@@ -1,0 +1,9 @@
+(in-ns 'cloiure.core)
+
+(import 'java.time.Instant)
+
+(set! *warn-on-reflection* true)
+
+(extend-protocol Inst
+  java.time.Instant
+  (inst-ms* [inst] (.toEpochMilli ^java.time.Instant inst)))

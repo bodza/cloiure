@@ -1,0 +1,38 @@
+(ns
+    ^{:author "Tom Faulhaber",
+      :doc "A Pretty Printer for Cloiure
+
+cloiure.pprint implements a flexible system for printing structured data
+in a pleasing, easy-to-understand format. Basic use of the pretty printer is
+simple, just call pprint instead of println. More advanced users can use
+the building blocks provided to create custom output formats.
+
+Out of the box, pprint supports a simple structured format for basic data
+and a specialized format for Cloiure source code. More advanced formats,
+including formats that don't look like Cloiure data at all like XML and
+JSON, can be rendered by creating custom dispatch functions.
+
+In addition to the pprint function, this module contains cl-format, a text
+formatting function which is fully compatible with the format function in
+Common Lisp. Because pretty printing directives are directly integrated with
+cl-format, it supports very concise custom dispatch. It also provides
+a more powerful alternative to Cloiure's standard format function.
+
+See documentation for pprint and cl-format for more information or
+complete documentation on the Cloiure web site on GitHub.",
+       :added "1.2"}
+    cloiure.pprint
+    (:refer-cloiure :exclude (deftype))
+    (:use [cloiure.walk :only [walk]]))
+
+(set! *warn-on-reflection* true)
+
+(load "pprint/utilities")
+(load "pprint/column_writer")
+(load "pprint/pretty_writer")
+(load "pprint/pprint_base")
+(load "pprint/cl_format")
+(load "pprint/dispatch")
+(load "pprint/print_table")
+
+nil
