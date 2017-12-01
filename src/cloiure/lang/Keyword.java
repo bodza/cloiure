@@ -26,15 +26,21 @@ public class Keyword implements IFn, Comparable, Named, Serializable, IHashEq
         {
             Util.clearCache(rq, table);
             if (sym.meta() != null)
+            {
                 sym = (Symbol) sym.withMeta(null);
+            }
             k = new Keyword(sym);
             existingRef = table.putIfAbsent(sym, new WeakReference<Keyword>(k, rq));
         }
         if (existingRef == null)
+        {
             return k;
+        }
         Keyword existingk = existingRef.get();
         if (existingk != null)
+        {
             return existingk;
+        }
         // entry died in the interim, do over
         table.remove(sym, existingRef);
         return intern(sym);
@@ -60,9 +66,13 @@ public class Keyword implements IFn, Comparable, Named, Serializable, IHashEq
     {
         Reference<Keyword> ref = table.get(sym);
         if (ref != null)
+        {
             return ref.get();
+        }
         else
+        {
             return null;
+        }
     }
 
     public static Keyword find(String ns, String name)
@@ -88,7 +98,9 @@ public class Keyword implements IFn, Comparable, Named, Serializable, IHashEq
     public String toString()
     {
         if (_str == null)
+        {
             _str = (":" + sym);
+        }
         return _str;
     }
 
@@ -141,14 +153,18 @@ public class Keyword implements IFn, Comparable, Named, Serializable, IHashEq
     final public Object invoke(Object obj)
     {
         if (obj instanceof ILookup)
+        {
             return ((ILookup)obj).valAt(this);
+        }
         return RT.get(obj, this);
     }
 
     final public Object invoke(Object obj, Object notFound)
     {
         if (obj instanceof ILookup)
+        {
             return ((ILookup)obj).valAt(this, notFound);
+        }
         return RT.get(obj, this, notFound);
     }
 

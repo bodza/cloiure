@@ -127,24 +127,32 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
     {
         Var dvout = ns.intern(sym);
         if (!dvout.hasRoot() || replaceRoot)
+        {
             dvout.bindRoot(root);
+        }
         return dvout;
     }
 
     public String toString()
     {
         if (ns != null)
+        {
             return "#'" + ns.name + "/" + sym;
-        return "#<Var: " + (sym != null ? sym.toString() : "--unnamed--") + ">";
+        }
+        return "#<Var: " + ((sym != null) ? sym.toString() : "--unnamed--") + ">";
     }
 
     public static Var find(Symbol nsQualifiedSym)
     {
         if (nsQualifiedSym.ns == null)
+        {
             throw new IllegalArgumentException("Symbol must be namespace-qualified");
+        }
         Namespace ns = Namespace.find(Symbol.intern(nsQualifiedSym.ns));
         if (ns == null)
+        {
             throw new IllegalArgumentException("No such namespace: " + nsQualifiedSym.ns);
+        }
         return ns.findInternedVar(Symbol.intern(nsQualifiedSym.name));
     }
 
@@ -201,7 +209,9 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
     final public Object get()
     {
         if (!threadBound.get())
+        {
             return root;
+        }
         return deref();
     }
 
@@ -209,14 +219,18 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
     {
         TBox b = getThreadBinding();
         if (b != null)
+        {
             return b.val;
+        }
         return root;
     }
 
     public void setValidator(IFn vf)
     {
         if (hasRoot())
+        {
             validate(vf, root);
+        }
         validator = vf;
     }
 
@@ -233,7 +247,9 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
         if (b != null)
         {
             if (Thread.currentThread() != b.thread)
+            {
                 throw new IllegalStateException(String.format("Can't set!: %s from non-binding thread", sym));
+            }
             return (b.val = val);
         }
         throw new IllegalStateException(String.format("Can't change/establish root binding of: %s with set", sym));
@@ -352,7 +368,9 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
             IMapEntry e = (IMapEntry) bs.first();
             Var v = (Var) e.key();
             if (!v.dynamic)
+            {
                 throw new IllegalStateException(String.format("Can't dynamically bind non-dynamic var: %s/%s", v.ns, v.sym));
+            }
             v.validate(v.getValidator(), e.val());
             v.threadBound.set(true);
             bmap = bmap.assoc(v, new TBox(Thread.currentThread(), e.val()));
@@ -397,7 +415,9 @@ public final class Var extends ARef implements IFn, IRef, Settable, Serializable
         {
             IMapEntry e = dvals.get().bindings.entryAt(this);
             if (e != null)
+            {
                 return (TBox) e.val();
+            }
         }
         return null;
     }

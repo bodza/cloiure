@@ -61,14 +61,18 @@ public class PersistentTreeSet extends APersistentSet implements IObj, Reversibl
     public IPersistentSet disjoin(Object key)
     {
         if (contains(key))
+        {
             return new PersistentTreeSet(meta(), impl.without(key));
+        }
         return this;
     }
 
     public IPersistentSet cons(Object o)
     {
         if (contains(o))
+        {
             return this;
+        }
         return new PersistentTreeSet(meta(), impl.assoc(o, o));
     }
 

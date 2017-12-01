@@ -1698,7 +1698,7 @@ public class ClassReader
                 v += 2;
                 break;
             case 'Z': // pointer to CONSTANT_Boolean
-                av.visit(name, readInt(items[readUnsignedShort(v)]) == 0 ? Boolean.FALSE : Boolean.TRUE);
+                av.visit(name, (readInt(items[readUnsignedShort(v)]) == 0) ? Boolean.FALSE : Boolean.TRUE);
                 v += 2;
                 break;
             case 'S': // pointer to CONSTANT_Short

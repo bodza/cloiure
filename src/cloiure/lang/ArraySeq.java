@@ -16,31 +16,51 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
     static public ArraySeq create(Object... array)
     {
         if (array == null || array.length == 0)
+        {
             return null;
+        }
         return new ArraySeq(array, 0);
     }
 
     static ISeq createFromObject(Object array)
     {
         if (array == null || Array.getLength(array) == 0)
+        {
             return null;
+        }
         Class aclass = array.getClass();
         if (aclass == int[].class)
+        {
             return new ArraySeq_int(null, (int[]) array, 0);
+        }
         if (aclass == float[].class)
+        {
             return new ArraySeq_float(null, (float[]) array, 0);
+        }
         if (aclass == double[].class)
+        {
             return new ArraySeq_double(null, (double[]) array, 0);
+        }
         if (aclass == long[].class)
+        {
             return new ArraySeq_long(null, (long[]) array, 0);
+        }
         if (aclass == byte[].class)
+        {
             return new ArraySeq_byte(null, (byte[]) array, 0);
+        }
         if (aclass == char[].class)
+        {
             return new ArraySeq_char(null, (char[]) array, 0);
+        }
         if (aclass == short[].class)
+        {
             return new ArraySeq_short(null, (short[]) array, 0);
+        }
         if (aclass == boolean[].class)
+        {
             return new ArraySeq_boolean(null, (boolean[]) array, 0);
+        }
         return new ArraySeq(array, 0);
     }
 
@@ -61,21 +81,27 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
     public Object first()
     {
         if (array != null)
+        {
             return array[i];
+        }
         return null;
     }
 
     public ISeq next()
     {
         if (array != null && i + 1 < array.length)
+        {
             return new ArraySeq(array, i + 1);
+        }
         return null;
     }
 
     public int count()
     {
         if (array != null)
+        {
             return array.length - i;
+        }
         return 0;
     }
 
@@ -98,7 +124,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 ret = f.invoke(ret, array[x]);
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
             }
             return ret;
         }
@@ -113,11 +141,15 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             for (int x = i + 1; x < array.length; x++)
             {
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
                 ret = f.invoke(ret, array[x]);
             }
             if (RT.isReduced(ret))
+            {
                 return ((IDeref)ret).deref();
+            }
             return ret;
         }
         return null;
@@ -126,9 +158,15 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
     public int indexOf(Object o)
     {
         if (array != null)
+        {
             for (int j = i; j < array.length; j++)
+            {
                 if (Util.equals(o, array[j]))
+                {
                     return j - i;
+                }
+            }
+        }
         return -1;
     }
 
@@ -139,14 +177,22 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             if (o == null)
             {
                 for (int j = array.length - 1; j >= i; j--)
+                {
                     if (array[j] == null)
+                    {
                         return j - i;
+                    }
+                }
             }
             else
             {
                 for (int j = array.length - 1; j >= i; j--)
+                {
                     if (o.equals(array[j]))
+                    {
                         return j - i;
+                    }
+                }
             }
         }
         return -1;
@@ -174,7 +220,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
         public ISeq next()
         {
             if (i + 1 < array.length)
+            {
                 return new ArraySeq_int(meta(), array, i + 1);
+            }
             return null;
         }
 
@@ -200,7 +248,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 ret = f.invoke(ret, array[x]);
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
             }
             return ret;
         }
@@ -211,11 +261,15 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             for (int x = i + 1; x < array.length; x++)
             {
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
                 ret = f.invoke(ret, array[x]);
             }
             if (RT.isReduced(ret))
+            {
                 return ((IDeref)ret).deref();
+            }
             return ret;
         }
 
@@ -225,8 +279,12 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 int k = ((Number) o).intValue();
                 for (int j = i; j < array.length; j++)
+                {
                     if (k == array[j])
+                    {
                         return j - i;
+                    }
+                }
             }
 
             return -1;
@@ -238,8 +296,12 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 int k = ((Number) o).intValue();
                 for (int j = array.length - 1; j >= i; j--)
+                {
                     if (k == array[j])
+                    {
                         return j - i;
+                    }
+                }
             }
 
             return -1;
@@ -266,7 +328,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
         public ISeq next()
         {
             if (i + 1 < array.length)
+            {
                 return new ArraySeq_float(meta(), array, i + 1);
+            }
             return null;
         }
 
@@ -292,7 +356,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 ret = f.invoke(ret, Numbers.num(array[x]));
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
             }
             return ret;
         }
@@ -303,11 +369,15 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             for (int x = i + 1; x < array.length; x++)
             {
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
                 ret = f.invoke(ret, Numbers.num(array[x]));
             }
             if (RT.isReduced(ret))
+            {
                 return ((IDeref)ret).deref();
+            }
             return ret;
         }
 
@@ -317,8 +387,12 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 float f = ((Number) o).floatValue();
                 for (int j = i; j < array.length; j++)
+                {
                     if (f == array[j])
+                    {
                         return j - i;
+                    }
+                }
             }
             return -1;
         }
@@ -329,8 +403,12 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 float f = ((Number) o).floatValue();
                 for (int j = array.length - 1; j >= i; j--)
+                {
                     if (f == array[j])
+                    {
                         return j - i;
+                    }
+                }
             }
             return -1;
         }
@@ -356,7 +434,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
         public ISeq next()
         {
             if (i + 1 < array.length)
+            {
                 return new ArraySeq_double(meta(), array, i + 1);
+            }
             return null;
         }
 
@@ -382,7 +462,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 ret = f.invoke(ret, array[x]);
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
             }
             return ret;
         }
@@ -393,11 +475,15 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             for (int x = i + 1; x < array.length; x++)
             {
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
                 ret = f.invoke(ret, array[x]);
             }
             if (RT.isReduced(ret))
+            {
                 return ((IDeref)ret).deref();
+            }
             return ret;
         }
 
@@ -407,8 +493,12 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 double d = ((Number) o).doubleValue();
                 for (int j = i; j < array.length; j++)
+                {
                     if (d == array[j])
+                    {
                         return j - i;
+                    }
+                }
             }
 
             return -1;
@@ -420,8 +510,12 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 double d = ((Number) o).doubleValue();
                 for (int j = array.length - 1; j >= i; j--)
+                {
                     if (d == array[j])
+                    {
                         return j - i;
+                    }
+                }
             }
 
             return -1;
@@ -448,7 +542,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
         public ISeq next()
         {
             if (i + 1 < array.length)
+            {
                 return new ArraySeq_long(meta(), array, i + 1);
+            }
             return null;
         }
 
@@ -474,7 +570,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 ret = f.invoke(ret, Numbers.num(array[x]));
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
             }
             return ret;
         }
@@ -485,11 +583,15 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             for (int x = i + 1; x < array.length; x++)
             {
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
                 ret = f.invoke(ret, Numbers.num(array[x]));
             }
             if (RT.isReduced(ret))
+            {
                 return ((IDeref)ret).deref();
+            }
             return ret;
         }
 
@@ -499,8 +601,12 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 long l = ((Number) o).longValue();
                 for (int j = i; j < array.length; j++)
+                {
                     if (l == array[j])
+                    {
                         return j - i;
+                    }
+                }
             }
 
             return -1;
@@ -512,8 +618,12 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 long l = ((Number) o).longValue();
                 for (int j = array.length - 1; j >= i; j--)
+                {
                     if (l == array[j])
+                    {
                         return j - i;
+                    }
+                }
             }
 
             return -1;
@@ -540,7 +650,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
         public ISeq next()
         {
             if (i + 1 < array.length)
+            {
                 return new ArraySeq_byte(meta(), array, i + 1);
+            }
             return null;
         }
 
@@ -566,7 +678,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 ret = f.invoke(ret, array[x]);
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
             }
             return ret;
         }
@@ -577,11 +691,15 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             for (int x = i + 1; x < array.length; x++)
             {
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
                 ret = f.invoke(ret, array[x]);
             }
             if (RT.isReduced(ret))
+            {
                 return ((IDeref)ret).deref();
+            }
             return ret;
         }
 
@@ -591,16 +709,24 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 byte b = ((Byte) o).byteValue();
                 for (int j = i; j < array.length; j++)
+                {
                     if (b == array[j])
+                    {
                         return j - i;
+                    }
+                }
             }
             if (o == null)
             {
                 return -1;
             }
             for (int j = i; j < array.length; j++)
+            {
                 if (o.equals(array[j]))
+                {
                     return j - i;
+                }
+            }
             return -1;
         }
 
@@ -610,16 +736,24 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 byte b = ((Byte) o).byteValue();
                 for (int j = array.length - 1; j >= i; j--)
+                {
                     if (b == array[j])
+                    {
                         return j - i;
+                    }
+                }
             }
             if (o == null)
             {
                 return -1;
             }
             for (int j = array.length - 1; j >= i; j--)
+            {
                 if (o.equals(array[j]))
+                {
                     return j - i;
+                }
+            }
             return -1;
         }
     }
@@ -644,7 +778,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
         public ISeq next()
         {
             if (i + 1 < array.length)
+            {
                 return new ArraySeq_char(meta(), array, i + 1);
+            }
             return null;
         }
 
@@ -670,7 +806,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 ret = f.invoke(ret, array[x]);
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
             }
             return ret;
         }
@@ -681,11 +819,15 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             for (int x = i + 1; x < array.length; x++)
             {
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
                 ret = f.invoke(ret, array[x]);
             }
             if (RT.isReduced(ret))
+            {
                 return ((IDeref)ret).deref();
+            }
             return ret;
         }
 
@@ -695,16 +837,24 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 char c = ((Character) o).charValue();
                 for (int j = i; j < array.length; j++)
+                {
                     if (c == array[j])
+                    {
                         return j - i;
+                    }
+                }
             }
             if (o == null)
             {
                 return -1;
             }
             for (int j = i; j < array.length; j++)
+            {
                 if (o.equals(array[j]))
+                {
                     return j - i;
+                }
+            }
             return -1;
         }
 
@@ -714,16 +864,24 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 char c = ((Character) o).charValue();
                 for (int j = array.length - 1; j >= i; j--)
+                {
                     if (c == array[j])
+                    {
                         return j - i;
+                    }
+                }
             }
             if (o == null)
             {
                 return -1;
             }
             for (int j = array.length - 1; j >= i; j--)
+            {
                 if (o.equals(array[j]))
+                {
                     return j - i;
+                }
+            }
             return -1;
         }
     }
@@ -748,7 +906,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
         public ISeq next()
         {
             if (i + 1 < array.length)
+            {
                 return new ArraySeq_short(meta(), array, i + 1);
+            }
             return null;
         }
 
@@ -774,7 +934,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 ret = f.invoke(ret, array[x]);
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
             }
             return ret;
         }
@@ -785,11 +947,15 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             for (int x = i + 1; x < array.length; x++)
             {
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
                 ret = f.invoke(ret, array[x]);
             }
             if (RT.isReduced(ret))
+            {
                 return ((IDeref)ret).deref();
+            }
             return ret;
         }
 
@@ -799,16 +965,24 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 short s = ((Short) o).shortValue();
                 for (int j = i; j < array.length; j++)
+                {
                     if (s == array[j])
+                    {
                         return j - i;
+                    }
+                }
             }
             if (o == null)
             {
                 return -1;
             }
             for (int j = i; j < array.length; j++)
+            {
                 if (o.equals(array[j]))
+                {
                     return j - i;
+                }
+            }
             return -1;
         }
 
@@ -818,16 +992,24 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 short s = ((Short) o).shortValue();
                 for (int j = array.length - 1; j >= i; j--)
+                {
                     if (s == array[j])
+                    {
                         return j - i;
+                    }
+                }
             }
             if (o == null)
             {
                 return -1;
             }
             for (int j = array.length - 1; j >= i; j--)
+            {
                 if (o.equals(array[j]))
+                {
                     return j - i;
+                }
+            }
             return -1;
         }
     }
@@ -852,7 +1034,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
         public ISeq next()
         {
             if (i + 1 < array.length)
+            {
                 return new ArraySeq_boolean(meta(), array, i + 1);
+            }
             return null;
         }
 
@@ -878,7 +1062,9 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 ret = f.invoke(ret, array[x]);
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
             }
             return ret;
         }
@@ -889,11 +1075,15 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             for (int x = i + 1; x < array.length; x++)
             {
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
                 ret = f.invoke(ret, array[x]);
             }
             if (RT.isReduced(ret))
+            {
                 return ((IDeref)ret).deref();
+            }
             return ret;
         }
 
@@ -903,16 +1093,24 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 boolean b = ((Boolean) o).booleanValue();
                 for (int j = i; j < array.length; j++)
+                {
                     if (b == array[j])
+                    {
                         return j - i;
+                    }
+                }
             }
             if (o == null)
             {
                 return -1;
             }
             for (int j = i; j < array.length; j++)
+            {
                 if (o.equals(array[j]))
+                {
                     return j - i;
+                }
+            }
             return -1;
         }
 
@@ -922,16 +1120,24 @@ public class ArraySeq extends ASeq implements IndexedSeq, IReduce
             {
                 boolean b = ((Boolean) o).booleanValue();
                 for (int j = array.length - 1; j >= i; j--)
+                {
                     if (b == array[j])
+                    {
                         return j - i;
+                    }
+                }
             }
             if (o == null)
             {
                 return -1;
             }
             for (int j = array.length - 1; j >= i; j--)
+            {
                 if (o.equals(array[j]))
+                {
                     return j - i;
+                }
+            }
             return -1;
         }
     }

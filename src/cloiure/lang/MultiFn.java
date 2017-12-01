@@ -85,7 +85,9 @@ public class MultiFn extends AFn
         try
         {
             if (prefers(dispatchValY, dispatchValX))
+            {
                 throw new IllegalStateException(String.format("Preference conflict in multimethod '%s': %s is already preferred to %s", name, dispatchValY, dispatchValX));
+            }
             preferTable = getPreferTable().assoc(dispatchValX, RT.conj((IPersistentCollection) RT.get(getPreferTable(), dispatchValX, PersistentHashSet.EMPTY), dispatchValY));
             resetCache();
             return this;
@@ -100,16 +102,22 @@ public class MultiFn extends AFn
     {
         IPersistentSet xprefs = (IPersistentSet) getPreferTable().valAt(x);
         if (xprefs != null && xprefs.contains(y))
+        {
             return true;
+        }
         for (ISeq ps = RT.seq(parents.invoke(y)); ps != null; ps = ps.next())
         {
             if (prefers(x, ps.first()))
+            {
                 return true;
+            }
         }
         for (ISeq ps = RT.seq(parents.invoke(x)); ps != null; ps = ps.next())
         {
             if (prefers(ps.first(), y))
+            {
                 return true;
+            }
         }
         return false;
     }
@@ -142,10 +150,14 @@ public class MultiFn extends AFn
     public IFn getMethod(Object dispatchVal)
     {
         if (cachedHierarchy != hierarchy.deref())
+        {
             resetCache();
+        }
         IFn targetFn = (IFn) methodCache.valAt(dispatchVal);
         if (targetFn != null)
+        {
             return targetFn;
+        }
         return findAndCacheBestMethod(dispatchVal);
     }
 
@@ -153,7 +165,9 @@ public class MultiFn extends AFn
     {
         IFn targetFn = getMethod(dispatchVal);
         if (targetFn == null)
+        {
             throw new IllegalArgumentException(String.format("No method in multimethod '%s' for dispatch value: %s", name, dispatchVal));
+        }
         return targetFn;
     }
 
@@ -173,20 +187,27 @@ public class MultiFn extends AFn
                 if (isA(dispatchVal, e.getKey()))
                 {
                     if (bestEntry == null || dominates(e.getKey(), bestEntry.getKey()))
+                    {
                         bestEntry = e;
+                    }
                     if (!dominates(bestEntry.getKey(), e.getKey()))
-                        throw new IllegalArgumentException(String.format("Multiple methods in multimethod '%s' match dispatch value: %s -> %s and %s, and neither is preferred",
-                                    name, dispatchVal, e.getKey(), bestEntry.getKey()));
+                    {
+                        throw new IllegalArgumentException(String.format("Multiple methods in multimethod '%s' match dispatch value: %s -> %s and %s, and neither is preferred", name, dispatchVal, e.getKey(), bestEntry.getKey()));
+                    }
                 }
             }
             if (bestEntry == null)
             {
                 bestValue = methodTable.valAt(defaultDispatchVal);
                 if (bestValue == null)
+                {
                     return null;
+                }
             }
             else
+            {
                 bestValue = bestEntry.getValue();
+            }
         }
         finally
         {

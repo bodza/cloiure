@@ -119,7 +119,7 @@ public final class Handle
             return false;
         }
         Handle h = (Handle) obj;
-        return tag == h.tag && owner.equals(h.owner) && name.equals(h.name) && desc.equals(h.desc);
+        return (tag == h.tag && owner.equals(h.owner) && name.equals(h.name) && desc.equals(h.desc));
     }
 
     @Override

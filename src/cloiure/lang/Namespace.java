@@ -54,16 +54,22 @@ public class Namespace extends AReference implements Serializable
         while ((o = map.valAt(sym)) == null)
         {
             if (v == null)
+            {
                 v = new Var(this, sym);
+            }
             IPersistentMap newMap = map.assoc(sym, v);
             mappings.compareAndSet(map, newMap);
             map = getMappings();
         }
         if (o instanceof Var && ((Var) o).ns == this)
+        {
             return (Var) o;
+        }
 
         if (v == null)
+        {
             v = new Var(this, sym);
+        }
 
         warnOrFailOnReplace(sym, o, v);
 
@@ -79,9 +85,13 @@ public class Namespace extends AReference implements Serializable
         {
             Namespace ns = ((Var)o).ns;
             if (ns == this || (v instanceof Var && ((Var)v).ns  == RT.CLOIURE_NS))
+            {
                 return;
+            }
             if (ns != RT.CLOIURE_NS)
+            {
                 throw new IllegalStateException(sym + " already refers to: " + o + " in namespace: " + name);
+            }
         }
         RT.errPrintWriter().println("WARNING: " + sym + " already refers to: " + o + " in namespace: " + name + ", being replaced by: " + v);
     }
@@ -101,7 +111,9 @@ public class Namespace extends AReference implements Serializable
             map = getMappings();
         }
         if (o == val)
+        {
             return o;
+        }
 
         warnOrFailOnReplace(sym, o, val);
 
@@ -132,7 +144,9 @@ public class Namespace extends AReference implements Serializable
             c = (Class) map.valAt(sym);
         }
         if (c == val)
+        {
             return c;
+        }
 
         throw new IllegalStateException(sym + " already refers to: " + c + " in namespace: " + name);
     }
@@ -172,7 +186,9 @@ public class Namespace extends AReference implements Serializable
     {
         Namespace ns = namespaces.get(name);
         if (ns != null)
+        {
             return ns;
+        }
         Namespace newns = new Namespace(name);
         ns = namespaces.putIfAbsent(name, newns);
         return (ns == null) ? newns : ns;
@@ -181,7 +197,9 @@ public class Namespace extends AReference implements Serializable
     public static Namespace remove(Symbol name)
     {
         if (name.equals(RT.CLOIURE_NS.name))
+        {
             throw new IllegalArgumentException("Cannot remove cloiure namespace");
+        }
         return namespaces.remove(name);
     }
 
@@ -199,7 +217,9 @@ public class Namespace extends AReference implements Serializable
     {
         Object o = mappings.get().valAt(symbol);
         if (o != null && o instanceof Var && ((Var) o).ns == this)
+        {
             return (Var) o;
+        }
         return null;
     }
 
@@ -217,7 +237,9 @@ public class Namespace extends AReference implements Serializable
     public void addAlias(Symbol alias, Namespace ns)
     {
         if (alias == null || ns == null)
+        {
             throw new NullPointerException("Expecting Symbol + Namespace");
+        }
         IPersistentMap map = getAliases();
         while (!map.containsKey(alias))
         {
@@ -227,7 +249,9 @@ public class Namespace extends AReference implements Serializable
         }
         // you can rebind an alias, but only to the initially-aliased namespace.
         if (!map.valAt(alias).equals(ns))
+        {
             throw new IllegalStateException("Alias " + alias + " already exists in namespace " + name + ", aliasing " + map.valAt(alias));
+        }
     }
 
     public void removeAlias(Symbol alias)

@@ -213,30 +213,42 @@ public class LispReader
     static private Object ensurePending(Object pendingForms)
     {
         if (pendingForms == null)
+        {
             return new LinkedList();
+        }
         else
+        {
             return pendingForms;
+        }
     }
 
     static private Object installPlatformFeature(Object opts)
     {
         if (opts == null)
+        {
             return RT.mapUniqueKeys(LispReader.OPT_FEATURES, PLATFORM_FEATURES);
+        }
         else
         {
             IPersistentMap mopts = (IPersistentMap) opts;
             Object features = mopts.valAt(OPT_FEATURES);
             if (features == null)
+            {
                 return mopts.assoc(LispReader.OPT_FEATURES, PLATFORM_FEATURES);
+            }
             else
+            {
                 return mopts.assoc(LispReader.OPT_FEATURES, RT.conj((IPersistentSet) features, PLATFORM_KEY));
+            }
         }
     }
 
     static private Object read(PushbackReader r, boolean eofIsError, Object eofValue, Character returnOn, Object returnOnValue, boolean isRecursive, Object opts, Object pendingForms, Resolver resolver)
     {
         if (RT.READEVAL.deref() == UNKNOWN)
+        {
             throw Util.runtimeException("Reading disallowed - *read-eval* bound to :unknown");
+        }
 
         opts = installPlatformFeature(opts);
 
@@ -245,7 +257,9 @@ public class LispReader
             while (true)
             {
                 if (pendingForms instanceof List && !((List)pendingForms).isEmpty())
+                {
                     return ((List)pendingForms).remove(0);
+                }
 
                 int ch = read1(r);
 
@@ -255,7 +269,9 @@ public class LispReader
                 if (ch == -1)
                 {
                     if (eofIsError)
+                    {
                         throw Util.runtimeException("EOF while reading");
+                    }
                     return eofValue;
                 }
 
@@ -276,7 +292,9 @@ public class LispReader
                     Object ret = macroFn.invoke(r, (char) ch, opts, pendingForms);
                     // no op macros return the reader
                     if (ret == r)
+                    {
                         continue;
+                    }
                     return ret;
                 }
 
@@ -299,7 +317,9 @@ public class LispReader
         catch (Exception e)
         {
             if (isRecursive || !(r instanceof LineNumberingPushbackReader))
+            {
                 throw Util.sneakyThrow(e);
+            }
             LineNumberingPushbackReader rdr = (LineNumberingPushbackReader) r;
          // throw Util.runtimeException(String.format("ReaderError:(%d,1) %s", rdr.getLineNumber(), e.getMessage()), e);
             throw new ReaderException(rdr.getLineNumber(), rdr.getColumnNumber(), e);
@@ -342,20 +362,26 @@ public class LispReader
         String s = sb.toString();
         Object n = matchNumber(s);
         if (n == null)
+        {
             throw new NumberFormatException("Invalid number: " + s);
+        }
         return n;
     }
 
     static private int readUnicodeChar(String token, int offset, int length, int base)
     {
         if (token.length() != offset + length)
+        {
             throw new IllegalArgumentException("Invalid unicode character: \\" + token);
+        }
         int uc = 0;
         for (int i = offset; i < offset + length; ++i)
         {
             int d = Character.digit(token.charAt(i), base);
             if (d == -1)
+            {
                 throw new IllegalArgumentException("Invalid digit: " + token.charAt(i));
+            }
             uc = uc * base + d;
         }
         return (char) uc;
@@ -365,7 +391,9 @@ public class LispReader
     {
         int uc = Character.digit(initch, base);
         if (uc == -1)
+        {
             throw new IllegalArgumentException("Invalid digit: " + (char) initch);
+        }
         int i = 1;
         for ( ; i < length; ++i)
         {
@@ -377,11 +405,15 @@ public class LispReader
             }
             int d = Character.digit(ch, base);
             if (d == -1)
+            {
                 throw new IllegalArgumentException("Invalid digit: " + (char) ch);
+            }
             uc = uc * base + d;
         }
         if (i != length && exact)
+        {
             throw new IllegalArgumentException("Invalid character length: " + i + ", should be: " + length);
+        }
         return uc;
     }
 
@@ -403,7 +435,9 @@ public class LispReader
 
         ret = matchSymbol(s, resolver);
         if (ret != null)
+        {
             return ret;
+        }
 
         throw Util.runtimeException("Invalid token: " + s);
     }
@@ -417,7 +451,9 @@ public class LispReader
             String ns = m.group(1);
             String name = m.group(2);
             if (ns != null && ns.endsWith(":/") || name.endsWith(":") || s.indexOf("::", 1) != -1)
+            {
                 return null;
+            }
             if (s.startsWith("::"))
             {
                 Symbol ks = Symbol.intern(s.substring(2));
@@ -425,33 +461,51 @@ public class LispReader
                 {
                     Symbol nsym;
                     if (ks.ns != null)
+                    {
                         nsym = resolver.resolveAlias(Symbol.intern(ks.ns));
+                    }
                     else
+                    {
                         nsym = resolver.currentNS();
+                    }
                     // auto-resolving keyword
                     if (nsym != null)
+                    {
                         return Keyword.intern(nsym.name, ks.name);
+                    }
                     else
+                    {
                         return null;
+                    }
                 }
                 else
                 {
                     Namespace kns;
                     if (ks.ns != null)
+                    {
                         kns = Compiler.currentNS().lookupAlias(Symbol.intern(ks.ns));
+                    }
                     else
+                    {
                         kns = Compiler.currentNS();
+                    }
                     // auto-resolving keyword
                     if (kns != null)
+                    {
                         return Keyword.intern(kns.name.name, ks.name);
+                    }
                     else
+                    {
                         return null;
+                    }
                 }
             }
             boolean isKeyword = (s.charAt(0) == ':');
             Symbol sym = Symbol.intern(s.substring(isKeyword ? 1 : 0));
             if (isKeyword)
+            {
                 return Keyword.intern(sym);
+            }
             return sym;
         }
         return null;
@@ -465,34 +519,52 @@ public class LispReader
             if (m.group(2) != null)
             {
                 if (m.group(8) != null)
+                {
                     return BigInt.ZERO;
+                }
                 return Numbers.num(0);
             }
             boolean negate = m.group(1).equals("-");
             String n;
             int radix = 10;
             if ((n = m.group(3)) != null)
+            {
                 radix = 10;
+            }
             else if ((n = m.group(4)) != null)
+            {
                 radix = 16;
+            }
             else if ((n = m.group(5)) != null)
+            {
                 radix = 8;
+            }
             else if ((n = m.group(7)) != null)
+            {
                 radix = Integer.parseInt(m.group(6));
+            }
             if (n == null)
+            {
                 return null;
+            }
             BigInteger bn = new BigInteger(n, radix);
             if (negate)
+            {
                 bn = bn.negate();
+            }
             if (m.group(8) != null)
+            {
                 return BigInt.fromBigInteger(bn);
+            }
             return (bn.bitLength() < 64) ? Numbers.num(bn.longValue()) : BigInt.fromBigInteger(bn);
         }
         m = floatPat.matcher(s);
         if (m.matches())
         {
             if (m.group(4) != null)
+            {
                 return new BigDecimal(m.group(1));
+            }
             return Double.parseDouble(s);
         }
         m = ratioPat.matcher(s);
@@ -500,8 +572,9 @@ public class LispReader
         {
             String numerator = m.group(1);
             if (numerator.startsWith("+"))
+            {
                 numerator = numerator.substring(1);
-
+            }
             return Numbers.divide(Numbers.reduceBigInt(BigInt.fromBigInteger(new BigInteger(numerator))), Numbers.reduceBigInt(BigInt.fromBigInteger(new BigInteger(m.group(2)))));
         }
         return null;
@@ -510,7 +583,9 @@ public class LispReader
     static private IFn getMacro(int ch)
     {
         if (ch < macros.length)
+        {
             return macros[ch];
+        }
         return null;
     }
 
@@ -535,14 +610,18 @@ public class LispReader
             for (int ch = read1(r); ch != '"'; ch = read1(r))
             {
                 if (ch == -1)
+                {
                     throw Util.runtimeException("EOF while reading regex");
-                sb.append( (char) ch );
+                }
+                sb.append((char) ch);
                 if (ch == '\\')  // escape
                 {
                     ch = read1(r);
                     if (ch == -1)
+                    {
                         throw Util.runtimeException("EOF while reading regex");
-                    sb.append( (char) ch );
+                    }
+                    sb.append((char) ch);
                 }
             }
             return Pattern.compile(sb.toString());
@@ -559,12 +638,16 @@ public class LispReader
             for (int ch = read1(r); ch != '"'; ch = read1(r))
             {
                 if (ch == -1)
+                {
                     throw Util.runtimeException("EOF while reading string");
+                }
                 if (ch == '\\')  // escape
                 {
                     ch = read1(r);
                     if (ch == -1)
+                    {
                         throw Util.runtimeException("EOF while reading string");
+                    }
                     switch (ch)
                     {
                         case 't':
@@ -590,7 +673,9 @@ public class LispReader
                         {
                             ch = read1(r);
                             if (Character.digit(ch, 16) == -1)
+                            {
                                 throw Util.runtimeException("Invalid unicode escape: \\u" + (char) ch); // oops! "
+                            }
                             ch = readUnicodeChar((PushbackReader) r, ch, 16, 4, true);
                             break;
                         }
@@ -600,10 +685,14 @@ public class LispReader
                             {
                                 ch = readUnicodeChar((PushbackReader) r, ch, 8, 3, false);
                                 if (ch > 0377)
+                                {
                                     throw Util.runtimeException("Octal escape sequence must be in range [0, 377].");
+                                }
                             }
                             else
+                            {
                                 throw Util.runtimeException("Unsupported escape character: \\" + (char) ch);
+                            }
                             break;
                         }
                     }
@@ -650,13 +739,18 @@ public class LispReader
             boolean auto = false;
             int autoChar = read1(r);
             if (autoChar == ':')
+            {
                 auto = true;
+            }
             else
+            {
                 unread(r, autoChar);
+            }
 
             Object sym = null;
             int nextChar = read1(r);
-            if (isWhitespace(nextChar)) {  // the #:: { } case or an error
+            if (isWhitespace(nextChar)) // the #:: { } case or an error
+            {
                 if (auto)
                 {
                     while (isWhitespace(nextChar))
@@ -682,7 +776,9 @@ public class LispReader
                     nextChar = read1(r);
             }
             if (nextChar != '{')
+            {
                 throw Util.runtimeException("Namespaced map must specify a map");
+            }
 
             // Resolve autoresolved ns
             String ns;
@@ -692,9 +788,13 @@ public class LispReader
                 if (sym == null)
                 {
                     if (resolver != null)
+                    {
                         ns = resolver.currentNS().name;
+                    }
                     else
+                    {
                         ns = Compiler.currentNS().getName().getName();
+                    }
                 }
                 else if (!(sym instanceof Symbol) || ((Symbol)sym).getNamespace() != null)
                 {
@@ -704,7 +804,9 @@ public class LispReader
                 {
                     Symbol resolvedNS;
                     if (resolver != null)
+                    {
                         resolvedNS = resolver.resolveAlias((Symbol) sym);
+                    }
                     else
                     {
                         Namespace rns = Compiler.currentNS().lookupAlias((Symbol)sym);
@@ -733,7 +835,9 @@ public class LispReader
             // Read map
             List kvs = readDelimitedList('}', r, true, opts, ensurePending(pendingForms));
             if ((kvs.size() & 1) == 1)
+            {
                 throw Util.runtimeException("Namespaced map literal must contain an even number of forms");
+            }
 
             // Construct output map
             Object[] a = new Object[kvs.size()];
@@ -788,9 +892,13 @@ public class LispReader
             Object o = read(r, true, null, true, opts, ensurePending(pendingForms));
 
             if (!(o instanceof Symbol))
+            {
                 throw Util.runtimeException("Invalid token: ##" + o);
+            }
             if (!(specials.containsKey(o)))
+            {
                 throw Util.runtimeException("Unknown symbolic value: ##" + o);
+            }
 
             return specials.valAt(o);
         }
@@ -877,7 +985,9 @@ public class LispReader
         {
             int ch = read1((Reader) reader);
             if (ch == -1)
+            {
                 throw Util.runtimeException("EOF while reading character");
+            }
             IFn fn = dispatchMacros[ch];
 
             // Try the ctor reader first
@@ -888,9 +998,13 @@ public class LispReader
                 Object result = ctorReader.invoke(reader, ch, opts, pendingForms);
 
                 if (result != null)
+                {
                     return result;
+                }
                 else
+                {
                     throw Util.runtimeException(String.format("No dispatch macro for: %c", (char) ch));
+                }
             }
             return fn.invoke(reader, ch, opts, pendingForms);
         }
@@ -907,7 +1021,9 @@ public class LispReader
         {
             PushbackReader r = (PushbackReader) reader;
             if (ARG_ENV.deref() != null)
+            {
                 throw new IllegalStateException("Nested #()s are not allowed");
+            }
             try
             {
                 Var.pushThreadBindings(RT.map(ARG_ENV, PersistentTreeMap.EMPTY));
@@ -926,7 +1042,9 @@ public class LispReader
                         {
                             Object sym = argsyms.valAt(i);
                             if (sym == null)
+                            {
                                 sym = garg(i);
+                            }
                             args = args.cons(sym);
                         }
                     }
@@ -980,9 +1098,13 @@ public class LispReader
             }
             Object n = read(r, true, null, true, opts, ensurePending(pendingForms));
             if (n.equals(Compiler._AMP_))
+            {
                 return registerArg(-1);
+            }
             if (!(n instanceof Number))
+            {
                 throw new IllegalStateException("arg literal must be %, %& or %integer");
+            }
             return registerArg(((Number) n).intValue());
         }
     }
@@ -1002,11 +1124,17 @@ public class LispReader
             pendingForms = ensurePending(pendingForms);
             Object meta = read(r, true, null, true, opts, pendingForms);
             if (meta instanceof Symbol || meta instanceof String)
+            {
                 meta = RT.map(RT.TAG_KEY, meta);
+            }
             else if (meta instanceof Keyword)
+            {
                 meta = RT.map(meta, RT.T);
+            }
             else if (!(meta instanceof IPersistentMap))
+            {
                 throw new IllegalArgumentException("Metadata must be Symbol, Keyword, String or Map");
+            }
 
             Object o = read(r, true, null, true, opts, pendingForms);
             if (o instanceof IMeta)
@@ -1029,7 +1157,9 @@ public class LispReader
                 return ((IObj) o).withMeta((IPersistentMap) ometa);
             }
             else
+            {
                 throw new IllegalArgumentException("Metadata can only be applied to IMetas");
+            }
         }
     }
 
@@ -1055,7 +1185,9 @@ public class LispReader
         {
             Object ret;
             if (Compiler.isSpecial(form))
+            {
                 ret = RT.list(Compiler.QUOTE, form);
+            }
             else if (form instanceof Symbol)
             {
                 Resolver resolver = (Resolver) RT.READER_RESOLVER.deref();
@@ -1064,10 +1196,14 @@ public class LispReader
                 {
                     IPersistentMap gmap = (IPersistentMap) GENSYM_ENV.deref();
                     if (gmap == null)
+                    {
                         throw new IllegalStateException("Gensym literal not in syntax-quote");
+                    }
                     Symbol gs = (Symbol) gmap.valAt(sym);
                     if (gs == null)
+                    {
                         GENSYM_ENV.set(gmap.assoc(sym, gs = Symbol.intern(null, sym.name.substring(0, sym.name.length() - 1) + "__" + RT.nextID() + "__auto__")));
+                    }
                     sym = gs;
                 }
                 else if (sym.ns == null && sym.name.endsWith("."))
@@ -1077,10 +1213,14 @@ public class LispReader
                     {
                         Symbol rc = resolver.resolveClass(csym);
                         if (rc != null)
+                        {
                             csym = rc;
+                        }
                     }
                     else
+                    {
                         csym = Compiler.resolveSymbol(csym);
+                    }
                     sym = Symbol.intern(null, csym.name.concat("."));
                 }
                 else if (sym.ns == null && sym.name.startsWith("."))
@@ -1095,7 +1235,9 @@ public class LispReader
                         Symbol alias = Symbol.intern(null, sym.ns);
                         nsym = resolver.resolveClass(alias);
                         if (nsym == null)
+                        {
                             nsym = resolver.resolveAlias(alias);
+                        }
                     }
                     if (nsym != null)
                     {
@@ -1106,11 +1248,17 @@ public class LispReader
                     {
                         Symbol rsym = resolver.resolveClass(sym);
                         if (rsym == null)
+                        {
                             rsym = resolver.resolveVar(sym);
+                        }
                         if (rsym != null)
+                        {
                             sym = rsym;
+                        }
                         else
+                        {
                             sym = Symbol.intern(resolver.currentNS().name, sym.name);
+                        }
                     }
                     // leave alone if qualified
                 }
@@ -1118,25 +1266,35 @@ public class LispReader
                 {
                     Object maybeClass = null;
                     if (sym.ns != null)
+                    {
                         maybeClass = Compiler.currentNS().getMapping(Symbol.intern(null, sym.ns));
+                    }
                     if (maybeClass instanceof Class)
                     {
                         // Classname/foo -> package.qualified.Classname/foo
                         sym = Symbol.intern(((Class)maybeClass).getName(), sym.name);
                     }
                     else
+                    {
                         sym = Compiler.resolveSymbol(sym);
+                    }
                 }
                 ret = RT.list(Compiler.QUOTE, sym);
             }
             else if (isUnquote(form))
+            {
                 return RT.second(form);
+            }
             else if (isUnquoteSplicing(form))
+            {
                 throw new IllegalStateException("splice not in list");
+            }
             else if (form instanceof IPersistentCollection)
             {
                 if (form instanceof IRecord)
+                {
                     ret = form;
+                }
                 else if (form instanceof IPersistentMap)
                 {
                     IPersistentVector keyvals = flattenMap(form);
@@ -1154,24 +1312,36 @@ public class LispReader
                 {
                     ISeq seq = RT.seq(form);
                     if (seq == null)
+                    {
                         ret = RT.cons(LIST, null);
+                    }
                     else
+                    {
                         ret = RT.list(SEQ, RT.cons(CONCAT, sqExpandList(seq)));
+                    }
                 }
                 else
+                {
                     throw new UnsupportedOperationException("Unknown Collection type");
+                }
             }
             else if (form instanceof Keyword || form instanceof Number || form instanceof Character || form instanceof String)
+            {
                 ret = form;
+            }
             else
+            {
                 ret = RT.list(Compiler.QUOTE, form);
+            }
 
             if (form instanceof IObj && RT.meta(form) != null)
             {
                 // filter line and column numbers
                 IPersistentMap newMeta = ((IObj) form).meta().without(RT.LINE_KEY).without(RT.COLUMN_KEY);
                 if (newMeta.count() > 0)
+                {
                     return RT.list(WITH_META, ret, syntaxQuote(((IObj) form).meta()));
+                }
             }
             return ret;
         }
@@ -1183,11 +1353,17 @@ public class LispReader
             {
                 Object item = seq.first();
                 if (isUnquote(item))
+                {
                     ret = ret.cons(RT.list(LIST, RT.second(item)));
+                }
                 else if (isUnquoteSplicing(item))
+                {
                     ret = ret.cons(RT.second(item));
+                }
                 else
+                {
                     ret = ret.cons(RT.list(LIST, syntaxQuote(item)));
+                }
             }
             return ret.seq();
         }
@@ -1222,7 +1398,9 @@ public class LispReader
             PushbackReader r = (PushbackReader) reader;
             int ch = read1(r);
             if (ch == -1)
+            {
                 throw Util.runtimeException("EOF while reading character");
+            }
             pendingForms = ensurePending(pendingForms);
             if (ch == '@')
             {
@@ -1245,37 +1423,59 @@ public class LispReader
             PushbackReader r = (PushbackReader) reader;
             int ch = read1(r);
             if (ch == -1)
+            {
                 throw Util.runtimeException("EOF while reading character");
+            }
             String token = readToken(r, (char) ch);
             if (token.length() == 1)
+            {
                 return Character.valueOf(token.charAt(0));
+            }
             else if (token.equals("newline"))
+            {
                 return '\n';
+            }
             else if (token.equals("space"))
+            {
                 return ' ';
+            }
             else if (token.equals("tab"))
+            {
                 return '\t';
+            }
             else if (token.equals("backspace"))
+            {
                 return '\b';
+            }
             else if (token.equals("formfeed"))
+            {
                 return '\f';
+            }
             else if (token.equals("return"))
+            {
                 return '\r';
+            }
             else if (token.startsWith("u"))
             {
                 char c = (char) readUnicodeChar(token, 1, 4, 16);
                 if (c >= '\uD800' && c <= '\uDFFF') // surrogate code unit?
+                {
                     throw Util.runtimeException("Invalid character constant: \\u" + Integer.toString(c, 16));
+                }
                 return c;
             }
             else if (token.startsWith("o"))
             {
                 int len = token.length() - 1;
                 if (len > 3)
+                {
                     throw Util.runtimeException("Invalid octal escape sequence length: " + len);
+                }
                 int uc = readUnicodeChar(token, 1, len, 8);
                 if (uc > 0377)
+                {
                     throw Util.runtimeException("Octal escape sequence must be in range [0, 377].");
+                }
                 return (char) uc;
             }
             throw Util.runtimeException("Unsupported character: \\" + token);
@@ -1296,13 +1496,19 @@ public class LispReader
             }
             List list = readDelimitedList(')', r, true, opts, ensurePending(pendingForms));
             if (list.isEmpty())
+            {
                 return PersistentList.EMPTY;
+            }
             IObj s = (IObj) PersistentList.create(list);
          // IObj s = (IObj) RT.seq(list);
             if (line != -1)
+            {
                 return s.withMeta(RT.map(RT.LINE_KEY, line, RT.COLUMN_KEY, column));
+            }
             else
+            {
                 return s;
+            }
         }
     }
 
@@ -1379,7 +1585,9 @@ public class LispReader
                 throw Util.runtimeException("Can't resolve " + fs);
             }
             else
+            {
                 throw new IllegalArgumentException("Unsupported #= form");
+            }
         }
     }
 
@@ -1408,7 +1616,9 @@ public class LispReader
             PushbackReader r = (PushbackReader) reader;
             Object[] a = readDelimitedList('}', r, true, opts, ensurePending(pendingForms)).toArray();
             if ((a.length & 1) == 1)
+            {
                 throw Util.runtimeException("Map literal must contain an even number of forms");
+            }
             return RT.map(a);
         }
     }
@@ -1456,9 +1666,13 @@ public class LispReader
             if (form == READ_EOF)
             {
                 if (firstline < 0)
+                {
                     throw Util.runtimeException("EOF while reading");
+                }
                 else
+                {
                     throw Util.runtimeException("EOF while reading, starting at line " + firstline);
+                }
             }
             else if (form == READ_FINISHED)
             {
@@ -1477,7 +1691,9 @@ public class LispReader
             pendingForms = ensurePending(pendingForms);
             Object name = read(r, true, null, false, opts, pendingForms);
             if (!(name instanceof Symbol))
+            {
                 throw new RuntimeException("Reader tag must be a symbol");
+            }
             Symbol sym = (Symbol)name;
             Object form = read(r, true, null, true, opts, pendingForms);
 
@@ -1503,9 +1719,13 @@ public class LispReader
                 {
                     IFn default_reader = (IFn)RT.DEFAULT_DATA_READER_FN.deref();
                     if (default_reader != null)
+                    {
                         return default_reader.invoke(tag, o);
+                    }
                     else
+                    {
                         throw new RuntimeException("No reader function for tag " + tag.toString());
+                    }
                 }
             }
 
@@ -1546,11 +1766,17 @@ public class LispReader
                 IPersistentVector recordEntries = (IPersistentVector)form;
                 boolean ctorFound = false;
                 for (Constructor ctor : allctors)
+                {
                     if (ctor.getParameterTypes().length == recordEntries.count())
+                    {
                         ctorFound = true;
+                    }
+                }
 
                 if (!ctorFound)
+                {
                     throw Util.runtimeException("Unexpected number of constructor arguments to " + recordClass.toString() + ": got " + recordEntries.count());
+                }
 
                 ret = Reflector.invokeConstructor(recordClass, RT.toArray(recordEntries));
             }
@@ -1560,7 +1786,9 @@ public class LispReader
                 for (ISeq s = RT.keys(vals); s != null; s = s.next())
                 {
                     if (!(s.first() instanceof Keyword))
+                    {
                         throw Util.runtimeException("Unreadable defrecord form: key must be of type cloiure.lang.Keyword, got " + s.first().toString());
+                    }
                 }
                 ret = Reflector.invokeStaticMethod(recordClass, "create", new Object[]{vals});
             }
@@ -1577,7 +1805,9 @@ public class LispReader
             return COND_PRESERVE.equals(readCond);
         }
         else
+        {
             return false;
+        }
     }
 
     public static class ConditionalReader extends AFn
@@ -1589,13 +1819,17 @@ public class LispReader
         public static boolean hasFeature(Object feature, Object opts)
         {
             if (!(feature instanceof Keyword))
+            {
                 throw Util.runtimeException("Feature should be a keyword: " + feature);
+            }
 
             if (DEFAULT_FEATURE.equals(feature))
+            {
                 return true;
+            }
 
             IPersistentSet custom = (IPersistentSet) ((IPersistentMap)opts).valAt(OPT_FEATURES);
-            return custom != null && custom.contains(feature);
+            return (custom != null && custom.contains(feature));
         }
 
         public static Object readCondDelimited(PushbackReader r, boolean splicing, Object opts, Object pendingForms)
@@ -1617,9 +1851,13 @@ public class LispReader
                     if (form == READ_EOF)
                     {
                         if (firstline < 0)
+                        {
                             throw Util.runtimeException("EOF while reading");
+                        }
                         else
+                        {
                             throw Util.runtimeException("EOF while reading, starting at line " + firstline);
+                        }
                     }
                     else if (form == READ_FINISHED)
                     {
@@ -1627,7 +1865,9 @@ public class LispReader
                     }
 
                     if (RESERVED_FEATURES.contains(form))
+                    {
                         throw Util.runtimeException("Feature name " + form + " is reserved.");
+                    }
 
                     if (hasFeature(form, opts))
                     {
@@ -1637,16 +1877,24 @@ public class LispReader
                         if (form == READ_EOF)
                         {
                             if (firstline < 0)
+                            {
                                 throw Util.runtimeException("EOF while reading");
+                            }
                             else
+                            {
                                 throw Util.runtimeException("EOF while reading, starting at line " + firstline);
+                            }
                         }
                         else if (form == READ_FINISHED)
                         {
                             if (firstline < 0)
+                            {
                                 throw Util.runtimeException("read-cond requires an even number of forms.");
+                            }
                             else
+                            {
                                 throw Util.runtimeException("read-cond starting on line " + firstline + " requires an even number of forms");
+                            }
                         }
                         else
                         {
@@ -1664,9 +1912,13 @@ public class LispReader
                     if (form == READ_EOF)
                     {
                         if (firstline < 0)
+                        {
                             throw Util.runtimeException("EOF while reading");
+                        }
                         else
+                        {
                             throw Util.runtimeException("EOF while reading, starting at line " + firstline);
+                        }
                     }
                     else if (form == READ_FINISHED)
                     {
@@ -1680,15 +1932,21 @@ public class LispReader
             }
 
             if (result == READ_STARTED)  // no features matched
+            {
                 return r;
+            }
 
             if (splicing)
             {
                 if (!(result instanceof List))
+                {
                     throw Util.runtimeException("Spliced form list in read-cond-splicing must implement java.util.List");
+                }
 
                 if (toplevel)
+                {
                     throw Util.runtimeException("Reader conditional splicing not allowed at the top level.");
+                }
 
                 ((List)pendingForms).addAll(0, (List)result);
 
@@ -1704,7 +1962,9 @@ public class LispReader
         {
             IPersistentMap mopts = (IPersistentMap)opts;
             if (!(opts != null && (COND_ALLOW.equals(mopts.valAt(OPT_READ_COND)) || COND_PRESERVE.equals(mopts.valAt(OPT_READ_COND)))))
+            {
                 throw Util.runtimeException("Conditional read not allowed");
+            }
         }
 
         public Object invoke(Object reader, Object mode, Object opts, Object pendingForms)
@@ -1714,7 +1974,9 @@ public class LispReader
             PushbackReader r = (PushbackReader) reader;
             int ch = read1(r);
             if (ch == -1)
+            {
                 throw Util.runtimeException("EOF while reading character");
+            }
 
             boolean splicing = false;
 
@@ -1728,10 +1990,14 @@ public class LispReader
                 ch = read1(r);
 
             if (ch == -1)
+            {
                 throw Util.runtimeException("EOF while reading character");
+            }
 
             if (ch != '(')
+            {
                 throw Util.runtimeException("read-cond body must be a list");
+            }
 
             try
             {
@@ -1759,8 +2025,8 @@ public class LispReader
  // public static void main(String[] args) throws Exception
  // {
  //     // RT.init();
- //     PushbackReader rdr = new PushbackReader( new java.io.StringReader( "(+ 21 21)" ) );
- //     Object input = LispReader.read(rdr, false, new Object(), false );
+ //     PushbackReader rdr = new PushbackReader(new java.io.StringReader("(+ 21 21)"));
+ //     Object input = LispReader.read(rdr, false, new Object(), false);
  //     System.out.println(Compiler.eval(input));
  // }
 

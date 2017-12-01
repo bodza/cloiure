@@ -978,12 +978,12 @@ public class InstructionAdapter extends MethodVisitor
 
     public void cmpl(final Type type)
     {
-        mv.visitInsn(type == Type.FLOAT_TYPE ? Opcodes.FCMPL : Opcodes.DCMPL);
+        mv.visitInsn((type == Type.FLOAT_TYPE) ? Opcodes.FCMPL : Opcodes.DCMPL);
     }
 
     public void cmpg(final Type type)
     {
-        mv.visitInsn(type == Type.FLOAT_TYPE ? Opcodes.FCMPG : Opcodes.DCMPG);
+        mv.visitInsn((type == Type.FLOAT_TYPE) ? Opcodes.FCMPG : Opcodes.DCMPG);
     }
 
     public void ifeq(final Label label)

@@ -30,29 +30,39 @@ public abstract class ASeq extends Obj implements ISeq, Sequential, List, Serial
     public boolean equiv(Object obj)
     {
         if (!(obj instanceof Sequential || obj instanceof List))
+        {
             return false;
+        }
         ISeq ms = RT.seq(obj);
         for (ISeq s = seq(); s != null; s = s.next(), ms = ms.next())
         {
             if (ms == null || !Util.equiv(s.first(), ms.first()))
+            {
                 return false;
+            }
         }
-        return ms == null;
+        return (ms == null);
     }
 
     public boolean equals(Object obj)
     {
         if (this == obj)
+        {
             return true;
+        }
         if (!(obj instanceof Sequential || obj instanceof List))
+        {
             return false;
+        }
         ISeq ms = RT.seq(obj);
         for (ISeq s = seq(); s != null; s = s.next(), ms = ms.next())
         {
             if (ms == null || !Util.equals(s.first(), ms.first()))
+            {
                 return false;
+            }
         }
-        return ms == null;
+        return (ms == null);
     }
 
     public int hashCode()
@@ -62,7 +72,7 @@ public abstract class ASeq extends Obj implements ISeq, Sequential, List, Serial
             int hash = 1;
             for (ISeq s = seq(); s != null; s = s.next())
             {
-                hash = 31 * hash + (s.first() == null ? 0 : s.first().hashCode());
+                hash = 31 * hash + ((s.first() == null) ? 0 : s.first().hashCode());
             }
             this._hash = hash;
         }
@@ -114,8 +124,12 @@ public abstract class ASeq extends Obj implements ISeq, Sequential, List, Serial
     {
         int i = 1;
         for (ISeq s = next(); s != null; s = s.next(), i++)
+        {
             if (s instanceof Counted)
+            {
                 return i + s.count();
+            }
+        }
         return i;
     }
 
@@ -133,7 +147,9 @@ public abstract class ASeq extends Obj implements ISeq, Sequential, List, Serial
     {
         ISeq s = next();
         if (s == null)
+        {
             return PersistentList.EMPTY;
+        }
         return s;
     }
 
@@ -187,7 +203,9 @@ public abstract class ASeq extends Obj implements ISeq, Sequential, List, Serial
         for (Object o : c)
         {
             if (!contains(o))
+            {
                 return false;
+            }
         }
         return true;
     }
@@ -204,7 +222,7 @@ public abstract class ASeq extends Obj implements ISeq, Sequential, List, Serial
 
     public boolean isEmpty()
     {
-        return seq() == null;
+        return (seq() == null);
     }
 
     public boolean contains(Object o)
@@ -212,7 +230,9 @@ public abstract class ASeq extends Obj implements ISeq, Sequential, List, Serial
         for (ISeq s = seq(); s != null; s = s.next())
         {
             if (Util.equiv(s.first(), o))
+            {
                 return true;
+            }
         }
         return false;
     }
@@ -250,7 +270,9 @@ public abstract class ASeq extends Obj implements ISeq, Sequential, List, Serial
         for (int i = 0; s != null; s = s.next(), i++)
         {
             if (Util.equiv(s.first(), o))
+            {
                 return i;
+            }
         }
         return -1;
     }

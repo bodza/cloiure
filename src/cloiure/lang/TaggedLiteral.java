@@ -44,16 +44,24 @@ public class TaggedLiteral implements ILookup
     public boolean equals(Object o)
     {
         if (this == o)
+        {
             return true;
+        }
         if (o == null || getClass() != o.getClass())
+        {
             return false;
+        }
 
         TaggedLiteral that = (TaggedLiteral) o;
 
-        if (form != null ? !form.equals(that.form) : that.form != null)
+        if ((form != null) ? !form.equals(that.form) : that.form != null)
+        {
             return false;
-        if (tag != null ? !tag.equals(that.tag) : that.tag != null)
+        }
+        if ((tag != null) ? !tag.equals(that.tag) : that.tag != null)
+        {
             return false;
+        }
 
         return true;
     }

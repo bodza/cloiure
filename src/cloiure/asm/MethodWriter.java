@@ -853,17 +853,17 @@ class MethodWriter extends MethodVisitor
                 switch (opcode)
                 {
                     case Opcodes.GETSTATIC:
-                        size = stackSize + (c == 'D' || c == 'J' ? 2 : 1);
+                        size = stackSize + ((c == 'D' || c == 'J') ? 2 : 1);
                         break;
                     case Opcodes.PUTSTATIC:
-                        size = stackSize + (c == 'D' || c == 'J' ? -2 : -1);
+                        size = stackSize + ((c == 'D' || c == 'J') ? -2 : -1);
                         break;
                     case Opcodes.GETFIELD:
-                        size = stackSize + (c == 'D' || c == 'J' ? 1 : 0);
+                        size = stackSize + ((c == 'D' || c == 'J') ? 1 : 0);
                         break;
                  // case Constants.PUTFIELD:
                     default:
-                        size = stackSize + (c == 'D' || c == 'J' ? -3 : -2);
+                        size = stackSize + ((c == 'D' || c == 'J') ? -3 : -2);
                         break;
                 }
                 // updates current and max stack sizes
@@ -1064,7 +1064,7 @@ class MethodWriter extends MethodVisitor
                 {
                     nextInsn.status |= Label.TARGET;
                 }
-                code.putByte(opcode <= 166 ? ((opcode + 1) ^ 1) - 1 : opcode ^ 1);
+                code.putByte((opcode <= 166) ? ((opcode + 1) ^ 1) - 1 : opcode ^ 1);
                 code.putShort(8); // jump offset
                 code.putByte(200); // GOTO_W
             }
@@ -1341,7 +1341,7 @@ class MethodWriter extends MethodVisitor
         h.end = end;
         h.handler = handler;
         h.desc = type;
-        h.type = type != null ? cw.newClass(type) : 0;
+        h.type = (type != null) ? cw.newClass(type) : 0;
         if (lastHandler == null)
         {
             firstHandler = h;
@@ -1381,7 +1381,7 @@ class MethodWriter extends MethodVisitor
         {
             // updates max locals
             char c = desc.charAt(0);
-            int n = index + (c == 'J' || c == 'D' ? 2 : 1);
+            int n = index + ((c == 'J' || c == 'D') ? 2 : 1);
             if (n > maxLocals)
             {
                 maxLocals = n;
@@ -1499,7 +1499,7 @@ class MethodWriter extends MethodVisitor
                     // finds start and end of dead basic block
                     Label k = l.successor;
                     int start = l.position;
-                    int end = (k == null ? code.length : k.position) - 1;
+                    int end = ((k == null) ? code.length : k.position) - 1;
                     // if non empty basic block
                     if (end >= start)
                     {
@@ -1654,7 +1654,7 @@ class MethodWriter extends MethodVisitor
                     if ((l.status & Label.PUSHED) == 0)
                     {
                         // computes its true beginning stack size...
-                        l.inputStackTop = b.info == Edge.EXCEPTION ? 1 : start + b.info;
+                        l.inputStackTop = (b.info == Edge.EXCEPTION) ? 1 : start + b.info;
                         // ...and pushes it onto the stack
                         l.status |= Label.PUSHED;
                         l.next = stack;
@@ -1946,7 +1946,7 @@ class MethodWriter extends MethodVisitor
                     localsSize = clocalsSize;
                     break;
                 case 0:
-                    type = delta < 64 ? SAME_FRAME : SAME_FRAME_EXTENDED;
+                    type = (delta < 64) ? SAME_FRAME : SAME_FRAME_EXTENDED;
                     break;
                 case 1:
                 case 2:
@@ -1957,7 +1957,7 @@ class MethodWriter extends MethodVisitor
         }
         else if (clocalsSize == localsSize && cstackSize == 1)
         {
-            type = delta < 63 ? SAME_LOCALS_1_STACK_ITEM_FRAME : SAME_LOCALS_1_STACK_ITEM_FRAME_EXTENDED;
+            type = (delta < 63) ? SAME_LOCALS_1_STACK_ITEM_FRAME : SAME_LOCALS_1_STACK_ITEM_FRAME_EXTENDED;
         }
         if (type != FULL_FRAME)
         {
@@ -2525,7 +2525,7 @@ class MethodWriter extends MethodVisitor
                         {
                             // converts temporary opcodes 202 to 217, 218 and
                             // 219 to IFEQ ... JSR (inclusive), IFNULL and IFNONNULL
-                            opcode = opcode < 218 ? opcode - 49 : opcode - 20;
+                            opcode = (opcode < 218) ? opcode - 49 : opcode - 20;
                             label = u + readUnsignedShort(b, u + 1);
                         }
                         else
@@ -2681,7 +2681,7 @@ class MethodWriter extends MethodVisitor
                     {
                         // changes temporary opcodes 202 to 217 (inclusive), 218
                         // and 219 to IFEQ ... JSR (inclusive), IFNULL and IFNONNULL
-                        opcode = opcode < 218 ? opcode - 49 : opcode - 20;
+                        opcode = (opcode < 218) ? opcode - 49 : opcode - 20;
                         label = u + readUnsignedShort(b, u + 1);
                     }
                     else
@@ -2706,7 +2706,7 @@ class MethodWriter extends MethodVisitor
                         }
                         else
                         {
-                            newCode.putByte(opcode <= 166 ? ((opcode + 1) ^ 1) - 1 : opcode ^ 1);
+                            newCode.putByte((opcode <= 166) ? ((opcode + 1) ^ 1) - 1 : opcode ^ 1);
                             newCode.putShort(8); // jump offset
                             newCode.putByte(200); // GOTO_W
                             // newOffset now computed from start of GOTO_W
@@ -2880,7 +2880,7 @@ class MethodWriter extends MethodVisitor
         // local var and line number tables
         for (i = 0; i < 2; ++i)
         {
-            ByteVector bv = i == 0 ? localVar : localVarType;
+            ByteVector bv = (i == 0) ? localVar : localVarType;
             if (bv != null)
             {
                 b = bv.data;

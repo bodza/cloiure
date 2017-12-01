@@ -4075,7 +4075,9 @@ public abstract class RestFn extends AFunction
     {
         ISeq ret = ArraySeq.create(array);
         for (int i = args.length - 1; i >= 0; --i)
+        {
             ret = RT.cons(args[i], ret);
+        }
         return ret;
     }
 
@@ -4084,7 +4086,9 @@ public abstract class RestFn extends AFunction
         while (args != null)
         {
             if (key == args.first())
+            {
                 return args.next();
+            }
             args = RT.next(args);
             args = RT.next(args);
         }

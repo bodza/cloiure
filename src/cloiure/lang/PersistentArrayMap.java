@@ -64,7 +64,9 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
             for (int j = i + 2; j < init.length; j += 2)
             {
                 if (equalKey(init[i], init[j]))
+                {
                     throw new IllegalArgumentException("Duplicate key: " + init[i]);
+                }
             }
         }
         return new PersistentArrayMap(init);
@@ -73,7 +75,9 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
     static public PersistentArrayMap createAsIfByAssoc(Object[] init)
     {
         if ((init.length & 1) == 1)
+        {
             throw new IllegalArgumentException(String.format("No value supplied for key: %s", init[init.length - 1]));
+        }
         // If this looks like it is doing busy-work, it is because it
         // is achieving these goals: O(n^2) run time like
         // createWithCheck(), never modify init arg, and only
@@ -91,7 +95,9 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
                 }
             }
             if (!duplicateKey)
+            {
                 n += 2;
+            }
         }
         if (n < init.length)
         {
@@ -129,7 +135,9 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
                 }
             }
             if (m != n)
+            {
                 throw new IllegalArgumentException("Internal error: m=" + m);
+            }
             init = nodups;
         }
         return new PersistentArrayMap(init);
@@ -166,7 +174,9 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
     {
         int i = indexOf(key);
         if (i >= 0)
+        {
             return (IMapEntry) MapEntry.create(array[i], array[i + 1]);
+        }
         return null;
     }
 
@@ -181,10 +191,14 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
         else // didn't have key, grow
         {
             if (array.length > HASHTABLE_THRESHOLD)
+            {
                 return createHT(array).assocEx(key, val);
+            }
             newArray = new Object[array.length + 2];
             if (array.length > 0)
+            {
                 System.arraycopy(array, 0, newArray, 2, array.length);
+            }
             newArray[0] = key;
             newArray[1] = val;
         }
@@ -198,17 +212,23 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
         if (i >= 0) // already have key, same-sized replacement
         {
             if (array[i + 1] == val) // no change, no op
+            {
                 return this;
+            }
             newArray = array.clone();
             newArray[i + 1] = val;
         }
         else // didn't have key, grow
         {
             if (array.length > HASHTABLE_THRESHOLD)
+            {
                 return createHT(array).assoc(key, val);
+            }
             newArray = new Object[array.length + 2];
             if (array.length > 0)
+            {
                 System.arraycopy(array, 0, newArray, 0, array.length);
+            }
             newArray[newArray.length - 2] = key;
             newArray[newArray.length - 1] = val;
         }
@@ -222,7 +242,9 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
         {
             int newlen = array.length - 2;
             if (newlen == 0)
+            {
                 return empty();
+            }
             Object[] newArray = new Object[newlen];
             System.arraycopy(array, 0, newArray, 0, i);
             System.arraycopy(array, i + 2, newArray, i, newlen - i);
@@ -241,7 +263,9 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
     {
         int i = indexOf(key);
         if (i >= 0)
+        {
             return array[i + 1];
+        }
         return notFound;
     }
 
@@ -261,7 +285,9 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
         for (int i = 0; i < array.length; i += 2)
         {
             if (ep.equiv(key, array[i]))
+            {
                 return i;
+            }
         }
         return -1;
     }
@@ -273,18 +299,24 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
             for (int i = 0; i < array.length; i += 2)
             {
                 if (key == array[i])
+                {
                     return i;
+                }
             }
             return -1;
         }
         else
+        {
             return indexOfObject(key);
+        }
     }
 
     static boolean equalKey(Object k1, Object k2)
     {
         if (k1 instanceof Keyword)
-            return k1 == k2;
+        {
+            return (k1 == k2);
+        }
         return Util.equiv(k1, k2);
     }
 
@@ -306,7 +338,9 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
     public ISeq seq()
     {
         if (array.length > 0)
+        {
             return new Seq(array, 0);
+        }
         return null;
     }
 
@@ -341,7 +375,9 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
         public ISeq next()
         {
             if (i + 2 < array.length)
+            {
                 return new Seq(array, i + 2);
+            }
             return null;
         }
 
@@ -406,7 +442,9 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
         {
             init = f.invoke(init, array[i], array[i + 1]);
             if (RT.isReduced(init))
+            {
                 return ((IDeref)init).deref();
+            }
         }
         return init;
     }
@@ -435,7 +473,9 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
             for (int i = 0; i < len; i += 2)
             {
                 if (equalKey(array[i], key))
+                {
                     return i;
+                }
             }
             return -1;
         }
@@ -446,12 +486,16 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
             if (i >= 0) // already have key,
             {
                 if (array[i + 1] != val) // no change, no op
+                {
                     array[i + 1] = val;
+                }
             }
             else // didn't have key, grow
             {
                 if (len >= array.length)
+                {
                     return PersistentHashMap.create(array).asTransient().assoc(key, val);
+                }
                 array[len++] = key;
                 array[len++] = val;
             }
@@ -477,7 +521,9 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
         {
             int i = indexOf(key);
             if (i >= 0)
+            {
                 return array[i + 1];
+            }
             return notFound;
         }
 
@@ -498,7 +544,9 @@ public class PersistentArrayMap extends APersistentMap implements IObj, IEditabl
         void ensureEditable()
         {
             if (owner == null)
+            {
                 throw new IllegalAccessError("Transient used after persistent! call");
+            }
         }
     }
 }

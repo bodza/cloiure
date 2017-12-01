@@ -157,12 +157,16 @@ public class Compiler implements Opcodes
         {
             Type[] a = new Type[i];
             for (int j = 0; j < i; j++)
+            {
                 a[j] = OBJECT_TYPE;
+            }
             ARG_TYPES[i] = a;
         }
         Type[] a = new Type[MAX_POSITIONAL_ARITY + 1];
         for (int j = 0; j < MAX_POSITIONAL_ARITY; j++)
+        {
             a[j] = OBJECT_TYPE;
+        }
         a[MAX_POSITIONAL_ARITY] = Type.getType("[Ljava/lang/Object;");
         ARG_TYPES[MAX_POSITIONAL_ARITY + 1] = a;
     }
@@ -360,19 +364,27 @@ public class Compiler implements Opcodes
     {
         // already qualified or classname?
         if (sym.name.indexOf('.') > 0)
+        {
             return sym;
+        }
         if (sym.ns != null)
         {
             Namespace ns = namespaceFor(sym);
             if (ns == null || ((ns.name.name == null) ? (sym.ns == null) : ns.name.name.equals(sym.ns)))
+            {
                 return sym;
+            }
             return Symbol.intern(ns.name.name, sym.name);
         }
         Object o = currentNS().getMapping(sym);
         if (o == null)
+        {
             return Symbol.intern(currentNS().name.name, sym.name);
+        }
         else if (o instanceof Class)
+        {
             return Symbol.intern(null, ((Class) o).getName());
+        }
         else if (o instanceof Var)
         {
             Var v = (Var) o;
@@ -419,7 +431,9 @@ public class Compiler implements Opcodes
             {
                 Keyword k  = ((KeywordExpr) expr.keyvals.nth(i)).k;
                 if ((k != RT.FILE_KEY) && (k != RT.DECLARED_KEY) && (k != RT.LINE_KEY) && (k != RT.COLUMN_KEY))
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -439,16 +453,22 @@ public class Compiler implements Opcodes
                 {
                     IPersistentMap metaMap = (IPersistentMap) meta.eval();
                     if (initProvided || true) // includesExplicitMetadata((MapExpr) meta))
+     {
                         var.setMeta(metaMap);
+     }
                 }
                 return var.setDynamic(isDynamic);
             }
             catch (Throwable e)
             {
                 if (!(e instanceof CompilerException))
+                {
                     throw new CompilerException(source, line, column, e);
+                }
                 else
+                {
                     throw (CompilerException) e;
+                }
             }
         }
 
@@ -490,12 +510,16 @@ public class Compiler implements Opcodes
                     ((FnExpr)init).emitForDefn(objx, gen);
                 }
                 else
+                {
                     init.emit(C.EXPRESSION, objx, gen);
+                }
                 gen.invokeVirtual(VAR_TYPE, bindRootMethod);
             }
 
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
 
         public boolean hasJavaClass()
@@ -520,15 +544,23 @@ public class Compiler implements Opcodes
                     form = RT.list(RT.first(form), RT.second(form), RT.fourth(form));
                 }
                 if (RT.count(form) > 3)
+                {
                     throw Util.runtimeException("Too many arguments to def");
+                }
                 else if (RT.count(form) < 2)
+                {
                     throw Util.runtimeException("Too few arguments to def");
+                }
                 else if (!(RT.second(form) instanceof Symbol))
+                {
                     throw Util.runtimeException("First argument to def must be a Symbol");
+                }
                 Symbol sym = (Symbol) RT.second(form);
                 Var v = lookupVar(sym, true);
                 if (v == null)
+                {
                     throw Util.runtimeException("Can't refer to qualified var that doesn't exist");
+                }
                 boolean shadowsCoreMapping = false;
                 if (!v.ns.equals(currentNS()))
                 {
@@ -537,19 +569,23 @@ public class Compiler implements Opcodes
                         v = currentNS().intern(sym);
                         shadowsCoreMapping = true;
                         registerVar(v);
-                    }
                      // throw Util.runtimeException("Name conflict, can't def " + sym + " because namespace: " + currentNS().name + " refers to:" + v);
+                    }
                     else
+                    {
                         throw Util.runtimeException("Can't create defs outside of current ns");
+                    }
                 }
                 IPersistentMap mm = sym.meta();
                 boolean isDynamic = RT.booleanCast(RT.get(mm, dynamicKey));
                 if (isDynamic)
+                {
                     v.setDynamic();
+                }
                 if (!isDynamic && sym.name.startsWith("*") && sym.name.endsWith("*") && sym.name.length() > 2)
                 {
                     RT.errPrintWriter().format("Warning: %1$s not declared dynamic and thus is not dynamically rebindable, "
-                            +"but its name suggests otherwise. Please either indicate ^:dynamic %1$s or change the name. (%2$s:%3$d)\n",
+                            + "but its name suggests otherwise. Please either indicate ^:dynamic %1$s or change the name. (%2$s:%3$d)\n",
                             sym, SOURCE_PATH.get(), LINE.get());
                 }
                 if (RT.booleanCast(RT.get(mm, arglistsKey)))
@@ -561,9 +597,10 @@ public class Compiler implements Opcodes
                     v.setMeta(vm);
                 }
                 Object source_path = SOURCE_PATH.get();
-                source_path = source_path == null ? "NO_SOURCE_FILE" : source_path;
+                source_path = (source_path == null) ? "NO_SOURCE_FILE" : source_path;
                 mm = (IPersistentMap) RT.assoc(mm, RT.LINE_KEY, LINE.get()).assoc(RT.COLUMN_KEY, COLUMN.get()).assoc(RT.FILE_KEY, source_path);
                 if (docstring != null)
+                {
                     mm = (IPersistentMap) RT.assoc(mm, RT.DOC_KEY, docstring);
                  // mm = mm.without(RT.DOC_KEY)
                  //        .without(Keyword.intern(null, "arglists"))
@@ -574,6 +611,7 @@ public class Compiler implements Opcodes
                  //        .without(Keyword.intern(null, "name"))
                  //        .without(Keyword.intern(null, "added"))
                  //        .without(Keyword.intern(null, "static"));
+                }
                 mm = (IPersistentMap) elideMeta(mm);
                 Expr meta = (mm.count() == 0) ? null : analyze((context == C.EVAL) ? context : C.EXPRESSION, mm);
                 return new DefExpr((String) SOURCE.deref(), lineDeref(), columnDeref(),
@@ -620,10 +658,14 @@ public class Compiler implements Opcodes
             {
                 ISeq form = (ISeq) frm;
                 if (RT.length(form) != 3)
+                {
                     throw new IllegalArgumentException("Malformed assignment, expecting (set! target val)");
+                }
                 Expr target = analyze(C.EXPRESSION, RT.second(form));
                 if (!(target instanceof AssignableExpr))
+                {
                     throw new IllegalArgumentException("Invalid assignment target");
+                }
                 return new AssignExpr((AssignableExpr) target, analyze(C.EXPRESSION, RT.third(form)));
             }
         }
@@ -641,7 +683,7 @@ public class Compiler implements Opcodes
         public VarExpr(Var var, Symbol tag)
         {
             this.var = var;
-            this.tag = tag != null ? tag : var.getTag();
+            this.tag = (tag != null) ? tag : var.getTag();
         }
 
         public Object eval()
@@ -660,13 +702,15 @@ public class Compiler implements Opcodes
 
         public boolean hasJavaClass()
         {
-            return tag != null;
+            return (tag != null);
         }
 
         public Class getJavaClass()
         {
             if (jc == null)
+            {
                 jc = HostExpr.tagToClass(tag);
+            }
             return jc;
         }
 
@@ -681,7 +725,9 @@ public class Compiler implements Opcodes
             val.emit(C.EXPRESSION, objx, gen);
             gen.invokeVirtual(VAR_TYPE, setMethod);
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
     }
 
@@ -703,7 +749,9 @@ public class Compiler implements Opcodes
         {
             objx.emitVar(gen, var);
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
 
         public boolean hasJavaClass()
@@ -723,7 +771,9 @@ public class Compiler implements Opcodes
                 Symbol sym = (Symbol) RT.second(form);
                 Var v = lookupVar(sym, false);
                 if (v != null)
+                {
                     return new TheVarExpr(v);
+                }
                 throw Util.runtimeException("Unable to resolve var: " + sym + " in this context");
             }
         }
@@ -752,7 +802,9 @@ public class Compiler implements Opcodes
         {
             objx.emitKeyword(gen, k);
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
 
         public boolean hasJavaClass()
@@ -795,7 +847,9 @@ public class Compiler implements Opcodes
             gen.invokeStatic(RT_TYPE, forNameMethod);
             gen.invokeVirtual(NS_TYPE, importClassMethod);
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
 
         public boolean hasJavaClass()
@@ -874,7 +928,6 @@ public class Compiler implements Opcodes
         final static Method fromLongMethod = Method.getMethod("cloiure.lang.Num from(long)");
         final static Method fromDoubleMethod = Method.getMethod("cloiure.lang.Num from(double)");
 
-        //*
         public static void emitBoxReturn(ObjExpr objx, GeneratorAdapter gen, Class returnType)
         {
             if (returnType.isPrimitive())
@@ -914,17 +967,24 @@ public class Compiler implements Opcodes
                      // gen.invokeStatic(DOUBLE_TYPE, doubleValueOfMethod);
                     }
                     else if (returnType == double.class)
+                    {
                         gen.invokeStatic(DOUBLE_TYPE, doubleValueOfMethod);
+                    }
                     else if (returnType == long.class)
+                    {
                         gen.invokeStatic(NUMBERS_TYPE, Method.getMethod("Number num(long)"));
+                    }
                     else if (returnType == byte.class)
+                    {
                         gen.invokeStatic(BYTE_TYPE, byteValueOfMethod);
+                    }
                     else if (returnType == short.class)
+                    {
                         gen.invokeStatic(SHORT_TYPE, shortValueOfMethod);
+                    }
                 }
             }
         }
-        //*/
 
         public static void emitUnboxArg(ObjExpr objx, GeneratorAdapter gen, Class paramType)
         {
@@ -956,32 +1016,56 @@ public class Compiler implements Opcodes
                     if (RT.booleanCast(RT.UNCHECKED_MATH.deref()))
                     {
                         if (paramType == int.class)
+                        {
                             m = Method.getMethod("int uncheckedIntCast(Object)");
+                        }
                         else if (paramType == float.class)
+                        {
                             m = Method.getMethod("float uncheckedFloatCast(Object)");
+                        }
                         else if (paramType == double.class)
+                        {
                             m = Method.getMethod("double uncheckedDoubleCast(Object)");
+                        }
                         else if (paramType == long.class)
+                        {
                             m = Method.getMethod("long uncheckedLongCast(Object)");
+                        }
                         else if (paramType == byte.class)
+                        {
                             m = Method.getMethod("byte uncheckedByteCast(Object)");
+                        }
                         else if (paramType == short.class)
+                        {
                             m = Method.getMethod("short uncheckedShortCast(Object)");
+                        }
                     }
                     else
                     {
                         if (paramType == int.class)
+                        {
                             m = Method.getMethod("int intCast(Object)");
+                        }
                         else if (paramType == float.class)
+                        {
                             m = Method.getMethod("float floatCast(Object)");
+                        }
                         else if (paramType == double.class)
+                        {
                             m = Method.getMethod("double doubleCast(Object)");
+                        }
                         else if (paramType == long.class)
+                        {
                             m = Method.getMethod("long longCast(Object)");
+                        }
                         else if (paramType == byte.class)
+                        {
                             m = Method.getMethod("byte byteCast(Object)");
+                        }
                         else if (paramType == short.class)
+                        {
                             m = Method.getMethod("short shortCast(Object)");
+                        }
                     }
                     gen.invokeStatic(RT_TYPE, m);
                 }
@@ -1002,7 +1086,9 @@ public class Compiler implements Opcodes
                 // (. x methodname-sym args+)
                 // (. x (methodname-sym args?))
                 if (RT.length(form) < 3)
+                {
                     throw new IllegalArgumentException("Malformed member expression, expecting (. target member ...)");
+                }
                 // determine static or instance
                 // static target must be symbol, either fully.qualified.Classname or Classname that has been imported
                 int line = lineDeref();
@@ -1012,7 +1098,9 @@ public class Compiler implements Opcodes
                 // at this point c will be non-null if static
                 Expr instance = null;
                 if (c == null)
+                {
                     instance = analyze((context == C.EVAL) ? context : C.EXPRESSION, RT.second(form));
+                }
 
                 boolean maybeField = (RT.length(form) == 3) && (RT.third(form) instanceof Symbol);
 
@@ -1020,9 +1108,13 @@ public class Compiler implements Opcodes
                 {
                     Symbol sym = (Symbol) RT.third(form);
                     if (c != null)
+                    {
                         maybeField = Reflector.getMethods(c, 0, munge(sym.name), true).size() == 0;
+                    }
                     else if (instance != null && instance.hasJavaClass() && instance.getJavaClass() != null)
+                    {
                         maybeField = Reflector.getMethods(instance.getJavaClass(), 0, munge(sym.name), false).size() == 0;
+                    }
                 }
 
                 if (maybeField)    // field
@@ -1030,25 +1122,37 @@ public class Compiler implements Opcodes
                     Symbol sym = (((Symbol)RT.third(form)).name.charAt(0) == '-') ? Symbol.intern(((Symbol)RT.third(form)).name.substring(1)) : (Symbol) RT.third(form);
                     Symbol tag = tagOf(form);
                     if (c != null)
+                    {
                         return new StaticFieldExpr(line, column, c, munge(sym.name), tag);
+                    }
                     else
+                    {
                         return new InstanceFieldExpr(line, column, instance, munge(sym.name), tag, (((Symbol)RT.third(form)).name.charAt(0) == '-'));
+                    }
                 }
                 else
                 {
                     ISeq call = (ISeq) ((RT.third(form) instanceof ISeq) ? RT.third(form) : RT.next(RT.next(form)));
                     if (!(RT.first(call) instanceof Symbol))
+                    {
                         throw new IllegalArgumentException("Malformed member expression");
+                    }
                     Symbol sym = (Symbol) RT.first(call);
                     Symbol tag = tagOf(form);
                     PersistentVector args = PersistentVector.EMPTY;
                     boolean tailPosition = inTailCall(context);
                     for (ISeq s = RT.next(call); s != null; s = s.next())
+                    {
                         args = args.cons(analyze((context == C.EVAL) ? context : C.EXPRESSION, s.first()));
+                    }
                     if (c != null)
+                    {
                         return new StaticMethodExpr(source, line, column, tag, c, munge(sym.name), args, tailPosition);
+                    }
                     else
+                    {
                         return new InstanceMethodExpr(source, line, column, tag, instance, munge(sym.name), args, tailPosition);
+                    }
                 }
             }
         }
@@ -1056,7 +1160,9 @@ public class Compiler implements Opcodes
         public static Class maybeClass(Object form, boolean stringOk)
         {
             if (form instanceof Class)
+            {
                 return (Class) form;
+            }
             Class c = null;
             if (form instanceof Symbol)
             {
@@ -1064,16 +1170,24 @@ public class Compiler implements Opcodes
                 if (sym.ns == null) // if ns-qualified can't be classname
                 {
                     if (Util.equals(sym, COMPILE_STUB_SYM.get()))
+                    {
                         return (Class) COMPILE_STUB_CLASS.get();
+                    }
                     if (sym.name.indexOf('.') > 0 || sym.name.charAt(0) == '[')
+                    {
                         c = RT.classForNameNonLoading(sym.name);
+                    }
                     else
                     {
                         Object o = currentNS().getMapping(sym);
                         if (o instanceof Class)
+                        {
                             c = (Class) o;
+                        }
                         else if (LOCAL_ENV.deref() != null && ((java.util.Map)LOCAL_ENV.deref()).containsKey(form))
+                        {
                             return null;
+                        }
                         else
                         {
                             try
@@ -1090,57 +1204,55 @@ public class Compiler implements Opcodes
                 }
             }
             else if (stringOk && form instanceof String)
+            {
                 c = RT.classForNameNonLoading((String) form);
+            }
             return c;
         }
-
-        /*
-        private static String maybeClassName(Object form, boolean stringOk)
-        {
-            String className = null;
-            if (form instanceof Symbol)
-            {
-                Symbol sym = (Symbol) form;
-                if (sym.ns == null) // if ns-qualified can't be classname
-                {
-                    if (sym.name.indexOf('.') > 0 || sym.name.charAt(0) == '[')
-                        className = sym.name;
-                    else
-                    {
-                        IPersistentMap imports = (IPersistentMap) ((Var) RT.NS_IMPORTS.get()).get();
-                        className = (String) imports.valAt(sym);
-                    }
-                }
-            }
-            else if (stringOk && form instanceof String)
-                className = (String) form;
-            return className;
-        }
-        */
 
         public static Class maybeSpecialTag(Symbol sym)
         {
             Class c = primClass(sym);
             if (c != null)
+            {
                 return c;
+            }
             else if (sym.name.equals("objects"))
+            {
                 c = Object[].class;
+            }
             else if (sym.name.equals("ints"))
+            {
                 c = int[].class;
+            }
             else if (sym.name.equals("longs"))
+            {
                 c = long[].class;
+            }
             else if (sym.name.equals("floats"))
+            {
                 c = float[].class;
+            }
             else if (sym.name.equals("doubles"))
+            {
                 c = double[].class;
+            }
             else if (sym.name.equals("chars"))
+            {
                 c = char[].class;
+            }
             else if (sym.name.equals("shorts"))
+            {
                 c = short[].class;
+            }
             else if (sym.name.equals("bytes"))
+            {
                 c = byte[].class;
+            }
             else if (sym.name.equals("booleans"))
+            {
                 c = boolean[].class;
+            }
             return c;
         }
 
@@ -1156,9 +1268,13 @@ public class Compiler implements Opcodes
                 }
             }
             if (c == null)
+            {
                 c = maybeClass(tag, true);
+            }
             if (c != null)
+            {
                 return c;
+            }
             throw new IllegalArgumentException("Unable to resolve classname: " + tag);
         }
     }
@@ -1214,7 +1330,7 @@ public class Compiler implements Opcodes
 
         public boolean canEmitPrimitive()
         {
-            return targetClass != null && field != null && Util.isPrimitive(field.getType());
+            return (targetClass != null && field != null && Util.isPrimitive(field.getType()));
         }
 
         public void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
@@ -1227,7 +1343,9 @@ public class Compiler implements Opcodes
                 gen.getField(getType(targetClass), fieldName, Type.getType(field.getType()));
             }
             else
+            {
                 throw new UnsupportedOperationException("Unboxed emit of unknown member");
+            }
         }
 
         public void emit(C context, ObjExpr objx, GeneratorAdapter gen)
@@ -1253,7 +1371,9 @@ public class Compiler implements Opcodes
                 gen.push(requireField);
                 gen.invokeStatic(REFLECTOR_TYPE, invokeNoArgInstanceMember);
                 if (context == C.STATEMENT)
+                {
                     gen.pop();
+                }
             }
         }
 
@@ -1265,7 +1385,9 @@ public class Compiler implements Opcodes
         public Class getJavaClass()
         {
             if (jc == null)
-                jc = tag != null ? HostExpr.tagToClass(tag) : field.getType();
+            {
+                jc = (tag != null) ? HostExpr.tagToClass(tag) : field.getType();
+            }
             return jc;
         }
 
@@ -1295,7 +1417,9 @@ public class Compiler implements Opcodes
                 gen.invokeStatic(REFLECTOR_TYPE, setInstanceFieldMethod);
             }
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
     }
 
@@ -1376,7 +1500,9 @@ public class Compiler implements Opcodes
          // Class c = Class.forName(className);
          // java.lang.reflect.Field field = c.getField(fieldName);
             if (jc == null)
-                jc =tag != null ? HostExpr.tagToClass(tag) : field.getType();
+            {
+                jc = (tag != null) ? HostExpr.tagToClass(tag) : field.getType();
+            }
             return jc;
         }
 
@@ -1393,7 +1519,9 @@ public class Compiler implements Opcodes
             HostExpr.emitUnboxArg(objx, gen, field.getType());
             gen.putStatic(Type.getType(c), fieldName, Type.getType(field.getType()));
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
     }
 
@@ -1403,7 +1531,9 @@ public class Compiler implements Opcodes
         {
             Class c = e.getJavaClass();
             if (Util.isPrimitive(c))
+            {
                 return c;
+            }
         }
         return null;
     }
@@ -1416,14 +1546,22 @@ public class Compiler implements Opcodes
             for (Expr e : exprs)
             {
                 if (e instanceof ThrowExpr)
+                {
                     continue;
+                }
                 if (!e.hasJavaClass())
+                {
                     return null;
+                }
                 Class c = e.getJavaClass();
                 if (match == null)
+                {
                     match = c;
+                }
                 else if (match != c)
+                {
                     return null;
+                }
             }
         }
         catch (Exception e)
@@ -1472,9 +1610,13 @@ public class Compiler implements Opcodes
                         final MaybePrimitiveExpr pe = (MaybePrimitiveExpr) e;
                         pe.emitUnboxed(C.EXPRESSION, objx, gen);
                         if (RT.booleanCast(RT.UNCHECKED_MATH.deref()))
+                        {
                             gen.invokeStatic(RT_TYPE, Method.getMethod("int uncheckedIntCast(long)"));
+                        }
                         else
+                        {
                             gen.invokeStatic(RT_TYPE, Method.getMethod("int intCast(long)"));
+                        }
                     }
                     else if (primc == float.class && parameterTypes[i] == double.class)
                     {
@@ -1587,7 +1729,9 @@ public class Compiler implements Opcodes
                 Object targetval = target.eval();
                 Object[] argvals = new Object[args.count()];
                 for (int i = 0; i < args.count(); i++)
+                {
                     argvals[i] = ((Expr) args.nth(i)).eval();
+                }
                 if (method != null)
                 {
                     LinkedList ms = new LinkedList();
@@ -1599,9 +1743,13 @@ public class Compiler implements Opcodes
             catch (Throwable e)
             {
                 if (!(e instanceof CompilerException))
+                {
                     throw new CompilerException(source, line, column, e);
+                }
                 else
+                {
                     throw (CompilerException) e;
+                }
             }
         }
 
@@ -1627,12 +1775,18 @@ public class Compiler implements Opcodes
                 }
                 Method m = new Method(methodName, Type.getReturnType(method), Type.getArgumentTypes(method));
                 if (method.getDeclaringClass().isInterface())
+                {
                     gen.invokeInterface(type, m);
+                }
                 else
+                {
                     gen.invokeVirtual(type, m);
+                }
             }
             else
+            {
                 throw new UnsupportedOperationException("Unboxed emit of unknown member");
+            }
         }
 
         public void emit(C context, ObjExpr objx, GeneratorAdapter gen)
@@ -1652,9 +1806,13 @@ public class Compiler implements Opcodes
                 }
                 Method m = new Method(methodName, Type.getReturnType(method), Type.getArgumentTypes(method));
                 if (method.getDeclaringClass().isInterface())
+                {
                     gen.invokeInterface(type, m);
+                }
                 else
+                {
                     gen.invokeVirtual(type, m);
+                }
              // if (context != C.STATEMENT || method.getReturnType() == Void.TYPE)
                 HostExpr.emitBoxReturn(objx, gen, method.getReturnType());
             }
@@ -1672,7 +1830,9 @@ public class Compiler implements Opcodes
                 gen.invokeStatic(REFLECTOR_TYPE, invokeInstanceMethodMethod);
             }
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
 
         public boolean hasJavaClass()
@@ -1683,7 +1843,9 @@ public class Compiler implements Opcodes
         public Class getJavaClass()
         {
             if (jc == null)
+            {
                 jc = retType((tag != null) ? HostExpr.tagToClass(tag) : null, (method != null) ? method.getReturnType() : null);
+            }
             return jc;
         }
     }
@@ -1721,7 +1883,9 @@ public class Compiler implements Opcodes
 
             List methods = Reflector.getMethods(c, args.count(), methodName, true);
             if (methods.isEmpty())
+            {
                 throw new IllegalArgumentException("No matching method: " + methodName);
+            }
 
             int methodidx = 0;
             if (methods.size() > 1)
@@ -1756,12 +1920,18 @@ public class Compiler implements Opcodes
             {
                 WarnBoxedMath boxedMath = m.getAnnotation(WarnBoxedMath.class);
                 if (boxedMath != null)
+                {
                     return boxedMath.value();
+                }
 
                 Class[] argTypes = m.getParameterTypes();
                 for (Class argType : argTypes)
+                {
                     if (argType.equals(Object.class) || argType.equals(Number.class))
+                    {
                         return true;
+                    }
+                }
             }
             return false;
         }
@@ -1772,7 +1942,9 @@ public class Compiler implements Opcodes
             {
                 Object[] argvals = new Object[args.count()];
                 for (int i = 0; i < args.count(); i++)
+                {
                     argvals[i] = ((Expr) args.nth(i)).eval();
+                }
                 if (method != null)
                 {
                     LinkedList ms = new LinkedList();
@@ -1784,9 +1956,13 @@ public class Compiler implements Opcodes
             catch (Throwable e)
             {
                 if (!(e instanceof CompilerException))
+                {
                     throw new CompilerException(source, line, column, e);
+                }
                 else
+                {
                     throw (CompilerException) e;
+                }
             }
         }
 
@@ -1813,11 +1989,15 @@ public class Compiler implements Opcodes
                 }
                 Object[] predOps = (Object[]) RT.get(Intrinsics.preds, method.toString());
                 for (int i = 0; i < predOps.length - 1; i++)
+                {
                     gen.visitInsn((Integer)predOps[i]);
+                }
                 gen.visitJumpInsn((Integer)predOps[predOps.length - 1], falseLabel);
             }
             else
+            {
                 throw new UnsupportedOperationException("Unboxed emit of unknown member");
+            }
         }
 
         public void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
@@ -1838,10 +2018,14 @@ public class Compiler implements Opcodes
                     if (ops instanceof Object[])
                     {
                         for (Object op : (Object[])ops)
+                        {
                             gen.visitInsn((Integer) op);
+                        }
                     }
                     else
+                    {
                         gen.visitInsn((Integer) ops);
+                    }
                 }
                 else
                 {
@@ -1851,7 +2035,9 @@ public class Compiler implements Opcodes
                 }
             }
             else
+            {
                 throw new UnsupportedOperationException("Unboxed emit of unknown member");
+            }
         }
 
         public void emit(C context, ObjExpr objx, GeneratorAdapter gen)
@@ -1874,9 +2060,13 @@ public class Compiler implements Opcodes
                 if (context == C.STATEMENT)
                 {
                     if (retClass == long.class || retClass == double.class)
+                    {
                         gen.pop2();
+                    }
                     else if (retClass != void.class)
+                    {
                         gen.pop();
+                    }
                 }
                 else
                 {
@@ -1898,7 +2088,9 @@ public class Compiler implements Opcodes
                 }
                 gen.invokeStatic(REFLECTOR_TYPE, invokeStaticMethodMethod);
                 if (context == C.STATEMENT)
+                {
                     gen.pop();
+                }
             }
         }
 
@@ -1910,7 +2102,9 @@ public class Compiler implements Opcodes
         public Class getJavaClass()
         {
             if (jc == null)
+            {
                 jc = retType((tag != null) ? HostExpr.tagToClass(tag) : null, (method != null) ? method.getReturnType() : null);
+            }
             return jc;
         }
     }
@@ -1978,13 +2172,21 @@ public class Compiler implements Opcodes
         public Class getJavaClass()
         {
             if (n instanceof Integer)
+            {
                 return long.class;
+            }
             else if (n instanceof Double)
+            {
                 return double.class;
+            }
             else if (n instanceof Long)
+            {
                 return long.class;
+            }
             else
+            {
                 throw new IllegalStateException("Unsupported Number type: " + n.getClass().getName());
+            }
         }
 
         public boolean canEmitPrimitive()
@@ -1995,19 +2197,29 @@ public class Compiler implements Opcodes
         public void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
         {
             if (n instanceof Integer)
+            {
                 gen.push(n.longValue());
+            }
             else if (n instanceof Double)
+            {
                 gen.push(n.doubleValue());
+            }
             else if (n instanceof Long)
+            {
                 gen.push(n.longValue());
+            }
         }
 
         static public Expr parse(Number form)
         {
             if (form instanceof Integer || form instanceof Double || form instanceof Long)
+            {
                 return new NumberExpr(form);
+            }
             else
+            {
                 return new ConstantExpr(form);
+            }
         }
     }
 
@@ -2057,13 +2269,21 @@ public class Compiler implements Opcodes
         public Class getJavaClass()
         {
             if (v instanceof APersistentMap)
+            {
                 return APersistentMap.class;
+            }
             else if (v instanceof APersistentSet)
+            {
                 return APersistentSet.class;
+            }
             else if (v instanceof APersistentVector)
+            {
                 return APersistentVector.class;
+            }
             else
+            {
                 return v.getClass();
+            }
          // throw new IllegalArgumentException("Has no Java class");
         }
 
@@ -2082,19 +2302,33 @@ public class Compiler implements Opcodes
                 Object v = RT.second(form);
 
                 if (v == null)
+                {
                     return NIL_EXPR;
+                }
                 else if (v == Boolean.TRUE)
+                {
                     return TRUE_EXPR;
+                }
                 else if (v == Boolean.FALSE)
+                {
                     return FALSE_EXPR;
+                }
                 if (v instanceof Number)
+                {
                     return NumberExpr.parse((Number)v);
+                }
                 else if (v instanceof String)
+                {
                     return new StringExpr((String) v);
+                }
                 else if (v instanceof IPersistentCollection && ((IPersistentCollection) v).count() == 0)
+                {
                     return new EmptyExpr(v);
+                }
                 else
+                {
                     return new ConstantExpr(v);
+                }
             }
         }
     }
@@ -2110,7 +2344,9 @@ public class Compiler implements Opcodes
         {
             gen.visitInsn(Opcodes.ACONST_NULL);
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
 
         public boolean hasJavaClass()
@@ -2143,9 +2379,13 @@ public class Compiler implements Opcodes
         public void emit(C context, ObjExpr objx, GeneratorAdapter gen)
         {
             if (val)
+            {
                 gen.getStatic(BOOLEAN_OBJECT_TYPE, "TRUE", BOOLEAN_OBJECT_TYPE);
+            }
             else
+            {
                 gen.getStatic(BOOLEAN_OBJECT_TYPE, "FALSE", BOOLEAN_OBJECT_TYPE);
+            }
             if (context == C.STATEMENT)
             {
                 gen.pop();
@@ -2183,7 +2423,9 @@ public class Compiler implements Opcodes
         public void emit(C context, ObjExpr objx, GeneratorAdapter gen)
         {
             if (context != C.STATEMENT)
+            {
                 gen.push(str);
+            }
         }
 
         public boolean hasJavaClass()
@@ -2314,10 +2556,14 @@ public class Compiler implements Opcodes
             gen.mark(startTry);
             tryExpr.emit(context, objx, gen);
             if (context != C.STATEMENT)
+            {
                 gen.visitVarInsn(OBJECT_TYPE.getOpcode(Opcodes.ISTORE), retLocal);
+            }
             gen.mark(endTry);
             if (finallyExpr != null)
+            {
                 finallyExpr.emit(C.STATEMENT, objx, gen);
+            }
             gen.goTo(ret);
 
             for (int i = 0; i < catchExprs.count(); i++)
@@ -2329,11 +2575,15 @@ public class Compiler implements Opcodes
                 gen.visitVarInsn(OBJECT_TYPE.getOpcode(Opcodes.ISTORE), clause.lb.idx);
                 clause.handler.emit(context, objx, gen);
                 if (context != C.STATEMENT)
+                {
                     gen.visitVarInsn(OBJECT_TYPE.getOpcode(Opcodes.ISTORE), retLocal);
+                }
                 gen.mark(clause.endLabel);
 
                 if (finallyExpr != null)
+                {
                     finallyExpr.emit(C.STATEMENT, objx, gen);
+                }
                 gen.goTo(ret);
             }
             if (finallyExpr != null)
@@ -2347,7 +2597,9 @@ public class Compiler implements Opcodes
             }
             gen.mark(ret);
             if (context != C.STATEMENT)
+            {
                 gen.visitVarInsn(OBJECT_TYPE.getOpcode(Opcodes.ILOAD), retLocal);
+            }
             gen.mark(end);
             for (int i = 0; i < catchExprs.count(); i++)
             {
@@ -2387,7 +2639,9 @@ public class Compiler implements Opcodes
                 ISeq form = (ISeq) frm;
              // if (context == C.EVAL || context == C.EXPRESSION)
                 if (context != C.RETURN)
+                {
                     return analyze(context, RT.list(RT.list(FNONCE, PersistentVector.EMPTY, form)));
+                }
 
                 // (try try-expr* catch-expr* finally-expr?)
                 // catch-expr: (catch class sym expr*)
@@ -2408,7 +2662,9 @@ public class Compiler implements Opcodes
                     if (!Util.equals(op, CATCH) && !Util.equals(op, FINALLY))
                     {
                         if (caught)
+                        {
                             throw Util.runtimeException("Only catch or finally clause can follow catch in try expression");
+                        }
                         body = body.cons(f);
                     }
                     else
@@ -2430,18 +2686,24 @@ public class Compiler implements Opcodes
                         {
                             Class c = HostExpr.maybeClass(RT.second(f), false);
                             if (c == null)
+                            {
                                 throw new IllegalArgumentException("Unable to resolve classname: " + RT.second(f));
+                            }
                             if (!(RT.third(f) instanceof Symbol))
+                            {
                                 throw new IllegalArgumentException("Bad binding form, expected symbol, got: " + RT.third(f));
+                            }
                             Symbol sym = (Symbol) RT.third(f);
                             if (sym.getNamespace() != null)
+                            {
                                 throw Util.runtimeException("Can't bind qualified name:" + sym);
+                            }
 
                             IPersistentMap dynamicBindings = RT.map(LOCAL_ENV, LOCAL_ENV.deref(), NEXT_LOCAL_NUM, NEXT_LOCAL_NUM.deref(), IN_CATCH_FINALLY, RT.T);
                             try
                             {
                                 Var.pushThreadBindings(dynamicBindings);
-                                LocalBinding lb = registerLocal(sym, (Symbol) (RT.second(f) instanceof Symbol ? RT.second(f) : null), null, false);
+                                LocalBinding lb = registerLocal(sym, (Symbol) ((RT.second(f) instanceof Symbol) ? RT.second(f) : null), null, false);
                                 Expr handler = (new BodyExpr.Parser()).parse(C.EXPRESSION, RT.next(RT.next(RT.next(f))));
                                 catches = catches.cons(new CatchClause(c, lb, handler));
                             }
@@ -2454,7 +2716,9 @@ public class Compiler implements Opcodes
                         else // finally
                         {
                             if (fs.next() != null)
+                            {
                                 throw Util.runtimeException("finally clause must be last in try expression");
+                            }
                             try
                             {
                                 Var.pushThreadBindings(RT.map(IN_CATCH_FINALLY, RT.T));
@@ -2577,11 +2841,17 @@ public class Compiler implements Opcodes
             public Expr parse(C context, Object form)
             {
                 if (context == C.EVAL)
+                {
                     return analyze(context, RT.list(RT.list(FNONCE, PersistentVector.EMPTY, form)));
+                }
                 else if (RT.count(form) == 1)
+                {
                     throw Util.runtimeException("Too few arguments to throw, throw expects a single Throwable instance");
+                }
                 else if (RT.count(form) > 2)
+                {
                     throw Util.runtimeException("Too many arguments to throw, throw expects a single Throwable instance");
+                }
                 return new ThrowExpr(analyze(C.EXPRESSION, RT.second(form)));
             }
         }
@@ -2598,9 +2868,13 @@ public class Compiler implements Opcodes
                 if (!c1[i].isPrimitive() && c2[i].isPrimitive()
                      // || Number.class.isAssignableFrom(c1[i]) && c2[i].isPrimitive()
                         || c2[i].isAssignableFrom(c1[i]))
+                {
                     better = true;
+                }
                 else
+                {
                     return false;
+                }
             }
         }
         return better;
@@ -2613,7 +2887,9 @@ public class Compiler implements Opcodes
         {
             Expr arg = (Expr) args.nth(i);
             if (i > 0)
+            {
                 sb.append(", ");
+            }
             sb.append((arg.hasJavaClass() && arg.getJavaClass() != null) ? arg.getJavaClass().getName() : "unknown");
         }
         return sb.toString();
@@ -2636,21 +2912,29 @@ public class Compiler implements Opcodes
                 Class aclass = arg.hasJavaClass() ? arg.getJavaClass() : Object.class;
                 Class pclass = paramlists.get(i)[p];
                 if (arg.hasJavaClass() && aclass == pclass)
+                {
                     exact++;
+                }
                 else
+                {
                     match = Reflector.paramArgTypeMatch(pclass, aclass);
+                }
             }
             if (exact == argexprs.count())
             {
                 if (!foundExact || matchIdx == -1 || rets.get(matchIdx).isAssignableFrom(rets.get(i)))
+                {
                     matchIdx = i;
+                }
                 tied = false;
                 foundExact = true;
             }
             else if (match && !foundExact)
             {
                 if (matchIdx == -1)
+                {
                     matchIdx = i;
+                }
                 else
                 {
                     if (subsumes(paramlists.get(i), paramlists.get(matchIdx)))
@@ -2661,15 +2945,21 @@ public class Compiler implements Opcodes
                     else if (Arrays.equals(paramlists.get(matchIdx), paramlists.get(i)))
                     {
                         if (rets.get(matchIdx).isAssignableFrom(rets.get(i)))
+                        {
                             matchIdx = i;
+                        }
                     }
                     else if (!(subsumes(paramlists.get(matchIdx), paramlists.get(i))))
+                    {
                         tied = true;
+                    }
                 }
             }
         }
         if (tied)
+        {
             throw new IllegalArgumentException("More than one matching method found: " + methodName);
+        }
 
         return matchIdx;
     }
@@ -2702,7 +2992,9 @@ public class Compiler implements Opcodes
                 }
             }
             if (ctors.isEmpty())
+            {
                 throw new IllegalArgumentException("No matching ctor found for " + c);
+            }
 
             int ctoridx = 0;
             if (ctors.size() > 1)
@@ -2722,7 +3014,9 @@ public class Compiler implements Opcodes
         {
             Object[] argvals = new Object[args.count()];
             for (int i = 0; i < args.count(); i++)
+            {
                 argvals[i] = ((Expr) args.nth(i)).eval();
+            }
             if (this.ctor != null)
             {
                 try
@@ -2755,7 +3049,9 @@ public class Compiler implements Opcodes
                 gen.invokeStatic(REFLECTOR_TYPE, invokeConstructorMethod);
             }
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
 
         public boolean hasJavaClass()
@@ -2777,13 +3073,19 @@ public class Compiler implements Opcodes
                 ISeq form = (ISeq) frm;
                 // (new Classname args...)
                 if (form.count() < 2)
+                {
                     throw Util.runtimeException("wrong number of arguments, expecting: (new Classname args...)");
+                }
                 Class c = HostExpr.maybeClass(RT.second(form), false);
                 if (c == null)
+                {
                     throw new IllegalArgumentException("Unable to resolve classname: " + RT.second(form));
+                }
                 PersistentVector args = PersistentVector.EMPTY;
                 for (ISeq s = RT.next(RT.next(form)); s != null; s = s.next())
+                {
                     args = args.cons(analyze((context == C.EVAL) ? context : C.EXPRESSION, s.first()));
+                }
                 return new NewExpr(c, args, line, column);
             }
         }
@@ -2853,7 +3155,9 @@ public class Compiler implements Opcodes
         {
             Object t = testExpr.eval();
             if (t != null && t != Boolean.FALSE)
+            {
                 return thenExpr.eval();
+            }
             return elseExpr.eval();
         }
 
@@ -2893,17 +3197,25 @@ public class Compiler implements Opcodes
                 gen.visitJumpInsn(IF_ACMPEQ, falseLabel);
             }
             if (emitUnboxed)
+            {
                 ((MaybePrimitiveExpr)thenExpr).emitUnboxed(context, objx, gen);
+            }
             else
+            {
                 thenExpr.emit(context, objx, gen);
+            }
             gen.goTo(endLabel);
             gen.mark(nullLabel);
             gen.pop();
             gen.mark(falseLabel);
             if (emitUnboxed)
+            {
                 ((MaybePrimitiveExpr)elseExpr).emitUnboxed(context, objx, gen);
+            }
             else
+            {
                 elseExpr.emit(context, objx, gen);
+            }
             gen.mark(endLabel);
         }
 
@@ -2940,7 +3252,9 @@ public class Compiler implements Opcodes
         {
             Class thenClass = thenExpr.getJavaClass();
             if (thenClass != null && thenClass != RECUR_CLASS)
+            {
                 return thenClass;
+            }
             return elseExpr.getJavaClass();
         }
 
@@ -2951,9 +3265,13 @@ public class Compiler implements Opcodes
                 ISeq form = (ISeq) frm;
                 // (if test then) or (if test then else)
                 if (form.count() > 4)
+                {
                     throw Util.runtimeException("Too many arguments to if");
+                }
                 else if (form.count() < 3)
+                {
                     throw Util.runtimeException("Too few arguments to if");
+                }
                 PathNode branch = new PathNode(PATHTYPE.BRANCH, (PathNode) CLEAR_PATH.get());
                 Expr testexpr = analyze((context == C.EVAL) ? context : C.EXPRESSION, RT.second(form));
                 Expr thenexpr, elseexpr;
@@ -3047,7 +3365,9 @@ public class Compiler implements Opcodes
         {
             String escapeStr = (String) s;
             if (!first)
+            {
                 sb.append("|");
+            }
             first = false;
             sb.append("\\Q");
             sb.append(escapeStr);
@@ -3063,9 +3383,13 @@ public class Compiler implements Opcodes
         {
             String sub = (String) CHAR_MAP.valAt(c);
             if (sub != null)
+            {
                 sb.append(sub);
+            }
             else
+            {
                 sb.append(c);
+            }
         }
         return sb.toString();
     }
@@ -3116,15 +3440,25 @@ public class Compiler implements Opcodes
         public void emit(C context, ObjExpr objx, GeneratorAdapter gen)
         {
             if (coll instanceof IPersistentList)
+            {
                 gen.getStatic(LIST_TYPE, "EMPTY", EMPTY_LIST_TYPE);
+            }
             else if (coll instanceof IPersistentVector)
+            {
                 gen.getStatic(VECTOR_TYPE, "EMPTY", VECTOR_TYPE);
+            }
             else if (coll instanceof IPersistentMap)
+            {
                 gen.getStatic(HASHMAP_TYPE, "EMPTY", HASHMAP_TYPE);
+            }
             else if (coll instanceof IPersistentSet)
+            {
                 gen.getStatic(HASHSET_TYPE, "EMPTY", HASHSET_TYPE);
+            }
             else
+            {
                 throw new UnsupportedOperationException("Unknown Collection type");
+            }
             if (context == C.STATEMENT)
             {
                 gen.pop();
@@ -3139,15 +3473,25 @@ public class Compiler implements Opcodes
         public Class getJavaClass()
         {
             if (coll instanceof IPersistentList)
+            {
                 return IPersistentList.class;
+            }
             else if (coll instanceof IPersistentVector)
+            {
                 return IPersistentVector.class;
+            }
             else if (coll instanceof IPersistentMap)
+            {
                 return IPersistentMap.class;
+            }
             else if (coll instanceof IPersistentSet)
+            {
                 return IPersistentSet.class;
+            }
             else
+            {
                 throw new UnsupportedOperationException("Unknown Collection type");
+            }
         }
     }
 
@@ -3166,7 +3510,9 @@ public class Compiler implements Opcodes
         {
             IPersistentVector ret = PersistentVector.EMPTY;
             for (int i = 0; i < args.count(); i++)
+            {
                 ret = (IPersistentVector) ret.cons(((Expr) args.nth(i)).eval());
+            }
             return ret.seq();
         }
 
@@ -3175,7 +3521,9 @@ public class Compiler implements Opcodes
             MethodExpr.emitArgsAsArray(args, objx, gen);
             gen.invokeStatic(RT_TYPE, arrayToListMethod);
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
 
         public boolean hasJavaClass()
@@ -3205,7 +3553,9 @@ public class Compiler implements Opcodes
         {
             Object[] ret = new Object[keyvals.count()];
             for (int i = 0; i < keyvals.count(); i++)
+            {
                 ret[i] = ((Expr) keyvals.nth(i)).eval();
+            }
             return RT.map(ret);
         }
 
@@ -3221,20 +3571,32 @@ public class Compiler implements Opcodes
                 {
                     Object kval = k.eval();
                     if (constantKeys.contains(kval))
+                    {
                         allConstantKeysUnique = false;
+                    }
                     else
+                    {
                         constantKeys = (IPersistentSet)constantKeys.cons(kval);
+                    }
                 }
                 else
+                {
                     allKeysConstant = false;
+                }
             }
             MethodExpr.emitArgsAsArray(keyvals, objx, gen);
             if ((allKeysConstant && allConstantKeysUnique) || (keyvals.count() <= 2))
+            {
                 gen.invokeStatic(RT_TYPE, mapUniqueKeysMethod);
+            }
             else
+            {
                 gen.invokeStatic(RT_TYPE, mapMethod);
+            }
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
 
         public boolean hasJavaClass()
@@ -3265,24 +3627,36 @@ public class Compiler implements Opcodes
                 {
                     Object kval = k.eval();
                     if (constantKeys.contains(kval))
+                    {
                         allConstantKeysUnique = false;
+                    }
                     else
+                    {
                         constantKeys = (IPersistentSet)constantKeys.cons(kval);
+                    }
                 }
                 else
+                {
                     keysConstant = false;
+                }
                 if (!(v instanceof LiteralExpr))
+                {
                     valsConstant = false;
+                }
             }
 
             Expr ret = new MapExpr(keyvals);
             if (form instanceof IObj && ((IObj) form).meta() != null)
+            {
                 return new MetaExpr(ret, MapExpr.parse((context == C.EVAL) ? context : C.EXPRESSION, ((IObj) form).meta()));
+            }
             else if (keysConstant)
             {
                 // TBD: Add more detail to exception thrown below.
                 if (!allConstantKeysUnique)
+                {
                     throw new IllegalArgumentException("Duplicate constant keys in map");
+                }
                 if (valsConstant)
                 {
                     IPersistentMap m = PersistentArrayMap.EMPTY;
@@ -3294,10 +3668,14 @@ public class Compiler implements Opcodes
                     return new ConstantExpr(m);
                 }
                 else
+                {
                     return ret;
+                }
             }
             else
+            {
                 return ret;
+            }
         }
     }
 
@@ -3316,7 +3694,9 @@ public class Compiler implements Opcodes
         {
             Object[] ret = new Object[keys.count()];
             for (int i = 0; i < keys.count(); i++)
+            {
                 ret[i] = ((Expr) keys.nth(i)).eval();
+            }
             return RT.set(ret);
         }
 
@@ -3325,7 +3705,9 @@ public class Compiler implements Opcodes
             MethodExpr.emitArgsAsArray(keys, objx, gen);
             gen.invokeStatic(RT_TYPE, setMethod);
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
 
         public boolean hasJavaClass()
@@ -3349,11 +3731,15 @@ public class Compiler implements Opcodes
                 Expr expr = analyze((context == C.EVAL) ? context : C.EXPRESSION, e);
                 keys = (IPersistentVector) keys.cons(expr);
                 if (!(expr instanceof LiteralExpr))
+                {
                     constant = false;
+                }
             }
             Expr ret = new SetExpr(keys);
             if (form instanceof IObj && ((IObj) form).meta() != null)
+            {
                 return new MetaExpr(ret, MapExpr.parse((context == C.EVAL) ? context : C.EXPRESSION, ((IObj) form).meta()));
+            }
             else if (constant)
             {
                 IPersistentSet set = PersistentHashSet.EMPTY;
@@ -3366,7 +3752,9 @@ public class Compiler implements Opcodes
                 return new ConstantExpr(set);
             }
             else
+            {
                 return ret;
+            }
         }
     }
 
@@ -3385,7 +3773,9 @@ public class Compiler implements Opcodes
         {
             IPersistentVector ret = PersistentVector.EMPTY;
             for (int i = 0; i < args.count(); i++)
+            {
                 ret = (IPersistentVector) ret.cons(((Expr) args.nth(i)).eval());
+            }
             return ret;
         }
 
@@ -3406,7 +3796,9 @@ public class Compiler implements Opcodes
             }
 
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
 
         public boolean hasJavaClass()
@@ -3429,11 +3821,15 @@ public class Compiler implements Opcodes
                 Expr v = analyze((context == C.EVAL) ? context : C.EXPRESSION, form.nth(i));
                 args = (IPersistentVector) args.cons(v);
                 if (!(v instanceof LiteralExpr))
+                {
                     constant = false;
+                }
             }
             Expr ret = new VectorExpr(args);
             if (form instanceof IObj && ((IObj) form).meta() != null)
+            {
                 return new MetaExpr(ret, MapExpr.parse((context == C.EVAL) ? context : C.EXPRESSION, ((IObj) form).meta()));
+            }
             else if (constant)
             {
                 IPersistentVector rv = PersistentVector.EMPTY;
@@ -3446,7 +3842,9 @@ public class Compiler implements Opcodes
                 return new ConstantExpr(rv);
             }
             else
+            {
                 return ret;
+            }
         }
     }
 
@@ -3484,9 +3882,13 @@ public class Compiler implements Opcodes
             catch (Throwable e)
             {
                 if (!(e instanceof CompilerException))
+                {
                     throw new CompilerException(source, line, column, e);
+                }
                 else
+                {
                     throw (CompilerException) e;
+                }
             }
         }
 
@@ -3521,18 +3923,22 @@ public class Compiler implements Opcodes
 
             gen.mark(endLabel);
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
 
         public boolean hasJavaClass()
         {
-            return tag != null;
+            return (tag != null);
         }
 
         public Class getJavaClass()
         {
             if (jc == null)
+            {
                 jc = HostExpr.tagToClass(tag);
+            }
             return jc;
         }
     }
@@ -3588,7 +3994,7 @@ public class Compiler implements Opcodes
  //
  //     public boolean hasJavaClass()
  //     {
- //         return tag != null;
+ //         return (tag != null);
  //     }
  //
  //     public Class getJavaClass()
@@ -3611,7 +4017,9 @@ public class Compiler implements Opcodes
         public Object eval()
         {
             if (c.isInstance(expr.eval()))
+            {
                 return RT.T;
+            }
             return RT.F;
         }
 
@@ -3631,7 +4039,9 @@ public class Compiler implements Opcodes
             emitUnboxed(context, objx, gen);
             HostExpr.emitBoxReturn(objx, gen, Boolean.TYPE);
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
 
         public boolean hasJavaClass()
@@ -3679,13 +4089,19 @@ public class Compiler implements Opcodes
         {
             emitUnboxed(context, objx, gen);
             if (context != C.STATEMENT)
+            {
                 HostExpr.emitBoxReturn(objx, gen, retClass);
+            }
             if (context == C.STATEMENT)
             {
                 if (retClass == long.class || retClass == double.class)
+                {
                     gen.pop2();
+                }
                 else
+                {
                     gen.pop();
+                }
             }
         }
 
@@ -3697,7 +4113,9 @@ public class Compiler implements Opcodes
         public Class getJavaClass()
         {
             if (jc == null)
+            {
                 jc = retType((tag != null) ? HostExpr.tagToClass(tag) : null, retClass);
+            }
             return jc;
         }
 
@@ -3729,7 +4147,9 @@ public class Compiler implements Opcodes
                 gen.invokeStatic(Type.getType(ArraySeq.class), Method.getMethod("cloiure.lang.ArraySeq create(Object[])"));
             }
             else
+            {
                 MethodExpr.emitTypedArgs(objx, gen, paramclasses, args);
+            }
 
             if (tailPosition && !objx.canBeDirect)
             {
@@ -3782,7 +4202,9 @@ public class Compiler implements Opcodes
                 }
             }
             if (method == null)
+            {
                 return null;
+            }
 
             Class retClass = method.getReturnType();
 
@@ -3798,7 +4220,9 @@ public class Compiler implements Opcodes
 
             PersistentVector argv = PersistentVector.EMPTY;
             for (ISeq s = RT.seq(args); s != null; s = s.next())
+            {
                 argv = argv.cons(analyze(C.EXPRESSION, s.first()));
+            }
 
             return new StaticInvokeExpr(target, retClass, paramClasses, paramTypes, variadic, argv, tag, tailPosition);
         }
@@ -3834,7 +4258,9 @@ public class Compiler implements Opcodes
                 APersistentVector sig = (APersistentVector) s.first();
                 int restOffset = sig.indexOf(_AMP_);
                 if (argcount == sig.count() || (restOffset > -1 && argcount >= restOffset))
+                {
                     return tagOf(sig);
+                }
             }
             return null;
         }
@@ -3870,8 +4296,10 @@ public class Compiler implements Opcodes
                         String mname = munge(mmapVal.sym.toString());
                         List methods = Reflector.getMethods(protocolOn, args.count() - 1, mname, false);
                         if (methods.size() != 1)
+                        {
                             throw new IllegalArgumentException("No single method: " + mname + " of interface: " + protocolOn.getName() +
                                     " found for function: " + fvar.sym + " of protocol: " + pvar.sym);
+                        }
                         this.onMethod = (java.lang.reflect.Method) methods.get(0);
                     }
                 }
@@ -3886,7 +4314,7 @@ public class Compiler implements Opcodes
                 Var v = ((VarExpr) fexpr).var;
                 Object arglists = RT.get(RT.meta(v), arglistsKey);
                 Object sigTag = sigTag(args.count(), v);
-                this.tag = sigTag == null ? ((VarExpr) fexpr).tag : sigTag;
+                this.tag = (sigTag == null) ? ((VarExpr) fexpr).tag : sigTag;
             }
             else
             {
@@ -3901,15 +4329,21 @@ public class Compiler implements Opcodes
                 IFn fn = (IFn) fexpr.eval();
                 PersistentVector argvs = PersistentVector.EMPTY;
                 for (int i = 0; i < args.count(); i++)
+                {
                     argvs = argvs.cons(((Expr) args.nth(i)).eval());
-                return fn.applyTo(RT.seq( Util.ret1(argvs, argvs = null) ));
+                }
+                return fn.applyTo(RT.seq(Util.ret1(argvs, argvs = null)));
             }
             catch (Throwable e)
             {
                 if (!(e instanceof CompilerException))
+                {
                     throw new CompilerException(source, line, column, e);
+                }
                 else
+                {
                     throw (CompilerException) e;
+                }
             }
         }
 
@@ -3929,7 +4363,9 @@ public class Compiler implements Opcodes
                 emitArgsAndCall(0, context, objx, gen);
             }
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
 
         public void emitProto(C context, ObjExpr objx, GeneratorAdapter gen)
@@ -4010,13 +4446,15 @@ public class Compiler implements Opcodes
 
         public boolean hasJavaClass()
         {
-            return tag != null;
+            return (tag != null);
         }
 
         public Class getJavaClass()
         {
             if (jc == null)
+            {
                 jc = HostExpr.tagToClass(tag);
+            }
             return jc;
         }
 
@@ -4024,7 +4462,9 @@ public class Compiler implements Opcodes
         {
             boolean tailPosition = inTailCall(context);
             if (context != C.EVAL)
+            {
                 context = C.EXPRESSION;
+            }
             Expr fexpr = analyze(context, form.first());
             if (fexpr instanceof VarExpr && ((VarExpr)fexpr).var.equals(INSTANCE) && RT.count(form) == 3)
             {
@@ -4071,9 +4511,11 @@ public class Compiler implements Opcodes
                     {
                         String primc = FnMethod.primInterface(args);
                         if (primc != null)
+                        {
                             return analyze(context, ((IObj)RT.listStar(Symbol.intern(".invokePrim"),
                                     ((Symbol) form.first()).withMeta(RT.map(RT.TAG_KEY, Symbol.intern(primc))),
                                     form.next())).withMeta((IPersistentMap)RT.conj(RT.meta(v), RT.meta(form))));
+                        }
                         break;
                     }
                 }
@@ -4144,7 +4586,9 @@ public class Compiler implements Opcodes
         public Class getJavaClass()
         {
             if (jc == null)
+            {
                 jc = (tag != null) ? HostExpr.tagToClass(tag) : AFunction.class;
+            }
             return jc;
         }
 
@@ -4195,9 +4639,13 @@ public class Compiler implements Opcodes
             else
             {
                 if (name == null)
+                {
                     name = "fn__" + RT.nextID();
+                }
                 else if (enclosingMethod != null)
+                {
                     name += "__" + RT.nextID();
+                }
             }
 
             String simpleName = munge(name).replace(".", "_DOT_");
@@ -4228,7 +4676,9 @@ public class Compiler implements Opcodes
                 // now (fn [args] body...) or (fn ([args] body...) ([args2] body2...) ...)
                 // turn former into latter
                 if (RT.second(form) instanceof IPersistentVector)
+                {
                     form = RT.list(FN, RT.next(form));
+                }
                 fn.line = lineDeref();
                 fn.column = columnDeref();
                 FnMethod[] methodArray = new FnMethod[MAX_POSITIONAL_ARITY + 1];
@@ -4245,32 +4695,52 @@ public class Compiler implements Opcodes
                     if (f.isVariadic())
                     {
                         if (variadicMethod == null)
+                        {
                             variadicMethod = f;
+                        }
                         else
+                        {
                             throw Util.runtimeException("Can't have more than 1 variadic overload");
+                        }
                     }
                     else if (methodArray[f.reqParms.count()] == null)
+                    {
                         methodArray[f.reqParms.count()] = f;
+                    }
                     else
+                    {
                         throw Util.runtimeException("Can't have 2 overloads with same arity");
+                    }
                     if (f.prim != null)
+                    {
                         prims.add(f.prim);
+                    }
                 }
                 if (variadicMethod != null)
                 {
                     for (int i = variadicMethod.reqParms.count() + 1; i <= MAX_POSITIONAL_ARITY; i++)
+                    {
                         if (methodArray[i] != null)
+                        {
                             throw Util.runtimeException("Can't have fixed arity function with more params than variadic function");
+                        }
+                    }
                 }
 
                 fn.canBeDirect = (!fn.hasEnclosingMethod && fn.closes.count() == 0 && !usesThis);
 
                 IPersistentCollection methods = null;
                 for (int i = 0; i < methodArray.length; i++)
+                {
                     if (methodArray[i] != null)
+                    {
                         methods = RT.conj(methods, methodArray[i]);
+                    }
+                }
                 if (variadicMethod != null)
+                {
                     methods = RT.conj(methods, variadicMethod);
+                }
 
                 if (fn.canBeDirect)
                 {
@@ -4281,7 +4751,9 @@ public class Compiler implements Opcodes
                             for (LocalBinding lb : (Collection<LocalBinding>)RT.keys(fm.locals))
                             {
                                 if (lb.isArg)
+                                {
                                     lb.idx -= 1;
+                                }
                             }
                         }
                     }
@@ -4307,7 +4779,9 @@ public class Compiler implements Opcodes
             fn.hasPrimSigs = prims.size() > 0;
             IPersistentMap fmeta = RT.meta(origForm);
             if (fmeta != null)
+            {
                 fmeta = fmeta.without(RT.LINE_KEY).without(RT.COLUMN_KEY).without(RT.FILE_KEY).without(retkey);
+            }
 
             fn.hasMeta = RT.count(fmeta) > 0;
 
@@ -4327,7 +4801,9 @@ public class Compiler implements Opcodes
                 return new MetaExpr(fn, MapExpr.parse((context == C.EVAL) ? context : C.EXPRESSION, fmeta));
             }
             else
+            {
                 return fn;
+            }
         }
 
         public final ObjMethod variadicMethod()
@@ -4337,7 +4813,7 @@ public class Compiler implements Opcodes
 
         boolean isVariadic()
         {
-            return variadicMethod != null;
+            return (variadicMethod != null);
         }
 
         public final IPersistentCollection methods()
@@ -4511,13 +4987,19 @@ public class Compiler implements Opcodes
             {
                 LocalBinding lb = (LocalBinding) s.first();
                 if (lb.getPrimitiveType() != null)
+                {
                     tv = tv.cons(Type.getType(lb.getPrimitiveType()));
+                }
                 else
+                {
                     tv = tv.cons(OBJECT_TYPE);
+                }
             }
             Type[] ret = new Type[tv.count()];
             for (int i = 0; i < tv.count(); i++)
+            {
                 ret[i] = (Type) tv.nth(i);
+            }
             return ret;
         }
 
@@ -4533,7 +5015,7 @@ public class Compiler implements Opcodes
          // ClassVisitor cv = new TraceClassVisitor(new CheckClassAdapter(cw), new PrintWriter(System.out));
          // ClassVisitor cv = new TraceClassVisitor(cw, new PrintWriter(System.out));
             cv.visit(V1_5, ACC_PUBLIC + ACC_SUPER + ACC_FINAL, internalName, null, superName, interfaceNames);
-         //                                                    superName != null ? superName : (isVariadic() ? "cloiure/lang/RestFn" : "cloiure/lang/AFunction"), null);
+         //                                                    (superName != null) ? superName : (isVariadic() ? "cloiure/lang/RestFn" : "cloiure/lang/AFunction"), null);
             String source = (String) SOURCE.deref();
             int lineBefore = (Integer) LINE_BEFORE.deref();
             int lineAfter = (Integer) LINE_AFTER.deref() + 1;
@@ -4576,20 +5058,28 @@ public class Compiler implements Opcodes
                     int access = isVolatile(lb) ? ACC_VOLATILE : isMutable(lb) ? 0 : (ACC_PUBLIC + ACC_FINAL);
                     FieldVisitor fv;
                     if (lb.getPrimitiveType() != null)
+                    {
                         fv = cv.visitField(access, lb.name, Type.getType(lb.getPrimitiveType()).getDescriptor(), null, null);
+                    }
                     else
+                    {
                         // todo - when closed-overs are fields, use more specific types here and in ctor and emitLocal?
                         fv = cv.visitField(access, lb.name, OBJECT_TYPE.getDescriptor(), null, null);
+                    }
                     addAnnotation(fv, RT.meta(lb.sym));
                 }
                 else
                 {
                     // todo - only enable this non-private+writability for letfns where we need it
                     if (lb.getPrimitiveType() != null)
+                    {
                         cv.visitField(0 + (isVolatile(lb) ? ACC_VOLATILE : 0), lb.name, Type.getType(lb.getPrimitiveType()).getDescriptor(), null, null);
+                    }
                     else
+                    {
                         cv.visitField(0 // + (oneTimeUse ? 0 : ACC_FINAL)
                                                                          , lb.name, OBJECT_TYPE.getDescriptor(), null, null);
+                    }
                 }
             }
 
@@ -4645,7 +5135,9 @@ public class Compiler implements Opcodes
                     ctorgen.visitVarInsn(Type.getType(primc).getOpcode(Opcodes.ILOAD), a);
                     ctorgen.putField(objtype, lb.name, Type.getType(primc));
                     if (primc == Long.TYPE || primc == Double.TYPE)
+                    {
                         ++a;
+                    }
                 }
                 else
                 {
@@ -4667,7 +5159,9 @@ public class Compiler implements Opcodes
                 Type[] ctorTypes = ctorTypes();
                 Type[] altCtorTypes = new Type[ctorTypes.length-altCtorDrops];
                 for (int i = 0; i < altCtorTypes.length; i++)
+                {
                     altCtorTypes[i] = ctorTypes[i];
+                }
                 Method alt = new Method("<init>", Type.VOID_TYPE, altCtorTypes);
                 ctorgen = new GeneratorAdapter(ACC_PUBLIC, alt, null, null, cv);
                 ctorgen.visitCode();
@@ -4687,7 +5181,9 @@ public class Compiler implements Opcodes
                 // alt ctor no __hash, __hasheq
                 altCtorTypes = new Type[ctorTypes.length-2];
                 for (int i = 0; i < altCtorTypes.length; i++)
+                {
                     altCtorTypes[i] = ctorTypes[i];
+                }
 
                 alt = new Method("<init>", Type.VOID_TYPE, altCtorTypes);
                 ctorgen = new GeneratorAdapter(ACC_PUBLIC, alt, null, null, cv);
@@ -4710,7 +5206,9 @@ public class Compiler implements Opcodes
                 Type[] ctorTypes = ctorTypes();
                 Type[] noMetaCtorTypes = new Type[ctorTypes.length-1];
                 for (int i = 1; i < ctorTypes.length; i++)
+                {
                     noMetaCtorTypes[i-1] = ctorTypes[i];
+                }
                 Method alt = new Method("<init>", Type.VOID_TYPE, noMetaCtorTypes);
                 ctorgen = new GeneratorAdapter(ACC_PUBLIC, alt, null, null, cv);
                 ctorgen.visitCode();
@@ -4769,7 +5267,9 @@ public class Compiler implements Opcodes
             for (int i = 0; i < constants.count(); i++)
             {
                 if (usedConstants.contains(i))
+                {
                     cv.visitField(ACC_PUBLIC + ACC_FINAL + ACC_STATIC, constantName(i), constantType(i).getDescriptor(), null, null);
+                }
             }
 
             // static fields for lookup sites
@@ -4790,7 +5290,9 @@ public class Compiler implements Opcodes
             }
 
             if (keywordCallsites.count() > 0)
+            {
                 emitKeywordCallsites(clinitgen);
+            }
 
          // for (int i = 0; i < varCallsites.count(); i++)
          // {
@@ -4844,7 +5346,9 @@ public class Compiler implements Opcodes
 
             bytecode = cw.toByteArray();
             if (RT.booleanCast(COMPILE_FILES.deref()))
+            {
                 writeClassFile(internalName, bytecode);
+            }
          // else
          //     getCompiledClass();
         }
@@ -4892,7 +5396,9 @@ public class Compiler implements Opcodes
          // System.out.println(value.getClass().toString());
 
             if (value == null)
+            {
                 gen.visitInsn(Opcodes.ACONST_NULL);
+            }
             else if (value instanceof String)
             {
                 gen.push((String) value);
@@ -4900,9 +5406,13 @@ public class Compiler implements Opcodes
             else if (value instanceof Boolean)
             {
                 if (((Boolean) value).booleanValue())
+                {
                     gen.getStatic(BOOLEAN_OBJECT_TYPE, "TRUE", BOOLEAN_OBJECT_TYPE);
+                }
                 else
+                {
                     gen.getStatic(BOOLEAN_OBJECT_TYPE, "FALSE", BOOLEAN_OBJECT_TYPE);
+                }
             }
             else if (value instanceof Integer)
             {
@@ -4931,23 +5441,41 @@ public class Compiler implements Opcodes
                 {
                     Type bt;
                     if (cc == boolean.class)
+                    {
                         bt = Type.getType(Boolean.class);
+                    }
                     else if (cc == byte.class)
+                    {
                         bt = Type.getType(Byte.class);
+                    }
                     else if (cc == char.class)
+                    {
                         bt = Type.getType(Character.class);
+                    }
                     else if (cc == double.class)
+                    {
                         bt = Type.getType(Double.class);
+                    }
                     else if (cc == float.class)
+                    {
                         bt = Type.getType(Float.class);
+                    }
                     else if (cc == int.class)
+                    {
                         bt = Type.getType(Integer.class);
+                    }
                     else if (cc == long.class)
+                    {
                         bt = Type.getType(Long.class);
+                    }
                     else if (cc == short.class)
+                    {
                         bt = Type.getType(Short.class);
+                    }
                     else
+                    {
                         throw Util.runtimeException("Can't embed unknown primitive in code: " + value);
+                    }
                     gen.getStatic(bt, "TYPE", Type.getType(Class.class));
                 }
                 else
@@ -5042,7 +5570,9 @@ public class Compiler implements Opcodes
             {
                 ISeq vs = RT.seq(value);
                 if (vs == null)
+                {
                     gen.getStatic(Type.getType(PersistentHashSet.class), "EMPTY", Type.getType(PersistentHashSet.class));
+                }
                 else
                 {
                     emitListAsObjectArray(vs, gen);
@@ -5073,10 +5603,14 @@ public class Compiler implements Opcodes
                     throw Util.runtimeException("Can't embed object in code, maybe print-dup not defined: " + value);
                 }
                 if (cs.length() == 0)
+                {
                     throw Util.runtimeException("Can't embed unreadable object in code: " + value);
+                }
 
                 if (cs.startsWith("#<"))
+                {
                     throw Util.runtimeException("Can't embed unreadable object in code: " + cs);
+                }
 
                 gen.push(cs);
                 gen.invokeStatic(RT_TYPE, readStringMethod);
@@ -5130,7 +5664,7 @@ public class Compiler implements Opcodes
 
         boolean isDeftype()
         {
-            return fields != null;
+            return (fields != null);
         }
 
         boolean supportsMeta()
@@ -5172,7 +5706,9 @@ public class Compiler implements Opcodes
         public Object eval()
         {
             if (isDeftype())
+            {
                 return null;
+            }
             try
             {
                 return getCompiledClass().newInstance();
@@ -5224,20 +5760,28 @@ public class Compiler implements Opcodes
                 gen.newInstance(objtype);
                 gen.dup();
                 if (supportsMeta())
+                {
                     gen.visitInsn(Opcodes.ACONST_NULL);
+                }
                 for (ISeq s = RT.seq(closesExprs); s != null; s = s.next())
                 {
                     LocalBindingExpr lbe = (LocalBindingExpr) s.first();
                     LocalBinding lb = lbe.b;
                     if (lb.getPrimitiveType() != null)
+                    {
                         objx.emitUnboxedLocal(gen, lb);
+                    }
                     else
+                    {
                         objx.emitLocal(gen, lb, lbe.shouldClear);
+                    }
                 }
                 gen.invokeConstructor(objtype, new Method("<init>", Type.VOID_TYPE, ctorTypes()));
             }
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
 
         public boolean hasJavaClass()
@@ -5250,20 +5794,26 @@ public class Compiler implements Opcodes
         public Class getJavaClass()
         {
             if (jc == null)
+            {
                 jc = (compiledClass != null) ? compiledClass : (tag != null) ? HostExpr.tagToClass(tag) : IFn.class;
+            }
             return jc;
         }
 
         public void emitAssignLocal(GeneratorAdapter gen, LocalBinding lb, Expr val)
         {
             if (!isMutable(lb))
+            {
                 throw new IllegalArgumentException("Cannot assign to non-mutable: " + lb.name);
+            }
             Class primc = lb.getPrimitiveType();
             gen.loadThis();
             if (primc != null)
             {
                 if (!(val instanceof MaybePrimitiveExpr && ((MaybePrimitiveExpr) val).canEmitPrimitive()))
+                {
                     throw new IllegalArgumentException("Must assign primitive to primitive mutable: " + lb.name);
+                }
                 MaybePrimitiveExpr me = (MaybePrimitiveExpr) val;
                 me.emitUnboxed(C.EXPRESSION, this, gen);
                 gen.putField(objtype, lb.name, Type.getType(primc));
@@ -5306,7 +5856,9 @@ public class Compiler implements Opcodes
                 {
                     gen.loadArg(lb.idx-argoff);
                     if (primc != null)
+                    {
                         HostExpr.emitBoxReturn(this, gen, primc);
+                    }
                     else
                     {
                         if (clear && lb.canBeCleared)
@@ -5356,9 +5908,13 @@ public class Compiler implements Opcodes
                 gen.getField(objtype, lb.name, Type.getType(primc));
             }
             else if (lb.isArg)
+            {
                 gen.loadArg(lb.idx-argoff);
+            }
             else
+            {
                 gen.visitVarInsn(Type.getType(primc).getOpcode(Opcodes.ILOAD), lb.idx);
+            }
         }
 
         public void emitVar(GeneratorAdapter gen, Var var)
@@ -5447,19 +6003,31 @@ public class Compiler implements Opcodes
             {
                 // can't emit derived fn types due to visibility
                 if (LazySeq.class.isAssignableFrom(c))
+                {
                     return Type.getType(ISeq.class);
+                }
                 else if (c == Keyword.class)
+                {
                     return Type.getType(Keyword.class);
+                }
              // else if (c == KeywordCallSite.class)
              //     return Type.getType(KeywordCallSite.class);
                 else if (RestFn.class.isAssignableFrom(c))
+                {
                     return Type.getType(RestFn.class);
+                }
                 else if (AFn.class.isAssignableFrom(c))
+                {
                     return Type.getType(AFn.class);
+                }
                 else if (c == Var.class)
+                {
                     return Type.getType(Var.class);
+                }
                 else if (c == String.class)
+                {
                     return Type.getType(String.class);
+                }
 
              // return Type.getType(c);
             }
@@ -5513,15 +6081,25 @@ public class Compiler implements Opcodes
         {
             Class c = null;
             if (x instanceof Class)
+            {
                 c = (Class) x;
+            }
             else if (x instanceof Symbol)
+            {
                 c = primClass((Symbol) x);
+            }
             if (c == null || !c.isPrimitive())
+            {
                 return 'O';
+            }
             if (c == long.class)
+            {
                 return 'L';
+            }
             if (c == double.class)
+            {
                 return 'D';
+            }
             throw new IllegalArgumentException("Only long and double primitives are supported");
         }
 
@@ -5529,14 +6107,20 @@ public class Compiler implements Opcodes
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < arglist.count(); i++)
+            {
                 sb.append(classChar(tagOf(arglist.nth(i))));
+            }
             sb.append(classChar(tagOf(arglist)));
             String ret = sb.toString();
             boolean prim = ret.contains("L") || ret.contains("D");
             if (prim && arglist.count() > 4)
+            {
                 throw new IllegalArgumentException("fns taking primitives support only 4 or fewer args");
+            }
             if (prim)
+            {
                 return "cloiure.lang.IFn$" + ret;
+            }
             return null;
         }
 
@@ -5553,7 +6137,9 @@ public class Compiler implements Opcodes
                 // register as the current method and set up a new env frame
                 PathNode pnode =  (PathNode) CLEAR_PATH.get();
                 if (pnode == null)
+                {
                     pnode = new PathNode(PATHTYPE.PATH, null);
+                }
                 Var.pushThreadBindings(RT.mapUniqueKeys(
                             METHOD, method,
                             LOCAL_ENV, LOCAL_ENV.deref(),
@@ -5567,34 +6153,50 @@ public class Compiler implements Opcodes
 
                 method.prim = primInterface(parms);
                 if (method.prim != null)
+                {
                     method.prim = method.prim.replace('.', '/');
+                }
 
                 if (rettag instanceof String)
+                {
                     rettag = Symbol.intern(null, (String) rettag);
+                }
                 if (!(rettag instanceof Symbol))
+                {
                     rettag = null;
+                }
                 if (rettag != null)
                 {
                     String retstr = ((Symbol)rettag).getName();
                     if (!(retstr.equals("long") || retstr.equals("double")))
+                    {
                         rettag = null;
+                    }
                 }
                 method.retClass = tagClass((tagOf(parms) != null) ? tagOf(parms) : rettag);
                 if (method.retClass.isPrimitive())
                 {
                     if (!(method.retClass == double.class || method.retClass == long.class))
+                    {
                         throw new IllegalArgumentException("Only long and double primitives are supported");
+                    }
                 }
                 else
+                {
                     method.retClass = Object.class;
+                }
                 // register 'this' as local 0
              // registerLocal(THISFN, null, null);
              // if (!canBeDirect)
              // {
                 if (objx.thisName != null)
+                {
                     registerLocal(Symbol.intern(objx.thisName), null, null, false);
+                }
                 else
+                {
                     getAndIncLocalNum();
+                }
              // }
                 PSTATE state = PSTATE.REQ;
                 PersistentVector argLocals = PersistentVector.EMPTY;
@@ -5603,18 +6205,26 @@ public class Compiler implements Opcodes
                 for (int i = 0; i < parms.count(); i++)
                 {
                     if (!(parms.nth(i) instanceof Symbol))
+                    {
                         throw new IllegalArgumentException("fn params must be Symbols");
+                    }
                     Symbol p = (Symbol) parms.nth(i);
                     if (p.getNamespace() != null)
+                    {
                         throw Util.runtimeException("Can't use qualified name as parameter: " + p);
+                    }
                     if (p.equals(_AMP_))
                     {
                      // if (canBeDirect)
                      //     throw Util.runtimeException("Variadic fns cannot be static");
                         if (state == PSTATE.REQ)
+                        {
                             state = PSTATE.REST;
+                        }
                         else
+                        {
                             throw Util.runtimeException("Invalid parameter list");
+                        }
                     }
 
                     else
@@ -5627,15 +6237,23 @@ public class Compiler implements Opcodes
                      // }
                      // throw Util.runtimeException("Non-static fn can't have primitive parameter: " + p);
                         if (pc.isPrimitive() && !(pc == double.class || pc == long.class))
+                        {
                             throw new IllegalArgumentException("Only long and double primitives are supported: " + p);
+                        }
 
                         if (state == PSTATE.REST && tagOf(p) != null)
+                        {
                             throw Util.runtimeException("& arg cannot have type hint");
+                        }
                         if (state == PSTATE.REST && method.prim != null)
+                        {
                             throw Util.runtimeException("fns taking primitives cannot be variadic");
+                        }
 
                         if (state == PSTATE.REST)
+                        {
                             pc = ISeq.class;
+                        }
                         argtypes.add(Type.getType(pc));
                         argclasses.add(pc);
                         LocalBinding lb = pc.isPrimitive() ? registerLocal(p, null, new MethodParamExpr(pc), true) : registerLocal(p, (state == PSTATE.REST) ? ISEQ : tagOf(p), null, true);
@@ -5655,7 +6273,9 @@ public class Compiler implements Opcodes
                     }
                 }
                 if (method.reqParms.count() > MAX_POSITIONAL_ARITY)
+                {
                     throw Util.runtimeException("Can't specify more than " + MAX_POSITIONAL_ARITY + " params");
+                }
                 LOOP_LOCALS.set(argLocals);
                 method.argLocals = argLocals;
              // if (canBeDirect)
@@ -5666,7 +6286,9 @@ public class Compiler implements Opcodes
                     for (int i = 0; i < method.argclasses.length; i++)
                     {
                         if (method.argclasses[i] == long.class || method.argclasses[i] == double.class)
+                        {
                             getAndIncLocalNum();
+                        }
                     }
                 }
                 method.body = (new BodyExpr.Parser()).parse(C.RETURN, body);
@@ -5771,7 +6393,9 @@ public class Compiler implements Opcodes
             if (prim != null)
             {
                 if (retClass == double.class || retClass == long.class)
+                {
                     returnType = getReturnType();
+                }
                 else returnType = OBJECT_TYPE;
 
                 Method pm = new Method("invokePrim", returnType, argtypes);
@@ -5804,9 +6428,13 @@ public class Compiler implements Opcodes
         {
             Type returnType;
             if (retClass == double.class || retClass == long.class)
+            {
                 returnType = getReturnType();
+            }
             else
+            {
                 returnType = OBJECT_TYPE;
+            }
             Method ms = new Method("invokePrim", returnType, argtypes);
 
             GeneratorAdapter gen = new GeneratorAdapter(ACC_PUBLIC + ACC_FINAL,
@@ -5915,7 +6543,7 @@ public class Compiler implements Opcodes
 
         boolean isVariadic()
         {
-            return restParm != null;
+            return (restParm != null);
         }
 
         int numParams()
@@ -5925,13 +6553,15 @@ public class Compiler implements Opcodes
 
         String getMethodName()
         {
-            return isVariadic()?"doInvoke":"invoke";
+            return isVariadic() ? "doInvoke" : "invoke";
         }
 
         Type getReturnType()
         {
             if (prim != null) // objx.isStatic)
+            {
                 return Type.getType(retClass);
+            }
             return OBJECT_TYPE;
         }
 
@@ -5941,7 +6571,9 @@ public class Compiler implements Opcodes
             {
                 Type[] ret = new Type[MAX_POSITIONAL_ARITY + 1];
                 for (int i = 0; i < MAX_POSITIONAL_ARITY + 1; i++)
+                {
                     ret[i] = OBJECT_TYPE;
+                }
                 return ret;
             }
             return  ARG_TYPES[numParams()];
@@ -6043,7 +6675,9 @@ public class Compiler implements Opcodes
             {
                 Class bc = maybePrimitiveType(be);
                 if (bc == retClass)
+                {
                     be.emitUnboxed(C.RETURN, objx, gen);
+                }
                 else if (retClass == long.class && bc == int.class)
                 {
                     be.emitUnboxed(C.RETURN, objx, gen);
@@ -6065,7 +6699,9 @@ public class Compiler implements Opcodes
                     gen.visitInsn(D2F);
                 }
                 else
+                {
                     throw new IllegalArgumentException("Mismatched primitive return, expected: " + retClass + ", had: " + be.getJavaClass());
+                }
             }
             else
             {
@@ -6075,7 +6711,9 @@ public class Compiler implements Opcodes
                     gen.pop();
                 }
                 else
+                {
                     gen.unbox(Type.getType(retClass));
+                }
             }
         }
 
@@ -6181,7 +6819,9 @@ public class Compiler implements Opcodes
         public LocalBinding(int num, Symbol sym, Symbol tag, Expr init, boolean isArg, PathNode clearPathRoot)
         {
             if (maybePrimitiveType(init) != null && tag != null)
+            {
                 throw new UnsupportedOperationException("Can't type hint a local with a primitive initializer");
+            }
             this.idx = num;
             this.sym = sym;
             this.tag = tag;
@@ -6198,9 +6838,13 @@ public class Compiler implements Opcodes
             if (hjc == null)
             {
                 if (init != null && init.hasJavaClass() && Util.isPrimitive(init.getJavaClass()) && !(init instanceof MaybePrimitiveExpr))
+                {
                     hjc =  false;
+                }
                 else
+                {
                     hjc = (tag != null || (init != null && init.hasJavaClass()));
+                }
             }
             return hjc;
         }
@@ -6210,7 +6854,9 @@ public class Compiler implements Opcodes
         public Class getJavaClass()
         {
             if (jc == null)
+            {
                 jc = (tag != null) ? HostExpr.tagToClass(tag) : init.getJavaClass();
+            }
             return jc;
         }
 
@@ -6232,7 +6878,9 @@ public class Compiler implements Opcodes
         public LocalBindingExpr(LocalBinding b, Symbol tag)
         {
             if (b.getPrimitiveType() != null && tag != null)
+            {
                 throw new UnsupportedOperationException("Can't type hint a primitive local");
+            }
             this.b = b;
             this.tag = tag;
 
@@ -6252,7 +6900,9 @@ public class Compiler implements Opcodes
                         LocalBindingExpr o = (LocalBindingExpr) s.first();
                         PathNode common = commonPath(clearPath, o.clearPath);
                         if (common != null && common.type == PATHTYPE.PATH)
+                        {
                             o.shouldClear = false;
+                        }
                      // else
                      //     dummy = null;
                     }
@@ -6276,7 +6926,7 @@ public class Compiler implements Opcodes
 
         public boolean canEmitPrimitive()
         {
-            return b.getPrimitiveType() != null;
+            return (b.getPrimitiveType() != null);
         }
 
         public void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
@@ -6287,7 +6937,9 @@ public class Compiler implements Opcodes
         public void emit(C context, ObjExpr objx, GeneratorAdapter gen)
         {
             if (context != C.STATEMENT)
+            {
                 objx.emitLocal(gen, b, shouldClear);
+            }
         }
 
         public Object evalAssign(Expr val)
@@ -6299,7 +6951,9 @@ public class Compiler implements Opcodes
         {
             objx.emitAssignLocal(gen, b, val);
             if (context != C.STATEMENT)
+            {
                 objx.emitLocal(gen, b, false);
+            }
         }
 
         public boolean hasJavaClass()
@@ -6313,9 +6967,13 @@ public class Compiler implements Opcodes
             if (jc == null)
             {
                 if (tag != null)
+                {
                     jc = HostExpr.tagToClass(tag);
+                }
                 else
+                {
                     jc = b.getJavaClass();
+                }
             }
             return jc;
         }
@@ -6341,7 +6999,9 @@ public class Compiler implements Opcodes
             {
                 ISeq forms = (ISeq) frms;
                 if (Util.equals(RT.first(forms), DO))
+                {
                     forms = RT.next(forms);
+                }
                 PersistentVector exprs = PersistentVector.EMPTY;
                 for ( ; forms != null; forms = forms.next())
                 {
@@ -6349,7 +7009,9 @@ public class Compiler implements Opcodes
                     exprs = exprs.cons(e);
                 }
                 if (exprs.count() == 0)
+                {
                     exprs = exprs.cons(NIL_EXPR);
+                }
                 return new BodyExpr(exprs);
             }
         }
@@ -6448,16 +7110,22 @@ public class Compiler implements Opcodes
                 ISeq form = (ISeq) frm;
                 // (letfns* [var (fn [args] body) ...] body...)
                 if (!(RT.second(form) instanceof IPersistentVector))
+                {
                     throw new IllegalArgumentException("Bad binding form, expected vector");
+                }
 
                 IPersistentVector bindings = (IPersistentVector) RT.second(form);
                 if ((bindings.count() % 2) != 0)
+                {
                     throw new IllegalArgumentException("Bad binding form, expected matched symbol expression pairs");
+                }
 
                 ISeq body = RT.next(RT.next(form));
 
                 if (context == C.EVAL)
+                {
                     return analyze(context, RT.list(RT.list(FNONCE, PersistentVector.EMPTY, form)));
+                }
 
                 IPersistentMap dynamicBindings = RT.map(LOCAL_ENV, LOCAL_ENV.deref(), NEXT_LOCAL_NUM, NEXT_LOCAL_NUM.deref());
 
@@ -6470,10 +7138,14 @@ public class Compiler implements Opcodes
                     for (int i = 0; i < bindings.count(); i += 2)
                     {
                         if (!(bindings.nth(i) instanceof Symbol))
+                        {
                             throw new IllegalArgumentException("Bad binding form, expected symbol, got: " + bindings.nth(i));
+                        }
                         Symbol sym = (Symbol) bindings.nth(i);
                         if (sym.getNamespace() != null)
+                        {
                             throw Util.runtimeException("Can't let qualified name: " + sym);
+                        }
                         LocalBinding lb = registerLocal(sym, tagOf(sym), null, false);
                         lb.canBeCleared = false;
                         lbs = lbs.cons(lb);
@@ -6540,12 +7212,18 @@ public class Compiler implements Opcodes
                 BindingInit bi = (BindingInit) bis.first();
                 String lname = bi.binding.name;
                 if (lname.endsWith("__auto__"))
+                {
                     lname += RT.nextID();
+                }
                 Class primc = maybePrimitiveType(bi.init);
                 if (primc != null)
+                {
                     gen.visitLocalVariable(lname, Type.getDescriptor(primc), null, loopLabel, end, bi.binding.idx);
+                }
                 else
+                {
                     gen.visitLocalVariable(lname, "Ljava/lang/Object;", null, loopLabel, end, bi.binding.idx);
+                }
             }
         }
 
@@ -6581,16 +7259,22 @@ public class Compiler implements Opcodes
                 // (let [var val var2 val2 ...] body...)
                 boolean isLoop = RT.first(form).equals(LOOP);
                 if (!(RT.second(form) instanceof IPersistentVector))
+                {
                     throw new IllegalArgumentException("Bad binding form, expected vector");
+                }
 
                 IPersistentVector bindings = (IPersistentVector) RT.second(form);
                 if ((bindings.count() % 2) != 0)
+                {
                     throw new IllegalArgumentException("Bad binding form, expected matched symbol expression pairs");
+                }
 
                 ISeq body = RT.next(RT.next(form));
 
                 if (context == C.EVAL || (context == C.EXPRESSION && isLoop))
+                {
                     return analyze(context, RT.list(RT.list(FNONCE, PersistentVector.EMPTY, form)));
+                }
 
                 ObjMethod method = (ObjMethod) METHOD.deref();
                 IPersistentMap backupMethodLocals = method.locals;
@@ -6612,7 +7296,9 @@ public class Compiler implements Opcodes
                     PathNode clearroot = new PathNode(PATHTYPE.PATH, looproot);
                     PathNode clearpath = new PathNode(PATHTYPE.PATH, looproot);
                     if (isLoop)
+                    {
                         dynamicBindings = dynamicBindings.assoc(LOOP_LOCALS, null);
+                    }
 
                     try
                     {
@@ -6623,10 +7309,14 @@ public class Compiler implements Opcodes
                         for (int i = 0; i < bindings.count(); i += 2)
                         {
                             if (!(bindings.nth(i) instanceof Symbol))
+                            {
                                 throw new IllegalArgumentException("Bad binding form, expected symbol, got: " + bindings.nth(i));
+                            }
                             Symbol sym = (Symbol) bindings.nth(i);
                             if (sym.getNamespace() != null)
+                            {
                                 throw Util.runtimeException("Can't let qualified name: " + sym);
+                            }
                             Expr init = analyze(C.EXPRESSION, bindings.nth(i + 1), sym.name);
                             if (isLoop)
                             {
@@ -6634,12 +7324,18 @@ public class Compiler implements Opcodes
                                 {
                                     init = new StaticMethodExpr("", 0, 0, null, RT.class, "box", RT.vector(init), false);
                                     if (RT.booleanCast(RT.WARN_ON_REFLECTION.deref()))
+                                    {
                                         RT.errPrintWriter().println("Auto-boxing loop arg: " + sym);
+                                    }
                                 }
                                 else if (maybePrimitiveType(init) == int.class)
+                                {
                                     init = new StaticMethodExpr("", 0, 0, null, RT.class, "longCast", RT.vector(init), false);
+                                }
                                 else if (maybePrimitiveType(init) == float.class)
+                                {
                                     init = new StaticMethodExpr("", 0, 0, null, RT.class, "doubleCast", RT.vector(init), false);
+                                }
                             }
                             // sequential enhancement of env (like Lisp let*)
                             try
@@ -6652,23 +7348,29 @@ public class Compiler implements Opcodes
                                 BindingInit bi = new BindingInit(lb, init);
                                 bindingInits = bindingInits.cons(bi);
                                 if (isLoop)
+                                {
                                     loopLocals = loopLocals.cons(lb);
+                                }
                             }
                             finally
                             {
                                 if (isLoop)
+                                {
                                     Var.popThreadBindings();
+                                }
                             }
                         }
                         if (isLoop)
+                        {
                             LOOP_LOCALS.set(loopLocals);
+                        }
                         Expr bodyExpr;
                         boolean moreMismatches = false;
                         try
                         {
                             if (isLoop)
                             {
-                                Object methodReturnContext = context == C.RETURN ? METHOD_RETURN_CONTEXT.deref() : null;
+                                Object methodReturnContext = (context == C.RETURN) ? METHOD_RETURN_CONTEXT.deref() : null;
                                 Var.pushThreadBindings(RT.map(CLEAR_PATH, clearpath,
                                             CLEAR_ROOT, clearroot,
                                             NO_RECUR, null,
@@ -6694,7 +7396,9 @@ public class Compiler implements Opcodes
                             }
                         }
                         if (!moreMismatches)
+                        {
                             return new LetExpr(bindingInits, bodyExpr, isLoop);
+                        }
                     }
                     finally
                     {
@@ -6735,9 +7439,13 @@ public class Compiler implements Opcodes
                 {
                     bi.init.emit(C.EXPRESSION, objx, gen);
                     if (!bi.binding.used && bi.binding.canBeCleared)
+                    {
                         gen.pop();
+                    }
                     else
+                    {
                         gen.visitVarInsn(OBJECT_TYPE.getOpcode(Opcodes.ISTORE), bi.binding.idx);
+                    }
                 }
                 bindingLabels.put(bi, gen.mark());
             }
@@ -6748,9 +7456,13 @@ public class Compiler implements Opcodes
                 {
                     Var.pushThreadBindings(RT.map(LOOP_LABEL, loopLabel));
                     if (emitUnboxed)
+                    {
                         ((MaybePrimitiveExpr)body).emitUnboxed(context, objx, gen);
+                    }
                     else
+                    {
                         body.emit(context, objx, gen);
+                    }
                 }
                 finally
                 {
@@ -6760,9 +7472,13 @@ public class Compiler implements Opcodes
             else
             {
                 if (emitUnboxed)
+                {
                     ((MaybePrimitiveExpr)body).emitUnboxed(context, objx, gen);
+                }
                 else
+                {
                     body.emit(context, objx, gen);
+                }
             }
             Label end = gen.mark();
          // gen.visitLocalVariable("this", "Ljava/lang/Object;", null, loopLabel, end, 0);
@@ -6771,12 +7487,18 @@ public class Compiler implements Opcodes
                 BindingInit bi = (BindingInit) bis.first();
                 String lname = bi.binding.name;
                 if (lname.endsWith("__auto__"))
+                {
                     lname += RT.nextID();
+                }
                 Class primc = maybePrimitiveType(bi.init);
                 if (primc != null)
+                {
                     gen.visitLocalVariable(lname, Type.getDescriptor(primc), null, bindingLabels.get(bi), end, bi.binding.idx);
+                }
                 else
+                {
                     gen.visitLocalVariable(lname, "Ljava/lang/Object;", null, bindingLabels.get(bi), end, bi.binding.idx);
+                }
             }
         }
 
@@ -6823,7 +7545,9 @@ public class Compiler implements Opcodes
         {
             Label loopLabel = (Label) LOOP_LABEL.deref();
             if (loopLabel == null)
+            {
                 throw new IllegalStateException();
+            }
             for (int i = 0; i < loopLocals.count(); i++)
             {
                 LocalBinding lb = (LocalBinding) loopLocals.nth(i);
@@ -6833,7 +7557,9 @@ public class Compiler implements Opcodes
                     Class primc = lb.getPrimitiveType();
                     final Class pc = maybePrimitiveType(arg);
                     if (pc == primc)
+                    {
                         ((MaybePrimitiveExpr) arg).emitUnboxed(C.EXPRESSION, objx, gen);
+                    }
                     else if (primc == long.class && pc == int.class)
                     {
                         ((MaybePrimitiveExpr) arg).emitUnboxed(C.EXPRESSION, objx, gen);
@@ -6876,13 +7602,19 @@ public class Compiler implements Opcodes
                 LocalBinding lb = (LocalBinding) loopLocals.nth(i);
                 Class primc = lb.getPrimitiveType();
                 if (lb.isArg)
+                {
                     gen.storeArg(lb.idx-(objx.canBeDirect ?0:1));
+                }
                 else
                 {
                     if (primc != null)
+                    {
                         gen.visitVarInsn(Type.getType(primc).getOpcode(Opcodes.ISTORE), lb.idx);
+                    }
                     else
+                    {
                         gen.visitVarInsn(OBJECT_TYPE.getOpcode(Opcodes.ISTORE), lb.idx);
+                    }
                 }
             }
 
@@ -6910,16 +7642,22 @@ public class Compiler implements Opcodes
                 ISeq form = (ISeq) frm;
                 IPersistentVector loopLocals = (IPersistentVector) LOOP_LOCALS.deref();
                 if (context != C.RETURN || loopLocals == null)
+                {
                     throw new UnsupportedOperationException("Can only recur from tail position");
+                }
                 if (NO_RECUR.deref() != null)
+                {
                     throw new UnsupportedOperationException("Cannot recur across try");
+                }
                 PersistentVector args = PersistentVector.EMPTY;
                 for (ISeq s = RT.seq(form.next()); s != null; s = s.next())
                 {
                     args = args.cons(analyze(C.EXPRESSION, s.first()));
                 }
                 if (args.count() != loopLocals.count())
+                {
                     throw new IllegalArgumentException(String.format("Mismatched argument count to recur, expected: %d args, got: %d", loopLocals.count(), args.count()));
+                }
                 for (int i = 0; i < loopLocals.count(); i++)
                 {
                     LocalBinding lb = (LocalBinding) loopLocals.nth(i);
@@ -6931,19 +7669,25 @@ public class Compiler implements Opcodes
                         if (primc == long.class)
                         {
                             if (!(pc == long.class || pc == int.class || pc == short.class || pc == char.class || pc == byte.class))
+                            {
                                 mismatch = true;
+                            }
                         }
                         else if (primc == double.class)
                         {
                             if (!(pc == double.class || pc == float.class))
+                            {
                                 mismatch = true;
+                            }
                         }
                         if (mismatch)
                         {
                             lb.recurMistmatch = true;
                             if (RT.booleanCast(RT.WARN_ON_REFLECTION.deref()))
+                            {
                                 RT.errPrintWriter().println(source + ":" + line + " recur arg for primitive local: " + lb.name + " is not matching primitive, had: " +
-                                     (pc != null ? pc.getName():"Object") + ", needed: " + primc.getName());
+                                     ((pc != null) ? pc.getName() : "Object") + ", needed: " + primc.getName());
+                            }
                         }
                     }
                 }
@@ -6979,7 +7723,9 @@ public class Compiler implements Opcodes
         int num = ((Number) NEXT_LOCAL_NUM.deref()).intValue();
         ObjMethod m = (ObjMethod) METHOD.deref();
         if (num > m.maxLocal)
+        {
             m.maxLocal = num;
+        }
         NEXT_LOCAL_NUM.set(num + 1);
         return num;
     }
@@ -6999,45 +7745,75 @@ public class Compiler implements Opcodes
                 Object mform = form;
                 form = RT.seq(form);
                 if (form == null)
+                {
                     form = PersistentList.EMPTY;
+                }
                 form = ((IObj)form).withMeta(RT.meta(mform));
             }
             if (form == null)
+            {
                 return NIL_EXPR;
+            }
             else if (form == Boolean.TRUE)
+            {
                 return TRUE_EXPR;
+            }
             else if (form == Boolean.FALSE)
+            {
                 return FALSE_EXPR;
+            }
             Class fclass = form.getClass();
             if (fclass == Symbol.class)
+            {
                 return analyzeSymbol((Symbol) form);
+            }
             else if (fclass == Keyword.class)
+            {
                 return registerKeyword((Keyword) form);
+            }
             else if (form instanceof Number)
+            {
                 return NumberExpr.parse((Number) form);
+            }
             else if (fclass == String.class)
+            {
                 return new StringExpr(((String) form).intern());
+            }
          // else if (fclass == Character.class)
          //     return new CharExpr((Character) form);
             else if (form instanceof IPersistentCollection && !(form instanceof IRecord) && !(form instanceof IType) && ((IPersistentCollection) form).count() == 0)
             {
                 Expr ret = new EmptyExpr(form);
                 if (RT.meta(form) != null)
+                {
                     ret = new MetaExpr(ret, MapExpr.parse((context == C.EVAL) ? context : C.EXPRESSION, ((IObj) form).meta()));
+                }
                 return ret;
             }
             else if (form instanceof ISeq)
+            {
                 return analyzeSeq(context, (ISeq) form, name);
+            }
             else if (form instanceof IPersistentVector)
+            {
                 return VectorExpr.parse(context, (IPersistentVector) form);
+            }
             else if (form instanceof IRecord)
+            {
                 return new ConstantExpr(form);
+            }
             else if (form instanceof IType)
+            {
                 return new ConstantExpr(form);
+            }
             else if (form instanceof IPersistentMap)
+            {
                 return MapExpr.parse(context, (IPersistentMap) form);
+            }
             else if (form instanceof IPersistentSet)
+            {
                 return SetExpr.parse(context, (IPersistentSet) form);
+            }
 
          // else
          //     throw new UnsupportedOperationException();
@@ -7046,9 +7822,13 @@ public class Compiler implements Opcodes
         catch (Throwable e)
         {
             if (!(e instanceof CompilerException))
+            {
                 throw new CompilerException((String) SOURCE_PATH.deref(), lineDeref(), columnDeref(), e);
+            }
             else
+            {
                 throw (CompilerException) e;
+            }
         }
     }
 
@@ -7075,14 +7855,18 @@ public class Compiler implements Opcodes
     {
         // no local macros for now
         if (op instanceof Symbol && referenceLocal((Symbol) op) != null)
+        {
             return null;
+        }
         if (op instanceof Symbol || op instanceof Var)
         {
             Var v = (op instanceof Var) ? (Var) op : lookupVar((Symbol) op, false, false);
             if (v != null && v.isMacro())
             {
                 if (v.ns != currentNS() && !v.isPublic())
+                {
                     throw new IllegalStateException("var: " + v + " is not public");
+                }
                 return v;
             }
         }
@@ -7093,20 +7877,26 @@ public class Compiler implements Opcodes
     {
         // no local inlines for now
         if (op instanceof Symbol && referenceLocal((Symbol) op) != null)
+        {
             return null;
+        }
         if (op instanceof Symbol || op instanceof Var)
         {
             Var v = (op instanceof Var) ? (Var) op : lookupVar((Symbol) op, false);
             if (v != null)
             {
                 if (v.ns != currentNS() && !v.isPublic())
+                {
                     throw new IllegalStateException("var: " + v + " is not public");
+                }
                 IFn ret = (IFn) RT.get(v.meta(), inlineKey);
                 if (ret != null)
                 {
                     IFn arityPred = (IFn) RT.get(v.meta(), inlineAritiesKey);
                     if (arityPred == null || RT.booleanCast(arityPred.invoke(arity)))
+                    {
                         return ret;
+                    }
                 }
             }
         }
@@ -7174,7 +7964,9 @@ public class Compiler implements Opcodes
             ISeq form = (ISeq) x;
             Object op = RT.first(form);
             if (isSpecial(op))
+            {
                 return x;
+            }
             // macro expansion
             Var v = isMacro(op);
             if (v != null)
@@ -7202,7 +7994,9 @@ public class Compiler implements Opcodes
                     if (sym.name.charAt(0) == '.')
                     {
                         if (RT.length(form) < 2)
+                        {
                             throw new IllegalArgumentException("Malformed member expression, expecting (.member target ...)");
+                        }
                         Symbol meth = Symbol.intern(sname.substring(1));
                         Object target = RT.second(form);
                         if (HostExpr.maybeClass(target, false) != null)
@@ -7235,7 +8029,9 @@ public class Compiler implements Opcodes
                         // (StringBuilder. "foo") => (new StringBuilder "foo")
                      // else
                         if (idx == sname.length() - 1)
+                        {
                             return RT.listStar(NEW, Symbol.intern(sname.substring(0, idx)), form.next());
+                        }
                     }
                 }
             }
@@ -7247,7 +8043,9 @@ public class Compiler implements Opcodes
     {
         Object exf = macroexpand1(form);
         if (exf != form)
+        {
             return macroexpand(exf);
+        }
         return form;
     }
 
@@ -7256,36 +8054,56 @@ public class Compiler implements Opcodes
         Object line = lineDeref();
         Object column = columnDeref();
         if (RT.meta(form) != null && RT.meta(form).containsKey(RT.LINE_KEY))
+        {
             line = RT.meta(form).valAt(RT.LINE_KEY);
+        }
         if (RT.meta(form) != null && RT.meta(form).containsKey(RT.COLUMN_KEY))
+        {
             column = RT.meta(form).valAt(RT.COLUMN_KEY);
+        }
         Var.pushThreadBindings(RT.map(LINE, line, COLUMN, column));
         try
         {
             Object me = macroexpand1(form);
             if (me != form)
+            {
                 return analyze(context, me, name);
+            }
 
             Object op = RT.first(form);
             if (op == null)
+            {
                 throw new IllegalArgumentException("Can't call nil, form: " + form);
+            }
             IFn inline = isInline(op, RT.count(RT.next(form)));
             if (inline != null)
+            {
                 return analyze(context, preserveTag(form, inline.applyTo(RT.next(form))));
+            }
             IParser p;
             if (op.equals(FN))
+            {
                 return FnExpr.parse(context, form, name);
+            }
             else if ((p = (IParser) specials.valAt(op)) != null)
+            {
                 return p.parse(context, form);
+            }
             else
+            {
                 return InvokeExpr.parse(context, form);
+            }
         }
         catch (Throwable e)
         {
             if (!(e instanceof CompilerException))
+            {
                 throw new CompilerException((String) SOURCE_PATH.deref(), lineDeref(), columnDeref(), e);
+            }
             else
+            {
                 throw (CompilerException) e;
+            }
         }
         finally
         {
@@ -7316,9 +8134,13 @@ public class Compiler implements Opcodes
             Object line = lineDeref();
             Object column = columnDeref();
             if (RT.meta(form) != null && RT.meta(form).containsKey(RT.LINE_KEY))
+            {
                 line = RT.meta(form).valAt(RT.LINE_KEY);
+            }
             if (RT.meta(form) != null && RT.meta(form).containsKey(RT.COLUMN_KEY))
+            {
                 column = RT.meta(form).valAt(RT.COLUMN_KEY);
+            }
             Var.pushThreadBindings(RT.map(LINE, line, COLUMN, column));
             try
             {
@@ -7327,7 +8149,9 @@ public class Compiler implements Opcodes
                 {
                     ISeq s = RT.next(form);
                     for ( ; RT.next(s) != null; s = RT.next(s))
+                    {
                         eval(RT.first(s), false);
+                    }
                     return eval(RT.first(s), false);
                 }
                 else if ((form instanceof IType) || (form instanceof IPersistentCollection && !(RT.first(form) instanceof Symbol && ((Symbol) RT.first(form)).name.startsWith("def"))))
@@ -7350,19 +8174,25 @@ public class Compiler implements Opcodes
         finally
         {
             if (createdLoader)
+            {
                 Var.popThreadBindings();
+            }
         }
     }
 
     private static int registerConstant(Object o)
     {
         if (!CONSTANTS.isBound())
+        {
             return -1;
+        }
         PersistentVector v = (PersistentVector) CONSTANTS.deref();
         IdentityHashMap<Object, Integer> ids = (IdentityHashMap<Object, Integer>) CONSTANT_IDS.deref();
         Integer i = ids.get(o);
         if (i != null)
+        {
             return i;
+        }
         CONSTANTS.set(RT.conj(v, o));
         ids.put(o, v.count());
         return v.count();
@@ -7371,7 +8201,9 @@ public class Compiler implements Opcodes
     private static KeywordExpr registerKeyword(Keyword keyword)
     {
         if (!KEYWORDS.isBound())
+        {
             return new KeywordExpr(keyword);
+        }
 
         IPersistentMap keywordsMap = (IPersistentMap) KEYWORDS.deref();
         Object id = RT.get(keywordsMap, keyword);
@@ -7389,7 +8221,9 @@ public class Compiler implements Opcodes
     private static int registerKeywordCallsite(Keyword keyword)
     {
         if (!KEYWORD_CALLSITES.isBound())
+        {
             throw new IllegalAccessError("KEYWORD_CALLSITES is not bound");
+        }
 
         IPersistentVector keywordCallsites = (IPersistentVector) KEYWORD_CALLSITES.deref();
 
@@ -7401,7 +8235,9 @@ public class Compiler implements Opcodes
     private static int registerProtocolCallsite(Var v)
     {
         if (!PROTOCOL_CALLSITES.isBound())
+        {
             throw new IllegalAccessError("PROTOCOL_CALLSITES is not bound");
+        }
 
         IPersistentVector protocolCallsites = (IPersistentVector) PROTOCOL_CALLSITES.deref();
 
@@ -7413,7 +8249,9 @@ public class Compiler implements Opcodes
     private static void registerVarCallsite(Var v)
     {
         if (!VAR_CALLSITES.isBound())
+        {
             throw new IllegalAccessError("VAR_CALLSITES is not bound");
+        }
 
         IPersistentCollection varCallsites = (IPersistentCollection) VAR_CALLSITES.deref();
 
@@ -7426,7 +8264,9 @@ public class Compiler implements Opcodes
     {
         ISeq ret = null;
         for ( ; p1 != null; p1 = p1.parent)
+        {
             ret = RT.cons(p1, ret);
+        }
         return ret;
     }
 
@@ -7435,7 +8275,9 @@ public class Compiler implements Opcodes
         ISeq xp = fwdPath(n1);
         ISeq yp = fwdPath(n2);
         if (RT.first(xp) != RT.first(yp))
+        {
             return null;
+        }
         while (RT.second(xp) != null && RT.second(xp) == RT.second(yp))
         {
             xp = xp.next();
@@ -7447,13 +8289,17 @@ public class Compiler implements Opcodes
     static void addAnnotation(Object visitor, IPersistentMap meta)
     {
         if (meta != null && ADD_ANNOTATIONS.isBound())
+        {
             ADD_ANNOTATIONS.invoke(visitor, meta);
+        }
     }
 
     static void addParameterAnnotation(Object visitor, IPersistentMap meta, int i)
     {
         if (meta != null && ADD_ANNOTATIONS.isBound())
+        {
             ADD_ANNOTATIONS.invoke(visitor, meta, i);
+        }
     }
 
     private static Expr analyzeSymbol(Symbol sym)
@@ -7474,7 +8320,9 @@ public class Compiler implements Opcodes
             if (c != null)
             {
                 if (Reflector.getField(c, sym.name, true) != null)
+                {
                     return new StaticFieldExpr(lineDeref(), columnDeref(), c, sym.name, tag);
+                }
                 throw Util.runtimeException("Unable to find static field: " + sym.name + " in " + c);
             }
         }
@@ -7487,16 +8335,24 @@ public class Compiler implements Opcodes
         {
             Var v = (Var) o;
             if (isMacro(v) != null)
+            {
                 throw Util.runtimeException("Can't take value of a macro: " + v);
+            }
             if (RT.booleanCast(RT.get(v.meta(), RT.CONST_KEY)))
+            {
                 return analyze(C.EXPRESSION, RT.list(QUOTE, v.get()));
+            }
             registerVar(v);
             return new VarExpr(v, tag);
         }
         else if (o instanceof Class)
+        {
             return new ConstantExpr(o);
+        }
         else if (o instanceof Symbol)
+        {
             return new UnresolvedVarExpr((Symbol) o);
+        }
 
         throw Util.runtimeException("Unable to resolve symbol: " + sym + " in this context");
     }
@@ -7505,7 +8361,9 @@ public class Compiler implements Opcodes
     {
         // skip over prefix + '.' or '/'
         if (className.startsWith(COMPILE_STUB_PREFIX))
+        {
             return className.substring(COMPILE_STUB_PREFIX.length() + 1);
+        }
         return className;
     }
 
@@ -7513,7 +8371,9 @@ public class Compiler implements Opcodes
     {
         String descriptor = Type.getType(c).getDescriptor();
         if (descriptor.startsWith("L"))
+        {
             descriptor = "L" + destubClassName(descriptor.substring(1));
+        }
         return Type.getType(descriptor);
     }
 
@@ -7553,13 +8413,19 @@ public class Compiler implements Opcodes
         {
             Namespace ns = namespaceFor(n, sym);
             if (ns == null)
+            {
                 throw Util.runtimeException("No such namespace: " + sym.ns);
+            }
 
             Var v = ns.findInternedVar(Symbol.intern(sym.name));
             if (v == null)
+            {
                 throw Util.runtimeException("No such var: " + sym);
+            }
             else if (v.ns != currentNS() && !v.isPublic() && !allowPrivate)
+            {
                 throw new IllegalStateException("var: " + sym + " is not public");
+            }
             return v;
         }
         else if (sym.name.indexOf('.') > 0 || sym.name.charAt(0) == '[')
@@ -7567,13 +8433,19 @@ public class Compiler implements Opcodes
             return RT.classForName(sym.name);
         }
         else if (sym.equals(NS))
+        {
             return RT.NS_VAR;
+        }
         else if (sym.equals(IN_NS))
+        {
             return RT.IN_NS_VAR;
+        }
         else
         {
             if (Util.equals(sym, COMPILE_STUB_SYM.get()))
+            {
                 return COMPILE_STUB_CLASS.get();
+            }
             Object o = n.getMapping(sym);
             if (o == null)
             {
@@ -7597,10 +8469,14 @@ public class Compiler implements Opcodes
         {
             Namespace ns = namespaceFor(n, sym);
             if (ns == null)
+            {
                 return null;
+            }
             Var v = ns.findInternedVar(Symbol.intern(sym.name));
             if (v == null)
+            {
                 return null;
+            }
             return v;
         }
         else if (sym.name.indexOf('.') > 0 && !sym.name.endsWith(".") || sym.name.charAt(0) == '[')
@@ -7608,9 +8484,13 @@ public class Compiler implements Opcodes
             return RT.classForName(sym.name);
         }
         else if (sym.equals(NS))
+        {
             return RT.NS_VAR;
+        }
         else if (sym.equals(IN_NS))
+        {
             return RT.IN_NS_VAR;
+        }
         else
         {
             Object o = n.getMapping(sym);
@@ -7627,18 +8507,28 @@ public class Compiler implements Opcodes
         {
             Namespace ns = namespaceFor(sym);
             if (ns == null)
+            {
                 return null;
+            }
              // throw Util.runtimeException("No such namespace: " + sym.ns);
             Symbol name = Symbol.intern(sym.name);
             if (internNew && ns == currentNS())
+            {
                 var = currentNS().intern(name);
+            }
             else
+            {
                 var = ns.findInternedVar(name);
+            }
         }
         else if (sym.equals(NS))
+        {
             var = RT.NS_VAR;
+        }
         else if (sym.equals(IN_NS))
+        {
             var = RT.IN_NS_VAR;
+        }
         else
         {
             // is it mapped?
@@ -7647,7 +8537,9 @@ public class Compiler implements Opcodes
             {
                 // introduce a new var in the current ns
                 if (internNew)
+                {
                     var = currentNS().intern(Symbol.intern(sym.name));
+                }
             }
             else if (o instanceof Var)
             {
@@ -7659,7 +8551,9 @@ public class Compiler implements Opcodes
             }
         }
         if (var != null && (!var.isMacro() || registerMacro))
+        {
             registerVar(var);
+        }
         return var;
     }
 
@@ -7671,7 +8565,9 @@ public class Compiler implements Opcodes
     private static void registerVar(Var var)
     {
         if (!VARS.isBound())
+        {
             return;
+        }
         IPersistentMap varsMap = (IPersistentMap) VARS.deref();
         Object id = RT.get(varsMap, var);
         if (id == null)
@@ -7700,7 +8596,9 @@ public class Compiler implements Opcodes
             else
             {
                 if (lb.idx == 0)
+                {
                     method.usesThis = true;
+                }
                 if (IN_CATCH_FINALLY.deref() != null)
                 {
                     method.localsUsedInCatchFinally = (PersistentHashSet) method.localsUsedInCatchFinally.cons(b.idx);
@@ -7712,13 +8610,17 @@ public class Compiler implements Opcodes
     static LocalBinding referenceLocal(Symbol sym)
     {
         if (!LOCAL_ENV.isBound())
+        {
             return null;
+        }
         LocalBinding b = (LocalBinding) RT.get(LOCAL_ENV.deref(), sym);
         if (b != null)
         {
             ObjMethod method = (ObjMethod) METHOD.deref();
             if (b.idx == 0)
+            {
                 method.usesThis = true;
+            }
             closeOver(b, method);
         }
         return b;
@@ -7728,9 +8630,13 @@ public class Compiler implements Opcodes
     {
         Object tag = RT.get(RT.meta(o), RT.TAG_KEY);
         if (tag instanceof Symbol)
+        {
             return (Symbol) tag;
+        }
         else if (tag instanceof String)
+        {
             return Symbol.intern(null, (String) tag);
+        }
         return null;
     }
 
@@ -7769,9 +8675,13 @@ public class Compiler implements Opcodes
     private static Object readerOpts(String sourceName)
     {
         if (sourceName != null && sourceName.endsWith(".clic"))
+        {
             return OPTS_COND_ALLOWED;
+        }
         else
+        {
             return null;
+        }
     }
 
     public static Object load(Reader rdr, String sourcePath, String sourceName)
@@ -7818,9 +8728,13 @@ public class Compiler implements Opcodes
         catch (Throwable e)
         {
             if (!(e instanceof CompilerException))
+            {
                 throw new CompilerException(sourcePath, (Integer) LINE_BEFORE.deref(), (Integer) COLUMN_BEFORE.deref(), e);
+            }
             else
+            {
                 throw (CompilerException) e;
+            }
         }
         finally
         {
@@ -7834,7 +8748,9 @@ public class Compiler implements Opcodes
     {
         String genPath = (String) COMPILE_PATH.deref();
         if (genPath == null)
+        {
             throw Util.runtimeException("*compile-path* not set");
+        }
         String[] dirs = internalName.split("/");
         String p = genPath;
         for (int i = 0; i < dirs.length - 1; i++)
@@ -7877,9 +8793,13 @@ public class Compiler implements Opcodes
         Object line = lineDeref();
         Object column = columnDeref();
         if (RT.meta(form) != null && RT.meta(form).containsKey(RT.LINE_KEY))
+        {
             line = RT.meta(form).valAt(RT.LINE_KEY);
+        }
         if (RT.meta(form) != null && RT.meta(form).containsKey(RT.COLUMN_KEY))
+        {
             column = RT.meta(form).valAt(RT.COLUMN_KEY);
+        }
         Var.pushThreadBindings(RT.map(LINE, line, COLUMN, column,
                     LOADER, RT.makeClassLoader()
         ));
@@ -7913,7 +8833,9 @@ public class Compiler implements Opcodes
         throws IOException
     {
         if (COMPILE_PATH.deref() == null)
+        {
             throw Util.runtimeException("*compile-path* not set");
+        }
 
         Object EOF = new Object();
         Object ret = null;
@@ -7972,13 +8894,17 @@ public class Compiler implements Opcodes
             for (int i = 0; i < objx.constants.count(); i++)
             {
                 if (objx.usedConstants.contains(i))
+                {
                     cv.visitField(ACC_PUBLIC + ACC_FINAL + ACC_STATIC, objx.constantName(i), objx.constantType(i).getDescriptor(), null, null);
+                }
             }
 
             final int INITS_PER = 100;
             int numInits =  objx.constants.count() / INITS_PER;
             if (objx.constants.count() % INITS_PER != 0)
+            {
                 ++numInits;
+            }
 
             for (int n = 0; n < numInits; n++)
             {
@@ -8019,7 +8945,9 @@ public class Compiler implements Opcodes
          //     objx.emitConstants(clinitgen);
          // }
             for (int n = 0; n < numInits; n++)
+            {
                 clinitgen.invokeStatic(objx.objtype, Method.getMethod("void __init" + n + "()"));
+            }
 
             clinitgen.push(objx.internalName.replace('/', '.'));
             clinitgen.invokeStatic(RT_TYPE, Method.getMethod("Class classForName(String)"));
@@ -8115,9 +9043,13 @@ public class Compiler implements Opcodes
 
                 ObjExpr ret = build(interfaces, null, null, classname, Symbol.intern(classname), null, rform, frm, null);
                 if (frm instanceof IObj && ((IObj) frm).meta() != null)
+                {
                     return new MetaExpr(ret, MapExpr.parse((context == C.EVAL) ? context : C.EXPRESSION, ((IObj) frm).meta()));
+                }
                 else
+                {
                     return ret;
+                }
             }
         }
 
@@ -8133,7 +9065,9 @@ public class Compiler implements Opcodes
             ret.opts = opts;
 
             if (thisSym != null)
+            {
                 ret.thisName = thisSym.name;
+            }
 
             if (fieldSyms != null)
             {
@@ -8152,12 +9086,10 @@ public class Compiler implements Opcodes
                 // use array map to preserve ctor order
                 ret.closes = new PersistentArrayMap(closesvec);
                 ret.fields = fmap;
-                for (int i = fieldSyms.count() - 1; i >= 0 && (((Symbol)fieldSyms.nth(i)).name.equals("__meta")
-                            || ((Symbol)fieldSyms.nth(i)).name.equals("__extmap")
-                            || ((Symbol)fieldSyms.nth(i)).name.equals("__hash")
-                            || ((Symbol)fieldSyms.nth(i)).name.equals("__hasheq")
-                            ); --i)
+                for (int i = fieldSyms.count() - 1; i >= 0 && (((Symbol)fieldSyms.nth(i)).name.equals("__meta") || ((Symbol)fieldSyms.nth(i)).name.equals("__extmap") || ((Symbol)fieldSyms.nth(i)).name.equals("__hash") || ((Symbol)fieldSyms.nth(i)).name.equals("__hasheq")); --i)
+                {
                     ret.altCtorDrops++;
+                }
             }
             // todo - set up volatiles
          // ret.volatiles = PersistentHashSet.create(RT.seq(RT.get(ret.optionsMap, volatileKey)));
@@ -8167,7 +9099,9 @@ public class Compiler implements Opcodes
             {
                 Class c = (Class) resolve((Symbol) s.first());
                 if (!c.isInterface())
+                {
                     throw new IllegalArgumentException("only interfaces are supported, had: " + c.getName());
+                }
                 interfaces = interfaces.cons(c);
             }
             Class superClass = Object.class;
@@ -8226,7 +9160,9 @@ public class Compiler implements Opcodes
             finally
             {
                 if (ret.isDeftype())
+                {
                     Var.popThreadBindings();
+                }
                 Var.popThreadBindings();
             }
 
@@ -8261,10 +9197,14 @@ public class Compiler implements Opcodes
                 LocalBinding lb = (LocalBinding) s.first();
                 int access = ACC_PUBLIC + (ret.isVolatile(lb) ? ACC_VOLATILE : ret.isMutable(lb) ? 0 : ACC_FINAL);
                 if (lb.getPrimitiveType() != null)
+                {
                     cv.visitField(access, lb.name, Type.getType(lb.getPrimitiveType()).getDescriptor(), null, null);
+                }
                 else
+                {
                     // todo - when closed-overs are fields, use more specific types here and in ctor and emitLocal?
                     cv.visitField(access, lb.name, OBJECT_TYPE.getDescriptor(), null, null);
+                }
             }
 
             // ctor that takes closed-overs and does nothing
@@ -8281,7 +9221,9 @@ public class Compiler implements Opcodes
                 Type[] ctorTypes = ret.ctorTypes();
                 Type[] altCtorTypes = new Type[ctorTypes.length-ret.altCtorDrops];
                 for (int i = 0; i < altCtorTypes.length; i++)
+                {
                     altCtorTypes[i] = ctorTypes[i];
+                }
                 Method alt = new Method("<init>", Type.VOID_TYPE, altCtorTypes);
                 ctorgen = new GeneratorAdapter(ACC_PUBLIC, alt, null, null, cv);
                 ctorgen.visitCode();
@@ -8301,7 +9243,9 @@ public class Compiler implements Opcodes
                 // alt ctor no __hash, __hasheq
                 altCtorTypes = new Type[ctorTypes.length-2];
                 for (int i = 0; i < altCtorTypes.length; i++)
+                {
                     altCtorTypes[i] = ctorTypes[i];
+                }
 
                 alt = new Method("<init>", Type.VOID_TYPE, altCtorTypes);
                 ctorgen = new GeneratorAdapter(ACC_PUBLIC, alt, null, null, cv);
@@ -8328,9 +9272,11 @@ public class Compiler implements Opcodes
         static String[] interfaceNames(IPersistentVector interfaces)
         {
             int icnt = interfaces.count();
-            String[] inames = icnt > 0 ? new String[icnt] : null;
+            String[] inames = (icnt > 0) ? new String[icnt] : null;
             for (int i = 0; i < icnt; i++)
+            {
                 inames[i] = slashname((Class) interfaces.nth(i));
+            }
             return inames;
         }
 
@@ -8479,9 +9425,13 @@ public class Compiler implements Opcodes
             for ( ; c != null; c = c.getSuperclass())
             {
                 for (java.lang.reflect.Method m : c.getDeclaredMethods())
+                {
                     considerMethod(m, mm);
+                }
                 for (java.lang.reflect.Method m : c.getMethods())
+                {
                     considerMethod(m, mm);
+                }
             }
         }
 
@@ -8490,7 +9440,9 @@ public class Compiler implements Opcodes
             Map allm = new HashMap();
             gatherMethods(sc, allm);
             for ( ; interfaces != null; interfaces = interfaces.next())
+            {
                 gatherMethods((Class) interfaces.first(), allm);
+            }
 
             Map<IPersistentVector, java.lang.reflect.Method> mm = new HashMap<IPersistentVector, java.lang.reflect.Method>();
             Map<IPersistentVector, Set<Class>> covariants = new HashMap<IPersistentVector, Set<Class>>();
@@ -8515,10 +9467,14 @@ public class Compiler implements Opcodes
                         mm.put(mk, m);
                     }
                     else
+                    {
                         cvs.add(m.getReturnType());
+                    }
                 }
                 else
+                {
                     mm.put(mk, m);
+                }
             }
             return new Map[] {mm, covariants};
         }
@@ -8599,9 +9555,13 @@ public class Compiler implements Opcodes
 
                 // register 'this' as local 0
                 if (thisName != null)
+                {
                     registerLocal((thisName == null) ? dummyThis:thisName, thistag, null, false);
+                }
                 else
+                {
                     getAndIncLocalNum();
+                }
 
                 PersistentVector argLocals = PersistentVector.EMPTY;
                 method.retClass = tagClass(tagOf(name));
@@ -8613,13 +9573,19 @@ public class Compiler implements Opcodes
                 for (int i = 0; i < parms.count(); i++)
                 {
                     if (!(parms.nth(i) instanceof Symbol))
+                    {
                         throw new IllegalArgumentException("params must be Symbols");
+                    }
                     Symbol p = (Symbol) parms.nth(i);
                     Object tag = tagOf(p);
                     if (tag != null)
+                    {
                         hinted = true;
+                    }
                     if (p.getNamespace() != null)
+                    {
                         p = Symbol.intern(p.name);
+                    }
                     Class pclass = tagClass(tag);
                     pclasses[i] = pclass;
                     psyms[i] = p;
@@ -8634,12 +9600,18 @@ public class Compiler implements Opcodes
                     {
                         // must be hinted and match one method
                         if (!hinted)
+                        {
                             throw new IllegalArgumentException("Must hint overloaded method: " + name.name);
+                        }
                         m = (java.lang.reflect.Method) matches.get(mk);
                         if (m == null)
+                        {
                             throw new IllegalArgumentException("Can't find matching overloaded method: " + name.name);
+                        }
                         if (m.getReturnType() != method.retClass)
+                        {
                             throw new IllegalArgumentException("Mismatched return type: " + name.name + ", expected: " + m.getReturnType().getName()  + ", had: " + method.retClass.getName());
+                        }
                     }
                     else // one match
                     {
@@ -8648,9 +9620,13 @@ public class Compiler implements Opcodes
                         {
                             m = (java.lang.reflect.Method) matches.get(mk);
                             if (m == null)
+                            {
                                 throw new IllegalArgumentException("Can't find matching method: " + name.name + ", leave off hints for auto match.");
+                            }
                             if (m.getReturnType() != method.retClass)
+                            {
                                 throw new IllegalArgumentException("Mismatched return type: " + name.name + ", expected: " + m.getReturnType().getName()  + ", had: " + method.retClass.getName());
+                            }
                         }
                         else // adopt found method sig
                         {
@@ -8663,7 +9639,9 @@ public class Compiler implements Opcodes
              // else if (findMethodsWithName(name.name, allmethods).size() > 0)
              //     throw new IllegalArgumentException("Can't override/overload method: " + name.name);
                 else
+                {
                     throw new IllegalArgumentException("Can't define method not in interfaces: " + name.name);
+                }
 
                 // else
                 // validate unque name+arity among additional methods
@@ -8680,7 +9658,9 @@ public class Compiler implements Opcodes
                 for (int i = 0; i < parms.count(); i++)
                 {
                     if (pclasses[i] == long.class || pclasses[i] == double.class)
+                    {
                         getAndIncLocalNum();
+                    }
                 }
                 LOOP_LOCALS.set(argLocals);
                 method.name = name.name;
@@ -8704,7 +9684,9 @@ public class Compiler implements Opcodes
                 Map.Entry e = (Map.Entry) o;
                 java.lang.reflect.Method m = (java.lang.reflect.Method) e.getValue();
                 if (name.equals(m.getName()) && m.getParameterTypes().length == arity)
+                {
                     ret.put(e.getKey(), e.getValue());
+                }
             }
             return ret;
         }
@@ -8717,7 +9699,9 @@ public class Compiler implements Opcodes
                 Map.Entry e = (Map.Entry) o;
                 java.lang.reflect.Method m = (java.lang.reflect.Method) e.getValue();
                 if (name.equals(m.getName()))
+                {
                     ret.put(e.getKey(), e.getValue());
+                }
             }
             return ret;
         }
@@ -8731,7 +9715,9 @@ public class Compiler implements Opcodes
             {
                 extypes = new Type[exclasses.length];
                 for (int i = 0; i < exclasses.length; i++)
+                {
                     extypes[i] = Type.getType(exclasses[i]);
+                }
             }
             GeneratorAdapter gen = new GeneratorAdapter(ACC_PUBLIC, m, null, extypes, cv);
             addAnnotation(gen, methodMeta);
@@ -8777,13 +9763,19 @@ public class Compiler implements Opcodes
     static Class retType(Class tc, Class ret)
     {
         if (tc == null)
+        {
             return ret;
+        }
         if (ret == null)
+        {
             return tc;
+        }
         if (ret.isPrimitive() && tc.isPrimitive())
         {
             if ((inty(ret) && inty(tc)) || (ret == tc))
+            {
                 return tc;
+            }
             throw new UnsupportedOperationException("Cannot coerce " + ret + " to " + tc + ", use a cast instead");
         }
         return tc;
@@ -8792,38 +9784,64 @@ public class Compiler implements Opcodes
     static Class primClass(Symbol sym)
     {
         if (sym == null)
+        {
             return null;
+        }
         Class c = null;
         if (sym.name.equals("int"))
+        {
             c = int.class;
+        }
         else if (sym.name.equals("long"))
+        {
             c = long.class;
+        }
         else if (sym.name.equals("float"))
+        {
             c = float.class;
+        }
         else if (sym.name.equals("double"))
+        {
             c = double.class;
+        }
         else if (sym.name.equals("char"))
+        {
             c = char.class;
+        }
         else if (sym.name.equals("short"))
+        {
             c = short.class;
+        }
         else if (sym.name.equals("byte"))
+        {
             c = byte.class;
+        }
         else if (sym.name.equals("boolean"))
+        {
             c = boolean.class;
+        }
         else if (sym.name.equals("void"))
+        {
             c = void.class;
+        }
         return c;
     }
 
     static Class tagClass(Object tag)
     {
         if (tag == null)
+        {
             return Object.class;
+        }
         Class c = null;
         if (tag instanceof Symbol)
+        {
             c = primClass((Symbol) tag);
+        }
         if (c == null)
+        {
             c = HostExpr.tagToClass(tag);
+        }
         return c;
     }
 
@@ -8835,26 +9853,44 @@ public class Compiler implements Opcodes
     static Class boxClass(Class p)
     {
         if (!p.isPrimitive())
+        {
             return p;
+        }
 
         Class c = null;
 
         if (p == Integer.TYPE)
+        {
             c = Integer.class;
+        }
         else if (p == Long.TYPE)
+        {
             c = Long.class;
+        }
         else if (p == Float.TYPE)
+        {
             c = Float.class;
+        }
         else if (p == Double.TYPE)
+        {
             c = Double.class;
+        }
         else if (p == Character.TYPE)
+        {
             c = Character.class;
+        }
         else if (p == Short.TYPE)
+        {
             c = Short.class;
+        }
         else if (p == Byte.TYPE)
+        {
             c = Byte.class;
+        }
         else if (p == Boolean.TYPE)
+        {
             c = Boolean.class;
+        }
 
         return c;
     }
@@ -8880,7 +9916,7 @@ public class Compiler implements Opcodes
 
         public boolean hasJavaClass()
         {
-            return c != null;
+            return (c != null);
         }
 
         public Class getJavaClass()
@@ -8940,10 +9976,14 @@ public class Compiler implements Opcodes
             this.line = line;
             this.column = column;
             if (switchType != compactKey && switchType != sparseKey)
+            {
                 throw new IllegalArgumentException("Unexpected switch type: "+switchType);
+            }
             this.switchType = switchType;
             if (testType != intKey && testType != hashEquivKey && testType != hashIdentityKey)
+            {
                 throw new IllegalArgumentException("Unexpected test type: "+switchType);
+            }
             this.testType = testType;
             this.skipCheck = skipCheck;
             Collection<Expr> returns = new ArrayList(thens.values());
@@ -8958,7 +9998,7 @@ public class Compiler implements Opcodes
 
         public boolean hasJavaClass()
         {
-            return returnType != null;
+            return (returnType != null);
         }
 
         public boolean canEmitPrimitive()
@@ -9000,12 +10040,16 @@ public class Compiler implements Opcodes
             gen.visitLineNumber(line, gen.mark());
 
             Class primExprClass = maybePrimitiveType(expr);
-            Type primExprType = primExprClass == null ? null : Type.getType(primExprClass);
+            Type primExprType = (primExprClass == null) ? null : Type.getType(primExprClass);
 
             if (testType == intKey)
+            {
                 emitExprForInts(objx, gen, primExprType, defaultLabel);
+            }
             else
+            {
                 emitExprForHashes(objx, gen);
+            }
 
             if (switchType == sparseKey)
             {
@@ -9028,11 +10072,17 @@ public class Compiler implements Opcodes
             {
                 gen.mark(labels.get(i));
                 if (testType == intKey)
+                {
                     emitThenForInts(objx, gen, primExprType, tests.get(i), thens.get(i), defaultLabel, emitUnboxed);
+                }
                 else if (RT.contains(skipCheck, i) == RT.T)
+                {
                     emitExpr(objx, gen, thens.get(i), emitUnboxed);
+                }
                 else
+                {
                     emitThenForHashes(objx, gen, tests.get(i), thens.get(i), defaultLabel, emitUnboxed);
+                }
                 gen.goTo(endLabel);
             }
 
@@ -9040,7 +10090,9 @@ public class Compiler implements Opcodes
             emitExpr(objx, gen, defaultExpr, emitUnboxed);
             gen.mark(endLabel);
             if (context == C.STATEMENT)
+            {
                 gen.pop();
+            }
         }
 
         private boolean isShiftMasked()
@@ -9149,9 +10201,13 @@ public class Compiler implements Opcodes
         private static void emitExpr(ObjExpr objx, GeneratorAdapter gen, Expr expr, boolean emitUnboxed)
         {
             if (emitUnboxed && expr instanceof MaybePrimitiveExpr)
+            {
                 ((MaybePrimitiveExpr)expr).emitUnboxed(C.EXPRESSION, objx, gen);
+            }
             else
+            {
                 expr.emit(C.EXPRESSION, objx, gen);
+            }
         }
 
         static class Parser implements IParser
@@ -9164,7 +10220,9 @@ public class Compiler implements Opcodes
             {
                 ISeq form = (ISeq) frm;
                 if (context == C.EVAL)
+                {
                     return analyze(context, RT.list(RT.list(FNONCE, PersistentVector.EMPTY, form)));
+                }
                 IPersistentVector args = LazilyPersistentVector.create(form.next());
 
                 Object exprForm = args.nth(0);

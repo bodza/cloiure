@@ -20,10 +20,12 @@ public class ProxyHandler implements InvocationHandler
         if (fn == null)
         {
             if (rt == Void.TYPE)
+            {
                 return null;
+            }
             else if (method.getName().equals("equals"))
             {
-                return proxy == args[0];
+                return (proxy == args[0]);
             }
             else if (method.getName().equals("hashCode"))
             {
@@ -37,25 +39,43 @@ public class ProxyHandler implements InvocationHandler
         }
         Object ret = fn.applyTo(ArraySeq.create(args));
         if (rt == Void.TYPE)
+        {
             return null;
+        }
         else if (rt.isPrimitive())
         {
             if (rt == Character.TYPE)
+            {
                 return ret;
+            }
             else if (rt == Integer.TYPE)
+            {
                 return ((Number) ret).intValue();
+            }
             else if (rt == Long.TYPE)
+            {
                 return ((Number) ret).longValue();
+            }
             else if (rt == Float.TYPE)
+            {
                 return ((Number) ret).floatValue();
+            }
             else if (rt == Double.TYPE)
+            {
                 return ((Number) ret).doubleValue();
+            }
             else if (rt == Boolean.TYPE && !(ret instanceof Boolean))
-                return ret == null ? Boolean.FALSE : Boolean.TRUE;
+            {
+                return (ret == null) ? Boolean.FALSE : Boolean.TRUE;
+            }
             else if (rt == Byte.TYPE)
+            {
                 return (byte) ((Number) ret).intValue();
+            }
             else if (rt == Short.TYPE)
+            {
                 return (short) ((Number) ret).intValue();
+            }
         }
         return ret;
     }

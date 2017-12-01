@@ -54,14 +54,18 @@ public class TransformerIterator implements Iterator
     {
         Iterator[] iters = new Iterator[sources.size()];
         for (int i = 0; i < sources.size(); i++)
+        {
             iters[i] = (Iterator)sources.get(i);
+        }
         return new TransformerIterator(xform, new MultiIterator(iters), true);
     }
 
     private boolean step()
     {
         if (next != NONE)
+        {
             return true;
+        }
 
         while (next == NONE)
         {
@@ -75,9 +79,13 @@ public class TransformerIterator implements Iterator
                 {
                     Object iter = null;
                     if (multi)
+                    {
                         iter = xf.applyTo(RT.cons(null, sourceIter.next()));
+                    }
                     else
+                    {
                         iter = xf.invoke(null, sourceIter.next());
+                    }
 
                     if (RT.isReduced(iter))
                     {
@@ -238,8 +246,12 @@ public class TransformerIterator implements Iterator
         public boolean hasNext()
         {
             for (Iterator iter : iters)
+            {
                 if (!iter.hasNext())
+                {
                     return false;
+                }
+            }
             return true;
         }
 
@@ -247,7 +259,9 @@ public class TransformerIterator implements Iterator
         {
             Object[] nexts = new Object[iters.length];
             for (int i = 0; i < iters.length; i++)
+            {
                 nexts[i] = iters[i].next();
+            }
             return new ArraySeq(nexts, 0);
         }
 

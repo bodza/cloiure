@@ -54,7 +54,9 @@ public final class MethodImplCache
     {
         Entry last = mre;
         if (last != null && last.c == c)
+        {
             return last.fn;
+        }
         return findFnFor(c);
     }
 

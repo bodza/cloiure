@@ -29,7 +29,9 @@ public class Repeat extends ASeq implements IReduce
     public static ISeq create(long count, Object val)
     {
         if (count <= 0)
+        {
             return PersistentList.EMPTY;
+        }
         return new Repeat(count, val);
     }
 
@@ -43,9 +45,13 @@ public class Repeat extends ASeq implements IReduce
         if (_next == null)
         {
             if (count > 1)
+            {
                 _next = new Repeat(count - 1, val);
+            }
             else if (count == INFINITE)
+            {
                 _next = this;
+            }
         }
         return _next;
     }
@@ -64,7 +70,9 @@ public class Repeat extends ASeq implements IReduce
             {
                 ret = f.invoke(ret, val);
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
             }
         }
         else
@@ -73,7 +81,9 @@ public class Repeat extends ASeq implements IReduce
             {
                 ret = f.invoke(ret, val);
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
             }
             return ret;
         }
@@ -88,7 +98,9 @@ public class Repeat extends ASeq implements IReduce
             {
                 ret = f.invoke(ret, val);
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
             }
         }
         else
@@ -97,7 +109,9 @@ public class Repeat extends ASeq implements IReduce
             {
                 ret = f.invoke(ret, val);
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
             }
             return ret;
         }

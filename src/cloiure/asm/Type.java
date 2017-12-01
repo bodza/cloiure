@@ -340,7 +340,7 @@ public class Type
         while (buf[off] != ')')
         {
             args[size] = getType(buf, off);
-            off += args[size].len + (args[size].sort == OBJECT ? 2 : 0);
+            off += args[size].len + ((args[size].sort == OBJECT) ? 2 : 0);
             size += 1;
         }
         return args;
@@ -416,7 +416,7 @@ public class Type
             if (car == ')')
             {
                 car = desc.charAt(c);
-                return n << 2 | (car == 'V' ? 0 : (car == 'D' || car == 'J' ? 2 : 1));
+                return n << 2 | ((car == 'V') ? 0 : ((car == 'D' || car == 'J') ? 2 : 1));
             }
             else if (car == 'L')
             {
@@ -853,7 +853,7 @@ public class Type
                 for (int i = 0; i < len; ++i)
                 {
                     char car = name.charAt(i);
-                    buf.append(car == '.' ? '/' : car);
+                    buf.append((car == '.') ? '/' : car);
                 }
                 buf.append(';');
                 return;
@@ -875,7 +875,7 @@ public class Type
     public int getSize()
     {
         // the size is in byte 0 of 'off' for primitive types (buf == null)
-        return buf == null ? (off & 0xFF) : 1;
+        return (buf == null) ? (off & 0xFF) : 1;
     }
 
     /**
@@ -896,13 +896,13 @@ public class Type
         {
             // the offset for IALOAD or IASTORE is in byte 1 of 'off' for
             // primitive types (buf == null)
-            return opcode + (buf == null ? (off & 0xFF00) >> 8 : 4);
+            return opcode + ((buf == null) ? (off & 0xFF00) >> 8 : 4);
         }
         else
         {
             // the offset for other instructions is in byte 2 of 'off' for
             // primitive types (buf == null)
-            return opcode + (buf == null ? (off & 0xFF0000) >> 16 : 4);
+            return opcode + ((buf == null) ? (off & 0xFF0000) >> 16 : 4);
         }
     }
 

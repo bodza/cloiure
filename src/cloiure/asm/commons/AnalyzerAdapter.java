@@ -512,7 +512,7 @@ public class AnalyzerAdapter extends MethodVisitor
     private Object get(final int local)
     {
         maxLocals = Math.max(maxLocals, local);
-        return local < locals.size() ? locals.get(local) : Opcodes.TOP;
+        return (local < locals.size()) ? locals.get(local) : Opcodes.TOP;
     }
 
     private void set(final int local, final Object type)

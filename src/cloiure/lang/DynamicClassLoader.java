@@ -44,9 +44,13 @@ public class DynamicClassLoader extends URLClassLoader
         {
             Class c = cr.get();
             if (c != null)
+            {
                 return c;
+            }
             else
+            {
                 classCache.remove(name, cr);
+            }
         }
         return null;
     }
@@ -55,9 +59,13 @@ public class DynamicClassLoader extends URLClassLoader
     {
         Class c = findInMemoryClass(name);
         if (c != null)
+        {
             return c;
+        }
         else
+        {
             return super.findClass(name);
+        }
     }
 
     protected synchronized Class<?> loadClass(String name, boolean resolve)
@@ -68,10 +76,14 @@ public class DynamicClassLoader extends URLClassLoader
         {
             c = findInMemoryClass(name);
             if (c == null)
+            {
                 c = super.loadClass(name, false);
+            }
         }
         if (resolve)
+        {
             resolveClass(c);
+        }
         return c;
     }
 

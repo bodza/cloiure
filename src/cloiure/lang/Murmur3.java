@@ -10,7 +10,7 @@
  */
 
 /**
- * Modified to remove stuff Cloiure doesn't need, placed under cloiure.lang namespace,
+ * Modified to remove stuff Clojure doesn't need, placed under clojure.lang namespace,
  * all fns made static, added hashOrdered/Unordered
  */
 
@@ -37,7 +37,9 @@ public final class Murmur3
     public static int hashInt(int input)
     {
         if (input == 0)
+        {
             return 0;
+        }
         int k1 = mixK1(input);
         int h1 = mixH1(seed, k1);
 
@@ -47,7 +49,9 @@ public final class Murmur3
     public static int hashLong(long input)
     {
         if (input == 0)
+        {
             return 0;
+        }
         int low = (int) input;
         int high = (int) (input >>> 32);
 

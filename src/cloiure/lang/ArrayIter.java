@@ -23,31 +23,51 @@ public class ArrayIter implements Iterator
     static public Iterator create(Object... array)
     {
         if (array == null || array.length == 0)
+        {
             return EMPTY_ITERATOR;
+        }
         return new ArrayIter(array, 0);
     }
 
     static public Iterator createFromObject(Object array)
     {
         if (array == null || Array.getLength(array) == 0)
+        {
             return EMPTY_ITERATOR;
+        }
         Class aclass = array.getClass();
         if (aclass == int[].class)
+        {
             return new ArrayIter_int((int[]) array, 0);
+        }
         if (aclass == float[].class)
+        {
             return new ArrayIter_float((float[]) array, 0);
+        }
         if (aclass == double[].class)
+        {
             return new ArrayIter_double((double[]) array, 0);
+        }
         if (aclass == long[].class)
+        {
             return new ArrayIter_long((long[]) array, 0);
+        }
         if (aclass == byte[].class)
+        {
             return new ArrayIter_byte((byte[]) array, 0);
+        }
         if (aclass == char[].class)
+        {
             return new ArrayIter_char((char[]) array, 0);
+        }
         if (aclass == short[].class)
+        {
             return new ArrayIter_short((short[]) array, 0);
+        }
         if (aclass == boolean[].class)
+        {
             return new ArrayIter_boolean((boolean[]) array, 0);
+        }
         return new ArrayIter(array, 0);
     }
 
@@ -65,7 +85,9 @@ public class ArrayIter implements Iterator
     public Object next()
     {
         if (array != null && i < array.length)
+        {
             return array[i++];
+        }
         throw new java.util.NoSuchElementException();
     }
 
@@ -95,7 +117,9 @@ public class ArrayIter implements Iterator
         public Long next()
         {
             if (array != null && i < array.length)
+            {
                 return Long.valueOf(array[i++]);
+            }
             throw new java.util.NoSuchElementException();
         }
 
@@ -124,7 +148,9 @@ public class ArrayIter implements Iterator
         public Double next()
         {
             if (array != null && i < array.length)
+            {
                 return Double.valueOf(array[i++]);
+            }
             throw new java.util.NoSuchElementException();
         }
 
@@ -153,7 +179,9 @@ public class ArrayIter implements Iterator
         public Double next()
         {
             if (array != null && i < array.length)
+            {
                 return array[i++];
+            }
             throw new java.util.NoSuchElementException();
         }
 
@@ -182,7 +210,9 @@ public class ArrayIter implements Iterator
         public Long next()
         {
             if (array != null && i < array.length)
+            {
                 return Long.valueOf(array[i++]);
+            }
             throw new java.util.NoSuchElementException();
         }
 
@@ -211,7 +241,9 @@ public class ArrayIter implements Iterator
         public Byte next()
         {
             if (array != null && i < array.length)
+            {
                 return array[i++];
+            }
             throw new java.util.NoSuchElementException();
         }
 
@@ -240,7 +272,9 @@ public class ArrayIter implements Iterator
         public Character next()
         {
             if (array != null && i < array.length)
+            {
                 return array[i++];
+            }
             throw new java.util.NoSuchElementException();
         }
 
@@ -269,7 +303,9 @@ public class ArrayIter implements Iterator
         public Long next()
         {
             if (array != null && i < array.length)
+            {
                 return Long.valueOf(array[i++]);
+            }
             throw new java.util.NoSuchElementException();
         }
 
@@ -298,7 +334,9 @@ public class ArrayIter implements Iterator
         public Boolean next()
         {
             if (array != null && i < array.length)
+            {
                 return Boolean.valueOf(array[i++]);
+            }
             throw new java.util.NoSuchElementException();
         }
 

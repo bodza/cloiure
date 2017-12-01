@@ -18,7 +18,9 @@ public class IteratorSeq extends ASeq
     public static IteratorSeq create(Iterator iter)
     {
         if (iter.hasNext())
+        {
             return new IteratorSeq(iter);
+        }
         return null;
     }
 
@@ -40,17 +42,22 @@ public class IteratorSeq extends ASeq
     public Object first()
     {
         if (state.val == state)
+        {
             synchronized (state)
             {
                 if (state.val == state)
+                {
                     state.val = iter.next();
+                }
             }
+        }
         return state.val;
     }
 
     public ISeq next()
     {
         if (state._rest == state)
+        {
             synchronized (state)
             {
                 if (state._rest == state)
@@ -59,6 +66,7 @@ public class IteratorSeq extends ASeq
                     state._rest = create(iter);
                 }
             }
+        }
         return (ISeq) state._rest;
     }
 

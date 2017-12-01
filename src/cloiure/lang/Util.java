@@ -13,13 +13,19 @@ public class Util
     static public boolean equiv(Object k1, Object k2)
     {
         if (k1 == k2)
+        {
             return true;
+        }
         if (k1 != null)
         {
             if (k1 instanceof Number && k2 instanceof Number)
+            {
                 return Numbers.equal((Number)k1, (Number)k2);
+            }
             else if (k1 instanceof IPersistentCollection || k2 instanceof IPersistentCollection)
+            {
                 return pcequiv(k1, k2);
+            }
             return k1.equals(k2);
         }
         return false;
@@ -51,7 +57,9 @@ public class Util
         public boolean equiv(Object k1, Object k2)
         {
             if (k2 instanceof Number)
+            {
                 return Numbers.equal((Number) k1, (Number) k2);
+            }
             return false;
         }
     };
@@ -61,7 +69,9 @@ public class Util
         public boolean equiv(Object k1, Object k2)
         {
             if (k1 instanceof IPersistentCollection || k2 instanceof IPersistentCollection)
+            {
                 return pcequiv(k1, k2);
+            }
             return k1.equals(k2);
         }
     };
@@ -69,13 +79,21 @@ public class Util
     static public EquivPred equivPred(Object k1)
     {
         if (k1 == null)
+        {
             return equivNull;
+        }
         else if (k1 instanceof Number)
+        {
             return equivNumber;
+        }
         else if (k1 instanceof String || k1 instanceof Symbol)
+        {
             return equivEquals;
+        }
         else if (k1 instanceof Collection || k1 instanceof Map)
+        {
             return equivColl;
+        }
         return equivEquals;
     }
 
@@ -132,14 +150,18 @@ public class Util
     static public boolean pcequiv(Object k1, Object k2)
     {
         if (k1 instanceof IPersistentCollection)
+        {
             return ((IPersistentCollection)k1).equiv(k2);
+        }
         return ((IPersistentCollection)k2).equiv(k1);
     }
 
     static public boolean equals(Object k1, Object k2)
     {
         if (k1 == k2)
+        {
             return true;
+        }
         return (k1 != null && k1.equals(k2));
     }
 
@@ -151,20 +173,28 @@ public class Util
     static public Class classOf(Object x)
     {
         if (x != null)
+        {
             return x.getClass();
+        }
         return null;
     }
 
     static public int compare(Object k1, Object k2)
     {
         if (k1 == k2)
+        {
             return 0;
+        }
         if (k1 != null)
         {
             if (k2 == null)
+            {
                 return 1;
+            }
             if (k1 instanceof Number)
+            {
                 return Numbers.compare((Number) k1, (Number) k2);
+            }
             return ((Comparable) k1).compareTo(k2);
         }
         return -1;
@@ -173,20 +203,30 @@ public class Util
     static public int hash(Object o)
     {
         if (o == null)
+        {
             return 0;
+        }
         return o.hashCode();
     }
 
     public static int hasheq(Object o)
     {
         if (o == null)
+        {
             return 0;
+        }
         if (o instanceof IHashEq)
+        {
             return dohasheq((IHashEq) o);
+        }
         if (o instanceof Number)
+        {
             return Numbers.hasheq((Number)o);
+        }
         if (o instanceof String)
+        {
             return Murmur3.hashInt(o.hashCode());
+        }
         return o.hashCode();
     }
 
@@ -234,7 +274,9 @@ public class Util
             {
                 Reference<V> val = e.getValue();
                 if (val != null && val.get() == null)
+                {
                     cache.remove(e.getKey(), val);
+                }
             }
         }
     }
@@ -253,13 +295,15 @@ public class Util
      * Throw even checked exceptions without being required
      * to declare them or catch them. Suggested idiom:
      * <p>
-     * <code>throw sneakyThrow( some exception );</code>
+     * <code>throw sneakyThrow(some exception);</code>
      */
     static public RuntimeException sneakyThrow(Throwable t)
     {
         // http://www.mail-archive.com/javaposse@googlegroups.com/msg05984.html
         if (t == null)
+        {
             throw new NullPointerException();
+        }
         Util.<RuntimeException>sneakyThrow0(t);
         return null;
     }

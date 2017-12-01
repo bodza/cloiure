@@ -25,7 +25,9 @@ public final class KeywordLookupSite implements ILookupSite, ILookupThunk
     public Object get(Object target)
     {
         if (target instanceof IKeywordLookup || target instanceof ILookup)
+        {
             return this;
+        }
         return RT.get(target, k);
     }
 
@@ -36,7 +38,9 @@ public final class KeywordLookupSite implements ILookupSite, ILookupThunk
             public Object get(Object target)
             {
                 if (target != null && target.getClass() == c)
+                {
                     return ((ILookup) target).valAt(k);
+                }
                 return this;
             }
         };
@@ -46,7 +50,9 @@ public final class KeywordLookupSite implements ILookupSite, ILookupThunk
     {
         ILookupThunk t = ((IKeywordLookup)target).getLookupThunk(k);
         if (t != null)
+        {
             return t;
+        }
         return ilookupThunk(target.getClass());
     }
 }

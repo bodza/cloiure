@@ -8,7 +8,9 @@ public class StringSeq extends ASeq implements IndexedSeq
     static public StringSeq create(CharSequence s)
     {
         if (s.length() == 0)
+        {
             return null;
+        }
         return new StringSeq(null, s, 0);
     }
 
@@ -22,7 +24,9 @@ public class StringSeq extends ASeq implements IndexedSeq
     public Obj withMeta(IPersistentMap meta)
     {
         if (meta == meta())
+        {
             return this;
+        }
         return new StringSeq(meta, s, i);
     }
 
@@ -34,7 +38,9 @@ public class StringSeq extends ASeq implements IndexedSeq
     public ISeq next()
     {
         if (i + 1 < s.length())
+        {
             return new StringSeq(_meta, s, i + 1);
+        }
         return null;
     }
 

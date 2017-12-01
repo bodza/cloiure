@@ -57,7 +57,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         {
             ret = ret.assoc(init[i], init[i + 1]);
             if (ret.count() != i/2 + 1)
+            {
                 throw new IllegalArgumentException("Duplicate key: " + init[i]);
+            }
         }
         return (PersistentHashMap) ret.persistent();
     }
@@ -68,7 +70,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         for ( ; items != null; items = items.next().next())
         {
             if (items.next() == null)
+            {
                 throw new IllegalArgumentException(String.format("No value supplied for key: %s", items.first()));
+            }
             ret = ret.assoc(items.first(), RT.second(items));
         }
         return (PersistentHashMap) ret.persistent();
@@ -80,10 +84,14 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         for (int i = 0; items != null; items = items.next().next(), ++i)
         {
             if (items.next() == null)
+            {
                 throw new IllegalArgumentException(String.format("No value supplied for key: %s", items.first()));
+            }
             ret = ret.assoc(items.first(), RT.second(items));
             if (ret.count() != i + 1)
+            {
                 throw new IllegalArgumentException("Duplicate key: " + items.first());
+            }
         }
         return (PersistentHashMap) ret.persistent();
     }
@@ -122,14 +130,18 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
     public boolean containsKey(Object key)
     {
         if (key == null)
+        {
             return hasNull;
+        }
         return (root != null) ? (root.find(0, hash(key), key, NOT_FOUND) != NOT_FOUND) : false;
     }
 
     public IMapEntry entryAt(Object key)
     {
         if (key == null)
+        {
             return hasNull ? (IMapEntry) MapEntry.create(null, nullValue) : null;
+        }
         return (root != null) ? root.find(0, hash(key), key) : null;
     }
 
@@ -138,21 +150,26 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         if (key == null)
         {
             if (hasNull && val == nullValue)
+            {
                 return this;
+            }
             return new PersistentHashMap(meta(), hasNull ? count : count + 1, root, true, val);
         }
         Box addedLeaf = new Box(null);
-        INode newroot = (root == null ? BitmapIndexedNode.EMPTY : root)
-            .assoc(0, hash(key), key, val, addedLeaf);
+        INode newroot = ((root == null) ? BitmapIndexedNode.EMPTY : root).assoc(0, hash(key), key, val, addedLeaf);
         if (newroot == root)
+        {
             return this;
+        }
         return new PersistentHashMap(meta(), (addedLeaf.val == null) ? count : count + 1, newroot, hasNull, nullValue);
     }
 
     public Object valAt(Object key, Object notFound)
     {
         if (key == null)
+        {
             return hasNull ? nullValue : notFound;
+        }
         return (root != null) ? root.find(0, hash(key), key, notFound) : notFound;
     }
 
@@ -164,19 +181,27 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
     public IPersistentMap assocEx(Object key, Object val)
     {
         if (containsKey(key))
+        {
             throw Util.runtimeException("Key already present");
+        }
         return assoc(key, val);
     }
 
     public IPersistentMap without(Object key)
     {
         if (key == null)
+        {
             return hasNull ? new PersistentHashMap(meta(), count - 1, root, false, null) : this;
+        }
         if (root == null)
+        {
             return this;
+        }
         INode newroot = root.without(0, hash(key), key);
         if (newroot == root)
+        {
             return this;
+        }
         return new PersistentHashMap(meta(), count - 1, newroot, hasNull, nullValue);
     }
 
@@ -209,9 +234,13 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
                 public boolean hasNext()
                 {
                     if (!seen)
+                    {
                         return true;
+                    }
                     else
+                    {
                         return rootIter.hasNext();
+                    }
                 }
 
                 public Object next()
@@ -222,7 +251,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
                         return f.invoke(null, nullValue);
                     }
                     else
+                    {
                         return rootIter.next();
+                    }
                 }
 
                 public void remove()
@@ -232,7 +263,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             };
         }
         else
+        {
             return rootIter;
+        }
     }
 
     public Iterator iterator()
@@ -254,14 +287,20 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
     {
         init = hasNull?f.invoke(init, null, nullValue):init;
         if (RT.isReduced(init))
+        {
             return ((IDeref)init).deref();
+        }
         if (root != null)
         {
             init = root.kvreduce(f, init);
             if (RT.isReduced(init))
+            {
                 return ((IDeref)init).deref();
+            }
             else
+            {
                 return init;
+            }
         }
         return init;
     }
@@ -275,7 +314,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             {
                 Object ret = combinef.invoke();
                 if (root != null)
+                {
                     ret = combinef.invoke(ret, root.fold(combinef, reducef, fjtask, fjfork, fjjoin));
+                }
                 return hasNull ? combinef.invoke(ret, reducef.invoke(combinef.invoke(), null, nullValue)) : ret;
             }
         };
@@ -347,7 +388,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             if (key == null)
             {
                 if (this.nullValue != val)
+                {
                     this.nullValue = val;
+                }
                 if (!hasNull)
                 {
                     this.count++;
@@ -359,9 +402,13 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             leafFlag.val = null;
             INode n = ((root == null) ? BitmapIndexedNode.EMPTY : root).assoc(edit, 0, hash(key), key, val, leafFlag);
             if (n != this.root)
+            {
                 this.root = n;
+            }
             if (leafFlag.val != null)
+            {
                 this.count++;
+            }
             return this;
         }
 
@@ -370,21 +417,29 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             if (key == null)
             {
                 if (!hasNull)
+                {
                     return this;
+                }
                 hasNull = false;
                 nullValue = null;
                 this.count--;
                 return this;
             }
             if (root == null)
+            {
                 return this;
+            }
          // Box leafFlag = new Box(null);
             leafFlag.val = null;
             INode n = root.without(edit, 0, hash(key), key, leafFlag);
             if (n != root)
+            {
                 this.root = n;
+            }
             if (leafFlag.val != null)
+            {
                 this.count--;
+            }
             return this;
         }
 
@@ -399,12 +454,18 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             if (key == null)
             {
                 if (hasNull)
+                {
                     return nullValue;
+                }
                 else
+                {
                     return notFound;
+                }
             }
             if (root == null)
+            {
                 return notFound;
+            }
             return root.find(0, hash(key), key, notFound);
         }
 
@@ -416,7 +477,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         void ensureEditable()
         {
             if (edit.get() == null)
+            {
                 throw new IllegalAccessError("Transient used after persistent! call");
+            }
         }
     }
 
@@ -462,10 +525,14 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             int idx = mask(hash, shift);
             INode node = array[idx];
             if (node == null)
+            {
                 return new ArrayNode(null, count + 1, cloneAndSet(array, idx, BitmapIndexedNode.EMPTY.assoc(shift + 5, hash, key, val, addedLeaf)));
+            }
             INode n = node.assoc(shift + 5, hash, key, val, addedLeaf);
             if (n == node)
+            {
                 return this;
+            }
             return new ArrayNode(null, count, cloneAndSet(array, idx, n));
         }
 
@@ -474,18 +541,26 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             int idx = mask(hash, shift);
             INode node = array[idx];
             if (node == null)
+            {
                 return this;
+            }
             INode n = node.without(shift + 5, hash, key);
             if (n == node)
+            {
                 return this;
+            }
             if (n == null)
             {
                 if (count <= 8) // shrink
+                {
                     return pack(null, idx);
+                }
                 return new ArrayNode(null, count - 1, cloneAndSet(array, idx, n));
             }
             else
+            {
                 return new ArrayNode(null, count, cloneAndSet(array, idx, n));
+            }
         }
 
         public IMapEntry find(int shift, int hash, Object key)
@@ -493,7 +568,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             int idx = mask(hash, shift);
             INode node = array[idx];
             if (node == null)
+            {
                 return null;
+            }
             return node.find(shift + 5, hash, key);
         }
 
@@ -502,7 +579,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             int idx = mask(hash, shift);
             INode node = array[idx];
             if (node == null)
+            {
                 return notFound;
+            }
             return node.find(shift + 5, hash, key, notFound);
         }
 
@@ -524,7 +603,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
                 {
                     init = node.kvreduce(f, init);
                     if (RT.isReduced(init))
+                    {
                         return init;
+                    }
                 }
             }
             return init;
@@ -553,7 +634,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         static public Object foldTasks(List<Callable> tasks, final IFn combinef, final IFn fjtask, final IFn fjfork, final IFn fjjoin)
         {
             if (tasks.isEmpty())
+            {
                 return combinef.invoke();
+            }
 
             if (tasks.size() == 1)
             {
@@ -585,7 +668,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         private ArrayNode ensureEditable(AtomicReference<Thread> edit)
         {
             if (this.edit == edit)
+            {
                 return this;
+            }
             return new ArrayNode(edit, count, this.array.clone());
         }
 
@@ -634,7 +719,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             }
             INode n = node.assoc(edit, shift + 5, hash, key, val, addedLeaf);
             if (n == node)
+            {
                 return this;
+            }
             return editAndSet(edit, idx, n);
         }
 
@@ -643,14 +730,20 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             int idx = mask(hash, shift);
             INode node = array[idx];
             if (node == null)
+            {
                 return this;
+            }
             INode n = node.without(edit, shift + 5, hash, key, removedLeaf);
             if (n == node)
+            {
                 return this;
+            }
             if (n == null)
             {
                 if (count <= 8) // shrink
+                {
                     return pack(edit, idx);
+                }
                 ArrayNode editable = editAndSet(edit, idx, n);
                 editable.count--;
                 return editable;
@@ -672,14 +765,18 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             private static ISeq create(IPersistentMap meta, INode[] nodes, int i, ISeq s)
             {
                 if (s != null)
+                {
                     return new Seq(meta, nodes, i, s);
+                }
                 for (int j = i; j < nodes.length; j++)
                 {
                     if (nodes[j] != null)
                     {
                         ISeq ns = nodes[j].nodeSeq();
                         if (ns != null)
+                        {
                             return new Seq(meta, nodes, j + 1, ns);
+                        }
                     }
                 }
                 return null;
@@ -729,28 +826,40 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
                     if (nestedIter != null)
                     {
                         if (nestedIter.hasNext())
+                        {
                             return true;
+                        }
                         else
+                        {
                             nestedIter = null;
+                        }
                     }
 
                     if (i < array.length)
                     {
                         INode node = array[i++];
                         if (node != null)
+                        {
                             nestedIter = node.iterator(f);
+                        }
                     }
                     else
+                    {
                         return false;
+                    }
                 }
             }
 
             public Object next()
             {
                 if (hasNext())
+                {
                     return nestedIter.next();
+                }
                 else
+                {
                     throw new NoSuchElementException();
+                }
             }
 
             public void remove()
@@ -792,13 +901,17 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
                 {
                     INode n = ((INode) valOrNode).assoc(shift + 5, hash, key, val, addedLeaf);
                     if (n == valOrNode)
+                    {
                         return this;
+                    }
                     return new BitmapIndexedNode(null, bitmap, cloneAndSet(array, 2 * idx + 1, n));
                 }
                 if (Util.equiv(key, keyOrNull))
                 {
                     if (val == valOrNode)
+                    {
                         return this;
+                    }
                     return new BitmapIndexedNode(null, bitmap, cloneAndSet(array, 2 * idx + 1, val));
                 }
                 addedLeaf.val = addedLeaf;
@@ -818,9 +931,13 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
                         if (((bitmap >>> i) & 1) != 0)
                         {
                             if (array[j] == null)
+                            {
                                 nodes[i] = (INode) array[j + 1];
+                            }
                             else
+                            {
                                 nodes[i] = EMPTY.assoc(shift + 5, hash(array[j]), array[j], array[j + 1], addedLeaf);
+                            }
                             j += 2;
                         }
                     }
@@ -843,7 +960,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         {
             int bit = bitpos(hash, shift);
             if ((bitmap & bit) == 0)
+            {
                 return this;
+            }
             int idx = index(bit);
             Object keyOrNull = array[2 * idx];
             Object valOrNode = array[2 * idx + 1];
@@ -851,16 +970,24 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             {
                 INode n = ((INode) valOrNode).without(shift + 5, hash, key);
                 if (n == valOrNode)
+                {
                     return this;
+                }
                 if (n != null)
+                {
                     return new BitmapIndexedNode(null, bitmap, cloneAndSet(array, 2 * idx + 1, n));
+                }
                 if (bitmap == bit)
+                {
                     return null;
+                }
                 return new BitmapIndexedNode(null, bitmap ^ bit, removePair(array, idx));
             }
             if (Util.equiv(key, keyOrNull))
+            {
                 // TODO: collapse
                 return new BitmapIndexedNode(null, bitmap ^ bit, removePair(array, idx));
+            }
             return this;
         }
 
@@ -868,14 +995,20 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         {
             int bit = bitpos(hash, shift);
             if ((bitmap & bit) == 0)
+            {
                 return null;
+            }
             int idx = index(bit);
             Object keyOrNull = array[2 * idx];
             Object valOrNode = array[2 * idx + 1];
             if (keyOrNull == null)
+            {
                 return ((INode) valOrNode).find(shift + 5, hash, key);
+            }
             if (Util.equiv(key, keyOrNull))
+            {
                 return (IMapEntry) MapEntry.create(keyOrNull, valOrNode);
+            }
             return null;
         }
 
@@ -883,14 +1016,20 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         {
             int bit = bitpos(hash, shift);
             if ((bitmap & bit) == 0)
+            {
                 return notFound;
+            }
             int idx = index(bit);
             Object keyOrNull = array[2 * idx];
             Object valOrNode = array[2 * idx + 1];
             if (keyOrNull == null)
+            {
                 return ((INode) valOrNode).find(shift + 5, hash, key, notFound);
+            }
             if (Util.equiv(key, keyOrNull))
+            {
                 return valOrNode;
+            }
             return notFound;
         }
 
@@ -917,9 +1056,11 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         private BitmapIndexedNode ensureEditable(AtomicReference<Thread> edit)
         {
             if (this.edit == edit)
+            {
                 return this;
+            }
             int n = Integer.bitCount(bitmap);
-            Object[] newArray = new Object[n >= 0 ? 2 * (n + 1) : 4]; // make room for next assoc
+            Object[] newArray = new Object[(n >= 0) ? 2 * (n + 1) : 4]; // make room for next assoc
             System.arraycopy(array, 0, newArray, 0, 2 * n);
             return new BitmapIndexedNode(edit, bitmap, newArray);
         }
@@ -942,7 +1083,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         private BitmapIndexedNode editAndRemovePair(AtomicReference<Thread> edit, int bit, int i)
         {
             if (bitmap == bit)
+            {
                 return null;
+            }
             BitmapIndexedNode editable = ensureEditable(edit);
             editable.bitmap ^= bit;
             System.arraycopy(editable.array, 2 * (i + 1), editable.array, 2 * i, editable.array.length - 2 * (i + 1));
@@ -963,13 +1106,17 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
                 {
                     INode n = ((INode) valOrNode).assoc(edit, shift + 5, hash, key, val, addedLeaf);
                     if (n == valOrNode)
+                    {
                         return this;
+                    }
                     return editAndSet(edit, 2 * idx + 1, n);
                 }
                 if (Util.equiv(key, keyOrNull))
                 {
                     if (val == valOrNode)
+                    {
                         return this;
+                    }
                     return editAndSet(edit, 2 * idx + 1, val);
                 }
                 addedLeaf.val = addedLeaf;
@@ -999,9 +1146,13 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
                         if (((bitmap >>> i) & 1) != 0)
                         {
                             if (array[j] == null)
+                            {
                                 nodes[i] = (INode) array[j + 1];
+                            }
                             else
+                            {
                                 nodes[i] = EMPTY.assoc(edit, shift + 5, hash(array[j]), array[j], array[j + 1], addedLeaf);
+                            }
                             j += 2;
                         }
                     }
@@ -1027,7 +1178,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         {
             int bit = bitpos(hash, shift);
             if ((bitmap & bit) == 0)
+            {
                 return this;
+            }
             int idx = index(bit);
             Object keyOrNull = array[2 * idx];
             Object valOrNode = array[2 * idx + 1];
@@ -1035,11 +1188,17 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             {
                 INode n = ((INode) valOrNode).without(edit, shift + 5, hash, key, removedLeaf);
                 if (n == valOrNode)
+                {
                     return this;
+                }
                 if (n != null)
+                {
                     return editAndSet(edit, 2 * idx + 1, n);
+                }
                 if (bitmap == bit)
+                {
                     return null;
+                }
                 return editAndRemovePair(edit, bit, idx);
             }
             if (Util.equiv(key, keyOrNull))
@@ -1075,7 +1234,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
                 if (idx != -1)
                 {
                     if (array[idx + 1] == val)
+                    {
                         return this;
+                    }
                     return new HashCollisionNode(null, hash, count, cloneAndSet(array, idx + 1, val));
                 }
                 Object[] newArray = new Object[2 * (count + 1)];
@@ -1093,9 +1254,13 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         {
             int idx = findIndex(key);
             if (idx == -1)
+            {
                 return this;
+            }
             if (count == 1)
+            {
                 return null;
+            }
             return new HashCollisionNode(null, hash, count - 1, removePair(array, idx/2));
         }
 
@@ -1103,9 +1268,13 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         {
             int idx = findIndex(key);
             if (idx < 0)
+            {
                 return null;
+            }
             if (Util.equiv(key, array[idx]))
+            {
                 return (IMapEntry) MapEntry.create(array[idx], array[idx + 1]);
+            }
             return null;
         }
 
@@ -1113,9 +1282,13 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         {
             int idx = findIndex(key);
             if (idx < 0)
+            {
                 return notFound;
+            }
             if (Util.equiv(key, array[idx]))
+            {
                 return array[idx + 1];
+            }
             return notFound;
         }
 
@@ -1144,7 +1317,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             for (int i = 0; i < 2 * count; i += 2)
             {
                 if (Util.equiv(key, array[i]))
+                {
                     return i;
+                }
             }
             return -1;
         }
@@ -1152,7 +1327,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         private HashCollisionNode ensureEditable(AtomicReference<Thread> edit)
         {
             if (this.edit == edit)
+            {
                 return this;
+            }
             Object[] newArray = new Object[2 * (count + 1)]; // make room for next assoc
             System.arraycopy(array, 0, newArray, 0, 2 * count);
             return new HashCollisionNode(edit, hash, count, newArray);
@@ -1192,7 +1369,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
                 if (idx != -1)
                 {
                     if (array[idx + 1] == val)
+                    {
                         return this;
+                    }
                     return editAndSet(edit, idx + 1, val);
                 }
                 if (array.length > 2 * count)
@@ -1217,10 +1396,14 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         {
             int idx = findIndex(key);
             if (idx == -1)
+            {
                 return this;
+            }
             removedLeaf.val = removedLeaf;
             if (count == 1)
+            {
                 return null;
+            }
             HashCollisionNode editable = ensureEditable(edit);
             editable.array[idx] = editable.array[2 * count - 2];
             editable.array[idx + 1] = editable.array[2 * count - 1];
@@ -1229,93 +1412,6 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             return editable;
         }
     }
-
-    /*
-    public static void main(String[] args)
-    {
-        try
-        {
-            ArrayList words = new ArrayList();
-            Scanner s = new Scanner(new File(args[0]));
-            s.useDelimiter(Pattern.compile("\\W"));
-            while (s.hasNext())
-            {
-                String word = s.next();
-                words.add(word);
-            }
-            System.out.println("words: " + words.size());
-            IPersistentMap map = PersistentHashMap.EMPTY;
-         // IPersistentMap map = new PersistentTreeMap();
-         // Map ht = new Hashtable();
-            Map ht = new HashMap();
-            Random rand;
-
-            System.out.println("Building map");
-            long startTime = System.nanoTime();
-            for (Object word5 : words)
-            {
-                map = map.assoc(word5, word5);
-            }
-            rand = new Random(42);
-            IPersistentMap snapshotMap = map;
-            for (int i = 0; i < words.size() / 200; i++)
-            {
-                map = map.without(words.get(rand.nextInt(words.size() / 2)));
-            }
-            long estimatedTime = System.nanoTime() - startTime;
-            System.out.println("count = " + map.count() + ", time: " + estimatedTime / 1000000);
-
-            System.out.println("Building ht");
-            startTime = System.nanoTime();
-            for (Object word1 : words)
-            {
-                ht.put(word1, word1);
-            }
-            rand = new Random(42);
-            for (int i = 0; i < words.size() / 200; i++)
-            {
-                ht.remove(words.get(rand.nextInt(words.size() / 2)));
-            }
-            estimatedTime = System.nanoTime() - startTime;
-            System.out.println("count = " + ht.size() + ", time: " + estimatedTime / 1000000);
-
-            System.out.println("map lookup");
-            startTime = System.nanoTime();
-            int c = 0;
-            for (Object word2 : words)
-            {
-                if (!map.contains(word2))
-                    ++c;
-            }
-            estimatedTime = System.nanoTime() - startTime;
-            System.out.println("notfound = " + c + ", time: " + estimatedTime / 1000000);
-            System.out.println("ht lookup");
-            startTime = System.nanoTime();
-            c = 0;
-            for (Object word3 : words)
-            {
-                if (!ht.containsKey(word3))
-                    ++c;
-            }
-            estimatedTime = System.nanoTime() - startTime;
-            System.out.println("notfound = " + c + ", time: " + estimatedTime / 1000000);
-            System.out.println("snapshotMap lookup");
-            startTime = System.nanoTime();
-            c = 0;
-            for (Object word4 : words)
-            {
-                if (!snapshotMap.contains(word4))
-                    ++c;
-            }
-            estimatedTime = System.nanoTime() - startTime;
-            System.out.println("notfound = " + c + ", time: " + estimatedTime / 1000000);
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-    }
-    */
 
     private static INode[] cloneAndSet(INode[] array, int i, INode a)
     {
@@ -1351,7 +1447,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
     {
         int key1hash = hash(key1);
         if (key1hash == key2hash)
+        {
             return new HashCollisionNode(null, key1hash, 2, new Object[] {key1, val1, key2, val2});
+        }
         Box addedLeaf = new Box(null);
         AtomicReference<Thread> edit = new AtomicReference<Thread>();
         return BitmapIndexedNode.EMPTY
@@ -1363,7 +1461,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
     {
         int key1hash = hash(key1);
         if (key1hash == key2hash)
+        {
             return new HashCollisionNode(null, key1hash, 2, new Object[] {key1, val1, key2, val2});
+        }
         Box addedLeaf = new Box(null);
         return BitmapIndexedNode.EMPTY
             .assoc(edit, shift, key1hash, key1, val1, addedLeaf)
@@ -1418,7 +1518,9 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         public boolean hasNext()
         {
             if (nextEntry != NULL || nextIter != null)
+            {
                 return true;
+            }
             return advance();
         }
 
@@ -1434,11 +1536,15 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             {
                 ret = nextIter.next();
                 if (!nextIter.hasNext())
+                {
                     nextIter = null;
+                }
                 return ret;
             }
             else if (advance())
+            {
                 return next();
+            }
             throw new NoSuchElementException();
         }
 
@@ -1469,15 +1575,21 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
             for (int i = 0; i < array.length; i += 2)
             {
                 if (array[i] != null)
+                {
                     init = f.invoke(init, array[i], array[i + 1]);
+                }
                 else
                 {
                     INode node = (INode) array[i + 1];
                     if (node != null)
+                    {
                         init = node.kvreduce(f, init);
+                    }
                 }
                 if (RT.isReduced(init))
+                {
                     return init;
+                }
             }
             return init;
         }
@@ -1485,17 +1597,23 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         private static ISeq create(Object[] array, int i, ISeq s)
         {
             if (s != null)
+            {
                 return new NodeSeq(null, array, i, s);
+            }
             for (int j = i; j < array.length; j+=2)
             {
                 if (array[j] != null)
+                {
                     return new NodeSeq(null, array, j, null);
+                }
                 INode node = (INode) array[j + 1];
                 if (node != null)
                 {
                     ISeq nodeSeq = node.nodeSeq();
                     if (nodeSeq != null)
+                    {
                         return new NodeSeq(null, array, j + 2, nodeSeq);
+                    }
                 }
             }
             return null;
@@ -1517,14 +1635,18 @@ public class PersistentHashMap extends APersistentMap implements IEditableCollec
         public Object first()
         {
             if (s != null)
+            {
                 return s.first();
+            }
             return MapEntry.create(array[i], array[i + 1]);
         }
 
         public ISeq next()
         {
             if (s != null)
+            {
                 return create(array, i, s.next());
+            }
             return create(array, i + 2, null);
         }
     }

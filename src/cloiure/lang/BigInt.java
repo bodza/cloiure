@@ -15,27 +15,35 @@ public final class BigInt extends Number implements IHashEq
     public int hashCode()
     {
         if (bipart == null)
+        {
             return (int) (this.lpart ^ (this.lpart >>> 32));
+        }
         return bipart.hashCode();
     }
 
     public int hasheq()
     {
         if (bipart == null)
+        {
             return Murmur3.hashLong(lpart);
+        }
         return bipart.hashCode();
     }
 
     public boolean equals(Object obj)
     {
         if (this == obj)
+        {
             return true;
+        }
         if (obj instanceof BigInt)
         {
             BigInt o = (BigInt) obj;
             if (bipart == null)
-                return o.bipart == null && this.lpart == o.lpart;
-            return o.bipart != null && this.bipart.equals(o.bipart);
+            {
+                return (o.bipart == null && this.lpart == o.lpart);
+            }
+            return (o.bipart != null && this.bipart.equals(o.bipart));
         }
         return false;
     }
@@ -49,9 +57,13 @@ public final class BigInt extends Number implements IHashEq
     public static BigInt fromBigInteger(BigInteger val)
     {
         if (val.bitLength() < 64)
+        {
             return new BigInt(val.longValue(), null);
+        }
         else
+        {
             return new BigInt(0, val);
+        }
     }
 
     public static BigInt fromLong(long val)
@@ -62,17 +74,25 @@ public final class BigInt extends Number implements IHashEq
     public BigInteger toBigInteger()
     {
         if (bipart == null)
+        {
             return BigInteger.valueOf(lpart);
+        }
         else
+        {
             return bipart;
+        }
     }
 
     public BigDecimal toBigDecimal()
     {
         if (bipart == null)
+        {
             return BigDecimal.valueOf(lpart);
+        }
         else
+        {
             return new BigDecimal(bipart);
+        }
     }
 
     ///// java.lang.Number:
@@ -80,49 +100,73 @@ public final class BigInt extends Number implements IHashEq
     public int intValue()
     {
         if (bipart == null)
+        {
             return (int) lpart;
+        }
         else
+        {
             return bipart.intValue();
+        }
     }
 
     public long longValue()
     {
         if (bipart == null)
+        {
             return lpart;
+        }
         else
+        {
             return bipart.longValue();
+        }
     }
 
     public float floatValue()
     {
         if (bipart == null)
+        {
             return lpart;
+        }
         else
+        {
             return bipart.floatValue();
+        }
     }
 
     public double doubleValue()
     {
         if (bipart == null)
+        {
             return lpart;
+        }
         else
+        {
             return bipart.doubleValue();
+        }
     }
 
     public byte byteValue()
     {
         if (bipart == null)
+        {
             return (byte) lpart;
+        }
         else
+        {
             return bipart.byteValue();
+        }
     }
 
     public short shortValue()
     {
         if (bipart == null)
+        {
             return (short) lpart;
+        }
         else
+        {
             return bipart.shortValue();
+        }
     }
 
     public static BigInt valueOf(long val)
@@ -133,7 +177,9 @@ public final class BigInt extends Number implements IHashEq
     public String toString()
     {
         if (bipart == null)
+        {
             return String.valueOf(lpart);
+        }
         return bipart.toString();
     }
 
@@ -148,7 +194,9 @@ public final class BigInt extends Number implements IHashEq
         {
             long ret = lpart + y.lpart;
             if ((ret ^ lpart) >= 0 || (ret ^ y.lpart) >= 0)
+            {
                 return BigInt.valueOf(ret);
+            }
         }
         return BigInt.fromBigInteger(this.toBigInteger().add(y.toBigInteger()));
     }
@@ -159,7 +207,9 @@ public final class BigInt extends Number implements IHashEq
         {
             long ret = lpart * y.lpart;
             if (y.lpart == 0 || (ret / y.lpart == lpart && lpart != Long.MIN_VALUE))
+            {
                 return BigInt.valueOf(ret);
+            }
         }
         return BigInt.fromBigInteger(this.toBigInteger().multiply(y.toBigInteger()));
     }
@@ -169,7 +219,9 @@ public final class BigInt extends Number implements IHashEq
         if ((bipart == null) && (y.bipart == null))
         {
             if (lpart == Long.MIN_VALUE && y.lpart == -1)
+            {
                 return BigInt.fromBigInteger(this.toBigInteger().negate());
+            }
             return BigInt.valueOf(lpart / y.lpart);
         }
         return BigInt.fromBigInteger(this.toBigInteger().divide(y.toBigInteger()));
@@ -188,8 +240,8 @@ public final class BigInt extends Number implements IHashEq
     {
         if ((bipart == null) && (y.bipart == null))
         {
-            return lpart < y.lpart;
+            return (lpart < y.lpart);
         }
-        return this.toBigInteger().compareTo(y.toBigInteger()) < 0;
+        return (this.toBigInteger().compareTo(y.toBigInteger()) < 0);
     }
 }

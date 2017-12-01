@@ -23,12 +23,16 @@ public class PersistentList extends ASeq implements IPersistentList, IReduce, Li
                 Object[] argsarray = ((ArraySeq) args).array;
                 IPersistentList ret = EMPTY;
                 for (int i = argsarray.length - 1; i >= ((ArraySeq)args).i; --i)
+                {
                     ret = (IPersistentList) ret.cons(argsarray[i]);
+                }
                 return ret;
             }
             LinkedList list = new LinkedList();
             for (ISeq s = RT.seq(args); s != null; s = s.next())
+            {
                 list.add(s.first());
+            }
             return create(list);
         }
 
@@ -39,12 +43,16 @@ public class PersistentList extends ASeq implements IPersistentList, IReduce, Li
                 Object[] argsarray = ((ArraySeq) args).array;
                 IPersistentList ret = EMPTY;
                 for (int i = argsarray.length - 1; i >= 0; --i)
+                {
                     ret = (IPersistentList) ret.cons(argsarray[i]);
+                }
                 return ret;
             }
             LinkedList list = new LinkedList();
             for (ISeq s = RT.seq(args); s != null; s = s.next())
+            {
                 list.add(s.first());
+            }
             return create(list);
         }
 
@@ -97,7 +105,9 @@ public class PersistentList extends ASeq implements IPersistentList, IReduce, Li
     public ISeq next()
     {
         if (_count == 1)
+        {
             return null;
+        }
         return (ISeq) _rest;
     }
 
@@ -109,7 +119,9 @@ public class PersistentList extends ASeq implements IPersistentList, IReduce, Li
     public IPersistentList pop()
     {
         if (_rest == null)
+        {
             return EMPTY.withMeta(_meta);
+        }
         return _rest;
     }
 
@@ -131,7 +143,9 @@ public class PersistentList extends ASeq implements IPersistentList, IReduce, Li
     public PersistentList withMeta(IPersistentMap meta)
     {
         if (meta != _meta)
+        {
             return new PersistentList(meta, _first, _rest, _count);
+        }
         return this;
     }
 
@@ -142,7 +156,9 @@ public class PersistentList extends ASeq implements IPersistentList, IReduce, Li
         {
             ret = f.invoke(ret, s.first());
             if (RT.isReduced(ret))
-                return ((IDeref)ret).deref();;
+            {
+                return ((IDeref)ret).deref();
+            }
         }
         return ret;
     }
@@ -153,11 +169,15 @@ public class PersistentList extends ASeq implements IPersistentList, IReduce, Li
         for (ISeq s = next(); s != null; s = s.next())
         {
             if (RT.isReduced(ret))
+            {
                 return ((IDeref)ret).deref();
+            }
             ret = f.invoke(ret, s.first());
         }
         if (RT.isReduced(ret))
+        {
             return ((IDeref)ret).deref();
+        }
         return ret;
     }
 
@@ -223,7 +243,9 @@ public class PersistentList extends ASeq implements IPersistentList, IReduce, Li
         public EmptyList withMeta(IPersistentMap meta)
         {
             if (meta != meta())
+            {
                 return new EmptyList(meta);
+            }
             return this;
         }
 
@@ -326,7 +348,9 @@ public class PersistentList extends ASeq implements IPersistentList, IReduce, Li
         public Object[] toArray(Object[] objects)
         {
             if (objects.length > 0)
+            {
                 objects[0] = null;
+            }
             return objects;
         }
 
@@ -358,7 +382,9 @@ public class PersistentList extends ASeq implements IPersistentList, IReduce, Li
             for (int i = 0; s != null; s = s.next(), i++)
             {
                 if (Util.equiv(s.first(), o))
+                {
                     return i;
+                }
             }
             return -1;
         }

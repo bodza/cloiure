@@ -67,7 +67,9 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
         for ( ; items != null; items = items.next().next())
         {
             if (items.next() == null)
+            {
                 throw new IllegalArgumentException(String.format("No value supplied for key: %s", items.first()));
+            }
             ret = ret.assoc(items.first(), RT.second(items));
         }
         return (PersistentTreeMap) ret;
@@ -79,7 +81,9 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
         for ( ; items != null; items = items.next().next())
         {
             if (items.next() == null)
+            {
                 throw new IllegalArgumentException(String.format("No value supplied for key: %s", items.first()));
+            }
             ret = ret.assoc(items.first(), RT.second(items));
         }
         return (PersistentTreeMap) ret;
@@ -133,7 +137,9 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
         {
             Node foundNode = (Node) found.val;
             if (foundNode.val() == val)  // note only get same collection on identity of val, not equals()
+            {
                 return this;
+            }
             return new PersistentTreeMap(comp, replace(tree, key, val), _count, meta());
         }
         return new PersistentTreeMap(comp, t.blacken(), _count + 1, meta());
@@ -146,7 +152,9 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
         if (t == null)
         {
             if (found.val == null) // null == doesn't contain key
+            {
                 return this;
+            }
             // empty
             return new PersistentTreeMap(meta(), comp);
         }
@@ -156,7 +164,9 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
     public ISeq seq()
     {
         if (_count > 0)
+        {
             return Seq.create(tree, true, _count);
+        }
         return null;
     }
 
@@ -168,7 +178,9 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
     public ISeq rseq()
     {
         if (_count > 0)
+        {
             return Seq.create(tree, false, _count);
+        }
         return null;
     }
 
@@ -185,7 +197,9 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
     public ISeq seq(boolean ascending)
     {
         if (_count > 0)
+        {
             return Seq.create(tree, ascending, _count);
+        }
         return null;
     }
 
@@ -211,7 +225,9 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
                         t = t.left();
                     }
                     else
+                    {
                         t = t.right();
+                    }
                 }
                 else
                 {
@@ -221,11 +237,15 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
                         t = t.right();
                     }
                     else
+                    {
                         t = t.left();
+                    }
                 }
             }
             if (stack != null)
+            {
                 return new Seq(stack, ascending);
+            }
         }
         return null;
     }
@@ -238,9 +258,13 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
     public Object kvreduce(IFn f, Object init)
     {
         if (tree != null)
+        {
             init = tree.kvreduce(f, init);
+        }
         if (RT.isReduced(init))
+        {
             init = ((IDeref)init).deref();
+        }
         return init;
     }
 
@@ -311,7 +335,9 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
     int depth(Node t)
     {
         if (t == null)
+        {
             return 0;
+        }
         return 1 + Math.max(depth(t.left()), depth(t.right()));
     }
 
@@ -343,11 +369,17 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
         {
             int c = doCompare(key, t.key);
             if (c == 0)
+            {
                 return t;
+            }
             else if (c < 0)
+            {
                 t = t.left();
+            }
             else
+            {
                 t = t.right();
+            }
         }
         return t;
     }
@@ -364,7 +396,9 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
         if (t == null)
         {
             if (val == null)
+            {
                 return new Red(key);
+            }
             return new RedVal(key, val);
         }
         int c = doCompare(key, t.key);
@@ -375,16 +409,22 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
         }
         Node ins = (c < 0) ? add(t.left(), key, val, found) : add(t.right(), key, val, found);
         if (ins == null) // found below
+        {
             return null;
+        }
         if (c < 0)
+        {
             return t.addLeft(ins);
+        }
         return t.addRight(ins);
     }
 
     Node remove(Node t, Object key, Box found)
     {
         if (t == null)
+        {
             return null; // not found indicator
+        }
         int c = doCompare(key, t.key);
         if (c == 0)
         {
@@ -393,16 +433,24 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
         }
         Node del = (c < 0) ? remove(t.left(), key, found) : remove(t.right(), key, found);
         if (del == null && found.val == null) // not found below
+        {
             return null;
+        }
         if (c < 0)
         {
             if (t.left() instanceof Black)
+            {
                 return balanceLeftDel(t.key, t.val(), del, t.right());
+            }
             else
+            {
                 return red(t.key, t.val(), del, t.right());
+            }
         }
         if (t.right() instanceof Black)
+        {
             return balanceRightDel(t.key, t.val(), t.left(), del);
+        }
         return red(t.key, t.val(), t.left(), del);
      // return t.removeLeft(del);
      // return t.removeRight(del);
@@ -411,76 +459,120 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
     static Node append(Node left, Node right)
     {
         if (left == null)
+        {
             return right;
+        }
         else if (right == null)
+        {
             return left;
+        }
         else if (left instanceof Red)
         {
             if (right instanceof Red)
             {
                 Node app = append(left.right(), right.left());
                 if (app instanceof Red)
+                {
                     return red(app.key, app.val(), red(left.key, left.val(), left.left(), app.left()), red(right.key, right.val(), app.right(), right.right()));
+                }
                 else
+                {
                     return red(left.key, left.val(), left.left(), red(right.key, right.val(), app, right.right()));
+                }
             }
             else
+            {
                 return red(left.key, left.val(), left.left(), append(left.right(), right));
+            }
         }
         else if (right instanceof Red)
+        {
             return red(right.key, right.val(), append(left, right.left()), right.right());
+        }
         else // black/black
         {
             Node app = append(left.right(), right.left());
             if (app instanceof Red)
+            {
                 return red(app.key, app.val(), black(left.key, left.val(), left.left(), app.left()), black(right.key, right.val(), app.right(), right.right()));
+            }
             else
+            {
                 return balanceLeftDel(left.key, left.val(), left.left(), black(right.key, right.val(), app, right.right()));
+            }
         }
     }
 
     static Node balanceLeftDel(Object key, Object val, Node del, Node right)
     {
         if (del instanceof Red)
+        {
             return red(key, val, del.blacken(), right);
+        }
         else if (right instanceof Black)
+        {
             return rightBalance(key, val, del, right.redden());
+        }
         else if (right instanceof Red && right.left() instanceof Black)
+        {
             return red(right.left().key, right.left().val(), black(key, val, del, right.left().left()), rightBalance(right.key, right.val(), right.left().right(), right.right().redden()));
+        }
         else
+        {
             throw new UnsupportedOperationException("Invariant violation");
+        }
     }
 
     static Node balanceRightDel(Object key, Object val, Node left, Node del)
     {
         if (del instanceof Red)
+        {
             return red(key, val, left, del.blacken());
+        }
         else if (left instanceof Black)
+        {
             return leftBalance(key, val, left.redden(), del);
+        }
         else if (left instanceof Red && left.right() instanceof Black)
+        {
             return red(left.right().key, left.right().val(), leftBalance(left.key, left.val(), left.left().redden(), left.right().left()), black(key, val, left.right().right(), del));
+        }
         else
+        {
             throw new UnsupportedOperationException("Invariant violation");
+        }
     }
 
     static Node leftBalance(Object key, Object val, Node ins, Node right)
     {
         if (ins instanceof Red && ins.left() instanceof Red)
+        {
             return red(ins.key, ins.val(), ins.left().blacken(), black(key, val, ins.right(), right));
+        }
         else if (ins instanceof Red && ins.right() instanceof Red)
+        {
             return red(ins.right().key, ins.right().val(), black(ins.key, ins.val(), ins.left(), ins.right().left()), black(key, val, ins.right().right(), right));
+        }
         else
+        {
             return black(key, val, ins, right);
+        }
     }
 
     static Node rightBalance(Object key, Object val, Node left, Node ins)
     {
         if (ins instanceof Red && ins.right() instanceof Red)
+        {
             return red(ins.key, ins.val(), black(key, val, left, ins.left()), ins.right().blacken());
+        }
         else if (ins instanceof Red && ins.left() instanceof Red)
+        {
             return red(ins.left().key, ins.left().val(), black(key, val, left, ins.left().left()), black(ins.key, ins.val(), ins.left().right(), ins.right()));
+        }
         else
+        {
             return black(key, val, left, ins);
+        }
     }
 
     Node replace(Node t, Object key, Object val)
@@ -502,11 +594,15 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
         if (left == null && right == null)
         {
             if (val == null)
+            {
                 return new Red(key);
+            }
             return new RedVal(key, val);
         }
         if (val == null)
+        {
             return new RedBranch(key, left, right);
+        }
         return new RedBranchVal(key, val, left, right);
     }
 
@@ -515,11 +611,15 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
         if (left == null && right == null)
         {
             if (val == null)
+            {
                 return new Black(key);
+            }
             return new BlackVal(key, val);
         }
         if (val == null)
+        {
             return new BlackBranch(key, left, right);
+        }
         return new BlackBranchVal(key, val, left, right);
     }
 
@@ -597,11 +697,15 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
             {
                 init = left().kvreduce(f, init);
                 if (RT.isReduced(init))
+                {
                     return init;
+                }
             }
             init = f.invoke(init, key(), val());
             if (RT.isReduced(init))
+            {
                 return init;
+            }
 
             if (right() != null)
             {
@@ -815,21 +919,33 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
         Node balanceLeft(Node parent)
         {
             if (left instanceof Red)
+            {
                 return red(key, val(), left.blacken(), black(parent.key, parent.val(), right, parent.right()));
+            }
             else if (right instanceof Red)
+            {
                 return red(right.key, right.val(), black(key, val(), left, right.left()), black(parent.key, parent.val(), right.right(), parent.right()));
+            }
             else
+            {
                 return super.balanceLeft(parent);
+            }
         }
 
         Node balanceRight(Node parent)
         {
             if (right instanceof Red)
+            {
                 return red(key, val(), black(parent.key, parent.val(), parent.left(), left), right.blacken());
+            }
             else if (left instanceof Red)
+            {
                 return red(left.key, left.val(), black(parent.key, parent.val(), parent.left(), left.left()), black(key, val(), left.right(), right));
+            }
             else
+            {
                 return super.balanceRight(parent);
+            }
         }
 
         Node blacken()
@@ -921,7 +1037,9 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
         public int count()
         {
             if (cnt < 0)
+            {
                 return super.count();
+            }
             return cnt;
         }
 
@@ -1025,125 +1143,4 @@ public class PersistentTreeMap extends APersistentMap implements IObj, Reversibl
             throw new UnsupportedOperationException();
         }
     }
-
-    /*
-    static public void main(String args[])
-    {
-        if (args.length != 1)
-            System.err.println("Usage: RBTree n");
-        int n = Integer.parseInt(args[0]);
-        Integer[] ints = new Integer[n];
-        for (int i = 0; i < ints.length; i++)
-        {
-            ints[i] = i;
-        }
-        Collections.shuffle(Arrays.asList(ints));
-        // force the ListMap class loading now
-     // try
-     // {
-     //     PersistentListMap.EMPTY.assocEx(1, null).assocEx(2, null).assocEx(3, null);
-     // }
-     // catch (Exception e)
-     // {
-     //     e.printStackTrace();  // To change body of catch statement use File | Settings | File Templates.
-     // }
-        System.out.println("Building set");
-     // IPersistentMap set = new PersistentArrayMap();
-     // IPersistentMap set = new PersistentHashtableMap(1001);
-        IPersistentMap set = PersistentHashMap.EMPTY;
-     // IPersistentMap set = new ListMap();
-     // IPersistentMap set = new ArrayMap();
-     // IPersistentMap set = new PersistentTreeMap();
-     // for (int i = 0; i < ints.length; i++)
-     // {
-     //     Integer anInt = ints[i];
-     //     set = set.add(anInt);
-     // }
-        long startTime = System.nanoTime();
-        for (Integer anInt : ints)
-        {
-            set = set.assoc(anInt, anInt);
-        }
-     // System.out.println("_count = " + set.count());
-
-     //      System.out.println("_count = " + set._count + ", min: " + set.minKey() + ", max: " + set.maxKey() + ", depth: " + set.depth());
-        for (Object aSet : set)
-        {
-        IMapEntry o = (IMapEntry) aSet;
-        if (!set.contains(o.key()))
-            System.err.println("Can't find: " + o.key());
-     // else if (n < 2000)
-     //     System.out.print(o.key().toString() + ",");
-        }
-
-        Random rand = new Random(42);
-        for (int i = 0; i < ints.length / 2; i++)
-        {
-            Integer anInt = ints[rand.nextInt(n)];
-            set = set.without(anInt);
-        }
-
-        long estimatedTime = System.nanoTime() - startTime;
-        System.out.println();
-
-        System.out.println("_count = " + set.count() + ", time: " + estimatedTime / 1000000);
-
-        System.out.println("Building ht");
-        Hashtable ht = new Hashtable(1001);
-        startTime = System.nanoTime();
-     // for (int i = 0; i < ints.length; i++)
-     // {
-     //     Integer anInt = ints[i];
-     //     ht.put(anInt, null);
-     // }
-        for (Integer anInt : ints)
-        {
-            ht.put(anInt, anInt);
-        }
-     // System.out.println("size = " + ht.size());
-     // Iterator it = ht.entrySet().iterator();
-        for (Object o1 : ht.entrySet())
-        {
-            Map.Entry o = (Map.Entry) o1;
-            if (!ht.containsKey(o.getKey()))
-                System.err.println("Can't find: " + o);
-         // else if (n < 2000)
-         //     System.out.print(o.toString() + ",");
-        }
-
-        rand = new Random(42);
-        for (int i = 0; i < ints.length / 2; i++)
-        {
-            Integer anInt = ints[rand.nextInt(n)];
-            ht.remove(anInt);
-        }
-        estimatedTime = System.nanoTime() - startTime;
-        System.out.println();
-        System.out.println("size = " + ht.size() + ", time: " + estimatedTime / 1000000);
-
-        System.out.println("set lookup");
-        startTime = System.nanoTime();
-        int c = 0;
-        for (Integer anInt : ints)
-        {
-            if (!set.contains(anInt))
-                ++c;
-        }
-        estimatedTime = System.nanoTime() - startTime;
-        System.out.println("notfound = " + c + ", time: " + estimatedTime / 1000000);
-
-        System.out.println("ht lookup");
-        startTime = System.nanoTime();
-        c = 0;
-        for (Integer anInt : ints)
-        {
-            if (!ht.containsKey(anInt))
-                ++c;
-        }
-        estimatedTime = System.nanoTime() - startTime;
-        System.out.println("notfound = " + c + ", time: " + estimatedTime / 1000000);
-
-     // System.out.println("_count = " + set._count + ", min: " + set.minKey() + ", max: " + set.maxKey() + ", depth: " + set.depth());
-    }
-    */
 }

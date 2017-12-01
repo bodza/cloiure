@@ -45,7 +45,9 @@ public abstract class AFunction extends AFn implements IObj, Comparator, Fn, Ser
         if (o instanceof Boolean)
         {
             if (RT.booleanCast(o))
+            {
                 return -1;
+            }
             return RT.booleanCast(invoke(o2, o1)) ? 1 : 0;
         }
 

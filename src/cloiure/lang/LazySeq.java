@@ -33,7 +33,9 @@ public final class LazySeq extends Obj implements ISeq, Sequential, List, IPendi
             fn = null;
         }
         if (sv != null)
+        {
             return sv;
+        }
         return s;
     }
 
@@ -57,7 +59,9 @@ public final class LazySeq extends Obj implements ISeq, Sequential, List, IPendi
     {
         int c = 0;
         for (ISeq s = seq(); s != null; s = s.next())
+        {
             ++c;
+        }
         return c;
     }
 
@@ -65,7 +69,9 @@ public final class LazySeq extends Obj implements ISeq, Sequential, List, IPendi
     {
         seq();
         if (s == null)
+        {
             return null;
+        }
         return s.first();
     }
 
@@ -73,7 +79,9 @@ public final class LazySeq extends Obj implements ISeq, Sequential, List, IPendi
     {
         seq();
         if (s == null)
+        {
             return null;
+        }
         return s.next();
     }
 
@@ -81,7 +89,9 @@ public final class LazySeq extends Obj implements ISeq, Sequential, List, IPendi
     {
         seq();
         if (s == null)
+        {
             return PersistentList.EMPTY;
+        }
         return s.more();
     }
 
@@ -99,16 +109,22 @@ public final class LazySeq extends Obj implements ISeq, Sequential, List, IPendi
     {
         ISeq s = seq();
         if (s != null)
+        {
             return s.equiv(o);
+        }
         else
+        {
             return (o instanceof Sequential || o instanceof List) && RT.seq(o) == null;
+        }
     }
 
     public int hashCode()
     {
         ISeq s = seq();
         if (s == null)
+        {
             return 1;
+        }
         return Util.hash(s);
     }
 
@@ -121,9 +137,13 @@ public final class LazySeq extends Obj implements ISeq, Sequential, List, IPendi
     {
         ISeq s = seq();
         if (s != null)
+        {
             return s.equals(o);
+        }
         else
+        {
             return (o instanceof Sequential || o instanceof List) && RT.seq(o) == null;
+        }
     }
 
     // java.util.Collection implementation
@@ -168,7 +188,9 @@ public final class LazySeq extends Obj implements ISeq, Sequential, List, IPendi
         for (Object o : c)
         {
             if (!contains(o))
+            {
                 return false;
+            }
         }
         return true;
     }
@@ -193,7 +215,9 @@ public final class LazySeq extends Obj implements ISeq, Sequential, List, IPendi
         for (ISeq s = seq(); s != null; s = s.next())
         {
             if (Util.equiv(s.first(), o))
+            {
                 return true;
+            }
         }
         return false;
     }
@@ -231,7 +255,9 @@ public final class LazySeq extends Obj implements ISeq, Sequential, List, IPendi
         for (int i = 0; s != null; s = s.next(), i++)
         {
             if (Util.equiv(s.first(), o))
+            {
                 return i;
+            }
         }
         return -1;
     }

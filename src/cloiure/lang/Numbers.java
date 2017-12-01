@@ -173,7 +173,9 @@ public class Numbers
         }
         Ops yops = ops(y);
         if (yops.isZero((Number)y))
+        {
             throw new ArithmeticException("Divide by zero");
+        }
         return ops(x).combine(yops).divide((Number)x, (Number)y);
     }
 
@@ -181,7 +183,9 @@ public class Numbers
     {
         Ops yops = ops(y);
         if (yops.isZero((Number) y))
+        {
             throw new ArithmeticException("Divide by zero");
+        }
         return ops(x).combine(yops).quotient((Number)x, (Number)y);
     }
 
@@ -189,14 +193,18 @@ public class Numbers
     {
         Ops yops = ops(y);
         if (yops.isZero((Number) y))
+        {
             throw new ArithmeticException("Divide by zero");
+        }
         return ops(x).combine(yops).remainder((Number)x, (Number)y);
     }
 
     static public double quotient(double n, double d)
     {
         if (d == 0)
+        {
             throw new ArithmeticException("Divide by zero");
+        }
 
         double q = n / d;
         if (q <= Long.MAX_VALUE && q >= Long.MIN_VALUE)
@@ -212,7 +220,9 @@ public class Numbers
     static public double remainder(double n, double d)
     {
         if (d == 0)
+        {
             throw new ArithmeticException("Divide by zero");
+        }
 
         double q = n / d;
         if (q <= Long.MAX_VALUE && q >= Long.MIN_VALUE)
@@ -238,7 +248,7 @@ public class Numbers
 
     static public boolean equal(Number x, Number y)
     {
-        return category(x) == category(y) && ops(x).combine(ops(y)).equiv(x, y);
+        return (category(x) == category(y) && ops(x).combine(ops(y)).equiv(x, y));
     }
 
     static public boolean lt(Object x, Object y)
@@ -265,9 +275,13 @@ public class Numbers
     {
         Ops ops = ops(x).combine(ops(y));
         if (ops.lt(x, y))
+        {
             return -1;
+        }
         else if (ops.lt(y, x))
+        {
             return 1;
+        }
         return 0;
     }
 
@@ -275,66 +289,98 @@ public class Numbers
     static BigInt toBigInt(Object x)
     {
         if (x instanceof BigInt)
+        {
             return (BigInt) x;
+        }
         if (x instanceof BigInteger)
+        {
             return BigInt.fromBigInteger((BigInteger) x);
+        }
         else
+        {
             return BigInt.fromLong(((Number) x).longValue());
+        }
     }
 
     @WarnBoxedMath(false)
     static BigInteger toBigInteger(Object x)
     {
         if (x instanceof BigInteger)
+        {
             return (BigInteger) x;
+        }
         else if (x instanceof BigInt)
+        {
             return ((BigInt) x).toBigInteger();
+        }
         else
+        {
             return BigInteger.valueOf(((Number) x).longValue());
+        }
     }
 
     @WarnBoxedMath(false)
     static BigDecimal toBigDecimal(Object x)
     {
         if (x instanceof BigDecimal)
+        {
             return (BigDecimal) x;
+        }
         else if (x instanceof BigInt)
         {
             BigInt bi = (BigInt) x;
             if (bi.bipart == null)
+            {
                 return BigDecimal.valueOf(bi.lpart);
+            }
             else
+            {
                 return new BigDecimal(bi.bipart);
+            }
         }
         else if (x instanceof BigInteger)
+        {
             return new BigDecimal((BigInteger) x);
+        }
         else if (x instanceof Double)
+        {
             return new BigDecimal(((Number) x).doubleValue());
+        }
         else if (x instanceof Float)
+        {
             return new BigDecimal(((Number) x).doubleValue());
+        }
         else if (x instanceof Ratio)
         {
             Ratio r = (Ratio)x;
             return (BigDecimal)divide(new BigDecimal(r.numerator), r.denominator);
         }
         else
+        {
             return BigDecimal.valueOf(((Number) x).longValue());
+        }
     }
 
     @WarnBoxedMath(false)
     static public Ratio toRatio(Object x)
     {
         if (x instanceof Ratio)
+        {
             return (Ratio) x;
+        }
         else if (x instanceof BigDecimal)
         {
             BigDecimal bx = (BigDecimal) x;
             BigInteger bv = bx.unscaledValue();
             int scale = bx.scale();
             if (scale < 0)
+            {
                 return new Ratio(bv.multiply(BigInteger.TEN.pow(-scale)), BigInteger.ONE);
+            }
             else
+            {
                 return new Ratio(bv, BigInteger.TEN.pow(scale));
+            }
         }
         return new Ratio(toBigInteger(x), BigInteger.ONE);
     }
@@ -343,36 +389,42 @@ public class Numbers
     static public Number rationalize(Number x)
     {
         if (x instanceof Float || x instanceof Double)
+        {
             return rationalize(BigDecimal.valueOf(x.doubleValue()));
+        }
         else if (x instanceof BigDecimal)
         {
             BigDecimal bx = (BigDecimal) x;
             BigInteger bv = bx.unscaledValue();
             int scale = bx.scale();
             if (scale < 0)
+            {
                 return BigInt.fromBigInteger(bv.multiply(BigInteger.TEN.pow(-scale)));
+            }
             else
+            {
                 return divide(bv, BigInteger.TEN.pow(scale));
+            }
         }
         return x;
     }
 
- // static  Number box(int val)
+ // static Number box(int val)
  // {
  //     return Integer.valueOf(val);
  // }
  //
- // static  Number box(long val)
+ // static Number box(long val)
  // {
  //     return Long.valueOf(val);
  // }
  //
- // static  Double box(double val)
+ // static Double box(double val)
  // {
  //     return Double.valueOf(val);
  // }
  //
- // static  Double box(float val)
+ // static Double box(float val)
  // {
  //     return Double.valueOf((double) val);
  // }
@@ -381,25 +433,37 @@ public class Numbers
     static public Number reduceBigInt(BigInt val)
     {
         if (val.bipart == null)
+        {
             return num(val.lpart);
+        }
         else
+        {
             return val.bipart;
+        }
     }
 
     static public Number divide(BigInteger n, BigInteger d)
     {
         if (d.equals(BigInteger.ZERO))
+        {
             throw new ArithmeticException("Divide by zero");
+        }
         BigInteger gcd = n.gcd(d);
         if (gcd.equals(BigInteger.ZERO))
+        {
             return BigInt.ZERO;
+        }
         n = n.divide(gcd);
         d = d.divide(gcd);
         if (d.equals(BigInteger.ONE))
+        {
             return BigInt.fromBigInteger(n);
+        }
         else if (d.equals(BigInteger.ONE.negate()))
+        {
             return BigInt.fromBigInteger(n.negate());
-        return new Ratio((d.signum() < 0 ? n.negate() : n), (d.signum() < 0 ? d.negate() : d));
+        }
+        return new Ratio(((d.signum() < 0) ? n.negate() : n), ((d.signum() < 0) ? d.negate() : d));
     }
 
     static public int shiftLeftInt(int x, int n)
@@ -525,7 +589,9 @@ public class Numbers
             long lx = x.longValue(), ly = y.longValue();
             long ret = lx + ly;
             if ((ret ^ lx) < 0 && (ret ^ ly) < 0)
+            {
                 return BIGINT_OPS.add(x, y);
+            }
             return num(ret);
         }
 
@@ -538,10 +604,14 @@ public class Numbers
         {
             long lx = x.longValue(), ly = y.longValue();
             if (lx == Long.MIN_VALUE && ly < 0)
+            {
                 return BIGINT_OPS.multiply(x, y);
+            }
             long ret = lx * ly;
             if (ly != 0 && ret/ly != lx)
+            {
                 return BIGINT_OPS.multiply(x, y);
+            }
             return num(ret);
         }
 
@@ -562,12 +632,16 @@ public class Numbers
             long val = y.longValue();
             long gcd = gcd(n, val);
             if (gcd == 0)
+            {
                 return num(0);
+            }
 
             n = n / gcd;
             long d = val / gcd;
             if (d == 1)
+            {
                 return num(n);
+            }
             if (d < 0)
             {
                 n = -n;
@@ -618,7 +692,9 @@ public class Numbers
         {
             long val = x.longValue();
             if (val > Long.MIN_VALUE)
+            {
                 return num(-val);
+            }
             return BigInt.fromBigInteger(BigInteger.valueOf(val).negate());
         }
 
@@ -632,7 +708,9 @@ public class Numbers
         {
             long val = x.longValue();
             if (val < Long.MAX_VALUE)
+            {
                 return num(val + 1);
+            }
             return BIGINT_OPS.inc(x);
         }
 
@@ -646,7 +724,9 @@ public class Numbers
         {
             long val = x.longValue();
             if (val > Long.MIN_VALUE)
+            {
                 return num(val - 1);
+            }
             return BIGINT_OPS.dec(x);
         }
     }
@@ -944,7 +1024,9 @@ public class Numbers
         {
             BigInt bx = toBigInt(x);
             if (bx.bipart == null)
-                return bx.lpart == 0;
+            {
+                return (bx.lpart == 0);
+            }
             return (bx.bipart.signum() == 0);
         }
 
@@ -952,7 +1034,9 @@ public class Numbers
         {
             BigInt bx = toBigInt(x);
             if (bx.bipart == null)
-                return bx.lpart > 0;
+            {
+                return (bx.lpart > 0);
+            }
             return (bx.bipart.signum() > 0);
         }
 
@@ -960,7 +1044,9 @@ public class Numbers
         {
             BigInt bx = toBigInt(x);
             if (bx.bipart == null)
-                return bx.lpart < 0;
+            {
+                return (bx.lpart < 0);
+            }
             return (bx.bipart.signum() < 0);
         }
 
@@ -1170,23 +1256,41 @@ public class Numbers
         Class xc = x.getClass();
 
         if (xc == Long.class)
+        {
             return LONG_OPS;
+        }
         else if (xc == Double.class)
+        {
             return DOUBLE_OPS;
+        }
         else if (xc == Integer.class)
+        {
             return LONG_OPS;
+        }
         else if (xc == Float.class)
+        {
             return DOUBLE_OPS;
+        }
         else if (xc == BigInt.class)
+        {
             return BIGINT_OPS;
+        }
         else if (xc == BigInteger.class)
+        {
             return BIGINT_OPS;
+        }
         else if (xc == Ratio.class)
+        {
             return RATIO_OPS;
+        }
         else if (xc == BigDecimal.class)
+        {
             return BIGDECIMAL_OPS;
+        }
         else
+        {
             return LONG_OPS;
+        }
     }
 
     @WarnBoxedMath(false)
@@ -1206,9 +1310,13 @@ public class Numbers
             // stripTrailingZeros() does not do anything to values
             // equal to 0 with different scales.
             if (isZero(x))
+            {
                 return BigDecimal.ZERO.hashCode();
+            }
             else
+            {
                 return ((BigDecimal) x).stripTrailingZeros().hashCode();
+            }
         }
         if (xc == Float.class && x.equals(-0.0f))
         {
@@ -1231,7 +1339,9 @@ public class Numbers
         if (xc == Double.class)
         {
             if (x.equals(-0.0))
+            {
                 return 0;  // match 0.0
+            }
             return x.hashCode();
         }
         return hasheqFrom(x, xc);
@@ -1242,21 +1352,37 @@ public class Numbers
         Class xc = x.getClass();
 
         if (xc == Integer.class)
+        {
             return Category.INTEGER;
+        }
         else if (xc == Double.class)
+        {
             return Category.FLOATING;
+        }
         else if (xc == Long.class)
+        {
             return Category.INTEGER;
+        }
         else if (xc == Float.class)
+        {
             return Category.FLOATING;
+        }
         else if (xc == BigInt.class)
+        {
             return Category.INTEGER;
+        }
         else if (xc == Ratio.class)
+        {
             return Category.RATIO;
+        }
         else if (xc == BigDecimal.class)
+        {
             return Category.DECIMAL;
+        }
         else
+        {
             return Category.INTEGER;
+        }
     }
 
     static long bitOpsCast(Object x)
@@ -1264,7 +1390,9 @@ public class Numbers
         Class xc = x.getClass();
 
         if (xc == Long.class || xc == Integer.class || xc == Short.class || xc == Byte.class)
+        {
             return RT.longCast(x);
+        }
         // no bignums, no decimals
         throw new IllegalArgumentException("bit operation not supported for: " + xc);
     }
@@ -1277,13 +1405,17 @@ public class Numbers
         {
             float f = ((Number) init).floatValue();
             for (int i = 0; i < ret.length; i++)
+            {
                 ret[i] = f;
+            }
         }
         else
         {
             ISeq s = RT.seq(init);
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = ((Number) s.first()).floatValue();
+            }
         }
         return ret;
     }
@@ -1292,14 +1424,18 @@ public class Numbers
     static public float[] float_array(Object sizeOrSeq)
     {
         if (sizeOrSeq instanceof Number)
+        {
             return new float[((Number) sizeOrSeq).intValue()];
+        }
         else
         {
             ISeq s = RT.seq(sizeOrSeq);
             int size = RT.count(s);
             float[] ret = new float[size];
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = ((Number) s.first()).floatValue();
+            }
             return ret;
         }
     }
@@ -1312,13 +1448,17 @@ public class Numbers
         {
             double f = ((Number) init).doubleValue();
             for (int i = 0; i < ret.length; i++)
+            {
                 ret[i] = f;
+            }
         }
         else
         {
             ISeq s = RT.seq(init);
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = ((Number) s.first()).doubleValue();
+            }
         }
         return ret;
     }
@@ -1327,14 +1467,18 @@ public class Numbers
     static public double[] double_array(Object sizeOrSeq)
     {
         if (sizeOrSeq instanceof Number)
+        {
             return new double[((Number) sizeOrSeq).intValue()];
+        }
         else
         {
             ISeq s = RT.seq(sizeOrSeq);
             int size = RT.count(s);
             double[] ret = new double[size];
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = ((Number) s.first()).doubleValue();
+            }
             return ret;
         }
     }
@@ -1347,13 +1491,17 @@ public class Numbers
         {
             int f = ((Number) init).intValue();
             for (int i = 0; i < ret.length; i++)
+            {
                 ret[i] = f;
+            }
         }
         else
         {
             ISeq s = RT.seq(init);
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = ((Number) s.first()).intValue();
+            }
         }
         return ret;
     }
@@ -1362,14 +1510,18 @@ public class Numbers
     static public int[] int_array(Object sizeOrSeq)
     {
         if (sizeOrSeq instanceof Number)
+        {
             return new int[((Number) sizeOrSeq).intValue()];
+        }
         else
         {
             ISeq s = RT.seq(sizeOrSeq);
             int size = RT.count(s);
             int[] ret = new int[size];
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = ((Number) s.first()).intValue();
+            }
             return ret;
         }
     }
@@ -1382,13 +1534,17 @@ public class Numbers
         {
             long f = ((Number) init).longValue();
             for (int i = 0; i < ret.length; i++)
+            {
                 ret[i] = f;
+            }
         }
         else
         {
             ISeq s = RT.seq(init);
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = ((Number) s.first()).longValue();
+            }
         }
         return ret;
     }
@@ -1397,14 +1553,18 @@ public class Numbers
     static public long[] long_array(Object sizeOrSeq)
     {
         if (sizeOrSeq instanceof Number)
+        {
             return new long[((Number) sizeOrSeq).intValue()];
+        }
         else
         {
             ISeq s = RT.seq(sizeOrSeq);
             int size = RT.count(s);
             long[] ret = new long[size];
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = ((Number) s.first()).longValue();
+            }
             return ret;
         }
     }
@@ -1417,13 +1577,17 @@ public class Numbers
         {
             short s = (Short) init;
             for (int i = 0; i < ret.length; i++)
+            {
                 ret[i] = s;
+            }
         }
         else
         {
             ISeq s = RT.seq(init);
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = ((Number) s.first()).shortValue();
+            }
         }
         return ret;
     }
@@ -1432,14 +1596,18 @@ public class Numbers
     static public short[] short_array(Object sizeOrSeq)
     {
         if (sizeOrSeq instanceof Number)
+        {
             return new short[((Number) sizeOrSeq).intValue()];
+        }
         else
         {
             ISeq s = RT.seq(sizeOrSeq);
             int size = RT.count(s);
             short[] ret = new short[size];
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = ((Number) s.first()).shortValue();
+            }
             return ret;
         }
     }
@@ -1452,13 +1620,17 @@ public class Numbers
         {
             char c = (Character) init;
             for (int i = 0; i < ret.length; i++)
+            {
                 ret[i] = c;
+            }
         }
         else
         {
             ISeq s = RT.seq(init);
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = (Character) s.first();
+            }
         }
         return ret;
     }
@@ -1467,14 +1639,18 @@ public class Numbers
     static public char[] char_array(Object sizeOrSeq)
     {
         if (sizeOrSeq instanceof Number)
+        {
             return new char[((Number) sizeOrSeq).intValue()];
+        }
         else
         {
             ISeq s = RT.seq(sizeOrSeq);
             int size = RT.count(s);
             char[] ret = new char[size];
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = (Character) s.first();
+            }
             return ret;
         }
     }
@@ -1487,13 +1663,17 @@ public class Numbers
         {
             byte b = (Byte) init;
             for (int i = 0; i < ret.length; i++)
+            {
                 ret[i] = b;
+            }
         }
         else
         {
             ISeq s = RT.seq(init);
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = ((Number) s.first()).byteValue();
+            }
         }
         return ret;
     }
@@ -1502,14 +1682,18 @@ public class Numbers
     static public byte[] byte_array(Object sizeOrSeq)
     {
         if (sizeOrSeq instanceof Number)
+        {
             return new byte[((Number) sizeOrSeq).intValue()];
+        }
         else
         {
             ISeq s = RT.seq(sizeOrSeq);
             int size = RT.count(s);
             byte[] ret = new byte[size];
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = ((Number) s.first()).byteValue();
+            }
             return ret;
         }
     }
@@ -1522,13 +1706,17 @@ public class Numbers
         {
             boolean b = (Boolean) init;
             for (int i = 0; i < ret.length; i++)
+            {
                 ret[i] = b;
+            }
         }
         else
         {
             ISeq s = RT.seq(init);
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = (Boolean)s.first();
+            }
         }
         return ret;
     }
@@ -1537,14 +1725,18 @@ public class Numbers
     static public boolean[] boolean_array(Object sizeOrSeq)
     {
         if (sizeOrSeq instanceof Number)
+        {
             return new boolean[((Number) sizeOrSeq).intValue()];
+        }
         else
         {
             ISeq s = RT.seq(sizeOrSeq);
             int size = RT.count(s);
             boolean[] ret = new boolean[size];
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = (Boolean)s.first();
+            }
             return ret;
         }
     }
@@ -2107,7 +2299,9 @@ public class Numbers
     {
         long ret = x + y;
         if ((ret ^ x) < 0 && (ret ^ y) < 0)
+        {
             return throwIntOverflow();
+        }
         return ret;
     }
 
@@ -2115,7 +2309,9 @@ public class Numbers
     {
         long ret = x + y;
         if ((ret ^ x) < 0 && (ret ^ y) < 0)
+        {
             return addP((Number)x, (Number)y);
+        }
         return num(ret);
     }
 
@@ -2123,7 +2319,9 @@ public class Numbers
     {
         long ret = x - y;
         if (((ret ^ x) < 0 && (ret ^ ~y) < 0))
+        {
             return throwIntOverflow();
+        }
         return ret;
     }
 
@@ -2131,69 +2329,91 @@ public class Numbers
     {
         long ret = x - y;
         if (((ret ^ x) < 0 && (ret ^ ~y) < 0))
+        {
             return minusP((Number)x, (Number)y);
+        }
         return num(ret);
     }
 
     static public long minus(long x)
     {
         if (x == Long.MIN_VALUE)
+        {
             return throwIntOverflow();
+        }
         return -x;
     }
 
     static public Number minusP(long x)
     {
         if (x == Long.MIN_VALUE)
+        {
             return BigInt.fromBigInteger(BigInteger.valueOf(x).negate());
+        }
         return num(-x);
     }
 
     static public long inc(long x)
     {
         if (x == Long.MAX_VALUE)
+        {
             return throwIntOverflow();
+        }
         return x + 1;
     }
 
     static public Number incP(long x)
     {
         if (x == Long.MAX_VALUE)
+        {
             return BIGINT_OPS.inc(x);
+        }
         return num(x + 1);
     }
 
     static public long dec(long x)
     {
         if (x == Long.MIN_VALUE)
+        {
             return throwIntOverflow();
+        }
         return x - 1;
     }
 
     static public Number decP(long x)
     {
         if (x == Long.MIN_VALUE)
+        {
             return BIGINT_OPS.dec(x);
+        }
         return num(x - 1);
     }
 
     static public long multiply(long x, long y)
     {
         if (x == Long.MIN_VALUE && y < 0)
+        {
             return throwIntOverflow();
+        }
         long ret = x * y;
         if (y != 0 && ret/y != x)
+        {
             return throwIntOverflow();
+        }
         return ret;
     }
 
     static public Number multiplyP(long x, long y)
     {
         if (x == Long.MIN_VALUE && y < 0)
+        {
             return multiplyP((Number)x, (Number)y);
+        }
         long ret = x * y;
         if (y != 0 && ret/y != x)
+        {
             return multiplyP((Number)x, (Number)y);
+        }
         return num(ret);
     }
 
@@ -2353,13 +2573,17 @@ public class Numbers
             {
                 float f = ((Number) init).floatValue();
                 for (int i = 0; i < ret.length; i++)
+                {
                     ret[i] = f;
+                }
             }
             else
             {
                 ISeq s = RT.seq(init);
                 for (int i = 0; i < size && s != null; i++, s = s.rest())
+                {
                     ret[i] = ((Number) s.first()).floatValue();
+                }
             }
             return ret;
         }
@@ -2367,14 +2591,18 @@ public class Numbers
         static public float[] vec(Object sizeOrSeq)
         {
             if (sizeOrSeq instanceof Number)
+            {
                 return new float[((Number) sizeOrSeq).intValue()];
+            }
             else
             {
                 ISeq s = RT.seq(sizeOrSeq);
                 int size = s.count();
                 float[] ret = new float[size];
                 for (int i = 0; i < size && s != null; i++, s = s.rest())
+                {
                     ret[i] = ((Number) s.first()).intValue();
+                }
                 return ret;
             }
         }
@@ -2383,7 +2611,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] += y;
+            }
             return xs;
         }
 
@@ -2391,7 +2621,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] -= y;
+            }
             return xs;
         }
 
@@ -2399,7 +2631,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] /= y;
+            }
             return xs;
         }
 
@@ -2407,7 +2641,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] *= y;
+            }
             return xs;
         }
 
@@ -2415,7 +2651,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = y / xs[i];
+            }
             return xs;
         }
 
@@ -2423,7 +2661,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[i] * y + zs[i];
+            }
             return xs;
         }
 
@@ -2431,7 +2671,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[i] * y - zs[i];
+            }
             return xs;
         }
 
@@ -2439,7 +2681,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[i] * y + z;
+            }
             return xs;
         }
 
@@ -2447,7 +2691,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[i] * y - z;
+            }
             return xs;
         }
 
@@ -2455,7 +2701,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = Math.abs(xs[i]);
+            }
             return xs;
         }
 
@@ -2463,7 +2711,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = -Math.abs(xs[i]);
+            }
             return xs;
         }
 
@@ -2471,7 +2721,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = -xs[i];
+            }
             return xs;
         }
 
@@ -2479,7 +2731,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] *= xs[i];
+            }
             return xs;
         }
 
@@ -2487,7 +2741,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] *= Math.abs(xs[i]);
+            }
             return xs;
         }
 
@@ -2497,9 +2753,13 @@ public class Numbers
             for (int i = 0; i < xs.length; i++)
             {
                 if (xs[i] < low)
+                {
                     xs[i] = low;
+                }
                 else if (xs[i] > high)
+                {
                     xs[i] = high;
+                }
             }
             return xs;
         }
@@ -2532,7 +2792,9 @@ public class Numbers
             for (int i = 0; i < xs.length; i++)
             {
                 if (xs[i] < thresh)
+                {
                     xs[i] = otherwise;
+                }
             }
             return xs;
         }
@@ -2541,7 +2803,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[xs.length - i - 1];
+            }
             return xs;
         }
 
@@ -2549,7 +2813,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 1; i < xs.length; i++)
+            {
                 xs[i] = xs[i - 1] + xs[i];
+            }
             return xs;
         }
 
@@ -2564,44 +2830,60 @@ public class Numbers
         {
             float ret = 0;
             for (int i = 0; i < xs.length; i++)
+            {
                 ret += xs[i] * ys[i];
+            }
             return ret;
         }
 
         static public float vmax(float[] xs)
         {
             if (xs.length == 0)
+            {
                 return 0;
+            }
             float ret = xs[0];
             for (int i = 0; i < xs.length; i++)
+            {
                 ret = Math.max(ret, xs[i]);
+            }
             return ret;
         }
 
         static public float vmin(float[] xs)
         {
             if (xs.length == 0)
+            {
                 return 0;
+            }
             float ret = xs[0];
             for (int i = 0; i < xs.length; i++)
+            {
                 ret = Math.min(ret, xs[i]);
+            }
             return ret;
         }
 
         static public float vmean(float[] xs)
         {
             if (xs.length == 0)
+            {
                 return 0;
+            }
             return vsum(xs) / xs.length;
         }
 
         static public double vrms(float[] xs)
         {
             if (xs.length == 0)
+            {
                 return 0;
+            }
             float ret = 0;
             for (int i = 0; i < xs.length; i++)
+            {
                 ret += xs[i] * xs[i];
+            }
             return Math.sqrt(ret / xs.length);
         }
 
@@ -2609,7 +2891,9 @@ public class Numbers
         {
             float ret = 0;
             for (int i = 0; i < xs.length; i++)
+            {
                 ret += xs[i];
+            }
             return ret;
         }
 
@@ -2622,7 +2906,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] += ys[i];
+            }
             return xs;
         }
 
@@ -2630,7 +2916,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] -= ys[i];
+            }
             return xs;
         }
 
@@ -2638,7 +2926,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] + ys[i]) * zs[i];
+            }
             return xs;
         }
 
@@ -2646,7 +2936,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] - ys[i]) * zs[i];
+            }
             return xs;
         }
 
@@ -2654,7 +2946,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] + ys[i]) * z;
+            }
             return xs;
         }
 
@@ -2662,7 +2956,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] - ys[i]) * z;
+            }
             return xs;
         }
 
@@ -2670,7 +2966,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] * ys[i]) + z;
+            }
             return xs;
         }
 
@@ -2678,7 +2976,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] /= ys[i];
+            }
             return xs;
         }
 
@@ -2686,7 +2986,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] *= ys[i];
+            }
             return xs;
         }
 
@@ -2694,7 +2996,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] * ys[i]) + zs[i];
+            }
             return xs;
         }
 
@@ -2702,7 +3006,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] * ys[i]) - zs[i];
+            }
             return xs;
         }
 
@@ -2710,7 +3016,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = Math.max(xs[i], ys[i]);
+            }
             return xs;
         }
 
@@ -2718,7 +3026,9 @@ public class Numbers
         {
             final float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = Math.min(xs[i], ys[i]);
+            }
             return xs;
         }
 
@@ -2726,15 +3036,19 @@ public class Numbers
         {
             float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = ((Number) fn.invoke(xs[i])).floatValue();
-        return xs;
+            }
+            return xs;
         }
 
         static public float[] vmap(IFn fn, float[] x, float[] ys)
         {
             float[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = ((Number) fn.invoke(xs[i], ys[i])).floatValue();
+            }
             return xs;
         }
     }
@@ -2844,13 +3158,17 @@ public class Numbers
             {
                 double f = ((Number) init).doubleValue();
                 for (int i = 0; i < ret.length; i++)
+                {
                     ret[i] = f;
+                }
             }
             else
             {
                 ISeq s = RT.seq(init);
                 for (int i = 0; i < size && s != null; i++, s = s.rest())
+                {
                     ret[i] = ((Number) s.first()).doubleValue();
+                }
             }
             return ret;
         }
@@ -2858,14 +3176,18 @@ public class Numbers
         static public double[] vec(Object sizeOrSeq)
         {
             if (sizeOrSeq instanceof Number)
+            {
                 return new double[((Number) sizeOrSeq).intValue()];
+            }
             else
             {
                 ISeq s = RT.seq(sizeOrSeq);
                 int size = s.count();
                 double[] ret = new double[size];
                 for (int i = 0; i < size && s != null; i++, s = s.rest())
+                {
                     ret[i] = ((Number) s.first()).intValue();
+                }
                 return ret;
             }
         }
@@ -2874,7 +3196,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] += y;
+            }
             return xs;
         }
 
@@ -2882,7 +3206,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] -= y;
+            }
             return xs;
         }
 
@@ -2890,7 +3216,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] /= y;
+            }
             return xs;
         }
 
@@ -2898,7 +3226,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] *= y;
+            }
             return xs;
         }
 
@@ -2906,7 +3236,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = y / xs[i];
+            }
             return xs;
         }
 
@@ -2914,7 +3246,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[i] * y + zs[i];
+            }
             return xs;
         }
 
@@ -2922,7 +3256,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[i] * y - zs[i];
+            }
             return xs;
         }
 
@@ -2930,7 +3266,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[i] * y + z;
+            }
             return xs;
         }
 
@@ -2938,7 +3276,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[i] * y - z;
+            }
             return xs;
         }
 
@@ -2946,7 +3286,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = Math.abs(xs[i]);
+            }
             return xs;
         }
 
@@ -2954,7 +3296,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = -Math.abs(xs[i]);
+            }
             return xs;
         }
 
@@ -2962,7 +3306,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = -xs[i];
+            }
             return xs;
         }
 
@@ -2970,7 +3316,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] *= xs[i];
+            }
             return xs;
         }
 
@@ -2978,7 +3326,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] *= Math.abs(xs[i]);
+            }
             return xs;
         }
 
@@ -2988,9 +3338,13 @@ public class Numbers
             for (int i = 0; i < xs.length; i++)
             {
                 if (xs[i] < low)
+                {
                     xs[i] = low;
+                }
                 else if (xs[i] > high)
+                {
                     xs[i] = high;
+                }
             }
             return xs;
         }
@@ -3023,7 +3377,9 @@ public class Numbers
             for (int i = 0; i < xs.length; i++)
             {
                 if (xs[i] < thresh)
+                {
                     xs[i] = otherwise;
+                }
             }
             return xs;
         }
@@ -3032,7 +3388,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[xs.length - i - 1];
+            }
             return xs;
         }
 
@@ -3040,7 +3398,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 1; i < xs.length; i++)
+            {
                 xs[i] = xs[i - 1] + xs[i];
+            }
             return xs;
         }
 
@@ -3055,44 +3415,60 @@ public class Numbers
         {
             double ret = 0;
             for (int i = 0; i < xs.length; i++)
+            {
                 ret += xs[i] * ys[i];
+            }
             return ret;
         }
 
         static public double vmax(double[] xs)
         {
             if (xs.length == 0)
+            {
                 return 0;
+            }
             double ret = xs[0];
             for (int i = 0; i < xs.length; i++)
+            {
                 ret = Math.max(ret, xs[i]);
+            }
             return ret;
         }
 
         static public double vmin(double[] xs)
         {
             if (xs.length == 0)
+            {
                 return 0;
+            }
             double ret = xs[0];
             for (int i = 0; i < xs.length; i++)
+            {
                 ret = Math.min(ret, xs[i]);
+            }
             return ret;
         }
 
         static public double vmean(double[] xs)
         {
             if (xs.length == 0)
+            {
                 return 0;
+            }
             return vsum(xs) / xs.length;
         }
 
         static public double vrms(double[] xs)
         {
             if (xs.length == 0)
+            {
                 return 0;
+            }
             double ret = 0;
             for (int i = 0; i < xs.length; i++)
+            {
                 ret += xs[i] * xs[i];
+            }
             return Math.sqrt(ret / xs.length);
         }
 
@@ -3100,7 +3476,9 @@ public class Numbers
         {
             double ret = 0;
             for (int i = 0; i < xs.length; i++)
+            {
                 ret += xs[i];
+            }
             return ret;
         }
 
@@ -3113,7 +3491,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] += ys[i];
+            }
             return xs;
         }
 
@@ -3121,7 +3501,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] -= ys[i];
+            }
             return xs;
         }
 
@@ -3129,7 +3511,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] + ys[i]) * zs[i];
+            }
             return xs;
         }
 
@@ -3137,7 +3521,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] - ys[i]) * zs[i];
+            }
             return xs;
         }
 
@@ -3145,7 +3531,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] + ys[i]) * z;
+            }
             return xs;
         }
 
@@ -3153,7 +3541,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] - ys[i]) * z;
+            }
             return xs;
         }
 
@@ -3161,7 +3551,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] * ys[i]) + z;
+            }
             return xs;
         }
 
@@ -3169,7 +3561,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] /= ys[i];
+            }
             return xs;
         }
 
@@ -3177,7 +3571,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] *= ys[i];
+            }
             return xs;
         }
 
@@ -3185,7 +3581,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] * ys[i]) + zs[i];
+            }
             return xs;
         }
 
@@ -3193,7 +3591,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] * ys[i]) - zs[i];
+            }
             return xs;
         }
 
@@ -3201,7 +3601,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = Math.max(xs[i], ys[i]);
+            }
             return xs;
         }
 
@@ -3209,7 +3611,9 @@ public class Numbers
         {
             final double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = Math.min(xs[i], ys[i]);
+            }
             return xs;
         }
 
@@ -3217,7 +3621,9 @@ public class Numbers
         {
             double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = ((Number) fn.invoke(xs[i])).doubleValue();
+            }
             return xs;
         }
 
@@ -3225,7 +3631,9 @@ public class Numbers
         {
             double[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = ((Number) fn.invoke(xs[i], ys[i])).doubleValue();
+            }
             return xs;
         }
     }
@@ -3335,13 +3743,17 @@ public class Numbers
             {
                 int f = ((Number) init).intValue();
                 for (int i = 0; i < ret.length; i++)
+                {
                     ret[i] = f;
+                }
             }
             else
             {
                 ISeq s = RT.seq(init);
                 for (int i = 0; i < size && s != null; i++, s = s.rest())
+                {
                     ret[i] = ((Number) s.first()).intValue();
+                }
             }
             return ret;
         }
@@ -3349,14 +3761,18 @@ public class Numbers
         static public int[] vec(Object sizeOrSeq)
         {
             if (sizeOrSeq instanceof Number)
+            {
                 return new int[((Number) sizeOrSeq).intValue()];
+            }
             else
             {
                 ISeq s = RT.seq(sizeOrSeq);
                 int size = s.count();
                 int[] ret = new int[size];
                 for (int i = 0; i < size && s != null; i++, s = s.rest())
+                {
                     ret[i] = ((Number) s.first()).intValue();
+                }
                 return ret;
             }
         }
@@ -3365,7 +3781,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] += y;
+            }
             return xs;
         }
 
@@ -3373,7 +3791,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] -= y;
+            }
             return xs;
         }
 
@@ -3381,7 +3801,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] /= y;
+            }
             return xs;
         }
 
@@ -3389,7 +3811,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] *= y;
+            }
             return xs;
         }
 
@@ -3397,7 +3821,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = y / xs[i];
+            }
             return xs;
         }
 
@@ -3405,7 +3831,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[i] * y + zs[i];
+            }
             return xs;
         }
 
@@ -3413,7 +3841,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[i] * y - zs[i];
+            }
             return xs;
         }
 
@@ -3421,7 +3851,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[i] * y + z;
+            }
             return xs;
         }
 
@@ -3429,7 +3861,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[i] * y - z;
+            }
             return xs;
         }
 
@@ -3437,7 +3871,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = Math.abs(xs[i]);
+            }
             return xs;
         }
 
@@ -3445,7 +3881,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = -Math.abs(xs[i]);
+            }
             return xs;
         }
 
@@ -3453,7 +3891,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = -xs[i];
+            }
             return xs;
         }
 
@@ -3461,7 +3901,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] *= xs[i];
+            }
             return xs;
         }
 
@@ -3469,7 +3911,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] *= Math.abs(xs[i]);
+            }
             return xs;
         }
 
@@ -3479,9 +3923,13 @@ public class Numbers
             for (int i = 0; i < xs.length; i++)
             {
                 if (xs[i] < low)
+                {
                     xs[i] = low;
+                }
                 else if (xs[i] > high)
+                {
                     xs[i] = high;
+                }
             }
             return xs;
         }
@@ -3514,7 +3962,9 @@ public class Numbers
             for (int i = 0; i < xs.length; i++)
             {
                 if (xs[i] < thresh)
+                {
                     xs[i] = otherwise;
+                }
             }
             return xs;
         }
@@ -3523,7 +3973,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[xs.length - i - 1];
+            }
             return xs;
         }
 
@@ -3531,7 +3983,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 1; i < xs.length; i++)
+            {
                 xs[i] = xs[i - 1] + xs[i];
+            }
             return xs;
         }
 
@@ -3546,44 +4000,60 @@ public class Numbers
         {
             int ret = 0;
             for (int i = 0; i < xs.length; i++)
+            {
                 ret += xs[i] * ys[i];
+            }
             return ret;
         }
 
         static public int vmax(int[] xs)
         {
             if (xs.length == 0)
+            {
                 return 0;
+            }
             int ret = xs[0];
             for (int i = 0; i < xs.length; i++)
+            {
                 ret = Math.max(ret, xs[i]);
+            }
             return ret;
         }
 
         static public int vmin(int[] xs)
         {
             if (xs.length == 0)
+            {
                 return 0;
+            }
             int ret = xs[0];
             for (int i = 0; i < xs.length; i++)
+            {
                 ret = Math.min(ret, xs[i]);
+            }
             return ret;
         }
 
         static public double vmean(int[] xs)
         {
             if (xs.length == 0)
+            {
                 return 0;
+            }
             return vsum(xs) / (double) xs.length;
         }
 
         static public double vrms(int[] xs)
         {
             if (xs.length == 0)
+            {
                 return 0;
+            }
             int ret = 0;
             for (int i = 0; i < xs.length; i++)
+            {
                 ret += xs[i] * xs[i];
+            }
             return Math.sqrt(ret / (double) xs.length);
         }
 
@@ -3591,7 +4061,9 @@ public class Numbers
         {
             int ret = 0;
             for (int i = 0; i < xs.length; i++)
+            {
                 ret += xs[i];
+            }
             return ret;
         }
 
@@ -3604,7 +4076,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] += ys[i];
+            }
             return xs;
         }
 
@@ -3612,7 +4086,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] -= ys[i];
+            }
             return xs;
         }
 
@@ -3620,7 +4096,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] + ys[i]) * zs[i];
+            }
             return xs;
         }
 
@@ -3628,7 +4106,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] - ys[i]) * zs[i];
+            }
             return xs;
         }
 
@@ -3636,7 +4116,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] + ys[i]) * z;
+            }
             return xs;
         }
 
@@ -3644,7 +4126,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] - ys[i]) * z;
+            }
             return xs;
         }
 
@@ -3652,7 +4136,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] * ys[i]) + z;
+            }
             return xs;
         }
 
@@ -3660,7 +4146,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] /= ys[i];
+            }
             return xs;
         }
 
@@ -3668,7 +4156,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] *= ys[i];
+            }
             return xs;
         }
 
@@ -3676,7 +4166,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] * ys[i]) + zs[i];
+            }
             return xs;
         }
 
@@ -3684,7 +4176,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] * ys[i]) - zs[i];
+            }
             return xs;
         }
 
@@ -3692,7 +4186,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = Math.max(xs[i], ys[i]);
+            }
             return xs;
         }
 
@@ -3700,7 +4196,9 @@ public class Numbers
         {
             final int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = Math.min(xs[i], ys[i]);
+            }
             return xs;
         }
 
@@ -3708,7 +4206,9 @@ public class Numbers
         {
             int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = ((Number) fn.invoke(xs[i])).intValue();
+            }
             return xs;
         }
 
@@ -3716,7 +4216,9 @@ public class Numbers
         {
             int[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = ((Number) fn.invoke(xs[i], ys[i])).intValue();
+            }
             return xs;
         }
     }
@@ -3826,13 +4328,17 @@ public class Numbers
             {
                 long f = ((Number) init).longValue();
                 for (int i = 0; i < ret.length; i++)
+                {
                     ret[i] = f;
+                }
             }
             else
             {
                 ISeq s = RT.seq(init);
                 for (int i = 0; i < size && s != null; i++, s = s.rest())
+                {
                     ret[i] = ((Number) s.first()).longValue();
+                }
             }
             return ret;
         }
@@ -3840,14 +4346,18 @@ public class Numbers
         static public long[] vec(Object sizeOrSeq)
         {
             if (sizeOrSeq instanceof Number)
+            {
                 return new long[((Number) sizeOrSeq).intValue()];
+            }
             else
             {
                 ISeq s = RT.seq(sizeOrSeq);
                 int size = s.count();
                 long[] ret = new long[size];
                 for (int i = 0; i < size && s != null; i++, s = s.rest())
+                {
                     ret[i] = ((Number) s.first()).intValue();
+                }
                 return ret;
             }
         }
@@ -3856,7 +4366,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] += y;
+            }
             return xs;
         }
 
@@ -3864,7 +4376,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] -= y;
+            }
             return xs;
         }
 
@@ -3872,7 +4386,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] /= y;
+            }
             return xs;
         }
 
@@ -3880,7 +4396,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] *= y;
+            }
             return xs;
         }
 
@@ -3888,7 +4406,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = y / xs[i];
+            }
             return xs;
         }
 
@@ -3896,7 +4416,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[i] * y + zs[i];
+            }
             return xs;
         }
 
@@ -3904,7 +4426,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[i] * y - zs[i];
+            }
             return xs;
         }
 
@@ -3912,7 +4436,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[i] * y + z;
+            }
             return xs;
         }
 
@@ -3920,7 +4446,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[i] * y - z;
+            }
             return xs;
         }
 
@@ -3928,7 +4456,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = Math.abs(xs[i]);
+            }
             return xs;
         }
 
@@ -3936,7 +4466,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = -Math.abs(xs[i]);
+            }
             return xs;
         }
 
@@ -3944,7 +4476,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = -xs[i];
+            }
             return xs;
         }
 
@@ -3952,7 +4486,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] *= xs[i];
+            }
             return xs;
         }
 
@@ -3960,7 +4496,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] *= Math.abs(xs[i]);
+            }
             return xs;
         }
 
@@ -3970,9 +4508,13 @@ public class Numbers
             for (int i = 0; i < xs.length; i++)
             {
                 if (xs[i] < low)
+                {
                     xs[i] = low;
+                }
                 else if (xs[i] > high)
+                {
                     xs[i] = high;
+                }
             }
             return xs;
         }
@@ -4005,7 +4547,9 @@ public class Numbers
             for (int i = 0; i < xs.length; i++)
             {
                 if (xs[i] < thresh)
+                {
                     xs[i] = otherwise;
+                }
             }
             return xs;
         }
@@ -4014,7 +4558,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = xs[xs.length - i - 1];
+            }
             return xs;
         }
 
@@ -4022,7 +4568,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 1; i < xs.length; i++)
+            {
                 xs[i] = xs[i - 1] + xs[i];
+            }
             return xs;
         }
 
@@ -4037,44 +4585,60 @@ public class Numbers
         {
             long ret = 0;
             for (int i = 0; i < xs.length; i++)
+            {
                 ret += xs[i] * ys[i];
+            }
             return ret;
         }
 
         static public long vmax(long[] xs)
         {
             if (xs.length == 0)
+            {
                 return 0;
+            }
             long ret = xs[0];
             for (int i = 0; i < xs.length; i++)
+            {
                 ret = Math.max(ret, xs[i]);
+            }
             return ret;
         }
 
         static public long vmin(long[] xs)
         {
             if (xs.length == 0)
+            {
                 return 0;
+            }
             long ret = xs[0];
             for (int i = 0; i < xs.length; i++)
+            {
                 ret = Math.min(ret, xs[i]);
+            }
             return ret;
         }
 
         static public double vmean(long[] xs)
         {
             if (xs.length == 0)
+            {
                 return 0;
+            }
             return vsum(xs) / (double) xs.length;
         }
 
         static public double vrms(long[] xs)
         {
             if (xs.length == 0)
+            {
                 return 0;
+            }
             long ret = 0;
             for (int i = 0; i < xs.length; i++)
+            {
                 ret += xs[i] * xs[i];
+            }
             return Math.sqrt(ret / (double) xs.length);
         }
 
@@ -4082,7 +4646,9 @@ public class Numbers
         {
             long ret = 0;
             for (int i = 0; i < xs.length; i++)
+            {
                 ret += xs[i];
+            }
             return ret;
         }
 
@@ -4095,7 +4661,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] += ys[i];
+            }
             return xs;
         }
 
@@ -4103,7 +4671,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] -= ys[i];
+            }
             return xs;
         }
 
@@ -4111,7 +4681,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] + ys[i]) * zs[i];
+            }
             return xs;
         }
 
@@ -4119,7 +4691,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] - ys[i]) * zs[i];
+            }
             return xs;
         }
 
@@ -4127,7 +4701,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] + ys[i]) * z;
+            }
             return xs;
         }
 
@@ -4135,7 +4711,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] - ys[i]) * z;
+            }
             return xs;
         }
 
@@ -4143,7 +4721,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] * ys[i]) + z;
+            }
             return xs;
         }
 
@@ -4151,7 +4731,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] /= ys[i];
+            }
             return xs;
         }
 
@@ -4159,7 +4741,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] *= ys[i];
+            }
             return xs;
         }
 
@@ -4167,7 +4751,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] * ys[i]) + zs[i];
+            }
             return xs;
         }
 
@@ -4175,7 +4761,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = (xs[i] * ys[i]) - zs[i];
+            }
             return xs;
         }
 
@@ -4183,7 +4771,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = Math.max(xs[i], ys[i]);
+            }
             return xs;
         }
 
@@ -4191,7 +4781,9 @@ public class Numbers
         {
             final long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = Math.min(xs[i], ys[i]);
+            }
             return xs;
         }
 
@@ -4199,7 +4791,9 @@ public class Numbers
         {
             long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = ((Number) fn.invoke(xs[i])).longValue();
+            }
             return xs;
         }
 
@@ -4207,14 +4801,16 @@ public class Numbers
         {
             long[] xs = x.clone();
             for (int i = 0; i < xs.length; i++)
+            {
                 xs[i] = ((Number) fn.invoke(xs[i], ys[i])).longValue();
+            }
             return xs;
         }
     }
     */
 
     // overload resolution
-    //*
+
     static public Number add(long x, Object y)
     {
         return add((Object)x, y);

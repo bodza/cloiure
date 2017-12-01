@@ -33,7 +33,9 @@ public final class ArrayChunk implements IChunk, Serializable
     public Object nth(int i, Object notFound)
     {
         if (i >= 0 && i < count())
+        {
             return nth(i);
+        }
         return notFound;
     }
 
@@ -44,8 +46,10 @@ public final class ArrayChunk implements IChunk, Serializable
 
     public IChunk dropFirst()
     {
-        if (off==end)
+        if (off == end)
+        {
             throw new IllegalStateException("dropFirst of empty chunk");
+        }
         return new ArrayChunk(array, off + 1, end);
     }
 
@@ -53,12 +57,16 @@ public final class ArrayChunk implements IChunk, Serializable
     {
         Object ret = f.invoke(start, array[off]);
         if (RT.isReduced(ret))
+        {
             return ret;
+        }
         for (int x = off + 1; x < end; x++)
         {
             ret = f.invoke(ret, array[x]);
             if (RT.isReduced(ret))
+            {
                 return ret;
+            }
         }
         return ret;
     }

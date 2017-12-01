@@ -112,7 +112,9 @@ public class LockingTransaction
         try
         {
             if (!ref.lock.writeLock().tryLock(LOCK_WAIT_MSECS, TimeUnit.MILLISECONDS))
+            {
                 throw retryex;
+            }
         }
         catch (InterruptedException e)
         {
@@ -133,7 +135,9 @@ public class LockingTransaction
             unlocked = false;
 
             if (ref.tvals != null && ref.tvals.point > readPoint)
+            {
                 throw retryex;
+            }
             Info refinfo = ref.tinfo;
 
             // write lock conflict
@@ -152,7 +156,9 @@ public class LockingTransaction
         finally
         {
             if (!unlocked)
+            {
                 ref.lock.writeLock().unlock();
+            }
         }
     }
 
@@ -199,7 +205,9 @@ public class LockingTransaction
         {
             barged = refinfo.status.compareAndSet(RUNNING, KILLED);
             if (barged)
+            {
                 refinfo.latch.countDown();
+            }
         }
         return barged;
     }
@@ -208,7 +216,9 @@ public class LockingTransaction
     {
         LockingTransaction t = transaction.get();
         if (t == null || t.info == null)
+        {
             throw new IllegalStateException("No transaction running");
+        }
         return t;
     }
 
@@ -221,7 +231,9 @@ public class LockingTransaction
     {
         LockingTransaction t = transaction.get();
         if (t == null || t.info == null)
+        {
             return null;
+        }
         return t;
     }
 
@@ -295,7 +307,10 @@ public class LockingTransaction
                     for (Map.Entry<Ref, ArrayList<CFn>> e : commutes.entrySet())
                     {
                         Ref ref = e.getKey();
-                        if (sets.contains(ref)) continue;
+                        if (sets.contains(ref))
+                        {
+                            continue;
+                        }
 
                         boolean wasEnsured = ensures.contains(ref);
                         // can't upgrade readLock, so release it
@@ -303,15 +318,19 @@ public class LockingTransaction
                         tryWriteLock(ref);
                         locked.add(ref);
                         if (wasEnsured && ref.tvals != null && ref.tvals.point > readPoint)
+                        {
                             throw retryex;
+                        }
 
                         Info refinfo = ref.tinfo;
                         if (refinfo != null && refinfo != info && refinfo.running())
                         {
                             if (!barge(refinfo))
+                            {
                                 throw retryex;
+                            }
                         }
-                        Object val = ref.tvals == null ? null : ref.tvals.val;
+                        Object val = (ref.tvals == null) ? null : ref.tvals.val;
                         vals.put(ref, val);
                         for (CFn f : e.getValue())
                         {
@@ -337,7 +356,7 @@ public class LockingTransaction
                     for (Map.Entry<Ref, Object> e : vals.entrySet())
                     {
                         Ref ref = e.getKey();
-                        Object oldval = ref.tvals == null ? null : ref.tvals.val;
+                        Object oldval = (ref.tvals == null) ? null : ref.tvals.val;
                         Object newval = e.getValue();
                         int hcount = ref.histCount();
 
@@ -357,7 +376,9 @@ public class LockingTransaction
                             ref.tvals.point = commitPoint;
                         }
                         if (ref.getWatches().count() > 0)
+                        {
                             notify.add(new Notify(ref, oldval, newval));
+                        }
                     }
 
                     done = true;
@@ -403,7 +424,9 @@ public class LockingTransaction
             }
         }
         if (!done)
+        {
             throw Util.runtimeException("Transaction failed after reaching retry limit");
+        }
         return ret;
     }
 
@@ -415,19 +438,27 @@ public class LockingTransaction
     Object doGet(Ref ref)
     {
         if (!info.running())
+        {
             throw retryex;
+        }
         if (vals.containsKey(ref))
+        {
             return vals.get(ref);
+        }
         try
         {
             ref.lock.readLock().lock();
             if (ref.tvals == null)
+            {
                 throw new IllegalStateException(ref.toString() + " is unbound.");
+            }
             Ref.TVal ver = ref.tvals;
             do
             {
                 if (ver.point <= readPoint)
+                {
                     return ver.val;
+                }
             } while ((ver = ver.prior) != ref.tvals);
         }
         finally
@@ -442,9 +473,13 @@ public class LockingTransaction
     Object doSet(Ref ref, Object val)
     {
         if (!info.running())
+        {
             throw retryex;
+        }
         if (commutes.containsKey(ref))
+        {
             throw new IllegalStateException("Can't set after commute");
+        }
         if (!sets.contains(ref))
         {
             sets.add(ref);
@@ -457,9 +492,13 @@ public class LockingTransaction
     void doEnsure(Ref ref)
     {
         if (!info.running())
+        {
             throw retryex;
+        }
         if (ensures.contains(ref))
+        {
             return;
+        }
         ref.lock.readLock().lock();
 
         // someone completed a write after our snapshot
@@ -482,13 +521,17 @@ public class LockingTransaction
             }
         }
         else
+        {
             ensures.add(ref);
+        }
     }
 
     Object doCommute(Ref ref, IFn fn, ISeq args)
     {
         if (!info.running())
+        {
             throw retryex;
+        }
         if (!vals.containsKey(ref))
         {
             Object val = null;
@@ -505,179 +548,12 @@ public class LockingTransaction
         }
         ArrayList<CFn> fns = commutes.get(ref);
         if (fns == null)
+        {
             commutes.put(ref, fns = new ArrayList<CFn>());
+        }
         fns.add(new CFn(fn, args));
         Object ret = fn.applyTo(RT.cons(vals.get(ref), args));
         vals.put(ref, ret);
         return ret;
     }
-
-    /*
-    // for test
-    static CyclicBarrier barrier;
-    static ArrayList<Ref> items;
-
-    public static void main(String[] args)
-    {
-        try
-        {
-            if (args.length != 4)
-                System.err.println("Usage: LockingTransaction nthreads nitems niters ninstances");
-            int nthreads = Integer.parseInt(args[0]);
-            int nitems = Integer.parseInt(args[1]);
-            int niters = Integer.parseInt(args[2]);
-            int ninstances = Integer.parseInt(args[3]);
-
-            if (items == null)
-            {
-                ArrayList<Ref> temp = new ArrayList(nitems);
-                for (int i = 0; i < nitems; i++)
-                    temp.add(new Ref(0));
-                items = temp;
-            }
-
-            class Incr extends AFn
-            {
-                public Object invoke(Object arg1)
-                {
-                    Integer i = (Integer) arg1;
-                    return i + 1;
-                }
-
-                public Obj withMeta(IPersistentMap meta)
-                {
-                    throw new UnsupportedOperationException();
-                }
-            }
-
-            class Commuter extends AFn implements Callable
-            {
-                int niters;
-                List<Ref> items;
-                Incr incr;
-
-                public Commuter(int niters, List<Ref> items)
-                {
-                    this.niters = niters;
-                    this.items = items;
-                    this.incr = new Incr();
-                }
-
-                public Object call()
-                {
-                    long nanos = 0;
-                    for (int i = 0; i < niters; i++)
-                    {
-                        long start = System.nanoTime();
-                        LockingTransaction.runInTransaction(this);
-                        nanos += System.nanoTime() - start;
-                    }
-                    return nanos;
-                }
-
-                public Object invoke()
-                {
-                    for (Ref tref : items)
-                    {
-                        LockingTransaction.getEx().doCommute(tref, incr);
-                    }
-                    return null;
-                }
-
-                public Obj withMeta(IPersistentMap meta)
-                {
-                    throw new UnsupportedOperationException();
-                }
-            }
-
-            class Incrementer extends AFn implements Callable
-            {
-                int niters;
-                List<Ref> items;
-
-                public Incrementer(int niters, List<Ref> items)
-                {
-                    this.niters = niters;
-                    this.items = items;
-                }
-
-                public Object call()
-                {
-                    long nanos = 0;
-                    for (int i = 0; i < niters; i++)
-                    {
-                        long start = System.nanoTime();
-                        LockingTransaction.runInTransaction(this);
-                        nanos += System.nanoTime() - start;
-                    }
-                    return nanos;
-                }
-
-                public Object invoke()
-                {
-                    for (Ref tref : items)
-                    {
-                     // Transaction.get().doTouch(tref);
-                     // LockingTransaction t = LockingTransaction.getEx();
-                     // int val = (Integer) t.doGet(tref);
-                     // t.doSet(tref, val + 1);
-                        int val = (Integer) tref.get();
-                        tref.set(val + 1);
-                    }
-                    return null;
-                }
-
-                public Obj withMeta(IPersistentMap meta)
-                {
-                    throw new UnsupportedOperationException();
-                }
-            }
-
-            ArrayList<Callable<Long>> tasks = new ArrayList(nthreads);
-            for (int i = 0; i < nthreads; i++)
-            {
-                ArrayList<Ref> si;
-                synchronized (items)
-                {
-                    si = (ArrayList<Ref>) items.clone();
-                }
-                Collections.shuffle(si);
-                tasks.add(new Incrementer(niters, si));
-             // tasks.add(new Commuter(niters, si));
-            }
-            ExecutorService e = Executors.newFixedThreadPool(nthreads);
-
-            if (barrier == null)
-                barrier = new CyclicBarrier(ninstances);
-            System.out.println("waiting for other instances...");
-            barrier.await();
-            System.out.println("starting");
-            long start = System.nanoTime();
-            List<Future<Long>> results = e.invokeAll(tasks);
-            long estimatedTime = System.nanoTime() - start;
-            System.out.printf("nthreads: %d, nitems: %d, niters: %d, time: %d%n", nthreads, nitems, niters, estimatedTime / 1000000);
-            e.shutdown();
-            for (Future<Long> result : results)
-            {
-                System.out.printf("%d, ", result.get() / 1000000);
-            }
-            System.out.println();
-            System.out.println("waiting for other instances...");
-            barrier.await();
-            synchronized (items)
-            {
-                for (Ref item : items)
-                {
-                    System.out.printf("%d, ", (Integer) item.currentVal());
-                }
-            }
-            System.out.println("\ndone");
-            System.out.flush();
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-    }
-    */
 }

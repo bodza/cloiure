@@ -39,17 +39,6 @@
             (fn [node children] (with-meta (vec children) (meta node)))
             root))
 
-(defn xml-zip
-  "Returns a zipper for xml elements (as from xml/parse),
-  given a root element"
-  {:added "1.0"}
-  [root]
-    (zipper (complement string?)
-            (comp seq :content)
-            (fn [node children]
-              (assoc node :content (and children (apply vector children))))
-            root))
-
 (defn node
   "Returns the node at loc"
   {:added "1.0"}

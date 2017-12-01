@@ -170,7 +170,7 @@ http://www.lispworks.com/documentation/HyperSpec/Body/22_c.htm
                  min-width
                  (+ min-width
                     (* (+ (quot (- (:mincol params) min-width 1)
-                                (:colinc params) )
+                                (:colinc params))
                           1)
                        (:colinc params))))
          chars (apply str (repeat (- width base-width) (:padchar params)))]
@@ -749,7 +749,7 @@ string, or one character longer."
                 (print (str
                         (apply str
                                (repeat
-                                (- w full-len (if append-zero 1 0) )
+                                (- w full-len (if append-zero 1 0))
                                 (:padchar params)))
                         (if add-sign (if (neg? arg) \- \+))
                         (if prepend-zero "0")
@@ -1678,7 +1678,7 @@ of parameters as well."
              (format-error (str "Parameter " (name (first %2))
                                 " has bad type in directive \"" (:directive def) "\": "
                                 (class val))
-                           (second %1))) )
+                           (second %1))))
         params (:params def)))
 
   (merge                                ;; create the result map

@@ -22,7 +22,9 @@ public abstract class ARef extends AReference implements IRef
         try
         {
             if (vf != null && !RT.booleanCast(vf.invoke(val)))
+            {
                 throw new IllegalStateException("Invalid reference state");
+            }
         }
         catch (RuntimeException re)
         {
@@ -77,7 +79,9 @@ public abstract class ARef extends AReference implements IRef
                 Map.Entry e = (Map.Entry) s.first();
                 IFn fn = (IFn) e.getValue();
                 if (fn != null)
+                {
                     fn.invoke(e.getKey(), this, oldval, newval);
+                }
             }
         }
     }

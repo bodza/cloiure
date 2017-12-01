@@ -64,7 +64,7 @@ class Handler
         int hstart = h.start.position;
         int hend = h.end.position;
         int s = start.position;
-        int e = end == null ? Integer.MAX_VALUE : end.position;
+        int e = (end == null) ? Integer.MAX_VALUE : end.position;
         // if [hstart,hend[ and [s,e[ intervals intersect...
         if (s < hend && e > hstart)
         {

@@ -39,9 +39,13 @@ public class Compile
         String uncheckedMathProp = System.getProperty(UNCHECKED_MATH_PROP);
         Object uncheckedMath = Boolean.FALSE;
         if ("true".equals(uncheckedMathProp))
+        {
             uncheckedMath = Boolean.TRUE;
+        }
         else if ("warn-on-boxed".equals(uncheckedMathProp))
+        {
             uncheckedMath = Keyword.intern("warn-on-boxed");
+        }
 
         // force load to avoid transitive compilation during lazy load
         RT.load("cloiure/core/specs/alpha");

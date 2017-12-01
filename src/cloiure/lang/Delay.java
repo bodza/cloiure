@@ -40,12 +40,14 @@ public class Delay implements IDeref, IPending
             }
         }
         if (exception != null)
+        {
             throw Util.sneakyThrow(exception);
+        }
         return val;
     }
 
     synchronized public boolean isRealized()
     {
-        return fn == null;
+        return (fn == null);
     }
 }

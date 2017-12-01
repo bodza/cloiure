@@ -16,14 +16,18 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
     public ISeq seq()
     {
         if (count() > 0)
+        {
             return new Seq(this, 0);
+        }
         return null;
     }
 
     public ISeq rseq()
     {
         if (count() > 0)
+        {
             return new RSeq(this, count() - 1);
+        }
         return null;
     }
 
@@ -33,11 +37,15 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
         {
             IPersistentVector ov = (IPersistentVector) obj;
             if (ov.count() != v.count())
+            {
                 return false;
+            }
             for (int i = 0; i < v.count(); i++)
             {
                 if (!Util.equals(v.nth(i), ov.nth(i)))
+                {
                     return false;
+                }
             }
             return true;
         }
@@ -45,26 +53,36 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
         {
             Collection ma = (Collection) obj;
             if (ma.size() != v.count() || ma.hashCode() != v.hashCode())
+            {
                 return false;
+            }
             for (Iterator i1 = ((List) v).iterator(), i2 = ma.iterator(); i1.hasNext(); )
             {
                 if (!Util.equals(i1.next(), i2.next()))
+                {
                     return false;
+                }
             }
             return true;
         }
         else
         {
             if (!(obj instanceof Sequential))
+            {
                 return false;
+            }
             ISeq ms = RT.seq(obj);
             for (int i = 0; i < v.count(); i++, ms = ms.next())
             {
                 if (ms == null || !Util.equals(v.nth(i), ms.first()))
+                {
                     return false;
+                }
             }
             if (ms != null)
+            {
                 return false;
+            }
         }
 
         return true;
@@ -76,11 +94,15 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
         {
             IPersistentVector ov = (IPersistentVector) obj;
             if (ov.count() != v.count())
+            {
                 return false;
+            }
             for (int i = 0; i < v.count(); i++)
             {
                 if (!Util.equiv(v.nth(i), ov.nth(i)))
+                {
                     return false;
+                }
             }
             return true;
         }
@@ -88,26 +110,36 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
         {
             Collection ma = (Collection) obj;
             if (ma.size() != v.count())
+            {
                 return false;
+            }
             for (Iterator i1 = ((List) v).iterator(), i2 = ma.iterator(); i1.hasNext(); )
             {
                 if (!Util.equiv(i1.next(), i2.next()))
+                {
                     return false;
+                }
             }
             return true;
         }
         else
         {
             if (!(obj instanceof Sequential))
+            {
                 return false;
+            }
             ISeq ms = RT.seq(obj);
             for (int i = 0; i < v.count(); i++, ms = ms.next())
             {
                 if (ms == null || !Util.equiv(v.nth(i), ms.first()))
+                {
                     return false;
+                }
             }
             if (ms != null)
+            {
                 return false;
+            }
         }
 
         return true;
@@ -116,14 +148,18 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
     public boolean equals(Object obj)
     {
         if (obj == this)
+        {
             return true;
+        }
         return doEquals(this, obj);
     }
 
     public boolean equiv(Object obj)
     {
         if (obj == this)
+        {
             return true;
+        }
         return doEquiv(this, obj);
     }
 
@@ -136,7 +172,7 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
             for (int i = 0; i < count(); i++)
             {
                 Object obj = nth(i);
-                hash = 31 * hash + (obj == null ? 0 : obj.hashCode());
+                hash = 31 * hash + ((obj == null) ? 0 : obj.hashCode());
             }
             this._hash = hash;
         }
@@ -169,7 +205,9 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
     public Object nth(int i, Object notFound)
     {
         if (i >= 0 && i < count())
+        {
             return nth(i);
+        }
         return notFound;
     }
 
@@ -181,16 +219,24 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
     public int indexOf(Object o)
     {
         for (int i = 0; i < count(); i++)
+        {
             if (Util.equiv(nth(i), o))
+            {
                 return i;
+            }
+        }
         return -1;
     }
 
     public int lastIndexOf(Object o)
     {
         for (int i = count() - 1; i >= 0; i--)
+        {
             if (Util.equiv(nth(i), o))
+            {
                 return i;
+            }
+        }
         return -1;
     }
 
@@ -207,28 +253,36 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
 
             public boolean hasNext()
             {
-                return nexti < count();
+                return (nexti < count());
             }
 
             public Object next()
             {
                 if (nexti < count())
+                {
                     return nth(nexti++);
+                }
                 else
+                {
                     throw new NoSuchElementException();
+                }
             }
 
             public boolean hasPrevious()
             {
-                return nexti > 0;
+                return (nexti > 0);
             }
 
             public Object previous()
             {
                 if (nexti > 0)
+                {
                     return nth(--nexti);
+                }
                 else
+                {
                     throw new NoSuchElementException();
+                }
             }
 
             public int nextIndex()
@@ -266,15 +320,19 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
 
             public boolean hasNext()
             {
-                return i < end;
+                return (i < end);
             }
 
             public Object next()
             {
                 if (i < end)
+                {
                     return nth(i++);
+                }
                 else
+                {
                     throw new NoSuchElementException();
+                }
             }
 
             public void remove()
@@ -307,7 +365,9 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
     public Object invoke(Object arg1)
     {
         if (Util.isInteger(arg1))
+        {
             return nth(((Number) arg1).intValue());
+        }
         throw new IllegalArgumentException("Key must be integer");
     }
 
@@ -320,15 +380,19 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
 
             public boolean hasNext()
             {
-                return i < count();
+                return (i < count());
             }
 
             public Object next()
             {
                 if (i < count())
+                {
                     return nth(i++);
+                }
                 else
+                {
                     throw new NoSuchElementException();
+                }
             }
 
             public void remove()
@@ -341,14 +405,18 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
     public Object peek()
     {
         if (count() > 0)
+        {
             return nth(count() - 1);
+        }
         return null;
     }
 
     public boolean containsKey(Object key)
     {
         if (!(Util.isInteger(key)))
+        {
             return false;
+        }
         int i = ((Number) key).intValue();
         return (i >= 0 && i < count());
     }
@@ -359,7 +427,9 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
         {
             int i = ((Number) key).intValue();
             if (i >= 0 && i < count())
+            {
                 return (IMapEntry) MapEntry.create(key, nth(i));
+            }
         }
         return null;
     }
@@ -380,7 +450,9 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
         {
             int i = ((Number) key).intValue();
             if (i >= 0 && i < count())
+            {
                 return nth(i);
+            }
         }
         return notFound;
     }
@@ -396,7 +468,9 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
     {
         Object[] ret = new Object[count()];
         for (int i = 0; i < count(); i++)
+        {
             ret[i] = nth(i);
+        }
         return ret;
     }
 
@@ -435,7 +509,9 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
         for (Object o : c)
         {
             if (!contains(o))
+            {
                 return false;
+            }
         }
         return true;
     }
@@ -460,7 +536,9 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
         for (ISeq s = seq(); s != null; s = s.next())
         {
             if (Util.equiv(s.first(), o))
+            {
                 return true;
+            }
         }
         return false;
     }
@@ -474,14 +552,20 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
     {
         IPersistentVector v = (IPersistentVector) o;
         if (count() < v.count())
+        {
             return -1;
+        }
         else if (count() > v.count())
+        {
             return 1;
+        }
         for (int i = 0; i < count(); i++)
         {
             int c = Util.compare(nth(i), v.nth(i));
             if (c != 0)
+            {
                 return c;
+            }
         }
         return 0;
     }
@@ -513,7 +597,9 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
         public ISeq next()
         {
             if (i + 1 < v.count())
+            {
                 return new APersistentVector.Seq(v, i + 1);
+            }
             return null;
         }
 
@@ -539,7 +625,9 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
             {
                 ret = f.invoke(ret, v.nth(x));
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
             }
             return ret;
         }
@@ -550,11 +638,15 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
             for (int x = i + 1; x < v.count(); x++)
             {
                 if (RT.isReduced(ret))
+                {
                     return ((IDeref)ret).deref();
+                }
                 ret = f.invoke(ret, v.nth(x));
             }
             if (RT.isReduced(ret))
+            {
                 return ((IDeref)ret).deref();
+            }
             return ret;
         }
     }
@@ -585,7 +677,9 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
         public ISeq next()
         {
             if (i > 0)
+            {
                 return new APersistentVector.RSeq(v, i - 1);
+            }
             return null;
         }
 
@@ -640,16 +734,22 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
         public Object nth(int i)
         {
             if ((start + i >= end) || (i < 0))
+            {
                 throw new IndexOutOfBoundsException();
+            }
             return v.nth(start + i);
         }
 
         public IPersistentVector assocN(int i, Object val)
         {
             if (start + i > end)
+            {
                 throw new IndexOutOfBoundsException();
+            }
             else if (start + i == end)
+            {
                 return cons(val);
+            }
             return new SubVector(_meta, v.assocN(start + i, val), start, end);
         }
 
@@ -680,7 +780,9 @@ public abstract class APersistentVector extends AFn implements IPersistentVector
         public SubVector withMeta(IPersistentMap meta)
         {
             if (meta == _meta)
+            {
                 return this;
+            }
             return new SubVector(meta, v, start, end);
         }
 

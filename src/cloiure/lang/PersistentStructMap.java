@@ -27,7 +27,9 @@ public class PersistentStructMap extends APersistentMap implements IObj
     static public Def createSlotMap(ISeq keys)
     {
         if (keys == null)
+        {
             throw new IllegalArgumentException("Must supply keys");
+        }
         int c = RT.count(keys);
         Object[] v = new Object[2 * c];
         int i = 0;
@@ -46,14 +48,20 @@ public class PersistentStructMap extends APersistentMap implements IObj
         for ( ; keyvals != null; keyvals = keyvals.next().next())
         {
             if (keyvals.next() == null)
+            {
                 throw new IllegalArgumentException(String.format("No value supplied for key: %s", keyvals.first()));
+            }
             Object k = keyvals.first();
             Object v = RT.second(keyvals);
             Map.Entry e = def.keyslots.entryAt(k);
             if (e != null)
+            {
                 vals[(Integer) e.getValue()] = v;
+            }
             else
+            {
                 ext = ext.assoc(k, v);
+            }
         }
         return new PersistentStructMap(null, def, vals, ext);
     }
@@ -67,7 +75,9 @@ public class PersistentStructMap extends APersistentMap implements IObj
             vals[i] = valseq.first();
         }
         if (valseq != null)
+        {
             throw new IllegalArgumentException("Too many arguments to struct constructor");
+        }
         return new PersistentStructMap(null, def, vals, ext);
     }
 
@@ -83,7 +93,9 @@ public class PersistentStructMap extends APersistentMap implements IObj
                 {
                     PersistentStructMap m = (PersistentStructMap) arg1;
                     if (m.def != def)
+                    {
                         throw Util.runtimeException("Accessor/struct mismatch");
+                    }
                     return m.vals[i];
                 }
             };
@@ -114,7 +126,9 @@ public class PersistentStructMap extends APersistentMap implements IObj
     public IObj withMeta(IPersistentMap meta)
     {
         if (meta == _meta)
+        {
             return this;
+        }
         return makeNew(meta, def, vals, ext);
     }
 
@@ -174,7 +188,9 @@ public class PersistentStructMap extends APersistentMap implements IObj
     public IPersistentMap assocEx(Object key, Object val)
     {
         if (containsKey(key))
+        {
             throw Util.runtimeException("Key already present");
+        }
         return assoc(key, val);
     }
 
@@ -182,10 +198,14 @@ public class PersistentStructMap extends APersistentMap implements IObj
     {
         Map.Entry e = def.keyslots.entryAt(key);
         if (e != null)
+        {
             throw Util.runtimeException("Can't remove struct key");
+        }
         IPersistentMap newExt = ext.without(key);
         if (newExt == ext)
+        {
             return this;
+        }
         return makeNew(_meta, def, vals, newExt);
     }
 
@@ -210,9 +230,13 @@ public class PersistentStructMap extends APersistentMap implements IObj
                     return entryAt(key);
                 }
                 else if (extIter != null && extIter.hasNext())
+                {
                     return extIter.next();
+                }
                 else
+                {
                     throw new NoSuchElementException();
+                }
             }
 
             public void remove()
@@ -256,7 +280,9 @@ public class PersistentStructMap extends APersistentMap implements IObj
         public Obj withMeta(IPersistentMap meta)
         {
             if (meta != _meta)
+            {
                 return new Seq(meta, keys, vals, i, ext);
+            }
             return this;
         }
 
@@ -268,7 +294,9 @@ public class PersistentStructMap extends APersistentMap implements IObj
         public ISeq next()
         {
             if (i + 1 < vals.length)
+            {
                 return new Seq(_meta, keys.next(), vals, i + 1, ext);
+            }
             return ext.seq();
         }
     }

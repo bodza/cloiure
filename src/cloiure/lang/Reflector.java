@@ -20,20 +20,24 @@ public class Reflector
     private static Throwable getCauseOrElse(Exception e)
     {
         if (e.getCause() != null)
+        {
             return e.getCause();
+        }
         return e;
     }
 
     private static RuntimeException throwCauseOrElseException(Exception e)
     {
         if (e.getCause() != null)
+        {
             throw Util.sneakyThrow(e.getCause());
+        }
         throw Util.sneakyThrow(e);
     }
 
     private static String noMethodReport(String methodName, Object target)
     {
-        return "No matching method found: " + methodName + (target == null ? "" : " for " + target.getClass());
+        return "No matching method found: " + methodName + ((target == null) ? "" : " for " + target.getClass());
     }
 
     static Object invokeMatchingMethod(String methodName, List methods, Object target, Object[] args)
@@ -69,7 +73,9 @@ public class Reflector
             m = foundm;
         }
         if (m == null)
+        {
             throw new IllegalArgumentException(noMethodReport(methodName, target));
+        }
 
         if (!Modifier.isPublic(m.getDeclaringClass().getModifiers()))
         {
@@ -77,7 +83,9 @@ public class Reflector
             Method oldm = m;
             m = getAsMethodOfPublicBase(target.getClass(), m);
             if (m == null)
+            {
                 throw new IllegalArgumentException("Can't call public method of non-public class: " + oldm.toString());
+            }
         }
         try
         {
@@ -103,7 +111,9 @@ public class Reflector
         }
         Class sc = c.getSuperclass();
         if (sc == null)
+        {
             return null;
+        }
         for (Method scm : sc.getMethods())
         {
             if (isMatch(scm, m))
@@ -124,7 +134,9 @@ public class Reflector
         Class[] types1 = lhs.getParameterTypes();
         Class[] types2 = rhs.getParameterTypes();
         if (types1.length != types2.length)
+        {
             return false;
+        }
 
         boolean match = true;
         for (int i = 0; i < types1.length; ++i)
@@ -148,7 +160,9 @@ public class Reflector
             {
                 Constructor ctor = allctors[i];
                 if (ctor.getParameterTypes().length == args.length)
+                {
                     ctors.add(ctor);
+                }
             }
             if (ctors.isEmpty())
             {
@@ -194,7 +208,9 @@ public class Reflector
     public static Object invokeStaticMethod(Class c, String methodName, Object[] args)
     {
         if (methodName.equals("new"))
+        {
             return invokeConstructor(c, args);
+        }
         List methods = getMethods(c, args.length, methodName, true);
         return invokeMatchingMethod(methodName, methods, null, args);
     }
@@ -299,17 +315,25 @@ public class Reflector
         {
             Field f = getField(c, name, false);
             if (f != null)
+            {
                 return getInstanceField(target, name);
+            }
             else
+            {
                 throw new IllegalArgumentException("No matching field found: " + name + " for " + target.getClass());
+            }
         }
         else
         {
             List meths = getMethods(c, 0, name, false);
             if (meths.size() > 0)
+            {
                 return invokeMatchingMethod(name, meths, target, RT.EMPTY_ARRAY);
+            }
             else
+            {
                 return getInstanceField(target, name);
+            }
         }
     }
 
@@ -363,7 +387,9 @@ public class Reflector
         for (int i = 0; i < allfields.length; i++)
         {
             if (name.equals(allfields[i].getName()) && Modifier.isStatic(allfields[i].getModifiers()) == getStatics)
+            {
                 return allfields[i];
+            }
         }
         return null;
     }
@@ -381,9 +407,13 @@ public class Reflector
                 try
                 {
                     if (method.isBridge() && c.getMethod(method.getName(), method.getParameterTypes()).equals(method))
+                    {
                         bridgeMethods.add(method);
+                    }
                     else
+                    {
                         methods.add(method);
+                    }
                 }
                 catch (NoSuchMethodException e)
                 {
@@ -396,8 +426,9 @@ public class Reflector
         }
 
         if (methods.isEmpty())
+        {
             methods.addAll(bridgeMethods);
-
+        }
         if (!getStatics && c.isInterface())
         {
             allmethods = Object.class.getMethods();
@@ -415,26 +446,44 @@ public class Reflector
     static Object boxArg(Class paramType, Object arg)
     {
         if (!paramType.isPrimitive())
+        {
             return paramType.cast(arg);
+        }
         else if (paramType == boolean.class)
+        {
             return Boolean.class.cast(arg);
+        }
         else if (paramType == char.class)
+        {
             return Character.class.cast(arg);
+        }
         else if (arg instanceof Number)
         {
             Number n = (Number) arg;
             if (paramType == int.class)
+            {
                 return n.intValue();
+            }
             else if (paramType == float.class)
+            {
                 return n.floatValue();
+            }
             else if (paramType == double.class)
+            {
                 return n.doubleValue();
+            }
             else if (paramType == long.class)
+            {
                 return n.longValue();
+            }
             else if (paramType == short.class)
+            {
                 return n.shortValue();
+            }
             else if (paramType == byte.class)
+            {
                 return n.byteValue();
+            }
         }
         throw new IllegalArgumentException("Unexpected param type, expected: " + paramType + ", given: " + arg.getClass().getName());
     }
@@ -442,7 +491,9 @@ public class Reflector
     static Object[] boxArgs(Class[] params, Object[] args)
     {
         if (params.length == 0)
+        {
             return null;
+        }
         Object[] ret = new Object[params.length];
         for (int i = 0; i < params.length; i++)
         {
@@ -456,34 +507,54 @@ public class Reflector
     static public boolean paramArgTypeMatch(Class paramType, Class argType)
     {
         if (argType == null)
+        {
             return !paramType.isPrimitive();
+        }
         if (paramType == argType || paramType.isAssignableFrom(argType))
+        {
             return true;
+        }
         if (paramType == int.class)
+        {
             return argType == Integer.class
                 || argType == long.class
                 || argType == Long.class
                 || argType == short.class
                 || argType == byte.class; // || argType == FixNum.class;
+        }
         else if (paramType == float.class)
+        {
             return argType == Float.class
                 || argType == double.class;
+        }
         else if (paramType == double.class)
+        {
             return argType == Double.class
                 || argType == float.class; // || argType == DoubleNum.class;
+        }
         else if (paramType == long.class)
+        {
             return argType == Long.class
                 || argType == int.class
                 || argType == short.class
                 || argType == byte.class; // || argType == BigNum.class;
+        }
         else if (paramType == char.class)
+        {
             return argType == Character.class;
+        }
         else if (paramType == short.class)
+        {
             return argType == Short.class;
+        }
         else if (paramType == byte.class)
+        {
             return argType == Byte.class;
+        }
         else if (paramType == boolean.class)
+        {
             return argType == Boolean.class;
+        }
         return false;
     }
 
@@ -491,7 +562,9 @@ public class Reflector
     {
         boolean ret = false;
         if (args == null)
-            return params.length == 0;
+        {
+            return (params.length == 0);
+        }
         if (params.length == args.length)
         {
             ret = true;
@@ -509,9 +582,13 @@ public class Reflector
     public static Object prepRet(Class c, Object x)
     {
         if (!(c.isPrimitive() || c == Boolean.class))
+        {
             return x;
+        }
         if (x instanceof Boolean)
+        {
             return ((Boolean) x)?Boolean.TRUE:Boolean.FALSE;
+        }
      // else if (x instanceof Integer)
      //     return ((Integer)x).longValue();
      // else if (x instanceof Float)

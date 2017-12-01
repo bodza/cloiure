@@ -7,11 +7,17 @@ public abstract class AMapEntry extends APersistentVector implements IMapEntry
     public Object nth(int i)
     {
         if (i == 0)
+        {
             return key();
+        }
         else if (i == 1)
+        {
             return val();
+        }
         else
+        {
             throw new IndexOutOfBoundsException();
+        }
     }
 
     private IPersistentVector asVector()
@@ -90,11 +96,17 @@ public abstract class AMapEntry extends APersistentVector implements IMapEntry
     public Object nth(int i)
     {
         if (i == 0)
+        {
             return key();
+        }
         else if (i == 1)
+        {
             return val();
+        }
         else
+        {
             throw new IndexOutOfBoundsException();
+        }
     }
 
     private IPersistentVector asVector()

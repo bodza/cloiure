@@ -3,7 +3,6 @@ package cloiure.lang;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-// import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * conses onto rear, peeks/pops from front
@@ -16,7 +15,6 @@ public class PersistentQueue extends Obj implements IPersistentList, Collection,
 {
     final public static PersistentQueue EMPTY = new PersistentQueue(null, 0, null, null);
 
-    //*
     final int cnt;
     final ISeq f;
     final PersistentVector r;
@@ -35,12 +33,16 @@ public class PersistentQueue extends Obj implements IPersistentList, Collection,
     public boolean equiv(Object obj)
     {
         if (!(obj instanceof Sequential))
+        {
             return false;
+        }
         ISeq ms = RT.seq(obj);
         for (ISeq s = seq(); s != null; s = s.next(), ms = ms.next())
         {
             if (ms == null || !Util.equiv(s.first(), ms.first()))
+            {
                 return false;
+            }
         }
         return (ms == null);
     }
@@ -48,12 +50,16 @@ public class PersistentQueue extends Obj implements IPersistentList, Collection,
     public boolean equals(Object obj)
     {
         if (!(obj instanceof Sequential))
+        {
             return false;
+        }
         ISeq ms = RT.seq(obj);
         for (ISeq s = seq(); s != null; s = s.next(), ms = ms.next())
         {
             if (ms == null || !Util.equals(s.first(), ms.first()))
+            {
                 return false;
+            }
         }
         return (ms == null);
     }
@@ -66,7 +72,7 @@ public class PersistentQueue extends Obj implements IPersistentList, Collection,
             hash = 1;
             for (ISeq s = seq(); s != null; s = s.next())
             {
-                hash = 31 * hash + (s.first() == null ? 0 : s.first().hashCode());
+                hash = 31 * hash + ((s.first() == null) ? 0 : s.first().hashCode());
             }
             this._hash = hash;
         }
@@ -97,7 +103,9 @@ public class PersistentQueue extends Obj implements IPersistentList, Collection,
     public PersistentQueue pop()
     {
         if (f == null)  // hmmm... pop of empty queue -> empty queue?
+        {
             return this;
+        }
          // throw new IllegalStateException("popping empty queue");
         ISeq f1 = f.next();
         PersistentVector r1 = r;
@@ -117,16 +125,22 @@ public class PersistentQueue extends Obj implements IPersistentList, Collection,
     public ISeq seq()
     {
         if (f == null)
+        {
             return null;
+        }
         return new Seq(f, RT.seq(r));
     }
 
     public PersistentQueue cons(Object o)
     {
         if (f == null)     // empty
+        {
             return new PersistentQueue(meta(), cnt + 1, RT.list(o), null);
+        }
         else
-            return new PersistentQueue(meta(), cnt + 1, f, (r != null ? r : PersistentVector.EMPTY).cons(o));
+        {
+            return new PersistentQueue(meta(), cnt + 1, f, ((r != null) ? r : PersistentVector.EMPTY).cons(o));
+        }
     }
 
     public IPersistentCollection empty()
@@ -169,7 +183,9 @@ public class PersistentQueue extends Obj implements IPersistentList, Collection,
             if (f1 == null)
             {
                 if (rseq == null)
+                {
                     return null;
+                }
                 f1 = rseq;
                 r1 = null;
             }
@@ -229,7 +245,9 @@ public class PersistentQueue extends Obj implements IPersistentList, Collection,
         for (Object o : c)
         {
             if (contains(o))
+            {
                 return true;
+            }
         }
         return false;
     }
@@ -254,7 +272,9 @@ public class PersistentQueue extends Obj implements IPersistentList, Collection,
         for (ISeq s = seq(); s != null; s = s.next())
         {
             if (Util.equiv(s.first(), o))
+            {
                 return true;
+            }
         }
         return false;
     }
@@ -264,7 +284,7 @@ public class PersistentQueue extends Obj implements IPersistentList, Collection,
         return new Iterator()
         {
             private ISeq fseq = f;
-            private final Iterator riter = r != null ? r.iterator() : null;
+            private final Iterator riter = (r != null) ? r.iterator() : null;
 
             public boolean hasNext()
             {
@@ -280,9 +300,13 @@ public class PersistentQueue extends Obj implements IPersistentList, Collection,
                     return ret;
                 }
                 else if (riter != null && riter.hasNext())
+                {
                     return riter.next();
+                }
                 else
+                {
                     throw new NoSuchElementException();
+                }
             }
 
             public void remove()
@@ -291,67 +315,4 @@ public class PersistentQueue extends Obj implements IPersistentList, Collection,
             }
         };
     }
-
-    /*
-    public static void main(String[] args)
-    {
-        if (args.length != 1)
-        {
-            System.err.println("Usage: PersistentQueue n");
-            return;
-        }
-        int n = Integer.parseInt(args[0]);
-
-        long startTime, estimatedTime;
-
-        Queue list = new LinkedList();
-     // Queue list = new ConcurrentLinkedQueue();
-        System.out.println("Queue");
-        startTime = System.nanoTime();
-        for (int i = 0; i < n; i++)
-        {
-            list.add(i);
-            list.add(i);
-            list.remove();
-        }
-        for (int i = 0; i < n - 10; i++)
-        {
-            list.remove();
-        }
-        estimatedTime = System.nanoTime() - startTime;
-        System.out.println("time: " + estimatedTime / 1000000);
-        System.out.println("peek: " + list.peek());
-
-        PersistentQueue q = PersistentQueue.EMPTY;
-        System.out.println("PersistentQueue");
-        startTime = System.nanoTime();
-        for (int i = 0; i < n; i++)
-        {
-            q = q.cons(i);
-            q = q.cons(i);
-            q = q.pop();
-        }
-     // IPersistentList lastq = null;
-     // IPersistentList lastq2;
-        for (int i = 0; i < n - 10; i++)
-        {
-         // lastq2 = lastq;
-         // lastq = q;
-            q = q.pop();
-        }
-        estimatedTime = System.nanoTime() - startTime;
-        System.out.println("time: " + estimatedTime / 1000000);
-        System.out.println("peek: " + q.peek());
-
-        IPersistentList q2 = q;
-        for (int i = 0; i < 10; i++)
-        {
-            q2 = (IPersistentList) q2.cons(i);
-        }
-     // for (ISeq s = q.seq(); s != null; s = s.rest())
-     //     System.out.println("q: " + s.first().toString());
-     // for (ISeq s = q2.seq(); s != null; s = s.rest())
-     //     System.out.println("q2: " + s.first().toString());
-    }
-    */
 }

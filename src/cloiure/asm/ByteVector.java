@@ -307,7 +307,7 @@ public class ByteVector
     {
         int length1 = 2 * data.length;
         int length2 = length + size;
-        byte[] newData = new byte[length1 > length2 ? length1 : length2];
+        byte[] newData = new byte[(length1 > length2) ? length1 : length2];
         System.arraycopy(data, 0, newData, 0, length);
         data = newData;
     }

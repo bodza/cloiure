@@ -160,9 +160,13 @@ public class RT
     static Object readTrueFalseUnknown(String s)
     {
         if (s.equals("true"))
+        {
             return Boolean.TRUE;
+        }
         else if (s.equals("false"))
+        {
             return Boolean.FALSE;
+        }
         return Keyword.intern(null, "unknown");
     }
 
@@ -289,9 +293,13 @@ public class RT
         URL u = (url instanceof String) ? (new URL((String) url)) : (URL) url;
         ClassLoader ccl = Thread.currentThread().getContextClassLoader();
         if (ccl instanceof DynamicClassLoader)
+        {
             ((DynamicClassLoader)ccl).addURL(u);
+        }
         else
+        {
             throw new IllegalAccessError("Context classloader is not a DynamicClassLoader");
+        }
     }
 
     public static boolean checkSpecAsserts = Boolean.getBoolean("cloiure.spec.check-asserts");
@@ -407,15 +415,21 @@ public class RT
         try
         {
             if (url.getProtocol().equals("jar"))
+            {
                 return ((JarURLConnection) connection).getJarFile().getEntry(libfile).getTime();
+            }
             else
+            {
                 return connection.getLastModified();
+            }
         }
         finally
         {
             InputStream ins = connection.getInputStream();
             if (ins != null)
+            {
                 ins.close();
+            }
         }
     }
 
@@ -434,7 +448,9 @@ public class RT
             }
         }
         else
+        {
             throw new FileNotFoundException("Could not locate Cloiure resource on classpath: " + cljfile);
+        }
     }
 
     static public void load(String scriptbase) throws IOException, ClassNotFoundException
@@ -475,13 +491,19 @@ public class RT
         if (!loaded && cljURL != null)
         {
             if (booleanCast(Compiler.COMPILE_FILES.deref()))
+            {
                 compile(scriptfile);
+            }
             else
+            {
                 loadResourceScript(RT.class, scriptfile);
+            }
         }
         else if (!loaded && failIfNotFound)
+        {
             throw new FileNotFoundException(String.format("Could not locate %s or %s on classpath.%s", classfile, cljfile,
                         scriptbase.contains("_") ? " Please check that namespaces with dashes use underscores in the Cloiure file name." : ""));
+        }
     }
 
     static void doInit()
@@ -555,28 +577,46 @@ public class RT
     static public ISeq seq(Object coll)
     {
         if (coll instanceof ASeq)
+        {
             return (ASeq) coll;
+        }
         else if (coll instanceof LazySeq)
+        {
             return ((LazySeq) coll).seq();
+        }
         else
+        {
             return seqFrom(coll);
+        }
     }
 
     // N.B. canSeq must be kept in sync with this!
     static ISeq seqFrom(Object coll)
     {
         if (coll instanceof Seqable)
+        {
             return ((Seqable) coll).seq();
+        }
         else if (coll == null)
+        {
             return null;
+        }
         else if (coll instanceof Iterable)
+        {
             return chunkIteratorSeq(((Iterable) coll).iterator());
+        }
         else if (coll.getClass().isArray())
+        {
             return ArraySeq.createFromObject(coll);
+        }
         else if (coll instanceof CharSequence)
+        {
             return StringSeq.create((CharSequence) coll);
+        }
         else if (coll instanceof Map)
+        {
             return seq(((Map) coll).entrySet());
+        }
         else
         {
             Class c = coll.getClass();
@@ -599,8 +639,11 @@ public class RT
     static public Iterator iter(Object coll)
     {
         if (coll instanceof Iterable)
+        {
             return ((Iterable)coll).iterator();
+        }
         else if (coll == null)
+        {
             return new Iterator()
             {
                 public boolean hasNext()
@@ -618,6 +661,7 @@ public class RT
                     throw new UnsupportedOperationException();
                 }
             };
+        }
         else if (coll instanceof Map)
         {
             return ((Map)coll).entrySet().iterator();
@@ -631,7 +675,7 @@ public class RT
 
                 public boolean hasNext()
                 {
-                    return i < s.length();
+                    return (i < s.length());
                 }
 
                 public Object next()
@@ -650,7 +694,9 @@ public class RT
             return ArrayIter.createFromObject(coll);
         }
         else
+        {
             return iter(seq(coll));
+        }
     }
 
     static public Object seqOrElse(Object o)
@@ -661,37 +707,51 @@ public class RT
     static public ISeq keys(Object coll)
     {
         if (coll instanceof IPersistentMap)
+        {
             return APersistentMap.KeySeq.createFromMap((IPersistentMap)coll);
+        }
         else
+        {
             return APersistentMap.KeySeq.create(seq(coll));
+        }
     }
 
     static public ISeq vals(Object coll)
     {
         if (coll instanceof IPersistentMap)
+        {
             return APersistentMap.ValSeq.createFromMap((IPersistentMap)coll);
+        }
         else
+        {
             return APersistentMap.ValSeq.create(seq(coll));
+        }
     }
 
     static public IPersistentMap meta(Object x)
     {
         if (x instanceof IMeta)
+        {
             return ((IMeta) x).meta();
+        }
         return null;
     }
 
     public static int count(Object o)
     {
         if (o instanceof Counted)
+        {
             return ((Counted) o).count();
+        }
         return countFrom(Util.ret1(o, o = null));
     }
 
     static int countFrom(Object o)
     {
         if (o == null)
+        {
             return 0;
+        }
         else if (o instanceof IPersistentCollection)
         {
             ISeq s = seq(o);
@@ -700,21 +760,33 @@ public class RT
             for ( ; s != null; s = s.next())
             {
                 if (s instanceof Counted)
+                {
                     return i + s.count();
+                }
                 i++;
             }
             return i;
         }
         else if (o instanceof CharSequence)
+        {
             return ((CharSequence) o).length();
+        }
         else if (o instanceof Collection)
+        {
             return ((Collection) o).size();
+        }
         else if (o instanceof Map)
+        {
             return ((Map) o).size();
+        }
         else if (o instanceof Map.Entry)
+        {
             return 2;
+        }
         else if (o.getClass().isArray())
+        {
             return Array.getLength(o);
+        }
 
         throw new UnsupportedOperationException("count not supported on this type: " + o.getClass().getSimpleName());
     }
@@ -722,7 +794,9 @@ public class RT
     static public IPersistentCollection conj(IPersistentCollection coll, Object x)
     {
         if (coll == null)
+        {
             return new PersistentList(x);
+        }
         return coll.cons(x);
     }
 
@@ -730,20 +804,30 @@ public class RT
     {
         // ISeq y = seq(coll);
         if (coll == null)
+        {
             return new PersistentList(x);
+        }
         else if (coll instanceof ISeq)
+        {
             return new Cons(x, (ISeq) coll);
+        }
         else
+        {
             return new Cons(x, seq(coll));
+        }
     }
 
     static public Object first(Object x)
     {
         if (x instanceof ISeq)
+        {
             return ((ISeq) x).first();
+        }
         ISeq seq = seq(x);
         if (seq == null)
+        {
             return null;
+        }
         return seq.first();
     }
 
@@ -765,20 +849,28 @@ public class RT
     static public ISeq next(Object x)
     {
         if (x instanceof ISeq)
+        {
             return ((ISeq) x).next();
+        }
         ISeq seq = seq(x);
         if (seq == null)
+        {
             return null;
+        }
         return seq.next();
     }
 
     static public ISeq more(Object x)
     {
         if (x instanceof ISeq)
+        {
             return ((ISeq) x).more();
+        }
         ISeq seq = seq(x);
         if (seq == null)
+        {
             return PersistentList.EMPTY;
+        }
         return seq.more();
     }
 
@@ -803,28 +895,36 @@ public class RT
     static public Object peek(Object x)
     {
         if (x == null)
+        {
             return null;
+        }
         return ((IPersistentStack) x).peek();
     }
 
     static public Object pop(Object x)
     {
         if (x == null)
+        {
             return null;
+        }
         return ((IPersistentStack) x).pop();
     }
 
     static public Object get(Object coll, Object key)
     {
         if (coll instanceof ILookup)
+        {
             return ((ILookup) coll).valAt(key);
+        }
         return getFrom(coll, key);
     }
 
     static Object getFrom(Object coll, Object key)
     {
         if (coll == null)
+        {
             return null;
+        }
         else if (coll instanceof Map)
         {
             Map m = (Map) coll;
@@ -839,7 +939,9 @@ public class RT
         {
             int n = ((Number) key).intValue();
             if (n >= 0 && n < count(coll))
+            {
                 return nth(coll, n);
+            }
             return null;
         }
         else if (coll instanceof ITransientSet)
@@ -854,26 +956,34 @@ public class RT
     static public Object get(Object coll, Object key, Object notFound)
     {
         if (coll instanceof ILookup)
+        {
             return ((ILookup) coll).valAt(key, notFound);
+        }
         return getFrom(coll, key, notFound);
     }
 
     static Object getFrom(Object coll, Object key, Object notFound)
     {
         if (coll == null)
+        {
             return notFound;
+        }
         else if (coll instanceof Map)
         {
             Map m = (Map) coll;
             if (m.containsKey(key))
+            {
                 return m.get(key);
+            }
             return notFound;
         }
         else if (coll instanceof IPersistentSet)
         {
             IPersistentSet set = (IPersistentSet) coll;
             if (set.contains(key))
+            {
                 return set.get(key);
+            }
             return notFound;
         }
         else if (key instanceof Number && (coll instanceof String || coll.getClass().isArray()))
@@ -885,7 +995,9 @@ public class RT
         {
             ITransientSet set = (ITransientSet) coll;
             if (set.contains(key))
+            {
                 return set.get(key);
+            }
             return notFound;
         }
         return notFound;
@@ -894,18 +1006,26 @@ public class RT
     static public Associative assoc(Object coll, Object key, Object val)
     {
         if (coll == null)
+        {
             return new PersistentArrayMap(new Object[] { key, val });
+        }
         return ((Associative) coll).assoc(key, val);
     }
 
     static public Object contains(Object coll, Object key)
     {
         if (coll == null)
+        {
             return F;
+        }
         else if (coll instanceof Associative)
+        {
             return ((Associative) coll).containsKey(key) ? T : F;
+        }
         else if (coll instanceof IPersistentSet)
+        {
             return ((IPersistentSet) coll).contains(key) ? T : F;
+        }
         else if (coll instanceof Map)
         {
             Map m = (Map) coll;
@@ -922,23 +1042,33 @@ public class RT
             return (n >= 0 && n < count(coll)) ? T : F;
         }
         else if (coll instanceof ITransientSet)
+        {
             return ((ITransientSet)coll).contains(key) ? T : F;
+        }
         else if (coll instanceof ITransientAssociative2)
+        {
             return (((ITransientAssociative2)coll).containsKey(key)) ? T : F;
+        }
         throw new IllegalArgumentException("contains? not supported on type: " + coll.getClass().getName());
     }
 
     static public Object find(Object coll, Object key)
     {
         if (coll == null)
+        {
             return null;
+        }
         else if (coll instanceof Associative)
+        {
             return ((Associative) coll).entryAt(key);
+        }
         else if (coll instanceof Map)
         {
             Map m = (Map) coll;
             if (m.containsKey(key))
+            {
                 return MapEntry.create(key, m.get(key));
+            }
             return null;
         }
         else if (coll instanceof ITransientAssociative2)
@@ -957,9 +1087,13 @@ public class RT
         {
             ISeq r = keyvals.next();
             if (r == null)
+            {
                 throw Util.runtimeException("Malformed keyword argslist");
+            }
             if (keyvals.first() == key)
+            {
                 return r;
+            }
             keyvals = r.next();
         }
         return null;
@@ -968,40 +1102,56 @@ public class RT
     static public Object dissoc(Object coll, Object key)
     {
         if (coll == null)
+        {
             return null;
+        }
         return ((IPersistentMap) coll).without(key);
     }
 
     static public Object nth(Object coll, int n)
     {
         if (coll instanceof Indexed)
+        {
             return ((Indexed) coll).nth(n);
+        }
         return nthFrom(Util.ret1(coll, coll = null), n);
     }
 
     static Object nthFrom(Object coll, int n)
     {
         if (coll == null)
+        {
             return null;
+        }
         else if (coll instanceof CharSequence)
+        {
             return Character.valueOf(((CharSequence) coll).charAt(n));
+        }
         else if (coll.getClass().isArray())
+        {
             return Reflector.prepRet(coll.getClass().getComponentType(), Array.get(coll, n));
+        }
         else if (coll instanceof RandomAccess)
+        {
             return ((List) coll).get(n);
+        }
         else if (coll instanceof Matcher)
+        {
             return ((Matcher) coll).group(n);
-
+        }
         else if (coll instanceof Map.Entry)
         {
             Map.Entry e = (Map.Entry) coll;
             if (n == 0)
+            {
                 return e.getKey();
+            }
             else if (n == 1)
+            {
                 return e.getValue();
+            }
             throw new IndexOutOfBoundsException();
         }
-
         else if (coll instanceof Sequential)
         {
             ISeq seq = RT.seq(coll);
@@ -1009,12 +1159,16 @@ public class RT
             for (int i = 0; i <= n && seq != null; ++i, seq = seq.next())
             {
                 if (i == n)
+                {
                     return seq.first();
+                }
             }
             throw new IndexOutOfBoundsException();
         }
         else
+        {
             throw new UnsupportedOperationException("nth not supported on this type: " + coll.getClass().getSimpleName());
+        }
     }
 
     static public Object nth(Object coll, int n, Object notFound)
@@ -1030,44 +1184,59 @@ public class RT
     static Object nthFrom(Object coll, int n, Object notFound)
     {
         if (coll == null)
+        {
             return notFound;
+        }
         else if (n < 0)
+        {
             return notFound;
-
+        }
         else if (coll instanceof CharSequence)
         {
             CharSequence s = (CharSequence) coll;
             if (n < s.length())
+            {
                 return Character.valueOf(s.charAt(n));
+            }
             return notFound;
         }
         else if (coll.getClass().isArray())
         {
             if (n < Array.getLength(coll))
+            {
                 return Reflector.prepRet(coll.getClass().getComponentType(), Array.get(coll, n));
+            }
             return notFound;
         }
         else if (coll instanceof RandomAccess)
         {
             List list = (List) coll;
             if (n < list.size())
+            {
                 return list.get(n);
+            }
             return notFound;
         }
         else if (coll instanceof Matcher)
         {
             Matcher m = (Matcher) coll;
             if (n < m.groupCount())
+            {
                 return m.group(n);
+            }
             return notFound;
         }
         else if (coll instanceof Map.Entry)
         {
             Map.Entry e = (Map.Entry) coll;
             if (n == 0)
+            {
                 return e.getKey();
+            }
             else if (n == 1)
+            {
                 return e.getValue();
+            }
             return notFound;
         }
         else if (coll instanceof Sequential)
@@ -1077,20 +1246,28 @@ public class RT
             for (int i = 0; i <= n && seq != null; ++i, seq = seq.next())
             {
                 if (i == n)
+                {
                     return seq.first();
+                }
             }
             return notFound;
         }
         else
+        {
             throw new UnsupportedOperationException("nth not supported on this type: " + coll.getClass().getSimpleName());
+        }
     }
 
     static public Object assocN(int n, Object val, Object coll)
     {
         if (coll == null)
+        {
             return null;
+        }
         else if (coll instanceof IPersistentVector)
+        {
             return ((IPersistentVector) coll).assocN(n, val);
+        }
         else if (coll instanceof Object[])
         {
             // hmm... this is not persistent
@@ -1099,7 +1276,9 @@ public class RT
             return array;
         }
         else
+        {
             return null;
+        }
     }
 
     static boolean hasTag(Object o, Object tag)
@@ -1162,12 +1341,14 @@ public class RT
     static public char charCast(Object x)
     {
         if (x instanceof Character)
+        {
             return ((Character) x).charValue();
-
+        }
         long n = ((Number) x).longValue();
         if (n < Character.MIN_VALUE || n > Character.MAX_VALUE)
+        {
             throw new IllegalArgumentException("Value out of range for char: " + x);
-
+        }
         return (char) n;
     }
 
@@ -1175,7 +1356,9 @@ public class RT
     {
         char i = (char) x;
         if (i != x)
+        {
             throw new IllegalArgumentException("Value out of range for char: " + x);
+        }
         return i;
     }
 
@@ -1183,7 +1366,9 @@ public class RT
     {
         char i = (char) x;
         if (i != x)
+        {
             throw new IllegalArgumentException("Value out of range for char: " + x);
+        }
         return i;
     }
 
@@ -1196,7 +1381,9 @@ public class RT
     {
         char i = (char) x;
         if (i != x)
+        {
             throw new IllegalArgumentException("Value out of range for char: " + x);
+        }
         return i;
     }
 
@@ -1204,28 +1391,36 @@ public class RT
     {
         char i = (char) x;
         if (i != x)
+        {
             throw new IllegalArgumentException("Value out of range for char: " + x);
+        }
         return i;
     }
 
     static public char charCast(float x)
     {
         if (x >= Character.MIN_VALUE && x <= Character.MAX_VALUE)
+        {
             return (char) x;
+        }
         throw new IllegalArgumentException("Value out of range for char: " + x);
     }
 
     static public char charCast(double x)
     {
         if (x >= Character.MIN_VALUE && x <= Character.MAX_VALUE)
+        {
             return (char) x;
+        }
         throw new IllegalArgumentException("Value out of range for char: " + x);
     }
 
     static public boolean booleanCast(Object x)
     {
         if (x instanceof Boolean)
+        {
             return ((Boolean) x).booleanValue();
+        }
         return (x != null);
     }
 
@@ -1237,11 +1432,14 @@ public class RT
     static public byte byteCast(Object x)
     {
         if (x instanceof Byte)
+        {
             return ((Byte) x).byteValue();
+        }
         long n = longCast(x);
         if (n < Byte.MIN_VALUE || n > Byte.MAX_VALUE)
+        {
             throw new IllegalArgumentException("Value out of range for byte: " + x);
-
+        }
         return (byte) n;
     }
 
@@ -1254,7 +1452,9 @@ public class RT
     {
         byte i = (byte) x;
         if (i != x)
+        {
             throw new IllegalArgumentException("Value out of range for byte: " + x);
+        }
         return i;
     }
 
@@ -1262,7 +1462,9 @@ public class RT
     {
         byte i = (byte) x;
         if (i != x)
+        {
             throw new IllegalArgumentException("Value out of range for byte: " + x);
+        }
         return i;
     }
 
@@ -1270,32 +1472,41 @@ public class RT
     {
         byte i = (byte) x;
         if (i != x)
+        {
             throw new IllegalArgumentException("Value out of range for byte: " + x);
+        }
         return i;
     }
 
     static public byte byteCast(float x)
     {
         if (x >= Byte.MIN_VALUE && x <= Byte.MAX_VALUE)
+        {
             return (byte) x;
+        }
         throw new IllegalArgumentException("Value out of range for byte: " + x);
     }
 
     static public byte byteCast(double x)
     {
         if (x >= Byte.MIN_VALUE && x <= Byte.MAX_VALUE)
+        {
             return (byte) x;
+        }
         throw new IllegalArgumentException("Value out of range for byte: " + x);
     }
 
     static public short shortCast(Object x)
     {
         if (x instanceof Short)
+        {
             return ((Short) x).shortValue();
+        }
         long n = longCast(x);
         if (n < Short.MIN_VALUE || n > Short.MAX_VALUE)
+        {
             throw new IllegalArgumentException("Value out of range for short: " + x);
-
+        }
         return (short) n;
     }
 
@@ -1313,7 +1524,9 @@ public class RT
     {
         short i = (short) x;
         if (i != x)
+        {
             throw new IllegalArgumentException("Value out of range for short: " + x);
+        }
         return i;
     }
 
@@ -1321,28 +1534,36 @@ public class RT
     {
         short i = (short) x;
         if (i != x)
+        {
             throw new IllegalArgumentException("Value out of range for short: " + x);
+        }
         return i;
     }
 
     static public short shortCast(float x)
     {
         if (x >= Short.MIN_VALUE && x <= Short.MAX_VALUE)
+        {
             return (short) x;
+        }
         throw new IllegalArgumentException("Value out of range for short: " + x);
     }
 
     static public short shortCast(double x)
     {
         if (x >= Short.MIN_VALUE && x <= Short.MAX_VALUE)
+        {
             return (short) x;
+        }
         throw new IllegalArgumentException("Value out of range for short: " + x);
     }
 
     static public int intCast(Object x)
     {
         if (x instanceof Integer)
+        {
             return ((Integer)x).intValue();
+        }
         if (x instanceof Number)
         {
             long n = longCast(x);
@@ -1374,7 +1595,9 @@ public class RT
     static public int intCast(float x)
     {
         if (x < Integer.MIN_VALUE || x > Integer.MAX_VALUE)
+        {
             throw new IllegalArgumentException("Value out of range for int: " + x);
+        }
         return (int) x;
     }
 
@@ -1382,45 +1605,67 @@ public class RT
     {
         int i = (int) x;
         if (i != x)
+        {
             throw new IllegalArgumentException("Value out of range for int: " + x);
+        }
         return i;
     }
 
     static public int intCast(double x)
     {
         if (x < Integer.MIN_VALUE || x > Integer.MAX_VALUE)
+        {
             throw new IllegalArgumentException("Value out of range for int: " + x);
+        }
         return (int) x;
     }
 
     static public long longCast(Object x)
     {
         if (x instanceof Integer || x instanceof Long)
+        {
             return ((Number) x).longValue();
+        }
         else if (x instanceof BigInt)
         {
             BigInt bi = (BigInt) x;
             if (bi.bipart == null)
+            {
                 return bi.lpart;
+            }
             else
+            {
                 throw new IllegalArgumentException("Value out of range for long: " + x);
+            }
         }
         else if (x instanceof BigInteger)
         {
             BigInteger bi = (BigInteger) x;
             if (bi.bitLength() < 64)
+            {
                 return bi.longValue();
+            }
             else
+            {
                 throw new IllegalArgumentException("Value out of range for long: " + x);
+            }
         }
         else if (x instanceof Byte || x instanceof Short)
+        {
             return ((Number) x).longValue();
+        }
         else if (x instanceof Ratio)
+        {
             return longCast(((Ratio)x).bigIntegerValue());
+        }
         else if (x instanceof Character)
+        {
             return longCast(((Character) x).charValue());
+        }
         else
+        {
             return longCast(((Number)x).doubleValue());
+        }
     }
 
     static public long longCast(byte x)
@@ -1441,7 +1686,9 @@ public class RT
     static public long longCast(float x)
     {
         if (x < Long.MIN_VALUE || x > Long.MAX_VALUE)
+        {
             throw new IllegalArgumentException("Value out of range for long: " + x);
+        }
         return (long) x;
     }
 
@@ -1453,19 +1700,23 @@ public class RT
     static public long longCast(double x)
     {
         if (x < Long.MIN_VALUE || x > Long.MAX_VALUE)
+        {
             throw new IllegalArgumentException("Value out of range for long: " + x);
+        }
         return (long) x;
     }
 
     static public float floatCast(Object x)
     {
         if (x instanceof Float)
+        {
             return ((Float) x).floatValue();
-
+        }
         double n = ((Number) x).doubleValue();
         if (n < -Float.MAX_VALUE || n > Float.MAX_VALUE)
+        {
             throw new IllegalArgumentException("Value out of range for float: " + x);
-
+        }
         return (float) n;
     }
 
@@ -1497,8 +1748,9 @@ public class RT
     static public float floatCast(double x)
     {
         if (x < -Float.MAX_VALUE || x > Float.MAX_VALUE)
+        {
             throw new IllegalArgumentException("Value out of range for float: " + x);
-
+        }
         return (float) x;
     }
 
@@ -1610,7 +1862,9 @@ public class RT
     static public char uncheckedCharCast(Object x)
     {
         if (x instanceof Character)
+        {
             return ((Character) x).charValue();
+        }
         return (char) ((Number) x).longValue();
     }
 
@@ -1652,7 +1906,9 @@ public class RT
     static public int uncheckedIntCast(Object x)
     {
         if (x instanceof Number)
+        {
             return ((Number)x).intValue();
+        }
         return ((Character) x).charValue();
     }
 
@@ -1799,18 +2055,26 @@ public class RT
     static public IPersistentMap map(Object... init)
     {
         if (init == null)
+        {
             return PersistentArrayMap.EMPTY;
+        }
         else if (init.length <= PersistentArrayMap.HASHTABLE_THRESHOLD)
+        {
             return PersistentArrayMap.createWithCheck(init);
+        }
         return PersistentHashMap.createWithCheck(init);
     }
 
     static public IPersistentMap mapUniqueKeys(Object... init)
     {
         if (init == null)
+        {
             return PersistentArrayMap.EMPTY;
+        }
         else if (init.length <= PersistentArrayMap.HASHTABLE_THRESHOLD)
+        {
             return new PersistentArrayMap(init);
+        }
         return PersistentHashMap.create(init);
     }
 
@@ -1827,9 +2091,13 @@ public class RT
     static public IPersistentVector subvec(IPersistentVector v, int start, int end)
     {
         if (end < start || start < 0 || end > v.count())
+        {
             throw new IndexOutOfBoundsException();
+        }
         if (start == end)
+        {
             return PersistentVector.EMPTY;
+        }
         return new APersistentVector.SubVector(null, v, start, end);
     }
 
@@ -1894,21 +2162,27 @@ public class RT
     {
         ISeq ret = null;
         for (int i = a.length - 1; i >= 0; --i)
+        {
             ret = (ISeq) cons(a[i], ret);
+        }
         return ret;
     }
 
     static public Object[] object_array(Object sizeOrSeq)
     {
         if (sizeOrSeq instanceof Number)
+        {
             return new Object[((Number) sizeOrSeq).intValue()];
+        }
         else
         {
             ISeq s = RT.seq(sizeOrSeq);
             int size = RT.count(s);
             Object[] ret = new Object[size];
             for (int i = 0; i < size && s != null; i++, s = s.next())
+            {
                 ret[i] = s.first();
+            }
             return ret;
         }
     }
@@ -1916,26 +2190,38 @@ public class RT
     static public Object[] toArray(Object coll)
     {
         if (coll == null)
+        {
             return EMPTY_ARRAY;
+        }
         else if (coll instanceof Object[])
+        {
             return (Object[]) coll;
+        }
         else if (coll instanceof Collection)
+        {
             return ((Collection) coll).toArray();
+        }
         else if (coll instanceof Iterable)
         {
             ArrayList ret = new ArrayList();
             for (Object o : (Iterable)coll)
+            {
                 ret.add(o);
+            }
             return ret.toArray();
         }
         else if (coll instanceof Map)
+        {
             return ((Map) coll).entrySet().toArray();
+        }
         else if (coll instanceof String)
         {
             char[] chars = ((String) coll).toCharArray();
             Object[] ret = new Object[chars.length];
             for (int i = 0; i < chars.length; i++)
+            {
                 ret[i] = chars[i];
+            }
             return ret;
         }
         else if (coll.getClass().isArray())
@@ -1943,11 +2229,15 @@ public class RT
             ISeq s = (seq(coll));
             Object[] ret = new Object[count(s)];
             for (int i = 0; i < ret.length; i++, s = s.next())
+            {
                 ret[i] = s.first();
+            }
             return ret;
         }
         else
+        {
             throw Util.runtimeException("Unable to convert: " + coll.getClass() + " to Object[]");
+        }
     }
 
     static public Object[] seqToArray(ISeq seq)
@@ -1955,7 +2245,9 @@ public class RT
         int len = length(seq);
         Object[] ret = new Object[len];
         for (int i = 0; seq != null; ++i, seq = seq.next())
+        {
             ret[i] = seq.first();
+        }
         return ret;
     }
 
@@ -1969,7 +2261,9 @@ public class RT
             dest = (Object[]) Array.newInstance(passed.getClass().getComponentType(), len);
         }
         for (int i = 0; seq != null; ++i, seq = seq.next())
+        {
             dest[i] = seq.first();
+        }
         if (len < passed.length)
         {
             dest[len] = null;
@@ -2056,7 +2350,9 @@ public class RT
     static Character readRet(int ret)
     {
         if (ret == -1)
+        {
             return null;
+        }
         return box((char) ret);
     }
 
@@ -2087,21 +2383,27 @@ public class RT
     static public int getLineNumber(Reader r)
     {
         if (r instanceof LineNumberingPushbackReader)
+        {
             return ((LineNumberingPushbackReader) r).getLineNumber();
+        }
         return 0;
     }
 
     static public int getColumnNumber(Reader r)
     {
         if (r instanceof LineNumberingPushbackReader)
+        {
             return ((LineNumberingPushbackReader) r).getColumnNumber();
+        }
         return 0;
     }
 
     static public LineNumberingPushbackReader getLineNumberingReader(Reader r)
     {
         if (isLineNumberingReader(r))
+        {
             return (LineNumberingPushbackReader) r;
+        }
         return new LineNumberingPushbackReader(r);
     }
 
@@ -2155,7 +2457,9 @@ public class RT
     {
         // call multimethod
         if (PRINT_INITIALIZED.isBound() && RT.booleanCast(PRINT_INITIALIZED.deref()))
+        {
             PR_ON.invoke(x, w);
+        }
         else
         {
             boolean readably = booleanCast(PRINT_READABLY.deref());
@@ -2167,14 +2471,20 @@ public class RT
                     IPersistentMap meta = o.meta();
                     w.write("#^");
                     if (meta.count() == 1 && meta.containsKey(TAG_KEY))
+                    {
                         print(meta.valAt(TAG_KEY), w);
+                    }
                     else
+                    {
                         print(meta, w);
+                    }
                     w.write(' ');
                 }
             }
             if (x == null)
+            {
                 w.write("nil");
+            }
             else if (x instanceof ISeq || x instanceof IPersistentList)
             {
                 w.write('(');
@@ -2185,7 +2495,9 @@ public class RT
             {
                 String s = (String) x;
                 if (!readably)
+                {
                     w.write(s);
+                }
                 else
                 {
                     w.write('"'); // oops! "
@@ -2234,7 +2546,9 @@ public class RT
                     w.write(' ');
                     print(e.val(), w);
                     if (s.next() != null)
+                    {
                         w.write(", ");
+                    }
                 }
                 w.write('}');
             }
@@ -2246,7 +2560,9 @@ public class RT
                 {
                     print(a.nth(i), w);
                     if (i < a.count() - 1)
+                    {
                         w.write(' ');
+                    }
                 }
                 w.write(']');
             }
@@ -2257,7 +2573,9 @@ public class RT
                 {
                     print(s.first(), w);
                     if (s.next() != null)
+                    {
                         w.write(" ");
+                    }
                 }
                 w.write('}');
             }
@@ -2265,7 +2583,9 @@ public class RT
             {
                 char c = ((Character) x).charValue();
                 if (!readably)
+                {
                     w.write(c);
+                }
                 else
                 {
                     w.write('\\');
@@ -2326,7 +2646,9 @@ public class RT
                 w.write("#\"" + p.pattern() + "\"");
             }
             else
+            {
                 w.write(x.toString());
+            }
         }
     }
 
@@ -2336,22 +2658,30 @@ public class RT
         {
             print(s.first(), w);
             if (s.next() != null)
+            {
                 w.write(' ');
+            }
         }
     }
 
     static public void formatAesthetic(Writer w, Object obj) throws IOException
     {
         if (obj == null)
+        {
             w.write("null");
+        }
         else
+        {
             w.write(obj.toString());
+        }
     }
 
     static public void formatStandard(Writer w, Object obj) throws IOException
     {
         if (obj == null)
+        {
             w.write("null");
+        }
         else if (obj instanceof String)
         {
             w.write('"');
@@ -2385,21 +2715,31 @@ public class RT
             }
         }
         else
+        {
             w.write(obj.toString());
+        }
     }
 
     static public Object format(Object o, String s, Object... args) throws IOException
     {
         Writer w;
         if (o == null)
+        {
             w = new StringWriter();
+        }
         else if (Util.equals(o, T))
+        {
             w = (Writer) OUT.deref();
+        }
         else
+        {
             w = (Writer) o;
+        }
         doFormat(w, s, ArraySeq.create(args));
         if (o == null)
+        {
             return w.toString();
+        }
         return null;
     }
 
@@ -2422,29 +2762,39 @@ public class RT
                             break;
                         case 'a':
                             if (args == null)
+                            {
                                 throw new IllegalArgumentException("Missing argument");
+                            }
                             RT.formatAesthetic(w, RT.first(args));
                             args = RT.next(args);
                             break;
                         case 's':
                             if (args == null)
+                            {
                                 throw new IllegalArgumentException("Missing argument");
+                            }
                             RT.formatStandard(w, RT.first(args));
                             args = RT.next(args);
                             break;
                         case '{': // oops! '}'
                             int j = s.indexOf("~}", i);    // note - does not nest
                             if (j == -1)
+                            {
                                 throw new IllegalArgumentException("Missing ~}");
+                            }
                             String subs = s.substring(i, j);
                             for (ISeq sargs = RT.seq(RT.first(args)); sargs != null; )
+                            {
                                 sargs = doFormat(w, subs, sargs);
+                            }
                             args = RT.next(args);
                             i = j + 2; // skip "~}"
                             break;
                         case '^':
                             if (args == null)
+                            {
                                 return null;
+                            }
                             break;
                         case '~':
                             w.write('~');
@@ -2467,7 +2817,9 @@ public class RT
     {
         // ThreadLocalData.setValues(vals);
         if (vals.length > 0)
+        {
             return vals; // [0];
+        }
         return null;
     }
 
@@ -2494,9 +2846,13 @@ public class RT
     static public ClassLoader baseLoader()
     {
         if (Compiler.LOADER.isBound())
+        {
             return (ClassLoader) Compiler.LOADER.deref();
+        }
         else if (booleanCast(USE_CONTEXT_CLASSLOADER.deref()))
+        {
             return Thread.currentThread().getContextClassLoader();
+        }
         return Compiler.class.getClassLoader();
     }
 
@@ -2530,9 +2886,13 @@ public class RT
         {
             Class c = null;
             if (!(loader instanceof DynamicClassLoader))
+            {
                 c = DynamicClassLoader.findInMemoryClass(name);
+            }
             if (c != null)
+            {
                 return c;
+            }
             return Class.forName(name, load, loader);
         }
         catch (ClassNotFoundException e)
@@ -2560,9 +2920,13 @@ public class RT
         catch (Exception e)
         {
             if (e instanceof ClassNotFoundException)
+            {
                 return null;
+            }
             else
+            {
                 throw Util.sneakyThrow(e);
+            }
         }
         return classForName(name);
     }

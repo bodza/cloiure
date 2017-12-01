@@ -25,7 +25,9 @@ public abstract class APersistentMap extends AFn implements IPersistentMap, Map,
         {
             IPersistentVector v = (IPersistentVector) o;
             if (v.count() != 2)
+            {
                 throw new IllegalArgumentException("Vector arg to map conj must be a pair");
+            }
             return assoc(v.nth(0), v.nth(1));
         }
 
@@ -46,13 +48,19 @@ public abstract class APersistentMap extends AFn implements IPersistentMap, Map,
     static public boolean mapEquals(IPersistentMap m1, Object obj)
     {
         if (m1 == obj)
+        {
             return true;
+        }
         if (!(obj instanceof Map))
+        {
             return false;
+        }
         Map m = (Map) obj;
 
         if (m.size() != m1.count())
+        {
             return false;
+        }
 
         for (ISeq s = m1.seq(); s != null; s = s.next())
         {
@@ -60,7 +68,9 @@ public abstract class APersistentMap extends AFn implements IPersistentMap, Map,
             boolean found = m.containsKey(e.getKey());
 
             if (!found || !Util.equals(e.getValue(), m.get(e.getKey())))
+            {
                 return false;
+            }
         }
 
         return true;
@@ -69,14 +79,20 @@ public abstract class APersistentMap extends AFn implements IPersistentMap, Map,
     public boolean equiv(Object obj)
     {
         if (!(obj instanceof Map))
+        {
             return false;
+        }
         if (obj instanceof IPersistentMap && !(obj instanceof MapEquivalence))
+        {
             return false;
+        }
 
         Map m = (Map) obj;
 
         if (m.size() != size())
+        {
             return false;
+        }
 
         for (ISeq s = seq(); s != null; s = s.next())
         {
@@ -84,7 +100,9 @@ public abstract class APersistentMap extends AFn implements IPersistentMap, Map,
             boolean found = m.containsKey(e.getKey());
 
             if (!found || !Util.equiv(e.getValue(), m.get(e.getKey())))
+            {
                 return false;
+            }
         }
 
         return true;
@@ -143,17 +161,23 @@ public abstract class APersistentMap extends AFn implements IPersistentMap, Map,
         static public KeySeq create(ISeq seq)
         {
             if (seq == null)
+            {
                 return null;
+            }
             return new KeySeq(seq, null);
         }
 
         static public KeySeq createFromMap(IPersistentMap map)
         {
             if (map == null)
+            {
                 return null;
+            }
             ISeq seq = map.seq();
             if (seq == null)
+            {
                 return null;
+            }
             return new KeySeq(seq, map);
         }
 
@@ -188,10 +212,14 @@ public abstract class APersistentMap extends AFn implements IPersistentMap, Map,
         public Iterator iterator()
         {
             if (iterable == null)
+            {
                 return super.iterator();
+            }
 
             if (iterable instanceof IMapIterable)
+            {
                 return ((IMapIterable)iterable).keyIterator();
+            }
 
             final Iterator mapIter = iterable.iterator();
             return new Iterator()
@@ -222,17 +250,23 @@ public abstract class APersistentMap extends AFn implements IPersistentMap, Map,
         static public ValSeq create(ISeq seq)
         {
             if (seq == null)
+            {
                 return null;
+            }
             return new ValSeq(seq, null);
         }
 
         static public ValSeq createFromMap(IPersistentMap map)
         {
             if (map == null)
+            {
                 return null;
+            }
             ISeq seq = map.seq();
             if (seq == null)
+            {
                 return null;
+            }
             return new ValSeq(seq, map);
         }
 
@@ -267,10 +301,14 @@ public abstract class APersistentMap extends AFn implements IPersistentMap, Map,
         public Iterator iterator()
         {
             if (iterable == null)
+            {
                 return super.iterator();
+            }
 
             if (iterable instanceof IMapIterable)
+            {
                 return ((IMapIterable)iterable).valIterator();
+            }
 
             final Iterator mapIter = iterable.iterator();
             return new Iterator()
@@ -365,7 +403,9 @@ public abstract class APersistentMap extends AFn implements IPersistentMap, Map,
                     Entry e = (Entry) o;
                     Entry found = entryAt(e.getKey());
                     if (found != null && Util.equals(found.getValue(), e.getValue()))
+                    {
                         return true;
+                    }
                 }
                 return false;
             }
@@ -520,7 +560,9 @@ public abstract class APersistentMap extends AFn implements IPersistentMap, Map,
         for (Object o : c)
         {
             if (!contains(o))
+            {
                 return false;
+            }
         }
         return true;
     }
@@ -535,11 +577,15 @@ public abstract class APersistentMap extends AFn implements IPersistentMap, Map,
                 a[i] = s.first();
             }
             if (a.length > count())
+            {
                 a[count()] = null;
+            }
             return a;
         }
         else
+        {
             return toArray();
+        }
     }
 
     public int size()

@@ -82,14 +82,18 @@ public class LongRange extends ASeq implements Counted, IChunkedSeq, IReduce
     public static ISeq create(long end)
     {
         if (end > 0)
+        {
             return new LongRange(0L, end, 1L, positiveStep(end));
+        }
         return PersistentList.EMPTY;
     }
 
     public static ISeq create(long start, long end)
     {
         if (start >= end)
+        {
             return PersistentList.EMPTY;
+        }
         return new LongRange(start, end, 1L, positiveStep(end));
     }
 
@@ -98,19 +102,25 @@ public class LongRange extends ASeq implements Counted, IChunkedSeq, IReduce
         if (step > 0)
         {
             if (end <= start)
+            {
                 return PersistentList.EMPTY;
+            }
             return new LongRange(start, end, step, positiveStep(end));
         }
         else if (step < 0)
         {
             if (end >= start)
+            {
                 return PersistentList.EMPTY;
+            }
             return new LongRange(start, end, step, negativeStep(end));
         }
         else
         {
             if (end == start)
+            {
                 return PersistentList.EMPTY;
+            }
             return Repeat.create(start);
         }
     }
@@ -118,7 +128,9 @@ public class LongRange extends ASeq implements Counted, IChunkedSeq, IReduce
     public Obj withMeta(IPersistentMap meta)
     {
         if (meta == _meta)
+        {
             return this;
+        }
         return new LongRange(meta, start, end, step, boundsCheck, _chunk, _chunkNext);
     }
 
@@ -130,7 +142,9 @@ public class LongRange extends ASeq implements Counted, IChunkedSeq, IReduce
     public void forceChunk()
     {
         if (_chunk != null)
+        {
             return;
+        }
 
         long count;
         try
@@ -160,7 +174,9 @@ public class LongRange extends ASeq implements Counted, IChunkedSeq, IReduce
     public ISeq next()
     {
         if (_next != null)
+        {
             return _next;
+        }
 
         forceChunk();
         if (_chunk.count() > 1)
@@ -187,7 +203,9 @@ public class LongRange extends ASeq implements Counted, IChunkedSeq, IReduce
     {
         forceChunk();
         if (_chunkNext == null)
+        {
             return PersistentList.EMPTY;
+        }
         return _chunkNext;
     }
 
@@ -203,9 +221,13 @@ public class LongRange extends ASeq implements Counted, IChunkedSeq, IReduce
             {
                 s = Numbers.add(s, step);
                 if (boundsCheck.exceededBounds(s))
+                {
                     break;
+                }
                 else
+                {
                     count++;
+                }
             }
             catch (ArithmeticException e)
             {
@@ -218,7 +240,7 @@ public class LongRange extends ASeq implements Counted, IChunkedSeq, IReduce
     // returns exact size of remaining items OR throws ArithmeticException for overflow case
     long rangeCount(long start, long end, long step)
     {
-        // (1) count = ceiling ( (end - start) / step )
+        // (1) count = ceiling ((end - start) / step)
         // (2) ceiling(a/b) = (a+b+o)/b where o=-1 for positive stepping and +1 for negative stepping
         // thus: count = end - start + step + o / step
         return Numbers.add(Numbers.add(Numbers.minus(end, start), step), (this.step > 0) ? -1 : 1) / step;
@@ -250,9 +272,13 @@ public class LongRange extends ASeq implements Counted, IChunkedSeq, IReduce
             }
 
             if (count > Integer.MAX_VALUE)
+            {
                 return Numbers.throwIntOverflow();
+            }
             else
+            {
                 return (int)count;
+            }
         }
     }
 
@@ -264,7 +290,9 @@ public class LongRange extends ASeq implements Counted, IChunkedSeq, IReduce
         {
             acc = f.invoke(acc, i);
             if (acc instanceof Reduced)
+            {
                 return ((Reduced)acc).deref();
+            }
             i += step;
         }
         return acc;
@@ -278,7 +306,9 @@ public class LongRange extends ASeq implements Counted, IChunkedSeq, IReduce
         {
             acc = f.invoke(acc, i);
             if (RT.isReduced(acc))
+            {
                 return ((Reduced)acc).deref();
+            }
             i += step;
         } while (!boundsCheck.exceededBounds(i));
         return acc;
@@ -359,7 +389,9 @@ public class LongRange extends ASeq implements Counted, IChunkedSeq, IReduce
         public Object nth(int i, Object notFound)
         {
             if (i >= 0 && i < count)
+            {
                 return start + (i * step);
+            }
             return notFound;
         }
 
@@ -371,7 +403,9 @@ public class LongRange extends ASeq implements Counted, IChunkedSeq, IReduce
         public LongChunk dropFirst()
         {
             if (count <= 1)
+            {
                 throw new IllegalStateException("dropFirst of empty chunk");
+            }
             return new LongChunk(start + step, step, count - 1);
         }
 
@@ -383,7 +417,9 @@ public class LongRange extends ASeq implements Counted, IChunkedSeq, IReduce
             {
                 ret = f.invoke(ret, x);
                 if (RT.isReduced(ret))
+                {
                     return ret;
+                }
                 x += step;
             }
             return ret;

@@ -44,16 +44,24 @@ public class ReaderConditional implements ILookup
     public boolean equals(Object o)
     {
         if (this == o)
+        {
             return true;
+        }
         if (o == null || getClass() != o.getClass())
+        {
             return false;
+        }
 
         ReaderConditional that = (ReaderConditional) o;
 
-        if (form != null ? !form.equals(that.form) : that.form != null)
+        if ((form != null) ? !form.equals(that.form) : that.form != null)
+        {
             return false;
-        if (splicing != null ? !splicing.equals(that.splicing) : that.splicing != null)
+        }
+        if ((splicing != null) ? !splicing.equals(that.splicing) : that.splicing != null)
+        {
             return false;
+        }
         return true;
     }
 

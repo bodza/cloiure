@@ -66,7 +66,9 @@ public class Iterate extends ASeq implements IReduce, IPending
         {
             ret = rf.invoke(ret, v);
             if (RT.isReduced(ret))
+            {
                 return ((IDeref)ret).deref();
+            }
             v = f.invoke(v);
         }
     }
@@ -79,7 +81,9 @@ public class Iterate extends ASeq implements IReduce, IPending
         {
             ret = rf.invoke(ret, v);
             if (RT.isReduced(ret))
+            {
                 return ((IDeref)ret).deref();
+            }
             v = f.invoke(v);
         }
     }

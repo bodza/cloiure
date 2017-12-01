@@ -54,18 +54,26 @@ public abstract class APersistentSet extends AFn implements IPersistentSet, Coll
     static public boolean setEquals(IPersistentSet s1, Object obj)
     {
         if (s1 == obj)
+        {
             return true;
+        }
         if (!(obj instanceof Set))
+        {
             return false;
+        }
         Set m = (Set) obj;
 
         if (m.size() != s1.count())
+        {
             return false;
+        }
 
         for (Object aM : m)
         {
             if (!s1.contains(aM))
+            {
                 return false;
+            }
         }
 
         return true;
@@ -74,17 +82,23 @@ public abstract class APersistentSet extends AFn implements IPersistentSet, Coll
     public boolean equiv(Object obj)
     {
         if (!(obj instanceof Set))
+        {
             return false;
+        }
 
         Set m = (Set) obj;
 
         if (m.size() != size())
+        {
             return false;
+        }
 
         for (Object aM : m)
         {
             if (!contains(aM))
+            {
                 return false;
+            }
         }
 
         return true;
@@ -164,7 +178,9 @@ public abstract class APersistentSet extends AFn implements IPersistentSet, Coll
         for (Object o : c)
         {
             if (!contains(o))
+            {
                 return false;
+            }
         }
         return true;
     }
@@ -187,8 +203,11 @@ public abstract class APersistentSet extends AFn implements IPersistentSet, Coll
     public Iterator iterator()
     {
         if (impl instanceof IMapIterable)
+        {
             return ((IMapIterable)impl).keyIterator();
+        }
         else
+        {
             return new Iterator()
             {
                 private final Iterator iter = impl.iterator();
@@ -208,5 +227,6 @@ public abstract class APersistentSet extends AFn implements IPersistentSet, Coll
                     throw new UnsupportedOperationException();
                 }
             };
+        }
     }
 }

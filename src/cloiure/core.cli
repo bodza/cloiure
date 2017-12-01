@@ -2985,7 +2985,7 @@
   "Returns a lazy sequence of x, (f x), (f (f x)) etc. f must be free of side-effects"
   {:added "1.0"
    :static true}
-  [f x] (cloiure.lang.Iterate/create f x) )
+  [f x] (cloiure.lang.Iterate/create f x))
 
 (defn range
   "Returns a lazy seq of nums from start (inclusive) to end
@@ -4857,26 +4857,6 @@
                   (when (branch? node)
                     (mapcat walk (children node))))))]
      (walk root)))
-
-(defn file-seq
-  "A tree seq on java.io.Files"
-  {:added "1.0"
-   :static true}
-  [dir]
-    (tree-seq
-     (fn [^java.io.File f] (. f (isDirectory)))
-     (fn [^java.io.File d] (seq (. d (listFiles))))
-     dir))
-
-(defn xml-seq
-  "A tree seq on the xml elements as per xml/parse"
-  {:added "1.0"
-   :static true}
-  [root]
-    (tree-seq
-     (complement string?)
-     (comp seq :content)
-     root))
 
 (defn special-symbol?
   "Returns true if s names a special form"
@@ -6811,37 +6791,8 @@
               coll)
       persistent!))
 
-(require '[cloiure.java.io :as jio])
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; futures (needs proxy) ;;;;;;;;;;;;;;;;;;
 
-(defn- normalize-slurp-opts
-  [opts]
-  (if (string? (first opts))
-    (do
-      (println "WARNING: (slurp f enc) is deprecated, use (slurp f :encoding enc).")
-      [:encoding (first opts)])
-    opts))
-
-(defn slurp
-  "Opens a reader on f and reads all its contents, returning a string.
-  See cloiure.java.io/reader for a complete list of supported arguments."
-  {:added "1.0"
-   :tag String}
-  ([f & opts]
-     (let [opts (normalize-slurp-opts opts)
-           sw (java.io.StringWriter.)]
-       (with-open [^java.io.Reader r (apply jio/reader f opts)]
-         (jio/copy r sw)
-         (.toString sw)))))
-
-(defn spit
-  "Opposite of slurp.  Opens f with writer, writes content, then
-  closes f. Options passed to cloiure.java.io/writer."
-  {:added "1.2"}
-  [f content & options]
-  (with-open [^java.io.Writer w (apply jio/writer f options)]
-    (.write w (str content))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; futures (needs proxy);;;;;;;;;;;;;;;;;;
 (defn future-call
   "Takes a function of no args and yields a future object that will
   invoke the function in another thread, and will cache the result and

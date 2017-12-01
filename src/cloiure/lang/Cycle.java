@@ -26,7 +26,9 @@ public class Cycle extends ASeq implements IReduce, IPending
     public static ISeq create(ISeq vals)
     {
         if (vals == null)
+        {
             return PersistentList.EMPTY;
+        }
         return new Cycle(vals, null, vals);
     }
 
@@ -54,7 +56,9 @@ public class Cycle extends ASeq implements IReduce, IPending
     public ISeq next()
     {
         if (_next == null)
+        {
             _next = new Cycle(all, current(), null);
+        }
         return _next;
     }
 
@@ -71,10 +75,14 @@ public class Cycle extends ASeq implements IReduce, IPending
         {
             s = s.next();
             if (s == null)
+            {
                 s = all;
+            }
             ret = f.invoke(ret, s.first());
             if (RT.isReduced(ret))
+            {
                 return ((IDeref)ret).deref();
+            }
         }
     }
 
@@ -86,10 +94,14 @@ public class Cycle extends ASeq implements IReduce, IPending
         {
             ret = f.invoke(ret, s.first());
             if (RT.isReduced(ret))
+            {
                 return ((IDeref)ret).deref();
+            }
             s = s.next();
             if (s == null)
+            {
                 s = all;
+            }
         }
     }
 }

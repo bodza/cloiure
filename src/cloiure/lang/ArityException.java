@@ -1,8 +1,5 @@
 package cloiure.lang;
 
-/**
- * @since 1.3
- */
 public class ArityException extends IllegalArgumentException
 {
     final public int actual;

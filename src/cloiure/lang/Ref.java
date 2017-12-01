@@ -9,11 +9,17 @@ public class Ref extends ARef implements IFn, Comparable<Ref>, IRef
     public int compareTo(Ref ref)
     {
         if (this.id == ref.id)
+        {
             return 0;
+        }
         else if (this.id < ref.id)
+        {
             return -1;
+        }
         else
+        {
             return 1;
+        }
     }
 
     public int getMinHistory()
@@ -99,7 +105,9 @@ public class Ref extends ARef implements IFn, Comparable<Ref>, IRef
         {
             lock.readLock().lock();
             if (tvals != null)
+            {
                 return tvals.val;
+            }
             throw new IllegalStateException(this.toString() + " is unbound.");
         }
         finally
@@ -108,13 +116,13 @@ public class Ref extends ARef implements IFn, Comparable<Ref>, IRef
         }
     }
 
-    //*
-
     public Object deref()
     {
         LockingTransaction t = LockingTransaction.getRunning();
         if (t == null)
+        {
             return currentVal();
+        }
         return t.doGet(this);
     }
 
@@ -183,14 +191,12 @@ public class Ref extends ARef implements IFn, Comparable<Ref>, IRef
         LockingTransaction.getEx().doEnsure(this);
     }
 
-    //*/
-
     boolean isBound()
     {
         try
         {
             lock.readLock().lock();
-            return tvals != null;
+            return (tvals != null);
         }
         finally
         {
@@ -231,12 +237,16 @@ public class Ref extends ARef implements IFn, Comparable<Ref>, IRef
     int histCount()
     {
         if (tvals == null)
+        {
             return 0;
+        }
         else
         {
             int count = 0;
             for (TVal tv = tvals.next; tv != tvals; tv = tv.next)
+            {
                 count++;
+            }
             return count;
         }
     }

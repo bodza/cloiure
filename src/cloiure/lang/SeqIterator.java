@@ -31,14 +31,18 @@ public class SeqIterator implements Iterator
             next = RT.seq(next);
         }
         else if (seq == next)
+        {
             next = RT.next(seq);
+        }
         return (next != null);
     }
 
     public Object next() throws NoSuchElementException
     {
         if (!hasNext())
+        {
             throw new NoSuchElementException();
+        }
         seq = next;
         return RT.first(next);
     }

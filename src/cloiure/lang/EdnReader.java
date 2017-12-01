@@ -122,7 +122,9 @@ public class EdnReader
                 if (ch == -1)
                 {
                     if (eofIsError)
+                    {
                         throw Util.runtimeException("EOF while reading");
+                    }
                     return eofValue;
                 }
 
@@ -130,7 +132,9 @@ public class EdnReader
                 {
                     Object n = readNumber(r, (char) ch);
                     if (RT.suppressRead())
+                    {
                         return null;
+                    }
                     return n;
                 }
 
@@ -139,10 +143,14 @@ public class EdnReader
                 {
                     Object ret = macroFn.invoke(r, (char) ch, opts);
                     if (RT.suppressRead())
+                    {
                         return null;
+                    }
                     // no op macros return the reader
                     if (ret == r)
+                    {
                         continue;
+                    }
                     return ret;
                 }
 
@@ -154,7 +162,9 @@ public class EdnReader
                         unread(r, ch2);
                         Object n = readNumber(r, (char) ch);
                         if (RT.suppressRead())
+                        {
                             return null;
+                        }
                         return n;
                     }
                     unread(r, ch2);
@@ -162,14 +172,18 @@ public class EdnReader
 
                 String token = readToken(r, (char) ch, true);
                 if (RT.suppressRead())
+                {
                     return null;
+                }
                 return interpretToken(token);
             }
         }
         catch (Exception e)
         {
             if (isRecursive || !(r instanceof LineNumberingPushbackReader))
+            {
                 throw Util.sneakyThrow(e);
+            }
             LineNumberingPushbackReader rdr = (LineNumberingPushbackReader) r;
          // throw Util.runtimeException(String.format("ReaderError:(%d,1) %s", rdr.getLineNumber(), e.getMessage()), e);
             throw new ReaderException(rdr.getLineNumber(), rdr.getColumnNumber(), e);
@@ -180,7 +194,9 @@ public class EdnReader
     {
         StringBuilder sb = new StringBuilder();
         if (leadConstituent && nonConstituent(initch))
+        {
             throw Util.runtimeException("Invalid leading character: " + (char)initch);
+        }
 
         sb.append(initch);
 
@@ -194,7 +210,9 @@ public class EdnReader
                 return sb.toString();
             }
             else if (nonConstituent(ch))
+            {
                 throw Util.runtimeException("Invalid constituent character: " + (char)ch);
+            }
             sb.append((char) ch);
         }
     }
@@ -218,20 +236,26 @@ public class EdnReader
         String s = sb.toString();
         Object n = matchNumber(s);
         if (n == null)
+        {
             throw new NumberFormatException("Invalid number: " + s);
+        }
         return n;
     }
 
     static private int readUnicodeChar(String token, int offset, int length, int base)
     {
         if (token.length() != offset + length)
+        {
             throw new IllegalArgumentException("Invalid unicode character: \\" + token);
+        }
         int uc = 0;
         for (int i = offset; i < offset + length; ++i)
         {
             int d = Character.digit(token.charAt(i), base);
             if (d == -1)
+            {
                 throw new IllegalArgumentException("Invalid digit: " + token.charAt(i));
+            }
             uc = uc * base + d;
         }
         return (char) uc;
@@ -241,7 +265,9 @@ public class EdnReader
     {
         int uc = Character.digit(initch, base);
         if (uc == -1)
+        {
             throw new IllegalArgumentException("Invalid digit: " + (char) initch);
+        }
         int i = 1;
         for ( ; i < length; ++i)
         {
@@ -253,11 +279,15 @@ public class EdnReader
             }
             int d = Character.digit(ch, base);
             if (d == -1)
+            {
                 throw new IllegalArgumentException("Invalid digit: " + (char) ch);
+            }
             uc = uc * base + d;
         }
         if (i != length && exact)
+        {
             throw new IllegalArgumentException("Invalid character length: " + i + ", should be: " + length);
+        }
         return uc;
     }
 
@@ -280,7 +310,9 @@ public class EdnReader
 
         ret = matchSymbol(s);
         if (ret != null)
+        {
             return ret;
+        }
 
         throw Util.runtimeException("Invalid token: " + s);
     }
@@ -294,7 +326,9 @@ public class EdnReader
             String ns = m.group(1);
             String name = m.group(2);
             if (ns != null && ns.endsWith(":/") || name.endsWith(":") || s.indexOf("::", 1) != -1)
+            {
                 return null;
+            }
             if (s.startsWith("::"))
             {
                 return null;
@@ -302,7 +336,9 @@ public class EdnReader
             boolean isKeyword = s.charAt(0) == ':';
             Symbol sym = Symbol.intern(s.substring(isKeyword ? 1 : 0));
             if (isKeyword)
+            {
                 return Keyword.intern(sym);
+            }
             return sym;
         }
         return null;
@@ -316,41 +352,62 @@ public class EdnReader
             if (m.group(2) != null)
             {
                 if (m.group(8) != null)
+                {
                     return BigInt.ZERO;
+                }
                 return Numbers.num(0);
             }
             boolean negate = m.group(1).equals("-");
             String n;
             int radix = 10;
             if ((n = m.group(3)) != null)
+            {
                 radix = 10;
+            }
             else if ((n = m.group(4)) != null)
+            {
                 radix = 16;
+            }
             else if ((n = m.group(5)) != null)
+            {
                 radix = 8;
+            }
             else if ((n = m.group(7)) != null)
+            {
                 radix = Integer.parseInt(m.group(6));
+            }
             if (n == null)
+            {
                 return null;
+            }
             BigInteger bn = new BigInteger(n, radix);
             if (negate)
+            {
                 bn = bn.negate();
+            }
             if (m.group(8) != null)
+            {
                 return BigInt.fromBigInteger(bn);
-            return bn.bitLength() < 64 ? Numbers.num(bn.longValue()) : BigInt.fromBigInteger(bn);
+            }
+            return (bn.bitLength() < 64) ? Numbers.num(bn.longValue()) : BigInt.fromBigInteger(bn);
         }
         m = floatPat.matcher(s);
         if (m.matches())
         {
             if (m.group(4) != null)
+            {
                 return new BigDecimal(m.group(1));
+            }
             return Double.parseDouble(s);
         }
         m = ratioPat.matcher(s);
         if (m.matches())
         {
             String numerator = m.group(1);
-            if (numerator.startsWith("+")) numerator = numerator.substring(1);
+            if (numerator.startsWith("+"))
+            {
+                numerator = numerator.substring(1);
+            }
 
             return Numbers.divide(Numbers.reduceBigInt(BigInt.fromBigInteger(new BigInteger(numerator))), Numbers.reduceBigInt(BigInt.fromBigInteger(new BigInteger(m.group(2)))));
         }
@@ -360,7 +417,9 @@ public class EdnReader
     static private IFn getMacro(int ch)
     {
         if (ch < macros.length)
+        {
             return macros[ch];
+        }
         return null;
     }
 
@@ -386,14 +445,18 @@ public class EdnReader
             for (int ch = read1(r); ch != '"'; ch = read1(r))
             {
                 if (ch == -1)
+                {
                     throw Util.runtimeException("EOF while reading regex");
-                sb.append( (char) ch );
+                }
+                sb.append((char) ch);
                 if (ch == '\\')  // escape
                 {
                     ch = read1(r);
                     if (ch == -1)
+                    {
                         throw Util.runtimeException("EOF while reading regex");
-                    sb.append( (char) ch );
+                    }
+                    sb.append((char) ch);
                 }
             }
             return Pattern.compile(sb.toString());
@@ -411,12 +474,16 @@ public class EdnReader
             for (int ch = read1(r); ch != '"'; ch = read1(r))
             {
                 if (ch == -1)
+                {
                     throw Util.runtimeException("EOF while reading string");
+                }
                 if (ch == '\\')  // escape
                 {
                     ch = read1(r);
                     if (ch == -1)
+                    {
                         throw Util.runtimeException("EOF while reading string");
+                    }
                     switch (ch)
                     {
                         case 't':
@@ -442,7 +509,9 @@ public class EdnReader
                         {
                             ch = read1(r);
                             if (Character.digit(ch, 16) == -1)
+                            {
                                 throw Util.runtimeException("Invalid unicode escape: \\u" + (char) ch); // oops! "
+                            }
                             ch = readUnicodeChar((PushbackReader) r, ch, 16, 4, true);
                             break;
                         }
@@ -452,10 +521,14 @@ public class EdnReader
                             {
                                 ch = readUnicodeChar((PushbackReader) r, ch, 8, 3, false);
                                 if (ch > 0377)
+                                {
                                     throw Util.runtimeException("Octal escape sequence must be in range [0, 377].");
+                                }
                             }
                             else
+                            {
                                 throw Util.runtimeException("Unsupported escape character: \\" + (char) ch);
+                            }
                             break;
                         }
                     }
@@ -499,7 +572,9 @@ public class EdnReader
             // Read ns symbol
             Object sym = read(r, true, null, false, opts);
             if (!(sym instanceof Symbol) || ((Symbol)sym).getNamespace() != null)
+            {
                 throw new RuntimeException("Namespaced map must specify a valid namespace: " + sym);
+            }
             String ns = ((Symbol)sym).getName();
 
             // Read map
@@ -507,10 +582,14 @@ public class EdnReader
             while (isWhitespace(nextChar))
                 nextChar = read1(r);
             if ('{' != nextChar)
+            {
                 throw new RuntimeException("Namespaced map must specify a map");
+            }
             List kvs = readDelimitedList('}', r, true, opts);
             if ((kvs.size() & 1) == 1)
+            {
                 throw Util.runtimeException("Namespaced map literal must contain an even number of forms");
+            }
 
             // Construct output map
             Object[] a = new Object[kvs.size()];
@@ -557,7 +636,9 @@ public class EdnReader
         {
             int ch = read1((Reader) reader);
             if (ch == -1)
+            {
                 throw Util.runtimeException("EOF while reading character");
+            }
             IFn fn = dispatchMacros[ch];
 
             if (fn == null)
@@ -589,11 +670,17 @@ public class EdnReader
             }
             Object meta = read(r, true, null, true, opts);
             if (meta instanceof Symbol || meta instanceof String)
+            {
                 meta = RT.map(RT.TAG_KEY, meta);
+            }
             else if (meta instanceof Keyword)
+            {
                 meta = RT.map(meta, RT.T);
+            }
             else if (!(meta instanceof IPersistentMap))
+            {
                 throw new IllegalArgumentException("Metadata must be Symbol, Keyword, String or Map");
+            }
 
             Object o = read(r, true, null, true, opts);
             if (o instanceof IMeta)
@@ -616,7 +703,9 @@ public class EdnReader
                 return ((IObj) o).withMeta((IPersistentMap) ometa);
             }
             else
+            {
                 throw new IllegalArgumentException("Metadata can only be applied to IMetas");
+            }
         }
     }
 
@@ -627,37 +716,59 @@ public class EdnReader
             PushbackReader r = (PushbackReader) reader;
             int ch = read1(r);
             if (ch == -1)
+            {
                 throw Util.runtimeException("EOF while reading character");
+            }
             String token = readToken(r, (char) ch, false);
             if (token.length() == 1)
+            {
                 return Character.valueOf(token.charAt(0));
+            }
             else if (token.equals("newline"))
+            {
                 return '\n';
+            }
             else if (token.equals("space"))
+            {
                 return ' ';
+            }
             else if (token.equals("tab"))
+            {
                 return '\t';
+            }
             else if (token.equals("backspace"))
+            {
                 return '\b';
+            }
             else if (token.equals("formfeed"))
+            {
                 return '\f';
+            }
             else if (token.equals("return"))
+            {
                 return '\r';
+            }
             else if (token.startsWith("u"))
             {
                 char c = (char) readUnicodeChar(token, 1, 4, 16);
                 if (c >= '\uD800' && c <= '\uDFFF') // surrogate code unit?
+                {
                     throw Util.runtimeException("Invalid character constant: \\u" + Integer.toString(c, 16));
+                }
                 return c;
             }
             else if (token.startsWith("o"))
             {
                 int len = token.length() - 1;
                 if (len > 3)
+                {
                     throw Util.runtimeException("Invalid octal escape sequence length: " + len);
+                }
                 int uc = readUnicodeChar(token, 1, len, 8);
                 if (uc > 0377)
+                {
                     throw Util.runtimeException("Octal escape sequence must be in range [0, 377].");
+                }
                 return (char) uc;
             }
             throw Util.runtimeException("Unsupported character: \\" + token);
@@ -678,7 +789,9 @@ public class EdnReader
             }
             List list = readDelimitedList(')', r, true, opts);
             if (list.isEmpty())
+            {
                 return PersistentList.EMPTY;
+            }
             IObj s = (IObj) PersistentList.create(list);
          // IObj s = (IObj) RT.seq(list);
          // if (line != -1)
@@ -706,7 +819,9 @@ public class EdnReader
             PushbackReader r = (PushbackReader) reader;
             Object[] a = readDelimitedList('}', r, true, opts).toArray();
             if ((a.length & 1) == 1)
+            {
                 throw Util.runtimeException("Map literal must contain an even number of forms");
+            }
             return RT.map(a);
         }
     }
@@ -750,9 +865,13 @@ public class EdnReader
             Object o = read(r, true, null, true, opts);
 
             if (!(o instanceof Symbol))
+            {
                 throw Util.runtimeException("Invalid token: ##" + o);
+            }
             if (!(specials.containsKey(o)))
+            {
                 throw Util.runtimeException("Unknown symbolic value: ##" + o);
+            }
 
             return specials.valAt(o);
         }
@@ -774,13 +893,19 @@ public class EdnReader
             if (ch == -1)
             {
                 if (firstline < 0)
+                {
                     throw Util.runtimeException("EOF while reading");
+                }
                 else
+                {
                     throw Util.runtimeException("EOF while reading, starting at line " + firstline);
+                }
             }
 
             if (ch == delim)
+            {
                 break;
+            }
 
             IFn macroFn = getMacro(ch);
             if (macroFn != null)
@@ -788,7 +913,9 @@ public class EdnReader
                 Object mret = macroFn.invoke(r, (char) ch, opts);
                 // no op macros return the reader
                 if (mret != r)
+                {
                     a.add(mret);
+                }
             }
             else
             {
@@ -796,7 +923,9 @@ public class EdnReader
 
                 Object o = read(r, true, null, isRecursive, opts);
                 if (o != r)
+                {
                     a.add(o);
+                }
             }
         }
 
@@ -810,7 +939,9 @@ public class EdnReader
             PushbackReader r = (PushbackReader) reader;
             Object name = read(r, true, null, false, opts);
             if (!(name instanceof Symbol))
+            {
                 throw new RuntimeException("Reader tag must be a symbol");
+            }
             Symbol sym = (Symbol)name;
             return readTagged(r, sym, (IPersistentMap) opts);
         }
@@ -825,17 +956,25 @@ public class EdnReader
             ILookup readers = (ILookup)RT.get(opts, READERS);
             IFn dataReader = (IFn)RT.get(readers, tag);
             if (dataReader == null)
+            {
                 dataReader = (IFn)RT.get(RT.DEFAULT_DATA_READERS.deref(), tag);
+            }
             if (dataReader == null)
             {
                 IFn defaultReader = (IFn)RT.get(opts, DEFAULT);
                 if (defaultReader != null)
+                {
                     return defaultReader.invoke(tag, o);
+                }
                 else
+                {
                     throw new RuntimeException("No reader function for tag " + tag.toString());
+                }
             }
             else
+            {
                 return dataReader.invoke(o);
+            }
         }
     }
 }

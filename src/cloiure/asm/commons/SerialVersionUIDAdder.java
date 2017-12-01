@@ -515,7 +515,7 @@ public class SerialVersionUIDAdder extends ClassVisitor
         {
             if (o instanceof Item)
             {
-                return compareTo((Item) o) == 0;
+                return (compareTo((Item) o) == 0);
             }
             return false;
         }

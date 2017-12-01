@@ -33,7 +33,9 @@ final public class Cons extends ASeq implements Serializable
     public ISeq more()
     {
         if (_more == null)
+        {
             return PersistentList.EMPTY;
+        }
         return _more;
     }
 

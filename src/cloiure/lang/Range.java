@@ -80,7 +80,9 @@ public class Range extends ASeq implements IChunkedSeq, IReduce
     public static ISeq create(Object end)
     {
         if (Numbers.isPos(end))
+        {
             return new Range(0L, end, 1L, positiveStep(end));
+        }
         return PersistentList.EMPTY;
     }
 
@@ -92,16 +94,22 @@ public class Range extends ASeq implements IChunkedSeq, IReduce
     public static ISeq create(final Object start, Object end, Object step)
     {
         if ((Numbers.isPos(step) && Numbers.gt(start, end)) || (Numbers.isNeg(step) && Numbers.gt(end, start)) || Numbers.equiv(start, end))
+        {
             return PersistentList.EMPTY;
+        }
         if (Numbers.isZero(step))
+        {
             return Repeat.create(start);
+        }
         return new Range(start, end, step, Numbers.isPos(step) ? positiveStep(end) : negativeStep(end));
     }
 
     public Obj withMeta(IPersistentMap meta)
     {
         if (meta == _meta)
+        {
             return this;
+        }
         return new Range(meta, end, start, step, boundsCheck, _chunk, _chunkNext);
     }
 
@@ -113,7 +121,9 @@ public class Range extends ASeq implements IChunkedSeq, IReduce
     public void forceChunk()
     {
         if (_chunk != null)
+        {
             return;
+        }
 
         Object[] arr = new Object[CHUNK_SIZE];
         int n = 0;
@@ -145,7 +155,9 @@ public class Range extends ASeq implements IChunkedSeq, IReduce
     public ISeq next()
     {
         if (_next != null)
+        {
             return _next;
+        }
 
         forceChunk();
         if (_chunk.count() > 1)
@@ -172,7 +184,9 @@ public class Range extends ASeq implements IChunkedSeq, IReduce
     {
         forceChunk();
         if (_chunkNext == null)
+        {
             return PersistentList.EMPTY;
+        }
         return _chunkNext;
     }
 
@@ -184,7 +198,9 @@ public class Range extends ASeq implements IChunkedSeq, IReduce
         {
             acc = f.invoke(acc, i);
             if (RT.isReduced(acc))
+            {
                 return ((Reduced)acc).deref();
+            }
             i = Numbers.addP(i, step);
         }
         return acc;
@@ -198,7 +214,9 @@ public class Range extends ASeq implements IChunkedSeq, IReduce
         {
             acc = f.invoke(acc, i);
             if (RT.isReduced(acc))
+            {
                 return ((Reduced)acc).deref();
+            }
             i = Numbers.addP(i, step);
         }
         return acc;

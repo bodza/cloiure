@@ -147,7 +147,9 @@ final public class Atom extends ARef implements IAtom2
         validate(newv);
         boolean ret = state.compareAndSet(oldv, newv);
         if (ret)
+        {
             notifyWatches(oldv, newv);
+        }
         return ret;
     }
 

@@ -45,7 +45,9 @@ public class PersistentHashSet extends APersistentSet implements IObj, IEditable
         {
             ret = (ITransientSet) ret.conj(init[i]);
             if (ret.count() != i + 1)
+            {
                 throw new IllegalArgumentException("Duplicate key: " + init[i]);
+            }
         }
         return (PersistentHashSet) ret.persistent();
     }
@@ -58,7 +60,9 @@ public class PersistentHashSet extends APersistentSet implements IObj, IEditable
         {
             ret = (ITransientSet) ret.conj(key);
             if (ret.count() != i + 1)
+            {
                 throw new IllegalArgumentException("Duplicate key: " + key);
+            }
             ++i;
         }
         return (PersistentHashSet) ret.persistent();
@@ -71,7 +75,9 @@ public class PersistentHashSet extends APersistentSet implements IObj, IEditable
         {
             ret = (ITransientSet) ret.conj(items.first());
             if (ret.count() != i + 1)
+            {
                 throw new IllegalArgumentException("Duplicate key: " + items.first());
+            }
         }
         return (PersistentHashSet) ret.persistent();
     }
@@ -85,14 +91,18 @@ public class PersistentHashSet extends APersistentSet implements IObj, IEditable
     public IPersistentSet disjoin(Object key)
     {
         if (contains(key))
+        {
             return new PersistentHashSet(meta(), impl.without(key));
+        }
         return this;
     }
 
     public IPersistentSet cons(Object o)
     {
         if (contains(o))
+        {
             return this;
+        }
         return new PersistentHashSet(meta(), impl.assoc(o, o));
     }
 

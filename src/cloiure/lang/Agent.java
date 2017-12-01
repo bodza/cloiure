@@ -148,7 +148,9 @@ public class Agent extends ARef
                 }
 
                 if (error == null && next.q.count() > 0)
+                {
                     ((Action) next.q.peek()).execute();
+                }
             }
             finally
             {
@@ -221,7 +223,9 @@ public class Agent extends ARef
         state = newState;
 
         if (clearActions)
+        {
             aq.set(ActionQueue.EMPTY);
+        }
         else
         {
             boolean restarted = false;
@@ -233,7 +237,9 @@ public class Agent extends ARef
             }
 
             if (prior.q.count() > 0)
+            {
                 ((Action) prior.q.peek()).execute();
+            }
         }
 
         return newState;
@@ -256,13 +262,17 @@ public class Agent extends ARef
     {
         LockingTransaction trans = LockingTransaction.getRunning();
         if (trans != null)
+        {
             trans.enqueue(action);
+        }
         else if (nested.get() != null)
         {
             nested.set(nested.get().cons(action));
         }
         else
+        {
             action.agent.enqueue(action);
+        }
     }
 
     void enqueue(Action action)
@@ -276,7 +286,9 @@ public class Agent extends ARef
         }
 
         if (prior.q.count() == 0 && prior.error == null)
+        {
             action.execute();
+        }
     }
 
     public int getQueueCount()
@@ -288,7 +300,9 @@ public class Agent extends ARef
     {
         IPersistentVector sends = nested.get();
         if (sends == null)
+        {
             return 0;
+        }
         for (int i = 0; i < sends.count(); i++)
         {
             Action a = (Action) sends.valAt(i);

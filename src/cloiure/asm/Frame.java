@@ -1531,7 +1531,7 @@ final class Frame
         {
             // if u is the NULL type, merge(u,t)=t,
             // or TOP if t is not a reference type
-            v = (t & BASE_KIND) == OBJECT || (t & DIM) != 0 ? t : TOP;
+            v = ((t & BASE_KIND) == OBJECT || (t & DIM) != 0) ? t : TOP;
         }
         else
         {

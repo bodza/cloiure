@@ -26,7 +26,9 @@ public abstract class ATransientMap extends AFn implements ITransientMap, ITrans
         {
             IPersistentVector v = (IPersistentVector) o;
             if (v.count() != 2)
+            {
                 throw new IllegalArgumentException("Vector arg to map conj must be a pair");
+            }
             return assoc(v.nth(0), v.nth(1));
         }
 
@@ -81,13 +83,15 @@ public abstract class ATransientMap extends AFn implements ITransientMap, ITrans
     private static final Object NOT_FOUND = new Object();
     public final boolean containsKey(Object key)
     {
-        return valAt(key, NOT_FOUND) != NOT_FOUND;
+        return (valAt(key, NOT_FOUND) != NOT_FOUND);
     }
     public final IMapEntry entryAt(Object key)
     {
         Object v = valAt(key, NOT_FOUND);
         if (v != NOT_FOUND)
+        {
             return MapEntry.create(key, v);
+        }
         return null;
     }
 

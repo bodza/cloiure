@@ -16,9 +16,13 @@ public class Symbol extends AFn implements IObj, Comparable, Named, Serializable
         if (_str == null)
         {
             if (ns != null)
+            {
                 _str = (ns + "/" + name);
+            }
             else
+            {
                 _str = name;
+            }
         }
         return _str;
     }
@@ -54,9 +58,13 @@ public class Symbol extends AFn implements IObj, Comparable, Named, Serializable
     {
         int i = nsname.indexOf('/');
         if (i == -1 || nsname.equals("/"))
+        {
             return new Symbol(null, nsname);
+        }
         else
+        {
             return new Symbol(nsname.substring(0, i), nsname.substring(i + 1));
+        }
     }
 
     private Symbol(String ns_interned, String name_interned)
@@ -69,9 +77,13 @@ public class Symbol extends AFn implements IObj, Comparable, Named, Serializable
     public boolean equals(Object o)
     {
         if (this == o)
+        {
             return true;
+        }
         if (!(o instanceof Symbol))
+        {
             return false;
+        }
 
         Symbol symbol = (Symbol) o;
 
@@ -108,16 +120,24 @@ public class Symbol extends AFn implements IObj, Comparable, Named, Serializable
     {
         Symbol s = (Symbol) o;
         if (this.equals(o))
+        {
             return 0;
+        }
         if (this.ns == null && s.ns != null)
+        {
             return -1;
+        }
         if (this.ns != null)
         {
             if (s.ns == null)
+            {
                 return 1;
+            }
             int nsc = this.ns.compareTo(s.ns);
             if (nsc != 0)
+            {
                 return nsc;
+            }
         }
         return this.name.compareTo(s.name);
     }

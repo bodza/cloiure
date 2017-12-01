@@ -36,7 +36,9 @@ public class TransactionalHashMap<K, V> extends AbstractMap<K, V> implements Con
     {
         bins = new Ref[nBins];
         for (int i = 0; i < nBins; i++)
+        {
             bins[i] = new Ref(PersistentHashMap.EMPTY);
+        }
     }
 
     public TransactionalHashMap(Map<? extends K, ? extends V> m)
@@ -69,7 +71,9 @@ public class TransactionalHashMap<K, V> extends AbstractMap<K, V> implements Con
     {
         Entry e = entryAt(k);
         if (e != null)
+        {
             return (V) e.getValue();
+        }
         return null;
     }
 
@@ -120,7 +124,9 @@ public class TransactionalHashMap<K, V> extends AbstractMap<K, V> implements Con
         {
             IPersistentMap map = mapAt(i);
             if (map.count() > 0)
+            {
                 entries.addAll((Collection) RT.seq(map));
+            }
         }
         return new AbstractSet<Entry<K, V>>()
         {
@@ -147,7 +153,9 @@ public class TransactionalHashMap<K, V> extends AbstractMap<K, V> implements Con
             return null;
         }
         else
+        {
             return (V) e.getValue();
+        }
     }
 
     public boolean remove(Object k, Object v)

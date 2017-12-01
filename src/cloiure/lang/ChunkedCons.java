@@ -20,7 +20,9 @@ final public class ChunkedCons extends ASeq implements IChunkedSeq
     public Obj withMeta(IPersistentMap meta)
     {
         if (meta != _meta)
+        {
             return new ChunkedCons(meta, chunk, _more);
+        }
         return this;
     }
 
@@ -32,16 +34,22 @@ final public class ChunkedCons extends ASeq implements IChunkedSeq
     public ISeq next()
     {
         if (chunk.count() > 1)
+        {
             return new ChunkedCons(chunk.dropFirst(), _more);
+        }
         return chunkedNext();
     }
 
     public ISeq more()
     {
         if (chunk.count() > 1)
+        {
             return new ChunkedCons(chunk.dropFirst(), _more);
+        }
         if (_more == null)
+        {
             return PersistentList.EMPTY;
+        }
         return _more;
     }
 
@@ -58,7 +66,9 @@ final public class ChunkedCons extends ASeq implements IChunkedSeq
     public ISeq chunkedMore()
     {
         if (_more == null)
+        {
             return PersistentList.EMPTY;
+        }
         return _more;
     }
 }

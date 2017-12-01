@@ -412,7 +412,7 @@ public class Label
      */
     Label getFirst()
     {
-        return !ClassReader.FRAMES || frame == null ? this : frame.owner;
+        return (!ClassReader.FRAMES || frame == null) ? this : frame.owner;
     }
 
     // ------------------------------------------------------------------------
@@ -430,7 +430,7 @@ public class Label
     {
         if ((status & Label.VISITED) != 0)
         {
-            return (srcAndRefPositions[(int) (id >>> 32)] & (int) id) != 0;
+            return ((srcAndRefPositions[(int) (id >>> 32)] & (int) id) != 0);
         }
         return false;
     }
