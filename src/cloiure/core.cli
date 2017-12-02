@@ -3975,50 +3975,6 @@
         form
         (macroexpand ex))))
 
-(defn create-struct
-  "Returns a structure basis object."
-  {:added "1.0"
-   :static true}
-  [& keys]
-    (. cloiure.lang.PersistentStructMap (createSlotMap keys)))
-
-(defmacro defstruct
-  "Same as (def name (create-struct keys...))"
-  {:added "1.0"
-   :static true}
-  [name & keys]
-  `(def ~name (create-struct ~@keys)))
-
-(defn struct-map
-  "Returns a new structmap instance with the keys of the
-  structure-basis. keyvals may contain all, some or none of the basis
-  keys - where values are not supplied they will default to nil.
-  keyvals can also contain keys not in the basis."
-  {:added "1.0"
-   :static true}
-  [s & inits]
-    (. cloiure.lang.PersistentStructMap (create s inits)))
-
-(defn struct
-  "Returns a new structmap instance with the keys of the
-  structure-basis. vals must be supplied for basis keys in order -
-  where values are not supplied they will default to nil."
-  {:added "1.0"
-   :static true}
-  [s & vals]
-    (. cloiure.lang.PersistentStructMap (construct s vals)))
-
-(defn accessor
-  "Returns a fn that, given an instance of a structmap with the basis,
-  returns the value at the key.  The key must be in the basis. The
-  returned function should be (slightly) more efficient than using
-  get, but such use of accessors should be limited to known
-  performance-critical areas."
-  {:added "1.0"
-   :static true}
-  [s key]
-    (. cloiure.lang.PersistentStructMap (getAccessor s key)))
-
 (defn load-reader
   "Sequentially read and evaluate the set of forms contained in the
   stream/file"
@@ -5585,25 +5541,6 @@
            (recur (conj s x) etc))
          true))
      false)))
-
-(defn resultset-seq
-  "Creates and returns a lazy sequence of structmaps corresponding to
-  the rows in the java.sql.ResultSet rs"
-  {:added "1.0"}
-  [^java.sql.ResultSet rs]
-    (let [rsmeta (. rs (getMetaData))
-          idxs (range 1 (inc (. rsmeta (getColumnCount))))
-          keys (map (comp keyword #(.toLowerCase ^String %))
-                    (map (fn [i] (. rsmeta (getColumnLabel i))) idxs))
-          check-keys
-                (or (apply distinct? keys)
-                    (throw (Exception. "ResultSet must have unique column labels")))
-          row-struct (apply create-struct keys)
-          row-values (fn [] (map (fn [^Integer i] (. rs (getObject i))) idxs))
-          rows (fn thisfn []
-                 (when (. rs (next))
-                   (cons (apply struct row-struct (row-values)) (lazy-seq (thisfn)))))]
-      (rows)))
 
 (defn iterator-seq
   "Returns a seq on a java.util.Iterator. Note that most collections

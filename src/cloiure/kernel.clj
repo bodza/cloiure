@@ -466,10 +466,9 @@
 
 (java-ns cloiure.lang.AFunction
 
-(§ import java.io.Serializable)
 (§ import java.util.Comparator)
 
-(§ class public abstract class AFunction extends AFn implements IObj, Comparator, Fn, Serializable)
+(§ class public abstract class AFunction extends AFn implements IObj, Comparator, Fn)
 (§
     public volatile MethodImplCache __methodImplCache
 
@@ -905,10 +904,9 @@
 
 (java-ns cloiure.lang.APersistentMap
 
-(§ import java.io.Serializable)
 (§ import java.util.*)
 
-(§ class public abstract class APersistentMap extends AFn implements IPersistentMap, Map, Iterable, Serializable, MapEquivalence, IHashEq)
+(§ class public abstract class APersistentMap extends AFn implements IPersistentMap, Map, Iterable, MapEquivalence, IHashEq)
 (§
     int _hash
     int _hasheq
@@ -1415,12 +1413,11 @@
 
 (java-ns cloiure.lang.APersistentSet
 
-(§ import java.io.Serializable)
 (§ import java.util.Collection)
 (§ import java.util.Iterator)
 (§ import java.util.Set)
 
-(§ class public abstract class APersistentSet extends AFn implements IPersistentSet, Collection, Set, Serializable, IHashEq)
+(§ class public abstract class APersistentSet extends AFn implements IPersistentSet, Collection, Set, IHashEq)
 (§
     int _hash
     int _hasheq
@@ -1640,10 +1637,9 @@
 
 (java-ns cloiure.lang.APersistentVector
 
-(§ import java.io.Serializable)
 (§ import java.util.*)
 
-(§ class public abstract class APersistentVector extends AFn implements IPersistentVector, Iterable, List, RandomAccess, Comparable, Serializable, IHashEq)
+(§ class public abstract class APersistentVector extends AFn implements IPersistentVector, Iterable, List, RandomAccess, Comparable, IHashEq)
 (§
     int _hash
     int _hasheq
@@ -2581,9 +2577,7 @@
 
 (java-ns cloiure.lang.ArrayChunk
 
-(§ import java.io.Serializable)
-
-(§ class public final class ArrayChunk implements IChunk, Serializable)
+(§ class public final class ArrayChunk implements IChunk)
 (§
     final Object[] array
     final int off
@@ -4146,10 +4140,9 @@
 
 (java-ns cloiure.lang.ASeq
 
-(§ import java.io.Serializable)
 (§ import java.util.*)
 
-(§ class public abstract class ASeq extends Obj implements ISeq, Sequential, List, Serializable, IHashEq)
+(§ class public abstract class ASeq extends Obj implements ISeq, Sequential, List, IHashEq)
 (§
     transient int _hash
     transient int _hasheq
@@ -15047,9 +15040,7 @@
 
 (java-ns cloiure.lang.Cons
 
-(§ import java.io.Serializable)
-
-(§ class final public class Cons extends ASeq implements Serializable)
+(§ class final public class Cons extends ASeq)
 (§
     private final Object _first
     private final ISeq _more
@@ -16325,7 +16316,6 @@
 (java-ns cloiure.lang.EnumerationSeq
 
 (§ import java.io.IOException)
-(§ import java.io.NotSerializableException)
 (§ import java.util.Enumeration)
 
 (§ class public class EnumerationSeq extends ASeq)
@@ -16397,11 +16387,6 @@
     public EnumerationSeq withMeta(IPersistentMap meta)
     (§
         (§ return (§ expr new EnumerationSeq(meta, iter, state)))
-    )
-
-    private void writeObject (java.io.ObjectOutputStream out) throws IOException
-    (§
-        throw new NotSerializableException(getClass().getName())
     )
 )
 )
@@ -17547,7 +17532,6 @@
 (java-ns cloiure.lang.IteratorSeq
 
 (§ import java.io.IOException)
-(§ import java.io.NotSerializableException)
 (§ import java.util.Iterator)
 
 (§ class public class IteratorSeq extends ASeq)
@@ -17620,11 +17604,6 @@
     (§
         (§ return (§ expr new IteratorSeq(meta, iter, state)))
     )
-
-    private void writeObject (java.io.ObjectOutputStream out) throws IOException
-    (§
-        throw new NotSerializableException(getClass().getName())
-    )
 )
 )
 
@@ -17696,15 +17675,13 @@
 
 (java-ns cloiure.lang.Keyword
 
-(§ import java.io.ObjectStreamException)
-(§ import java.io.Serializable)
 (§ import java.lang.ref.Reference)
 (§ import java.lang.ref.WeakReference)
 (§ import java.util.concurrent.ConcurrentHashMap)
 (§ import java.lang.ref.ReferenceQueue)
 (§ import java.lang.ref.SoftReference)
 
-(§ class public class Keyword implements IFn, Comparable, Named, Serializable, IHashEq)
+(§ class public class Keyword implements IFn, Comparable, Named, IHashEq)
 (§
     private static ConcurrentHashMap<Symbol, Reference<Keyword>> table = new ConcurrentHashMap()
 
@@ -17833,11 +17810,6 @@
     public String getName()
     (§
         (§ return (§ expr sym.getName()))
-    )
-
-    private Object readResolve() throws ObjectStreamException
-    (§
-        (§ return (§ expr intern(sym)))
     )
 
     ;;;
@@ -20995,8 +20967,6 @@
 
 (java-ns cloiure.lang.LongRange
 
-(§ import java.io.Serializable)
-
 (§ import java.util.Iterator)
 (§ import java.util.NoSuchElementException)
 
@@ -21017,7 +20987,7 @@
     private volatile ISeq _chunkNext ;; lazy
     private volatile ISeq _next ;; cached
 
-    private static interface BoundsCheck extends Serializable
+    private static interface BoundsCheck
     (§
         boolean exceededBounds(long val)
     )
@@ -21357,7 +21327,7 @@
         )
     )
 
-    private static class LongChunk implements IChunk, Serializable
+    private static class LongChunk implements IChunk
     (§
         final long start
         final long step
@@ -22197,7 +22167,6 @@
  ; all fns made static, added hashOrdered/Unordered
  ;;
 
-(§ import java.io.Serializable)
 (§ import java.nio.ByteBuffer)
 
 ;;;
@@ -22344,12 +22313,10 @@
 
 (java-ns cloiure.lang.Namespace
 
-(§ import java.io.ObjectStreamException)
-(§ import java.io.Serializable)
 (§ import java.util.concurrent.ConcurrentHashMap)
 (§ import java.util.concurrent.atomic.AtomicReference)
 
-(§ class public class Namespace extends AReference implements Serializable)
+(§ class public class Namespace extends AReference)
 (§
     final public Symbol name
 
@@ -22607,13 +22574,6 @@
             aliases.compareAndSet(map, newMap)
             map = getAliases()
         )
-    )
-
-    private Object readResolve() throws ObjectStreamException
-    (§
-        ;; ensures that serialized namespaces are "deserialized" to the
-        ;; namespace in the present runtime
-        (§ return (§ expr findOrCreate(name)))
     )
 )
 )
@@ -25599,9 +25559,7 @@
 
 (java-ns cloiure.lang.Obj
 
-(§ import java.io.Serializable)
-
-(§ class public abstract class Obj implements IObj, Serializable)
+(§ class public abstract class Obj implements IObj)
 (§
     final IPersistentMap _meta
 
@@ -25626,7 +25584,6 @@
 
 (java-ns cloiure.lang.PersistentArrayMap
 
-(§ import java.io.Serializable)
 (§ import java.util.Arrays)
 (§ import java.util.Iterator)
 (§ import java.util.Map)
@@ -26179,7 +26136,6 @@
 
 (java-ns cloiure.lang.PersistentHashMap
 
-(§ import java.io.Serializable)
 (§ import java.util.*)
 (§ import java.util.concurrent.Callable)
 (§ import java.util.concurrent.atomic.AtomicReference)
@@ -26658,7 +26614,7 @@
         )
     )
 
-    static interface INode extends Serializable
+    static interface INode
     (§
         INode assoc(int shift, int hash, Object key, Object val, Box addedLeaf)
 
@@ -27973,7 +27929,6 @@
 
 (java-ns cloiure.lang.PersistentList
 
-(§ import java.io.Serializable)
 (§ import java.util.*)
 
 (§ class public class PersistentList extends ASeq implements IPersistentList, IReduce, List, Counted)
@@ -28698,311 +28653,6 @@
                 throw new UnsupportedOperationException()
             )
         )))
-    )
-)
-)
-
-(java-ns cloiure.lang.PersistentStructMap
-
-(§ import java.util.Iterator)
-(§ import java.util.Map)
-(§ import java.io.Serializable)
-(§ import java.util.NoSuchElementException)
-
-(§ class public class PersistentStructMap extends APersistentMap implements IObj)
-(§
-    public static class Def implements Serializable
-    (§
-        final ISeq keys
-        final IPersistentMap keyslots
-
-        Def(ISeq keys, IPersistentMap keyslots)
-        (§
-            this.keys = keys
-            this.keyslots = keyslots
-        )
-    )
-
-    final Def def
-    final Object[] vals
-    final IPersistentMap ext
-    final IPersistentMap _meta
-
-    static public Def createSlotMap(ISeq keys)
-    (§
-        if (keys == nil)
-        (§
-            throw new IllegalArgumentException("Must supply keys")
-        )
-        int c = RT.count(keys)
-        Object[] v = new Object[2 * c]
-        int i = 0
-        for (ISeq s = keys s != nil s = s.next(), i++)
-        (§
-            v[2 * i] =  s.first()
-            v[2 * i + 1] = i
-        )
-        (§ return (§ expr new Def(keys, RT.map(v))))
-    )
-
-    static public PersistentStructMap create(Def def, ISeq keyvals)
-    (§
-        Object[] vals = new Object[def.keyslots.count()]
-        IPersistentMap ext = PersistentHashMap.EMPTY
-        for (  keyvals != nil keyvals = keyvals.next().next())
-        (§
-            if (keyvals.next() == nil)
-            (§
-                throw new IllegalArgumentException(String.format("No value supplied for key: %s", keyvals.first()))
-            )
-            Object k = keyvals.first()
-            Object v = RT.second(keyvals)
-            Map.Entry e = def.keyslots.entryAt(k)
-            if (e != nil)
-            (§
-                vals[(Integer) e.getValue()] = v
-            )
-            else
-            (§
-                ext = ext.assoc(k, v)
-            )
-        )
-        (§ return (§ expr new PersistentStructMap(nil, def, vals, ext)))
-    )
-
-    static public PersistentStructMap construct(Def def, ISeq valseq)
-    (§
-        Object[] vals = new Object[def.keyslots.count()]
-        IPersistentMap ext = PersistentHashMap.EMPTY
-        for (int i = 0 i < vals.length && valseq != nil valseq = valseq.next(), i++)
-        (§
-            vals[i] = valseq.first()
-        )
-        if (valseq != nil)
-        (§
-            throw new IllegalArgumentException("Too many arguments to struct constructor")
-        )
-        (§ return (§ expr new PersistentStructMap(nil, def, vals, ext)))
-    )
-
-    static public IFn getAccessor(final Def def, Object key)
-    (§
-        Map.Entry e = def.keyslots.entryAt(key)
-        if (e != nil)
-        (§
-            final int i = (Integer) e.getValue()
-            (§ return (§ expr new AFn()
-            (§
-                public Object invoke(Object arg1)
-                (§
-                    PersistentStructMap m = (PersistentStructMap) arg1
-                    if (m.def != def)
-                    (§
-                        throw Util.runtimeException("Accessor/struct mismatch")
-                    )
-                    (§ return (§ expr m.vals[i]))
-                )
-            )))
-        )
-        throw new IllegalArgumentException("Not a key of struct")
-    )
-
-    protected PersistentStructMap(IPersistentMap meta, Def def, Object[] vals, IPersistentMap ext)
-    (§
-        this._meta = meta
-        this.ext = ext
-        this.def = def
-        this.vals = vals
-    )
-
-    ;;;
-     ; Returns a new instance of PersistentStructMap using the given parameters.
-     ; This function is used instead of the PersistentStructMap constructor by
-     ; all methods that return a new PersistentStructMap.  This is done so as to
-     ; allow subclasses to return instances of their class from all
-     ; PersistentStructMap methods.
-     ;;
-    protected PersistentStructMap makeNew(IPersistentMap meta, Def def, Object[] vals, IPersistentMap ext)
-    (§
-        (§ return (§ expr new PersistentStructMap(meta, def, vals, ext)))
-    )
-
-    public IObj withMeta(IPersistentMap meta)
-    (§
-        if (meta == _meta)
-        (§
-            (§ return (§ expr this))
-        )
-        (§ return (§ expr makeNew(meta, def, vals, ext)))
-    )
-
-    public IPersistentMap meta()
-    (§
-        (§ return (§ expr _meta))
-    )
-
-    public boolean containsKey(Object key)
-    (§
-        (§ return (§ expr def.keyslots.containsKey(key) || ext.containsKey(key)))
-    )
-
-    public IMapEntry entryAt(Object key)
-    (§
-        Map.Entry e = def.keyslots.entryAt(key)
-        if (e != nil)
-        (§
-            (§ return (§ expr (IMapEntry) MapEntry.create(e.getKey(), vals[(Integer) e.getValue()])))
-        )
-        (§ return (§ expr ext.entryAt(key)))
-    )
-
-    public IPersistentMap assoc(Object key, Object val)
-    (§
-        Map.Entry e = def.keyslots.entryAt(key)
-        if (e != nil)
-        (§
-            int i = (Integer) e.getValue()
-            Object[] newVals = vals.clone()
-            newVals[i] = val
-            (§ return (§ expr makeNew(_meta, def, newVals, ext)))
-        )
-        (§ return (§ expr makeNew(_meta, def, vals, ext.assoc(key, val))))
-    )
-
-    public Object valAt(Object key)
-    (§
-        Integer i = (Integer) def.keyslots.valAt(key)
-        if (i != nil)
-        (§
-            (§ return (§ expr vals[i]))
-        )
-        (§ return (§ expr ext.valAt(key)))
-    )
-
-    public Object valAt(Object key, Object notFound)
-    (§
-        Integer i = (Integer) def.keyslots.valAt(key)
-        if (i != nil)
-        (§
-            (§ return (§ expr vals[i]))
-        )
-        (§ return (§ expr ext.valAt(key, notFound)))
-    )
-
-    public IPersistentMap assocEx(Object key, Object val)
-    (§
-        if (containsKey(key))
-        (§
-            throw Util.runtimeException("Key already present")
-        )
-        (§ return (§ expr assoc(key, val)))
-    )
-
-    public IPersistentMap without(Object key)
-    (§
-        Map.Entry e = def.keyslots.entryAt(key)
-        if (e != nil)
-        (§
-            throw Util.runtimeException("Can't remove struct key")
-        )
-        IPersistentMap newExt = ext.without(key)
-        if (newExt == ext)
-        (§
-            (§ return (§ expr this))
-        )
-        (§ return (§ expr makeNew(_meta, def, vals, newExt)))
-    )
-
-    public Iterator iterator()
-    (§
-        (§ return (§ expr new Iterator()
-        (§
-            private ISeq ks = def.keys
-            private Iterator extIter = (ext == nil) ? nil :or ext.iterator()
-
-            public boolean hasNext()
-            (§
-                (§ return (§ expr ((ks != nil && ks.seq() != nil) || (extIter != nil && extIter.hasNext()))))
-            )
-
-            public Object next()
-            (§
-                if (ks != nil)
-                (§
-                    Object key = ks.first()
-                    ks = ks.next()
-                    (§ return (§ expr entryAt(key)))
-                )
-                else if (extIter != nil && extIter.hasNext())
-                (§
-                    (§ return (§ expr extIter.next()))
-                )
-                else
-                (§
-                    throw new NoSuchElementException()
-                )
-            )
-
-            public void remove()
-            (§
-                throw new UnsupportedOperationException()
-            )
-        )))
-    )
-
-    public int count()
-    (§
-        (§ return (§ expr vals.length + RT.count(ext)))
-    )
-
-    public ISeq seq()
-    (§
-        (§ return (§ expr new Seq(nil, def.keys, vals, 0, ext)))
-    )
-
-    public IPersistentCollection empty()
-    (§
-        (§ return (§ expr construct(def, nil)))
-    )
-
-    static class Seq extends ASeq
-    (§
-        final int i
-        final ISeq keys
-        final Object[] vals
-        final IPersistentMap ext
-
-        public Seq(IPersistentMap meta, ISeq keys, Object[] vals, int i, IPersistentMap ext)
-        (§
-            super(meta)
-            this.i = i
-            this.keys = keys
-            this.vals = vals
-            this.ext = ext
-        )
-
-        public Obj withMeta(IPersistentMap meta)
-        (§
-            if (meta != _meta)
-            (§
-                (§ return (§ expr new Seq(meta, keys, vals, i, ext)))
-            )
-            (§ return (§ expr this))
-        )
-
-        public Object first()
-        (§
-            (§ return (§ expr MapEntry.create(keys.first(), vals[i])))
-        )
-
-        public ISeq next()
-        (§
-            if (i + 1 < vals.length)
-            (§
-                (§ return (§ expr new Seq(_meta, keys.next(), vals, i + 1, ext)))
-            )
-            (§ return (§ expr ext.seq()))
-        )
     )
 )
 )
@@ -30274,7 +29924,6 @@
 
 (java-ns cloiure.lang.PersistentVector
 
-(§ import java.io.Serializable)
 (§ import java.util.ArrayList)
 (§ import java.util.Iterator)
 (§ import java.util.List)
@@ -30283,7 +29932,7 @@
 
 (§ class public class PersistentVector extends APersistentVector implements IObj, IEditableCollection, IReduce, IKVReduce)
 (§
-    public static class Node implements Serializable
+    public static class Node
     (§
         transient public final AtomicReference<Thread> edit
         public final Object[] array
@@ -31298,7 +30947,6 @@
 
 (java-ns cloiure.lang.Range
 
-(§ import java.io.Serializable)
 (§ import java.util.*)
 
 ;;;
@@ -31318,7 +30966,7 @@
     private volatile ISeq _chunkNext ;; lazy
     private volatile ISeq _next ;; cached
 
-    private static interface BoundsCheck extends Serializable
+    private static interface BoundsCheck
     (§
         boolean exceededBounds(Object val)
     )
@@ -37210,18 +36858,11 @@
     static public final Object[] EMPTY_ARRAY = new Object[] (§)
     static public final Comparator DEFAULT_COMPARATOR = new DefaultComparator()
 
-    private static final class DefaultComparator implements Comparator, Serializable
+    private static final class DefaultComparator implements Comparator
     (§
         public int compare(Object o1, Object o2)
         (§
             (§ return (§ expr Util.compare(o1, o2)))
-        )
-
-        private Object readResolve() throws ObjectStreamException
-        (§
-            ;; ensures that we aren't hanging onto a new default comparator for every
-            ;; sorted set, etc., we deserialize
-            (§ return (§ expr DEFAULT_COMPARATOR))
         )
     )
 
@@ -40210,10 +39851,7 @@
 
 (java-ns cloiure.lang.Symbol
 
-(§ import java.io.Serializable)
-(§ import java.io.ObjectStreamException)
-
-(§ class public class Symbol extends AFn implements IObj, Comparable, Named, Serializable, IHashEq)
+(§ class public class Symbol extends AFn implements IObj, Comparable, Named, IHashEq)
 (§
     final String ns
     final String name
@@ -40350,11 +39988,6 @@
             )
         )
         (§ return (§ expr this.name.compareTo(s.name)))
-    )
-
-    private Object readResolve() throws ObjectStreamException
-    (§
-        (§ return (§ expr intern(ns, name)))
     )
 
     public Object invoke(Object obj)
@@ -41306,11 +40939,9 @@
 
 (java-ns cloiure.lang.Var
 
-(§ import java.io.ObjectStreamException)
-(§ import java.io.Serializable)
 (§ import java.util.concurrent.atomic.AtomicBoolean)
 
-(§ class public final class Var extends ARef implements IFn, IRef, Settable, Serializable)
+(§ class public final class Var extends ARef implements IFn, IRef, Settable)
 (§
     static class TBox
     (§
@@ -42097,31 +41728,6 @@
             (§ return (§ expr RT.dissoc(c, k)))
         )
     )
-
-    ;; Note - serialization only supports reconnecting the Var identity on the deserializing end
-    ;; Neither the value in the var nor any of its properties are serialized
-
-    private static class Serialized implements Serializable
-    (§
-        public Serialized(Symbol nsName, Symbol sym)
-        (§
-            this.nsName = nsName
-            this.sym = sym
-        )
-
-        private Symbol nsName
-        private Symbol sym
-
-        private Object readResolve() throws ObjectStreamException
-        (§
-            (§ return (§ expr intern(nsName, sym)))
-        )
-    )
-
-    private Object writeReplace() throws ObjectStreamException
-    (§
-        (§ return (§ expr new Serialized(ns.getName(), sym)))
-    )
 )
 )
 
