@@ -48,130 +48,133 @@
 
 #_abstract
 (class-ns AFn (§ implements IFn)
-    (§ method Object call()
+    #_method
+    (§ defn #_"Object" call [this]
         (ß invoke())
     )
 
-    (§ method void run()
+    #_method
+    (§ defn #_"void" run [this]
         (ß invoke())
         nil
     )
 
-    (§ method Object invoke()
+    #_method
+    (§ defn #_"Object" invoke [this]
         (ß throwArity(0))
     )
 
-    (§ method Object invoke(Object arg1)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1]
         (ß throwArity(1))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2]
         (ß throwArity(2))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
         (ß throwArity(3))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
         (ß throwArity(4))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
         (ß throwArity(5))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
         (ß throwArity(6))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
         (ß throwArity(7))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
         (ß throwArity(8))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
         (ß throwArity(9))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
         (ß throwArity(10))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
         (ß throwArity(11))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
         (ß throwArity(12))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
         (ß throwArity(13))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
         (ß throwArity(14))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
         (ß throwArity(15))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
         (ß throwArity(16))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
         (ß throwArity(17))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
         (ß throwArity(18))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
         (ß throwArity(19))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
         (ß throwArity(20))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20,
-            Object... args)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20, #_"Object..." args]
         (ß throwArity(21))
     )
 
-    (§ method Object applyTo(ISeq arglist)
+    #_method
+    (§ defn #_"Object" applyTo [this, #_"ISeq" arglist]
         (ß applyToHelper(this, Util.ret1(arglist, arglist = nil)))
     )
 
-    (§ defn Object applyToHelper(IFn ifn, ISeq arglist)
+    (§ defn #_"Object" applyToHelper [#_"IFn" ifn, #_"ISeq" arglist]
         (§ switch (ß RT.boundedLength(arglist, 20))
             (§ case 0)
             (do
@@ -475,7 +478,8 @@
         )
     )
 
-    (§ method Object throwArity(int n)
+    #_method
+    (§ defn #_"Object" throwArity [this, #_"int" n]
         (let [#_"String" name (ß getClass().getSimpleName())]
             (throw (ß new ArityException(n, Compiler.demunge(name))))
         )
@@ -490,36 +494,43 @@
 #_abstract
 (class-ns AFunction (§ extends AFn) (§ implements IObj, Comparator, Fn)
     #_volatile
-    (§ field MethodImplCache __methodImplCache)
+    (§ field #_"MethodImplCache" __methodImplCache)
 
-    (§ method IPersistentMap meta()
+    #_method
+    (§ defn #_"IPersistentMap" meta [this]
         nil
     )
 
-    (§ method IObj withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"IObj" withMeta [this, #_"IPersistentMap" meta]
         (ß new RestFn()
             (§ reify
                 #_protected
-                (§ method Object doInvoke(Object args)
+                #_method
+                (§ defn #_"Object" doInvoke [this, #_"Object" args]
                     (ß AFunction.this.applyTo((ISeq) args))
                 )
 
-                (§ method IPersistentMap meta()
+                #_method
+                (§ defn #_"IPersistentMap" meta [this]
                     meta
                 )
 
-                (§ method IObj withMeta(IPersistentMap meta)
+                #_method
+                (§ defn #_"IObj" withMeta [this, #_"IPersistentMap" meta]
                     (ß AFunction.this.withMeta(meta))
                 )
 
-                (§ method int getRequiredArity()
+                #_method
+                (§ defn #_"int" getRequiredArity [this]
                     0
                 )
             )
         )
     )
 
-    (§ method int compare(Object o1, Object o2)
+    #_method
+    (§ defn #_"int" compare [this, #_"Object" o1, #_"Object" o2]
         (let [#_"Object" o (ß invoke(o1, o2))]
             (when (ß o instanceof Boolean)
                 (when (ß RT.booleanCast(o))
@@ -547,45 +558,46 @@
 
 (class-ns Agent (§ extends ARef)
     (class-ns ActionQueue
-        (§ field IPersistentStack q)
-        (§ field Throwable error) ;; non-null indicates fail state
-        (§ def ActionQueue EMPTY = new ActionQueue(PersistentQueue.EMPTY, nil))
+        (§ field #_"IPersistentStack" q)
+        (§ field #_"Throwable" error) ;; non-null indicates fail state
+        (§ def #_"ActionQueue" EMPTY (ß new ActionQueue(PersistentQueue.EMPTY, nil)))
 
-        (§ constructor ActionQueue(IPersistentStack q, Throwable error)
+        (§ constructor #_"ActionQueue" ActionQueue [#_"IPersistentStack" q, #_"Throwable" error]
             (ß this.q = q)
             (ß this.error = error)
             this
         )
     )
 
-    (§ def Keyword CONTINUE = Keyword.intern(nil, "continue"))
-    (§ def Keyword FAIL = Keyword.intern(nil, "fail"))
+    (§ def #_"Keyword" CONTINUE (ß Keyword.intern(nil, "continue")))
+    (§ def #_"Keyword" FAIL (ß Keyword.intern(nil, "fail")))
 
     #_volatile
-    (§ field Object state)
-    (§ field AtomicReference<ActionQueue> aq = new AtomicReference<ActionQueue>(ActionQueue.EMPTY))
+    (§ field #_"Object" state)
+    (§ field #_"AtomicReference<ActionQueue>" aq (ß new AtomicReference<ActionQueue>(ActionQueue.EMPTY)))
 
     #_volatile
-    (§ field Keyword errorMode = CONTINUE)
+    (§ field #_"Keyword" errorMode (ß CONTINUE))
     #_volatile
-    (§ field IFn errorHandler = nil)
+    (§ field #_"IFn" errorHandler (ß nil))
 
-    (§ def- AtomicLong sendThreadPoolCounter = new AtomicLong(0))
+    (§ def- #_"AtomicLong" sendThreadPoolCounter (ß new AtomicLong(0)))
 
-    (§ def- AtomicLong sendOffThreadPoolCounter = new AtomicLong(0))
-
-    #_volatile
-    (§ def ExecutorService pooledExecutor = Executors.newFixedThreadPool(2 + Runtime.getRuntime().availableProcessors(), createThreadFactory("cloiure-agent-send-pool-%d", sendThreadPoolCounter)))
+    (§ def- #_"AtomicLong" sendOffThreadPoolCounter (ß new AtomicLong(0)))
 
     #_volatile
-    (§ def ExecutorService soloExecutor = Executors.newCachedThreadPool(createThreadFactory("cloiure-agent-send-off-pool-%d", sendOffThreadPoolCounter)))
+    (§ def #_"ExecutorService" pooledExecutor (ß Executors.newFixedThreadPool(2 + Runtime.getRuntime().availableProcessors(), createThreadFactory("cloiure-agent-send-pool-%d", sendThreadPoolCounter))))
 
-    (§ def ThreadLocal<IPersistentVector> nested = new ThreadLocal<IPersistentVector>())
+    #_volatile
+    (§ def #_"ExecutorService" soloExecutor (ß Executors.newCachedThreadPool(createThreadFactory("cloiure-agent-send-off-pool-%d", sendOffThreadPoolCounter))))
 
-    (§ defn- ThreadFactory createThreadFactory(String format, AtomicLong threadPoolCounter)
+    (§ def #_"ThreadLocal<IPersistentVector>" nested (ß new ThreadLocal<IPersistentVector>()))
+
+    (§ defn- #_"ThreadFactory" createThreadFactory [#_"String" format, #_"AtomicLong" threadPoolCounter]
         (ß new ThreadFactory()
             (§ reify
-                (§ method Thread newThread(Runnable runnable)
+                #_method
+                (§ defn #_"Thread" newThread [this, #_"Runnable" runnable]
                     (let [#_"Thread" thread (ß new Thread(runnable))]
                         (ß thread.setName(String.format(format, threadPoolCounter.getAndIncrement())))
                         thread
@@ -595,19 +607,19 @@
         )
     )
 
-    (§ defn void shutdown()
+    (§ defn #_"void" shutdown []
         (ß soloExecutor.shutdown())
         (ß pooledExecutor.shutdown())
         nil
     )
 
     (class-ns Action (§ implements Runnable)
-        (§ field Agent agent)
-        (§ field IFn fn)
-        (§ field ISeq args)
-        (§ field Executor exec)
+        (§ field #_"Agent" agent)
+        (§ field #_"IFn" fn)
+        (§ field #_"ISeq" args)
+        (§ field #_"Executor" exec)
 
-        (§ constructor Action(Agent agent, IFn fn, ISeq args, Executor exec)
+        (§ constructor #_"Action" Action [#_"Agent" agent, #_"IFn" fn, #_"ISeq" args, #_"Executor" exec]
             (ß this.agent = agent)
             (ß this.args = args)
             (ß this.fn = fn)
@@ -615,7 +627,8 @@
             this
         )
 
-        (§ method void execute()
+        #_method
+        (§ defn #_"void" execute [this]
             (try
                 (ß exec.execute(this))
                 (catch Throwable error
@@ -632,7 +645,7 @@
             nil
         )
 
-        (§ defn void doRun(Action action)
+        (§ defn #_"void" doRun [#_"Action" action]
             (try
                 (ß nested.set(PersistentVector.EMPTY))
 
@@ -691,24 +704,26 @@
             nil
         )
 
-        (§ method void run()
+        #_method
+        (§ defn #_"void" run [this]
             (ß doRun(this))
             nil
         )
     )
 
-    (§ constructor Agent(Object state)
+    (§ constructor #_"Agent" Agent [#_"Object" state]
         (§ this(state, nil))
         this
     )
 
-    (§ constructor Agent(Object state, IPersistentMap meta)
+    (§ constructor #_"Agent" Agent [#_"Object" state, #_"IPersistentMap" meta]
         (§ super(meta))
         (ß setState(state))
         this
     )
 
-    (§ method boolean setState(Object newState)
+    #_method
+    (§ defn #_"boolean" setState [this, #_"Object" newState]
         (ß validate(newState))
         (let [#_"boolean" ret (ß (state != newState))]
             (ß state = newState)
@@ -716,33 +731,40 @@
         )
     )
 
-    (§ method Object deref()
+    #_method
+    (§ defn #_"Object" deref [this]
         state
     )
 
-    (§ method Throwable getError()
+    #_method
+    (§ defn #_"Throwable" getError [this]
         (ß aq.get().error)
     )
 
-    (§ method void setErrorMode(Keyword k)
+    #_method
+    (§ defn #_"void" setErrorMode [this, #_"Keyword" k]
         (ß errorMode = k)
         nil
     )
 
-    (§ method Keyword getErrorMode()
+    #_method
+    (§ defn #_"Keyword" getErrorMode [this]
         errorMode
     )
 
-    (§ method void setErrorHandler(IFn f)
+    #_method
+    (§ defn #_"void" setErrorHandler [this, #_"IFn" f]
         (ß errorHandler = f)
         nil
     )
 
-    (§ method IFn getErrorHandler()
+    #_method
+    (§ defn #_"IFn" getErrorHandler [this]
         errorHandler
     )
 
-    (§ method Object restart(Object newState, boolean clearActions)
+    #_method
+    (§ defn #_"Object" restart [this, #_"Object" newState, #_"boolean" clearActions]
         (§ sync this
             (when (ß getError() == nil)
                 (throw (ß Util.runtimeException("Agent does not need a restart")))
@@ -774,7 +796,8 @@
         )
     )
 
-    (§ method Object dispatch(IFn fn, ISeq args, Executor exec)
+    #_method
+    (§ defn #_"Object" dispatch [this, #_"IFn" fn, #_"ISeq" args, #_"Executor" exec]
         (let [#_"Throwable" error (ß getError())]
             (when (ß error != nil)
                 (throw (ß Util.runtimeException("Agent is failed, needs restart", error)))
@@ -787,7 +810,7 @@
         )
     )
 
-    (§ defn void dispatchAction(Action action)
+    (§ defn #_"void" dispatchAction [#_"Action" action]
         (let [#_"LockingTransaction" trans (ß LockingTransaction.getRunning())]
             (cond (ß trans != nil)
                 (do
@@ -806,7 +829,8 @@
         )
     )
 
-    (§ method void enqueue(Action action)
+    #_method
+    (§ defn #_"void" enqueue [this, #_"Action" action]
         (let [#_"boolean" queued false]
             (let [#_"ActionQueue" prior nil]
                 (while (ß !queued)
@@ -822,11 +846,12 @@
         )
     )
 
-    (§ method int getQueueCount()
+    #_method
+    (§ defn #_"int" getQueueCount [this]
         (ß aq.get().q.count())
     )
 
-    (§ defn int releasePendingSends()
+    (§ defn #_"int" releasePendingSends []
         (let [#_"IPersistentVector" sends (ß nested.get())]
             (when (ß sends == nil)
                 (§ return 0)
@@ -849,7 +874,8 @@
 
 #_abstract
 (class-ns AMapEntry (§ extends APersistentVector) (§ implements IMapEntry)
-    (§ method Object nth(int i)
+    #_method
+    (§ defn #_"Object" nth [this, #_"int" i]
         (cond (ß i == 0)
             (do
                 (ß key())
@@ -865,35 +891,43 @@
         )
     )
 
-    (§ method- IPersistentVector asVector()
+    #_method
+    (§ defn- #_"IPersistentVector" asVector [this]
         (ß LazilyPersistentVector.createOwning(key(), val()))
     )
 
-    (§ method IPersistentVector assocN(int i, Object val)
+    #_method
+    (§ defn #_"IPersistentVector" assocN [this, #_"int" i, #_"Object" val]
         (ß asVector().assocN(i, val))
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         2
     )
 
-    (§ method ISeq seq()
+    #_method
+    (§ defn #_"ISeq" seq [this]
         (ß asVector().seq())
     )
 
-    (§ method IPersistentVector cons(Object o)
+    #_method
+    (§ defn #_"IPersistentVector" cons [this, #_"Object" o]
         (ß asVector().cons(o))
     )
 
-    (§ method IPersistentCollection empty()
+    #_method
+    (§ defn #_"IPersistentCollection" empty [this]
         nil
     )
 
-    (§ method IPersistentStack pop()
+    #_method
+    (§ defn #_"IPersistentStack" pop [this]
         (ß LazilyPersistentVector.createOwning(key()))
     )
 
-    (§ method Object setValue(Object value)
+    #_method
+    (§ defn #_"Object" setValue [this, #_"Object" value]
         (throw (ß new UnsupportedOperationException()))
     )
 )
@@ -905,14 +939,16 @@
 
 #_abstract
 (class-ns APersistentMap (§ extends AFn) (§ implements IPersistentMap, Map, Iterable, MapEquivalence, IHashEq)
-    (§ field int _hash)
-    (§ field int _hasheq)
+    (§ field #_"int" _hash)
+    (§ field #_"int" _hasheq)
 
-    (§ method String toString()
+    #_method
+    (§ defn #_"String" toString [this]
         (ß RT.printString(this))
     )
 
-    (§ method IPersistentCollection cons(Object o)
+    #_method
+    (§ defn #_"IPersistentCollection" cons [this, #_"Object" o]
         (cond (ß o instanceof Map.Entry)
             (do
                 (let [(ß Map.Entry e = (Map.Entry) o)]
@@ -940,11 +976,12 @@
         )
     )
 
-    (§ method boolean equals(Object obj)
+    #_method
+    (§ defn #_"boolean" equals [this, #_"Object" obj]
         (ß mapEquals(this, obj))
     )
 
-    (§ defn boolean mapEquals(IPersistentMap m1, Object obj)
+    (§ defn #_"boolean" mapEquals [#_"IPersistentMap" m1, #_"Object" obj]
         (when (ß m1 == obj)
             (§ return true)
         )
@@ -970,7 +1007,8 @@
         )
     )
 
-    (§ method boolean equiv(Object obj)
+    #_method
+    (§ defn #_"boolean" equiv [this, #_"Object" obj]
         (when (ß !(obj instanceof Map))
             (§ return false)
         )
@@ -997,7 +1035,8 @@
         )
     )
 
-    (§ method int hashCode()
+    #_method
+    (§ defn #_"int" hashCode [this]
         (let [#_"int" cached (ß this._hash)]
             (when (ß cached == 0)
                 (ß this._hash = cached = mapHash(this))
@@ -1006,7 +1045,7 @@
         )
     )
 
-    (§ defn int mapHash(IPersistentMap m)
+    (§ defn #_"int" mapHash [#_"IPersistentMap" m]
         (let [#_"int" hash 0]
             (loop-when-recur [(ß ISeq s = m.seq())] (ß s != nil) [(ß s = s.next())]
                 (let [(ß Map.Entry e = (Map.Entry) s.first())]
@@ -1017,7 +1056,8 @@
         )
     )
 
-    (§ method int hasheq()
+    #_method
+    (§ defn #_"int" hasheq [this]
         (let [#_"int" cached (ß this._hasheq)]
             (when (ß cached == 0)
                 (ß this._hasheq = cached = Murmur3.hashUnordered(this))
@@ -1026,22 +1066,22 @@
         )
     )
 
-    (§ defn int mapHasheq(IPersistentMap m)
+    (§ defn #_"int" mapHasheq [#_"IPersistentMap" m]
         (ß Murmur3.hashUnordered(m))
     )
 
     (class-ns KeySeq (§ extends ASeq)
-        (§ field ISeq seq)
-        (§ field Iterable iterable)
+        (§ field #_"ISeq" seq)
+        (§ field #_"Iterable" iterable)
 
-        (§ defn KeySeq create(ISeq seq)
+        (§ defn #_"KeySeq" create [#_"ISeq" seq]
             (when (ß seq == nil)
                 (§ return nil)
             )
             (ß new KeySeq(seq, nil))
         )
 
-        (§ defn KeySeq createFromMap(IPersistentMap map)
+        (§ defn #_"KeySeq" createFromMap [#_"IPersistentMap" map]
             (when (ß map == nil)
                 (§ return nil)
             )
@@ -1053,32 +1093,36 @@
             )
         )
 
-        (§ constructor- KeySeq(ISeq seq, Iterable iterable)
+        (§ constructor- #_"KeySeq" KeySeq [#_"ISeq" seq, #_"Iterable" iterable]
             (ß this.seq = seq)
             (ß this.iterable = iterable)
             this
         )
 
-        (§ constructor- KeySeq(IPersistentMap meta, ISeq seq, Iterable iterable)
+        (§ constructor- #_"KeySeq" KeySeq [#_"IPersistentMap" meta, #_"ISeq" seq, #_"Iterable" iterable]
             (§ super(meta))
             (ß this.seq = seq)
             (ß this.iterable = iterable)
             this
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (ß ((Map.Entry) seq.first()).getKey())
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (ß create(seq.next()))
         )
 
-        (§ method KeySeq withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"KeySeq" withMeta [this, #_"IPersistentMap" meta]
             (ß new KeySeq(meta, seq, iterable))
         )
 
-        (§ method Iterator iterator()
+        #_method
+        (§ defn #_"Iterator" iterator [this]
             (when (ß iterable == nil)
                 (§ return (ß super.iterator()))
             )
@@ -1090,15 +1134,18 @@
             (let [#_"Iterator" mapIter (ß iterable.iterator())]
                 (ß new Iterator()
                     (§ reify
-                        (§ method boolean hasNext()
+                        #_method
+                        (§ defn #_"boolean" hasNext [this]
                             (ß mapIter.hasNext())
                         )
 
-                        (§ method Object next()
+                        #_method
+                        (§ defn #_"Object" next [this]
                             (ß ((Map.Entry)mapIter.next()).getKey())
                         )
 
-                        (§ method void remove()
+                        #_method
+                        (§ defn #_"void" remove [this]
                             (throw (ß new UnsupportedOperationException()))
                         )
                     )
@@ -1108,17 +1155,17 @@
     )
 
     (class-ns ValSeq (§ extends ASeq)
-        (§ field ISeq seq)
-        (§ field Iterable iterable)
+        (§ field #_"ISeq" seq)
+        (§ field #_"Iterable" iterable)
 
-        (§ defn ValSeq create(ISeq seq)
+        (§ defn #_"ValSeq" create [#_"ISeq" seq]
             (when (ß seq == nil)
                 (§ return nil)
             )
             (ß new ValSeq(seq, nil))
         )
 
-        (§ defn ValSeq createFromMap(IPersistentMap map)
+        (§ defn #_"ValSeq" createFromMap [#_"IPersistentMap" map]
             (when (ß map == nil)
                 (§ return nil)
             )
@@ -1130,32 +1177,36 @@
             )
         )
 
-        (§ constructor- ValSeq(ISeq seq, Iterable iterable)
+        (§ constructor- #_"ValSeq" ValSeq [#_"ISeq" seq, #_"Iterable" iterable]
             (ß this.seq = seq)
             (ß this.iterable = iterable)
             this
         )
 
-        (§ constructor- ValSeq(IPersistentMap meta, ISeq seq, Iterable iterable)
+        (§ constructor- #_"ValSeq" ValSeq [#_"IPersistentMap" meta, #_"ISeq" seq, #_"Iterable" iterable]
             (§ super(meta))
             (ß this.seq = seq)
             (ß this.iterable = iterable)
             this
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (ß ((Map.Entry) seq.first()).getValue())
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (ß create(seq.next()))
         )
 
-        (§ method ValSeq withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"ValSeq" withMeta [this, #_"IPersistentMap" meta]
             (ß new ValSeq(meta, seq, iterable))
         )
 
-        (§ method Iterator iterator()
+        #_method
+        (§ defn #_"Iterator" iterator [this]
             (when (ß iterable == nil)
                 (§ return (ß super.iterator()))
             )
@@ -1167,15 +1218,18 @@
             (let [#_"Iterator" mapIter (ß iterable.iterator())]
                 (ß new Iterator()
                     (§ reify
-                        (§ method boolean hasNext()
+                        #_method
+                        (§ defn #_"boolean" hasNext [this]
                             (ß mapIter.hasNext())
                         )
 
-                        (§ method Object next()
+                        #_method
+                        (§ defn #_"Object" next [this]
                             (ß ((Map.Entry)mapIter.next()).getValue())
                         )
 
-                        (§ method void remove()
+                        #_method
+                        (§ defn #_"void" remove [this]
                             (throw (ß new UnsupportedOperationException()))
                         )
                     )
@@ -1184,62 +1238,74 @@
         )
     )
 
-    (§ def IFn MAKE_ENTRY = new AFn()
+    (§ def #_"IFn" MAKE_ENTRY (ß new AFn()
         (§ reify
-            (§ method Object invoke(Object key, Object val)
+            #_method
+            (§ defn #_"Object" invoke [this, #_"Object" key, #_"Object" val]
                 (ß MapEntry.create(key, val))
             )
         )
-    )
+    ))
 
-    (§ def IFn MAKE_KEY = new AFn()
+    (§ def #_"IFn" MAKE_KEY (ß new AFn()
         (§ reify
-            (§ method Object invoke(Object key, Object val)
+            #_method
+            (§ defn #_"Object" invoke [this, #_"Object" key, #_"Object" val]
                 key
             )
         )
-    )
+    ))
 
-    (§ def IFn MAKE_VAL = new AFn()
+    (§ def #_"IFn" MAKE_VAL (ß new AFn()
         (§ reify
-            (§ method Object invoke(Object key, Object val)
+            #_method
+            (§ defn #_"Object" invoke [this, #_"Object" key, #_"Object" val]
                 val
             )
         )
-    )
+    ))
 
-    (§ method Object invoke(Object arg1)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1]
         (ß valAt(arg1))
     )
 
-    (§ method Object invoke(Object arg1, Object notFound)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" notFound]
         (ß valAt(arg1, notFound))
     )
 
-    (§ method void clear()
+    #_method
+    (§ defn #_"void" clear [this]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean containsValue(Object value)
+    #_method
+    (§ defn #_"boolean" containsValue [this, #_"Object" value]
         (ß values().contains(value))
     )
 
-    (§ method Set entrySet()
+    #_method
+    (§ defn #_"Set" entrySet [this]
         (ß new AbstractSet()
             (§ reify
-                (§ method Iterator iterator()
+                #_method
+                (§ defn #_"Iterator" iterator [this]
                     (ß APersistentMap.this.iterator())
                 )
 
-                (§ method int size()
+                #_method
+                (§ defn #_"int" size [this]
                     (ß count())
                 )
 
-                (§ method int hashCode()
+                #_method
+                (§ defn #_"int" hashCode [this]
                     (ß APersistentMap.this.hashCode())
                 )
 
-                (§ method boolean contains(Object o)
+                #_method
+                (§ defn #_"boolean" contains [this, #_"Object" o]
                     (when (ß o instanceof Entry)
                         (let [#_"Entry" e (ß (Entry) o)]
                             (let [#_"Entry" found (ß entryAt(e.getKey()))]
@@ -1255,32 +1321,39 @@
         )
     )
 
-    (§ method Object get(Object key)
+    #_method
+    (§ defn #_"Object" get [this, #_"Object" key]
         (ß valAt(key))
     )
 
-    (§ method boolean isEmpty()
+    #_method
+    (§ defn #_"boolean" isEmpty [this]
         (ß (count() == 0))
     )
 
-    (§ method Set keySet()
+    #_method
+    (§ defn #_"Set" keySet [this]
         (ß new AbstractSet()
             (§ reify
-                (§ method Iterator iterator()
+                #_method
+                (§ defn #_"Iterator" iterator [this]
                     (let [#_"Iterator" mi (ß APersistentMap.this.iterator())]
                         (ß new Iterator()
                             (§ reify
-                                (§ method boolean hasNext()
+                                #_method
+                                (§ defn #_"boolean" hasNext [this]
                                     (ß mi.hasNext())
                                 )
 
-                                (§ method Object next()
+                                #_method
+                                (§ defn #_"Object" next [this]
                                     (let [#_"Entry" e (ß (Entry) mi.next())]
                                         (ß e.getKey())
                                     )
                                 )
 
-                                (§ method void remove()
+                                #_method
+                                (§ defn #_"void" remove [this]
                                     (throw (ß new UnsupportedOperationException()))
                                 )
                             )
@@ -1288,51 +1361,62 @@
                     )
                 )
 
-                (§ method int size()
+                #_method
+                (§ defn #_"int" size [this]
                     (ß count())
                 )
 
-                (§ method boolean contains(Object o)
+                #_method
+                (§ defn #_"boolean" contains [this, #_"Object" o]
                     (ß APersistentMap.this.containsKey(o))
                 )
             )
         )
     )
 
-    (§ method Object put(Object key, Object value)
+    #_method
+    (§ defn #_"Object" put [this, #_"Object" key, #_"Object" value]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method void putAll(Map t)
+    #_method
+    (§ defn #_"void" putAll [this, #_"Map" t]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method Object remove(Object key)
+    #_method
+    (§ defn #_"Object" remove [this, #_"Object" key]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method int size()
+    #_method
+    (§ defn #_"int" size [this]
         (ß count())
     )
 
-    (§ method Collection values()
+    #_method
+    (§ defn #_"Collection" values [this]
         (ß new AbstractCollection()
             (§ reify
-                (§ method Iterator iterator()
+                #_method
+                (§ defn #_"Iterator" iterator [this]
                     (let [#_"Iterator" mi (ß APersistentMap.this.iterator())]
                         (ß new Iterator()
                             (§ reify
-                                (§ method boolean hasNext()
+                                #_method
+                                (§ defn #_"boolean" hasNext [this]
                                     (ß mi.hasNext())
                                 )
 
-                                (§ method Object next()
+                                #_method
+                                (§ defn #_"Object" next [this]
                                     (let [#_"Entry" e (ß (Entry) mi.next())]
                                         (ß e.getValue())
                                     )
                                 )
 
-                                (§ method void remove()
+                                #_method
+                                (§ defn #_"void" remove [this]
                                     (throw (ß new UnsupportedOperationException()))
                                 )
                             )
@@ -1340,7 +1424,8 @@
                     )
                 )
 
-                (§ method int size()
+                #_method
+                (§ defn #_"int" size [this]
                     (ß count())
                 )
             )
@@ -1357,45 +1442,52 @@
 
 #_abstract
 (class-ns APersistentSet (§ extends AFn) (§ implements IPersistentSet, Collection, Set, IHashEq)
-    (§ field int _hash)
-    (§ field int _hasheq)
-    (§ field IPersistentMap impl)
+    (§ field #_"int" _hash)
+    (§ field #_"int" _hasheq)
+    (§ field #_"IPersistentMap" impl)
 
     #_protected
-    (§ constructor APersistentSet(IPersistentMap impl)
+    (§ constructor #_"APersistentSet" APersistentSet [#_"IPersistentMap" impl]
         (ß this.impl = impl)
         this
     )
 
-    (§ method String toString()
+    #_method
+    (§ defn #_"String" toString [this]
         (ß RT.printString(this))
     )
 
-    (§ method boolean contains(Object key)
+    #_method
+    (§ defn #_"boolean" contains [this, #_"Object" key]
         (ß impl.containsKey(key))
     )
 
-    (§ method Object get(Object key)
+    #_method
+    (§ defn #_"Object" get [this, #_"Object" key]
         (ß impl.valAt(key))
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         (ß impl.count())
     )
 
-    (§ method ISeq seq()
+    #_method
+    (§ defn #_"ISeq" seq [this]
         (ß RT.keys(impl))
     )
 
-    (§ method Object invoke(Object arg1)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1]
         (ß get(arg1))
     )
 
-    (§ method boolean equals(Object obj)
+    #_method
+    (§ defn #_"boolean" equals [this, #_"Object" obj]
         (ß setEquals(this, obj))
     )
 
-    (§ defn boolean setEquals(IPersistentSet s1, Object obj)
+    (§ defn #_"boolean" setEquals [#_"IPersistentSet" s1, #_"Object" obj]
         (when (ß s1 == obj)
             (§ return true)
         )
@@ -1417,7 +1509,8 @@
         )
     )
 
-    (§ method boolean equiv(Object obj)
+    #_method
+    (§ defn #_"boolean" equiv [this, #_"Object" obj]
         (when (ß !(obj instanceof Set))
             (§ return false)
         )
@@ -1437,7 +1530,8 @@
         )
     )
 
-    (§ method int hashCode()
+    #_method
+    (§ defn #_"int" hashCode [this]
         (let [#_"int" hash (ß this._hash)]
             (when (ß hash == 0)
                 (loop-when-recur [(ß ISeq s = seq())] (ß s != nil) [(ß s = s.next())]
@@ -1451,7 +1545,8 @@
         )
     )
 
-    (§ method int hasheq()
+    #_method
+    (§ defn #_"int" hasheq [this]
         (let [#_"int" cached (ß this._hasheq)]
             (when (ß cached == 0)
                 (ß this._hasheq = cached = Murmur3.hashUnordered(this))
@@ -1460,35 +1555,43 @@
         )
     )
 
-    (§ method Object[] toArray()
+    #_method
+    (§ defn #_"Object[]" toArray [this]
         (ß RT.seqToArray(seq()))
     )
 
-    (§ method boolean add(Object o)
+    #_method
+    (§ defn #_"boolean" add [this, #_"Object" o]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean remove(Object o)
+    #_method
+    (§ defn #_"boolean" remove [this, #_"Object" o]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean addAll(Collection c)
+    #_method
+    (§ defn #_"boolean" addAll [this, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method void clear()
+    #_method
+    (§ defn #_"void" clear [this]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean retainAll(Collection c)
+    #_method
+    (§ defn #_"boolean" retainAll [this, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean removeAll(Collection c)
+    #_method
+    (§ defn #_"boolean" removeAll [this, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean containsAll(Collection c)
+    #_method
+    (§ defn #_"boolean" containsAll [this, #_"Collection" c]
         (doseq [#_"Object" o c]
             (when (ß !contains(o))
                 (§ return false)
@@ -1497,19 +1600,23 @@
         true
     )
 
-    (§ method Object[] toArray(Object[] a)
+    #_method
+    (§ defn #_"Object[]" toArray [this, #_"Object[]" a]
         (ß RT.seqToPassedArray(seq(), a))
     )
 
-    (§ method int size()
+    #_method
+    (§ defn #_"int" size [this]
         (ß count())
     )
 
-    (§ method boolean isEmpty()
+    #_method
+    (§ defn #_"boolean" isEmpty [this]
         (ß (count() == 0))
     )
 
-    (§ method Iterator iterator()
+    #_method
+    (§ defn #_"Iterator" iterator [this]
         (if (ß impl instanceof IMapIterable)
             (do
                 (ß ((IMapIterable)impl).keyIterator())
@@ -1517,17 +1624,20 @@
             (do
                 (ß new Iterator()
                     (§ reify
-                        (§ field- Iterator iter = impl.iterator())
+                        (§ field- #_"Iterator" iter (ß impl.iterator()))
 
-                        (§ method boolean hasNext()
+                        #_method
+                        (§ defn #_"boolean" hasNext [this]
                             (ß iter.hasNext())
                         )
 
-                        (§ method Object next()
+                        #_method
+                        (§ defn #_"Object" next [this]
                             (ß ((IMapEntry)iter.next()).key())
                         )
 
-                        (§ method void remove()
+                        #_method
+                        (§ defn #_"void" remove [this]
                             (throw (ß new UnsupportedOperationException()))
                         )
                     )
@@ -1544,28 +1654,31 @@
 
 #_abstract
 (class-ns APersistentVector (§ extends AFn) (§ implements IPersistentVector, Iterable, List, RandomAccess, Comparable, IHashEq)
-    (§ field int _hash)
-    (§ field int _hasheq)
+    (§ field #_"int" _hash)
+    (§ field #_"int" _hasheq)
 
-    (§ method String toString()
+    #_method
+    (§ defn #_"String" toString [this]
         (ß RT.printString(this))
     )
 
-    (§ method ISeq seq()
+    #_method
+    (§ defn #_"ISeq" seq [this]
         (when (ß count() > 0)
             (§ return (ß new Seq(this, 0)))
         )
         nil
     )
 
-    (§ method ISeq rseq()
+    #_method
+    (§ defn #_"ISeq" rseq [this]
         (when (ß count() > 0)
             (§ return (ß new RSeq(this, count() - 1)))
         )
         nil
     )
 
-    (§ defn boolean doEquals(IPersistentVector v, Object obj)
+    (§ defn #_"boolean" doEquals [#_"IPersistentVector" v, #_"Object" obj]
         (cond (ß obj instanceof IPersistentVector)
             (do
                 (let [#_"IPersistentVector" ov (ß (IPersistentVector) obj)]
@@ -1615,7 +1728,7 @@
         true
     )
 
-    (§ defn boolean doEquiv(IPersistentVector v, Object obj)
+    (§ defn #_"boolean" doEquiv [#_"IPersistentVector" v, #_"Object" obj]
         (cond (ß obj instanceof IPersistentVector)
             (do
                 (let [#_"IPersistentVector" ov (ß (IPersistentVector) obj)]
@@ -1665,21 +1778,24 @@
         true
     )
 
-    (§ method boolean equals(Object obj)
+    #_method
+    (§ defn #_"boolean" equals [this, #_"Object" obj]
         (when (ß obj == this)
             (§ return true)
         )
         (ß doEquals(this, obj))
     )
 
-    (§ method boolean equiv(Object obj)
+    #_method
+    (§ defn #_"boolean" equiv [this, #_"Object" obj]
         (when (ß obj == this)
             (§ return true)
         )
         (ß doEquiv(this, obj))
     )
 
-    (§ method int hashCode()
+    #_method
+    (§ defn #_"int" hashCode [this]
         (let [#_"int" hash (ß this._hash)]
             (when (ß hash == 0)
                 (ß hash = 1)
@@ -1694,7 +1810,8 @@
         )
     )
 
-    (§ method int hasheq()
+    #_method
+    (§ defn #_"int" hasheq [this]
         (let [#_"int" hash (ß this._hasheq)]
             (when (ß hash == 0)
                 (§ let [#_"int" n]
@@ -1711,22 +1828,26 @@
         )
     )
 
-    (§ method Object get(int index)
+    #_method
+    (§ defn #_"Object" get [this, #_"int" index]
         (ß nth(index))
     )
 
-    (§ method Object nth(int i, Object notFound)
+    #_method
+    (§ defn #_"Object" nth [this, #_"int" i, #_"Object" notFound]
         (when (ß i >= 0 && i < count())
             (§ return (ß nth(i)))
         )
         notFound
     )
 
-    (§ method Object remove(int i)
+    #_method
+    (§ defn #_"Object" remove [this, #_"int" i]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method int indexOf(Object o)
+    #_method
+    (§ defn #_"int" indexOf [this, #_"Object" o]
         (loop-when-recur [(ß int i = 0)] (ß i < count()) [(ß i++)]
             (when (ß Util.equiv(nth(i), o))
                 (§ return i)
@@ -1735,7 +1856,8 @@
         -1
     )
 
-    (§ method int lastIndexOf(Object o)
+    #_method
+    (§ defn #_"int" lastIndexOf [this, #_"Object" o]
         (loop-when-recur [(ß int i = count() - 1)] (ß i >= 0) [(ß i--)]
             (when (ß Util.equiv(nth(i), o))
                 (§ return i)
@@ -1744,19 +1866,23 @@
         -1
     )
 
-    (§ method ListIterator listIterator()
+    #_method
+    (§ defn #_"ListIterator" listIterator [this]
         (ß listIterator(0))
     )
 
-    (§ method ListIterator listIterator(int index)
+    #_method
+    (§ defn #_"ListIterator" listIterator [this, #_"int" index]
         (ß new ListIterator()
             (§ reify
                 (let [#_"int" nexti index]
-                    (§ method boolean hasNext()
+                    #_method
+                    (§ defn #_"boolean" hasNext [this]
                         (ß (nexti < count()))
                     )
 
-                    (§ method Object next()
+                    #_method
+                    (§ defn #_"Object" next [this]
                         (if (ß nexti < count())
                             (do
                                 (ß nth(nexti++))
@@ -1767,11 +1893,13 @@
                         )
                     )
 
-                    (§ method boolean hasPrevious()
+                    #_method
+                    (§ defn #_"boolean" hasPrevious [this]
                         (ß (nexti > 0))
                     )
 
-                    (§ method Object previous()
+                    #_method
+                    (§ defn #_"Object" previous [this]
                         (if (ß nexti > 0)
                             (do
                                 (ß nth(--nexti))
@@ -1782,23 +1910,28 @@
                         )
                     )
 
-                    (§ method int nextIndex()
+                    #_method
+                    (§ defn #_"int" nextIndex [this]
                         nexti
                     )
 
-                    (§ method int previousIndex()
+                    #_method
+                    (§ defn #_"int" previousIndex [this]
                         (ß nexti - 1)
                     )
 
-                    (§ method void remove()
+                    #_method
+                    (§ defn #_"void" remove [this]
                         (throw (ß new UnsupportedOperationException()))
                     )
 
-                    (§ method void set(Object o)
+                    #_method
+                    (§ defn #_"void" set [this, #_"Object" o]
                         (throw (ß new UnsupportedOperationException()))
                     )
 
-                    (§ method void add(Object o)
+                    #_method
+                    (§ defn #_"void" add [this, #_"Object" o]
                         (throw (ß new UnsupportedOperationException()))
                     )
                 )
@@ -1806,15 +1939,18 @@
         )
     )
 
-    (§ method Iterator rangedIterator(int start, int end)
+    #_method
+    (§ defn #_"Iterator" rangedIterator [this, #_"int" start, #_"int" end]
         (ß new Iterator()
             (§ reify
                 (let [#_"int" i start]
-                    (§ method boolean hasNext()
+                    #_method
+                    (§ defn #_"boolean" hasNext [this]
                         (ß (i < end))
                     )
 
-                    (§ method Object next()
+                    #_method
+                    (§ defn #_"Object" next [this]
                         (if (ß i < end)
                             (do
                                 (ß nth(i++))
@@ -1825,7 +1961,8 @@
                         )
                     )
 
-                    (§ method void remove()
+                    #_method
+                    (§ defn #_"void" remove [this]
                         (throw (ß new UnsupportedOperationException()))
                     )
                 )
@@ -1833,39 +1970,47 @@
         )
     )
 
-    (§ method List subList(int fromIndex, int toIndex)
+    #_method
+    (§ defn #_"List" subList [this, #_"int" fromIndex, #_"int" toIndex]
         (ß (List) RT.subvec(this, fromIndex, toIndex))
     )
 
-    (§ method Object set(int i, Object o)
+    #_method
+    (§ defn #_"Object" set [this, #_"int" i, #_"Object" o]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method void add(int i, Object o)
+    #_method
+    (§ defn #_"void" add [this, #_"int" i, #_"Object" o]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean addAll(int i, Collection c)
+    #_method
+    (§ defn #_"boolean" addAll [this, #_"int" i, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method Object invoke(Object arg1)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1]
         (when (ß Util.isInteger(arg1))
             (§ return (ß nth(((Number) arg1).intValue())))
         )
         (throw (ß new IllegalArgumentException("Key must be integer")))
     )
 
-    (§ method Iterator iterator()
+    #_method
+    (§ defn #_"Iterator" iterator [this]
         ;; todo - something more efficient
         (ß new Iterator()
             (§ reify
                 (let [#_"int" i 0]
-                    (§ method boolean hasNext()
+                    #_method
+                    (§ defn #_"boolean" hasNext [this]
                         (ß (i < count()))
                     )
 
-                    (§ method Object next()
+                    #_method
+                    (§ defn #_"Object" next [this]
                         (if (ß i < count())
                             (do
                                 (ß nth(i++))
@@ -1876,7 +2021,8 @@
                         )
                     )
 
-                    (§ method void remove()
+                    #_method
+                    (§ defn #_"void" remove [this]
                         (throw (ß new UnsupportedOperationException()))
                     )
                 )
@@ -1884,14 +2030,16 @@
         )
     )
 
-    (§ method Object peek()
+    #_method
+    (§ defn #_"Object" peek [this]
         (when (ß count() > 0)
             (§ return (ß nth(count() - 1)))
         )
         nil
     )
 
-    (§ method boolean containsKey(Object key)
+    #_method
+    (§ defn #_"boolean" containsKey [this, #_"Object" key]
         (when (ß !(Util.isInteger(key)))
             (§ return false)
         )
@@ -1900,7 +2048,8 @@
         )
     )
 
-    (§ method IMapEntry entryAt(Object key)
+    #_method
+    (§ defn #_"IMapEntry" entryAt [this, #_"Object" key]
         (when (ß Util.isInteger(key))
             (let [#_"int" i (ß ((Number) key).intValue())]
                 (when (ß i >= 0 && i < count())
@@ -1911,7 +2060,8 @@
         nil
     )
 
-    (§ method IPersistentVector assoc(Object key, Object val)
+    #_method
+    (§ defn #_"IPersistentVector" assoc [this, #_"Object" key, #_"Object" val]
         (when (ß Util.isInteger(key))
             (let [#_"int" i (ß ((Number) key).intValue())]
                 (§ return (ß assocN(i, val)))
@@ -1920,7 +2070,8 @@
         (throw (ß new IllegalArgumentException("Key must be integer")))
     )
 
-    (§ method Object valAt(Object key, Object notFound)
+    #_method
+    (§ defn #_"Object" valAt [this, #_"Object" key, #_"Object" notFound]
         (when (ß Util.isInteger(key))
             (let [#_"int" i (ß ((Number) key).intValue())]
                 (when (ß i >= 0 && i < count())
@@ -1931,11 +2082,13 @@
         notFound
     )
 
-    (§ method Object valAt(Object key)
+    #_method
+    (§ defn #_"Object" valAt [this, #_"Object" key]
         (ß valAt(key, nil))
     )
 
-    (§ method Object[] toArray()
+    #_method
+    (§ defn #_"Object[]" toArray [this]
         (let [#_"Object[]" ret (ß new Object[count()])]
             (loop-when-recur [(ß int i = 0)] (ß i < count()) [(ß i++)]
                 (ß ret[i] = nth(i))
@@ -1944,31 +2097,38 @@
         )
     )
 
-    (§ method boolean add(Object o)
+    #_method
+    (§ defn #_"boolean" add [this, #_"Object" o]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean remove(Object o)
+    #_method
+    (§ defn #_"boolean" remove [this, #_"Object" o]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean addAll(Collection c)
+    #_method
+    (§ defn #_"boolean" addAll [this, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method void clear()
+    #_method
+    (§ defn #_"void" clear [this]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean retainAll(Collection c)
+    #_method
+    (§ defn #_"boolean" retainAll [this, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean removeAll(Collection c)
+    #_method
+    (§ defn #_"boolean" removeAll [this, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean containsAll(Collection c)
+    #_method
+    (§ defn #_"boolean" containsAll [this, #_"Collection" c]
         (doseq [#_"Object" o c]
             (when (ß !contains(o))
                 (§ return false)
@@ -1977,19 +2137,23 @@
         true
     )
 
-    (§ method Object[] toArray(Object[] a)
+    #_method
+    (§ defn #_"Object[]" toArray [this, #_"Object[]" a]
         (ß RT.seqToPassedArray(seq(), a))
     )
 
-    (§ method int size()
+    #_method
+    (§ defn #_"int" size [this]
         (ß count())
     )
 
-    (§ method boolean isEmpty()
+    #_method
+    (§ defn #_"boolean" isEmpty [this]
         (ß (count() == 0))
     )
 
-    (§ method boolean contains(Object o)
+    #_method
+    (§ defn #_"boolean" contains [this, #_"Object" o]
         (loop-when-recur [(ß ISeq s = seq())] (ß s != nil) [(ß s = s.next())]
             (when (ß Util.equiv(s.first(), o))
                 (§ return true)
@@ -1998,11 +2162,13 @@
         false
     )
 
-    (§ method int length()
+    #_method
+    (§ defn #_"int" length [this]
         (ß count())
     )
 
-    (§ method int compareTo(Object o)
+    #_method
+    (§ defn #_"int" compareTo [this, #_"Object" o]
         (let [#_"IPersistentVector" v (ß (IPersistentVector) o)]
             (cond (ß count() < v.count())
                 (do
@@ -2026,46 +2192,52 @@
 
     (class-ns Seq (§ extends ASeq) (§ implements IndexedSeq, IReduce)
         ;; todo - something more efficient
-        (§ field IPersistentVector v)
-        (§ field int i)
+        (§ field #_"IPersistentVector" v)
+        (§ field #_"int" i)
 
-        (§ constructor Seq(IPersistentVector v, int i)
+        (§ constructor #_"Seq" Seq [#_"IPersistentVector" v, #_"int" i]
             (ß this.v = v)
             (ß this.i = i)
             this
         )
 
-        (§ constructor Seq(IPersistentMap meta, IPersistentVector v, int i)
+        (§ constructor #_"Seq" Seq [#_"IPersistentMap" meta, #_"IPersistentVector" v, #_"int" i]
             (§ super(meta))
             (ß this.v = v)
             (ß this.i = i)
             this
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (ß v.nth(i))
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (when (ß i + 1 < v.count())
                 (§ return (ß new APersistentVector.Seq(v, i + 1)))
             )
             nil
         )
 
-        (§ method int index()
+        #_method
+        (§ defn #_"int" index [this]
             i
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             (ß v.count() - i)
         )
 
-        (§ method APersistentVector.Seq withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"APersistentVector.Seq" withMeta [this, #_"IPersistentMap" meta]
             (ß new APersistentVector.Seq(meta, v, i))
         )
 
-        (§ method Object reduce(IFn f)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß v.nth(i))]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < v.count()) [(ß x++)]
                     (ß ret = f.invoke(ret, v.nth(x)))
@@ -2077,7 +2249,8 @@
             )
         )
 
-        (§ method Object reduce(IFn f, Object start)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, v.nth(i)))]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < v.count()) [(ß x++)]
                     (when (ß RT.isReduced(ret))
@@ -2094,53 +2267,58 @@
     )
 
     (class-ns RSeq (§ extends ASeq) (§ implements IndexedSeq, Counted)
-        (§ field IPersistentVector v)
-        (§ field int i)
+        (§ field #_"IPersistentVector" v)
+        (§ field #_"int" i)
 
-        (§ constructor RSeq(IPersistentVector vector, int i)
+        (§ constructor #_"RSeq" RSeq [#_"IPersistentVector" vector, #_"int" i]
             (ß this.v = vector)
             (ß this.i = i)
             this
         )
 
-        (§ constructor RSeq(IPersistentMap meta, IPersistentVector v, int i)
+        (§ constructor #_"RSeq" RSeq [#_"IPersistentMap" meta, #_"IPersistentVector" v, #_"int" i]
             (§ super(meta))
             (ß this.v = v)
             (ß this.i = i)
             this
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (ß v.nth(i))
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (when (ß i > 0)
                 (§ return (ß new APersistentVector.RSeq(v, i - 1)))
             )
             nil
         )
 
-        (§ method int index()
+        #_method
+        (§ defn #_"int" index [this]
             i
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             (ß i + 1)
         )
 
-        (§ method APersistentVector.RSeq withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"APersistentVector.RSeq" withMeta [this, #_"IPersistentMap" meta]
             (ß new APersistentVector.RSeq(meta, v, i))
         )
     )
 
     (class-ns SubVector (§ extends APersistentVector) (§ implements IObj)
-        (§ field IPersistentVector v)
-        (§ field int start)
-        (§ field int end)
-        (§ field IPersistentMap _meta)
+        (§ field #_"IPersistentVector" v)
+        (§ field #_"int" start)
+        (§ field #_"int" end)
+        (§ field #_"IPersistentMap" _meta)
 
-        (§ constructor SubVector(IPersistentMap meta, IPersistentVector v, int start, int end)
+        (§ constructor #_"SubVector" SubVector [#_"IPersistentMap" meta, #_"IPersistentVector" v, #_"int" start, #_"int" end]
             (ß this._meta = meta)
 
             (when (ß v instanceof APersistentVector.SubVector)
@@ -2156,21 +2334,24 @@
             this
         )
 
-        (§ method Iterator iterator()
+        #_method
+        (§ defn #_"Iterator" iterator [this]
             (when (ß v instanceof APersistentVector)
                 (§ return (ß ((APersistentVector)v).rangedIterator(start, end)))
             )
             (ß super.iterator())
         )
 
-        (§ method Object nth(int i)
+        #_method
+        (§ defn #_"Object" nth [this, #_"int" i]
             (when (ß (start + i >= end) || (i < 0))
                 (throw (ß new IndexOutOfBoundsException()))
             )
             (ß v.nth(start + i))
         )
 
-        (§ method IPersistentVector assocN(int i, Object val)
+        #_method
+        (§ defn #_"IPersistentVector" assocN [this, #_"int" i, #_"Object" val]
             (cond (ß start + i > end)
                 (do
                     (throw (ß new IndexOutOfBoundsException()))
@@ -2183,33 +2364,39 @@
             (ß new SubVector(_meta, v.assocN(start + i, val), start, end))
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             (ß end - start)
         )
 
-        (§ method IPersistentVector cons(Object o)
+        #_method
+        (§ defn #_"IPersistentVector" cons [this, #_"Object" o]
             (ß new SubVector(_meta, v.assocN(end, o), start, end + 1))
         )
 
-        (§ method IPersistentCollection empty()
+        #_method
+        (§ defn #_"IPersistentCollection" empty [this]
             (ß PersistentVector.EMPTY.withMeta(meta()))
         )
 
-        (§ method IPersistentStack pop()
+        #_method
+        (§ defn #_"IPersistentStack" pop [this]
             (when (ß end - 1 == start)
                 (§ return (ß PersistentVector.EMPTY))
             )
             (ß new SubVector(_meta, v, start, end - 1))
         )
 
-        (§ method SubVector withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"SubVector" withMeta [this, #_"IPersistentMap" meta]
             (when (ß meta == _meta)
                 (§ return this)
             )
             (ß new SubVector(meta, v, start, end))
         )
 
-        (§ method IPersistentMap meta()
+        #_method
+        (§ defn #_"IPersistentMap" meta [this]
             (ß _meta)
         )
     )
@@ -2224,21 +2411,22 @@
 (class-ns ARef (§ extends AReference) (§ implements IRef)
     #_protected
     #_volatile
-    (§ field IFn validator = nil)
+    (§ field #_"IFn" validator (ß nil))
     #_volatile
-    (§ field- IPersistentMap watches = PersistentHashMap.EMPTY)
+    (§ field- #_"IPersistentMap" watches (ß PersistentHashMap.EMPTY))
 
-    (§ constructor ARef()
+    (§ constructor #_"ARef" ARef []
         (§ super())
         this
     )
 
-    (§ constructor ARef(IPersistentMap meta)
+    (§ constructor #_"ARef" ARef [#_"IPersistentMap" meta]
         (§ super(meta))
         this
     )
 
-    (§ method void validate(IFn vf, Object val)
+    #_method
+    (§ defn #_"void" validate [this, #_"IFn" vf, #_"Object" val]
         (try
             (when (ß vf != nil && !RT.booleanCast(vf.invoke(val)))
                 (throw (ß new IllegalStateException("Invalid reference state")))
@@ -2253,40 +2441,47 @@
         nil
     )
 
-    (§ method void validate(Object val)
+    #_method
+    (§ defn #_"void" validate [this, #_"Object" val]
         (ß validate(validator, val))
         nil
     )
 
-    (§ method void setValidator(IFn vf)
+    #_method
+    (§ defn #_"void" setValidator [this, #_"IFn" vf]
         (ß validate(vf, deref()))
         (ß validator = vf)
         nil
     )
 
-    (§ method IFn getValidator()
+    #_method
+    (§ defn #_"IFn" getValidator [this]
         validator
     )
 
-    (§ method IPersistentMap getWatches()
+    #_method
+    (§ defn #_"IPersistentMap" getWatches [this]
         watches
     )
 
-    (§ method IRef addWatch(Object key, IFn callback)
+    #_method
+    (§ defn #_"IRef" addWatch [this, #_"Object" key, #_"IFn" callback]
         (§ sync this
             (ß watches = watches.assoc(key, callback))
             this
         )
     )
 
-    (§ method IRef removeWatch(Object key)
+    #_method
+    (§ defn #_"IRef" removeWatch [this, #_"Object" key]
         (§ sync this
             (ß watches = watches.without(key))
             this
         )
     )
 
-    (§ method void notifyWatches(Object oldval, Object newval)
+    #_method
+    (§ defn #_"void" notifyWatches [this, #_"Object" oldval, #_"Object" newval]
         (let [#_"IPersistentMap" ws watches]
             (when (ß ws.count() > 0)
                 (loop-when-recur [(ß ISeq s = ws.seq())] (ß s != nil) [(ß s = s.next())]
@@ -2308,32 +2503,35 @@
 (java-ns cloiure.lang.AReference
 
 (class-ns AReference (§ implements IReference)
-    (§ field- IPersistentMap _meta)
+    (§ field- #_"IPersistentMap" _meta)
 
-    (§ constructor AReference()
+    (§ constructor #_"AReference" AReference []
         (§ this(nil))
         this
     )
 
-    (§ constructor AReference(IPersistentMap meta)
+    (§ constructor #_"AReference" AReference [#_"IPersistentMap" meta]
         (ß _meta = meta)
         this
     )
 
-    (§ method IPersistentMap meta()
+    #_method
+    (§ defn #_"IPersistentMap" meta [this]
         (§ sync this
             (ß _meta)
         )
     )
 
-    (§ method IPersistentMap alterMeta(IFn alter, ISeq args)
+    #_method
+    (§ defn #_"IPersistentMap" alterMeta [this, #_"IFn" alter, #_"ISeq" args]
         (§ sync this
             (ß _meta = (IPersistentMap) alter.applyTo(new Cons(_meta, args)))
             (ß _meta)
         )
     )
 
-    (§ method IPersistentMap resetMeta(IPersistentMap m)
+    #_method
+    (§ defn #_"IPersistentMap" resetMeta [this, #_"IPersistentMap" m]
         (§ sync this
             (ß _meta = m)
             m
@@ -2345,16 +2543,16 @@
 (java-ns cloiure.lang.ArityException
 
 (class-ns ArityException (§ extends IllegalArgumentException)
-    (§ field int actual)
+    (§ field #_"int" actual)
 
-    (§ field String name)
+    (§ field #_"String" name)
 
-    (§ constructor ArityException(int actual, String name)
+    (§ constructor #_"ArityException" ArityException [#_"int" actual, #_"String" name]
         (§ this(actual, name, nil))
         this
     )
 
-    (§ constructor ArityException(int actual, String name, Throwable cause)
+    (§ constructor #_"ArityException" ArityException [#_"int" actual, #_"String" name, #_"Throwable" cause]
         (§ super("Wrong number of args (" + actual + ") passed to: " + name, cause))
         (ß this.actual = actual)
         (ß this.name = name)
@@ -2366,50 +2564,55 @@
 (java-ns cloiure.lang.ArrayChunk
 
 (class-ns ArrayChunk (§ implements IChunk)
-    (§ field Object[] array)
-    (§ field int off)
-    (§ field int end)
+    (§ field #_"Object[]" array)
+    (§ field #_"int" off)
+    (§ field #_"int" end)
 
-    (§ constructor ArrayChunk(Object[] array)
+    (§ constructor #_"ArrayChunk" ArrayChunk [#_"Object[]" array]
         (§ this(array, 0, array.length))
         this
     )
 
-    (§ constructor ArrayChunk(Object[] array, int off)
+    (§ constructor #_"ArrayChunk" ArrayChunk [#_"Object[]" array, #_"int" off]
         (§ this(array, off, array.length))
         this
     )
 
-    (§ constructor ArrayChunk(Object[] array, int off, int end)
+    (§ constructor #_"ArrayChunk" ArrayChunk [#_"Object[]" array, #_"int" off, #_"int" end]
         (ß this.array = array)
         (ß this.off = off)
         (ß this.end = end)
         this
     )
 
-    (§ method Object nth(int i)
+    #_method
+    (§ defn #_"Object" nth [this, #_"int" i]
         (ß array[off + i])
     )
 
-    (§ method Object nth(int i, Object notFound)
+    #_method
+    (§ defn #_"Object" nth [this, #_"int" i, #_"Object" notFound]
         (when (ß i >= 0 && i < count())
             (§ return (ß nth(i)))
         )
         notFound
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         (ß end - off)
     )
 
-    (§ method IChunk dropFirst()
+    #_method
+    (§ defn #_"IChunk" dropFirst [this]
         (when (ß off == end)
             (throw (ß new IllegalStateException("dropFirst of empty chunk")))
         )
         (ß new ArrayChunk(array, off + 1, end))
     )
 
-    (§ method Object reduce(IFn f, Object start)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
         (let [#_"Object" ret (ß f.invoke(start, array[off]))]
             (when (ß RT.isReduced(ret))
                 (§ return ret)
@@ -2432,37 +2635,40 @@
 (§ import java.util.Iterator)
 
 (class-ns ArrayIter (§ implements Iterator)
-    (§ field Object[] array)
-    (§ field int i)
+    (§ field #_"Object[]" array)
+    (§ field #_"int" i)
 
-    (§ def Iterator EMPTY_ITERATOR = new Iterator()
+    (§ def #_"Iterator" EMPTY_ITERATOR (ß new Iterator()
         (§ reify
-            (§ method boolean hasNext()
+            #_method
+            (§ defn #_"boolean" hasNext [this]
                 false
             )
 
-            (§ method Object next()
+            #_method
+            (§ defn #_"Object" next [this]
                 (throw (ß new java.util.NoSuchElementException()))
             )
 
-            (§ method void remove()
+            #_method
+            (§ defn #_"void" remove [this]
                 (throw (ß new UnsupportedOperationException("remove() not supported")))
             )
         )
-    )
+    ))
 
-    (§ defn Iterator create()
+    (§ defn #_"Iterator" create []
         (ß EMPTY_ITERATOR)
     )
 
-    (§ defn Iterator create(Object... array)
+    (§ defn #_"Iterator" create [#_"Object..." array]
         (when (ß array == nil || array.length == 0)
             (§ return (ß EMPTY_ITERATOR))
         )
         (ß new ArrayIter(array, 0))
     )
 
-    (§ defn Iterator createFromObject(Object array)
+    (§ defn #_"Iterator" createFromObject [#_"Object" array]
         (when (ß array == nil || Array.getLength(array) == 0)
             (§ return (ß EMPTY_ITERATOR))
         )
@@ -2495,231 +2701,258 @@
         )
     )
 
-    (§ constructor ArrayIter(Object array, int i)
+    (§ constructor #_"ArrayIter" ArrayIter [#_"Object" array, #_"int" i]
         (ß this.i = i)
         (ß this.array = (Object[]) array)
         this
     )
 
-    (§ method boolean hasNext()
+    #_method
+    (§ defn #_"boolean" hasNext [this]
         (ß (array != nil && i < array.length))
     )
 
-    (§ method Object next()
+    #_method
+    (§ defn #_"Object" next [this]
         (when (ß array != nil && i < array.length)
             (§ return (ß array[i++]))
         )
         (throw (ß new java.util.NoSuchElementException()))
     )
 
-    (§ method void remove()
+    #_method
+    (§ defn #_"void" remove [this]
         (throw (ß new UnsupportedOperationException("remove() not supported")))
     )
 
     (class-ns ArrayIter_int (§ implements Iterator<Long>)
-        (§ field int[] array)
-        (§ field int i)
+        (§ field #_"int[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor ArrayIter_int(int[] array, int i)
+        (§ constructor #_"ArrayIter_int" ArrayIter_int [#_"int[]" array, #_"int" i]
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method boolean hasNext()
+        #_method
+        (§ defn #_"boolean" hasNext [this]
             (ß (array != nil && i < array.length))
         )
 
-        (§ method Long next()
+        #_method
+        (§ defn #_"Long" next [this]
             (when (ß array != nil && i < array.length)
                 (§ return (ß Long.valueOf(array[i++])))
             )
             (throw (ß new java.util.NoSuchElementException()))
         )
 
-        (§ method void remove()
+        #_method
+        (§ defn #_"void" remove [this]
             (throw (ß new UnsupportedOperationException("remove() not supported")))
         )
     )
 
     (class-ns ArrayIter_float (§ implements Iterator<Double>)
-        (§ field float[] array)
-        (§ field int i)
+        (§ field #_"float[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor ArrayIter_float(float[] array, int i)
+        (§ constructor #_"ArrayIter_float" ArrayIter_float [#_"float[]" array, #_"int" i]
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method boolean hasNext()
+        #_method
+        (§ defn #_"boolean" hasNext [this]
             (ß (array != nil && i < array.length))
         )
 
-        (§ method Double next()
+        #_method
+        (§ defn #_"Double" next [this]
             (when (ß array != nil && i < array.length)
                 (§ return (ß Double.valueOf(array[i++])))
             )
             (throw (ß new java.util.NoSuchElementException()))
         )
 
-        (§ method void remove()
+        #_method
+        (§ defn #_"void" remove [this]
             (throw (ß new UnsupportedOperationException("remove() not supported")))
         )
     )
 
     (class-ns ArrayIter_double (§ implements Iterator<Double>)
-        (§ field double[] array)
-        (§ field int i)
+        (§ field #_"double[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor ArrayIter_double(double[] array, int i)
+        (§ constructor #_"ArrayIter_double" ArrayIter_double [#_"double[]" array, #_"int" i]
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method boolean hasNext()
+        #_method
+        (§ defn #_"boolean" hasNext [this]
             (ß (array != nil && i < array.length))
         )
 
-        (§ method Double next()
+        #_method
+        (§ defn #_"Double" next [this]
             (when (ß array != nil && i < array.length)
                 (§ return (ß array[i++]))
             )
             (throw (ß new java.util.NoSuchElementException()))
         )
 
-        (§ method void remove()
+        #_method
+        (§ defn #_"void" remove [this]
             (throw (ß new UnsupportedOperationException("remove() not supported")))
         )
     )
 
     (class-ns ArrayIter_long (§ implements Iterator<Long>)
-        (§ field long[] array)
-        (§ field int i)
+        (§ field #_"long[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor ArrayIter_long(long[] array, int i)
+        (§ constructor #_"ArrayIter_long" ArrayIter_long [#_"long[]" array, #_"int" i]
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method boolean hasNext()
+        #_method
+        (§ defn #_"boolean" hasNext [this]
             (ß (array != nil && i < array.length))
         )
 
-        (§ method Long next()
+        #_method
+        (§ defn #_"Long" next [this]
             (when (ß array != nil && i < array.length)
                 (§ return (ß Long.valueOf(array[i++])))
             )
             (throw (ß new java.util.NoSuchElementException()))
         )
 
-        (§ method void remove()
+        #_method
+        (§ defn #_"void" remove [this]
             (throw (ß new UnsupportedOperationException("remove() not supported")))
         )
     )
 
     (class-ns ArrayIter_byte (§ implements Iterator<Byte>)
-        (§ field byte[] array)
-        (§ field int i)
+        (§ field #_"byte[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor ArrayIter_byte(byte[] array, int i)
+        (§ constructor #_"ArrayIter_byte" ArrayIter_byte [#_"byte[]" array, #_"int" i]
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method boolean hasNext()
+        #_method
+        (§ defn #_"boolean" hasNext [this]
             (ß (array != nil && i < array.length))
         )
 
-        (§ method Byte next()
+        #_method
+        (§ defn #_"Byte" next [this]
             (when (ß array != nil && i < array.length)
                 (§ return (ß array[i++]))
             )
             (throw (ß new java.util.NoSuchElementException()))
         )
 
-        (§ method void remove()
+        #_method
+        (§ defn #_"void" remove [this]
             (throw (ß new UnsupportedOperationException("remove() not supported")))
         )
     )
 
     (class-ns ArrayIter_char (§ implements Iterator<Character>)
-        (§ field char[] array)
-        (§ field int i)
+        (§ field #_"char[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor ArrayIter_char(char[] array, int i)
+        (§ constructor #_"ArrayIter_char" ArrayIter_char [#_"char[]" array, #_"int" i]
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method boolean hasNext()
+        #_method
+        (§ defn #_"boolean" hasNext [this]
             (ß (array != nil && i < array.length))
         )
 
-        (§ method Character next()
+        #_method
+        (§ defn #_"Character" next [this]
             (when (ß array != nil && i < array.length)
                 (§ return (ß array[i++]))
             )
             (throw (ß new java.util.NoSuchElementException()))
         )
 
-        (§ method void remove()
+        #_method
+        (§ defn #_"void" remove [this]
             (throw (ß new UnsupportedOperationException("remove() not supported")))
         )
     )
 
     (class-ns ArrayIter_short (§ implements Iterator<Long>)
-        (§ field short[] array)
-        (§ field int i)
+        (§ field #_"short[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor ArrayIter_short(short[] array, int i)
+        (§ constructor #_"ArrayIter_short" ArrayIter_short [#_"short[]" array, #_"int" i]
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method boolean hasNext()
+        #_method
+        (§ defn #_"boolean" hasNext [this]
             (ß (array != nil && i < array.length))
         )
 
-        (§ method Long next()
+        #_method
+        (§ defn #_"Long" next [this]
             (when (ß array != nil && i < array.length)
                 (§ return (ß Long.valueOf(array[i++])))
             )
             (throw (ß new java.util.NoSuchElementException()))
         )
 
-        (§ method void remove()
+        #_method
+        (§ defn #_"void" remove [this]
             (throw (ß new UnsupportedOperationException("remove() not supported")))
         )
     )
 
     (class-ns ArrayIter_boolean (§ implements Iterator<Boolean>)
-        (§ field boolean[] array)
-        (§ field int i)
+        (§ field #_"boolean[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor ArrayIter_boolean(boolean[] array, int i)
+        (§ constructor #_"ArrayIter_boolean" ArrayIter_boolean [#_"boolean[]" array, #_"int" i]
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method boolean hasNext()
+        #_method
+        (§ defn #_"boolean" hasNext [this]
             (ß (array != nil && i < array.length))
         )
 
-        (§ method Boolean next()
+        #_method
+        (§ defn #_"Boolean" next [this]
             (when (ß array != nil && i < array.length)
                 (§ return (ß Boolean.valueOf(array[i++])))
             )
             (throw (ß new java.util.NoSuchElementException()))
         )
 
-        (§ method void remove()
+        #_method
+        (§ defn #_"void" remove [this]
             (throw (ß new UnsupportedOperationException("remove() not supported")))
         )
     )
@@ -2731,21 +2964,21 @@
 (§ import java.lang.reflect.Array)
 
 (class-ns ArraySeq (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-    (§ field Object[] array)
-    (§ field int i)
+    (§ field #_"Object[]" array)
+    (§ field #_"int" i)
 
-    (§ defn ArraySeq create()
+    (§ defn #_"ArraySeq" create []
         nil
     )
 
-    (§ defn ArraySeq create(Object... array)
+    (§ defn #_"ArraySeq" create [#_"Object..." array]
         (when (ß array == nil || array.length == 0)
             (§ return nil)
         )
         (ß new ArraySeq(array, 0))
     )
 
-    (§ defn ISeq createFromObject(Object array)
+    (§ defn #_"ISeq" createFromObject [#_"Object" array]
         (when (ß array == nil || Array.getLength(array) == 0)
             (§ return nil)
         )
@@ -2778,49 +3011,55 @@
         )
     )
 
-    (§ constructor ArraySeq(Object array, int i)
+    (§ constructor #_"ArraySeq" ArraySeq [#_"Object" array, #_"int" i]
         (ß this.i = i)
         (ß this.array = (Object[]) array)
         this
     )
 
-    (§ constructor ArraySeq(IPersistentMap meta, Object array, int i)
+    (§ constructor #_"ArraySeq" ArraySeq [#_"IPersistentMap" meta, #_"Object" array, #_"int" i]
         (§ super(meta))
         (ß this.i = i)
         (ß this.array = (Object[]) array)
         this
     )
 
-    (§ method Object first()
+    #_method
+    (§ defn #_"Object" first [this]
         (when (ß array != nil)
             (§ return (ß array[i]))
         )
         nil
     )
 
-    (§ method ISeq next()
+    #_method
+    (§ defn #_"ISeq" next [this]
         (when (ß array != nil && i + 1 < array.length)
             (§ return (ß new ArraySeq(array, i + 1)))
         )
         nil
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         (when (ß array != nil)
             (§ return (ß array.length - i))
         )
         0
     )
 
-    (§ method int index()
+    #_method
+    (§ defn #_"int" index [this]
         i
     )
 
-    (§ method ArraySeq withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"ArraySeq" withMeta [this, #_"IPersistentMap" meta]
         (ß new ArraySeq(meta, array, i))
     )
 
-    (§ method Object reduce(IFn f)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" f]
         (when (ß array != nil)
             (let [#_"Object" ret (ß array[i])]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
@@ -2835,7 +3074,8 @@
         nil
     )
 
-    (§ method Object reduce(IFn f, Object start)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
         (when (ß array != nil)
             (let [#_"Object" ret (ß f.invoke(start, array[i]))]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
@@ -2853,7 +3093,8 @@
         nil
     )
 
-    (§ method int indexOf(Object o)
+    #_method
+    (§ defn #_"int" indexOf [this, #_"Object" o]
         (when (ß array != nil)
             (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
                 (when (ß Util.equals(o, array[j]))
@@ -2864,7 +3105,8 @@
         -1
     )
 
-    (§ method int lastIndexOf(Object o)
+    #_method
+    (§ defn #_"int" lastIndexOf [this, #_"Object" o]
         (when (ß array != nil)
             (if (ß o == nil)
                 (do
@@ -2887,40 +3129,46 @@
     )
 
     (class-ns ArraySeq_int (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-        (§ field int[] array)
-        (§ field int i)
+        (§ field #_"int[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor ArraySeq_int(IPersistentMap meta, int[] array, int i)
+        (§ constructor #_"ArraySeq_int" ArraySeq_int [#_"IPersistentMap" meta, #_"int[]" array, #_"int" i]
             (§ super(meta))
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (ß array[i])
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (when (ß i + 1 < array.length)
                 (§ return (ß new ArraySeq_int(meta(), array, i + 1)))
             )
             nil
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             (ß array.length - i)
         )
 
-        (§ method int index()
+        #_method
+        (§ defn #_"int" index [this]
             i
         )
 
-        (§ method ArraySeq_int withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"ArraySeq_int" withMeta [this, #_"IPersistentMap" meta]
             (ß new ArraySeq_int(meta, array, i))
         )
 
-        (§ method Object reduce(IFn f)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß array[i])]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
                     (ß ret = f.invoke(ret, array[x]))
@@ -2932,7 +3180,8 @@
             )
         )
 
-        (§ method Object reduce(IFn f, Object start)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, array[i]))]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
                     (when (ß RT.isReduced(ret))
@@ -2947,7 +3196,8 @@
             )
         )
 
-        (§ method int indexOf(Object o)
+        #_method
+        (§ defn #_"int" indexOf [this, #_"Object" o]
             (when (ß o instanceof Number)
                 (let [#_"int" k (ß ((Number) o).intValue())]
                     (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
@@ -2961,7 +3211,8 @@
             -1
         )
 
-        (§ method int lastIndexOf(Object o)
+        #_method
+        (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (when (ß o instanceof Number)
                 (let [#_"int" k (ß ((Number) o).intValue())]
                     (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
@@ -2977,40 +3228,46 @@
     )
 
     (class-ns ArraySeq_float (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-        (§ field float[] array)
-        (§ field int i)
+        (§ field #_"float[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor ArraySeq_float(IPersistentMap meta, float[] array, int i)
+        (§ constructor #_"ArraySeq_float" ArraySeq_float [#_"IPersistentMap" meta, #_"float[]" array, #_"int" i]
             (§ super(meta))
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (ß Numbers.num(array[i]))
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (when (ß i + 1 < array.length)
                 (§ return (ß new ArraySeq_float(meta(), array, i + 1)))
             )
             nil
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             (ß array.length - i)
         )
 
-        (§ method int index()
+        #_method
+        (§ defn #_"int" index [this]
             i
         )
 
-        (§ method ArraySeq_float withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"ArraySeq_float" withMeta [this, #_"IPersistentMap" meta]
             (ß new ArraySeq_float(meta, array, i))
         )
 
-        (§ method Object reduce(IFn f)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß Numbers.num(array[i]))]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
                     (ß ret = f.invoke(ret, Numbers.num(array[x])))
@@ -3022,7 +3279,8 @@
             )
         )
 
-        (§ method Object reduce(IFn f, Object start)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, Numbers.num(array[i])))]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
                     (when (ß RT.isReduced(ret))
@@ -3037,7 +3295,8 @@
             )
         )
 
-        (§ method int indexOf(Object o)
+        #_method
+        (§ defn #_"int" indexOf [this, #_"Object" o]
             (when (ß o instanceof Number)
                 (let [#_"float" f (ß ((Number) o).floatValue())]
                     (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
@@ -3050,7 +3309,8 @@
             -1
         )
 
-        (§ method int lastIndexOf(Object o)
+        #_method
+        (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (when (ß o instanceof Number)
                 (let [#_"float" f (ß ((Number) o).floatValue())]
                     (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
@@ -3065,40 +3325,46 @@
     )
 
     (class-ns ArraySeq_double (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-        (§ field double[] array)
-        (§ field int i)
+        (§ field #_"double[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor ArraySeq_double(IPersistentMap meta, double[] array, int i)
+        (§ constructor #_"ArraySeq_double" ArraySeq_double [#_"IPersistentMap" meta, #_"double[]" array, #_"int" i]
             (§ super(meta))
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (ß array[i])
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (when (ß i + 1 < array.length)
                 (§ return (ß new ArraySeq_double(meta(), array, i + 1)))
             )
             nil
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             (ß array.length - i)
         )
 
-        (§ method int index()
+        #_method
+        (§ defn #_"int" index [this]
             i
         )
 
-        (§ method ArraySeq_double withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"ArraySeq_double" withMeta [this, #_"IPersistentMap" meta]
             (ß new ArraySeq_double(meta, array, i))
         )
 
-        (§ method Object reduce(IFn f)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß array[i])]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
                     (ß ret = f.invoke(ret, array[x]))
@@ -3110,7 +3376,8 @@
             )
         )
 
-        (§ method Object reduce(IFn f, Object start)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, array[i]))]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
                     (when (ß RT.isReduced(ret))
@@ -3125,7 +3392,8 @@
             )
         )
 
-        (§ method int indexOf(Object o)
+        #_method
+        (§ defn #_"int" indexOf [this, #_"Object" o]
             (when (ß o instanceof Number)
                 (let [#_"double" d (ß ((Number) o).doubleValue())]
                     (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
@@ -3139,7 +3407,8 @@
             -1
         )
 
-        (§ method int lastIndexOf(Object o)
+        #_method
+        (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (when (ß o instanceof Number)
                 (let [#_"double" d (ß ((Number) o).doubleValue())]
                     (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
@@ -3155,40 +3424,46 @@
     )
 
     (class-ns ArraySeq_long (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-        (§ field long[] array)
-        (§ field int i)
+        (§ field #_"long[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor ArraySeq_long(IPersistentMap meta, long[] array, int i)
+        (§ constructor #_"ArraySeq_long" ArraySeq_long [#_"IPersistentMap" meta, #_"long[]" array, #_"int" i]
             (§ super(meta))
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (ß Numbers.num(array[i]))
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (when (ß i + 1 < array.length)
                 (§ return (ß new ArraySeq_long(meta(), array, i + 1)))
             )
             nil
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             (ß array.length - i)
         )
 
-        (§ method int index()
+        #_method
+        (§ defn #_"int" index [this]
             i
         )
 
-        (§ method ArraySeq_long withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"ArraySeq_long" withMeta [this, #_"IPersistentMap" meta]
             (ß new ArraySeq_long(meta, array, i))
         )
 
-        (§ method Object reduce(IFn f)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß Numbers.num(array[i]))]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
                     (ß ret = f.invoke(ret, Numbers.num(array[x])))
@@ -3200,7 +3475,8 @@
             )
         )
 
-        (§ method Object reduce(IFn f, Object start)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, Numbers.num(array[i])))]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
                     (when (ß RT.isReduced(ret))
@@ -3215,7 +3491,8 @@
             )
         )
 
-        (§ method int indexOf(Object o)
+        #_method
+        (§ defn #_"int" indexOf [this, #_"Object" o]
             (when (ß o instanceof Number)
                 (let [#_"long" l (ß ((Number) o).longValue())]
                     (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
@@ -3229,7 +3506,8 @@
             -1
         )
 
-        (§ method int lastIndexOf(Object o)
+        #_method
+        (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (when (ß o instanceof Number)
                 (let [#_"long" l (ß ((Number) o).longValue())]
                     (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
@@ -3245,40 +3523,46 @@
     )
 
     (class-ns ArraySeq_byte (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-        (§ field byte[] array)
-        (§ field int i)
+        (§ field #_"byte[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor ArraySeq_byte(IPersistentMap meta, byte[] array, int i)
+        (§ constructor #_"ArraySeq_byte" ArraySeq_byte [#_"IPersistentMap" meta, #_"byte[]" array, #_"int" i]
             (§ super(meta))
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (ß array[i])
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (when (ß i + 1 < array.length)
                 (§ return (ß new ArraySeq_byte(meta(), array, i + 1)))
             )
             nil
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             (ß array.length - i)
         )
 
-        (§ method int index()
+        #_method
+        (§ defn #_"int" index [this]
             i
         )
 
-        (§ method ArraySeq_byte withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"ArraySeq_byte" withMeta [this, #_"IPersistentMap" meta]
             (ß new ArraySeq_byte(meta, array, i))
         )
 
-        (§ method Object reduce(IFn f)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß array[i])]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
                     (ß ret = f.invoke(ret, array[x]))
@@ -3290,7 +3574,8 @@
             )
         )
 
-        (§ method Object reduce(IFn f, Object start)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, array[i]))]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
                     (when (ß RT.isReduced(ret))
@@ -3305,7 +3590,8 @@
             )
         )
 
-        (§ method int indexOf(Object o)
+        #_method
+        (§ defn #_"int" indexOf [this, #_"Object" o]
             (when (ß o instanceof Byte)
                 (let [#_"byte" b (ß ((Byte) o).byteValue())]
                     (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
@@ -3326,7 +3612,8 @@
             -1
         )
 
-        (§ method int lastIndexOf(Object o)
+        #_method
+        (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (when (ß o instanceof Byte)
                 (let [#_"byte" b (ß ((Byte) o).byteValue())]
                     (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
@@ -3349,40 +3636,46 @@
     )
 
     (class-ns ArraySeq_char (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-        (§ field char[] array)
-        (§ field int i)
+        (§ field #_"char[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor ArraySeq_char(IPersistentMap meta, char[] array, int i)
+        (§ constructor #_"ArraySeq_char" ArraySeq_char [#_"IPersistentMap" meta, #_"char[]" array, #_"int" i]
             (§ super(meta))
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (ß array[i])
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (when (ß i + 1 < array.length)
                 (§ return (ß new ArraySeq_char(meta(), array, i + 1)))
             )
             nil
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             (ß array.length - i)
         )
 
-        (§ method int index()
+        #_method
+        (§ defn #_"int" index [this]
             i
         )
 
-        (§ method ArraySeq_char withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"ArraySeq_char" withMeta [this, #_"IPersistentMap" meta]
             (ß new ArraySeq_char(meta, array, i))
         )
 
-        (§ method Object reduce(IFn f)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß array[i])]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
                     (ß ret = f.invoke(ret, array[x]))
@@ -3394,7 +3687,8 @@
             )
         )
 
-        (§ method Object reduce(IFn f, Object start)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, array[i]))]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
                     (when (ß RT.isReduced(ret))
@@ -3409,7 +3703,8 @@
             )
         )
 
-        (§ method int indexOf(Object o)
+        #_method
+        (§ defn #_"int" indexOf [this, #_"Object" o]
             (when (ß o instanceof Character)
                 (let [#_"char" c (ß ((Character) o).charValue())]
                     (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
@@ -3430,7 +3725,8 @@
             -1
         )
 
-        (§ method int lastIndexOf(Object o)
+        #_method
+        (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (when (ß o instanceof Character)
                 (let [#_"char" c (ß ((Character) o).charValue())]
                     (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
@@ -3453,40 +3749,46 @@
     )
 
     (class-ns ArraySeq_short (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-        (§ field short[] array)
-        (§ field int i)
+        (§ field #_"short[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor ArraySeq_short(IPersistentMap meta, short[] array, int i)
+        (§ constructor #_"ArraySeq_short" ArraySeq_short [#_"IPersistentMap" meta, #_"short[]" array, #_"int" i]
             (§ super(meta))
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (ß array[i])
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (when (ß i + 1 < array.length)
                 (§ return (ß new ArraySeq_short(meta(), array, i + 1)))
             )
             nil
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             (ß array.length - i)
         )
 
-        (§ method int index()
+        #_method
+        (§ defn #_"int" index [this]
             i
         )
 
-        (§ method ArraySeq_short withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"ArraySeq_short" withMeta [this, #_"IPersistentMap" meta]
             (ß new ArraySeq_short(meta, array, i))
         )
 
-        (§ method Object reduce(IFn f)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß array[i])]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
                     (ß ret = f.invoke(ret, array[x]))
@@ -3498,7 +3800,8 @@
             )
         )
 
-        (§ method Object reduce(IFn f, Object start)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, array[i]))]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
                     (when (ß RT.isReduced(ret))
@@ -3513,7 +3816,8 @@
             )
         )
 
-        (§ method int indexOf(Object o)
+        #_method
+        (§ defn #_"int" indexOf [this, #_"Object" o]
             (when (ß o instanceof Short)
                 (let [#_"short" s (ß ((Short) o).shortValue())]
                     (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
@@ -3534,7 +3838,8 @@
             -1
         )
 
-        (§ method int lastIndexOf(Object o)
+        #_method
+        (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (when (ß o instanceof Short)
                 (let [#_"short" s (ß ((Short) o).shortValue())]
                     (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
@@ -3557,40 +3862,46 @@
     )
 
     (class-ns ArraySeq_boolean (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-        (§ field boolean[] array)
-        (§ field int i)
+        (§ field #_"boolean[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor ArraySeq_boolean(IPersistentMap meta, boolean[] array, int i)
+        (§ constructor #_"ArraySeq_boolean" ArraySeq_boolean [#_"IPersistentMap" meta, #_"boolean[]" array, #_"int" i]
             (§ super(meta))
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (ß array[i])
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (when (ß i + 1 < array.length)
                 (§ return (ß new ArraySeq_boolean(meta(), array, i + 1)))
             )
             nil
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             (ß array.length - i)
         )
 
-        (§ method int index()
+        #_method
+        (§ defn #_"int" index [this]
             i
         )
 
-        (§ method ArraySeq_boolean withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"ArraySeq_boolean" withMeta [this, #_"IPersistentMap" meta]
             (ß new ArraySeq_boolean(meta, array, i))
         )
 
-        (§ method Object reduce(IFn f)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß array[i])]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
                     (ß ret = f.invoke(ret, array[x]))
@@ -3602,7 +3913,8 @@
             )
         )
 
-        (§ method Object reduce(IFn f, Object start)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, array[i]))]
                 (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
                     (when (ß RT.isReduced(ret))
@@ -3617,7 +3929,8 @@
             )
         )
 
-        (§ method int indexOf(Object o)
+        #_method
+        (§ defn #_"int" indexOf [this, #_"Object" o]
             (when (ß o instanceof Boolean)
                 (let [#_"boolean" b (ß ((Boolean) o).booleanValue())]
                     (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
@@ -3638,7 +3951,8 @@
             -1
         )
 
-        (§ method int lastIndexOf(Object o)
+        #_method
+        (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (when (ß o instanceof Boolean)
                 (let [#_"boolean" b (ß ((Boolean) o).booleanValue())]
                     (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
@@ -3669,30 +3983,33 @@
 #_abstract
 (class-ns ASeq (§ extends Obj) (§ implements ISeq, Sequential, List, IHashEq)
     #_transient
-    (§ field int _hash)
+    (§ field #_"int" _hash)
     #_transient
-    (§ field int _hasheq)
+    (§ field #_"int" _hasheq)
 
-    (§ method String toString()
+    #_method
+    (§ defn #_"String" toString [this]
         (ß RT.printString(this))
     )
 
-    (§ method IPersistentCollection empty()
+    #_method
+    (§ defn #_"IPersistentCollection" empty [this]
         (ß PersistentList.EMPTY)
     )
 
     #_protected
-    (§ constructor ASeq(IPersistentMap meta)
+    (§ constructor #_"ASeq" ASeq [#_"IPersistentMap" meta]
         (§ super(meta))
         this
     )
 
     #_protected
-    (§ constructor ASeq()
+    (§ constructor #_"ASeq" ASeq []
         this
     )
 
-    (§ method boolean equiv(Object obj)
+    #_method
+    (§ defn #_"boolean" equiv [this, #_"Object" obj]
         (when (ß !(obj instanceof Sequential || obj instanceof List))
             (§ return false)
         )
@@ -3706,7 +4023,8 @@
         )
     )
 
-    (§ method boolean equals(Object obj)
+    #_method
+    (§ defn #_"boolean" equals [this, #_"Object" obj]
         (when (ß this == obj)
             (§ return true)
         )
@@ -3723,7 +4041,8 @@
         )
     )
 
-    (§ method int hashCode()
+    #_method
+    (§ defn #_"int" hashCode [this]
         (when (ß _hash == 0)
             (let [#_"int" hash 1]
                 (loop-when-recur [(ß ISeq s = seq())] (ß s != nil) [(ß s = s.next())]
@@ -3735,14 +4054,16 @@
         (ß _hash)
     )
 
-    (§ method int hasheq()
+    #_method
+    (§ defn #_"int" hasheq [this]
         (when (ß _hasheq == 0)
             (ß _hasheq = Murmur3.hashOrdered(this))
         )
         (ß _hasheq)
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         (let [#_"int" i 1]
             (loop-when-recur [(ß ISeq s = next())] (ß s != nil) [(ß s = s.next(), i++)]
                 (when (ß s instanceof Counted)
@@ -3753,15 +4074,18 @@
         )
     )
 
-    (§ method ISeq seq()
+    #_method
+    (§ defn #_"ISeq" seq [this]
         this
     )
 
-    (§ method ISeq cons(Object o)
+    #_method
+    (§ defn #_"ISeq" cons [this, #_"Object" o]
         (ß new Cons(o, this))
     )
 
-    (§ method ISeq more()
+    #_method
+    (§ defn #_"ISeq" more [this]
         (let [#_"ISeq" s (ß next())]
             (when (ß s == nil)
                 (§ return (ß PersistentList.EMPTY))
@@ -3770,35 +4094,43 @@
         )
     )
 
-    (§ method Object[] toArray()
+    #_method
+    (§ defn #_"Object[]" toArray [this]
         (ß RT.seqToArray(seq()))
     )
 
-    (§ method boolean add(Object o)
+    #_method
+    (§ defn #_"boolean" add [this, #_"Object" o]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean remove(Object o)
+    #_method
+    (§ defn #_"boolean" remove [this, #_"Object" o]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean addAll(Collection c)
+    #_method
+    (§ defn #_"boolean" addAll [this, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method void clear()
+    #_method
+    (§ defn #_"void" clear [this]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean retainAll(Collection c)
+    #_method
+    (§ defn #_"boolean" retainAll [this, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean removeAll(Collection c)
+    #_method
+    (§ defn #_"boolean" removeAll [this, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean containsAll(Collection c)
+    #_method
+    (§ defn #_"boolean" containsAll [this, #_"Collection" c]
         (doseq [#_"Object" o c]
             (when (ß !contains(o))
                 (§ return false)
@@ -3807,19 +4139,23 @@
         true
     )
 
-    (§ method Object[] toArray(Object[] a)
+    #_method
+    (§ defn #_"Object[]" toArray [this, #_"Object[]" a]
         (ß RT.seqToPassedArray(seq(), a))
     )
 
-    (§ method int size()
+    #_method
+    (§ defn #_"int" size [this]
         (ß count())
     )
 
-    (§ method boolean isEmpty()
+    #_method
+    (§ defn #_"boolean" isEmpty [this]
         (ß (seq() == nil))
     )
 
-    (§ method boolean contains(Object o)
+    #_method
+    (§ defn #_"boolean" contains [this, #_"Object" o]
         (loop-when-recur [(ß ISeq s = seq())] (ß s != nil) [(ß s = s.next())]
             (when (ß Util.equiv(s.first(), o))
                 (§ return true)
@@ -3828,27 +4164,33 @@
         false
     )
 
-    (§ method Iterator iterator()
+    #_method
+    (§ defn #_"Iterator" iterator [this]
         (ß new SeqIterator(this))
     )
 
-    (§ method- List reify()
+    #_method
+    (§ defn- #_"List" reify [this]
         (ß Collections.unmodifiableList(new ArrayList(this)))
     )
 
-    (§ method List subList(int fromIndex, int toIndex)
+    #_method
+    (§ defn #_"List" subList [this, #_"int" fromIndex, #_"int" toIndex]
         (ß reify().subList(fromIndex, toIndex))
     )
 
-    (§ method Object set(int index, Object element)
+    #_method
+    (§ defn #_"Object" set [this, #_"int" index, #_"Object" element]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method Object remove(int index)
+    #_method
+    (§ defn #_"Object" remove [this, #_"int" index]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method int indexOf(Object o)
+    #_method
+    (§ defn #_"int" indexOf [this, #_"Object" o]
         (let [#_"ISeq" s (ß seq())]
             (loop-when-recur [(ß int i = 0)] (ß s != nil) [(ß s = s.next(), i++)]
                 (when (ß Util.equiv(s.first(), o))
@@ -3859,27 +4201,33 @@
         )
     )
 
-    (§ method int lastIndexOf(Object o)
+    #_method
+    (§ defn #_"int" lastIndexOf [this, #_"Object" o]
         (ß reify().lastIndexOf(o))
     )
 
-    (§ method ListIterator listIterator()
+    #_method
+    (§ defn #_"ListIterator" listIterator [this]
         (ß reify().listIterator())
     )
 
-    (§ method ListIterator listIterator(int index)
+    #_method
+    (§ defn #_"ListIterator" listIterator [this, #_"int" index]
         (ß reify().listIterator(index))
     )
 
-    (§ method Object get(int index)
+    #_method
+    (§ defn #_"Object" get [this, #_"int" index]
         (ß RT.nth(this, index))
     )
 
-    (§ method void add(int index, Object element)
+    #_method
+    (§ defn #_"void" add [this, #_"int" index, #_"Object" element]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean addAll(int index, Collection c)
+    #_method
+    (§ defn #_"boolean" addAll [this, #_"int" index, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 )
@@ -3899,24 +4247,26 @@
 (§ import java.util.concurrent.atomic.AtomicReference)
 
 (class-ns Atom (§ extends ARef) (§ implements IAtom2)
-    (§ field AtomicReference state)
+    (§ field #_"AtomicReference" state)
 
-    (§ constructor Atom(Object state)
+    (§ constructor #_"Atom" Atom [#_"Object" state]
         (ß this.state = new AtomicReference(state))
         this
     )
 
-    (§ constructor Atom(Object state, IPersistentMap meta)
+    (§ constructor #_"Atom" Atom [#_"Object" state, #_"IPersistentMap" meta]
         (§ super(meta))
         (ß this.state = new AtomicReference(state))
         this
     )
 
-    (§ method Object deref()
+    #_method
+    (§ defn #_"Object" deref [this]
         (ß state.get())
     )
 
-    (§ method Object swap(IFn f)
+    #_method
+    (§ defn #_"Object" swap [this, #_"IFn" f]
         (while true
             (let [#_"Object" v (ß deref())]
                 (let [#_"Object" newv (ß f.invoke(v))]
@@ -3930,7 +4280,8 @@
         )
     )
 
-    (§ method Object swap(IFn f, Object arg)
+    #_method
+    (§ defn #_"Object" swap [this, #_"IFn" f, #_"Object" arg]
         (while true
             (let [#_"Object" v (ß deref())]
                 (let [#_"Object" newv (ß f.invoke(v, arg))]
@@ -3944,7 +4295,8 @@
         )
     )
 
-    (§ method Object swap(IFn f, Object arg1, Object arg2)
+    #_method
+    (§ defn #_"Object" swap [this, #_"IFn" f, #_"Object" arg1, #_"Object" arg2]
         (while true
             (let [#_"Object" v (ß deref())]
                 (let [#_"Object" newv (ß f.invoke(v, arg1, arg2))]
@@ -3958,7 +4310,8 @@
         )
     )
 
-    (§ method Object swap(IFn f, Object x, Object y, ISeq args)
+    #_method
+    (§ defn #_"Object" swap [this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" args]
         (while true
             (let [#_"Object" v (ß deref())]
                 (let [#_"Object" newv (ß f.applyTo(RT.listStar(v, x, y, args)))]
@@ -3972,7 +4325,8 @@
         )
     )
 
-    (§ method IPersistentVector swapVals(IFn f)
+    #_method
+    (§ defn #_"IPersistentVector" swapVals [this, #_"IFn" f]
         (while true
             (let [#_"Object" oldv (ß deref())]
                 (let [#_"Object" newv (ß f.invoke(oldv))]
@@ -3986,7 +4340,8 @@
         )
     )
 
-    (§ method IPersistentVector swapVals(IFn f, Object arg)
+    #_method
+    (§ defn #_"IPersistentVector" swapVals [this, #_"IFn" f, #_"Object" arg]
         (while true
             (let [#_"Object" oldv (ß deref())]
                 (let [#_"Object" newv (ß f.invoke(oldv, arg))]
@@ -4000,7 +4355,8 @@
         )
     )
 
-    (§ method IPersistentVector swapVals(IFn f, Object arg1, Object arg2)
+    #_method
+    (§ defn #_"IPersistentVector" swapVals [this, #_"IFn" f, #_"Object" arg1, #_"Object" arg2]
         (while true
             (let [#_"Object" oldv (ß deref())]
                 (let [#_"Object" newv (ß f.invoke(oldv, arg1, arg2))]
@@ -4014,7 +4370,8 @@
         )
     )
 
-    (§ method IPersistentVector swapVals(IFn f, Object x, Object y, ISeq args)
+    #_method
+    (§ defn #_"IPersistentVector" swapVals [this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" args]
         (while true
             (let [#_"Object" oldv (ß deref())]
                 (let [#_"Object" newv (ß f.applyTo(RT.listStar(oldv, x, y, args)))]
@@ -4028,7 +4385,8 @@
         )
     )
 
-    (§ method boolean compareAndSet(Object oldv, Object newv)
+    #_method
+    (§ defn #_"boolean" compareAndSet [this, #_"Object" oldv, #_"Object" newv]
         (ß validate(newv))
         (let [#_"boolean" ret (ß state.compareAndSet(oldv, newv))]
             (when ret
@@ -4038,7 +4396,8 @@
         )
     )
 
-    (§ method Object reset(Object newval)
+    #_method
+    (§ defn #_"Object" reset [this, #_"Object" newval]
         (let [#_"Object" oldval (ß state.get())]
             (ß validate(newval))
             (ß state.set(newval))
@@ -4047,7 +4406,8 @@
         )
     )
 
-    (§ method IPersistentVector resetVals(Object newv)
+    #_method
+    (§ defn #_"IPersistentVector" resetVals [this, #_"Object" newv]
         (ß validate(newv))
         (while true
             (let [#_"Object" oldv (ß deref())]
@@ -4076,7 +4436,8 @@
     (§ abstract int doCount())
     (§ abstract IPersistentMap doPersistent())
 
-    (§ method ITransientMap conj(Object o)
+    #_method
+    (§ defn #_"ITransientMap" conj [this, #_"Object" o]
         (ß ensureEditable())
         (cond (ß o instanceof Map.Entry)
             (do
@@ -4105,43 +4466,52 @@
         )
     )
 
-    (§ method Object invoke(Object arg1)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1]
         (ß valAt(arg1))
     )
 
-    (§ method Object invoke(Object arg1, Object notFound)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" notFound]
         (ß valAt(arg1, notFound))
     )
 
-    (§ method Object valAt(Object key)
+    #_method
+    (§ defn #_"Object" valAt [this, #_"Object" key]
         (ß valAt(key, nil))
     )
 
-    (§ method ITransientMap assoc(Object key, Object val)
+    #_method
+    (§ defn #_"ITransientMap" assoc [this, #_"Object" key, #_"Object" val]
         (ß ensureEditable())
         (ß doAssoc(key, val))
     )
 
-    (§ method ITransientMap without(Object key)
+    #_method
+    (§ defn #_"ITransientMap" without [this, #_"Object" key]
         (ß ensureEditable())
         (ß doWithout(key))
     )
 
-    (§ method IPersistentMap persistent()
+    #_method
+    (§ defn #_"IPersistentMap" persistent [this]
         (ß ensureEditable())
         (ß doPersistent())
     )
 
-    (§ method Object valAt(Object key, Object notFound)
+    #_method
+    (§ defn #_"Object" valAt [this, #_"Object" key, #_"Object" notFound]
         (ß ensureEditable())
         (ß doValAt(key, notFound))
     )
 
-    (§ def- Object NOT_FOUND = new Object())
-    (§ method boolean containsKey(Object key)
+    (§ def- #_"Object" NOT_FOUND (ß new Object()))
+    #_method
+    (§ defn #_"boolean" containsKey [this, #_"Object" key]
         (ß (valAt(key, NOT_FOUND) != NOT_FOUND))
     )
-    (§ method IMapEntry entryAt(Object key)
+    #_method
+    (§ defn #_"IMapEntry" entryAt [this, #_"Object" key]
         (let [#_"Object" v (ß valAt(key, NOT_FOUND))]
             (when (ß v != NOT_FOUND)
                 (§ return (ß MapEntry.create(key, v)))
@@ -4150,7 +4520,8 @@
         )
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         (ß ensureEditable())
         (ß doCount())
     )
@@ -4162,18 +4533,20 @@
 #_abstract
 (class-ns ATransientSet (§ extends AFn) (§ implements ITransientSet)
     #_volatile
-    (§ field ITransientMap impl)
+    (§ field #_"ITransientMap" impl)
 
-    (§ constructor ATransientSet(ITransientMap impl)
+    (§ constructor #_"ATransientSet" ATransientSet [#_"ITransientMap" impl]
         (ß this.impl = impl)
         this
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         (ß impl.count())
     )
 
-    (§ method ITransientSet conj(Object val)
+    #_method
+    (§ defn #_"ITransientSet" conj [this, #_"Object" val]
         (let [#_"ITransientMap" m (ß impl.assoc(val, val))]
             (when (ß m != impl)
                 (ß this.impl = m)
@@ -4182,11 +4555,13 @@
         )
     )
 
-    (§ method boolean contains(Object key)
+    #_method
+    (§ defn #_"boolean" contains [this, #_"Object" key]
         (ß (this != impl.valAt(key, this)))
     )
 
-    (§ method ITransientSet disjoin(Object key)
+    #_method
+    (§ defn #_"ITransientSet" disjoin [this, #_"Object" key]
         (let [#_"ITransientMap" m (ß impl.without(key))]
             (when (ß m != impl)
                 (ß this.impl = m)
@@ -4195,15 +4570,18 @@
         )
     )
 
-    (§ method Object get(Object key)
+    #_method
+    (§ defn #_"Object" get [this, #_"Object" key]
         (ß impl.valAt(key))
     )
 
-    (§ method Object invoke(Object key, Object notFound)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" key, #_"Object" notFound]
         (ß impl.valAt(key, notFound))
     )
 
-    (§ method Object invoke(Object key)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" key]
         (ß impl.valAt(key))
     )
 )
@@ -4215,28 +4593,31 @@
 (§ import java.math.BigDecimal)
 
 (class-ns BigInt (§ extends Number) (§ implements IHashEq)
-    (§ field long lpart)
-    (§ field BigInteger bipart)
+    (§ field #_"long" lpart)
+    (§ field #_"BigInteger" bipart)
 
-    (§ def BigInt ZERO = new BigInt(0, nil))
-    (§ def BigInt ONE = new BigInt(1, nil))
+    (§ def #_"BigInt" ZERO (ß new BigInt(0, nil)))
+    (§ def #_"BigInt" ONE (ß new BigInt(1, nil)))
 
     ;; must follow Long
-    (§ method int hashCode()
+    #_method
+    (§ defn #_"int" hashCode [this]
         (when (ß bipart == nil)
             (§ return (ß (int) (this.lpart :xor (this.lpart >>> 32))))
         )
         (ß bipart.hashCode())
     )
 
-    (§ method int hasheq()
+    #_method
+    (§ defn #_"int" hasheq [this]
         (when (ß bipart == nil)
             (§ return (ß Murmur3.hashLong(lpart)))
         )
         (ß bipart.hashCode())
     )
 
-    (§ method boolean equals(Object obj)
+    #_method
+    (§ defn #_"boolean" equals [this, #_"Object" obj]
         (when (ß this == obj)
             (§ return true)
         )
@@ -4251,13 +4632,13 @@
         false
     )
 
-    (§ constructor- BigInt(long lpart, BigInteger bipart)
+    (§ constructor- #_"BigInt" BigInt [#_"long" lpart, #_"BigInteger" bipart]
         (ß this.lpart = lpart)
         (ß this.bipart = bipart)
         this
     )
 
-    (§ defn BigInt fromBigInteger(BigInteger val)
+    (§ defn #_"BigInt" fromBigInteger [#_"BigInteger" val]
         (if (ß val.bitLength() < 64)
             (do
                 (ß new BigInt(val.longValue(), nil))
@@ -4268,11 +4649,12 @@
         )
     )
 
-    (§ defn BigInt fromLong(long val)
+    (§ defn #_"BigInt" fromLong [#_"long" val]
         (ß new BigInt(val, nil))
     )
 
-    (§ method BigInteger toBigInteger()
+    #_method
+    (§ defn #_"BigInteger" toBigInteger [this]
         (if (ß bipart == nil)
             (do
                 (ß BigInteger.valueOf(lpart))
@@ -4283,7 +4665,8 @@
         )
     )
 
-    (§ method BigDecimal toBigDecimal()
+    #_method
+    (§ defn #_"BigDecimal" toBigDecimal [this]
         (if (ß bipart == nil)
             (do
                 (ß BigDecimal.valueOf(lpart))
@@ -4294,7 +4677,8 @@
         )
     )
 
-    (§ method int intValue()
+    #_method
+    (§ defn #_"int" intValue [this]
         (if (ß bipart == nil)
             (do
                 (ß (int) lpart)
@@ -4305,7 +4689,8 @@
         )
     )
 
-    (§ method long longValue()
+    #_method
+    (§ defn #_"long" longValue [this]
         (if (ß bipart == nil)
             (do
                 lpart
@@ -4316,7 +4701,8 @@
         )
     )
 
-    (§ method float floatValue()
+    #_method
+    (§ defn #_"float" floatValue [this]
         (if (ß bipart == nil)
             (do
                 lpart
@@ -4327,7 +4713,8 @@
         )
     )
 
-    (§ method double doubleValue()
+    #_method
+    (§ defn #_"double" doubleValue [this]
         (if (ß bipart == nil)
             (do
                 lpart
@@ -4338,7 +4725,8 @@
         )
     )
 
-    (§ method byte byteValue()
+    #_method
+    (§ defn #_"byte" byteValue [this]
         (if (ß bipart == nil)
             (do
                 (ß (byte) lpart)
@@ -4349,7 +4737,8 @@
         )
     )
 
-    (§ method short shortValue()
+    #_method
+    (§ defn #_"short" shortValue [this]
         (if (ß bipart == nil)
             (do
                 (ß (short) lpart)
@@ -4360,22 +4749,25 @@
         )
     )
 
-    (§ defn BigInt valueOf(long val)
+    (§ defn #_"BigInt" valueOf [#_"long" val]
         (ß new BigInt(val, nil))
     )
 
-    (§ method String toString()
+    #_method
+    (§ defn #_"String" toString [this]
         (when (ß bipart == nil)
             (§ return (ß String.valueOf(lpart)))
         )
         (ß bipart.toString())
     )
 
-    (§ method int bitLength()
+    #_method
+    (§ defn #_"int" bitLength [this]
         (ß toBigInteger().bitLength())
     )
 
-    (§ method BigInt add(BigInt y)
+    #_method
+    (§ defn #_"BigInt" add [this, #_"BigInt" y]
         (when (ß (bipart == nil) && (y.bipart == nil))
             (let [#_"long" ret (ß lpart + y.lpart)]
                 (when (ß (ret :xor lpart) >= 0 || (ret :xor y.lpart) >= 0)
@@ -4386,7 +4778,8 @@
         (ß BigInt.fromBigInteger(this.toBigInteger().add(y.toBigInteger())))
     )
 
-    (§ method BigInt multiply(BigInt y)
+    #_method
+    (§ defn #_"BigInt" multiply [this, #_"BigInt" y]
         (when (ß (bipart == nil) && (y.bipart == nil))
             (let [#_"long" ret (ß lpart * y.lpart)]
                 (when (ß y.lpart == 0 || (ret / y.lpart == lpart && lpart != Long.MIN_VALUE))
@@ -4397,7 +4790,8 @@
         (ß BigInt.fromBigInteger(this.toBigInteger().multiply(y.toBigInteger())))
     )
 
-    (§ method BigInt quotient(BigInt y)
+    #_method
+    (§ defn #_"BigInt" quotient [this, #_"BigInt" y]
         (when (ß (bipart == nil) && (y.bipart == nil))
             (when (ß lpart == Long.MIN_VALUE && y.lpart == -1)
                 (§ return (ß BigInt.fromBigInteger(this.toBigInteger().negate())))
@@ -4407,14 +4801,16 @@
         (ß BigInt.fromBigInteger(this.toBigInteger().divide(y.toBigInteger())))
     )
 
-    (§ method BigInt remainder(BigInt y)
+    #_method
+    (§ defn #_"BigInt" remainder [this, #_"BigInt" y]
         (when (ß (bipart == nil) && (y.bipart == nil))
             (§ return (ß BigInt.valueOf(lpart % y.lpart)))
         )
         (ß BigInt.fromBigInteger(this.toBigInteger().remainder(y.toBigInteger())))
     )
 
-    (§ method boolean lt(BigInt y)
+    #_method
+    (§ defn #_"boolean" lt [this, #_"BigInt" y]
         (when (ß (bipart == nil) && (y.bipart == nil))
             (§ return (ß (lpart < y.lpart)))
         )
@@ -4426,16 +4822,16 @@
 (java-ns cloiure.lang.Binding
 
 (class-ns Binding #_"<T>"
-    (§ field T val)
-    (§ field Binding rest)
+    (§ field #_"T" val)
+    (§ field #_"Binding" rest)
 
-    (§ constructor Binding(T val)
+    (§ constructor #_"Binding" Binding [#_"T" val]
         (ß this.val = val)
         (ß this.rest = nil)
         this
     )
 
-    (§ constructor Binding(T val, Binding rest)
+    (§ constructor #_"Binding" Binding [#_"T" val, #_"Binding" rest]
         (ß this.val = val)
         (ß this.rest = rest)
         this
@@ -4446,9 +4842,9 @@
 (java-ns cloiure.lang.Box
 
 (class-ns Box
-    (§ field Object val)
+    (§ field #_"Object" val)
 
-    (§ constructor Box(Object val)
+    (§ constructor #_"Box" Box [#_"Object" val]
         (ß this.val = val)
         this
     )
@@ -4458,28 +4854,31 @@
 (java-ns cloiure.lang.ChunkBuffer
 
 (class-ns ChunkBuffer (§ implements Counted)
-    (§ field Object[] buffer)
-    (§ field int end)
+    (§ field #_"Object[]" buffer)
+    (§ field #_"int" end)
 
-    (§ constructor ChunkBuffer(int capacity)
+    (§ constructor #_"ChunkBuffer" ChunkBuffer [#_"int" capacity]
         (ß buffer = new Object[capacity])
         (ß end = 0)
         this
     )
 
-    (§ method void add(Object o)
+    #_method
+    (§ defn #_"void" add [this, #_"Object" o]
         (ß buffer[end++] = o)
         nil
     )
 
-    (§ method IChunk chunk()
+    #_method
+    (§ defn #_"IChunk" chunk [this]
         (let [#_"ArrayChunk" ret (ß new ArrayChunk(buffer, 0, end))]
             (ß buffer = nil)
             ret
         )
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         end
     )
 )
@@ -4488,40 +4887,44 @@
 (java-ns cloiure.lang.ChunkedCons
 
 (class-ns ChunkedCons (§ extends ASeq) (§ implements IChunkedSeq)
-    (§ field IChunk chunk)
-    (§ field ISeq _more)
+    (§ field #_"IChunk" chunk)
+    (§ field #_"ISeq" _more)
 
-    (§ constructor ChunkedCons(IPersistentMap meta, IChunk chunk, ISeq more)
+    (§ constructor #_"ChunkedCons" ChunkedCons [#_"IPersistentMap" meta, #_"IChunk" chunk, #_"ISeq" more]
         (§ super(meta))
         (ß this.chunk = chunk)
         (ß this._more = more)
         this
     )
 
-    (§ constructor ChunkedCons(IChunk chunk, ISeq more)
+    (§ constructor #_"ChunkedCons" ChunkedCons [#_"IChunk" chunk, #_"ISeq" more]
         (§ this(nil, chunk, more))
         this
     )
 
-    (§ method Obj withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"Obj" withMeta [this, #_"IPersistentMap" meta]
         (when (ß meta != _meta)
             (§ return (ß new ChunkedCons(meta, chunk, _more)))
         )
         this
     )
 
-    (§ method Object first()
+    #_method
+    (§ defn #_"Object" first [this]
         (ß chunk.nth(0))
     )
 
-    (§ method ISeq next()
+    #_method
+    (§ defn #_"ISeq" next [this]
         (when (ß chunk.count() > 1)
             (§ return (ß new ChunkedCons(chunk.dropFirst(), _more)))
         )
         (ß chunkedNext())
     )
 
-    (§ method ISeq more()
+    #_method
+    (§ defn #_"ISeq" more [this]
         (when (ß chunk.count() > 1)
             (§ return (ß new ChunkedCons(chunk.dropFirst(), _more)))
         )
@@ -4531,15 +4934,18 @@
         (ß _more)
     )
 
-    (§ method IChunk chunkedFirst()
+    #_method
+    (§ defn #_"IChunk" chunkedFirst [this]
         chunk
     )
 
-    (§ method ISeq chunkedNext()
+    #_method
+    (§ defn #_"ISeq" chunkedNext [this]
         (ß chunkedMore().seq())
     )
 
-    (§ method ISeq chunkedMore()
+    #_method
+    (§ defn #_"ISeq" chunkedMore [this]
         (when (ß _more == nil)
             (§ return (ß PersistentList.EMPTY))
         )
@@ -4560,16 +4966,16 @@
 ;; all be within CLASSPATH.
 
 (class-ns Compile
-    (§ def- String PATH_PROP = "cloiure.compile.path")
-    (§ def- String REFLECTION_WARNING_PROP = "cloiure.compile.warn-on-reflection")
-    (§ def- String UNCHECKED_MATH_PROP = "cloiure.compile.unchecked-math")
+    (§ def- #_"String" PATH_PROP (ß "cloiure.compile.path"))
+    (§ def- #_"String" REFLECTION_WARNING_PROP (ß "cloiure.compile.warn-on-reflection"))
+    (§ def- #_"String" UNCHECKED_MATH_PROP (ß "cloiure.compile.unchecked-math"))
 
-    (§ def- Var compile_path = RT.var("cloiure.core", "*compile-path*"))
-    (§ def- Var compile = RT.var("cloiure.core", "compile"))
-    (§ def- Var warn_on_reflection = RT.var("cloiure.core", "*warn-on-reflection*"))
-    (§ def- Var unchecked_math = RT.var("cloiure.core", "*unchecked-math*"))
+    (§ def- #_"Var" compile_path (ß RT.var("cloiure.core", "*compile-path*")))
+    (§ def- #_"Var" compile (ß RT.var("cloiure.core", "compile")))
+    (§ def- #_"Var" warn_on_reflection (ß RT.var("cloiure.core", "*warn-on-reflection*")))
+    (§ def- #_"Var" unchecked_math (ß RT.var("cloiure.core", "*unchecked-math*")))
 
-    (§ defn void main(String[] args) (§ throws IOException, ClassNotFoundException)
+    (§ defn #_"void" main [#_"String[]" args] (§ throws IOException, ClassNotFoundException)
         (let [#_"OutputStreamWriter" out (ß (OutputStreamWriter) RT.OUT.deref())]
             (let [#_"PrintWriter" err (ß RT.errPrintWriter())]
                 (let [#_"String" path (ß System.getProperty(PATH_PROP))]
@@ -4639,61 +5045,61 @@
 (§ import java.util.regex.Matcher)
 
 (class-ns Compiler (§ implements Opcodes)
-    (§ def Symbol DEF = Symbol.intern("def"))
-    (§ def Symbol LOOP = Symbol.intern("loop*"))
-    (§ def Symbol RECUR = Symbol.intern("recur"))
-    (§ def Symbol IF = Symbol.intern("if"))
-    (§ def Symbol LET = Symbol.intern("let*"))
-    (§ def Symbol LETFN = Symbol.intern("letfn*"))
-    (§ def Symbol DO = Symbol.intern("do"))
-    (§ def Symbol FN = Symbol.intern("fn*"))
-    (§ def Symbol FNONCE = (Symbol) Symbol.intern("fn*").withMeta(RT.map(Keyword.intern(nil, "once"), RT.T)))
-    (§ def Symbol QUOTE = Symbol.intern("quote"))
-    (§ def Symbol THE_VAR = Symbol.intern("var"))
-    (§ def Symbol DOT = Symbol.intern("."))
-    (§ def Symbol ASSIGN = Symbol.intern("set!"))
-    (§ def Symbol TRY = Symbol.intern("try"))
-    (§ def Symbol CATCH = Symbol.intern("catch"))
-    (§ def Symbol FINALLY = Symbol.intern("finally"))
-    (§ def Symbol THROW = Symbol.intern("throw"))
-    (§ def Symbol MONITOR_ENTER = Symbol.intern("monitor-enter"))
-    (§ def Symbol MONITOR_EXIT = Symbol.intern("monitor-exit"))
-    (§ def Symbol IMPORT = Symbol.intern("cloiure.core", "import*"))
-    (§ def Symbol DEFTYPE = Symbol.intern("deftype*"))
-    (§ def Symbol CASE = Symbol.intern("case*"))
+    (§ def #_"Symbol" DEF (ß Symbol.intern("def")))
+    (§ def #_"Symbol" LOOP (ß Symbol.intern("loop*")))
+    (§ def #_"Symbol" RECUR (ß Symbol.intern("recur")))
+    (§ def #_"Symbol" IF (ß Symbol.intern("if")))
+    (§ def #_"Symbol" LET (ß Symbol.intern("let*")))
+    (§ def #_"Symbol" LETFN (ß Symbol.intern("letfn*")))
+    (§ def #_"Symbol" DO (ß Symbol.intern("do")))
+    (§ def #_"Symbol" FN (ß Symbol.intern("fn*")))
+    (§ def #_"Symbol" FNONCE (ß (Symbol) Symbol.intern("fn*").withMeta(RT.map(Keyword.intern(nil, "once"), RT.T))))
+    (§ def #_"Symbol" QUOTE (ß Symbol.intern("quote")))
+    (§ def #_"Symbol" THE_VAR (ß Symbol.intern("var")))
+    (§ def #_"Symbol" DOT (ß Symbol.intern(".")))
+    (§ def #_"Symbol" ASSIGN (ß Symbol.intern("set!")))
+    (§ def #_"Symbol" TRY (ß Symbol.intern("try")))
+    (§ def #_"Symbol" CATCH (ß Symbol.intern("catch")))
+    (§ def #_"Symbol" FINALLY (ß Symbol.intern("finally")))
+    (§ def #_"Symbol" THROW (ß Symbol.intern("throw")))
+    (§ def #_"Symbol" MONITOR_ENTER (ß Symbol.intern("monitor-enter")))
+    (§ def #_"Symbol" MONITOR_EXIT (ß Symbol.intern("monitor-exit")))
+    (§ def #_"Symbol" IMPORT (ß Symbol.intern("cloiure.core", "import*")))
+    (§ def #_"Symbol" DEFTYPE (ß Symbol.intern("deftype*")))
+    (§ def #_"Symbol" CASE (ß Symbol.intern("case*")))
 
-    (§ def Symbol CLASS = Symbol.intern("Class"))
-    (§ def Symbol NEW = Symbol.intern("new"))
-    (§ def Symbol THIS = Symbol.intern("this"))
-    (§ def Symbol REIFY = Symbol.intern("reify*"))
-    (§ def Symbol LIST = Symbol.intern("cloiure.core", "list"))
-    (§ def Symbol HASHMAP = Symbol.intern("cloiure.core", "hash-map"))
-    (§ def Symbol VECTOR = Symbol.intern("cloiure.core", "vector"))
-    (§ def Symbol IDENTITY = Symbol.intern("cloiure.core", "identity"))
+    (§ def #_"Symbol" CLASS (ß Symbol.intern("Class")))
+    (§ def #_"Symbol" NEW (ß Symbol.intern("new")))
+    (§ def #_"Symbol" THIS (ß Symbol.intern("this")))
+    (§ def #_"Symbol" REIFY (ß Symbol.intern("reify*")))
+    (§ def #_"Symbol" LIST (ß Symbol.intern("cloiure.core", "list")))
+    (§ def #_"Symbol" HASHMAP (ß Symbol.intern("cloiure.core", "hash-map")))
+    (§ def #_"Symbol" VECTOR (ß Symbol.intern("cloiure.core", "vector")))
+    (§ def #_"Symbol" IDENTITY (ß Symbol.intern("cloiure.core", "identity")))
 
-    (§ def Symbol _AMP_ = Symbol.intern("&"))
-    (§ def Symbol ISEQ = Symbol.intern("cloiure.lang.ISeq"))
+    (§ def #_"Symbol" _AMP_ (ß Symbol.intern("&")))
+    (§ def #_"Symbol" ISEQ (ß Symbol.intern("cloiure.lang.ISeq")))
 
-    (§ def Keyword loadNs = Keyword.intern(nil, "load-ns"))
-    (§ def Keyword inlineKey = Keyword.intern(nil, "inline"))
-    (§ def Keyword inlineAritiesKey = Keyword.intern(nil, "inline-arities"))
-    (§ def Keyword staticKey = Keyword.intern(nil, "static"))
-    (§ def Keyword arglistsKey = Keyword.intern(nil, "arglists"))
-    (§ def Symbol INVOKE_STATIC = Symbol.intern("invokeStatic"))
+    (§ def #_"Keyword" loadNs (ß Keyword.intern(nil, "load-ns")))
+    (§ def #_"Keyword" inlineKey (ß Keyword.intern(nil, "inline")))
+    (§ def #_"Keyword" inlineAritiesKey (ß Keyword.intern(nil, "inline-arities")))
+    (§ def #_"Keyword" staticKey (ß Keyword.intern(nil, "static")))
+    (§ def #_"Keyword" arglistsKey (ß Keyword.intern(nil, "arglists")))
+    (§ def #_"Symbol" INVOKE_STATIC (ß Symbol.intern("invokeStatic")))
 
-    (§ def Keyword volatileKey = Keyword.intern(nil, "volatile"))
-    (§ def Keyword implementsKey = Keyword.intern(nil, "implements"))
-    (§ def String COMPILE_STUB_PREFIX = "compile__stub")
+    (§ def #_"Keyword" volatileKey (ß Keyword.intern(nil, "volatile")))
+    (§ def #_"Keyword" implementsKey (ß Keyword.intern(nil, "implements")))
+    (§ def #_"String" COMPILE_STUB_PREFIX (ß "compile__stub"))
 
-    (§ def Keyword protocolKey = Keyword.intern(nil, "protocol"))
-    (§ def Keyword onKey = Keyword.intern(nil, "on"))
-    (§ def Keyword dynamicKey = Keyword.intern("dynamic"))
-    (§ def Keyword redefKey = Keyword.intern(nil, "redef"))
+    (§ def #_"Keyword" protocolKey (ß Keyword.intern(nil, "protocol")))
+    (§ def #_"Keyword" onKey (ß Keyword.intern(nil, "on")))
+    (§ def #_"Keyword" dynamicKey (ß Keyword.intern("dynamic")))
+    (§ def #_"Keyword" redefKey (ß Keyword.intern(nil, "redef")))
 
-    (§ def Symbol NS = Symbol.intern("ns"))
-    (§ def Symbol IN_NS = Symbol.intern("in-ns"))
+    (§ def #_"Symbol" NS (ß Symbol.intern("ns")))
+    (§ def #_"Symbol" IN_NS (ß Symbol.intern("in-ns")))
 
-    (§ def IPersistentMap specials = PersistentHashMap.create(
+    (§ def #_"IPersistentMap" specials (ß PersistentHashMap.create(
   #_map DEF, new DefExpr.Parser(),
   #_map LOOP, new LetExpr.Parser(),
   #_map RECUR, new RecurExpr.Parser(),
@@ -4718,29 +5124,29 @@
   #_map FINALLY, nil,
   #_map NEW, new NewExpr.Parser(),
   #_map _AMP_, nil
-    ))
+    )))
 
-    (§ def- int MAX_POSITIONAL_ARITY = 20)
-    (§ def- Type OBJECT_TYPE)
-    (§ def- Type KEYWORD_TYPE = Type.getType(Keyword.class))
-    (§ def- Type VAR_TYPE = Type.getType(Var.class))
-    (§ def- Type SYMBOL_TYPE = Type.getType(Symbol.class))
-    (§ def- Type IFN_TYPE = Type.getType(IFn.class))
-    (§ def- Type AFUNCTION_TYPE = Type.getType(AFunction.class))
-    (§ def- Type RT_TYPE = Type.getType(RT.class))
-    (§ def- Type NUMBERS_TYPE = Type.getType(Numbers.class))
+    (§ def- #_"int" MAX_POSITIONAL_ARITY (ß 20))
+    (§ def- #_"Type" OBJECT_TYPE)
+    (§ def- #_"Type" KEYWORD_TYPE (ß Type.getType(Keyword.class)))
+    (§ def- #_"Type" VAR_TYPE (ß Type.getType(Var.class)))
+    (§ def- #_"Type" SYMBOL_TYPE (ß Type.getType(Symbol.class)))
+    (§ def- #_"Type" IFN_TYPE (ß Type.getType(IFn.class)))
+    (§ def- #_"Type" AFUNCTION_TYPE (ß Type.getType(AFunction.class)))
+    (§ def- #_"Type" RT_TYPE (ß Type.getType(RT.class)))
+    (§ def- #_"Type" NUMBERS_TYPE (ß Type.getType(Numbers.class)))
 
-    (§ def Type CLASS_TYPE = Type.getType(Class.class))
-    (§ def Type NS_TYPE = Type.getType(Namespace.class))
-    (§ def Type UTIL_TYPE = Type.getType(Util.class))
-    (§ def Type REFLECTOR_TYPE = Type.getType(Reflector.class))
-    (§ def Type THROWABLE_TYPE = Type.getType(Throwable.class))
-    (§ def Type BOOLEAN_OBJECT_TYPE = Type.getType(Boolean.class))
-    (§ def Type IPERSISTENTMAP_TYPE = Type.getType(IPersistentMap.class))
-    (§ def Type IOBJ_TYPE = Type.getType(IObj.class))
-    (§ def Type TUPLE_TYPE = Type.getType(Tuple.class))
+    (§ def #_"Type" CLASS_TYPE (ß Type.getType(Class.class)))
+    (§ def #_"Type" NS_TYPE (ß Type.getType(Namespace.class)))
+    (§ def #_"Type" UTIL_TYPE (ß Type.getType(Util.class)))
+    (§ def #_"Type" REFLECTOR_TYPE (ß Type.getType(Reflector.class)))
+    (§ def #_"Type" THROWABLE_TYPE (ß Type.getType(Throwable.class)))
+    (§ def #_"Type" BOOLEAN_OBJECT_TYPE (ß Type.getType(Boolean.class)))
+    (§ def #_"Type" IPERSISTENTMAP_TYPE (ß Type.getType(IPersistentMap.class)))
+    (§ def #_"Type" IOBJ_TYPE (ß Type.getType(IObj.class)))
+    (§ def #_"Type" TUPLE_TYPE (ß Type.getType(Tuple.class)))
 
-    (§ def Method[] createTupleMethods =
+    (§ def #_"Method[]" createTupleMethods
     (§ array
         (ß Method.getMethod("cloiure.lang.IPersistentVector create()")),
         (ß Method.getMethod("cloiure.lang.IPersistentVector create(Object)")),
@@ -4751,8 +5157,8 @@
         (ß Method.getMethod("cloiure.lang.IPersistentVector create(Object,Object,Object,Object,Object,Object)"))
     ))
 
-    (§ def- Type[][] ARG_TYPES)
-    (§ def- Type[] EXCEPTION_TYPES = (§))
+    (§ def- #_"Type[][]" ARG_TYPES)
+    (§ def- #_"Type[]" EXCEPTION_TYPES (ß (§)))
 
     (§ static
         (ß OBJECT_TYPE = Type.getType(Object.class))
@@ -4775,70 +5181,70 @@
     )
 
     ;; symbol->localbinding
-    (§ def Var LOCAL_ENV = Var.create(nil).setDynamic())
+    (§ def #_"Var" LOCAL_ENV (ß Var.create(nil).setDynamic()))
 
     ;; vector<localbinding>
-    (§ def Var LOOP_LOCALS = Var.create().setDynamic())
+    (§ def #_"Var" LOOP_LOCALS (ß Var.create().setDynamic()))
 
     ;; Label
-    (§ def Var LOOP_LABEL = Var.create().setDynamic())
+    (§ def #_"Var" LOOP_LABEL (ß Var.create().setDynamic()))
 
     ;; vector<object>
-    (§ def Var CONSTANTS = Var.create().setDynamic())
+    (§ def #_"Var" CONSTANTS (ß Var.create().setDynamic()))
 
     ;; IdentityHashMap
-    (§ def Var CONSTANT_IDS = Var.create().setDynamic())
+    (§ def #_"Var" CONSTANT_IDS (ß Var.create().setDynamic()))
 
     ;; vector<keyword>
-    (§ def Var KEYWORD_CALLSITES = Var.create().setDynamic())
+    (§ def #_"Var" KEYWORD_CALLSITES (ß Var.create().setDynamic()))
 
     ;; vector<var>
-    (§ def Var PROTOCOL_CALLSITES = Var.create().setDynamic())
+    (§ def #_"Var" PROTOCOL_CALLSITES (ß Var.create().setDynamic()))
 
     ;; set<var>
-    (§ def Var VAR_CALLSITES = Var.create().setDynamic())
+    (§ def #_"Var" VAR_CALLSITES (ß Var.create().setDynamic()))
 
     ;; keyword->constid
-    (§ def Var KEYWORDS = Var.create().setDynamic())
+    (§ def #_"Var" KEYWORDS (ß Var.create().setDynamic()))
 
     ;; var->constid
-    (§ def Var VARS = Var.create().setDynamic())
+    (§ def #_"Var" VARS (ß Var.create().setDynamic()))
 
     ;; FnFrame
-    (§ def Var METHOD = Var.create(nil).setDynamic())
+    (§ def #_"Var" METHOD (ß Var.create(nil).setDynamic()))
 
     ;; nil or not
-    (§ def Var IN_CATCH_FINALLY = Var.create(nil).setDynamic())
+    (§ def #_"Var" IN_CATCH_FINALLY (ß Var.create(nil).setDynamic()))
 
-    (§ def Var METHOD_RETURN_CONTEXT = Var.create(nil).setDynamic())
+    (§ def #_"Var" METHOD_RETURN_CONTEXT (ß Var.create(nil).setDynamic()))
 
-    (§ def Var NO_RECUR = Var.create(nil).setDynamic())
+    (§ def #_"Var" NO_RECUR (ß Var.create(nil).setDynamic()))
 
     ;; DynamicClassLoader
-    (§ def Var LOADER = Var.create().setDynamic())
+    (§ def #_"Var" LOADER (ß Var.create().setDynamic()))
 
     ;; String
-    (§ def Var SOURCE = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*source-path*"), "NO_SOURCE_FILE").setDynamic())
+    (§ def #_"Var" SOURCE (ß Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*source-path*"), "NO_SOURCE_FILE").setDynamic()))
 
     ;; String
-    (§ def Var SOURCE_PATH = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*file*"), "NO_SOURCE_PATH").setDynamic())
+    (§ def #_"Var" SOURCE_PATH (ß Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*file*"), "NO_SOURCE_PATH").setDynamic()))
 
     ;; String
-    (§ def Var COMPILE_PATH = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*compile-path*"), nil).setDynamic())
+    (§ def #_"Var" COMPILE_PATH (ß Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*compile-path*"), nil).setDynamic()))
     ;; boolean
-    (§ def Var COMPILE_FILES = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*compile-files*"), Boolean.FALSE).setDynamic())
+    (§ def #_"Var" COMPILE_FILES (ß Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*compile-files*"), Boolean.FALSE).setDynamic()))
 
-    (§ def Var INSTANCE = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("instance?")))
+    (§ def #_"Var" INSTANCE (ß Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("instance?"))))
 
-    (§ def Var ADD_ANNOTATIONS = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("add-annotations")))
+    (§ def #_"Var" ADD_ANNOTATIONS (ß Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("add-annotations"))))
 
-    (§ def Keyword disableLocalsClearingKey = Keyword.intern("disable-locals-clearing"))
-    (§ def Keyword directLinkingKey = Keyword.intern("direct-linking"))
-    (§ def Keyword elideMetaKey = Keyword.intern("elide-meta"))
+    (§ def #_"Keyword" disableLocalsClearingKey (ß Keyword.intern("disable-locals-clearing")))
+    (§ def #_"Keyword" directLinkingKey (ß Keyword.intern("direct-linking")))
+    (§ def #_"Keyword" elideMetaKey (ß Keyword.intern("elide-meta")))
 
-    (§ def Var COMPILER_OPTIONS)
+    (§ def #_"Var" COMPILER_OPTIONS)
 
-    (§ defn Object getCompilerOption(Keyword k)
+    (§ defn #_"Object" getCompilerOption [#_"Keyword" k]
         (ß RT.get(COMPILER_OPTIONS.deref(), k))
     )
 
@@ -4858,7 +5264,7 @@
         )
     )
 
-    (§ defn Object elideMeta(Object m)
+    (§ defn #_"Object" elideMeta [#_"Object" m]
         (let [#_"Collection<Object>" elides (ß (Collection<Object>) getCompilerOption(elideMetaKey))]
             (when (ß elides != nil)
                 (doseq [#_"Object" k elides]
@@ -4870,40 +5276,40 @@
     )
 
     ;; Integer
-    (§ def Var LINE = Var.create(0).setDynamic())
-    (§ def Var COLUMN = Var.create(0).setDynamic())
+    (§ def #_"Var" LINE (ß Var.create(0).setDynamic()))
+    (§ def #_"Var" COLUMN (ß Var.create(0).setDynamic()))
 
-    (§ defn int lineDeref()
+    (§ defn #_"int" lineDeref []
         (ß ((Number)LINE.deref()).intValue())
     )
 
-    (§ defn int columnDeref()
+    (§ defn #_"int" columnDeref []
         (ß ((Number)COLUMN.deref()).intValue())
     )
 
     ;; Integer
-    (§ def Var LINE_BEFORE = Var.create(0).setDynamic())
-    (§ def Var COLUMN_BEFORE = Var.create(0).setDynamic())
-    (§ def Var LINE_AFTER = Var.create(0).setDynamic())
-    (§ def Var COLUMN_AFTER = Var.create(0).setDynamic())
+    (§ def #_"Var" LINE_BEFORE (ß Var.create(0).setDynamic()))
+    (§ def #_"Var" COLUMN_BEFORE (ß Var.create(0).setDynamic()))
+    (§ def #_"Var" LINE_AFTER (ß Var.create(0).setDynamic()))
+    (§ def #_"Var" COLUMN_AFTER (ß Var.create(0).setDynamic()))
 
     ;; Integer
-    (§ def Var NEXT_LOCAL_NUM = Var.create(0).setDynamic())
+    (§ def #_"Var" NEXT_LOCAL_NUM (ß Var.create(0).setDynamic()))
 
     ;; Integer
-    (§ def Var RET_LOCAL_NUM = Var.create().setDynamic())
+    (§ def #_"Var" RET_LOCAL_NUM (ß Var.create().setDynamic()))
 
-    (§ def Var COMPILE_STUB_SYM = Var.create(nil).setDynamic())
-    (§ def Var COMPILE_STUB_CLASS = Var.create(nil).setDynamic())
+    (§ def #_"Var" COMPILE_STUB_SYM (ß Var.create(nil).setDynamic()))
+    (§ def #_"Var" COMPILE_STUB_CLASS (ß Var.create(nil).setDynamic()))
 
     ;; PathNode chain
-    (§ def Var CLEAR_PATH = Var.create(nil).setDynamic())
+    (§ def #_"Var" CLEAR_PATH (ß Var.create(nil).setDynamic()))
 
     ;; tail of PathNode chain
-    (§ def Var CLEAR_ROOT = Var.create(nil).setDynamic())
+    (§ def #_"Var" CLEAR_ROOT (ß Var.create(nil).setDynamic()))
 
     ;; LocalBinding -> Set<LocalBindingExpr>
-    (§ def Var CLEAR_SITES = Var.create(nil).setDynamic())
+    (§ def #_"Var" CLEAR_SITES (ß Var.create(nil).setDynamic()))
 
     #_non-static
     (§ enum C
@@ -4918,7 +5324,7 @@
     (class-ns Recur
     )
 
-    (§ def Class RECUR_CLASS = Recur.class)
+    (§ def #_"Class" RECUR_CLASS (ß Recur.class))
 
     #_non-static
     (§ interface Expr
@@ -4930,11 +5336,13 @@
 
     #_abstract
     (class-ns UntypedExpr (§ implements Expr)
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (throw (ß new IllegalArgumentException("Has no Java class")))
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             false
         )
     )
@@ -4944,15 +5352,15 @@
         (§ abstract Expr parse(C context, Object form))
     )
 
-    (§ defn boolean isSpecial(Object sym)
+    (§ defn #_"boolean" isSpecial [#_"Object" sym]
         (ß specials.containsKey(sym))
     )
 
-    (§ defn boolean inTailCall(C context)
+    (§ defn #_"boolean" inTailCall [#_"C" context]
         (ß (context == C.RETURN) && (METHOD_RETURN_CONTEXT.deref() != nil) && (IN_CATCH_FINALLY.deref() == nil))
     )
 
-    (§ defn Symbol resolveSymbol(Symbol sym)
+    (§ defn #_"Symbol" resolveSymbol [#_"Symbol" sym]
         ;; already qualified or classname?
         (when (ß sym.name.indexOf(\.) > 0)
             (§ return sym)
@@ -4986,24 +5394,24 @@
     )
 
     (class-ns DefExpr (§ implements Expr)
-        (§ field Var var)
-        (§ field Expr init)
-        (§ field Expr meta)
-        (§ field boolean initProvided)
-        (§ field boolean isDynamic)
-        (§ field boolean shadowsCoreMapping)
-        (§ field String source)
-        (§ field int line)
-        (§ field int column)
+        (§ field #_"Var" var)
+        (§ field #_"Expr" init)
+        (§ field #_"Expr" meta)
+        (§ field #_"boolean" initProvided)
+        (§ field #_"boolean" isDynamic)
+        (§ field #_"boolean" shadowsCoreMapping)
+        (§ field #_"String" source)
+        (§ field #_"int" line)
+        (§ field #_"int" column)
 
-        (§ def Method bindRootMethod = Method.getMethod("void bindRoot(Object)"))
-        (§ def Method setTagMethod = Method.getMethod("void setTag(cloiure.lang.Symbol)"))
-        (§ def Method setMetaMethod = Method.getMethod("void setMeta(cloiure.lang.IPersistentMap)"))
-        (§ def Method setDynamicMethod = Method.getMethod("cloiure.lang.Var setDynamic(boolean)"))
-        (§ def Method symintern = Method.getMethod("cloiure.lang.Symbol intern(String, String)"))
-        (§ def Method internVar = Method.getMethod("cloiure.lang.Var refer(cloiure.lang.Symbol, cloiure.lang.Var)"))
+        (§ def #_"Method" bindRootMethod (ß Method.getMethod("void bindRoot(Object)")))
+        (§ def #_"Method" setTagMethod (ß Method.getMethod("void setTag(cloiure.lang.Symbol)")))
+        (§ def #_"Method" setMetaMethod (ß Method.getMethod("void setMeta(cloiure.lang.IPersistentMap)")))
+        (§ def #_"Method" setDynamicMethod (ß Method.getMethod("cloiure.lang.Var setDynamic(boolean)")))
+        (§ def #_"Method" symintern (ß Method.getMethod("cloiure.lang.Symbol intern(String, String)")))
+        (§ def #_"Method" internVar (ß Method.getMethod("cloiure.lang.Var refer(cloiure.lang.Symbol, cloiure.lang.Var)")))
 
-        (§ constructor DefExpr(String source, int line, int column, Var var, Expr init, Expr meta, boolean initProvided, boolean isDynamic, boolean shadowsCoreMapping)
+        (§ constructor #_"DefExpr" DefExpr [#_"String" source, #_"int" line, #_"int" column, #_"Var" var, #_"Expr" init, #_"Expr" meta, #_"boolean" initProvided, #_"boolean" isDynamic, #_"boolean" shadowsCoreMapping]
             (ß this.source = source)
             (ß this.line = line)
             (ß this.column = column)
@@ -5016,7 +5424,8 @@
             this
         )
 
-        (§ method- boolean includesExplicitMetadata(MapExpr expr)
+        #_method
+        (§ defn- #_"boolean" includesExplicitMetadata [this, #_"MapExpr" expr]
             (loop-when-recur [(ß int i = 0)] (ß i < expr.keyvals.count()) [(ß i += 2)]
                 (let [#_"Keyword" k (ß ((KeywordExpr) expr.keyvals.nth(i)).k)]
                     (when (ß (k != RT.FILE_KEY) && (k != RT.DECLARED_KEY) && (k != RT.LINE_KEY) && (k != RT.COLUMN_KEY))
@@ -5027,7 +5436,8 @@
             false
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (try
                 (when initProvided
                     (ß var.bindRoot(init.eval()))
@@ -5053,7 +5463,8 @@
             )
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß objx.emitVar(gen, var))
 
             (when shadowsCoreMapping
@@ -5097,16 +5508,19 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß Var.class)
         )
 
         (class-ns Parser (§ implements IParser)
-            (§ method Expr parse(C context, Object form)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" form]
                 ;; (def x) or (def x initexpr) or (def x "docstring" initexpr)
                 (let [#_"String" docstring nil]
                     (when (ß RT.count(form) == 4 && (RT.third(form) instanceof String))
@@ -5181,34 +5595,39 @@
     )
 
     (class-ns AssignExpr (§ implements Expr)
-        (§ field AssignableExpr target)
-        (§ field Expr val)
+        (§ field #_"AssignableExpr" target)
+        (§ field #_"Expr" val)
 
-        (§ constructor AssignExpr(AssignableExpr target, Expr val)
+        (§ constructor #_"AssignExpr" AssignExpr [#_"AssignableExpr" target, #_"Expr" val]
             (ß this.target = target)
             (ß this.val = val)
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (ß target.evalAssign(val))
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß target.emitAssign(context, objx, gen, val))
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß val.hasJavaClass())
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß val.getJavaClass())
         )
 
         (class-ns Parser (§ implements IParser)
-            (§ method Expr parse(C context, Object frm)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" frm]
                 (let [#_"ISeq" form (ß (ISeq) frm)]
                     (when (ß RT.length(form) != 3)
                         (throw (ß new IllegalArgumentException("Malformed assignment, expecting (set! target val)")))
@@ -5225,24 +5644,26 @@
     )
 
     (class-ns VarExpr (§ implements Expr, AssignableExpr)
-        (§ field Var var)
-        (§ field Object tag)
-        (§ def Method getMethod = Method.getMethod("Object get()"))
-        (§ def Method setMethod = Method.getMethod("Object set(Object)"))
+        (§ field #_"Var" var)
+        (§ field #_"Object" tag)
+        (§ def #_"Method" getMethod (ß Method.getMethod("Object get()")))
+        (§ def #_"Method" setMethod (ß Method.getMethod("Object set(Object)")))
 
-        (§ field Class jc)
+        (§ field #_"Class" jc)
 
-        (§ constructor VarExpr(Var var, Symbol tag)
+        (§ constructor #_"VarExpr" VarExpr [#_"Var" var, #_"Symbol" tag]
             (ß this.var = var)
             (ß this.tag = (tag != nil) ? tag :or var.getTag())
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (ß var.deref())
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß objx.emitVarValue(gen, var))
             (when (ß context == C.STATEMENT)
                 (ß gen.pop())
@@ -5250,22 +5671,26 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß (tag != nil))
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (when (ß jc == nil)
                 (ß jc = HostExpr.tagToClass(tag))
             )
             jc
         )
 
-        (§ method Object evalAssign(Expr val)
+        #_method
+        (§ defn #_"Object" evalAssign [this, #_"Expr" val]
             (ß var.set(val.eval()))
         )
 
-        (§ method void emitAssign(C context, ObjExpr objx, GeneratorAdapter gen, Expr val)
+        #_method
+        (§ defn #_"void" emitAssign [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val]
             (ß objx.emitVar(gen, var))
             (ß val.emit(C.EXPRESSION, objx, gen))
             (ß gen.invokeVirtual(VAR_TYPE, setMethod))
@@ -5277,18 +5702,20 @@
     )
 
     (class-ns TheVarExpr (§ implements Expr)
-        (§ field Var var)
+        (§ field #_"Var" var)
 
-        (§ constructor TheVarExpr(Var var)
+        (§ constructor #_"TheVarExpr" TheVarExpr [#_"Var" var]
             (ß this.var = var)
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             var
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß objx.emitVar(gen, var))
             (when (ß context == C.STATEMENT)
                 (ß gen.pop())
@@ -5296,16 +5723,19 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß Var.class)
         )
 
         (class-ns Parser (§ implements IParser)
-            (§ method Expr parse(C context, Object form)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" form]
                 (let [#_"Symbol" sym (ß (Symbol) RT.second(form))]
                     (let [#_"Var" v (ß lookupVar(sym, false))]
                         (when (ß v != nil)
@@ -5319,22 +5749,25 @@
     )
 
     (class-ns KeywordExpr (§ extends LiteralExpr)
-        (§ field Keyword k)
+        (§ field #_"Keyword" k)
 
-        (§ constructor KeywordExpr(Keyword k)
+        (§ constructor #_"KeywordExpr" KeywordExpr [#_"Keyword" k]
             (ß this.k = k)
             this
         )
 
-        (§ method Object val()
+        #_method
+        (§ defn #_"Object" val [this]
             k
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             k
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß objx.emitKeyword(gen, k))
             (when (ß context == C.STATEMENT)
                 (ß gen.pop())
@@ -5342,35 +5775,39 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß Keyword.class)
         )
     )
 
     (class-ns ImportExpr (§ implements Expr)
-        (§ field String c)
+        (§ field #_"String" c)
 
-        (§ def Method forNameMethod = Method.getMethod("Class classForNameNonLoading(String)"))
-        (§ def Method importClassMethod = Method.getMethod("Class importClass(Class)"))
-        (§ def Method derefMethod = Method.getMethod("Object deref()"))
+        (§ def #_"Method" forNameMethod (ß Method.getMethod("Class classForNameNonLoading(String)")))
+        (§ def #_"Method" importClassMethod (ß Method.getMethod("Class importClass(Class)")))
+        (§ def #_"Method" derefMethod (ß Method.getMethod("Object deref()")))
 
-        (§ constructor ImportExpr(String c)
+        (§ constructor #_"ImportExpr" ImportExpr [#_"String" c]
             (ß this.c = c)
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (let [#_"Namespace" ns (ß (Namespace) RT.CURRENT_NS.deref())]
                 (ß ns.importClass(RT.classForNameNonLoading(c)))
                 nil
             )
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß gen.getStatic(RT_TYPE, "CURRENT_NS", VAR_TYPE))
             (ß gen.invokeVirtual(VAR_TYPE, derefMethod))
             (ß gen.checkCast(NS_TYPE))
@@ -5383,16 +5820,19 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             false
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (throw (ß new IllegalArgumentException("ImportExpr has no Java class")))
         )
 
         (class-ns Parser (§ implements IParser)
-            (§ method Expr parse(C context, Object form)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" form]
                 (ß new ImportExpr((String) RT.second(form)))
             )
         )
@@ -5402,7 +5842,8 @@
     (class-ns LiteralExpr (§ implements Expr)
         (§ abstract Object val())
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (ß val())
         )
     )
@@ -5419,39 +5860,39 @@
 
     #_abstract
     (class-ns HostExpr (§ implements Expr, MaybePrimitiveExpr)
-        (§ def Type BOOLEAN_TYPE = Type.getType(Boolean.class))
-        (§ def Type CHAR_TYPE = Type.getType(Character.class))
-        (§ def Type INTEGER_TYPE = Type.getType(Integer.class))
-        (§ def Type LONG_TYPE = Type.getType(Long.class))
-        (§ def Type FLOAT_TYPE = Type.getType(Float.class))
-        (§ def Type DOUBLE_TYPE = Type.getType(Double.class))
-        (§ def Type SHORT_TYPE = Type.getType(Short.class))
-        (§ def Type BYTE_TYPE = Type.getType(Byte.class))
-        (§ def Type NUMBER_TYPE = Type.getType(Number.class))
+        (§ def #_"Type" BOOLEAN_TYPE (ß Type.getType(Boolean.class)))
+        (§ def #_"Type" CHAR_TYPE (ß Type.getType(Character.class)))
+        (§ def #_"Type" INTEGER_TYPE (ß Type.getType(Integer.class)))
+        (§ def #_"Type" LONG_TYPE (ß Type.getType(Long.class)))
+        (§ def #_"Type" FLOAT_TYPE (ß Type.getType(Float.class)))
+        (§ def #_"Type" DOUBLE_TYPE (ß Type.getType(Double.class)))
+        (§ def #_"Type" SHORT_TYPE (ß Type.getType(Short.class)))
+        (§ def #_"Type" BYTE_TYPE (ß Type.getType(Byte.class)))
+        (§ def #_"Type" NUMBER_TYPE (ß Type.getType(Number.class)))
 
-        (§ def Method charValueMethod = Method.getMethod("char charValue()"))
-        (§ def Method booleanValueMethod = Method.getMethod("boolean booleanValue()"))
+        (§ def #_"Method" charValueMethod (ß Method.getMethod("char charValue()")))
+        (§ def #_"Method" booleanValueMethod (ß Method.getMethod("boolean booleanValue()")))
 
-        (§ def Method charValueOfMethod = Method.getMethod("Character valueOf(char)"))
-        (§ def Method intValueOfMethod = Method.getMethod("Integer valueOf(int)"))
-        (§ def Method longValueOfMethod = Method.getMethod("Long valueOf(long)"))
-        (§ def Method floatValueOfMethod = Method.getMethod("Float valueOf(float)"))
-        (§ def Method doubleValueOfMethod = Method.getMethod("Double valueOf(double)"))
-        (§ def Method shortValueOfMethod = Method.getMethod("Short valueOf(short)"))
-        (§ def Method byteValueOfMethod = Method.getMethod("Byte valueOf(byte)"))
+        (§ def #_"Method" charValueOfMethod (ß Method.getMethod("Character valueOf(char)")))
+        (§ def #_"Method" intValueOfMethod (ß Method.getMethod("Integer valueOf(int)")))
+        (§ def #_"Method" longValueOfMethod (ß Method.getMethod("Long valueOf(long)")))
+        (§ def #_"Method" floatValueOfMethod (ß Method.getMethod("Float valueOf(float)")))
+        (§ def #_"Method" doubleValueOfMethod (ß Method.getMethod("Double valueOf(double)")))
+        (§ def #_"Method" shortValueOfMethod (ß Method.getMethod("Short valueOf(short)")))
+        (§ def #_"Method" byteValueOfMethod (ß Method.getMethod("Byte valueOf(byte)")))
 
-        (§ def Method intValueMethod = Method.getMethod("int intValue()"))
-        (§ def Method longValueMethod = Method.getMethod("long longValue()"))
-        (§ def Method floatValueMethod = Method.getMethod("float floatValue()"))
-        (§ def Method doubleValueMethod = Method.getMethod("double doubleValue()"))
-        (§ def Method byteValueMethod = Method.getMethod("byte byteValue()"))
-        (§ def Method shortValueMethod = Method.getMethod("short shortValue()"))
+        (§ def #_"Method" intValueMethod (ß Method.getMethod("int intValue()")))
+        (§ def #_"Method" longValueMethod (ß Method.getMethod("long longValue()")))
+        (§ def #_"Method" floatValueMethod (ß Method.getMethod("float floatValue()")))
+        (§ def #_"Method" doubleValueMethod (ß Method.getMethod("double doubleValue()")))
+        (§ def #_"Method" byteValueMethod (ß Method.getMethod("byte byteValue()")))
+        (§ def #_"Method" shortValueMethod (ß Method.getMethod("short shortValue()")))
 
-        (§ def Method fromIntMethod = Method.getMethod("cloiure.lang.Num from(int)"))
-        (§ def Method fromLongMethod = Method.getMethod("cloiure.lang.Num from(long)"))
-        (§ def Method fromDoubleMethod = Method.getMethod("cloiure.lang.Num from(double)"))
+        (§ def #_"Method" fromIntMethod (ß Method.getMethod("cloiure.lang.Num from(int)")))
+        (§ def #_"Method" fromLongMethod (ß Method.getMethod("cloiure.lang.Num from(long)")))
+        (§ def #_"Method" fromDoubleMethod (ß Method.getMethod("cloiure.lang.Num from(double)")))
 
-        (§ defn void emitBoxReturn(ObjExpr objx, GeneratorAdapter gen, Class returnType)
+        (§ defn #_"void" emitBoxReturn [#_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Class" returnType]
             (when (ß returnType.isPrimitive())
                 (cond (ß returnType == boolean.class)
                     (do
@@ -5507,7 +5948,7 @@
             nil
         )
 
-        (§ defn void emitUnboxArg(ObjExpr objx, GeneratorAdapter gen, Class paramType)
+        (§ defn #_"void" emitUnboxArg [#_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Class" paramType]
             (if (ß paramType.isPrimitive())
                 (do
                     (cond (ß paramType == boolean.class)
@@ -5593,7 +6034,8 @@
         )
 
         (class-ns Parser (§ implements IParser)
-            (§ method Expr parse(C context, Object frm)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" frm]
                 (let [#_"ISeq" form (ß (ISeq) frm)]
                     ;; (. x fieldname-sym) or
                     ;; (. x 0-ary-method)
@@ -5681,7 +6123,7 @@
             )
         )
 
-        (§ defn Class maybeClass(Object form, boolean stringOk)
+        (§ defn #_"Class" maybeClass [#_"Object" form, #_"boolean" stringOk]
             (when (ß form instanceof Class)
                 (§ return (ß (Class) form))
             )
@@ -5733,7 +6175,7 @@
             )
         )
 
-        (§ defn Class maybeSpecialTag(Symbol sym)
+        (§ defn #_"Class" maybeSpecialTag [#_"Symbol" sym]
             (let [#_"Class" c (ß primClass(sym))]
                 (cond (ß c != nil)
                     (do
@@ -5780,7 +6222,7 @@
             )
         )
 
-        (§ defn Class tagToClass(Object tag)
+        (§ defn #_"Class" tagToClass [#_"Object" tag]
             (let [#_"Class" c nil]
                 (when (ß tag instanceof Symbol)
                     (let [#_"Symbol" sym (ß (Symbol) tag)]
@@ -5805,21 +6247,21 @@
     )
 
     (class-ns InstanceFieldExpr (§ extends FieldExpr) (§ implements AssignableExpr)
-        (§ field Expr target)
-        (§ field Class targetClass)
-        (§ field java.lang.reflect.Field field)
-        (§ field String fieldName)
-        (§ field int line)
-        (§ field int column)
-        (§ field Symbol tag)
-        (§ field boolean requireField)
+        (§ field #_"Expr" target)
+        (§ field #_"Class" targetClass)
+        (§ field #_"java.lang.reflect.Field" field)
+        (§ field #_"String" fieldName)
+        (§ field #_"int" line)
+        (§ field #_"int" column)
+        (§ field #_"Symbol" tag)
+        (§ field #_"boolean" requireField)
 
-        (§ def Method invokeNoArgInstanceMember = Method.getMethod("Object invokeNoArgInstanceMember(Object,String,boolean)"))
-        (§ def Method setInstanceFieldMethod = Method.getMethod("Object setInstanceField(Object,String,Object)"))
+        (§ def #_"Method" invokeNoArgInstanceMember (ß Method.getMethod("Object invokeNoArgInstanceMember(Object,String,boolean)")))
+        (§ def #_"Method" setInstanceFieldMethod (ß Method.getMethod("Object setInstanceField(Object,String,Object)")))
 
-        (§ field Class jc)
+        (§ field #_"Class" jc)
 
-        (§ constructor InstanceFieldExpr(int line, int column, Expr target, String fieldName, Symbol tag, boolean requireField)
+        (§ constructor #_"InstanceFieldExpr" InstanceFieldExpr [#_"int" line, #_"int" column, #_"Expr" target, #_"String" fieldName, #_"Symbol" tag, #_"boolean" requireField]
             (ß this.target = target)
             (ß this.targetClass = target.hasJavaClass() ? target.getJavaClass() :or nil)
             (ß this.field = (targetClass != nil) ? Reflector.getField(targetClass, fieldName, false) :or nil)
@@ -5842,15 +6284,18 @@
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (ß Reflector.invokeNoArgInstanceMember(target.eval(), fieldName, requireField))
         )
 
-        (§ method boolean canEmitPrimitive()
+        #_method
+        (§ defn #_"boolean" canEmitPrimitive [this]
             (ß (targetClass != nil && field != nil && Util.isPrimitive(field.getType())))
         )
 
-        (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitUnboxed [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (if (ß targetClass != nil && field != nil)
                 (do
                     (ß target.emit(C.EXPRESSION, objx, gen))
@@ -5865,7 +6310,8 @@
             nil
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (if (ß targetClass != nil && field != nil)
                 (do
                     (ß target.emit(C.EXPRESSION, objx, gen))
@@ -5891,22 +6337,26 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß (field != nil || tag != nil))
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (when (ß jc == nil)
                 (ß jc = (tag != nil) ? HostExpr.tagToClass(tag) :or field.getType())
             )
             jc
         )
 
-        (§ method Object evalAssign(Expr val)
+        #_method
+        (§ defn #_"Object" evalAssign [this, #_"Expr" val]
             (ß Reflector.setInstanceField(target.eval(), fieldName, val.eval()))
         )
 
-        (§ method void emitAssign(C context, ObjExpr objx, GeneratorAdapter gen, Expr val)
+        #_method
+        (§ defn #_"void" emitAssign [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val]
             (if (ß targetClass != nil && field != nil)
                 (do
                     (ß target.emit(C.EXPRESSION, objx, gen))
@@ -5933,17 +6383,17 @@
     )
 
     (class-ns StaticFieldExpr (§ extends FieldExpr) (§ implements AssignableExpr)
-        (§ field String fieldName)
-        (§ field Class c)
-        (§ field java.lang.reflect.Field field)
-        (§ field Symbol tag)
+        (§ field #_"String" fieldName)
+        (§ field #_"Class" c)
+        (§ field #_"java.lang.reflect.Field" field)
+        (§ field #_"Symbol" tag)
 
-        (§ field int line)
-        (§ field int column)
+        (§ field #_"int" line)
+        (§ field #_"int" column)
 
-        (§ field Class jc)
+        (§ field #_"Class" jc)
 
-        (§ constructor StaticFieldExpr(int line, int column, Class c, String fieldName, Symbol tag)
+        (§ constructor #_"StaticFieldExpr" StaticFieldExpr [#_"int" line, #_"int" column, #_"Class" c, #_"String" fieldName, #_"Symbol" tag]
             (ß this.fieldName = fieldName)
             (ß this.line = line)
             (ß this.column = column)
@@ -5958,21 +6408,25 @@
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (ß Reflector.getStaticField(c, fieldName))
         )
 
-        (§ method boolean canEmitPrimitive()
+        #_method
+        (§ defn #_"boolean" canEmitPrimitive [this]
             (ß Util.isPrimitive(field.getType()))
         )
 
-        (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitUnboxed [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß gen.visitLineNumber(line, gen.mark()))
             (ß gen.getStatic(Type.getType(c), fieldName, Type.getType(field.getType())))
             nil
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß gen.visitLineNumber(line, gen.mark()))
 
             (ß gen.getStatic(Type.getType(c), fieldName, Type.getType(field.getType())))
@@ -5983,22 +6437,26 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (when (ß jc == nil)
                 (ß jc = (tag != nil) ? HostExpr.tagToClass(tag) :or field.getType())
             )
             jc
         )
 
-        (§ method Object evalAssign(Expr val)
+        #_method
+        (§ defn #_"Object" evalAssign [this, #_"Expr" val]
             (ß Reflector.setStaticField(c, fieldName, val.eval()))
         )
 
-        (§ method void emitAssign(C context, ObjExpr objx, GeneratorAdapter gen, Expr val)
+        #_method
+        (§ defn #_"void" emitAssign [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val]
             (ß val.emit(C.EXPRESSION, objx, gen))
             (ß gen.visitLineNumber(line, gen.mark()))
             (ß gen.dup())
@@ -6011,7 +6469,7 @@
         )
     )
 
-    (§ defn Class maybePrimitiveType(Expr e)
+    (§ defn #_"Class" maybePrimitiveType [#_"Expr" e]
         (when (ß e instanceof MaybePrimitiveExpr && e.hasJavaClass() && ((MaybePrimitiveExpr)e).canEmitPrimitive())
             (let [#_"Class" c (ß e.getJavaClass())]
                 (when (ß Util.isPrimitive(c))
@@ -6022,7 +6480,7 @@
         nil
     )
 
-    (§ defn Class maybeJavaClass(Collection<Expr> exprs)
+    (§ defn #_"Class" maybeJavaClass [#_"Collection<Expr>" exprs]
         (let [#_"Class" match nil]
             (try
                 (doseq [#_"Expr" e exprs]
@@ -6054,7 +6512,7 @@
 
     #_abstract
     (class-ns MethodExpr (§ extends HostExpr)
-        (§ defn void emitArgsAsArray(IPersistentVector args, ObjExpr objx, GeneratorAdapter gen)
+        (§ defn #_"void" emitArgsAsArray [#_"IPersistentVector" args, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß gen.push(args.count()))
             (ß gen.newArray(OBJECT_TYPE))
             (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
@@ -6066,7 +6524,7 @@
             nil
         )
 
-        (§ defn void emitTypedArgs(ObjExpr objx, GeneratorAdapter gen, Class[] parameterTypes, IPersistentVector args)
+        (§ defn #_"void" emitTypedArgs [#_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Class[]" parameterTypes, #_"IPersistentVector" args]
             (loop-when-recur [(ß int i = 0)] (ß i < parameterTypes.length) [(ß i++)]
                 (let [#_"Expr" e (ß (Expr) args.nth(i))]
                     (try
@@ -6130,21 +6588,21 @@
     )
 
     (class-ns InstanceMethodExpr (§ extends MethodExpr)
-        (§ field Expr target)
-        (§ field String methodName)
-        (§ field IPersistentVector args)
-        (§ field String source)
-        (§ field int line)
-        (§ field int column)
-        (§ field Symbol tag)
-        (§ field boolean tailPosition)
-        (§ field java.lang.reflect.Method method)
+        (§ field #_"Expr" target)
+        (§ field #_"String" methodName)
+        (§ field #_"IPersistentVector" args)
+        (§ field #_"String" source)
+        (§ field #_"int" line)
+        (§ field #_"int" column)
+        (§ field #_"Symbol" tag)
+        (§ field #_"boolean" tailPosition)
+        (§ field #_"java.lang.reflect.Method" method)
 
-        (§ field Class jc)
+        (§ field #_"Class" jc)
 
-        (§ def Method invokeInstanceMethodMethod = Method.getMethod("Object invokeInstanceMethod(Object,String,Object[])"))
+        (§ def #_"Method" invokeInstanceMethodMethod (ß Method.getMethod("Object invokeInstanceMethod(Object,String,Object[])")))
 
-        (§ constructor InstanceMethodExpr(String source, int line, int column, Symbol tag, Expr target, String methodName, IPersistentVector args, boolean tailPosition)
+        (§ constructor #_"InstanceMethodExpr" InstanceMethodExpr [#_"String" source, #_"int" line, #_"int" column, #_"Symbol" tag, #_"Expr" target, #_"String" methodName, #_"IPersistentVector" args, #_"boolean" tailPosition]
             (ß this.source = source)
             (ß this.line = line)
             (ß this.column = column)
@@ -6203,7 +6661,8 @@
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (try
                 (let [#_"Object" targetval (ß target.eval())]
                     (let [#_"Object[]" argvals (ß new Object[args.count()])]
@@ -6232,11 +6691,13 @@
             )
         )
 
-        (§ method boolean canEmitPrimitive()
+        #_method
+        (§ defn #_"boolean" canEmitPrimitive [this]
             (ß (method != nil && Util.isPrimitive(method.getReturnType())))
         )
 
-        (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitUnboxed [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (if (ß method != nil)
                 (do
                     (let [#_"Type" type (ß Type.getType(method.getDeclaringClass()))]
@@ -6268,7 +6729,8 @@
             nil
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (if (ß method != nil)
                 (do
                     (let [#_"Type" type (ß Type.getType(method.getDeclaringClass()))]
@@ -6313,11 +6775,13 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß (method != nil || tag != nil))
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (when (ß jc == nil)
                 (ß jc = retType((tag != nil) ? HostExpr.tagToClass(tag) :or nil, (method != nil) ? method.getReturnType() :or nil))
             )
@@ -6326,23 +6790,23 @@
     )
 
     (class-ns StaticMethodExpr (§ extends MethodExpr)
-        (§ field Class c)
-        (§ field String methodName)
-        (§ field IPersistentVector args)
-        (§ field String source)
-        (§ field int line)
-        (§ field int column)
-        (§ field java.lang.reflect.Method method)
-        (§ field Symbol tag)
-        (§ field boolean tailPosition)
+        (§ field #_"Class" c)
+        (§ field #_"String" methodName)
+        (§ field #_"IPersistentVector" args)
+        (§ field #_"String" source)
+        (§ field #_"int" line)
+        (§ field #_"int" column)
+        (§ field #_"java.lang.reflect.Method" method)
+        (§ field #_"Symbol" tag)
+        (§ field #_"boolean" tailPosition)
 
-        (§ def Method forNameMethod = Method.getMethod("Class classForName(String)"))
-        (§ def Method invokeStaticMethodMethod = Method.getMethod("Object invokeStaticMethod(Class,String,Object[])"))
-        (§ def Keyword warnOnBoxedKeyword = Keyword.intern("warn-on-boxed"))
+        (§ def #_"Method" forNameMethod (ß Method.getMethod("Class classForName(String)")))
+        (§ def #_"Method" invokeStaticMethodMethod (ß Method.getMethod("Object invokeStaticMethod(Class,String,Object[])")))
+        (§ def #_"Keyword" warnOnBoxedKeyword (ß Keyword.intern("warn-on-boxed")))
 
-        (§ field Class jc)
+        (§ field #_"Class" jc)
 
-        (§ constructor StaticMethodExpr(String source, int line, int column, Symbol tag, Class c, String methodName, IPersistentVector args, boolean tailPosition)
+        (§ constructor #_"StaticMethodExpr" StaticMethodExpr [#_"String" source, #_"int" line, #_"int" column, #_"Symbol" tag, #_"Class" c, #_"String" methodName, #_"IPersistentVector" args, #_"boolean" tailPosition]
             (ß this.c = c)
             (ß this.methodName = methodName)
             (ß this.args = args)
@@ -6383,7 +6847,7 @@
             )
         )
 
-        (§ defn boolean isBoxedMath(java.lang.reflect.Method m)
+        (§ defn #_"boolean" isBoxedMath [#_"java.lang.reflect.Method" m]
             (let [#_"Class" c (ß m.getDeclaringClass())]
                 (when (ß c.equals(Numbers.class))
                     (let [#_"WarnBoxedMath" boxedMath (ß m.getAnnotation(WarnBoxedMath.class))]
@@ -6404,7 +6868,8 @@
             )
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (try
                 (let [#_"Object[]" argvals (ß new Object[args.count()])]
                     (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
@@ -6431,15 +6896,18 @@
             )
         )
 
-        (§ method boolean canEmitPrimitive()
+        #_method
+        (§ defn #_"boolean" canEmitPrimitive [this]
             (ß (method != nil && Util.isPrimitive(method.getReturnType())))
         )
 
-        (§ method boolean canEmitIntrinsicPredicate()
+        #_method
+        (§ defn #_"boolean" canEmitIntrinsicPredicate [this]
             (ß (method != nil && RT.get(Intrinsics.preds, method.toString()) != nil))
         )
 
-        (§ method void emitIntrinsicPredicate(C context, ObjExpr objx, GeneratorAdapter gen, Label falseLabel)
+        #_method
+        (§ defn #_"void" emitIntrinsicPredicate [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Label" falseLabel]
             (ß gen.visitLineNumber(line, gen.mark()))
             (if (ß method != nil)
                 (do
@@ -6463,7 +6931,8 @@
             nil
         )
 
-        (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitUnboxed [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (if (ß method != nil)
                 (do
                     (ß MethodExpr.emitTypedArgs(objx, gen, method.getParameterTypes(), args))
@@ -6504,7 +6973,8 @@
             nil
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (if (ß method != nil)
                 (do
                     (ß MethodExpr.emitTypedArgs(objx, gen, method.getParameterTypes(), args))
@@ -6559,11 +7029,13 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß (method != nil || tag != nil))
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (when (ß jc == nil)
                 (ß jc = retType((tag != nil) ? HostExpr.tagToClass(tag) :or nil, (method != nil) ? method.getReturnType() :or nil))
             )
@@ -6572,56 +7044,64 @@
     )
 
     (class-ns UnresolvedVarExpr (§ implements Expr)
-        (§ field Symbol symbol)
+        (§ field #_"Symbol" symbol)
 
-        (§ constructor UnresolvedVarExpr(Symbol symbol)
+        (§ constructor #_"UnresolvedVarExpr" UnresolvedVarExpr [#_"Symbol" symbol]
             (ß this.symbol = symbol)
             this
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             false
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (throw (ß new IllegalArgumentException("UnresolvedVarExpr has no Java class")))
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             nil
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (throw (ß new IllegalArgumentException("UnresolvedVarExpr cannot be evalled")))
         )
     )
 
     (class-ns NumberExpr (§ extends LiteralExpr) (§ implements MaybePrimitiveExpr)
-        (§ field Number n)
-        (§ field int id)
+        (§ field #_"Number" n)
+        (§ field #_"int" id)
 
-        (§ constructor NumberExpr(Number n)
+        (§ constructor #_"NumberExpr" NumberExpr [#_"Number" n]
             (ß this.n = n)
             (ß this.id = registerConstant(n))
             this
         )
 
-        (§ method Object val()
+        #_method
+        (§ defn #_"Object" val [this]
             n
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (when (ß context != C.STATEMENT)
                 (ß objx.emitConstant(gen, id))
             )
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (cond (ß n instanceof Integer)
                 (do
                     (ß long.class)
@@ -6641,11 +7121,13 @@
             )
         )
 
-        (§ method boolean canEmitPrimitive()
+        #_method
+        (§ defn #_"boolean" canEmitPrimitive [this]
             true
         )
 
-        (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitUnboxed [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (cond (ß n instanceof Integer)
                 (do
                     (ß gen.push(n.longValue()))
@@ -6662,7 +7144,7 @@
             nil
         )
 
-        (§ defn Expr parse(Number form)
+        (§ defn #_"Expr" parse [#_"Number" form]
             (if (ß form instanceof Integer || form instanceof Double || form instanceof Long)
                 (do
                     (ß new NumberExpr(form))
@@ -6677,20 +7159,22 @@
     (class-ns ConstantExpr (§ extends LiteralExpr)
         ;; stuff quoted vals in classloader at compile time, pull out at runtime
         ;; this won't work for static compilation...
-        (§ field Object v)
-        (§ field int id)
+        (§ field #_"Object" v)
+        (§ field #_"int" id)
 
-        (§ constructor ConstantExpr(Object v)
+        (§ constructor #_"ConstantExpr" ConstantExpr [#_"Object" v]
             (ß this.v = v)
             (ß this.id = registerConstant(v))
             this
         )
 
-        (§ method Object val()
+        #_method
+        (§ defn #_"Object" val [this]
             v
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß objx.emitConstant(gen, id))
 
             (when (ß context == C.STATEMENT)
@@ -6699,11 +7183,13 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß Modifier.isPublic(v.getClass().getModifiers()))
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (cond (ß v instanceof APersistentMap)
                 (do
                     (ß APersistentMap.class)
@@ -6724,9 +7210,10 @@
         )
 
         (class-ns Parser (§ implements IParser)
-            (§ def Keyword formKey = Keyword.intern("form"))
+            (§ def #_"Keyword" formKey (ß Keyword.intern("form")))
 
-            (§ method Expr parse(C context, Object form)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" form]
                 (let [#_"int" argCount (ß RT.count(form) - 1)]
                     (when (ß argCount != 1)
                         (let [#_"IPersistentMap" exData (ß new PersistentArrayMap(new Object[] (§ formKey, form )))]
@@ -6771,11 +7258,13 @@
     )
 
     (class-ns NilExpr (§ extends LiteralExpr)
-        (§ method Object val()
+        #_method
+        (§ defn #_"Object" val [this]
             nil
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß gen.visitInsn(Opcodes.ACONST_NULL))
             (when (ß context == C.STATEMENT)
                 (ß gen.pop())
@@ -6783,30 +7272,34 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             nil
         )
     )
 
-    (§ def NilExpr NIL_EXPR = new NilExpr())
+    (§ def #_"NilExpr" NIL_EXPR (ß new NilExpr()))
 
     (class-ns BooleanExpr (§ extends LiteralExpr)
-        (§ field boolean val)
+        (§ field #_"boolean" val)
 
-        (§ constructor BooleanExpr(boolean val)
+        (§ constructor #_"BooleanExpr" BooleanExpr [#_"boolean" val]
             (ß this.val = val)
             this
         )
 
-        (§ method Object val()
+        #_method
+        (§ defn #_"Object" val [this]
             (ß val ? RT.T :or RT.F)
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (if val
                 (do
                     (ß gen.getStatic(BOOLEAN_OBJECT_TYPE, "TRUE", BOOLEAN_OBJECT_TYPE))
@@ -6821,59 +7314,67 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß Boolean.class)
         )
     )
 
-    (§ def BooleanExpr TRUE_EXPR = new BooleanExpr(true))
-    (§ def BooleanExpr FALSE_EXPR = new BooleanExpr(false))
+    (§ def #_"BooleanExpr" TRUE_EXPR (ß new BooleanExpr(true)))
+    (§ def #_"BooleanExpr" FALSE_EXPR (ß new BooleanExpr(false)))
 
     (class-ns StringExpr (§ extends LiteralExpr)
-        (§ field String str)
+        (§ field #_"String" str)
 
-        (§ constructor StringExpr(String str)
+        (§ constructor #_"StringExpr" StringExpr [#_"String" str]
             (ß this.str = str)
             this
         )
 
-        (§ method Object val()
+        #_method
+        (§ defn #_"Object" val [this]
             str
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (when (ß context != C.STATEMENT)
                 (ß gen.push(str))
             )
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß String.class)
         )
     )
 
     (class-ns MonitorEnterExpr (§ extends UntypedExpr)
-        (§ field Expr target)
+        (§ field #_"Expr" target)
 
-        (§ constructor MonitorEnterExpr(Expr target)
+        (§ constructor #_"MonitorEnterExpr" MonitorEnterExpr [#_"Expr" target]
             (ß this.target = target)
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (throw (ß new UnsupportedOperationException("Can't eval monitor-enter")))
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß target.emit(C.EXPRESSION, objx, gen))
             (ß gen.monitorEnter())
             (ß NIL_EXPR.emit(context, objx, gen))
@@ -6881,25 +7382,28 @@
         )
 
         (class-ns Parser (§ implements IParser)
-            (§ method Expr parse(C context, Object form)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" form]
                 (ß new MonitorEnterExpr(analyze(C.EXPRESSION, RT.second(form))))
             )
         )
     )
 
     (class-ns MonitorExitExpr (§ extends UntypedExpr)
-        (§ field Expr target)
+        (§ field #_"Expr" target)
 
-        (§ constructor MonitorExitExpr(Expr target)
+        (§ constructor #_"MonitorExitExpr" MonitorExitExpr [#_"Expr" target]
             (ß this.target = target)
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (throw (ß new UnsupportedOperationException("Can't eval monitor-exit")))
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß target.emit(C.EXPRESSION, objx, gen))
             (ß gen.monitorExit())
             (ß NIL_EXPR.emit(context, objx, gen))
@@ -6907,27 +7411,28 @@
         )
 
         (class-ns Parser (§ implements IParser)
-            (§ method Expr parse(C context, Object form)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" form]
                 (ß new MonitorExitExpr(analyze(C.EXPRESSION, RT.second(form))))
             )
         )
     )
 
     (class-ns TryExpr (§ implements Expr)
-        (§ field Expr tryExpr)
-        (§ field Expr finallyExpr)
-        (§ field PersistentVector catchExprs)
-        (§ field int retLocal)
-        (§ field int finallyLocal)
+        (§ field #_"Expr" tryExpr)
+        (§ field #_"Expr" finallyExpr)
+        (§ field #_"PersistentVector" catchExprs)
+        (§ field #_"int" retLocal)
+        (§ field #_"int" finallyLocal)
 
         (class-ns CatchClause
-            (§ field Class c)
-            (§ field LocalBinding lb)
-            (§ field Expr handler)
-            (§ field Label label)
-            (§ field Label endLabel)
+            (§ field #_"Class" c)
+            (§ field #_"LocalBinding" lb)
+            (§ field #_"Expr" handler)
+            (§ field #_"Label" label)
+            (§ field #_"Label" endLabel)
 
-            (§ constructor CatchClause(Class c, LocalBinding lb, Expr handler)
+            (§ constructor #_"CatchClause" CatchClause [#_"Class" c, #_"LocalBinding" lb, #_"Expr" handler]
                 (ß this.c = c)
                 (ß this.lb = lb)
                 (ß this.handler = handler)
@@ -6935,7 +7440,7 @@
             )
         )
 
-        (§ constructor TryExpr(Expr tryExpr, PersistentVector catchExprs, Expr finallyExpr, int retLocal, int finallyLocal)
+        (§ constructor #_"TryExpr" TryExpr [#_"Expr" tryExpr, #_"PersistentVector" catchExprs, #_"Expr" finallyExpr, #_"int" retLocal, #_"int" finallyLocal]
             (ß this.tryExpr = tryExpr)
             (ß this.catchExprs = catchExprs)
             (ß this.finallyExpr = finallyExpr)
@@ -6944,11 +7449,13 @@
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (throw (ß new UnsupportedOperationException("Can't eval try")))
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (let [#_"Label" startTry (ß gen.newLabel())]
                 (let [#_"Label" endTry (ß gen.newLabel())]
                     (let [#_"Label" end (ß gen.newLabel())]
@@ -7029,16 +7536,19 @@
             )
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß tryExpr.hasJavaClass())
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß tryExpr.getJavaClass())
         )
 
         (class-ns Parser (§ implements IParser)
-            (§ method Expr parse(C context, Object frm)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" frm]
                 (let [#_"ISeq" form (ß (ISeq) frm)]
                     (when (ß context != C.RETURN)
                         (§ return (ß analyze(context, RT.list(RT.list(FNONCE, PersistentVector.EMPTY, form)))))
@@ -7153,18 +7663,20 @@
     )
 
     (class-ns ThrowExpr (§ extends UntypedExpr)
-        (§ field Expr excExpr)
+        (§ field #_"Expr" excExpr)
 
-        (§ constructor ThrowExpr(Expr excExpr)
+        (§ constructor #_"ThrowExpr" ThrowExpr [#_"Expr" excExpr]
             (ß this.excExpr = excExpr)
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (throw (ß Util.runtimeException("Can't eval throw")))
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß excExpr.emit(C.EXPRESSION, objx, gen))
             (ß gen.checkCast(THROWABLE_TYPE))
             (ß gen.throwException())
@@ -7172,7 +7684,8 @@
         )
 
         (class-ns Parser (§ implements IParser)
-            (§ method Expr parse(C context, Object form)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" form]
                 (cond (ß context == C.EVAL)
                     (do
                         (§ return (ß analyze(context, RT.list(RT.list(FNONCE, PersistentVector.EMPTY, form)))))
@@ -7191,7 +7704,7 @@
         )
     )
 
-    (§ defn boolean subsumes(Class[] c1, Class[] c2)
+    (§ defn #_"boolean" subsumes [#_"Class[]" c1, #_"Class[]" c2]
         ;; presumes matching lengths
         (let [#_"Boolean" better false]
             (loop-when-recur [(ß int i = 0)] (ß i < c1.length) [(ß i++)]
@@ -7210,7 +7723,7 @@
         )
     )
 
-    (§ defn String getTypeStringForArgs(IPersistentVector args)
+    (§ defn #_"String" getTypeStringForArgs [#_"IPersistentVector" args]
         (let [#_"StringBuilder" sb (ß new StringBuilder())]
             (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
                 (let [#_"Expr" arg (ß (Expr) args.nth(i))]
@@ -7224,7 +7737,7 @@
         )
     )
 
-    (§ defn int getMatchingParams(String methodName, ArrayList<Class[]> paramlists, IPersistentVector argexprs, List<Class> rets)
+    (§ defn #_"int" getMatchingParams [#_"String" methodName, #_"ArrayList<Class[]>" paramlists, #_"IPersistentVector" argexprs, #_"List<Class>" rets]
         ;; presumes matching lengths
         (let [#_"int" matchIdx -1]
             (let [#_"boolean" tied false]
@@ -7299,14 +7812,14 @@
     )
 
     (class-ns NewExpr (§ implements Expr)
-        (§ field IPersistentVector args)
-        (§ field Constructor ctor)
-        (§ field Class c)
+        (§ field #_"IPersistentVector" args)
+        (§ field #_"Constructor" ctor)
+        (§ field #_"Class" c)
 
-        (§ def Method invokeConstructorMethod = Method.getMethod("Object invokeConstructor(Class,Object[])"))
-        (§ def Method forNameMethod = Method.getMethod("Class classForName(String)"))
+        (§ def #_"Method" invokeConstructorMethod (ß Method.getMethod("Object invokeConstructor(Class,Object[])")))
+        (§ def #_"Method" forNameMethod (ß Method.getMethod("Class classForName(String)")))
 
-        (§ constructor NewExpr(Class c, IPersistentVector args, int line, int column)
+        (§ constructor #_"NewExpr" NewExpr [#_"Class" c, #_"IPersistentVector" args, #_"int" line, #_"int" column]
             (ß this.args = args)
             (ß this.c = c)
             (let [#_"Constructor[]" allctors (ß c.getConstructors())]
@@ -7343,7 +7856,8 @@
             )
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (let [#_"Object[]" argvals (ß new Object[args.count()])]
                 (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
                     (ß argvals[i] = ((Expr) args.nth(i)).eval())
@@ -7360,7 +7874,8 @@
             )
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (if (ß this.ctor != nil)
                 (do
                     (let [#_"Type" type (ß getType(c))]
@@ -7383,16 +7898,19 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             c
         )
 
         (class-ns Parser (§ implements IParser)
-            (§ method Expr parse(C context, Object frm)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" frm]
                 (let [#_"int" line (ß lineDeref())]
                     (let [#_"int" column (ß columnDeref())]
                         (let [#_"ISeq" form (ß (ISeq) frm)]
@@ -7419,23 +7937,25 @@
     )
 
     (class-ns MetaExpr (§ implements Expr)
-        (§ field Expr expr)
-        (§ field Expr meta)
+        (§ field #_"Expr" expr)
+        (§ field #_"Expr" meta)
 
-        (§ def Type IOBJ_TYPE = Type.getType(IObj.class))
-        (§ def Method withMetaMethod = Method.getMethod("cloiure.lang.IObj withMeta(cloiure.lang.IPersistentMap)"))
+        (§ def #_"Type" IOBJ_TYPE (ß Type.getType(IObj.class)))
+        (§ def #_"Method" withMetaMethod (ß Method.getMethod("cloiure.lang.IObj withMeta(cloiure.lang.IPersistentMap)")))
 
-        (§ constructor MetaExpr(Expr expr, Expr meta)
+        (§ constructor #_"MetaExpr" MetaExpr [#_"Expr" expr, #_"Expr" meta]
             (ß this.expr = expr)
             (ß this.meta = meta)
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (ß ((IObj) expr.eval()).withMeta((IPersistentMap) meta.eval()))
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß expr.emit(C.EXPRESSION, objx, gen))
             (ß gen.checkCast(IOBJ_TYPE))
             (ß meta.emit(C.EXPRESSION, objx, gen))
@@ -7447,23 +7967,25 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß expr.hasJavaClass())
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß expr.getJavaClass())
         )
     )
 
     (class-ns IfExpr (§ implements Expr, MaybePrimitiveExpr)
-        (§ field Expr testExpr)
-        (§ field Expr thenExpr)
-        (§ field Expr elseExpr)
-        (§ field int line)
-        (§ field int column)
+        (§ field #_"Expr" testExpr)
+        (§ field #_"Expr" thenExpr)
+        (§ field #_"Expr" elseExpr)
+        (§ field #_"int" line)
+        (§ field #_"int" column)
 
-        (§ constructor IfExpr(int line, int column, Expr testExpr, Expr thenExpr, Expr elseExpr)
+        (§ constructor #_"IfExpr" IfExpr [#_"int" line, #_"int" column, #_"Expr" testExpr, #_"Expr" thenExpr, #_"Expr" elseExpr]
             (ß this.testExpr = testExpr)
             (ß this.thenExpr = thenExpr)
             (ß this.elseExpr = elseExpr)
@@ -7472,7 +7994,8 @@
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (let [#_"Object" t (ß testExpr.eval())]
                 (when (ß t != nil && t != Boolean.FALSE)
                     (§ return (ß thenExpr.eval()))
@@ -7481,17 +8004,20 @@
             )
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß doEmit(context, objx, gen, false))
             nil
         )
 
-        (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitUnboxed [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß doEmit(context, objx, gen, true))
             nil
         )
 
-        (§ method void doEmit(C context, ObjExpr objx, GeneratorAdapter gen, boolean emitUnboxed)
+        #_method
+        (§ defn #_"void" doEmit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"boolean" emitUnboxed]
             (let [#_"Label" nullLabel (ß gen.newLabel())]
                 (let [#_"Label" falseLabel (ß gen.newLabel())]
                     (let [#_"Label" endLabel (ß gen.newLabel())]
@@ -7542,7 +8068,8 @@
             )
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß thenExpr.hasJavaClass()
                 && elseExpr.hasJavaClass()
                 && (thenExpr.getJavaClass() == elseExpr.getJavaClass()
@@ -7552,7 +8079,8 @@
                     || (elseExpr.getJavaClass() == nil && !thenExpr.getJavaClass().isPrimitive())))
         )
 
-        (§ method boolean canEmitPrimitive()
+        #_method
+        (§ defn #_"boolean" canEmitPrimitive [this]
             (try
                 (ß thenExpr instanceof MaybePrimitiveExpr
                     && elseExpr instanceof MaybePrimitiveExpr
@@ -7567,7 +8095,8 @@
             )
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (let [#_"Class" thenClass (ß thenExpr.getJavaClass())]
                 (when (ß thenClass != nil && thenClass != RECUR_CLASS)
                     (§ return thenClass)
@@ -7577,7 +8106,8 @@
         )
 
         (class-ns Parser (§ implements IParser)
-            (§ method Expr parse(C context, Object frm)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" frm]
                 (let [#_"ISeq" form (ß (ISeq) frm)]
                     ;; (if test then) or (if test then else)
                     (cond (ß form.count() > 4)
@@ -7615,7 +8145,7 @@
         )
     )
 
-    (§ def IPersistentMap CHAR_MAP = PersistentHashMap.create(
+    (§ def #_"IPersistentMap" CHAR_MAP (ß PersistentHashMap.create(
       #_map \-, "_",
       #_map \:, "_COLON_",
       #_map \+, "_PLUS_",
@@ -7640,10 +8170,10 @@
       #_map \/, "_SLASH_",
       #_map \\, "_BSLASH_",
       #_map \?, "_QMARK_"
-    ))
+    )))
 
-    (§ def IPersistentMap DEMUNGE_MAP)
-    (§ def Pattern DEMUNGE_PATTERN)
+    (§ def #_"IPersistentMap" DEMUNGE_MAP)
+    (§ def #_"Pattern" DEMUNGE_PATTERN)
 
     (§ static
         ;; DEMUNGE_MAP maps strings to characters in the opposite
@@ -7670,7 +8200,8 @@
             (let [#_"Object[]" mungeStrs (ß RT.toArray(RT.keys(m)))]
                 (ß Arrays.sort(mungeStrs, new Comparator()
                     (§ reify
-                        (§ method int compare(Object s1, Object s2)
+                        #_method
+                        (§ defn #_"int" compare [this, #_"Object" s1, #_"Object" s2]
                             (ß ((String) s2).length() - ((String) s1).length())
                         )
                     ))
@@ -7695,7 +8226,7 @@
         )
     )
 
-    (§ defn String munge(String name)
+    (§ defn #_"String" munge [#_"String" name]
         (let [#_"StringBuilder" sb (ß new StringBuilder())]
             (doseq [#_"char" c (ß name.toCharArray())]
                 (let [#_"String" sub (ß (String) CHAR_MAP.valAt(c))]
@@ -7713,7 +8244,7 @@
         )
     )
 
-    (§ defn String demunge(String mungedName)
+    (§ defn #_"String" demunge [#_"String" mungedName]
         (let [#_"StringBuilder" sb (ß new StringBuilder())]
             (let [#_"Matcher" m (ß DEMUNGE_PATTERN.matcher(mungedName))]
                 (let [#_"int" lastMatchEnd 0]
@@ -7739,26 +8270,28 @@
     )
 
     (class-ns EmptyExpr (§ implements Expr)
-        (§ field Object coll)
+        (§ field #_"Object" coll)
 
-        (§ def Type HASHMAP_TYPE = Type.getType(PersistentArrayMap.class))
-        (§ def Type HASHSET_TYPE = Type.getType(PersistentHashSet.class))
-        (§ def Type VECTOR_TYPE = Type.getType(PersistentVector.class))
-        (§ def Type IVECTOR_TYPE = Type.getType(IPersistentVector.class))
-        (§ def Type TUPLE_TYPE = Type.getType(Tuple.class))
-        (§ def Type LIST_TYPE = Type.getType(PersistentList.class))
-        (§ def Type EMPTY_LIST_TYPE = Type.getType(PersistentList.EmptyList.class))
+        (§ def #_"Type" HASHMAP_TYPE (ß Type.getType(PersistentArrayMap.class)))
+        (§ def #_"Type" HASHSET_TYPE (ß Type.getType(PersistentHashSet.class)))
+        (§ def #_"Type" VECTOR_TYPE (ß Type.getType(PersistentVector.class)))
+        (§ def #_"Type" IVECTOR_TYPE (ß Type.getType(IPersistentVector.class)))
+        (§ def #_"Type" TUPLE_TYPE (ß Type.getType(Tuple.class)))
+        (§ def #_"Type" LIST_TYPE (ß Type.getType(PersistentList.class)))
+        (§ def #_"Type" EMPTY_LIST_TYPE (ß Type.getType(PersistentList.EmptyList.class)))
 
-        (§ constructor EmptyExpr(Object coll)
+        (§ constructor #_"EmptyExpr" EmptyExpr [#_"Object" coll]
             (ß this.coll = coll)
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             coll
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (cond (ß coll instanceof IPersistentList)
                 (do
                     (ß gen.getStatic(LIST_TYPE, "EMPTY", EMPTY_LIST_TYPE))
@@ -7786,11 +8319,13 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (cond (ß coll instanceof IPersistentList)
                 (do
                     (ß IPersistentList.class)
@@ -7816,16 +8351,17 @@
     )
 
     (class-ns ListExpr (§ implements Expr)
-        (§ field IPersistentVector args)
+        (§ field #_"IPersistentVector" args)
 
-        (§ def Method arrayToListMethod = Method.getMethod("cloiure.lang.ISeq arrayToList(Object[])"))
+        (§ def #_"Method" arrayToListMethod (ß Method.getMethod("cloiure.lang.ISeq arrayToList(Object[])")))
 
-        (§ constructor ListExpr(IPersistentVector args)
+        (§ constructor #_"ListExpr" ListExpr [#_"IPersistentVector" args]
             (ß this.args = args)
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (let [#_"IPersistentVector" ret (ß PersistentVector.EMPTY)]
                 (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
                     (ß ret = (IPersistentVector) ret.cons(((Expr) args.nth(i)).eval()))
@@ -7834,7 +8370,8 @@
             )
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß MethodExpr.emitArgsAsArray(args, objx, gen))
             (ß gen.invokeStatic(RT_TYPE, arrayToListMethod))
             (when (ß context == C.STATEMENT)
@@ -7843,27 +8380,30 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß IPersistentList.class)
         )
     )
 
     (class-ns MapExpr (§ implements Expr)
-        (§ field IPersistentVector keyvals)
+        (§ field #_"IPersistentVector" keyvals)
 
-        (§ def Method mapMethod = Method.getMethod("cloiure.lang.IPersistentMap map(Object[])"))
-        (§ def Method mapUniqueKeysMethod = Method.getMethod("cloiure.lang.IPersistentMap mapUniqueKeys(Object[])"))
+        (§ def #_"Method" mapMethod (ß Method.getMethod("cloiure.lang.IPersistentMap map(Object[])")))
+        (§ def #_"Method" mapUniqueKeysMethod (ß Method.getMethod("cloiure.lang.IPersistentMap mapUniqueKeys(Object[])")))
 
-        (§ constructor MapExpr(IPersistentVector keyvals)
+        (§ constructor #_"MapExpr" MapExpr [#_"IPersistentVector" keyvals]
             (ß this.keyvals = keyvals)
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (let [#_"Object[]" ret (ß new Object[keyvals.count()])]
                 (loop-when-recur [(ß int i = 0)] (ß i < keyvals.count()) [(ß i++)]
                     (ß ret[i] = ((Expr) keyvals.nth(i)).eval())
@@ -7872,7 +8412,8 @@
             )
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (let [#_"boolean" allKeysConstant true]
                 (let [#_"boolean" allConstantKeysUnique true]
                     (let [#_"IPersistentSet" constantKeys (ß PersistentHashSet.EMPTY)]
@@ -7915,15 +8456,17 @@
             )
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß IPersistentMap.class)
         )
 
-        (§ defn Expr parse(C context, IPersistentMap form)
+        (§ defn #_"Expr" parse [#_"C" context, #_"IPersistentMap" form]
             (let [#_"IPersistentVector" keyvals (ß PersistentVector.EMPTY)]
                 (let [#_"boolean" keysConstant true]
                     (let [#_"boolean" valsConstant true]
@@ -8000,16 +8543,17 @@
     )
 
     (class-ns SetExpr (§ implements Expr)
-        (§ field IPersistentVector keys)
+        (§ field #_"IPersistentVector" keys)
 
-        (§ def Method setMethod = Method.getMethod("cloiure.lang.IPersistentSet set(Object[])"))
+        (§ def #_"Method" setMethod (ß Method.getMethod("cloiure.lang.IPersistentSet set(Object[])")))
 
-        (§ constructor SetExpr(IPersistentVector keys)
+        (§ constructor #_"SetExpr" SetExpr [#_"IPersistentVector" keys]
             (ß this.keys = keys)
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (let [#_"Object[]" ret (ß new Object[keys.count()])]
                 (loop-when-recur [(ß int i = 0)] (ß i < keys.count()) [(ß i++)]
                     (ß ret[i] = ((Expr) keys.nth(i)).eval())
@@ -8018,7 +8562,8 @@
             )
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß MethodExpr.emitArgsAsArray(keys, objx, gen))
             (ß gen.invokeStatic(RT_TYPE, setMethod))
             (when (ß context == C.STATEMENT)
@@ -8027,15 +8572,17 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß IPersistentSet.class)
         )
 
-        (§ defn Expr parse(C context, IPersistentSet form)
+        (§ defn #_"Expr" parse [#_"C" context, #_"IPersistentSet" form]
             (let [#_"IPersistentVector" keys (ß PersistentVector.EMPTY)]
                 (let [#_"boolean" constant true]
                     (loop-when-recur [(ß ISeq s = RT.seq(form))] (ß s != nil) [(ß s = s.next())]
@@ -8076,16 +8623,17 @@
     )
 
     (class-ns VectorExpr (§ implements Expr)
-        (§ field IPersistentVector args)
+        (§ field #_"IPersistentVector" args)
 
-        (§ def Method vectorMethod = Method.getMethod("cloiure.lang.IPersistentVector vector(Object[])"))
+        (§ def #_"Method" vectorMethod (ß Method.getMethod("cloiure.lang.IPersistentVector vector(Object[])")))
 
-        (§ constructor VectorExpr(IPersistentVector args)
+        (§ constructor #_"VectorExpr" VectorExpr [#_"IPersistentVector" args]
             (ß this.args = args)
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (let [#_"IPersistentVector" ret (ß PersistentVector.EMPTY)]
                 (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
                     (ß ret = (IPersistentVector) ret.cons(((Expr) args.nth(i)).eval()))
@@ -8094,7 +8642,8 @@
             )
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (if (ß args.count() <= Tuple.MAX_SIZE)
                 (do
                     (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
@@ -8114,15 +8663,17 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß IPersistentVector.class)
         )
 
-        (§ defn Expr parse(C context, IPersistentVector form)
+        (§ defn #_"Expr" parse [#_"C" context, #_"IPersistentVector" form]
             (let [#_"boolean" constant true]
                 (let [#_"IPersistentVector" args (ß PersistentVector.EMPTY)]
                     (loop-when-recur [(ß int i = 0)] (ß i < form.count()) [(ß i++)]
@@ -8161,19 +8712,19 @@
     )
 
     (class-ns KeywordInvokeExpr (§ implements Expr)
-        (§ field KeywordExpr kw)
-        (§ field Object tag)
-        (§ field Expr target)
-        (§ field int line)
-        (§ field int column)
-        (§ field int siteIndex)
-        (§ field String source)
+        (§ field #_"KeywordExpr" kw)
+        (§ field #_"Object" tag)
+        (§ field #_"Expr" target)
+        (§ field #_"int" line)
+        (§ field #_"int" column)
+        (§ field #_"int" siteIndex)
+        (§ field #_"String" source)
 
-        (§ def Type ILOOKUP_TYPE = Type.getType(ILookup.class))
+        (§ def #_"Type" ILOOKUP_TYPE (ß Type.getType(ILookup.class)))
 
-        (§ field Class jc)
+        (§ field #_"Class" jc)
 
-        (§ constructor KeywordInvokeExpr(String source, int line, int column, Symbol tag, KeywordExpr kw, Expr target)
+        (§ constructor #_"KeywordInvokeExpr" KeywordInvokeExpr [#_"String" source, #_"int" line, #_"int" column, #_"Symbol" tag, #_"KeywordExpr" kw, #_"Expr" target]
             (ß this.source = source)
             (ß this.kw = kw)
             (ß this.target = target)
@@ -8184,7 +8735,8 @@
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (try
                 (ß kw.k.invoke(target.eval()))
                 (catch Throwable e
@@ -8200,7 +8752,8 @@
             )
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (let [#_"Label" endLabel (ß gen.newLabel())]
                 (let [#_"Label" faultLabel (ß gen.newLabel())]
                     (ß gen.visitLineNumber(line, gen.mark()))
@@ -8236,11 +8789,13 @@
             )
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß (tag != nil))
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (when (ß jc == nil)
                 (ß jc = HostExpr.tagToClass(tag))
             )
@@ -8249,33 +8804,37 @@
     )
 
     (class-ns InstanceOfExpr (§ implements Expr, MaybePrimitiveExpr)
-        (§ field Expr expr)
-        (§ field Class c)
+        (§ field #_"Expr" expr)
+        (§ field #_"Class" c)
 
-        (§ constructor InstanceOfExpr(Class c, Expr expr)
+        (§ constructor #_"InstanceOfExpr" InstanceOfExpr [#_"Class" c, #_"Expr" expr]
             (ß this.expr = expr)
             (ß this.c = c)
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (when (ß c.isInstance(expr.eval()))
                 (§ return (ß RT.T))
             )
             (ß RT.F)
         )
 
-        (§ method boolean canEmitPrimitive()
+        #_method
+        (§ defn #_"boolean" canEmitPrimitive [this]
             true
         )
 
-        (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitUnboxed [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß expr.emit(C.EXPRESSION, objx, gen))
             (ß gen.instanceOf(getType(c)))
             nil
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß emitUnboxed(context, objx, gen))
             (ß HostExpr.emitBoxReturn(objx, gen, Boolean.TYPE))
             (when (ß context == C.STATEMENT)
@@ -8284,28 +8843,30 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß Boolean.TYPE)
         )
     )
 
     (class-ns StaticInvokeExpr (§ implements Expr, MaybePrimitiveExpr)
-        (§ field Type target)
-        (§ field Class retClass)
-        (§ field Class[] paramclasses)
-        (§ field Type[] paramtypes)
-        (§ field IPersistentVector args)
-        (§ field boolean variadic)
-        (§ field boolean tailPosition)
-        (§ field Object tag)
+        (§ field #_"Type" target)
+        (§ field #_"Class" retClass)
+        (§ field #_"Class[]" paramclasses)
+        (§ field #_"Type[]" paramtypes)
+        (§ field #_"IPersistentVector" args)
+        (§ field #_"boolean" variadic)
+        (§ field #_"boolean" tailPosition)
+        (§ field #_"Object" tag)
 
-        (§ field Class jc)
+        (§ field #_"Class" jc)
 
-        (§ constructor StaticInvokeExpr(Type target, Class retClass, Class[] paramclasses, Type[] paramtypes, boolean variadic, IPersistentVector args, Object tag, boolean tailPosition)
+        (§ constructor #_"StaticInvokeExpr" StaticInvokeExpr [#_"Type" target, #_"Class" retClass, #_"Class[]" paramclasses, #_"Type[]" paramtypes, #_"boolean" variadic, #_"IPersistentVector" args, #_"Object" tag, #_"boolean" tailPosition]
             (ß this.target = target)
             (ß this.retClass = retClass)
             (ß this.paramclasses = paramclasses)
@@ -8317,11 +8878,13 @@
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (throw (ß new UnsupportedOperationException("Can't eval StaticInvokeExpr")))
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß emitUnboxed(context, objx, gen))
             (when (ß context != C.STATEMENT)
                 (ß HostExpr.emitBoxReturn(objx, gen, retClass))
@@ -8339,22 +8902,26 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (when (ß jc == nil)
                 (ß jc = retType((tag != nil) ? HostExpr.tagToClass(tag) :or nil, retClass))
             )
             jc
         )
 
-        (§ method boolean canEmitPrimitive()
+        #_method
+        (§ defn #_"boolean" canEmitPrimitive [this]
             (ß retClass.isPrimitive())
         )
 
-        (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitUnboxed [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (let [#_"Method" ms (ß new Method("invokeStatic", getReturnType(), paramtypes))]
                 (if variadic
                     (do
@@ -8392,11 +8959,12 @@
             )
         )
 
-        (§ method- Type getReturnType()
+        #_method
+        (§ defn- #_"Type" getReturnType [this]
             (ß Type.getType(retClass))
         )
 
-        (§ defn Expr parse(Var v, ISeq args, Object tag, boolean tailPosition)
+        (§ defn #_"Expr" parse [#_"Var" v, #_"ISeq" args, #_"Object" tag, #_"boolean" tailPosition]
             (when (ß !v.isBound() || v.get() == nil)
                 (§ return nil)
             )
@@ -8458,26 +9026,26 @@
     )
 
     (class-ns InvokeExpr (§ implements Expr)
-        (§ field Expr fexpr)
-        (§ field Object tag)
-        (§ field IPersistentVector args)
-        (§ field int line)
-        (§ field int column)
-        (§ field boolean tailPosition)
-        (§ field String source)
+        (§ field #_"Expr" fexpr)
+        (§ field #_"Object" tag)
+        (§ field #_"IPersistentVector" args)
+        (§ field #_"int" line)
+        (§ field #_"int" column)
+        (§ field #_"boolean" tailPosition)
+        (§ field #_"String" source)
 
-        (§ field boolean isProtocol = false)
-        (§ field boolean isDirect = false)
-        (§ field int siteIndex = -1)
-        (§ field Class protocolOn)
-        (§ field java.lang.reflect.Method onMethod)
+        (§ field #_"boolean" isProtocol (ß false))
+        (§ field #_"boolean" isDirect (ß false))
+        (§ field #_"int" siteIndex (ß -1))
+        (§ field #_"Class" protocolOn)
+        (§ field #_"java.lang.reflect.Method" onMethod)
 
-        (§ def Keyword onKey = Keyword.intern("on"))
-        (§ def Keyword methodMapKey = Keyword.intern("method-map"))
+        (§ def #_"Keyword" onKey (ß Keyword.intern("on")))
+        (§ def #_"Keyword" methodMapKey (ß Keyword.intern("method-map")))
 
-        (§ field Class jc)
+        (§ field #_"Class" jc)
 
-        (§ defn Object sigTag(int argcount, Var v)
+        (§ defn #_"Object" sigTag [#_"int" argcount, #_"Var" v]
             (let [#_"Object" arglists (ß RT.get(RT.meta(v), arglistsKey))]
                 (let [#_"Object" sigTag nil]
                     (loop-when-recur [(ß ISeq s = RT.seq(arglists))] (ß s != nil) [(ß s = s.next())]
@@ -8494,7 +9062,7 @@
             )
         )
 
-        (§ constructor InvokeExpr(String source, int line, int column, Symbol tag, Expr fexpr, IPersistentVector args, boolean tailPosition)
+        (§ constructor #_"InvokeExpr" InvokeExpr [#_"String" source, #_"int" line, #_"int" column, #_"Symbol" tag, #_"Expr" fexpr, #_"IPersistentVector" args, #_"boolean" tailPosition]
             (ß this.source = source)
             (ß this.fexpr = fexpr)
             (ß this.args = args)
@@ -8555,7 +9123,8 @@
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (try
                 (let [#_"IFn" fn (ß (IFn) fexpr.eval())]
                     (let [#_"PersistentVector" argvs (ß PersistentVector.EMPTY)]
@@ -8578,7 +9147,8 @@
             )
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (if isProtocol
                 (do
                     (ß gen.visitLineNumber(line, gen.mark()))
@@ -8597,7 +9167,8 @@
             nil
         )
 
-        (§ method void emitProto(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitProto [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (let [#_"Label" onLabel (ß gen.newLabel())]
                 (let [#_"Label" callLabel (ß gen.newLabel())]
                     (let [#_"Label" endLabel (ß gen.newLabel())]
@@ -8648,7 +9219,8 @@
             )
         )
 
-        (§ method void emitArgsAndCall(int firstArgToEmit, C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitArgsAndCall [this, #_"int" firstArgToEmit, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (loop-when-recur [(ß int i = firstArgToEmit)] (ß i < Math.min(MAX_POSITIONAL_ARITY, args.count())) [(ß i++)]
                 (let [#_"Expr" e (ß (Expr) args.nth(i))]
                     (ß e.emit(C.EXPRESSION, objx, gen))
@@ -8674,18 +9246,20 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß (tag != nil))
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (when (ß jc == nil)
                 (ß jc = HostExpr.tagToClass(tag))
             )
             jc
         )
 
-        (§ defn Expr parse(C context, ISeq form)
+        (§ defn #_"Expr" parse [#_"C" context, #_"ISeq" form]
             (let [#_"boolean" tailPosition (ß inTailCall(context))]
                 (when (ß context != C.EVAL)
                     (ß context = C.EXPRESSION)
@@ -8764,12 +9338,13 @@
     )
 
     (class-ns SourceDebugExtensionAttribute (§ extends Attribute)
-        (§ constructor SourceDebugExtensionAttribute()
+        (§ constructor #_"SourceDebugExtensionAttribute" SourceDebugExtensionAttribute []
             (§ super("SourceDebugExtension"))
             this
         )
 
-        (§ method void writeSMAP(ClassWriter cw, String smap)
+        #_method
+        (§ defn #_"void" writeSMAP [this, #_"ClassWriter" cw, #_"String" smap]
             (let [#_"ByteVector" bv (ß write(cw, nil, -1, -1, -1))]
                 (ß bv.putUTF8(smap))
                 nil
@@ -8778,32 +9353,35 @@
     )
 
     (class-ns FnExpr (§ extends ObjExpr)
-        (§ def Type aFnType = Type.getType(AFunction.class))
-        (§ def Type restFnType = Type.getType(RestFn.class))
+        (§ def #_"Type" aFnType (ß Type.getType(AFunction.class)))
+        (§ def #_"Type" restFnType (ß Type.getType(RestFn.class)))
 
         ;; if there is a variadic overload (there can only be one) it is stored here
-        (§ field FnMethod variadicMethod = nil)
-        (§ field IPersistentCollection methods)
-        (§ field- boolean hasPrimSigs)
-        (§ field- boolean hasMeta)
-        (§ field- boolean hasEnclosingMethod)
+        (§ field #_"FnMethod" variadicMethod (ß nil))
+        (§ field #_"IPersistentCollection" methods)
+        (§ field- #_"boolean" hasPrimSigs)
+        (§ field- #_"boolean" hasMeta)
+        (§ field- #_"boolean" hasEnclosingMethod)
 
-        (§ field Class jc)
+        (§ field #_"Class" jc)
 
-        (§ constructor FnExpr(Object tag)
+        (§ constructor #_"FnExpr" FnExpr [#_"Object" tag]
             (§ super(tag))
             this
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method boolean supportsMeta()
+        #_method
+        (§ defn #_"boolean" supportsMeta [this]
             hasMeta
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (when (ß jc == nil)
                 (ß jc = (tag != nil) ? HostExpr.tagToClass(tag) :or AFunction.class)
             )
@@ -8811,7 +9389,8 @@
         )
 
         #_protected
-        (§ method void emitMethods(ClassVisitor cv)
+        #_method
+        (§ defn #_"void" emitMethods [this, #_"ClassVisitor" cv]
             ;; override of invoke/doInvoke for each method
             (loop-when-recur [(ß ISeq s = RT.seq(methods))] (ß s != nil) [(ß s = s.next())]
                 (let [#_"ObjMethod" method (ß (ObjMethod) s.first())]
@@ -8830,7 +9409,7 @@
             nil
         )
 
-        (§ defn Expr parse(C context, ISeq form, String name)
+        (§ defn #_"Expr" parse [#_"C" context, #_"ISeq" form, #_"String" name]
             (let [#_"ISeq" origForm form]
                 (let [#_"FnExpr" fn (ß new FnExpr(tagOf(form)))]
                     (let [#_"Keyword" retkey (ß Keyword.intern(nil, "rettag"))]
@@ -9011,149 +9590,166 @@
             )
         )
 
-        (§ method ObjMethod variadicMethod()
+        #_method
+        (§ defn #_"ObjMethod" variadicMethod [this]
             variadicMethod
         )
 
-        (§ method boolean isVariadic()
+        #_method
+        (§ defn #_"boolean" isVariadic [this]
             (ß (variadicMethod != nil))
         )
 
-        (§ method IPersistentCollection methods()
+        #_method
+        (§ defn #_"IPersistentCollection" methods [this]
             methods
         )
 
-        (§ method void emitForDefn(ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitForDefn [this, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß emit(C.EXPRESSION, objx, gen))
             nil
         )
     )
 
     (class-ns ObjExpr (§ implements Expr)
-        (§ def String CONST_PREFIX = "const__")
+        (§ def #_"String" CONST_PREFIX (ß "const__"))
 
-        (§ field String name)
-        (§ field String internalName)
-        (§ field String thisName)
-        (§ field Type objtype)
-        (§ field Object tag)
+        (§ field #_"String" name)
+        (§ field #_"String" internalName)
+        (§ field #_"String" thisName)
+        (§ field #_"Type" objtype)
+        (§ field #_"Object" tag)
         ;; localbinding->itself
-        (§ field IPersistentMap closes = PersistentHashMap.EMPTY)
+        (§ field #_"IPersistentMap" closes (ß PersistentHashMap.EMPTY))
         ;; localbndingexprs
-        (§ field IPersistentVector closesExprs = PersistentVector.EMPTY)
+        (§ field #_"IPersistentVector" closesExprs (ß PersistentVector.EMPTY))
         ;; symbols
-        (§ field IPersistentSet volatiles = PersistentHashSet.EMPTY)
+        (§ field #_"IPersistentSet" volatiles (ß PersistentHashSet.EMPTY))
 
         ;; symbol->lb
-        (§ field IPersistentMap fields = nil)
+        (§ field #_"IPersistentMap" fields (ß nil))
 
         ;; hinted fields
-        (§ field IPersistentVector hintedFields = PersistentVector.EMPTY)
+        (§ field #_"IPersistentVector" hintedFields (ß PersistentVector.EMPTY))
 
         ;; Keyword->KeywordExpr
-        (§ field IPersistentMap keywords = PersistentHashMap.EMPTY)
-        (§ field IPersistentMap vars = PersistentHashMap.EMPTY)
-        (§ field Class compiledClass)
-        (§ field int line)
-        (§ field int column)
-        (§ field PersistentVector constants)
-        (§ field IPersistentSet usedConstants = PersistentHashSet.EMPTY)
+        (§ field #_"IPersistentMap" keywords (ß PersistentHashMap.EMPTY))
+        (§ field #_"IPersistentMap" vars (ß PersistentHashMap.EMPTY))
+        (§ field #_"Class" compiledClass)
+        (§ field #_"int" line)
+        (§ field #_"int" column)
+        (§ field #_"PersistentVector" constants)
+        (§ field #_"IPersistentSet" usedConstants (ß PersistentHashSet.EMPTY))
 
-        (§ field int constantsID)
-        (§ field int altCtorDrops = 0)
+        (§ field #_"int" constantsID)
+        (§ field #_"int" altCtorDrops (ß 0))
 
-        (§ field IPersistentVector keywordCallsites)
-        (§ field IPersistentVector protocolCallsites)
-        (§ field IPersistentSet varCallsites)
-        (§ field boolean onceOnly = false)
+        (§ field #_"IPersistentVector" keywordCallsites)
+        (§ field #_"IPersistentVector" protocolCallsites)
+        (§ field #_"IPersistentSet" varCallsites)
+        (§ field #_"boolean" onceOnly (ß false))
 
-        (§ field Object src)
+        (§ field #_"Object" src)
 
-        (§ field IPersistentMap opts = PersistentHashMap.EMPTY)
+        (§ field #_"IPersistentMap" opts (ß PersistentHashMap.EMPTY))
 
-        (§ def Method voidctor = Method.getMethod("void <init>()"))
+        (§ def #_"Method" voidctor (ß Method.getMethod("void <init>()")))
         #_protected
-        (§ field IPersistentMap classMeta)
+        (§ field #_"IPersistentMap" classMeta)
         #_protected
-        (§ field boolean canBeDirect)
+        (§ field #_"boolean" canBeDirect)
 
-        (§ method String name()
+        #_method
+        (§ defn #_"String" name [this]
             name
         )
 
-        (§ method String internalName()
+        #_method
+        (§ defn #_"String" internalName [this]
             internalName
         )
 
-        (§ method String thisName()
+        #_method
+        (§ defn #_"String" thisName [this]
             thisName
         )
 
-        (§ method Type objtype()
+        #_method
+        (§ defn #_"Type" objtype [this]
             objtype
         )
 
-        (§ method IPersistentMap closes()
+        #_method
+        (§ defn #_"IPersistentMap" closes [this]
             closes
         )
 
-        (§ method IPersistentMap keywords()
+        #_method
+        (§ defn #_"IPersistentMap" keywords [this]
             keywords
         )
 
-        (§ method IPersistentMap vars()
+        #_method
+        (§ defn #_"IPersistentMap" vars [this]
             vars
         )
 
-        (§ method Class compiledClass()
+        #_method
+        (§ defn #_"Class" compiledClass [this]
             compiledClass
         )
 
-        (§ method int line()
+        #_method
+        (§ defn #_"int" line [this]
             line
         )
 
-        (§ method int column()
+        #_method
+        (§ defn #_"int" column [this]
             column
         )
 
-        (§ method PersistentVector constants()
+        #_method
+        (§ defn #_"PersistentVector" constants [this]
             constants
         )
 
-        (§ method int constantsID()
+        #_method
+        (§ defn #_"int" constantsID [this]
             constantsID
         )
 
-        (§ def Method kwintern = Method.getMethod("cloiure.lang.Keyword intern(String, String)"))
-        (§ def Method symintern = Method.getMethod("cloiure.lang.Symbol intern(String)"))
-        (§ def Method varintern = Method.getMethod("cloiure.lang.Var intern(cloiure.lang.Symbol, cloiure.lang.Symbol)"))
+        (§ def #_"Method" kwintern (ß Method.getMethod("cloiure.lang.Keyword intern(String, String)")))
+        (§ def #_"Method" symintern (ß Method.getMethod("cloiure.lang.Symbol intern(String)")))
+        (§ def #_"Method" varintern (ß Method.getMethod("cloiure.lang.Var intern(cloiure.lang.Symbol, cloiure.lang.Symbol)")))
 
-        (§ def Type DYNAMIC_CLASSLOADER_TYPE = Type.getType(DynamicClassLoader.class))
-        (§ def Method getClassMethod = Method.getMethod("Class getClass()"))
-        (§ def Method getClassLoaderMethod = Method.getMethod("ClassLoader getClassLoader()"))
-        (§ def Method getConstantsMethod = Method.getMethod("Object[] getConstants(int)"))
-        (§ def Method readStringMethod = Method.getMethod("Object readString(String)"))
+        (§ def #_"Type" DYNAMIC_CLASSLOADER_TYPE (ß Type.getType(DynamicClassLoader.class)))
+        (§ def #_"Method" getClassMethod (ß Method.getMethod("Class getClass()")))
+        (§ def #_"Method" getClassLoaderMethod (ß Method.getMethod("ClassLoader getClassLoader()")))
+        (§ def #_"Method" getConstantsMethod (ß Method.getMethod("Object[] getConstants(int)")))
+        (§ def #_"Method" readStringMethod (ß Method.getMethod("Object readString(String)")))
 
-        (§ def Type ILOOKUP_SITE_TYPE = Type.getType(ILookupSite.class))
-        (§ def Type ILOOKUP_THUNK_TYPE = Type.getType(ILookupThunk.class))
-        (§ def Type KEYWORD_LOOKUPSITE_TYPE = Type.getType(KeywordLookupSite.class))
+        (§ def #_"Type" ILOOKUP_SITE_TYPE (ß Type.getType(ILookupSite.class)))
+        (§ def #_"Type" ILOOKUP_THUNK_TYPE (ß Type.getType(ILookupThunk.class)))
+        (§ def #_"Type" KEYWORD_LOOKUPSITE_TYPE (ß Type.getType(KeywordLookupSite.class)))
 
-        (§ field- DynamicClassLoader loader)
-        (§ field- byte[] bytecode)
+        (§ field- #_"DynamicClassLoader" loader)
+        (§ field- #_"byte[]" bytecode)
 
-        (§ constructor ObjExpr(Object tag)
+        (§ constructor #_"ObjExpr" ObjExpr [#_"Object" tag]
             (ß this.tag = tag)
             this
         )
 
-        (§ defn String trimGenID(String name)
+        (§ defn #_"String" trimGenID [#_"String" name]
             (let [#_"int" i (ß name.lastIndexOf("__"))]
                 (ß (i == -1) ? name :or name.substring(0, i))
             )
         )
 
-        (§ method Type[] ctorTypes()
+        #_method
+        (§ defn #_"Type[]" ctorTypes [this]
             (let [#_"IPersistentVector" tv (ß !supportsMeta() ? PersistentVector.EMPTY :or RT.vector(IPERSISTENTMAP_TYPE))]
                 (loop-when-recur [(ß ISeq s = RT.keys(closes))] (ß s != nil) [(ß s = s.next())]
                     (let [#_"LocalBinding" lb (ß (LocalBinding) s.first())]
@@ -9176,7 +9772,8 @@
             )
         )
 
-        (§ method void compile(String superName, String[] interfaceNames, boolean oneTimeUse) (§ throws IOException)
+        #_method
+        (§ defn #_"void" compile [this, #_"String" superName, #_"String[]" interfaceNames, #_"boolean" oneTimeUse] (§ throws IOException)
             ;; create bytecode for a class
             ;; with name current_ns.defname[$letname]+
             ;; anonymous fns get names fn__id
@@ -9479,7 +10076,8 @@
             )
         )
 
-        (§ method- void emitKeywordCallsites(GeneratorAdapter clinitgen)
+        #_method
+        (§ defn- #_"void" emitKeywordCallsites [this, #_"GeneratorAdapter" clinitgen]
             (loop-when-recur [(ß int i = 0)] (ß i < keywordCallsites.count()) [(ß i++)]
                 (let [#_"Keyword" k (ß (Keyword) keywordCallsites.nth(i))]
                     (ß clinitgen.newInstance(KEYWORD_LOOKUPSITE_TYPE))
@@ -9495,16 +10093,19 @@
         )
 
         #_protected
-        (§ method void emitStatics(ClassVisitor gen)
+        #_method
+        (§ defn #_"void" emitStatics [this, #_"ClassVisitor" gen]
             nil
         )
 
         #_protected
-        (§ method void emitMethods(ClassVisitor gen)
+        #_method
+        (§ defn #_"void" emitMethods [this, #_"ClassVisitor" gen]
             nil
         )
 
-        (§ method void emitListAsObjectArray(Object value, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitListAsObjectArray [this, #_"Object" value, #_"GeneratorAdapter" gen]
             (ß gen.push(((List) value).size()))
             (ß gen.newArray(OBJECT_TYPE))
             (let [#_"int" i 0]
@@ -9518,7 +10119,8 @@
             )
         )
 
-        (§ method void emitValue(Object value, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitValue [this, #_"Object" value, #_"GeneratorAdapter" gen]
             (let [#_"boolean" partial true]
                 (cond (ß value == nil)
                     (do
@@ -9759,7 +10361,8 @@
             )
         )
 
-        (§ method void emitConstants(GeneratorAdapter clinitgen)
+        #_method
+        (§ defn #_"void" emitConstants [this, #_"GeneratorAdapter" clinitgen]
             (try
                 (ß Var.pushThreadBindings(RT.map(RT.PRINT_DUP, RT.T)))
 
@@ -9777,27 +10380,33 @@
             nil
         )
 
-        (§ method boolean isMutable(LocalBinding lb)
+        #_method
+        (§ defn #_"boolean" isMutable [this, #_"LocalBinding" lb]
             (ß isVolatile(lb) || RT.booleanCast(RT.contains(fields, lb.sym)) && RT.booleanCast(RT.get(lb.sym.meta(), Keyword.intern("unsynchronized-mutable"))))
         )
 
-        (§ method boolean isVolatile(LocalBinding lb)
+        #_method
+        (§ defn #_"boolean" isVolatile [this, #_"LocalBinding" lb]
             (ß RT.booleanCast(RT.contains(fields, lb.sym)) && RT.booleanCast(RT.get(lb.sym.meta(), Keyword.intern("volatile-mutable"))))
         )
 
-        (§ method boolean isDeftype()
+        #_method
+        (§ defn #_"boolean" isDeftype [this]
             (ß (fields != nil))
         )
 
-        (§ method boolean supportsMeta()
+        #_method
+        (§ defn #_"boolean" supportsMeta [this]
             (ß !isDeftype())
         )
 
-        (§ method void emitClearCloses(GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitClearCloses [this, #_"GeneratorAdapter" gen]
             nil
         )
 
-        (§ method Class getCompiledClass()
+        #_method
+        (§ defn #_"Class" getCompiledClass [this]
             (§ sync this
                 (when (ß compiledClass == nil)
                     (ß loader = (DynamicClassLoader) LOADER.deref())
@@ -9807,7 +10416,8 @@
             )
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (when (ß isDeftype())
                 (§ return nil)
             )
@@ -9819,7 +10429,8 @@
             )
         )
 
-        (§ method void emitLetFnInits(GeneratorAdapter gen, ObjExpr objx, IPersistentSet letFnLocals)
+        #_method
+        (§ defn #_"void" emitLetFnInits [this, #_"GeneratorAdapter" gen, #_"ObjExpr" objx, #_"IPersistentSet" letFnLocals]
             ;; objx arg is enclosing objx, not this
             (ß gen.checkCast(objtype))
 
@@ -9846,7 +10457,8 @@
             nil
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             ;; emitting a Fn means constructing an instance, feeding closed-overs from enclosing scope, if any
             ;; objx arg is enclosing objx, not this
             (if (ß isDeftype())
@@ -9882,20 +10494,23 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ field Class jc)
+        (§ field #_"Class" jc)
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (when (ß jc == nil)
                 (ß jc = (compiledClass != nil) ? compiledClass :or (tag != nil) ? HostExpr.tagToClass(tag) :or IFn.class)
             )
             jc
         )
 
-        (§ method void emitAssignLocal(GeneratorAdapter gen, LocalBinding lb, Expr val)
+        #_method
+        (§ defn #_"void" emitAssignLocal [this, #_"GeneratorAdapter" gen, #_"LocalBinding" lb, #_"Expr" val]
             (when (ß !isMutable(lb))
                 (throw (ß new IllegalArgumentException("Cannot assign to non-mutable: " + lb.name)))
             )
@@ -9920,7 +10535,8 @@
             )
         )
 
-        (§ method- void emitLocal(GeneratorAdapter gen, LocalBinding lb, boolean clear)
+        #_method
+        (§ defn- #_"void" emitLocal [this, #_"GeneratorAdapter" gen, #_"LocalBinding" lb, #_"boolean" clear]
             (if (ß closes.containsKey(lb))
                 (do
                     (let [#_"Class" primc (ß lb.getPrimitiveType())]
@@ -9981,7 +10597,8 @@
             nil
         )
 
-        (§ method- void emitUnboxedLocal(GeneratorAdapter gen, LocalBinding lb)
+        #_method
+        (§ defn- #_"void" emitUnboxedLocal [this, #_"GeneratorAdapter" gen, #_"LocalBinding" lb]
             (let [#_"int" argoff (ß canBeDirect ? 0 :or 1)]
                 (let [#_"Class" primc (ß lb.getPrimitiveType())]
                     (cond (ß closes.containsKey(lb))
@@ -10003,17 +10620,19 @@
             )
         )
 
-        (§ method void emitVar(GeneratorAdapter gen, Var var)
+        #_method
+        (§ defn #_"void" emitVar [this, #_"GeneratorAdapter" gen, #_"Var" var]
             (let [#_"Integer" i (ß (Integer) vars.valAt(var))]
                 (ß emitConstant(gen, i))
                 nil
             )
         )
 
-        (§ def Method varGetMethod = Method.getMethod("Object get()"))
-        (§ def Method varGetRawMethod = Method.getMethod("Object getRawRoot()"))
+        (§ def #_"Method" varGetMethod (ß Method.getMethod("Object get()")))
+        (§ def #_"Method" varGetRawMethod (ß Method.getMethod("Object getRawRoot()")))
 
-        (§ method void emitVarValue(GeneratorAdapter gen, Var v)
+        #_method
+        (§ defn #_"void" emitVarValue [this, #_"GeneratorAdapter" gen, #_"Var" v]
             (let [#_"Integer" i (ß (Integer) vars.valAt(v))]
                 (if (ß !v.isDynamic())
                     (do
@@ -10029,52 +10648,63 @@
             )
         )
 
-        (§ method void emitKeyword(GeneratorAdapter gen, Keyword k)
+        #_method
+        (§ defn #_"void" emitKeyword [this, #_"GeneratorAdapter" gen, #_"Keyword" k]
             (let [#_"Integer" i (ß (Integer) keywords.valAt(k))]
                 (ß emitConstant(gen, i))
                 nil
             )
         )
 
-        (§ method void emitConstant(GeneratorAdapter gen, int id)
+        #_method
+        (§ defn #_"void" emitConstant [this, #_"GeneratorAdapter" gen, #_"int" id]
             (ß usedConstants = (IPersistentSet) usedConstants.cons(id))
             (ß gen.getStatic(objtype, constantName(id), constantType(id)))
             nil
         )
 
-        (§ method String constantName(int id)
+        #_method
+        (§ defn #_"String" constantName [this, #_"int" id]
             (ß CONST_PREFIX + id)
         )
 
-        (§ method String siteName(int n)
+        #_method
+        (§ defn #_"String" siteName [this, #_"int" n]
             (ß "__site__" + n)
         )
 
-        (§ method String siteNameStatic(int n)
+        #_method
+        (§ defn #_"String" siteNameStatic [this, #_"int" n]
             (ß siteName(n) + "__")
         )
 
-        (§ method String thunkName(int n)
+        #_method
+        (§ defn #_"String" thunkName [this, #_"int" n]
             (ß "__thunk__" + n)
         )
 
-        (§ method String cachedClassName(int n)
+        #_method
+        (§ defn #_"String" cachedClassName [this, #_"int" n]
             (ß "__cached_class__" + n)
         )
 
-        (§ method String cachedVarName(int n)
+        #_method
+        (§ defn #_"String" cachedVarName [this, #_"int" n]
             (ß "__cached_var__" + n)
         )
 
-        (§ method String varCallsiteName(int n)
+        #_method
+        (§ defn #_"String" varCallsiteName [this, #_"int" n]
             (ß "__var__callsite__" + n)
         )
 
-        (§ method String thunkNameStatic(int n)
+        #_method
+        (§ defn #_"String" thunkNameStatic [this, #_"int" n]
             (ß thunkName(n) + "__")
         )
 
-        (§ method Type constantType(int id)
+        #_method
+        (§ defn #_"Type" constantType [this, #_"int" id]
             (let [#_"Object" o (ß constants.nth(id))]
                 (let [#_"Class" c (ß cloiure.lang.Util.classOf(o))]
                     (when (ß c!= nil && Modifier.isPublic(c.getModifiers()))
@@ -10118,17 +10748,17 @@
     )
 
     (class-ns PathNode
-        (§ field PATHTYPE type)
-        (§ field PathNode parent)
+        (§ field #_"PATHTYPE" type)
+        (§ field #_"PathNode" parent)
 
-        (§ constructor PathNode(PATHTYPE type, PathNode parent)
+        (§ constructor #_"PathNode" PathNode [#_"PATHTYPE" type, #_"PathNode" parent]
             (ß this.type = type)
             (ß this.parent = parent)
             this
         )
     )
 
-    (§ defn PathNode clearPathRoot()
+    (§ defn #_"PathNode" clearPathRoot []
         (ß (PathNode) CLEAR_ROOT.get())
     )
 
@@ -10141,19 +10771,19 @@
 
     (class-ns FnMethod (§ extends ObjMethod)
         ;; localbinding->localbinding
-        (§ field PersistentVector reqParms = PersistentVector.EMPTY)
-        (§ field LocalBinding restParm = nil)
-        (§ field Type[] argtypes)
-        (§ field Class[] argclasses)
-        (§ field Class retClass)
-        (§ field String prim)
+        (§ field #_"PersistentVector" reqParms (ß PersistentVector.EMPTY))
+        (§ field #_"LocalBinding" restParm (ß nil))
+        (§ field #_"Type[]" argtypes)
+        (§ field #_"Class[]" argclasses)
+        (§ field #_"Class" retClass)
+        (§ field #_"String" prim)
 
-        (§ constructor FnMethod(ObjExpr objx, ObjMethod parent)
+        (§ constructor #_"FnMethod" FnMethod [#_"ObjExpr" objx, #_"ObjMethod" parent]
             (§ super(objx, parent))
             this
         )
 
-        (§ defn char classChar(Object x)
+        (§ defn #_"char" classChar [#_"Object" x]
             (let [#_"Class" c nil]
                 (cond (ß x instanceof Class)
                     (do
@@ -10177,7 +10807,7 @@
             )
         )
 
-        (§ defn String primInterface(IPersistentVector arglist)
+        (§ defn #_"String" primInterface [#_"IPersistentVector" arglist]
             (let [#_"StringBuilder" sb (ß new StringBuilder())]
                 (loop-when-recur [(ß int i = 0)] (ß i < arglist.count()) [(ß i++)]
                     (ß sb.append(classChar(tagOf(arglist.nth(i)))))
@@ -10197,7 +10827,7 @@
             )
         )
 
-        (§ defn FnMethod parse(ObjExpr objx, ISeq form, Object rettag)
+        (§ defn #_"FnMethod" parse [#_"ObjExpr" objx, #_"ISeq" form, #_"Object" rettag]
             ;; ([args] body...)
             (let [#_"IPersistentVector" parms (ß (IPersistentVector) RT.first(form))]
                 (let [#_"ISeq" body (ß RT.next(form))]
@@ -10355,7 +10985,8 @@
             )
         )
 
-        (§ method void emit(ObjExpr fn, ClassVisitor cv)
+        #_method
+        (§ defn #_"void" emit [this, #_"ObjExpr" fn, #_"ClassVisitor" cv]
             (cond (ß fn.canBeDirect)
                 (do
                     (ß doEmitStatic(fn, cv))
@@ -10372,7 +11003,8 @@
             nil
         )
 
-        (§ method void doEmitStatic(ObjExpr fn, ClassVisitor cv)
+        #_method
+        (§ defn #_"void" doEmitStatic [this, #_"ObjExpr" fn, #_"ClassVisitor" cv]
             (let [#_"Type" returnType (ß Type.getType(retClass))]
                 (let [#_"Method" ms (ß new Method("invokeStatic", returnType, argtypes))]
                     ;; todo don't hardwire EXCEPTION_TYPES
@@ -10453,7 +11085,8 @@
             )
         )
 
-        (§ method void doEmitPrim(ObjExpr fn, ClassVisitor cv)
+        #_method
+        (§ defn #_"void" doEmitPrim [this, #_"ObjExpr" fn, #_"ClassVisitor" cv]
             (§ let [#_"Type" returnType]
                 (if (ß retClass == double.class || retClass == long.class)
                     (do
@@ -10513,7 +11146,8 @@
             )
         )
 
-        (§ method void doEmit(ObjExpr fn, ClassVisitor cv)
+        #_method
+        (§ defn #_"void" doEmit [this, #_"ObjExpr" fn, #_"ClassVisitor" cv]
             (let [#_"Method" m (ß new Method(getMethodName(), getReturnType(), getArgTypes()))]
                 ;; todo don't hardwire EXCEPTION_TYPES
                 (let [#_"GeneratorAdapter" gen (ß new GeneratorAdapter(ACC_PUBLIC, m, nil, EXCEPTION_TYPES, cv))]
@@ -10546,34 +11180,41 @@
             )
         )
 
-        (§ method PersistentVector reqParms()
+        #_method
+        (§ defn #_"PersistentVector" reqParms [this]
             reqParms
         )
 
-        (§ method LocalBinding restParm()
+        #_method
+        (§ defn #_"LocalBinding" restParm [this]
             restParm
         )
 
-        (§ method boolean isVariadic()
+        #_method
+        (§ defn #_"boolean" isVariadic [this]
             (ß (restParm != nil))
         )
 
-        (§ method int numParams()
+        #_method
+        (§ defn #_"int" numParams [this]
             (ß reqParms.count() + (isVariadic() ? 1 :or 0))
         )
 
-        (§ method String getMethodName()
+        #_method
+        (§ defn #_"String" getMethodName [this]
             (ß isVariadic() ? "doInvoke" :or "invoke")
         )
 
-        (§ method Type getReturnType()
+        #_method
+        (§ defn #_"Type" getReturnType [this]
             (when (ß prim != nil) ;; objx.isStatic
                 (§ return (ß Type.getType(retClass)))
             )
             (ß OBJECT_TYPE)
         )
 
-        (§ method Type[] getArgTypes()
+        #_method
+        (§ defn #_"Type[]" getArgTypes [this]
             (when (ß isVariadic() && reqParms.count() == MAX_POSITIONAL_ARITY)
                 (let [#_"Type[]" ret (ß new Type[MAX_POSITIONAL_ARITY + 1])]
                     (loop-when-recur [(ß int i = 0)] (ß i < MAX_POSITIONAL_ARITY + 1) [(ß i++)]
@@ -10585,7 +11226,8 @@
             (ß ARG_TYPES[numParams()])
         )
 
-        (§ method void emitClearLocals(GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitClearLocals [this, #_"GeneratorAdapter" gen]
             nil
         )
     )
@@ -10594,57 +11236,64 @@
     (class-ns ObjMethod
         ;; when closures are defined inside other closures,
         ;; the closed over locals need to be propagated to the enclosing objx
-        (§ field ObjMethod parent)
+        (§ field #_"ObjMethod" parent)
         ;; localbinding->localbinding
-        (§ field IPersistentMap locals = nil)
+        (§ field #_"IPersistentMap" locals (ß nil))
         ;; num->localbinding
-        (§ field IPersistentMap indexlocals = nil)
-        (§ field Expr body = nil)
-        (§ field ObjExpr objx)
-        (§ field PersistentVector argLocals)
-        (§ field int maxLocal = 0)
-        (§ field int line)
-        (§ field int column)
-        (§ field boolean usesThis = false)
-        (§ field PersistentHashSet localsUsedInCatchFinally = PersistentHashSet.EMPTY)
+        (§ field #_"IPersistentMap" indexlocals (ß nil))
+        (§ field #_"Expr" body (ß nil))
+        (§ field #_"ObjExpr" objx)
+        (§ field #_"PersistentVector" argLocals)
+        (§ field #_"int" maxLocal (ß 0))
+        (§ field #_"int" line)
+        (§ field #_"int" column)
+        (§ field #_"boolean" usesThis (ß false))
+        (§ field #_"PersistentHashSet" localsUsedInCatchFinally (ß PersistentHashSet.EMPTY))
         #_protected
-        (§ field IPersistentMap methodMeta)
+        (§ field #_"IPersistentMap" methodMeta)
 
-        (§ method IPersistentMap locals()
+        #_method
+        (§ defn #_"IPersistentMap" locals [this]
             locals
         )
 
-        (§ method Expr body()
+        #_method
+        (§ defn #_"Expr" body [this]
             body
         )
 
-        (§ method ObjExpr objx()
+        #_method
+        (§ defn #_"ObjExpr" objx [this]
             objx
         )
 
-        (§ method PersistentVector argLocals()
+        #_method
+        (§ defn #_"PersistentVector" argLocals [this]
             argLocals
         )
 
-        (§ method int maxLocal()
+        #_method
+        (§ defn #_"int" maxLocal [this]
             maxLocal
         )
 
-        (§ method int line()
+        #_method
+        (§ defn #_"int" line [this]
             line
         )
 
-        (§ method int column()
+        #_method
+        (§ defn #_"int" column [this]
             column
         )
 
-        (§ constructor ObjMethod(ObjExpr objx, ObjMethod parent)
+        (§ constructor #_"ObjMethod" ObjMethod [#_"ObjExpr" objx, #_"ObjMethod" parent]
             (ß this.parent = parent)
             (ß this.objx = objx)
             this
         )
 
-        (§ defn void emitBody(ObjExpr objx, GeneratorAdapter gen, Class retClass, Expr body)
+        (§ defn #_"void" emitBody [#_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Class" retClass, #_"Expr" body]
             (let [#_"MaybePrimitiveExpr" be (ß (MaybePrimitiveExpr) body)]
                 (if (ß Util.isPrimitive(retClass) && be.canEmitPrimitive())
                     (do
@@ -10701,7 +11350,8 @@
         (§ abstract Type getReturnType())
         (§ abstract Type[] getArgTypes())
 
-        (§ method void emit(ObjExpr fn, ClassVisitor cv)
+        #_method
+        (§ defn #_"void" emit [this, #_"ObjExpr" fn, #_"ClassVisitor" cv]
             (let [#_"Method" m (ß new Method(getMethodName(), getReturnType(), getArgTypes()))]
                 ;; todo don't hardwire EXCEPTION_TYPES
                 (let [#_"GeneratorAdapter" gen (ß new GeneratorAdapter(ACC_PUBLIC, m, nil, EXCEPTION_TYPES, cv))]
@@ -10734,11 +11384,13 @@
             )
         )
 
-        (§ method void emitClearLocals(GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitClearLocals [this, #_"GeneratorAdapter" gen]
             nil
         )
 
-        (§ method void emitClearLocalsOld(GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitClearLocalsOld [this, #_"GeneratorAdapter" gen]
             (loop-when-recur [(ß int i = 0)] (ß i < argLocals.count()) [(ß i++)]
                 (let [#_"LocalBinding" lb (ß (LocalBinding) argLocals.nth(i))]
                     (when (ß !localsUsedInCatchFinally.contains(lb.idx) && lb.getPrimitiveType() == nil)
@@ -10760,7 +11412,8 @@
             nil
         )
 
-        (§ method void emitClearThis(GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitClearThis [this, #_"GeneratorAdapter" gen]
             (ß gen.visitInsn(Opcodes.ACONST_NULL))
             (ß gen.visitVarInsn(Opcodes.ASTORE, 0))
             nil
@@ -10768,18 +11421,18 @@
     )
 
     (class-ns LocalBinding
-        (§ field Symbol sym)
-        (§ field Symbol tag)
-        (§ field Expr init)
-        (§ field int idx)
-        (§ field String name)
-        (§ field boolean isArg)
-        (§ field PathNode clearPathRoot)
-        (§ field boolean canBeCleared = !RT.booleanCast(getCompilerOption(disableLocalsClearingKey)))
-        (§ field boolean recurMistmatch = false)
-        (§ field boolean used = false)
+        (§ field #_"Symbol" sym)
+        (§ field #_"Symbol" tag)
+        (§ field #_"Expr" init)
+        (§ field #_"int" idx)
+        (§ field #_"String" name)
+        (§ field #_"boolean" isArg)
+        (§ field #_"PathNode" clearPathRoot)
+        (§ field #_"boolean" canBeCleared (ß !RT.booleanCast(getCompilerOption(disableLocalsClearingKey))))
+        (§ field #_"boolean" recurMistmatch (ß false))
+        (§ field #_"boolean" used (ß false))
 
-        (§ constructor LocalBinding(int num, Symbol sym, Symbol tag, Expr init, boolean isArg, PathNode clearPathRoot)
+        (§ constructor #_"LocalBinding" LocalBinding [#_"int" num, #_"Symbol" sym, #_"Symbol" tag, #_"Expr" init, #_"boolean" isArg, #_"PathNode" clearPathRoot]
             (when (ß maybePrimitiveType(init) != nil && tag != nil)
                 (throw (ß new UnsupportedOperationException("Can't type hint a local with a primitive initializer")))
             )
@@ -10793,9 +11446,10 @@
             this
         )
 
-        (§ field Boolean hjc)
+        (§ field #_"Boolean" hjc)
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (when (ß hjc == nil)
                 (if (ß init != nil && init.hasJavaClass() && Util.isPrimitive(init.getJavaClass()) && !(init instanceof MaybePrimitiveExpr))
                     (do
@@ -10809,29 +11463,31 @@
             hjc
         )
 
-        (§ field Class jc)
+        (§ field #_"Class" jc)
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (when (ß jc == nil)
                 (ß jc = (tag != nil) ? HostExpr.tagToClass(tag) :or init.getJavaClass())
             )
             jc
         )
 
-        (§ method Class getPrimitiveType()
+        #_method
+        (§ defn #_"Class" getPrimitiveType [this]
             (ß maybePrimitiveType(init))
         )
     )
 
     (class-ns LocalBindingExpr (§ implements Expr, MaybePrimitiveExpr, AssignableExpr)
-        (§ field LocalBinding b)
-        (§ field Symbol tag)
+        (§ field #_"LocalBinding" b)
+        (§ field #_"Symbol" tag)
 
-        (§ field PathNode clearPath)
-        (§ field PathNode clearRoot)
-        (§ field boolean shouldClear = false)
+        (§ field #_"PathNode" clearPath)
+        (§ field #_"PathNode" clearRoot)
+        (§ field #_"boolean" shouldClear (ß false))
 
-        (§ constructor LocalBindingExpr(LocalBinding b, Symbol tag)
+        (§ constructor #_"LocalBindingExpr" LocalBindingExpr [#_"LocalBinding" b, #_"Symbol" tag]
             (when (ß b.getPrimitiveType() != nil && tag != nil)
                 (throw (ß new UnsupportedOperationException("Can't type hint a primitive local")))
             )
@@ -10866,31 +11522,37 @@
             )
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (throw (ß new UnsupportedOperationException("Can't eval locals")))
         )
 
-        (§ method boolean canEmitPrimitive()
+        #_method
+        (§ defn #_"boolean" canEmitPrimitive [this]
             (ß (b.getPrimitiveType() != nil))
         )
 
-        (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitUnboxed [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß objx.emitUnboxedLocal(gen, b))
             nil
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (when (ß context != C.STATEMENT)
                 (ß objx.emitLocal(gen, b, shouldClear))
             )
             nil
         )
 
-        (§ method Object evalAssign(Expr val)
+        #_method
+        (§ defn #_"Object" evalAssign [this, #_"Expr" val]
             (throw (ß new UnsupportedOperationException("Can't eval locals")))
         )
 
-        (§ method void emitAssign(C context, ObjExpr objx, GeneratorAdapter gen, Expr val)
+        #_method
+        (§ defn #_"void" emitAssign [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val]
             (ß objx.emitAssignLocal(gen, b, val))
             (when (ß context != C.STATEMENT)
                 (ß objx.emitLocal(gen, b, false))
@@ -10898,13 +11560,15 @@
             nil
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß (tag != nil || b.hasJavaClass()))
         )
 
-        (§ field Class jc)
+        (§ field #_"Class" jc)
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (when (ß jc == nil)
                 (if (ß tag != nil)
                     (do
@@ -10920,19 +11584,21 @@
     )
 
     (class-ns BodyExpr (§ implements Expr, MaybePrimitiveExpr)
-        (§ field PersistentVector exprs)
+        (§ field #_"PersistentVector" exprs)
 
-        (§ method PersistentVector exprs()
+        #_method
+        (§ defn #_"PersistentVector" exprs [this]
             exprs
         )
 
-        (§ constructor BodyExpr(PersistentVector exprs)
+        (§ constructor #_"BodyExpr" BodyExpr [#_"PersistentVector" exprs]
             (ß this.exprs = exprs)
             this
         )
 
         (class-ns Parser (§ implements IParser)
-            (§ method Expr parse(C context, Object frms)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" frms]
                 (let [#_"ISeq" forms (ß (ISeq) frms)]
                     (when (ß Util.equals(RT.first(forms), DO))
                         (ß forms = RT.next(forms))
@@ -10952,7 +11618,8 @@
             )
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (let [#_"Object" ret nil]
                 (doseq [#_"Object" o exprs]
                     (let [#_"Expr" e (ß (Expr) o)]
@@ -10963,11 +11630,13 @@
             )
         )
 
-        (§ method boolean canEmitPrimitive()
+        #_method
+        (§ defn #_"boolean" canEmitPrimitive [this]
             (ß (lastExpr() instanceof MaybePrimitiveExpr && ((MaybePrimitiveExpr)lastExpr()).canEmitPrimitive()))
         )
 
-        (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitUnboxed [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (loop-when-recur [(ß int i = 0)] (ß i < exprs.count() - 1) [(ß i++)]
                 (let [#_"Expr" e (ß (Expr) exprs.nth(i))]
                     (ß e.emit(C.STATEMENT, objx, gen))
@@ -10979,7 +11648,8 @@
             )
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (loop-when-recur [(ß int i = 0)] (ß i < exprs.count() - 1) [(ß i++)]
                 (let [#_"Expr" e (ß (Expr) exprs.nth(i))]
                     (ß e.emit(C.STATEMENT, objx, gen))
@@ -10991,32 +11661,37 @@
             )
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß lastExpr().hasJavaClass())
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß lastExpr().getJavaClass())
         )
 
-        (§ method- Expr lastExpr()
+        #_method
+        (§ defn- #_"Expr" lastExpr [this]
             (ß (Expr) exprs.nth(exprs.count() - 1))
         )
     )
 
     (class-ns BindingInit
-        (§ field LocalBinding binding)
-        (§ field Expr init)
+        (§ field #_"LocalBinding" binding)
+        (§ field #_"Expr" init)
 
-        (§ method LocalBinding binding()
+        #_method
+        (§ defn #_"LocalBinding" binding [this]
             binding
         )
 
-        (§ method Expr init()
+        #_method
+        (§ defn #_"Expr" init [this]
             init
         )
 
-        (§ constructor BindingInit(LocalBinding binding, Expr init)
+        (§ constructor #_"BindingInit" BindingInit [#_"LocalBinding" binding, #_"Expr" init]
             (ß this.binding = binding)
             (ß this.init = init)
             this
@@ -11024,17 +11699,18 @@
     )
 
     (class-ns LetFnExpr (§ implements Expr)
-        (§ field PersistentVector bindingInits)
-        (§ field Expr body)
+        (§ field #_"PersistentVector" bindingInits)
+        (§ field #_"Expr" body)
 
-        (§ constructor LetFnExpr(PersistentVector bindingInits, Expr body)
+        (§ constructor #_"LetFnExpr" LetFnExpr [#_"PersistentVector" bindingInits, #_"Expr" body]
             (ß this.bindingInits = bindingInits)
             (ß this.body = body)
             this
         )
 
         (class-ns Parser (§ implements IParser)
-            (§ method Expr parse(C context, Object frm)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" frm]
                 (let [#_"ISeq" form (ß (ISeq) frm)]
                     ;; (letfns* [var (fn [args] body) ...] body...)
                     (when (ß !(RT.second(form) instanceof IPersistentVector))
@@ -11098,11 +11774,13 @@
             )
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (throw (ß new UnsupportedOperationException("Can't eval letfns")))
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (loop-when-recur [(ß int i = 0)] (ß i < bindingInits.count()) [(ß i++)]
                 (let [#_"BindingInit" bi (ß (BindingInit) bindingInits.nth(i))]
                     (ß gen.visitInsn(Opcodes.ACONST_NULL))
@@ -11157,21 +11835,23 @@
             )
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß body.hasJavaClass())
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß body.getJavaClass())
         )
     )
 
     (class-ns LetExpr (§ implements Expr, MaybePrimitiveExpr)
-        (§ field PersistentVector bindingInits)
-        (§ field Expr body)
-        (§ field boolean isLoop)
+        (§ field #_"PersistentVector" bindingInits)
+        (§ field #_"Expr" body)
+        (§ field #_"boolean" isLoop)
 
-        (§ constructor LetExpr(PersistentVector bindingInits, Expr body, boolean isLoop)
+        (§ constructor #_"LetExpr" LetExpr [#_"PersistentVector" bindingInits, #_"Expr" body, #_"boolean" isLoop]
             (ß this.bindingInits = bindingInits)
             (ß this.body = body)
             (ß this.isLoop = isLoop)
@@ -11179,7 +11859,8 @@
         )
 
         (class-ns Parser (§ implements IParser)
-            (§ method Expr parse(C context, Object frm)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" frm]
                 (let [#_"ISeq" form (ß (ISeq) frm)]
                     ;; (let [var val var2 val2 ...] body...)
                     (let [#_"boolean" isLoop (ß RT.first(form).equals(LOOP))]
@@ -11330,21 +12011,25 @@
             )
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (throw (ß new UnsupportedOperationException("Can't eval let/loop")))
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß doEmit(context, objx, gen, false))
             nil
         )
 
-        (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitUnboxed [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß doEmit(context, objx, gen, true))
             nil
         )
 
-        (§ method void doEmit(C context, ObjExpr objx, GeneratorAdapter gen, boolean emitUnboxed)
+        #_method
+        (§ defn #_"void" doEmit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"boolean" emitUnboxed]
             (let [(ß HashMap<BindingInit, Label> bindingLabels = new HashMap())]
                 (loop-when-recur [(ß int i = 0)] (ß i < bindingInits.count()) [(ß i++)]
                     (let [#_"BindingInit" bi (ß (BindingInit) bindingInits.nth(i))]
@@ -11425,28 +12110,31 @@
             )
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß body.hasJavaClass())
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß body.getJavaClass())
         )
 
-        (§ method boolean canEmitPrimitive()
+        #_method
+        (§ defn #_"boolean" canEmitPrimitive [this]
             (ß (body instanceof MaybePrimitiveExpr && ((MaybePrimitiveExpr)body).canEmitPrimitive()))
         )
     )
 
     (class-ns RecurExpr (§ implements Expr, MaybePrimitiveExpr)
-        (§ field IPersistentVector args)
-        (§ field IPersistentVector loopLocals)
+        (§ field #_"IPersistentVector" args)
+        (§ field #_"IPersistentVector" loopLocals)
 
-        (§ field int line)
-        (§ field int column)
-        (§ field String source)
+        (§ field #_"int" line)
+        (§ field #_"int" column)
+        (§ field #_"String" source)
 
-        (§ constructor RecurExpr(IPersistentVector loopLocals, IPersistentVector args, int line, int column, String source)
+        (§ constructor #_"RecurExpr" RecurExpr [#_"IPersistentVector" loopLocals, #_"IPersistentVector" args, #_"int" line, #_"int" column, #_"String" source]
             (ß this.loopLocals = loopLocals)
             (ß this.args = args)
             (ß this.line = line)
@@ -11455,11 +12143,13 @@
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (throw (ß new UnsupportedOperationException("Can't eval recur")))
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (let [#_"Label" loopLabel (ß (Label) LOOP_LABEL.deref())]
                 (when (ß loopLabel == nil)
                     (throw (ß new IllegalStateException()))
@@ -11538,16 +12228,19 @@
             )
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             true
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             (ß RECUR_CLASS)
         )
 
         (class-ns Parser (§ implements IParser)
-            (§ method Expr parse(C context, Object frm)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" frm]
                 (let [#_"int" line (ß lineDeref())]
                     (let [#_"int" column (ß columnDeref())]
                         (let [#_"String" source (ß (String) SOURCE.deref())]
@@ -11607,17 +12300,19 @@
             )
         )
 
-        (§ method boolean canEmitPrimitive()
+        #_method
+        (§ defn #_"boolean" canEmitPrimitive [this]
             true
         )
 
-        (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitUnboxed [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß emit(context, objx, gen))
             nil
         )
     )
 
-    (§ defn- LocalBinding registerLocal(Symbol sym, Symbol tag, Expr init, boolean isArg)
+    (§ defn- #_"LocalBinding" registerLocal [#_"Symbol" sym, #_"Symbol" tag, #_"Expr" init, #_"boolean" isArg]
         (let [#_"int" num (ß getAndIncLocalNum())]
             (let [#_"LocalBinding" b (ß new LocalBinding(num, sym, tag, init, isArg, clearPathRoot()))]
                 (let [#_"IPersistentMap" localsMap (ß (IPersistentMap) LOCAL_ENV.deref())]
@@ -11632,7 +12327,7 @@
         )
     )
 
-    (§ defn- int getAndIncLocalNum()
+    (§ defn- #_"int" getAndIncLocalNum []
         (let [#_"int" num (ß ((Number) NEXT_LOCAL_NUM.deref()).intValue())]
             (let [#_"ObjMethod" m (ß (ObjMethod) METHOD.deref())]
                 (when (ß num > m.maxLocal)
@@ -11644,11 +12339,11 @@
         )
     )
 
-    (§ defn Expr analyze(C context, Object form)
+    (§ defn #_"Expr" analyze [#_"C" context, #_"Object" form]
         (ß analyze(context, form, nil))
     )
 
-    (§ defn- Expr analyze(C context, Object form, String name)
+    (§ defn- #_"Expr" analyze [#_"C" context, #_"Object" form, #_"String" name]
         ;; todo symbol macro expansion?
         (try
             (when (ß form instanceof LazySeq)
@@ -11741,23 +12436,24 @@
     )
 
     (class-ns CompilerException (§ extends RuntimeException)
-        (§ field String source)
+        (§ field #_"String" source)
 
-        (§ field int line)
+        (§ field #_"int" line)
 
-        (§ constructor CompilerException(String source, int line, int column, Throwable cause)
+        (§ constructor #_"CompilerException" CompilerException [#_"String" source, #_"int" line, #_"int" column, #_"Throwable" cause]
             (§ super(errorMsg(source, line, column, cause.toString()), cause))
             (ß this.source = source)
             (ß this.line = line)
             this
         )
 
-        (§ method String toString()
+        #_method
+        (§ defn #_"String" toString [this]
             (ß getMessage())
         )
     )
 
-    (§ defn Var isMacro(Object op)
+    (§ defn #_"Var" isMacro [#_"Object" op]
         ;; no local macros for now
         (when (ß op instanceof Symbol && referenceLocal((Symbol) op) != nil)
             (§ return nil)
@@ -11775,7 +12471,7 @@
         nil
     )
 
-    (§ defn IFn isInline(Object op, int arity)
+    (§ defn #_"IFn" isInline [#_"Object" op, #_"int" arity]
         ;; no local inlines for now
         (when (ß op instanceof Symbol && referenceLocal((Symbol) op) != nil)
             (§ return nil)
@@ -11801,11 +12497,11 @@
         nil
     )
 
-    (§ defn boolean namesStaticMember(Symbol sym)
+    (§ defn #_"boolean" namesStaticMember [#_"Symbol" sym]
         (ß (sym.ns != nil && namespaceFor(sym) == nil))
     )
 
-    (§ defn Object preserveTag(ISeq src, Object dst)
+    (§ defn #_"Object" preserveTag [#_"ISeq" src, #_"Object" dst]
         (let [#_"Symbol" tag (ß tagOf(src))]
             (when (ß tag != nil && dst instanceof IObj)
                 (let [#_"IPersistentMap" meta (ß RT.meta(dst))]
@@ -11817,12 +12513,12 @@
     )
 
     #_volatile
-    (§ def- Var MACRO_CHECK = nil)
+    (§ def- #_"Var" MACRO_CHECK (ß nil))
     #_volatile
-    (§ def- boolean MACRO_CHECK_LOADING = false)
-    (§ def- Object MACRO_CHECK_LOCK = new Object())
+    (§ def- #_"boolean" MACRO_CHECK_LOADING (ß false))
+    (§ def- #_"Object" MACRO_CHECK_LOCK (ß new Object()))
 
-    (§ defn- Var ensureMacroCheck() (§ throws ClassNotFoundException, IOException)
+    (§ defn- #_"Var" ensureMacroCheck [] (§ throws ClassNotFoundException, IOException)
         (when (ß MACRO_CHECK == nil)
             (§ sync (ß MACRO_CHECK_LOCK)
                 (when (ß MACRO_CHECK == nil)
@@ -11837,7 +12533,7 @@
         (ß MACRO_CHECK)
     )
 
-    (§ defn void checkSpecs(Var v, ISeq form)
+    (§ defn #_"void" checkSpecs [#_"Var" v, #_"ISeq" form]
         (when (ß RT.CHECK_SPECS && !MACRO_CHECK_LOADING)
             (try
                 (ß ensureMacroCheck().applyTo(RT.cons(v, RT.list(form.next()))))
@@ -11849,7 +12545,7 @@
         nil
     )
 
-    (§ defn Object macroexpand1(Object x)
+    (§ defn #_"Object" macroexpand1 [#_"Object" x]
         (when (ß x instanceof ISeq)
             (let [#_"ISeq" form (ß (ISeq) x)]
                 (let [#_"Object" op (ß RT.first(form))]
@@ -11927,7 +12623,7 @@
         x
     )
 
-    (§ defn Object macroexpand(Object form)
+    (§ defn #_"Object" macroexpand [#_"Object" form]
         (let [#_"Object" exf (ß macroexpand1(form))]
             (when (ß exf != form)
                 (§ return (ß macroexpand(exf)))
@@ -11936,7 +12632,7 @@
         )
     )
 
-    (§ defn- Expr analyzeSeq(C context, ISeq form, String name)
+    (§ defn- #_"Expr" analyzeSeq [#_"C" context, #_"ISeq" form, #_"String" name]
         (let [#_"Object" line (ß lineDeref())]
             (let [#_"Object" column (ß columnDeref())]
                 (when (ß RT.meta(form) != nil && RT.meta(form).containsKey(RT.LINE_KEY))
@@ -11996,15 +12692,15 @@
         )
     )
 
-    (§ defn String errorMsg(String source, int line, int column, String s)
+    (§ defn #_"String" errorMsg [#_"String" source, #_"int" line, #_"int" column, #_"String" s]
         (ß String.format("%s, compiling:(%s:%d:%d)", s, source, line, column))
     )
 
-    (§ defn Object eval(Object form)
+    (§ defn #_"Object" eval [#_"Object" form]
         (ß eval(form, true))
     )
 
-    (§ defn Object eval(Object form, boolean freshLoader)
+    (§ defn #_"Object" eval [#_"Object" form, #_"boolean" freshLoader]
         (let [#_"boolean" createdLoader false]
             (when true ;; !LOADER.isBound()
                 (ß Var.pushThreadBindings(RT.map(LOADER, RT.makeClassLoader())))
@@ -12061,7 +12757,7 @@
         )
     )
 
-    (§ defn- int registerConstant(Object o)
+    (§ defn- #_"int" registerConstant [#_"Object" o]
         (when (ß !CONSTANTS.isBound())
             (§ return -1)
         )
@@ -12079,7 +12775,7 @@
         )
     )
 
-    (§ defn- KeywordExpr registerKeyword(Keyword keyword)
+    (§ defn- #_"KeywordExpr" registerKeyword [#_"Keyword" keyword]
         (when (ß !KEYWORDS.isBound())
             (§ return (ß new KeywordExpr(keyword)))
         )
@@ -12094,7 +12790,7 @@
         )
     )
 
-    (§ defn- int registerKeywordCallsite(Keyword keyword)
+    (§ defn- #_"int" registerKeywordCallsite [#_"Keyword" keyword]
         (when (ß !KEYWORD_CALLSITES.isBound())
             (throw (ß new IllegalAccessError("KEYWORD_CALLSITES is not bound")))
         )
@@ -12106,7 +12802,7 @@
         )
     )
 
-    (§ defn- int registerProtocolCallsite(Var v)
+    (§ defn- #_"int" registerProtocolCallsite [#_"Var" v]
         (when (ß !PROTOCOL_CALLSITES.isBound())
             (throw (ß new IllegalAccessError("PROTOCOL_CALLSITES is not bound")))
         )
@@ -12118,7 +12814,7 @@
         )
     )
 
-    (§ defn- void registerVarCallsite(Var v)
+    (§ defn- #_"void" registerVarCallsite [#_"Var" v]
         (when (ß !VAR_CALLSITES.isBound())
             (throw (ß new IllegalAccessError("VAR_CALLSITES is not bound")))
         )
@@ -12130,7 +12826,7 @@
         )
     )
 
-    (§ defn ISeq fwdPath(PathNode p1)
+    (§ defn #_"ISeq" fwdPath [#_"PathNode" p1]
         (let [#_"ISeq" ret nil]
             (loop-when-recur [(ß )] (ß p1 != nil) [(ß p1 = p1.parent)]
                 (ß ret = RT.cons(p1, ret))
@@ -12139,7 +12835,7 @@
         )
     )
 
-    (§ defn PathNode commonPath(PathNode n1, PathNode n2)
+    (§ defn #_"PathNode" commonPath [#_"PathNode" n1, #_"PathNode" n2]
         (let [#_"ISeq" xp (ß fwdPath(n1))]
             (let [#_"ISeq" yp (ß fwdPath(n2))]
                 (when (ß RT.first(xp) != RT.first(yp))
@@ -12154,21 +12850,21 @@
         )
     )
 
-    (§ defn void addAnnotation(Object visitor, IPersistentMap meta)
+    (§ defn #_"void" addAnnotation [#_"Object" visitor, #_"IPersistentMap" meta]
         (when (ß meta != nil && ADD_ANNOTATIONS.isBound())
             (ß ADD_ANNOTATIONS.invoke(visitor, meta))
         )
         nil
     )
 
-    (§ defn void addParameterAnnotation(Object visitor, IPersistentMap meta, int i)
+    (§ defn #_"void" addParameterAnnotation [#_"Object" visitor, #_"IPersistentMap" meta, #_"int" i]
         (when (ß meta != nil && ADD_ANNOTATIONS.isBound())
             (ß ADD_ANNOTATIONS.invoke(visitor, meta, i))
         )
         nil
     )
 
-    (§ defn- Expr analyzeSymbol(Symbol sym)
+    (§ defn- #_"Expr" analyzeSymbol [#_"Symbol" sym]
         (let [#_"Symbol" tag (ß tagOf(sym))]
             (cond (ß sym.ns == nil) ;; ns-qualified syms are always Vars
                 (do
@@ -12221,7 +12917,7 @@
         )
     )
 
-    (§ defn String destubClassName(String className)
+    (§ defn #_"String" destubClassName [#_"String" className]
         ;; skip over prefix + '.' or '/'
         (when (ß className.startsWith(COMPILE_STUB_PREFIX))
             (§ return (ß className.substring(COMPILE_STUB_PREFIX.length() + 1)))
@@ -12229,7 +12925,7 @@
         className
     )
 
-    (§ defn Type getType(Class c)
+    (§ defn #_"Type" getType [#_"Class" c]
         (let [#_"String" descriptor (ß Type.getType(c).getDescriptor())]
             (when (ß descriptor.startsWith("L"))
                 (ß descriptor = "L" + destubClassName(descriptor.substring(1)))
@@ -12238,19 +12934,19 @@
         )
     )
 
-    (§ defn Object resolve(Symbol sym, boolean allowPrivate)
+    (§ defn #_"Object" resolve [#_"Symbol" sym, #_"boolean" allowPrivate]
         (ß resolveIn(currentNS(), sym, allowPrivate))
     )
 
-    (§ defn Object resolve(Symbol sym)
+    (§ defn #_"Object" resolve [#_"Symbol" sym]
         (ß resolveIn(currentNS(), sym, false))
     )
 
-    (§ defn Namespace namespaceFor(Symbol sym)
+    (§ defn #_"Namespace" namespaceFor [#_"Symbol" sym]
         (ß namespaceFor(currentNS(), sym))
     )
 
-    (§ defn Namespace namespaceFor(Namespace inns, Symbol sym)
+    (§ defn #_"Namespace" namespaceFor [#_"Namespace" inns, #_"Symbol" sym]
         ;; note, presumes non-nil sym.ns
         ;; first check against currentNS' aliases...
         (let [#_"Symbol" nsSym (ß Symbol.intern(sym.ns))]
@@ -12264,7 +12960,7 @@
         )
     )
 
-    (§ defn Object resolveIn(Namespace n, Symbol sym, boolean allowPrivate)
+    (§ defn #_"Object" resolveIn [#_"Namespace" n, #_"Symbol" sym, #_"boolean" allowPrivate]
         ;; note - ns-qualified vars must already exist
         (cond (ß sym.ns != nil)
             (do
@@ -12321,7 +13017,7 @@
         )
     )
 
-    (§ defn Object maybeResolveIn(Namespace n, Symbol sym)
+    (§ defn #_"Object" maybeResolveIn [#_"Namespace" n, #_"Symbol" sym]
         ;; note - ns-qualified vars must already exist
         (cond (ß sym.ns != nil)
             (do
@@ -12358,7 +13054,7 @@
         )
     )
 
-    (§ defn Var lookupVar(Symbol sym, boolean internNew, boolean registerMacro)
+    (§ defn #_"Var" lookupVar [#_"Symbol" sym, #_"boolean" internNew, #_"boolean" registerMacro]
         (let [#_"Var" var nil]
             ;; note - ns-qualified vars in other namespaces must already exist
             (cond (ß sym.ns != nil)
@@ -12417,11 +13113,11 @@
         )
     )
 
-    (§ defn Var lookupVar(Symbol sym, boolean internNew)
+    (§ defn #_"Var" lookupVar [#_"Symbol" sym, #_"boolean" internNew]
         (ß lookupVar(sym, internNew, true))
     )
 
-    (§ defn- void registerVar(Var var)
+    (§ defn- #_"void" registerVar [#_"Var" var]
         (when (ß !VARS.isBound())
             (§ return nil)
         )
@@ -12435,11 +13131,11 @@
         )
     )
 
-    (§ defn Namespace currentNS()
+    (§ defn #_"Namespace" currentNS []
         (ß (Namespace) RT.CURRENT_NS.deref())
     )
 
-    (§ defn void closeOver(LocalBinding b, ObjMethod method)
+    (§ defn #_"void" closeOver [#_"LocalBinding" b, #_"ObjMethod" method]
         (when (ß b != nil && method != nil)
             (let [#_"LocalBinding" lb (ß (LocalBinding) RT.get(method.locals, b))]
                 (if (ß lb == nil)
@@ -12461,7 +13157,7 @@
         nil
     )
 
-    (§ defn LocalBinding referenceLocal(Symbol sym)
+    (§ defn #_"LocalBinding" referenceLocal [#_"Symbol" sym]
         (when (ß !LOCAL_ENV.isBound())
             (§ return nil)
         )
@@ -12478,7 +13174,7 @@
         )
     )
 
-    (§ defn- Symbol tagOf(Object o)
+    (§ defn- #_"Symbol" tagOf [#_"Object" o]
         (let [#_"Object" tag (ß RT.get(RT.meta(o), RT.TAG_KEY))]
             (cond (ß tag instanceof Symbol)
                 (do
@@ -12493,7 +13189,7 @@
         )
     )
 
-    (§ defn Object loadFile(String file) (§ throws IOException)
+    (§ defn #_"Object" loadFile [#_"String" file] (§ throws IOException)
         (let [#_"FileInputStream" f (ß new FileInputStream(file))]
             (try
                 (ß load(new InputStreamReader(f, RT.UTF8), new File(file).getAbsolutePath(), (new File(file)).getName()))
@@ -12504,11 +13200,11 @@
         )
     )
 
-    (§ defn Object load(Reader rdr)
+    (§ defn #_"Object" load [#_"Reader" rdr]
         (ß load(rdr, nil, "NO_SOURCE_FILE"))
     )
 
-    (§ defn void consumeWhitespaces(LineNumberingPushbackReader pushbackReader)
+    (§ defn #_"void" consumeWhitespaces [#_"LineNumberingPushbackReader" pushbackReader]
         (let [#_"int" ch (ß LispReader.read1(pushbackReader))]
             (while (ß LispReader.isWhitespace(ch))
                 (ß ch = LispReader.read1(pushbackReader))
@@ -12518,9 +13214,9 @@
         )
     )
 
-    (§ def- Object OPTS_COND_ALLOWED = RT.mapUniqueKeys(LispReader.OPT_READ_COND, LispReader.COND_ALLOW))
+    (§ def- #_"Object" OPTS_COND_ALLOWED (ß RT.mapUniqueKeys(LispReader.OPT_READ_COND, LispReader.COND_ALLOW)))
 
-    (§ defn- Object readerOpts(String sourceName)
+    (§ defn- #_"Object" readerOpts [#_"String" sourceName]
         (if (ß sourceName != nil && sourceName.endsWith(".clic"))
             (do
                 (ß OPTS_COND_ALLOWED)
@@ -12531,7 +13227,7 @@
         )
     )
 
-    (§ defn Object load(Reader rdr, String sourcePath, String sourceName)
+    (§ defn #_"Object" load [#_"Reader" rdr, #_"String" sourcePath, #_"String" sourceName]
         (let [(ß Object EOF = new Object())]
             (let [#_"Object" ret nil]
                 (let [#_"LineNumberingPushbackReader" pushbackReader (ß (rdr instanceof LineNumberingPushbackReader) ? (LineNumberingPushbackReader) rdr :or new LineNumberingPushbackReader(rdr))]
@@ -12589,7 +13285,7 @@
         )
     )
 
-    (§ defn void writeClassFile(String internalName, byte[] bytecode) (§ throws IOException)
+    (§ defn #_"void" writeClassFile [#_"String" internalName, #_"byte[]" bytecode] (§ throws IOException)
         (let [#_"String" genPath (ß (String) COMPILE_PATH.deref())]
             (when (ß genPath == nil)
                 (throw (ß Util.runtimeException("*compile-path* not set")))
@@ -12620,21 +13316,21 @@
         )
     )
 
-    (§ defn void pushNS()
+    (§ defn #_"void" pushNS []
         (ß Var.pushThreadBindings(PersistentHashMap.create(Var.intern(Symbol.intern("cloiure.core"), Symbol.intern("*ns*")).setDynamic(), nil)))
         nil
     )
 
-    (§ defn void pushNSandLoader(ClassLoader loader)
+    (§ defn #_"void" pushNSandLoader [#_"ClassLoader" loader]
         (ß Var.pushThreadBindings(RT.map(Var.intern(Symbol.intern("cloiure.core"), Symbol.intern("*ns*")).setDynamic(), nil, RT.FN_LOADER_VAR, loader, RT.READEVAL, RT.T)))
         nil
     )
 
-    (§ defn ILookupThunk getLookupThunk(Object target, Keyword k)
+    (§ defn #_"ILookupThunk" getLookupThunk [#_"Object" target, #_"Keyword" k]
         nil
     )
 
-    (§ defn void compile1(GeneratorAdapter gen, ObjExpr objx, Object form)
+    (§ defn #_"void" compile1 [#_"GeneratorAdapter" gen, #_"ObjExpr" objx, #_"Object" form]
         (let [#_"Object" line (ß lineDeref())]
             (let [#_"Object" column (ß columnDeref())]
                 (when (ß RT.meta(form) != nil && RT.meta(form).containsKey(RT.LINE_KEY))
@@ -12674,7 +13370,7 @@
         )
     )
 
-    (§ defn Object compile(Reader rdr, String sourcePath, String sourceName) (§ throws IOException)
+    (§ defn #_"Object" compile [#_"Reader" rdr, #_"String" sourcePath, #_"String" sourceName] (§ throws IOException)
         (when (ß COMPILE_PATH.deref() == nil)
             (throw (ß Util.runtimeException("*compile-path* not set")))
         )
@@ -12827,18 +13523,19 @@
     )
 
     (class-ns NewInstanceExpr (§ extends ObjExpr)
-        (§ field IPersistentCollection methods)
+        (§ field #_"IPersistentCollection" methods)
 
-        (§ field Map<IPersistentVector, java.lang.reflect.Method> mmap)
-        (§ field Map<IPersistentVector, Set<Class>> covariants)
+        (§ field #_"Map<IPersistentVector, java.lang.reflect.Method>" mmap)
+        (§ field #_"Map<IPersistentVector, Set<Class>>" covariants)
 
-        (§ constructor NewInstanceExpr(Object tag)
+        (§ constructor #_"NewInstanceExpr" NewInstanceExpr [#_"Object" tag]
             (§ super(tag))
             this
         )
 
         (class-ns DeftypeParser (§ implements IParser)
-            (§ method Expr parse(C context, Object frm)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" frm]
                 (let [#_"ISeq" rform (ß (ISeq) frm)]
                     ;; (deftype* tagname classname [fields] :implements [interfaces] :tag tagname methods*)
                     (ß rform = RT.next(rform))
@@ -12866,7 +13563,8 @@
         )
 
         (class-ns ReifyParser (§ implements IParser)
-            (§ method Expr parse(C context, Object frm)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" frm]
                 ;; (reify this-name? [interfaces] (method-name [args] body)*)
                 (let [#_"ISeq" form (ß (ISeq) frm)]
                     (let [#_"ObjMethod" enclosingMethod (ß (ObjMethod) METHOD.deref())]
@@ -12897,7 +13595,7 @@
             )
         )
 
-        (§ defn ObjExpr build(IPersistentVector interfaceSyms, IPersistentVector fieldSyms, Symbol thisSym, String tagName, Symbol className, Symbol typeTag, ISeq methodForms, Object frm, IPersistentMap opts)
+        (§ defn #_"ObjExpr" build [#_"IPersistentVector" interfaceSyms, #_"IPersistentVector" fieldSyms, #_"Symbol" thisSym, #_"String" tagName, #_"Symbol" className, #_"Symbol" typeTag, #_"ISeq" methodForms, #_"Object" frm, #_"IPersistentMap" opts]
             (let [#_"NewInstanceExpr" ret (ß new NewInstanceExpr(nil))]
                 (ß ret.src = frm)
                 (ß ret.name = className.toString())
@@ -13028,7 +13726,7 @@
          ; Use it as a type hint for this, and bind the simple name of the class to this stub (in resolve etc)
          ; Unmunge the name (using a magic prefix) on any code gen for classes
          ;;
-        (§ defn Class compileStub(String superName, NewInstanceExpr ret, String[] interfaceNames, Object frm)
+        (§ defn #_"Class" compileStub [#_"String" superName, #_"NewInstanceExpr" ret, #_"String[]" interfaceNames, #_"Object" frm]
             (let [#_"ClassWriter" cw (ß new ClassWriter(ClassWriter.COMPUTE_MAXS))]
                 (let [#_"ClassVisitor" cv cw]
                     (ß cv.visit(V1_5, ACC_PUBLIC + ACC_SUPER, COMPILE_STUB_PREFIX + "/" + ret.internalName, nil, superName, interfaceNames))
@@ -13118,7 +13816,7 @@
             )
         )
 
-        (§ defn String[] interfaceNames(IPersistentVector interfaces)
+        (§ defn #_"String[]" interfaceNames [#_"IPersistentVector" interfaces]
             (let [#_"int" icnt (ß interfaces.count())]
                 (let [#_"String[]" inames (ß (icnt > 0) ? new String[icnt] :or nil)]
                     (loop-when-recur [(ß int i = 0)] (ß i < icnt) [(ß i++)]
@@ -13129,12 +13827,13 @@
             )
         )
 
-        (§ defn String slashname(Class c)
+        (§ defn #_"String" slashname [#_"Class" c]
             (ß c.getName().replace(\., \/))
         )
 
         #_protected
-        (§ method void emitStatics(ClassVisitor cv)
+        #_method
+        (§ defn #_"void" emitStatics [this, #_"ClassVisitor" cv]
             (when (ß this.isDeftype())
                 ;; getBasis()
                 (let [#_"Method" meth (ß Method.getMethod("cloiure.lang.IPersistentVector getBasis()"))]
@@ -13215,7 +13914,8 @@
         )
 
         #_protected
-        (§ method void emitMethods(ClassVisitor cv)
+        #_method
+        (§ defn #_"void" emitMethods [this, #_"ClassVisitor" cv]
             (loop-when-recur [(ß ISeq s = RT.seq(methods))] (ß s != nil) [(ß s = s.next())]
                 (let [#_"ObjMethod" method (ß (ObjMethod) s.first())]
                     (ß method.emit(this, cv))
@@ -13252,11 +13952,11 @@
             nil
         )
 
-        (§ defn IPersistentVector msig(java.lang.reflect.Method m)
+        (§ defn #_"IPersistentVector" msig [#_"java.lang.reflect.Method" m]
             (ß RT.vector(m.getName(), RT.seq(m.getParameterTypes()), m.getReturnType()))
         )
 
-        (§ defn void considerMethod(java.lang.reflect.Method m, Map mm)
+        (§ defn #_"void" considerMethod [#_"java.lang.reflect.Method" m, #_"Map" mm]
             (let [#_"IPersistentVector" mk (ß msig(m))]
                 (let [#_"int" mods (ß m.getModifiers())]
                     (when (ß !(mm.containsKey(mk) || !(Modifier.isPublic(mods) || Modifier.isProtected(mods)) || Modifier.isStatic(mods) || Modifier.isFinal(mods)))
@@ -13267,7 +13967,7 @@
             )
         )
 
-        (§ defn void gatherMethods(Class c, Map mm)
+        (§ defn #_"void" gatherMethods [#_"Class" c, #_"Map" mm]
             (loop-when-recur [(ß )] (ß c != nil) [(ß c = c.getSuperclass())]
                 (doseq [#_"java.lang.reflect.Method" m (ß c.getDeclaredMethods())]
                     (ß considerMethod(m, mm))
@@ -13279,7 +13979,7 @@
             nil
         )
 
-        (§ defn Map[] gatherMethods(Class sc, ISeq interfaces)
+        (§ defn #_"Map[]" gatherMethods [#_"Class" sc, #_"ISeq" interfaces]
             (let [#_"Map" allm (ß new HashMap())]
                 (ß gatherMethods(sc, allm))
                 (loop-when-recur [(ß )] (ß interfaces != nil) [(ß interfaces = interfaces.next())]
@@ -13329,41 +14029,45 @@
     )
 
     (class-ns NewInstanceMethod (§ extends ObjMethod)
-        (§ field String name)
-        (§ field Type[] argTypes)
-        (§ field Type retType)
-        (§ field Class retClass)
-        (§ field Class[] exclasses)
+        (§ field #_"String" name)
+        (§ field #_"Type[]" argTypes)
+        (§ field #_"Type" retType)
+        (§ field #_"Class" retClass)
+        (§ field #_"Class[]" exclasses)
 
-        (§ def Symbol dummyThis = Symbol.intern(nil, "dummy_this_dlskjsdfower"))
-        (§ field- IPersistentVector parms)
+        (§ def #_"Symbol" dummyThis (ß Symbol.intern(nil, "dummy_this_dlskjsdfower")))
+        (§ field- #_"IPersistentVector" parms)
 
-        (§ constructor NewInstanceMethod(ObjExpr objx, ObjMethod parent)
+        (§ constructor #_"NewInstanceMethod" NewInstanceMethod [#_"ObjExpr" objx, #_"ObjMethod" parent]
             (§ super(objx, parent))
             this
         )
 
-        (§ method int numParams()
+        #_method
+        (§ defn #_"int" numParams [this]
             (ß argLocals.count())
         )
 
-        (§ method String getMethodName()
+        #_method
+        (§ defn #_"String" getMethodName [this]
             name
         )
 
-        (§ method Type getReturnType()
+        #_method
+        (§ defn #_"Type" getReturnType [this]
             retType
         )
 
-        (§ method Type[] getArgTypes()
+        #_method
+        (§ defn #_"Type[]" getArgTypes [this]
             argTypes
         )
 
-        (§ defn IPersistentVector msig(String name, Class[] paramTypes)
+        (§ defn #_"IPersistentVector" msig [#_"String" name, #_"Class[]" paramTypes]
             (ß RT.vector(name, RT.seq(paramTypes)))
         )
 
-        (§ defn NewInstanceMethod parse(ObjExpr objx, ISeq form, Symbol thistag, Map overrideables)
+        (§ defn #_"NewInstanceMethod" parse [#_"ObjExpr" objx, #_"ISeq" form, #_"Symbol" thistag, #_"Map" overrideables]
             ;; (methodname [this-name args*] body...)
             ;; this-name might be nil
             (let [#_"NewInstanceMethod" method (ß new NewInstanceMethod(objx, (ObjMethod) METHOD.deref()))]
@@ -13518,7 +14222,7 @@
             )
         )
 
-        (§ defn- Map findMethodsWithNameAndArity(String name, int arity, Map mm)
+        (§ defn- #_"Map" findMethodsWithNameAndArity [#_"String" name, #_"int" arity, #_"Map" mm]
             (let [#_"Map" ret (ß new HashMap())]
                 (doseq [#_"Object" o (ß mm.entrySet())]
                     (let [(ß Map.Entry e = (Map.Entry) o)]
@@ -13533,7 +14237,7 @@
             )
         )
 
-        (§ defn- Map findMethodsWithName(String name, Map mm)
+        (§ defn- #_"Map" findMethodsWithName [#_"String" name, #_"Map" mm]
             (let [#_"Map" ret (ß new HashMap())]
                 (doseq [#_"Object" o (ß mm.entrySet())]
                     (let [(ß Map.Entry e = (Map.Entry) o)]
@@ -13548,7 +14252,8 @@
             )
         )
 
-        (§ method void emit(ObjExpr obj, ClassVisitor cv)
+        #_method
+        (§ defn #_"void" emit [this, #_"ObjExpr" obj, #_"ClassVisitor" cv]
             (let [#_"Method" m (ß new Method(getMethodName(), getReturnType(), getArgTypes()))]
                 (let [#_"Type[]" extypes nil]
                     (when (ß exclasses.length > 0)
@@ -13595,11 +14300,11 @@
         )
     )
 
-    (§ defn boolean inty(Class c)
+    (§ defn #_"boolean" inty [#_"Class" c]
         (ß (c == int.class || c == short.class || c == byte.class || c == char.class))
     )
 
-    (§ defn Class retType(Class tc, Class ret)
+    (§ defn #_"Class" retType [#_"Class" tc, #_"Class" ret]
         (when (ß tc == nil)
             (§ return ret)
         )
@@ -13615,7 +14320,7 @@
         tc
     )
 
-    (§ defn Class primClass(Symbol sym)
+    (§ defn #_"Class" primClass [#_"Symbol" sym]
         (when (ß sym == nil)
             (§ return nil)
         )
@@ -13661,7 +14366,7 @@
         )
     )
 
-    (§ defn Class tagClass(Object tag)
+    (§ defn #_"Class" tagClass [#_"Object" tag]
         (when (ß tag == nil)
             (§ return (ß Object.class))
         )
@@ -13676,11 +14381,11 @@
         )
     )
 
-    (§ defn Class primClass(Class c)
+    (§ defn #_"Class" primClass [#_"Class" c]
         (ß c.isPrimitive() ? c :or Object.class)
     )
 
-    (§ defn Class boxClass(Class p)
+    (§ defn #_"Class" boxClass [#_"Class" p]
         (when (ß !p.isPrimitive())
             (§ return p)
         )
@@ -13725,65 +14430,74 @@
     )
 
     (class-ns MethodParamExpr (§ implements Expr, MaybePrimitiveExpr)
-        (§ field Class c)
+        (§ field #_"Class" c)
 
-        (§ constructor MethodParamExpr(Class c)
+        (§ constructor #_"MethodParamExpr" MethodParamExpr [#_"Class" c]
             (ß this.c = c)
             this
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (throw (ß Util.runtimeException("Can't eval")))
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (throw (ß Util.runtimeException("Can't emit")))
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß (c != nil))
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             c
         )
 
-        (§ method boolean canEmitPrimitive()
+        #_method
+        (§ defn #_"boolean" canEmitPrimitive [this]
             (ß Util.isPrimitive(c))
         )
 
-        (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitUnboxed [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (throw (ß Util.runtimeException("Can't emit")))
         )
     )
 
     (class-ns CaseExpr (§ implements Expr, MaybePrimitiveExpr)
-        (§ field LocalBindingExpr expr)
-        (§ field int shift, mask, low, high)
-        (§ field Expr defaultExpr)
-        (§ field SortedMap<Integer, Expr> tests)
-        (§ field HashMap<Integer, Expr> thens)
-        (§ field Keyword switchType)
-        (§ field Keyword testType)
-        (§ field Set<Integer> skipCheck)
-        (§ field Class returnType)
-        (§ field int line)
-        (§ field int column)
+        (§ field #_"LocalBindingExpr" expr)
+        (§ field #_"int" shift)
+        (§ field #_"int" mask)
+        (§ field #_"int" low)
+        (§ field #_"int" high)
+        (§ field #_"Expr" defaultExpr)
+        (§ field #_"SortedMap<Integer, Expr>" tests)
+        (§ field #_"HashMap<Integer, Expr>" thens)
+        (§ field #_"Keyword" switchType)
+        (§ field #_"Keyword" testType)
+        (§ field #_"Set<Integer>" skipCheck)
+        (§ field #_"Class" returnType)
+        (§ field #_"int" line)
+        (§ field #_"int" column)
 
-        (§ def Type NUMBER_TYPE = Type.getType(Number.class))
-        (§ def Method intValueMethod = Method.getMethod("int intValue()"))
+        (§ def #_"Type" NUMBER_TYPE (ß Type.getType(Number.class)))
+        (§ def #_"Method" intValueMethod (ß Method.getMethod("int intValue()")))
 
-        (§ def Method hashMethod = Method.getMethod("int hash(Object)"))
-        (§ def Method hashCodeMethod = Method.getMethod("int hashCode()"))
-        (§ def Method equivMethod = Method.getMethod("boolean equiv(Object, Object)"))
-        (§ def Keyword compactKey = Keyword.intern(nil, "compact"))
-        (§ def Keyword sparseKey = Keyword.intern(nil, "sparse"))
-        (§ def Keyword hashIdentityKey = Keyword.intern(nil, "hash-identity"))
-        (§ def Keyword hashEquivKey = Keyword.intern(nil, "hash-equiv"))
-        (§ def Keyword intKey = Keyword.intern(nil, "int"))
+        (§ def #_"Method" hashMethod (ß Method.getMethod("int hash(Object)")))
+        (§ def #_"Method" hashCodeMethod (ß Method.getMethod("int hashCode()")))
+        (§ def #_"Method" equivMethod (ß Method.getMethod("boolean equiv(Object, Object)")))
+        (§ def #_"Keyword" compactKey (ß Keyword.intern(nil, "compact")))
+        (§ def #_"Keyword" sparseKey (ß Keyword.intern(nil, "sparse")))
+        (§ def #_"Keyword" hashIdentityKey (ß Keyword.intern(nil, "hash-identity")))
+        (§ def #_"Keyword" hashEquivKey (ß Keyword.intern(nil, "hash-equiv")))
+        (§ def #_"Keyword" intKey (ß Keyword.intern(nil, "int")))
 
         ;; (case* expr shift mask default map<minhash, [test then]> table-type test-type skip-check?)
-        (§ constructor CaseExpr(int line, int column, LocalBindingExpr expr, int shift, int mask, int low, int high, Expr defaultExpr, SortedMap<Integer, Expr> tests, HashMap<Integer, Expr> thens, Keyword switchType, Keyword testType, Set<Integer> skipCheck)
+        (§ constructor #_"CaseExpr" CaseExpr [#_"int" line, #_"int" column, #_"LocalBindingExpr" expr, #_"int" shift, #_"int" mask, #_"int" low, #_"int" high, #_"Expr" defaultExpr, #_"SortedMap<Integer, Expr>" tests, #_"HashMap<Integer, Expr>" thens, #_"Keyword" switchType, #_"Keyword" testType, #_"Set<Integer>" skipCheck]
             (ß this.expr = expr)
             (ß this.shift = shift)
             (ß this.mask = mask)
@@ -13813,33 +14527,40 @@
             )
         )
 
-        (§ method boolean hasJavaClass()
+        #_method
+        (§ defn #_"boolean" hasJavaClass [this]
             (ß (returnType != nil))
         )
 
-        (§ method boolean canEmitPrimitive()
+        #_method
+        (§ defn #_"boolean" canEmitPrimitive [this]
             (ß Util.isPrimitive(returnType))
         )
 
-        (§ method Class getJavaClass()
+        #_method
+        (§ defn #_"Class" getJavaClass [this]
             returnType
         )
 
-        (§ method Object eval()
+        #_method
+        (§ defn #_"Object" eval [this]
             (throw (ß new UnsupportedOperationException("Can't eval case")))
         )
 
-        (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß doEmit(context, objx, gen, false))
             nil
         )
 
-        (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn #_"void" emitUnboxed [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß doEmit(context, objx, gen, true))
             nil
         )
 
-        (§ method void doEmit(C context, ObjExpr objx, GeneratorAdapter gen, boolean emitUnboxed)
+        #_method
+        (§ defn #_"void" doEmit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"boolean" emitUnboxed]
             (let [#_"Label" defaultLabel (ß gen.newLabel())]
                 (let [#_"Label" endLabel (ß gen.newLabel())]
                     (let [(ß SortedMap<Integer, Label> labels = new TreeMap())]
@@ -13911,11 +14632,13 @@
             )
         )
 
-        (§ method- boolean isShiftMasked()
+        #_method
+        (§ defn- #_"boolean" isShiftMasked [this]
             (ß (mask != 0))
         )
 
-        (§ method- void emitShiftMask(GeneratorAdapter gen)
+        #_method
+        (§ defn- #_"void" emitShiftMask [this, #_"GeneratorAdapter" gen]
             (when (ß isShiftMasked())
                 (ß gen.push(shift))
                 (ß gen.visitInsn(ISHR))
@@ -13925,7 +14648,8 @@
             nil
         )
 
-        (§ method- void emitExprForInts(ObjExpr objx, GeneratorAdapter gen, Type exprType, Label defaultLabel)
+        #_method
+        (§ defn- #_"void" emitExprForInts [this, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Type" exprType, #_"Label" defaultLabel]
             (cond (ß exprType == nil)
                 (do
                     (when (ß RT.booleanCast(RT.WARN_ON_REFLECTION.deref()))
@@ -13953,7 +14677,8 @@
             nil
         )
 
-        (§ method- void emitThenForInts(ObjExpr objx, GeneratorAdapter gen, Type exprType, Expr test, Expr then, Label defaultLabel, boolean emitUnboxed)
+        #_method
+        (§ defn- #_"void" emitThenForInts [this, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Type" exprType, #_"Expr" test, #_"Expr" then, #_"Label" defaultLabel, #_"boolean" emitUnboxed]
             (cond (ß exprType == nil)
                 (do
                     (ß expr.emit(C.EXPRESSION, objx, gen))
@@ -13988,14 +14713,16 @@
             nil
         )
 
-        (§ method- void emitExprForHashes(ObjExpr objx, GeneratorAdapter gen)
+        #_method
+        (§ defn- #_"void" emitExprForHashes [this, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß expr.emit(C.EXPRESSION, objx, gen))
             (ß gen.invokeStatic(UTIL_TYPE, hashMethod))
             (ß emitShiftMask(gen))
             nil
         )
 
-        (§ method- void emitThenForHashes(ObjExpr objx, GeneratorAdapter gen, Expr test, Expr then, Label defaultLabel, boolean emitUnboxed)
+        #_method
+        (§ defn- #_"void" emitThenForHashes [this, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" test, #_"Expr" then, #_"Label" defaultLabel, #_"boolean" emitUnboxed]
             (ß expr.emit(C.EXPRESSION, objx, gen))
             (ß test.emit(C.EXPRESSION, objx, gen))
             (if (ß testType == hashIdentityKey)
@@ -14011,7 +14738,7 @@
             nil
         )
 
-        (§ defn- void emitExpr(ObjExpr objx, GeneratorAdapter gen, Expr expr, boolean emitUnboxed)
+        (§ defn- #_"void" emitExpr [#_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" expr, #_"boolean" emitUnboxed]
             (if (ß emitUnboxed && expr instanceof MaybePrimitiveExpr)
                 (do
                     (ß ((MaybePrimitiveExpr)expr).emitUnboxed(C.EXPRESSION, objx, gen))
@@ -14028,7 +14755,8 @@
             ;; prepared by case macro and presumed correct
             ;; case macro binds actual expr in let so expr is always a local,
             ;; no need to worry about multiple evaluation
-            (§ method Expr parse(C context, Object frm)
+            #_method
+            (§ defn #_"Expr" parse [this, #_"C" context, #_"Object" frm]
                 (let [#_"ISeq" form (ß (ISeq) frm)]
                     (when (ß context == C.EVAL)
                         (§ return (ß analyze(context, RT.list(RT.list(FNONCE, PersistentVector.EMPTY, form)))))
@@ -14110,7 +14838,7 @@
         )
     )
 
-    (§ defn IPersistentCollection emptyVarCallSites()
+    (§ defn #_"IPersistentCollection" emptyVarCallSites []
         (ß PersistentHashSet.EMPTY)
     )
 )
@@ -14119,42 +14847,47 @@
 (java-ns cloiure.lang.Cons
 
 (class-ns Cons (§ extends ASeq)
-    (§ field- Object _first)
-    (§ field- ISeq _more)
+    (§ field- #_"Object" _first)
+    (§ field- #_"ISeq" _more)
 
-    (§ constructor Cons(Object first, ISeq _more)
+    (§ constructor #_"Cons" Cons [#_"Object" first, #_"ISeq" _more]
         (ß this._first = first)
         (ß this._more = _more)
         this
     )
 
-    (§ constructor Cons(IPersistentMap meta, Object _first, ISeq _more)
+    (§ constructor #_"Cons" Cons [#_"IPersistentMap" meta, #_"Object" _first, #_"ISeq" _more]
         (§ super(meta))
         (ß this._first = _first)
         (ß this._more = _more)
         this
     )
 
-    (§ method Object first()
+    #_method
+    (§ defn #_"Object" first [this]
         (ß _first)
     )
 
-    (§ method ISeq next()
+    #_method
+    (§ defn #_"ISeq" next [this]
         (ß more().seq())
     )
 
-    (§ method ISeq more()
+    #_method
+    (§ defn #_"ISeq" more [this]
         (when (ß _more == nil)
             (§ return (ß PersistentList.EMPTY))
         )
         (ß _more)
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         (ß 1 + RT.count(_more))
     )
 
-    (§ method Cons withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"Cons" withMeta [this, #_"IPersistentMap" meta]
         (ß new Cons(meta, _first, _more))
     )
 )
@@ -14174,21 +14907,21 @@
 (java-ns cloiure.lang.Cycle
 
 (class-ns Cycle (§ extends ASeq) (§ implements IReduce, IPending)
-    (§ field- ISeq all) ;; never nil
-    (§ field- ISeq prev)
+    (§ field- #_"ISeq" all) ;; never nil
+    (§ field- #_"ISeq" prev)
     #_volatile
-    (§ field- ISeq _current) ;; lazily realized
+    (§ field- #_"ISeq" _current) ;; lazily realized
     #_volatile
-    (§ field- ISeq _next) ;; cached
+    (§ field- #_"ISeq" _next) ;; cached
 
-    (§ constructor- Cycle(ISeq all, ISeq prev, ISeq current)
+    (§ constructor- #_"Cycle" Cycle [#_"ISeq" all, #_"ISeq" prev, #_"ISeq" current]
         (ß this.all = all)
         (ß this.prev = prev)
         (ß this._current = current)
         this
     )
 
-    (§ constructor- Cycle(IPersistentMap meta, ISeq all, ISeq prev, ISeq current, ISeq next)
+    (§ constructor- #_"Cycle" Cycle [#_"IPersistentMap" meta, #_"ISeq" all, #_"ISeq" prev, #_"ISeq" current, #_"ISeq" next]
         (§ super(meta))
         (ß this.all = all)
         (ß this.prev = prev)
@@ -14197,7 +14930,7 @@
         this
     )
 
-    (§ defn ISeq create(ISeq vals)
+    (§ defn #_"ISeq" create [#_"ISeq" vals]
         (when (ß vals == nil)
             (§ return (ß PersistentList.EMPTY))
         )
@@ -14205,7 +14938,8 @@
     )
 
     ;; realization for use of current
-    (§ method- ISeq current()
+    #_method
+    (§ defn- #_"ISeq" current [this]
         (when (ß _current == nil)
             (let [#_"ISeq" current (ß prev.next())]
                 (ß _current = (current == nil) ? all :or current)
@@ -14214,26 +14948,31 @@
         (ß _current)
     )
 
-    (§ method boolean isRealized()
+    #_method
+    (§ defn #_"boolean" isRealized [this]
         (ß (_current != nil))
     )
 
-    (§ method Object first()
+    #_method
+    (§ defn #_"Object" first [this]
         (ß current().first())
     )
 
-    (§ method ISeq next()
+    #_method
+    (§ defn #_"ISeq" next [this]
         (when (ß _next == nil)
             (ß _next = new Cycle(all, current(), nil))
         )
         (ß _next)
     )
 
-    (§ method Cycle withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"Cycle" withMeta [this, #_"IPersistentMap" meta]
         (ß new Cycle(meta, all, prev, _current, _next))
     )
 
-    (§ method Object reduce(IFn f)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" f]
         (let [#_"ISeq" s (ß current())]
             (let [#_"Object" ret (ß s.first())]
                 (while true
@@ -14250,7 +14989,8 @@
         )
     )
 
-    (§ method Object reduce(IFn f, Object start)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
         (let [#_"Object" ret start]
             (let [#_"ISeq" s (ß current())]
                 (while true
@@ -14273,24 +15013,25 @@
 
 (class-ns Delay (§ implements IDeref, IPending)
     #_volatile
-    (§ field Object val)
+    (§ field #_"Object" val)
     #_volatile
-    (§ field Throwable exception)
+    (§ field #_"Throwable" exception)
     #_volatile
-    (§ field IFn fn)
+    (§ field #_"IFn" fn)
 
-    (§ constructor Delay(IFn fn)
+    (§ constructor #_"Delay" Delay [#_"IFn" fn]
         (ß this.fn = fn)
         (ß this.val = nil)
         (ß this.exception = nil)
         this
     )
 
-    (§ defn Object force(Object x)
+    (§ defn #_"Object" force [#_"Object" x]
         (ß (x instanceof Delay) ? ((Delay) x).deref() :or x)
     )
 
-    (§ method Object deref()
+    #_method
+    (§ defn #_"Object" deref [this]
         (when (ß fn != nil)
             (§ sync this
                 ;; double check
@@ -14311,7 +15052,8 @@
         val
     )
 
-    (§ method boolean isRealized()
+    #_method
+    (§ defn #_"boolean" isRealized [this]
         (§ sync this
             (ß (fn == nil))
         )
@@ -14331,25 +15073,26 @@
 (§ import java.lang.ref.SoftReference)
 
 (class-ns DynamicClassLoader (§ extends URLClassLoader)
-    (§ field HashMap<Integer, Object[]> constantVals = new HashMap<Integer, Object[]>())
-    (§ def ConcurrentHashMap<String, Reference<Class>>classCache = new ConcurrentHashMap<String, Reference<Class> >())
+    (§ field #_"HashMap<Integer, Object[]>" constantVals (ß new HashMap<Integer, Object[]>()))
+    (§ def #_"ConcurrentHashMap<String, Reference<Class>>" classCache (ß new ConcurrentHashMap<String, Reference<Class>>()))
 
-    (§ def URL[] EMPTY_URLS = new URL[] (§))
+    (§ def #_"URL[]" EMPTY_URLS (ß new URL[] (§)))
 
-    (§ def ReferenceQueue rq = new ReferenceQueue())
+    (§ def #_"ReferenceQueue" rq (ß new ReferenceQueue()))
 
-    (§ constructor DynamicClassLoader()
+    (§ constructor #_"DynamicClassLoader" DynamicClassLoader []
         ;; pseudo test in lieu of hasContextClassLoader()
         (§ super(EMPTY_URLS, (Thread.currentThread().getContextClassLoader() == nil || Thread.currentThread().getContextClassLoader() == ClassLoader.getSystemClassLoader()) ? Compiler.class.getClassLoader() :or Thread.currentThread().getContextClassLoader()))
         this
     )
 
-    (§ constructor DynamicClassLoader(ClassLoader parent)
+    (§ constructor #_"DynamicClassLoader" DynamicClassLoader [#_"ClassLoader" parent]
         (§ super(EMPTY_URLS, parent))
         this
     )
 
-    (§ method Class defineClass(String name, byte[] bytes, Object srcForm)
+    #_method
+    (§ defn #_"Class" defineClass [this, #_"String" name, #_"byte[]" bytes, #_"Object" srcForm]
         (ß Util.clearCache(rq, classCache))
         (let [#_"Class" c (ß defineClass(name, bytes, 0, bytes.length))]
             (ß classCache.put(name, new SoftReference(c, rq)))
@@ -14357,7 +15100,7 @@
         )
     )
 
-    (§ defn Class<?> findInMemoryClass(String name)
+    (§ defn #_"Class<?>" findInMemoryClass [#_"String" name]
         (let [#_"Reference<Class>" cr (ß classCache.get(name))]
             (when (ß cr != nil)
                 (let [#_"Class" c (ß cr.get())]
@@ -14376,7 +15119,8 @@
     )
 
     #_protected
-    (§ method Class<?>findClass(String name) (§ throws ClassNotFoundException)
+    #_method
+    (§ defn #_"Class<?>" findClass [this, #_"String" name] (§ throws ClassNotFoundException)
         (let [#_"Class" c (ß findInMemoryClass(name))]
             (if (ß c != nil)
                 (do
@@ -14390,7 +15134,8 @@
     )
 
     #_protected
-    (§ method Class<?> loadClass(String name, boolean resolve) (§ throws ClassNotFoundException)
+    #_method
+    (§ defn #_"Class<?>" loadClass [this, #_"String" name, #_"boolean" resolve] (§ throws ClassNotFoundException)
         (§ sync this
             (let [#_"Class" c (ß findLoadedClass(name))]
                 (when (ß c == nil)
@@ -14407,16 +15152,19 @@
         )
     )
 
-    (§ method void registerConstants(int id, Object[] val)
+    #_method
+    (§ defn #_"void" registerConstants [this, #_"int" id, #_"Object[]" val]
         (ß constantVals.put(id, val))
         nil
     )
 
-    (§ method Object[] getConstants(int id)
+    #_method
+    (§ defn #_"Object[]" getConstants [this, #_"int" id]
         (ß constantVals.get(id))
     )
 
-    (§ method void addURL(URL url)
+    #_method
+    (§ defn #_"void" addURL [this, #_"URL" url]
         (ß super.addURL(url))
         nil
     )
@@ -14437,14 +15185,14 @@
 (§ import java.util.regex.Pattern)
 
 (class-ns EdnReader
-    (§ def IFn[] macros = new IFn[256])
-    (§ def IFn[] dispatchMacros = new IFn[256])
-    (§ def Pattern symbolPat = Pattern.compile("[:]?([\\D&&[^/]].*/)?(/|[\\D&&[^/]][^/]*)"))
-    (§ def Pattern intPat = Pattern.compile("([-+]?)(?:(0)|([1-9][0-9]*)|0[xX]([0-9A-Fa-f]+)|0([0-7]+)|([1-9][0-9]?)[rR]([0-9A-Za-z]+)|0[0-9]+)(N)?"))
-    (§ def Pattern ratioPat = Pattern.compile("([-+]?[0-9]+)/([0-9]+)"))
-    (§ def Pattern floatPat = Pattern.compile("([-+]?[0-9]+(\\.[0-9]*)?([eE][-+]?[0-9]+)?)(M)?"))
+    (§ def #_"IFn[]" macros (ß new IFn[256]))
+    (§ def #_"IFn[]" dispatchMacros (ß new IFn[256]))
+    (§ def #_"Pattern" symbolPat (ß Pattern.compile("[:]?([\\D&&[^/]].*/)?(/|[\\D&&[^/]][^/]*)")))
+    (§ def #_"Pattern" intPat (ß Pattern.compile("([-+]?)(?:(0)|([1-9][0-9]*)|0[xX]([0-9A-Fa-f]+)|0([0-7]+)|([1-9][0-9]?)[rR]([0-9A-Za-z]+)|0[0-9]+)(N)?")))
+    (§ def #_"Pattern" ratioPat (ß Pattern.compile("([-+]?[0-9]+)/([0-9]+)")))
+    (§ def #_"Pattern" floatPat (ß Pattern.compile("([-+]?[0-9]+(\\.[0-9]*)?([eE][-+]?[0-9]+)?)(M)?")))
 
-    (§ def IFn taggedReader = new TaggedReader())
+    (§ def #_"IFn" taggedReader (ß new TaggedReader()))
 
     (§ static
         (ß macros[\"] = new StringReader()) ;; oops! "
@@ -14467,21 +15215,21 @@
         (ß dispatchMacros[\:] = new NamespaceMapReader())
     )
 
-    (§ defn boolean nonConstituent(int ch)
+    (§ defn #_"boolean" nonConstituent [#_"int" ch]
         (ß (ch == \@ || ch == \` || ch == \~))
     )
 
-    (§ defn Object readString(String s, IPersistentMap opts)
+    (§ defn #_"Object" readString [#_"String" s, #_"IPersistentMap" opts]
         (let [#_"PushbackReader" r (ß new PushbackReader(new java.io.StringReader(s)))]
             (ß read(r, opts))
         )
     )
 
-    (§ defn boolean isWhitespace(int ch)
+    (§ defn #_"boolean" isWhitespace [#_"int" ch]
         (ß (Character.isWhitespace(ch) || ch == \,))
     )
 
-    (§ defn void unread(PushbackReader r, int ch)
+    (§ defn #_"void" unread [#_"PushbackReader" r, #_"int" ch]
         (when (ß ch != -1)
             (try
                 (ß r.unread(ch))
@@ -14494,10 +15242,10 @@
     )
 
     (class-ns ReaderException (§ extends RuntimeException)
-        (§ field int line)
-        (§ field int column)
+        (§ field #_"int" line)
+        (§ field #_"int" column)
 
-        (§ constructor ReaderException(int line, int column, Throwable cause)
+        (§ constructor #_"ReaderException" ReaderException [#_"int" line, #_"int" column, #_"Throwable" cause]
             (§ super(cause))
             (ß this.line = line)
             (ß this.column = column)
@@ -14505,7 +15253,7 @@
         )
     )
 
-    (§ defn int read1(Reader r)
+    (§ defn #_"int" read1 [#_"Reader" r]
         (try
             (ß r.read())
             (catch IOException e
@@ -14514,13 +15262,13 @@
         )
     )
 
-    (§ def Keyword EOF = Keyword.intern(nil, "eof"))
+    (§ def #_"Keyword" EOF (ß Keyword.intern(nil, "eof")))
 
-    (§ defn Object read(PushbackReader r, IPersistentMap opts)
+    (§ defn #_"Object" read [#_"PushbackReader" r, #_"IPersistentMap" opts]
         (ß read(r, !opts.containsKey(EOF), opts.valAt(EOF), false, opts))
     )
 
-    (§ defn Object read(PushbackReader r, boolean eofIsError, Object eofValue, boolean isRecursive, Object opts)
+    (§ defn #_"Object" read [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"boolean" isRecursive, #_"Object" opts]
         (try
             (while true
                 (let [#_"int" ch (ß read1(r))]
@@ -14593,7 +15341,7 @@
         )
     )
 
-    (§ defn- String readToken(PushbackReader r, char initch, boolean leadConstituent)
+    (§ defn- #_"String" readToken [#_"PushbackReader" r, #_"char" initch, #_"boolean" leadConstituent]
         (let [#_"StringBuilder" sb (ß new StringBuilder())]
             (when (ß leadConstituent && nonConstituent(initch))
                 (throw (ß Util.runtimeException("Invalid leading character: " + (char)initch)))
@@ -14619,7 +15367,7 @@
         )
     )
 
-    (§ defn- Object readNumber(PushbackReader r, char initch)
+    (§ defn- #_"Object" readNumber [#_"PushbackReader" r, #_"char" initch]
         (let [#_"StringBuilder" sb (ß new StringBuilder())]
             (ß sb.append(initch))
 
@@ -14644,7 +15392,7 @@
         )
     )
 
-    (§ defn- int readUnicodeChar(String token, int offset, int length, int base)
+    (§ defn- #_"int" readUnicodeChar [#_"String" token, #_"int" offset, #_"int" length, #_"int" base]
         (when (ß token.length() != offset + length)
             (throw (ß new IllegalArgumentException("Invalid unicode character: \\" + token)))
         )
@@ -14661,7 +15409,7 @@
         )
     )
 
-    (§ defn- int readUnicodeChar(PushbackReader r, int initch, int base, int length, boolean exact)
+    (§ defn- #_"int" readUnicodeChar [#_"PushbackReader" r, #_"int" initch, #_"int" base, #_"int" length, #_"boolean" exact]
         (let [#_"int" uc (ß Character.digit(initch, base))]
             (when (ß uc == -1)
                 (throw (ß new IllegalArgumentException("Invalid digit: " + (char) initch)))
@@ -14689,7 +15437,7 @@
         )
     )
 
-    (§ defn- Object interpretToken(String s)
+    (§ defn- #_"Object" interpretToken [#_"String" s]
         (cond (ß s.equals("nil"))
             (do
                 (§ return nil)
@@ -14714,7 +15462,7 @@
         )
     )
 
-    (§ defn- Object matchSymbol(String s)
+    (§ defn- #_"Object" matchSymbol [#_"String" s]
         (let [#_"Matcher" m (ß symbolPat.matcher(s))]
             (when (ß m.matches())
                 (let [#_"int" gc (ß m.groupCount())]
@@ -14742,7 +15490,7 @@
         )
     )
 
-    (§ defn- Object matchNumber(String s)
+    (§ defn- #_"Object" matchNumber [#_"String" s]
         (let [#_"Matcher" m (ß intPat.matcher(s))]
             (when (ß m.matches())
                 (when (ß m.group(2) != nil)
@@ -14808,23 +15556,24 @@
         )
     )
 
-    (§ defn- IFn getMacro(int ch)
+    (§ defn- #_"IFn" getMacro [#_"int" ch]
         (when (ß ch < macros.length)
             (§ return (ß macros[ch]))
         )
         nil
     )
 
-    (§ defn- boolean isMacro(int ch)
+    (§ defn- #_"boolean" isMacro [#_"int" ch]
         (ß (ch < macros.length && macros[ch] != nil))
     )
 
-    (§ defn- boolean isTerminatingMacro(int ch)
+    (§ defn- #_"boolean" isTerminatingMacro [#_"int" ch]
         (ß (ch != \# && ch != \' && isMacro(ch)))
     )
 
     (class-ns StringReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object doublequote, Object opts)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" doublequote, #_"Object" opts]
             (let [#_"StringBuilder" sb (ß new StringBuilder())]
                 (let [#_"Reader" r (ß (Reader) reader)]
                     (loop-when-recur [(ß int ch = read1(r))] (ß ch != \") [(ß ch = read1(r))] ;; oops! "
@@ -14905,7 +15654,8 @@
     )
 
     (class-ns CommentReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object semicolon, Object opts)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" semicolon, #_"Object" opts]
             (let [#_"Reader" r (ß (Reader) reader)]
                 (§ let [#_"int" ch]
                     (§ loop
@@ -14919,7 +15669,8 @@
     )
 
     (class-ns DiscardReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object underscore, Object opts)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" underscore, #_"Object" opts]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (ß read(r, true, nil, true, opts))
                 r
@@ -14928,7 +15679,8 @@
     )
 
     (class-ns NamespaceMapReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object colon, Object opts)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" colon, #_"Object" opts]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 ;; Read ns symbol
                 (let [#_"Object" sym (ß read(r, true, nil, false, opts))]
@@ -15001,7 +15753,8 @@
     )
 
     (class-ns DispatchReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object hash, Object opts)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" hash, #_"Object" opts]
             (let [#_"int" ch (ß read1((Reader) reader))]
                 (when (ß ch == -1)
                     (throw (ß Util.runtimeException("EOF while reading character")))
@@ -15023,7 +15776,8 @@
     )
 
     (class-ns MetaReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object caret, Object opts)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" caret, #_"Object" opts]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (let [#_"int" line -1]
                     (let [#_"int" column -1]
@@ -15078,7 +15832,8 @@
     )
 
     (class-ns CharacterReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object backslash, Object opts)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" backslash, #_"Object" opts]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (let [#_"int" ch (ß read1(r))]
                     (when (ß ch == -1)
@@ -15145,7 +15900,8 @@
     )
 
     (class-ns ListReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object leftparen, Object opts)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (let [#_"int" line -1]
                     (let [#_"int" column -1]
@@ -15168,7 +15924,8 @@
     )
 
     (class-ns VectorReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object leftparen, Object opts)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (ß LazilyPersistentVector.create(readDelimitedList(\], r, true, opts)))
             )
@@ -15176,7 +15933,8 @@
     )
 
     (class-ns MapReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object leftparen, Object opts)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (let [#_"Object[]" a (ß readDelimitedList(\}, r, true, opts).toArray())]
                     (when (ß (a.length & 1) == 1)
@@ -15189,7 +15947,8 @@
     )
 
     (class-ns SetReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object leftbracket, Object opts)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" leftbracket, #_"Object" opts]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (ß PersistentHashSet.createWithCheck(readDelimitedList(\}, r, true, opts)))
             )
@@ -15197,25 +15956,28 @@
     )
 
     (class-ns UnmatchedDelimiterReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object rightdelim, Object opts)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" rightdelim, #_"Object" opts]
             (throw (ß Util.runtimeException("Unmatched delimiter: " + rightdelim)))
         )
     )
 
     (class-ns UnreadableReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object leftangle, Object opts)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" leftangle, #_"Object" opts]
             (throw (ß Util.runtimeException("Unreadable form")))
         )
     )
 
     (class-ns SymbolicValueReader (§ extends AFn)
-        (§ def IPersistentMap specials = PersistentHashMap.create(
+        (§ def #_"IPersistentMap" specials (ß PersistentHashMap.create(
       #_map Symbol.intern("Inf"), Double.POSITIVE_INFINITY,
       #_map Symbol.intern("-Inf"), Double.NEGATIVE_INFINITY,
       #_map Symbol.intern("NaN"), Double.NaN
-        ))
+        )))
 
-        (§ method Object invoke(Object reader, Object quote, Object opts)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" quote, #_"Object" opts]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (let [#_"Object" o (ß read(r, true, nil, true, opts))]
                     (when (ß !(o instanceof Symbol))
@@ -15231,7 +15993,7 @@
         )
     )
 
-    (§ defn List readDelimitedList(char delim, PushbackReader r, boolean isRecursive, Object opts)
+    (§ defn #_"List" readDelimitedList [#_"char" delim, #_"PushbackReader" r, #_"boolean" isRecursive, #_"Object" opts]
         (let [#_"int" firstline (ß (r instanceof LineNumberingPushbackReader) ? ((LineNumberingPushbackReader) r).getLineNumber() :or -1)]
             (let [#_"ArrayList" a (ß new ArrayList())]
                 (while true
@@ -15285,7 +16047,8 @@
     )
 
     (class-ns TaggedReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object firstChar, Object opts)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" firstChar, #_"Object" opts]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (let [#_"Object" name (ß read(r, true, nil, false, opts))]
                     (when (ß !(name instanceof Symbol))
@@ -15298,10 +16061,11 @@
             )
         )
 
-        (§ def Keyword READERS = Keyword.intern(nil, "readers"))
-        (§ def Keyword DEFAULT = Keyword.intern(nil, "default"))
+        (§ def #_"Keyword" READERS (ß Keyword.intern(nil, "readers")))
+        (§ def #_"Keyword" DEFAULT (ß Keyword.intern(nil, "default")))
 
-        (§ method- Object readTagged(PushbackReader reader, Symbol tag, IPersistentMap opts)
+        #_method
+        (§ defn- #_"Object" readTagged [this, #_"PushbackReader" reader, #_"Symbol" tag, #_"IPersistentMap" opts]
             (let [#_"Object" o (ß read(reader, true, nil, true, opts))]
                 (let [#_"ILookup" readers (ß (ILookup)RT.get(opts, READERS))]
                     (let [#_"IFn" dataReader (ß (IFn)RT.get(readers, tag))]
@@ -15339,24 +16103,24 @@
 (§ import java.util.Enumeration)
 
 (class-ns EnumerationSeq (§ extends ASeq)
-    (§ field Enumeration iter)
-    (§ field State state)
+    (§ field #_"Enumeration" iter)
+    (§ field #_"State" state)
 
     (class-ns State
         #_volatile
-        (§ field Object val)
+        (§ field #_"Object" val)
         #_volatile
-        (§ field Object _rest)
+        (§ field #_"Object" _rest)
     )
 
-    (§ defn EnumerationSeq create(Enumeration iter)
+    (§ defn #_"EnumerationSeq" create [#_"Enumeration" iter]
         (when (ß iter.hasMoreElements())
             (§ return (ß new EnumerationSeq(iter)))
         )
         nil
     )
 
-    (§ constructor EnumerationSeq(Enumeration iter)
+    (§ constructor #_"EnumerationSeq" EnumerationSeq [#_"Enumeration" iter]
         (ß this.iter = iter)
         (ß state = new State())
         (ß this.state.val = state)
@@ -15364,14 +16128,15 @@
         this
     )
 
-    (§ constructor EnumerationSeq(IPersistentMap meta, Enumeration iter, State state)
+    (§ constructor #_"EnumerationSeq" EnumerationSeq [#_"IPersistentMap" meta, #_"Enumeration" iter, #_"State" state]
         (§ super(meta))
         (ß this.iter = iter)
         (ß this.state = state)
         this
     )
 
-    (§ method Object first()
+    #_method
+    (§ defn #_"Object" first [this]
         (when (ß state.val == state)
             (§ sync state
                 (when (ß state.val == state)
@@ -15382,7 +16147,8 @@
         (ß state.val)
     )
 
-    (§ method ISeq next()
+    #_method
+    (§ defn #_"ISeq" next [this]
         (when (ß state._rest == state)
             (§ sync state
                 (when (ß state._rest == state)
@@ -15394,7 +16160,8 @@
         (ß (ISeq) state._rest)
     )
 
-    (§ method EnumerationSeq withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"EnumerationSeq" withMeta [this, #_"IPersistentMap" meta]
         (ß new EnumerationSeq(meta, iter, state))
     )
 )
@@ -15408,14 +16175,14 @@
  ; exception classes.
  ;;
 (class-ns ExceptionInfo (§ extends RuntimeException) (§ implements IExceptionInfo)
-    (§ field IPersistentMap data)
+    (§ field #_"IPersistentMap" data)
 
-    (§ constructor ExceptionInfo(String s, IPersistentMap data)
+    (§ constructor #_"ExceptionInfo" ExceptionInfo [#_"String" s, #_"IPersistentMap" data]
         (§ this(s, data, nil))
         this
     )
 
-    (§ constructor ExceptionInfo(String s, IPersistentMap data, Throwable throwable)
+    (§ constructor #_"ExceptionInfo" ExceptionInfo [#_"String" s, #_"IPersistentMap" data, #_"Throwable" throwable]
         ;; nil cause is equivalent to not passing a cause
         (§ super(s, throwable))
         (if (ß data != nil)
@@ -15429,11 +16196,13 @@
         this
     )
 
-    (§ method IPersistentMap getData()
+    #_method
+    (§ defn #_"IPersistentMap" getData [this]
         data
     )
 
-    (§ method String toString()
+    #_method
+    (§ defn #_"String" toString [this]
         (ß "cloiure.lang.ExceptionInfo: " + getMessage() + " " + data.toString())
     )
 )
@@ -15448,12 +16217,12 @@
 (java-ns cloiure.lang.FnLoaderThunk
 
 (class-ns FnLoaderThunk (§ extends RestFn)
-    (§ field Var v)
-    (§ field ClassLoader loader)
-    (§ field String fnClassName)
-    (§ field IFn fn)
+    (§ field #_"Var" v)
+    (§ field #_"ClassLoader" loader)
+    (§ field #_"String" fnClassName)
+    (§ field #_"IFn" fn)
 
-    (§ constructor FnLoaderThunk(Var v, String fnClassName)
+    (§ constructor #_"FnLoaderThunk" FnLoaderThunk [#_"Var" v, #_"String" fnClassName]
         (ß this.v = v)
         (ß this.loader = (ClassLoader) RT.FN_LOADER_VAR.get())
         (ß this.fnClassName = fnClassName)
@@ -15461,28 +16230,33 @@
         this
     )
 
-    (§ method Object invoke(Object arg1)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1]
         (ß load())
         (ß fn.invoke(arg1))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2]
         (ß load())
         (ß fn.invoke(arg1, arg2))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
         (ß load())
         (ß fn.invoke(arg1, arg2, arg3))
     )
 
     #_protected
-    (§ method Object doInvoke(Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" args]
         (ß load())
         (ß fn.applyTo((ISeq) args))
     )
 
-    (§ method- void load()
+    #_method
+    (§ defn- #_"void" load [this]
         (when (ß fn == nil)
             (try
                 (ß fn = (IFn) Class.forName(fnClassName, true, loader).newInstance())
@@ -15495,15 +16269,18 @@
         nil
     )
 
-    (§ method int getRequiredArity()
+    #_method
+    (§ defn #_"int" getRequiredArity [this]
         0
     )
 
-    (§ method IObj withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"IObj" withMeta [this, #_"IPersistentMap" meta]
         this
     )
 
-    (§ method IPersistentMap meta()
+    #_method
+    (§ defn #_"IPersistentMap" meta [this]
         nil
     )
 )
@@ -17180,11 +17957,11 @@
 (§ import cloiure.asm.Opcodes)
 
 (class-ns Intrinsics (§ implements Opcodes)
-    (§ defn- Object[] oa(Object... arr)
+    (§ defn- #_"Object[]" oa [#_"Object..." arr]
         arr
     )
 
-    (§ def IPersistentMap ops = RT.map(
+    (§ def #_"IPersistentMap" ops (ß RT.map(
       #_map "public static double cloiure.lang.Numbers.add(double,double)", DADD,
       #_map "public static long cloiure.lang.Numbers.and(long,long)", LAND,
       #_map "public static long cloiure.lang.Numbers.or(long,long)", LOR,
@@ -17272,10 +18049,10 @@
       #_map "public static long cloiure.lang.RT.uncheckedLongCast(byte)", I2L,
       #_map "public static long cloiure.lang.RT.uncheckedLongCast(long)", NOP,
       #_map "public static long cloiure.lang.RT.uncheckedLongCast(int)", I2L
-    ))
+    )))
 
     ;; map to instructions terminated with comparator for branch to false
-    (§ def IPersistentMap preds = RT.map(
+    (§ def #_"IPersistentMap" preds (ß RT.map(
       #_map "public static boolean cloiure.lang.Numbers.lt(double,double)", oa(DCMPG, IFGE),
       #_map "public static boolean cloiure.lang.Numbers.lt(long,long)", oa(LCMP, IFGE),
       #_map "public static boolean cloiure.lang.Numbers.equiv(double,double)", oa(DCMPL, IFNE),
@@ -17296,7 +18073,7 @@
       #_map "public static boolean cloiure.lang.Numbers.isPos(double)", oa(DCONST_0, DCMPL, IFLE),
       #_map "public static boolean cloiure.lang.Numbers.isNeg(long)", oa(LCONST_0, LCMP, IFGE),
       #_map "public static boolean cloiure.lang.Numbers.isNeg(double)", oa(DCONST_0, DCMPG, IFGE)
-    ))
+    )))
 )
 )
 
@@ -17432,22 +18209,22 @@
 (java-ns cloiure.lang.Iterate
 
 (class-ns Iterate (§ extends ASeq) (§ implements IReduce, IPending)
-    (§ def- Object UNREALIZED_SEED = new Object())
-    (§ field- IFn f) ;; never nil
-    (§ field- Object prevSeed)
+    (§ def- #_"Object" UNREALIZED_SEED (ß new Object()))
+    (§ field- #_"IFn" f) ;; never nil
+    (§ field- #_"Object" prevSeed)
     #_volatile
-    (§ field- Object _seed) ;; lazily realized
+    (§ field- #_"Object" _seed) ;; lazily realized
     #_volatile
-    (§ field- ISeq _next) ;; cached
+    (§ field- #_"ISeq" _next) ;; cached
 
-    (§ constructor- Iterate(IFn f, Object prevSeed, Object seed)
+    (§ constructor- #_"Iterate" Iterate [#_"IFn" f, #_"Object" prevSeed, #_"Object" seed]
         (ß this.f = f)
         (ß this.prevSeed = prevSeed)
         (ß this._seed = seed)
         this
     )
 
-    (§ constructor- Iterate(IPersistentMap meta, IFn f, Object prevSeed, Object seed, ISeq next)
+    (§ constructor- #_"Iterate" Iterate [#_"IPersistentMap" meta, #_"IFn" f, #_"Object" prevSeed, #_"Object" seed, #_"ISeq" next]
         (§ super(meta))
         (ß this.f = f)
         (ß this.prevSeed = prevSeed)
@@ -17456,33 +18233,38 @@
         this
     )
 
-    (§ defn ISeq create(IFn f, Object seed)
+    (§ defn #_"ISeq" create [#_"IFn" f, #_"Object" seed]
         (ß new Iterate(f, nil, seed))
     )
 
-    (§ method boolean isRealized()
+    #_method
+    (§ defn #_"boolean" isRealized [this]
         (ß (_seed != UNREALIZED_SEED))
     )
 
-    (§ method Object first()
+    #_method
+    (§ defn #_"Object" first [this]
         (when (ß _seed == UNREALIZED_SEED)
             (ß _seed = f.invoke(prevSeed))
         )
         (ß _seed)
     )
 
-    (§ method ISeq next()
+    #_method
+    (§ defn #_"ISeq" next [this]
         (when (ß _next == nil)
             (ß _next = new Iterate(f, first(), UNREALIZED_SEED))
         )
         (ß _next)
     )
 
-    (§ method Iterate withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"Iterate" withMeta [this, #_"IPersistentMap" meta]
         (ß new Iterate(meta, f, prevSeed, _seed, _next))
     )
 
-    (§ method Object reduce(IFn rf)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" rf]
         (let [#_"Object" first (ß first())]
             (let [#_"Object" ret first]
                 (let [#_"Object" v (ß f.invoke(first))]
@@ -17498,7 +18280,8 @@
         )
     )
 
-    (§ method Object reduce(IFn rf, Object start)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" rf, #_"Object" start]
         (let [#_"Object" ret start]
             (let [#_"Object" v (ß first())]
                 (while true
@@ -17520,24 +18303,24 @@
 (§ import java.util.Iterator)
 
 (class-ns IteratorSeq (§ extends ASeq)
-    (§ field Iterator iter)
-    (§ field State state)
+    (§ field #_"Iterator" iter)
+    (§ field #_"State" state)
 
     (class-ns State
         #_volatile
-        (§ field Object val)
+        (§ field #_"Object" val)
         #_volatile
-        (§ field Object _rest)
+        (§ field #_"Object" _rest)
     )
 
-    (§ defn IteratorSeq create(Iterator iter)
+    (§ defn #_"IteratorSeq" create [#_"Iterator" iter]
         (when (ß iter.hasNext())
             (§ return (ß new IteratorSeq(iter)))
         )
         nil
     )
 
-    (§ constructor IteratorSeq(Iterator iter)
+    (§ constructor #_"IteratorSeq" IteratorSeq [#_"Iterator" iter]
         (ß this.iter = iter)
         (ß state = new State())
         (ß this.state.val = state)
@@ -17545,14 +18328,15 @@
         this
     )
 
-    (§ constructor IteratorSeq(IPersistentMap meta, Iterator iter, State state)
+    (§ constructor #_"IteratorSeq" IteratorSeq [#_"IPersistentMap" meta, #_"Iterator" iter, #_"State" state]
         (§ super(meta))
         (ß this.iter = iter)
         (ß this.state = state)
         this
     )
 
-    (§ method Object first()
+    #_method
+    (§ defn #_"Object" first [this]
         (when (ß state.val == state)
             (§ sync state
                 (when (ß state.val == state)
@@ -17563,7 +18347,8 @@
         (ß state.val)
     )
 
-    (§ method ISeq next()
+    #_method
+    (§ defn #_"ISeq" next [this]
         (when (ß state._rest == state)
             (§ sync state
                 (when (ß state._rest == state)
@@ -17575,7 +18360,8 @@
         (ß (ISeq) state._rest)
     )
 
-    (§ method IteratorSeq withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"IteratorSeq" withMeta [this, #_"IPersistentMap" meta]
         (ß new IteratorSeq(meta, iter, state))
     )
 )
@@ -17645,16 +18431,16 @@
 (§ import java.lang.ref.SoftReference)
 
 (class-ns Keyword (§ implements IFn, Comparable, Named, IHashEq)
-    (§ def- ConcurrentHashMap<Symbol, Reference<Keyword>> table = new ConcurrentHashMap())
+    (§ def- #_"ConcurrentHashMap<Symbol, Reference<Keyword>>" table (ß new ConcurrentHashMap()))
 
-    (§ def ReferenceQueue rq = new ReferenceQueue())
+    (§ def #_"ReferenceQueue" rq (ß new ReferenceQueue()))
 
-    (§ field Symbol sym)
-    (§ field int hasheq)
+    (§ field #_"Symbol" sym)
+    (§ field #_"int" hasheq)
     #_transient
-    (§ field String _str)
+    (§ field #_"String" _str)
 
-    (§ defn Keyword intern(Symbol sym)
+    (§ defn #_"Keyword" intern [#_"Symbol" sym]
         (let [#_"Keyword" k nil]
             (let [#_"Reference<Keyword>" existingRef (ß table.get(sym))]
                 (when (ß existingRef == nil)
@@ -17680,21 +18466,21 @@
         )
     )
 
-    (§ defn Keyword intern(String ns, String name)
+    (§ defn #_"Keyword" intern [#_"String" ns, #_"String" name]
         (ß intern(Symbol.intern(ns, name)))
     )
 
-    (§ defn Keyword intern(String nsname)
+    (§ defn #_"Keyword" intern [#_"String" nsname]
         (ß intern(Symbol.intern(nsname)))
     )
 
-    (§ constructor- Keyword(Symbol sym)
+    (§ constructor- #_"Keyword" Keyword [#_"Symbol" sym]
         (ß this.sym = sym)
         (ß hasheq = sym.hasheq() + 0x9e3779b9)
         this
     )
 
-    (§ defn Keyword find(Symbol sym)
+    (§ defn #_"Keyword" find [#_"Symbol" sym]
         (let [#_"Reference<Keyword>" ref (ß table.get(sym))]
             (if (ß ref != nil)
                 (do
@@ -17707,54 +18493,64 @@
         )
     )
 
-    (§ defn Keyword find(String ns, String name)
+    (§ defn #_"Keyword" find [#_"String" ns, #_"String" name]
         (ß find(Symbol.intern(ns, name)))
     )
 
-    (§ defn Keyword find(String nsname)
+    (§ defn #_"Keyword" find [#_"String" nsname]
         (ß find(Symbol.intern(nsname)))
     )
 
-    (§ method int hashCode()
+    #_method
+    (§ defn #_"int" hashCode [this]
         (ß sym.hashCode() + 0x9e3779b9)
     )
 
-    (§ method int hasheq()
+    #_method
+    (§ defn #_"int" hasheq [this]
         hasheq
     )
 
-    (§ method String toString()
+    #_method
+    (§ defn #_"String" toString [this]
         (when (ß _str == nil)
             (ß _str = (":" + sym))
         )
         (ß _str)
     )
 
-    (§ method Object throwArity()
+    #_method
+    (§ defn #_"Object" throwArity [this]
         (throw (ß new IllegalArgumentException("Wrong number of args passed to keyword: " + toString())))
     )
 
-    (§ method Object call()
+    #_method
+    (§ defn #_"Object" call [this]
         (ß throwArity())
     )
 
-    (§ method void run()
+    #_method
+    (§ defn #_"void" run [this]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method Object invoke()
+    #_method
+    (§ defn #_"Object" invoke [this]
         (ß throwArity())
     )
 
-    (§ method int compareTo(Object o)
+    #_method
+    (§ defn #_"int" compareTo [this, #_"Object" o]
         (ß sym.compareTo(((Keyword) o).sym))
     )
 
-    (§ method String getNamespace()
+    #_method
+    (§ defn #_"String" getNamespace [this]
         (ß sym.getNamespace())
     )
 
-    (§ method String getName()
+    #_method
+    (§ defn #_"String" getName [this]
         (ß sym.getName())
     )
 
@@ -17764,119 +18560,119 @@
      ; @param obj - must be IPersistentMap
      ; @return the value at the key or nil if not found
      ;;
-    (§ method Object invoke(Object obj)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" obj]
         (when (ß obj instanceof ILookup)
             (§ return (ß ((ILookup)obj).valAt(this)))
         )
         (ß RT.get(obj, this))
     )
 
-    (§ method Object invoke(Object obj, Object notFound)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" obj, #_"Object" notFound]
         (when (ß obj instanceof ILookup)
             (§ return (ß ((ILookup)obj).valAt(this, notFound)))
         )
         (ß RT.get(obj, this, notFound))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
         (ß throwArity())
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20,
-            Object... args)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20, #_"Object..." args]
         (ß throwArity())
     )
 
-    (§ method Object applyTo(ISeq arglist)
+    #_method
+    (§ defn #_"Object" applyTo [this, #_"ISeq" arglist]
         (ß AFn.applyToHelper(this, arglist))
     )
 )
@@ -17885,14 +18681,15 @@
 (java-ns cloiure.lang.KeywordLookupSite
 
 (class-ns KeywordLookupSite (§ implements ILookupSite, ILookupThunk)
-    (§ field Keyword k)
+    (§ field #_"Keyword" k)
 
-    (§ constructor KeywordLookupSite(Keyword k)
+    (§ constructor #_"KeywordLookupSite" KeywordLookupSite [#_"Keyword" k]
         (ß this.k = k)
         this
     )
 
-    (§ method ILookupThunk fault(Object target)
+    #_method
+    (§ defn #_"ILookupThunk" fault [this, #_"Object" target]
         (cond (ß target instanceof IKeywordLookup)
             (do
                 (§ return (ß install(target)))
@@ -17905,17 +18702,20 @@
         this
     )
 
-    (§ method Object get(Object target)
+    #_method
+    (§ defn #_"Object" get [this, #_"Object" target]
         (when (ß target instanceof IKeywordLookup || target instanceof ILookup)
             (§ return this)
         )
         (ß RT.get(target, k))
     )
 
-    (§ method- ILookupThunk ilookupThunk(Class c)
+    #_method
+    (§ defn- #_"ILookupThunk" ilookupThunk [this, #_"Class" c]
         (ß new ILookupThunk()
             (§ reify
-                (§ method Object get(Object target)
+                #_method
+                (§ defn #_"Object" get [this, #_"Object" target]
                     (when (ß target != nil && target.getClass() == c)
                         (§ return (ß ((ILookup) target).valAt(k)))
                     )
@@ -17925,7 +18725,8 @@
         )
     )
 
-    (§ method- ILookupThunk install(Object target)
+    #_method
+    (§ defn- #_"ILookupThunk" install [this, #_"Object" target]
         (let [#_"ILookupThunk" t (ß ((IKeywordLookup)target).getLookupThunk(k))]
             (when (ß t != nil)
                 (§ return t)
@@ -17942,21 +18743,21 @@
 (§ import java.util.RandomAccess)
 
 (class-ns LazilyPersistentVector
-    (§ defn IPersistentVector createOwning(Object... items)
+    (§ defn #_"IPersistentVector" createOwning [#_"Object..." items]
         (when (ß items.length <= 32)
             (§ return (ß new PersistentVector(items.length, 5, PersistentVector.EMPTY_NODE, items)))
         )
         (ß PersistentVector.create(items))
     )
 
-    (§ defn int fcount(Object c)
+    (§ defn #_"int" fcount [#_"Object" c]
         (when (ß c instanceof Counted)
             (§ return (ß ((Counted) c).count()))
         )
         (ß ((Collection)c).size())
     )
 
-    (§ defn IPersistentVector create(Object obj)
+    (§ defn #_"IPersistentVector" create [#_"Object" obj]
         (cond (ß obj instanceof IReduceInit)
             (do
                 (ß PersistentVector.create((IReduceInit) obj))
@@ -17983,27 +18784,29 @@
 (§ import java.util.*)
 
 (class-ns LazySeq (§ extends Obj) (§ implements ISeq, Sequential, List, IPending, IHashEq)
-    (§ field- IFn fn)
-    (§ field- Object sv)
-    (§ field- ISeq s)
+    (§ field- #_"IFn" fn)
+    (§ field- #_"Object" sv)
+    (§ field- #_"ISeq" s)
 
-    (§ constructor LazySeq(IFn fn)
+    (§ constructor #_"LazySeq" LazySeq [#_"IFn" fn]
         (ß this.fn = fn)
         this
     )
 
-    (§ constructor- LazySeq(IPersistentMap meta, ISeq s)
+    (§ constructor- #_"LazySeq" LazySeq [#_"IPersistentMap" meta, #_"ISeq" s]
         (§ super(meta))
         (ß this.fn = nil)
         (ß this.s = s)
         this
     )
 
-    (§ method Obj withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"Obj" withMeta [this, #_"IPersistentMap" meta]
         (ß new LazySeq(meta, seq()))
     )
 
-    (§ method Object sval()
+    #_method
+    (§ defn #_"Object" sval [this]
         (§ sync this
             (when (ß fn != nil)
                 (ß sv = fn.invoke())
@@ -18016,7 +18819,8 @@
         )
     )
 
-    (§ method ISeq seq()
+    #_method
+    (§ defn #_"ISeq" seq [this]
         (§ sync this
             (ß sval())
             (when (ß sv != nil)
@@ -18032,7 +18836,8 @@
         )
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         (let [#_"int" c 0]
             (loop-when-recur [(ß ISeq s = seq())] (ß s != nil) [(ß s = s.next())]
                 (ß ++c)
@@ -18041,7 +18846,8 @@
         )
     )
 
-    (§ method Object first()
+    #_method
+    (§ defn #_"Object" first [this]
         (ß seq())
         (when (ß s == nil)
             (§ return nil)
@@ -18049,7 +18855,8 @@
         (ß s.first())
     )
 
-    (§ method ISeq next()
+    #_method
+    (§ defn #_"ISeq" next [this]
         (ß seq())
         (when (ß s == nil)
             (§ return nil)
@@ -18057,7 +18864,8 @@
         (ß s.next())
     )
 
-    (§ method ISeq more()
+    #_method
+    (§ defn #_"ISeq" more [this]
         (ß seq())
         (when (ß s == nil)
             (§ return (ß PersistentList.EMPTY))
@@ -18065,15 +18873,18 @@
         (ß s.more())
     )
 
-    (§ method ISeq cons(Object o)
+    #_method
+    (§ defn #_"ISeq" cons [this, #_"Object" o]
         (ß RT.cons(o, seq()))
     )
 
-    (§ method IPersistentCollection empty()
+    #_method
+    (§ defn #_"IPersistentCollection" empty [this]
         (ß PersistentList.EMPTY)
     )
 
-    (§ method boolean equiv(Object o)
+    #_method
+    (§ defn #_"boolean" equiv [this, #_"Object" o]
         (let [#_"ISeq" s (ß seq())]
             (if (ß s != nil)
                 (do
@@ -18086,7 +18897,8 @@
         )
     )
 
-    (§ method int hashCode()
+    #_method
+    (§ defn #_"int" hashCode [this]
         (let [#_"ISeq" s (ß seq())]
             (when (ß s == nil)
                 (§ return 1)
@@ -18095,11 +18907,13 @@
         )
     )
 
-    (§ method int hasheq()
+    #_method
+    (§ defn #_"int" hasheq [this]
         (ß Murmur3.hashOrdered(this))
     )
 
-    (§ method boolean equals(Object o)
+    #_method
+    (§ defn #_"boolean" equals [this, #_"Object" o]
         (let [#_"ISeq" s (ß seq())]
             (if (ß s != nil)
                 (do
@@ -18112,35 +18926,43 @@
         )
     )
 
-    (§ method Object[] toArray()
+    #_method
+    (§ defn #_"Object[]" toArray [this]
         (ß RT.seqToArray(seq()))
     )
 
-    (§ method boolean add(Object o)
+    #_method
+    (§ defn #_"boolean" add [this, #_"Object" o]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean remove(Object o)
+    #_method
+    (§ defn #_"boolean" remove [this, #_"Object" o]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean addAll(Collection c)
+    #_method
+    (§ defn #_"boolean" addAll [this, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method void clear()
+    #_method
+    (§ defn #_"void" clear [this]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean retainAll(Collection c)
+    #_method
+    (§ defn #_"boolean" retainAll [this, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean removeAll(Collection c)
+    #_method
+    (§ defn #_"boolean" removeAll [this, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean containsAll(Collection c)
+    #_method
+    (§ defn #_"boolean" containsAll [this, #_"Collection" c]
         (doseq [#_"Object" o c]
             (when (ß !contains(o))
                 (§ return false)
@@ -18149,19 +18971,23 @@
         true
     )
 
-    (§ method Object[] toArray(Object[] a)
+    #_method
+    (§ defn #_"Object[]" toArray [this, #_"Object[]" a]
         (ß RT.seqToPassedArray(seq(), a))
     )
 
-    (§ method int size()
+    #_method
+    (§ defn #_"int" size [this]
         (ß count())
     )
 
-    (§ method boolean isEmpty()
+    #_method
+    (§ defn #_"boolean" isEmpty [this]
         (ß (seq() == nil))
     )
 
-    (§ method boolean contains(Object o)
+    #_method
+    (§ defn #_"boolean" contains [this, #_"Object" o]
         (loop-when-recur [(ß ISeq s = seq())] (ß s != nil) [(ß s = s.next())]
             (when (ß Util.equiv(s.first(), o))
                 (§ return true)
@@ -18170,27 +18996,33 @@
         false
     )
 
-    (§ method Iterator iterator()
+    #_method
+    (§ defn #_"Iterator" iterator [this]
         (ß new SeqIterator(this))
     )
 
-    (§ method- List reify()
+    #_method
+    (§ defn- #_"List" reify [this]
         (ß new ArrayList(this))
     )
 
-    (§ method List subList(int fromIndex, int toIndex)
+    #_method
+    (§ defn #_"List" subList [this, #_"int" fromIndex, #_"int" toIndex]
         (ß reify().subList(fromIndex, toIndex))
     )
 
-    (§ method Object set(int index, Object element)
+    #_method
+    (§ defn #_"Object" set [this, #_"int" index, #_"Object" element]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method Object remove(int index)
+    #_method
+    (§ defn #_"Object" remove [this, #_"int" index]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method int indexOf(Object o)
+    #_method
+    (§ defn #_"int" indexOf [this, #_"Object" o]
         (let [#_"ISeq" s (ß seq())]
             (loop-when-recur [(ß int i = 0)] (ß s != nil) [(ß s = s.next(), i++)]
                 (when (ß Util.equiv(s.first(), o))
@@ -18201,31 +19033,38 @@
         )
     )
 
-    (§ method int lastIndexOf(Object o)
+    #_method
+    (§ defn #_"int" lastIndexOf [this, #_"Object" o]
         (ß reify().lastIndexOf(o))
     )
 
-    (§ method ListIterator listIterator()
+    #_method
+    (§ defn #_"ListIterator" listIterator [this]
         (ß reify().listIterator())
     )
 
-    (§ method ListIterator listIterator(int index)
+    #_method
+    (§ defn #_"ListIterator" listIterator [this, #_"int" index]
         (ß reify().listIterator(index))
     )
 
-    (§ method Object get(int index)
+    #_method
+    (§ defn #_"Object" get [this, #_"int" index]
         (ß RT.nth(this, index))
     )
 
-    (§ method void add(int index, Object element)
+    #_method
+    (§ defn #_"void" add [this, #_"int" index, #_"Object" element]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean addAll(int index, Collection c)
+    #_method
+    (§ defn #_"boolean" addAll [this, #_"int" index, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean isRealized()
+    #_method
+    (§ defn #_"boolean" isRealized [this]
         (§ sync this
             (ß (fn == nil))
         )
@@ -18246,36 +19085,40 @@
     ;; LineNumberReader collapses all occurrences of CR, LF, and CRLF into a
     ;; single '\n'.
 
-    (§ def- int newline = (int) \newline)
+    (§ def- #_"int" newline (ß (int) \newline))
 
-    (§ field- boolean _atLineStart = true)
-    (§ field- boolean _prev)
-    (§ field- int _columnNumber = 1)
+    (§ field- #_"boolean" _atLineStart (ß true))
+    (§ field- #_"boolean" _prev)
+    (§ field- #_"int" _columnNumber (ß 1))
 
-    (§ constructor LineNumberingPushbackReader(Reader r)
+    (§ constructor #_"LineNumberingPushbackReader" LineNumberingPushbackReader [#_"Reader" r]
         (§ super(new LineNumberReader(r)))
         this
     )
 
-    (§ constructor LineNumberingPushbackReader(Reader r, int size)
+    (§ constructor #_"LineNumberingPushbackReader" LineNumberingPushbackReader [#_"Reader" r, #_"int" size]
         (§ super(new LineNumberReader(r, size)))
         this
     )
 
-    (§ method int getLineNumber()
+    #_method
+    (§ defn #_"int" getLineNumber [this]
         (ß ((LineNumberReader) in).getLineNumber() + 1)
     )
 
-    (§ method void setLineNumber(int line)
+    #_method
+    (§ defn #_"void" setLineNumber [this, #_"int" line]
         (ß ((LineNumberReader) in).setLineNumber(line - 1))
         nil
     )
 
-    (§ method int getColumnNumber()
+    #_method
+    (§ defn #_"int" getColumnNumber [this]
         (ß _columnNumber)
     )
 
-    (§ method int read() (§ throws IOException)
+    #_method
+    (§ defn #_"int" read [this] (§ throws IOException)
         (let [#_"int" c (ß super.read())]
             (ß _prev = _atLineStart)
             (if (ß (c == newline) || (c == -1))
@@ -18292,14 +19135,16 @@
         )
     )
 
-    (§ method void unread(int c) (§ throws IOException)
+    #_method
+    (§ defn #_"void" unread [this, #_"int" c] (§ throws IOException)
         (ß super.unread(c))
         (ß _atLineStart = _prev)
         (ß _columnNumber--)
         nil
     )
 
-    (§ method String readLine() (§ throws IOException)
+    #_method
+    (§ defn #_"String" readLine [this] (§ throws IOException)
         (let [#_"int" c (ß read())]
             (§ let [#_"String" line]
                 (§ switch c
@@ -18331,7 +19176,8 @@
         )
     )
 
-    (§ method boolean atLineStart()
+    #_method
+    (§ defn #_"boolean" atLineStart [this]
         (ß _atLineStart)
     )
 )
@@ -18368,41 +19214,41 @@
 (§ import java.util.regex.Pattern)
 
 (class-ns LispReader
-    (§ def Symbol QUOTE = Symbol.intern("quote"))
-    (§ def Symbol THE_VAR = Symbol.intern("var"))
+    (§ def #_"Symbol" QUOTE (ß Symbol.intern("quote")))
+    (§ def #_"Symbol" THE_VAR (ß Symbol.intern("var")))
 
-    (§ def Symbol UNQUOTE = Symbol.intern("cloiure.core", "unquote"))
-    (§ def Symbol UNQUOTE_SPLICING = Symbol.intern("cloiure.core", "unquote-splicing"))
-    (§ def Symbol CONCAT = Symbol.intern("cloiure.core", "concat"))
-    (§ def Symbol SEQ = Symbol.intern("cloiure.core", "seq"))
-    (§ def Symbol LIST = Symbol.intern("cloiure.core", "list"))
-    (§ def Symbol APPLY = Symbol.intern("cloiure.core", "apply"))
-    (§ def Symbol HASHMAP = Symbol.intern("cloiure.core", "hash-map"))
-    (§ def Symbol HASHSET = Symbol.intern("cloiure.core", "hash-set"))
-    (§ def Symbol VECTOR = Symbol.intern("cloiure.core", "vector"))
-    (§ def Symbol WITH_META = Symbol.intern("cloiure.core", "with-meta"))
-    (§ def Symbol META = Symbol.intern("cloiure.core", "meta"))
-    (§ def Symbol DEREF = Symbol.intern("cloiure.core", "deref"))
-    (§ def Symbol READ_COND = Symbol.intern("cloiure.core", "read-cond"))
-    (§ def Symbol READ_COND_SPLICING = Symbol.intern("cloiure.core", "read-cond-splicing"))
-    (§ def Keyword UNKNOWN = Keyword.intern(nil, "unknown"))
+    (§ def #_"Symbol" UNQUOTE (ß Symbol.intern("cloiure.core", "unquote")))
+    (§ def #_"Symbol" UNQUOTE_SPLICING (ß Symbol.intern("cloiure.core", "unquote-splicing")))
+    (§ def #_"Symbol" CONCAT (ß Symbol.intern("cloiure.core", "concat")))
+    (§ def #_"Symbol" SEQ (ß Symbol.intern("cloiure.core", "seq")))
+    (§ def #_"Symbol" LIST (ß Symbol.intern("cloiure.core", "list")))
+    (§ def #_"Symbol" APPLY (ß Symbol.intern("cloiure.core", "apply")))
+    (§ def #_"Symbol" HASHMAP (ß Symbol.intern("cloiure.core", "hash-map")))
+    (§ def #_"Symbol" HASHSET (ß Symbol.intern("cloiure.core", "hash-set")))
+    (§ def #_"Symbol" VECTOR (ß Symbol.intern("cloiure.core", "vector")))
+    (§ def #_"Symbol" WITH_META (ß Symbol.intern("cloiure.core", "with-meta")))
+    (§ def #_"Symbol" META (ß Symbol.intern("cloiure.core", "meta")))
+    (§ def #_"Symbol" DEREF (ß Symbol.intern("cloiure.core", "deref")))
+    (§ def #_"Symbol" READ_COND (ß Symbol.intern("cloiure.core", "read-cond")))
+    (§ def #_"Symbol" READ_COND_SPLICING (ß Symbol.intern("cloiure.core", "read-cond-splicing")))
+    (§ def #_"Keyword" UNKNOWN (ß Keyword.intern(nil, "unknown")))
 
-    (§ def IFn[] macros = new IFn[256])
-    (§ def IFn[] dispatchMacros = new IFn[256])
+    (§ def #_"IFn[]" macros (ß new IFn[256]))
+    (§ def #_"IFn[]" dispatchMacros (ß new IFn[256]))
 
-    (§ def Pattern symbolPat = Pattern.compile("[:]?([\\D&&[^/]].*/)?(/|[\\D&&[^/]][^/]*)"))
-    (§ def Pattern intPat = Pattern.compile("([-+]?)(?:(0)|([1-9][0-9]*)|0[xX]([0-9A-Fa-f]+)|0([0-7]+)|([1-9][0-9]?)[rR]([0-9A-Za-z]+)|0[0-9]+)(N)?"))
-    (§ def Pattern ratioPat = Pattern.compile("([-+]?[0-9]+)/([0-9]+)"))
-    (§ def Pattern floatPat = Pattern.compile("([-+]?[0-9]+(\\.[0-9]*)?([eE][-+]?[0-9]+)?)(M)?"))
+    (§ def #_"Pattern" symbolPat (ß Pattern.compile("[:]?([\\D&&[^/]].*/)?(/|[\\D&&[^/]][^/]*)")))
+    (§ def #_"Pattern" intPat (ß Pattern.compile("([-+]?)(?:(0)|([1-9][0-9]*)|0[xX]([0-9A-Fa-f]+)|0([0-7]+)|([1-9][0-9]?)[rR]([0-9A-Za-z]+)|0[0-9]+)(N)?")))
+    (§ def #_"Pattern" ratioPat (ß Pattern.compile("([-+]?[0-9]+)/([0-9]+)")))
+    (§ def #_"Pattern" floatPat (ß Pattern.compile("([-+]?[0-9]+(\\.[0-9]*)?([eE][-+]?[0-9]+)?)(M)?")))
 
     ;; symbol->gensymbol
-    (§ def Var GENSYM_ENV = Var.create(nil).setDynamic())
+    (§ def #_"Var" GENSYM_ENV (ß Var.create(nil).setDynamic()))
     ;; sorted-map num->gensymbol
-    (§ def Var ARG_ENV = Var.create(nil).setDynamic())
-    (§ def IFn ctorReader = new CtorReader())
+    (§ def #_"Var" ARG_ENV (ß Var.create(nil).setDynamic()))
+    (§ def #_"IFn" ctorReader (ß new CtorReader()))
 
     ;; Dynamic var set to true in a read-cond context
-    (§ def Var READ_COND_ENV = Var.create(nil).setDynamic())
+    (§ def #_"Var" READ_COND_ENV (ß Var.create(nil).setDynamic()))
 
     (§ static
         (ß macros[\"] = new StringReader()) ;; oops! "
@@ -18443,11 +19289,11 @@
         (§ abstract Symbol resolveVar(Symbol sym))
     )
 
-    (§ defn boolean isWhitespace(int ch)
+    (§ defn #_"boolean" isWhitespace [#_"int" ch]
         (ß (Character.isWhitespace(ch) || ch == \,))
     )
 
-    (§ defn void unread(PushbackReader r, int ch)
+    (§ defn #_"void" unread [#_"PushbackReader" r, #_"int" ch]
         (when (ß ch != -1)
             (try
                 (ß r.unread(ch))
@@ -18460,10 +19306,10 @@
     )
 
     (class-ns ReaderException (§ extends RuntimeException)
-        (§ field int line)
-        (§ field int column)
+        (§ field #_"int" line)
+        (§ field #_"int" column)
 
-        (§ constructor ReaderException(int line, int column, Throwable cause)
+        (§ constructor #_"ReaderException" ReaderException [#_"int" line, #_"int" column, #_"Throwable" cause]
             (§ super(cause))
             (ß this.line = line)
             (ß this.column = column)
@@ -18471,7 +19317,7 @@
         )
     )
 
-    (§ defn int read1(Reader r)
+    (§ defn #_"int" read1 [#_"Reader" r]
         (try
             (ß r.read())
             (catch IOException e
@@ -18481,22 +19327,22 @@
     )
 
     ;; Reader opts
-    (§ def Keyword OPT_EOF = Keyword.intern(nil, "eof"))
-    (§ def Keyword OPT_FEATURES = Keyword.intern(nil, "features"))
-    (§ def Keyword OPT_READ_COND = Keyword.intern(nil, "read-cond"))
+    (§ def #_"Keyword" OPT_EOF (ß Keyword.intern(nil, "eof")))
+    (§ def #_"Keyword" OPT_FEATURES (ß Keyword.intern(nil, "features")))
+    (§ def #_"Keyword" OPT_READ_COND (ß Keyword.intern(nil, "read-cond")))
 
     ;; EOF special value to throw on eof
-    (§ def Keyword EOFTHROW = Keyword.intern(nil, "eofthrow"))
+    (§ def #_"Keyword" EOFTHROW (ß Keyword.intern(nil, "eofthrow")))
 
     ;; Platform features - always installed
-    (§ def- Keyword PLATFORM_KEY = Keyword.intern(nil, "cli"))
-    (§ def- Object PLATFORM_FEATURES = PersistentHashSet.create(PLATFORM_KEY))
+    (§ def- #_"Keyword" PLATFORM_KEY (ß Keyword.intern(nil, "cli")))
+    (§ def- #_"Object" PLATFORM_FEATURES (ß PersistentHashSet.create(PLATFORM_KEY)))
 
     ;; Reader conditional options - use with :read-cond
-    (§ def Keyword COND_ALLOW = Keyword.intern(nil, "allow"))
-    (§ def Keyword COND_PRESERVE = Keyword.intern(nil, "preserve"))
+    (§ def #_"Keyword" COND_ALLOW (ß Keyword.intern(nil, "allow")))
+    (§ def #_"Keyword" COND_PRESERVE (ß Keyword.intern(nil, "preserve")))
 
-    (§ defn Object read(PushbackReader r, Object opts)
+    (§ defn #_"Object" read [#_"PushbackReader" r, #_"Object" opts]
         (let [#_"boolean" eofIsError true]
             (let [#_"Object" eofValue nil]
                 (when (ß opts != nil && opts instanceof IPersistentMap)
@@ -18512,20 +19358,20 @@
         )
     )
 
-    (§ defn Object read(PushbackReader r, boolean eofIsError, Object eofValue, boolean isRecursive)
+    (§ defn #_"Object" read [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"boolean" isRecursive]
         (ß read(r, eofIsError, eofValue, isRecursive, PersistentHashMap.EMPTY))
     )
 
-    (§ defn Object read(PushbackReader r, boolean eofIsError, Object eofValue, boolean isRecursive, Object opts)
+    (§ defn #_"Object" read [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"boolean" isRecursive, #_"Object" opts]
         ;; start with pendingForms nil as reader conditional splicing is not allowed at top level
         (ß read(r, eofIsError, eofValue, nil, nil, isRecursive, opts, nil, (Resolver) RT.READER_RESOLVER.deref()))
     )
 
-    (§ defn- Object read(PushbackReader r, boolean eofIsError, Object eofValue, boolean isRecursive, Object opts, Object pendingForms)
+    (§ defn- #_"Object" read [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"boolean" isRecursive, #_"Object" opts, #_"Object" pendingForms]
         (ß read(r, eofIsError, eofValue, nil, nil, isRecursive, opts, ensurePending(pendingForms), (Resolver) RT.READER_RESOLVER.deref()))
     )
 
-    (§ defn- Object ensurePending(Object pendingForms)
+    (§ defn- #_"Object" ensurePending [#_"Object" pendingForms]
         (if (ß pendingForms == nil)
             (do
                 (ß new LinkedList())
@@ -18536,7 +19382,7 @@
         )
     )
 
-    (§ defn- Object installPlatformFeature(Object opts)
+    (§ defn- #_"Object" installPlatformFeature [#_"Object" opts]
         (if (ß opts == nil)
             (do
                 (ß RT.mapUniqueKeys(LispReader.OPT_FEATURES, PLATFORM_FEATURES))
@@ -18558,7 +19404,7 @@
         )
     )
 
-    (§ defn- Object read(PushbackReader r, boolean eofIsError, Object eofValue, Character returnOn, Object returnOnValue, boolean isRecursive, Object opts, Object pendingForms, Resolver resolver)
+    (§ defn- #_"Object" read [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"Character" returnOn, #_"Object" returnOnValue, #_"boolean" isRecursive, #_"Object" opts, #_"Object" pendingForms, #_"Resolver" resolver]
         (when (ß RT.READEVAL.deref() == UNKNOWN)
             (throw (ß Util.runtimeException("Reading disallowed - *read-eval* bound to :unknown")))
         )
@@ -18633,7 +19479,7 @@
         )
     )
 
-    (§ defn- String readToken(PushbackReader r, char initch)
+    (§ defn- #_"String" readToken [#_"PushbackReader" r, #_"char" initch]
         (let [#_"StringBuilder" sb (ß new StringBuilder())]
             (ß sb.append(initch))
 
@@ -18649,7 +19495,7 @@
         )
     )
 
-    (§ defn- Object readNumber(PushbackReader r, char initch)
+    (§ defn- #_"Object" readNumber [#_"PushbackReader" r, #_"char" initch]
         (let [#_"StringBuilder" sb (ß new StringBuilder())]
             (ß sb.append(initch))
 
@@ -18674,7 +19520,7 @@
         )
     )
 
-    (§ defn- int readUnicodeChar(String token, int offset, int length, int base)
+    (§ defn- #_"int" readUnicodeChar [#_"String" token, #_"int" offset, #_"int" length, #_"int" base]
         (when (ß token.length() != offset + length)
             (throw (ß new IllegalArgumentException("Invalid unicode character: \\" + token)))
         )
@@ -18691,7 +19537,7 @@
         )
     )
 
-    (§ defn- int readUnicodeChar(PushbackReader r, int initch, int base, int length, boolean exact)
+    (§ defn- #_"int" readUnicodeChar [#_"PushbackReader" r, #_"int" initch, #_"int" base, #_"int" length, #_"boolean" exact]
         (let [#_"int" uc (ß Character.digit(initch, base))]
             (when (ß uc == -1)
                 (throw (ß new IllegalArgumentException("Invalid digit: " + (char) initch)))
@@ -18719,7 +19565,7 @@
         )
     )
 
-    (§ defn- Object interpretToken(String s, Resolver resolver)
+    (§ defn- #_"Object" interpretToken [#_"String" s, #_"Resolver" resolver]
         (cond (ß s.equals("nil"))
             (do
                 (§ return nil)
@@ -18743,7 +19589,7 @@
         )
     )
 
-    (§ defn- Object matchSymbol(String s, Resolver resolver)
+    (§ defn- #_"Object" matchSymbol [#_"String" s, #_"Resolver" resolver]
         (let [#_"Matcher" m (ß symbolPat.matcher(s))]
             (when (ß m.matches())
                 (let [#_"int" gc (ß m.groupCount())]
@@ -18816,7 +19662,7 @@
         )
     )
 
-    (§ defn- Object matchNumber(String s)
+    (§ defn- #_"Object" matchNumber [#_"String" s]
         (let [#_"Matcher" m (ß intPat.matcher(s))]
             (when (ß m.matches())
                 (when (ß m.group(2) != nil)
@@ -18881,25 +19727,26 @@
         )
     )
 
-    (§ defn- IFn getMacro(int ch)
+    (§ defn- #_"IFn" getMacro [#_"int" ch]
         (when (ß ch < macros.length)
             (§ return (ß macros[ch]))
         )
         nil
     )
 
-    (§ defn- boolean isMacro(int ch)
+    (§ defn- #_"boolean" isMacro [#_"int" ch]
         (ß (ch < macros.length && macros[ch] != nil))
     )
 
-    (§ defn- boolean isTerminatingMacro(int ch)
+    (§ defn- #_"boolean" isTerminatingMacro [#_"int" ch]
         (ß (ch != \# && ch != \' && ch != \% && isMacro(ch)))
     )
 
     (class-ns RegexReader (§ extends AFn)
-        (§ def StringReader stringrdr = new StringReader())
+        (§ def #_"StringReader" stringrdr (ß new StringReader()))
 
-        (§ method Object invoke(Object reader, Object doublequote, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" doublequote, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"StringBuilder" sb (ß new StringBuilder())]
                 (let [#_"Reader" r (ß (Reader) reader)]
                     (loop-when-recur [(ß int ch = read1(r))] (ß ch != \") [(ß ch = read1(r))] ;; oops! "
@@ -18922,7 +19769,8 @@
     )
 
     (class-ns StringReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object doublequote, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" doublequote, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"StringBuilder" sb (ß new StringBuilder())]
                 (let [#_"Reader" r (ß (Reader) reader)]
                     (loop-when-recur [(ß int ch = read1(r))] (ß ch != \") [(ß ch = read1(r))] ;; oops! "
@@ -19003,7 +19851,8 @@
     )
 
     (class-ns CommentReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object semicolon, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" semicolon, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"Reader" r (ß (Reader) reader)]
                 (§ let [#_"int" ch]
                     (§ loop
@@ -19017,7 +19866,8 @@
     )
 
     (class-ns DiscardReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object underscore, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" underscore, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (ß read(r, true, nil, true, opts, ensurePending(pendingForms)))
                 r
@@ -19029,7 +19879,8 @@
     ;; ::{:c 1}   => {:a.b/c 1}  (where *ns* = a.b)
     ;; ::a{:c 1}  => {:a.b/c 1}  (where a is aliased to a.b)
     (class-ns NamespaceMapReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object colon, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" colon, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (let [#_"boolean" auto false]
                     (let [#_"int" autoChar (ß read1(r))]
@@ -19193,13 +20044,14 @@
     )
 
     (class-ns SymbolicValueReader (§ extends AFn)
-        (§ def IPersistentMap  specials = PersistentHashMap.create(
+        (§ def #_"IPersistentMap" specials (ß PersistentHashMap.create(
       #_map Symbol.intern("Inf"), Double.POSITIVE_INFINITY,
       #_map Symbol.intern("-Inf"), Double.NEGATIVE_INFINITY,
       #_map Symbol.intern("NaN"), Double.NaN
-        ))
+        )))
 
-        (§ method Object invoke(Object reader, Object quote, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" quote, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (let [#_"Object" o (ß read(r, true, nil, true, opts, ensurePending(pendingForms)))]
                     (when (ß !(o instanceof Symbol))
@@ -19216,14 +20068,15 @@
     )
 
     (class-ns WrappingReader (§ extends AFn)
-        (§ field Symbol sym)
+        (§ field #_"Symbol" sym)
 
-        (§ constructor WrappingReader(Symbol sym)
+        (§ constructor #_"WrappingReader" WrappingReader [#_"Symbol" sym]
             (ß this.sym = sym)
             this
         )
 
-        (§ method Object invoke(Object reader, Object quote, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" quote, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (let [#_"Object" o (ß read(r, true, nil, true, opts, ensurePending(pendingForms)))]
                     (ß RT.list(sym, o))
@@ -19233,16 +20086,17 @@
     )
 
     (class-ns DeprecatedWrappingReader (§ extends AFn)
-        (§ field Symbol sym)
-        (§ field String macro)
+        (§ field #_"Symbol" sym)
+        (§ field #_"String" macro)
 
-        (§ constructor DeprecatedWrappingReader(Symbol sym, String macro)
+        (§ constructor #_"DeprecatedWrappingReader" DeprecatedWrappingReader [#_"Symbol" sym, #_"String" macro]
             (ß this.sym = sym)
             (ß this.macro = macro)
             this
         )
 
-        (§ method Object invoke(Object reader, Object quote, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" quote, #_"Object" opts, #_"Object" pendingForms]
             (ß System.out.println("WARNING: reader macro " + macro + " is deprecated; use " + sym.getName() + " instead"))
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (let [#_"Object" o (ß read(r, true, nil, true, opts, ensurePending(pendingForms)))]
@@ -19253,7 +20107,8 @@
     )
 
     (class-ns VarReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object quote, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" quote, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (let [#_"Object" o (ß read(r, true, nil, true, opts, ensurePending(pendingForms)))]
                     (ß RT.list(THE_VAR, o))
@@ -19263,7 +20118,8 @@
     )
 
     (class-ns DispatchReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object hash, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" hash, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"int" ch (ß read1((Reader) reader))]
                 (when (ß ch == -1)
                     (throw (ß Util.runtimeException("EOF while reading character")))
@@ -19290,12 +20146,13 @@
         )
     )
 
-    (§ defn Symbol garg(int n)
+    (§ defn #_"Symbol" garg [#_"int" n]
         (ß Symbol.intern(nil, ((n == -1) ? "rest" :or ("p" + n)) + "__" + RT.nextID() + "#"))
     )
 
     (class-ns FnReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object lparen, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" lparen, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (when (ß ARG_ENV.deref() != nil)
                     (throw (ß new IllegalStateException("Nested #()s are not allowed")))
@@ -19340,7 +20197,7 @@
         )
     )
 
-    (§ defn Symbol registerArg(int n)
+    (§ defn #_"Symbol" registerArg [#_"int" n]
         (let [#_"PersistentTreeMap" argsyms (ß (PersistentTreeMap) ARG_ENV.deref())]
             (when (ß argsyms == nil)
                 (throw (ß new IllegalStateException("arg literal not in #()")))
@@ -19356,7 +20213,8 @@
     )
 
     (class-ns ArgReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object pct, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" pct, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (when (ß ARG_ENV.deref() == nil)
                     (§ return (ß interpretToken(readToken(r, \%), nil)))
@@ -19382,7 +20240,8 @@
     )
 
     (class-ns MetaReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object caret, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" caret, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (let [#_"int" line -1]
                     (let [#_"int" column -1]
@@ -19438,7 +20297,8 @@
     )
 
     (class-ns SyntaxQuoteReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object backquote, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" backquote, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (try
                     (ß Var.pushThreadBindings(RT.map(GENSYM_ENV, PersistentHashMap.EMPTY)))
@@ -19453,7 +20313,7 @@
             )
         )
 
-        (§ defn Object syntaxQuote(Object form)
+        (§ defn #_"Object" syntaxQuote [#_"Object" form]
             (§ let [#_"Object" ret]
                 (cond (ß Compiler.isSpecial(form))
                     (do
@@ -19626,7 +20486,7 @@
             )
         )
 
-        (§ defn- ISeq sqExpandList(ISeq seq)
+        (§ defn- #_"ISeq" sqExpandList [#_"ISeq" seq]
             (let [#_"PersistentVector" ret (ß PersistentVector.EMPTY)]
                 (loop-when-recur [(ß )] (ß seq != nil) [(ß seq = seq.next())]
                     (let [#_"Object" item (ß seq.first())]
@@ -19649,7 +20509,7 @@
             )
         )
 
-        (§ defn- IPersistentVector flattenMap(Object form)
+        (§ defn- #_"IPersistentVector" flattenMap [#_"Object" form]
             (let [#_"IPersistentVector" keyvals (ß PersistentVector.EMPTY)]
                 (loop-when-recur [(ß ISeq s = RT.seq(form))] (ß s != nil) [(ß s = s.next())]
                     (let [#_"IMapEntry" e (ß (IMapEntry) s.first())]
@@ -19662,16 +20522,17 @@
         )
     )
 
-    (§ defn boolean isUnquoteSplicing(Object form)
+    (§ defn #_"boolean" isUnquoteSplicing [#_"Object" form]
         (ß form instanceof ISeq && Util.equals(RT.first(form), UNQUOTE_SPLICING))
     )
 
-    (§ defn boolean isUnquote(Object form)
+    (§ defn #_"boolean" isUnquote [#_"Object" form]
         (ß form instanceof ISeq && Util.equals(RT.first(form), UNQUOTE))
     )
 
     (class-ns UnquoteReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object comma, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" comma, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (let [#_"int" ch (ß read1(r))]
                     (when (ß ch == -1)
@@ -19697,7 +20558,8 @@
     )
 
     (class-ns CharacterReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object backslash, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" backslash, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (let [#_"int" ch (ß read1(r))]
                     (when (ß ch == -1)
@@ -19764,7 +20626,8 @@
     )
 
     (class-ns ListReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object leftparen, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (let [#_"int" line -1]
                     (let [#_"int" column -1]
@@ -19794,7 +20657,8 @@
     )
 
     (class-ns EvalReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object eq, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" eq, #_"Object" opts, #_"Object" pendingForms]
             (when (ß !RT.booleanCast(RT.READEVAL.deref()))
                 (throw (ß Util.runtimeException("EvalReader not allowed when *read-eval* is false.")))
             )
@@ -19842,7 +20706,8 @@
     )
 
     (class-ns VectorReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object leftparen, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (ß LazilyPersistentVector.create(readDelimitedList(\], r, true, opts, ensurePending(pendingForms))))
             )
@@ -19850,7 +20715,8 @@
     )
 
     (class-ns MapReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object leftparen, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (let [#_"Object[]" a (ß readDelimitedList(\}, r, true, opts, ensurePending(pendingForms)).toArray())]
                     (when (ß (a.length & 1) == 1)
@@ -19863,7 +20729,8 @@
     )
 
     (class-ns SetReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object leftbracket, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" leftbracket, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (ß PersistentHashSet.createWithCheck(readDelimitedList(\}, r, true, opts, ensurePending(pendingForms))))
             )
@@ -19871,22 +20738,24 @@
     )
 
     (class-ns UnmatchedDelimiterReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object rightdelim, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" rightdelim, #_"Object" opts, #_"Object" pendingForms]
             (throw (ß Util.runtimeException("Unmatched delimiter: " + rightdelim)))
         )
     )
 
     (class-ns UnreadableReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object leftangle, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" leftangle, #_"Object" opts, #_"Object" pendingForms]
             (throw (ß Util.runtimeException("Unreadable form")))
         )
     )
 
     ;; Sentinel values for reading lists
-    (§ def- Object READ_EOF = new Object())
-    (§ def- Object READ_FINISHED = new Object())
+    (§ def- #_"Object" READ_EOF (ß new Object()))
+    (§ def- #_"Object" READ_FINISHED (ß new Object()))
 
-    (§ defn List readDelimitedList(char delim, PushbackReader r, boolean isRecursive, Object opts, Object pendingForms)
+    (§ defn #_"List" readDelimitedList [#_"char" delim, #_"PushbackReader" r, #_"boolean" isRecursive, #_"Object" opts, #_"Object" pendingForms]
         (let [#_"int" firstline (ß (r instanceof LineNumberingPushbackReader) ? ((LineNumberingPushbackReader) r).getLineNumber() :or -1)]
             (let [#_"ArrayList" a (ß new ArrayList())]
                 (let [#_"Resolver" resolver (ß (Resolver) RT.READER_RESOLVER.deref())]
@@ -19918,7 +20787,8 @@
     )
 
     (class-ns CtorReader (§ extends AFn)
-        (§ method Object invoke(Object reader, Object firstChar, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" firstChar, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
                 (ß pendingForms = ensurePending(pendingForms))
                 (let [#_"Object" name (ß read(r, true, nil, false, opts, pendingForms))]
@@ -19941,7 +20811,8 @@
             )
         )
 
-        (§ method- Object readTagged(Object o, Symbol tag, Object opts, Object pendingForms)
+        #_method
+        (§ defn- #_"Object" readTagged [this, #_"Object" o, #_"Symbol" tag, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"ILookup" data_readers (ß (ILookup)RT.DATA_READERS.deref())]
                 (let [#_"IFn" data_reader (ß (IFn)RT.get(data_readers, tag))]
                     (when (ß data_reader == nil)
@@ -19966,7 +20837,8 @@
             )
         )
 
-        (§ method- Object readRecord(Object form, Symbol recordName, Object opts, Object pendingForms)
+        #_method
+        (§ defn- #_"Object" readRecord [this, #_"Object" form, #_"Symbol" recordName, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"boolean" readeval (ß RT.booleanCast(RT.READEVAL.deref()))]
                 (when (ß !readeval)
                     (throw (ß Util.runtimeException("Record construction syntax can only be used when *read-eval* == true")))
@@ -20029,7 +20901,7 @@
         )
     )
 
-    (§ defn boolean isPreserveReadCond(Object opts)
+    (§ defn #_"boolean" isPreserveReadCond [#_"Object" opts]
         (if (ß RT.booleanCast(READ_COND_ENV.deref()) && opts instanceof IPersistentMap)
             (do
                 (let [#_"Object" readCond (ß ((IPersistentMap) opts).valAt(OPT_READ_COND))]
@@ -20043,11 +20915,11 @@
     )
 
     (class-ns ConditionalReader (§ extends AFn)
-        (§ def- Object READ_STARTED = new Object())
-        (§ def Keyword DEFAULT_FEATURE = Keyword.intern(nil, "default"))
-        (§ def IPersistentSet RESERVED_FEATURES = RT.set(Keyword.intern(nil, "else"), Keyword.intern(nil, "none")))
+        (§ def- #_"Object" READ_STARTED (ß new Object()))
+        (§ def #_"Keyword" DEFAULT_FEATURE (ß Keyword.intern(nil, "default")))
+        (§ def #_"IPersistentSet" RESERVED_FEATURES (ß RT.set(Keyword.intern(nil, "else"), Keyword.intern(nil, "none"))))
 
-        (§ defn boolean hasFeature(Object feature, Object opts)
+        (§ defn #_"boolean" hasFeature [#_"Object" feature, #_"Object" opts]
             (when (ß !(feature instanceof Keyword))
                 (throw (ß Util.runtimeException("Feature should be a keyword: " + feature)))
             )
@@ -20061,7 +20933,7 @@
             )
         )
 
-        (§ defn Object readCondDelimited(PushbackReader r, boolean splicing, Object opts, Object pendingForms)
+        (§ defn #_"Object" readCondDelimited [#_"PushbackReader" r, #_"boolean" splicing, #_"Object" opts, #_"Object" pendingForms]
             (let [#_"Object" result (ß READ_STARTED)]
                 (§ let [#_"Object" form] ;; The most recently ready form
                     (let [#_"boolean" toplevel (ß (pendingForms == nil))]
@@ -20183,7 +21055,7 @@
             )
         )
 
-        (§ defn- void checkConditionalAllowed(Object opts)
+        (§ defn- #_"void" checkConditionalAllowed [#_"Object" opts]
             (let [#_"IPersistentMap" mopts (ß (IPersistentMap)opts)]
                 (when (ß !(opts != nil && (COND_ALLOW.equals(mopts.valAt(OPT_READ_COND)) || COND_PRESERVE.equals(mopts.valAt(OPT_READ_COND)))))
                     (throw (ß Util.runtimeException("Conditional read not allowed")))
@@ -20192,7 +21064,8 @@
             )
         )
 
-        (§ method Object invoke(Object reader, Object mode, Object opts, Object pendingForms)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" mode, #_"Object" opts, #_"Object" pendingForms]
             (ß checkConditionalAllowed(opts))
 
             (let [#_"PushbackReader" r (ß (PushbackReader) reader)]
@@ -20257,17 +21130,17 @@
 
 (§ anno @SuppressWarnings((§ "SynchronizeOnNonFinalField" )))
 (class-ns LockingTransaction
-    (§ def int RETRY_LIMIT = 10000)
-    (§ def int LOCK_WAIT_MSECS = 100)
-    (§ def long BARGE_WAIT_NANOS = 10 * 1000000)
+    (§ def #_"int" RETRY_LIMIT (ß 10000))
+    (§ def #_"int" LOCK_WAIT_MSECS (ß 100))
+    (§ def #_"long" BARGE_WAIT_NANOS (ß 10 * 1000000))
 
-    (§ def int RUNNING = 0)
-    (§ def int COMMITTING = 1)
-    (§ def int RETRY = 2)
-    (§ def int KILLED = 3)
-    (§ def int COMMITTED = 4)
+    (§ def #_"int" RUNNING (ß 0))
+    (§ def #_"int" COMMITTING (ß 1))
+    (§ def #_"int" RETRY (ß 2))
+    (§ def #_"int" KILLED (ß 3))
+    (§ def #_"int" COMMITTED (ß 4))
 
-    (§ def ThreadLocal<LockingTransaction> transaction = new ThreadLocal<LockingTransaction>())
+    (§ def #_"ThreadLocal<LockingTransaction>" transaction (ß new ThreadLocal<LockingTransaction>()))
 
     (class-ns RetryEx (§ extends Error)
     )
@@ -20276,18 +21149,19 @@
     )
 
     (class-ns Info
-        (§ field AtomicInteger status)
-        (§ field long startPoint)
-        (§ field CountDownLatch latch)
+        (§ field #_"AtomicInteger" status)
+        (§ field #_"long" startPoint)
+        (§ field #_"CountDownLatch" latch)
 
-        (§ constructor Info(int status, long startPoint)
+        (§ constructor #_"Info" Info [#_"int" status, #_"long" startPoint]
             (ß this.status = new AtomicInteger(status))
             (ß this.startPoint = startPoint)
             (ß this.latch = new CountDownLatch(1))
             this
         )
 
-        (§ method boolean running()
+        #_method
+        (§ defn #_"boolean" running [this]
             (let [#_"int" s (ß status.get())]
                 (ß (s == RUNNING || s == COMMITTING))
             )
@@ -20295,10 +21169,10 @@
     )
 
     (class-ns CFn
-        (§ field IFn fn)
-        (§ field ISeq args)
+        (§ field #_"IFn" fn)
+        (§ field #_"ISeq" args)
 
-        (§ constructor CFn(IFn fn, ISeq args)
+        (§ constructor #_"CFn" CFn [#_"IFn" fn, #_"ISeq" args]
             (ß this.fn = fn)
             (ß this.args = args)
             this
@@ -20307,18 +21181,21 @@
 
     ;; total order on transactions
     ;; transactions will consume a point for init, for each retry, and on commit if writing
-    (§ def- AtomicLong lastPoint = new AtomicLong())
+    (§ def- #_"AtomicLong" lastPoint (ß new AtomicLong()))
 
-    (§ method void getReadPoint()
+    #_method
+    (§ defn #_"void" getReadPoint [this]
         (ß readPoint = lastPoint.incrementAndGet())
         nil
     )
 
-    (§ method long getCommitPoint()
+    #_method
+    (§ defn #_"long" getCommitPoint [this]
         (ß lastPoint.incrementAndGet())
     )
 
-    (§ method void stop(int status)
+    #_method
+    (§ defn #_"void" stop [this, #_"int" status]
         (when (ß info != nil)
             (§ sync info
                 (ß info.status.set(status))
@@ -20332,20 +21209,21 @@
         nil
     )
 
-    (§ field Info info)
-    (§ field long readPoint)
-    (§ field long startPoint)
-    (§ field long startTime)
+    (§ field #_"Info" info)
+    (§ field #_"long" readPoint)
+    (§ field #_"long" startPoint)
+    (§ field #_"long" startTime)
 
-    (§ field RetryEx retryex = new RetryEx())
-    (§ field ArrayList<Agent.Action> actions = new ArrayList<Agent.Action>())
-    (§ field HashMap<Ref, Object> vals = new HashMap<Ref, Object>())
-    (§ field HashSet<Ref> sets = new HashSet<Ref>())
-    (§ field TreeMap<Ref, ArrayList<CFn>> commutes = new TreeMap<Ref, ArrayList<CFn>>())
+    (§ field #_"RetryEx" retryex (ß new RetryEx()))
+    (§ field #_"ArrayList<Agent.Action>" actions (ß new ArrayList<Agent.Action>()))
+    (§ field #_"HashMap<Ref, Object>" vals (ß new HashMap<Ref, Object>()))
+    (§ field #_"HashSet<Ref>" sets (ß new HashSet<Ref>()))
+    (§ field #_"TreeMap<Ref, ArrayList<CFn>>" commutes (ß new TreeMap<Ref, ArrayList<CFn>>()))
 
-    (§ field HashSet<Ref> ensures = new HashSet<Ref>()) ;; all hold readLock
+    (§ field #_"HashSet<Ref>" ensures (ß new HashSet<Ref>())) ;; all hold readLock
 
-    (§ method void tryWriteLock(Ref ref)
+    #_method
+    (§ defn #_"void" tryWriteLock [this, #_"Ref" ref]
         (try
             (when (ß !ref.lock.writeLock().tryLock(LOCK_WAIT_MSECS, TimeUnit.MILLISECONDS))
                 (throw retryex)
@@ -20358,7 +21236,8 @@
     )
 
     ;; returns the most recent val
-    (§ method Object lock(Ref ref)
+    #_method
+    (§ defn #_"Object" lock [this, #_"Ref" ref]
         ;; can't upgrade readLock, so release it
         (ß releaseIfEnsured(ref))
 
@@ -20391,7 +21270,8 @@
         )
     )
 
-    (§ method- Object blockAndBail(Info refinfo)
+    #_method
+    (§ defn- #_"Object" blockAndBail [this, #_"Info" refinfo]
         ;; stop prior to blocking
         (ß stop(RETRY))
         (try
@@ -20403,7 +21283,8 @@
         (throw retryex)
     )
 
-    (§ method- void releaseIfEnsured(Ref ref)
+    #_method
+    (§ defn- #_"void" releaseIfEnsured [this, #_"Ref" ref]
         (when (ß ensures.contains(ref))
             (ß ensures.remove(ref))
             (ß ref.lock.readLock().unlock())
@@ -20411,16 +21292,19 @@
         nil
     )
 
-    (§ method void abort() (§ throws AbortException)
+    #_method
+    (§ defn #_"void" abort [this] (§ throws AbortException)
         (ß stop(KILLED))
         (throw (ß new AbortException()))
     )
 
-    (§ method- boolean bargeTimeElapsed()
+    #_method
+    (§ defn- #_"boolean" bargeTimeElapsed [this]
         (ß (System.nanoTime() - startTime > BARGE_WAIT_NANOS))
     )
 
-    (§ method- boolean barge(Info refinfo)
+    #_method
+    (§ defn- #_"boolean" barge [this, #_"Info" refinfo]
         (let [#_"boolean" barged false]
             ;; if this transaction is older, try to abort the other
             (when (ß bargeTimeElapsed() && startPoint < refinfo.startPoint)
@@ -20433,7 +21317,7 @@
         )
     )
 
-    (§ defn LockingTransaction getEx()
+    (§ defn #_"LockingTransaction" getEx []
         (let [#_"LockingTransaction" t (ß transaction.get())]
             (when (ß t == nil || t.info == nil)
                 (throw (ß new IllegalStateException("No transaction running")))
@@ -20442,11 +21326,11 @@
         )
     )
 
-    (§ defn boolean isRunning()
+    (§ defn #_"boolean" isRunning []
         (ß (getRunning() != nil))
     )
 
-    (§ defn LockingTransaction getRunning()
+    (§ defn #_"LockingTransaction" getRunning []
         (let [#_"LockingTransaction" t (ß transaction.get())]
             (when (ß t == nil || t.info == nil)
                 (§ return nil)
@@ -20455,7 +21339,7 @@
         )
     )
 
-    (§ defn Object runInTransaction(Callable fn) (§ throws Exception)
+    (§ defn #_"Object" runInTransaction [#_"Callable" fn] (§ throws Exception)
         (let [#_"LockingTransaction" t (ß transaction.get())]
             (§ let [#_"Object" ret]
                 (if (ß t == nil)
@@ -20486,11 +21370,11 @@
     )
 
     (class-ns Notify
-        (§ field Ref ref)
-        (§ field Object oldval)
-        (§ field Object newval)
+        (§ field #_"Ref" ref)
+        (§ field #_"Object" oldval)
+        (§ field #_"Object" newval)
 
-        (§ constructor Notify(Ref ref, Object oldval, Object newval)
+        (§ constructor #_"Notify" Notify [#_"Ref" ref, #_"Object" oldval, #_"Object" newval]
             (ß this.ref = ref)
             (ß this.oldval = oldval)
             (ß this.newval = newval)
@@ -20498,7 +21382,8 @@
         )
     )
 
-    (§ method Object run(Callable fn) (§ throws Exception)
+    #_method
+    (§ defn #_"Object" run [this, #_"Callable" fn] (§ throws Exception)
         (let [#_"boolean" done false]
             (let [#_"Object" ret nil]
                 (let [#_"ArrayList<Ref>" locked (ß new ArrayList<Ref>())]
@@ -20634,12 +21519,14 @@
         )
     )
 
-    (§ method void enqueue(Agent.Action action)
+    #_method
+    (§ defn #_"void" enqueue [this, #_"Agent.Action" action]
         (ß actions.add(action))
         nil
     )
 
-    (§ method Object doGet(Ref ref)
+    #_method
+    (§ defn #_"Object" doGet [this, #_"Ref" ref]
         (when (ß !info.running())
             (throw retryex)
         )
@@ -20668,7 +21555,8 @@
         (throw retryex)
     )
 
-    (§ method Object doSet(Ref ref, Object val)
+    #_method
+    (§ defn #_"Object" doSet [this, #_"Ref" ref, #_"Object" val]
         (when (ß !info.running())
             (throw retryex)
         )
@@ -20683,7 +21571,8 @@
         val
     )
 
-    (§ method void doEnsure(Ref ref)
+    #_method
+    (§ defn #_"void" doEnsure [this, #_"Ref" ref]
         (when (ß !info.running())
             (throw retryex)
         )
@@ -20716,7 +21605,8 @@
         )
     )
 
-    (§ method Object doCommute(Ref ref, IFn fn, ISeq args)
+    #_method
+    (§ defn #_"Object" doCommute [this, #_"Ref" ref, #_"IFn" fn, #_"ISeq" args]
         (when (ß !info.running())
             (throw retryex)
         )
@@ -20755,47 +21645,49 @@
  ; Implements the special common case of a finite range based on long start, end, and step.
  ;;
 (class-ns LongRange (§ extends ASeq) (§ implements Counted, IChunkedSeq, IReduce)
-    (§ def- int CHUNK_SIZE = 32)
+    (§ def- #_"int" CHUNK_SIZE (ß 32))
 
     ;; Invariants guarantee this is never an empty or infinite seq
-    (§ field long start)
-    (§ field long end)
-    (§ field long step)
-    (§ field BoundsCheck boundsCheck)
+    (§ field #_"long" start)
+    (§ field #_"long" end)
+    (§ field #_"long" step)
+    (§ field #_"BoundsCheck" boundsCheck)
 
     #_volatile
-    (§ field- LongChunk _chunk) ;; lazy
+    (§ field- #_"LongChunk" _chunk) ;; lazy
     #_volatile
-    (§ field- ISeq _chunkNext) ;; lazy
+    (§ field- #_"ISeq" _chunkNext) ;; lazy
     #_volatile
-    (§ field- ISeq _next) ;; cached
+    (§ field- #_"ISeq" _next) ;; cached
 
     #_private
     (§ interface BoundsCheck
         (§ abstract boolean exceededBounds(long val))
     )
 
-    (§ defn- BoundsCheck positiveStep(long end)
+    (§ defn- #_"BoundsCheck" positiveStep [#_"long" end]
         (ß new BoundsCheck()
             (§ reify
-                (§ method boolean exceededBounds(long val)
+                #_method
+                (§ defn #_"boolean" exceededBounds [this, #_"long" val]
                     (ß (val >= end))
                 )
             )
         )
     )
 
-    (§ defn- BoundsCheck negativeStep(long end)
+    (§ defn- #_"BoundsCheck" negativeStep [#_"long" end]
         (ß new BoundsCheck()
             (§ reify
-                (§ method boolean exceededBounds(long val)
+                #_method
+                (§ defn #_"boolean" exceededBounds [this, #_"long" val]
                     (ß (val <= end))
                 )
             )
         )
     )
 
-    (§ constructor- LongRange(long start, long end, long step, BoundsCheck boundsCheck)
+    (§ constructor- #_"LongRange" LongRange [#_"long" start, #_"long" end, #_"long" step, #_"BoundsCheck" boundsCheck]
         (ß this.start = start)
         (ß this.end = end)
         (ß this.step = step)
@@ -20803,7 +21695,7 @@
         this
     )
 
-    (§ constructor- LongRange(long start, long end, long step, BoundsCheck boundsCheck, LongChunk chunk, ISeq chunkNext)
+    (§ constructor- #_"LongRange" LongRange [#_"long" start, #_"long" end, #_"long" step, #_"BoundsCheck" boundsCheck, #_"LongChunk" chunk, #_"ISeq" chunkNext]
         (ß this.start = start)
         (ß this.end = end)
         (ß this.step = step)
@@ -20813,7 +21705,7 @@
         this
     )
 
-    (§ constructor- LongRange(IPersistentMap meta, long start, long end, long step, BoundsCheck boundsCheck, LongChunk chunk, ISeq chunkNext)
+    (§ constructor- #_"LongRange" LongRange [#_"IPersistentMap" meta, #_"long" start, #_"long" end, #_"long" step, #_"BoundsCheck" boundsCheck, #_"LongChunk" chunk, #_"ISeq" chunkNext]
         (§ super(meta))
         (ß this.start = start)
         (ß this.end = end)
@@ -20824,21 +21716,21 @@
         this
     )
 
-    (§ defn ISeq create(long end)
+    (§ defn #_"ISeq" create [#_"long" end]
         (when (ß end > 0)
             (§ return (ß new LongRange(0, end, 1, positiveStep(end))))
         )
         (ß PersistentList.EMPTY)
     )
 
-    (§ defn ISeq create(long start, long end)
+    (§ defn #_"ISeq" create [#_"long" start, #_"long" end]
         (when (ß start >= end)
             (§ return (ß PersistentList.EMPTY))
         )
         (ß new LongRange(start, end, 1, positiveStep(end)))
     )
 
-    (§ defn ISeq create(long start, long end, long step)
+    (§ defn #_"ISeq" create [#_"long" start, #_"long" end, #_"long" step]
         (cond (ß step > 0)
             (do
                 (when (ß end <= start)
@@ -20863,18 +21755,21 @@
         )
     )
 
-    (§ method Obj withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"Obj" withMeta [this, #_"IPersistentMap" meta]
         (when (ß meta == _meta)
             (§ return this)
         )
         (ß new LongRange(meta, start, end, step, boundsCheck, _chunk, _chunkNext))
     )
 
-    (§ method Object first()
+    #_method
+    (§ defn #_"Object" first [this]
         start
     )
 
-    (§ method void forceChunk()
+    #_method
+    (§ defn #_"void" forceChunk [this]
         (when (ß _chunk != nil)
             (§ return nil)
         )
@@ -20906,7 +21801,8 @@
         )
     )
 
-    (§ method ISeq next()
+    #_method
+    (§ defn #_"ISeq" next [this]
         (when (ß _next != nil)
             (§ return (ß _next))
         )
@@ -20921,16 +21817,19 @@
         (ß chunkedNext())
     )
 
-    (§ method IChunk chunkedFirst()
+    #_method
+    (§ defn #_"IChunk" chunkedFirst [this]
         (ß forceChunk())
         (ß _chunk)
     )
 
-    (§ method ISeq chunkedNext()
+    #_method
+    (§ defn #_"ISeq" chunkedNext [this]
         (ß chunkedMore().seq())
     )
 
-    (§ method ISeq chunkedMore()
+    #_method
+    (§ defn #_"ISeq" chunkedMore [this]
         (ß forceChunk())
         (when (ß _chunkNext == nil)
             (§ return (ß PersistentList.EMPTY))
@@ -20940,7 +21839,8 @@
 
     ;; fallback count mechanism for pathological cases
     ;; returns either exact count or CHUNK_SIZE+1
-    (§ method long steppingCount(long start, long end, long step)
+    #_method
+    (§ defn #_"long" steppingCount [this, #_"long" start, #_"long" end, #_"long" step]
         (let [#_"long" count 1]
             (let [#_"long" s start]
                 (while (ß count <= CHUNK_SIZE)
@@ -20965,14 +21865,16 @@
     )
 
     ;; returns exact size of remaining items OR throws ArithmeticException for overflow case
-    (§ method long rangeCount(long start, long end, long step)
+    #_method
+    (§ defn #_"long" rangeCount [this, #_"long" start, #_"long" end, #_"long" step]
         ;; (1) count = ceiling ((end - start) / step)
         ;; (2) ceiling(a/b) = (a+b+o)/b where o=-1 for positive stepping and +1 for negative stepping
         ;; thus: count = end - start + step + o / step
         (ß Numbers.add(Numbers.add(Numbers.minus(end, start), step), (this.step > 0) ? -1 :or 1) / step)
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         (try
             (let [#_"long" c (ß rangeCount(start, end, step))]
                 (if (ß c > Integer.MAX_VALUE)
@@ -21007,7 +21909,8 @@
         )
     )
 
-    (§ method Object reduce(IFn f)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" f]
         (let [#_"Object" acc start]
             (let [#_"long" i (ß start + step)]
                 (while (ß !boundsCheck.exceededBounds(i))
@@ -21022,7 +21925,8 @@
         )
     )
 
-    (§ method Object reduce(IFn f, Object val)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" val]
         (let [#_"Object" acc val]
             (let [#_"long" i start]
                 (§ loop
@@ -21038,26 +21942,29 @@
         )
     )
 
-    (§ method Iterator iterator()
+    #_method
+    (§ defn #_"Iterator" iterator [this]
         (ß new LongRangeIterator())
     )
 
     #_non-static
     (class-ns LongRangeIterator (§ implements Iterator)
-        (§ field- long next)
-        (§ field- boolean hasNext)
+        (§ field- #_"long" next)
+        (§ field- #_"boolean" hasNext)
 
-        (§ constructor LongRangeIterator()
+        (§ constructor #_"LongRangeIterator" LongRangeIterator []
             (ß this.next = start)
             (ß this.hasNext = true)
             this
         )
 
-        (§ method boolean hasNext()
+        #_method
+        (§ defn #_"boolean" hasNext [this]
             hasNext
         )
 
-        (§ method Object next()
+        #_method
+        (§ defn #_"Object" next [this]
             (if hasNext
                 (do
                     (let [#_"long" ret next]
@@ -21077,51 +21984,58 @@
             )
         )
 
-        (§ method void remove()
+        #_method
+        (§ defn #_"void" remove [this]
             (throw (ß new UnsupportedOperationException()))
         )
     )
 
     #_private
     (class-ns LongChunk (§ implements IChunk)
-        (§ field long start)
-        (§ field long step)
-        (§ field int count)
+        (§ field #_"long" start)
+        (§ field #_"long" step)
+        (§ field #_"int" count)
 
-        (§ constructor LongChunk(long start, long step, int count)
+        (§ constructor #_"LongChunk" LongChunk [#_"long" start, #_"long" step, #_"int" count]
             (ß this.start = start)
             (ß this.step = step)
             (ß this.count = count)
             this
         )
 
-        (§ method long first()
+        #_method
+        (§ defn #_"long" first [this]
             start
         )
 
-        (§ method Object nth(int i)
+        #_method
+        (§ defn #_"Object" nth [this, #_"int" i]
             (ß start + (i * step))
         )
 
-        (§ method Object nth(int i, Object notFound)
+        #_method
+        (§ defn #_"Object" nth [this, #_"int" i, #_"Object" notFound]
             (when (ß i >= 0 && i < count)
                 (§ return (ß start + (i * step)))
             )
             notFound
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             count
         )
 
-        (§ method LongChunk dropFirst()
+        #_method
+        (§ defn #_"LongChunk" dropFirst [this]
             (when (ß count <= 1)
                 (throw (ß new IllegalStateException("dropFirst of empty chunk")))
             )
             (ß new LongChunk(start + step, step, count - 1))
         )
 
-        (§ method Object reduce(IFn f, Object init)
+        #_method
+        (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" init]
             (let [#_"long" x start]
                 (let [#_"Object" ret init]
                     (loop-when-recur [(ß int i = 0)] (ß i < count) [(ß i++)]
@@ -21144,32 +22058,36 @@
 (§ import java.util.Iterator)
 
 (class-ns MapEntry (§ extends AMapEntry)
-    (§ field Object _key)
-    (§ field Object _val)
+    (§ field #_"Object" _key)
+    (§ field #_"Object" _val)
 
-    (§ defn MapEntry create(Object key, Object val)
+    (§ defn #_"MapEntry" create [#_"Object" key, #_"Object" val]
         (ß new MapEntry(key, val))
     )
 
-    (§ constructor MapEntry(Object key, Object val)
+    (§ constructor #_"MapEntry" MapEntry [#_"Object" key, #_"Object" val]
         (ß this._key = key)
         (ß this._val = val)
         this
     )
 
-    (§ method Object key()
+    #_method
+    (§ defn #_"Object" key [this]
         (ß _key)
     )
 
-    (§ method Object val()
+    #_method
+    (§ defn #_"Object" val [this]
         (ß _val)
     )
 
-    (§ method Object getKey()
+    #_method
+    (§ defn #_"Object" getKey [this]
         (ß key())
     )
 
-    (§ method Object getValue()
+    #_method
+    (§ defn #_"Object" getValue [this]
         (ß val())
     )
 )
@@ -21188,31 +22106,31 @@
 
 (class-ns MethodImplCache
     (class-ns Entry
-        (§ field Class c)
-        (§ field IFn fn)
+        (§ field #_"Class" c)
+        (§ field #_"IFn" fn)
 
-        (§ constructor Entry(Class c, IFn fn)
+        (§ constructor #_"Entry" Entry [#_"Class" c, #_"IFn" fn]
             (ß this.c = c)
             (ß this.fn = fn)
             this
         )
     )
 
-    (§ field IPersistentMap protocol)
-    (§ field Keyword methodk)
-    (§ field int shift)
-    (§ field int mask)
-    (§ field Object[] table) ;; [class, entry. class, entry ...]
-    (§ field Map map)
+    (§ field #_"IPersistentMap" protocol)
+    (§ field #_"Keyword" methodk)
+    (§ field #_"int" shift)
+    (§ field #_"int" mask)
+    (§ field #_"Object[]" table) ;; [class, entry. class, entry ...]
+    (§ field #_"Map" map)
 
-    (§ field Entry mre = nil)
+    (§ field #_"Entry" mre (ß nil))
 
-    (§ constructor MethodImplCache(IPersistentMap protocol, Keyword methodk)
+    (§ constructor #_"MethodImplCache" MethodImplCache [#_"IPersistentMap" protocol, #_"Keyword" methodk]
         (§ this(protocol, methodk, 0, 0, RT.EMPTY_ARRAY))
         this
     )
 
-    (§ constructor MethodImplCache(IPersistentMap protocol, Keyword methodk, int shift, int mask, Object[] table)
+    (§ constructor #_"MethodImplCache" MethodImplCache [#_"IPersistentMap" protocol, #_"Keyword" methodk, #_"int" shift, #_"int" mask, #_"Object[]" table]
         (ß this.protocol = protocol)
         (ß this.methodk = methodk)
         (ß this.shift = shift)
@@ -21222,7 +22140,7 @@
         this
     )
 
-    (§ constructor MethodImplCache(IPersistentMap protocol, Keyword methodk, Map map)
+    (§ constructor #_"MethodImplCache" MethodImplCache [#_"IPersistentMap" protocol, #_"Keyword" methodk, #_"Map" map]
         (ß this.protocol = protocol)
         (ß this.methodk = methodk)
         (ß this.shift = 0)
@@ -21232,7 +22150,8 @@
         this
     )
 
-    (§ method IFn fnFor(Class c)
+    #_method
+    (§ defn #_"IFn" fnFor [this, #_"Class" c]
         (let [#_"Entry" last mre]
             (when (ß last != nil && last.c == c)
                 (§ return (ß last.fn))
@@ -21241,7 +22160,8 @@
         )
     )
 
-    (§ method IFn findFnFor(Class c)
+    #_method
+    (§ defn #_"IFn" findFnFor [this, #_"Class" c]
         (if (ß map != nil)
             (do
                 (let [#_"Entry" e (ß (Entry) map.get(c))]
@@ -21271,27 +22191,27 @@
 (§ import java.util.concurrent.locks.ReentrantReadWriteLock)
 
 (class-ns MultiFn (§ extends AFn)
-    (§ field IFn dispatchFn)
-    (§ field Object defaultDispatchVal)
-    (§ field IRef hierarchy)
-    (§ field String name)
-    (§ field ReentrantReadWriteLock rw)
+    (§ field #_"IFn" dispatchFn)
+    (§ field #_"Object" defaultDispatchVal)
+    (§ field #_"IRef" hierarchy)
+    (§ field #_"String" name)
+    (§ field #_"ReentrantReadWriteLock" rw)
 
     #_volatile
-    (§ field IPersistentMap methodTable)
+    (§ field #_"IPersistentMap" methodTable)
     #_volatile
-    (§ field IPersistentMap preferTable)
+    (§ field #_"IPersistentMap" preferTable)
     #_volatile
-    (§ field IPersistentMap methodCache)
+    (§ field #_"IPersistentMap" methodCache)
     #_volatile
-    (§ field Object cachedHierarchy)
+    (§ field #_"Object" cachedHierarchy)
 
-    (§ def Var assoc = RT.var("cloiure.core", "assoc"))
-    (§ def Var dissoc = RT.var("cloiure.core", "dissoc"))
-    (§ def Var isa = RT.var("cloiure.core", "isa?"))
-    (§ def Var parents = RT.var("cloiure.core", "parents"))
+    (§ def #_"Var" assoc (ß RT.var("cloiure.core", "assoc")))
+    (§ def #_"Var" dissoc (ß RT.var("cloiure.core", "dissoc")))
+    (§ def #_"Var" isa (ß RT.var("cloiure.core", "isa?")))
+    (§ def #_"Var" parents (ß RT.var("cloiure.core", "parents")))
 
-    (§ constructor MultiFn(String name, IFn dispatchFn, Object defaultDispatchVal, IRef hierarchy)
+    (§ constructor #_"MultiFn" MultiFn [#_"String" name, #_"IFn" dispatchFn, #_"Object" defaultDispatchVal, #_"IRef" hierarchy]
         (ß this.rw = new ReentrantReadWriteLock())
         (ß this.name = name)
         (ß this.dispatchFn = dispatchFn)
@@ -21304,7 +22224,8 @@
         this
     )
 
-    (§ method MultiFn reset()
+    #_method
+    (§ defn #_"MultiFn" reset [this]
         (ß rw.writeLock().lock())
         (try
             (ß methodTable = methodCache = preferTable = PersistentHashMap.EMPTY)
@@ -21316,7 +22237,8 @@
         )
     )
 
-    (§ method MultiFn addMethod(Object dispatchVal, IFn method)
+    #_method
+    (§ defn #_"MultiFn" addMethod [this, #_"Object" dispatchVal, #_"IFn" method]
         (ß rw.writeLock().lock())
         (try
             (ß methodTable = getMethodTable().assoc(dispatchVal, method))
@@ -21328,7 +22250,8 @@
         )
     )
 
-    (§ method MultiFn removeMethod(Object dispatchVal)
+    #_method
+    (§ defn #_"MultiFn" removeMethod [this, #_"Object" dispatchVal]
         (ß rw.writeLock().lock())
         (try
             (ß methodTable = getMethodTable().without(dispatchVal))
@@ -21340,7 +22263,8 @@
         )
     )
 
-    (§ method MultiFn preferMethod(Object dispatchValX, Object dispatchValY)
+    #_method
+    (§ defn #_"MultiFn" preferMethod [this, #_"Object" dispatchValX, #_"Object" dispatchValY]
         (ß rw.writeLock().lock())
         (try
             (when (ß prefers(dispatchValY, dispatchValX))
@@ -21355,7 +22279,8 @@
         )
     )
 
-    (§ method- boolean prefers(Object x, Object y)
+    #_method
+    (§ defn- #_"boolean" prefers [this, #_"Object" x, #_"Object" y]
         (let [#_"IPersistentSet" xprefs (ß (IPersistentSet) getPreferTable().valAt(x))]
             (when (ß xprefs != nil && xprefs.contains(y))
                 (§ return true)
@@ -21374,15 +22299,18 @@
         )
     )
 
-    (§ method- boolean isA(Object x, Object y)
+    #_method
+    (§ defn- #_"boolean" isA [this, #_"Object" x, #_"Object" y]
         (ß RT.booleanCast(isa.invoke(hierarchy.deref(), x, y)))
     )
 
-    (§ method- boolean dominates(Object x, Object y)
+    #_method
+    (§ defn- #_"boolean" dominates [this, #_"Object" x, #_"Object" y]
         (ß prefers(x, y) || isA(x, y))
     )
 
-    (§ method- IPersistentMap resetCache()
+    #_method
+    (§ defn- #_"IPersistentMap" resetCache [this]
         (ß rw.writeLock().lock())
         (try
             (ß methodCache = getMethodTable())
@@ -21394,7 +22322,8 @@
         )
     )
 
-    (§ method IFn getMethod(Object dispatchVal)
+    #_method
+    (§ defn #_"IFn" getMethod [this, #_"Object" dispatchVal]
         (when (ß cachedHierarchy != hierarchy.deref())
             (ß resetCache())
         )
@@ -21406,7 +22335,8 @@
         )
     )
 
-    (§ method- IFn getFn(Object dispatchVal)
+    #_method
+    (§ defn- #_"IFn" getFn [this, #_"Object" dispatchVal]
         (let [#_"IFn" targetFn (ß getMethod(dispatchVal))]
             (when (ß targetFn == nil)
                 (throw (ß new IllegalArgumentException(String.format("No method in multimethod '%s' for dispatch value: %s", name, dispatchVal))))
@@ -21415,7 +22345,8 @@
         )
     )
 
-    (§ method- IFn findAndCacheBestMethod(Object dispatchVal)
+    #_method
+    (§ defn- #_"IFn" findAndCacheBestMethod [this, #_"Object" dispatchVal]
         (ß rw.readLock().lock())
         (§ let [#_"Object" bestValue]
             (let [#_"IPersistentMap" mt methodTable]
@@ -21476,25 +22407,30 @@
         )
     )
 
-    (§ method Object invoke()
+    #_method
+    (§ defn #_"Object" invoke [this]
         (ß getFn(dispatchFn.invoke()).invoke())
     )
 
-    (§ method Object invoke(Object arg1)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1]
         (ß getFn(dispatchFn.invoke(arg1)).invoke(Util.ret1(arg1, arg1 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2]
         (ß getFn(dispatchFn.invoke(arg1, arg2)).
             invoke(Util.ret1(arg1, arg1 = nil), Util.ret1(arg2, arg2 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
         (ß getFn(dispatchFn.invoke(arg1, arg2, arg3)).
             invoke(Util.ret1(arg1, arg1 = nil), Util.ret1(arg2, arg2 = nil), Util.ret1(arg3, arg3 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
         (ß getFn(dispatchFn.invoke(arg1, arg2, arg3, arg4)).
             invoke(Util.ret1(arg1, arg1 = nil),
                     Util.ret1(arg2, arg2 = nil),
@@ -21502,7 +22438,8 @@
                     Util.ret1(arg4, arg4 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
         (ß getFn(dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5)).
             invoke(Util.ret1(arg1, arg1 = nil),
                     Util.ret1(arg2, arg2 = nil),
@@ -21511,7 +22448,8 @@
                     Util.ret1(arg5, arg5 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
         (ß getFn(dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6)).
             invoke(Util.ret1(arg1, arg1 = nil),
                     Util.ret1(arg2, arg2 = nil),
@@ -21521,7 +22459,8 @@
                     Util.ret1(arg6, arg6 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
         (ß getFn(dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7)).
             invoke(Util.ret1(arg1, arg1 = nil),
                     Util.ret1(arg2, arg2 = nil),
@@ -21532,8 +22471,8 @@
                     Util.ret1(arg7, arg7 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
         (ß getFn(dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)).
             invoke(Util.ret1(arg1, arg1 = nil),
                     Util.ret1(arg2, arg2 = nil),
@@ -21545,8 +22484,8 @@
                     Util.ret1(arg8, arg8 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
         (ß getFn(dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)).
             invoke(Util.ret1(arg1, arg1 = nil),
                     Util.ret1(arg2, arg2 = nil),
@@ -21559,8 +22498,8 @@
                     Util.ret1(arg9, arg9 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
         (ß getFn(dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)).
             invoke(Util.ret1(arg1, arg1 = nil),
                     Util.ret1(arg2, arg2 = nil),
@@ -21574,8 +22513,8 @@
                     Util.ret1(arg10, arg10 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
         (ß getFn(dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11)).
             invoke(Util.ret1(arg1, arg1 = nil),
                     Util.ret1(arg2, arg2 = nil),
@@ -21590,8 +22529,8 @@
                     Util.ret1(arg11, arg11 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
         (ß getFn(dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)).
             invoke(Util.ret1(arg1, arg1 = nil),
                     Util.ret1(arg2, arg2 = nil),
@@ -21607,8 +22546,8 @@
                     Util.ret1(arg12, arg12 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
         (ß getFn(dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13)).
             invoke(Util.ret1(arg1, arg1 = nil),
                     Util.ret1(arg2, arg2 = nil),
@@ -21625,8 +22564,8 @@
                     Util.ret1(arg13, arg13 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
         (ß getFn(
                 dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)).
             invoke(Util.ret1(arg1, arg1 = nil),
@@ -21645,9 +22584,8 @@
                     Util.ret1(arg14, arg14 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
         (ß getFn(
                 dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
                     arg15)).
@@ -21668,9 +22606,8 @@
                     Util.ret1(arg15, arg15 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
         (ß getFn(
                 dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
                     arg15, arg16)).
@@ -21692,9 +22629,8 @@
                     Util.ret1(arg16, arg16 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
         (ß getFn(
                 dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
                     arg15, arg16, arg17)).
@@ -21717,9 +22653,8 @@
                     Util.ret1(arg17, arg17 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
         (ß getFn(
                 dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
                     arg15, arg16, arg17, arg18)).
@@ -21743,9 +22678,8 @@
                     Util.ret1(arg18, arg18 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
         (ß getFn(
                 dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
                     arg15, arg16, arg17, arg18, arg19)).
@@ -21770,9 +22704,8 @@
                     Util.ret1(arg19, arg19 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
         (ß getFn(
                 dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
                     arg15, arg16, arg17, arg18, arg19, arg20)).
@@ -21798,9 +22731,8 @@
                     Util.ret1(arg20, arg20 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20, Object... args)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20, #_"Object..." args]
         (ß getFn(
                 dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
                     arg15, arg16, arg17, arg18, arg19, arg20, args)).
@@ -21827,11 +22759,13 @@
                     args))
     )
 
-    (§ method IPersistentMap getMethodTable()
+    #_method
+    (§ defn #_"IPersistentMap" getMethodTable [this]
         methodTable
     )
 
-    (§ method IPersistentMap getPreferTable()
+    #_method
+    (§ defn #_"IPersistentMap" getPreferTable [this]
         preferTable
     )
 )
@@ -21865,11 +22799,11 @@
  ; @author Kurt Alfred Kluever
  ;;
 (class-ns Murmur3
-    (§ def- int seed = 0)
-    (§ def- int C1 = 0xcc9e2d51)
-    (§ def- int C2 = 0x1b873593)
+    (§ def- #_"int" seed (ß 0))
+    (§ def- #_"int" C1 (ß 0xcc9e2d51))
+    (§ def- #_"int" C2 (ß 0x1b873593))
 
-    (§ defn int hashInt(int input)
+    (§ defn #_"int" hashInt [#_"int" input]
         (when (ß input == 0)
             (§ return 0)
         )
@@ -21880,7 +22814,7 @@
         )
     )
 
-    (§ defn int hashLong(long input)
+    (§ defn #_"int" hashLong [#_"long" input]
         (when (ß input == 0)
             (§ return 0)
         )
@@ -21898,7 +22832,7 @@
         )
     )
 
-    (§ defn int hashUnencodedChars(CharSequence input)
+    (§ defn #_"int" hashUnencodedChars [#_"CharSequence" input]
         (let [#_"int" h1 seed]
             ;; step through the CharSequence 2 chars at a time
             (loop-when-recur [(ß int i = 1)] (ß i < input.length()) [(ß i += 2)]
@@ -21920,7 +22854,7 @@
         )
     )
 
-    (§ defn int mixCollHash(int hash, int count)
+    (§ defn #_"int" mixCollHash [#_"int" hash, #_"int" count]
         (let [#_"int" h1 seed]
             (let [#_"int" k1 (ß mixK1(hash))]
                 (ß h1 = mixH1(h1, k1))
@@ -21929,7 +22863,7 @@
         )
     )
 
-    (§ defn int hashOrdered(Iterable xs)
+    (§ defn #_"int" hashOrdered [#_"Iterable" xs]
         (let [#_"int" n 0]
             (let [#_"int" hash 1]
                 (doseq [#_"Object" x xs]
@@ -21942,7 +22876,7 @@
         )
     )
 
-    (§ defn int hashUnordered(Iterable xs)
+    (§ defn #_"int" hashUnordered [#_"Iterable" xs]
         (let [#_"int" hash 0]
             (let [#_"int" n 0]
                 (doseq [#_"Object" x xs]
@@ -21955,14 +22889,14 @@
         )
     )
 
-    (§ defn- int mixK1(int k1)
+    (§ defn- #_"int" mixK1 [#_"int" k1]
         (ß k1 *= C1)
         (ß k1 = Integer.rotateLeft(k1, 15))
         (ß k1 *= C2)
         k1
     )
 
-    (§ defn- int mixH1(int h1, int k1)
+    (§ defn- #_"int" mixH1 [#_"int" h1, #_"int" k1]
         (ß h1 ^= k1)
         (ß h1 = Integer.rotateLeft(h1, 13))
         (ß h1 = h1 * 5 + 0xe6546b64)
@@ -21970,7 +22904,7 @@
     )
 
     ;; Finalization mix - force all bits of a hash block to avalanche
-    (§ defn- int fmix(int h1, int length)
+    (§ defn- #_"int" fmix [#_"int" h1, #_"int" length]
         (ß h1 ^= length)
         (ß h1 ^= h1 >>> 16)
         (ß h1 *= 0x85ebca6b)
@@ -21996,20 +22930,21 @@
 (§ import java.util.concurrent.atomic.AtomicReference)
 
 (class-ns Namespace (§ extends AReference)
-    (§ field Symbol name)
+    (§ field #_"Symbol" name)
 
     #_transient
-    (§ field AtomicReference<IPersistentMap> mappings = new AtomicReference<IPersistentMap>())
+    (§ field #_"AtomicReference<IPersistentMap>" mappings (ß new AtomicReference<IPersistentMap>()))
     #_transient
-    (§ field AtomicReference<IPersistentMap> aliases = new AtomicReference<IPersistentMap>())
+    (§ field #_"AtomicReference<IPersistentMap>" aliases (ß new AtomicReference<IPersistentMap>()))
 
-    (§ def ConcurrentHashMap<Symbol, Namespace> namespaces = new ConcurrentHashMap<Symbol, Namespace>())
+    (§ def #_"ConcurrentHashMap<Symbol, Namespace>" namespaces (ß new ConcurrentHashMap<Symbol, Namespace>()))
 
-    (§ method String toString()
+    #_method
+    (§ defn #_"String" toString [this]
         (ß name.toString())
     )
 
-    (§ constructor Namespace(Symbol name)
+    (§ constructor #_"Namespace" Namespace [#_"Symbol" name]
         (§ super(name.meta()))
         (ß this.name = name)
         (ß mappings.set(RT.DEFAULT_IMPORTS))
@@ -22017,19 +22952,22 @@
         this
     )
 
-    (§ defn ISeq all()
+    (§ defn #_"ISeq" all []
         (ß RT.seq(namespaces.values()))
     )
 
-    (§ method Symbol getName()
+    #_method
+    (§ defn #_"Symbol" getName [this]
         name
     )
 
-    (§ method IPersistentMap getMappings()
+    #_method
+    (§ defn #_"IPersistentMap" getMappings [this]
         (ß mappings.get())
     )
 
-    (§ method Var intern(Symbol sym)
+    #_method
+    (§ defn #_"Var" intern [this, #_"Symbol" sym]
         (when (ß sym.ns != nil)
             (throw (ß new IllegalArgumentException("Can't intern namespace-qualified symbol")))
         )
@@ -22065,7 +23003,8 @@
         )
     )
 
-    (§ method- void warnOrFailOnReplace(Symbol sym, Object o, Object v)
+    #_method
+    (§ defn- #_"void" warnOrFailOnReplace [this, #_"Symbol" sym, #_"Object" o, #_"Object" v]
         (when (ß o instanceof Var)
             (let [#_"Namespace" ns (ß ((Var)o).ns)]
                 (when (ß ns == this || (v instanceof Var && ((Var)v).ns  == RT.CLOIURE_NS))
@@ -22080,7 +23019,8 @@
         nil
     )
 
-    (§ method Object reference(Symbol sym, Object val)
+    #_method
+    (§ defn #_"Object" reference [this, #_"Symbol" sym, #_"Object" val]
         (when (ß sym.ns != nil)
             (throw (ß new IllegalArgumentException("Can't intern namespace-qualified symbol")))
         )
@@ -22107,11 +23047,12 @@
         )
     )
 
-    (§ defn boolean areDifferentInstancesOfSameClassName(Class cls1, Class cls2)
+    (§ defn #_"boolean" areDifferentInstancesOfSameClassName [#_"Class" cls1, #_"Class" cls2]
         (ß (cls1 != cls2) && (cls1.getName().equals(cls2.getName())))
     )
 
-    (§ method Class referenceClass(Symbol sym, Class val)
+    #_method
+    (§ defn #_"Class" referenceClass [this, #_"Symbol" sym, #_"Class" val]
         (when (ß sym.ns != nil)
             (throw (ß new IllegalArgumentException("Can't intern namespace-qualified symbol")))
         )
@@ -22133,7 +23074,8 @@
         )
     )
 
-    (§ method void unmap(Symbol sym)
+    #_method
+    (§ defn #_"void" unmap [this, #_"Symbol" sym]
         (when (ß sym.ns != nil)
             (throw (ß new IllegalArgumentException("Can't unintern namespace-qualified symbol")))
         )
@@ -22148,21 +23090,24 @@
         )
     )
 
-    (§ method Class importClass(Symbol sym, Class c)
+    #_method
+    (§ defn #_"Class" importClass [this, #_"Symbol" sym, #_"Class" c]
         (ß referenceClass(sym, c))
     )
 
-    (§ method Class importClass(Class c)
+    #_method
+    (§ defn #_"Class" importClass [this, #_"Class" c]
         (let [#_"String" n (ß c.getName())]
             (ß importClass(Symbol.intern(n.substring(n.lastIndexOf(\.) + 1)), c))
         )
     )
 
-    (§ method Var refer(Symbol sym, Var var)
+    #_method
+    (§ defn #_"Var" refer [this, #_"Symbol" sym, #_"Var" var]
         (ß (Var) reference(sym, var))
     )
 
-    (§ defn Namespace findOrCreate(Symbol name)
+    (§ defn #_"Namespace" findOrCreate [#_"Symbol" name]
         (let [#_"Namespace" ns (ß namespaces.get(name))]
             (when (ß ns != nil)
                 (§ return ns)
@@ -22174,22 +23119,24 @@
         )
     )
 
-    (§ defn Namespace remove(Symbol name)
+    (§ defn #_"Namespace" remove [#_"Symbol" name]
         (when (ß name.equals(RT.CLOIURE_NS.name))
             (throw (ß new IllegalArgumentException("Cannot remove cloiure namespace")))
         )
         (ß namespaces.remove(name))
     )
 
-    (§ defn Namespace find(Symbol name)
+    (§ defn #_"Namespace" find [#_"Symbol" name]
         (ß namespaces.get(name))
     )
 
-    (§ method Object getMapping(Symbol name)
+    #_method
+    (§ defn #_"Object" getMapping [this, #_"Symbol" name]
         (ß mappings.get().valAt(name))
     )
 
-    (§ method Var findInternedVar(Symbol symbol)
+    #_method
+    (§ defn #_"Var" findInternedVar [this, #_"Symbol" symbol]
         (let [#_"Object" o (ß mappings.get().valAt(symbol))]
             (when (ß o != nil && o instanceof Var && ((Var) o).ns == this)
                 (§ return (ß (Var) o))
@@ -22198,17 +23145,20 @@
         )
     )
 
-    (§ method IPersistentMap getAliases()
+    #_method
+    (§ defn #_"IPersistentMap" getAliases [this]
         (ß aliases.get())
     )
 
-    (§ method Namespace lookupAlias(Symbol alias)
+    #_method
+    (§ defn #_"Namespace" lookupAlias [this, #_"Symbol" alias]
         (let [#_"IPersistentMap" map (ß getAliases())]
             (ß (Namespace) map.valAt(alias))
         )
     )
 
-    (§ method void addAlias(Symbol alias, Namespace ns)
+    #_method
+    (§ defn #_"void" addAlias [this, #_"Symbol" alias, #_"Namespace" ns]
         (when (ß alias == nil || ns == nil)
             (throw (ß new NullPointerException("Expecting Symbol + Namespace")))
         )
@@ -22227,7 +23177,8 @@
         )
     )
 
-    (§ method void removeAlias(Symbol alias)
+    #_method
+    (§ defn #_"void" removeAlias [this, #_"Symbol" alias]
         (let [#_"IPersistentMap" map (ß getAliases())]
             (while (ß map.containsKey(alias))
                 (let [#_"IPersistentMap" newMap (ß map.without(alias))]
@@ -22279,78 +23230,83 @@
 
     #_abstract
     (class-ns OpsP (§ implements Ops)
-        (§ method Number addP(Number x, Number y)
+        #_method
+        (§ defn #_"Number" addP [this, #_"Number" x, #_"Number" y]
             (ß add(x, y))
         )
 
-        (§ method Number multiplyP(Number x, Number y)
+        #_method
+        (§ defn #_"Number" multiplyP [this, #_"Number" x, #_"Number" y]
             (ß multiply(x, y))
         )
 
-        (§ method Number negateP(Number x)
+        #_method
+        (§ defn #_"Number" negateP [this, #_"Number" x]
             (ß negate(x))
         )
 
-        (§ method Number incP(Number x)
+        #_method
+        (§ defn #_"Number" incP [this, #_"Number" x]
             (ß inc(x))
         )
 
-        (§ method Number decP(Number x)
+        #_method
+        (§ defn #_"Number" decP [this, #_"Number" x]
             (ß dec(x))
         )
     )
 
-    (§ defn boolean isZero(Object x)
+    (§ defn #_"boolean" isZero [#_"Object" x]
         (ß ops(x).isZero((Number)x))
     )
 
-    (§ defn boolean isPos(Object x)
+    (§ defn #_"boolean" isPos [#_"Object" x]
         (ß ops(x).isPos((Number)x))
     )
 
-    (§ defn boolean isNeg(Object x)
+    (§ defn #_"boolean" isNeg [#_"Object" x]
         (ß ops(x).isNeg((Number)x))
     )
 
-    (§ defn Number minus(Object x)
+    (§ defn #_"Number" minus [#_"Object" x]
         (ß ops(x).negate((Number)x))
     )
 
-    (§ defn Number minusP(Object x)
+    (§ defn #_"Number" minusP [#_"Object" x]
         (ß ops(x).negateP((Number)x))
     )
 
-    (§ defn Number inc(Object x)
+    (§ defn #_"Number" inc [#_"Object" x]
         (ß ops(x).inc((Number)x))
     )
 
-    (§ defn Number incP(Object x)
+    (§ defn #_"Number" incP [#_"Object" x]
         (ß ops(x).incP((Number)x))
     )
 
-    (§ defn Number dec(Object x)
+    (§ defn #_"Number" dec [#_"Object" x]
         (ß ops(x).dec((Number)x))
     )
 
-    (§ defn Number decP(Object x)
+    (§ defn #_"Number" decP [#_"Object" x]
         (ß ops(x).decP((Number)x))
     )
 
-    (§ defn Number add(Object x, Object y)
+    (§ defn #_"Number" add [#_"Object" x, #_"Object" y]
         (ß ops(x).combine(ops(y)).add((Number)x, (Number)y))
     )
 
-    (§ defn Number addP(Object x, Object y)
+    (§ defn #_"Number" addP [#_"Object" x, #_"Object" y]
         (ß ops(x).combine(ops(y)).addP((Number)x, (Number)y))
     )
 
-    (§ defn Number minus(Object x, Object y)
+    (§ defn #_"Number" minus [#_"Object" x, #_"Object" y]
         (let [#_"Ops" yops (ß ops(y))]
             (ß ops(x).combine(yops).add((Number)x, yops.negate((Number)y)))
         )
     )
 
-    (§ defn Number minusP(Object x, Object y)
+    (§ defn #_"Number" minusP [#_"Object" x, #_"Object" y]
         (let [#_"Ops" yops (ß ops(y))]
             (let [#_"Number" negativeY (ß yops.negateP((Number) y))]
                 (let [#_"Ops" negativeYOps (ß ops(negativeY))]
@@ -22360,15 +23316,15 @@
         )
     )
 
-    (§ defn Number multiply(Object x, Object y)
+    (§ defn #_"Number" multiply [#_"Object" x, #_"Object" y]
         (ß ops(x).combine(ops(y)).multiply((Number)x, (Number)y))
     )
 
-    (§ defn Number multiplyP(Object x, Object y)
+    (§ defn #_"Number" multiplyP [#_"Object" x, #_"Object" y]
         (ß ops(x).combine(ops(y)).multiplyP((Number)x, (Number)y))
     )
 
-    (§ defn Number divide(Object x, Object y)
+    (§ defn #_"Number" divide [#_"Object" x, #_"Object" y]
         (cond (ß isNaN(x))
             (do
                 (§ return (ß (Number)x))
@@ -22386,7 +23342,7 @@
         )
     )
 
-    (§ defn Number quotient(Object x, Object y)
+    (§ defn #_"Number" quotient [#_"Object" x, #_"Object" y]
         (let [#_"Ops" yops (ß ops(y))]
             (when (ß yops.isZero((Number) y))
                 (throw (ß new ArithmeticException("Divide by zero")))
@@ -22395,7 +23351,7 @@
         )
     )
 
-    (§ defn Number remainder(Object x, Object y)
+    (§ defn #_"Number" remainder [#_"Object" x, #_"Object" y]
         (let [#_"Ops" yops (ß ops(y))]
             (when (ß yops.isZero((Number) y))
                 (throw (ß new ArithmeticException("Divide by zero")))
@@ -22404,7 +23360,7 @@
         )
     )
 
-    (§ defn double quotient(double n, double d)
+    (§ defn #_"double" quotient [#_"double" n, #_"double" d]
         (when (ß d == 0)
             (throw (ß new ArithmeticException("Divide by zero")))
         )
@@ -22422,7 +23378,7 @@
         )
     )
 
-    (§ defn double remainder(double n, double d)
+    (§ defn #_"double" remainder [#_"double" n, #_"double" d]
         (when (ß d == 0)
             (throw (ß new ArithmeticException("Divide by zero")))
         )
@@ -22442,35 +23398,35 @@
         )
     )
 
-    (§ defn boolean equiv(Object x, Object y)
+    (§ defn #_"boolean" equiv [#_"Object" x, #_"Object" y]
         (ß equiv((Number) x, (Number) y))
     )
 
-    (§ defn boolean equiv(Number x, Number y)
+    (§ defn #_"boolean" equiv [#_"Number" x, #_"Number" y]
         (ß ops(x).combine(ops(y)).equiv(x, y))
     )
 
-    (§ defn boolean equal(Number x, Number y)
+    (§ defn #_"boolean" equal [#_"Number" x, #_"Number" y]
         (ß (category(x) == category(y) && ops(x).combine(ops(y)).equiv(x, y)))
     )
 
-    (§ defn boolean lt(Object x, Object y)
+    (§ defn #_"boolean" lt [#_"Object" x, #_"Object" y]
         (ß ops(x).combine(ops(y)).lt((Number)x, (Number)y))
     )
 
-    (§ defn boolean lte(Object x, Object y)
+    (§ defn #_"boolean" lte [#_"Object" x, #_"Object" y]
         (ß ops(x).combine(ops(y)).lte((Number)x, (Number)y))
     )
 
-    (§ defn boolean gt(Object x, Object y)
+    (§ defn #_"boolean" gt [#_"Object" x, #_"Object" y]
         (ß ops(x).combine(ops(y)).lt((Number)y, (Number)x))
     )
 
-    (§ defn boolean gte(Object x, Object y)
+    (§ defn #_"boolean" gte [#_"Object" x, #_"Object" y]
         (ß ops(x).combine(ops(y)).gte((Number)x, (Number)y))
     )
 
-    (§ defn int compare(Number x, Number y)
+    (§ defn #_"int" compare [#_"Number" x, #_"Number" y]
         (let [#_"Ops" ops (ß ops(x).combine(ops(y)))]
             (cond (ß ops.lt(x, y))
                 (do
@@ -22486,7 +23442,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn BigInt toBigInt(Object x)
+    (§ defn #_"BigInt" toBigInt [#_"Object" x]
         (when (ß x instanceof BigInt)
             (§ return (ß (BigInt) x))
         )
@@ -22501,7 +23457,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn BigInteger toBigInteger(Object x)
+    (§ defn #_"BigInteger" toBigInteger [#_"Object" x]
         (cond (ß x instanceof BigInteger)
             (do
                 (ß (BigInteger) x)
@@ -22518,7 +23474,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn BigDecimal toBigDecimal(Object x)
+    (§ defn #_"BigDecimal" toBigDecimal [#_"Object" x]
         (cond (ß x instanceof BigDecimal)
             (do
                 (ß (BigDecimal) x)
@@ -22562,7 +23518,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn Ratio toRatio(Object x)
+    (§ defn #_"Ratio" toRatio [#_"Object" x]
         (cond (ß x instanceof Ratio)
             (do
                 (§ return (ß (Ratio) x))
@@ -22589,7 +23545,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn Number rationalize(Number x)
+    (§ defn #_"Number" rationalize [#_"Number" x]
         (cond (ß x instanceof Float || x instanceof Double)
             (do
                 (§ return (ß rationalize(BigDecimal.valueOf(x.doubleValue()))))
@@ -22616,7 +23572,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn Number reduceBigInt(BigInt val)
+    (§ defn #_"Number" reduceBigInt [#_"BigInt" val]
         (if (ß val.bipart == nil)
             (do
                 (ß num(val.lpart))
@@ -22627,7 +23583,7 @@
         )
     )
 
-    (§ defn Number divide(BigInteger n, BigInteger d)
+    (§ defn #_"Number" divide [#_"BigInteger" n, #_"BigInteger" d]
         (when (ß d.equals(BigInteger.ZERO))
             (throw (ß new ArithmeticException("Divide by zero")))
         )
@@ -22650,99 +23606,110 @@
         )
     )
 
-    (§ defn int shiftLeftInt(int x, int n)
+    (§ defn #_"int" shiftLeftInt [#_"int" x, #_"int" n]
         (ß x << n)
     )
 
-    (§ defn long shiftLeft(Object x, Object y)
+    (§ defn #_"long" shiftLeft [#_"Object" x, #_"Object" y]
         (ß shiftLeft(bitOpsCast(x), bitOpsCast(y)))
     )
-    (§ defn long shiftLeft(Object x, long y)
+    (§ defn #_"long" shiftLeft [#_"Object" x, #_"long" y]
         (ß shiftLeft(bitOpsCast(x), y))
     )
-    (§ defn long shiftLeft(long x, Object y)
+    (§ defn #_"long" shiftLeft [#_"long" x, #_"Object" y]
         (ß shiftLeft(x, bitOpsCast(y)))
     )
-    (§ defn long shiftLeft(long x, long n)
+    (§ defn #_"long" shiftLeft [#_"long" x, #_"long" n]
         (ß x << n)
     )
 
-    (§ defn int shiftRightInt(int x, int n)
+    (§ defn #_"int" shiftRightInt [#_"int" x, #_"int" n]
         (ß x >> n)
     )
 
-    (§ defn long shiftRight(Object x, Object y)
+    (§ defn #_"long" shiftRight [#_"Object" x, #_"Object" y]
         (ß shiftRight(bitOpsCast(x), bitOpsCast(y)))
     )
-    (§ defn long shiftRight(Object x, long y)
+    (§ defn #_"long" shiftRight [#_"Object" x, #_"long" y]
         (ß shiftRight(bitOpsCast(x), y))
     )
-    (§ defn long shiftRight(long x, Object y)
+    (§ defn #_"long" shiftRight [#_"long" x, #_"Object" y]
         (ß shiftRight(x, bitOpsCast(y)))
     )
-    (§ defn long shiftRight(long x, long n)
+    (§ defn #_"long" shiftRight [#_"long" x, #_"long" n]
         (ß x >> n)
     )
 
-    (§ defn int unsignedShiftRightInt(int x, int n)
+    (§ defn #_"int" unsignedShiftRightInt [#_"int" x, #_"int" n]
         (ß x >>> n)
     )
 
-    (§ defn long unsignedShiftRight(Object x, Object y)
+    (§ defn #_"long" unsignedShiftRight [#_"Object" x, #_"Object" y]
         (ß unsignedShiftRight(bitOpsCast(x), bitOpsCast(y)))
     )
-    (§ defn long unsignedShiftRight(Object x, long y)
+    (§ defn #_"long" unsignedShiftRight [#_"Object" x, #_"long" y]
         (ß unsignedShiftRight(bitOpsCast(x), y))
     )
-    (§ defn long unsignedShiftRight(long x, Object y)
+    (§ defn #_"long" unsignedShiftRight [#_"long" x, #_"Object" y]
         (ß unsignedShiftRight(x, bitOpsCast(y)))
     )
-    (§ defn long unsignedShiftRight(long x, long n)
+    (§ defn #_"long" unsignedShiftRight [#_"long" x, #_"long" n]
         (ß x >>> n)
     )
 
     (class-ns LongOps (§ implements Ops)
-        (§ method Ops combine(Ops y)
+        #_method
+        (§ defn #_"Ops" combine [this, #_"Ops" y]
             (ß y.opsWith(this))
         )
 
-        (§ method Ops opsWith(LongOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"LongOps" x]
             this
         )
 
-        (§ method Ops opsWith(DoubleOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"DoubleOps" x]
             (ß DOUBLE_OPS)
         )
 
-        (§ method Ops opsWith(RatioOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"RatioOps" x]
             (ß RATIO_OPS)
         )
 
-        (§ method Ops opsWith(BigIntOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"BigIntOps" x]
             (ß BIGINT_OPS)
         )
 
-        (§ method Ops opsWith(BigDecimalOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"BigDecimalOps" x]
             (ß BIGDECIMAL_OPS)
         )
 
-        (§ method boolean isZero(Number x)
+        #_method
+        (§ defn #_"boolean" isZero [this, #_"Number" x]
             (ß (x.longValue() == 0))
         )
 
-        (§ method boolean isPos(Number x)
+        #_method
+        (§ defn #_"boolean" isPos [this, #_"Number" x]
             (ß (x.longValue() > 0))
         )
 
-        (§ method boolean isNeg(Number x)
+        #_method
+        (§ defn #_"boolean" isNeg [this, #_"Number" x]
             (ß (x.longValue() < 0))
         )
 
-        (§ method Number add(Number x, Number y)
+        #_method
+        (§ defn #_"Number" add [this, #_"Number" x, #_"Number" y]
             (ß num(Numbers.add(x.longValue(), y.longValue())))
         )
 
-        (§ method Number addP(Number x, Number y)
+        #_method
+        (§ defn #_"Number" addP [this, #_"Number" x, #_"Number" y]
             (let [#_"long" lx (ß x.longValue(), ly = y.longValue())]
                 (let [#_"long" ret (ß lx + ly)]
                     (when (ß (ret :xor lx) < 0 && (ret :xor ly) < 0)
@@ -22753,11 +23720,13 @@
             )
         )
 
-        (§ method Number multiply(Number x, Number y)
+        #_method
+        (§ defn #_"Number" multiply [this, #_"Number" x, #_"Number" y]
             (ß num(Numbers.multiply(x.longValue(), y.longValue())))
         )
 
-        (§ method Number multiplyP(Number x, Number y)
+        #_method
+        (§ defn #_"Number" multiplyP [this, #_"Number" x, #_"Number" y]
             (let [#_"long" lx (ß x.longValue(), ly = y.longValue())]
                 (when (ß lx == Long.MIN_VALUE && ly < 0)
                     (§ return (ß BIGINT_OPS.multiply(x, y)))
@@ -22771,7 +23740,7 @@
             )
         )
 
-        (§ defn long gcd(long u, long v)
+        (§ defn #_"long" gcd [#_"long" u, #_"long" v]
             (while (ß v != 0)
                 (let [#_"long" r (ß u % v)]
                     (ß u = v)
@@ -22781,7 +23750,8 @@
             u
         )
 
-        (§ method Number divide(Number x, Number y)
+        #_method
+        (§ defn #_"Number" divide [this, #_"Number" x, #_"Number" y]
             (let [#_"long" n (ß x.longValue())]
                 (let [#_"long" val (ß y.longValue())]
                     (let [#_"long" gcd (ß gcd(n, val))]
@@ -22805,37 +23775,45 @@
             )
         )
 
-        (§ method Number quotient(Number x, Number y)
+        #_method
+        (§ defn #_"Number" quotient [this, #_"Number" x, #_"Number" y]
             (ß num(x.longValue() / y.longValue()))
         )
 
-        (§ method Number remainder(Number x, Number y)
+        #_method
+        (§ defn #_"Number" remainder [this, #_"Number" x, #_"Number" y]
             (ß num(x.longValue() % y.longValue()))
         )
 
-        (§ method boolean equiv(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" equiv [this, #_"Number" x, #_"Number" y]
             (ß (x.longValue() == y.longValue()))
         )
 
-        (§ method boolean lt(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" lt [this, #_"Number" x, #_"Number" y]
             (ß (x.longValue() < y.longValue()))
         )
 
-        (§ method boolean lte(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" lte [this, #_"Number" x, #_"Number" y]
             (ß (x.longValue() <= y.longValue()))
         )
 
-        (§ method boolean gte(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" gte [this, #_"Number" x, #_"Number" y]
             (ß (x.longValue() >= y.longValue()))
         )
 
-        (§ method Number negate(Number x)
+        #_method
+        (§ defn #_"Number" negate [this, #_"Number" x]
             (let [#_"long" val (ß x.longValue())]
                 (ß num(Numbers.minus(val)))
             )
         )
 
-        (§ method Number negateP(Number x)
+        #_method
+        (§ defn #_"Number" negateP [this, #_"Number" x]
             (let [#_"long" val (ß x.longValue())]
                 (when (ß val > Long.MIN_VALUE)
                     (§ return (ß num(-val)))
@@ -22844,13 +23822,15 @@
             )
         )
 
-        (§ method Number inc(Number x)
+        #_method
+        (§ defn #_"Number" inc [this, #_"Number" x]
             (let [#_"long" val (ß x.longValue())]
                 (ß num(Numbers.inc(val)))
             )
         )
 
-        (§ method Number incP(Number x)
+        #_method
+        (§ defn #_"Number" incP [this, #_"Number" x]
             (let [#_"long" val (ß x.longValue())]
                 (when (ß val < Long.MAX_VALUE)
                     (§ return (ß num(val + 1)))
@@ -22859,13 +23839,15 @@
             )
         )
 
-        (§ method Number dec(Number x)
+        #_method
+        (§ defn #_"Number" dec [this, #_"Number" x]
             (let [#_"long" val (ß x.longValue())]
                 (ß num(Numbers.dec(val)))
             )
         )
 
-        (§ method Number decP(Number x)
+        #_method
+        (§ defn #_"Number" decP [this, #_"Number" x]
             (let [#_"long" val (ß x.longValue())]
                 (when (ß val > Long.MIN_VALUE)
                     (§ return (ß num(val - 1)))
@@ -22876,139 +23858,170 @@
     )
 
     (class-ns DoubleOps (§ extends OpsP)
-        (§ method Ops combine(Ops y)
+        #_method
+        (§ defn #_"Ops" combine [this, #_"Ops" y]
             (ß y.opsWith(this))
         )
 
-        (§ method Ops opsWith(LongOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"LongOps" x]
             this
         )
 
-        (§ method Ops opsWith(DoubleOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"DoubleOps" x]
             this
         )
 
-        (§ method Ops opsWith(RatioOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"RatioOps" x]
             this
         )
 
-        (§ method Ops opsWith(BigIntOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"BigIntOps" x]
             this
         )
 
-        (§ method Ops opsWith(BigDecimalOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"BigDecimalOps" x]
             this
         )
 
-        (§ method boolean isZero(Number x)
+        #_method
+        (§ defn #_"boolean" isZero [this, #_"Number" x]
             (ß (x.doubleValue() == 0))
         )
 
-        (§ method boolean isPos(Number x)
+        #_method
+        (§ defn #_"boolean" isPos [this, #_"Number" x]
             (ß (x.doubleValue() > 0))
         )
 
-        (§ method boolean isNeg(Number x)
+        #_method
+        (§ defn #_"boolean" isNeg [this, #_"Number" x]
             (ß (x.doubleValue() < 0))
         )
 
-        (§ method Number add(Number x, Number y)
+        #_method
+        (§ defn #_"Number" add [this, #_"Number" x, #_"Number" y]
             (ß Double.valueOf(x.doubleValue() + y.doubleValue()))
         )
 
-        (§ method Number multiply(Number x, Number y)
+        #_method
+        (§ defn #_"Number" multiply [this, #_"Number" x, #_"Number" y]
             (ß Double.valueOf(x.doubleValue() * y.doubleValue()))
         )
 
-        (§ method Number divide(Number x, Number y)
+        #_method
+        (§ defn #_"Number" divide [this, #_"Number" x, #_"Number" y]
             (ß Double.valueOf(x.doubleValue() / y.doubleValue()))
         )
 
-        (§ method Number quotient(Number x, Number y)
+        #_method
+        (§ defn #_"Number" quotient [this, #_"Number" x, #_"Number" y]
             (ß Numbers.quotient(x.doubleValue(), y.doubleValue()))
         )
 
-        (§ method Number remainder(Number x, Number y)
+        #_method
+        (§ defn #_"Number" remainder [this, #_"Number" x, #_"Number" y]
             (ß Numbers.remainder(x.doubleValue(), y.doubleValue()))
         )
 
-        (§ method boolean equiv(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" equiv [this, #_"Number" x, #_"Number" y]
             (ß (x.doubleValue() == y.doubleValue()))
         )
 
-        (§ method boolean lt(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" lt [this, #_"Number" x, #_"Number" y]
             (ß (x.doubleValue() < y.doubleValue()))
         )
 
-        (§ method boolean lte(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" lte [this, #_"Number" x, #_"Number" y]
             (ß (x.doubleValue() <= y.doubleValue()))
         )
 
-        (§ method boolean gte(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" gte [this, #_"Number" x, #_"Number" y]
             (ß (x.doubleValue() >= y.doubleValue()))
         )
 
-        (§ method Number negate(Number x)
+        #_method
+        (§ defn #_"Number" negate [this, #_"Number" x]
             (ß Double.valueOf(-x.doubleValue()))
         )
 
-        (§ method Number inc(Number x)
+        #_method
+        (§ defn #_"Number" inc [this, #_"Number" x]
             (ß Double.valueOf(x.doubleValue() + 1))
         )
 
-        (§ method Number dec(Number x)
+        #_method
+        (§ defn #_"Number" dec [this, #_"Number" x]
             (ß Double.valueOf(x.doubleValue() - 1))
         )
     )
 
     (class-ns RatioOps (§ extends OpsP)
-        (§ method Ops combine(Ops y)
+        #_method
+        (§ defn #_"Ops" combine [this, #_"Ops" y]
             (ß y.opsWith(this))
         )
 
-        (§ method Ops opsWith(LongOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"LongOps" x]
             this
         )
 
-        (§ method Ops opsWith(DoubleOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"DoubleOps" x]
             (ß DOUBLE_OPS)
         )
 
-        (§ method Ops opsWith(RatioOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"RatioOps" x]
             this
         )
 
-        (§ method Ops opsWith(BigIntOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"BigIntOps" x]
             this
         )
 
-        (§ method Ops opsWith(BigDecimalOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"BigDecimalOps" x]
             (ß BIGDECIMAL_OPS)
         )
 
-        (§ method boolean isZero(Number x)
+        #_method
+        (§ defn #_"boolean" isZero [this, #_"Number" x]
             (let [#_"Ratio" r (ß (Ratio) x)]
                 (ß (r.numerator.signum() == 0))
             )
         )
 
-        (§ method boolean isPos(Number x)
+        #_method
+        (§ defn #_"boolean" isPos [this, #_"Number" x]
             (let [#_"Ratio" r (ß (Ratio) x)]
                 (ß (r.numerator.signum() > 0))
             )
         )
 
-        (§ method boolean isNeg(Number x)
+        #_method
+        (§ defn #_"boolean" isNeg [this, #_"Number" x]
             (let [#_"Ratio" r (ß (Ratio) x)]
                 (ß (r.numerator.signum() < 0))
             )
         )
 
-        (§ defn Number normalizeRet(Number ret, Number x, Number y)
+        (§ defn #_"Number" normalizeRet [#_"Number" ret, #_"Number" x, #_"Number" y]
             ret
         )
 
-        (§ method Number add(Number x, Number y)
+        #_method
+        (§ defn #_"Number" add [this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (ß toRatio(x))]
                 (let [#_"Ratio" ry (ß toRatio(y))]
                     (let [#_"Number" ret (ß divide(ry.numerator.multiply(rx.denominator).add(rx.numerator.multiply(ry.denominator)), ry.denominator.multiply(rx.denominator)))]
@@ -23018,7 +24031,8 @@
             )
         )
 
-        (§ method Number multiply(Number x, Number y)
+        #_method
+        (§ defn #_"Number" multiply [this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (ß toRatio(x))]
                 (let [#_"Ratio" ry (ß toRatio(y))]
                     (let [#_"Number" ret (ß Numbers.divide(ry.numerator.multiply(rx.numerator), ry.denominator.multiply(rx.denominator)))]
@@ -23028,7 +24042,8 @@
             )
         )
 
-        (§ method Number divide(Number x, Number y)
+        #_method
+        (§ defn #_"Number" divide [this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (ß toRatio(x))]
                 (let [#_"Ratio" ry (ß toRatio(y))]
                     (let [#_"Number" ret (ß Numbers.divide(ry.denominator.multiply(rx.numerator), ry.numerator.multiply(rx.denominator)))]
@@ -23038,7 +24053,8 @@
             )
         )
 
-        (§ method Number quotient(Number x, Number y)
+        #_method
+        (§ defn #_"Number" quotient [this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (ß toRatio(x))]
                 (let [#_"Ratio" ry (ß toRatio(y))]
                     (let [#_"BigInteger" q (ß rx.numerator.multiply(ry.denominator).divide(rx.denominator.multiply(ry.numerator)))]
@@ -23048,7 +24064,8 @@
             )
         )
 
-        (§ method Number remainder(Number x, Number y)
+        #_method
+        (§ defn #_"Number" remainder [this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (ß toRatio(x))]
                 (let [#_"Ratio" ry (ß toRatio(y))]
                     (let [#_"BigInteger" q (ß rx.numerator.multiply(ry.denominator).divide(rx.denominator.multiply(ry.numerator)))]
@@ -23060,7 +24077,8 @@
             )
         )
 
-        (§ method boolean equiv(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" equiv [this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (ß toRatio(x))]
                 (let [#_"Ratio" ry (ß toRatio(y))]
                     (ß (rx.numerator.equals(ry.numerator) && rx.denominator.equals(ry.denominator)))
@@ -23068,7 +24086,8 @@
             )
         )
 
-        (§ method boolean lt(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" lt [this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (ß toRatio(x))]
                 (let [#_"Ratio" ry (ß toRatio(y))]
                     (ß Numbers.lt(rx.numerator.multiply(ry.denominator), ry.numerator.multiply(rx.denominator)))
@@ -23076,7 +24095,8 @@
             )
         )
 
-        (§ method boolean lte(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" lte [this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (ß toRatio(x))]
                 (let [#_"Ratio" ry (ß toRatio(y))]
                     (ß Numbers.lte(rx.numerator.multiply(ry.denominator), ry.numerator.multiply(rx.denominator)))
@@ -23084,7 +24104,8 @@
             )
         )
 
-        (§ method boolean gte(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" gte [this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (ß toRatio(x))]
                 (let [#_"Ratio" ry (ß toRatio(y))]
                     (ß Numbers.gte(rx.numerator.multiply(ry.denominator), ry.numerator.multiply(rx.denominator)))
@@ -23092,47 +24113,57 @@
             )
         )
 
-        (§ method Number negate(Number x)
+        #_method
+        (§ defn #_"Number" negate [this, #_"Number" x]
             (let [#_"Ratio" r (ß (Ratio) x)]
                 (ß new Ratio(r.numerator.negate(), r.denominator))
             )
         )
 
-        (§ method Number inc(Number x)
+        #_method
+        (§ defn #_"Number" inc [this, #_"Number" x]
             (ß Numbers.add(x, 1))
         )
 
-        (§ method Number dec(Number x)
+        #_method
+        (§ defn #_"Number" dec [this, #_"Number" x]
             (ß Numbers.add(x, -1))
         )
     )
 
     (class-ns BigIntOps (§ extends OpsP)
-        (§ method Ops combine(Ops y)
+        #_method
+        (§ defn #_"Ops" combine [this, #_"Ops" y]
             (ß y.opsWith(this))
         )
 
-        (§ method Ops opsWith(LongOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"LongOps" x]
             this
         )
 
-        (§ method Ops opsWith(DoubleOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"DoubleOps" x]
             (ß DOUBLE_OPS)
         )
 
-        (§ method Ops opsWith(RatioOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"RatioOps" x]
             (ß RATIO_OPS)
         )
 
-        (§ method Ops opsWith(BigIntOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"BigIntOps" x]
             this
         )
 
-        (§ method Ops opsWith(BigDecimalOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"BigDecimalOps" x]
             (ß BIGDECIMAL_OPS)
         )
 
-        (§ method boolean isZero(Number x)
+        #_method
+        (§ defn #_"boolean" isZero [this, #_"Number" x]
             (let [#_"BigInt" bx (ß toBigInt(x))]
                 (when (ß bx.bipart == nil)
                     (§ return (ß (bx.lpart == 0)))
@@ -23141,7 +24172,8 @@
             )
         )
 
-        (§ method boolean isPos(Number x)
+        #_method
+        (§ defn #_"boolean" isPos [this, #_"Number" x]
             (let [#_"BigInt" bx (ß toBigInt(x))]
                 (when (ß bx.bipart == nil)
                     (§ return (ß (bx.lpart > 0)))
@@ -23150,7 +24182,8 @@
             )
         )
 
-        (§ method boolean isNeg(Number x)
+        #_method
+        (§ defn #_"boolean" isNeg [this, #_"Number" x]
             (let [#_"BigInt" bx (ß toBigInt(x))]
                 (when (ß bx.bipart == nil)
                     (§ return (ß (bx.lpart < 0)))
@@ -23159,53 +24192,65 @@
             )
         )
 
-        (§ method Number add(Number x, Number y)
+        #_method
+        (§ defn #_"Number" add [this, #_"Number" x, #_"Number" y]
             (ß toBigInt(x).add(toBigInt(y)))
         )
 
-        (§ method Number multiply(Number x, Number y)
+        #_method
+        (§ defn #_"Number" multiply [this, #_"Number" x, #_"Number" y]
             (ß toBigInt(x).multiply(toBigInt(y)))
         )
 
-        (§ method Number divide(Number x, Number y)
+        #_method
+        (§ defn #_"Number" divide [this, #_"Number" x, #_"Number" y]
             (ß Numbers.divide(toBigInteger(x), toBigInteger(y)))
         )
 
-        (§ method Number quotient(Number x, Number y)
+        #_method
+        (§ defn #_"Number" quotient [this, #_"Number" x, #_"Number" y]
             (ß toBigInt(x).quotient(toBigInt(y)))
         )
 
-        (§ method Number remainder(Number x, Number y)
+        #_method
+        (§ defn #_"Number" remainder [this, #_"Number" x, #_"Number" y]
             (ß toBigInt(x).remainder(toBigInt(y)))
         )
 
-        (§ method boolean equiv(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" equiv [this, #_"Number" x, #_"Number" y]
             (ß toBigInt(x).equals(toBigInt(y)))
         )
 
-        (§ method boolean lt(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" lt [this, #_"Number" x, #_"Number" y]
             (ß toBigInt(x).lt(toBigInt(y)))
         )
 
-        (§ method boolean lte(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" lte [this, #_"Number" x, #_"Number" y]
             (ß (toBigInteger(x).compareTo(toBigInteger(y)) <= 0))
         )
 
-        (§ method boolean gte(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" gte [this, #_"Number" x, #_"Number" y]
             (ß (toBigInteger(x).compareTo(toBigInteger(y)) >= 0))
         )
 
-        (§ method Number negate(Number x)
+        #_method
+        (§ defn #_"Number" negate [this, #_"Number" x]
             (ß BigInt.fromBigInteger(toBigInteger(x).negate()))
         )
 
-        (§ method Number inc(Number x)
+        #_method
+        (§ defn #_"Number" inc [this, #_"Number" x]
             (let [#_"BigInteger" bx (ß toBigInteger(x))]
                 (ß BigInt.fromBigInteger(bx.add(BigInteger.ONE)))
             )
         )
 
-        (§ method Number dec(Number x)
+        #_method
+        (§ defn #_"Number" dec [this, #_"Number" x]
             (let [#_"BigInteger" bx (ß toBigInteger(x))]
                 (ß BigInt.fromBigInteger(bx.subtract(BigInteger.ONE)))
             )
@@ -23213,103 +24258,123 @@
     )
 
     (class-ns BigDecimalOps (§ extends OpsP)
-        (§ def Var MATH_CONTEXT = RT.MATH_CONTEXT)
+        (§ def #_"Var" MATH_CONTEXT (ß RT.MATH_CONTEXT))
 
-        (§ method Ops combine(Ops y)
+        #_method
+        (§ defn #_"Ops" combine [this, #_"Ops" y]
             (ß y.opsWith(this))
         )
 
-        (§ method Ops opsWith(LongOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"LongOps" x]
             this
         )
 
-        (§ method Ops opsWith(DoubleOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"DoubleOps" x]
             (ß DOUBLE_OPS)
         )
 
-        (§ method Ops opsWith(RatioOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"RatioOps" x]
             this
         )
 
-        (§ method Ops opsWith(BigIntOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"BigIntOps" x]
             this
         )
 
-        (§ method Ops opsWith(BigDecimalOps x)
+        #_method
+        (§ defn #_"Ops" opsWith [this, #_"BigDecimalOps" x]
             this
         )
 
-        (§ method boolean isZero(Number x)
+        #_method
+        (§ defn #_"boolean" isZero [this, #_"Number" x]
             (let [#_"BigDecimal" bx (ß (BigDecimal) x)]
                 (ß (bx.signum() == 0))
             )
         )
 
-        (§ method boolean isPos(Number x)
+        #_method
+        (§ defn #_"boolean" isPos [this, #_"Number" x]
             (let [#_"BigDecimal" bx (ß (BigDecimal) x)]
                 (ß (bx.signum() > 0))
             )
         )
 
-        (§ method boolean isNeg(Number x)
+        #_method
+        (§ defn #_"boolean" isNeg [this, #_"Number" x]
             (let [#_"BigDecimal" bx (ß (BigDecimal) x)]
                 (ß (bx.signum() < 0))
             )
         )
 
-        (§ method Number add(Number x, Number y)
+        #_method
+        (§ defn #_"Number" add [this, #_"Number" x, #_"Number" y]
             (let [#_"MathContext" mc (ß (MathContext) MATH_CONTEXT.deref())]
                 (ß (mc == nil) ? toBigDecimal(x).add(toBigDecimal(y)) :or toBigDecimal(x).add(toBigDecimal(y), mc))
             )
         )
 
-        (§ method Number multiply(Number x, Number y)
+        #_method
+        (§ defn #_"Number" multiply [this, #_"Number" x, #_"Number" y]
             (let [#_"MathContext" mc (ß (MathContext) MATH_CONTEXT.deref())]
                 (ß (mc == nil) ? toBigDecimal(x).multiply(toBigDecimal(y)) :or toBigDecimal(x).multiply(toBigDecimal(y), mc))
             )
         )
 
-        (§ method Number divide(Number x, Number y)
+        #_method
+        (§ defn #_"Number" divide [this, #_"Number" x, #_"Number" y]
             (let [#_"MathContext" mc (ß (MathContext) MATH_CONTEXT.deref())]
                 (ß (mc == nil) ? toBigDecimal(x).divide(toBigDecimal(y)) :or toBigDecimal(x).divide(toBigDecimal(y), mc))
             )
         )
 
-        (§ method Number quotient(Number x, Number y)
+        #_method
+        (§ defn #_"Number" quotient [this, #_"Number" x, #_"Number" y]
             (let [#_"MathContext" mc (ß (MathContext) MATH_CONTEXT.deref())]
                 (ß (mc == nil) ? toBigDecimal(x).divideToIntegralValue(toBigDecimal(y)) :or toBigDecimal(x).divideToIntegralValue(toBigDecimal(y), mc))
             )
         )
 
-        (§ method Number remainder(Number x, Number y)
+        #_method
+        (§ defn #_"Number" remainder [this, #_"Number" x, #_"Number" y]
             (let [#_"MathContext" mc (ß (MathContext) MATH_CONTEXT.deref())]
                 (ß (mc == nil) ? toBigDecimal(x).remainder(toBigDecimal(y)) :or toBigDecimal(x).remainder(toBigDecimal(y), mc))
             )
         )
 
-        (§ method boolean equiv(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" equiv [this, #_"Number" x, #_"Number" y]
             (ß (toBigDecimal(x).compareTo(toBigDecimal(y)) == 0))
         )
 
-        (§ method boolean lt(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" lt [this, #_"Number" x, #_"Number" y]
             (ß (toBigDecimal(x).compareTo(toBigDecimal(y)) < 0))
         )
 
-        (§ method boolean lte(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" lte [this, #_"Number" x, #_"Number" y]
             (ß (toBigDecimal(x).compareTo(toBigDecimal(y)) <= 0))
         )
 
-        (§ method boolean gte(Number x, Number y)
+        #_method
+        (§ defn #_"boolean" gte [this, #_"Number" x, #_"Number" y]
             (ß (toBigDecimal(x).compareTo(toBigDecimal(y)) >= 0))
         )
 
-        (§ method Number negate(Number x)
+        #_method
+        (§ defn #_"Number" negate [this, #_"Number" x]
             (let [#_"MathContext" mc (ß (MathContext) MATH_CONTEXT.deref())]
                 (ß (mc == nil) ? ((BigDecimal) x).negate() :or ((BigDecimal) x).negate(mc))
             )
         )
 
-        (§ method Number inc(Number x)
+        #_method
+        (§ defn #_"Number" inc [this, #_"Number" x]
             (let [#_"MathContext" mc (ß (MathContext) MATH_CONTEXT.deref())]
                 (let [#_"BigDecimal" bx (ß (BigDecimal) x)]
                     (ß (mc == nil) ? bx.add(BigDecimal.ONE) :or bx.add(BigDecimal.ONE, mc))
@@ -23317,7 +24382,8 @@
             )
         )
 
-        (§ method Number dec(Number x)
+        #_method
+        (§ defn #_"Number" dec [this, #_"Number" x]
             (let [#_"MathContext" mc (ß (MathContext) MATH_CONTEXT.deref())]
                 (let [#_"BigDecimal" bx (ß (BigDecimal) x)]
                     (ß (mc == nil) ? bx.subtract(BigDecimal.ONE) :or bx.subtract(BigDecimal.ONE, mc))
@@ -23326,11 +24392,11 @@
         )
     )
 
-    (§ def LongOps LONG_OPS = new LongOps())
-    (§ def DoubleOps DOUBLE_OPS = new DoubleOps())
-    (§ def RatioOps RATIO_OPS = new RatioOps())
-    (§ def BigIntOps BIGINT_OPS = new BigIntOps())
-    (§ def BigDecimalOps BIGDECIMAL_OPS = new BigDecimalOps())
+    (§ def #_"LongOps" LONG_OPS (ß new LongOps()))
+    (§ def #_"DoubleOps" DOUBLE_OPS (ß new DoubleOps()))
+    (§ def #_"RatioOps" RATIO_OPS (ß new RatioOps()))
+    (§ def #_"BigIntOps" BIGINT_OPS (ß new BigIntOps()))
+    (§ def #_"BigDecimalOps" BIGDECIMAL_OPS (ß new BigDecimalOps()))
 
     (§ enum Category
         (§ item INTEGER),
@@ -23339,7 +24405,7 @@
         (§ item RATIO)
     )
 
-    (§ defn Ops ops(Object x)
+    (§ defn #_"Ops" ops [#_"Object" x]
         (let [#_"Class" xc (ß x.getClass())]
             (cond (ß xc == Long.class)
                 (do
@@ -23382,7 +24448,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn int hasheqFrom(Number x, Class xc)
+    (§ defn #_"int" hasheqFrom [#_"Number" x, #_"Class" xc]
         (when (ß xc == Integer.class || xc == Short.class || xc == Byte.class || (xc == BigInteger.class && lte(x, Long.MAX_VALUE) && gte(x, Long.MIN_VALUE)))
             (let [#_"long" lpart (ß x.longValue())]
                 (§ return (ß Murmur3.hashLong(lpart)))
@@ -23410,7 +24476,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn int hasheq(Number x)
+    (§ defn #_"int" hasheq [#_"Number" x]
         (let [#_"Class" xc (ß x.getClass())]
             (when (ß xc == Long.class)
                 (let [#_"long" lpart (ß x.longValue())]
@@ -23427,7 +24493,7 @@
         )
     )
 
-    (§ defn Category category(Object x)
+    (§ defn #_"Category" category [#_"Object" x]
         (let [#_"Class" xc (ß x.getClass())]
             (cond (ß xc == Integer.class)
                 (do
@@ -23465,7 +24531,7 @@
         )
     )
 
-    (§ defn long bitOpsCast(Object x)
+    (§ defn #_"long" bitOpsCast [#_"Object" x]
         (let [#_"Class" xc (ß x.getClass())]
             (when (ß xc == Long.class || xc == Integer.class || xc == Short.class || xc == Byte.class)
                 (§ return (ß RT.longCast(x)))
@@ -23476,7 +24542,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn float[] float_array(int size, Object init)
+    (§ defn #_"float[]" float_array [#_"int" size, #_"Object" init]
         (let [#_"float[]" ret (ß new float[size])]
             (if (ß init instanceof Number)
                 (do
@@ -23499,7 +24565,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn float[] float_array(Object sizeOrSeq)
+    (§ defn #_"float[]" float_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
                 (ß new float[((Number) sizeOrSeq).intValue()])
@@ -23520,7 +24586,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn double[] double_array(int size, Object init)
+    (§ defn #_"double[]" double_array [#_"int" size, #_"Object" init]
         (let [#_"double[]" ret (ß new double[size])]
             (if (ß init instanceof Number)
                 (do
@@ -23543,7 +24609,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn double[] double_array(Object sizeOrSeq)
+    (§ defn #_"double[]" double_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
                 (ß new double[((Number) sizeOrSeq).intValue()])
@@ -23564,7 +24630,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn int[] int_array(int size, Object init)
+    (§ defn #_"int[]" int_array [#_"int" size, #_"Object" init]
         (let [#_"int[]" ret (ß new int[size])]
             (if (ß init instanceof Number)
                 (do
@@ -23587,7 +24653,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn int[] int_array(Object sizeOrSeq)
+    (§ defn #_"int[]" int_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
                 (ß new int[((Number) sizeOrSeq).intValue()])
@@ -23608,7 +24674,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn long[] long_array(int size, Object init)
+    (§ defn #_"long[]" long_array [#_"int" size, #_"Object" init]
         (let [#_"long[]" ret (ß new long[size])]
             (if (ß init instanceof Number)
                 (do
@@ -23631,7 +24697,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn long[] long_array(Object sizeOrSeq)
+    (§ defn #_"long[]" long_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
                 (ß new long[((Number) sizeOrSeq).intValue()])
@@ -23652,7 +24718,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn short[] short_array(int size, Object init)
+    (§ defn #_"short[]" short_array [#_"int" size, #_"Object" init]
         (let [#_"short[]" ret (ß new short[size])]
             (if (ß init instanceof Short)
                 (do
@@ -23675,7 +24741,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn short[] short_array(Object sizeOrSeq)
+    (§ defn #_"short[]" short_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
                 (ß new short[((Number) sizeOrSeq).intValue()])
@@ -23696,7 +24762,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn char[] char_array(int size, Object init)
+    (§ defn #_"char[]" char_array [#_"int" size, #_"Object" init]
         (let [#_"char[]" ret (ß new char[size])]
             (if (ß init instanceof Character)
                 (do
@@ -23719,7 +24785,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn char[] char_array(Object sizeOrSeq)
+    (§ defn #_"char[]" char_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
                 (ß new char[((Number) sizeOrSeq).intValue()])
@@ -23740,7 +24806,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn byte[] byte_array(int size, Object init)
+    (§ defn #_"byte[]" byte_array [#_"int" size, #_"Object" init]
         (let [#_"byte[]" ret (ß new byte[size])]
             (if (ß init instanceof Byte)
                 (do
@@ -23763,7 +24829,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn byte[] byte_array(Object sizeOrSeq)
+    (§ defn #_"byte[]" byte_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
                 (ß new byte[((Number) sizeOrSeq).intValue()])
@@ -23784,7 +24850,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn boolean[] boolean_array(int size, Object init)
+    (§ defn #_"boolean[]" boolean_array [#_"int" size, #_"Object" init]
         (let [#_"boolean[]" ret (ß new boolean[size])]
             (if (ß init instanceof Boolean)
                 (do
@@ -23807,7 +24873,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn boolean[] boolean_array(Object sizeOrSeq)
+    (§ defn #_"boolean[]" boolean_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
                 (ß new boolean[((Number) sizeOrSeq).intValue()])
@@ -23828,510 +24894,510 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn boolean[] booleans(Object array)
+    (§ defn #_"boolean[]" booleans [#_"Object" array]
         (ß (boolean[]) array)
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn byte[] bytes(Object array)
+    (§ defn #_"byte[]" bytes [#_"Object" array]
         (ß (byte[]) array)
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn char[] chars(Object array)
+    (§ defn #_"char[]" chars [#_"Object" array]
         (ß (char[]) array)
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn short[] shorts(Object array)
+    (§ defn #_"short[]" shorts [#_"Object" array]
         (ß (short[]) array)
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn float[] floats(Object array)
+    (§ defn #_"float[]" floats [#_"Object" array]
         (ß (float[]) array)
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn double[] doubles(Object array)
+    (§ defn #_"double[]" doubles [#_"Object" array]
         (ß (double[]) array)
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn int[] ints(Object array)
+    (§ defn #_"int[]" ints [#_"Object" array]
         (ß (int[]) array)
     )
 
     (§ anno @WarnBoxedMath(false))
-    (§ defn long[] longs(Object array)
+    (§ defn #_"long[]" longs [#_"Object" array]
         (ß (long[]) array)
     )
 
-    (§ defn Number num(Object x)
+    (§ defn #_"Number" num [#_"Object" x]
         (ß (Number) x)
     )
 
-    (§ defn Number num(float x)
+    (§ defn #_"Number" num [#_"float" x]
         (ß Float.valueOf(x))
     )
 
-    (§ defn Number num(double x)
+    (§ defn #_"Number" num [#_"double" x]
         (ß Double.valueOf(x))
     )
 
-    (§ defn double add(double x, double y)
+    (§ defn #_"double" add [#_"double" x, #_"double" y]
         (ß x + y)
     )
 
-    (§ defn double addP(double x, double y)
+    (§ defn #_"double" addP [#_"double" x, #_"double" y]
         (ß x + y)
     )
 
-    (§ defn double minus(double x, double y)
+    (§ defn #_"double" minus [#_"double" x, #_"double" y]
         (ß x - y)
     )
 
-    (§ defn double minusP(double x, double y)
+    (§ defn #_"double" minusP [#_"double" x, #_"double" y]
         (ß x - y)
     )
 
-    (§ defn double minus(double x)
+    (§ defn #_"double" minus [#_"double" x]
         (ß -x)
     )
 
-    (§ defn double minusP(double x)
+    (§ defn #_"double" minusP [#_"double" x]
         (ß -x)
     )
 
-    (§ defn double inc(double x)
+    (§ defn #_"double" inc [#_"double" x]
         (ß x + 1)
     )
 
-    (§ defn double incP(double x)
+    (§ defn #_"double" incP [#_"double" x]
         (ß x + 1)
     )
 
-    (§ defn double dec(double x)
+    (§ defn #_"double" dec [#_"double" x]
         (ß x - 1)
     )
 
-    (§ defn double decP(double x)
+    (§ defn #_"double" decP [#_"double" x]
         (ß x - 1)
     )
 
-    (§ defn double multiply(double x, double y)
+    (§ defn #_"double" multiply [#_"double" x, #_"double" y]
         (ß x * y)
     )
 
-    (§ defn double multiplyP(double x, double y)
+    (§ defn #_"double" multiplyP [#_"double" x, #_"double" y]
         (ß x * y)
     )
 
-    (§ defn double divide(double x, double y)
+    (§ defn #_"double" divide [#_"double" x, #_"double" y]
         (ß x / y)
     )
 
-    (§ defn boolean equiv(double x, double y)
+    (§ defn #_"boolean" equiv [#_"double" x, #_"double" y]
         (ß (x == y))
     )
 
-    (§ defn boolean lt(double x, double y)
+    (§ defn #_"boolean" lt [#_"double" x, #_"double" y]
         (ß (x < y))
     )
 
-    (§ defn boolean lte(double x, double y)
+    (§ defn #_"boolean" lte [#_"double" x, #_"double" y]
         (ß (x <= y))
     )
 
-    (§ defn boolean gt(double x, double y)
+    (§ defn #_"boolean" gt [#_"double" x, #_"double" y]
         (ß (x > y))
     )
 
-    (§ defn boolean gte(double x, double y)
+    (§ defn #_"boolean" gte [#_"double" x, #_"double" y]
         (ß (x >= y))
     )
 
-    (§ defn boolean isPos(double x)
+    (§ defn #_"boolean" isPos [#_"double" x]
         (ß (x > 0))
     )
 
-    (§ defn boolean isNeg(double x)
+    (§ defn #_"boolean" isNeg [#_"double" x]
         (ß (x < 0))
     )
 
-    (§ defn boolean isZero(double x)
+    (§ defn #_"boolean" isZero [#_"double" x]
         (ß (x == 0))
     )
 
-    (§ defn int throwIntOverflow()
+    (§ defn #_"int" throwIntOverflow []
         (throw (ß new ArithmeticException("integer overflow")))
     )
 
-    (§ defn int unchecked_int_add(int x, int y)
+    (§ defn #_"int" unchecked_int_add [#_"int" x, #_"int" y]
         (ß x + y)
     )
 
-    (§ defn int unchecked_int_subtract(int x, int y)
+    (§ defn #_"int" unchecked_int_subtract [#_"int" x, #_"int" y]
         (ß x - y)
     )
 
-    (§ defn int unchecked_int_negate(int x)
+    (§ defn #_"int" unchecked_int_negate [#_"int" x]
         (ß -x)
     )
 
-    (§ defn int unchecked_int_inc(int x)
+    (§ defn #_"int" unchecked_int_inc [#_"int" x]
         (ß x + 1)
     )
 
-    (§ defn int unchecked_int_dec(int x)
+    (§ defn #_"int" unchecked_int_dec [#_"int" x]
         (ß x - 1)
     )
 
-    (§ defn int unchecked_int_multiply(int x, int y)
+    (§ defn #_"int" unchecked_int_multiply [#_"int" x, #_"int" y]
         (ß x * y)
     )
 
-    (§ defn long not(Object x)
+    (§ defn #_"long" not [#_"Object" x]
         (ß not(bitOpsCast(x)))
     )
 
-    (§ defn long not(long x)
+    (§ defn #_"long" not [#_"long" x]
         (ß ~x)
     )
 
-    (§ defn long and(Object x, Object y)
+    (§ defn #_"long" and [#_"Object" x, #_"Object" y]
         (ß and(bitOpsCast(x), bitOpsCast(y)))
     )
 
-    (§ defn long and(Object x, long y)
+    (§ defn #_"long" and [#_"Object" x, #_"long" y]
         (ß and(bitOpsCast(x), y))
     )
 
-    (§ defn long and(long x, Object y)
+    (§ defn #_"long" and [#_"long" x, #_"Object" y]
         (ß and(x, bitOpsCast(y)))
     )
 
-    (§ defn long and(long x, long y)
+    (§ defn #_"long" and [#_"long" x, #_"long" y]
         (ß x & y)
     )
 
-    (§ defn long or(Object x, Object y)
+    (§ defn #_"long" or [#_"Object" x, #_"Object" y]
         (ß or(bitOpsCast(x), bitOpsCast(y)))
     )
 
-    (§ defn long or(Object x, long y)
+    (§ defn #_"long" or [#_"Object" x, #_"long" y]
         (ß or(bitOpsCast(x), y))
     )
 
-    (§ defn long or(long x, Object y)
+    (§ defn #_"long" or [#_"long" x, #_"Object" y]
         (ß or(x, bitOpsCast(y)))
     )
 
-    (§ defn long or(long x, long y)
+    (§ defn #_"long" or [#_"long" x, #_"long" y]
         (ß x | y)
     )
 
-    (§ defn long xor(Object x, Object y)
+    (§ defn #_"long" xor [#_"Object" x, #_"Object" y]
         (ß xor(bitOpsCast(x), bitOpsCast(y)))
     )
 
-    (§ defn long xor(Object x, long y)
+    (§ defn #_"long" xor [#_"Object" x, #_"long" y]
         (ß xor(bitOpsCast(x), y))
     )
 
-    (§ defn long xor(long x, Object y)
+    (§ defn #_"long" xor [#_"long" x, #_"Object" y]
         (ß xor(x, bitOpsCast(y)))
     )
 
-    (§ defn long xor(long x, long y)
+    (§ defn #_"long" xor [#_"long" x, #_"long" y]
         (ß x :xor y)
     )
 
-    (§ defn long andNot(Object x, Object y)
+    (§ defn #_"long" andNot [#_"Object" x, #_"Object" y]
         (ß andNot(bitOpsCast(x), bitOpsCast(y)))
     )
 
-    (§ defn long andNot(Object x, long y)
+    (§ defn #_"long" andNot [#_"Object" x, #_"long" y]
         (ß andNot(bitOpsCast(x), y))
     )
 
-    (§ defn long andNot(long x, Object y)
+    (§ defn #_"long" andNot [#_"long" x, #_"Object" y]
         (ß andNot(x, bitOpsCast(y)))
     )
 
-    (§ defn long andNot(long x, long y)
+    (§ defn #_"long" andNot [#_"long" x, #_"long" y]
         (ß x & ~y)
     )
 
-    (§ defn long clearBit(Object x, Object y)
+    (§ defn #_"long" clearBit [#_"Object" x, #_"Object" y]
         (ß clearBit(bitOpsCast(x), bitOpsCast(y)))
     )
 
-    (§ defn long clearBit(Object x, long y)
+    (§ defn #_"long" clearBit [#_"Object" x, #_"long" y]
         (ß clearBit(bitOpsCast(x), y))
     )
 
-    (§ defn long clearBit(long x, Object y)
+    (§ defn #_"long" clearBit [#_"long" x, #_"Object" y]
         (ß clearBit(x, bitOpsCast(y)))
     )
 
-    (§ defn long clearBit(long x, long n)
+    (§ defn #_"long" clearBit [#_"long" x, #_"long" n]
         (ß x & ~(1 << n))
     )
 
-    (§ defn long setBit(Object x, Object y)
+    (§ defn #_"long" setBit [#_"Object" x, #_"Object" y]
         (ß setBit(bitOpsCast(x), bitOpsCast(y)))
     )
 
-    (§ defn long setBit(Object x, long y)
+    (§ defn #_"long" setBit [#_"Object" x, #_"long" y]
         (ß setBit(bitOpsCast(x), y))
     )
 
-    (§ defn long setBit(long x, Object y)
+    (§ defn #_"long" setBit [#_"long" x, #_"Object" y]
         (ß setBit(x, bitOpsCast(y)))
     )
 
-    (§ defn long setBit(long x, long n)
+    (§ defn #_"long" setBit [#_"long" x, #_"long" n]
         (ß x | (1 << n))
     )
 
-    (§ defn long flipBit(Object x, Object y)
+    (§ defn #_"long" flipBit [#_"Object" x, #_"Object" y]
         (ß flipBit(bitOpsCast(x), bitOpsCast(y)))
     )
 
-    (§ defn long flipBit(Object x, long y)
+    (§ defn #_"long" flipBit [#_"Object" x, #_"long" y]
         (ß flipBit(bitOpsCast(x), y))
     )
 
-    (§ defn long flipBit(long x, Object y)
+    (§ defn #_"long" flipBit [#_"long" x, #_"Object" y]
         (ß flipBit(x, bitOpsCast(y)))
     )
 
-    (§ defn long flipBit(long x, long n)
+    (§ defn #_"long" flipBit [#_"long" x, #_"long" n]
         (ß x :xor (1 << n))
     )
 
-    (§ defn boolean testBit(Object x, Object y)
+    (§ defn #_"boolean" testBit [#_"Object" x, #_"Object" y]
         (ß testBit(bitOpsCast(x), bitOpsCast(y)))
     )
 
-    (§ defn boolean testBit(Object x, long y)
+    (§ defn #_"boolean" testBit [#_"Object" x, #_"long" y]
         (ß testBit(bitOpsCast(x), y))
     )
 
-    (§ defn boolean testBit(long x, Object y)
+    (§ defn #_"boolean" testBit [#_"long" x, #_"Object" y]
         (ß testBit(x, bitOpsCast(y)))
     )
 
-    (§ defn boolean testBit(long x, long n)
+    (§ defn #_"boolean" testBit [#_"long" x, #_"long" n]
         (ß ((x & (1 << n)) != 0))
     )
 
-    (§ defn int unchecked_int_divide(int x, int y)
+    (§ defn #_"int" unchecked_int_divide [#_"int" x, #_"int" y]
         (ß x / y)
     )
 
-    (§ defn int unchecked_int_remainder(int x, int y)
+    (§ defn #_"int" unchecked_int_remainder [#_"int" x, #_"int" y]
         (ß x % y)
     )
 
-    (§ defn Number num(long x)
+    (§ defn #_"Number" num [#_"long" x]
         (ß Long.valueOf(x))
     )
 
-    (§ defn long unchecked_add(long x, long y)
+    (§ defn #_"long" unchecked_add [#_"long" x, #_"long" y]
         (ß x + y)
     )
 
-    (§ defn long unchecked_minus(long x, long y)
+    (§ defn #_"long" unchecked_minus [#_"long" x, #_"long" y]
         (ß x - y)
     )
 
-    (§ defn long unchecked_multiply(long x, long y)
+    (§ defn #_"long" unchecked_multiply [#_"long" x, #_"long" y]
         (ß x * y)
     )
 
-    (§ defn long unchecked_minus(long x)
+    (§ defn #_"long" unchecked_minus [#_"long" x]
         (ß -x)
     )
 
-    (§ defn long unchecked_inc(long x)
+    (§ defn #_"long" unchecked_inc [#_"long" x]
         (ß x + 1)
     )
 
-    (§ defn long unchecked_dec(long x)
+    (§ defn #_"long" unchecked_dec [#_"long" x]
         (ß x - 1)
     )
 
-    (§ defn Number unchecked_add(Object x, Object y)
+    (§ defn #_"Number" unchecked_add [#_"Object" x, #_"Object" y]
         (ß add(x, y))
     )
 
-    (§ defn Number unchecked_minus(Object x, Object y)
+    (§ defn #_"Number" unchecked_minus [#_"Object" x, #_"Object" y]
         (ß minus(x, y))
     )
 
-    (§ defn Number unchecked_multiply(Object x, Object y)
+    (§ defn #_"Number" unchecked_multiply [#_"Object" x, #_"Object" y]
         (ß multiply(x, y))
     )
 
-    (§ defn Number unchecked_minus(Object x)
+    (§ defn #_"Number" unchecked_minus [#_"Object" x]
         (ß minus(x))
     )
 
-    (§ defn Number unchecked_inc(Object x)
+    (§ defn #_"Number" unchecked_inc [#_"Object" x]
         (ß inc(x))
     )
 
-    (§ defn Number unchecked_dec(Object x)
+    (§ defn #_"Number" unchecked_dec [#_"Object" x]
         (ß dec(x))
     )
 
-    (§ defn double unchecked_add(double x, double y)
+    (§ defn #_"double" unchecked_add [#_"double" x, #_"double" y]
         (ß add(x, y))
     )
 
-    (§ defn double unchecked_minus(double x, double y)
+    (§ defn #_"double" unchecked_minus [#_"double" x, #_"double" y]
         (ß minus(x, y))
     )
 
-    (§ defn double unchecked_multiply(double x, double y)
+    (§ defn #_"double" unchecked_multiply [#_"double" x, #_"double" y]
         (ß multiply(x, y))
     )
 
-    (§ defn double unchecked_minus(double x)
+    (§ defn #_"double" unchecked_minus [#_"double" x]
         (ß minus(x))
     )
 
-    (§ defn double unchecked_inc(double x)
+    (§ defn #_"double" unchecked_inc [#_"double" x]
         (ß inc(x))
     )
 
-    (§ defn double unchecked_dec(double x)
+    (§ defn #_"double" unchecked_dec [#_"double" x]
         (ß dec(x))
     )
 
-    (§ defn double unchecked_add(double x, Object y)
+    (§ defn #_"double" unchecked_add [#_"double" x, #_"Object" y]
         (ß add(x, y))
     )
 
-    (§ defn double unchecked_minus(double x, Object y)
+    (§ defn #_"double" unchecked_minus [#_"double" x, #_"Object" y]
         (ß minus(x, y))
     )
 
-    (§ defn double unchecked_multiply(double x, Object y)
+    (§ defn #_"double" unchecked_multiply [#_"double" x, #_"Object" y]
         (ß multiply(x, y))
     )
 
-    (§ defn double unchecked_add(Object x, double y)
+    (§ defn #_"double" unchecked_add [#_"Object" x, #_"double" y]
         (ß add(x, y))
     )
 
-    (§ defn double unchecked_minus(Object x, double y)
+    (§ defn #_"double" unchecked_minus [#_"Object" x, #_"double" y]
         (ß minus(x, y))
     )
 
-    (§ defn double unchecked_multiply(Object x, double y)
+    (§ defn #_"double" unchecked_multiply [#_"Object" x, #_"double" y]
         (ß multiply(x, y))
     )
 
-    (§ defn double unchecked_add(double x, long y)
+    (§ defn #_"double" unchecked_add [#_"double" x, #_"long" y]
         (ß add(x, y))
     )
 
-    (§ defn double unchecked_minus(double x, long y)
+    (§ defn #_"double" unchecked_minus [#_"double" x, #_"long" y]
         (ß minus(x, y))
     )
 
-    (§ defn double unchecked_multiply(double x, long y)
+    (§ defn #_"double" unchecked_multiply [#_"double" x, #_"long" y]
         (ß multiply(x, y))
     )
 
-    (§ defn double unchecked_add(long x, double y)
+    (§ defn #_"double" unchecked_add [#_"long" x, #_"double" y]
         (ß add(x, y))
     )
 
-    (§ defn double unchecked_minus(long x, double y)
+    (§ defn #_"double" unchecked_minus [#_"long" x, #_"double" y]
         (ß minus(x, y))
     )
 
-    (§ defn double unchecked_multiply(long x, double y)
+    (§ defn #_"double" unchecked_multiply [#_"long" x, #_"double" y]
         (ß multiply(x, y))
     )
 
-    (§ defn Number unchecked_add(long x, Object y)
+    (§ defn #_"Number" unchecked_add [#_"long" x, #_"Object" y]
         (ß add(x, y))
     )
 
-    (§ defn Number unchecked_minus(long x, Object y)
+    (§ defn #_"Number" unchecked_minus [#_"long" x, #_"Object" y]
         (ß minus(x, y))
     )
 
-    (§ defn Number unchecked_multiply(long x, Object y)
+    (§ defn #_"Number" unchecked_multiply [#_"long" x, #_"Object" y]
         (ß multiply(x, y))
     )
 
-    (§ defn Number unchecked_add(Object x, long y)
+    (§ defn #_"Number" unchecked_add [#_"Object" x, #_"long" y]
         (ß add(x, y))
     )
 
-    (§ defn Number unchecked_minus(Object x, long y)
+    (§ defn #_"Number" unchecked_minus [#_"Object" x, #_"long" y]
         (ß minus(x, y))
     )
 
-    (§ defn Number unchecked_multiply(Object x, long y)
+    (§ defn #_"Number" unchecked_multiply [#_"Object" x, #_"long" y]
         (ß multiply(x, y))
     )
 
-    (§ defn Number quotient(double x, Object y)
+    (§ defn #_"Number" quotient [#_"double" x, #_"Object" y]
         (ß quotient((Object)x, y))
     )
 
-    (§ defn Number quotient(Object x, double y)
+    (§ defn #_"Number" quotient [#_"Object" x, #_"double" y]
         (ß quotient(x, (Object)y))
     )
 
-    (§ defn Number quotient(long x, Object y)
+    (§ defn #_"Number" quotient [#_"long" x, #_"Object" y]
         (ß quotient((Object)x, y))
     )
 
-    (§ defn Number quotient(Object x, long y)
+    (§ defn #_"Number" quotient [#_"Object" x, #_"long" y]
         (ß quotient(x, (Object)y))
     )
 
-    (§ defn double quotient(double x, long y)
+    (§ defn #_"double" quotient [#_"double" x, #_"long" y]
         (ß quotient(x, (double)y))
     )
 
-    (§ defn double quotient(long x, double y)
+    (§ defn #_"double" quotient [#_"long" x, #_"double" y]
         (ß quotient((double)x, y))
     )
 
-    (§ defn Number remainder(double x, Object y)
+    (§ defn #_"Number" remainder [#_"double" x, #_"Object" y]
         (ß remainder((Object)x, y))
     )
 
-    (§ defn Number remainder(Object x, double y)
+    (§ defn #_"Number" remainder [#_"Object" x, #_"double" y]
         (ß remainder(x, (Object)y))
     )
 
-    (§ defn Number remainder(long x, Object y)
+    (§ defn #_"Number" remainder [#_"long" x, #_"Object" y]
         (ß remainder((Object)x, y))
     )
 
-    (§ defn Number remainder(Object x, long y)
+    (§ defn #_"Number" remainder [#_"Object" x, #_"long" y]
         (ß remainder(x, (Object)y))
     )
 
-    (§ defn double remainder(double x, long y)
+    (§ defn #_"double" remainder [#_"double" x, #_"long" y]
         (ß remainder(x, (double)y))
     )
 
-    (§ defn double remainder(long x, double y)
+    (§ defn #_"double" remainder [#_"long" x, #_"double" y]
         (ß remainder((double)x, y))
     )
 
-    (§ defn long add(long x, long y)
+    (§ defn #_"long" add [#_"long" x, #_"long" y]
         (let [#_"long" ret (ß x + y)]
             (when (ß (ret :xor x) < 0 && (ret :xor y) < 0)
                 (§ return (ß throwIntOverflow()))
@@ -24340,7 +25406,7 @@
         )
     )
 
-    (§ defn Number addP(long x, long y)
+    (§ defn #_"Number" addP [#_"long" x, #_"long" y]
         (let [#_"long" ret (ß x + y)]
             (when (ß (ret :xor x) < 0 && (ret :xor y) < 0)
                 (§ return (ß addP((Number)x, (Number)y)))
@@ -24349,7 +25415,7 @@
         )
     )
 
-    (§ defn long minus(long x, long y)
+    (§ defn #_"long" minus [#_"long" x, #_"long" y]
         (let [#_"long" ret (ß x - y)]
             (when (ß ((ret :xor x) < 0 && (ret :xor ~y) < 0))
                 (§ return (ß throwIntOverflow()))
@@ -24358,7 +25424,7 @@
         )
     )
 
-    (§ defn Number minusP(long x, long y)
+    (§ defn #_"Number" minusP [#_"long" x, #_"long" y]
         (let [#_"long" ret (ß x - y)]
             (when (ß ((ret :xor x) < 0 && (ret :xor ~y) < 0))
                 (§ return (ß minusP((Number)x, (Number)y)))
@@ -24367,49 +25433,49 @@
         )
     )
 
-    (§ defn long minus(long x)
+    (§ defn #_"long" minus [#_"long" x]
         (when (ß x == Long.MIN_VALUE)
             (§ return (ß throwIntOverflow()))
         )
         (ß -x)
     )
 
-    (§ defn Number minusP(long x)
+    (§ defn #_"Number" minusP [#_"long" x]
         (when (ß x == Long.MIN_VALUE)
             (§ return (ß BigInt.fromBigInteger(BigInteger.valueOf(x).negate())))
         )
         (ß num(-x))
     )
 
-    (§ defn long inc(long x)
+    (§ defn #_"long" inc [#_"long" x]
         (when (ß x == Long.MAX_VALUE)
             (§ return (ß throwIntOverflow()))
         )
         (ß x + 1)
     )
 
-    (§ defn Number incP(long x)
+    (§ defn #_"Number" incP [#_"long" x]
         (when (ß x == Long.MAX_VALUE)
             (§ return (ß BIGINT_OPS.inc(x)))
         )
         (ß num(x + 1))
     )
 
-    (§ defn long dec(long x)
+    (§ defn #_"long" dec [#_"long" x]
         (when (ß x == Long.MIN_VALUE)
             (§ return (ß throwIntOverflow()))
         )
         (ß x - 1)
     )
 
-    (§ defn Number decP(long x)
+    (§ defn #_"Number" decP [#_"long" x]
         (when (ß x == Long.MIN_VALUE)
             (§ return (ß BIGINT_OPS.dec(x)))
         )
         (ß num(x - 1))
     )
 
-    (§ defn long multiply(long x, long y)
+    (§ defn #_"long" multiply [#_"long" x, #_"long" y]
         (when (ß x == Long.MIN_VALUE && y < 0)
             (§ return (ß throwIntOverflow()))
         )
@@ -24421,7 +25487,7 @@
         )
     )
 
-    (§ defn Number multiplyP(long x, long y)
+    (§ defn #_"Number" multiplyP [#_"long" x, #_"long" y]
         (when (ß x == Long.MIN_VALUE && y < 0)
             (§ return (ß multiplyP((Number)x, (Number)y)))
         )
@@ -24433,349 +25499,349 @@
         )
     )
 
-    (§ defn long quotient(long x, long y)
+    (§ defn #_"long" quotient [#_"long" x, #_"long" y]
         (ß x / y)
     )
 
-    (§ defn long remainder(long x, long y)
+    (§ defn #_"long" remainder [#_"long" x, #_"long" y]
         (ß x % y)
     )
 
-    (§ defn boolean equiv(long x, long y)
+    (§ defn #_"boolean" equiv [#_"long" x, #_"long" y]
         (ß (x == y))
     )
 
-    (§ defn boolean lt(long x, long y)
+    (§ defn #_"boolean" lt [#_"long" x, #_"long" y]
         (ß (x < y))
     )
 
-    (§ defn boolean lte(long x, long y)
+    (§ defn #_"boolean" lte [#_"long" x, #_"long" y]
         (ß (x <= y))
     )
 
-    (§ defn boolean gt(long x, long y)
+    (§ defn #_"boolean" gt [#_"long" x, #_"long" y]
         (ß (x > y))
     )
 
-    (§ defn boolean gte(long x, long y)
+    (§ defn #_"boolean" gte [#_"long" x, #_"long" y]
         (ß (x >= y))
     )
 
-    (§ defn boolean isPos(long x)
+    (§ defn #_"boolean" isPos [#_"long" x]
         (ß (x > 0))
     )
 
-    (§ defn boolean isNeg(long x)
+    (§ defn #_"boolean" isNeg [#_"long" x]
         (ß (x < 0))
     )
 
-    (§ defn boolean isZero(long x)
+    (§ defn #_"boolean" isZero [#_"long" x]
         (ß (x == 0))
     )
 
     ;; overload resolution
 
-    (§ defn Number add(long x, Object y)
+    (§ defn #_"Number" add [#_"long" x, #_"Object" y]
         (ß add((Object)x, y))
     )
 
-    (§ defn Number add(Object x, long y)
+    (§ defn #_"Number" add [#_"Object" x, #_"long" y]
         (ß add(x, (Object)y))
     )
 
-    (§ defn Number addP(long x, Object y)
+    (§ defn #_"Number" addP [#_"long" x, #_"Object" y]
         (ß addP((Object)x, y))
     )
 
-    (§ defn Number addP(Object x, long y)
+    (§ defn #_"Number" addP [#_"Object" x, #_"long" y]
         (ß addP(x, (Object)y))
     )
 
-    (§ defn double add(double x, Object y)
+    (§ defn #_"double" add [#_"double" x, #_"Object" y]
         (ß add(x, ((Number)y).doubleValue()))
     )
 
-    (§ defn double add(Object x, double y)
+    (§ defn #_"double" add [#_"Object" x, #_"double" y]
         (ß add(((Number)x).doubleValue(), y))
     )
 
-    (§ defn double add(double x, long y)
+    (§ defn #_"double" add [#_"double" x, #_"long" y]
         (ß x + y)
     )
 
-    (§ defn double add(long x, double y)
+    (§ defn #_"double" add [#_"long" x, #_"double" y]
         (ß x + y)
     )
 
-    (§ defn double addP(double x, Object y)
+    (§ defn #_"double" addP [#_"double" x, #_"Object" y]
         (ß addP(x, ((Number)y).doubleValue()))
     )
 
-    (§ defn double addP(Object x, double y)
+    (§ defn #_"double" addP [#_"Object" x, #_"double" y]
         (ß addP(((Number)x).doubleValue(), y))
     )
 
-    (§ defn double addP(double x, long y)
+    (§ defn #_"double" addP [#_"double" x, #_"long" y]
         (ß x + y)
     )
 
-    (§ defn double addP(long x, double y)
+    (§ defn #_"double" addP [#_"long" x, #_"double" y]
         (ß x + y)
     )
 
-    (§ defn Number minus(long x, Object y)
+    (§ defn #_"Number" minus [#_"long" x, #_"Object" y]
         (ß minus((Object)x, y))
     )
 
-    (§ defn Number minus(Object x, long y)
+    (§ defn #_"Number" minus [#_"Object" x, #_"long" y]
         (ß minus(x, (Object)y))
     )
 
-    (§ defn Number minusP(long x, Object y)
+    (§ defn #_"Number" minusP [#_"long" x, #_"Object" y]
         (ß minusP((Object)x, y))
     )
 
-    (§ defn Number minusP(Object x, long y)
+    (§ defn #_"Number" minusP [#_"Object" x, #_"long" y]
         (ß minusP(x, (Object)y))
     )
 
-    (§ defn double minus(double x, Object y)
+    (§ defn #_"double" minus [#_"double" x, #_"Object" y]
         (ß minus(x, ((Number)y).doubleValue()))
     )
 
-    (§ defn double minus(Object x, double y)
+    (§ defn #_"double" minus [#_"Object" x, #_"double" y]
         (ß minus(((Number)x).doubleValue(), y))
     )
 
-    (§ defn double minus(double x, long y)
+    (§ defn #_"double" minus [#_"double" x, #_"long" y]
         (ß x - y)
     )
 
-    (§ defn double minus(long x, double y)
+    (§ defn #_"double" minus [#_"long" x, #_"double" y]
         (ß x - y)
     )
 
-    (§ defn double minusP(double x, Object y)
+    (§ defn #_"double" minusP [#_"double" x, #_"Object" y]
         (ß minus(x, ((Number)y).doubleValue()))
     )
 
-    (§ defn double minusP(Object x, double y)
+    (§ defn #_"double" minusP [#_"Object" x, #_"double" y]
         (ß minus(((Number)x).doubleValue(), y))
     )
 
-    (§ defn double minusP(double x, long y)
+    (§ defn #_"double" minusP [#_"double" x, #_"long" y]
         (ß x - y)
     )
 
-    (§ defn double minusP(long x, double y)
+    (§ defn #_"double" minusP [#_"long" x, #_"double" y]
         (ß x - y)
     )
 
-    (§ defn Number multiply(long x, Object y)
+    (§ defn #_"Number" multiply [#_"long" x, #_"Object" y]
         (ß multiply((Object)x, y))
     )
 
-    (§ defn Number multiply(Object x, long y)
+    (§ defn #_"Number" multiply [#_"Object" x, #_"long" y]
         (ß multiply(x, (Object)y))
     )
 
-    (§ defn Number multiplyP(long x, Object y)
+    (§ defn #_"Number" multiplyP [#_"long" x, #_"Object" y]
         (ß multiplyP((Object)x, y))
     )
 
-    (§ defn Number multiplyP(Object x, long y)
+    (§ defn #_"Number" multiplyP [#_"Object" x, #_"long" y]
         (ß multiplyP(x, (Object)y))
     )
 
-    (§ defn double multiply(double x, Object y)
+    (§ defn #_"double" multiply [#_"double" x, #_"Object" y]
         (ß multiply(x, ((Number)y).doubleValue()))
     )
 
-    (§ defn double multiply(Object x, double y)
+    (§ defn #_"double" multiply [#_"Object" x, #_"double" y]
         (ß multiply(((Number)x).doubleValue(), y))
     )
 
-    (§ defn double multiply(double x, long y)
+    (§ defn #_"double" multiply [#_"double" x, #_"long" y]
         (ß x * y)
     )
 
-    (§ defn double multiply(long x, double y)
+    (§ defn #_"double" multiply [#_"long" x, #_"double" y]
         (ß x * y)
     )
 
-    (§ defn double multiplyP(double x, Object y)
+    (§ defn #_"double" multiplyP [#_"double" x, #_"Object" y]
         (ß multiplyP(x, ((Number)y).doubleValue()))
     )
 
-    (§ defn double multiplyP(Object x, double y)
+    (§ defn #_"double" multiplyP [#_"Object" x, #_"double" y]
         (ß multiplyP(((Number)x).doubleValue(), y))
     )
 
-    (§ defn double multiplyP(double x, long y)
+    (§ defn #_"double" multiplyP [#_"double" x, #_"long" y]
         (ß x * y)
     )
 
-    (§ defn double multiplyP(long x, double y)
+    (§ defn #_"double" multiplyP [#_"long" x, #_"double" y]
         (ß x * y)
     )
 
-    (§ defn Number divide(long x, Object y)
+    (§ defn #_"Number" divide [#_"long" x, #_"Object" y]
         (ß divide((Object)x, y))
     )
 
-    (§ defn Number divide(Object x, long y)
+    (§ defn #_"Number" divide [#_"Object" x, #_"long" y]
         (ß divide(x, (Object)y))
     )
 
-    (§ defn double divide(double x, Object y)
+    (§ defn #_"double" divide [#_"double" x, #_"Object" y]
         (ß x / ((Number)y).doubleValue())
     )
 
-    (§ defn double divide(Object x, double y)
+    (§ defn #_"double" divide [#_"Object" x, #_"double" y]
         (ß ((Number)x).doubleValue() / y)
     )
 
-    (§ defn double divide(double x, long y)
+    (§ defn #_"double" divide [#_"double" x, #_"long" y]
         (ß x / y)
     )
 
-    (§ defn double divide(long x, double y)
+    (§ defn #_"double" divide [#_"long" x, #_"double" y]
         (ß x / y)
     )
 
-    (§ defn Number divide(long x, long y)
+    (§ defn #_"Number" divide [#_"long" x, #_"long" y]
         (ß divide((Number)x, (Number)y))
     )
 
-    (§ defn boolean lt(long x, Object y)
+    (§ defn #_"boolean" lt [#_"long" x, #_"Object" y]
         (ß lt((Object)x, y))
     )
 
-    (§ defn boolean lt(Object x, long y)
+    (§ defn #_"boolean" lt [#_"Object" x, #_"long" y]
         (ß lt(x, (Object)y))
     )
 
-    (§ defn boolean lt(double x, Object y)
+    (§ defn #_"boolean" lt [#_"double" x, #_"Object" y]
         (ß (x < ((Number)y).doubleValue()))
     )
 
-    (§ defn boolean lt(Object x, double y)
+    (§ defn #_"boolean" lt [#_"Object" x, #_"double" y]
         (ß (((Number)x).doubleValue() < y))
     )
 
-    (§ defn boolean lt(double x, long y)
+    (§ defn #_"boolean" lt [#_"double" x, #_"long" y]
         (ß (x < y))
     )
 
-    (§ defn boolean lt(long x, double y)
+    (§ defn #_"boolean" lt [#_"long" x, #_"double" y]
         (ß (x < y))
     )
 
-    (§ defn boolean lte(long x, Object y)
+    (§ defn #_"boolean" lte [#_"long" x, #_"Object" y]
         (ß lte((Object)x, y))
     )
 
-    (§ defn boolean lte(Object x, long y)
+    (§ defn #_"boolean" lte [#_"Object" x, #_"long" y]
         (ß lte(x, (Object)y))
     )
 
-    (§ defn boolean lte(double x, Object y)
+    (§ defn #_"boolean" lte [#_"double" x, #_"Object" y]
         (ß (x <= ((Number)y).doubleValue()))
     )
 
-    (§ defn boolean lte(Object x, double y)
+    (§ defn #_"boolean" lte [#_"Object" x, #_"double" y]
         (ß (((Number)x).doubleValue() <= y))
     )
 
-    (§ defn boolean lte(double x, long y)
+    (§ defn #_"boolean" lte [#_"double" x, #_"long" y]
         (ß (x <= y))
     )
 
-    (§ defn boolean lte(long x, double y)
+    (§ defn #_"boolean" lte [#_"long" x, #_"double" y]
         (ß (x <= y))
     )
 
-    (§ defn boolean gt(long x, Object y)
+    (§ defn #_"boolean" gt [#_"long" x, #_"Object" y]
         (ß gt((Object)x, y))
     )
 
-    (§ defn boolean gt(Object x, long y)
+    (§ defn #_"boolean" gt [#_"Object" x, #_"long" y]
         (ß gt(x, (Object)y))
     )
 
-    (§ defn boolean gt(double x, Object y)
+    (§ defn #_"boolean" gt [#_"double" x, #_"Object" y]
         (ß (x > ((Number)y).doubleValue()))
     )
 
-    (§ defn boolean gt(Object x, double y)
+    (§ defn #_"boolean" gt [#_"Object" x, #_"double" y]
         (ß (((Number)x).doubleValue() > y))
     )
 
-    (§ defn boolean gt(double x, long y)
+    (§ defn #_"boolean" gt [#_"double" x, #_"long" y]
         (ß (x > y))
     )
 
-    (§ defn boolean gt(long x, double y)
+    (§ defn #_"boolean" gt [#_"long" x, #_"double" y]
         (ß (x > y))
     )
 
-    (§ defn boolean gte(long x, Object y)
+    (§ defn #_"boolean" gte [#_"long" x, #_"Object" y]
         (ß gte((Object)x, y))
     )
 
-    (§ defn boolean gte(Object x, long y)
+    (§ defn #_"boolean" gte [#_"Object" x, #_"long" y]
         (ß gte(x, (Object)y))
     )
 
-    (§ defn boolean gte(double x, Object y)
+    (§ defn #_"boolean" gte [#_"double" x, #_"Object" y]
         (ß (x >= ((Number)y).doubleValue()))
     )
 
-    (§ defn boolean gte(Object x, double y)
+    (§ defn #_"boolean" gte [#_"Object" x, #_"double" y]
         (ß (((Number)x).doubleValue() >= y))
     )
 
-    (§ defn boolean gte(double x, long y)
+    (§ defn #_"boolean" gte [#_"double" x, #_"long" y]
         (ß (x >= y))
     )
 
-    (§ defn boolean gte(long x, double y)
+    (§ defn #_"boolean" gte [#_"long" x, #_"double" y]
         (ß (x >= y))
     )
 
-    (§ defn boolean equiv(long x, Object y)
+    (§ defn #_"boolean" equiv [#_"long" x, #_"Object" y]
         (ß equiv((Object)x, y))
     )
 
-    (§ defn boolean equiv(Object x, long y)
+    (§ defn #_"boolean" equiv [#_"Object" x, #_"long" y]
         (ß equiv(x, (Object)y))
     )
 
-    (§ defn boolean equiv(double x, Object y)
+    (§ defn #_"boolean" equiv [#_"double" x, #_"Object" y]
         (ß (x == ((Number)y).doubleValue()))
     )
 
-    (§ defn boolean equiv(Object x, double y)
+    (§ defn #_"boolean" equiv [#_"Object" x, #_"double" y]
         (ß (((Number)x).doubleValue() == y))
     )
 
-    (§ defn boolean equiv(double x, long y)
+    (§ defn #_"boolean" equiv [#_"double" x, #_"long" y]
         (ß (x == y))
     )
 
-    (§ defn boolean equiv(long x, double y)
+    (§ defn #_"boolean" equiv [#_"long" x, #_"double" y]
         (ß (x == y))
     )
 
-    (§ defn boolean isNaN(Object x)
+    (§ defn #_"boolean" isNaN [#_"Object" x]
         (ß (x instanceof Double) && ((Double)x).isNaN() || (x instanceof Float) && ((Float)x).isNaN())
     )
 
-    (§ defn double max(double x, double y)
+    (§ defn #_"double" max [#_"double" x, #_"double" y]
         (ß Math.max(x, y))
     )
 
-    (§ defn Object max(double x, long y)
+    (§ defn #_"Object" max [#_"double" x, #_"long" y]
         (when (ß Double.isNaN(x))
             (§ return x)
         )
@@ -24789,7 +25855,7 @@
         )
     )
 
-    (§ defn Object max(double x, Object y)
+    (§ defn #_"Object" max [#_"double" x, #_"Object" y]
         (cond (ß Double.isNaN(x))
             (do
                 (§ return x)
@@ -24809,7 +25875,7 @@
         )
     )
 
-    (§ defn Object max(long x, double y)
+    (§ defn #_"Object" max [#_"long" x, #_"double" y]
         (when (ß Double.isNaN(y))
             (§ return y)
         )
@@ -24823,7 +25889,7 @@
         )
     )
 
-    (§ defn long max(long x, long y)
+    (§ defn #_"long" max [#_"long" x, #_"long" y]
         (if (ß x > y)
             (do
                 x
@@ -24834,7 +25900,7 @@
         )
     )
 
-    (§ defn Object max(long x, Object y)
+    (§ defn #_"Object" max [#_"long" x, #_"Object" y]
         (when (ß isNaN(y))
             (§ return y)
         )
@@ -24848,7 +25914,7 @@
         )
     )
 
-    (§ defn Object max(Object x, long y)
+    (§ defn #_"Object" max [#_"Object" x, #_"long" y]
         (when (ß isNaN(x))
             (§ return x)
         )
@@ -24862,7 +25928,7 @@
         )
     )
 
-    (§ defn Object max(Object x, double y)
+    (§ defn #_"Object" max [#_"Object" x, #_"double" y]
         (cond (ß isNaN(x))
             (do
                 (§ return x)
@@ -24882,7 +25948,7 @@
         )
     )
 
-    (§ defn Object max(Object x, Object y)
+    (§ defn #_"Object" max [#_"Object" x, #_"Object" y]
         (cond (ß isNaN(x))
             (do
                 (§ return x)
@@ -24902,11 +25968,11 @@
         )
     )
 
-    (§ defn double min(double x, double y)
+    (§ defn #_"double" min [#_"double" x, #_"double" y]
         (ß Math.min(x, y))
     )
 
-    (§ defn Object min(double x, long y)
+    (§ defn #_"Object" min [#_"double" x, #_"long" y]
         (when (ß Double.isNaN(x))
             (§ return x)
         )
@@ -24920,7 +25986,7 @@
         )
     )
 
-    (§ defn Object min(double x, Object y)
+    (§ defn #_"Object" min [#_"double" x, #_"Object" y]
         (cond (ß Double.isNaN(x))
             (do
                 (§ return x)
@@ -24940,7 +26006,7 @@
         )
     )
 
-    (§ defn Object min(long x, double y)
+    (§ defn #_"Object" min [#_"long" x, #_"double" y]
         (when (ß Double.isNaN(y))
             (§ return y)
         )
@@ -24954,7 +26020,7 @@
         )
     )
 
-    (§ defn long min(long x, long y)
+    (§ defn #_"long" min [#_"long" x, #_"long" y]
         (if (ß x < y)
             (do
                 x
@@ -24965,7 +26031,7 @@
         )
     )
 
-    (§ defn Object min(long x, Object y)
+    (§ defn #_"Object" min [#_"long" x, #_"Object" y]
         (when (ß isNaN(y))
             (§ return y)
         )
@@ -24979,7 +26045,7 @@
         )
     )
 
-    (§ defn Object min(Object x, long y)
+    (§ defn #_"Object" min [#_"Object" x, #_"long" y]
         (when (ß isNaN(x))
             (§ return x)
         )
@@ -24993,7 +26059,7 @@
         )
     )
 
-    (§ defn Object min(Object x, double y)
+    (§ defn #_"Object" min [#_"Object" x, #_"double" y]
         (cond (ß isNaN(x))
             (do
                 (§ return x)
@@ -25013,7 +26079,7 @@
         )
     )
 
-    (§ defn Object min(Object x, Object y)
+    (§ defn #_"Object" min [#_"Object" x, #_"Object" y]
         (cond (ß isNaN(x))
             (do
                 (§ return x)
@@ -25039,19 +26105,20 @@
 
 #_abstract
 (class-ns Obj (§ implements IObj)
-    (§ field IPersistentMap _meta)
+    (§ field #_"IPersistentMap" _meta)
 
-    (§ constructor Obj(IPersistentMap meta)
+    (§ constructor #_"Obj" Obj [#_"IPersistentMap" meta]
         (ß this._meta = meta)
         this
     )
 
-    (§ constructor Obj()
+    (§ constructor #_"Obj" Obj []
         (ß _meta = nil)
         this
     )
 
-    (§ method IPersistentMap meta()
+    #_method
+    (§ defn #_"IPersistentMap" meta [this]
         (ß _meta)
     )
 
@@ -25077,13 +26144,13 @@
  ; nil keys and values are ok, but you won't be able to distinguish a nil value via valAt - use contains/entryAt
  ;;
 (class-ns PersistentArrayMap (§ extends APersistentMap) (§ implements IObj, IEditableCollection, IMapIterable, IKVReduce)
-    (§ field Object[] array)
-    (§ def int HASHTABLE_THRESHOLD = 16)
+    (§ field #_"Object[]" array)
+    (§ def #_"int" HASHTABLE_THRESHOLD (ß 16))
 
-    (§ def PersistentArrayMap EMPTY = new PersistentArrayMap())
-    (§ field- IPersistentMap _meta)
+    (§ def #_"PersistentArrayMap" EMPTY (ß new PersistentArrayMap()))
+    (§ field- #_"IPersistentMap" _meta)
 
-    (§ defn IPersistentMap create(Map other)
+    (§ defn #_"IPersistentMap" create [#_"Map" other]
         (let [#_"ITransientMap" ret (ß EMPTY.asTransient())]
             (doseq [#_"Object" o (ß other.entrySet())]
                 (let [(ß Map.Entry e = (Entry) o)]
@@ -25095,25 +26162,28 @@
     )
 
     #_protected
-    (§ constructor PersistentArrayMap()
+    (§ constructor #_"PersistentArrayMap" PersistentArrayMap []
         (ß this.array = new Object[] (§))
         (ß this._meta = nil)
         this
     )
 
-    (§ method PersistentArrayMap withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"PersistentArrayMap" withMeta [this, #_"IPersistentMap" meta]
         (ß new PersistentArrayMap(meta, array))
     )
 
-    (§ method PersistentArrayMap create(Object... init)
+    #_method
+    (§ defn #_"PersistentArrayMap" create [this, #_"Object..." init]
         (ß new PersistentArrayMap(meta(), init))
     )
 
-    (§ method IPersistentMap createHT(Object[] init)
+    #_method
+    (§ defn #_"IPersistentMap" createHT [this, #_"Object[]" init]
         (ß PersistentHashMap.create(meta(), init))
     )
 
-    (§ defn PersistentArrayMap createWithCheck(Object[] init)
+    (§ defn #_"PersistentArrayMap" createWithCheck [#_"Object[]" init]
         (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i += 2)]
             (loop-when-recur [(ß int j = i + 2)] (ß j < init.length) [(ß j += 2)]
                 (when (ß equalKey(init[i], init[j]))
@@ -25124,7 +26194,7 @@
         (ß new PersistentArrayMap(init))
     )
 
-    (§ defn PersistentArrayMap createAsIfByAssoc(Object[] init)
+    (§ defn #_"PersistentArrayMap" createAsIfByAssoc [#_"Object[]" init]
         (when (ß (init.length & 1) == 1)
             (throw (ß new IllegalArgumentException(String.format("No value supplied for key: %s", init[init.length - 1]))))
         )
@@ -25192,27 +26262,30 @@
      ;
      ; @param init {key1, val1, key2, val2, ...}
      ;;
-    (§ constructor PersistentArrayMap(Object[] init)
+    (§ constructor #_"PersistentArrayMap" PersistentArrayMap [#_"Object[]" init]
         (ß this.array = init)
         (ß this._meta = nil)
         this
     )
 
-    (§ constructor PersistentArrayMap(IPersistentMap meta, Object[] init)
+    (§ constructor #_"PersistentArrayMap" PersistentArrayMap [#_"IPersistentMap" meta, #_"Object[]" init]
         (ß this._meta = meta)
         (ß this.array = init)
         this
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         (ß array.length / 2)
     )
 
-    (§ method boolean containsKey(Object key)
+    #_method
+    (§ defn #_"boolean" containsKey [this, #_"Object" key]
         (ß (indexOf(key) >= 0))
     )
 
-    (§ method IMapEntry entryAt(Object key)
+    #_method
+    (§ defn #_"IMapEntry" entryAt [this, #_"Object" key]
         (let [#_"int" i (ß indexOf(key))]
             (when (ß i >= 0)
                 (§ return (ß (IMapEntry) MapEntry.create(array[i], array[i + 1])))
@@ -25221,7 +26294,8 @@
         )
     )
 
-    (§ method IPersistentMap assocEx(Object key, Object val)
+    #_method
+    (§ defn #_"IPersistentMap" assocEx [this, #_"Object" key, #_"Object" val]
         (let [#_"int" i (ß indexOf(key))]
             (§ let [#_"Object[]" newArray]
                 (cond (ß i >= 0)
@@ -25246,7 +26320,8 @@
         )
     )
 
-    (§ method IPersistentMap assoc(Object key, Object val)
+    #_method
+    (§ defn #_"IPersistentMap" assoc [this, #_"Object" key, #_"Object" val]
         (let [#_"int" i (ß indexOf(key))]
             (§ let [#_"Object[]" newArray]
                 (cond (ß i >= 0) ;; already have key, same-sized replacement
@@ -25275,7 +26350,8 @@
         )
     )
 
-    (§ method IPersistentMap without(Object key)
+    #_method
+    (§ defn #_"IPersistentMap" without [this, #_"Object" key]
         (let [#_"int" i (ß indexOf(key))]
             (when (ß i >= 0) ;; have key, will remove
                 (let [#_"int" newlen (ß array.length - 2)]
@@ -25294,11 +26370,13 @@
         )
     )
 
-    (§ method IPersistentMap empty()
+    #_method
+    (§ defn #_"IPersistentMap" empty [this]
         (ß (IPersistentMap) EMPTY.withMeta(meta()))
     )
 
-    (§ method Object valAt(Object key, Object notFound)
+    #_method
+    (§ defn #_"Object" valAt [this, #_"Object" key, #_"Object" notFound]
         (let [#_"int" i (ß indexOf(key))]
             (when (ß i >= 0)
                 (§ return (ß array[i + 1]))
@@ -25307,15 +26385,18 @@
         )
     )
 
-    (§ method Object valAt(Object key)
+    #_method
+    (§ defn #_"Object" valAt [this, #_"Object" key]
         (ß valAt(key, nil))
     )
 
-    (§ method int capacity()
+    #_method
+    (§ defn #_"int" capacity [this]
         (ß count())
     )
 
-    (§ method- int indexOfObject(Object key)
+    #_method
+    (§ defn- #_"int" indexOfObject [this, #_"Object" key]
         (let [(ß Util.EquivPred ep = Util.equivPred(key))]
             (loop-when-recur [(ß int i = 0)] (ß i < array.length) [(ß i += 2)]
                 (when (ß ep.equiv(key, array[i]))
@@ -25326,7 +26407,8 @@
         )
     )
 
-    (§ method- int indexOf(Object key)
+    #_method
+    (§ defn- #_"int" indexOf [this, #_"Object" key]
         (if (ß key instanceof Keyword)
             (do
                 (loop-when-recur [(ß int i = 0)] (ß i < array.length) [(ß i += 2)]
@@ -25342,97 +26424,108 @@
         )
     )
 
-    (§ defn boolean equalKey(Object k1, Object k2)
+    (§ defn #_"boolean" equalKey [#_"Object" k1, #_"Object" k2]
         (when (ß k1 instanceof Keyword)
             (§ return (ß (k1 == k2)))
         )
         (ß Util.equiv(k1, k2))
     )
 
-    (§ method Iterator iterator()
+    #_method
+    (§ defn #_"Iterator" iterator [this]
         (ß new Iter(array, APersistentMap.MAKE_ENTRY))
     )
 
-    (§ method Iterator keyIterator()
+    #_method
+    (§ defn #_"Iterator" keyIterator [this]
         (ß new Iter(array, APersistentMap.MAKE_KEY))
     )
 
-    (§ method Iterator valIterator()
+    #_method
+    (§ defn #_"Iterator" valIterator [this]
         (ß new Iter(array, APersistentMap.MAKE_VAL))
     )
 
-    (§ method ISeq seq()
+    #_method
+    (§ defn #_"ISeq" seq [this]
         (when (ß array.length > 0)
             (§ return (ß new Seq(array, 0)))
         )
         nil
     )
 
-    (§ method IPersistentMap meta()
+    #_method
+    (§ defn #_"IPersistentMap" meta [this]
         (ß _meta)
     )
 
     (class-ns Seq (§ extends ASeq) (§ implements Counted)
-        (§ field Object[] array)
-        (§ field int i)
+        (§ field #_"Object[]" array)
+        (§ field #_"int" i)
 
-        (§ constructor Seq(Object[] array, int i)
+        (§ constructor #_"Seq" Seq [#_"Object[]" array, #_"int" i]
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ constructor Seq(IPersistentMap meta, Object[] array, int i)
+        (§ constructor #_"Seq" Seq [#_"IPersistentMap" meta, #_"Object[]" array, #_"int" i]
             (§ super(meta))
             (ß this.array = array)
             (ß this.i = i)
             this
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (ß MapEntry.create(array[i], array[i + 1]))
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (when (ß i + 2 < array.length)
                 (§ return (ß new Seq(array, i + 2)))
             )
             nil
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             (ß (array.length - i) / 2)
         )
 
-        (§ method Obj withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"Obj" withMeta [this, #_"IPersistentMap" meta]
             (ß new Seq(meta, array, i))
         )
     )
 
     (class-ns Iter (§ implements Iterator)
-        (§ field IFn f)
-        (§ field Object[] array)
-        (§ field int i)
+        (§ field #_"IFn" f)
+        (§ field #_"Object[]" array)
+        (§ field #_"int" i)
 
         ;; for iterator
-        (§ constructor Iter(Object[] array, IFn f)
+        (§ constructor #_"Iter" Iter [#_"Object[]" array, #_"IFn" f]
             (§ this(array, -2, f))
             this
         )
 
         ;; for entryAt
-        (§ constructor Iter(Object[] array, int i, IFn f)
+        (§ constructor #_"Iter" Iter [#_"Object[]" array, #_"int" i, #_"IFn" f]
             (ß this.array = array)
             (ß this.i = i)
             (ß this.f = f)
             this
         )
 
-        (§ method boolean hasNext()
+        #_method
+        (§ defn #_"boolean" hasNext [this]
             (ß (i < array.length - 2))
         )
 
-        (§ method Object next()
+        #_method
+        (§ defn #_"Object" next [this]
             (try
                 (ß i += 2)
                 (ß f.invoke(array[i], array[i + 1]))
@@ -25442,12 +26535,14 @@
             )
         )
 
-        (§ method void remove()
+        #_method
+        (§ defn #_"void" remove [this]
             (throw (ß new UnsupportedOperationException()))
         )
     )
 
-    (§ method Object kvreduce(IFn f, Object init)
+    #_method
+    (§ defn #_"Object" kvreduce [this, #_"IFn" f, #_"Object" init]
         (loop-when-recur [(ß int i = 0)] (ß i < array.length) [(ß i += 2)]
             (ß init = f.invoke(init, array[i], array[i + 1]))
             (when (ß RT.isReduced(init))
@@ -25457,18 +26552,19 @@
         init
     )
 
-    (§ method ITransientMap asTransient()
+    #_method
+    (§ defn #_"ITransientMap" asTransient [this]
         (ß new TransientArrayMap(array))
     )
 
     (class-ns TransientArrayMap (§ extends ATransientMap)
         #_volatile
-        (§ field int len)
-        (§ field Object[] array)
+        (§ field #_"int" len)
+        (§ field #_"Object[]" array)
         #_volatile
-        (§ field Thread owner)
+        (§ field #_"Thread" owner)
 
-        (§ constructor TransientArrayMap(Object[] array)
+        (§ constructor #_"TransientArrayMap" TransientArrayMap [#_"Object[]" array]
             (ß this.owner = Thread.currentThread())
             (ß this.array = new Object[Math.max(HASHTABLE_THRESHOLD, array.length)])
             (ß System.arraycopy(array, 0, this.array, 0, array.length))
@@ -25476,7 +26572,8 @@
             this
         )
 
-        (§ method- int indexOf(Object key)
+        #_method
+        (§ defn- #_"int" indexOf [this, #_"Object" key]
             (loop-when-recur [(ß int i = 0)] (ß i < len) [(ß i += 2)]
                 (when (ß equalKey(array[i], key))
                     (§ return i)
@@ -25485,7 +26582,8 @@
             -1
         )
 
-        (§ method ITransientMap doAssoc(Object key, Object val)
+        #_method
+        (§ defn #_"ITransientMap" doAssoc [this, #_"Object" key, #_"Object" val]
             (let [#_"int" i (ß indexOf(key))]
                 (cond (ß i >= 0) ;; already have key,
                     (do
@@ -25506,7 +26604,8 @@
             )
         )
 
-        (§ method ITransientMap doWithout(Object key)
+        #_method
+        (§ defn #_"ITransientMap" doWithout [this, #_"Object" key]
             (let [#_"int" i (ß indexOf(key))]
                 (when (ß i >= 0) ;; have key, will remove
                     (when (ß len >= 2)
@@ -25519,7 +26618,8 @@
             )
         )
 
-        (§ method Object doValAt(Object key, Object notFound)
+        #_method
+        (§ defn #_"Object" doValAt [this, #_"Object" key, #_"Object" notFound]
             (let [#_"int" i (ß indexOf(key))]
                 (when (ß i >= 0)
                     (§ return (ß array[i + 1]))
@@ -25528,11 +26628,13 @@
             )
         )
 
-        (§ method int doCount()
+        #_method
+        (§ defn #_"int" doCount [this]
             (ß len / 2)
         )
 
-        (§ method IPersistentMap doPersistent()
+        #_method
+        (§ defn #_"IPersistentMap" doPersistent [this]
             (ß ensureEditable())
             (ß owner = nil)
             (let [#_"Object[]" a (ß new Object[len])]
@@ -25541,7 +26643,8 @@
             )
         )
 
-        (§ method void ensureEditable()
+        #_method
+        (§ defn #_"void" ensureEditable [this]
             (when (ß owner == nil)
                 (throw (ß new IllegalAccessError("Transient used after persistent! call")))
             )
@@ -25567,16 +26670,16 @@
  ; Any errors are my own
  ;;
 (class-ns PersistentHashMap (§ extends APersistentMap) (§ implements IEditableCollection, IObj, IMapIterable, IKVReduce)
-    (§ field int count)
-    (§ field INode root)
-    (§ field boolean hasNull)
-    (§ field Object nullValue)
-    (§ field IPersistentMap _meta)
+    (§ field #_"int" count)
+    (§ field #_"INode" root)
+    (§ field #_"boolean" hasNull)
+    (§ field #_"Object" nullValue)
+    (§ field #_"IPersistentMap" _meta)
 
-    (§ def PersistentHashMap EMPTY = new PersistentHashMap(0, nil, false, nil))
-    (§ def- Object NOT_FOUND = new Object())
+    (§ def #_"PersistentHashMap" EMPTY (ß new PersistentHashMap(0, nil, false, nil)))
+    (§ def- #_"Object" NOT_FOUND (ß new Object()))
 
-    (§ defn IPersistentMap create(Map other)
+    (§ defn #_"IPersistentMap" create [#_"Map" other]
         (let [#_"ITransientMap" ret (ß EMPTY.asTransient())]
             (doseq [#_"Object" o (ß other.entrySet())]
                 (let [(ß Map.Entry e = (Entry) o)]
@@ -25590,7 +26693,7 @@
     ;;;
      ; @param init {key1, val1, key2, val2, ...}
      ;;
-    (§ defn PersistentHashMap create(Object... init)
+    (§ defn #_"PersistentHashMap" create [#_"Object..." init]
         (let [#_"ITransientMap" ret (ß EMPTY.asTransient())]
             (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i += 2)]
                 (ß ret = ret.assoc(init[i], init[i + 1]))
@@ -25599,7 +26702,7 @@
         )
     )
 
-    (§ defn PersistentHashMap createWithCheck(Object... init)
+    (§ defn #_"PersistentHashMap" createWithCheck [#_"Object..." init]
         (let [#_"ITransientMap" ret (ß EMPTY.asTransient())]
             (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i += 2)]
                 (ß ret = ret.assoc(init[i], init[i + 1]))
@@ -25611,7 +26714,7 @@
         )
     )
 
-    (§ defn PersistentHashMap create(ISeq items)
+    (§ defn #_"PersistentHashMap" create [#_"ISeq" items]
         (let [#_"ITransientMap" ret (ß EMPTY.asTransient())]
             (loop-when-recur [(ß )] (ß items != nil) [(ß items = items.next().next())]
                 (when (ß items.next() == nil)
@@ -25623,7 +26726,7 @@
         )
     )
 
-    (§ defn PersistentHashMap createWithCheck(ISeq items)
+    (§ defn #_"PersistentHashMap" createWithCheck [#_"ISeq" items]
         (let [#_"ITransientMap" ret (ß EMPTY.asTransient())]
             (loop-when-recur [(ß int i = 0)] (ß items != nil) [(ß items = items.next().next(), ++i)]
                 (when (ß items.next() == nil)
@@ -25641,11 +26744,11 @@
     ;;;
      ; @param init {key1, val1, key2, val2, ...}
      ;;
-    (§ defn PersistentHashMap create(IPersistentMap meta, Object... init)
+    (§ defn #_"PersistentHashMap" create [#_"IPersistentMap" meta, #_"Object..." init]
         (ß create(init).withMeta(meta))
     )
 
-    (§ constructor PersistentHashMap(int count, INode root, boolean hasNull, Object nullValue)
+    (§ constructor #_"PersistentHashMap" PersistentHashMap [#_"int" count, #_"INode" root, #_"boolean" hasNull, #_"Object" nullValue]
         (ß this.count = count)
         (ß this.root = root)
         (ß this.hasNull = hasNull)
@@ -25654,7 +26757,7 @@
         this
     )
 
-    (§ constructor PersistentHashMap(IPersistentMap meta, int count, INode root, boolean hasNull, Object nullValue)
+    (§ constructor #_"PersistentHashMap" PersistentHashMap [#_"IPersistentMap" meta, #_"int" count, #_"INode" root, #_"boolean" hasNull, #_"Object" nullValue]
         (ß this._meta = meta)
         (ß this.count = count)
         (ß this.root = root)
@@ -25663,25 +26766,28 @@
         this
     )
 
-    (§ defn int hash(Object k)
+    (§ defn #_"int" hash [#_"Object" k]
         (ß Util.hasheq(k))
     )
 
-    (§ method boolean containsKey(Object key)
+    #_method
+    (§ defn #_"boolean" containsKey [this, #_"Object" key]
         (when (ß key == nil)
             (§ return hasNull)
         )
         (ß (root != nil) ? (root.find(0, hash(key), key, NOT_FOUND) != NOT_FOUND) :or false)
     )
 
-    (§ method IMapEntry entryAt(Object key)
+    #_method
+    (§ defn #_"IMapEntry" entryAt [this, #_"Object" key]
         (when (ß key == nil)
             (§ return (ß hasNull ? (IMapEntry) MapEntry.create(nil, nullValue) :or nil))
         )
         (ß (root != nil) ? root.find(0, hash(key), key) :or nil)
     )
 
-    (§ method IPersistentMap assoc(Object key, Object val)
+    #_method
+    (§ defn #_"IPersistentMap" assoc [this, #_"Object" key, #_"Object" val]
         (when (ß key == nil)
             (when (ß hasNull && val == nullValue)
                 (§ return this)
@@ -25698,25 +26804,29 @@
         )
     )
 
-    (§ method Object valAt(Object key, Object notFound)
+    #_method
+    (§ defn #_"Object" valAt [this, #_"Object" key, #_"Object" notFound]
         (when (ß key == nil)
             (§ return (ß hasNull ? nullValue :or notFound))
         )
         (ß (root != nil) ? root.find(0, hash(key), key, notFound) :or notFound)
     )
 
-    (§ method Object valAt(Object key)
+    #_method
+    (§ defn #_"Object" valAt [this, #_"Object" key]
         (ß valAt(key, nil))
     )
 
-    (§ method IPersistentMap assocEx(Object key, Object val)
+    #_method
+    (§ defn #_"IPersistentMap" assocEx [this, #_"Object" key, #_"Object" val]
         (when (ß containsKey(key))
             (throw (ß Util.runtimeException("Key already present")))
         )
         (ß assoc(key, val))
     )
 
-    (§ method IPersistentMap without(Object key)
+    #_method
+    (§ defn #_"IPersistentMap" without [this, #_"Object" key]
         (when (ß key == nil)
             (§ return (ß hasNull ? new PersistentHashMap(meta(), count - 1, root, false, nil) :or this))
         )
@@ -25731,31 +26841,36 @@
         )
     )
 
-    (§ def Iterator EMPTY_ITER = new Iterator()
+    (§ def #_"Iterator" EMPTY_ITER (ß new Iterator()
         (§ reify
-            (§ method boolean hasNext()
+            #_method
+            (§ defn #_"boolean" hasNext [this]
                 false
             )
 
-            (§ method Object next()
+            #_method
+            (§ defn #_"Object" next [this]
                 (throw (ß new NoSuchElementException()))
             )
 
-            (§ method void remove()
+            #_method
+            (§ defn #_"void" remove [this]
                 (throw (ß new UnsupportedOperationException()))
             )
         )
-    )
+    ))
 
-    (§ method- Iterator iterator(IFn f)
+    #_method
+    (§ defn- #_"Iterator" iterator [this, #_"IFn" f]
         (let [#_"Iterator" rootIter (ß (root == nil) ? EMPTY_ITER :or root.iterator(f))]
             (if hasNull
                 (do
                     (ß new Iterator()
                         (§ reify
-                            (§ field- boolean seen = false)
+                            (§ field- #_"boolean" seen (ß false))
 
-                            (§ method boolean hasNext()
+                            #_method
+                            (§ defn #_"boolean" hasNext [this]
                                 (if (ß !seen)
                                     (do
                                         true
@@ -25766,7 +26881,8 @@
                                 )
                             )
 
-                            (§ method Object next()
+                            #_method
+                            (§ defn #_"Object" next [this]
                                 (if (ß !seen)
                                     (do
                                         (ß seen = true)
@@ -25778,7 +26894,8 @@
                                 )
                             )
 
-                            (§ method void remove()
+                            #_method
+                            (§ defn #_"void" remove [this]
                                 (throw (ß new UnsupportedOperationException()))
                             )
                         )
@@ -25791,19 +26908,23 @@
         )
     )
 
-    (§ method Iterator iterator()
+    #_method
+    (§ defn #_"Iterator" iterator [this]
         (ß iterator(APersistentMap.MAKE_ENTRY))
     )
 
-    (§ method Iterator keyIterator()
+    #_method
+    (§ defn #_"Iterator" keyIterator [this]
         (ß iterator(APersistentMap.MAKE_KEY))
     )
 
-    (§ method Iterator valIterator()
+    #_method
+    (§ defn #_"Iterator" valIterator [this]
         (ß iterator(APersistentMap.MAKE_VAL))
     )
 
-    (§ method Object kvreduce(IFn f, Object init)
+    #_method
+    (§ defn #_"Object" kvreduce [this, #_"IFn" f, #_"Object" init]
         (ß init = hasNull ? f.invoke(init, nil, nullValue) :or init)
         (when (ß RT.isReduced(init))
             (§ return (ß ((IDeref)init).deref()))
@@ -25822,12 +26943,14 @@
         init
     )
 
-    (§ method Object fold(long n, IFn combinef, IFn reducef, IFn fjinvoke, IFn fjtask, IFn fjfork, IFn fjjoin)
+    #_method
+    (§ defn #_"Object" fold [this, #_"long" n, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjinvoke, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
         ;; we are ignoring n for now
         (let [#_"Callable" top
                 (ß new Callable()
                     (§ reify
-                        (§ method Object call() (§ throws Exception)
+                        #_method
+                        (§ defn #_"Object" call [this] (§ throws Exception)
                             (let [#_"Object" ret (ß combinef.invoke())]
                                 (when (ß root != nil)
                                     (ß ret = combinef.invoke(ret, root.fold(combinef, reducef, fjtask, fjfork, fjjoin)))
@@ -25841,54 +26964,60 @@
         )
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         count
     )
 
-    (§ method ISeq seq()
+    #_method
+    (§ defn #_"ISeq" seq [this]
         (let [#_"ISeq" s (ß (root != nil) ? root.nodeSeq() :or nil)]
             (ß hasNull ? new Cons(MapEntry.create(nil, nullValue), s) :or s)
         )
     )
 
-    (§ method IPersistentCollection empty()
+    #_method
+    (§ defn #_"IPersistentCollection" empty [this]
         (ß EMPTY.withMeta(meta()))
     )
 
-    (§ defn int mask(int hash, int shift)
+    (§ defn #_"int" mask [#_"int" hash, #_"int" shift]
         (ß (hash >>> shift) & 0x01f)
     )
 
-    (§ method PersistentHashMap withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"PersistentHashMap" withMeta [this, #_"IPersistentMap" meta]
         (ß new PersistentHashMap(meta, count, root, hasNull, nullValue))
     )
 
-    (§ method TransientHashMap asTransient()
+    #_method
+    (§ defn #_"TransientHashMap" asTransient [this]
         (ß new TransientHashMap(this))
     )
 
-    (§ method IPersistentMap meta()
+    #_method
+    (§ defn #_"IPersistentMap" meta [this]
         (ß _meta)
     )
 
     (class-ns TransientHashMap (§ extends ATransientMap)
-        (§ field AtomicReference<Thread> edit)
+        (§ field #_"AtomicReference<Thread>" edit)
         #_volatile
-        (§ field INode root)
+        (§ field #_"INode" root)
         #_volatile
-        (§ field int count)
+        (§ field #_"int" count)
         #_volatile
-        (§ field boolean hasNull)
+        (§ field #_"boolean" hasNull)
         #_volatile
-        (§ field Object nullValue)
-        (§ field Box leafFlag = new Box(nil))
+        (§ field #_"Object" nullValue)
+        (§ field #_"Box" leafFlag (ß new Box(nil)))
 
-        (§ constructor TransientHashMap(PersistentHashMap m)
+        (§ constructor #_"TransientHashMap" TransientHashMap [#_"PersistentHashMap" m]
             (§ this(new AtomicReference<Thread>(Thread.currentThread()), m.root, m.count, m.hasNull, m.nullValue))
             this
         )
 
-        (§ constructor TransientHashMap(AtomicReference<Thread> edit, INode root, int count, boolean hasNull, Object nullValue)
+        (§ constructor #_"TransientHashMap" TransientHashMap [#_"AtomicReference<Thread>" edit, #_"INode" root, #_"int" count, #_"boolean" hasNull, #_"Object" nullValue]
             (ß this.edit = edit)
             (ß this.root = root)
             (ß this.count = count)
@@ -25897,7 +27026,8 @@
             this
         )
 
-        (§ method ITransientMap doAssoc(Object key, Object val)
+        #_method
+        (§ defn #_"ITransientMap" doAssoc [this, #_"Object" key, #_"Object" val]
             (when (ß key == nil)
                 (when (ß this.nullValue != val)
                     (ß this.nullValue = val)
@@ -25920,7 +27050,8 @@
             )
         )
 
-        (§ method ITransientMap doWithout(Object key)
+        #_method
+        (§ defn #_"ITransientMap" doWithout [this, #_"Object" key]
             (when (ß key == nil)
                 (when (ß !hasNull)
                     (§ return this)
@@ -25945,12 +27076,14 @@
             )
         )
 
-        (§ method IPersistentMap doPersistent()
+        #_method
+        (§ defn #_"IPersistentMap" doPersistent [this]
             (ß edit.set(nil))
             (ß new PersistentHashMap(count, root, hasNull, nullValue))
         )
 
-        (§ method Object doValAt(Object key, Object notFound)
+        #_method
+        (§ defn #_"Object" doValAt [this, #_"Object" key, #_"Object" notFound]
             (when (ß key == nil)
                 (if hasNull
                     (do
@@ -25967,11 +27100,13 @@
             (ß root.find(0, hash(key), key, notFound))
         )
 
-        (§ method int doCount()
+        #_method
+        (§ defn #_"int" doCount [this]
             count
         )
 
-        (§ method void ensureEditable()
+        #_method
+        (§ defn #_"void" ensureEditable [this]
             (when (ß edit.get() == nil)
                 (throw (ß new IllegalAccessError("Transient used after persistent! call")))
             )
@@ -25994,18 +27129,19 @@
     )
 
     (class-ns ArrayNode (§ implements INode)
-        (§ field int count)
-        (§ field INode[] array)
-        (§ field AtomicReference<Thread> edit)
+        (§ field #_"int" count)
+        (§ field #_"INode[]" array)
+        (§ field #_"AtomicReference<Thread>" edit)
 
-        (§ constructor ArrayNode(AtomicReference<Thread> edit, int count, INode[] array)
+        (§ constructor #_"ArrayNode" ArrayNode [#_"AtomicReference<Thread>" edit, #_"int" count, #_"INode[]" array]
             (ß this.array = array)
             (ß this.edit = edit)
             (ß this.count = count)
             this
         )
 
-        (§ method INode assoc(int shift, int hash, Object key, Object val, Box addedLeaf)
+        #_method
+        (§ defn #_"INode" assoc [this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
             (let [#_"int" idx (ß mask(hash, shift))]
                 (let [#_"INode" node (ß array[idx])]
                     (when (ß node == nil)
@@ -26021,7 +27157,8 @@
             )
         )
 
-        (§ method INode without(int shift, int hash, Object key)
+        #_method
+        (§ defn #_"INode" without [this, #_"int" shift, #_"int" hash, #_"Object" key]
             (let [#_"int" idx (ß mask(hash, shift))]
                 (let [#_"INode" node (ß array[idx])]
                     (when (ß node == nil)
@@ -26047,7 +27184,8 @@
             )
         )
 
-        (§ method IMapEntry find(int shift, int hash, Object key)
+        #_method
+        (§ defn #_"IMapEntry" find [this, #_"int" shift, #_"int" hash, #_"Object" key]
             (let [#_"int" idx (ß mask(hash, shift))]
                 (let [#_"INode" node (ß array[idx])]
                     (when (ß node == nil)
@@ -26058,7 +27196,8 @@
             )
         )
 
-        (§ method Object find(int shift, int hash, Object key, Object notFound)
+        #_method
+        (§ defn #_"Object" find [this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound]
             (let [#_"int" idx (ß mask(hash, shift))]
                 (let [#_"INode" node (ß array[idx])]
                     (when (ß node == nil)
@@ -26069,15 +27208,18 @@
             )
         )
 
-        (§ method ISeq nodeSeq()
+        #_method
+        (§ defn #_"ISeq" nodeSeq [this]
             (ß Seq.create(array))
         )
 
-        (§ method Iterator iterator(IFn f)
+        #_method
+        (§ defn #_"Iterator" iterator [this, #_"IFn" f]
             (ß new Iter(array, f))
         )
 
-        (§ method Object kvreduce(IFn f, Object init)
+        #_method
+        (§ defn #_"Object" kvreduce [this, #_"IFn" f, #_"Object" init]
             (doseq [#_"INode" node array]
                 (when (ß node != nil)
                     (ß init = node.kvreduce(f, init))
@@ -26089,13 +27231,15 @@
             init
         )
 
-        (§ method Object fold(IFn combinef, IFn reducef, IFn fjtask, IFn fjfork, IFn fjjoin)
+        #_method
+        (§ defn #_"Object" fold [this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
             (let [#_"List<Callable>" tasks (ß new ArrayList())]
                 (doseq [#_"INode" node array]
                     (when (ß node != nil)
                         (ß tasks.add(new Callable()
                             (§ reify
-                                (§ method Object call() (§ throws Exception)
+                                #_method
+                                (§ defn #_"Object" call [this] (§ throws Exception)
                                     (ß node.fold(combinef, reducef, fjtask, fjfork, fjjoin))
                                 )
                             ))
@@ -26107,7 +27251,7 @@
             )
         )
 
-        (§ defn Object foldTasks(List<Callable> tasks, IFn combinef, IFn fjtask, IFn fjfork, IFn fjjoin)
+        (§ defn #_"Object" foldTasks [#_"List<Callable>" tasks, #_"IFn" combinef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
             (when (ß tasks.isEmpty())
                 (§ return (ß combinef.invoke()))
             )
@@ -26128,7 +27272,8 @@
                     (let [#_"Object" forked
                             (ß fjfork.invoke(fjtask.invoke(new Callable()
                                 (§ reify
-                                    (§ method Object call() (§ throws Exception)
+                                    #_method
+                                    (§ defn #_"Object" call [this] (§ throws Exception)
                                         (ß foldTasks(t2, combinef, fjtask, fjfork, fjjoin))
                                     )
                                 )))
@@ -26139,21 +27284,24 @@
             )
         )
 
-        (§ method- ArrayNode ensureEditable(AtomicReference<Thread> edit)
+        #_method
+        (§ defn- #_"ArrayNode" ensureEditable [this, #_"AtomicReference<Thread>" edit]
             (when (ß this.edit == edit)
                 (§ return this)
             )
             (ß new ArrayNode(edit, count, this.array.clone()))
         )
 
-        (§ method- ArrayNode editAndSet(AtomicReference<Thread> edit, int i, INode n)
+        #_method
+        (§ defn- #_"ArrayNode" editAndSet [this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"INode" n]
             (let [#_"ArrayNode" editable (ß ensureEditable(edit))]
                 (ß editable.array[i] = n)
                 editable
             )
         )
 
-        (§ method- INode pack(AtomicReference<Thread> edit, int idx)
+        #_method
+        (§ defn- #_"INode" pack [this, #_"AtomicReference<Thread>" edit, #_"int" idx]
             (let [#_"Object[]" newArray (ß new Object[2 * (count - 1)])]
                 (let [#_"int" j 1]
                     (let [#_"int" bitmap 0]
@@ -26177,7 +27325,8 @@
             )
         )
 
-        (§ method INode assoc(AtomicReference<Thread> edit, int shift, int hash, Object key, Object val, Box addedLeaf)
+        #_method
+        (§ defn #_"INode" assoc [this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
             (let [#_"int" idx (ß mask(hash, shift))]
                 (let [#_"INode" node (ß array[idx])]
                     (when (ß node == nil)
@@ -26196,7 +27345,8 @@
             )
         )
 
-        (§ method INode without(AtomicReference<Thread> edit, int shift, int hash, Object key, Box removedLeaf)
+        #_method
+        (§ defn #_"INode" without [this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf]
             (let [#_"int" idx (ß mask(hash, shift))]
                 (let [#_"INode" node (ß array[idx])]
                     (when (ß node == nil)
@@ -26222,15 +27372,15 @@
         )
 
         (class-ns Seq (§ extends ASeq)
-            (§ field INode[] nodes)
-            (§ field int i)
-            (§ field ISeq s)
+            (§ field #_"INode[]" nodes)
+            (§ field #_"int" i)
+            (§ field #_"ISeq" s)
 
-            (§ defn ISeq create(INode[] nodes)
+            (§ defn #_"ISeq" create [#_"INode[]" nodes]
                 (ß create(nil, nodes, 0, nil))
             )
 
-            (§ defn- ISeq create(IPersistentMap meta, INode[] nodes, int i, ISeq s)
+            (§ defn- #_"ISeq" create [#_"IPersistentMap" meta, #_"INode[]" nodes, #_"int" i, #_"ISeq" s]
                 (when (ß s != nil)
                     (§ return (ß new Seq(meta, nodes, i, s)))
                 )
@@ -26246,7 +27396,7 @@
                 nil
             )
 
-            (§ constructor- Seq(IPersistentMap meta, INode[] nodes, int i, ISeq s)
+            (§ constructor- #_"Seq" Seq [#_"IPersistentMap" meta, #_"INode[]" nodes, #_"int" i, #_"ISeq" s]
                 (§ super(meta))
                 (ß this.nodes = nodes)
                 (ß this.i = i)
@@ -26254,32 +27404,36 @@
                 this
             )
 
-            (§ method Obj withMeta(IPersistentMap meta)
+            #_method
+            (§ defn #_"Obj" withMeta [this, #_"IPersistentMap" meta]
                 (ß new Seq(meta, nodes, i, s))
             )
 
-            (§ method Object first()
+            #_method
+            (§ defn #_"Object" first [this]
                 (ß s.first())
             )
 
-            (§ method ISeq next()
+            #_method
+            (§ defn #_"ISeq" next [this]
                 (ß create(nil, nodes, i, s.next()))
             )
         )
 
         (class-ns Iter (§ implements Iterator)
-            (§ field- INode[] array)
-            (§ field- IFn f)
-            (§ field- int i = 0)
-            (§ field- Iterator nestedIter)
+            (§ field- #_"INode[]" array)
+            (§ field- #_"IFn" f)
+            (§ field- #_"int" i (ß 0))
+            (§ field- #_"Iterator" nestedIter)
 
-            (§ constructor- Iter(INode[] array, IFn f)
+            (§ constructor- #_"Iter" Iter [#_"INode[]" array, #_"IFn" f]
                 (ß this.array = array)
                 (ß this.f = f)
                 this
             )
 
-            (§ method boolean hasNext()
+            #_method
+            (§ defn #_"boolean" hasNext [this]
                 (while true
                     (when (ß nestedIter != nil)
                         (if (ß nestedIter.hasNext())
@@ -26307,7 +27461,8 @@
                 )
             )
 
-            (§ method Object next()
+            #_method
+            (§ defn #_"Object" next [this]
                 (if (ß hasNext())
                     (do
                         (ß nestedIter.next())
@@ -26318,31 +27473,34 @@
                 )
             )
 
-            (§ method void remove()
+            #_method
+            (§ defn #_"void" remove [this]
                 (throw (ß new UnsupportedOperationException()))
             )
         )
     )
 
     (class-ns BitmapIndexedNode (§ implements INode)
-        (§ def BitmapIndexedNode EMPTY = new BitmapIndexedNode(nil, 0, new Object[0]))
+        (§ def #_"BitmapIndexedNode" EMPTY (ß new BitmapIndexedNode(nil, 0, new Object[0])))
 
-        (§ field int bitmap)
-        (§ field Object[] array)
-        (§ field AtomicReference<Thread> edit)
+        (§ field #_"int" bitmap)
+        (§ field #_"Object[]" array)
+        (§ field #_"AtomicReference<Thread>" edit)
 
-        (§ method int index(int bit)
+        #_method
+        (§ defn #_"int" index [this, #_"int" bit]
             (ß Integer.bitCount(bitmap & (bit - 1)))
         )
 
-        (§ constructor BitmapIndexedNode(AtomicReference<Thread> edit, int bitmap, Object[] array)
+        (§ constructor #_"BitmapIndexedNode" BitmapIndexedNode [#_"AtomicReference<Thread>" edit, #_"int" bitmap, #_"Object[]" array]
             (ß this.bitmap = bitmap)
             (ß this.array = array)
             (ß this.edit = edit)
             this
         )
 
-        (§ method INode assoc(int shift, int hash, Object key, Object val, Box addedLeaf)
+        #_method
+        (§ defn #_"INode" assoc [this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
             (let [#_"int" bit (ß bitpos(hash, shift))]
                 (let [#_"int" idx (ß index(bit))]
                     (if (ß (bitmap & bit) != 0)
@@ -26412,7 +27570,8 @@
             )
         )
 
-        (§ method INode without(int shift, int hash, Object key)
+        #_method
+        (§ defn #_"INode" without [this, #_"int" shift, #_"int" hash, #_"Object" key]
             (let [#_"int" bit (ß bitpos(hash, shift))]
                 (when (ß (bitmap & bit) == 0)
                     (§ return this)
@@ -26445,7 +27604,8 @@
             )
         )
 
-        (§ method IMapEntry find(int shift, int hash, Object key)
+        #_method
+        (§ defn #_"IMapEntry" find [this, #_"int" shift, #_"int" hash, #_"Object" key]
             (let [#_"int" bit (ß bitpos(hash, shift))]
                 (when (ß (bitmap & bit) == 0)
                     (§ return nil)
@@ -26466,7 +27626,8 @@
             )
         )
 
-        (§ method Object find(int shift, int hash, Object key, Object notFound)
+        #_method
+        (§ defn #_"Object" find [this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound]
             (let [#_"int" bit (ß bitpos(hash, shift))]
                 (when (ß (bitmap & bit) == 0)
                     (§ return notFound)
@@ -26487,23 +27648,28 @@
             )
         )
 
-        (§ method ISeq nodeSeq()
+        #_method
+        (§ defn #_"ISeq" nodeSeq [this]
             (ß NodeSeq.create(array))
         )
 
-        (§ method Iterator iterator(IFn f)
+        #_method
+        (§ defn #_"Iterator" iterator [this, #_"IFn" f]
             (ß new NodeIter(array, f))
         )
 
-        (§ method Object kvreduce(IFn f, Object init)
+        #_method
+        (§ defn #_"Object" kvreduce [this, #_"IFn" f, #_"Object" init]
             (ß NodeSeq.kvreduce(array, f, init))
         )
 
-        (§ method Object fold(IFn combinef, IFn reducef, IFn fjtask, IFn fjfork, IFn fjjoin)
+        #_method
+        (§ defn #_"Object" fold [this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
             (ß NodeSeq.kvreduce(array, reducef, combinef.invoke()))
         )
 
-        (§ method- BitmapIndexedNode ensureEditable(AtomicReference<Thread> edit)
+        #_method
+        (§ defn- #_"BitmapIndexedNode" ensureEditable [this, #_"AtomicReference<Thread>" edit]
             (when (ß this.edit == edit)
                 (§ return this)
             )
@@ -26515,14 +27681,16 @@
             )
         )
 
-        (§ method- BitmapIndexedNode editAndSet(AtomicReference<Thread> edit, int i, Object a)
+        #_method
+        (§ defn- #_"BitmapIndexedNode" editAndSet [this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"Object" a]
             (let [#_"BitmapIndexedNode" editable (ß ensureEditable(edit))]
                 (ß editable.array[i] = a)
                 editable
             )
         )
 
-        (§ method- BitmapIndexedNode editAndSet(AtomicReference<Thread> edit, int i, Object a, int j, Object b)
+        #_method
+        (§ defn- #_"BitmapIndexedNode" editAndSet [this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"Object" a, #_"int" j, #_"Object" b]
             (let [#_"BitmapIndexedNode" editable (ß ensureEditable(edit))]
                 (ß editable.array[i] = a)
                 (ß editable.array[j] = b)
@@ -26530,7 +27698,8 @@
             )
         )
 
-        (§ method- BitmapIndexedNode editAndRemovePair(AtomicReference<Thread> edit, int bit, int i)
+        #_method
+        (§ defn- #_"BitmapIndexedNode" editAndRemovePair [this, #_"AtomicReference<Thread>" edit, #_"int" bit, #_"int" i]
             (when (ß bitmap == bit)
                 (§ return nil)
             )
@@ -26543,7 +27712,8 @@
             )
         )
 
-        (§ method INode assoc(AtomicReference<Thread> edit, int shift, int hash, Object key, Object val, Box addedLeaf)
+        #_method
+        (§ defn #_"INode" assoc [this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
             (let [#_"int" bit (ß bitpos(hash, shift))]
                 (let [#_"int" idx (ß index(bit))]
                     (if (ß (bitmap & bit) != 0)
@@ -26627,7 +27797,8 @@
             )
         )
 
-        (§ method INode without(AtomicReference<Thread> edit, int shift, int hash, Object key, Box removedLeaf)
+        #_method
+        (§ defn #_"INode" without [this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf]
             (let [#_"int" bit (ß bitpos(hash, shift))]
                 (when (ß (bitmap & bit) == 0)
                     (§ return this)
@@ -26663,12 +27834,12 @@
     )
 
     (class-ns HashCollisionNode (§ implements INode)
-        (§ field int hash)
-        (§ field int count)
-        (§ field Object[] array)
-        (§ field AtomicReference<Thread> edit)
+        (§ field #_"int" hash)
+        (§ field #_"int" count)
+        (§ field #_"Object[]" array)
+        (§ field #_"AtomicReference<Thread>" edit)
 
-        (§ constructor HashCollisionNode(AtomicReference<Thread> edit, int hash, int count, Object... array)
+        (§ constructor #_"HashCollisionNode" HashCollisionNode [#_"AtomicReference<Thread>" edit, #_"int" hash, #_"int" count, #_"Object..." array]
             (ß this.edit = edit)
             (ß this.hash = hash)
             (ß this.count = count)
@@ -26676,7 +27847,8 @@
             this
         )
 
-        (§ method INode assoc(int shift, int hash, Object key, Object val, Box addedLeaf)
+        #_method
+        (§ defn #_"INode" assoc [this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
             (when (ß hash == this.hash)
                 (let [#_"int" idx (ß findIndex(key))]
                     (when (ß idx != -1)
@@ -26698,7 +27870,8 @@
             (ß new BitmapIndexedNode(nil, bitpos(this.hash, shift), new Object[] (§ nil, this )).assoc(shift, hash, key, val, addedLeaf))
         )
 
-        (§ method INode without(int shift, int hash, Object key)
+        #_method
+        (§ defn #_"INode" without [this, #_"int" shift, #_"int" hash, #_"Object" key]
             (let [#_"int" idx (ß findIndex(key))]
                 (when (ß idx == -1)
                     (§ return this)
@@ -26710,7 +27883,8 @@
             )
         )
 
-        (§ method IMapEntry find(int shift, int hash, Object key)
+        #_method
+        (§ defn #_"IMapEntry" find [this, #_"int" shift, #_"int" hash, #_"Object" key]
             (let [#_"int" idx (ß findIndex(key))]
                 (when (ß idx < 0)
                     (§ return nil)
@@ -26722,7 +27896,8 @@
             )
         )
 
-        (§ method Object find(int shift, int hash, Object key, Object notFound)
+        #_method
+        (§ defn #_"Object" find [this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound]
             (let [#_"int" idx (ß findIndex(key))]
                 (when (ß idx < 0)
                     (§ return notFound)
@@ -26734,23 +27909,28 @@
             )
         )
 
-        (§ method ISeq nodeSeq()
+        #_method
+        (§ defn #_"ISeq" nodeSeq [this]
             (ß NodeSeq.create(array))
         )
 
-        (§ method Iterator iterator(IFn f)
+        #_method
+        (§ defn #_"Iterator" iterator [this, #_"IFn" f]
             (ß new NodeIter(array, f))
         )
 
-        (§ method Object kvreduce(IFn f, Object init)
+        #_method
+        (§ defn #_"Object" kvreduce [this, #_"IFn" f, #_"Object" init]
             (ß NodeSeq.kvreduce(array, f, init))
         )
 
-        (§ method Object fold(IFn combinef, IFn reducef, IFn fjtask, IFn fjfork, IFn fjjoin)
+        #_method
+        (§ defn #_"Object" fold [this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
             (ß NodeSeq.kvreduce(array, reducef, combinef.invoke()))
         )
 
-        (§ method int findIndex(Object key)
+        #_method
+        (§ defn #_"int" findIndex [this, #_"Object" key]
             (loop-when-recur [(ß int i = 0)] (ß i < 2 * count) [(ß i += 2)]
                 (when (ß Util.equiv(key, array[i]))
                     (§ return i)
@@ -26759,7 +27939,8 @@
             -1
         )
 
-        (§ method- HashCollisionNode ensureEditable(AtomicReference<Thread> edit)
+        #_method
+        (§ defn- #_"HashCollisionNode" ensureEditable [this, #_"AtomicReference<Thread>" edit]
             (when (ß this.edit == edit)
                 (§ return this)
             )
@@ -26769,7 +27950,8 @@
             )
         )
 
-        (§ method- HashCollisionNode ensureEditable(AtomicReference<Thread> edit, int count, Object[] array)
+        #_method
+        (§ defn- #_"HashCollisionNode" ensureEditable [this, #_"AtomicReference<Thread>" edit, #_"int" count, #_"Object[]" array]
             (when (ß this.edit == edit)
                 (ß this.array = array)
                 (ß this.count = count)
@@ -26778,14 +27960,16 @@
             (ß new HashCollisionNode(edit, hash, count, array))
         )
 
-        (§ method- HashCollisionNode editAndSet(AtomicReference<Thread> edit, int i, Object a)
+        #_method
+        (§ defn- #_"HashCollisionNode" editAndSet [this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"Object" a]
             (let [#_"HashCollisionNode" editable (ß ensureEditable(edit))]
                 (ß editable.array[i] = a)
                 editable
             )
         )
 
-        (§ method- HashCollisionNode editAndSet(AtomicReference<Thread> edit, int i, Object a, int j, Object b)
+        #_method
+        (§ defn- #_"HashCollisionNode" editAndSet [this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"Object" a, #_"int" j, #_"Object" b]
             (let [#_"HashCollisionNode" editable (ß ensureEditable(edit))]
                 (ß editable.array[i] = a)
                 (ß editable.array[j] = b)
@@ -26793,7 +27977,8 @@
             )
         )
 
-        (§ method INode assoc(AtomicReference<Thread> edit, int shift, int hash, Object key, Object val, Box addedLeaf)
+        #_method
+        (§ defn #_"INode" assoc [this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
             (when (ß hash == this.hash)
                 (let [#_"int" idx (ß findIndex(key))]
                     (when (ß idx != -1)
@@ -26822,7 +28007,8 @@
             (ß new BitmapIndexedNode(edit, bitpos(this.hash, shift), new Object[] (§ nil, this, nil, nil )).assoc(edit, shift, hash, key, val, addedLeaf))
         )
 
-        (§ method INode without(AtomicReference<Thread> edit, int shift, int hash, Object key, Box removedLeaf)
+        #_method
+        (§ defn #_"INode" without [this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf]
             (let [#_"int" idx (ß findIndex(key))]
                 (when (ß idx == -1)
                     (§ return this)
@@ -26842,21 +28028,21 @@
         )
     )
 
-    (§ defn- INode[] cloneAndSet(INode[] array, int i, INode a)
+    (§ defn- #_"INode[]" cloneAndSet [#_"INode[]" array, #_"int" i, #_"INode" a]
         (let [#_"INode[]" clone (ß array.clone())]
             (ß clone[i] = a)
             clone
         )
     )
 
-    (§ defn- Object[] cloneAndSet(Object[] array, int i, Object a)
+    (§ defn- #_"Object[]" cloneAndSet [#_"Object[]" array, #_"int" i, #_"Object" a]
         (let [#_"Object[]" clone (ß array.clone())]
             (ß clone[i] = a)
             clone
         )
     )
 
-    (§ defn- Object[] cloneAndSet(Object[] array, int i, Object a, int j, Object b)
+    (§ defn- #_"Object[]" cloneAndSet [#_"Object[]" array, #_"int" i, #_"Object" a, #_"int" j, #_"Object" b]
         (let [#_"Object[]" clone (ß array.clone())]
             (ß clone[i] = a)
             (ß clone[j] = b)
@@ -26864,7 +28050,7 @@
         )
     )
 
-    (§ defn- Object[] removePair(Object[] array, int i)
+    (§ defn- #_"Object[]" removePair [#_"Object[]" array, #_"int" i]
         (let [#_"Object[]" newArray (ß new Object[array.length - 2])]
             (ß System.arraycopy(array, 0, newArray, 0, 2 * i))
             (ß System.arraycopy(array, 2 * (i + 1), newArray, 2 * i, newArray.length - 2 * i))
@@ -26872,7 +28058,7 @@
         )
     )
 
-    (§ defn- INode createNode(int shift, Object key1, Object val1, int key2hash, Object key2, Object val2)
+    (§ defn- #_"INode" createNode [#_"int" shift, #_"Object" key1, #_"Object" val1, #_"int" key2hash, #_"Object" key2, #_"Object" val2]
         (let [#_"int" key1hash (ß hash(key1))]
             (when (ß key1hash == key2hash)
                 (§ return (ß new HashCollisionNode(nil, key1hash, 2, new Object[] (§ key1, val1, key2, val2 ))))
@@ -26885,7 +28071,7 @@
         )
     )
 
-    (§ defn- INode createNode(AtomicReference<Thread> edit, int shift, Object key1, Object val1, int key2hash, Object key2, Object val2)
+    (§ defn- #_"INode" createNode [#_"AtomicReference<Thread>" edit, #_"int" shift, #_"Object" key1, #_"Object" val1, #_"int" key2hash, #_"Object" key2, #_"Object" val2]
         (let [#_"int" key1hash (ß hash(key1))]
             (when (ß key1hash == key2hash)
                 (§ return (ß new HashCollisionNode(nil, key1hash, 2, new Object[] (§ key1, val1, key2, val2 ))))
@@ -26896,25 +28082,26 @@
         )
     )
 
-    (§ defn- int bitpos(int hash, int shift)
+    (§ defn- #_"int" bitpos [#_"int" hash, #_"int" shift]
         (ß 1 << mask(hash, shift))
     )
 
     (class-ns NodeIter (§ implements Iterator)
-        (§ def- Object NULL = new Object())
-        (§ field Object[] array)
-        (§ field IFn f)
-        (§ field- int i = 0)
-        (§ field- Object nextEntry = NULL)
-        (§ field- Iterator nextIter)
+        (§ def- #_"Object" NULL (ß new Object()))
+        (§ field #_"Object[]" array)
+        (§ field #_"IFn" f)
+        (§ field- #_"int" i (ß 0))
+        (§ field- #_"Object" nextEntry (ß NULL))
+        (§ field- #_"Iterator" nextIter)
 
-        (§ constructor NodeIter(Object[] array, IFn f)
+        (§ constructor #_"NodeIter" NodeIter [#_"Object[]" array, #_"IFn" f]
             (ß this.array = array)
             (ß this.f = f)
             this
         )
 
-        (§ method- boolean advance()
+        #_method
+        (§ defn- #_"boolean" advance [this]
             (while (ß i < array.length)
                 (let [#_"Object" key (ß array[i])]
                     (let [#_"Object" nodeOrVal (ß array[i + 1])]
@@ -26940,14 +28127,16 @@
             false
         )
 
-        (§ method boolean hasNext()
+        #_method
+        (§ defn #_"boolean" hasNext [this]
             (when (ß nextEntry != NULL || nextIter != nil)
                 (§ return true)
             )
             (ß advance())
         )
 
-        (§ method Object next()
+        #_method
+        (§ defn #_"Object" next [this]
             (let [#_"Object" ret nextEntry]
                 (cond (ß ret != NULL)
                     (do
@@ -26971,26 +28160,27 @@
             )
         )
 
-        (§ method void remove()
+        #_method
+        (§ defn #_"void" remove [this]
             (throw (ß new UnsupportedOperationException()))
         )
     )
 
     (class-ns NodeSeq (§ extends ASeq)
-        (§ field Object[] array)
-        (§ field int i)
-        (§ field ISeq s)
+        (§ field #_"Object[]" array)
+        (§ field #_"int" i)
+        (§ field #_"ISeq" s)
 
-        (§ constructor NodeSeq(Object[] array, int i)
+        (§ constructor #_"NodeSeq" NodeSeq [#_"Object[]" array, #_"int" i]
             (§ this(nil, array, i, nil))
             this
         )
 
-        (§ defn ISeq create(Object[] array)
+        (§ defn #_"ISeq" create [#_"Object[]" array]
             (ß create(array, 0, nil))
         )
 
-        (§ defn Object kvreduce(Object[] array, IFn f, Object init)
+        (§ defn #_"Object" kvreduce [#_"Object[]" array, #_"IFn" f, #_"Object" init]
             (loop-when-recur [(ß int i = 0)] (ß i < array.length) [(ß i += 2)]
                 (if (ß array[i] != nil)
                     (do
@@ -27011,7 +28201,7 @@
             init
         )
 
-        (§ defn- ISeq create(Object[] array, int i, ISeq s)
+        (§ defn- #_"ISeq" create [#_"Object[]" array, #_"int" i, #_"ISeq" s]
             (when (ß s != nil)
                 (§ return (ß new NodeSeq(nil, array, i, s)))
             )
@@ -27032,7 +28222,7 @@
             nil
         )
 
-        (§ constructor NodeSeq(IPersistentMap meta, Object[] array, int i, ISeq s)
+        (§ constructor #_"NodeSeq" NodeSeq [#_"IPersistentMap" meta, #_"Object[]" array, #_"int" i, #_"ISeq" s]
             (§ super(meta))
             (ß this.array = array)
             (ß this.i = i)
@@ -27040,18 +28230,21 @@
             this
         )
 
-        (§ method Obj withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"Obj" withMeta [this, #_"IPersistentMap" meta]
             (ß new NodeSeq(meta, array, i, s))
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (when (ß s != nil)
                 (§ return (ß s.first()))
             )
             (ß MapEntry.create(array[i], array[i + 1]))
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (when (ß s != nil)
                 (§ return (ß create(array, i, s.next())))
             )
@@ -27066,11 +28259,11 @@
 (§ import java.util.List)
 
 (class-ns PersistentHashSet (§ extends APersistentSet) (§ implements IObj, IEditableCollection)
-    (§ def PersistentHashSet EMPTY = new PersistentHashSet(nil, PersistentHashMap.EMPTY))
+    (§ def #_"PersistentHashSet" EMPTY (ß new PersistentHashSet(nil, PersistentHashMap.EMPTY)))
 
-    (§ field IPersistentMap _meta)
+    (§ field #_"IPersistentMap" _meta)
 
-    (§ defn PersistentHashSet create(Object... init)
+    (§ defn #_"PersistentHashSet" create [#_"Object..." init]
         (let [#_"ITransientSet" ret (ß (ITransientSet)EMPTY.asTransient())]
             (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i++)]
                 (ß ret = (ITransientSet)ret.conj(init[i]))
@@ -27079,7 +28272,7 @@
         )
     )
 
-    (§ defn PersistentHashSet create(List init)
+    (§ defn #_"PersistentHashSet" create [#_"List" init]
         (let [#_"ITransientSet" ret (ß (ITransientSet)EMPTY.asTransient())]
             (doseq [#_"Object" key init]
                 (ß ret = (ITransientSet) ret.conj(key))
@@ -27088,7 +28281,7 @@
         )
     )
 
-    (§ defn PersistentHashSet create(ISeq items)
+    (§ defn #_"PersistentHashSet" create [#_"ISeq" items]
         (let [#_"ITransientSet" ret (ß (ITransientSet)EMPTY.asTransient())]
             (loop-when-recur [(ß )] (ß items != nil) [(ß items = items.next())]
                 (ß ret = (ITransientSet) ret.conj(items.first()))
@@ -27097,7 +28290,7 @@
         )
     )
 
-    (§ defn PersistentHashSet createWithCheck(Object... init)
+    (§ defn #_"PersistentHashSet" createWithCheck [#_"Object..." init]
         (let [#_"ITransientSet" ret (ß (ITransientSet)EMPTY.asTransient())]
             (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i++)]
                 (ß ret = (ITransientSet) ret.conj(init[i]))
@@ -27109,7 +28302,7 @@
         )
     )
 
-    (§ defn PersistentHashSet createWithCheck(List init)
+    (§ defn #_"PersistentHashSet" createWithCheck [#_"List" init]
         (let [#_"ITransientSet" ret (ß (ITransientSet)EMPTY.asTransient())]
             (let [#_"int" i 0]
                 (doseq [#_"Object" key init]
@@ -27124,7 +28317,7 @@
         )
     )
 
-    (§ defn PersistentHashSet createWithCheck(ISeq items)
+    (§ defn #_"PersistentHashSet" createWithCheck [#_"ISeq" items]
         (let [#_"ITransientSet" ret (ß (ITransientSet)EMPTY.asTransient())]
             (loop-when-recur [(ß int i = 0)] (ß items != nil) [(ß items = items.next(), ++i)]
                 (ß ret = (ITransientSet) ret.conj(items.first()))
@@ -27136,49 +28329,56 @@
         )
     )
 
-    (§ constructor PersistentHashSet(IPersistentMap meta, IPersistentMap impl)
+    (§ constructor #_"PersistentHashSet" PersistentHashSet [#_"IPersistentMap" meta, #_"IPersistentMap" impl]
         (§ super(impl))
         (ß this._meta = meta)
         this
     )
 
-    (§ method IPersistentSet disjoin(Object key)
+    #_method
+    (§ defn #_"IPersistentSet" disjoin [this, #_"Object" key]
         (when (ß contains(key))
             (§ return (ß new PersistentHashSet(meta(), impl.without(key))))
         )
         this
     )
 
-    (§ method IPersistentSet cons(Object o)
+    #_method
+    (§ defn #_"IPersistentSet" cons [this, #_"Object" o]
         (when (ß contains(o))
             (§ return this)
         )
         (ß new PersistentHashSet(meta(), impl.assoc(o, o)))
     )
 
-    (§ method IPersistentCollection empty()
+    #_method
+    (§ defn #_"IPersistentCollection" empty [this]
         (ß EMPTY.withMeta(meta()))
     )
 
-    (§ method PersistentHashSet withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"PersistentHashSet" withMeta [this, #_"IPersistentMap" meta]
         (ß new PersistentHashSet(meta, impl))
     )
 
-    (§ method ITransientCollection asTransient()
+    #_method
+    (§ defn #_"ITransientCollection" asTransient [this]
         (ß new TransientHashSet(((PersistentHashMap) impl).asTransient()))
     )
 
-    (§ method IPersistentMap meta()
+    #_method
+    (§ defn #_"IPersistentMap" meta [this]
         (ß _meta)
     )
 
     (class-ns TransientHashSet (§ extends ATransientSet)
-        (§ constructor TransientHashSet(ITransientMap impl)
+        (§ constructor #_"TransientHashSet" TransientHashSet [#_"ITransientMap" impl]
             (§ super(impl))
             this
         )
 
-        (§ method IPersistentCollection persistent()
+        #_method
+        (§ defn #_"IPersistentCollection" persistent [this]
             (ß new PersistentHashSet(nil, impl.persistent()))
         )
     )
@@ -27190,17 +28390,19 @@
 (§ import java.util.*)
 
 (class-ns PersistentList (§ extends ASeq) (§ implements IPersistentList, IReduce, List, Counted)
-    (§ field- Object _first)
-    (§ field- IPersistentList _rest)
-    (§ field- int _count)
+    (§ field- #_"Object" _first)
+    (§ field- #_"IPersistentList" _rest)
+    (§ field- #_"int" _count)
 
     (class-ns Primordial (§ extends RestFn)
-        (§ method int getRequiredArity()
+        #_method
+        (§ defn #_"int" getRequiredArity [this]
             0
         )
 
         #_protected
-        (§ method Object doInvoke(Object args)
+        #_method
+        (§ defn #_"Object" doInvoke [this, #_"Object" args]
             (when (ß args instanceof ArraySeq)
                 (let [#_"Object[]" argsarray (ß ((ArraySeq) args).array)]
                     (let [#_"IPersistentList" ret (ß EMPTY)]
@@ -27219,7 +28421,7 @@
             )
         )
 
-        (§ defn Object invokeStatic(ISeq args)
+        (§ defn #_"Object" invokeStatic [#_"ISeq" args]
             (when (ß args instanceof ArraySeq)
                 (let [#_"Object[]" argsarray (ß ((ArraySeq) args).array)]
                     (let [#_"IPersistentList" ret (ß EMPTY)]
@@ -27238,20 +28440,22 @@
             )
         )
 
-        (§ method IObj withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"IObj" withMeta [this, #_"IPersistentMap" meta]
             (throw (ß new UnsupportedOperationException()))
         )
 
-        (§ method IPersistentMap meta()
+        #_method
+        (§ defn #_"IPersistentMap" meta [this]
             nil
         )
     )
 
-    (§ def IFn creator = new Primordial())
+    (§ def #_"IFn" creator (ß new Primordial()))
 
-    (§ def EmptyList EMPTY = new EmptyList(nil))
+    (§ def #_"EmptyList" EMPTY (ß new EmptyList(nil)))
 
-    (§ constructor PersistentList(Object first)
+    (§ constructor #_"PersistentList" PersistentList [#_"Object" first]
         (ß this._first = first)
         (ß this._rest = nil)
 
@@ -27259,7 +28463,7 @@
         this
     )
 
-    (§ constructor PersistentList(IPersistentMap meta, Object _first, IPersistentList _rest, int _count)
+    (§ constructor #_"PersistentList" PersistentList [#_"IPersistentMap" meta, #_"Object" _first, #_"IPersistentList" _rest, #_"int" _count]
         (§ super(meta))
         (ß this._first = _first)
         (ß this._rest = _rest)
@@ -27267,7 +28471,7 @@
         this
     )
 
-    (§ defn IPersistentList create(List init)
+    (§ defn #_"IPersistentList" create [#_"List" init]
         (let [#_"IPersistentList" ret (ß EMPTY)]
             (loop-when-recur [(ß ListIterator i = init.listIterator(init.size()))] (ß i.hasPrevious()) [(ß )]
                 (ß ret = (IPersistentList) ret.cons(i.previous()))
@@ -27276,48 +28480,57 @@
         )
     )
 
-    (§ method Object first()
+    #_method
+    (§ defn #_"Object" first [this]
         (ß _first)
     )
 
-    (§ method ISeq next()
+    #_method
+    (§ defn #_"ISeq" next [this]
         (when (ß _count == 1)
             (§ return nil)
         )
         (ß (ISeq) _rest)
     )
 
-    (§ method Object peek()
+    #_method
+    (§ defn #_"Object" peek [this]
         (ß first())
     )
 
-    (§ method IPersistentList pop()
+    #_method
+    (§ defn #_"IPersistentList" pop [this]
         (when (ß _rest == nil)
             (§ return (ß EMPTY.withMeta(_meta)))
         )
         (ß _rest)
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         (ß _count)
     )
 
-    (§ method PersistentList cons(Object o)
+    #_method
+    (§ defn #_"PersistentList" cons [this, #_"Object" o]
         (ß new PersistentList(meta(), o, this, _count + 1))
     )
 
-    (§ method IPersistentCollection empty()
+    #_method
+    (§ defn #_"IPersistentCollection" empty [this]
         (ß EMPTY.withMeta(meta()))
     )
 
-    (§ method PersistentList withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"PersistentList" withMeta [this, #_"IPersistentMap" meta]
         (when (ß meta != _meta)
             (§ return (ß new PersistentList(meta, _first, _rest, _count)))
         )
         this
     )
 
-    (§ method Object reduce(IFn f)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" f]
         (let [#_"Object" ret (ß first())]
             (loop-when-recur [(ß ISeq s = next())] (ß s != nil) [(ß s = s.next())]
                 (ß ret = f.invoke(ret, s.first()))
@@ -27329,7 +28542,8 @@
         )
     )
 
-    (§ method Object reduce(IFn f, Object start)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
         (let [#_"Object" ret (ß f.invoke(start, first()))]
             (loop-when-recur [(ß ISeq s = next())] (ß s != nil) [(ß s = s.next())]
                 (when (ß RT.isReduced(ret))
@@ -27345,162 +28559,198 @@
     )
 
     (class-ns EmptyList (§ extends Obj) (§ implements IPersistentList, List, ISeq, Counted, IHashEq)
-        (§ def int hasheq = Murmur3.hashOrdered(Collections.EMPTY_LIST))
+        (§ def #_"int" hasheq (ß Murmur3.hashOrdered(Collections.EMPTY_LIST)))
 
-        (§ method int hashCode()
+        #_method
+        (§ defn #_"int" hashCode [this]
             1
         )
 
-        (§ method int hasheq()
+        #_method
+        (§ defn #_"int" hasheq [this]
             hasheq
         )
 
-        (§ method String toString()
+        #_method
+        (§ defn #_"String" toString [this]
             (ß "()")
         )
 
-        (§ method boolean equals(Object o)
+        #_method
+        (§ defn #_"boolean" equals [this, #_"Object" o]
             (ß ((o instanceof Sequential || o instanceof List) && RT.seq(o) == nil))
         )
 
-        (§ method boolean equiv(Object o)
+        #_method
+        (§ defn #_"boolean" equiv [this, #_"Object" o]
             (ß equals(o))
         )
 
-        (§ constructor EmptyList(IPersistentMap meta)
+        (§ constructor #_"EmptyList" EmptyList [#_"IPersistentMap" meta]
             (§ super(meta))
             this
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             nil
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             nil
         )
 
-        (§ method ISeq more()
+        #_method
+        (§ defn #_"ISeq" more [this]
             this
         )
 
-        (§ method PersistentList cons(Object o)
+        #_method
+        (§ defn #_"PersistentList" cons [this, #_"Object" o]
             (ß new PersistentList(meta(), o, nil, 1))
         )
 
-        (§ method IPersistentCollection empty()
+        #_method
+        (§ defn #_"IPersistentCollection" empty [this]
             this
         )
 
-        (§ method EmptyList withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"EmptyList" withMeta [this, #_"IPersistentMap" meta]
             (when (ß meta != meta())
                 (§ return (ß new EmptyList(meta)))
             )
             this
         )
 
-        (§ method Object peek()
+        #_method
+        (§ defn #_"Object" peek [this]
             nil
         )
 
-        (§ method IPersistentList pop()
+        #_method
+        (§ defn #_"IPersistentList" pop [this]
             (throw (ß new IllegalStateException("Can't pop empty list")))
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             0
         )
 
-        (§ method ISeq seq()
+        #_method
+        (§ defn #_"ISeq" seq [this]
             nil
         )
 
-        (§ method int size()
+        #_method
+        (§ defn #_"int" size [this]
             0
         )
 
-        (§ method boolean isEmpty()
+        #_method
+        (§ defn #_"boolean" isEmpty [this]
             true
         )
 
-        (§ method boolean contains(Object o)
+        #_method
+        (§ defn #_"boolean" contains [this, #_"Object" o]
             false
         )
 
-        (§ method Iterator iterator()
+        #_method
+        (§ defn #_"Iterator" iterator [this]
             (ß new Iterator()
                 (§ reify
-                    (§ method boolean hasNext()
+                    #_method
+                    (§ defn #_"boolean" hasNext [this]
                         false
                     )
 
-                    (§ method Object next()
+                    #_method
+                    (§ defn #_"Object" next [this]
                         (throw (ß new NoSuchElementException()))
                     )
 
-                    (§ method void remove()
+                    #_method
+                    (§ defn #_"void" remove [this]
                         (throw (ß new UnsupportedOperationException()))
                     )
                 )
             )
         )
 
-        (§ method Object[] toArray()
+        #_method
+        (§ defn #_"Object[]" toArray [this]
             (ß RT.EMPTY_ARRAY)
         )
 
-        (§ method boolean add(Object o)
+        #_method
+        (§ defn #_"boolean" add [this, #_"Object" o]
             (throw (ß new UnsupportedOperationException()))
         )
 
-        (§ method boolean remove(Object o)
+        #_method
+        (§ defn #_"boolean" remove [this, #_"Object" o]
             (throw (ß new UnsupportedOperationException()))
         )
 
-        (§ method boolean addAll(Collection collection)
+        #_method
+        (§ defn #_"boolean" addAll [this, #_"Collection" collection]
             (throw (ß new UnsupportedOperationException()))
         )
 
-        (§ method void clear()
+        #_method
+        (§ defn #_"void" clear [this]
             (throw (ß new UnsupportedOperationException()))
         )
 
-        (§ method boolean retainAll(Collection collection)
+        #_method
+        (§ defn #_"boolean" retainAll [this, #_"Collection" collection]
             (throw (ß new UnsupportedOperationException()))
         )
 
-        (§ method boolean removeAll(Collection collection)
+        #_method
+        (§ defn #_"boolean" removeAll [this, #_"Collection" collection]
             (throw (ß new UnsupportedOperationException()))
         )
 
-        (§ method boolean containsAll(Collection collection)
+        #_method
+        (§ defn #_"boolean" containsAll [this, #_"Collection" collection]
             (ß collection.isEmpty())
         )
 
-        (§ method Object[] toArray(Object[] objects)
+        #_method
+        (§ defn #_"Object[]" toArray [this, #_"Object[]" objects]
             (when (ß objects.length > 0)
                 (ß objects[0] = nil)
             )
             objects
         )
 
-        (§ method- List reify()
+        #_method
+        (§ defn- #_"List" reify [this]
             (ß Collections.unmodifiableList(new ArrayList(this)))
         )
 
-        (§ method List subList(int fromIndex, int toIndex)
+        #_method
+        (§ defn #_"List" subList [this, #_"int" fromIndex, #_"int" toIndex]
             (ß reify().subList(fromIndex, toIndex))
         )
 
-        (§ method Object set(int index, Object element)
+        #_method
+        (§ defn #_"Object" set [this, #_"int" index, #_"Object" element]
             (throw (ß new UnsupportedOperationException()))
         )
 
-        (§ method Object remove(int index)
+        #_method
+        (§ defn #_"Object" remove [this, #_"int" index]
             (throw (ß new UnsupportedOperationException()))
         )
 
-        (§ method int indexOf(Object o)
+        #_method
+        (§ defn #_"int" indexOf [this, #_"Object" o]
             (let [#_"ISeq" s (ß seq())]
                 (loop-when-recur [(ß int i = 0)] (ß s != nil) [(ß s = s.next(), i++)]
                     (when (ß Util.equiv(s.first(), o))
@@ -27511,27 +28761,33 @@
             )
         )
 
-        (§ method int lastIndexOf(Object o)
+        #_method
+        (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (ß reify().lastIndexOf(o))
         )
 
-        (§ method ListIterator listIterator()
+        #_method
+        (§ defn #_"ListIterator" listIterator [this]
             (ß reify().listIterator())
         )
 
-        (§ method ListIterator listIterator(int index)
+        #_method
+        (§ defn #_"ListIterator" listIterator [this, #_"int" index]
             (ß reify().listIterator(index))
         )
 
-        (§ method Object get(int index)
+        #_method
+        (§ defn #_"Object" get [this, #_"int" index]
             (ß RT.nth(this, index))
         )
 
-        (§ method void add(int index, Object element)
+        #_method
+        (§ defn #_"void" add [this, #_"int" index, #_"Object" element]
             (throw (ß new UnsupportedOperationException()))
         )
 
-        (§ method boolean addAll(int index, Collection c)
+        #_method
+        (§ defn #_"boolean" addAll [this, #_"int" index, #_"Collection" c]
             (throw (ß new UnsupportedOperationException()))
         )
     )
@@ -27551,15 +28807,15 @@
  ; so no reversing or suspensions required for persistent use
  ;;
 (class-ns PersistentQueue (§ extends Obj) (§ implements IPersistentList, Collection, Counted, IHashEq)
-    (§ def PersistentQueue EMPTY = new PersistentQueue(nil, 0, nil, nil))
+    (§ def #_"PersistentQueue" EMPTY (ß new PersistentQueue(nil, 0, nil, nil)))
 
-    (§ field int cnt)
-    (§ field ISeq f)
-    (§ field PersistentVector r)
-    (§ field int _hash)
-    (§ field int _hasheq)
+    (§ field #_"int" cnt)
+    (§ field #_"ISeq" f)
+    (§ field #_"PersistentVector" r)
+    (§ field #_"int" _hash)
+    (§ field #_"int" _hasheq)
 
-    (§ constructor PersistentQueue(IPersistentMap meta, int cnt, ISeq f, PersistentVector r)
+    (§ constructor #_"PersistentQueue" PersistentQueue [#_"IPersistentMap" meta, #_"int" cnt, #_"ISeq" f, #_"PersistentVector" r]
         (§ super(meta))
         (ß this.cnt = cnt)
         (ß this.f = f)
@@ -27567,7 +28823,8 @@
         this
     )
 
-    (§ method boolean equiv(Object obj)
+    #_method
+    (§ defn #_"boolean" equiv [this, #_"Object" obj]
         (when (ß !(obj instanceof Sequential))
             (§ return false)
         )
@@ -27581,7 +28838,8 @@
         )
     )
 
-    (§ method boolean equals(Object obj)
+    #_method
+    (§ defn #_"boolean" equals [this, #_"Object" obj]
         (when (ß !(obj instanceof Sequential))
             (§ return false)
         )
@@ -27595,7 +28853,8 @@
         )
     )
 
-    (§ method int hashCode()
+    #_method
+    (§ defn #_"int" hashCode [this]
         (let [#_"int" hash (ß this._hash)]
             (when (ß hash == 0)
                 (ß hash = 1)
@@ -27608,7 +28867,8 @@
         )
     )
 
-    (§ method int hasheq()
+    #_method
+    (§ defn #_"int" hasheq [this]
         (let [#_"int" cached (ß this._hasheq)]
             (when (ß cached == 0)
                 (ß this._hasheq = cached = Murmur3.hashOrdered(this))
@@ -27617,11 +28877,13 @@
         )
     )
 
-    (§ method Object peek()
+    #_method
+    (§ defn #_"Object" peek [this]
         (ß RT.first(f))
     )
 
-    (§ method PersistentQueue pop()
+    #_method
+    (§ defn #_"PersistentQueue" pop [this]
         (when (ß f == nil) ;; hmmm... pop of empty queue -> empty queue?
             (§ return this)
         )
@@ -27636,18 +28898,21 @@
         )
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         cnt
     )
 
-    (§ method ISeq seq()
+    #_method
+    (§ defn #_"ISeq" seq [this]
         (when (ß f == nil)
             (§ return nil)
         )
         (ß new Seq(f, RT.seq(r)))
     )
 
-    (§ method PersistentQueue cons(Object o)
+    #_method
+    (§ defn #_"PersistentQueue" cons [this, #_"Object" o]
         (if (ß f == nil) ;; empty
             (do
                 (ß new PersistentQueue(meta(), cnt + 1, RT.list(o), nil))
@@ -27658,36 +28923,40 @@
         )
     )
 
-    (§ method IPersistentCollection empty()
+    #_method
+    (§ defn #_"IPersistentCollection" empty [this]
         (ß EMPTY.withMeta(meta()))
     )
 
-    (§ method PersistentQueue withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"PersistentQueue" withMeta [this, #_"IPersistentMap" meta]
         (ß new PersistentQueue(meta, cnt, f, r))
     )
 
     (class-ns Seq (§ extends ASeq)
-        (§ field ISeq f)
-        (§ field ISeq rseq)
+        (§ field #_"ISeq" f)
+        (§ field #_"ISeq" rseq)
 
-        (§ constructor Seq(ISeq f, ISeq rseq)
+        (§ constructor #_"Seq" Seq [#_"ISeq" f, #_"ISeq" rseq]
             (ß this.f = f)
             (ß this.rseq = rseq)
             this
         )
 
-        (§ constructor Seq(IPersistentMap meta, ISeq f, ISeq rseq)
+        (§ constructor #_"Seq" Seq [#_"IPersistentMap" meta, #_"ISeq" f, #_"ISeq" rseq]
             (§ super(meta))
             (ß this.f = f)
             (ß this.rseq = rseq)
             this
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (ß f.first())
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (let [#_"ISeq" f1 (ß f.next())]
                 (let [#_"ISeq" r1 rseq]
                     (when (ß f1 == nil)
@@ -27702,44 +28971,54 @@
             )
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             (ß RT.count(f) + RT.count(rseq))
         )
 
-        (§ method Seq withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"Seq" withMeta [this, #_"IPersistentMap" meta]
             (ß new Seq(meta, f, rseq))
         )
     )
 
-    (§ method Object[] toArray()
+    #_method
+    (§ defn #_"Object[]" toArray [this]
         (ß RT.seqToArray(seq()))
     )
 
-    (§ method boolean add(Object o)
+    #_method
+    (§ defn #_"boolean" add [this, #_"Object" o]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean remove(Object o)
+    #_method
+    (§ defn #_"boolean" remove [this, #_"Object" o]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean addAll(Collection c)
+    #_method
+    (§ defn #_"boolean" addAll [this, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method void clear()
+    #_method
+    (§ defn #_"void" clear [this]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean retainAll(Collection c)
+    #_method
+    (§ defn #_"boolean" retainAll [this, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean removeAll(Collection c)
+    #_method
+    (§ defn #_"boolean" removeAll [this, #_"Collection" c]
         (throw (ß new UnsupportedOperationException()))
     )
 
-    (§ method boolean containsAll(Collection c)
+    #_method
+    (§ defn #_"boolean" containsAll [this, #_"Collection" c]
         (doseq [#_"Object" o c]
             (when (ß contains(o))
                 (§ return true)
@@ -27748,19 +29027,23 @@
         false
     )
 
-    (§ method Object[] toArray(Object[] a)
+    #_method
+    (§ defn #_"Object[]" toArray [this, #_"Object[]" a]
         (ß RT.seqToPassedArray(seq(), a))
     )
 
-    (§ method int size()
+    #_method
+    (§ defn #_"int" size [this]
         (ß count())
     )
 
-    (§ method boolean isEmpty()
+    #_method
+    (§ defn #_"boolean" isEmpty [this]
         (ß (count() == 0))
     )
 
-    (§ method boolean contains(Object o)
+    #_method
+    (§ defn #_"boolean" contains [this, #_"Object" o]
         (loop-when-recur [(ß ISeq s = seq())] (ß s != nil) [(ß s = s.next())]
             (when (ß Util.equiv(s.first(), o))
                 (§ return true)
@@ -27769,17 +29052,20 @@
         false
     )
 
-    (§ method Iterator iterator()
+    #_method
+    (§ defn #_"Iterator" iterator [this]
         (ß new Iterator()
             (§ reify
-                (§ field- ISeq fseq = f)
-                (§ field- Iterator riter = (r != nil) ? r.iterator() :or nil)
+                (§ field- #_"ISeq" fseq (ß f))
+                (§ field- #_"Iterator" riter (ß (r != nil) ? r.iterator() :or nil))
 
-                (§ method boolean hasNext()
+                #_method
+                (§ defn #_"boolean" hasNext [this]
                     (ß ((fseq != nil && fseq.seq() != nil) || (riter != nil && riter.hasNext())))
                 )
 
-                (§ method Object next()
+                #_method
+                (§ defn #_"Object" next [this]
                     (cond (ß fseq != nil)
                         (do
                             (let [#_"Object" ret (ß fseq.first())]
@@ -27798,7 +29084,8 @@
                     )
                 )
 
-                (§ method void remove()
+                #_method
+                (§ defn #_"void" remove [this]
                     (throw (ß new UnsupportedOperationException()))
                 )
             )
@@ -27819,14 +29106,14 @@
  ; See Okasaki, Kahrs, Larsen et al
  ;;
 (class-ns PersistentTreeMap (§ extends APersistentMap) (§ implements IObj, Reversible, Sorted, IKVReduce)
-    (§ field Comparator comp)
-    (§ field Node tree)
-    (§ field int _count)
-    (§ field IPersistentMap _meta)
+    (§ field #_"Comparator" comp)
+    (§ field #_"Node" tree)
+    (§ field #_"int" _count)
+    (§ field #_"IPersistentMap" _meta)
 
-    (§ def PersistentTreeMap EMPTY = new PersistentTreeMap())
+    (§ def #_"PersistentTreeMap" EMPTY (ß new PersistentTreeMap()))
 
-    (§ defn IPersistentMap create(Map other)
+    (§ defn #_"IPersistentMap" create [#_"Map" other]
         (let [#_"IPersistentMap" ret (ß EMPTY)]
             (doseq [#_"Object" o (ß other.entrySet())]
                 (let [(ß Map.Entry e = (Entry) o)]
@@ -27837,21 +29124,22 @@
         )
     )
 
-    (§ constructor PersistentTreeMap()
+    (§ constructor #_"PersistentTreeMap" PersistentTreeMap []
         (§ this(RT.DEFAULT_COMPARATOR))
         this
     )
 
-    (§ method PersistentTreeMap withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"PersistentTreeMap" withMeta [this, #_"IPersistentMap" meta]
         (ß new PersistentTreeMap(meta, comp, tree, _count))
     )
 
-    (§ constructor- PersistentTreeMap(Comparator comp)
+    (§ constructor- #_"PersistentTreeMap" PersistentTreeMap [#_"Comparator" comp]
         (§ this(nil, comp))
         this
     )
 
-    (§ constructor PersistentTreeMap(IPersistentMap meta, Comparator comp)
+    (§ constructor #_"PersistentTreeMap" PersistentTreeMap [#_"IPersistentMap" meta, #_"Comparator" comp]
         (ß this.comp = comp)
         (ß this._meta = meta)
         (ß tree = nil)
@@ -27859,7 +29147,7 @@
         this
     )
 
-    (§ constructor PersistentTreeMap(IPersistentMap meta, Comparator comp, Node tree, int _count)
+    (§ constructor #_"PersistentTreeMap" PersistentTreeMap [#_"IPersistentMap" meta, #_"Comparator" comp, #_"Node" tree, #_"int" _count]
         (ß this._meta = meta)
         (ß this.comp = comp)
         (ß this.tree = tree)
@@ -27867,7 +29155,7 @@
         this
     )
 
-    (§ defn PersistentTreeMap create(ISeq items)
+    (§ defn #_"PersistentTreeMap" create [#_"ISeq" items]
         (let [#_"IPersistentMap" ret (ß EMPTY)]
             (loop-when-recur [(ß )] (ß items != nil) [(ß items = items.next().next())]
                 (when (ß items.next() == nil)
@@ -27879,7 +29167,7 @@
         )
     )
 
-    (§ defn PersistentTreeMap create(Comparator comp, ISeq items)
+    (§ defn #_"PersistentTreeMap" create [#_"Comparator" comp, #_"ISeq" items]
         (let [#_"IPersistentMap" ret (ß new PersistentTreeMap(comp))]
             (loop-when-recur [(ß )] (ß items != nil) [(ß items = items.next().next())]
                 (when (ß items.next() == nil)
@@ -27891,11 +29179,13 @@
         )
     )
 
-    (§ method boolean containsKey(Object key)
+    #_method
+    (§ defn #_"boolean" containsKey [this, #_"Object" key]
         (ß (entryAt(key) != nil))
     )
 
-    (§ method boolean equals(Object obj)
+    #_method
+    (§ defn #_"boolean" equals [this, #_"Object" obj]
         (try
             (ß super.equals(obj))
             (catch ClassCastException e
@@ -27904,7 +29194,8 @@
         )
     )
 
-    (§ method boolean equiv(Object obj)
+    #_method
+    (§ defn #_"boolean" equiv [this, #_"Object" obj]
         (try
             (ß super.equiv(obj))
             (catch ClassCastException e
@@ -27913,7 +29204,8 @@
         )
     )
 
-    (§ method PersistentTreeMap assocEx(Object key, Object val)
+    #_method
+    (§ defn #_"PersistentTreeMap" assocEx [this, #_"Object" key, #_"Object" val]
         (let [#_"Box" found (ß new Box(nil))]
             (let [#_"Node" t (ß add(tree, key, val, found))]
                 (when (ß t == nil) ;; nil == already contains key
@@ -27924,7 +29216,8 @@
         )
     )
 
-    (§ method PersistentTreeMap assoc(Object key, Object val)
+    #_method
+    (§ defn #_"PersistentTreeMap" assoc [this, #_"Object" key, #_"Object" val]
         (let [#_"Box" found (ß new Box(nil))]
             (let [#_"Node" t (ß add(tree, key, val, found))]
                 (when (ß t == nil) ;; nil == already contains key
@@ -27940,7 +29233,8 @@
         )
     )
 
-    (§ method PersistentTreeMap without(Object key)
+    #_method
+    (§ defn #_"PersistentTreeMap" without [this, #_"Object" key]
         (let [#_"Box" found (ß new Box(nil))]
             (let [#_"Node" t (ß remove(tree, key, found))]
                 (when (ß t == nil)
@@ -27955,40 +29249,47 @@
         )
     )
 
-    (§ method ISeq seq()
+    #_method
+    (§ defn #_"ISeq" seq [this]
         (when (ß _count > 0)
             (§ return (ß Seq.create(tree, true, _count)))
         )
         nil
     )
 
-    (§ method IPersistentCollection empty()
+    #_method
+    (§ defn #_"IPersistentCollection" empty [this]
         (ß new PersistentTreeMap(meta(), comp))
     )
 
-    (§ method ISeq rseq()
+    #_method
+    (§ defn #_"ISeq" rseq [this]
         (when (ß _count > 0)
             (§ return (ß Seq.create(tree, false, _count)))
         )
         nil
     )
 
-    (§ method Comparator comparator()
+    #_method
+    (§ defn #_"Comparator" comparator [this]
         comp
     )
 
-    (§ method Object entryKey(Object entry)
+    #_method
+    (§ defn #_"Object" entryKey [this, #_"Object" entry]
         (ß ((IMapEntry) entry).key())
     )
 
-    (§ method ISeq seq(boolean ascending)
+    #_method
+    (§ defn #_"ISeq" seq [this, #_"boolean" ascending]
         (when (ß _count > 0)
             (§ return (ß Seq.create(tree, ascending, _count)))
         )
         nil
     )
 
-    (§ method ISeq seqFrom(Object key, boolean ascending)
+    #_method
+    (§ defn #_"ISeq" seqFrom [this, #_"Object" key, #_"boolean" ascending]
         (when (ß _count > 0)
             (let [#_"ISeq" stack nil]
                 (let [#_"Node" t tree]
@@ -28035,11 +29336,13 @@
         nil
     )
 
-    (§ method NodeIterator iterator()
+    #_method
+    (§ defn #_"NodeIterator" iterator [this]
         (ß new NodeIterator(tree, true))
     )
 
-    (§ method Object kvreduce(IFn f, Object init)
+    #_method
+    (§ defn #_"Object" kvreduce [this, #_"IFn" f, #_"Object" init]
         (when (ß tree != nil)
             (ß init = tree.kvreduce(f, init))
         )
@@ -28049,33 +29352,40 @@
         init
     )
 
-    (§ method NodeIterator reverseIterator()
+    #_method
+    (§ defn #_"NodeIterator" reverseIterator [this]
         (ß new NodeIterator(tree, false))
     )
 
-    (§ method Iterator keys()
+    #_method
+    (§ defn #_"Iterator" keys [this]
         (ß keys(iterator()))
     )
 
-    (§ method Iterator vals()
+    #_method
+    (§ defn #_"Iterator" vals [this]
         (ß vals(iterator()))
     )
 
-    (§ method Iterator keys(NodeIterator it)
+    #_method
+    (§ defn #_"Iterator" keys [this, #_"NodeIterator" it]
         (ß new KeyIterator(it))
     )
 
-    (§ method Iterator vals(NodeIterator it)
+    #_method
+    (§ defn #_"Iterator" vals [this, #_"NodeIterator" it]
         (ß new ValIterator(it))
     )
 
-    (§ method Object minKey()
+    #_method
+    (§ defn #_"Object" minKey [this]
         (let [#_"Node" t (ß min())]
             (ß (t != nil) ? t.key :or nil)
         )
     )
 
-    (§ method Node min()
+    #_method
+    (§ defn #_"Node" min [this]
         (let [#_"Node" t tree]
             (when (ß t != nil)
                 (while (ß t.left() != nil)
@@ -28086,13 +29396,15 @@
         )
     )
 
-    (§ method Object maxKey()
+    #_method
+    (§ defn #_"Object" maxKey [this]
         (let [#_"Node" t (ß max())]
             (ß (t != nil) ? t.key :or nil)
         )
     )
 
-    (§ method Node max()
+    #_method
+    (§ defn #_"Node" max [this]
         (let [#_"Node" t tree]
             (when (ß t != nil)
                 (while (ß t.right() != nil)
@@ -28103,36 +29415,43 @@
         )
     )
 
-    (§ method int depth()
+    #_method
+    (§ defn #_"int" depth [this]
         (ß depth(tree))
     )
 
-    (§ method int depth(Node t)
+    #_method
+    (§ defn #_"int" depth [this, #_"Node" t]
         (when (ß t == nil)
             (§ return 0)
         )
         (ß 1 + Math.max(depth(t.left()), depth(t.right())))
     )
 
-    (§ method Object valAt(Object key, Object notFound)
+    #_method
+    (§ defn #_"Object" valAt [this, #_"Object" key, #_"Object" notFound]
         (let [#_"Node" n (ß entryAt(key))]
             (ß (n != nil) ? n.val() :or notFound)
         )
     )
 
-    (§ method Object valAt(Object key)
+    #_method
+    (§ defn #_"Object" valAt [this, #_"Object" key]
         (ß valAt(key, nil))
     )
 
-    (§ method int capacity()
+    #_method
+    (§ defn #_"int" capacity [this]
         (ß _count)
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         (ß _count)
     )
 
-    (§ method Node entryAt(Object key)
+    #_method
+    (§ defn #_"Node" entryAt [this, #_"Object" key]
         (let [#_"Node" t tree]
             (while (ß t != nil)
                 (let [#_"int" c (ß doCompare(key, t.key))]
@@ -28155,11 +29474,13 @@
         )
     )
 
-    (§ method int doCompare(Object k1, Object k2)
+    #_method
+    (§ defn #_"int" doCompare [this, #_"Object" k1, #_"Object" k2]
         (ß comp.compare(k1, k2))
     )
 
-    (§ method Node add(Node t, Object key, Object val, Box found)
+    #_method
+    (§ defn #_"Node" add [this, #_"Node" t, #_"Object" key, #_"Object" val, #_"Box" found]
         (when (ß t == nil)
             (when (ß val == nil)
                 (§ return (ß new Red(key)))
@@ -28183,7 +29504,8 @@
         )
     )
 
-    (§ method Node remove(Node t, Object key, Box found)
+    #_method
+    (§ defn #_"Node" remove [this, #_"Node" t, #_"Object" key, #_"Box" found]
         (when (ß t == nil)
             (§ return nil) ;; not found indicator
         )
@@ -28214,7 +29536,7 @@
         )
     )
 
-    (§ defn Node append(Node left, Node right)
+    (§ defn #_"Node" append [#_"Node" left, #_"Node" right]
         (cond (ß left == nil)
             (do
                 right
@@ -28263,7 +29585,7 @@
         )
     )
 
-    (§ defn Node balanceLeftDel(Object key, Object val, Node del, Node right)
+    (§ defn #_"Node" balanceLeftDel [#_"Object" key, #_"Object" val, #_"Node" del, #_"Node" right]
         (cond (ß del instanceof Red)
             (do
                 (ß red(key, val, del.blacken(), right))
@@ -28283,7 +29605,7 @@
         )
     )
 
-    (§ defn Node balanceRightDel(Object key, Object val, Node left, Node del)
+    (§ defn #_"Node" balanceRightDel [#_"Object" key, #_"Object" val, #_"Node" left, #_"Node" del]
         (cond (ß del instanceof Red)
             (do
                 (ß red(key, val, left, del.blacken()))
@@ -28303,7 +29625,7 @@
         )
     )
 
-    (§ defn Node leftBalance(Object key, Object val, Node ins, Node right)
+    (§ defn #_"Node" leftBalance [#_"Object" key, #_"Object" val, #_"Node" ins, #_"Node" right]
         (cond (ß ins instanceof Red && ins.left() instanceof Red)
             (do
                 (ß red(ins.key, ins.val(), ins.left().blacken(), black(key, val, ins.right(), right)))
@@ -28319,7 +29641,7 @@
         )
     )
 
-    (§ defn Node rightBalance(Object key, Object val, Node left, Node ins)
+    (§ defn #_"Node" rightBalance [#_"Object" key, #_"Object" val, #_"Node" left, #_"Node" ins]
         (cond (ß ins instanceof Red && ins.right() instanceof Red)
             (do
                 (ß red(ins.key, ins.val(), black(key, val, left, ins.left()), ins.right().blacken()))
@@ -28335,13 +29657,14 @@
         )
     )
 
-    (§ method Node replace(Node t, Object key, Object val)
+    #_method
+    (§ defn #_"Node" replace [this, #_"Node" t, #_"Object" key, #_"Object" val]
         (let [#_"int" c (ß doCompare(key, t.key))]
             (ß t.replace(t.key, (c == 0) ? val :or t.val(), (c < 0) ? replace(t.left(), key, val) :or t.left(), (c > 0) ? replace(t.right(), key, val) :or t.right()))
         )
     )
 
-    (§ constructor PersistentTreeMap(Comparator comp, Node tree, int count, IPersistentMap meta)
+    (§ constructor #_"PersistentTreeMap" PersistentTreeMap [#_"Comparator" comp, #_"Node" tree, #_"int" count, #_"IPersistentMap" meta]
         (ß this._meta = meta)
         (ß this.comp = comp)
         (ß this.tree = tree)
@@ -28349,7 +29672,7 @@
         this
     )
 
-    (§ defn Red red(Object key, Object val, Node left, Node right)
+    (§ defn #_"Red" red [#_"Object" key, #_"Object" val, #_"Node" left, #_"Node" right]
         (when (ß left == nil && right == nil)
             (when (ß val == nil)
                 (§ return (ß new Red(key)))
@@ -28362,7 +29685,7 @@
         (ß new RedBranchVal(key, val, left, right))
     )
 
-    (§ defn Black black(Object key, Object val, Node left, Node right)
+    (§ defn #_"Black" black [#_"Object" key, #_"Object" val, #_"Node" left, #_"Node" right]
         (when (ß left == nil && right == nil)
             (when (ß val == nil)
                 (§ return (ß new Black(key)))
@@ -28375,40 +29698,47 @@
         (ß new BlackBranchVal(key, val, left, right))
     )
 
-    (§ method IPersistentMap meta()
+    #_method
+    (§ defn #_"IPersistentMap" meta [this]
         (ß _meta)
     )
 
     #_abstract
     (class-ns Node (§ extends AMapEntry)
-        (§ field Object key)
+        (§ field #_"Object" key)
 
-        (§ constructor Node(Object key)
+        (§ constructor #_"Node" Node [#_"Object" key]
             (ß this.key = key)
             this
         )
 
-        (§ method Object key()
+        #_method
+        (§ defn #_"Object" key [this]
             key
         )
 
-        (§ method Object val()
+        #_method
+        (§ defn #_"Object" val [this]
             nil
         )
 
-        (§ method Object getKey()
+        #_method
+        (§ defn #_"Object" getKey [this]
             (ß key())
         )
 
-        (§ method Object getValue()
+        #_method
+        (§ defn #_"Object" getValue [this]
             (ß val())
         )
 
-        (§ method Node left()
+        #_method
+        (§ defn #_"Node" left [this]
             nil
         )
 
-        (§ method Node right()
+        #_method
+        (§ defn #_"Node" right [this]
             nil
         )
 
@@ -28419,17 +29749,20 @@
         (§ abstract Node blacken())
         (§ abstract Node redden())
 
-        (§ method Node balanceLeft(Node parent)
+        #_method
+        (§ defn #_"Node" balanceLeft [this, #_"Node" parent]
             (ß black(parent.key, parent.val(), this, parent.right()))
         )
 
-        (§ method Node balanceRight(Node parent)
+        #_method
+        (§ defn #_"Node" balanceRight [this, #_"Node" parent]
             (ß black(parent.key, parent.val(), parent.left(), this))
         )
 
         (§ abstract Node replace(Object key, Object val, Node left, Node right))
 
-        (§ method Object kvreduce(IFn f, Object init)
+        #_method
+        (§ defn #_"Object" kvreduce [this, #_"IFn" f, #_"Object" init]
             (when (ß left() != nil)
                 (ß init = left().kvreduce(f, init))
                 (when (ß RT.isReduced(init))
@@ -28449,175 +29782,201 @@
     )
 
     (class-ns Black (§ extends Node)
-        (§ constructor Black(Object key)
+        (§ constructor #_"Black" Black [#_"Object" key]
             (§ super(key))
             this
         )
 
-        (§ method Node addLeft(Node ins)
+        #_method
+        (§ defn #_"Node" addLeft [this, #_"Node" ins]
             (ß ins.balanceLeft(this))
         )
 
-        (§ method Node addRight(Node ins)
+        #_method
+        (§ defn #_"Node" addRight [this, #_"Node" ins]
             (ß ins.balanceRight(this))
         )
 
-        (§ method Node removeLeft(Node del)
+        #_method
+        (§ defn #_"Node" removeLeft [this, #_"Node" del]
             (ß balanceLeftDel(key, val(), del, right()))
         )
 
-        (§ method Node removeRight(Node del)
+        #_method
+        (§ defn #_"Node" removeRight [this, #_"Node" del]
             (ß balanceRightDel(key, val(), left(), del))
         )
 
-        (§ method Node blacken()
+        #_method
+        (§ defn #_"Node" blacken [this]
             this
         )
 
-        (§ method Node redden()
+        #_method
+        (§ defn #_"Node" redden [this]
             (ß new Red(key))
         )
 
-        (§ method Node replace(Object key, Object val, Node left, Node right)
+        #_method
+        (§ defn #_"Node" replace [this, #_"Object" key, #_"Object" val, #_"Node" left, #_"Node" right]
             (ß black(key, val, left, right))
         )
     )
 
     (class-ns BlackVal (§ extends Black)
-        (§ field Object val)
+        (§ field #_"Object" val)
 
-        (§ constructor BlackVal(Object key, Object val)
+        (§ constructor #_"BlackVal" BlackVal [#_"Object" key, #_"Object" val]
             (§ super(key))
             (ß this.val = val)
             this
         )
 
-        (§ method Object val()
+        #_method
+        (§ defn #_"Object" val [this]
             val
         )
 
-        (§ method Node redden()
+        #_method
+        (§ defn #_"Node" redden [this]
             (ß new RedVal(key, val))
         )
     )
 
     (class-ns BlackBranch (§ extends Black)
-        (§ field Node left)
+        (§ field #_"Node" left)
 
-        (§ field Node right)
+        (§ field #_"Node" right)
 
-        (§ constructor BlackBranch(Object key, Node left, Node right)
+        (§ constructor #_"BlackBranch" BlackBranch [#_"Object" key, #_"Node" left, #_"Node" right]
             (§ super(key))
             (ß this.left = left)
             (ß this.right = right)
             this
         )
 
-        (§ method Node left()
+        #_method
+        (§ defn #_"Node" left [this]
             left
         )
 
-        (§ method Node right()
+        #_method
+        (§ defn #_"Node" right [this]
             right
         )
 
-        (§ method Node redden()
+        #_method
+        (§ defn #_"Node" redden [this]
             (ß new RedBranch(key, left, right))
         )
     )
 
     (class-ns BlackBranchVal (§ extends BlackBranch)
-        (§ field Object val)
+        (§ field #_"Object" val)
 
-        (§ constructor BlackBranchVal(Object key, Object val, Node left, Node right)
+        (§ constructor #_"BlackBranchVal" BlackBranchVal [#_"Object" key, #_"Object" val, #_"Node" left, #_"Node" right]
             (§ super(key, left, right))
             (ß this.val = val)
             this
         )
 
-        (§ method Object val()
+        #_method
+        (§ defn #_"Object" val [this]
             val
         )
 
-        (§ method Node redden()
+        #_method
+        (§ defn #_"Node" redden [this]
             (ß new RedBranchVal(key, val, left, right))
         )
     )
 
     (class-ns Red (§ extends Node)
-        (§ constructor Red(Object key)
+        (§ constructor #_"Red" Red [#_"Object" key]
             (§ super(key))
             this
         )
 
-        (§ method Node addLeft(Node ins)
+        #_method
+        (§ defn #_"Node" addLeft [this, #_"Node" ins]
             (ß red(key, val(), ins, right()))
         )
 
-        (§ method Node addRight(Node ins)
+        #_method
+        (§ defn #_"Node" addRight [this, #_"Node" ins]
             (ß red(key, val(), left(), ins))
         )
 
-        (§ method Node removeLeft(Node del)
+        #_method
+        (§ defn #_"Node" removeLeft [this, #_"Node" del]
             (ß red(key, val(), del, right()))
         )
 
-        (§ method Node removeRight(Node del)
+        #_method
+        (§ defn #_"Node" removeRight [this, #_"Node" del]
             (ß red(key, val(), left(), del))
         )
 
-        (§ method Node blacken()
+        #_method
+        (§ defn #_"Node" blacken [this]
             (ß new Black(key))
         )
 
-        (§ method Node redden()
+        #_method
+        (§ defn #_"Node" redden [this]
             (throw (ß new UnsupportedOperationException("Invariant violation")))
         )
 
-        (§ method Node replace(Object key, Object val, Node left, Node right)
+        #_method
+        (§ defn #_"Node" replace [this, #_"Object" key, #_"Object" val, #_"Node" left, #_"Node" right]
             (ß red(key, val, left, right))
         )
     )
 
     (class-ns RedVal (§ extends Red)
-        (§ field Object val)
+        (§ field #_"Object" val)
 
-        (§ constructor RedVal(Object key, Object val)
+        (§ constructor #_"RedVal" RedVal [#_"Object" key, #_"Object" val]
             (§ super(key))
             (ß this.val = val)
             this
         )
 
-        (§ method Object val()
+        #_method
+        (§ defn #_"Object" val [this]
             val
         )
 
-        (§ method Node blacken()
+        #_method
+        (§ defn #_"Node" blacken [this]
             (ß new BlackVal(key, val))
         )
     )
 
     (class-ns RedBranch (§ extends Red)
-        (§ field Node left)
+        (§ field #_"Node" left)
 
-        (§ field Node right)
+        (§ field #_"Node" right)
 
-        (§ constructor RedBranch(Object key, Node left, Node right)
+        (§ constructor #_"RedBranch" RedBranch [#_"Object" key, #_"Node" left, #_"Node" right]
             (§ super(key))
             (ß this.left = left)
             (ß this.right = right)
             this
         )
 
-        (§ method Node left()
+        #_method
+        (§ defn #_"Node" left [this]
             left
         )
 
-        (§ method Node right()
+        #_method
+        (§ defn #_"Node" right [this]
             right
         )
 
-        (§ method Node balanceLeft(Node parent)
+        #_method
+        (§ defn #_"Node" balanceLeft [this, #_"Node" parent]
             (cond (ß left instanceof Red)
                 (do
                     (ß red(key, val(), left.blacken(), black(parent.key, parent.val(), right, parent.right())))
@@ -28633,7 +29992,8 @@
             )
         )
 
-        (§ method Node balanceRight(Node parent)
+        #_method
+        (§ defn #_"Node" balanceRight [this, #_"Node" parent]
             (cond (ß right instanceof Red)
                 (do
                     (ß red(key, val(), black(parent.key, parent.val(), parent.left(), left), right.blacken()))
@@ -28649,49 +30009,52 @@
             )
         )
 
-        (§ method Node blacken()
+        #_method
+        (§ defn #_"Node" blacken [this]
             (ß new BlackBranch(key, left, right))
         )
     )
 
     (class-ns RedBranchVal (§ extends RedBranch)
-        (§ field Object val)
+        (§ field #_"Object" val)
 
-        (§ constructor RedBranchVal(Object key, Object val, Node left, Node right)
+        (§ constructor #_"RedBranchVal" RedBranchVal [#_"Object" key, #_"Object" val, #_"Node" left, #_"Node" right]
             (§ super(key, left, right))
             (ß this.val = val)
             this
         )
 
-        (§ method Object val()
+        #_method
+        (§ defn #_"Object" val [this]
             val
         )
 
-        (§ method Node blacken()
+        #_method
+        (§ defn #_"Node" blacken [this]
             (ß new BlackBranchVal(key, val, left, right))
         )
     )
 
     (class-ns Seq (§ extends ASeq)
-        (§ field ISeq stack)
-        (§ field boolean asc)
-        (§ field int cnt)
+        (§ field #_"ISeq" stack)
+        (§ field #_"boolean" asc)
+        (§ field #_"int" cnt)
 
-        (§ constructor Seq(ISeq stack, boolean asc)
+        (§ constructor #_"Seq" Seq [#_"ISeq" stack, #_"boolean" asc]
             (ß this.stack = stack)
             (ß this.asc = asc)
             (ß this.cnt = -1)
             this
         )
 
-        (§ constructor Seq(ISeq stack, boolean asc, int cnt)
+        (§ constructor #_"Seq" Seq [#_"ISeq" stack, #_"boolean" asc, #_"int" cnt]
             (ß this.stack = stack)
             (ß this.asc = asc)
             (ß this.cnt = cnt)
             this
         )
 
-        (§ constructor Seq(IPersistentMap meta, ISeq stack, boolean asc, int cnt)
+        (§ constructor #_"Seq" Seq [#_"IPersistentMap" meta, #_"ISeq" stack, #_"boolean" asc, #_"int" cnt]
             (§ super(meta))
             (ß this.stack = stack)
             (ß this.asc = asc)
@@ -28699,11 +30062,11 @@
             this
         )
 
-        (§ defn Seq create(Node t, boolean asc, int cnt)
+        (§ defn #_"Seq" create [#_"Node" t, #_"boolean" asc, #_"int" cnt]
             (ß new Seq(push(t, nil, asc), asc, cnt))
         )
 
-        (§ defn ISeq push(Node t, ISeq stack, boolean asc)
+        (§ defn #_"ISeq" push [#_"Node" t, #_"ISeq" stack, #_"boolean" asc]
             (while (ß t != nil)
                 (ß stack = RT.cons(t, stack))
                 (ß t = asc ? t.left() :or t.right())
@@ -28711,11 +30074,13 @@
             stack
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (ß stack.first())
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (let [#_"Node" t (ß (Node) stack.first())]
                 (let [#_"ISeq" nextstack (ß push(asc ? t.right() :or t.left(), stack.next(), asc))]
                     (when (ß nextstack != nil)
@@ -28726,29 +30091,32 @@
             )
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             (when (ß cnt < 0)
                 (§ return (ß super.count()))
             )
             cnt
         )
 
-        (§ method Obj withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"Obj" withMeta [this, #_"IPersistentMap" meta]
             (ß new Seq(meta, stack, asc, cnt))
         )
     )
 
     (class-ns NodeIterator (§ implements Iterator)
-        (§ field Stack stack = new Stack())
-        (§ field boolean asc)
+        (§ field #_"Stack" stack (ß new Stack()))
+        (§ field #_"boolean" asc)
 
-        (§ constructor NodeIterator(Node t, boolean asc)
+        (§ constructor #_"NodeIterator" NodeIterator [#_"Node" t, #_"boolean" asc]
             (ß this.asc = asc)
             (ß push(t))
             this
         )
 
-        (§ method void push(Node t)
+        #_method
+        (§ defn #_"void" push [this, #_"Node" t]
             (while (ß t != nil)
                 (ß stack.push(t))
                 (ß t = asc ? t.left() :or t.right())
@@ -28756,11 +30124,13 @@
             nil
         )
 
-        (§ method boolean hasNext()
+        #_method
+        (§ defn #_"boolean" hasNext [this]
             (ß !stack.isEmpty())
         )
 
-        (§ method Object next()
+        #_method
+        (§ defn #_"Object" next [this]
             (try
                 (let [#_"Node" t (ß (Node) stack.pop())]
                     (ß push(asc ? t.right() :or t.left()))
@@ -28772,49 +30142,56 @@
             )
         )
 
-        (§ method void remove()
+        #_method
+        (§ defn #_"void" remove [this]
             (throw (ß new UnsupportedOperationException()))
         )
     )
 
     (class-ns KeyIterator (§ implements Iterator)
-        (§ field NodeIterator it)
+        (§ field #_"NodeIterator" it)
 
-        (§ constructor KeyIterator(NodeIterator it)
+        (§ constructor #_"KeyIterator" KeyIterator [#_"NodeIterator" it]
             (ß this.it = it)
             this
         )
 
-        (§ method boolean hasNext()
+        #_method
+        (§ defn #_"boolean" hasNext [this]
             (ß it.hasNext())
         )
 
-        (§ method Object next()
+        #_method
+        (§ defn #_"Object" next [this]
             (ß ((Node) it.next()).key)
         )
 
-        (§ method void remove()
+        #_method
+        (§ defn #_"void" remove [this]
             (throw (ß new UnsupportedOperationException()))
         )
     )
 
     (class-ns ValIterator (§ implements Iterator)
-        (§ field NodeIterator it)
+        (§ field #_"NodeIterator" it)
 
-        (§ constructor ValIterator(NodeIterator it)
+        (§ constructor #_"ValIterator" ValIterator [#_"NodeIterator" it]
             (ß this.it = it)
             this
         )
 
-        (§ method boolean hasNext()
+        #_method
+        (§ defn #_"boolean" hasNext [this]
             (ß it.hasNext())
         )
 
-        (§ method Object next()
+        #_method
+        (§ defn #_"Object" next [this]
             (ß ((Node) it.next()).val())
         )
 
-        (§ method void remove()
+        #_method
+        (§ defn #_"void" remove [this]
             (throw (ß new UnsupportedOperationException()))
         )
     )
@@ -28826,11 +30203,11 @@
 (§ import java.util.Comparator)
 
 (class-ns PersistentTreeSet (§ extends APersistentSet) (§ implements IObj, Reversible, Sorted)
-    (§ def PersistentTreeSet EMPTY = new PersistentTreeSet(nil, PersistentTreeMap.EMPTY))
+    (§ def #_"PersistentTreeSet" EMPTY (ß new PersistentTreeSet(nil, PersistentTreeMap.EMPTY)))
 
-    (§ field IPersistentMap _meta)
+    (§ field #_"IPersistentMap" _meta)
 
-    (§ defn PersistentTreeSet create(ISeq items)
+    (§ defn #_"PersistentTreeSet" create [#_"ISeq" items]
         (let [#_"PersistentTreeSet" ret (ß EMPTY)]
             (loop-when-recur [(ß )] (ß items != nil) [(ß items = items.next())]
                 (ß ret = (PersistentTreeSet) ret.cons(items.first()))
@@ -28839,7 +30216,7 @@
         )
     )
 
-    (§ defn PersistentTreeSet create(Comparator comp, ISeq items)
+    (§ defn #_"PersistentTreeSet" create [#_"Comparator" comp, #_"ISeq" items]
         (let [#_"PersistentTreeSet" ret (ß new PersistentTreeSet(nil, new PersistentTreeMap(nil, comp)))]
             (loop-when-recur [(ß )] (ß items != nil) [(ß items = items.next())]
                 (ß ret = (PersistentTreeSet) ret.cons(items.first()))
@@ -28848,13 +30225,14 @@
         )
     )
 
-    (§ constructor PersistentTreeSet(IPersistentMap meta, IPersistentMap impl)
+    (§ constructor #_"PersistentTreeSet" PersistentTreeSet [#_"IPersistentMap" meta, #_"IPersistentMap" impl]
         (§ super(impl))
         (ß this._meta = meta)
         this
     )
 
-    (§ method boolean equals(Object obj)
+    #_method
+    (§ defn #_"boolean" equals [this, #_"Object" obj]
         (try
             (ß super.equals(obj))
             (catch ClassCastException e
@@ -28863,7 +30241,8 @@
         )
     )
 
-    (§ method boolean equiv(Object obj)
+    #_method
+    (§ defn #_"boolean" equiv [this, #_"Object" obj]
         (try
             (ß super.equiv(obj))
             (catch ClassCastException e
@@ -28872,53 +30251,63 @@
         )
     )
 
-    (§ method IPersistentSet disjoin(Object key)
+    #_method
+    (§ defn #_"IPersistentSet" disjoin [this, #_"Object" key]
         (when (ß contains(key))
             (§ return (ß new PersistentTreeSet(meta(), impl.without(key))))
         )
         this
     )
 
-    (§ method IPersistentSet cons(Object o)
+    #_method
+    (§ defn #_"IPersistentSet" cons [this, #_"Object" o]
         (when (ß contains(o))
             (§ return this)
         )
         (ß new PersistentTreeSet(meta(), impl.assoc(o, o)))
     )
 
-    (§ method IPersistentCollection empty()
+    #_method
+    (§ defn #_"IPersistentCollection" empty [this]
         (ß new PersistentTreeSet(meta(), (PersistentTreeMap)impl.empty()))
     )
 
-    (§ method ISeq rseq()
+    #_method
+    (§ defn #_"ISeq" rseq [this]
         (ß APersistentMap.KeySeq.create(((Reversible) impl).rseq()))
     )
 
-    (§ method PersistentTreeSet withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"PersistentTreeSet" withMeta [this, #_"IPersistentMap" meta]
         (ß new PersistentTreeSet(meta, impl))
     )
 
-    (§ method Comparator comparator()
+    #_method
+    (§ defn #_"Comparator" comparator [this]
         (ß ((Sorted)impl).comparator())
     )
 
-    (§ method Object entryKey(Object entry)
+    #_method
+    (§ defn #_"Object" entryKey [this, #_"Object" entry]
         entry
     )
 
-    (§ method ISeq seq(boolean ascending)
+    #_method
+    (§ defn #_"ISeq" seq [this, #_"boolean" ascending]
         (let [#_"PersistentTreeMap" m (ß (PersistentTreeMap) impl)]
             (ß RT.keys(m.seq(ascending)))
         )
     )
 
-    (§ method ISeq seqFrom(Object key, boolean ascending)
+    #_method
+    (§ defn #_"ISeq" seqFrom [this, #_"Object" key, #_"boolean" ascending]
         (let [#_"PersistentTreeMap" m (ß (PersistentTreeMap) impl)]
             (ß RT.keys(m.seqFrom(key, ascending)))
         )
     )
 
-    (§ method IPersistentMap meta()
+    #_method
+    (§ defn #_"IPersistentMap" meta [this]
         (ß _meta)
     )
 )
@@ -28935,56 +30324,58 @@
 (class-ns PersistentVector (§ extends APersistentVector) (§ implements IObj, IEditableCollection, IReduce, IKVReduce)
     (class-ns Node
         #_transient
-        (§ field AtomicReference<Thread> edit)
-        (§ field Object[] array)
+        (§ field #_"AtomicReference<Thread>" edit)
+        (§ field #_"Object[]" array)
 
-        (§ constructor Node(AtomicReference<Thread> edit, Object[] array)
+        (§ constructor #_"Node" Node [#_"AtomicReference<Thread>" edit, #_"Object[]" array]
             (ß this.edit = edit)
             (ß this.array = array)
             this
         )
 
-        (§ constructor Node(AtomicReference<Thread> edit)
+        (§ constructor #_"Node" Node [#_"AtomicReference<Thread>" edit]
             (ß this.edit = edit)
             (ß this.array = new Object[32])
             this
         )
     )
 
-    (§ def AtomicReference<Thread> NOEDIT = new AtomicReference<Thread>(nil))
-    (§ def Node EMPTY_NODE = new Node(NOEDIT, new Object[32]))
+    (§ def #_"AtomicReference<Thread>" NOEDIT (ß new AtomicReference<Thread>(nil)))
+    (§ def #_"Node" EMPTY_NODE (ß new Node(NOEDIT, new Object[32])))
 
-    (§ field int cnt)
-    (§ field int shift)
-    (§ field Node root)
-    (§ field Object[] tail)
-    (§ field IPersistentMap _meta)
+    (§ field #_"int" cnt)
+    (§ field #_"int" shift)
+    (§ field #_"Node" root)
+    (§ field #_"Object[]" tail)
+    (§ field #_"IPersistentMap" _meta)
 
-    (§ def PersistentVector EMPTY = new PersistentVector(0, 5, EMPTY_NODE, new Object[] (§)))
+    (§ def #_"PersistentVector" EMPTY (ß new PersistentVector(0, 5, EMPTY_NODE, new Object[] (§))))
 
-    (§ def- IFn TRANSIENT_VECTOR_CONJ = new AFn()
+    (§ def- #_"IFn" TRANSIENT_VECTOR_CONJ (ß new AFn()
         (§ reify
-            (§ method Object invoke(Object coll, Object val)
+            #_method
+            (§ defn #_"Object" invoke [this, #_"Object" coll, #_"Object" val]
                 (ß ((ITransientVector)coll).conj(val))
             )
-            (§ method Object invoke(Object coll)
+            #_method
+            (§ defn #_"Object" invoke [this, #_"Object" coll]
                 coll
             )
         )
-    )
+    ))
 
-    (§ defn PersistentVector adopt(Object [] items)
+    (§ defn #_"PersistentVector" adopt [#_"Object[]" items]
         (ß new PersistentVector(items.length, 5, EMPTY_NODE, items))
     )
 
-    (§ defn PersistentVector create(IReduceInit items)
+    (§ defn #_"PersistentVector" create [#_"IReduceInit" items]
         (let [#_"TransientVector" ret (ß EMPTY.asTransient())]
             (ß items.reduce(TRANSIENT_VECTOR_CONJ, ret))
             (ß ret.persistent())
         )
     )
 
-    (§ defn PersistentVector create(ISeq items)
+    (§ defn #_"PersistentVector" create [#_"ISeq" items]
         (let [#_"Object[]" arr (ß new Object[32])]
             (let [#_"int" i 0]
                 (loop-when-recur [(ß )] (ß items != nil && i < 32) [(ß items = items.next())]
@@ -29018,7 +30409,7 @@
         )
     )
 
-    (§ defn PersistentVector create(List list)
+    (§ defn #_"PersistentVector" create [#_"List" list]
         (let [#_"int" size (ß list.size())]
             (when (ß size <= 32)
                 (§ return (ß new PersistentVector(size, 5, PersistentVector.EMPTY_NODE, list.toArray())))
@@ -29033,7 +30424,7 @@
         )
     )
 
-    (§ defn PersistentVector create(Iterable items)
+    (§ defn #_"PersistentVector" create [#_"Iterable" items]
         ;; optimize common case
         (when (ß items instanceof ArrayList)
             (§ return (ß create((ArrayList)items)))
@@ -29049,7 +30440,7 @@
         )
     )
 
-    (§ defn PersistentVector create(Object... items)
+    (§ defn #_"PersistentVector" create [#_"Object..." items]
         (let [#_"TransientVector" ret (ß EMPTY.asTransient())]
             (doseq [#_"Object" item items]
                 (ß ret = ret.conj(item))
@@ -29058,7 +30449,7 @@
         )
     )
 
-    (§ constructor PersistentVector(int cnt, int shift, Node root, Object[] tail)
+    (§ constructor #_"PersistentVector" PersistentVector [#_"int" cnt, #_"int" shift, #_"Node" root, #_"Object[]" tail]
         (ß this._meta = nil)
         (ß this.cnt = cnt)
         (ß this.shift = shift)
@@ -29067,7 +30458,7 @@
         this
     )
 
-    (§ constructor PersistentVector(IPersistentMap meta, int cnt, int shift, Node root, Object[] tail)
+    (§ constructor #_"PersistentVector" PersistentVector [#_"IPersistentMap" meta, #_"int" cnt, #_"int" shift, #_"Node" root, #_"Object[]" tail]
         (ß this._meta = meta)
         (ß this.cnt = cnt)
         (ß this.shift = shift)
@@ -29076,18 +30467,21 @@
         this
     )
 
-    (§ method TransientVector asTransient()
+    #_method
+    (§ defn #_"TransientVector" asTransient [this]
         (ß new TransientVector(this))
     )
 
-    (§ method int tailoff()
+    #_method
+    (§ defn #_"int" tailoff [this]
         (when (ß cnt < 32)
             (§ return 0)
         )
         (ß ((cnt - 1) >>> 5) << 5)
     )
 
-    (§ method Object[] arrayFor(int i)
+    #_method
+    (§ defn #_"Object[]" arrayFor [this, #_"int" i]
         (when (ß i >= 0 && i < cnt)
             (when (ß i >= tailoff())
                 (§ return tail)
@@ -29102,20 +30496,23 @@
         (throw (ß new IndexOutOfBoundsException()))
     )
 
-    (§ method Object nth(int i)
+    #_method
+    (§ defn #_"Object" nth [this, #_"int" i]
         (let [#_"Object[]" node (ß arrayFor(i))]
             (ß node[i & 0x01f])
         )
     )
 
-    (§ method Object nth(int i, Object notFound)
+    #_method
+    (§ defn #_"Object" nth [this, #_"int" i, #_"Object" notFound]
         (when (ß i >= 0 && i < cnt)
             (§ return (ß nth(i)))
         )
         notFound
     )
 
-    (§ method PersistentVector assocN(int i, Object val)
+    #_method
+    (§ defn #_"PersistentVector" assocN [this, #_"int" i, #_"Object" val]
         (when (ß i >= 0 && i < cnt)
             (when (ß i >= tailoff())
                 (let [#_"Object[]" newTail (ß new Object[tail.length])]
@@ -29134,7 +30531,7 @@
         (throw (ß new IndexOutOfBoundsException()))
     )
 
-    (§ defn- Node doAssoc(int level, Node node, int i, Object val)
+    (§ defn- #_"Node" doAssoc [#_"int" level, #_"Node" node, #_"int" i, #_"Object" val]
         (let [#_"Node" ret (ß new Node(node.edit, node.array.clone()))]
             (if (ß level == 0)
                 (do
@@ -29150,19 +30547,23 @@
         )
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         cnt
     )
 
-    (§ method PersistentVector withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"PersistentVector" withMeta [this, #_"IPersistentMap" meta]
         (ß new PersistentVector(meta, cnt, shift, root, tail))
     )
 
-    (§ method IPersistentMap meta()
+    #_method
+    (§ defn #_"IPersistentMap" meta [this]
         (ß _meta)
     )
 
-    (§ method PersistentVector cons(Object val)
+    #_method
+    (§ defn #_"PersistentVector" cons [this, #_"Object" val]
         ;; room in tail?
         (when (ß cnt - tailoff() < 32)
             (let [#_"Object[]" newTail (ß new Object[tail.length + 1])]
@@ -29193,7 +30594,8 @@
         )
     )
 
-    (§ method- Node pushTail(int level, Node parent, Node tailnode)
+    #_method
+    (§ defn- #_"Node" pushTail [this, #_"int" level, #_"Node" parent, #_"Node" tailnode]
         ;; if parent is leaf, insert node,
         ;; else does it map to an existing child? -> nodeToInsert = pushNode one more level
         ;; else alloc new path
@@ -29218,7 +30620,7 @@
         )
     )
 
-    (§ defn- Node newPath(AtomicReference<Thread> edit, int level, Node node)
+    (§ defn- #_"Node" newPath [#_"AtomicReference<Thread>" edit, #_"int" level, #_"Node" node]
         (when (ß level == 0)
             (§ return node)
         )
@@ -29228,29 +30630,34 @@
         )
     )
 
-    (§ method IChunkedSeq chunkedSeq()
+    #_method
+    (§ defn #_"IChunkedSeq" chunkedSeq [this]
         (when (ß count() == 0)
             (§ return nil)
         )
         (ß new ChunkedSeq(this, 0, 0))
     )
 
-    (§ method ISeq seq()
+    #_method
+    (§ defn #_"ISeq" seq [this]
         (ß chunkedSeq())
     )
 
     (§ anno @Override)
-    (§ method Iterator rangedIterator(int start, int end)
+    #_method
+    (§ defn #_"Iterator" rangedIterator [this, #_"int" start, #_"int" end]
         (ß new Iterator()
             (§ reify
                 (let [#_"int" i start]
                     (let [#_"int" base (ß i - (i%32))]
                         (let [#_"Object[]" array (ß (start < count()) ? arrayFor(i) :or nil)]
-                            (§ method boolean hasNext()
+                            #_method
+                            (§ defn #_"boolean" hasNext [this]
                                 (ß (i < end))
                             )
 
-                            (§ method Object next()
+                            #_method
+                            (§ defn #_"Object" next [this]
                                 (if (ß i < end)
                                     (do
                                         (when (ß i - base == 32)
@@ -29265,7 +30672,8 @@
                                 )
                             )
 
-                            (§ method void remove()
+                            #_method
+                            (§ defn #_"void" remove [this]
                                 (throw (ß new UnsupportedOperationException()))
                             )
                         )
@@ -29275,11 +30683,13 @@
         )
     )
 
-    (§ method Iterator iterator()
+    #_method
+    (§ defn #_"Iterator" iterator [this]
         (ß rangedIterator(0, count()))
     )
 
-    (§ method Object reduce(IFn f)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" f]
         (§ let [#_"Object" init]
             (if (ß cnt > 0)
                 (do
@@ -29306,7 +30716,8 @@
         )
     )
 
-    (§ method Object reduce(IFn f, Object init)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" init]
         (let [#_"int" step 0]
             (loop-when-recur [(ß int i = 0)] (ß i < cnt) [(ß i += step)]
                 (let [#_"Object[]" array (ß arrayFor(i))]
@@ -29323,7 +30734,8 @@
         )
     )
 
-    (§ method Object kvreduce(IFn f, Object init)
+    #_method
+    (§ defn #_"Object" kvreduce [this, #_"IFn" f, #_"Object" init]
         (let [#_"int" step 0]
             (loop-when-recur [(ß int i = 0)] (ß i < cnt) [(ß i += step)]
                 (let [#_"Object[]" array (ß arrayFor(i))]
@@ -29341,12 +30753,12 @@
     )
 
     (class-ns ChunkedSeq (§ extends ASeq) (§ implements IChunkedSeq, Counted)
-        (§ field PersistentVector vec)
-        (§ field Object[] node)
-        (§ field int i)
-        (§ field int offset)
+        (§ field #_"PersistentVector" vec)
+        (§ field #_"Object[]" node)
+        (§ field #_"int" i)
+        (§ field #_"int" offset)
 
-        (§ constructor ChunkedSeq(PersistentVector vec, int i, int offset)
+        (§ constructor #_"ChunkedSeq" ChunkedSeq [#_"PersistentVector" vec, #_"int" i, #_"int" offset]
             (ß this.vec = vec)
             (ß this.i = i)
             (ß this.offset = offset)
@@ -29354,7 +30766,7 @@
             this
         )
 
-        (§ constructor ChunkedSeq(IPersistentMap meta, PersistentVector vec, Object[] node, int i, int offset)
+        (§ constructor #_"ChunkedSeq" ChunkedSeq [#_"IPersistentMap" meta, #_"PersistentVector" vec, #_"Object[]" node, #_"int" i, #_"int" offset]
             (§ super(meta))
             (ß this.vec = vec)
             (ß this.node = node)
@@ -29363,7 +30775,7 @@
             this
         )
 
-        (§ constructor ChunkedSeq(PersistentVector vec, Object[] node, int i, int offset)
+        (§ constructor #_"ChunkedSeq" ChunkedSeq [#_"PersistentVector" vec, #_"Object[]" node, #_"int" i, #_"int" offset]
             (ß this.vec = vec)
             (ß this.node = node)
             (ß this.i = i)
@@ -29371,18 +30783,21 @@
             this
         )
 
-        (§ method IChunk chunkedFirst()
+        #_method
+        (§ defn #_"IChunk" chunkedFirst [this]
             (ß new ArrayChunk(node, offset))
         )
 
-        (§ method ISeq chunkedNext()
+        #_method
+        (§ defn #_"ISeq" chunkedNext [this]
             (when (ß i + node.length < vec.cnt)
                 (§ return (ß new ChunkedSeq(vec, i + node.length, 0)))
             )
             nil
         )
 
-        (§ method ISeq chunkedMore()
+        #_method
+        (§ defn #_"ISeq" chunkedMore [this]
             (let [#_"ISeq" s (ß chunkedNext())]
                 (when (ß s == nil)
                     (§ return (ß PersistentList.EMPTY))
@@ -29391,34 +30806,40 @@
             )
         )
 
-        (§ method Obj withMeta(IPersistentMap meta)
+        #_method
+        (§ defn #_"Obj" withMeta [this, #_"IPersistentMap" meta]
             (when (ß meta == this._meta)
                 (§ return this)
             )
             (ß new ChunkedSeq(meta, vec, node, i, offset))
         )
 
-        (§ method Object first()
+        #_method
+        (§ defn #_"Object" first [this]
             (ß node[offset])
         )
 
-        (§ method ISeq next()
+        #_method
+        (§ defn #_"ISeq" next [this]
             (when (ß offset + 1 < node.length)
                 (§ return (ß new ChunkedSeq(vec, node, i, offset + 1)))
             )
             (ß chunkedNext())
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             (ß vec.cnt - (i + offset))
         )
     )
 
-    (§ method IPersistentCollection empty()
+    #_method
+    (§ defn #_"IPersistentCollection" empty [this]
         (ß EMPTY.withMeta(meta()))
     )
 
-    (§ method PersistentVector pop()
+    #_method
+    (§ defn #_"PersistentVector" pop [this]
         (when (ß cnt == 0)
             (throw (ß new IllegalStateException("Can't pop empty vector")))
         )
@@ -29447,7 +30868,8 @@
         )
     )
 
-    (§ method- Node popTail(int level, Node node)
+    #_method
+    (§ defn- #_"Node" popTail [this, #_"int" level, #_"Node" node]
         (let [#_"int" subidx (ß ((cnt - 2) >>> level) & 0x01f)]
             (cond (ß level > 5)
                 (do
@@ -29482,15 +30904,15 @@
 
     (class-ns TransientVector (§ extends AFn) (§ implements ITransientVector, ITransientAssociative2, Counted)
         #_volatile
-        (§ field int cnt)
+        (§ field #_"int" cnt)
         #_volatile
-        (§ field int shift)
+        (§ field #_"int" shift)
         #_volatile
-        (§ field Node root)
+        (§ field #_"Node" root)
         #_volatile
-        (§ field Object[] tail)
+        (§ field #_"Object[]" tail)
 
-        (§ constructor TransientVector(int cnt, int shift, Node root, Object[] tail)
+        (§ constructor #_"TransientVector" TransientVector [#_"int" cnt, #_"int" shift, #_"Node" root, #_"Object[]" tail]
             (ß this.cnt = cnt)
             (ß this.shift = shift)
             (ß this.root = root)
@@ -29498,35 +30920,39 @@
             this
         )
 
-        (§ constructor TransientVector(PersistentVector v)
+        (§ constructor #_"TransientVector" TransientVector [#_"PersistentVector" v]
             (§ this(v.cnt, v.shift, editableRoot(v.root), editableTail(v.tail)))
             this
         )
 
-        (§ method int count()
+        #_method
+        (§ defn #_"int" count [this]
             (ß ensureEditable())
             cnt
         )
 
-        (§ method Node ensureEditable(Node node)
+        #_method
+        (§ defn #_"Node" ensureEditable [this, #_"Node" node]
             (when (ß node.edit == root.edit)
                 (§ return node)
             )
             (ß new Node(root.edit, node.array.clone()))
         )
 
-        (§ method void ensureEditable()
+        #_method
+        (§ defn #_"void" ensureEditable [this]
             (when (ß root.edit.get() == nil)
                 (throw (ß new IllegalAccessError("Transient used after persistent! call")))
             )
             nil
         )
 
-        (§ defn Node editableRoot(Node node)
+        (§ defn #_"Node" editableRoot [#_"Node" node]
             (ß new Node(new AtomicReference<Thread>(Thread.currentThread()), node.array.clone()))
         )
 
-        (§ method PersistentVector persistent()
+        #_method
+        (§ defn #_"PersistentVector" persistent [this]
             (ß ensureEditable())
             (ß root.edit.set(nil))
             (let [#_"Object[]" trimmedTail (ß new Object[cnt - tailoff()])]
@@ -29535,14 +30961,15 @@
             )
         )
 
-        (§ defn Object[] editableTail(Object[] tl)
+        (§ defn #_"Object[]" editableTail [#_"Object[]" tl]
             (let [#_"Object[]" ret (ß new Object[32])]
                 (ß System.arraycopy(tl, 0, ret, 0, tl.length))
                 ret
             )
         )
 
-        (§ method TransientVector conj(Object val)
+        #_method
+        (§ defn #_"TransientVector" conj [this, #_"Object" val]
             (ß ensureEditable())
             (let [#_"int" i cnt]
                 ;; room in tail?
@@ -29579,7 +31006,8 @@
             )
         )
 
-        (§ method- Node pushTail(int level, Node parent, Node tailnode)
+        #_method
+        (§ defn- #_"Node" pushTail [this, #_"int" level, #_"Node" parent, #_"Node" tailnode]
             ;; if parent is leaf, insert node,
             ;; else does it map to an existing child? -> nodeToInsert = pushNode one more level
             ;; else alloc new path
@@ -29605,14 +31033,16 @@
             )
         )
 
-        (§ method- int tailoff()
+        #_method
+        (§ defn- #_"int" tailoff [this]
             (when (ß cnt < 32)
                 (§ return 0)
             )
             (ß ((cnt - 1) >>> 5) << 5)
         )
 
-        (§ method- Object[] arrayFor(int i)
+        #_method
+        (§ defn- #_"Object[]" arrayFor [this, #_"int" i]
             (when (ß i >= 0 && i < cnt)
                 (when (ß i >= tailoff())
                     (§ return tail)
@@ -29627,7 +31057,8 @@
             (throw (ß new IndexOutOfBoundsException()))
         )
 
-        (§ method- Object[] editableArrayFor(int i)
+        #_method
+        (§ defn- #_"Object[]" editableArrayFor [this, #_"int" i]
             (when (ß i >= 0 && i < cnt)
                 (when (ß i >= tailoff())
                     (§ return tail)
@@ -29642,12 +31073,14 @@
             (throw (ß new IndexOutOfBoundsException()))
         )
 
-        (§ method Object valAt(Object key)
+        #_method
+        (§ defn #_"Object" valAt [this, #_"Object" key]
             ;; note - relies on ensureEditable in 2-arg valAt
             (ß valAt(key, nil))
         )
 
-        (§ method Object valAt(Object key, Object notFound)
+        #_method
+        (§ defn #_"Object" valAt [this, #_"Object" key, #_"Object" notFound]
             (ß ensureEditable())
             (when (ß Util.isInteger(key))
                 (let [#_"int" i (ß ((Number) key).intValue())]
@@ -29659,13 +31092,15 @@
             notFound
         )
 
-        (§ def- Object NOT_FOUND = new Object())
+        (§ def- #_"Object" NOT_FOUND (ß new Object()))
 
-        (§ method boolean containsKey(Object key)
+        #_method
+        (§ defn #_"boolean" containsKey [this, #_"Object" key]
             (ß (valAt(key, NOT_FOUND) != NOT_FOUND))
         )
 
-        (§ method IMapEntry entryAt(Object key)
+        #_method
+        (§ defn #_"IMapEntry" entryAt [this, #_"Object" key]
             (let [#_"Object" v (ß valAt(key, NOT_FOUND))]
                 (when (ß v != NOT_FOUND)
                     (§ return (ß MapEntry.create(key, v)))
@@ -29674,7 +31109,8 @@
             )
         )
 
-        (§ method Object invoke(Object arg1)
+        #_method
+        (§ defn #_"Object" invoke [this, #_"Object" arg1]
             ;; note - relies on ensureEditable in nth
             (when (ß Util.isInteger(arg1))
                 (§ return (ß nth(((Number) arg1).intValue())))
@@ -29682,21 +31118,24 @@
             (throw (ß new IllegalArgumentException("Key must be integer")))
         )
 
-        (§ method Object nth(int i)
+        #_method
+        (§ defn #_"Object" nth [this, #_"int" i]
             (ß ensureEditable())
             (let [#_"Object[]" node (ß arrayFor(i))]
                 (ß node[i & 0x01f])
             )
         )
 
-        (§ method Object nth(int i, Object notFound)
+        #_method
+        (§ defn #_"Object" nth [this, #_"int" i, #_"Object" notFound]
             (when (ß i >= 0 && i < count())
                 (§ return (ß nth(i)))
             )
             notFound
         )
 
-        (§ method TransientVector assocN(int i, Object val)
+        #_method
+        (§ defn #_"TransientVector" assocN [this, #_"int" i, #_"Object" val]
             (ß ensureEditable())
             (when (ß i >= 0 && i < cnt)
                 (when (ß i >= tailoff())
@@ -29713,7 +31152,8 @@
             (throw (ß new IndexOutOfBoundsException()))
         )
 
-        (§ method TransientVector assoc(Object key, Object val)
+        #_method
+        (§ defn #_"TransientVector" assoc [this, #_"Object" key, #_"Object" val]
             ;; note - relies on ensureEditable in assocN
             (when (ß Util.isInteger(key))
                 (let [#_"int" i (ß ((Number) key).intValue())]
@@ -29723,7 +31163,8 @@
             (throw (ß new IllegalArgumentException("Key must be integer")))
         )
 
-        (§ method- Node doAssoc(int level, Node node, int i, Object val)
+        #_method
+        (§ defn- #_"Node" doAssoc [this, #_"int" level, #_"Node" node, #_"int" i, #_"Object" val]
             (ß node = ensureEditable(node))
             (let [#_"Node" ret node]
                 (if (ß level == 0)
@@ -29740,7 +31181,8 @@
             )
         )
 
-        (§ method TransientVector pop()
+        #_method
+        (§ defn #_"TransientVector" pop [this]
             (ß ensureEditable())
             (when (ß cnt == 0)
                 (throw (ß new IllegalStateException("Can't pop empty vector")))
@@ -29777,7 +31219,8 @@
             )
         )
 
-        (§ method- Node popTail(int level, Node node)
+        #_method
+        (§ defn- #_"Node" popTail [this, #_"int" level, #_"Node" node]
             (ß node = ensureEditable(node))
             (let [#_"int" subidx (ß ((cnt - 2) >>> level) & 0x01f)]
                 (cond (ß level > 5)
@@ -29821,14 +31264,15 @@
 
 (class-ns ProxyHandler (§ implements InvocationHandler)
     ;; method-name-string->fn
-    (§ field IPersistentMap fns)
+    (§ field #_"IPersistentMap" fns)
 
-    (§ constructor ProxyHandler(IPersistentMap fns)
+    (§ constructor #_"ProxyHandler" ProxyHandler [#_"IPersistentMap" fns]
         (ß this.fns = fns)
         this
     )
 
-    (§ method Object invoke(Object proxy, Method method, Object[] args) (§ throws Throwable)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" proxy, #_"Method" method, #_"Object[]" args] (§ throws Throwable)
         (let [#_"Class" rt (ß method.getReturnType())]
             (let [#_"IFn" fn (ß (IFn) fns.valAt(method.getName()))]
                 (when (ß fn == nil)
@@ -29909,47 +31353,49 @@
  ; Implements generic numeric (potentially infinite) range.
  ;;
 (class-ns Range (§ extends ASeq) (§ implements IChunkedSeq, IReduce)
-    (§ def- int CHUNK_SIZE = 32)
+    (§ def- #_"int" CHUNK_SIZE (ß 32))
 
     ;; Invariants guarantee this is never an "empty" seq
-    (§ field Object end)
-    (§ field Object start)
-    (§ field Object step)
-    (§ field BoundsCheck boundsCheck)
+    (§ field #_"Object" end)
+    (§ field #_"Object" start)
+    (§ field #_"Object" step)
+    (§ field #_"BoundsCheck" boundsCheck)
 
     #_volatile
-    (§ field- IChunk _chunk) ;; lazy
+    (§ field- #_"IChunk" _chunk) ;; lazy
     #_volatile
-    (§ field- ISeq _chunkNext) ;; lazy
+    (§ field- #_"ISeq" _chunkNext) ;; lazy
     #_volatile
-    (§ field- ISeq _next) ;; cached
+    (§ field- #_"ISeq" _next) ;; cached
 
     #_private
     (§ interface BoundsCheck
         (§ abstract boolean exceededBounds(Object val))
     )
 
-    (§ defn- BoundsCheck positiveStep(Object end)
+    (§ defn- #_"BoundsCheck" positiveStep [#_"Object" end]
         (ß new BoundsCheck()
             (§ reify
-                (§ method boolean exceededBounds(Object val)
+                #_method
+                (§ defn #_"boolean" exceededBounds [this, #_"Object" val]
                     (ß Numbers.gte(val, end))
                 )
             )
         )
     )
 
-    (§ defn- BoundsCheck negativeStep(Object end)
+    (§ defn- #_"BoundsCheck" negativeStep [#_"Object" end]
         (ß new BoundsCheck()
             (§ reify
-                (§ method boolean exceededBounds(Object val)
+                #_method
+                (§ defn #_"boolean" exceededBounds [this, #_"Object" val]
                     (ß Numbers.lte(val, end))
                 )
             )
         )
     )
 
-    (§ constructor- Range(Object start, Object end, Object step, BoundsCheck boundsCheck)
+    (§ constructor- #_"Range" Range [#_"Object" start, #_"Object" end, #_"Object" step, #_"BoundsCheck" boundsCheck]
         (ß this.end = end)
         (ß this.start = start)
         (ß this.step = step)
@@ -29957,7 +31403,7 @@
         this
     )
 
-    (§ constructor- Range(Object start, Object end, Object step, BoundsCheck boundsCheck, IChunk chunk, ISeq chunkNext)
+    (§ constructor- #_"Range" Range [#_"Object" start, #_"Object" end, #_"Object" step, #_"BoundsCheck" boundsCheck, #_"IChunk" chunk, #_"ISeq" chunkNext]
         (ß this.end = end)
         (ß this.start = start)
         (ß this.step = step)
@@ -29967,7 +31413,7 @@
         this
     )
 
-    (§ constructor- Range(IPersistentMap meta, Object start, Object end, Object step, BoundsCheck boundsCheck, IChunk chunk, ISeq chunkNext)
+    (§ constructor- #_"Range" Range [#_"IPersistentMap" meta, #_"Object" start, #_"Object" end, #_"Object" step, #_"BoundsCheck" boundsCheck, #_"IChunk" chunk, #_"ISeq" chunkNext]
         (§ super(meta))
         (ß this.end = end)
         (ß this.start = start)
@@ -29978,18 +31424,18 @@
         this
     )
 
-    (§ defn ISeq create(Object end)
+    (§ defn #_"ISeq" create [#_"Object" end]
         (when (ß Numbers.isPos(end))
             (§ return (ß new Range(0, end, 1, positiveStep(end))))
         )
         (ß PersistentList.EMPTY)
     )
 
-    (§ defn ISeq create(Object start, Object end)
+    (§ defn #_"ISeq" create [#_"Object" start, #_"Object" end]
         (ß create(start, end, 1))
     )
 
-    (§ defn ISeq create(Object start, Object end, Object step)
+    (§ defn #_"ISeq" create [#_"Object" start, #_"Object" end, #_"Object" step]
         (when (ß (Numbers.isPos(step) && Numbers.gt(start, end)) || (Numbers.isNeg(step) && Numbers.gt(end, start)) || Numbers.equiv(start, end))
             (§ return (ß PersistentList.EMPTY))
         )
@@ -29999,18 +31445,21 @@
         (ß new Range(start, end, step, Numbers.isPos(step) ? positiveStep(end) :or negativeStep(end)))
     )
 
-    (§ method Obj withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"Obj" withMeta [this, #_"IPersistentMap" meta]
         (when (ß meta == _meta)
             (§ return this)
         )
         (ß new Range(meta, end, start, step, boundsCheck, _chunk, _chunkNext))
     )
 
-    (§ method Object first()
+    #_method
+    (§ defn #_"Object" first [this]
         start
     )
 
-    (§ method void forceChunk()
+    #_method
+    (§ defn #_"void" forceChunk [this]
         (when (ß _chunk != nil)
             (§ return nil)
         )
@@ -30043,7 +31492,8 @@
         )
     )
 
-    (§ method ISeq next()
+    #_method
+    (§ defn #_"ISeq" next [this]
         (when (ß _next != nil)
             (§ return (ß _next))
         )
@@ -30058,16 +31508,19 @@
         (ß chunkedNext())
     )
 
-    (§ method IChunk chunkedFirst()
+    #_method
+    (§ defn #_"IChunk" chunkedFirst [this]
         (ß forceChunk())
         (ß _chunk)
     )
 
-    (§ method ISeq chunkedNext()
+    #_method
+    (§ defn #_"ISeq" chunkedNext [this]
         (ß chunkedMore().seq())
     )
 
-    (§ method ISeq chunkedMore()
+    #_method
+    (§ defn #_"ISeq" chunkedMore [this]
         (ß forceChunk())
         (when (ß _chunkNext == nil)
             (§ return (ß PersistentList.EMPTY))
@@ -30075,7 +31528,8 @@
         (ß _chunkNext)
     )
 
-    (§ method Object reduce(IFn f)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" f]
         (let [#_"Object" acc start]
             (let [#_"Number" i (ß Numbers.addP(start, step))]
                 (while (ß !boundsCheck.exceededBounds(i))
@@ -30090,7 +31544,8 @@
         )
     )
 
-    (§ method Object reduce(IFn f, Object val)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" val]
         (let [#_"Object" acc val]
             (let [#_"Object" i start]
                 (while (ß !boundsCheck.exceededBounds(i))
@@ -30105,25 +31560,28 @@
         )
     )
 
-    (§ method Iterator iterator()
+    #_method
+    (§ defn #_"Iterator" iterator [this]
         (ß new RangeIterator())
     )
 
     #_private
     #_non-static
     (class-ns RangeIterator (§ implements Iterator)
-        (§ field- Object next)
+        (§ field- #_"Object" next)
 
-        (§ constructor RangeIterator()
+        (§ constructor #_"RangeIterator" RangeIterator []
             (ß this.next = start)
             this
         )
 
-        (§ method boolean hasNext()
+        #_method
+        (§ defn #_"boolean" hasNext [this]
             (ß (!boundsCheck.exceededBounds(next)))
         )
 
-        (§ method Object next()
+        #_method
+        (§ defn #_"Object" next [this]
             (if (ß hasNext())
                 (do
                     (let [#_"Object" ret next]
@@ -30137,7 +31595,8 @@
             )
         )
 
-        (§ method void remove()
+        #_method
+        (§ defn #_"void" remove [this]
             (throw (ß new UnsupportedOperationException()))
         )
     )
@@ -30151,48 +31610,57 @@
 (§ import java.math.MathContext)
 
 (class-ns Ratio (§ extends Number) (§ implements Comparable)
-    (§ field BigInteger numerator)
-    (§ field BigInteger denominator)
+    (§ field #_"BigInteger" numerator)
+    (§ field #_"BigInteger" denominator)
 
-    (§ constructor Ratio(BigInteger numerator, BigInteger denominator)
+    (§ constructor #_"Ratio" Ratio [#_"BigInteger" numerator, #_"BigInteger" denominator]
         (ß this.numerator = numerator)
         (ß this.denominator = denominator)
         this
     )
 
-    (§ method boolean equals(Object arg0)
+    #_method
+    (§ defn #_"boolean" equals [this, #_"Object" arg0]
         (ß (arg0 != nil && arg0 instanceof Ratio && ((Ratio) arg0).numerator.equals(numerator) && ((Ratio) arg0).denominator.equals(denominator)))
     )
 
-    (§ method int hashCode()
+    #_method
+    (§ defn #_"int" hashCode [this]
         (ß numerator.hashCode() :xor denominator.hashCode())
     )
 
-    (§ method String toString()
+    #_method
+    (§ defn #_"String" toString [this]
         (ß numerator.toString() + "/" + denominator.toString())
     )
 
-    (§ method int intValue()
+    #_method
+    (§ defn #_"int" intValue [this]
         (ß (int) doubleValue())
     )
 
-    (§ method long longValue()
+    #_method
+    (§ defn #_"long" longValue [this]
         (ß bigIntegerValue().longValue())
     )
 
-    (§ method float floatValue()
+    #_method
+    (§ defn #_"float" floatValue [this]
         (ß (float)doubleValue())
     )
 
-    (§ method double doubleValue()
+    #_method
+    (§ defn #_"double" doubleValue [this]
         (ß decimalValue(MathContext.DECIMAL64).doubleValue())
     )
 
-    (§ method BigDecimal decimalValue()
+    #_method
+    (§ defn #_"BigDecimal" decimalValue [this]
         (ß decimalValue(MathContext.UNLIMITED))
     )
 
-    (§ method BigDecimal decimalValue(MathContext mc)
+    #_method
+    (§ defn #_"BigDecimal" decimalValue [this, #_"MathContext" mc]
         (let [#_"BigDecimal" numerator (ß new BigDecimal(this.numerator))]
             (let [#_"BigDecimal" denominator (ß new BigDecimal(this.denominator))]
                 (ß numerator.divide(denominator, mc))
@@ -30200,11 +31668,13 @@
         )
     )
 
-    (§ method BigInteger bigIntegerValue()
+    #_method
+    (§ defn #_"BigInteger" bigIntegerValue [this]
         (ß numerator.divide(denominator))
     )
 
-    (§ method int compareTo(Object o)
+    #_method
+    (§ defn #_"int" compareTo [this, #_"Object" o]
         (let [#_"Number" other (ß (Number)o)]
             (ß Numbers.compare(this, other))
         )
@@ -30215,27 +31685,29 @@
 (java-ns cloiure.lang.ReaderConditional
 
 (class-ns ReaderConditional (§ implements ILookup)
-    (§ def Keyword FORM_KW = Keyword.intern("form"))
-    (§ def Keyword SPLICING_KW = Keyword.intern("splicing?"))
+    (§ def #_"Keyword" FORM_KW (ß Keyword.intern("form")))
+    (§ def #_"Keyword" SPLICING_KW (ß Keyword.intern("splicing?")))
 
-    (§ field Object form)
-    (§ field Boolean splicing)
+    (§ field #_"Object" form)
+    (§ field #_"Boolean" splicing)
 
-    (§ defn ReaderConditional create(Object form, boolean splicing)
+    (§ defn #_"ReaderConditional" create [#_"Object" form, #_"boolean" splicing]
         (ß new ReaderConditional(form, splicing))
     )
 
-    (§ constructor- ReaderConditional(Object form, boolean splicing)
+    (§ constructor- #_"ReaderConditional" ReaderConditional [#_"Object" form, #_"boolean" splicing]
         (ß this.form = form)
         (ß this.splicing = splicing)
         this
     )
 
-    (§ method Object valAt(Object key)
+    #_method
+    (§ defn #_"Object" valAt [this, #_"Object" key]
         (ß valAt(key, nil))
     )
 
-    (§ method Object valAt(Object key, Object notFound)
+    #_method
+    (§ defn #_"Object" valAt [this, #_"Object" key, #_"Object" notFound]
         (cond (ß FORM_KW.equals(key))
             (do
                 (ß this.form)
@@ -30252,7 +31724,8 @@
     )
 
     (§ anno @Override)
-    (§ method boolean equals(Object o)
+    #_method
+    (§ defn #_"boolean" equals [this, #_"Object" o]
         (when (ß this == o)
             (§ return true)
         )
@@ -30272,7 +31745,8 @@
     )
 
     (§ anno @Override)
-    (§ method int hashCode()
+    #_method
+    (§ defn #_"int" hashCode [this]
         (let [#_"int" result (ß Util.hash(form))]
             (ß result = 31 * result + Util.hash(splicing))
             result
@@ -30286,13 +31760,13 @@
 (§ import java.util.Iterator)
 
 (class-ns RecordIterator (§ implements Iterator)
-    (§ field int i = 0)
-    (§ field int basecnt)
-    (§ field ILookup rec)
-    (§ field IPersistentVector basefields)
-    (§ field Iterator extmap)
+    (§ field #_"int" i (ß 0))
+    (§ field #_"int" basecnt)
+    (§ field #_"ILookup" rec)
+    (§ field #_"IPersistentVector" basefields)
+    (§ field #_"Iterator" extmap)
 
-    (§ constructor RecordIterator(ILookup rec, IPersistentVector basefields, Iterator extmap)
+    (§ constructor #_"RecordIterator" RecordIterator [#_"ILookup" rec, #_"IPersistentVector" basefields, #_"Iterator" extmap]
         (ß this.rec = rec)
         (ß this.basefields = basefields)
         (ß this.basecnt = basefields.count())
@@ -30300,7 +31774,8 @@
         this
     )
 
-    (§ method boolean hasNext()
+    #_method
+    (§ defn #_"boolean" hasNext [this]
         (if (ß i < basecnt)
             (do
                 true
@@ -30311,7 +31786,8 @@
         )
     )
 
-    (§ method Object next()
+    #_method
+    (§ defn #_"Object" next [this]
         (if (ß i < basecnt)
             (do
                 (let [#_"Object" k (ß basefields.nth(i))]
@@ -30325,7 +31801,8 @@
         )
     )
 
-    (§ method void remove()
+    #_method
+    (§ defn #_"void" remove [this]
         (throw (ß new UnsupportedOperationException()))
     )
 )
@@ -30334,14 +31811,15 @@
 (java-ns cloiure.lang.Reduced
 
 (class-ns Reduced (§ implements IDeref)
-    (§ field Object val)
+    (§ field #_"Object" val)
 
-    (§ constructor Reduced(Object val)
+    (§ constructor #_"Reduced" Reduced [#_"Object" val]
         (ß this.val = val)
         this
     )
 
-    (§ method Object deref()
+    #_method
+    (§ defn #_"Object" deref [this]
         val
     )
 )
@@ -30354,7 +31832,8 @@
 (§ import java.util.concurrent.locks.ReentrantReadWriteLock)
 
 (class-ns Ref (§ extends ARef) (§ implements IFn, Comparable<Ref>, IRef)
-    (§ method int compareTo(Ref ref)
+    #_method
+    (§ defn #_"int" compareTo [this, #_"Ref" ref]
         (cond (ß this.id == ref.id)
             (do
                 0
@@ -30370,31 +31849,35 @@
         )
     )
 
-    (§ method int getMinHistory()
+    #_method
+    (§ defn #_"int" getMinHistory [this]
         minHistory
     )
 
-    (§ method Ref setMinHistory(int minHistory)
+    #_method
+    (§ defn #_"Ref" setMinHistory [this, #_"int" minHistory]
         (ß this.minHistory = minHistory)
         this
     )
 
-    (§ method int getMaxHistory()
+    #_method
+    (§ defn #_"int" getMaxHistory [this]
         maxHistory
     )
 
-    (§ method Ref setMaxHistory(int maxHistory)
+    #_method
+    (§ defn #_"Ref" setMaxHistory [this, #_"int" maxHistory]
         (ß this.maxHistory = maxHistory)
         this
     )
 
     (class-ns TVal
-        (§ field Object val)
-        (§ field long point)
-        (§ field TVal prior)
-        (§ field TVal next)
+        (§ field #_"Object" val)
+        (§ field #_"long" point)
+        (§ field #_"TVal" prior)
+        (§ field #_"TVal" next)
 
-        (§ constructor TVal(Object val, long point, TVal prior)
+        (§ constructor #_"TVal" TVal [#_"Object" val, #_"long" point, #_"TVal" prior]
             (ß this.val = val)
             (ß this.point = point)
             (ß this.prior = prior)
@@ -30404,7 +31887,7 @@
             this
         )
 
-        (§ constructor TVal(Object val, long point)
+        (§ constructor #_"TVal" TVal [#_"Object" val, #_"long" point]
             (ß this.val = val)
             (ß this.point = point)
             (ß this.next = this)
@@ -30413,25 +31896,25 @@
         )
     )
 
-    (§ field TVal tvals)
-    (§ field AtomicInteger faults)
-    (§ field ReentrantReadWriteLock lock)
-    (§ field LockingTransaction.Info tinfo)
-    (§ field long id)
+    (§ field #_"TVal" tvals)
+    (§ field #_"AtomicInteger" faults)
+    (§ field #_"ReentrantReadWriteLock" lock)
+    (§ field #_"LockingTransaction.Info" tinfo)
+    (§ field #_"long" id)
 
     #_volatile
-    (§ field int minHistory = 0)
+    (§ field #_"int" minHistory (ß 0))
     #_volatile
-    (§ field int maxHistory = 10)
+    (§ field #_"int" maxHistory (ß 10))
 
-    (§ def AtomicLong ids = new AtomicLong())
+    (§ def #_"AtomicLong" ids (ß new AtomicLong()))
 
-    (§ constructor Ref(Object initVal)
+    (§ constructor #_"Ref" Ref [#_"Object" initVal]
         (§ this(initVal, nil))
         this
     )
 
-    (§ constructor Ref(Object initVal, IPersistentMap meta)
+    (§ constructor #_"Ref" Ref [#_"Object" initVal, #_"IPersistentMap" meta]
         (§ super(meta))
         (ß this.id = ids.getAndIncrement())
         (ß this.faults = new AtomicInteger())
@@ -30443,7 +31926,8 @@
     ;; the latest val
 
     ;; ok out of transaction
-    (§ method Object currentVal()
+    #_method
+    (§ defn #_"Object" currentVal [this]
         (try
             (ß lock.readLock().lock())
             (when (ß tvals != nil)
@@ -30456,7 +31940,8 @@
         )
     )
 
-    (§ method Object deref()
+    #_method
+    (§ defn #_"Object" deref [this]
         (let [#_"LockingTransaction" t (ß LockingTransaction.getRunning())]
             (when (ß t == nil)
                 (§ return (ß currentVal()))
@@ -30465,26 +31950,31 @@
         )
     )
 
-    (§ method Object set(Object val)
+    #_method
+    (§ defn #_"Object" set [this, #_"Object" val]
         (ß LockingTransaction.getEx().doSet(this, val))
     )
 
-    (§ method Object commute(IFn fn, ISeq args)
+    #_method
+    (§ defn #_"Object" commute [this, #_"IFn" fn, #_"ISeq" args]
         (ß LockingTransaction.getEx().doCommute(this, fn, args))
     )
 
-    (§ method Object alter(IFn fn, ISeq args)
+    #_method
+    (§ defn #_"Object" alter [this, #_"IFn" fn, #_"ISeq" args]
         (let [#_"LockingTransaction" t (ß LockingTransaction.getEx())]
             (ß t.doSet(this, fn.applyTo(RT.cons(t.doGet(this), args))))
         )
     )
 
-    (§ method void touch()
+    #_method
+    (§ defn #_"void" touch [this]
         (ß LockingTransaction.getEx().doEnsure(this))
         nil
     )
 
-    (§ method boolean isBound()
+    #_method
+    (§ defn #_"boolean" isBound [this]
         (try
             (ß lock.readLock().lock())
             (ß (tvals != nil))
@@ -30494,7 +31984,8 @@
         )
     )
 
-    (§ method void trimHistory()
+    #_method
+    (§ defn #_"void" trimHistory [this]
         (try
             (ß lock.writeLock().lock())
             (when (ß tvals != nil)
@@ -30508,7 +31999,8 @@
         nil
     )
 
-    (§ method int getHistoryCount()
+    #_method
+    (§ defn #_"int" getHistoryCount [this]
         (try
             (ß lock.writeLock().lock())
             (ß histCount())
@@ -30518,7 +32010,8 @@
         )
     )
 
-    (§ method int histCount()
+    #_method
+    (§ defn #_"int" histCount [this]
         (if (ß tvals == nil)
             (do
                 0
@@ -30534,136 +32027,140 @@
         )
     )
 
-    (§ method IFn fn()
+    #_method
+    (§ defn #_"IFn" fn [this]
         (ß (IFn) deref())
     )
 
-    (§ method Object call()
+    #_method
+    (§ defn #_"Object" call [this]
         (ß invoke())
     )
 
-    (§ method void run()
+    #_method
+    (§ defn #_"void" run [this]
         (ß invoke())
         nil
     )
 
-    (§ method Object invoke()
+    #_method
+    (§ defn #_"Object" invoke [this]
         (ß fn().invoke())
     )
 
-    (§ method Object invoke(Object arg1)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1]
         (ß fn().invoke(arg1))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2]
         (ß fn().invoke(arg1, arg2))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
         (ß fn().invoke(arg1, arg2, arg3))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
         (ß fn().invoke(arg1, arg2, arg3, arg4))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
                 arg16))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
                 arg16, arg17))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
                 arg16, arg17, arg18))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
                 arg16, arg17, arg18, arg19))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
                 arg16, arg17, arg18, arg19, arg20))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20,
-            Object... args)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20, #_"Object..." args]
         (ß fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
                 arg16, arg17, arg18, arg19, arg20, args))
     )
 
-    (§ method Object applyTo(ISeq arglist)
+    #_method
+    (§ defn #_"Object" applyTo [this, #_"ISeq" arglist]
         (ß AFn.applyToHelper(this, arglist))
     )
 )
@@ -30680,7 +32177,7 @@
 (§ import java.util.List)
 
 (class-ns Reflector
-    (§ defn Object invokeInstanceMethod(Object target, String methodName, Object[] args)
+    (§ defn #_"Object" invokeInstanceMethod [#_"Object" target, #_"String" methodName, #_"Object[]" args]
         (let [#_"Class" c (ß target.getClass())]
             (let [#_"List" methods (ß getMethods(c, args.length, methodName, false))]
                 (ß invokeMatchingMethod(methodName, methods, target, args))
@@ -30688,25 +32185,25 @@
         )
     )
 
-    (§ defn- Throwable getCauseOrElse(Exception e)
+    (§ defn- #_"Throwable" getCauseOrElse [#_"Exception" e]
         (when (ß e.getCause() != nil)
             (§ return (ß e.getCause()))
         )
         e
     )
 
-    (§ defn- RuntimeException throwCauseOrElseException(Exception e)
+    (§ defn- #_"RuntimeException" throwCauseOrElseException [#_"Exception" e]
         (when (ß e.getCause() != nil)
             (throw (ß Util.sneakyThrow(e.getCause())))
         )
         (throw (ß Util.sneakyThrow(e)))
     )
 
-    (§ defn- String noMethodReport(String methodName, Object target)
+    (§ defn- #_"String" noMethodReport [#_"String" methodName, #_"Object" target]
         (ß "No matching method found: " + methodName + ((target == nil) ? "" :or " for " + target.getClass()))
     )
 
-    (§ defn Object invokeMatchingMethod(String methodName, List methods, Object target, Object[] args)
+    (§ defn #_"Object" invokeMatchingMethod [#_"String" methodName, #_"List" methods, #_"Object" target, #_"Object[]" args]
         (let [#_"Method" m nil]
             (let [#_"Object[]" boxedArgs nil]
                 (cond (ß methods.isEmpty())
@@ -30760,7 +32257,7 @@
         )
     )
 
-    (§ defn Method getAsMethodOfPublicBase(Class c, Method m)
+    (§ defn #_"Method" getAsMethodOfPublicBase [#_"Class" c, #_"Method" m]
         (doseq [#_"Class" iface (ß c.getInterfaces())]
             (doseq [#_"Method" im (ß iface.getMethods())]
                 (when (ß isMatch(im, m))
@@ -30781,7 +32278,7 @@
         )
     )
 
-    (§ defn boolean isMatch(Method lhs, Method rhs)
+    (§ defn #_"boolean" isMatch [#_"Method" lhs, #_"Method" rhs]
         (when (ß !lhs.getName().equals(rhs.getName()) || !Modifier.isPublic(lhs.getDeclaringClass().getModifiers()))
             (§ return false)
         )
@@ -30805,7 +32302,7 @@
         )
     )
 
-    (§ defn Object invokeConstructor(Class c, Object[] args)
+    (§ defn #_"Object" invokeConstructor [#_"Class" c, #_"Object[]" args]
         (try
             (let [#_"Constructor[]" allctors (ß c.getConstructors())]
                 (let [#_"ArrayList" ctors (ß new ArrayList())]
@@ -30850,17 +32347,17 @@
         )
     )
 
-    (§ defn Object invokeStaticMethodVariadic(String className, String methodName, Object... args)
+    (§ defn #_"Object" invokeStaticMethodVariadic [#_"String" className, #_"String" methodName, #_"Object..." args]
         (ß invokeStaticMethod(className, methodName, args))
     )
 
-    (§ defn Object invokeStaticMethod(String className, String methodName, Object[] args)
+    (§ defn #_"Object" invokeStaticMethod [#_"String" className, #_"String" methodName, #_"Object[]" args]
         (let [#_"Class" c (ß RT.classForName(className))]
             (ß invokeStaticMethod(c, methodName, args))
         )
     )
 
-    (§ defn Object invokeStaticMethod(Class c, String methodName, Object[] args)
+    (§ defn #_"Object" invokeStaticMethod [#_"Class" c, #_"String" methodName, #_"Object[]" args]
         (when (ß methodName.equals("new"))
             (§ return (ß invokeConstructor(c, args)))
         )
@@ -30869,13 +32366,13 @@
         )
     )
 
-    (§ defn Object getStaticField(String className, String fieldName)
+    (§ defn #_"Object" getStaticField [#_"String" className, #_"String" fieldName]
         (let [#_"Class" c (ß RT.classForName(className))]
             (ß getStaticField(c, fieldName))
         )
     )
 
-    (§ defn Object getStaticField(Class c, String fieldName)
+    (§ defn #_"Object" getStaticField [#_"Class" c, #_"String" fieldName]
         (let [#_"Field" f (ß getField(c, fieldName, true))]
             (when (ß f != nil)
                 (try
@@ -30889,13 +32386,13 @@
         )
     )
 
-    (§ defn Object setStaticField(String className, String fieldName, Object val)
+    (§ defn #_"Object" setStaticField [#_"String" className, #_"String" fieldName, #_"Object" val]
         (let [#_"Class" c (ß RT.classForName(className))]
             (ß setStaticField(c, fieldName, val))
         )
     )
 
-    (§ defn Object setStaticField(Class c, String fieldName, Object val)
+    (§ defn #_"Object" setStaticField [#_"Class" c, #_"String" fieldName, #_"Object" val]
         (let [#_"Field" f (ß getField(c, fieldName, true))]
             (when (ß f != nil)
                 (try
@@ -30910,7 +32407,7 @@
         )
     )
 
-    (§ defn Object getInstanceField(Object target, String fieldName)
+    (§ defn #_"Object" getInstanceField [#_"Object" target, #_"String" fieldName]
         (let [#_"Class" c (ß target.getClass())]
             (let [#_"Field" f (ß getField(c, fieldName, false))]
                 (when (ß f != nil)
@@ -30926,7 +32423,7 @@
         )
     )
 
-    (§ defn Object setInstanceField(Object target, String fieldName, Object val)
+    (§ defn #_"Object" setInstanceField [#_"Object" target, #_"String" fieldName, #_"Object" val]
         (let [#_"Class" c (ß target.getClass())]
             (let [#_"Field" f (ß getField(c, fieldName, false))]
                 (when (ß f != nil)
@@ -30944,11 +32441,11 @@
     )
 
     ;; not used as of Clojure 1.6, but left for runtime compatibility with compiled bytecode from older versions
-    (§ defn Object invokeNoArgInstanceMember(Object target, String name)
+    (§ defn #_"Object" invokeNoArgInstanceMember [#_"Object" target, #_"String" name]
         (ß invokeNoArgInstanceMember(target, name, false))
     )
 
-    (§ defn Object invokeNoArgInstanceMember(Object target, String name, boolean requireField)
+    (§ defn #_"Object" invokeNoArgInstanceMember [#_"Object" target, #_"String" name, #_"boolean" requireField]
         (let [#_"Class" c (ß target.getClass())]
             (if requireField
                 (do
@@ -30979,7 +32476,7 @@
         )
     )
 
-    (§ defn Object invokeInstanceMember(Object target, String name)
+    (§ defn #_"Object" invokeInstanceMember [#_"Object" target, #_"String" name]
         ;; check for field first
         (let [#_"Class" c (ß target.getClass())]
             (let [#_"Field" f (ß getField(c, name, false))]
@@ -30996,7 +32493,7 @@
         )
     )
 
-    (§ defn Object invokeInstanceMember(String name, Object target, Object arg1)
+    (§ defn #_"Object" invokeInstanceMember [#_"String" name, #_"Object" target, #_"Object" arg1]
         ;; check for field first
         (let [#_"Class" c (ß target.getClass())]
             (let [#_"Field" f (ß getField(c, name, false))]
@@ -31014,11 +32511,11 @@
         )
     )
 
-    (§ defn Object invokeInstanceMember(String name, Object target, Object... args)
+    (§ defn #_"Object" invokeInstanceMember [#_"String" name, #_"Object" target, #_"Object..." args]
         (ß invokeInstanceMethod(target, name, args))
     )
 
-    (§ defn Field getField(Class c, String name, boolean getStatics)
+    (§ defn #_"Field" getField [#_"Class" c, #_"String" name, #_"boolean" getStatics]
         (let [#_"Field[]" allfields (ß c.getFields())]
             (loop-when-recur [(ß int i = 0)] (ß i < allfields.length) [(ß i++)]
                 (when (ß name.equals(allfields[i].getName()) && Modifier.isStatic(allfields[i].getModifiers()) == getStatics)
@@ -31029,7 +32526,7 @@
         )
     )
 
-    (§ defn List getMethods(Class c, int arity, String name, boolean getStatics)
+    (§ defn #_"List" getMethods [#_"Class" c, #_"int" arity, #_"String" name, #_"boolean" getStatics]
         (let [#_"Method[]" allmethods (ß c.getMethods())]
             (let [#_"ArrayList" methods (ß new ArrayList())]
                 (let [#_"ArrayList" bridgeMethods (ß new ArrayList())]
@@ -31069,7 +32566,7 @@
         )
     )
 
-    (§ defn Object boxArg(Class paramType, Object arg)
+    (§ defn #_"Object" boxArg [#_"Class" paramType, #_"Object" arg]
         (cond (ß !paramType.isPrimitive())
             (do
                 (§ return (ß paramType.cast(arg)))
@@ -31116,7 +32613,7 @@
         (throw (ß new IllegalArgumentException("Unexpected param type, expected: " + paramType + ", given: " + arg.getClass().getName())))
     )
 
-    (§ defn Object[] boxArgs(Class[] params, Object[] args)
+    (§ defn #_"Object[]" boxArgs [#_"Class[]" params, #_"Object[]" args]
         (when (ß params.length == 0)
             (§ return nil)
         )
@@ -31132,7 +32629,7 @@
         )
     )
 
-    (§ defn boolean paramArgTypeMatch(Class paramType, Class argType)
+    (§ defn #_"boolean" paramArgTypeMatch [#_"Class" paramType, #_"Class" argType]
         (when (ß argType == nil)
             (§ return (ß !paramType.isPrimitive()))
         )
@@ -31184,7 +32681,7 @@
         false
     )
 
-    (§ defn boolean isCongruent(Class[] params, Object[] args)
+    (§ defn #_"boolean" isCongruent [#_"Class[]" params, #_"Object[]" args]
         (let [#_"boolean" ret false]
             (when (ß args == nil)
                 (§ return (ß (params.length == 0)))
@@ -31205,7 +32702,7 @@
         )
     )
 
-    (§ defn Object prepRet(Class c, Object x)
+    (§ defn #_"Object" prepRet [#_"Class" c, #_"Object" x]
         (when (ß !(c.isPrimitive() || c == Boolean.class))
             (§ return x)
         )
@@ -31220,42 +32717,44 @@
 (java-ns cloiure.lang.Repeat
 
 (class-ns Repeat (§ extends ASeq) (§ implements IReduce)
-    (§ def- long INFINITE = -1)
+    (§ def- #_"long" INFINITE (ß -1))
 
-    (§ field- long count) ;; always INFINITE or >0
-    (§ field- Object val)
+    (§ field- #_"long" count) ;; always INFINITE or >0
+    (§ field- #_"Object" val)
     #_volatile
-    (§ field- ISeq _next) ;; cached
+    (§ field- #_"ISeq" _next) ;; cached
 
-    (§ constructor- Repeat(long count, Object val)
+    (§ constructor- #_"Repeat" Repeat [#_"long" count, #_"Object" val]
         (ß this.count = count)
         (ß this.val = val)
         this
     )
 
-    (§ constructor- Repeat(IPersistentMap meta, long count, Object val)
+    (§ constructor- #_"Repeat" Repeat [#_"IPersistentMap" meta, #_"long" count, #_"Object" val]
         (§ super(meta))
         (ß this.count = count)
         (ß this.val = val)
         this
     )
 
-    (§ defn Repeat create(Object val)
+    (§ defn #_"Repeat" create [#_"Object" val]
         (ß new Repeat(INFINITE, val))
     )
 
-    (§ defn ISeq create(long count, Object val)
+    (§ defn #_"ISeq" create [#_"long" count, #_"Object" val]
         (when (ß count <= 0)
             (§ return (ß PersistentList.EMPTY))
         )
         (ß new Repeat(count, val))
     )
 
-    (§ method Object first()
+    #_method
+    (§ defn #_"Object" first [this]
         val
     )
 
-    (§ method ISeq next()
+    #_method
+    (§ defn #_"ISeq" next [this]
         (when (ß _next == nil)
             (cond (ß count > 1)
                 (do
@@ -31270,11 +32769,13 @@
         (ß _next)
     )
 
-    (§ method Repeat withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"Repeat" withMeta [this, #_"IPersistentMap" meta]
         (ß new Repeat(meta, count, val))
     )
 
-    (§ method Object reduce(IFn f)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" f]
         (let [#_"Object" ret val]
             (if (ß count == INFINITE)
                 (do
@@ -31298,7 +32799,8 @@
         )
     )
 
-    (§ method Object reduce(IFn f, Object start)
+    #_method
+    (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
         (let [#_"Object" ret start]
             (if (ß count == INFINITE)
                 (do
@@ -31331,134 +32833,133 @@
     (§ abstract int getRequiredArity())
 
     #_protected
-    (§ method Object doInvoke(Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13,
-            Object arg14, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13,
-            Object arg14, Object arg15, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13,
-            Object arg14, Object arg15, Object arg16, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13,
-            Object arg14, Object arg15, Object arg16, Object arg17, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13,
-            Object arg14, Object arg15, Object arg16, Object arg17, Object arg18, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13,
-            Object arg14, Object arg15, Object arg16, Object arg17, Object arg18, Object arg19,
-            Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" args]
         nil
     )
 
     #_protected
-    (§ method Object doInvoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13,
-            Object arg14, Object arg15, Object arg16, Object arg17, Object arg18, Object arg19,
-            Object arg20, Object args)
+    #_method
+    (§ defn #_"Object" doInvoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20, #_"Object" args]
         nil
     )
 
-    (§ method Object applyTo(ISeq args)
+    #_method
+    (§ defn #_"Object" applyTo [this, #_"ISeq" args]
         (when (ß RT.boundedLength(args, getRequiredArity()) <= getRequiredArity())
             (§ return (ß AFn.applyToHelper(this, Util.ret1(args, args = nil))))
         )
@@ -31761,7 +33262,8 @@
         (ß throwArity(-1))
     )
 
-    (§ method Object invoke()
+    #_method
+    (§ defn #_"Object" invoke [this]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -31774,7 +33276,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -31791,7 +33294,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -31820,7 +33324,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -31860,7 +33365,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -31913,7 +33419,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -31981,7 +33488,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -32066,7 +33574,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -32170,8 +33679,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -32296,8 +33805,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -32445,8 +33954,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -32619,8 +34128,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -32820,8 +34329,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -33050,8 +34559,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -33311,8 +34820,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -33605,9 +35114,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -33935,9 +35443,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -34302,9 +35809,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -34708,9 +36214,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -35155,9 +36660,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -35645,9 +37149,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -36180,9 +37683,8 @@
         )
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20, Object... args)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20, #_"Object..." args]
         (§ switch (ß getRequiredArity())
             (§ case 0)
             (do
@@ -36717,7 +38219,7 @@
     )
 
     #_protected
-    (§ defn ISeq ontoArrayPrepend(Object[] array, Object... args)
+    (§ defn #_"ISeq" ontoArrayPrepend [#_"Object[]" array, #_"Object..." args]
         (let [#_"ISeq" ret (ß ArraySeq.create(array))]
             (loop-when-recur [(ß int i = args.length - 1)] (ß i >= 0) [(ß --i)]
                 (ß ret = RT.cons(args[i], ret))
@@ -36727,7 +38229,7 @@
     )
 
     #_protected
-    (§ defn ISeq findKey(Object key, ISeq args)
+    (§ defn #_"ISeq" findKey [#_"Object" key, #_"ISeq" args]
         (while (ß args != nil)
             (when (ß key == args.first())
                 (§ return (ß args.next()))
@@ -36767,12 +38269,12 @@
 (§ import java.net.URLConnection)
 
 (class-ns RT
-    (§ def Boolean T = Boolean.TRUE)
-    (§ def Boolean F = Boolean.FALSE)
-    (§ def String LOADER_SUFFIX = "__init")
+    (§ def #_"Boolean" T (ß Boolean.TRUE))
+    (§ def #_"Boolean" F (ß Boolean.FALSE))
+    (§ def #_"String" LOADER_SUFFIX (ß "__init"))
 
     ;; simple-symbol->class
-    (§ def IPersistentMap DEFAULT_IMPORTS = map(
+    (§ def #_"IPersistentMap" DEFAULT_IMPORTS (ß map(
       #_map Symbol.intern("Boolean"), Boolean.class,
       #_map Symbol.intern("Byte"), Byte.class,
       #_map Symbol.intern("Character"), Character.class,
@@ -36869,12 +38371,12 @@
       #_map Symbol.intern("Deprecated"), Deprecated.class,
       #_map Symbol.intern("Override"), Override.class,
       #_map Symbol.intern("SuppressWarnings"), SuppressWarnings.class
-    ))
+    )))
 
     ;; single instance of UTF-8 Charset, so as to avoid catching UnsupportedCharsetExceptions everywhere
-    (§ def Charset UTF8 = Charset.forName("UTF-8"))
+    (§ def #_"Charset" UTF8 (ß Charset.forName("UTF-8")))
 
-    (§ defn Object readTrueFalseUnknown(String s)
+    (§ defn #_"Object" readTrueFalseUnknown [#_"String" s]
         (cond (ß s.equals("true"))
             (do
                 (§ return (ß Boolean.TRUE))
@@ -36887,55 +38389,56 @@
         (ß Keyword.intern(nil, "unknown"))
     )
 
-    (§ def Namespace CLOIURE_NS = Namespace.findOrCreate(Symbol.intern("cloiure.core")))
-    (§ def Var OUT = Var.intern(CLOIURE_NS, Symbol.intern("*out*"), new OutputStreamWriter(System.out)).setDynamic())
-    (§ def Var IN = Var.intern(CLOIURE_NS, Symbol.intern("*in*"), new LineNumberingPushbackReader(new InputStreamReader(System.in))).setDynamic())
-    (§ def Var ERR = Var.intern(CLOIURE_NS, Symbol.intern("*err*"), new PrintWriter(new OutputStreamWriter(System.err), true)).setDynamic())
-    (§ def Keyword TAG_KEY = Keyword.intern(nil, "tag"))
-    (§ def Keyword CONST_KEY = Keyword.intern(nil, "const"))
-    (§ def Var AGENT = Var.intern(CLOIURE_NS, Symbol.intern("*agent*"), nil).setDynamic())
-    (§ def Object readeval = readTrueFalseUnknown(System.getProperty("cloiure.read.eval", "true")))
-    (§ def Var READEVAL = Var.intern(CLOIURE_NS, Symbol.intern("*read-eval*"),  readeval).setDynamic())
-    (§ def Var DATA_READERS = Var.intern(CLOIURE_NS, Symbol.intern("*data-readers*"), RT.map()).setDynamic())
-    (§ def Var DEFAULT_DATA_READER_FN = Var.intern(CLOIURE_NS, Symbol.intern("*default-data-reader-fn*"), RT.map()).setDynamic())
-    (§ def Var DEFAULT_DATA_READERS = Var.intern(CLOIURE_NS, Symbol.intern("default-data-readers"), RT.map()))
-    (§ def Var SUPPRESS_READ = Var.intern(CLOIURE_NS, Symbol.intern("*suppress-read*"), nil).setDynamic())
-    (§ def Var ASSERT = Var.intern(CLOIURE_NS, Symbol.intern("*assert*"), T).setDynamic())
-    (§ def Var MATH_CONTEXT = Var.intern(CLOIURE_NS, Symbol.intern("*math-context*"), nil).setDynamic())
-    (§ def Keyword LINE_KEY = Keyword.intern(nil, "line"))
-    (§ def Keyword COLUMN_KEY = Keyword.intern(nil, "column"))
-    (§ def Keyword FILE_KEY = Keyword.intern(nil, "file"))
-    (§ def Keyword DECLARED_KEY = Keyword.intern(nil, "declared"))
-    (§ def Keyword DOC_KEY = Keyword.intern(nil, "doc"))
-    (§ def Var USE_CONTEXT_CLASSLOADER = Var.intern(CLOIURE_NS, Symbol.intern("*use-context-classloader*"), T).setDynamic())
+    (§ def #_"Namespace" CLOIURE_NS (ß Namespace.findOrCreate(Symbol.intern("cloiure.core"))))
+    (§ def #_"Var" OUT (ß Var.intern(CLOIURE_NS, Symbol.intern("*out*"), new OutputStreamWriter(System.out)).setDynamic()))
+    (§ def #_"Var" IN (ß Var.intern(CLOIURE_NS, Symbol.intern("*in*"), new LineNumberingPushbackReader(new InputStreamReader(System.in))).setDynamic()))
+    (§ def #_"Var" ERR (ß Var.intern(CLOIURE_NS, Symbol.intern("*err*"), new PrintWriter(new OutputStreamWriter(System.err), true)).setDynamic()))
+    (§ def #_"Keyword" TAG_KEY (ß Keyword.intern(nil, "tag")))
+    (§ def #_"Keyword" CONST_KEY (ß Keyword.intern(nil, "const")))
+    (§ def #_"Var" AGENT (ß Var.intern(CLOIURE_NS, Symbol.intern("*agent*"), nil).setDynamic()))
+    (§ def #_"Object" readeval (ß readTrueFalseUnknown(System.getProperty("cloiure.read.eval", "true"))))
+    (§ def #_"Var" READEVAL (ß Var.intern(CLOIURE_NS, Symbol.intern("*read-eval*"),  readeval).setDynamic()))
+    (§ def #_"Var" DATA_READERS (ß Var.intern(CLOIURE_NS, Symbol.intern("*data-readers*"), RT.map()).setDynamic()))
+    (§ def #_"Var" DEFAULT_DATA_READER_FN (ß Var.intern(CLOIURE_NS, Symbol.intern("*default-data-reader-fn*"), RT.map()).setDynamic()))
+    (§ def #_"Var" DEFAULT_DATA_READERS (ß Var.intern(CLOIURE_NS, Symbol.intern("default-data-readers"), RT.map())))
+    (§ def #_"Var" SUPPRESS_READ (ß Var.intern(CLOIURE_NS, Symbol.intern("*suppress-read*"), nil).setDynamic()))
+    (§ def #_"Var" ASSERT (ß Var.intern(CLOIURE_NS, Symbol.intern("*assert*"), T).setDynamic()))
+    (§ def #_"Var" MATH_CONTEXT (ß Var.intern(CLOIURE_NS, Symbol.intern("*math-context*"), nil).setDynamic()))
+    (§ def #_"Keyword" LINE_KEY (ß Keyword.intern(nil, "line")))
+    (§ def #_"Keyword" COLUMN_KEY (ß Keyword.intern(nil, "column")))
+    (§ def #_"Keyword" FILE_KEY (ß Keyword.intern(nil, "file")))
+    (§ def #_"Keyword" DECLARED_KEY (ß Keyword.intern(nil, "declared")))
+    (§ def #_"Keyword" DOC_KEY (ß Keyword.intern(nil, "doc")))
+    (§ def #_"Var" USE_CONTEXT_CLASSLOADER (ß Var.intern(CLOIURE_NS, Symbol.intern("*use-context-classloader*"), T).setDynamic()))
     ;; boolean
-    (§ def Var UNCHECKED_MATH = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*unchecked-math*"), Boolean.FALSE).setDynamic())
+    (§ def #_"Var" UNCHECKED_MATH (ß Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*unchecked-math*"), Boolean.FALSE).setDynamic()))
 
-    (§ def Symbol LOAD_FILE = Symbol.intern("load-file"))
-    (§ def Symbol IN_NAMESPACE = Symbol.intern("in-ns"))
-    (§ def Symbol NAMESPACE = Symbol.intern("ns"))
-    (§ def Symbol IDENTICAL = Symbol.intern("identical?"))
-    (§ def Var CMD_LINE_ARGS = Var.intern(CLOIURE_NS, Symbol.intern("*command-line-args*"), nil).setDynamic())
+    (§ def #_"Symbol" LOAD_FILE (ß Symbol.intern("load-file")))
+    (§ def #_"Symbol" IN_NAMESPACE (ß Symbol.intern("in-ns")))
+    (§ def #_"Symbol" NAMESPACE (ß Symbol.intern("ns")))
+    (§ def #_"Symbol" IDENTICAL (ß Symbol.intern("identical?")))
+    (§ def #_"Var" CMD_LINE_ARGS (ß Var.intern(CLOIURE_NS, Symbol.intern("*command-line-args*"), nil).setDynamic()))
     ;; symbol
-    (§ def Var CURRENT_NS = Var.intern(CLOIURE_NS, Symbol.intern("*ns*"), CLOIURE_NS).setDynamic())
+    (§ def #_"Var" CURRENT_NS (ß Var.intern(CLOIURE_NS, Symbol.intern("*ns*"), CLOIURE_NS).setDynamic()))
 
-    (§ def Var FLUSH_ON_NEWLINE = Var.intern(CLOIURE_NS, Symbol.intern("*flush-on-newline*"), T).setDynamic())
-    (§ def Var PRINT_META = Var.intern(CLOIURE_NS, Symbol.intern("*print-meta*"), F).setDynamic())
-    (§ def Var PRINT_READABLY = Var.intern(CLOIURE_NS, Symbol.intern("*print-readably*"), T).setDynamic())
-    (§ def Var PRINT_DUP = Var.intern(CLOIURE_NS, Symbol.intern("*print-dup*"), F).setDynamic())
-    (§ def Var WARN_ON_REFLECTION = Var.intern(CLOIURE_NS, Symbol.intern("*warn-on-reflection*"), F).setDynamic())
-    (§ def Var ALLOW_UNRESOLVED_VARS = Var.intern(CLOIURE_NS, Symbol.intern("*allow-unresolved-vars*"), F).setDynamic())
-    (§ def Var READER_RESOLVER = Var.intern(CLOIURE_NS, Symbol.intern("*reader-resolver*"), nil).setDynamic())
+    (§ def #_"Var" FLUSH_ON_NEWLINE (ß Var.intern(CLOIURE_NS, Symbol.intern("*flush-on-newline*"), T).setDynamic()))
+    (§ def #_"Var" PRINT_META (ß Var.intern(CLOIURE_NS, Symbol.intern("*print-meta*"), F).setDynamic()))
+    (§ def #_"Var" PRINT_READABLY (ß Var.intern(CLOIURE_NS, Symbol.intern("*print-readably*"), T).setDynamic()))
+    (§ def #_"Var" PRINT_DUP (ß Var.intern(CLOIURE_NS, Symbol.intern("*print-dup*"), F).setDynamic()))
+    (§ def #_"Var" WARN_ON_REFLECTION (ß Var.intern(CLOIURE_NS, Symbol.intern("*warn-on-reflection*"), F).setDynamic()))
+    (§ def #_"Var" ALLOW_UNRESOLVED_VARS (ß Var.intern(CLOIURE_NS, Symbol.intern("*allow-unresolved-vars*"), F).setDynamic()))
+    (§ def #_"Var" READER_RESOLVER (ß Var.intern(CLOIURE_NS, Symbol.intern("*reader-resolver*"), nil).setDynamic()))
 
-    (§ def Var IN_NS_VAR = Var.intern(CLOIURE_NS, Symbol.intern("in-ns"), F))
-    (§ def Var NS_VAR = Var.intern(CLOIURE_NS, Symbol.intern("ns"), F))
-    (§ def Var FN_LOADER_VAR = Var.intern(CLOIURE_NS, Symbol.intern("*fn-loader*"), nil).setDynamic())
-    (§ def Var PRINT_INITIALIZED = Var.intern(CLOIURE_NS, Symbol.intern("print-initialized")))
-    (§ def Var PR_ON = Var.intern(CLOIURE_NS, Symbol.intern("pr-on")))
+    (§ def #_"Var" IN_NS_VAR (ß Var.intern(CLOIURE_NS, Symbol.intern("in-ns"), F)))
+    (§ def #_"Var" NS_VAR (ß Var.intern(CLOIURE_NS, Symbol.intern("ns"), F)))
+    (§ def #_"Var" FN_LOADER_VAR (ß Var.intern(CLOIURE_NS, Symbol.intern("*fn-loader*"), nil).setDynamic()))
+    (§ def #_"Var" PRINT_INITIALIZED (ß Var.intern(CLOIURE_NS, Symbol.intern("print-initialized"))))
+    (§ def #_"Var" PR_ON (ß Var.intern(CLOIURE_NS, Symbol.intern("pr-on"))))
 
-    (§ def IFn inNamespace = new AFn()
+    (§ def #_"IFn" inNamespace (ß new AFn()
         (§ reify
-            (§ method Object invoke(Object arg1)
+            #_method
+            (§ defn #_"Object" invoke [this, #_"Object" arg1]
                 (let [#_"Symbol" nsname (ß (Symbol) arg1)]
                     (let [#_"Namespace" ns (ß Namespace.findOrCreate(nsname))]
                         (ß CURRENT_NS.set(ns))
@@ -36944,11 +38447,12 @@
                 )
             )
         )
-    )
+    ))
 
-    (§ def IFn bootNamespace = new AFn()
+    (§ def #_"IFn" bootNamespace (ß new AFn()
         (§ reify
-            (§ method Object invoke(Object __form, Object __env, Object arg1)
+            #_method
+            (§ defn #_"Object" invoke [this, #_"Object" __form, #_"Object" __env, #_"Object" arg1]
                 (let [#_"Symbol" nsname (ß (Symbol) arg1)]
                     (let [#_"Namespace" ns (ß Namespace.findOrCreate(nsname))]
                         (ß CURRENT_NS.set(ns))
@@ -36957,9 +38461,9 @@
                 )
             )
         )
-    )
+    ))
 
-    (§ defn List<String> processCommandLine(String[] args)
+    (§ defn #_"List<String>" processCommandLine [#_"String[]" args]
         (let [#_"List<String>" arglist (ß Arrays.asList(args))]
             (let [#_"int" split (ß arglist.indexOf("--"))]
                 (when (ß split >= 0)
@@ -36972,7 +38476,7 @@
     )
 
     ;; duck typing stderr plays nice with e.g. swank
-    (§ defn PrintWriter errPrintWriter()
+    (§ defn #_"PrintWriter" errPrintWriter []
         (let [#_"Writer" w (ß (Writer) ERR.deref())]
             (if (ß w instanceof PrintWriter)
                 (do
@@ -36985,19 +38489,20 @@
         )
     )
 
-    (§ def Object[] EMPTY_ARRAY = new Object[] (§))
-    (§ def Comparator DEFAULT_COMPARATOR = new DefaultComparator())
+    (§ def #_"Object[]" EMPTY_ARRAY (ß new Object[] (§)))
+    (§ def #_"Comparator" DEFAULT_COMPARATOR (ß new DefaultComparator()))
 
     #_private
     (class-ns DefaultComparator (§ implements Comparator)
-        (§ method int compare(Object o1, Object o2)
+        #_method
+        (§ defn #_"int" compare [this, #_"Object" o1, #_"Object" o2]
             (ß Util.compare(o1, o2))
         )
     )
 
-    (§ def AtomicInteger id = new AtomicInteger(1))
+    (§ def #_"AtomicInteger" id (ß new AtomicInteger(1)))
 
-    (§ defn void addURL(Object url) (§ throws MalformedURLException)
+    (§ defn #_"void" addURL [#_"Object" url] (§ throws MalformedURLException)
         (let [#_"URL" u (ß (url instanceof String) ? (new URL((String) url)) :or (URL) url)]
             (let [#_"ClassLoader" ccl (ß Thread.currentThread().getContextClassLoader())]
                 (if (ß ccl instanceof DynamicClassLoader)
@@ -37013,10 +38518,10 @@
         )
     )
 
-    (§ def boolean checkSpecAsserts = Boolean.getBoolean("cloiure.spec.check-asserts"))
-    (§ def boolean instrumentMacros = ! Boolean.getBoolean("cloiure.spec.skip-macros"))
+    (§ def #_"boolean" checkSpecAsserts (ß Boolean.getBoolean("cloiure.spec.check-asserts")))
+    (§ def #_"boolean" instrumentMacros (ß ! Boolean.getBoolean("cloiure.spec.skip-macros")))
     #_volatile
-    (§ def boolean CHECK_SPECS = false)
+    (§ def #_"boolean" CHECK_SPECS (ß false))
 
     (§ static
         (let [#_"Keyword" arglistskw (ß Keyword.intern(nil, "arglists"))]
@@ -37033,7 +38538,8 @@
                         (ß v.setMeta(map(DOC_KEY, "Sets *ns* to the namespace named by the symbol, creating it if needed.", arglistskw, list(vector(namesym)))))
                         (ß v = Var.intern(CLOIURE_NS, LOAD_FILE, new AFn()
                             (§ reify
-                                (§ method Object invoke(Object arg1)
+                                #_method
+                                (§ defn #_"Object" invoke [this, #_"Object" arg1]
                                     (try
                                         (ß Compiler.loadFile((String) arg1))
                                         (catch IOException e
@@ -37058,39 +38564,39 @@
         )
     )
 
-    (§ defn Keyword keyword(String ns, String name)
+    (§ defn #_"Keyword" keyword [#_"String" ns, #_"String" name]
         (ß Keyword.intern((Symbol.intern(ns, name))))
     )
 
-    (§ defn Var var(String ns, String name)
+    (§ defn #_"Var" var [#_"String" ns, #_"String" name]
         (ß Var.intern(Namespace.findOrCreate(Symbol.intern(nil, ns)), Symbol.intern(nil, name)))
     )
 
-    (§ defn Var var(String ns, String name, Object init)
+    (§ defn #_"Var" var [#_"String" ns, #_"String" name, #_"Object" init]
         (ß Var.intern(Namespace.findOrCreate(Symbol.intern(nil, ns)), Symbol.intern(nil, name), init))
     )
 
-    (§ defn void loadResourceScript(String name) (§ throws IOException)
+    (§ defn #_"void" loadResourceScript [#_"String" name] (§ throws IOException)
         (ß loadResourceScript(name, true))
         nil
     )
 
-    (§ defn void maybeLoadResourceScript(String name) (§ throws IOException)
+    (§ defn #_"void" maybeLoadResourceScript [#_"String" name] (§ throws IOException)
         (ß loadResourceScript(name, false))
         nil
     )
 
-    (§ defn void loadResourceScript(String name, boolean failIfNotFound) (§ throws IOException)
+    (§ defn #_"void" loadResourceScript [#_"String" name, #_"boolean" failIfNotFound] (§ throws IOException)
         (ß loadResourceScript(RT.class, name, failIfNotFound))
         nil
     )
 
-    (§ defn void loadResourceScript(Class c, String name) (§ throws IOException)
+    (§ defn #_"void" loadResourceScript [#_"Class" c, #_"String" name] (§ throws IOException)
         (ß loadResourceScript(c, name, true))
         nil
     )
 
-    (§ defn void loadResourceScript(Class c, String name, boolean failIfNotFound) (§ throws IOException)
+    (§ defn #_"void" loadResourceScript [#_"Class" c, #_"String" name, #_"boolean" failIfNotFound] (§ throws IOException)
         (let [#_"int" slash (ß name.lastIndexOf(\/))]
             (let [#_"String" file (ß (slash >= 0) ? name.substring(slash + 1) :or name)]
                 (let [#_"InputStream" ins (ß resourceAsStream(baseLoader(), name))]
@@ -37114,12 +38620,12 @@
         )
     )
 
-    (§ defn void init()
+    (§ defn #_"void" init []
         (ß RT.errPrintWriter().println("No need to call RT.init() anymore"))
         nil
     )
 
-    (§ defn long lastModified(URL url, String libfile) (§ throws IOException)
+    (§ defn #_"long" lastModified [#_"URL" url, #_"String" libfile] (§ throws IOException)
         (let [#_"URLConnection" connection (ß url.openConnection())]
             (try
                 (if (ß url.getProtocol().equals("jar"))
@@ -37141,7 +38647,7 @@
         )
     )
 
-    (§ defn void compile(String cljfile) (§ throws IOException)
+    (§ defn #_"void" compile [#_"String" cljfile] (§ throws IOException)
         (let [#_"InputStream" ins (ß resourceAsStream(baseLoader(), cljfile))]
             (if (ß ins != nil)
                 (do
@@ -37160,12 +38666,12 @@
         )
     )
 
-    (§ defn void load(String scriptbase) (§ throws IOException, ClassNotFoundException)
+    (§ defn #_"void" load [#_"String" scriptbase] (§ throws IOException, ClassNotFoundException)
         (ß load(scriptbase, true))
         nil
     )
 
-    (§ defn void load(String scriptbase, boolean failIfNotFound) (§ throws IOException, ClassNotFoundException)
+    (§ defn #_"void" load [#_"String" scriptbase, #_"boolean" failIfNotFound] (§ throws IOException, ClassNotFoundException)
         (let [#_"String" classfile (ß scriptbase + LOADER_SUFFIX + ".class")]
             (let [#_"String" cljfile (ß scriptbase + ".cli")]
                 (let [#_"String" scriptfile cljfile]
@@ -37214,7 +38720,7 @@
         )
     )
 
-    (§ defn void doInit() (§ throws ClassNotFoundException, IOException)
+    (§ defn #_"void" doInit [] (§ throws ClassNotFoundException, IOException)
         (ß load("cloiure/core"))
 
         (ß Var.pushThreadBindings(RT.mapUniqueKeys(
@@ -37251,23 +38757,24 @@
         nil
     )
 
-    (§ defn int nextID()
+    (§ defn #_"int" nextID []
         (ß id.getAndIncrement())
     )
 
     ;; Load a library in the System ClassLoader instead of Cloiure's own.
-    (§ defn void loadLibrary(String libname)
+    (§ defn #_"void" loadLibrary [#_"String" libname]
         (ß System.loadLibrary(libname))
         nil
     )
 
-    (§ def- int CHUNK_SIZE = 32)
+    (§ def- #_"int" CHUNK_SIZE (ß 32))
 
-    (§ defn ISeq chunkIteratorSeq(Iterator iter)
+    (§ defn #_"ISeq" chunkIteratorSeq [#_"Iterator" iter]
         (when (ß iter.hasNext())
             (§ return (ß new LazySeq(new AFn()
                 (§ reify
-                    (§ method Object invoke()
+                    #_method
+                    (§ defn #_"Object" invoke [this]
                         (let [#_"Object[]" arr (ß new Object[CHUNK_SIZE])]
                             (let [#_"int" n 0]
                                 (while (ß iter.hasNext() && n < CHUNK_SIZE)
@@ -37283,7 +38790,7 @@
         nil
     )
 
-    (§ defn ISeq seq(Object coll)
+    (§ defn #_"ISeq" seq [#_"Object" coll]
         (cond (ß coll instanceof ASeq)
             (do
                 (ß (ASeq) coll)
@@ -37300,7 +38807,7 @@
     )
 
     ;; N.B. canSeq must be kept in sync with this!
-    (§ defn ISeq seqFrom(Object coll)
+    (§ defn #_"ISeq" seqFrom [#_"Object" coll]
         (cond (ß coll instanceof Seqable)
             (do
                 (ß ((Seqable) coll).seq())
@@ -37336,7 +38843,7 @@
         )
     )
 
-    (§ defn boolean canSeq(Object coll)
+    (§ defn #_"boolean" canSeq [#_"Object" coll]
         (ß coll instanceof ISeq
             || coll instanceof Seqable
             || coll == nil
@@ -37346,7 +38853,7 @@
             || coll instanceof Map)
     )
 
-    (§ defn Iterator iter(Object coll)
+    (§ defn #_"Iterator" iter [#_"Object" coll]
         (cond (ß coll instanceof Iterable)
             (do
                 (ß ((Iterable)coll).iterator())
@@ -37355,15 +38862,18 @@
             (do
                 (ß new Iterator()
                     (§ reify
-                        (§ method boolean hasNext()
+                        #_method
+                        (§ defn #_"boolean" hasNext [this]
                             false
                         )
 
-                        (§ method Object next()
+                        #_method
+                        (§ defn #_"Object" next [this]
                             (throw (ß new NoSuchElementException()))
                         )
 
-                        (§ method void remove()
+                        #_method
+                        (§ defn #_"void" remove [this]
                             (throw (ß new UnsupportedOperationException()))
                         )
                     )
@@ -37379,15 +38889,18 @@
                     (ß new Iterator()
                         (§ reify
                             (let [#_"int" i 0]
-                                (§ method boolean hasNext()
+                                #_method
+                                (§ defn #_"boolean" hasNext [this]
                                     (ß (i < s.length()))
                                 )
 
-                                (§ method Object next()
+                                #_method
+                                (§ defn #_"Object" next [this]
                                     (ß s.charAt(i++))
                                 )
 
-                                (§ method void remove()
+                                #_method
+                                (§ defn #_"void" remove [this]
                                     (throw (ß new UnsupportedOperationException()))
                                 )
                             )
@@ -37406,11 +38919,11 @@
         )
     )
 
-    (§ defn Object seqOrElse(Object o)
+    (§ defn #_"Object" seqOrElse [#_"Object" o]
         (ß (seq(o) == nil) ? nil :or o)
     )
 
-    (§ defn ISeq keys(Object coll)
+    (§ defn #_"ISeq" keys [#_"Object" coll]
         (if (ß coll instanceof IPersistentMap)
             (do
                 (ß APersistentMap.KeySeq.createFromMap((IPersistentMap)coll))
@@ -37421,7 +38934,7 @@
         )
     )
 
-    (§ defn ISeq vals(Object coll)
+    (§ defn #_"ISeq" vals [#_"Object" coll]
         (if (ß coll instanceof IPersistentMap)
             (do
                 (ß APersistentMap.ValSeq.createFromMap((IPersistentMap)coll))
@@ -37432,21 +38945,21 @@
         )
     )
 
-    (§ defn IPersistentMap meta(Object x)
+    (§ defn #_"IPersistentMap" meta [#_"Object" x]
         (when (ß x instanceof IMeta)
             (§ return (ß ((IMeta) x).meta()))
         )
         nil
     )
 
-    (§ defn int count(Object o)
+    (§ defn #_"int" count [#_"Object" o]
         (when (ß o instanceof Counted)
             (§ return (ß ((Counted) o).count()))
         )
         (ß countFrom(Util.ret1(o, o = nil)))
     )
 
-    (§ defn int countFrom(Object o)
+    (§ defn #_"int" countFrom [#_"Object" o]
         (cond (ß o == nil)
             (do
                 (§ return 0)
@@ -37491,14 +39004,14 @@
         (throw (ß new UnsupportedOperationException("count not supported on this type: " + o.getClass().getSimpleName())))
     )
 
-    (§ defn IPersistentCollection conj(IPersistentCollection coll, Object x)
+    (§ defn #_"IPersistentCollection" conj [#_"IPersistentCollection" coll, #_"Object" x]
         (when (ß coll == nil)
             (§ return (ß new PersistentList(x)))
         )
         (ß coll.cons(x))
     )
 
-    (§ defn ISeq cons(Object x, Object coll)
+    (§ defn #_"ISeq" cons [#_"Object" x, #_"Object" coll]
         (cond (ß coll == nil)
             (do
                 (ß new PersistentList(x))
@@ -37514,7 +39027,7 @@
         )
     )
 
-    (§ defn Object first(Object x)
+    (§ defn #_"Object" first [#_"Object" x]
         (when (ß x instanceof ISeq)
             (§ return (ß ((ISeq) x).first()))
         )
@@ -37526,19 +39039,19 @@
         )
     )
 
-    (§ defn Object second(Object x)
+    (§ defn #_"Object" second [#_"Object" x]
         (ß first(next(x)))
     )
 
-    (§ defn Object third(Object x)
+    (§ defn #_"Object" third [#_"Object" x]
         (ß first(next(next(x))))
     )
 
-    (§ defn Object fourth(Object x)
+    (§ defn #_"Object" fourth [#_"Object" x]
         (ß first(next(next(next(x)))))
     )
 
-    (§ defn ISeq next(Object x)
+    (§ defn #_"ISeq" next [#_"Object" x]
         (when (ß x instanceof ISeq)
             (§ return (ß ((ISeq) x).next()))
         )
@@ -37550,7 +39063,7 @@
         )
     )
 
-    (§ defn ISeq more(Object x)
+    (§ defn #_"ISeq" more [#_"Object" x]
         (when (ß x instanceof ISeq)
             (§ return (ß ((ISeq) x).more()))
         )
@@ -37562,28 +39075,28 @@
         )
     )
 
-    (§ defn Object peek(Object x)
+    (§ defn #_"Object" peek [#_"Object" x]
         (when (ß x == nil)
             (§ return nil)
         )
         (ß ((IPersistentStack) x).peek())
     )
 
-    (§ defn Object pop(Object x)
+    (§ defn #_"Object" pop [#_"Object" x]
         (when (ß x == nil)
             (§ return nil)
         )
         (ß ((IPersistentStack) x).pop())
     )
 
-    (§ defn Object get(Object coll, Object key)
+    (§ defn #_"Object" get [#_"Object" coll, #_"Object" key]
         (when (ß coll instanceof ILookup)
             (§ return (ß ((ILookup) coll).valAt(key)))
         )
         (ß getFrom(coll, key))
     )
 
-    (§ defn Object getFrom(Object coll, Object key)
+    (§ defn #_"Object" getFrom [#_"Object" coll, #_"Object" key]
         (cond (ß coll == nil)
             (do
                 (§ return nil)
@@ -37620,14 +39133,14 @@
         nil
     )
 
-    (§ defn Object get(Object coll, Object key, Object notFound)
+    (§ defn #_"Object" get [#_"Object" coll, #_"Object" key, #_"Object" notFound]
         (when (ß coll instanceof ILookup)
             (§ return (ß ((ILookup) coll).valAt(key, notFound)))
         )
         (ß getFrom(coll, key, notFound))
     )
 
-    (§ defn Object getFrom(Object coll, Object key, Object notFound)
+    (§ defn #_"Object" getFrom [#_"Object" coll, #_"Object" key, #_"Object" notFound]
         (cond (ß coll == nil)
             (do
                 (§ return notFound)
@@ -37669,14 +39182,14 @@
         notFound
     )
 
-    (§ defn Associative assoc(Object coll, Object key, Object val)
+    (§ defn #_"Associative" assoc [#_"Object" coll, #_"Object" key, #_"Object" val]
         (when (ß coll == nil)
             (§ return (ß new PersistentArrayMap(new Object[] (§ key, val ))))
         )
         (ß ((Associative) coll).assoc(key, val))
     )
 
-    (§ defn Object contains(Object coll, Object key)
+    (§ defn #_"Object" contains [#_"Object" coll, #_"Object" key]
         (cond (ß coll == nil)
             (do
                 (§ return (ß F))
@@ -37719,7 +39232,7 @@
         (throw (ß new IllegalArgumentException("contains? not supported on type: " + coll.getClass().getName())))
     )
 
-    (§ defn Object find(Object coll, Object key)
+    (§ defn #_"Object" find [#_"Object" coll, #_"Object" key]
         (cond (ß coll == nil)
             (do
                 (§ return nil)
@@ -37748,7 +39261,7 @@
     ;; takes a seq of key, val, key, val
 
     ;; returns tail starting at val of matching key if found, else nil
-    (§ defn ISeq findKey(Keyword key, ISeq keyvals)
+    (§ defn #_"ISeq" findKey [#_"Keyword" key, #_"ISeq" keyvals]
         (while (ß keyvals != nil)
             (let [#_"ISeq" r (ß keyvals.next())]
                 (when (ß r == nil)
@@ -37763,21 +39276,21 @@
         nil
     )
 
-    (§ defn Object dissoc(Object coll, Object key)
+    (§ defn #_"Object" dissoc [#_"Object" coll, #_"Object" key]
         (when (ß coll == nil)
             (§ return nil)
         )
         (ß ((IPersistentMap) coll).without(key))
     )
 
-    (§ defn Object nth(Object coll, int n)
+    (§ defn #_"Object" nth [#_"Object" coll, #_"int" n]
         (when (ß coll instanceof Indexed)
             (§ return (ß ((Indexed) coll).nth(n)))
         )
         (ß nthFrom(Util.ret1(coll, coll = nil), n))
     )
 
-    (§ defn Object nthFrom(Object coll, int n)
+    (§ defn #_"Object" nthFrom [#_"Object" coll, #_"int" n]
         (cond (ß coll == nil)
             (do
                 nil
@@ -37832,7 +39345,7 @@
         )
     )
 
-    (§ defn Object nth(Object coll, int n, Object notFound)
+    (§ defn #_"Object" nth [#_"Object" coll, #_"int" n, #_"Object" notFound]
         (when (ß coll instanceof Indexed)
             (let [#_"Indexed" v (ß (Indexed) coll)]
                 (§ return (ß v.nth(n, notFound)))
@@ -37841,7 +39354,7 @@
         (ß nthFrom(coll, n, notFound))
     )
 
-    (§ defn Object nthFrom(Object coll, int n, Object notFound)
+    (§ defn #_"Object" nthFrom [#_"Object" coll, #_"int" n, #_"Object" notFound]
         (cond (ß coll == nil)
             (do
                 notFound
@@ -37918,7 +39431,7 @@
         )
     )
 
-    (§ defn Object assocN(int n, Object val, Object coll)
+    (§ defn #_"Object" assocN [#_"int" n, #_"Object" val, #_"Object" coll]
         (cond (ß coll == nil)
             (do
                 nil
@@ -37942,51 +39455,51 @@
         )
     )
 
-    (§ defn boolean hasTag(Object o, Object tag)
+    (§ defn #_"boolean" hasTag [#_"Object" o, #_"Object" tag]
         (ß Util.equals(tag, RT.get(RT.meta(o), TAG_KEY)))
     )
 
-    (§ defn Object box(Object x)
+    (§ defn #_"Object" box [#_"Object" x]
         x
     )
 
-    (§ defn Character box(char x)
+    (§ defn #_"Character" box [#_"char" x]
         (ß Character.valueOf(x))
     )
 
-    (§ defn Object box(boolean x)
+    (§ defn #_"Object" box [#_"boolean" x]
         (ß x ? T :or F)
     )
 
-    (§ defn Object box(Boolean x)
+    (§ defn #_"Object" box [#_"Boolean" x]
         x
     )
 
-    (§ defn Number box(byte x)
+    (§ defn #_"Number" box [#_"byte" x]
         x
     )
 
-    (§ defn Number box(short x)
+    (§ defn #_"Number" box [#_"short" x]
         x
     )
 
-    (§ defn Number box(int x)
+    (§ defn #_"Number" box [#_"int" x]
         x
     )
 
-    (§ defn Number box(long x)
+    (§ defn #_"Number" box [#_"long" x]
         x
     )
 
-    (§ defn Number box(float x)
+    (§ defn #_"Number" box [#_"float" x]
         x
     )
 
-    (§ defn Number box(double x)
+    (§ defn #_"Number" box [#_"double" x]
         x
     )
 
-    (§ defn char charCast(Object x)
+    (§ defn #_"char" charCast [#_"Object" x]
         (when (ß x instanceof Character)
             (§ return (ß ((Character) x).charValue()))
         )
@@ -37998,7 +39511,7 @@
         )
     )
 
-    (§ defn char charCast(byte x)
+    (§ defn #_"char" charCast [#_"byte" x]
         (let [#_"char" i (ß (char) x)]
             (when (ß i != x)
                 (throw (ß new IllegalArgumentException("Value out of range for char: " + x)))
@@ -38007,7 +39520,7 @@
         )
     )
 
-    (§ defn char charCast(short x)
+    (§ defn #_"char" charCast [#_"short" x]
         (let [#_"char" i (ß (char) x)]
             (when (ß i != x)
                 (throw (ß new IllegalArgumentException("Value out of range for char: " + x)))
@@ -38016,11 +39529,11 @@
         )
     )
 
-    (§ defn char charCast(char x)
+    (§ defn #_"char" charCast [#_"char" x]
         x
     )
 
-    (§ defn char charCast(int x)
+    (§ defn #_"char" charCast [#_"int" x]
         (let [#_"char" i (ß (char) x)]
             (when (ß i != x)
                 (throw (ß new IllegalArgumentException("Value out of range for char: " + x)))
@@ -38029,7 +39542,7 @@
         )
     )
 
-    (§ defn char charCast(long x)
+    (§ defn #_"char" charCast [#_"long" x]
         (let [#_"char" i (ß (char) x)]
             (when (ß i != x)
                 (throw (ß new IllegalArgumentException("Value out of range for char: " + x)))
@@ -38038,32 +39551,32 @@
         )
     )
 
-    (§ defn char charCast(float x)
+    (§ defn #_"char" charCast [#_"float" x]
         (when (ß x >= Character.MIN_VALUE && x <= Character.MAX_VALUE)
             (§ return (ß (char) x))
         )
         (throw (ß new IllegalArgumentException("Value out of range for char: " + x)))
     )
 
-    (§ defn char charCast(double x)
+    (§ defn #_"char" charCast [#_"double" x]
         (when (ß x >= Character.MIN_VALUE && x <= Character.MAX_VALUE)
             (§ return (ß (char) x))
         )
         (throw (ß new IllegalArgumentException("Value out of range for char: " + x)))
     )
 
-    (§ defn boolean booleanCast(Object x)
+    (§ defn #_"boolean" booleanCast [#_"Object" x]
         (when (ß x instanceof Boolean)
             (§ return (ß ((Boolean) x).booleanValue()))
         )
         (ß (x != nil))
     )
 
-    (§ defn boolean booleanCast(boolean x)
+    (§ defn #_"boolean" booleanCast [#_"boolean" x]
         x
     )
 
-    (§ defn byte byteCast(Object x)
+    (§ defn #_"byte" byteCast [#_"Object" x]
         (when (ß x instanceof Byte)
             (§ return (ß ((Byte) x).byteValue()))
         )
@@ -38075,11 +39588,11 @@
         )
     )
 
-    (§ defn byte byteCast(byte x)
+    (§ defn #_"byte" byteCast [#_"byte" x]
         x
     )
 
-    (§ defn byte byteCast(short x)
+    (§ defn #_"byte" byteCast [#_"short" x]
         (let [#_"byte" i (ß (byte) x)]
             (when (ß i != x)
                 (throw (ß new IllegalArgumentException("Value out of range for byte: " + x)))
@@ -38088,7 +39601,7 @@
         )
     )
 
-    (§ defn byte byteCast(int x)
+    (§ defn #_"byte" byteCast [#_"int" x]
         (let [#_"byte" i (ß (byte) x)]
             (when (ß i != x)
                 (throw (ß new IllegalArgumentException("Value out of range for byte: " + x)))
@@ -38097,7 +39610,7 @@
         )
     )
 
-    (§ defn byte byteCast(long x)
+    (§ defn #_"byte" byteCast [#_"long" x]
         (let [#_"byte" i (ß (byte) x)]
             (when (ß i != x)
                 (throw (ß new IllegalArgumentException("Value out of range for byte: " + x)))
@@ -38106,21 +39619,21 @@
         )
     )
 
-    (§ defn byte byteCast(float x)
+    (§ defn #_"byte" byteCast [#_"float" x]
         (when (ß x >= Byte.MIN_VALUE && x <= Byte.MAX_VALUE)
             (§ return (ß (byte) x))
         )
         (throw (ß new IllegalArgumentException("Value out of range for byte: " + x)))
     )
 
-    (§ defn byte byteCast(double x)
+    (§ defn #_"byte" byteCast [#_"double" x]
         (when (ß x >= Byte.MIN_VALUE && x <= Byte.MAX_VALUE)
             (§ return (ß (byte) x))
         )
         (throw (ß new IllegalArgumentException("Value out of range for byte: " + x)))
     )
 
-    (§ defn short shortCast(Object x)
+    (§ defn #_"short" shortCast [#_"Object" x]
         (when (ß x instanceof Short)
             (§ return (ß ((Short) x).shortValue()))
         )
@@ -38132,15 +39645,15 @@
         )
     )
 
-    (§ defn short shortCast(byte x)
+    (§ defn #_"short" shortCast [#_"byte" x]
         x
     )
 
-    (§ defn short shortCast(short x)
+    (§ defn #_"short" shortCast [#_"short" x]
         x
     )
 
-    (§ defn short shortCast(int x)
+    (§ defn #_"short" shortCast [#_"int" x]
         (let [#_"short" i (ß (short) x)]
             (when (ß i != x)
                 (throw (ß new IllegalArgumentException("Value out of range for short: " + x)))
@@ -38149,7 +39662,7 @@
         )
     )
 
-    (§ defn short shortCast(long x)
+    (§ defn #_"short" shortCast [#_"long" x]
         (let [#_"short" i (ß (short) x)]
             (when (ß i != x)
                 (throw (ß new IllegalArgumentException("Value out of range for short: " + x)))
@@ -38158,21 +39671,21 @@
         )
     )
 
-    (§ defn short shortCast(float x)
+    (§ defn #_"short" shortCast [#_"float" x]
         (when (ß x >= Short.MIN_VALUE && x <= Short.MAX_VALUE)
             (§ return (ß (short) x))
         )
         (throw (ß new IllegalArgumentException("Value out of range for short: " + x)))
     )
 
-    (§ defn short shortCast(double x)
+    (§ defn #_"short" shortCast [#_"double" x]
         (when (ß x >= Short.MIN_VALUE && x <= Short.MAX_VALUE)
             (§ return (ß (short) x))
         )
         (throw (ß new IllegalArgumentException("Value out of range for short: " + x)))
     )
 
-    (§ defn int intCast(Object x)
+    (§ defn #_"int" intCast [#_"Object" x]
         (when (ß x instanceof Integer)
             (§ return (ß ((Integer)x).intValue()))
         )
@@ -38184,30 +39697,30 @@
         (ß ((Character) x).charValue())
     )
 
-    (§ defn int intCast(char x)
+    (§ defn #_"int" intCast [#_"char" x]
         x
     )
 
-    (§ defn int intCast(byte x)
+    (§ defn #_"int" intCast [#_"byte" x]
         x
     )
 
-    (§ defn int intCast(short x)
+    (§ defn #_"int" intCast [#_"short" x]
         x
     )
 
-    (§ defn int intCast(int x)
+    (§ defn #_"int" intCast [#_"int" x]
         x
     )
 
-    (§ defn int intCast(float x)
+    (§ defn #_"int" intCast [#_"float" x]
         (when (ß x < Integer.MIN_VALUE || x > Integer.MAX_VALUE)
             (throw (ß new IllegalArgumentException("Value out of range for int: " + x)))
         )
         (ß (int) x)
     )
 
-    (§ defn int intCast(long x)
+    (§ defn #_"int" intCast [#_"long" x]
         (let [#_"int" i (ß (int) x)]
             (when (ß i != x)
                 (throw (ß new IllegalArgumentException("Value out of range for int: " + x)))
@@ -38216,14 +39729,14 @@
         )
     )
 
-    (§ defn int intCast(double x)
+    (§ defn #_"int" intCast [#_"double" x]
         (when (ß x < Integer.MIN_VALUE || x > Integer.MAX_VALUE)
             (throw (ß new IllegalArgumentException("Value out of range for int: " + x)))
         )
         (ß (int) x)
     )
 
-    (§ defn long longCast(Object x)
+    (§ defn #_"long" longCast [#_"Object" x]
         (cond (ß x instanceof Integer || x instanceof Long)
             (do
                 (ß ((Number) x).longValue())
@@ -38273,37 +39786,37 @@
         )
     )
 
-    (§ defn long longCast(byte x)
+    (§ defn #_"long" longCast [#_"byte" x]
         x
     )
 
-    (§ defn long longCast(short x)
+    (§ defn #_"long" longCast [#_"short" x]
         x
     )
 
-    (§ defn long longCast(int x)
+    (§ defn #_"long" longCast [#_"int" x]
         x
     )
 
-    (§ defn long longCast(float x)
+    (§ defn #_"long" longCast [#_"float" x]
         (when (ß x < Long.MIN_VALUE || x > Long.MAX_VALUE)
             (throw (ß new IllegalArgumentException("Value out of range for long: " + x)))
         )
         (ß (long) x)
     )
 
-    (§ defn long longCast(long x)
+    (§ defn #_"long" longCast [#_"long" x]
         x
     )
 
-    (§ defn long longCast(double x)
+    (§ defn #_"long" longCast [#_"double" x]
         (when (ß x < Long.MIN_VALUE || x > Long.MAX_VALUE)
             (throw (ß new IllegalArgumentException("Value out of range for long: " + x)))
         )
         (ß (long) x)
     )
 
-    (§ defn float floatCast(Object x)
+    (§ defn #_"float" floatCast [#_"Object" x]
         (when (ß x instanceof Float)
             (§ return (ß ((Float) x).floatValue()))
         )
@@ -38315,272 +39828,272 @@
         )
     )
 
-    (§ defn float floatCast(byte x)
+    (§ defn #_"float" floatCast [#_"byte" x]
         x
     )
 
-    (§ defn float floatCast(short x)
+    (§ defn #_"float" floatCast [#_"short" x]
         x
     )
 
-    (§ defn float floatCast(int x)
+    (§ defn #_"float" floatCast [#_"int" x]
         x
     )
 
-    (§ defn float floatCast(float x)
+    (§ defn #_"float" floatCast [#_"float" x]
         x
     )
 
-    (§ defn float floatCast(long x)
+    (§ defn #_"float" floatCast [#_"long" x]
         x
     )
 
-    (§ defn float floatCast(double x)
+    (§ defn #_"float" floatCast [#_"double" x]
         (when (ß x < -Float.MAX_VALUE || x > Float.MAX_VALUE)
             (throw (ß new IllegalArgumentException("Value out of range for float: " + x)))
         )
         (ß (float) x)
     )
 
-    (§ defn double doubleCast(Object x)
+    (§ defn #_"double" doubleCast [#_"Object" x]
         (ß ((Number) x).doubleValue())
     )
 
-    (§ defn double doubleCast(byte x)
+    (§ defn #_"double" doubleCast [#_"byte" x]
         x
     )
 
-    (§ defn double doubleCast(short x)
+    (§ defn #_"double" doubleCast [#_"short" x]
         x
     )
 
-    (§ defn double doubleCast(int x)
+    (§ defn #_"double" doubleCast [#_"int" x]
         x
     )
 
-    (§ defn double doubleCast(float x)
+    (§ defn #_"double" doubleCast [#_"float" x]
         x
     )
 
-    (§ defn double doubleCast(long x)
+    (§ defn #_"double" doubleCast [#_"long" x]
         x
     )
 
-    (§ defn double doubleCast(double x)
+    (§ defn #_"double" doubleCast [#_"double" x]
         x
     )
 
-    (§ defn byte uncheckedByteCast(Object x)
+    (§ defn #_"byte" uncheckedByteCast [#_"Object" x]
         (ß ((Number) x).byteValue())
     )
 
-    (§ defn byte uncheckedByteCast(byte x)
+    (§ defn #_"byte" uncheckedByteCast [#_"byte" x]
         x
     )
 
-    (§ defn byte uncheckedByteCast(short x)
+    (§ defn #_"byte" uncheckedByteCast [#_"short" x]
         (ß (byte) x)
     )
 
-    (§ defn byte uncheckedByteCast(int x)
+    (§ defn #_"byte" uncheckedByteCast [#_"int" x]
         (ß (byte) x)
     )
 
-    (§ defn byte uncheckedByteCast(long x)
+    (§ defn #_"byte" uncheckedByteCast [#_"long" x]
         (ß (byte) x)
     )
 
-    (§ defn byte uncheckedByteCast(float x)
+    (§ defn #_"byte" uncheckedByteCast [#_"float" x]
         (ß (byte) x)
     )
 
-    (§ defn byte uncheckedByteCast(double x)
+    (§ defn #_"byte" uncheckedByteCast [#_"double" x]
         (ß (byte) x)
     )
 
-    (§ defn short uncheckedShortCast(Object x)
+    (§ defn #_"short" uncheckedShortCast [#_"Object" x]
         (ß ((Number) x).shortValue())
     )
 
-    (§ defn short uncheckedShortCast(byte x)
+    (§ defn #_"short" uncheckedShortCast [#_"byte" x]
         x
     )
 
-    (§ defn short uncheckedShortCast(short x)
+    (§ defn #_"short" uncheckedShortCast [#_"short" x]
         x
     )
 
-    (§ defn short uncheckedShortCast(int x)
+    (§ defn #_"short" uncheckedShortCast [#_"int" x]
         (ß (short) x)
     )
 
-    (§ defn short uncheckedShortCast(long x)
+    (§ defn #_"short" uncheckedShortCast [#_"long" x]
         (ß (short) x)
     )
 
-    (§ defn short uncheckedShortCast(float x)
+    (§ defn #_"short" uncheckedShortCast [#_"float" x]
         (ß (short) x)
     )
 
-    (§ defn short uncheckedShortCast(double x)
+    (§ defn #_"short" uncheckedShortCast [#_"double" x]
         (ß (short) x)
     )
 
-    (§ defn char uncheckedCharCast(Object x)
+    (§ defn #_"char" uncheckedCharCast [#_"Object" x]
         (when (ß x instanceof Character)
             (§ return (ß ((Character) x).charValue()))
         )
         (ß (char) ((Number) x).longValue())
     )
 
-    (§ defn char uncheckedCharCast(byte x)
+    (§ defn #_"char" uncheckedCharCast [#_"byte" x]
         (ß (char) x)
     )
 
-    (§ defn char uncheckedCharCast(short x)
+    (§ defn #_"char" uncheckedCharCast [#_"short" x]
         (ß (char) x)
     )
 
-    (§ defn char uncheckedCharCast(char x)
+    (§ defn #_"char" uncheckedCharCast [#_"char" x]
         x
     )
 
-    (§ defn char uncheckedCharCast(int x)
+    (§ defn #_"char" uncheckedCharCast [#_"int" x]
         (ß (char) x)
     )
 
-    (§ defn char uncheckedCharCast(long x)
+    (§ defn #_"char" uncheckedCharCast [#_"long" x]
         (ß (char) x)
     )
 
-    (§ defn char uncheckedCharCast(float x)
+    (§ defn #_"char" uncheckedCharCast [#_"float" x]
         (ß (char) x)
     )
 
-    (§ defn char uncheckedCharCast(double x)
+    (§ defn #_"char" uncheckedCharCast [#_"double" x]
         (ß (char) x)
     )
 
-    (§ defn int uncheckedIntCast(Object x)
+    (§ defn #_"int" uncheckedIntCast [#_"Object" x]
         (when (ß x instanceof Number)
             (§ return (ß ((Number)x).intValue()))
         )
         (ß ((Character) x).charValue())
     )
 
-    (§ defn int uncheckedIntCast(byte x)
+    (§ defn #_"int" uncheckedIntCast [#_"byte" x]
         x
     )
 
-    (§ defn int uncheckedIntCast(short x)
+    (§ defn #_"int" uncheckedIntCast [#_"short" x]
         x
     )
 
-    (§ defn int uncheckedIntCast(char x)
+    (§ defn #_"int" uncheckedIntCast [#_"char" x]
         x
     )
 
-    (§ defn int uncheckedIntCast(int x)
+    (§ defn #_"int" uncheckedIntCast [#_"int" x]
         x
     )
 
-    (§ defn int uncheckedIntCast(long x)
+    (§ defn #_"int" uncheckedIntCast [#_"long" x]
         (ß (int) x)
     )
 
-    (§ defn int uncheckedIntCast(float x)
+    (§ defn #_"int" uncheckedIntCast [#_"float" x]
         (ß (int) x)
     )
 
-    (§ defn int uncheckedIntCast(double x)
+    (§ defn #_"int" uncheckedIntCast [#_"double" x]
         (ß (int) x)
     )
 
-    (§ defn long uncheckedLongCast(Object x)
+    (§ defn #_"long" uncheckedLongCast [#_"Object" x]
         (ß ((Number) x).longValue())
     )
 
-    (§ defn long uncheckedLongCast(byte x)
+    (§ defn #_"long" uncheckedLongCast [#_"byte" x]
         x
     )
 
-    (§ defn long uncheckedLongCast(short x)
+    (§ defn #_"long" uncheckedLongCast [#_"short" x]
         x
     )
 
-    (§ defn long uncheckedLongCast(int x)
+    (§ defn #_"long" uncheckedLongCast [#_"int" x]
         x
     )
 
-    (§ defn long uncheckedLongCast(long x)
+    (§ defn #_"long" uncheckedLongCast [#_"long" x]
         x
     )
 
-    (§ defn long uncheckedLongCast(float x)
+    (§ defn #_"long" uncheckedLongCast [#_"float" x]
         (ß (long) x)
     )
 
-    (§ defn long uncheckedLongCast(double x)
+    (§ defn #_"long" uncheckedLongCast [#_"double" x]
         (ß (long) x)
     )
 
-    (§ defn float uncheckedFloatCast(Object x)
+    (§ defn #_"float" uncheckedFloatCast [#_"Object" x]
         (ß ((Number) x).floatValue())
     )
 
-    (§ defn float uncheckedFloatCast(byte x)
+    (§ defn #_"float" uncheckedFloatCast [#_"byte" x]
         x
     )
 
-    (§ defn float uncheckedFloatCast(short x)
+    (§ defn #_"float" uncheckedFloatCast [#_"short" x]
         x
     )
 
-    (§ defn float uncheckedFloatCast(int x)
+    (§ defn #_"float" uncheckedFloatCast [#_"int" x]
         x
     )
 
-    (§ defn float uncheckedFloatCast(long x)
+    (§ defn #_"float" uncheckedFloatCast [#_"long" x]
         x
     )
 
-    (§ defn float uncheckedFloatCast(float x)
+    (§ defn #_"float" uncheckedFloatCast [#_"float" x]
         x
     )
 
-    (§ defn float uncheckedFloatCast(double x)
+    (§ defn #_"float" uncheckedFloatCast [#_"double" x]
         (ß (float) x)
     )
 
-    (§ defn double uncheckedDoubleCast(Object x)
+    (§ defn #_"double" uncheckedDoubleCast [#_"Object" x]
         (ß ((Number) x).doubleValue())
     )
 
-    (§ defn double uncheckedDoubleCast(byte x)
+    (§ defn #_"double" uncheckedDoubleCast [#_"byte" x]
         x
     )
 
-    (§ defn double uncheckedDoubleCast(short x)
+    (§ defn #_"double" uncheckedDoubleCast [#_"short" x]
         x
     )
 
-    (§ defn double uncheckedDoubleCast(int x)
+    (§ defn #_"double" uncheckedDoubleCast [#_"int" x]
         x
     )
 
-    (§ defn double uncheckedDoubleCast(long x)
+    (§ defn #_"double" uncheckedDoubleCast [#_"long" x]
         x
     )
 
-    (§ defn double uncheckedDoubleCast(float x)
+    (§ defn #_"double" uncheckedDoubleCast [#_"float" x]
         x
     )
 
-    (§ defn double uncheckedDoubleCast(double x)
+    (§ defn #_"double" uncheckedDoubleCast [#_"double" x]
         x
     )
 
-    (§ defn IPersistentMap map(Object... init)
+    (§ defn #_"IPersistentMap" map [#_"Object..." init]
         (cond (ß init == nil)
             (do
                 (§ return (ß PersistentArrayMap.EMPTY))
@@ -38593,7 +40106,7 @@
         (ß PersistentHashMap.createWithCheck(init))
     )
 
-    (§ defn IPersistentMap mapUniqueKeys(Object... init)
+    (§ defn #_"IPersistentMap" mapUniqueKeys [#_"Object..." init]
         (cond (ß init == nil)
             (do
                 (§ return (ß PersistentArrayMap.EMPTY))
@@ -38606,15 +40119,15 @@
         (ß PersistentHashMap.create(init))
     )
 
-    (§ defn IPersistentSet set(Object... init)
+    (§ defn #_"IPersistentSet" set [#_"Object..." init]
         (ß PersistentHashSet.createWithCheck(init))
     )
 
-    (§ defn IPersistentVector vector(Object... init)
+    (§ defn #_"IPersistentVector" vector [#_"Object..." init]
         (ß LazilyPersistentVector.createOwning(init))
     )
 
-    (§ defn IPersistentVector subvec(IPersistentVector v, int start, int end)
+    (§ defn #_"IPersistentVector" subvec [#_"IPersistentVector" v, #_"int" start, #_"int" end]
         (when (ß end < start || start < 0 || end > v.count())
             (throw (ß new IndexOutOfBoundsException()))
         )
@@ -38624,51 +40137,51 @@
         (ß new APersistentVector.SubVector(nil, v, start, end))
     )
 
-    (§ defn ISeq list()
+    (§ defn #_"ISeq" list []
         nil
     )
 
-    (§ defn ISeq list(Object arg1)
+    (§ defn #_"ISeq" list [#_"Object" arg1]
         (ß new PersistentList(arg1))
     )
 
-    (§ defn ISeq list(Object arg1, Object arg2)
+    (§ defn #_"ISeq" list [#_"Object" arg1, #_"Object" arg2]
         (ß listStar(arg1, arg2, nil))
     )
 
-    (§ defn ISeq list(Object arg1, Object arg2, Object arg3)
+    (§ defn #_"ISeq" list [#_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
         (ß listStar(arg1, arg2, arg3, nil))
     )
 
-    (§ defn ISeq list(Object arg1, Object arg2, Object arg3, Object arg4)
+    (§ defn #_"ISeq" list [#_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
         (ß listStar(arg1, arg2, arg3, arg4, nil))
     )
 
-    (§ defn ISeq list(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
+    (§ defn #_"ISeq" list [#_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
         (ß listStar(arg1, arg2, arg3, arg4, arg5, nil))
     )
 
-    (§ defn ISeq listStar(Object arg1, ISeq rest)
+    (§ defn #_"ISeq" listStar [#_"Object" arg1, #_"ISeq" rest]
         (ß (ISeq) cons(arg1, rest))
     )
 
-    (§ defn ISeq listStar(Object arg1, Object arg2, ISeq rest)
+    (§ defn #_"ISeq" listStar [#_"Object" arg1, #_"Object" arg2, #_"ISeq" rest]
         (ß (ISeq) cons(arg1, cons(arg2, rest)))
     )
 
-    (§ defn ISeq listStar(Object arg1, Object arg2, Object arg3, ISeq rest)
+    (§ defn #_"ISeq" listStar [#_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"ISeq" rest]
         (ß (ISeq) cons(arg1, cons(arg2, cons(arg3, rest))))
     )
 
-    (§ defn ISeq listStar(Object arg1, Object arg2, Object arg3, Object arg4, ISeq rest)
+    (§ defn #_"ISeq" listStar [#_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"ISeq" rest]
         (ß (ISeq) cons(arg1, cons(arg2, cons(arg3, cons(arg4, rest)))))
     )
 
-    (§ defn ISeq listStar(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, ISeq rest)
+    (§ defn #_"ISeq" listStar [#_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"ISeq" rest]
         (ß (ISeq) cons(arg1, cons(arg2, cons(arg3, cons(arg4, cons(arg5, rest))))))
     )
 
-    (§ defn ISeq arrayToList(Object[] a)
+    (§ defn #_"ISeq" arrayToList [#_"Object[]" a]
         (let [#_"ISeq" ret nil]
             (loop-when-recur [(ß int i = a.length - 1)] (ß i >= 0) [(ß --i)]
                 (ß ret = (ISeq) cons(a[i], ret))
@@ -38677,7 +40190,7 @@
         )
     )
 
-    (§ defn Object[] object_array(Object sizeOrSeq)
+    (§ defn #_"Object[]" object_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
                 (ß new Object[((Number) sizeOrSeq).intValue()])
@@ -38697,7 +40210,7 @@
         )
     )
 
-    (§ defn Object[] toArray(Object coll)
+    (§ defn #_"Object[]" toArray [#_"Object" coll]
         (cond (ß coll == nil)
             (do
                 (ß EMPTY_ARRAY)
@@ -38752,7 +40265,7 @@
         )
     )
 
-    (§ defn Object[] seqToArray(ISeq seq)
+    (§ defn #_"Object[]" seqToArray [#_"ISeq" seq]
         (let [#_"int" len (ß length(seq))]
             (let [#_"Object[]" ret (ß new Object[len])]
                 (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß ++i, seq = seq.next())]
@@ -38764,7 +40277,7 @@
     )
 
     ;; supports java Collection.toArray(T[])
-    (§ defn Object[] seqToPassedArray(ISeq seq, Object[] passed)
+    (§ defn #_"Object[]" seqToPassedArray [#_"ISeq" seq, #_"Object[]" passed]
         (let [#_"Object[]" dest passed]
             (let [#_"int" len (ß count(seq))]
                 (when (ß len > dest.length)
@@ -38781,13 +40294,13 @@
         )
     )
 
-    (§ defn Object seqToTypedArray(ISeq seq)
+    (§ defn #_"Object" seqToTypedArray [#_"ISeq" seq]
         (let [#_"Class" type (ß (seq != nil && seq.first() != nil) ? seq.first().getClass() :or Object.class)]
             (ß seqToTypedArray(type, seq))
         )
     )
 
-    (§ defn Object seqToTypedArray(Class type, ISeq seq)
+    (§ defn #_"Object" seqToTypedArray [#_"Class" type, #_"ISeq" seq]
         (let [#_"Object" ret (ß Array.newInstance(type, length(seq)))]
             (cond (ß type == Integer.TYPE)
                 (do
@@ -38830,7 +40343,7 @@
         )
     )
 
-    (§ defn int length(ISeq list)
+    (§ defn #_"int" length [#_"ISeq" list]
         (let [#_"int" i 0]
             (loop-when-recur [(ß ISeq c = list)] (ß c != nil) [(ß c = c.next())]
                 (ß i++)
@@ -38839,7 +40352,7 @@
         )
     )
 
-    (§ defn int boundedLength(ISeq list, int limit)
+    (§ defn #_"int" boundedLength [#_"ISeq" list, #_"int" limit]
         (let [#_"int" i 0]
             (loop-when-recur [(ß ISeq c = list)] (ß c != nil && i <= limit) [(ß c = c.next())]
                 (ß i++)
@@ -38848,20 +40361,20 @@
         )
     )
 
-    (§ defn Character readRet(int ret)
+    (§ defn #_"Character" readRet [#_"int" ret]
         (when (ß ret == -1)
             (§ return nil)
         )
         (ß box((char) ret))
     )
 
-    (§ defn Character readChar(Reader r) (§ throws IOException)
+    (§ defn #_"Character" readChar [#_"Reader" r] (§ throws IOException)
         (let [#_"int" ret (ß r.read())]
             (ß readRet(ret))
         )
     )
 
-    (§ defn Character peekChar(Reader r) (§ throws IOException)
+    (§ defn #_"Character" peekChar [#_"Reader" r] (§ throws IOException)
         (§ let [#_"int" ret]
             (if (ß r instanceof PushbackReader)
                 (do
@@ -38879,45 +40392,45 @@
         )
     )
 
-    (§ defn int getLineNumber(Reader r)
+    (§ defn #_"int" getLineNumber [#_"Reader" r]
         (when (ß r instanceof LineNumberingPushbackReader)
             (§ return (ß ((LineNumberingPushbackReader) r).getLineNumber()))
         )
         0
     )
 
-    (§ defn int getColumnNumber(Reader r)
+    (§ defn #_"int" getColumnNumber [#_"Reader" r]
         (when (ß r instanceof LineNumberingPushbackReader)
             (§ return (ß ((LineNumberingPushbackReader) r).getColumnNumber()))
         )
         0
     )
 
-    (§ defn LineNumberingPushbackReader getLineNumberingReader(Reader r)
+    (§ defn #_"LineNumberingPushbackReader" getLineNumberingReader [#_"Reader" r]
         (when (ß isLineNumberingReader(r))
             (§ return (ß (LineNumberingPushbackReader) r))
         )
         (ß new LineNumberingPushbackReader(r))
     )
 
-    (§ defn boolean isLineNumberingReader(Reader r)
+    (§ defn #_"boolean" isLineNumberingReader [#_"Reader" r]
         (ß (r instanceof LineNumberingPushbackReader))
     )
 
-    (§ defn boolean isReduced(Object r)
+    (§ defn #_"boolean" isReduced [#_"Object" r]
         (ß (r instanceof Reduced))
     )
 
-    (§ defn String resolveClassNameInContext(String className)
+    (§ defn #_"String" resolveClassNameInContext [#_"String" className]
         ;; todo - look up in context var
         className
     )
 
-    (§ defn boolean suppressRead()
+    (§ defn #_"boolean" suppressRead []
         (ß booleanCast(SUPPRESS_READ.deref()))
     )
 
-    (§ defn String printString(Object x)
+    (§ defn #_"String" printString [#_"Object" x]
         (try
             (let [#_"StringWriter" sw (ß new StringWriter())]
                 (ß print(x, sw))
@@ -38929,17 +40442,17 @@
         )
     )
 
-    (§ defn Object readString(String s)
+    (§ defn #_"Object" readString [#_"String" s]
         (ß readString(s, nil))
     )
 
-    (§ defn Object readString(String s, Object opts)
+    (§ defn #_"Object" readString [#_"String" s, #_"Object" opts]
         (let [#_"PushbackReader" r (ß new PushbackReader(new StringReader(s)))]
             (ß LispReader.read(r, opts))
         )
     )
 
-    (§ defn void print(Object x, Writer w) (§ throws IOException)
+    (§ defn #_"void" print [#_"Object" x, #_"Writer" w] (§ throws IOException)
         ;; call multimethod
         (if (ß PRINT_INITIALIZED.isBound() && RT.booleanCast(PRINT_INITIALIZED.deref()))
             (do
@@ -39167,7 +40680,7 @@
         nil
     )
 
-    (§ defn- void printInnerSeq(ISeq x, Writer w) (§ throws IOException)
+    (§ defn- #_"void" printInnerSeq [#_"ISeq" x, #_"Writer" w] (§ throws IOException)
         (loop-when-recur [(ß ISeq s = x)] (ß s != nil) [(ß s = s.next())]
             (ß print(s.first(), w))
             (when (ß s.next() != nil)
@@ -39177,7 +40690,7 @@
         nil
     )
 
-    (§ defn void formatAesthetic(Writer w, Object obj) (§ throws IOException)
+    (§ defn #_"void" formatAesthetic [#_"Writer" w, #_"Object" obj] (§ throws IOException)
         (if (ß obj == nil)
             (do
                 (ß w.write("nil"))
@@ -39189,7 +40702,7 @@
         nil
     )
 
-    (§ defn void formatStandard(Writer w, Object obj) (§ throws IOException)
+    (§ defn #_"void" formatStandard [#_"Writer" w, #_"Object" obj] (§ throws IOException)
         (cond (ß obj == nil)
             (do
                 (ß w.write("nil"))
@@ -39246,7 +40759,7 @@
         nil
     )
 
-    (§ defn Object format(Object o, String s, Object... args) (§ throws IOException)
+    (§ defn #_"Object" format [#_"Object" o, #_"String" s, #_"Object..." args] (§ throws IOException)
         (§ let [#_"Writer" w]
             (cond (ß o == nil)
                 (do
@@ -39269,7 +40782,7 @@
         )
     )
 
-    (§ defn ISeq doFormat(Writer w, String s, ISeq args) (§ throws IOException)
+    (§ defn #_"ISeq" doFormat [#_"Writer" w, #_"String" s, #_"ISeq" args] (§ throws IOException)
         (loop-when-recur [(ß int i = 0)] (ß i < s.length()) [(ß )]
             (let [#_"char" c (ß s.charAt(i++))]
                 (§ switch (ß Character.toLowerCase(c))
@@ -39352,17 +40865,18 @@
         args
     )
 
-    (§ defn Object[] setValues(Object... vals)
+    (§ defn #_"Object[]" setValues [#_"Object..." vals]
         (when (ß vals.length > 0)
             (§ return vals)
         )
         nil
     )
 
-    (§ defn ClassLoader makeClassLoader()
+    (§ defn #_"ClassLoader" makeClassLoader []
         (ß (ClassLoader) AccessController.doPrivileged(new PrivilegedAction()
             (§ reify
-                (§ method Object run()
+                #_method
+                (§ defn #_"Object" run [this]
                     (try
                         (ß Var.pushThreadBindings(RT.map(USE_CONTEXT_CLASSLOADER, RT.T)))
                         (ß new DynamicClassLoader(baseLoader()))
@@ -39375,7 +40889,7 @@
         )
     )
 
-    (§ defn ClassLoader baseLoader()
+    (§ defn #_"ClassLoader" baseLoader []
         (cond (ß Compiler.LOADER.isBound())
             (do
                 (§ return (ß (ClassLoader) Compiler.LOADER.deref()))
@@ -39388,7 +40902,7 @@
         (ß Compiler.class.getClassLoader())
     )
 
-    (§ defn InputStream resourceAsStream(ClassLoader loader, String name)
+    (§ defn #_"InputStream" resourceAsStream [#_"ClassLoader" loader, #_"String" name]
         (if (ß loader == nil)
             (do
                 (ß ClassLoader.getSystemResourceAsStream(name))
@@ -39399,7 +40913,7 @@
         )
     )
 
-    (§ defn URL getResource(ClassLoader loader, String name)
+    (§ defn #_"URL" getResource [#_"ClassLoader" loader, #_"String" name]
         (if (ß loader == nil)
             (do
                 (ß ClassLoader.getSystemResource(name))
@@ -39410,7 +40924,7 @@
         )
     )
 
-    (§ defn Class classForName(String name, boolean load, ClassLoader loader)
+    (§ defn #_"Class" classForName [#_"String" name, #_"boolean" load, #_"ClassLoader" loader]
         (try
             (let [#_"Class" c nil]
                 (when (ß !(loader instanceof DynamicClassLoader))
@@ -39427,15 +40941,15 @@
         )
     )
 
-    (§ defn Class classForName(String name)
+    (§ defn #_"Class" classForName [#_"String" name]
         (ß classForName(name, true, baseLoader()))
     )
 
-    (§ defn Class classForNameNonLoading(String name)
+    (§ defn #_"Class" classForNameNonLoading [#_"String" name]
         (ß classForName(name, false, baseLoader()))
     )
 
-    (§ defn Class loadClassForName(String name)
+    (§ defn #_"Class" loadClassForName [#_"String" name]
         (try
             (ß classForNameNonLoading(name))
             (catch Exception e
@@ -39452,156 +40966,156 @@
         (ß classForName(name))
     )
 
-    (§ defn float aget(float[] xs, int i)
+    (§ defn #_"float" aget [#_"float[]" xs, #_"int" i]
         (ß xs[i])
     )
 
-    (§ defn float aset(float[] xs, int i, float v)
+    (§ defn #_"float" aset [#_"float[]" xs, #_"int" i, #_"float" v]
         (ß xs[i] = v)
         v
     )
 
-    (§ defn int alength(float[] xs)
+    (§ defn #_"int" alength [#_"float[]" xs]
         (ß xs.length)
     )
 
-    (§ defn float[] aclone(float[] xs)
+    (§ defn #_"float[]" aclone [#_"float[]" xs]
         (ß xs.clone())
     )
 
-    (§ defn double aget(double[] xs, int i)
+    (§ defn #_"double" aget [#_"double[]" xs, #_"int" i]
         (ß xs[i])
     )
 
-    (§ defn double aset(double[] xs, int i, double v)
+    (§ defn #_"double" aset [#_"double[]" xs, #_"int" i, #_"double" v]
         (ß xs[i] = v)
         v
     )
 
-    (§ defn int alength(double[] xs)
+    (§ defn #_"int" alength [#_"double[]" xs]
         (ß xs.length)
     )
 
-    (§ defn double[] aclone(double[] xs)
+    (§ defn #_"double[]" aclone [#_"double[]" xs]
         (ß xs.clone())
     )
 
-    (§ defn int aget(int[] xs, int i)
+    (§ defn #_"int" aget [#_"int[]" xs, #_"int" i]
         (ß xs[i])
     )
 
-    (§ defn int aset(int[] xs, int i, int v)
+    (§ defn #_"int" aset [#_"int[]" xs, #_"int" i, #_"int" v]
         (ß xs[i] = v)
         v
     )
 
-    (§ defn int alength(int[] xs)
+    (§ defn #_"int" alength [#_"int[]" xs]
         (ß xs.length)
     )
 
-    (§ defn int[] aclone(int[] xs)
+    (§ defn #_"int[]" aclone [#_"int[]" xs]
         (ß xs.clone())
     )
 
-    (§ defn long aget(long[] xs, int i)
+    (§ defn #_"long" aget [#_"long[]" xs, #_"int" i]
         (ß xs[i])
     )
 
-    (§ defn long aset(long[] xs, int i, long v)
+    (§ defn #_"long" aset [#_"long[]" xs, #_"int" i, #_"long" v]
         (ß xs[i] = v)
         v
     )
 
-    (§ defn int alength(long[] xs)
+    (§ defn #_"int" alength [#_"long[]" xs]
         (ß xs.length)
     )
 
-    (§ defn long[] aclone(long[] xs)
+    (§ defn #_"long[]" aclone [#_"long[]" xs]
         (ß xs.clone())
     )
 
-    (§ defn char aget(char[] xs, int i)
+    (§ defn #_"char" aget [#_"char[]" xs, #_"int" i]
         (ß xs[i])
     )
 
-    (§ defn char aset(char[] xs, int i, char v)
+    (§ defn #_"char" aset [#_"char[]" xs, #_"int" i, #_"char" v]
         (ß xs[i] = v)
         v
     )
 
-    (§ defn int alength(char[] xs)
+    (§ defn #_"int" alength [#_"char[]" xs]
         (ß xs.length)
     )
 
-    (§ defn char[] aclone(char[] xs)
+    (§ defn #_"char[]" aclone [#_"char[]" xs]
         (ß xs.clone())
     )
 
-    (§ defn byte aget(byte[] xs, int i)
+    (§ defn #_"byte" aget [#_"byte[]" xs, #_"int" i]
         (ß xs[i])
     )
 
-    (§ defn byte aset(byte[] xs, int i, byte v)
+    (§ defn #_"byte" aset [#_"byte[]" xs, #_"int" i, #_"byte" v]
         (ß xs[i] = v)
         v
     )
 
-    (§ defn int alength(byte[] xs)
+    (§ defn #_"int" alength [#_"byte[]" xs]
         (ß xs.length)
     )
 
-    (§ defn byte[] aclone(byte[] xs)
+    (§ defn #_"byte[]" aclone [#_"byte[]" xs]
         (ß xs.clone())
     )
 
-    (§ defn short aget(short[] xs, int i)
+    (§ defn #_"short" aget [#_"short[]" xs, #_"int" i]
         (ß xs[i])
     )
 
-    (§ defn short aset(short[] xs, int i, short v)
+    (§ defn #_"short" aset [#_"short[]" xs, #_"int" i, #_"short" v]
         (ß xs[i] = v)
         v
     )
 
-    (§ defn int alength(short[] xs)
+    (§ defn #_"int" alength [#_"short[]" xs]
         (ß xs.length)
     )
 
-    (§ defn short[] aclone(short[] xs)
+    (§ defn #_"short[]" aclone [#_"short[]" xs]
         (ß xs.clone())
     )
 
-    (§ defn boolean aget(boolean[] xs, int i)
+    (§ defn #_"boolean" aget [#_"boolean[]" xs, #_"int" i]
         (ß xs[i])
     )
 
-    (§ defn boolean aset(boolean[] xs, int i, boolean v)
+    (§ defn #_"boolean" aset [#_"boolean[]" xs, #_"int" i, #_"boolean" v]
         (ß xs[i] = v)
         v
     )
 
-    (§ defn int alength(boolean[] xs)
+    (§ defn #_"int" alength [#_"boolean[]" xs]
         (ß xs.length)
     )
 
-    (§ defn boolean[] aclone(boolean[] xs)
+    (§ defn #_"boolean[]" aclone [#_"boolean[]" xs]
         (ß xs.clone())
     )
 
-    (§ defn Object aget(Object[] xs, int i)
+    (§ defn #_"Object" aget [#_"Object[]" xs, #_"int" i]
         (ß xs[i])
     )
 
-    (§ defn Object aset(Object[] xs, int i, Object v)
+    (§ defn #_"Object" aset [#_"Object[]" xs, #_"int" i, #_"Object" v]
         (ß xs[i] = v)
         v
     )
 
-    (§ defn int alength(Object[] xs)
+    (§ defn #_"int" alength [#_"Object[]" xs]
         (ß xs.length)
     )
 
-    (§ defn Object[] aclone(Object[] xs)
+    (§ defn #_"Object[]" aclone [#_"Object[]" xs]
         (ß xs.clone())
     )
 )
@@ -39619,18 +41133,20 @@
 (§ import java.util.Enumeration)
 
 (class-ns SeqEnumeration (§ implements Enumeration)
-    (§ field ISeq seq)
+    (§ field #_"ISeq" seq)
 
-    (§ constructor SeqEnumeration(ISeq seq)
+    (§ constructor #_"SeqEnumeration" SeqEnumeration [#_"ISeq" seq]
         (ß this.seq = seq)
         this
     )
 
-    (§ method boolean hasMoreElements()
+    #_method
+    (§ defn #_"boolean" hasMoreElements [this]
         (ß (seq != nil))
     )
 
-    (§ method Object nextElement()
+    #_method
+    (§ defn #_"Object" nextElement [this]
         (let [#_"Object" ret (ß RT.first(seq))]
             (ß seq = RT.next(seq))
             ret
@@ -39645,25 +41161,26 @@
 (§ import java.util.NoSuchElementException)
 
 (class-ns SeqIterator (§ implements Iterator)
-    (§ def Object START = new Object())
+    (§ def #_"Object" START (ß new Object()))
 
-    (§ field Object seq)
-    (§ field Object next)
+    (§ field #_"Object" seq)
+    (§ field #_"Object" next)
 
-    (§ constructor SeqIterator(Object o)
+    (§ constructor #_"SeqIterator" SeqIterator [#_"Object" o]
         (ß seq = START)
         (ß next = o)
         this
     )
 
     ;; preserved for binary compatibility
-    (§ constructor SeqIterator(ISeq o)
+    (§ constructor #_"SeqIterator" SeqIterator [#_"ISeq" o]
         (ß seq = START)
         (ß next = o)
         this
     )
 
-    (§ method boolean hasNext()
+    #_method
+    (§ defn #_"boolean" hasNext [this]
         (cond (ß seq == START)
             (do
                 (ß seq = nil)
@@ -39677,7 +41194,8 @@
         (ß (next != nil))
     )
 
-    (§ method Object next() (§ throws NoSuchElementException)
+    #_method
+    (§ defn #_"Object" next [this] (§ throws NoSuchElementException)
         (when (ß !hasNext())
             (throw (ß new NoSuchElementException()))
         )
@@ -39685,7 +41203,8 @@
         (ß RT.first(next))
     )
 
-    (§ method void remove()
+    #_method
+    (§ defn #_"void" remove [this]
         (throw (ß new UnsupportedOperationException()))
     )
 )
@@ -39720,46 +41239,51 @@
 (java-ns cloiure.lang.StringSeq
 
 (class-ns StringSeq (§ extends ASeq) (§ implements IndexedSeq)
-    (§ field CharSequence s)
-    (§ field int i)
+    (§ field #_"CharSequence" s)
+    (§ field #_"int" i)
 
-    (§ defn StringSeq create(CharSequence s)
+    (§ defn #_"StringSeq" create [#_"CharSequence" s]
         (when (ß s.length() == 0)
             (§ return nil)
         )
         (ß new StringSeq(nil, s, 0))
     )
 
-    (§ constructor StringSeq(IPersistentMap meta, CharSequence s, int i)
+    (§ constructor #_"StringSeq" StringSeq [#_"IPersistentMap" meta, #_"CharSequence" s, #_"int" i]
         (§ super(meta))
         (ß this.s = s)
         (ß this.i = i)
         this
     )
 
-    (§ method Obj withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"Obj" withMeta [this, #_"IPersistentMap" meta]
         (when (ß meta == meta())
             (§ return this)
         )
         (ß new StringSeq(meta, s, i))
     )
 
-    (§ method Object first()
+    #_method
+    (§ defn #_"Object" first [this]
         (ß Character.valueOf(s.charAt(i)))
     )
 
-    (§ method ISeq next()
+    #_method
+    (§ defn #_"ISeq" next [this]
         (when (ß i + 1 < s.length())
             (§ return (ß new StringSeq(_meta, s, i + 1)))
         )
         nil
     )
 
-    (§ method int index()
+    #_method
+    (§ defn #_"int" index [this]
         i
     )
 
-    (§ method int count()
+    #_method
+    (§ defn #_"int" count [this]
         (ß s.length() - i)
     )
 )
@@ -39768,14 +41292,15 @@
 (java-ns cloiure.lang.Symbol
 
 (class-ns Symbol (§ extends AFn) (§ implements IObj, Comparable, Named, IHashEq)
-    (§ field String ns)
-    (§ field String name)
-    (§ field- int _hasheq)
-    (§ field IPersistentMap _meta)
+    (§ field #_"String" ns)
+    (§ field #_"String" name)
+    (§ field- #_"int" _hasheq)
+    (§ field #_"IPersistentMap" _meta)
     #_transient
-    (§ field String _str)
+    (§ field #_"String" _str)
 
-    (§ method String toString()
+    #_method
+    (§ defn #_"String" toString [this]
         (when (ß _str == nil)
             (if (ß ns != nil)
                 (do
@@ -39789,29 +41314,31 @@
         (ß _str)
     )
 
-    (§ method String getNamespace()
+    #_method
+    (§ defn #_"String" getNamespace [this]
         ns
     )
 
-    (§ method String getName()
+    #_method
+    (§ defn #_"String" getName [this]
         name
     )
 
     ;; the create thunks preserve binary compatibility with code compiled
     ;; against earlier version of Cloiure and can be removed (at some point).
-    (§ defn Symbol create(String ns, String name)
+    (§ defn #_"Symbol" create [#_"String" ns, #_"String" name]
         (ß Symbol.intern(ns, name))
     )
 
-    (§ defn Symbol create(String nsname)
+    (§ defn #_"Symbol" create [#_"String" nsname]
         (ß Symbol.intern(nsname))
     )
 
-    (§ defn Symbol intern(String ns, String name)
+    (§ defn #_"Symbol" intern [#_"String" ns, #_"String" name]
         (ß new Symbol(ns, name))
     )
 
-    (§ defn Symbol intern(String nsname)
+    (§ defn #_"Symbol" intern [#_"String" nsname]
         (let [#_"int" i (ß nsname.indexOf(\/))]
             (if (ß i == -1 || nsname.equals("/"))
                 (do
@@ -39824,14 +41351,15 @@
         )
     )
 
-    (§ constructor- Symbol(String ns_interned, String name_interned)
+    (§ constructor- #_"Symbol" Symbol [#_"String" ns_interned, #_"String" name_interned]
         (ß this.name = name_interned)
         (ß this.ns = ns_interned)
         (ß this._meta = nil)
         this
     )
 
-    (§ method boolean equals(Object o)
+    #_method
+    (§ defn #_"boolean" equals [this, #_"Object" o]
         (when (ß this == o)
             (§ return true)
         )
@@ -39844,29 +41372,33 @@
         )
     )
 
-    (§ method int hashCode()
+    #_method
+    (§ defn #_"int" hashCode [this]
         (ß Util.hashCombine(name.hashCode(), Util.hash(ns)))
     )
 
-    (§ method int hasheq()
+    #_method
+    (§ defn #_"int" hasheq [this]
         (when (ß _hasheq == 0)
             (ß _hasheq = Util.hashCombine(Murmur3.hashUnencodedChars(name), Util.hash(ns)))
         )
         (ß _hasheq)
     )
 
-    (§ method IObj withMeta(IPersistentMap meta)
+    #_method
+    (§ defn #_"IObj" withMeta [this, #_"IPersistentMap" meta]
         (ß new Symbol(meta, ns, name))
     )
 
-    (§ constructor- Symbol(IPersistentMap meta, String ns, String name)
+    (§ constructor- #_"Symbol" Symbol [#_"IPersistentMap" meta, #_"String" ns, #_"String" name]
         (ß this.name = name)
         (ß this.ns = ns)
         (ß this._meta = meta)
         this
     )
 
-    (§ method int compareTo(Object o)
+    #_method
+    (§ defn #_"int" compareTo [this, #_"Object" o]
         (let [#_"Symbol" s (ß (Symbol) o)]
             (when (ß this.equals(o))
                 (§ return 0)
@@ -39888,15 +41420,18 @@
         )
     )
 
-    (§ method Object invoke(Object obj)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" obj]
         (ß RT.get(obj, this))
     )
 
-    (§ method Object invoke(Object obj, Object notFound)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" obj, #_"Object" notFound]
         (ß RT.get(obj, this, notFound))
     )
 
-    (§ method IPersistentMap meta()
+    #_method
+    (§ defn #_"IPersistentMap" meta [this]
         (ß _meta)
     )
 )
@@ -39905,27 +41440,29 @@
 (java-ns cloiure.lang.TaggedLiteral
 
 (class-ns TaggedLiteral (§ implements ILookup)
-    (§ def Keyword TAG_KW = Keyword.intern("tag"))
-    (§ def Keyword FORM_KW = Keyword.intern("form"))
+    (§ def #_"Keyword" TAG_KW (ß Keyword.intern("tag")))
+    (§ def #_"Keyword" FORM_KW (ß Keyword.intern("form")))
 
-    (§ field Symbol tag)
-    (§ field Object form)
+    (§ field #_"Symbol" tag)
+    (§ field #_"Object" form)
 
-    (§ defn TaggedLiteral create(Symbol tag, Object form)
+    (§ defn #_"TaggedLiteral" create [#_"Symbol" tag, #_"Object" form]
         (ß new TaggedLiteral(tag, form))
     )
 
-    (§ constructor- TaggedLiteral(Symbol tag, Object form)
+    (§ constructor- #_"TaggedLiteral" TaggedLiteral [#_"Symbol" tag, #_"Object" form]
         (ß this.tag = tag)
         (ß this.form = form)
         this
     )
 
-    (§ method Object valAt(Object key)
+    #_method
+    (§ defn #_"Object" valAt [this, #_"Object" key]
         (ß valAt(key, nil))
     )
 
-    (§ method Object valAt(Object key, Object notFound)
+    #_method
+    (§ defn #_"Object" valAt [this, #_"Object" key, #_"Object" notFound]
         (cond (ß FORM_KW.equals(key))
             (do
                 (ß this.form)
@@ -39942,7 +41479,8 @@
     )
 
     (§ anno @Override)
-    (§ method boolean equals(Object o)
+    #_method
+    (§ defn #_"boolean" equals [this, #_"Object" o]
         (when (ß this == o)
             (§ return true)
         )
@@ -39963,7 +41501,8 @@
     )
 
     (§ anno @Override)
-    (§ method int hashCode()
+    #_method
+    (§ defn #_"int" hashCode [this]
         (let [#_"int" result (ß Util.hash(tag))]
             (ß result = 31 * result + Util.hash(form))
             result
@@ -39978,13 +41517,15 @@
 (§ import java.util.*)
 
 (class-ns TransactionalHashMap #_"<K, V>" (§ extends AbstractMap #_"<K, V>") (§ implements ConcurrentMap #_"<K, V>")
-    (§ field Ref[] bins)
+    (§ field #_"Ref[]" bins)
 
-    (§ method IPersistentMap mapAt(int bin)
+    #_method
+    (§ defn #_"IPersistentMap" mapAt [this, #_"int" bin]
         (ß (IPersistentMap) bins[bin].deref())
     )
 
-    (§ method int binFor(Object k)
+    #_method
+    (§ defn #_"int" binFor [this, #_"Object" k]
         ;; spread hashes, a la Cliff Click
         (let [#_"int" h (ß k.hashCode())]
             (ß h ^= (h >>> 20) :xor (h >>> 12))
@@ -39993,16 +41534,17 @@
         )
     )
 
-    (§ method Entry entryAt(Object k)
+    #_method
+    (§ defn #_"Entry" entryAt [this, #_"Object" k]
         (ß mapAt(binFor(k)).entryAt(k))
     )
 
-    (§ constructor TransactionalHashMap()
+    (§ constructor #_"TransactionalHashMap" TransactionalHashMap []
         (§ this(421))
         this
     )
 
-    (§ constructor TransactionalHashMap(int nBins)
+    (§ constructor #_"TransactionalHashMap" TransactionalHashMap [#_"int" nBins]
         (ß bins = new Ref[nBins])
         (loop-when-recur [(ß int i = 0)] (ß i < nBins) [(ß i++)]
             (ß bins[i] = new Ref(PersistentHashMap.EMPTY))
@@ -40010,13 +41552,14 @@
         this
     )
 
-    (§ constructor TransactionalHashMap(Map<? extends K, ? extends V> m)
+    (§ constructor #_"TransactionalHashMap" TransactionalHashMap [#_"Map<? extends K, ? extends V>" m]
         (§ this(m.size()))
         (ß putAll(m))
         this
     )
 
-    (§ method int size()
+    #_method
+    (§ defn #_"int" size [this]
         (let [#_"int" n 0]
             (loop-when-recur [(ß int i = 0)] (ß i < bins.length) [(ß i++)]
                 (ß n += mapAt(i).count())
@@ -40025,15 +41568,18 @@
         )
     )
 
-    (§ method boolean isEmpty()
+    #_method
+    (§ defn #_"boolean" isEmpty [this]
         (ß (size() == 0))
     )
 
-    (§ method boolean containsKey(Object k)
+    #_method
+    (§ defn #_"boolean" containsKey [this, #_"Object" k]
         (ß (entryAt(k) != nil))
     )
 
-    (§ method V get(Object k)
+    #_method
+    (§ defn #_"V" get [this, #_"Object" k]
         (let [#_"Entry" e (ß entryAt(k))]
             (when (ß e != nil)
                 (§ return (ß (V) e.getValue()))
@@ -40042,7 +41588,8 @@
         )
     )
 
-    (§ method V put(K k, V v)
+    #_method
+    (§ defn #_"V" put [this, #_"K" k, #_"V" v]
         (let [#_"Ref" r (ß bins[binFor(k)])]
             (let [#_"IPersistentMap" map (ß (IPersistentMap) r.deref())]
                 (let [#_"Object" ret (ß map.valAt(k))]
@@ -40053,7 +41600,8 @@
         )
     )
 
-    (§ method V remove(Object k)
+    #_method
+    (§ defn #_"V" remove [this, #_"Object" k]
         (let [#_"Ref" r (ß bins[binFor(k)])]
             (let [#_"IPersistentMap" map (ß (IPersistentMap) r.deref())]
                 (let [#_"Object" ret (ß map.valAt(k))]
@@ -40064,7 +41612,8 @@
         )
     )
 
-    (§ method void putAll(Map<? extends K, ? extends V> map)
+    #_method
+    (§ defn #_"void" putAll [this, #_"Map<? extends K, ? extends V>" map]
         (loop-when-recur [(ß Iterator i = map.entrySet().iterator())] (ß i.hasNext()) [(ß )]
             (let [(ß Entry<K, V> e = (Entry) i.next())]
                 (ß put(e.getKey(), e.getValue()))
@@ -40073,7 +41622,8 @@
         nil
     )
 
-    (§ method void clear()
+    #_method
+    (§ defn #_"void" clear [this]
         (loop-when-recur [(ß int i = 0)] (ß i < bins.length) [(ß i++)]
             (let [#_"Ref" r (ß bins[i])]
                 (let [#_"IPersistentMap" map (ß (IPersistentMap) r.deref())]
@@ -40086,7 +41636,8 @@
         nil
     )
 
-    (§ method Set<Entry<K, V>> entrySet()
+    #_method
+    (§ defn #_"Set<Entry<K, V>>" entrySet [this]
         (let [(ß ArrayList<Map.Entry<K, V>> entries = new ArrayList(bins.length))]
             (loop-when-recur [(ß int i = 0)] (ß i < bins.length) [(ß i++)]
                 (let [#_"IPersistentMap" map (ß mapAt(i))]
@@ -40097,11 +41648,13 @@
             )
             (ß new AbstractSet<Entry<K, V>>()
                 (§ reify
-                    (§ method Iterator iterator()
+                    #_method
+                    (§ defn #_"Iterator" iterator [this]
                         (ß Collections.unmodifiableList(entries).iterator())
                     )
 
-                    (§ method int size()
+                    #_method
+                    (§ defn #_"int" size [this]
                         (ß entries.size())
                     )
                 )
@@ -40109,7 +41662,8 @@
         )
     )
 
-    (§ method V putIfAbsent(K k, V v)
+    #_method
+    (§ defn #_"V" putIfAbsent [this, #_"K" k, #_"V" v]
         (let [#_"Ref" r (ß bins[binFor(k)])]
             (let [#_"IPersistentMap" map (ß (IPersistentMap) r.deref())]
                 (let [#_"Entry" e (ß map.entryAt(k))]
@@ -40127,7 +41681,8 @@
         )
     )
 
-    (§ method boolean remove(Object k, Object v)
+    #_method
+    (§ defn #_"boolean" remove [this, #_"Object" k, #_"Object" v]
         (let [#_"Ref" r (ß bins[binFor(k)])]
             (let [#_"IPersistentMap" map (ß (IPersistentMap) r.deref())]
                 (let [#_"Entry" e (ß map.entryAt(k))]
@@ -40141,7 +41696,8 @@
         )
     )
 
-    (§ method boolean replace(K k, V oldv, V newv)
+    #_method
+    (§ defn #_"boolean" replace [this, #_"K" k, #_"V" oldv, #_"V" newv]
         (let [#_"Ref" r (ß bins[binFor(k)])]
             (let [#_"IPersistentMap" map (ß (IPersistentMap) r.deref())]
                 (let [#_"Entry" e (ß map.entryAt(k))]
@@ -40155,7 +41711,8 @@
         )
     )
 
-    (§ method V replace(K k, V v)
+    #_method
+    (§ defn #_"V" replace [this, #_"K" k, #_"V" v]
         (let [#_"Ref" r (ß bins[binFor(k)])]
             (let [#_"IPersistentMap" map (ß (IPersistentMap) r.deref())]
                 (let [#_"Entry" e (ß map.entryAt(k))]
@@ -40180,35 +41737,38 @@
 (§ import java.util.LinkedList)
 
 (class-ns TransformerIterator (§ implements Iterator)
-    (§ def- Buffer EMPTY = new Empty())
-    (§ def- Object NONE = new Object())
+    (§ def- #_"Buffer" EMPTY (ß new Empty()))
+    (§ def- #_"Object" NONE (ß new Object()))
 
     ;; Source
-    (§ field- Iterator sourceIter)
-    (§ field- IFn xf)
-    (§ field- boolean multi)
+    (§ field- #_"Iterator" sourceIter)
+    (§ field- #_"IFn" xf)
+    (§ field- #_"boolean" multi)
 
     ;; Iteration state
     #_volatile
-    (§ field- Buffer buffer = EMPTY)
+    (§ field- #_"Buffer" buffer (ß EMPTY))
     #_volatile
-    (§ field- Object next = NONE)
+    (§ field- #_"Object" next (ß NONE))
     #_volatile
-    (§ field- boolean completed = false)
+    (§ field- #_"boolean" completed (ß false))
 
-    (§ constructor- TransformerIterator(IFn xform, Iterator sourceIter, boolean multi)
+    (§ constructor- #_"TransformerIterator" TransformerIterator [#_"IFn" xform, #_"Iterator" sourceIter, #_"boolean" multi]
         (ß this.sourceIter = sourceIter)
         (ß this.xf = (IFn) xform.invoke(new AFn()
             (§ reify
-                (§ method Object invoke()
+                #_method
+                (§ defn #_"Object" invoke [this]
                     nil
                 )
 
-                (§ method Object invoke(Object acc)
+                #_method
+                (§ defn #_"Object" invoke [this, #_"Object" acc]
                     acc
                 )
 
-                (§ method Object invoke(Object acc, Object o)
+                #_method
+                (§ defn #_"Object" invoke [this, #_"Object" acc, #_"Object" o]
                     (ß buffer = buffer.add(o))
                     acc
                 )
@@ -40218,11 +41778,11 @@
         this
     )
 
-    (§ defn Iterator create(IFn xform, Iterator source)
+    (§ defn #_"Iterator" create [#_"IFn" xform, #_"Iterator" source]
         (ß new TransformerIterator(xform, source, false))
     )
 
-    (§ defn Iterator createMulti(IFn xform, List sources)
+    (§ defn #_"Iterator" createMulti [#_"IFn" xform, #_"List" sources]
         (let [#_"Iterator[]" iters (ß new Iterator[sources.size()])]
             (loop-when-recur [(ß int i = 0)] (ß i < sources.size()) [(ß i++)]
                 (ß iters[i] = (Iterator)sources.get(i))
@@ -40231,7 +41791,8 @@
         )
     )
 
-    (§ method- boolean step()
+    #_method
+    (§ defn- #_"boolean" step [this]
         (when (ß next != NONE)
             (§ return true)
         )
@@ -40276,11 +41837,13 @@
         true
     )
 
-    (§ method boolean hasNext()
+    #_method
+    (§ defn #_"boolean" hasNext [this]
         (ß step())
     )
 
-    (§ method Object next()
+    #_method
+    (§ defn #_"Object" next [this]
         (when (ß hasNext())
             (let [#_"Object" ret next]
                 (ß next = NONE)
@@ -40290,7 +41853,8 @@
         (throw (ß new NoSuchElementException()))
     )
 
-    (§ method void remove()
+    #_method
+    (§ defn #_"void" remove [this]
         (throw (ß new UnsupportedOperationException()))
     )
 
@@ -40303,19 +41867,23 @@
 
     #_private
     (class-ns Empty (§ implements Buffer)
-        (§ method Buffer add(Object o)
+        #_method
+        (§ defn #_"Buffer" add [this, #_"Object" o]
             (ß new Single(o))
         )
 
-        (§ method Object remove()
+        #_method
+        (§ defn #_"Object" remove [this]
             (throw (ß new IllegalStateException("Removing object from empty buffer")))
         )
 
-        (§ method boolean isEmpty()
+        #_method
+        (§ defn #_"boolean" isEmpty [this]
             true
         )
 
-        (§ method String toString()
+        #_method
+        (§ defn #_"String" toString [this]
             (ß "Empty")
         )
     )
@@ -40323,14 +41891,15 @@
     #_private
     (class-ns Single (§ implements Buffer)
         #_volatile
-        (§ field- Object val)
+        (§ field- #_"Object" val)
 
-        (§ constructor Single(Object o)
+        (§ constructor #_"Single" Single [#_"Object" o]
             (ß this.val = o)
             this
         )
 
-        (§ method Buffer add(Object o)
+        #_method
+        (§ defn #_"Buffer" add [this, #_"Object" o]
             (if (ß val == NONE)
                 (do
                     (ß val = o)
@@ -40342,7 +41911,8 @@
             )
         )
 
-        (§ method Object remove()
+        #_method
+        (§ defn #_"Object" remove [this]
             (when (ß val == NONE)
                 (throw (ß new IllegalStateException("Removing object from empty buffer")))
             )
@@ -40352,53 +41922,60 @@
             )
         )
 
-        (§ method boolean isEmpty()
+        #_method
+        (§ defn #_"boolean" isEmpty [this]
             (ß (val == NONE))
         )
 
-        (§ method String toString()
+        #_method
+        (§ defn #_"String" toString [this]
             (ß "Single: " + val)
         )
     )
 
     #_private
     (class-ns Many (§ implements Buffer)
-        (§ field- Queue vals = new LinkedList())
+        (§ field- #_"Queue" vals (ß new LinkedList()))
 
-        (§ constructor Many(Object o1, Object o2)
+        (§ constructor #_"Many" Many [#_"Object" o1, #_"Object" o2]
             (ß vals.add(o1))
             (ß vals.add(o2))
             this
         )
 
-        (§ method Buffer add(Object o)
+        #_method
+        (§ defn #_"Buffer" add [this, #_"Object" o]
             (ß vals.add(o))
             this
         )
 
-        (§ method Object remove()
+        #_method
+        (§ defn #_"Object" remove [this]
             (ß vals.remove())
         )
 
-        (§ method boolean isEmpty()
+        #_method
+        (§ defn #_"boolean" isEmpty [this]
             (ß vals.isEmpty())
         )
 
-        (§ method String toString()
+        #_method
+        (§ defn #_"String" toString [this]
             (ß "Many: " + vals.toString())
         )
     )
 
     #_private
     (class-ns MultiIterator (§ implements Iterator)
-        (§ field- Iterator[] iters)
+        (§ field- #_"Iterator[]" iters)
 
-        (§ constructor MultiIterator(Iterator[] iters)
+        (§ constructor #_"MultiIterator" MultiIterator [#_"Iterator[]" iters]
             (ß this.iters = iters)
             this
         )
 
-        (§ method boolean hasNext()
+        #_method
+        (§ defn #_"boolean" hasNext [this]
             (doseq [#_"Iterator" iter iters]
                 (when (ß !iter.hasNext())
                     (§ return false)
@@ -40407,7 +41984,8 @@
             true
         )
 
-        (§ method Object next()
+        #_method
+        (§ defn #_"Object" next [this]
             (let [#_"Object[]" nexts (ß new Object[iters.length])]
                 (loop-when-recur [(ß int i = 0)] (ß i < iters.length) [(ß i++)]
                     (ß nexts[i] = iters[i].next())
@@ -40416,7 +41994,8 @@
             )
         )
 
-        (§ method void remove()
+        #_method
+        (§ defn #_"void" remove [this]
             (throw (ß new UnsupportedOperationException()))
         )
     )
@@ -40429,33 +42008,33 @@
 (§ import java.util.RandomAccess)
 
 (class-ns Tuple
-    (§ def int MAX_SIZE = 6)
+    (§ def #_"int" MAX_SIZE (ß 6))
 
-    (§ defn IPersistentVector create()
+    (§ defn #_"IPersistentVector" create []
         (ß PersistentVector.EMPTY)
     )
 
-    (§ defn IPersistentVector create(Object v0)
+    (§ defn #_"IPersistentVector" create [#_"Object" v0]
         (ß RT.vector(v0))
     )
 
-    (§ defn IPersistentVector create(Object v0, Object v1)
+    (§ defn #_"IPersistentVector" create [#_"Object" v0, #_"Object" v1]
         (ß RT.vector(v0, v1))
     )
 
-    (§ defn IPersistentVector create(Object v0, Object v1, Object v2)
+    (§ defn #_"IPersistentVector" create [#_"Object" v0, #_"Object" v1, #_"Object" v2]
         (ß RT.vector(v0, v1, v2))
     )
 
-    (§ defn IPersistentVector create(Object v0, Object v1, Object v2, Object v3)
+    (§ defn #_"IPersistentVector" create [#_"Object" v0, #_"Object" v1, #_"Object" v2, #_"Object" v3]
         (ß RT.vector(v0, v1, v2, v3))
     )
 
-    (§ defn IPersistentVector create(Object v0, Object v1, Object v2, Object v3, Object v4)
+    (§ defn #_"IPersistentVector" create [#_"Object" v0, #_"Object" v1, #_"Object" v2, #_"Object" v3, #_"Object" v4]
         (ß RT.vector(v0, v1, v2, v3, v4))
     )
 
-    (§ defn IPersistentVector create(Object v0, Object v1, Object v2, Object v3, Object v4, Object v5)
+    (§ defn #_"IPersistentVector" create [#_"Object" v0, #_"Object" v1, #_"Object" v2, #_"Object" v3, #_"Object" v4, #_"Object" v5]
         (ß RT.vector(v0, v1, v2, v3, v4, v5))
     )
 )
@@ -40472,7 +42051,7 @@
 (§ import java.lang.ref.ReferenceQueue)
 
 (class-ns Util
-    (§ defn boolean equiv(Object k1, Object k2)
+    (§ defn #_"boolean" equiv [#_"Object" k1, #_"Object" k2]
         (when (ß k1 == k2)
             (§ return true)
         )
@@ -40496,45 +42075,49 @@
         (§ abstract boolean equiv(Object k1, Object k2))
     )
 
-    (§ def EquivPred equivNull = new EquivPred()
+    (§ def #_"EquivPred" equivNull (ß new EquivPred()
         (§ reify
-            (§ method boolean equiv(Object k1, Object k2)
+            #_method
+            (§ defn #_"boolean" equiv [this, #_"Object" k1, #_"Object" k2]
                 (ß (k2 == nil))
             )
         )
-    )
+    ))
 
-    (§ def EquivPred equivEquals = new EquivPred()
+    (§ def #_"EquivPred" equivEquals (ß new EquivPred()
         (§ reify
-            (§ method boolean equiv(Object k1, Object k2)
+            #_method
+            (§ defn #_"boolean" equiv [this, #_"Object" k1, #_"Object" k2]
                 (ß k1.equals(k2))
             )
         )
-    )
+    ))
 
-    (§ def EquivPred equivNumber = new EquivPred()
+    (§ def #_"EquivPred" equivNumber (ß new EquivPred()
         (§ reify
-            (§ method boolean equiv(Object k1, Object k2)
+            #_method
+            (§ defn #_"boolean" equiv [this, #_"Object" k1, #_"Object" k2]
                 (when (ß k2 instanceof Number)
                     (§ return (ß Numbers.equal((Number) k1, (Number) k2)))
                 )
                 false
             )
         )
-    )
+    ))
 
-    (§ def EquivPred equivColl = new EquivPred()
+    (§ def #_"EquivPred" equivColl (ß new EquivPred()
         (§ reify
-            (§ method boolean equiv(Object k1, Object k2)
+            #_method
+            (§ defn #_"boolean" equiv [this, #_"Object" k1, #_"Object" k2]
                 (when (ß k1 instanceof IPersistentCollection || k2 instanceof IPersistentCollection)
                     (§ return (ß pcequiv(k1, k2)))
                 )
                 (ß k1.equals(k2))
             )
         )
-    )
+    ))
 
-    (§ defn EquivPred equivPred(Object k1)
+    (§ defn #_"EquivPred" equivPred [#_"Object" k1]
         (cond (ß k1 == nil)
             (do
                 (§ return equivNull)
@@ -40555,72 +42138,72 @@
         equivEquals
     )
 
-    (§ defn boolean equiv(long k1, long k2)
+    (§ defn #_"boolean" equiv [#_"long" k1, #_"long" k2]
         (ß (k1 == k2))
     )
 
-    (§ defn boolean equiv(Object k1, long k2)
+    (§ defn #_"boolean" equiv [#_"Object" k1, #_"long" k2]
         (ß equiv(k1, (Object)k2))
     )
 
-    (§ defn boolean equiv(long k1, Object k2)
+    (§ defn #_"boolean" equiv [#_"long" k1, #_"Object" k2]
         (ß equiv((Object)k1, k2))
     )
 
-    (§ defn boolean equiv(double k1, double k2)
+    (§ defn #_"boolean" equiv [#_"double" k1, #_"double" k2]
         (ß (k1 == k2))
     )
 
-    (§ defn boolean equiv(Object k1, double k2)
+    (§ defn #_"boolean" equiv [#_"Object" k1, #_"double" k2]
         (ß equiv(k1, (Object)k2))
     )
 
-    (§ defn boolean equiv(double k1, Object k2)
+    (§ defn #_"boolean" equiv [#_"double" k1, #_"Object" k2]
         (ß equiv((Object)k1, k2))
     )
 
-    (§ defn boolean equiv(boolean k1, boolean k2)
+    (§ defn #_"boolean" equiv [#_"boolean" k1, #_"boolean" k2]
         (ß (k1 == k2))
     )
 
-    (§ defn boolean equiv(Object k1, boolean k2)
+    (§ defn #_"boolean" equiv [#_"Object" k1, #_"boolean" k2]
         (ß equiv(k1, (Object)k2))
     )
 
-    (§ defn boolean equiv(boolean k1, Object k2)
+    (§ defn #_"boolean" equiv [#_"boolean" k1, #_"Object" k2]
         (ß equiv((Object)k1, k2))
     )
 
-    (§ defn boolean equiv(char c1, char c2)
+    (§ defn #_"boolean" equiv [#_"char" c1, #_"char" c2]
         (ß (c1 == c2))
     )
 
-    (§ defn boolean pcequiv(Object k1, Object k2)
+    (§ defn #_"boolean" pcequiv [#_"Object" k1, #_"Object" k2]
         (when (ß k1 instanceof IPersistentCollection)
             (§ return (ß ((IPersistentCollection)k1).equiv(k2)))
         )
         (ß ((IPersistentCollection)k2).equiv(k1))
     )
 
-    (§ defn boolean equals(Object k1, Object k2)
+    (§ defn #_"boolean" equals [#_"Object" k1, #_"Object" k2]
         (when (ß k1 == k2)
             (§ return true)
         )
         (ß (k1 != nil && k1.equals(k2)))
     )
 
-    (§ defn boolean identical(Object k1, Object k2)
+    (§ defn #_"boolean" identical [#_"Object" k1, #_"Object" k2]
         (ß (k1 == k2))
     )
 
-    (§ defn Class classOf(Object x)
+    (§ defn #_"Class" classOf [#_"Object" x]
         (when (ß x != nil)
             (§ return (ß x.getClass()))
         )
         nil
     )
 
-    (§ defn int compare(Object k1, Object k2)
+    (§ defn #_"int" compare [#_"Object" k1, #_"Object" k2]
         (when (ß k1 == k2)
             (§ return 0)
         )
@@ -40636,14 +42219,14 @@
         -1
     )
 
-    (§ defn int hash(Object o)
+    (§ defn #_"int" hash [#_"Object" o]
         (when (ß o == nil)
             (§ return 0)
         )
         (ß o.hashCode())
     )
 
-    (§ defn int hasheq(Object o)
+    (§ defn #_"int" hasheq [#_"Object" o]
         (when (ß o == nil)
             (§ return 0)
         )
@@ -40659,33 +42242,33 @@
         (ß o.hashCode())
     )
 
-    (§ defn- int dohasheq(IHashEq o)
+    (§ defn- #_"int" dohasheq [#_"IHashEq" o]
         (ß o.hasheq())
     )
 
-    (§ defn int hashCombine(int seed, int hash)
+    (§ defn #_"int" hashCombine [#_"int" seed, #_"int" hash]
         ;; a la boost
         (ß seed ^= hash + 0x9e3779b9 + (seed << 6) + (seed >> 2))
         seed
     )
 
-    (§ defn boolean isPrimitive(Class c)
+    (§ defn #_"boolean" isPrimitive [#_"Class" c]
         (ß (c != nil && c.isPrimitive() && !(c == Void.TYPE)))
     )
 
-    (§ defn boolean isInteger(Object x)
+    (§ defn #_"boolean" isInteger [#_"Object" x]
         (ß (x instanceof Integer || x instanceof Long || x instanceof BigInt || x instanceof BigInteger))
     )
 
-    (§ defn Object ret1(Object ret, Object nil)
+    (§ defn #_"Object" ret1 [#_"Object" ret, #_"Object" nil]
         ret
     )
 
-    (§ defn ISeq ret1(ISeq ret, Object nil)
+    (§ defn #_"ISeq" ret1 [#_"ISeq" ret, #_"Object" nil]
         ret
     )
 
-    (§ defn <K, V> void clearCache(ReferenceQueue rq, ConcurrentHashMap<K, Reference<V>> cache)
+    (§ defn #_"<K, V> void" clearCache [#_"ReferenceQueue" rq, #_"ConcurrentHashMap<K, Reference<V>>" cache]
         ;; cleanup any dead entries
         (when (ß rq.poll() != nil)
             (while (ß rq.poll() != nil)
@@ -40701,11 +42284,11 @@
         nil
     )
 
-    (§ defn RuntimeException runtimeException(String s)
+    (§ defn #_"RuntimeException" runtimeException [#_"String" s]
         (ß new RuntimeException(s))
     )
 
-    (§ defn RuntimeException runtimeException(String s, Throwable e)
+    (§ defn #_"RuntimeException" runtimeException [#_"String" s, #_"Throwable" e]
         (ß new RuntimeException(s, e))
     )
 
@@ -40715,7 +42298,7 @@
      ;
      ; <code>throw sneakyThrow(some exception);</code>
      ;;
-    (§ defn RuntimeException sneakyThrow(Throwable t)
+    (§ defn #_"RuntimeException" sneakyThrow [#_"Throwable" t]
         ;; http://www.mail-archive.com/javaposse@googlegroups.com/msg05984.html
         (when (ß t == nil)
             (throw (ß new NullPointerException()))
@@ -40725,11 +42308,11 @@
     )
 
     (§ anno @SuppressWarnings("unchecked"))
-    (§ defn- <T extends Throwable> void sneakyThrow0(Throwable t) (§ throws T)
+    (§ defn- #_"<T extends Throwable> void" sneakyThrow0 [#_"Throwable" t] (§ throws T)
         (throw (ß (T) t))
     )
 
-    (§ defn Object loadWithClass(String scriptbase, Class<?> loadFrom) (§ throws IOException, ClassNotFoundException)
+    (§ defn #_"Object" loadWithClass [#_"String" scriptbase, #_"Class<?>" loadFrom] (§ throws IOException, ClassNotFoundException)
         (ß Var.pushThreadBindings(RT.map(new Object[] (§ Compiler.LOADER, loadFrom.getClassLoader() ))))
         (try
             (ß RT.var("cloiure.core", "load").invoke(scriptbase))
@@ -40748,10 +42331,10 @@
 (class-ns Var (§ extends ARef) (§ implements IFn, IRef, Settable)
     (class-ns TBox
         #_volatile
-        (§ field Object val)
-        (§ field Thread thread)
+        (§ field #_"Object" val)
+        (§ field #_"Thread" thread)
 
-        (§ constructor TBox(Thread t, Object val)
+        (§ constructor #_"TBox" TBox [#_"Thread" t, #_"Object" val]
             (ß this.thread = t)
             (ß this.val = val)
             this
@@ -40759,101 +42342,108 @@
     )
 
     (class-ns Unbound (§ extends AFn)
-        (§ field Var v)
+        (§ field #_"Var" v)
 
-        (§ constructor Unbound(Var v)
+        (§ constructor #_"Unbound" Unbound [#_"Var" v]
             (ß this.v = v)
             this
         )
 
-        (§ method String toString()
+        #_method
+        (§ defn #_"String" toString [this]
             (ß "Unbound: " + v)
         )
 
-        (§ method Object throwArity(int n)
+        #_method
+        (§ defn #_"Object" throwArity [this, #_"int" n]
             (throw (ß new IllegalStateException("Attempting to call unbound fn: " + v)))
         )
     )
 
     (class-ns Frame
-        (§ def Frame TOP = new Frame(PersistentHashMap.EMPTY, nil))
+        (§ def #_"Frame" TOP (ß new Frame(PersistentHashMap.EMPTY, nil)))
         ;; Var->TBox
-        (§ field Associative bindings)
+        (§ field #_"Associative" bindings)
         ;; Var->val
-        (§ field Frame prev)
+        (§ field #_"Frame" prev)
 
-        (§ constructor Frame(Associative bindings, Frame prev)
+        (§ constructor #_"Frame" Frame [#_"Associative" bindings, #_"Frame" prev]
             (ß this.bindings = bindings)
             (ß this.prev = prev)
             this
         )
 
         #_protected
-        (§ method Object clone()
+        #_method
+        (§ defn #_"Object" clone [this]
             (ß new Frame(this.bindings, nil))
         )
     )
 
-    (§ def ThreadLocal<Frame> dvals = new ThreadLocal<Frame>()
+    (§ def #_"ThreadLocal<Frame>" dvals (ß new ThreadLocal<Frame>()
         (§ reify
             #_protected
-            (§ method Frame initialValue()
+            #_method
+            (§ defn #_"Frame" initialValue [this]
                 (ß Frame.TOP)
             )
         )
-    )
+    ))
 
     #_volatile
-    (§ def int rev = 0)
+    (§ def #_"int" rev (ß 0))
 
-    (§ def Keyword privateKey = Keyword.intern(nil, "private"))
-    (§ def IPersistentMap privateMeta = new PersistentArrayMap(new Object[] (§ privateKey, Boolean.TRUE )))
-    (§ def Keyword macroKey = Keyword.intern(nil, "macro"))
-    (§ def Keyword nameKey = Keyword.intern(nil, "name"))
-    (§ def Keyword nsKey = Keyword.intern(nil, "ns"))
-
-    #_volatile
-    (§ field Object root)
+    (§ def #_"Keyword" privateKey (ß Keyword.intern(nil, "private")))
+    (§ def #_"IPersistentMap" privateMeta (ß new PersistentArrayMap(new Object[] (§ privateKey, Boolean.TRUE ))))
+    (§ def #_"Keyword" macroKey (ß Keyword.intern(nil, "macro")))
+    (§ def #_"Keyword" nameKey (ß Keyword.intern(nil, "name")))
+    (§ def #_"Keyword" nsKey (ß Keyword.intern(nil, "ns")))
 
     #_volatile
-    (§ field boolean dynamic = false)
+    (§ field #_"Object" root)
+
+    #_volatile
+    (§ field #_"boolean" dynamic (ß false))
     #_transient
-    (§ field AtomicBoolean threadBound)
-    (§ field Symbol sym)
-    (§ field Namespace ns)
+    (§ field #_"AtomicBoolean" threadBound)
+    (§ field #_"Symbol" sym)
+    (§ field #_"Namespace" ns)
 
-    (§ defn Object getThreadBindingFrame()
+    (§ defn #_"Object" getThreadBindingFrame []
         (ß dvals.get())
     )
 
-    (§ defn Object cloneThreadBindingFrame()
+    (§ defn #_"Object" cloneThreadBindingFrame []
         (ß dvals.get().clone())
     )
 
-    (§ defn void resetThreadBindingFrame(Object frame)
+    (§ defn #_"void" resetThreadBindingFrame [#_"Object" frame]
         (ß dvals.set((Frame) frame))
         nil
     )
 
-    (§ method Var setDynamic()
+    #_method
+    (§ defn #_"Var" setDynamic [this]
         (ß this.dynamic = true)
         this
     )
 
-    (§ method Var setDynamic(boolean b)
+    #_method
+    (§ defn #_"Var" setDynamic [this, #_"boolean" b]
         (ß this.dynamic = b)
         this
     )
 
-    (§ method boolean isDynamic()
+    #_method
+    (§ defn #_"boolean" isDynamic [this]
         dynamic
     )
 
-    (§ defn Var intern(Namespace ns, Symbol sym, Object root)
+    (§ defn #_"Var" intern [#_"Namespace" ns, #_"Symbol" sym, #_"Object" root]
         (ß intern(ns, sym, root, true))
     )
 
-    (§ defn Var intern(Namespace ns, Symbol sym, Object root, boolean replaceRoot)
+    (§ defn #_"Var" intern [#_"Namespace" ns, #_"Symbol" sym, #_"Object" root, #_"boolean" replaceRoot]
         (let [#_"Var" dvout (ß ns.intern(sym))]
             (when (ß !dvout.hasRoot() || replaceRoot)
                 (ß dvout.bindRoot(root))
@@ -40862,14 +42452,15 @@
         )
     )
 
-    (§ method String toString()
+    #_method
+    (§ defn #_"String" toString [this]
         (when (ß ns != nil)
             (§ return (ß "#'" + ns.name + "/" + sym))
         )
         (ß "#<Var: " + ((sym != nil) ? sym.toString() :or "--unnamed--") + ">")
     )
 
-    (§ defn Var find(Symbol nsQualifiedSym)
+    (§ defn #_"Var" find [#_"Symbol" nsQualifiedSym]
         (when (ß nsQualifiedSym.ns == nil)
             (throw (ß new IllegalArgumentException("Symbol must be namespace-qualified")))
         )
@@ -40881,13 +42472,13 @@
         )
     )
 
-    (§ defn Var intern(Symbol nsName, Symbol sym)
+    (§ defn #_"Var" intern [#_"Symbol" nsName, #_"Symbol" sym]
         (let [#_"Namespace" ns (ß Namespace.findOrCreate(nsName))]
             (ß intern(ns, sym))
         )
     )
 
-    (§ defn Var internPrivate(String nsName, String sym)
+    (§ defn #_"Var" internPrivate [#_"String" nsName, #_"String" sym]
         (let [#_"Namespace" ns (ß Namespace.findOrCreate(Symbol.intern(nsName)))]
             (let [#_"Var" ret (ß intern(ns, Symbol.intern(sym)))]
                 (ß ret.setMeta(privateMeta))
@@ -40896,19 +42487,19 @@
         )
     )
 
-    (§ defn Var intern(Namespace ns, Symbol sym)
+    (§ defn #_"Var" intern [#_"Namespace" ns, #_"Symbol" sym]
         (ß ns.intern(sym))
     )
 
-    (§ defn Var create()
+    (§ defn #_"Var" create []
         (ß new Var(nil, nil))
     )
 
-    (§ defn Var create(Object root)
+    (§ defn #_"Var" create [#_"Object" root]
         (ß new Var(nil, nil, root))
     )
 
-    (§ constructor Var(Namespace ns, Symbol sym)
+    (§ constructor #_"Var" Var [#_"Namespace" ns, #_"Symbol" sym]
         (ß this.ns = ns)
         (ß this.sym = sym)
         (ß this.threadBound = new AtomicBoolean(false))
@@ -40917,25 +42508,28 @@
         this
     )
 
-    (§ constructor Var(Namespace ns, Symbol sym, Object root)
+    (§ constructor #_"Var" Var [#_"Namespace" ns, #_"Symbol" sym, #_"Object" root]
         (§ this(ns, sym))
         (ß this.root = root)
         (ß ++rev)
         this
     )
 
-    (§ method boolean isBound()
+    #_method
+    (§ defn #_"boolean" isBound [this]
         (ß (hasRoot() || (threadBound.get() && dvals.get().bindings.containsKey(this))))
     )
 
-    (§ method Object get()
+    #_method
+    (§ defn #_"Object" get [this]
         (when (ß !threadBound.get())
             (§ return root)
         )
         (ß deref())
     )
 
-    (§ method Object deref()
+    #_method
+    (§ defn #_"Object" deref [this]
         (let [#_"TBox" b (ß getThreadBinding())]
             (when (ß b != nil)
                 (§ return (ß b.val))
@@ -40944,7 +42538,8 @@
         )
     )
 
-    (§ method void setValidator(IFn vf)
+    #_method
+    (§ defn #_"void" setValidator [this, #_"IFn" vf]
         (when (ß hasRoot())
             (ß validate(vf, root))
         )
@@ -40952,12 +42547,14 @@
         nil
     )
 
-    (§ method Object alter(IFn fn, ISeq args)
+    #_method
+    (§ defn #_"Object" alter [this, #_"IFn" fn, #_"ISeq" args]
         (ß set(fn.applyTo(RT.cons(deref(), args))))
         this
     )
 
-    (§ method Object set(Object val)
+    #_method
+    (§ defn #_"Object" set [this, #_"Object" val]
         (ß validate(getValidator(), val))
         (let [#_"TBox" b (ß getThreadBinding())]
             (when (ß b != nil)
@@ -40970,53 +42567,64 @@
         )
     )
 
-    (§ method Object doSet(Object val)
+    #_method
+    (§ defn #_"Object" doSet [this, #_"Object" val]
         (ß set(val))
     )
 
-    (§ method Object doReset(Object val)
+    #_method
+    (§ defn #_"Object" doReset [this, #_"Object" val]
         (ß bindRoot(val))
         val
     )
 
-    (§ method void setMeta(IPersistentMap m)
+    #_method
+    (§ defn #_"void" setMeta [this, #_"IPersistentMap" m]
         ;; ensure these basis keys
         (ß resetMeta(m.assoc(nameKey, sym).assoc(nsKey, ns)))
         nil
     )
 
-    (§ method void setMacro()
+    #_method
+    (§ defn #_"void" setMacro [this]
         (ß alterMeta(assoc, RT.list(macroKey, RT.T)))
         nil
     )
 
-    (§ method boolean isMacro()
+    #_method
+    (§ defn #_"boolean" isMacro [this]
         (ß RT.booleanCast(meta().valAt(macroKey)))
     )
 
-    (§ method boolean isPublic()
+    #_method
+    (§ defn #_"boolean" isPublic [this]
         (ß !RT.booleanCast(meta().valAt(privateKey)))
     )
 
-    (§ method Object getRawRoot()
+    #_method
+    (§ defn #_"Object" getRawRoot [this]
         root
     )
 
-    (§ method Object getTag()
+    #_method
+    (§ defn #_"Object" getTag [this]
         (ß meta().valAt(RT.TAG_KEY))
     )
 
-    (§ method void setTag(Symbol tag)
+    #_method
+    (§ defn #_"void" setTag [this, #_"Symbol" tag]
         (ß alterMeta(assoc, RT.list(RT.TAG_KEY, tag)))
         nil
     )
 
-    (§ method boolean hasRoot()
+    #_method
+    (§ defn #_"boolean" hasRoot [this]
         (ß !(root instanceof Unbound))
     )
 
     ;; binding root always clears macro flag
-    (§ method void bindRoot(Object root)
+    #_method
+    (§ defn #_"void" bindRoot [this, #_"Object" root]
         (§ sync this
             (ß validate(getValidator(), root))
             (let [#_"Object" oldroot (ß this.root)]
@@ -41029,7 +42637,8 @@
         nil
     )
 
-    (§ method void swapRoot(Object root)
+    #_method
+    (§ defn #_"void" swapRoot [this, #_"Object" root]
         (§ sync this
             (ß validate(getValidator(), root))
             (let [#_"Object" oldroot (ß this.root)]
@@ -41041,7 +42650,8 @@
         nil
     )
 
-    (§ method void unbindRoot()
+    #_method
+    (§ defn #_"void" unbindRoot [this]
         (§ sync this
             (ß this.root = new Unbound(this))
             (ß ++rev)
@@ -41049,7 +42659,8 @@
         nil
     )
 
-    (§ method void commuteRoot(IFn fn)
+    #_method
+    (§ defn #_"void" commuteRoot [this, #_"IFn" fn]
         (§ sync this
             (let [#_"Object" newRoot (ß fn.invoke(root))]
                 (ß validate(getValidator(), newRoot))
@@ -41063,7 +42674,8 @@
         nil
     )
 
-    (§ method Object alterRoot(IFn fn, ISeq args)
+    #_method
+    (§ defn #_"Object" alterRoot [this, #_"IFn" fn, #_"ISeq" args]
         (§ sync this
             (let [#_"Object" newRoot (ß fn.applyTo(RT.cons(root, args)))]
                 (ß validate(getValidator(), newRoot))
@@ -41077,7 +42689,7 @@
         )
     )
 
-    (§ defn void pushThreadBindings(Associative bindings)
+    (§ defn #_"void" pushThreadBindings [#_"Associative" bindings]
         (let [#_"Frame" f (ß dvals.get())]
             (let [#_"Associative" bmap (ß f.bindings)]
                 (loop-when-recur [(ß ISeq bs = bindings.seq())] (ß bs != nil) [(ß bs = bs.next())]
@@ -41098,7 +42710,7 @@
         )
     )
 
-    (§ defn void popThreadBindings()
+    (§ defn #_"void" popThreadBindings []
         (let [#_"Frame" f (ß dvals.get().prev)]
             (cond (ß f == nil)
                 (do
@@ -41117,7 +42729,7 @@
         )
     )
 
-    (§ defn Associative getThreadBindings()
+    (§ defn #_"Associative" getThreadBindings []
         (let [#_"Frame" f (ß dvals.get())]
             (let [#_"IPersistentMap" ret (ß PersistentHashMap.EMPTY)]
                 (loop-when-recur [(ß ISeq bs = f.bindings.seq())] (ß bs != nil) [(ß bs = bs.next())]
@@ -41134,7 +42746,8 @@
         )
     )
 
-    (§ method TBox getThreadBinding()
+    #_method
+    (§ defn #_"TBox" getThreadBinding [this]
         (when (ß threadBound.get())
             (let [#_"IMapEntry" e (ß dvals.get().bindings.entryAt(this))]
                 (when (ß e != nil)
@@ -41145,46 +42758,55 @@
         nil
     )
 
-    (§ method IFn fn()
+    #_method
+    (§ defn #_"IFn" fn [this]
         (ß (IFn) deref())
     )
 
-    (§ method Object call()
+    #_method
+    (§ defn #_"Object" call [this]
         (ß invoke())
     )
 
-    (§ method void run()
+    #_method
+    (§ defn #_"void" run [this]
         (ß invoke())
         nil
     )
 
-    (§ method Object invoke()
+    #_method
+    (§ defn #_"Object" invoke [this]
         (ß fn().invoke())
     )
 
-    (§ method Object invoke(Object arg1)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
                 Util.ret1(arg4, arg4 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41192,7 +42814,8 @@
                 Util.ret1(arg5, arg5 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41201,7 +42824,8 @@
                 Util.ret1(arg6, arg6 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41211,8 +42835,8 @@
                 Util.ret1(arg7, arg7 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41223,8 +42847,8 @@
                 Util.ret1(arg8, arg8 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41236,8 +42860,8 @@
                 Util.ret1(arg9, arg9 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41250,8 +42874,8 @@
                 Util.ret1(arg10, arg10 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41265,8 +42889,8 @@
                 Util.ret1(arg11, arg11 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41281,8 +42905,8 @@
                 Util.ret1(arg12, arg12 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41298,8 +42922,8 @@
                 Util.ret1(arg13, arg13 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41316,9 +42940,8 @@
                 Util.ret1(arg14, arg14 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41336,9 +42959,8 @@
                 Util.ret1(arg15, arg15 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41357,9 +42979,8 @@
                 Util.ret1(arg16, arg16 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41379,9 +43000,8 @@
                 Util.ret1(arg17, arg17 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41402,9 +43022,8 @@
                 Util.ret1(arg18, arg18 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41426,9 +43045,8 @@
                 Util.ret1(arg19, arg19 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41451,10 +43069,8 @@
                 Util.ret1(arg20, arg20 = nil)))
     )
 
-    (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20,
-            Object... args)
+    #_method
+    (§ defn #_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20, #_"Object..." args]
         (ß fn().invoke(Util.ret1(arg1, arg1 = nil),
                 Util.ret1(arg2, arg2 = nil),
                 Util.ret1(arg3, arg3 = nil),
@@ -41478,27 +43094,30 @@
                 (Object[])Util.ret1(args, args = nil)))
     )
 
-    (§ method Object applyTo(ISeq arglist)
+    #_method
+    (§ defn #_"Object" applyTo [this, #_"ISeq" arglist]
         (ß fn().applyTo(arglist))
     )
 
-    (§ def IFn assoc = new AFn()
+    (§ def #_"IFn" assoc (ß new AFn()
         (§ reify
             (§ anno @Override)
-            (§ method Object invoke(Object m, Object k, Object v)
+            #_method
+            (§ defn #_"Object" invoke [this, #_"Object" m, #_"Object" k, #_"Object" v]
                 (ß RT.assoc(m, k, v))
             )
         )
-    )
+    ))
 
-    (§ def IFn dissoc = new AFn()
+    (§ def #_"IFn" dissoc (ß new AFn()
         (§ reify
             (§ anno @Override)
-            (§ method Object invoke(Object c, Object k)
+            #_method
+            (§ defn #_"Object" invoke [this, #_"Object" c, #_"Object" k]
                 (ß RT.dissoc(c, k))
             )
         )
-    )
+    ))
 )
 )
 
@@ -41506,18 +43125,20 @@
 
 (class-ns Volatile (§ implements IDeref)
     #_volatile
-    (§ field Object val)
+    (§ field #_"Object" val)
 
-    (§ constructor Volatile(Object val)
+    (§ constructor #_"Volatile" Volatile [#_"Object" val]
         (ß this.val = val)
         this
     )
 
-    (§ method Object deref()
+    #_method
+    (§ defn #_"Object" deref [this]
         val
     )
 
-    (§ method Object reset(Object newval)
+    #_method
+    (§ defn #_"Object" reset [this, #_"Object" newval]
         (ß this.val = newval)
     )
 )
@@ -41543,11 +43164,11 @@
 (§ import cloiure.lang.RT)
 
 (class-ns main
-    (§ def- Symbol CLOIURE_MAIN = Symbol.intern("cloiure.main"))
-    (§ def- Var REQUIRE = RT.var("cloiure.core", "require"))
-    (§ def- Var MAIN = RT.var("cloiure.main", "main"))
+    (§ def- #_"Symbol" CLOIURE_MAIN (ß Symbol.intern("cloiure.main")))
+    (§ def- #_"Var" REQUIRE (ß RT.var("cloiure.core", "require")))
+    (§ def- #_"Var" MAIN (ß RT.var("cloiure.main", "main")))
 
-    (§ defn void main(String[] args)
+    (§ defn #_"void" main [#_"String[]" args]
         (ß REQUIRE.invoke(CLOIURE_MAIN))
         (ß MAIN.applyTo(RT.seq(args)))
         nil
