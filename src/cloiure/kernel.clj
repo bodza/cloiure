@@ -46,109 +46,90 @@
 
 (java-ns cloiure.lang.AFn
 
-#_public
 #_abstract
 (class-ns AFn (§ implements IFn)
-    #_public
     (§ method Object call()
         (§ return (§ expr invoke()))
     )
 
-    #_public
     (§ method void run()
         (§ call invoke())
     )
 
-    #_public
     (§ method Object invoke()
         (§ return (§ expr throwArity(0)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1)
         (§ return (§ expr throwArity(1)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2)
         (§ return (§ expr throwArity(2)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3)
         (§ return (§ expr throwArity(3)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4)
         (§ return (§ expr throwArity(4)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
         (§ return (§ expr throwArity(5)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6)
         (§ return (§ expr throwArity(6)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7)
         (§ return (§ expr throwArity(7)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8))
     (§
         (§ return (§ expr throwArity(8)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9))
     (§
         (§ return (§ expr throwArity(9)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10))
     (§
         (§ return (§ expr throwArity(10)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11))
     (§
         (§ return (§ expr throwArity(11)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12))
     (§
         (§ return (§ expr throwArity(12)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13))
     (§
         (§ return (§ expr throwArity(13)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14))
     (§
         (§ return (§ expr throwArity(14)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15))
@@ -156,7 +137,6 @@
         (§ return (§ expr throwArity(15)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16))
@@ -164,7 +144,6 @@
         (§ return (§ expr throwArity(16)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17))
@@ -172,7 +151,6 @@
         (§ return (§ expr throwArity(17)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18))
@@ -180,7 +158,6 @@
         (§ return (§ expr throwArity(18)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19))
@@ -188,7 +165,6 @@
         (§ return (§ expr throwArity(19)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20))
@@ -196,7 +172,6 @@
         (§ return (§ expr throwArity(20)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20,
@@ -205,14 +180,11 @@
         (§ return (§ expr throwArity(21)))
     )
 
-    #_public
     (§ method Object applyTo(ISeq arglist)
         (§ return (§ expr applyToHelper(this, Util.ret1(arglist, arglist = nil))))
     )
 
-    #_static
-    #_public
-    (§ method Object applyToHelper(IFn ifn, ISeq arglist)
+    (§ defn Object applyToHelper(IFn ifn, ISeq arglist)
         (§ switch (RT.boundedLength(arglist, 20)))
         (§
             (§ case 0)
@@ -517,7 +489,6 @@
         )
     )
 
-    #_public
     (§ method Object throwArity(int n)
         (§ let String name = getClass().getSimpleName())
         (§ throw new ArityException(n, Compiler.demunge(name)))
@@ -529,45 +500,37 @@
 
 (§ import java.util.Comparator)
 
-#_public
 #_abstract
 (class-ns AFunction (§ extends AFn) (§ implements IObj, Comparator, Fn)
-    #_public
     #_volatile
     (§ field MethodImplCache __methodImplCache)
 
-    #_public
     (§ method IPersistentMap meta()
         (§ return (§ expr nil))
     )
 
-    #_public
-    (§ method IObj withMeta(final IPersistentMap meta)
+    (§ method IObj withMeta(IPersistentMap meta)
         (§ return (§ expr new RestFn()
-        (§ inner
+        (§ reify
             #_protected
             (§ method Object doInvoke(Object args)
                 (§ return (§ expr AFunction.this.applyTo((ISeq) args)))
             )
 
-            #_public
             (§ method IPersistentMap meta()
                 (§ return (§ expr meta))
             )
 
-            #_public
             (§ method IObj withMeta(IPersistentMap meta)
                 (§ return (§ expr AFunction.this.withMeta(meta)))
             )
 
-            #_public
             (§ method int getRequiredArity()
                 (§ return (§ expr 0))
             )
         )))
     )
 
-    #_public
     (§ method int compare(Object o1, Object o2)
         (§ let Object o = invoke(o1, o2))
 
@@ -595,33 +558,20 @@
 (§ import java.util.concurrent.atomic.AtomicLong)
 (§ import java.util.concurrent.atomic.AtomicReference)
 
-#_public
 (class-ns Agent (§ extends ARef)
-    #_static
     (class-ns ActionQueue
-        #_public
-        #_final
         (§ field IPersistentStack q)
-        #_public
-        #_final
         (§ field Throwable error) ;; non-null indicates fail state
-        #_static
-        #_final
-        (§ field ActionQueue EMPTY = new ActionQueue(PersistentQueue.EMPTY, nil))
+        (§ def ActionQueue EMPTY = new ActionQueue(PersistentQueue.EMPTY, nil))
 
-        #_public
-        (§ method ActionQueue(IPersistentStack q, Throwable error)
+        (§ constructor ActionQueue(IPersistentStack q, Throwable error)
             (§ ass this.q = q)
             (§ ass this.error = error)
         )
     )
 
-    #_static
-    #_final
-    (§ field Keyword CONTINUE = Keyword.intern(nil, "continue"))
-    #_static
-    #_final
-    (§ field Keyword FAIL = Keyword.intern(nil, "fail"))
+    (§ def Keyword CONTINUE = Keyword.intern(nil, "continue"))
+    (§ def Keyword FAIL = Keyword.intern(nil, "fail"))
 
     #_volatile
     (§ field Object state)
@@ -632,36 +582,21 @@
     #_volatile
     (§ field IFn errorHandler = nil)
 
-    #_final
-    #_private
-    #_static
-    (§ field AtomicLong sendThreadPoolCounter = new AtomicLong(0))
+    (§ def- AtomicLong sendThreadPoolCounter = new AtomicLong(0))
 
-    #_final
-    #_private
-    #_static
-    (§ field AtomicLong sendOffThreadPoolCounter = new AtomicLong(0))
+    (§ def- AtomicLong sendOffThreadPoolCounter = new AtomicLong(0))
 
     #_volatile
-    #_public
-    #_static
-    (§ field ExecutorService pooledExecutor = Executors.newFixedThreadPool(2 + Runtime.getRuntime().availableProcessors(), createThreadFactory("cloiure-agent-send-pool-%d", sendThreadPoolCounter)))
+    (§ def ExecutorService pooledExecutor = Executors.newFixedThreadPool(2 + Runtime.getRuntime().availableProcessors(), createThreadFactory("cloiure-agent-send-pool-%d", sendThreadPoolCounter)))
 
     #_volatile
-    #_public
-    #_static
-    (§ field ExecutorService soloExecutor = Executors.newCachedThreadPool(createThreadFactory("cloiure-agent-send-off-pool-%d", sendOffThreadPoolCounter)))
+    (§ def ExecutorService soloExecutor = Executors.newCachedThreadPool(createThreadFactory("cloiure-agent-send-off-pool-%d", sendOffThreadPoolCounter)))
 
-    #_final
-    #_static
-    (§ field ThreadLocal<IPersistentVector> nested = new ThreadLocal<IPersistentVector>())
+    (§ def ThreadLocal<IPersistentVector> nested = new ThreadLocal<IPersistentVector>())
 
-    #_private
-    #_static
-    (§ method ThreadFactory createThreadFactory(final String format, final AtomicLong threadPoolCounter)
+    (§ defn- ThreadFactory createThreadFactory(String format, AtomicLong threadPoolCounter)
         (§ return (§ expr new ThreadFactory()
-        (§ inner
-            #_public
+        (§ reify
             (§ method Thread newThread(Runnable runnable)
                 (§ let Thread thread = new Thread(runnable))
                 (§ call thread.setName(String.format(format, threadPoolCounter.getAndIncrement())))
@@ -670,26 +605,18 @@
         )))
     )
 
-    #_public
-    #_static
-    (§ method void shutdown()
+    (§ defn void shutdown()
         (§ call soloExecutor.shutdown())
         (§ call pooledExecutor.shutdown())
     )
 
-    #_static
     (class-ns Action (§ implements Runnable)
-        #_final
         (§ field Agent agent)
-        #_final
         (§ field IFn fn)
-        #_final
         (§ field ISeq args)
-        #_final
         (§ field Executor exec)
 
-        #_public
-        (§ method Action(Agent agent, IFn fn, ISeq args, Executor exec)
+        (§ constructor Action(Agent agent, IFn fn, ISeq args, Executor exec)
             (§ ass this.agent = agent)
             (§ ass this.args = args)
             (§ ass this.fn = fn)
@@ -716,8 +643,7 @@
             )
         )
 
-        #_static
-        (§ method void doRun(Action action)
+        (§ defn void doRun(Action action)
             (§ try )
             (§
                 (§ call nested.set(PersistentVector.EMPTY))
@@ -778,19 +704,16 @@
             )
         )
 
-        #_public
         (§ method void run()
             (§ call doRun(this))
         )
     )
 
-    #_public
-    (§ method Agent(Object state)
+    (§ constructor Agent(Object state)
         (§ this(state, nil))
     )
 
-    #_public
-    (§ method Agent(Object state, IPersistentMap meta)
+    (§ constructor Agent(Object state, IPersistentMap meta)
         (§ super(meta))
         (§ call setState(state))
     )
@@ -802,70 +725,63 @@
         (§ return (§ expr ret))
     )
 
-    #_public
     (§ method Object deref()
         (§ return (§ expr state))
     )
 
-    #_public
     (§ method Throwable getError()
         (§ return (§ expr aq.get().error))
     )
 
-    #_public
     (§ method void setErrorMode(Keyword k)
         (§ ass errorMode = k)
     )
 
-    #_public
     (§ method Keyword getErrorMode()
         (§ return (§ expr errorMode))
     )
 
-    #_public
     (§ method void setErrorHandler(IFn f)
         (§ ass errorHandler = f)
     )
 
-    #_public
     (§ method IFn getErrorHandler()
         (§ return (§ expr errorHandler))
     )
 
-    #_synchronized
-    #_public
     (§ method Object restart(Object newState, boolean clearActions)
-        (§ if (getError() == nil))
-        (§
-            (§ throw Util.runtimeException("Agent does not need a restart"))
-        )
-        (§ call validate(newState))
-        (§ ass state = newState)
-
-        (§ if (clearActions))
-        (§
-            (§ call aq.set(ActionQueue.EMPTY))
-        )
-        (§ else )
-        (§
-            (§ let boolean restarted = false)
-            (§ let ActionQueue prior = nil)
-            (§ while (!restarted))
+        (§ synchronized (this)
+            (§ if (getError() == nil))
             (§
-                (§ ass prior = aq.get())
-                (§ ass restarted = aq.compareAndSet(prior, new ActionQueue(prior.q, nil)))
+                (§ throw Util.runtimeException("Agent does not need a restart"))
+            )
+            (§ call validate(newState))
+            (§ ass state = newState)
+
+            (§ if (clearActions))
+            (§
+                (§ call aq.set(ActionQueue.EMPTY))
+            )
+            (§ else )
+            (§
+                (§ let boolean restarted = false)
+                (§ let ActionQueue prior = nil)
+                (§ while (!restarted))
+                (§
+                    (§ ass prior = aq.get())
+                    (§ ass restarted = aq.compareAndSet(prior, new ActionQueue(prior.q, nil)))
+                )
+
+                (§ if (prior.q.count() > 0))
+                (§
+                    ((Action) prior.q.peek()).execute()
+                )
             )
 
-            (§ if (prior.q.count() > 0))
-            (§
-                ((Action) prior.q.peek()).execute()
-            )
+            (§ return (§ expr newState))
         )
-
-        (§ return (§ expr newState))
     )
 
-    #_public
     (§ method Object dispatch(IFn fn, ISeq args, Executor exec)
         (§ let Throwable error = getError())
         (§ if (error != nil))
@@ -878,8 +794,7 @@
         (§ return (§ expr this))
     )
 
-    #_static
-    (§ method void dispatchAction(Action action)
+    (§ defn void dispatchAction(Action action)
         (§ let LockingTransaction trans = LockingTransaction.getRunning())
         (§ if (trans != nil))
         (§
@@ -910,14 +825,11 @@
         )
     )
 
-    #_public
     (§ method int getQueueCount()
         (§ return (§ expr aq.get().q.count()))
     )
 
-    #_static
-    #_public
-    (§ method int releasePendingSends()
+    (§ defn int releasePendingSends()
         (§ let IPersistentVector sends = nested.get())
         (§ if (sends == nil))
         (§
@@ -938,10 +850,8 @@
 
 (§ import java.io.StringWriter)
 
-#_public
 #_abstract
 (class-ns AMapEntry (§ extends APersistentVector) (§ implements IMapEntry)
-    #_public
     (§ method Object nth(int i)
         (§ if (i == 0))
         (§
@@ -957,42 +867,34 @@
         )
     )
 
-    #_private
-    (§ method IPersistentVector asVector()
+    (§ method- IPersistentVector asVector()
         (§ return (§ expr LazilyPersistentVector.createOwning(key(), val())))
     )
 
-    #_public
     (§ method IPersistentVector assocN(int i, Object val)
         (§ return (§ expr asVector().assocN(i, val)))
     )
 
-    #_public
     (§ method int count()
         (§ return (§ expr 2))
     )
 
-    #_public
     (§ method ISeq seq()
         (§ return (§ expr asVector().seq()))
     )
 
-    #_public
     (§ method IPersistentVector cons(Object o)
         (§ return (§ expr asVector().cons(o)))
     )
 
-    #_public
     (§ method IPersistentCollection empty()
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method IPersistentStack pop()
         (§ return (§ expr LazilyPersistentVector.createOwning(key())))
     )
 
-    #_public
     (§ method Object setValue(Object value)
         (§ throw new UnsupportedOperationException())
     )
@@ -1003,18 +905,15 @@
 
 (§ import java.util.*)
 
-#_public
 #_abstract
 (class-ns APersistentMap (§ extends AFn) (§ implements IPersistentMap, Map, Iterable, MapEquivalence, IHashEq)
     (§ field int _hash)
     (§ field int _hasheq)
 
-    #_public
     (§ method String toString()
         (§ return (§ expr RT.printString(this)))
     )
 
-    #_public
     (§ method IPersistentCollection cons(Object o)
         (§ if (o instanceof Map.Entry))
         (§
@@ -1041,14 +940,11 @@
         (§ return (§ expr ret))
     )
 
-    #_public
     (§ method boolean equals(Object obj)
         (§ return (§ expr mapEquals(this, obj)))
     )
 
-    #_static
-    #_public
-    (§ method boolean mapEquals(IPersistentMap m1, Object obj)
+    (§ defn boolean mapEquals(IPersistentMap m1, Object obj)
         (§ if (m1 == obj))
         (§
             (§ return (§ expr true))
@@ -1078,7 +974,6 @@
         (§ return (§ expr true))
     )
 
-    #_public
     (§ method boolean equiv(Object obj)
         (§ if (!(obj instanceof Map)))
         (§
@@ -1110,7 +1005,6 @@
         (§ return (§ expr true))
     )
 
-    #_public
     (§ method int hashCode()
         (§ let int cached = this._hash)
         (§ if (cached == 0))
@@ -1120,9 +1014,7 @@
         (§ return (§ expr cached))
     )
 
-    #_static
-    #_public
-    (§ method int mapHash(IPersistentMap m)
+    (§ defn int mapHash(IPersistentMap m)
         (§ let int hash = 0)
         (§ for (ISeq s = m.seq() s != nil s = s.next()))
         (§
@@ -1132,7 +1024,6 @@
         (§ return (§ expr hash))
     )
 
-    #_public
     (§ method int hasheq()
         (§ let int cached = this._hasheq)
         (§ if (cached == 0))
@@ -1142,23 +1033,15 @@
         (§ return (§ expr cached))
     )
 
-    #_static
-    #_public
-    (§ method int mapHasheq(IPersistentMap m)
+    (§ defn int mapHasheq(IPersistentMap m)
         (§ return (§ expr Murmur3.hashUnordered(m)))
     )
 
-    #_static
-    #_public
     (class-ns KeySeq (§ extends ASeq)
-        #_final
         (§ field ISeq seq)
-        #_final
         (§ field Iterable iterable)
 
-        #_static
-        #_public
-        (§ method KeySeq create(ISeq seq)
+        (§ defn KeySeq create(ISeq seq)
             (§ if (seq == nil))
             (§
                 (§ return (§ expr nil))
@@ -1166,9 +1049,7 @@
             (§ return (§ expr new KeySeq(seq, nil)))
         )
 
-        #_static
-        #_public
-        (§ method KeySeq createFromMap(IPersistentMap map)
+        (§ defn KeySeq createFromMap(IPersistentMap map)
             (§ if (map == nil))
             (§
                 (§ return (§ expr nil))
@@ -1181,35 +1062,29 @@
             (§ return (§ expr new KeySeq(seq, map)))
         )
 
-        #_private
-        (§ method KeySeq(ISeq seq, Iterable iterable)
+        (§ constructor- KeySeq(ISeq seq, Iterable iterable)
             (§ ass this.seq = seq)
             (§ ass this.iterable = iterable)
         )
 
-        #_private
-        (§ method KeySeq(IPersistentMap meta, ISeq seq, Iterable iterable)
+        (§ constructor- KeySeq(IPersistentMap meta, ISeq seq, Iterable iterable)
             (§ super(meta))
             (§ ass this.seq = seq)
             (§ ass this.iterable = iterable)
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr ((Map.Entry) seq.first()).getKey()))
         )
 
-        #_public
         (§ method ISeq next()
             (§ return (§ expr create(seq.next())))
         )
 
-        #_public
         (§ method KeySeq withMeta(IPersistentMap meta)
             (§ return (§ expr new KeySeq(meta, seq, iterable)))
         )
 
-        #_public
         (§ method Iterator iterator()
             (§ if (iterable == nil))
             (§
@@ -1221,20 +1096,17 @@
                 (§ return (§ expr ((IMapIterable)iterable).keyIterator()))
             )
 
-            (§ let final Iterator mapIter = iterable.iterator())
+            (§ let Iterator mapIter = iterable.iterator())
             (§ return (§ expr new Iterator()
-            (§ inner
-                #_public
+            (§ reify
                 (§ method boolean hasNext()
                     (§ return (§ expr mapIter.hasNext()))
                 )
 
-                #_public
                 (§ method Object next()
                     (§ return (§ expr ((Map.Entry)mapIter.next()).getKey()))
                 )
 
-                #_public
                 (§ method void remove()
                     (§ throw new UnsupportedOperationException())
                 )
@@ -1242,17 +1114,11 @@
         )
     )
 
-    #_static
-    #_public
     (class-ns ValSeq (§ extends ASeq)
-        #_final
         (§ field ISeq seq)
-        #_final
         (§ field Iterable iterable)
 
-        #_static
-        #_public
-        (§ method ValSeq create(ISeq seq)
+        (§ defn ValSeq create(ISeq seq)
             (§ if (seq == nil))
             (§
                 (§ return (§ expr nil))
@@ -1260,9 +1126,7 @@
             (§ return (§ expr new ValSeq(seq, nil)))
         )
 
-        #_static
-        #_public
-        (§ method ValSeq createFromMap(IPersistentMap map)
+        (§ defn ValSeq createFromMap(IPersistentMap map)
             (§ if (map == nil))
             (§
                 (§ return (§ expr nil))
@@ -1275,35 +1139,29 @@
             (§ return (§ expr new ValSeq(seq, map)))
         )
 
-        #_private
-        (§ method ValSeq(ISeq seq, Iterable iterable)
+        (§ constructor- ValSeq(ISeq seq, Iterable iterable)
             (§ ass this.seq = seq)
             (§ ass this.iterable = iterable)
         )
 
-        #_private
-        (§ method ValSeq(IPersistentMap meta, ISeq seq, Iterable iterable)
+        (§ constructor- ValSeq(IPersistentMap meta, ISeq seq, Iterable iterable)
             (§ super(meta))
             (§ ass this.seq = seq)
             (§ ass this.iterable = iterable)
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr ((Map.Entry) seq.first()).getValue()))
         )
 
-        #_public
         (§ method ISeq next()
             (§ return (§ expr create(seq.next())))
         )
 
-        #_public
         (§ method ValSeq withMeta(IPersistentMap meta)
             (§ return (§ expr new ValSeq(meta, seq, iterable)))
         )
 
-        #_public
         (§ method Iterator iterator()
             (§ if (iterable == nil))
             (§
@@ -1315,20 +1173,17 @@
                 (§ return (§ expr ((IMapIterable)iterable).valIterator()))
             )
 
-            (§ let final Iterator mapIter = iterable.iterator())
+            (§ let Iterator mapIter = iterable.iterator())
             (§ return (§ expr new Iterator()
-            (§ inner
-                #_public
+            (§ reify
                 (§ method boolean hasNext()
                     (§ return (§ expr mapIter.hasNext()))
                 )
 
-                #_public
                 (§ method Object next()
                     (§ return (§ expr ((Map.Entry)mapIter.next()).getValue()))
                 )
 
-                #_public
                 (§ method void remove()
                     (§ throw new UnsupportedOperationException())
                 )
@@ -1336,76 +1191,58 @@
         )
     )
 
-    #_static
-    #_final
-    (§ field IFn MAKE_ENTRY = new AFn()
-    (§ inner
-        #_public
+    (§ def IFn MAKE_ENTRY = new AFn()
+    (§ reify
         (§ method Object invoke(Object key, Object val)
             (§ return (§ expr MapEntry.create(key, val)))
         )
     ))
 
-    #_static
-    #_final
-    (§ field IFn MAKE_KEY = new AFn()
-    (§ inner
-        #_public
+    (§ def IFn MAKE_KEY = new AFn()
+    (§ reify
         (§ method Object invoke(Object key, Object val)
             (§ return (§ expr key))
         )
     ))
 
-    #_static
-    #_final
-    (§ field IFn MAKE_VAL = new AFn()
-    (§ inner
-        #_public
+    (§ def IFn MAKE_VAL = new AFn()
+    (§ reify
         (§ method Object invoke(Object key, Object val)
             (§ return (§ expr val))
         )
     ))
 
-    #_public
     (§ method Object invoke(Object arg1)
         (§ return (§ expr valAt(arg1)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object notFound)
         (§ return (§ expr valAt(arg1, notFound)))
     )
 
-    #_public
     (§ method void clear()
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean containsValue(Object value)
         (§ return (§ expr values().contains(value)))
     )
 
-    #_public
     (§ method Set entrySet()
         (§ return (§ expr new AbstractSet()
-        (§ inner
-            #_public
+        (§ reify
             (§ method Iterator iterator()
                 (§ return (§ expr APersistentMap.this.iterator()))
             )
 
-            #_public
             (§ method int size()
                 (§ return (§ expr count()))
             )
 
-            #_public
             (§ method int hashCode()
                 (§ return (§ expr APersistentMap.this.hashCode()))
             )
 
-            #_public
             (§ method boolean contains(Object o)
                 (§ if (o instanceof Entry))
                 (§
@@ -1421,105 +1258,86 @@
         )))
     )
 
-    #_public
     (§ method Object get(Object key)
         (§ return (§ expr valAt(key)))
     )
 
-    #_public
     (§ method boolean isEmpty()
         (§ return (§ expr (count() == 0)))
     )
 
-    #_public
     (§ method Set keySet()
         (§ return (§ expr new AbstractSet()
-        (§ inner
-            #_public
+        (§ reify
             (§ method Iterator iterator()
-                (§ let final Iterator mi = APersistentMap.this.iterator())
+                (§ let Iterator mi = APersistentMap.this.iterator())
 
                 (§ return (§ expr new Iterator()
-                (§ inner
-                    #_public
+                (§ reify
                     (§ method boolean hasNext()
                         (§ return (§ expr mi.hasNext()))
                     )
 
-                    #_public
                     (§ method Object next()
                         (§ let Entry e = (Entry) mi.next())
                         (§ return (§ expr e.getKey()))
                     )
 
-                    #_public
                     (§ method void remove()
                         (§ throw new UnsupportedOperationException())
                     )
                 )))
             )
 
-            #_public
             (§ method int size()
                 (§ return (§ expr count()))
             )
 
-            #_public
             (§ method boolean contains(Object o)
                 (§ return (§ expr APersistentMap.this.containsKey(o)))
             )
         )))
     )
 
-    #_public
     (§ method Object put(Object key, Object value)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method void putAll(Map t)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method Object remove(Object key)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method int size()
         (§ return (§ expr count()))
     )
 
-    #_public
     (§ method Collection values()
         (§ return (§ expr new AbstractCollection()
-        (§ inner
-            #_public
+        (§ reify
             (§ method Iterator iterator()
-                (§ let final Iterator mi = APersistentMap.this.iterator())
+                (§ let Iterator mi = APersistentMap.this.iterator())
 
                 (§ return (§ expr new Iterator()
-                (§ inner
-                    #_public
+                (§ reify
                     (§ method boolean hasNext()
                         (§ return (§ expr mi.hasNext()))
                     )
 
-                    #_public
                     (§ method Object next()
                         (§ let Entry e = (Entry) mi.next())
                         (§ return (§ expr e.getValue()))
                     )
 
-                    #_public
                     (§ method void remove()
                         (§ throw new UnsupportedOperationException())
                     )
                 )))
             )
 
-            #_public
             (§ method int size()
                 (§ return (§ expr count()))
             )
@@ -1534,57 +1352,46 @@
 (§ import java.util.Iterator)
 (§ import java.util.Set)
 
-#_public
 #_abstract
 (class-ns APersistentSet (§ extends AFn) (§ implements IPersistentSet, Collection, Set, IHashEq)
     (§ field int _hash)
     (§ field int _hasheq)
-    #_final
     (§ field IPersistentMap impl)
 
     #_protected
-    (§ method APersistentSet(IPersistentMap impl)
+    (§ constructor APersistentSet(IPersistentMap impl)
         (§ ass this.impl = impl)
     )
 
-    #_public
     (§ method String toString()
         (§ return (§ expr RT.printString(this)))
     )
 
-    #_public
     (§ method boolean contains(Object key)
         (§ return (§ expr impl.containsKey(key)))
     )
 
-    #_public
     (§ method Object get(Object key)
         (§ return (§ expr impl.valAt(key)))
     )
 
-    #_public
     (§ method int count()
         (§ return (§ expr impl.count()))
     )
 
-    #_public
     (§ method ISeq seq()
         (§ return (§ expr RT.keys(impl)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1)
         (§ return (§ expr get(arg1)))
     )
 
-    #_public
     (§ method boolean equals(Object obj)
         (§ return (§ expr setEquals(this, obj)))
     )
 
-    #_static
-    #_public
-    (§ method boolean setEquals(IPersistentSet s1, Object obj)
+    (§ defn boolean setEquals(IPersistentSet s1, Object obj)
         (§ if (s1 == obj))
         (§
             (§ return (§ expr true))
@@ -1611,7 +1418,6 @@
         (§ return (§ expr true))
     )
 
-    #_public
     (§ method boolean equiv(Object obj)
         (§ if (!(obj instanceof Set)))
         (§
@@ -1636,7 +1442,6 @@
         (§ return (§ expr true))
     )
 
-    #_public
     (§ method int hashCode()
         (§ let int hash = this._hash)
         (§ if (hash == 0))
@@ -1651,7 +1456,6 @@
         (§ return (§ expr hash))
     )
 
-    #_public
     (§ method int hasheq()
         (§ let int cached = this._hasheq)
         (§ if (cached == 0))
@@ -1661,42 +1465,34 @@
         (§ return (§ expr cached))
     )
 
-    #_public
     (§ method Object[] toArray()
         (§ return (§ expr RT.seqToArray(seq())))
     )
 
-    #_public
     (§ method boolean add(Object o)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean remove(Object o)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean addAll(Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method void clear()
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean retainAll(Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean removeAll(Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean containsAll(Collection c)
         (§ for (Object o :in c))
         (§
@@ -1708,22 +1504,18 @@
         (§ return (§ expr true))
     )
 
-    #_public
     (§ method Object[] toArray(Object[] a)
         (§ return (§ expr RT.seqToPassedArray(seq(), a)))
     )
 
-    #_public
     (§ method int size()
         (§ return (§ expr count()))
     )
 
-    #_public
     (§ method boolean isEmpty()
         (§ return (§ expr (count() == 0)))
     )
 
-    #_public
     (§ method Iterator iterator()
         (§ if (impl instanceof IMapIterable))
         (§
@@ -1732,22 +1524,17 @@
         (§ else )
         (§
             (§ return (§ expr new Iterator()
-            (§ inner
-                #_private
-                #_final
-                (§ field Iterator iter = impl.iterator())
+            (§ reify
+                (§ field- Iterator iter = impl.iterator())
 
-                #_public
                 (§ method boolean hasNext()
                     (§ return (§ expr iter.hasNext()))
                 )
 
-                #_public
                 (§ method Object next()
                     (§ return (§ expr ((IMapEntry)iter.next()).key()))
                 )
 
-                #_public
                 (§ method void remove()
                     (§ throw new UnsupportedOperationException())
                 )
@@ -1761,18 +1548,15 @@
 
 (§ import java.util.*)
 
-#_public
 #_abstract
 (class-ns APersistentVector (§ extends AFn) (§ implements IPersistentVector, Iterable, List, RandomAccess, Comparable, IHashEq)
     (§ field int _hash)
     (§ field int _hasheq)
 
-    #_public
     (§ method String toString()
         (§ return (§ expr RT.printString(this)))
     )
 
-    #_public
     (§ method ISeq seq()
         (§ if (count() > 0))
         (§
@@ -1781,7 +1565,6 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method ISeq rseq()
         (§ if (count() > 0))
         (§
@@ -1790,8 +1573,7 @@
         (§ return (§ expr nil))
     )
 
-    #_static
-    (§ method boolean doEquals(IPersistentVector v, Object obj)
+    (§ defn boolean doEquals(IPersistentVector v, Object obj)
         (§ if (obj instanceof IPersistentVector))
         (§
             (§ let IPersistentVector ov = (IPersistentVector) obj)
@@ -1847,8 +1629,7 @@
         (§ return (§ expr true))
     )
 
-    #_static
-    (§ method boolean doEquiv(IPersistentVector v, Object obj)
+    (§ defn boolean doEquiv(IPersistentVector v, Object obj)
         (§ if (obj instanceof IPersistentVector))
         (§
             (§ let IPersistentVector ov = (IPersistentVector) obj)
@@ -1904,7 +1685,6 @@
         (§ return (§ expr true))
     )
 
-    #_public
     (§ method boolean equals(Object obj)
         (§ if (obj == this))
         (§
@@ -1913,7 +1693,6 @@
         (§ return (§ expr doEquals(this, obj)))
     )
 
-    #_public
     (§ method boolean equiv(Object obj)
         (§ if (obj == this))
         (§
@@ -1922,7 +1701,6 @@
         (§ return (§ expr doEquiv(this, obj)))
     )
 
-    #_public
     (§ method int hashCode()
         (§ let int hash = this._hash)
         (§ if (hash == 0))
@@ -1938,7 +1716,6 @@
         (§ return (§ expr hash))
     )
 
-    #_public
     (§ method int hasheq()
         (§ let int hash = this._hasheq)
         (§ if (hash == 0))
@@ -1956,12 +1733,10 @@
         (§ return (§ expr hash))
     )
 
-    #_public
     (§ method Object get(int index)
         (§ return (§ expr nth(index)))
     )
 
-    #_public
     (§ method Object nth(int i, Object notFound)
         (§ if (i >= 0 && i < count()))
         (§
@@ -1970,12 +1745,10 @@
         (§ return (§ expr notFound))
     )
 
-    #_public
     (§ method Object remove(int i)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method int indexOf(Object o)
         (§ for (int i = 0 i < count() i++))
         (§
@@ -1987,7 +1760,6 @@
         (§ return (§ expr -1))
     )
 
-    #_public
     (§ method int lastIndexOf(Object o)
         (§ for (int i = count() - 1 i >= 0 i--))
         (§
@@ -1999,23 +1771,19 @@
         (§ return (§ expr -1))
     )
 
-    #_public
     (§ method ListIterator listIterator()
         (§ return (§ expr listIterator(0)))
     )
 
-    #_public
-    (§ method ListIterator listIterator(final int index)
+    (§ method ListIterator listIterator(int index)
         (§ return (§ expr new ListIterator()
-        (§ inner
+        (§ reify
             (§ let int nexti = index)
 
-            #_public
             (§ method boolean hasNext()
                 (§ return (§ expr (nexti < count())))
             )
 
-            #_public
             (§ method Object next()
                 (§ if (nexti < count()))
                 (§
@@ -2027,12 +1795,10 @@
                 )
             )
 
-            #_public
             (§ method boolean hasPrevious()
                 (§ return (§ expr (nexti > 0)))
             )
 
-            #_public
             (§ method Object previous()
                 (§ if (nexti > 0))
                 (§
@@ -2044,44 +1810,37 @@
                 )
             )
 
-            #_public
             (§ method int nextIndex()
                 (§ return (§ expr nexti))
             )
 
-            #_public
             (§ method int previousIndex()
                 (§ return (§ expr nexti - 1))
             )
 
-            #_public
             (§ method void remove()
                 (§ throw new UnsupportedOperationException())
             )
 
-            #_public
             (§ method void set(Object o)
                 (§ throw new UnsupportedOperationException())
             )
 
-            #_public
             (§ method void add(Object o)
                 (§ throw new UnsupportedOperationException())
             )
         )))
     )
 
-    (§ method Iterator rangedIterator(final int start, final int end)
+    (§ method Iterator rangedIterator(int start, int end)
         (§ return (§ expr new Iterator()
-        (§ inner
+        (§ reify
             (§ let int i = start)
 
-            #_public
             (§ method boolean hasNext()
                 (§ return (§ expr (i < end)))
             )
 
-            #_public
             (§ method Object next()
                 (§ if (i < end))
                 (§
@@ -2093,34 +1852,28 @@
                 )
             )
 
-            #_public
             (§ method void remove()
                 (§ throw new UnsupportedOperationException())
             )
         )))
     )
 
-    #_public
     (§ method List subList(int fromIndex, int toIndex)
         (§ return (§ expr (List) RT.subvec(this, fromIndex, toIndex)))
     )
 
-    #_public
     (§ method Object set(int i, Object o)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method void add(int i, Object o)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean addAll(int i, Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method Object invoke(Object arg1)
         (§ if (Util.isInteger(arg1)))
         (§
@@ -2129,19 +1882,16 @@
         (§ throw new IllegalArgumentException("Key must be integer"))
     )
 
-    #_public
     (§ method Iterator iterator()
         ;; todo - something more efficient
         (§ return (§ expr new Iterator()
-        (§ inner
+        (§ reify
             (§ let int i = 0)
 
-            #_public
             (§ method boolean hasNext()
                 (§ return (§ expr (i < count())))
             )
 
-            #_public
             (§ method Object next()
                 (§ if (i < count()))
                 (§
@@ -2153,14 +1903,12 @@
                 )
             )
 
-            #_public
             (§ method void remove()
                 (§ throw new UnsupportedOperationException())
             )
         )))
     )
 
-    #_public
     (§ method Object peek()
         (§ if (count() > 0))
         (§
@@ -2169,7 +1917,6 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method boolean containsKey(Object key)
         (§ if (!(Util.isInteger(key))))
         (§
@@ -2179,7 +1926,6 @@
         (§ return (§ expr (i >= 0 && i < count())))
     )
 
-    #_public
     (§ method IMapEntry entryAt(Object key)
         (§ if (Util.isInteger(key)))
         (§
@@ -2192,7 +1938,6 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method IPersistentVector assoc(Object key, Object val)
         (§ if (Util.isInteger(key)))
         (§
@@ -2202,7 +1947,6 @@
         (§ throw new IllegalArgumentException("Key must be integer"))
     )
 
-    #_public
     (§ method Object valAt(Object key, Object notFound)
         (§ if (Util.isInteger(key)))
         (§
@@ -2215,12 +1959,10 @@
         (§ return (§ expr notFound))
     )
 
-    #_public
     (§ method Object valAt(Object key)
         (§ return (§ expr valAt(key, nil)))
     )
 
-    #_public
     (§ method Object[] toArray()
         (§ let Object[] ret = new Object[count()])
         (§ for (int i = 0 i < count() i++))
@@ -2230,37 +1972,30 @@
         (§ return (§ expr ret))
     )
 
-    #_public
     (§ method boolean add(Object o)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean remove(Object o)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean addAll(Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method void clear()
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean retainAll(Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean removeAll(Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean containsAll(Collection c)
         (§ for (Object o :in c))
         (§
@@ -2272,22 +2007,18 @@
         (§ return (§ expr true))
     )
 
-    #_public
     (§ method Object[] toArray(Object[] a)
         (§ return (§ expr RT.seqToPassedArray(seq(), a)))
     )
 
-    #_public
     (§ method int size()
         (§ return (§ expr count()))
     )
 
-    #_public
     (§ method boolean isEmpty()
         (§ return (§ expr (count() == 0)))
     )
 
-    #_public
     (§ method boolean contains(Object o)
         (§ for (ISeq s = seq() s != nil s = s.next()))
         (§
@@ -2299,12 +2030,10 @@
         (§ return (§ expr false))
     )
 
-    #_public
     (§ method int length()
         (§ return (§ expr count()))
     )
 
-    #_public
     (§ method int compareTo(Object o)
         (§ let IPersistentVector v = (IPersistentVector) o)
         (§ if (count() < v.count()))
@@ -2326,32 +2055,26 @@
         (§ return (§ expr 0))
     )
 
-    #_static
     (class-ns Seq (§ extends ASeq) (§ implements IndexedSeq, IReduce)
         ;; todo - something more efficient
-        #_final
         (§ field IPersistentVector v)
-        #_final
         (§ field int i)
 
-        #_public
-        (§ method Seq(IPersistentVector v, int i)
+        (§ constructor Seq(IPersistentVector v, int i)
             (§ ass this.v = v)
             (§ ass this.i = i)
         )
 
-        (§ method Seq(IPersistentMap meta, IPersistentVector v, int i)
+        (§ constructor Seq(IPersistentMap meta, IPersistentVector v, int i)
             (§ super(meta))
             (§ ass this.v = v)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr v.nth(i)))
         )
 
-        #_public
         (§ method ISeq next()
             (§ if (i + 1 < v.count()))
             (§
@@ -2360,22 +2083,18 @@
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method int index()
             (§ return (§ expr i))
         )
 
-        #_public
         (§ method int count()
             (§ return (§ expr v.count() - i))
         )
 
-        #_public
         (§ method APersistentVector.Seq withMeta(IPersistentMap meta)
             (§ return (§ expr new APersistentVector.Seq(meta, v, i)))
         )
 
-        #_public
         (§ method Object reduce(IFn f)
             (§ let Object ret = v.nth(i))
             (§ for (int x = i + 1 x < v.count() x++))
@@ -2389,7 +2108,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method Object reduce(IFn f, Object start)
             (§ let Object ret = f.invoke(start, v.nth(i)))
             (§ for (int x = i + 1 x < v.count() x++))
@@ -2408,32 +2126,25 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns RSeq (§ extends ASeq) (§ implements IndexedSeq, Counted)
-        #_final
         (§ field IPersistentVector v)
-        #_final
         (§ field int i)
 
-        #_public
-        (§ method RSeq(IPersistentVector vector, int i)
+        (§ constructor RSeq(IPersistentVector vector, int i)
             (§ ass this.v = vector)
             (§ ass this.i = i)
         )
 
-        (§ method RSeq(IPersistentMap meta, IPersistentVector v, int i)
+        (§ constructor RSeq(IPersistentMap meta, IPersistentVector v, int i)
             (§ super(meta))
             (§ ass this.v = v)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr v.nth(i)))
         )
 
-        #_public
         (§ method ISeq next()
             (§ if (i > 0))
             (§
@@ -2442,39 +2153,26 @@
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method int index()
             (§ return (§ expr i))
         )
 
-        #_public
         (§ method int count()
             (§ return (§ expr i + 1))
         )
 
-        #_public
         (§ method APersistentVector.RSeq withMeta(IPersistentMap meta)
             (§ return (§ expr new APersistentVector.RSeq(meta, v, i)))
         )
     )
 
-    #_public
-    #_static
     (class-ns SubVector (§ extends APersistentVector) (§ implements IObj)
-        #_public
-        #_final
         (§ field IPersistentVector v)
-        #_public
-        #_final
         (§ field int start)
-        #_public
-        #_final
         (§ field int end)
-        #_final
         (§ field IPersistentMap _meta)
 
-        #_public
-        (§ method SubVector(IPersistentMap meta, IPersistentVector v, int start, int end)
+        (§ constructor SubVector(IPersistentMap meta, IPersistentVector v, int start, int end)
             (§ ass this._meta = meta)
 
             (§ if (v instanceof APersistentVector.SubVector))
@@ -2489,7 +2187,6 @@
             (§ ass this.end = end)
         )
 
-        #_public
         (§ method Iterator iterator()
             (§ if (v instanceof APersistentVector))
             (§
@@ -2498,7 +2195,6 @@
             (§ return (§ expr super.iterator()))
         )
 
-        #_public
         (§ method Object nth(int i)
             (§ if ((start + i >= end) || (i < 0)))
             (§
@@ -2507,7 +2203,6 @@
             (§ return (§ expr v.nth(start + i)))
         )
 
-        #_public
         (§ method IPersistentVector assocN(int i, Object val)
             (§ if (start + i > end))
             (§
@@ -2520,22 +2215,18 @@
             (§ return (§ expr new SubVector(_meta, v.assocN(start + i, val), start, end)))
         )
 
-        #_public
         (§ method int count()
             (§ return (§ expr end - start))
         )
 
-        #_public
         (§ method IPersistentVector cons(Object o)
             (§ return (§ expr new SubVector(_meta, v.assocN(end, o), start, end + 1)))
         )
 
-        #_public
         (§ method IPersistentCollection empty()
             (§ return (§ expr PersistentVector.EMPTY.withMeta(meta())))
         )
 
-        #_public
         (§ method IPersistentStack pop()
             (§ if (end - 1 == start))
             (§
@@ -2544,7 +2235,6 @@
             (§ return (§ expr new SubVector(_meta, v, start, end - 1)))
         )
 
-        #_public
         (§ method SubVector withMeta(IPersistentMap meta)
             (§ if (meta == _meta))
             (§
@@ -2553,7 +2243,6 @@
             (§ return (§ expr new SubVector(meta, v, start, end)))
         )
 
-        #_public
         (§ method IPersistentMap meta()
             (§ return (§ expr _meta))
         )
@@ -2565,23 +2254,19 @@
 
 (§ import java.util.Map)
 
-#_public
 #_abstract
 (class-ns ARef (§ extends AReference) (§ implements IRef)
     #_protected
     #_volatile
     (§ field IFn validator = nil)
-    #_private
     #_volatile
-    (§ field IPersistentMap watches = PersistentHashMap.EMPTY)
+    (§ field- IPersistentMap watches = PersistentHashMap.EMPTY)
 
-    #_public
-    (§ method ARef()
+    (§ constructor ARef()
         (§ super())
     )
 
-    #_public
-    (§ method ARef(IPersistentMap meta)
+    (§ constructor ARef(IPersistentMap meta)
         (§ super(meta))
     )
 
@@ -2607,37 +2292,33 @@
         (§ call validate(validator, val))
     )
 
-    #_public
     (§ method void setValidator(IFn vf)
         (§ call validate(vf, deref()))
         (§ ass validator = vf)
     )
 
-    #_public
     (§ method IFn getValidator()
         (§ return (§ expr validator))
     )
 
-    #_public
     (§ method IPersistentMap getWatches()
         (§ return (§ expr watches))
     )
 
-    #_synchronized
-    #_public
     (§ method IRef addWatch(Object key, IFn callback)
-        (§ ass watches = watches.assoc(key, callback))
-        (§ return (§ expr this))
+        (§ synchronized (this)
+            (§ ass watches = watches.assoc(key, callback))
+            (§ return (§ expr this))
+        )
     )
 
-    #_synchronized
-    #_public
     (§ method IRef removeWatch(Object key)
-        (§ ass watches = watches.without(key))
-        (§ return (§ expr this))
+        (§ synchronized (this)
+            (§ ass watches = watches.without(key))
+            (§ return (§ expr this))
+        )
     )
 
-    #_public
     (§ method void notifyWatches(Object oldval, Object newval)
         (§ let IPersistentMap ws = watches)
         (§ if (ws.count() > 0))
@@ -2658,62 +2339,51 @@
 
 (java-ns cloiure.lang.AReference
 
-#_public
 (class-ns AReference (§ implements IReference)
-    #_private
-    (§ field IPersistentMap _meta)
+    (§ field- IPersistentMap _meta)
 
-    #_public
-    (§ method AReference()
+    (§ constructor AReference()
         (§ this(nil))
     )
 
-    #_public
-    (§ method AReference(IPersistentMap meta)
+    (§ constructor AReference(IPersistentMap meta)
         (§ ass _meta = meta)
     )
 
-    #_synchronized
-    #_public
     (§ method IPersistentMap meta()
-        (§ return (§ expr _meta))
+        (§ synchronized (this)
+            (§ return (§ expr _meta))
+        )
     )
 
-    #_synchronized
-    #_public
     (§ method IPersistentMap alterMeta(IFn alter, ISeq args)
-        (§ ass _meta = (IPersistentMap) alter.applyTo(new Cons(_meta, args)))
-        (§ return (§ expr _meta))
+        (§ synchronized (this)
+            (§ ass _meta = (IPersistentMap) alter.applyTo(new Cons(_meta, args)))
+            (§ return (§ expr _meta))
+        )
     )
 
-    #_synchronized
-    #_public
     (§ method IPersistentMap resetMeta(IPersistentMap m)
-        (§ ass _meta = m)
-        (§ return (§ expr m))
+        (§ synchronized (this)
+            (§ ass _meta = m)
+            (§ return (§ expr m))
+        )
     )
 )
 )
 
 (java-ns cloiure.lang.ArityException
 
-#_public
 (class-ns ArityException (§ extends IllegalArgumentException)
-    #_final
-    #_public
     (§ field int actual)
 
-    #_final
-    #_public
     (§ field String name)
 
-    #_public
-    (§ method ArityException(int actual, String name)
+    (§ constructor ArityException(int actual, String name)
         (§ this(actual, name, nil))
     )
 
-    #_public
-    (§ method ArityException(int actual, String name, Throwable cause)
+    (§ constructor ArityException(int actual, String name, Throwable cause)
         (§ super("Wrong number of args (" + actual + ") passed to: " + name, cause))
         (§ ass this.actual = actual)
         (§ ass this.name = name)
@@ -2723,39 +2393,29 @@
 
 (java-ns cloiure.lang.ArrayChunk
 
-#_public
-#_final
 (class-ns ArrayChunk (§ implements IChunk)
-    #_final
     (§ field Object[] array)
-    #_final
     (§ field int off)
-    #_final
     (§ field int end)
 
-    #_public
-    (§ method ArrayChunk(Object[] array)
+    (§ constructor ArrayChunk(Object[] array)
         (§ this(array, 0, array.length))
     )
 
-    #_public
-    (§ method ArrayChunk(Object[] array, int off)
+    (§ constructor ArrayChunk(Object[] array, int off)
         (§ this(array, off, array.length))
     )
 
-    #_public
-    (§ method ArrayChunk(Object[] array, int off, int end)
+    (§ constructor ArrayChunk(Object[] array, int off, int end)
         (§ ass this.array = array)
         (§ ass this.off = off)
         (§ ass this.end = end)
     )
 
-    #_public
     (§ method Object nth(int i)
         (§ return (§ expr array[off + i]))
     )
 
-    #_public
     (§ method Object nth(int i, Object notFound)
         (§ if (i >= 0 && i < count()))
         (§
@@ -2764,12 +2424,10 @@
         (§ return (§ expr notFound))
     )
 
-    #_public
     (§ method int count()
         (§ return (§ expr end - off))
     )
 
-    #_public
     (§ method IChunk dropFirst()
         (§ if (off == end))
         (§
@@ -2778,7 +2436,6 @@
         (§ return (§ expr new ArrayChunk(array, off + 1, end)))
     )
 
-    #_public
     (§ method Object reduce(IFn f, Object start)
         (§ let Object ret = f.invoke(start, array[off]))
         (§ if (RT.isReduced(ret)))
@@ -2803,41 +2460,30 @@
 (§ import java.lang.reflect.Array)
 (§ import java.util.Iterator)
 
-#_public
 (class-ns ArrayIter (§ implements Iterator)
-    #_final
     (§ field Object[] array)
     (§ field int i)
 
-    #_static
-    #_public
-    (§ field Iterator EMPTY_ITERATOR = new Iterator()
-    (§ inner
-        #_public
+    (§ def Iterator EMPTY_ITERATOR = new Iterator()
+    (§ reify
         (§ method boolean hasNext()
             (§ return (§ expr false))
         )
 
-        #_public
         (§ method Object next()
             (§ throw new java.util.NoSuchElementException())
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException("remove() not supported"))
         )
     ))
 
-    #_static
-    #_public
-    (§ method Iterator create()
+    (§ defn Iterator create()
         (§ return (§ expr EMPTY_ITERATOR))
     )
 
-    #_static
-    #_public
-    (§ method Iterator create(Object... array)
+    (§ defn Iterator create(Object... array)
         (§ if (array == nil || array.length == 0))
         (§
             (§ return (§ expr EMPTY_ITERATOR))
@@ -2845,9 +2491,7 @@
         (§ return (§ expr new ArrayIter(array, 0)))
     )
 
-    #_static
-    #_public
-    (§ method Iterator createFromObject(Object array)
+    (§ defn Iterator createFromObject(Object array)
         (§ if (array == nil || Array.getLength(array) == 0))
         (§
             (§ return (§ expr EMPTY_ITERATOR))
@@ -2888,17 +2532,15 @@
         (§ return (§ expr new ArrayIter(array, 0)))
     )
 
-    (§ method ArrayIter(Object array, int i)
+    (§ constructor ArrayIter(Object array, int i)
         (§ ass this.i = i)
         (§ ass this.array = (Object[]) array)
     )
 
-    #_public
     (§ method boolean hasNext()
         (§ return (§ expr (array != nil && i < array.length)))
     )
 
-    #_public
     (§ method Object next()
         (§ if (array != nil && i < array.length))
         (§
@@ -2907,29 +2549,23 @@
         (§ throw new java.util.NoSuchElementException())
     )
 
-    #_public
     (§ method void remove()
         (§ throw new UnsupportedOperationException("remove() not supported"))
     )
 
-    #_static
-    #_public
     (class-ns ArrayIter_int (§ implements Iterator<Long>)
-        #_final
         (§ field int[] array)
         (§ field int i)
 
-        (§ method ArrayIter_int(int[] array, int i)
+        (§ constructor ArrayIter_int(int[] array, int i)
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method boolean hasNext()
             (§ return (§ expr (array != nil && i < array.length)))
         )
 
-        #_public
         (§ method Long next()
             (§ if (array != nil && i < array.length))
             (§
@@ -2938,30 +2574,24 @@
             (§ throw new java.util.NoSuchElementException())
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException("remove() not supported"))
         )
     )
 
-    #_static
-    #_public
     (class-ns ArrayIter_float (§ implements Iterator<Double>)
-        #_final
         (§ field float[] array)
         (§ field int i)
 
-        (§ method ArrayIter_float(float[] array, int i)
+        (§ constructor ArrayIter_float(float[] array, int i)
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method boolean hasNext()
             (§ return (§ expr (array != nil && i < array.length)))
         )
 
-        #_public
         (§ method Double next()
             (§ if (array != nil && i < array.length))
             (§
@@ -2970,30 +2600,24 @@
             (§ throw new java.util.NoSuchElementException())
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException("remove() not supported"))
         )
     )
 
-    #_static
-    #_public
     (class-ns ArrayIter_double (§ implements Iterator<Double>)
-        #_final
         (§ field double[] array)
         (§ field int i)
 
-        (§ method ArrayIter_double(double[] array, int i)
+        (§ constructor ArrayIter_double(double[] array, int i)
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method boolean hasNext()
             (§ return (§ expr (array != nil && i < array.length)))
         )
 
-        #_public
         (§ method Double next()
             (§ if (array != nil && i < array.length))
             (§
@@ -3002,30 +2626,24 @@
             (§ throw new java.util.NoSuchElementException())
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException("remove() not supported"))
         )
     )
 
-    #_static
-    #_public
     (class-ns ArrayIter_long (§ implements Iterator<Long>)
-        #_final
         (§ field long[] array)
         (§ field int i)
 
-        (§ method ArrayIter_long(long[] array, int i)
+        (§ constructor ArrayIter_long(long[] array, int i)
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method boolean hasNext()
             (§ return (§ expr (array != nil && i < array.length)))
         )
 
-        #_public
         (§ method Long next()
             (§ if (array != nil && i < array.length))
             (§
@@ -3034,30 +2652,24 @@
             (§ throw new java.util.NoSuchElementException())
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException("remove() not supported"))
         )
     )
 
-    #_static
-    #_public
     (class-ns ArrayIter_byte (§ implements Iterator<Byte>)
-        #_final
         (§ field byte[] array)
         (§ field int i)
 
-        (§ method ArrayIter_byte(byte[] array, int i)
+        (§ constructor ArrayIter_byte(byte[] array, int i)
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method boolean hasNext()
             (§ return (§ expr (array != nil && i < array.length)))
         )
 
-        #_public
         (§ method Byte next()
             (§ if (array != nil && i < array.length))
             (§
@@ -3066,30 +2678,24 @@
             (§ throw new java.util.NoSuchElementException())
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException("remove() not supported"))
         )
     )
 
-    #_static
-    #_public
     (class-ns ArrayIter_char (§ implements Iterator<Character>)
-        #_final
         (§ field char[] array)
         (§ field int i)
 
-        (§ method ArrayIter_char(char[] array, int i)
+        (§ constructor ArrayIter_char(char[] array, int i)
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method boolean hasNext()
             (§ return (§ expr (array != nil && i < array.length)))
         )
 
-        #_public
         (§ method Character next()
             (§ if (array != nil && i < array.length))
             (§
@@ -3098,30 +2704,24 @@
             (§ throw new java.util.NoSuchElementException())
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException("remove() not supported"))
         )
     )
 
-    #_static
-    #_public
     (class-ns ArrayIter_short (§ implements Iterator<Long>)
-        #_final
         (§ field short[] array)
         (§ field int i)
 
-        (§ method ArrayIter_short(short[] array, int i)
+        (§ constructor ArrayIter_short(short[] array, int i)
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method boolean hasNext()
             (§ return (§ expr (array != nil && i < array.length)))
         )
 
-        #_public
         (§ method Long next()
             (§ if (array != nil && i < array.length))
             (§
@@ -3130,30 +2730,24 @@
             (§ throw new java.util.NoSuchElementException())
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException("remove() not supported"))
         )
     )
 
-    #_static
-    #_public
     (class-ns ArrayIter_boolean (§ implements Iterator<Boolean>)
-        #_final
         (§ field boolean[] array)
         (§ field int i)
 
-        (§ method ArrayIter_boolean(boolean[] array, int i)
+        (§ constructor ArrayIter_boolean(boolean[] array, int i)
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method boolean hasNext()
             (§ return (§ expr (array != nil && i < array.length)))
         )
 
-        #_public
         (§ method Boolean next()
             (§ if (array != nil && i < array.length))
             (§
@@ -3162,7 +2756,6 @@
             (§ throw new java.util.NoSuchElementException())
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException("remove() not supported"))
         )
@@ -3174,23 +2767,15 @@
 
 (§ import java.lang.reflect.Array)
 
-#_public
 (class-ns ArraySeq (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-    #_public
-    #_final
     (§ field Object[] array)
-    #_final
     (§ field int i)
 
-    #_static
-    #_public
-    (§ method ArraySeq create()
+    (§ defn ArraySeq create()
         (§ return (§ expr nil))
     )
 
-    #_static
-    #_public
-    (§ method ArraySeq create(Object... array)
+    (§ defn ArraySeq create(Object... array)
         (§ if (array == nil || array.length == 0))
         (§
             (§ return (§ expr nil))
@@ -3198,8 +2783,7 @@
         (§ return (§ expr new ArraySeq(array, 0)))
     )
 
-    #_static
-    (§ method ISeq createFromObject(Object array)
+    (§ defn ISeq createFromObject(Object array)
         (§ if (array == nil || Array.getLength(array) == 0))
         (§
             (§ return (§ expr nil))
@@ -3240,18 +2824,17 @@
         (§ return (§ expr new ArraySeq(array, 0)))
     )
 
-    (§ method ArraySeq(Object array, int i)
+    (§ constructor ArraySeq(Object array, int i)
         (§ ass this.i = i)
         (§ ass this.array = (Object[]) array)
     )
 
-    (§ method ArraySeq(IPersistentMap meta, Object array, int i)
+    (§ constructor ArraySeq(IPersistentMap meta, Object array, int i)
         (§ super(meta))
         (§ ass this.i = i)
         (§ ass this.array = (Object[]) array)
     )
 
-    #_public
     (§ method Object first()
         (§ if (array != nil))
         (§
@@ -3260,7 +2843,6 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method ISeq next()
         (§ if (array != nil && i + 1 < array.length))
         (§
@@ -3269,7 +2851,6 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method int count()
         (§ if (array != nil))
         (§
@@ -3278,17 +2859,14 @@
         (§ return (§ expr 0))
     )
 
-    #_public
     (§ method int index()
         (§ return (§ expr i))
     )
 
-    #_public
     (§ method ArraySeq withMeta(IPersistentMap meta)
         (§ return (§ expr new ArraySeq(meta, array, i)))
     )
 
-    #_public
     (§ method Object reduce(IFn f)
         (§ if (array != nil))
         (§
@@ -3306,7 +2884,6 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method Object reduce(IFn f, Object start)
         (§ if (array != nil))
         (§
@@ -3328,7 +2905,6 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method int indexOf(Object o)
         (§ if (array != nil))
         (§
@@ -3343,7 +2919,6 @@
         (§ return (§ expr -1))
     )
 
-    #_public
     (§ method int lastIndexOf(Object o)
         (§ if (array != nil))
         (§
@@ -3371,27 +2946,20 @@
         (§ return (§ expr -1))
     )
 
-    #_static
-    #_public
     (class-ns ArraySeq_int (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-        #_public
-        #_final
         (§ field int[] array)
-        #_final
         (§ field int i)
 
-        (§ method ArraySeq_int(IPersistentMap meta, int[] array, int i)
+        (§ constructor ArraySeq_int(IPersistentMap meta, int[] array, int i)
             (§ super(meta))
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr array[i]))
         )
 
-        #_public
         (§ method ISeq next()
             (§ if (i + 1 < array.length))
             (§
@@ -3400,22 +2968,18 @@
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method int count()
             (§ return (§ expr array.length - i))
         )
 
-        #_public
         (§ method int index()
             (§ return (§ expr i))
         )
 
-        #_public
         (§ method ArraySeq_int withMeta(IPersistentMap meta)
             (§ return (§ expr new ArraySeq_int(meta, array, i)))
         )
 
-        #_public
         (§ method Object reduce(IFn f)
             (§ let Object ret = array[i])
             (§ for (int x = i + 1 x < array.length x++))
@@ -3429,7 +2993,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method Object reduce(IFn f, Object start)
             (§ let Object ret = f.invoke(start, array[i]))
             (§ for (int x = i + 1 x < array.length x++))
@@ -3447,7 +3010,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method int indexOf(Object o)
             (§ if (o instanceof Number))
             (§
@@ -3464,7 +3026,6 @@
             (§ return (§ expr -1))
         )
 
-        #_public
         (§ method int lastIndexOf(Object o)
             (§ if (o instanceof Number))
             (§
@@ -3482,27 +3043,20 @@
         )
     )
 
-    #_static
-    #_public
     (class-ns ArraySeq_float (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-        #_public
-        #_final
         (§ field float[] array)
-        #_final
         (§ field int i)
 
-        (§ method ArraySeq_float(IPersistentMap meta, float[] array, int i)
+        (§ constructor ArraySeq_float(IPersistentMap meta, float[] array, int i)
             (§ super(meta))
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr Numbers.num(array[i])))
         )
 
-        #_public
         (§ method ISeq next()
             (§ if (i + 1 < array.length))
             (§
@@ -3511,22 +3065,18 @@
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method int count()
             (§ return (§ expr array.length - i))
         )
 
-        #_public
         (§ method int index()
             (§ return (§ expr i))
         )
 
-        #_public
         (§ method ArraySeq_float withMeta(IPersistentMap meta)
             (§ return (§ expr new ArraySeq_float(meta, array, i)))
         )
 
-        #_public
         (§ method Object reduce(IFn f)
             (§ let Object ret = Numbers.num(array[i]))
             (§ for (int x = i + 1 x < array.length x++))
@@ -3540,7 +3090,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method Object reduce(IFn f, Object start)
             (§ let Object ret = f.invoke(start, Numbers.num(array[i])))
             (§ for (int x = i + 1 x < array.length x++))
@@ -3558,7 +3107,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method int indexOf(Object o)
             (§ if (o instanceof Number))
             (§
@@ -3574,7 +3122,6 @@
             (§ return (§ expr -1))
         )
 
-        #_public
         (§ method int lastIndexOf(Object o)
             (§ if (o instanceof Number))
             (§
@@ -3591,27 +3138,20 @@
         )
     )
 
-    #_static
-    #_public
     (class-ns ArraySeq_double (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-        #_public
-        #_final
         (§ field double[] array)
-        #_final
         (§ field int i)
 
-        (§ method ArraySeq_double(IPersistentMap meta, double[] array, int i)
+        (§ constructor ArraySeq_double(IPersistentMap meta, double[] array, int i)
             (§ super(meta))
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr array[i]))
         )
 
-        #_public
         (§ method ISeq next()
             (§ if (i + 1 < array.length))
             (§
@@ -3620,22 +3160,18 @@
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method int count()
             (§ return (§ expr array.length - i))
         )
 
-        #_public
         (§ method int index()
             (§ return (§ expr i))
         )
 
-        #_public
         (§ method ArraySeq_double withMeta(IPersistentMap meta)
             (§ return (§ expr new ArraySeq_double(meta, array, i)))
         )
 
-        #_public
         (§ method Object reduce(IFn f)
             (§ let Object ret = array[i])
             (§ for (int x = i + 1 x < array.length x++))
@@ -3649,7 +3185,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method Object reduce(IFn f, Object start)
             (§ let Object ret = f.invoke(start, array[i]))
             (§ for (int x = i + 1 x < array.length x++))
@@ -3667,7 +3202,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method int indexOf(Object o)
             (§ if (o instanceof Number))
             (§
@@ -3684,7 +3218,6 @@
             (§ return (§ expr -1))
         )
 
-        #_public
         (§ method int lastIndexOf(Object o)
             (§ if (o instanceof Number))
             (§
@@ -3702,27 +3235,20 @@
         )
     )
 
-    #_static
-    #_public
     (class-ns ArraySeq_long (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-        #_public
-        #_final
         (§ field long[] array)
-        #_final
         (§ field int i)
 
-        (§ method ArraySeq_long(IPersistentMap meta, long[] array, int i)
+        (§ constructor ArraySeq_long(IPersistentMap meta, long[] array, int i)
             (§ super(meta))
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr Numbers.num(array[i])))
         )
 
-        #_public
         (§ method ISeq next()
             (§ if (i + 1 < array.length))
             (§
@@ -3731,22 +3257,18 @@
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method int count()
             (§ return (§ expr array.length - i))
         )
 
-        #_public
         (§ method int index()
             (§ return (§ expr i))
         )
 
-        #_public
         (§ method ArraySeq_long withMeta(IPersistentMap meta)
             (§ return (§ expr new ArraySeq_long(meta, array, i)))
         )
 
-        #_public
         (§ method Object reduce(IFn f)
             (§ let Object ret = Numbers.num(array[i]))
             (§ for (int x = i + 1 x < array.length x++))
@@ -3760,7 +3282,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method Object reduce(IFn f, Object start)
             (§ let Object ret = f.invoke(start, Numbers.num(array[i])))
             (§ for (int x = i + 1 x < array.length x++))
@@ -3778,7 +3299,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method int indexOf(Object o)
             (§ if (o instanceof Number))
             (§
@@ -3795,7 +3315,6 @@
             (§ return (§ expr -1))
         )
 
-        #_public
         (§ method int lastIndexOf(Object o)
             (§ if (o instanceof Number))
             (§
@@ -3813,27 +3332,20 @@
         )
     )
 
-    #_static
-    #_public
     (class-ns ArraySeq_byte (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-        #_public
-        #_final
         (§ field byte[] array)
-        #_final
         (§ field int i)
 
-        (§ method ArraySeq_byte(IPersistentMap meta, byte[] array, int i)
+        (§ constructor ArraySeq_byte(IPersistentMap meta, byte[] array, int i)
             (§ super(meta))
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr array[i]))
         )
 
-        #_public
         (§ method ISeq next()
             (§ if (i + 1 < array.length))
             (§
@@ -3842,22 +3354,18 @@
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method int count()
             (§ return (§ expr array.length - i))
         )
 
-        #_public
         (§ method int index()
             (§ return (§ expr i))
         )
 
-        #_public
         (§ method ArraySeq_byte withMeta(IPersistentMap meta)
             (§ return (§ expr new ArraySeq_byte(meta, array, i)))
         )
 
-        #_public
         (§ method Object reduce(IFn f)
             (§ let Object ret = array[i])
             (§ for (int x = i + 1 x < array.length x++))
@@ -3871,7 +3379,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method Object reduce(IFn f, Object start)
             (§ let Object ret = f.invoke(start, array[i]))
             (§ for (int x = i + 1 x < array.length x++))
@@ -3889,7 +3396,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method int indexOf(Object o)
             (§ if (o instanceof Byte))
             (§
@@ -3916,7 +3422,6 @@
             (§ return (§ expr -1))
         )
 
-        #_public
         (§ method int lastIndexOf(Object o)
             (§ if (o instanceof Byte))
             (§
@@ -3944,27 +3449,20 @@
         )
     )
 
-    #_static
-    #_public
     (class-ns ArraySeq_char (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-        #_public
-        #_final
         (§ field char[] array)
-        #_final
         (§ field int i)
 
-        (§ method ArraySeq_char(IPersistentMap meta, char[] array, int i)
+        (§ constructor ArraySeq_char(IPersistentMap meta, char[] array, int i)
             (§ super(meta))
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr array[i]))
         )
 
-        #_public
         (§ method ISeq next()
             (§ if (i + 1 < array.length))
             (§
@@ -3973,22 +3471,18 @@
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method int count()
             (§ return (§ expr array.length - i))
         )
 
-        #_public
         (§ method int index()
             (§ return (§ expr i))
         )
 
-        #_public
         (§ method ArraySeq_char withMeta(IPersistentMap meta)
             (§ return (§ expr new ArraySeq_char(meta, array, i)))
         )
 
-        #_public
         (§ method Object reduce(IFn f)
             (§ let Object ret = array[i])
             (§ for (int x = i + 1 x < array.length x++))
@@ -4002,7 +3496,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method Object reduce(IFn f, Object start)
             (§ let Object ret = f.invoke(start, array[i]))
             (§ for (int x = i + 1 x < array.length x++))
@@ -4020,7 +3513,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method int indexOf(Object o)
             (§ if (o instanceof Character))
             (§
@@ -4047,7 +3539,6 @@
             (§ return (§ expr -1))
         )
 
-        #_public
         (§ method int lastIndexOf(Object o)
             (§ if (o instanceof Character))
             (§
@@ -4075,27 +3566,20 @@
         )
     )
 
-    #_static
-    #_public
     (class-ns ArraySeq_short (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-        #_public
-        #_final
         (§ field short[] array)
-        #_final
         (§ field int i)
 
-        (§ method ArraySeq_short(IPersistentMap meta, short[] array, int i)
+        (§ constructor ArraySeq_short(IPersistentMap meta, short[] array, int i)
             (§ super(meta))
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr array[i]))
         )
 
-        #_public
         (§ method ISeq next()
             (§ if (i + 1 < array.length))
             (§
@@ -4104,22 +3588,18 @@
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method int count()
             (§ return (§ expr array.length - i))
         )
 
-        #_public
         (§ method int index()
             (§ return (§ expr i))
         )
 
-        #_public
         (§ method ArraySeq_short withMeta(IPersistentMap meta)
             (§ return (§ expr new ArraySeq_short(meta, array, i)))
         )
 
-        #_public
         (§ method Object reduce(IFn f)
             (§ let Object ret = array[i])
             (§ for (int x = i + 1 x < array.length x++))
@@ -4133,7 +3613,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method Object reduce(IFn f, Object start)
             (§ let Object ret = f.invoke(start, array[i]))
             (§ for (int x = i + 1 x < array.length x++))
@@ -4151,7 +3630,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method int indexOf(Object o)
             (§ if (o instanceof Short))
             (§
@@ -4178,7 +3656,6 @@
             (§ return (§ expr -1))
         )
 
-        #_public
         (§ method int lastIndexOf(Object o)
             (§ if (o instanceof Short))
             (§
@@ -4206,27 +3683,20 @@
         )
     )
 
-    #_static
-    #_public
     (class-ns ArraySeq_boolean (§ extends ASeq) (§ implements IndexedSeq, IReduce)
-        #_public
-        #_final
         (§ field boolean[] array)
-        #_final
         (§ field int i)
 
-        (§ method ArraySeq_boolean(IPersistentMap meta, boolean[] array, int i)
+        (§ constructor ArraySeq_boolean(IPersistentMap meta, boolean[] array, int i)
             (§ super(meta))
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr array[i]))
         )
 
-        #_public
         (§ method ISeq next()
             (§ if (i + 1 < array.length))
             (§
@@ -4235,22 +3705,18 @@
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method int count()
             (§ return (§ expr array.length - i))
         )
 
-        #_public
         (§ method int index()
             (§ return (§ expr i))
         )
 
-        #_public
         (§ method ArraySeq_boolean withMeta(IPersistentMap meta)
             (§ return (§ expr new ArraySeq_boolean(meta, array, i)))
         )
 
-        #_public
         (§ method Object reduce(IFn f)
             (§ let Object ret = array[i])
             (§ for (int x = i + 1 x < array.length x++))
@@ -4264,7 +3730,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method Object reduce(IFn f, Object start)
             (§ let Object ret = f.invoke(start, array[i]))
             (§ for (int x = i + 1 x < array.length x++))
@@ -4282,7 +3747,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method int indexOf(Object o)
             (§ if (o instanceof Boolean))
             (§
@@ -4309,7 +3773,6 @@
             (§ return (§ expr -1))
         )
 
-        #_public
         (§ method int lastIndexOf(Object o)
             (§ if (o instanceof Boolean))
             (§
@@ -4343,7 +3806,6 @@
 
 (§ import java.util.*)
 
-#_public
 #_abstract
 (class-ns ASeq (§ extends Obj) (§ implements ISeq, Sequential, List, IHashEq)
     #_transient
@@ -4351,26 +3813,23 @@
     #_transient
     (§ field int _hasheq)
 
-    #_public
     (§ method String toString()
         (§ return (§ expr RT.printString(this)))
     )
 
-    #_public
     (§ method IPersistentCollection empty()
         (§ return (§ expr PersistentList.EMPTY))
     )
 
     #_protected
-    (§ method ASeq(IPersistentMap meta)
+    (§ constructor ASeq(IPersistentMap meta)
         (§ super(meta))
     )
 
     #_protected
-    (§ method ASeq()
+    (§ constructor ASeq()
     )
 
-    #_public
     (§ method boolean equiv(Object obj)
         (§ if (!(obj instanceof Sequential || obj instanceof List)))
         (§
@@ -4387,7 +3846,6 @@
         (§ return (§ expr (ms == nil)))
     )
 
-    #_public
     (§ method boolean equals(Object obj)
         (§ if (this == obj))
         (§
@@ -4408,7 +3866,6 @@
         (§ return (§ expr (ms == nil)))
     )
 
-    #_public
     (§ method int hashCode()
         (§ if (_hash == 0))
         (§
@@ -4422,7 +3879,6 @@
         (§ return (§ expr _hash))
     )
 
-    #_public
     (§ method int hasheq()
         (§ if (_hasheq == 0))
         (§
@@ -4431,7 +3887,6 @@
         (§ return (§ expr _hasheq))
     )
 
-    #_public
     (§ method int count()
         (§ let int i = 1)
         (§ for (ISeq s = next() s != nil s = s.next(), i++))
@@ -4444,18 +3899,14 @@
         (§ return (§ expr i))
     )
 
-    #_final
-    #_public
     (§ method ISeq seq()
         (§ return (§ expr this))
     )
 
-    #_public
     (§ method ISeq cons(Object o)
         (§ return (§ expr new Cons(o, this)))
     )
 
-    #_public
     (§ method ISeq more()
         (§ let ISeq s = next())
         (§ if (s == nil))
@@ -4465,42 +3916,34 @@
         (§ return (§ expr s))
     )
 
-    #_public
     (§ method Object[] toArray()
         (§ return (§ expr RT.seqToArray(seq())))
     )
 
-    #_public
     (§ method boolean add(Object o)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean remove(Object o)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean addAll(Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method void clear()
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean retainAll(Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean removeAll(Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean containsAll(Collection c)
         (§ for (Object o :in c))
         (§
@@ -4512,22 +3955,18 @@
         (§ return (§ expr true))
     )
 
-    #_public
     (§ method Object[] toArray(Object[] a)
         (§ return (§ expr RT.seqToPassedArray(seq(), a)))
     )
 
-    #_public
     (§ method int size()
         (§ return (§ expr count()))
     )
 
-    #_public
     (§ method boolean isEmpty()
         (§ return (§ expr (seq() == nil)))
     )
 
-    #_public
     (§ method boolean contains(Object o)
         (§ for (ISeq s = seq() s != nil s = s.next()))
         (§
@@ -4539,32 +3978,26 @@
         (§ return (§ expr false))
     )
 
-    #_public
     (§ method Iterator iterator()
         (§ return (§ expr new SeqIterator(this)))
     )
 
-    #_private
-    (§ method List reify()
+    (§ method- List reify()
         (§ return (§ expr Collections.unmodifiableList(new ArrayList(this))))
     )
 
-    #_public
     (§ method List subList(int fromIndex, int toIndex)
         (§ return (§ expr reify().subList(fromIndex, toIndex)))
     )
 
-    #_public
     (§ method Object set(int index, Object element)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method Object remove(int index)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method int indexOf(Object o)
         (§ let ISeq s = seq())
         (§ for (int i = 0 s != nil s = s.next(), i++))
@@ -4577,32 +4010,26 @@
         (§ return (§ expr -1))
     )
 
-    #_public
     (§ method int lastIndexOf(Object o)
         (§ return (§ expr reify().lastIndexOf(o)))
     )
 
-    #_public
     (§ method ListIterator listIterator()
         (§ return (§ expr reify().listIterator()))
     )
 
-    #_public
     (§ method ListIterator listIterator(int index)
         (§ return (§ expr reify().listIterator(index)))
     )
 
-    #_public
     (§ method Object get(int index)
         (§ return (§ expr RT.nth(this, index)))
     )
 
-    #_public
     (§ method void add(int index, Object element)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean addAll(int index, Collection c)
         (§ throw new UnsupportedOperationException())
     )
@@ -4611,7 +4038,6 @@
 
 (java-ns cloiure.lang.Associative
 
-#_public
 (§ interface Associative (§ extends IPersistentCollection, ILookup)
     (§ abstract boolean containsKey(Object key))
     (§ abstract IMapEntry entryAt(Object key))
@@ -4623,29 +4049,22 @@
 
 (§ import java.util.concurrent.atomic.AtomicReference)
 
-#_final
-#_public
 (class-ns Atom (§ extends ARef) (§ implements IAtom2)
-    #_final
     (§ field AtomicReference state)
 
-    #_public
-    (§ method Atom(Object state)
+    (§ constructor Atom(Object state)
         (§ ass this.state = new AtomicReference(state))
     )
 
-    #_public
-    (§ method Atom(Object state, IPersistentMap meta)
+    (§ constructor Atom(Object state, IPersistentMap meta)
         (§ super(meta))
         (§ ass this.state = new AtomicReference(state))
     )
 
-    #_public
     (§ method Object deref()
         (§ return (§ expr state.get()))
     )
 
-    #_public
     (§ method Object swap(IFn f)
         (§ while (true))
         (§
@@ -4660,7 +4079,6 @@
         )
     )
 
-    #_public
     (§ method Object swap(IFn f, Object arg)
         (§ while (true))
         (§
@@ -4675,7 +4093,6 @@
         )
     )
 
-    #_public
     (§ method Object swap(IFn f, Object arg1, Object arg2)
         (§ while (true))
         (§
@@ -4690,7 +4107,6 @@
         )
     )
 
-    #_public
     (§ method Object swap(IFn f, Object x, Object y, ISeq args)
         (§ while (true))
         (§
@@ -4705,7 +4121,6 @@
         )
     )
 
-    #_public
     (§ method IPersistentVector swapVals(IFn f)
         (§ while (true))
         (§
@@ -4720,7 +4135,6 @@
         )
     )
 
-    #_public
     (§ method IPersistentVector swapVals(IFn f, Object arg)
         (§ while (true))
         (§
@@ -4735,7 +4149,6 @@
         )
     )
 
-    #_public
     (§ method IPersistentVector swapVals(IFn f, Object arg1, Object arg2)
         (§ while (true))
         (§
@@ -4750,7 +4163,6 @@
         )
     )
 
-    #_public
     (§ method IPersistentVector swapVals(IFn f, Object x, Object y, ISeq args)
         (§ while (true))
         (§
@@ -4765,7 +4177,6 @@
         )
     )
 
-    #_public
     (§ method boolean compareAndSet(Object oldv, Object newv)
         (§ call validate(newv))
         (§ let boolean ret = state.compareAndSet(oldv, newv))
@@ -4776,7 +4187,6 @@
         (§ return (§ expr ret))
     )
 
-    #_public
     (§ method Object reset(Object newval)
         (§ let Object oldval = state.get())
         (§ call validate(newval))
@@ -4785,7 +4195,6 @@
         (§ return (§ expr newval))
     )
 
-    #_public
     (§ method IPersistentVector resetVals(Object newv)
         (§ call validate(newv))
         (§ while (true))
@@ -4807,7 +4216,6 @@
 
 (§ import cloiure.lang.PersistentHashMap.INode)
 
-#_public
 #_abstract
 (class-ns ATransientMap (§ extends AFn) (§ implements ITransientMap, ITransientAssociative2)
     (§ abstract void ensureEditable())
@@ -4817,7 +4225,6 @@
     (§ abstract int doCount())
     (§ abstract IPersistentMap doPersistent())
 
-    #_public
     (§ method ITransientMap conj(Object o)
         (§ call ensureEditable())
         (§ if (o instanceof Map.Entry))
@@ -4845,63 +4252,42 @@
         (§ return (§ expr ret))
     )
 
-    #_public
-    #_final
     (§ method Object invoke(Object arg1)
         (§ return (§ expr valAt(arg1)))
     )
 
-    #_public
-    #_final
     (§ method Object invoke(Object arg1, Object notFound)
         (§ return (§ expr valAt(arg1, notFound)))
     )
 
-    #_public
-    #_final
     (§ method Object valAt(Object key)
         (§ return (§ expr valAt(key, nil)))
     )
 
-    #_public
-    #_final
     (§ method ITransientMap assoc(Object key, Object val)
         (§ call ensureEditable())
         (§ return (§ expr doAssoc(key, val)))
     )
 
-    #_public
-    #_final
     (§ method ITransientMap without(Object key)
         (§ call ensureEditable())
         (§ return (§ expr doWithout(key)))
     )
 
-    #_public
-    #_final
     (§ method IPersistentMap persistent()
         (§ call ensureEditable())
         (§ return (§ expr doPersistent()))
     )
 
-    #_public
-    #_final
     (§ method Object valAt(Object key, Object notFound)
         (§ call ensureEditable())
         (§ return (§ expr doValAt(key, notFound)))
     )
 
-    #_private
-    #_static
-    #_final
-    (§ field Object NOT_FOUND = new Object())
-    #_public
-    #_final
+    (§ def- Object NOT_FOUND = new Object())
     (§ method boolean containsKey(Object key)
         (§ return (§ expr (valAt(key, NOT_FOUND) != NOT_FOUND)))
     )
-    #_public
-    #_final
     (§ method IMapEntry entryAt(Object key)
         (§ let Object v = valAt(key, NOT_FOUND))
         (§ if (v != NOT_FOUND))
@@ -4911,8 +4297,6 @@
         (§ return (§ expr nil))
     )
 
-    #_public
-    #_final
     (§ method int count()
         (§ call ensureEditable())
         (§ return (§ expr doCount()))
@@ -4922,22 +4306,19 @@
 
 (java-ns cloiure.lang.ATransientSet
 
-#_public
 #_abstract
 (class-ns ATransientSet (§ extends AFn) (§ implements ITransientSet)
     #_volatile
     (§ field ITransientMap impl)
 
-    (§ method ATransientSet(ITransientMap impl)
+    (§ constructor ATransientSet(ITransientMap impl)
         (§ ass this.impl = impl)
     )
 
-    #_public
     (§ method int count()
         (§ return (§ expr impl.count()))
     )
 
-    #_public
     (§ method ITransientSet conj(Object val)
         (§ let ITransientMap m = impl.assoc(val, val))
         (§ if (m != impl))
@@ -4947,12 +4328,10 @@
         (§ return (§ expr this))
     )
 
-    #_public
     (§ method boolean contains(Object key)
         (§ return (§ expr (this != impl.valAt(key, this))))
     )
 
-    #_public
     (§ method ITransientSet disjoin(Object key)
         (§ let ITransientMap m = impl.without(key))
         (§ if (m != impl))
@@ -4962,17 +4341,14 @@
         (§ return (§ expr this))
     )
 
-    #_public
     (§ method Object get(Object key)
         (§ return (§ expr impl.valAt(key)))
     )
 
-    #_public
     (§ method Object invoke(Object key, Object notFound)
         (§ return (§ expr impl.valAt(key, notFound)))
     )
 
-    #_public
     (§ method Object invoke(Object key)
         (§ return (§ expr impl.valAt(key)))
     )
@@ -4984,27 +4360,14 @@
 (§ import java.math.BigInteger)
 (§ import java.math.BigDecimal)
 
-#_public
-#_final
 (class-ns BigInt (§ extends Number) (§ implements IHashEq)
-    #_final
-    #_public
     (§ field long lpart)
-    #_final
-    #_public
     (§ field BigInteger bipart)
 
-    #_final
-    #_public
-    #_static
-    (§ field BigInt ZERO = new BigInt(0, nil))
-    #_final
-    #_public
-    #_static
-    (§ field BigInt ONE = new BigInt(1, nil))
+    (§ def BigInt ZERO = new BigInt(0, nil))
+    (§ def BigInt ONE = new BigInt(1, nil))
 
     ;; must follow Long
-    #_public
     (§ method int hashCode()
         (§ if (bipart == nil))
         (§
@@ -5013,7 +4376,6 @@
         (§ return (§ expr bipart.hashCode()))
     )
 
-    #_public
     (§ method int hasheq()
         (§ if (bipart == nil))
         (§
@@ -5022,7 +4384,6 @@
         (§ return (§ expr bipart.hashCode()))
     )
 
-    #_public
     (§ method boolean equals(Object obj)
         (§ if (this == obj))
         (§
@@ -5040,15 +4401,12 @@
         (§ return (§ expr false))
     )
 
-    #_private
-    (§ method BigInt(long lpart, BigInteger bipart)
+    (§ constructor- BigInt(long lpart, BigInteger bipart)
         (§ ass this.lpart = lpart)
         (§ ass this.bipart = bipart)
     )
 
-    #_public
-    #_static
-    (§ method BigInt fromBigInteger(BigInteger val)
+    (§ defn BigInt fromBigInteger(BigInteger val)
         (§ if (val.bitLength() < 64))
         (§
             (§ return (§ expr new BigInt(val.longValue(), nil)))
@@ -5059,13 +4417,10 @@
         )
     )
 
-    #_public
-    #_static
-    (§ method BigInt fromLong(long val)
+    (§ defn BigInt fromLong(long val)
         (§ return (§ expr new BigInt(val, nil)))
     )
 
-    #_public
     (§ method BigInteger toBigInteger()
         (§ if (bipart == nil))
         (§
@@ -5077,7 +4432,6 @@
         )
     )
 
-    #_public
     (§ method BigDecimal toBigDecimal()
         (§ if (bipart == nil))
         (§
@@ -5089,7 +4443,6 @@
         )
     )
 
-    #_public
     (§ method int intValue()
         (§ if (bipart == nil))
         (§
@@ -5101,7 +4454,6 @@
         )
     )
 
-    #_public
     (§ method long longValue()
         (§ if (bipart == nil))
         (§
@@ -5113,7 +4465,6 @@
         )
     )
 
-    #_public
     (§ method float floatValue()
         (§ if (bipart == nil))
         (§
@@ -5125,7 +4476,6 @@
         )
     )
 
-    #_public
     (§ method double doubleValue()
         (§ if (bipart == nil))
         (§
@@ -5137,7 +4487,6 @@
         )
     )
 
-    #_public
     (§ method byte byteValue()
         (§ if (bipart == nil))
         (§
@@ -5149,7 +4498,6 @@
         )
     )
 
-    #_public
     (§ method short shortValue()
         (§ if (bipart == nil))
         (§
@@ -5161,13 +4509,10 @@
         )
     )
 
-    #_public
-    #_static
-    (§ method BigInt valueOf(long val)
+    (§ defn BigInt valueOf(long val)
         (§ return (§ expr new BigInt(val, nil)))
     )
 
-    #_public
     (§ method String toString()
         (§ if (bipart == nil))
         (§
@@ -5176,12 +4521,10 @@
         (§ return (§ expr bipart.toString()))
     )
 
-    #_public
     (§ method int bitLength()
         (§ return (§ expr toBigInteger().bitLength()))
     )
 
-    #_public
     (§ method BigInt add(BigInt y)
         (§ if ((bipart == nil) && (y.bipart == nil)))
         (§
@@ -5194,7 +4537,6 @@
         (§ return (§ expr BigInt.fromBigInteger(this.toBigInteger().add(y.toBigInteger()))))
     )
 
-    #_public
     (§ method BigInt multiply(BigInt y)
         (§ if ((bipart == nil) && (y.bipart == nil)))
         (§
@@ -5207,7 +4549,6 @@
         (§ return (§ expr BigInt.fromBigInteger(this.toBigInteger().multiply(y.toBigInteger()))))
     )
 
-    #_public
     (§ method BigInt quotient(BigInt y)
         (§ if ((bipart == nil) && (y.bipart == nil)))
         (§
@@ -5220,7 +4561,6 @@
         (§ return (§ expr BigInt.fromBigInteger(this.toBigInteger().divide(y.toBigInteger()))))
     )
 
-    #_public
     (§ method BigInt remainder(BigInt y)
         (§ if ((bipart == nil) && (y.bipart == nil)))
         (§
@@ -5229,7 +4569,6 @@
         (§ return (§ expr BigInt.fromBigInteger(this.toBigInteger().remainder(y.toBigInteger()))))
     )
 
-    #_public
     (§ method boolean lt(BigInt y)
         (§ if ((bipart == nil) && (y.bipart == nil)))
         (§
@@ -5242,22 +4581,16 @@
 
 (java-ns cloiure.lang.Binding
 
-#_public
 (class-ns Binding #_"<T>"
-    #_public
     (§ field T val)
-    #_public
-    #_final
     (§ field Binding rest)
 
-    #_public
-    (§ method Binding(T val)
+    (§ constructor Binding(T val)
         (§ ass this.val = val)
         (§ ass this.rest = nil)
     )
 
-    #_public
-    (§ method Binding(T val, Binding rest)
+    (§ constructor Binding(T val, Binding rest)
         (§ ass this.val = val)
         (§ ass this.rest = rest)
     )
@@ -5266,13 +4599,10 @@
 
 (java-ns cloiure.lang.Box
 
-#_public
 (class-ns Box
-    #_public
     (§ field Object val)
 
-    #_public
-    (§ method Box(Object val)
+    (§ constructor Box(Object val)
         (§ ass this.val = val)
     )
 )
@@ -5280,31 +4610,25 @@
 
 (java-ns cloiure.lang.ChunkBuffer
 
-#_final
-#_public
 (class-ns ChunkBuffer (§ implements Counted)
     (§ field Object[] buffer)
     (§ field int end)
 
-    #_public
-    (§ method ChunkBuffer(int capacity)
+    (§ constructor ChunkBuffer(int capacity)
         (§ ass buffer = new Object[capacity])
         (§ ass end = 0)
     )
 
-    #_public
     (§ method void add(Object o)
         (§ ass buffer[end++] = o)
     )
 
-    #_public
     (§ method IChunk chunk()
         (§ let ArrayChunk ret = new ArrayChunk(buffer, 0, end))
         (§ ass buffer = nil)
         (§ return (§ expr ret))
     )
 
-    #_public
     (§ method int count()
         (§ return (§ expr end))
     )
@@ -5313,26 +4637,20 @@
 
 (java-ns cloiure.lang.ChunkedCons
 
-#_final
-#_public
 (class-ns ChunkedCons (§ extends ASeq) (§ implements IChunkedSeq)
-    #_final
     (§ field IChunk chunk)
-    #_final
     (§ field ISeq _more)
 
-    (§ method ChunkedCons(IPersistentMap meta, IChunk chunk, ISeq more)
+    (§ constructor ChunkedCons(IPersistentMap meta, IChunk chunk, ISeq more)
         (§ super(meta))
         (§ ass this.chunk = chunk)
         (§ ass this._more = more)
     )
 
-    #_public
-    (§ method ChunkedCons(IChunk chunk, ISeq more)
+    (§ constructor ChunkedCons(IChunk chunk, ISeq more)
         (§ this(nil, chunk, more))
     )
 
-    #_public
     (§ method Obj withMeta(IPersistentMap meta)
         (§ if (meta != _meta))
         (§
@@ -5341,12 +4659,10 @@
         (§ return (§ expr this))
     )
 
-    #_public
     (§ method Object first()
         (§ return (§ expr chunk.nth(0)))
     )
 
-    #_public
     (§ method ISeq next()
         (§ if (chunk.count() > 1))
         (§
@@ -5355,7 +4671,6 @@
         (§ return (§ expr chunkedNext()))
     )
 
-    #_public
     (§ method ISeq more()
         (§ if (chunk.count() > 1))
         (§
@@ -5368,17 +4683,14 @@
         (§ return (§ expr _more))
     )
 
-    #_public
     (§ method IChunk chunkedFirst()
         (§ return (§ expr chunk))
     )
 
-    #_public
     (§ method ISeq chunkedNext()
         (§ return (§ expr chunkedMore().seq()))
     )
 
-    #_public
     (§ method ISeq chunkedMore()
         (§ if (_more == nil))
         (§
@@ -5400,41 +4712,17 @@
 ;; strings naming the libs to be compiled. The libs and compile-path must
 ;; all be within CLASSPATH.
 
-#_public
 (class-ns Compile
-    #_private
-    #_static
-    #_final
-    (§ field String PATH_PROP = "cloiure.compile.path")
-    #_private
-    #_static
-    #_final
-    (§ field String REFLECTION_WARNING_PROP = "cloiure.compile.warn-on-reflection")
-    #_private
-    #_static
-    #_final
-    (§ field String UNCHECKED_MATH_PROP = "cloiure.compile.unchecked-math")
+    (§ def- String PATH_PROP = "cloiure.compile.path")
+    (§ def- String REFLECTION_WARNING_PROP = "cloiure.compile.warn-on-reflection")
+    (§ def- String UNCHECKED_MATH_PROP = "cloiure.compile.unchecked-math")
 
-    #_private
-    #_static
-    #_final
-    (§ field Var compile_path = RT.var("cloiure.core", "*compile-path*"))
-    #_private
-    #_static
-    #_final
-    (§ field Var compile = RT.var("cloiure.core", "compile"))
-    #_private
-    #_static
-    #_final
-    (§ field Var warn_on_reflection = RT.var("cloiure.core", "*warn-on-reflection*"))
-    #_private
-    #_static
-    #_final
-    (§ field Var unchecked_math = RT.var("cloiure.core", "*unchecked-math*"))
+    (§ def- Var compile_path = RT.var("cloiure.core", "*compile-path*"))
+    (§ def- Var compile = RT.var("cloiure.core", "compile"))
+    (§ def- Var warn_on_reflection = RT.var("cloiure.core", "*warn-on-reflection*"))
+    (§ def- Var unchecked_math = RT.var("cloiure.core", "*unchecked-math*"))
 
-    #_public
-    #_static
-    (§ method void main(String[] args) (§ throws IOException, ClassNotFoundException)
+    (§ defn void main(String[] args) (§ throws IOException, ClassNotFoundException)
         (§ let OutputStreamWriter out = (OutputStreamWriter) RT.OUT.deref())
         (§ let PrintWriter err = RT.errPrintWriter())
         (§ let String path = System.getProperty(PATH_PROP))
@@ -5501,159 +4789,62 @@
 (§ import java.util.regex.Pattern)
 (§ import java.util.regex.Matcher)
 
-#_public
 (class-ns Compiler (§ implements Opcodes)
-    #_static
-    #_final
-    (§ field Symbol DEF = Symbol.intern("def"))
-    #_static
-    #_final
-    (§ field Symbol LOOP = Symbol.intern("loop*"))
-    #_static
-    #_final
-    (§ field Symbol RECUR = Symbol.intern("recur"))
-    #_static
-    #_final
-    (§ field Symbol IF = Symbol.intern("if"))
-    #_static
-    #_final
-    (§ field Symbol LET = Symbol.intern("let*"))
-    #_static
-    #_final
-    (§ field Symbol LETFN = Symbol.intern("letfn*"))
-    #_static
-    #_final
-    (§ field Symbol DO = Symbol.intern("do"))
-    #_static
-    #_final
-    (§ field Symbol FN = Symbol.intern("fn*"))
-    #_static
-    #_final
-    (§ field Symbol FNONCE = (Symbol) Symbol.intern("fn*").withMeta(RT.map(Keyword.intern(nil, "once"), RT.T)))
-    #_static
-    #_final
-    (§ field Symbol QUOTE = Symbol.intern("quote"))
-    #_static
-    #_final
-    (§ field Symbol THE_VAR = Symbol.intern("var"))
-    #_static
-    #_final
-    (§ field Symbol DOT = Symbol.intern("."))
-    #_static
-    #_final
-    (§ field Symbol ASSIGN = Symbol.intern("set!"))
-    #_static
-    #_final
-    (§ field Symbol TRY = Symbol.intern("try"))
-    #_static
-    #_final
-    (§ field Symbol CATCH = Symbol.intern("catch"))
-    #_static
-    #_final
-    (§ field Symbol FINALLY = Symbol.intern("finally"))
-    #_static
-    #_final
-    (§ field Symbol THROW = Symbol.intern("throw"))
-    #_static
-    #_final
-    (§ field Symbol MONITOR_ENTER = Symbol.intern("monitor-enter"))
-    #_static
-    #_final
-    (§ field Symbol MONITOR_EXIT = Symbol.intern("monitor-exit"))
-    #_static
-    #_final
-    (§ field Symbol IMPORT = Symbol.intern("cloiure.core", "import*"))
-    #_static
-    #_final
-    (§ field Symbol DEFTYPE = Symbol.intern("deftype*"))
-    #_static
-    #_final
-    (§ field Symbol CASE = Symbol.intern("case*"))
+    (§ def Symbol DEF = Symbol.intern("def"))
+    (§ def Symbol LOOP = Symbol.intern("loop*"))
+    (§ def Symbol RECUR = Symbol.intern("recur"))
+    (§ def Symbol IF = Symbol.intern("if"))
+    (§ def Symbol LET = Symbol.intern("let*"))
+    (§ def Symbol LETFN = Symbol.intern("letfn*"))
+    (§ def Symbol DO = Symbol.intern("do"))
+    (§ def Symbol FN = Symbol.intern("fn*"))
+    (§ def Symbol FNONCE = (Symbol) Symbol.intern("fn*").withMeta(RT.map(Keyword.intern(nil, "once"), RT.T)))
+    (§ def Symbol QUOTE = Symbol.intern("quote"))
+    (§ def Symbol THE_VAR = Symbol.intern("var"))
+    (§ def Symbol DOT = Symbol.intern("."))
+    (§ def Symbol ASSIGN = Symbol.intern("set!"))
+    (§ def Symbol TRY = Symbol.intern("try"))
+    (§ def Symbol CATCH = Symbol.intern("catch"))
+    (§ def Symbol FINALLY = Symbol.intern("finally"))
+    (§ def Symbol THROW = Symbol.intern("throw"))
+    (§ def Symbol MONITOR_ENTER = Symbol.intern("monitor-enter"))
+    (§ def Symbol MONITOR_EXIT = Symbol.intern("monitor-exit"))
+    (§ def Symbol IMPORT = Symbol.intern("cloiure.core", "import*"))
+    (§ def Symbol DEFTYPE = Symbol.intern("deftype*"))
+    (§ def Symbol CASE = Symbol.intern("case*"))
 
-    #_static
-    #_final
-    (§ field Symbol CLASS = Symbol.intern("Class"))
-    #_static
-    #_final
-    (§ field Symbol NEW = Symbol.intern("new"))
-    #_static
-    #_final
-    (§ field Symbol THIS = Symbol.intern("this"))
-    #_static
-    #_final
-    (§ field Symbol REIFY = Symbol.intern("reify*"))
-    #_static
-    #_final
-    (§ field Symbol LIST = Symbol.intern("cloiure.core", "list"))
-    #_static
-    #_final
-    (§ field Symbol HASHMAP = Symbol.intern("cloiure.core", "hash-map"))
-    #_static
-    #_final
-    (§ field Symbol VECTOR = Symbol.intern("cloiure.core", "vector"))
-    #_static
-    #_final
-    (§ field Symbol IDENTITY = Symbol.intern("cloiure.core", "identity"))
+    (§ def Symbol CLASS = Symbol.intern("Class"))
+    (§ def Symbol NEW = Symbol.intern("new"))
+    (§ def Symbol THIS = Symbol.intern("this"))
+    (§ def Symbol REIFY = Symbol.intern("reify*"))
+    (§ def Symbol LIST = Symbol.intern("cloiure.core", "list"))
+    (§ def Symbol HASHMAP = Symbol.intern("cloiure.core", "hash-map"))
+    (§ def Symbol VECTOR = Symbol.intern("cloiure.core", "vector"))
+    (§ def Symbol IDENTITY = Symbol.intern("cloiure.core", "identity"))
 
-    #_static
-    #_final
-    (§ field Symbol _AMP_ = Symbol.intern("&"))
-    #_static
-    #_final
-    (§ field Symbol ISEQ = Symbol.intern("cloiure.lang.ISeq"))
+    (§ def Symbol _AMP_ = Symbol.intern("&"))
+    (§ def Symbol ISEQ = Symbol.intern("cloiure.lang.ISeq"))
 
-    #_static
-    #_final
-    (§ field Keyword loadNs = Keyword.intern(nil, "load-ns"))
-    #_static
-    #_final
-    (§ field Keyword inlineKey = Keyword.intern(nil, "inline"))
-    #_static
-    #_final
-    (§ field Keyword inlineAritiesKey = Keyword.intern(nil, "inline-arities"))
-    #_static
-    #_final
-    (§ field Keyword staticKey = Keyword.intern(nil, "static"))
-    #_static
-    #_final
-    (§ field Keyword arglistsKey = Keyword.intern(nil, "arglists"))
-    #_static
-    #_final
-    (§ field Symbol INVOKE_STATIC = Symbol.intern("invokeStatic"))
+    (§ def Keyword loadNs = Keyword.intern(nil, "load-ns"))
+    (§ def Keyword inlineKey = Keyword.intern(nil, "inline"))
+    (§ def Keyword inlineAritiesKey = Keyword.intern(nil, "inline-arities"))
+    (§ def Keyword staticKey = Keyword.intern(nil, "static"))
+    (§ def Keyword arglistsKey = Keyword.intern(nil, "arglists"))
+    (§ def Symbol INVOKE_STATIC = Symbol.intern("invokeStatic"))
 
-    #_static
-    #_final
-    (§ field Keyword volatileKey = Keyword.intern(nil, "volatile"))
-    #_static
-    #_final
-    (§ field Keyword implementsKey = Keyword.intern(nil, "implements"))
-    #_static
-    #_final
-    (§ field String COMPILE_STUB_PREFIX = "compile__stub")
+    (§ def Keyword volatileKey = Keyword.intern(nil, "volatile"))
+    (§ def Keyword implementsKey = Keyword.intern(nil, "implements"))
+    (§ def String COMPILE_STUB_PREFIX = "compile__stub")
 
-    #_static
-    #_final
-    (§ field Keyword protocolKey = Keyword.intern(nil, "protocol"))
-    #_static
-    #_final
-    (§ field Keyword onKey = Keyword.intern(nil, "on"))
-    #_static
-    (§ field Keyword dynamicKey = Keyword.intern("dynamic"))
-    #_static
-    #_final
-    (§ field Keyword redefKey = Keyword.intern(nil, "redef"))
+    (§ def Keyword protocolKey = Keyword.intern(nil, "protocol"))
+    (§ def Keyword onKey = Keyword.intern(nil, "on"))
+    (§ def Keyword dynamicKey = Keyword.intern("dynamic"))
+    (§ def Keyword redefKey = Keyword.intern(nil, "redef"))
 
-    #_static
-    #_final
-    (§ field Symbol NS = Symbol.intern("ns"))
-    #_static
-    #_final
-    (§ field Symbol IN_NS = Symbol.intern("in-ns"))
+    (§ def Symbol NS = Symbol.intern("ns"))
+    (§ def Symbol IN_NS = Symbol.intern("in-ns"))
 
-    #_static
-    #_final
-    #_public
-    (§ field IPersistentMap specials = PersistentHashMap.create(
+    (§ def IPersistentMap specials = PersistentHashMap.create(
   #_map DEF, new DefExpr.Parser(),
   #_map LOOP, new LetExpr.Parser(),
   #_map RECUR, new RecurExpr.Parser(),
@@ -5680,74 +4871,27 @@
   #_map _AMP_, nil
     ))
 
-    #_private
-    #_static
-    #_final
-    (§ field int MAX_POSITIONAL_ARITY = 20)
-    #_private
-    #_static
-    #_final
-    (§ field Type OBJECT_TYPE)
-    #_private
-    #_static
-    #_final
-    (§ field Type KEYWORD_TYPE = Type.getType(Keyword.class))
-    #_private
-    #_static
-    #_final
-    (§ field Type VAR_TYPE = Type.getType(Var.class))
-    #_private
-    #_static
-    #_final
-    (§ field Type SYMBOL_TYPE = Type.getType(Symbol.class))
-    #_private
-    #_static
-    #_final
-    (§ field Type IFN_TYPE = Type.getType(IFn.class))
-    #_private
-    #_static
-    #_final
-    (§ field Type AFUNCTION_TYPE = Type.getType(AFunction.class))
-    #_private
-    #_static
-    #_final
-    (§ field Type RT_TYPE = Type.getType(RT.class))
-    #_private
-    #_static
-    #_final
-    (§ field Type NUMBERS_TYPE = Type.getType(Numbers.class))
+    (§ def- int MAX_POSITIONAL_ARITY = 20)
+    (§ def- Type OBJECT_TYPE)
+    (§ def- Type KEYWORD_TYPE = Type.getType(Keyword.class))
+    (§ def- Type VAR_TYPE = Type.getType(Var.class))
+    (§ def- Type SYMBOL_TYPE = Type.getType(Symbol.class))
+    (§ def- Type IFN_TYPE = Type.getType(IFn.class))
+    (§ def- Type AFUNCTION_TYPE = Type.getType(AFunction.class))
+    (§ def- Type RT_TYPE = Type.getType(RT.class))
+    (§ def- Type NUMBERS_TYPE = Type.getType(Numbers.class))
 
-    #_final
-    #_static
-    (§ field Type CLASS_TYPE = Type.getType(Class.class))
-    #_final
-    #_static
-    (§ field Type NS_TYPE = Type.getType(Namespace.class))
-    #_final
-    #_static
-    (§ field Type UTIL_TYPE = Type.getType(Util.class))
-    #_final
-    #_static
-    (§ field Type REFLECTOR_TYPE = Type.getType(Reflector.class))
-    #_final
-    #_static
-    (§ field Type THROWABLE_TYPE = Type.getType(Throwable.class))
-    #_final
-    #_static
-    (§ field Type BOOLEAN_OBJECT_TYPE = Type.getType(Boolean.class))
-    #_final
-    #_static
-    (§ field Type IPERSISTENTMAP_TYPE = Type.getType(IPersistentMap.class))
-    #_final
-    #_static
-    (§ field Type IOBJ_TYPE = Type.getType(IObj.class))
-    #_final
-    #_static
-    (§ field Type TUPLE_TYPE = Type.getType(Tuple.class))
+    (§ def Type CLASS_TYPE = Type.getType(Class.class))
+    (§ def Type NS_TYPE = Type.getType(Namespace.class))
+    (§ def Type UTIL_TYPE = Type.getType(Util.class))
+    (§ def Type REFLECTOR_TYPE = Type.getType(Reflector.class))
+    (§ def Type THROWABLE_TYPE = Type.getType(Throwable.class))
+    (§ def Type BOOLEAN_OBJECT_TYPE = Type.getType(Boolean.class))
+    (§ def Type IPERSISTENTMAP_TYPE = Type.getType(IPersistentMap.class))
+    (§ def Type IOBJ_TYPE = Type.getType(IObj.class))
+    (§ def Type TUPLE_TYPE = Type.getType(Tuple.class))
 
-    #_final
-    #_static
-    (§ field Method[] createTupleMethods =
+    (§ def Method[] createTupleMethods =
     (§ array
         (§ expr Method.getMethod("cloiure.lang.IPersistentVector create()")),
         (§ expr Method.getMethod("cloiure.lang.IPersistentVector create(Object)")),
@@ -5758,17 +4902,10 @@
         (§ expr Method.getMethod("cloiure.lang.IPersistentVector create(Object,Object,Object,Object,Object,Object)"))
     ))
 
-    #_private
-    #_static
-    #_final
-    (§ field Type[][] ARG_TYPES)
-    #_private
-    #_static
-    #_final
-    (§ field Type[] EXCEPTION_TYPES = (§))
+    (§ def- Type[][] ARG_TYPES)
+    (§ def- Type[] EXCEPTION_TYPES = (§))
 
-    (§ static )
-    (§
+    (§ static
         (§ ass OBJECT_TYPE = Type.getType(Object.class))
         (§ ass ARG_TYPES = new Type[MAX_POSITIONAL_ARITY + 2][])
         (§ for (int i = 0 i <= MAX_POSITIONAL_ARITY ++i))
@@ -5790,152 +4927,74 @@
     )
 
     ;; symbol->localbinding
-    #_static
-    #_final
-    #_public
-    (§ field Var LOCAL_ENV = Var.create(nil).setDynamic())
+    (§ def Var LOCAL_ENV = Var.create(nil).setDynamic())
 
     ;; vector<localbinding>
-    #_static
-    #_final
-    #_public
-    (§ field Var LOOP_LOCALS = Var.create().setDynamic())
+    (§ def Var LOOP_LOCALS = Var.create().setDynamic())
 
     ;; Label
-    #_static
-    #_final
-    #_public
-    (§ field Var LOOP_LABEL = Var.create().setDynamic())
+    (§ def Var LOOP_LABEL = Var.create().setDynamic())
 
     ;; vector<object>
-    #_static
-    #_final
-    #_public
-    (§ field Var CONSTANTS = Var.create().setDynamic())
+    (§ def Var CONSTANTS = Var.create().setDynamic())
 
     ;; IdentityHashMap
-    #_static
-    #_final
-    #_public
-    (§ field Var CONSTANT_IDS = Var.create().setDynamic())
+    (§ def Var CONSTANT_IDS = Var.create().setDynamic())
 
     ;; vector<keyword>
-    #_static
-    #_final
-    #_public
-    (§ field Var KEYWORD_CALLSITES = Var.create().setDynamic())
+    (§ def Var KEYWORD_CALLSITES = Var.create().setDynamic())
 
     ;; vector<var>
-    #_static
-    #_final
-    #_public
-    (§ field Var PROTOCOL_CALLSITES = Var.create().setDynamic())
+    (§ def Var PROTOCOL_CALLSITES = Var.create().setDynamic())
 
     ;; set<var>
-    #_static
-    #_final
-    #_public
-    (§ field Var VAR_CALLSITES = Var.create().setDynamic())
+    (§ def Var VAR_CALLSITES = Var.create().setDynamic())
 
     ;; keyword->constid
-    #_static
-    #_final
-    #_public
-    (§ field Var KEYWORDS = Var.create().setDynamic())
+    (§ def Var KEYWORDS = Var.create().setDynamic())
 
     ;; var->constid
-    #_static
-    #_final
-    #_public
-    (§ field Var VARS = Var.create().setDynamic())
+    (§ def Var VARS = Var.create().setDynamic())
 
     ;; FnFrame
-    #_static
-    #_final
-    #_public
-    (§ field Var METHOD = Var.create(nil).setDynamic())
+    (§ def Var METHOD = Var.create(nil).setDynamic())
 
     ;; nil or not
-    #_static
-    #_final
-    #_public
-    (§ field Var IN_CATCH_FINALLY = Var.create(nil).setDynamic())
+    (§ def Var IN_CATCH_FINALLY = Var.create(nil).setDynamic())
 
-    #_static
-    #_final
-    #_public
-    (§ field Var METHOD_RETURN_CONTEXT = Var.create(nil).setDynamic())
+    (§ def Var METHOD_RETURN_CONTEXT = Var.create(nil).setDynamic())
 
-    #_static
-    #_final
-    #_public
-    (§ field Var NO_RECUR = Var.create(nil).setDynamic())
+    (§ def Var NO_RECUR = Var.create(nil).setDynamic())
 
     ;; DynamicClassLoader
-    #_static
-    #_final
-    #_public
-    (§ field Var LOADER = Var.create().setDynamic())
+    (§ def Var LOADER = Var.create().setDynamic())
 
     ;; String
-    #_static
-    #_final
-    #_public
-    (§ field Var SOURCE = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*source-path*"), "NO_SOURCE_FILE").setDynamic())
+    (§ def Var SOURCE = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*source-path*"), "NO_SOURCE_FILE").setDynamic())
 
     ;; String
-    #_static
-    #_final
-    #_public
-    (§ field Var SOURCE_PATH = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*file*"), "NO_SOURCE_PATH").setDynamic())
+    (§ def Var SOURCE_PATH = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*file*"), "NO_SOURCE_PATH").setDynamic())
 
     ;; String
-    #_static
-    #_final
-    #_public
-    (§ field Var COMPILE_PATH = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*compile-path*"), nil).setDynamic())
+    (§ def Var COMPILE_PATH = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*compile-path*"), nil).setDynamic())
     ;; boolean
-    #_static
-    #_final
-    #_public
-    (§ field Var COMPILE_FILES = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*compile-files*"), Boolean.FALSE).setDynamic())
+    (§ def Var COMPILE_FILES = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*compile-files*"), Boolean.FALSE).setDynamic())
 
-    #_static
-    #_final
-    #_public
-    (§ field Var INSTANCE = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("instance?")))
+    (§ def Var INSTANCE = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("instance?")))
 
-    #_static
-    #_final
-    #_public
-    (§ field Var ADD_ANNOTATIONS = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("add-annotations")))
+    (§ def Var ADD_ANNOTATIONS = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("add-annotations")))
 
-    #_static
-    #_final
-    #_public
-    (§ field Keyword disableLocalsClearingKey = Keyword.intern("disable-locals-clearing"))
-    #_static
-    #_final
-    #_public
-    (§ field Keyword directLinkingKey = Keyword.intern("direct-linking"))
-    #_static
-    #_final
-    #_public
-    (§ field Keyword elideMetaKey = Keyword.intern("elide-meta"))
+    (§ def Keyword disableLocalsClearingKey = Keyword.intern("disable-locals-clearing"))
+    (§ def Keyword directLinkingKey = Keyword.intern("direct-linking"))
+    (§ def Keyword elideMetaKey = Keyword.intern("elide-meta"))
 
-    #_static
-    #_final
-    #_public
-    (§ field Var COMPILER_OPTIONS)
+    (§ def Var COMPILER_OPTIONS)
 
-    #_static
-    #_public
-    (§ method Object getCompilerOption(Keyword k)
+    (§ defn Object getCompilerOption(Keyword k)
         (§ return (§ expr RT.get(COMPILER_OPTIONS.deref(), k)))
     )
 
-    (§ static )
-    (§
+    (§ static
         (§ let Object compilerOptions = nil)
 
         (§ for (Map.Entry e :in System.getProperties().entrySet()))
@@ -5951,8 +5010,7 @@
         (§ ass COMPILER_OPTIONS = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*compiler-options*"), compilerOptions).setDynamic())
     )
 
-    #_static
-    (§ method Object elideMeta(Object m)
+    (§ defn Object elideMeta(Object m)
         (§ let Collection<Object> elides = (Collection<Object>) getCompilerOption(elideMetaKey))
         (§ if (elides != nil))
         (§
@@ -5965,83 +5023,42 @@
     )
 
     ;; Integer
-    #_static
-    #_final
-    #_public
-    (§ field Var LINE = Var.create(0).setDynamic())
-    #_static
-    #_final
-    #_public
-    (§ field Var COLUMN = Var.create(0).setDynamic())
+    (§ def Var LINE = Var.create(0).setDynamic())
+    (§ def Var COLUMN = Var.create(0).setDynamic())
 
-    #_static
-    (§ method int lineDeref()
+    (§ defn int lineDeref()
         (§ return (§ expr ((Number)LINE.deref()).intValue()))
     )
 
-    #_static
-    (§ method int columnDeref()
+    (§ defn int columnDeref()
         (§ return (§ expr ((Number)COLUMN.deref()).intValue()))
     )
 
     ;; Integer
-    #_static
-    #_final
-    #_public
-    (§ field Var LINE_BEFORE = Var.create(0).setDynamic())
-    #_static
-    #_final
-    #_public
-    (§ field Var COLUMN_BEFORE = Var.create(0).setDynamic())
-    #_static
-    #_final
-    #_public
-    (§ field Var LINE_AFTER = Var.create(0).setDynamic())
-    #_static
-    #_final
-    #_public
-    (§ field Var COLUMN_AFTER = Var.create(0).setDynamic())
+    (§ def Var LINE_BEFORE = Var.create(0).setDynamic())
+    (§ def Var COLUMN_BEFORE = Var.create(0).setDynamic())
+    (§ def Var LINE_AFTER = Var.create(0).setDynamic())
+    (§ def Var COLUMN_AFTER = Var.create(0).setDynamic())
 
     ;; Integer
-    #_static
-    #_final
-    #_public
-    (§ field Var NEXT_LOCAL_NUM = Var.create(0).setDynamic())
+    (§ def Var NEXT_LOCAL_NUM = Var.create(0).setDynamic())
 
     ;; Integer
-    #_static
-    #_final
-    #_public
-    (§ field Var RET_LOCAL_NUM = Var.create().setDynamic())
+    (§ def Var RET_LOCAL_NUM = Var.create().setDynamic())
 
-    #_static
-    #_final
-    #_public
-    (§ field Var COMPILE_STUB_SYM = Var.create(nil).setDynamic())
-    #_static
-    #_final
-    #_public
-    (§ field Var COMPILE_STUB_CLASS = Var.create(nil).setDynamic())
+    (§ def Var COMPILE_STUB_SYM = Var.create(nil).setDynamic())
+    (§ def Var COMPILE_STUB_CLASS = Var.create(nil).setDynamic())
 
     ;; PathNode chain
-    #_static
-    #_final
-    #_public
-    (§ field Var CLEAR_PATH = Var.create(nil).setDynamic())
+    (§ def Var CLEAR_PATH = Var.create(nil).setDynamic())
 
     ;; tail of PathNode chain
-    #_static
-    #_final
-    #_public
-    (§ field Var CLEAR_ROOT = Var.create(nil).setDynamic())
+    (§ def Var CLEAR_ROOT = Var.create(nil).setDynamic())
 
     ;; LocalBinding -> Set<LocalBindingExpr>
-    #_static
-    #_final
-    #_public
-    (§ field Var CLEAR_SITES = Var.create(nil).setDynamic())
+    (§ def Var CLEAR_SITES = Var.create(nil).setDynamic())
 
-    #_public
+    #_non-static
     (§ enum C
         (§ item STATEMENT), ;; value ignored
         (§ item EXPRESSION), ;; value required
@@ -6050,14 +5067,13 @@
     )
 
     #_private
+    #_non-static
     (class-ns Recur
     )
 
-    #_static
-    #_final
-    #_public
-    (§ field Class RECUR_CLASS = Recur.class)
+    (§ def Class RECUR_CLASS = Recur.class)
 
+    #_non-static
     (§ interface Expr
         (§ abstract Object eval())
         (§ abstract void emit(C context, ObjExpr objx, GeneratorAdapter gen))
@@ -6065,37 +5081,31 @@
         (§ abstract Class getJavaClass())
     )
 
-    #_public
-    #_static
     #_abstract
     (class-ns UntypedExpr (§ implements Expr)
-        #_public
         (§ method Class getJavaClass()
             (§ throw new IllegalArgumentException("Has no Java class"))
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr false))
         )
     )
 
+    #_non-static
     (§ interface IParser
         (§ abstract Expr parse(C context, Object form))
     )
 
-    #_static
-    (§ method boolean isSpecial(Object sym)
+    (§ defn boolean isSpecial(Object sym)
         (§ return (§ expr specials.containsKey(sym)))
     )
 
-    #_static
-    (§ method boolean inTailCall(C context)
+    (§ defn boolean inTailCall(C context)
         (§ return (§ expr (context == C.RETURN) && (METHOD_RETURN_CONTEXT.deref() != nil) && (IN_CATCH_FINALLY.deref() == nil)))
     )
 
-    #_static
-    (§ method Symbol resolveSymbol(Symbol sym)
+    (§ defn Symbol resolveSymbol(Symbol sym)
         ;; already qualified or classname?
         (§ if (sym.name.indexOf(\.) > 0))
         (§
@@ -6127,57 +5137,25 @@
         (§ return (§ expr nil))
     )
 
-    #_static
     (class-ns DefExpr (§ implements Expr)
-        #_public
-        #_final
         (§ field Var var)
-        #_public
-        #_final
         (§ field Expr init)
-        #_public
-        #_final
         (§ field Expr meta)
-        #_public
-        #_final
         (§ field boolean initProvided)
-        #_public
-        #_final
         (§ field boolean isDynamic)
-        #_public
-        #_final
         (§ field boolean shadowsCoreMapping)
-        #_public
-        #_final
         (§ field String source)
-        #_public
-        #_final
         (§ field int line)
-        #_public
-        #_final
         (§ field int column)
 
-        #_final
-        #_static
-        (§ field Method bindRootMethod = Method.getMethod("void bindRoot(Object)"))
-        #_final
-        #_static
-        (§ field Method setTagMethod = Method.getMethod("void setTag(cloiure.lang.Symbol)"))
-        #_final
-        #_static
-        (§ field Method setMetaMethod = Method.getMethod("void setMeta(cloiure.lang.IPersistentMap)"))
-        #_final
-        #_static
-        (§ field Method setDynamicMethod = Method.getMethod("cloiure.lang.Var setDynamic(boolean)"))
-        #_final
-        #_static
-        (§ field Method symintern = Method.getMethod("cloiure.lang.Symbol intern(String, String)"))
-        #_final
-        #_static
-        (§ field Method internVar = Method.getMethod("cloiure.lang.Var refer(cloiure.lang.Symbol, cloiure.lang.Var)"))
+        (§ def Method bindRootMethod = Method.getMethod("void bindRoot(Object)"))
+        (§ def Method setTagMethod = Method.getMethod("void setTag(cloiure.lang.Symbol)"))
+        (§ def Method setMetaMethod = Method.getMethod("void setMeta(cloiure.lang.IPersistentMap)"))
+        (§ def Method setDynamicMethod = Method.getMethod("cloiure.lang.Var setDynamic(boolean)"))
+        (§ def Method symintern = Method.getMethod("cloiure.lang.Symbol intern(String, String)"))
+        (§ def Method internVar = Method.getMethod("cloiure.lang.Var refer(cloiure.lang.Symbol, cloiure.lang.Var)"))
 
-        #_public
-        (§ method DefExpr(String source, int line, int column, Var var, Expr init, Expr meta, boolean initProvided, boolean isDynamic, boolean shadowsCoreMapping)
+        (§ constructor DefExpr(String source, int line, int column, Var var, Expr init, Expr meta, boolean initProvided, boolean isDynamic, boolean shadowsCoreMapping)
             (§ ass this.source = source)
             (§ ass this.line = line)
             (§ ass this.column = column)
@@ -6189,8 +5167,7 @@
             (§ ass this.initProvided = initProvided)
         )
 
-        #_private
-        (§ method boolean includesExplicitMetadata(MapExpr expr)
+        (§ method- boolean includesExplicitMetadata(MapExpr expr)
             (§ for (int i = 0 i < expr.keyvals.count() i += 2))
             (§
                 (§ let Keyword k = ((KeywordExpr) expr.keyvals.nth(i)).k)
@@ -6202,7 +5179,6 @@
             (§ return (§ expr false))
         )
 
-        #_public
         (§ method Object eval()
             (§ try )
             (§
@@ -6233,7 +5209,6 @@
             )
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call objx.emitVar(gen, var))
 
@@ -6283,19 +5258,15 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr Var.class))
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
-            #_public
             (§ method Expr parse(C context, Object form)
                 ;; (def x) or (def x initexpr) or (def x "docstring" initexpr)
                 (§ let String docstring = nil)
@@ -6367,45 +5338,32 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns AssignExpr (§ implements Expr)
-        #_public
-        #_final
         (§ field AssignableExpr target)
-        #_public
-        #_final
         (§ field Expr val)
 
-        #_public
-        (§ method AssignExpr(AssignableExpr target, Expr val)
+        (§ constructor AssignExpr(AssignableExpr target, Expr val)
             (§ ass this.target = target)
             (§ ass this.val = val)
         )
 
-        #_public
         (§ method Object eval()
             (§ return (§ expr target.evalAssign(val)))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call target.emitAssign(context, objx, gen, val))
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr val.hasJavaClass()))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr val.getJavaClass()))
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
-            #_public
             (§ method Expr parse(C context, Object frm)
                 (§ let ISeq form = (ISeq) frm)
                 (§ if (RT.length(form) != 3))
@@ -6422,36 +5380,23 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns VarExpr (§ implements Expr, AssignableExpr)
-        #_public
-        #_final
         (§ field Var var)
-        #_public
-        #_final
         (§ field Object tag)
-        #_final
-        #_static
-        (§ field Method getMethod = Method.getMethod("Object get()"))
-        #_final
-        #_static
-        (§ field Method setMethod = Method.getMethod("Object set(Object)"))
+        (§ def Method getMethod = Method.getMethod("Object get()"))
+        (§ def Method setMethod = Method.getMethod("Object set(Object)"))
 
         (§ field Class jc)
 
-        #_public
-        (§ method VarExpr(Var var, Symbol tag)
+        (§ constructor VarExpr(Var var, Symbol tag)
             (§ ass this.var = var)
             (§ ass this.tag = (tag != nil) ? tag :or var.getTag())
         )
 
-        #_public
         (§ method Object eval()
             (§ return (§ expr var.deref()))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call objx.emitVarValue(gen, var))
             (§ if (context == C.STATEMENT))
@@ -6460,12 +5405,10 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr (tag != nil)))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ if (jc == nil))
             (§
@@ -6474,12 +5417,10 @@
             (§ return (§ expr jc))
         )
 
-        #_public
         (§ method Object evalAssign(Expr val)
             (§ return (§ expr var.set(val.eval())))
         )
 
-        #_public
         (§ method void emitAssign(C context, ObjExpr objx, GeneratorAdapter gen, Expr val)
             (§ call objx.emitVar(gen, var))
             (§ call val.emit(C.EXPRESSION, objx, gen))
@@ -6491,24 +5432,17 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns TheVarExpr (§ implements Expr)
-        #_public
-        #_final
         (§ field Var var)
 
-        #_public
-        (§ method TheVarExpr(Var var)
+        (§ constructor TheVarExpr(Var var)
             (§ ass this.var = var)
         )
 
-        #_public
         (§ method Object eval()
             (§ return (§ expr var))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call objx.emitVar(gen, var))
             (§ if (context == C.STATEMENT))
@@ -6517,19 +5451,15 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr Var.class))
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
-            #_public
             (§ method Expr parse(C context, Object form)
                 (§ let Symbol sym = (Symbol) RT.second(form))
                 (§ let Var v = lookupVar(sym, false))
@@ -6542,15 +5472,10 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns KeywordExpr (§ extends LiteralExpr)
-        #_public
-        #_final
         (§ field Keyword k)
 
-        #_public
-        (§ method KeywordExpr(Keyword k)
+        (§ constructor KeywordExpr(Keyword k)
             (§ ass this.k = k)
         )
 
@@ -6558,12 +5483,10 @@
             (§ return (§ expr k))
         )
 
-        #_public
         (§ method Object eval()
             (§ return (§ expr k))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call objx.emitKeyword(gen, k))
             (§ if (context == C.STATEMENT))
@@ -6572,47 +5495,32 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr Keyword.class))
         )
     )
 
-    #_public
-    #_static
     (class-ns ImportExpr (§ implements Expr)
-        #_public
-        #_final
         (§ field String c)
 
-        #_final
-        #_static
-        (§ field Method forNameMethod = Method.getMethod("Class classForNameNonLoading(String)"))
-        #_final
-        #_static
-        (§ field Method importClassMethod = Method.getMethod("Class importClass(Class)"))
-        #_final
-        #_static
-        (§ field Method derefMethod = Method.getMethod("Object deref()"))
+        (§ def Method forNameMethod = Method.getMethod("Class classForNameNonLoading(String)"))
+        (§ def Method importClassMethod = Method.getMethod("Class importClass(Class)"))
+        (§ def Method derefMethod = Method.getMethod("Object deref()"))
 
-        #_public
-        (§ method ImportExpr(String c)
+        (§ constructor ImportExpr(String c)
             (§ ass this.c = c)
         )
 
-        #_public
         (§ method Object eval()
             (§ let Namespace ns = (Namespace) RT.CURRENT_NS.deref())
             (§ call ns.importClass(RT.classForNameNonLoading(c)))
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call gen.getStatic(RT_TYPE, "CURRENT_NS", VAR_TYPE))
             (§ call gen.invokeVirtual(VAR_TYPE, derefMethod))
@@ -6626,143 +5534,75 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr false))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ throw new IllegalArgumentException("ImportExpr has no Java class"))
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
-            #_public
             (§ method Expr parse(C context, Object form)
                 (§ return (§ expr new ImportExpr((String) RT.second(form))))
             )
         )
     )
 
-    #_public
-    #_static
     #_abstract
     (class-ns LiteralExpr (§ implements Expr)
         (§ abstract Object val())
 
-        #_public
         (§ method Object eval()
             (§ return (§ expr val()))
         )
     )
 
-    #_static
     (§ interface AssignableExpr
         (§ abstract Object evalAssign(Expr val))
         (§ abstract void emitAssign(C context, ObjExpr objx, GeneratorAdapter gen, Expr val))
     )
 
-    #_static
-    #_public
     (§ interface MaybePrimitiveExpr (§ extends Expr)
         (§ abstract boolean canEmitPrimitive())
         (§ abstract void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen))
     )
 
-    #_static
-    #_public
     #_abstract
     (class-ns HostExpr (§ implements Expr, MaybePrimitiveExpr)
-        #_final
-        #_static
-        (§ field Type BOOLEAN_TYPE = Type.getType(Boolean.class))
-        #_final
-        #_static
-        (§ field Type CHAR_TYPE = Type.getType(Character.class))
-        #_final
-        #_static
-        (§ field Type INTEGER_TYPE = Type.getType(Integer.class))
-        #_final
-        #_static
-        (§ field Type LONG_TYPE = Type.getType(Long.class))
-        #_final
-        #_static
-        (§ field Type FLOAT_TYPE = Type.getType(Float.class))
-        #_final
-        #_static
-        (§ field Type DOUBLE_TYPE = Type.getType(Double.class))
-        #_final
-        #_static
-        (§ field Type SHORT_TYPE = Type.getType(Short.class))
-        #_final
-        #_static
-        (§ field Type BYTE_TYPE = Type.getType(Byte.class))
-        #_final
-        #_static
-        (§ field Type NUMBER_TYPE = Type.getType(Number.class))
+        (§ def Type BOOLEAN_TYPE = Type.getType(Boolean.class))
+        (§ def Type CHAR_TYPE = Type.getType(Character.class))
+        (§ def Type INTEGER_TYPE = Type.getType(Integer.class))
+        (§ def Type LONG_TYPE = Type.getType(Long.class))
+        (§ def Type FLOAT_TYPE = Type.getType(Float.class))
+        (§ def Type DOUBLE_TYPE = Type.getType(Double.class))
+        (§ def Type SHORT_TYPE = Type.getType(Short.class))
+        (§ def Type BYTE_TYPE = Type.getType(Byte.class))
+        (§ def Type NUMBER_TYPE = Type.getType(Number.class))
 
-        #_final
-        #_static
-        (§ field Method charValueMethod = Method.getMethod("char charValue()"))
-        #_final
-        #_static
-        (§ field Method booleanValueMethod = Method.getMethod("boolean booleanValue()"))
+        (§ def Method charValueMethod = Method.getMethod("char charValue()"))
+        (§ def Method booleanValueMethod = Method.getMethod("boolean booleanValue()"))
 
-        #_final
-        #_static
-        (§ field Method charValueOfMethod = Method.getMethod("Character valueOf(char)"))
-        #_final
-        #_static
-        (§ field Method intValueOfMethod = Method.getMethod("Integer valueOf(int)"))
-        #_final
-        #_static
-        (§ field Method longValueOfMethod = Method.getMethod("Long valueOf(long)"))
-        #_final
-        #_static
-        (§ field Method floatValueOfMethod = Method.getMethod("Float valueOf(float)"))
-        #_final
-        #_static
-        (§ field Method doubleValueOfMethod = Method.getMethod("Double valueOf(double)"))
-        #_final
-        #_static
-        (§ field Method shortValueOfMethod = Method.getMethod("Short valueOf(short)"))
-        #_final
-        #_static
-        (§ field Method byteValueOfMethod = Method.getMethod("Byte valueOf(byte)"))
+        (§ def Method charValueOfMethod = Method.getMethod("Character valueOf(char)"))
+        (§ def Method intValueOfMethod = Method.getMethod("Integer valueOf(int)"))
+        (§ def Method longValueOfMethod = Method.getMethod("Long valueOf(long)"))
+        (§ def Method floatValueOfMethod = Method.getMethod("Float valueOf(float)"))
+        (§ def Method doubleValueOfMethod = Method.getMethod("Double valueOf(double)"))
+        (§ def Method shortValueOfMethod = Method.getMethod("Short valueOf(short)"))
+        (§ def Method byteValueOfMethod = Method.getMethod("Byte valueOf(byte)"))
 
-        #_final
-        #_static
-        (§ field Method intValueMethod = Method.getMethod("int intValue()"))
-        #_final
-        #_static
-        (§ field Method longValueMethod = Method.getMethod("long longValue()"))
-        #_final
-        #_static
-        (§ field Method floatValueMethod = Method.getMethod("float floatValue()"))
-        #_final
-        #_static
-        (§ field Method doubleValueMethod = Method.getMethod("double doubleValue()"))
-        #_final
-        #_static
-        (§ field Method byteValueMethod = Method.getMethod("byte byteValue()"))
-        #_final
-        #_static
-        (§ field Method shortValueMethod = Method.getMethod("short shortValue()"))
+        (§ def Method intValueMethod = Method.getMethod("int intValue()"))
+        (§ def Method longValueMethod = Method.getMethod("long longValue()"))
+        (§ def Method floatValueMethod = Method.getMethod("float floatValue()"))
+        (§ def Method doubleValueMethod = Method.getMethod("double doubleValue()"))
+        (§ def Method byteValueMethod = Method.getMethod("byte byteValue()"))
+        (§ def Method shortValueMethod = Method.getMethod("short shortValue()"))
 
-        #_final
-        #_static
-        (§ field Method fromIntMethod = Method.getMethod("cloiure.lang.Num from(int)"))
-        #_final
-        #_static
-        (§ field Method fromLongMethod = Method.getMethod("cloiure.lang.Num from(long)"))
-        #_final
-        #_static
-        (§ field Method fromDoubleMethod = Method.getMethod("cloiure.lang.Num from(double)"))
+        (§ def Method fromIntMethod = Method.getMethod("cloiure.lang.Num from(int)"))
+        (§ def Method fromLongMethod = Method.getMethod("cloiure.lang.Num from(long)"))
+        (§ def Method fromDoubleMethod = Method.getMethod("cloiure.lang.Num from(double)"))
 
-        #_public
-        #_static
-        (§ method void emitBoxReturn(ObjExpr objx, GeneratorAdapter gen, Class returnType)
+        (§ defn void emitBoxReturn(ObjExpr objx, GeneratorAdapter gen, Class returnType)
             (§ if (returnType.isPrimitive()))
             (§
                 (§ if (returnType == boolean.class))
@@ -6814,9 +5654,7 @@
             )
         )
 
-        #_public
-        #_static
-        (§ method void emitUnboxArg(ObjExpr objx, GeneratorAdapter gen, Class paramType)
+        (§ defn void emitUnboxArg(ObjExpr objx, GeneratorAdapter gen, Class paramType)
             (§ if (paramType.isPrimitive()))
             (§
                 (§ if (paramType == boolean.class))
@@ -6896,9 +5734,7 @@
             )
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
-            #_public
             (§ method Expr parse(C context, Object frm)
                 (§ let ISeq form = (ISeq) frm)
                 ;; (. x fieldname-sym) or
@@ -6977,9 +5813,7 @@
             )
         )
 
-        #_public
-        #_static
-        (§ method Class maybeClass(Object form, boolean stringOk)
+        (§ defn Class maybeClass(Object form, boolean stringOk)
             (§ if (form instanceof Class))
             (§
                 (§ return (§ expr (Class) form))
@@ -7031,9 +5865,7 @@
             (§ return (§ expr c))
         )
 
-        #_public
-        #_static
-        (§ method Class maybeSpecialTag(Symbol sym)
+        (§ defn Class maybeSpecialTag(Symbol sym)
             (§ let Class c = primClass(sym))
             (§ if (c != nil))
             (§
@@ -7078,8 +5910,7 @@
             (§ return (§ expr c))
         )
 
-        #_static
-        (§ method Class tagToClass(Object tag)
+        (§ defn Class tagToClass(Object tag)
             (§ let Class c = nil)
             (§ if (tag instanceof Symbol))
             (§
@@ -7101,49 +5932,26 @@
         )
     )
 
-    #_static
     #_abstract
     (class-ns FieldExpr (§ extends HostExpr)
     )
 
-    #_static
     (class-ns InstanceFieldExpr (§ extends FieldExpr) (§ implements AssignableExpr)
-        #_public
-        #_final
         (§ field Expr target)
-        #_public
-        #_final
         (§ field Class targetClass)
-        #_public
-        #_final
         (§ field java.lang.reflect.Field field)
-        #_public
-        #_final
         (§ field String fieldName)
-        #_public
-        #_final
         (§ field int line)
-        #_public
-        #_final
         (§ field int column)
-        #_public
-        #_final
         (§ field Symbol tag)
-        #_public
-        #_final
         (§ field boolean requireField)
 
-        #_final
-        #_static
-        (§ field Method invokeNoArgInstanceMember = Method.getMethod("Object invokeNoArgInstanceMember(Object,String,boolean)"))
-        #_final
-        #_static
-        (§ field Method setInstanceFieldMethod = Method.getMethod("Object setInstanceField(Object,String,Object)"))
+        (§ def Method invokeNoArgInstanceMember = Method.getMethod("Object invokeNoArgInstanceMember(Object,String,boolean)"))
+        (§ def Method setInstanceFieldMethod = Method.getMethod("Object setInstanceField(Object,String,Object)"))
 
         (§ field Class jc)
 
-        #_public
-        (§ method InstanceFieldExpr(int line, int column, Expr target, String fieldName, Symbol tag, boolean requireField)
+        (§ constructor InstanceFieldExpr(int line, int column, Expr target, String fieldName, Symbol tag, boolean requireField)
             (§ ass this.target = target)
             (§ ass this.targetClass = target.hasJavaClass() ? target.getJavaClass() :or nil)
             (§ ass this.field = (targetClass != nil) ? Reflector.getField(targetClass, fieldName, false) :or nil)
@@ -7166,17 +5974,14 @@
             )
         )
 
-        #_public
         (§ method Object eval()
             (§ return (§ expr Reflector.invokeNoArgInstanceMember(target.eval(), fieldName, requireField)))
         )
 
-        #_public
         (§ method boolean canEmitPrimitive()
             (§ return (§ expr (targetClass != nil && field != nil && Util.isPrimitive(field.getType()))))
         )
 
-        #_public
         (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ if (targetClass != nil && field != nil))
             (§
@@ -7191,7 +5996,6 @@
             )
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ if (targetClass != nil && field != nil))
             (§
@@ -7219,12 +6023,10 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr (field != nil || tag != nil)))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ if (jc == nil))
             (§
@@ -7233,12 +6035,10 @@
             (§ return (§ expr jc))
         )
 
-        #_public
         (§ method Object evalAssign(Expr val)
             (§ return (§ expr Reflector.setInstanceField(target.eval(), fieldName, val.eval())))
         )
 
-        #_public
         (§ method void emitAssign(C context, ObjExpr objx, GeneratorAdapter gen, Expr val)
             (§ if (targetClass != nil && field != nil))
             (§
@@ -7265,30 +6065,18 @@
         )
     )
 
-    #_static
     (class-ns StaticFieldExpr (§ extends FieldExpr) (§ implements AssignableExpr)
-        #_public
-        #_final
         (§ field String fieldName)
-        #_public
-        #_final
         (§ field Class c)
-        #_public
-        #_final
         (§ field java.lang.reflect.Field field)
-        #_public
-        #_final
         (§ field Symbol tag)
 
-        #_final
         (§ field int line)
-        #_final
         (§ field int column)
 
         (§ field Class jc)
 
-        #_public
-        (§ method StaticFieldExpr(int line, int column, Class c, String fieldName, Symbol tag)
+        (§ constructor StaticFieldExpr(int line, int column, Class c, String fieldName, Symbol tag)
             (§ ass this.fieldName = fieldName)
             (§ ass this.line = line)
             (§ ass this.column = column)
@@ -7304,23 +6092,19 @@
             (§ ass this.tag = tag)
         )
 
-        #_public
         (§ method Object eval()
             (§ return (§ expr Reflector.getStaticField(c, fieldName)))
         )
 
-        #_public
         (§ method boolean canEmitPrimitive()
             (§ return (§ expr Util.isPrimitive(field.getType())))
         )
 
-        #_public
         (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call gen.visitLineNumber(line, gen.mark()))
             (§ call gen.getStatic(Type.getType(c), fieldName, Type.getType(field.getType())))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call gen.visitLineNumber(line, gen.mark()))
 
@@ -7332,12 +6116,10 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ if (jc == nil))
             (§
@@ -7346,12 +6128,10 @@
             (§ return (§ expr jc))
         )
 
-        #_public
         (§ method Object evalAssign(Expr val)
             (§ return (§ expr Reflector.setStaticField(c, fieldName, val.eval())))
         )
 
-        #_public
         (§ method void emitAssign(C context, ObjExpr objx, GeneratorAdapter gen, Expr val)
             (§ call val.emit(C.EXPRESSION, objx, gen))
             (§ call gen.visitLineNumber(line, gen.mark()))
@@ -7365,8 +6145,7 @@
         )
     )
 
-    #_static
-    (§ method Class maybePrimitiveType(Expr e)
+    (§ defn Class maybePrimitiveType(Expr e)
         (§ if (e instanceof MaybePrimitiveExpr && e.hasJavaClass() && ((MaybePrimitiveExpr)e).canEmitPrimitive()))
         (§
             (§ let Class c = e.getJavaClass())
@@ -7378,8 +6157,7 @@
         (§ return (§ expr nil))
     )
 
-    #_static
-    (§ method Class maybeJavaClass(Collection<Expr> exprs)
+    (§ defn Class maybeJavaClass(Collection<Expr> exprs)
         (§ let Class match = nil)
         (§ try )
         (§
@@ -7411,11 +6189,9 @@
         (§ return (§ expr match))
     )
 
-    #_static
     #_abstract
     (class-ns MethodExpr (§ extends HostExpr)
-        #_static
-        (§ method void emitArgsAsArray(IPersistentVector args, ObjExpr objx, GeneratorAdapter gen)
+        (§ defn void emitArgsAsArray(IPersistentVector args, ObjExpr objx, GeneratorAdapter gen)
             (§ call gen.push(args.count()))
             (§ call gen.newArray(OBJECT_TYPE))
             (§ for (int i = 0 i < args.count() i++))
@@ -7427,29 +6203,27 @@
             )
         )
 
-        #_public
-        #_static
-        (§ method void emitTypedArgs(ObjExpr objx, GeneratorAdapter gen, Class[] parameterTypes, IPersistentVector args)
+        (§ defn void emitTypedArgs(ObjExpr objx, GeneratorAdapter gen, Class[] parameterTypes, IPersistentVector args)
             (§ for (int i = 0 i < parameterTypes.length i++))
             (§
                 (§ let Expr e = (Expr) args.nth(i))
                 (§ try )
                 (§
-                    (§ let final Class primc = maybePrimitiveType(e))
+                    (§ let Class primc = maybePrimitiveType(e))
                     (§ if (primc == parameterTypes[i]))
                     (§
-                        (§ let final MaybePrimitiveExpr pe = (MaybePrimitiveExpr) e)
+                        (§ let MaybePrimitiveExpr pe = (MaybePrimitiveExpr) e)
                         (§ call pe.emitUnboxed(C.EXPRESSION, objx, gen))
                     )
                     (§ elseif (primc == int.class && parameterTypes[i] == long.class))
                     (§
-                        (§ let final MaybePrimitiveExpr pe = (MaybePrimitiveExpr) e)
+                        (§ let MaybePrimitiveExpr pe = (MaybePrimitiveExpr) e)
                         (§ call pe.emitUnboxed(C.EXPRESSION, objx, gen))
                         (§ call gen.visitInsn(I2L))
                     )
                     (§ elseif (primc == long.class && parameterTypes[i] == int.class))
                     (§
-                        (§ let final MaybePrimitiveExpr pe = (MaybePrimitiveExpr) e)
+                        (§ let MaybePrimitiveExpr pe = (MaybePrimitiveExpr) e)
                         (§ call pe.emitUnboxed(C.EXPRESSION, objx, gen))
                         (§ if (RT.booleanCast(RT.UNCHECKED_MATH.deref())))
                         (§
@@ -7462,13 +6236,13 @@
                     )
                     (§ elseif (primc == float.class && parameterTypes[i] == double.class))
                     (§
-                        (§ let final MaybePrimitiveExpr pe = (MaybePrimitiveExpr) e)
+                        (§ let MaybePrimitiveExpr pe = (MaybePrimitiveExpr) e)
                         (§ call pe.emitUnboxed(C.EXPRESSION, objx, gen))
                         (§ call gen.visitInsn(F2D))
                     )
                     (§ elseif (primc == double.class && parameterTypes[i] == float.class))
                     (§
-                        (§ let final MaybePrimitiveExpr pe = (MaybePrimitiveExpr) e)
+                        (§ let MaybePrimitiveExpr pe = (MaybePrimitiveExpr) e)
                         (§ call pe.emitUnboxed(C.EXPRESSION, objx, gen))
                         (§ call gen.visitInsn(D2F))
                     )
@@ -7486,44 +6260,22 @@
         )
     )
 
-    #_static
     (class-ns InstanceMethodExpr (§ extends MethodExpr)
-        #_public
-        #_final
         (§ field Expr target)
-        #_public
-        #_final
         (§ field String methodName)
-        #_public
-        #_final
         (§ field IPersistentVector args)
-        #_public
-        #_final
         (§ field String source)
-        #_public
-        #_final
         (§ field int line)
-        #_public
-        #_final
         (§ field int column)
-        #_public
-        #_final
         (§ field Symbol tag)
-        #_public
-        #_final
         (§ field boolean tailPosition)
-        #_public
-        #_final
         (§ field java.lang.reflect.Method method)
 
         (§ field Class jc)
 
-        #_final
-        #_static
-        (§ field Method invokeInstanceMethodMethod = Method.getMethod("Object invokeInstanceMethod(Object,String,Object[])"))
+        (§ def Method invokeInstanceMethodMethod = Method.getMethod("Object invokeInstanceMethod(Object,String,Object[])"))
 
-        #_public
-        (§ method InstanceMethodExpr(String source, int line, int column, Symbol tag, Expr target, String methodName, IPersistentVector args, boolean tailPosition)
+        (§ constructor InstanceMethodExpr(String source, int line, int column, Symbol tag, Expr target, String methodName, IPersistentVector args, boolean tailPosition)
             (§ ass this.source = source)
             (§ ass this.line = line)
             (§ ass this.column = column)
@@ -7581,7 +6333,6 @@
             )
         )
 
-        #_public
         (§ method Object eval()
             (§ try )
             (§
@@ -7612,12 +6363,10 @@
             )
         )
 
-        #_public
         (§ method boolean canEmitPrimitive()
             (§ return (§ expr (method != nil && Util.isPrimitive(method.getReturnType()))))
         )
 
-        #_public
         (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ if (method != nil))
             (§
@@ -7647,7 +6396,6 @@
             )
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ if (method != nil))
             (§
@@ -7691,12 +6439,10 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr (method != nil || tag != nil)))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ if (jc == nil))
             (§
@@ -7706,50 +6452,24 @@
         )
     )
 
-    #_static
     (class-ns StaticMethodExpr (§ extends MethodExpr)
-        #_public
-        #_final
         (§ field Class c)
-        #_public
-        #_final
         (§ field String methodName)
-        #_public
-        #_final
         (§ field IPersistentVector args)
-        #_public
-        #_final
         (§ field String source)
-        #_public
-        #_final
         (§ field int line)
-        #_public
-        #_final
         (§ field int column)
-        #_public
-        #_final
         (§ field java.lang.reflect.Method method)
-        #_public
-        #_final
         (§ field Symbol tag)
-        #_public
-        #_final
         (§ field boolean tailPosition)
 
-        #_final
-        #_static
-        (§ field Method forNameMethod = Method.getMethod("Class classForName(String)"))
-        #_final
-        #_static
-        (§ field Method invokeStaticMethodMethod = Method.getMethod("Object invokeStaticMethod(Class,String,Object[])"))
-        #_final
-        #_static
-        (§ field Keyword warnOnBoxedKeyword = Keyword.intern("warn-on-boxed"))
+        (§ def Method forNameMethod = Method.getMethod("Class classForName(String)"))
+        (§ def Method invokeStaticMethodMethod = Method.getMethod("Object invokeStaticMethod(Class,String,Object[])"))
+        (§ def Keyword warnOnBoxedKeyword = Keyword.intern("warn-on-boxed"))
 
         (§ field Class jc)
 
-        #_public
-        (§ method StaticMethodExpr(String source, int line, int column, Symbol tag, Class c, String methodName, IPersistentVector args, boolean tailPosition)
+        (§ constructor StaticMethodExpr(String source, int line, int column, Symbol tag, Class c, String methodName, IPersistentVector args, boolean tailPosition)
             (§ ass this.c = c)
             (§ ass this.methodName = methodName)
             (§ ass this.args = args)
@@ -7789,9 +6509,7 @@
             )
         )
 
-        #_public
-        #_static
-        (§ method boolean isBoxedMath(java.lang.reflect.Method m)
+        (§ defn boolean isBoxedMath(java.lang.reflect.Method m)
             (§ let Class c = m.getDeclaringClass())
             (§ if (c.equals(Numbers.class)))
             (§
@@ -7813,7 +6531,6 @@
             (§ return (§ expr false))
         )
 
-        #_public
         (§ method Object eval()
             (§ try )
             (§
@@ -7843,17 +6560,14 @@
             )
         )
 
-        #_public
         (§ method boolean canEmitPrimitive()
             (§ return (§ expr (method != nil && Util.isPrimitive(method.getReturnType()))))
         )
 
-        #_public
         (§ method boolean canEmitIntrinsicPredicate()
             (§ return (§ expr (method != nil && RT.get(Intrinsics.preds, method.toString()) != nil)))
         )
 
-        #_public
         (§ method void emitIntrinsicPredicate(C context, ObjExpr objx, GeneratorAdapter gen, Label falseLabel)
             (§ call gen.visitLineNumber(line, gen.mark()))
             (§ if (method != nil))
@@ -7877,7 +6591,6 @@
             )
         )
 
-        #_public
         (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ if (method != nil))
             (§
@@ -7916,7 +6629,6 @@
             )
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ if (method != nil))
             (§
@@ -7968,12 +6680,10 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr (method != nil || tag != nil)))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ if (jc == nil))
             (§
@@ -7983,47 +6693,34 @@
         )
     )
 
-    #_static
     (class-ns UnresolvedVarExpr (§ implements Expr)
-        #_public
-        #_final
         (§ field Symbol symbol)
 
-        #_public
-        (§ method UnresolvedVarExpr(Symbol symbol)
+        (§ constructor UnresolvedVarExpr(Symbol symbol)
             (§ ass this.symbol = symbol)
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr false))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ throw new IllegalArgumentException("UnresolvedVarExpr has no Java class"))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
         )
 
-        #_public
         (§ method Object eval()
             (§ throw new IllegalArgumentException("UnresolvedVarExpr cannot be evalled"))
         )
     )
 
-    #_static
     (class-ns NumberExpr (§ extends LiteralExpr) (§ implements MaybePrimitiveExpr)
-        #_final
         (§ field Number n)
-        #_public
-        #_final
         (§ field int id)
 
-        #_public
-        (§ method NumberExpr(Number n)
+        (§ constructor NumberExpr(Number n)
             (§ ass this.n = n)
             (§ ass this.id = registerConstant(n))
         )
@@ -8032,7 +6729,6 @@
             (§ return (§ expr n))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ if (context != C.STATEMENT))
             (§
@@ -8040,12 +6736,10 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ if (n instanceof Integer))
             (§
@@ -8065,12 +6759,10 @@
             )
         )
 
-        #_public
         (§ method boolean canEmitPrimitive()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ if (n instanceof Integer))
             (§
@@ -8086,9 +6778,7 @@
             )
         )
 
-        #_static
-        #_public
-        (§ method Expr parse(Number form)
+        (§ defn Expr parse(Number form)
             (§ if (form instanceof Integer || form instanceof Double || form instanceof Long))
             (§
                 (§ return (§ expr new NumberExpr(form)))
@@ -8100,19 +6790,13 @@
         )
     )
 
-    #_static
     (class-ns ConstantExpr (§ extends LiteralExpr)
         ;; stuff quoted vals in classloader at compile time, pull out at runtime
         ;; this won't work for static compilation...
-        #_public
-        #_final
         (§ field Object v)
-        #_public
-        #_final
         (§ field int id)
 
-        #_public
-        (§ method ConstantExpr(Object v)
+        (§ constructor ConstantExpr(Object v)
             (§ ass this.v = v)
             (§ ass this.id = registerConstant(v))
         )
@@ -8121,7 +6805,6 @@
             (§ return (§ expr v))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call objx.emitConstant(gen, id))
 
@@ -8131,12 +6814,10 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr Modifier.isPublic(v.getClass().getModifiers())))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ if (v instanceof APersistentMap))
             (§
@@ -8156,12 +6837,9 @@
             )
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
-            #_static
-            (§ field Keyword formKey = Keyword.intern("form"))
+            (§ def Keyword formKey = Keyword.intern("form"))
 
-            #_public
             (§ method Expr parse(C context, Object form)
                 (§ let int argCount = RT.count(form) - 1)
                 (§ if (argCount != 1))
@@ -8203,13 +6881,11 @@
         )
     )
 
-    #_static
     (class-ns NilExpr (§ extends LiteralExpr)
         (§ method Object val()
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call gen.visitInsn(Opcodes.ACONST_NULL))
             (§ if (context == C.STATEMENT))
@@ -8218,29 +6894,21 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr nil))
         )
     )
 
-    #_final
-    #_static
-    (§ field NilExpr NIL_EXPR = new NilExpr())
+    (§ def NilExpr NIL_EXPR = new NilExpr())
 
-    #_static
     (class-ns BooleanExpr (§ extends LiteralExpr)
-        #_public
-        #_final
         (§ field boolean val)
 
-        #_public
-        (§ method BooleanExpr(boolean val)
+        (§ constructor BooleanExpr(boolean val)
             (§ ass this.val = val)
         )
 
@@ -8248,7 +6916,6 @@
             (§ return (§ expr val ? RT.T :or RT.F))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ if (val))
             (§
@@ -8264,32 +6931,22 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr Boolean.class))
         )
     )
 
-    #_final
-    #_static
-    (§ field BooleanExpr TRUE_EXPR = new BooleanExpr(true))
-    #_final
-    #_static
-    (§ field BooleanExpr FALSE_EXPR = new BooleanExpr(false))
+    (§ def BooleanExpr TRUE_EXPR = new BooleanExpr(true))
+    (§ def BooleanExpr FALSE_EXPR = new BooleanExpr(false))
 
-    #_static
     (class-ns StringExpr (§ extends LiteralExpr)
-        #_public
-        #_final
         (§ field String str)
 
-        #_public
-        (§ method StringExpr(String str)
+        (§ constructor StringExpr(String str)
             (§ ass this.str = str)
         )
 
@@ -8297,7 +6954,6 @@
             (§ return (§ expr str))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ if (context != C.STATEMENT))
             (§
@@ -8305,123 +6961,85 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr String.class))
         )
     )
 
-    #_static
     (class-ns MonitorEnterExpr (§ extends UntypedExpr)
-        #_final
         (§ field Expr target)
 
-        #_public
-        (§ method MonitorEnterExpr(Expr target)
+        (§ constructor MonitorEnterExpr(Expr target)
             (§ ass this.target = target)
         )
 
-        #_public
         (§ method Object eval()
             (§ throw new UnsupportedOperationException("Can't eval monitor-enter"))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call target.emit(C.EXPRESSION, objx, gen))
             (§ call gen.monitorEnter())
             (§ call NIL_EXPR.emit(context, objx, gen))
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
-            #_public
             (§ method Expr parse(C context, Object form)
                 (§ return (§ expr new MonitorEnterExpr(analyze(C.EXPRESSION, RT.second(form)))))
             )
         )
     )
 
-    #_static
     (class-ns MonitorExitExpr (§ extends UntypedExpr)
-        #_final
         (§ field Expr target)
 
-        #_public
-        (§ method MonitorExitExpr(Expr target)
+        (§ constructor MonitorExitExpr(Expr target)
             (§ ass this.target = target)
         )
 
-        #_public
         (§ method Object eval()
             (§ throw new UnsupportedOperationException("Can't eval monitor-exit"))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call target.emit(C.EXPRESSION, objx, gen))
             (§ call gen.monitorExit())
             (§ call NIL_EXPR.emit(context, objx, gen))
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
-            #_public
             (§ method Expr parse(C context, Object form)
                 (§ return (§ expr new MonitorExitExpr(analyze(C.EXPRESSION, RT.second(form)))))
             )
         )
     )
 
-    #_public
-    #_static
     (class-ns TryExpr (§ implements Expr)
-        #_public
-        #_final
         (§ field Expr tryExpr)
-        #_public
-        #_final
         (§ field Expr finallyExpr)
-        #_public
-        #_final
         (§ field PersistentVector catchExprs)
-        #_public
-        #_final
         (§ field int retLocal)
-        #_public
-        #_final
         (§ field int finallyLocal)
 
-        #_public
-        #_static
         (class-ns CatchClause
-            #_public
-            #_final
             (§ field Class c)
-            #_public
-            #_final
             (§ field LocalBinding lb)
-            #_public
-            #_final
             (§ field Expr handler)
             (§ field Label label)
             (§ field Label endLabel)
 
-            #_public
-            (§ method CatchClause(Class c, LocalBinding lb, Expr handler)
+            (§ constructor CatchClause(Class c, LocalBinding lb, Expr handler)
                 (§ ass this.c = c)
                 (§ ass this.lb = lb)
                 (§ ass this.handler = handler)
             )
         )
 
-        #_public
-        (§ method TryExpr(Expr tryExpr, PersistentVector catchExprs, Expr finallyExpr, int retLocal, int finallyLocal)
+        (§ constructor TryExpr(Expr tryExpr, PersistentVector catchExprs, Expr finallyExpr, int retLocal, int finallyLocal)
             (§ ass this.tryExpr = tryExpr)
             (§ ass this.catchExprs = catchExprs)
             (§ ass this.finallyExpr = finallyExpr)
@@ -8429,12 +7047,10 @@
             (§ ass this.finallyLocal = finallyLocal)
         )
 
-        #_public
         (§ method Object eval()
             (§ throw new UnsupportedOperationException("Can't eval try"))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ let Label startTry = gen.newLabel())
             (§ let Label endTry = gen.newLabel())
@@ -8517,19 +7133,15 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr tryExpr.hasJavaClass()))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr tryExpr.getJavaClass()))
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
-            #_public
             (§ method Expr parse(C context, Object frm)
                 (§ let ISeq form = (ISeq) frm)
                 (§ if (context != C.RETURN))
@@ -8646,32 +7258,24 @@
         )
     )
 
-    #_static
     (class-ns ThrowExpr (§ extends UntypedExpr)
-        #_public
-        #_final
         (§ field Expr excExpr)
 
-        #_public
-        (§ method ThrowExpr(Expr excExpr)
+        (§ constructor ThrowExpr(Expr excExpr)
             (§ ass this.excExpr = excExpr)
         )
 
-        #_public
         (§ method Object eval()
             (§ throw Util.runtimeException("Can't eval throw"))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call excExpr.emit(C.EXPRESSION, objx, gen))
             (§ call gen.checkCast(THROWABLE_TYPE))
             (§ call gen.throwException())
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
-            #_public
             (§ method Expr parse(C context, Object form)
                 (§ if (context == C.EVAL))
                 (§
@@ -8690,9 +7294,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method boolean subsumes(Class[] c1, Class[] c2)
+    (§ defn boolean subsumes(Class[] c1, Class[] c2)
         ;; presumes matching lengths
         (§ let Boolean better = false)
         (§ for (int i = 0 i < c1.length i++))
@@ -8712,8 +7314,7 @@
         (§ return (§ expr better))
     )
 
-    #_static
-    (§ method String getTypeStringForArgs(IPersistentVector args)
+    (§ defn String getTypeStringForArgs(IPersistentVector args)
         (§ let StringBuilder sb = new StringBuilder())
         (§ for (int i = 0 i < args.count() i++))
         (§
@@ -8727,8 +7328,7 @@
         (§ return (§ expr sb.toString()))
     )
 
-    #_static
-    (§ method int getMatchingParams(String methodName, ArrayList<Class[]> paramlists, IPersistentVector argexprs, List<Class> rets)
+    (§ defn int getMatchingParams(String methodName, ArrayList<Class[]> paramlists, IPersistentVector argexprs, List<Class> rets)
         ;; presumes matching lengths
         (§ let int matchIdx = -1)
         (§ let boolean tied = false)
@@ -8796,28 +7396,15 @@
         (§ return (§ expr matchIdx))
     )
 
-    #_public
-    #_static
     (class-ns NewExpr (§ implements Expr)
-        #_public
-        #_final
         (§ field IPersistentVector args)
-        #_public
-        #_final
         (§ field Constructor ctor)
-        #_public
-        #_final
         (§ field Class c)
 
-        #_final
-        #_static
-        (§ field Method invokeConstructorMethod = Method.getMethod("Object invokeConstructor(Class,Object[])"))
-        #_final
-        #_static
-        (§ field Method forNameMethod = Method.getMethod("Class classForName(String)"))
+        (§ def Method invokeConstructorMethod = Method.getMethod("Object invokeConstructor(Class,Object[])"))
+        (§ def Method forNameMethod = Method.getMethod("Class classForName(String)"))
 
-        #_public
-        (§ method NewExpr(Class c, IPersistentVector args, int line, int column)
+        (§ constructor NewExpr(Class c, IPersistentVector args, int line, int column)
             (§ ass this.args = args)
             (§ ass this.c = c)
             (§ let Constructor[] allctors = c.getConstructors())
@@ -8852,7 +7439,6 @@
             )
         )
 
-        #_public
         (§ method Object eval()
             (§ let Object[] argvals = new Object[args.count()])
             (§ for (int i = 0 i < args.count() i++))
@@ -8873,7 +7459,6 @@
             (§ return (§ expr Reflector.invokeConstructor(c, argvals)))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ if (this.ctor != nil))
             (§
@@ -8896,19 +7481,15 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr c))
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
-            #_public
             (§ method Expr parse(C context, Object frm)
                 (§ let int line = lineDeref())
                 (§ let int column = columnDeref())
@@ -8933,35 +7514,22 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns MetaExpr (§ implements Expr)
-        #_public
-        #_final
         (§ field Expr expr)
-        #_public
-        #_final
         (§ field Expr meta)
 
-        #_final
-        #_static
-        (§ field Type IOBJ_TYPE = Type.getType(IObj.class))
-        #_final
-        #_static
-        (§ field Method withMetaMethod = Method.getMethod("cloiure.lang.IObj withMeta(cloiure.lang.IPersistentMap)"))
+        (§ def Type IOBJ_TYPE = Type.getType(IObj.class))
+        (§ def Method withMetaMethod = Method.getMethod("cloiure.lang.IObj withMeta(cloiure.lang.IPersistentMap)"))
 
-        #_public
-        (§ method MetaExpr(Expr expr, Expr meta)
+        (§ constructor MetaExpr(Expr expr, Expr meta)
             (§ ass this.expr = expr)
             (§ ass this.meta = meta)
         )
 
-        #_public
         (§ method Object eval()
             (§ return (§ expr ((IObj) expr.eval()).withMeta((IPersistentMap) meta.eval())))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call expr.emit(C.EXPRESSION, objx, gen))
             (§ call gen.checkCast(IOBJ_TYPE))
@@ -8974,38 +7542,23 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr expr.hasJavaClass()))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr expr.getJavaClass()))
         )
     )
 
-    #_public
-    #_static
     (class-ns IfExpr (§ implements Expr, MaybePrimitiveExpr)
-        #_public
-        #_final
         (§ field Expr testExpr)
-        #_public
-        #_final
         (§ field Expr thenExpr)
-        #_public
-        #_final
         (§ field Expr elseExpr)
-        #_public
-        #_final
         (§ field int line)
-        #_public
-        #_final
         (§ field int column)
 
-        #_public
-        (§ method IfExpr(int line, int column, Expr testExpr, Expr thenExpr, Expr elseExpr)
+        (§ constructor IfExpr(int line, int column, Expr testExpr, Expr thenExpr, Expr elseExpr)
             (§ ass this.testExpr = testExpr)
             (§ ass this.thenExpr = thenExpr)
             (§ ass this.elseExpr = elseExpr)
@@ -9013,7 +7566,6 @@
             (§ ass this.column = column)
         )
 
-        #_public
         (§ method Object eval()
             (§ let Object t = testExpr.eval())
             (§ if (t != nil && t != Boolean.FALSE))
@@ -9023,17 +7575,14 @@
             (§ return (§ expr elseExpr.eval()))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call doEmit(context, objx, gen, false))
         )
 
-        #_public
         (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call doEmit(context, objx, gen, true))
         )
 
-        #_public
         (§ method void doEmit(C context, ObjExpr objx, GeneratorAdapter gen, boolean emitUnboxed)
             (§ let Label nullLabel = gen.newLabel())
             (§ let Label falseLabel = gen.newLabel())
@@ -9081,7 +7630,6 @@
             (§ call gen.mark(endLabel))
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr thenExpr.hasJavaClass()
           #_arg && elseExpr.hasJavaClass()
@@ -9092,7 +7640,6 @@
               #_arg || (elseExpr.getJavaClass() == nil && !thenExpr.getJavaClass().isPrimitive()))))
         )
 
-        #_public
         (§ method boolean canEmitPrimitive()
             (§ try )
             (§
@@ -9110,7 +7657,6 @@
             )
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ let Class thenClass = thenExpr.getJavaClass())
             (§ if (thenClass != nil && thenClass != RECUR_CLASS))
@@ -9120,9 +7666,7 @@
             (§ return (§ expr elseExpr.getJavaClass()))
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
-            #_public
             (§ method Expr parse(C context, Object frm)
                 (§ let ISeq form = (ISeq) frm)
                 ;; (if test then) or (if test then else)
@@ -9160,10 +7704,7 @@
         )
     )
 
-    #_static
-    #_final
-    #_public
-    (§ field IPersistentMap CHAR_MAP = PersistentHashMap.create(
+    (§ def IPersistentMap CHAR_MAP = PersistentHashMap.create(
       #_map \-, "_",
       #_map \:, "_COLON_",
       #_map \+, "_PLUS_",
@@ -9190,17 +7731,10 @@
       #_map \?, "_QMARK_"
     ))
 
-    #_static
-    #_final
-    #_public
-    (§ field IPersistentMap DEMUNGE_MAP)
-    #_static
-    #_final
-    #_public
-    (§ field Pattern DEMUNGE_PATTERN)
+    (§ def IPersistentMap DEMUNGE_MAP)
+    (§ def Pattern DEMUNGE_PATTERN)
 
-    (§ static )
-    (§
+    (§ static
         ;; DEMUNGE_MAP maps strings to characters in the opposite
         ;; direction that CHAR_MAP does, plus it maps "$" to '/'
         (§ let IPersistentMap m = RT.map("$", \/))
@@ -9222,8 +7756,7 @@
         ;; prefixes of others.
         (§ let Object[] mungeStrs = RT.toArray(RT.keys(m)))
         (§ call Arrays.sort(mungeStrs, new Comparator()
-        (§ inner
-            #_public
+        (§ reify
             (§ method int compare(Object s1, Object s2)
                 (§ return (§ expr ((String) s2).length() - ((String) s1).length()))
             )
@@ -9245,9 +7778,7 @@
         (§ ass DEMUNGE_PATTERN = Pattern.compile(sb.toString()))
     )
 
-    #_static
-    #_public
-    (§ method String munge(String name)
+    (§ defn String munge(String name)
         (§ let StringBuilder sb = new StringBuilder())
         (§ for (char c :in name.toCharArray()))
         (§
@@ -9264,9 +7795,7 @@
         (§ return (§ expr sb.toString()))
     )
 
-    #_static
-    #_public
-    (§ method String demunge(String mungedName)
+    (§ defn String demunge(String mungedName)
         (§ let StringBuilder sb = new StringBuilder())
         (§ let Matcher m = DEMUNGE_PATTERN.matcher(mungedName))
         (§ let int lastMatchEnd = 0)
@@ -9286,46 +7815,25 @@
         (§ return (§ expr sb.toString()))
     )
 
-    #_public
-    #_static
     (class-ns EmptyExpr (§ implements Expr)
-        #_public
-        #_final
         (§ field Object coll)
 
-        #_final
-        #_static
-        (§ field Type HASHMAP_TYPE = Type.getType(PersistentArrayMap.class))
-        #_final
-        #_static
-        (§ field Type HASHSET_TYPE = Type.getType(PersistentHashSet.class))
-        #_final
-        #_static
-        (§ field Type VECTOR_TYPE = Type.getType(PersistentVector.class))
-        #_final
-        #_static
-        (§ field Type IVECTOR_TYPE = Type.getType(IPersistentVector.class))
-        #_final
-        #_static
-        (§ field Type TUPLE_TYPE = Type.getType(Tuple.class))
-        #_final
-        #_static
-        (§ field Type LIST_TYPE = Type.getType(PersistentList.class))
-        #_final
-        #_static
-        (§ field Type EMPTY_LIST_TYPE = Type.getType(PersistentList.EmptyList.class))
+        (§ def Type HASHMAP_TYPE = Type.getType(PersistentArrayMap.class))
+        (§ def Type HASHSET_TYPE = Type.getType(PersistentHashSet.class))
+        (§ def Type VECTOR_TYPE = Type.getType(PersistentVector.class))
+        (§ def Type IVECTOR_TYPE = Type.getType(IPersistentVector.class))
+        (§ def Type TUPLE_TYPE = Type.getType(Tuple.class))
+        (§ def Type LIST_TYPE = Type.getType(PersistentList.class))
+        (§ def Type EMPTY_LIST_TYPE = Type.getType(PersistentList.EmptyList.class))
 
-        #_public
-        (§ method EmptyExpr(Object coll)
+        (§ constructor EmptyExpr(Object coll)
             (§ ass this.coll = coll)
         )
 
-        #_public
         (§ method Object eval()
             (§ return (§ expr coll))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ if (coll instanceof IPersistentList))
             (§
@@ -9353,12 +7861,10 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ if (coll instanceof IPersistentList))
             (§
@@ -9383,23 +7889,15 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns ListExpr (§ implements Expr)
-        #_public
-        #_final
         (§ field IPersistentVector args)
 
-        #_final
-        #_static
-        (§ field Method arrayToListMethod = Method.getMethod("cloiure.lang.ISeq arrayToList(Object[])"))
+        (§ def Method arrayToListMethod = Method.getMethod("cloiure.lang.ISeq arrayToList(Object[])"))
 
-        #_public
-        (§ method ListExpr(IPersistentVector args)
+        (§ constructor ListExpr(IPersistentVector args)
             (§ ass this.args = args)
         )
 
-        #_public
         (§ method Object eval()
             (§ let IPersistentVector ret = PersistentVector.EMPTY)
             (§ for (int i = 0 i < args.count() i++))
@@ -9409,7 +7907,6 @@
             (§ return (§ expr ret.seq()))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call MethodExpr.emitArgsAsArray(args, objx, gen))
             (§ call gen.invokeStatic(RT_TYPE, arrayToListMethod))
@@ -9419,37 +7916,25 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr IPersistentList.class))
         )
     )
 
-    #_public
-    #_static
     (class-ns MapExpr (§ implements Expr)
-        #_public
-        #_final
         (§ field IPersistentVector keyvals)
 
-        #_final
-        #_static
-        (§ field Method mapMethod = Method.getMethod("cloiure.lang.IPersistentMap map(Object[])"))
-        #_final
-        #_static
-        (§ field Method mapUniqueKeysMethod = Method.getMethod("cloiure.lang.IPersistentMap mapUniqueKeys(Object[])"))
+        (§ def Method mapMethod = Method.getMethod("cloiure.lang.IPersistentMap map(Object[])"))
+        (§ def Method mapUniqueKeysMethod = Method.getMethod("cloiure.lang.IPersistentMap mapUniqueKeys(Object[])"))
 
-        #_public
-        (§ method MapExpr(IPersistentVector keyvals)
+        (§ constructor MapExpr(IPersistentVector keyvals)
             (§ ass this.keyvals = keyvals)
         )
 
-        #_public
         (§ method Object eval()
             (§ let Object[] ret = new Object[keyvals.count()])
             (§ for (int i = 0 i < keyvals.count() i++))
@@ -9459,7 +7944,6 @@
             (§ return (§ expr RT.map(ret)))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ let boolean allKeysConstant = true)
             (§ let boolean allConstantKeysUnique = true)
@@ -9499,19 +7983,15 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr IPersistentMap.class))
         )
 
-        #_static
-        #_public
-        (§ method Expr parse(C context, IPersistentMap form)
+        (§ defn Expr parse(C context, IPersistentMap form)
             (§ let IPersistentVector keyvals = PersistentVector.EMPTY)
             (§ let boolean keysConstant = true)
             (§ let boolean valsConstant = true)
@@ -9579,23 +8059,15 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns SetExpr (§ implements Expr)
-        #_public
-        #_final
         (§ field IPersistentVector keys)
 
-        #_final
-        #_static
-        (§ field Method setMethod = Method.getMethod("cloiure.lang.IPersistentSet set(Object[])"))
+        (§ def Method setMethod = Method.getMethod("cloiure.lang.IPersistentSet set(Object[])"))
 
-        #_public
-        (§ method SetExpr(IPersistentVector keys)
+        (§ constructor SetExpr(IPersistentVector keys)
             (§ ass this.keys = keys)
         )
 
-        #_public
         (§ method Object eval()
             (§ let Object[] ret = new Object[keys.count()])
             (§ for (int i = 0 i < keys.count() i++))
@@ -9605,7 +8077,6 @@
             (§ return (§ expr RT.set(ret)))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call MethodExpr.emitArgsAsArray(keys, objx, gen))
             (§ call gen.invokeStatic(RT_TYPE, setMethod))
@@ -9615,19 +8086,15 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr IPersistentSet.class))
         )
 
-        #_static
-        #_public
-        (§ method Expr parse(C context, IPersistentSet form)
+        (§ defn Expr parse(C context, IPersistentSet form)
             (§ let IPersistentVector keys = PersistentVector.EMPTY)
             (§ let boolean constant = true)
 
@@ -9663,23 +8130,15 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns VectorExpr (§ implements Expr)
-        #_public
-        #_final
         (§ field IPersistentVector args)
 
-        #_final
-        #_static
-        (§ field Method vectorMethod = Method.getMethod("cloiure.lang.IPersistentVector vector(Object[])"))
+        (§ def Method vectorMethod = Method.getMethod("cloiure.lang.IPersistentVector vector(Object[])"))
 
-        #_public
-        (§ method VectorExpr(IPersistentVector args)
+        (§ constructor VectorExpr(IPersistentVector args)
             (§ ass this.args = args)
         )
 
-        #_public
         (§ method Object eval()
             (§ let IPersistentVector ret = PersistentVector.EMPTY)
             (§ for (int i = 0 i < args.count() i++))
@@ -9689,7 +8148,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ if (args.count() <= Tuple.MAX_SIZE))
             (§
@@ -9711,19 +8169,15 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr IPersistentVector.class))
         )
 
-        #_static
-        #_public
-        (§ method Expr parse(C context, IPersistentVector form)
+        (§ defn Expr parse(C context, IPersistentVector form)
             (§ let boolean constant = true)
 
             (§ let IPersistentVector args = PersistentVector.EMPTY)
@@ -9758,37 +8212,20 @@
         )
     )
 
-    #_static
     (class-ns KeywordInvokeExpr (§ implements Expr)
-        #_public
-        #_final
         (§ field KeywordExpr kw)
-        #_public
-        #_final
         (§ field Object tag)
-        #_public
-        #_final
         (§ field Expr target)
-        #_public
-        #_final
         (§ field int line)
-        #_public
-        #_final
         (§ field int column)
-        #_public
-        #_final
         (§ field int siteIndex)
-        #_public
-        #_final
         (§ field String source)
 
-        #_static
-        (§ field Type ILOOKUP_TYPE = Type.getType(ILookup.class))
+        (§ def Type ILOOKUP_TYPE = Type.getType(ILookup.class))
 
         (§ field Class jc)
 
-        #_public
-        (§ method KeywordInvokeExpr(String source, int line, int column, Symbol tag, KeywordExpr kw, Expr target)
+        (§ constructor KeywordInvokeExpr(String source, int line, int column, Symbol tag, KeywordExpr kw, Expr target)
             (§ ass this.source = source)
             (§ ass this.kw = kw)
             (§ ass this.target = target)
@@ -9798,7 +8235,6 @@
             (§ ass this.siteIndex = registerKeywordCallsite(kw.k))
         )
 
-        #_public
         (§ method Object eval()
             (§ try )
             (§
@@ -9817,7 +8253,6 @@
             )
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ let Label endLabel = gen.newLabel())
             (§ let Label faultLabel = gen.newLabel())
@@ -9853,12 +8288,10 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr (tag != nil)))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ if (jc == nil))
             (§
@@ -9868,19 +8301,15 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns InstanceOfExpr (§ implements Expr, MaybePrimitiveExpr)
         (§ field Expr expr)
         (§ field Class c)
 
-        #_public
-        (§ method InstanceOfExpr(Class c, Expr expr)
+        (§ constructor InstanceOfExpr(Class c, Expr expr)
             (§ ass this.expr = expr)
             (§ ass this.c = c)
         )
 
-        #_public
         (§ method Object eval()
             (§ if (c.isInstance(expr.eval())))
             (§
@@ -9889,18 +8318,15 @@
             (§ return (§ expr RT.F))
         )
 
-        #_public
         (§ method boolean canEmitPrimitive()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call expr.emit(C.EXPRESSION, objx, gen))
             (§ call gen.instanceOf(getType(c)))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call emitUnboxed(context, objx, gen))
             (§ call HostExpr.emitBoxReturn(objx, gen, Boolean.TYPE))
@@ -9910,47 +8336,28 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr Boolean.TYPE))
         )
     )
 
-    #_static
     (class-ns StaticInvokeExpr (§ implements Expr, MaybePrimitiveExpr)
-        #_public
-        #_final
         (§ field Type target)
-        #_public
-        #_final
         (§ field Class retClass)
-        #_public
-        #_final
         (§ field Class[] paramclasses)
-        #_public
-        #_final
         (§ field Type[] paramtypes)
-        #_public
-        #_final
         (§ field IPersistentVector args)
-        #_public
-        #_final
         (§ field boolean variadic)
-        #_public
-        #_final
         (§ field boolean tailPosition)
-        #_public
-        #_final
         (§ field Object tag)
 
         (§ field Class jc)
 
-        (§ method StaticInvokeExpr(Type target, Class retClass, Class[] paramclasses, Type[] paramtypes, boolean variadic, IPersistentVector args, Object tag, boolean tailPosition)
+        (§ constructor StaticInvokeExpr(Type target, Class retClass, Class[] paramclasses, Type[] paramtypes, boolean variadic, IPersistentVector args, Object tag, boolean tailPosition)
             (§ ass this.target = target)
             (§ ass this.retClass = retClass)
             (§ ass this.paramclasses = paramclasses)
@@ -9961,12 +8368,10 @@
             (§ ass this.tag = tag)
         )
 
-        #_public
         (§ method Object eval()
             (§ throw new UnsupportedOperationException("Can't eval StaticInvokeExpr"))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call emitUnboxed(context, objx, gen))
             (§ if (context != C.STATEMENT))
@@ -9986,12 +8391,10 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ if (jc == nil))
             (§
@@ -10000,12 +8403,10 @@
             (§ return (§ expr jc))
         )
 
-        #_public
         (§ method boolean canEmitPrimitive()
             (§ return (§ expr retClass.isPrimitive()))
         )
 
-        #_public
         (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ let Method ms = new Method("invokeStatic", getReturnType(), paramtypes))
             (§ if (variadic))
@@ -10041,14 +8442,11 @@
             (§ call gen.invokeStatic(target, ms))
         )
 
-        #_private
-        (§ method Type getReturnType()
+        (§ method- Type getReturnType()
             (§ return (§ expr Type.getType(retClass)))
         )
 
-        #_public
-        #_static
-        (§ method Expr parse(Var v, ISeq args, Object tag, boolean tailPosition)
+        (§ defn Expr parse(Var v, ISeq args, Object tag, boolean tailPosition)
             (§ if (!v.isBound() || v.get() == nil))
             (§
                 (§ return (§ expr nil))
@@ -10107,50 +8505,27 @@
         )
     )
 
-    #_static
     (class-ns InvokeExpr (§ implements Expr)
-        #_public
-        #_final
         (§ field Expr fexpr)
-        #_public
-        #_final
         (§ field Object tag)
-        #_public
-        #_final
         (§ field IPersistentVector args)
-        #_public
-        #_final
         (§ field int line)
-        #_public
-        #_final
         (§ field int column)
-        #_public
-        #_final
         (§ field boolean tailPosition)
-        #_public
-        #_final
         (§ field String source)
 
-        #_public
         (§ field boolean isProtocol = false)
-        #_public
         (§ field boolean isDirect = false)
-        #_public
         (§ field int siteIndex = -1)
-        #_public
         (§ field Class protocolOn)
-        #_public
         (§ field java.lang.reflect.Method onMethod)
 
-        #_static
-        (§ field Keyword onKey = Keyword.intern("on"))
-        #_static
-        (§ field Keyword methodMapKey = Keyword.intern("method-map"))
+        (§ def Keyword onKey = Keyword.intern("on"))
+        (§ def Keyword methodMapKey = Keyword.intern("method-map"))
 
         (§ field Class jc)
 
-        #_static
-        (§ method Object sigTag(int argcount, Var v)
+        (§ defn Object sigTag(int argcount, Var v)
             (§ let Object arglists = RT.get(RT.meta(v), arglistsKey))
             (§ let Object sigTag = nil)
             (§ for (ISeq s = RT.seq(arglists) s != nil s = s.next()))
@@ -10165,8 +8540,7 @@
             (§ return (§ expr nil))
         )
 
-        #_public
-        (§ method InvokeExpr(String source, int line, int column, Symbol tag, Expr fexpr, IPersistentVector args, boolean tailPosition)
+        (§ constructor InvokeExpr(String source, int line, int column, Symbol tag, Expr fexpr, IPersistentVector args, boolean tailPosition)
             (§ ass this.source = source)
             (§ ass this.fexpr = fexpr)
             (§ ass this.args = args)
@@ -10220,7 +8594,6 @@
             )
         )
 
-        #_public
         (§ method Object eval()
             (§ try )
             (§
@@ -10245,7 +8618,6 @@
             )
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ if (isProtocol))
             (§
@@ -10265,7 +8637,6 @@
             )
         )
 
-        #_public
         (§ method void emitProto(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ let Label onLabel = gen.newLabel())
             (§ let Label callLabel = gen.newLabel())
@@ -10340,12 +8711,10 @@
             (§ call gen.invokeInterface(IFN_TYPE, new Method("invoke", OBJECT_TYPE, ARG_TYPES[Math.min(MAX_POSITIONAL_ARITY + 1, args.count())])))
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr (tag != nil)))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ if (jc == nil))
             (§
@@ -10354,9 +8723,7 @@
             (§ return (§ expr jc))
         )
 
-        #_static
-        #_public
-        (§ method Expr parse(C context, ISeq form)
+        (§ defn Expr parse(C context, ISeq form)
             (§ let boolean tailPosition = inTailCall(context))
             (§ if (context != C.EVAL))
             (§
@@ -10429,10 +8796,8 @@
         )
     )
 
-    #_static
     (class-ns SourceDebugExtensionAttribute (§ extends Attribute)
-        #_public
-        (§ method SourceDebugExtensionAttribute()
+        (§ constructor SourceDebugExtensionAttribute()
             (§ super("SourceDebugExtension"))
         )
 
@@ -10442,34 +8807,23 @@
         )
     )
 
-    #_static
-    #_public
     (class-ns FnExpr (§ extends ObjExpr)
-        #_final
-        #_static
-        (§ field Type aFnType = Type.getType(AFunction.class))
-        #_final
-        #_static
-        (§ field Type restFnType = Type.getType(RestFn.class))
+        (§ def Type aFnType = Type.getType(AFunction.class))
+        (§ def Type restFnType = Type.getType(RestFn.class))
 
         ;; if there is a variadic overload (there can only be one) it is stored here
         (§ field FnMethod variadicMethod = nil)
         (§ field IPersistentCollection methods)
-        #_private
-        (§ field boolean hasPrimSigs)
-        #_private
-        (§ field boolean hasMeta)
-        #_private
-        (§ field boolean hasEnclosingMethod)
+        (§ field- boolean hasPrimSigs)
+        (§ field- boolean hasMeta)
+        (§ field- boolean hasEnclosingMethod)
 
         (§ field Class jc)
 
-        #_public
-        (§ method FnExpr(Object tag)
+        (§ constructor FnExpr(Object tag)
             (§ super(tag))
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
@@ -10478,7 +8832,6 @@
             (§ return (§ expr hasMeta))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ if (jc == nil))
             (§
@@ -10506,8 +8859,7 @@
             )
         )
 
-        #_static
-        (§ method Expr parse(C context, ISeq form, String name)
+        (§ defn Expr parse(C context, ISeq form, String name)
             (§ let ISeq origForm = form)
             (§ let FnExpr fn = new FnExpr(tagOf(form)))
             (§ let Keyword retkey = Keyword.intern(nil, "rettag"))
@@ -10696,8 +9048,6 @@
             )
         )
 
-        #_public
-        #_final
         (§ method ObjMethod variadicMethod()
             (§ return (§ expr variadicMethod))
         )
@@ -10706,31 +9056,22 @@
             (§ return (§ expr (variadicMethod != nil)))
         )
 
-        #_public
-        #_final
         (§ method IPersistentCollection methods()
             (§ return (§ expr methods))
         )
 
-        #_public
         (§ method void emitForDefn(ObjExpr objx, GeneratorAdapter gen)
             (§ call emit(C.EXPRESSION, objx, gen))
         )
     )
 
-    #_static
-    #_public
     (class-ns ObjExpr (§ implements Expr)
-        #_static
-        #_final
-        (§ field String CONST_PREFIX = "const__")
+        (§ def String CONST_PREFIX = "const__")
 
         (§ field String name)
         (§ field String internalName)
         (§ field String thisName)
         (§ field Type objtype)
-        #_public
-        #_final
         (§ field Object tag)
         ;; localbinding->itself
         (§ field IPersistentMap closes = PersistentHashMap.EMPTY)
@@ -10766,134 +9107,82 @@
 
         (§ field IPersistentMap opts = PersistentHashMap.EMPTY)
 
-        #_final
-        #_static
-        (§ field Method voidctor = Method.getMethod("void <init>()"))
+        (§ def Method voidctor = Method.getMethod("void <init>()"))
         #_protected
         (§ field IPersistentMap classMeta)
         #_protected
         (§ field boolean canBeDirect)
 
-        #_public
-        #_final
         (§ method String name()
             (§ return (§ expr name))
         )
 
-        #_public
-        #_final
         (§ method String internalName()
             (§ return (§ expr internalName))
         )
 
-        #_public
-        #_final
         (§ method String thisName()
             (§ return (§ expr thisName))
         )
 
-        #_public
-        #_final
         (§ method Type objtype()
             (§ return (§ expr objtype))
         )
 
-        #_public
-        #_final
         (§ method IPersistentMap closes()
             (§ return (§ expr closes))
         )
 
-        #_public
-        #_final
         (§ method IPersistentMap keywords()
             (§ return (§ expr keywords))
         )
 
-        #_public
-        #_final
         (§ method IPersistentMap vars()
             (§ return (§ expr vars))
         )
 
-        #_public
-        #_final
         (§ method Class compiledClass()
             (§ return (§ expr compiledClass))
         )
 
-        #_public
-        #_final
         (§ method int line()
             (§ return (§ expr line))
         )
 
-        #_public
-        #_final
         (§ method int column()
             (§ return (§ expr column))
         )
 
-        #_public
-        #_final
         (§ method PersistentVector constants()
             (§ return (§ expr constants))
         )
 
-        #_public
-        #_final
         (§ method int constantsID()
             (§ return (§ expr constantsID))
         )
 
-        #_final
-        #_static
-        (§ field Method kwintern = Method.getMethod("cloiure.lang.Keyword intern(String, String)"))
-        #_final
-        #_static
-        (§ field Method symintern = Method.getMethod("cloiure.lang.Symbol intern(String)"))
-        #_final
-        #_static
-        (§ field Method varintern = Method.getMethod("cloiure.lang.Var intern(cloiure.lang.Symbol, cloiure.lang.Symbol)"))
+        (§ def Method kwintern = Method.getMethod("cloiure.lang.Keyword intern(String, String)"))
+        (§ def Method symintern = Method.getMethod("cloiure.lang.Symbol intern(String)"))
+        (§ def Method varintern = Method.getMethod("cloiure.lang.Var intern(cloiure.lang.Symbol, cloiure.lang.Symbol)"))
 
-        #_final
-        #_static
-        (§ field Type DYNAMIC_CLASSLOADER_TYPE = Type.getType(DynamicClassLoader.class))
-        #_final
-        #_static
-        (§ field Method getClassMethod = Method.getMethod("Class getClass()"))
-        #_final
-        #_static
-        (§ field Method getClassLoaderMethod = Method.getMethod("ClassLoader getClassLoader()"))
-        #_final
-        #_static
-        (§ field Method getConstantsMethod = Method.getMethod("Object[] getConstants(int)"))
-        #_final
-        #_static
-        (§ field Method readStringMethod = Method.getMethod("Object readString(String)"))
+        (§ def Type DYNAMIC_CLASSLOADER_TYPE = Type.getType(DynamicClassLoader.class))
+        (§ def Method getClassMethod = Method.getMethod("Class getClass()"))
+        (§ def Method getClassLoaderMethod = Method.getMethod("ClassLoader getClassLoader()"))
+        (§ def Method getConstantsMethod = Method.getMethod("Object[] getConstants(int)"))
+        (§ def Method readStringMethod = Method.getMethod("Object readString(String)"))
 
-        #_final
-        #_static
-        (§ field Type ILOOKUP_SITE_TYPE = Type.getType(ILookupSite.class))
-        #_final
-        #_static
-        (§ field Type ILOOKUP_THUNK_TYPE = Type.getType(ILookupThunk.class))
-        #_final
-        #_static
-        (§ field Type KEYWORD_LOOKUPSITE_TYPE = Type.getType(KeywordLookupSite.class))
+        (§ def Type ILOOKUP_SITE_TYPE = Type.getType(ILookupSite.class))
+        (§ def Type ILOOKUP_THUNK_TYPE = Type.getType(ILookupThunk.class))
+        (§ def Type KEYWORD_LOOKUPSITE_TYPE = Type.getType(KeywordLookupSite.class))
 
-        #_private
-        (§ field DynamicClassLoader loader)
-        #_private
-        (§ field byte[] bytecode)
+        (§ field- DynamicClassLoader loader)
+        (§ field- byte[] bytecode)
 
-        #_public
-        (§ method ObjExpr(Object tag)
+        (§ constructor ObjExpr(Object tag)
             (§ ass this.tag = tag)
         )
 
-        #_static
-        (§ method String trimGenID(String name)
+        (§ defn String trimGenID(String name)
             (§ let int i = name.lastIndexOf("__"))
             (§ return (§ expr (i == -1) ? name :or name.substring(0, i)))
         )
@@ -11213,8 +9502,7 @@
             )
         )
 
-        #_private
-        (§ method void emitKeywordCallsites(GeneratorAdapter clinitgen)
+        (§ method- void emitKeywordCallsites(GeneratorAdapter clinitgen)
             (§ for (int i = 0 i < keywordCallsites.count() i++))
             (§
                 (§ let Keyword k = (Keyword) keywordCallsites.nth(i))
@@ -11521,17 +9809,17 @@
         (§ method void emitClearCloses(GeneratorAdapter gen)
         )
 
-        #_synchronized
         (§ method Class getCompiledClass()
-            (§ if (compiledClass == nil))
-            (§
-                (§ ass loader = (DynamicClassLoader) LOADER.deref())
-                (§ ass compiledClass = loader.defineClass(name, bytecode, src))
+            (§ synchronized (this)
+                (§ if (compiledClass == nil))
+                (§
+                    (§ ass loader = (DynamicClassLoader) LOADER.deref())
+                    (§ ass compiledClass = loader.defineClass(name, bytecode, src))
+                )
+                (§ return (§ expr compiledClass))
             )
-            (§ return (§ expr compiledClass))
         )
 
-        #_public
         (§ method Object eval()
             (§ if (isDeftype()))
             (§
@@ -11547,7 +9835,6 @@
             )
         )
 
-        #_public
         (§ method void emitLetFnInits(GeneratorAdapter gen, ObjExpr objx, IPersistentSet letFnLocals)
             ;; objx arg is enclosing objx, not this
             (§ call gen.checkCast(objtype))
@@ -11574,7 +9861,6 @@
             (§ call gen.pop())
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             ;; emitting a Fn means constructing an instance, feeding closed-overs from enclosing scope, if any
             ;; objx arg is enclosing objx, not this
@@ -11611,14 +9897,12 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
         (§ field Class jc)
 
-        #_public
         (§ method Class getJavaClass()
             (§ if (jc == nil))
             (§
@@ -11627,7 +9911,6 @@
             (§ return (§ expr jc))
         )
 
-        #_public
         (§ method void emitAssignLocal(GeneratorAdapter gen, LocalBinding lb, Expr val)
             (§ if (!isMutable(lb)))
             (§
@@ -11652,8 +9935,7 @@
             )
         )
 
-        #_private
-        (§ method void emitLocal(GeneratorAdapter gen, LocalBinding lb, boolean clear)
+        (§ method- void emitLocal(GeneratorAdapter gen, LocalBinding lb, boolean clear)
             (§ if (closes.containsKey(lb)))
             (§
                 (§ let Class primc = lb.getPrimitiveType())
@@ -11711,8 +9993,7 @@
             )
         )
 
-        #_private
-        (§ method void emitUnboxedLocal(GeneratorAdapter gen, LocalBinding lb)
+        (§ method- void emitUnboxedLocal(GeneratorAdapter gen, LocalBinding lb)
             (§ let int argoff = canBeDirect ? 0 :or 1)
             (§ let Class primc = lb.getPrimitiveType())
             (§ if (closes.containsKey(lb)))
@@ -11730,20 +10011,14 @@
             )
         )
 
-        #_public
         (§ method void emitVar(GeneratorAdapter gen, Var var)
             (§ let Integer i = (Integer) vars.valAt(var))
             (§ call emitConstant(gen, i))
         )
 
-        #_final
-        #_static
-        (§ field Method varGetMethod = Method.getMethod("Object get()"))
-        #_final
-        #_static
-        (§ field Method varGetRawMethod = Method.getMethod("Object getRawRoot()"))
+        (§ def Method varGetMethod = Method.getMethod("Object get()"))
+        (§ def Method varGetRawMethod = Method.getMethod("Object getRawRoot()"))
 
-        #_public
         (§ method void emitVarValue(GeneratorAdapter gen, Var v)
             (§ let Integer i = (Integer) vars.valAt(v))
             (§ if (!v.isDynamic()))
@@ -11758,13 +10033,11 @@
             )
         )
 
-        #_public
         (§ method void emitKeyword(GeneratorAdapter gen, Keyword k)
             (§ let Integer i = (Integer) keywords.valAt(k))
             (§ call emitConstant(gen, i))
         )
 
-        #_public
         (§ method void emitConstant(GeneratorAdapter gen, int id)
             (§ ass usedConstants = (IPersistentSet) usedConstants.cons(id))
             (§ call gen.getStatic(objtype, constantName(id), constantType(id)))
@@ -11837,37 +10110,33 @@
         )
     )
 
+    #_non-static
     (§ enum PATHTYPE
         (§ item PATH),
         (§ item BRANCH)
     )
 
-    #_static
     (class-ns PathNode
-        #_final
         (§ field PATHTYPE type)
-        #_final
         (§ field PathNode parent)
 
-        (§ method PathNode(PATHTYPE type, PathNode parent)
+        (§ constructor PathNode(PATHTYPE type, PathNode parent)
             (§ ass this.type = type)
             (§ ass this.parent = parent)
         )
     )
 
-    #_static
-    (§ method PathNode clearPathRoot()
+    (§ defn PathNode clearPathRoot()
         (§ return (§ expr (PathNode) CLEAR_ROOT.get()))
     )
 
+    #_non-static
     (§ enum PSTATE
         (§ item REQ),
         (§ item REST),
         (§ item DONE)
     )
 
-    #_public
-    #_static
     (class-ns FnMethod (§ extends ObjMethod)
         ;; localbinding->localbinding
         (§ field PersistentVector reqParms = PersistentVector.EMPTY)
@@ -11877,14 +10146,11 @@
         (§ field Class retClass)
         (§ field String prim)
 
-        #_public
-        (§ method FnMethod(ObjExpr objx, ObjMethod parent)
+        (§ constructor FnMethod(ObjExpr objx, ObjMethod parent)
             (§ super(objx, parent))
         )
 
-        #_static
-        #_public
-        (§ method char classChar(Object x)
+        (§ defn char classChar(Object x)
             (§ let Class c = nil)
             (§ if (x instanceof Class))
             (§
@@ -11909,9 +10175,7 @@
             (§ throw new IllegalArgumentException("Only long and double primitives are supported"))
         )
 
-        #_static
-        #_public
-        (§ method String primInterface(IPersistentVector arglist)
+        (§ defn String primInterface(IPersistentVector arglist)
             (§ let StringBuilder sb = new StringBuilder())
             (§ for (int i = 0 i < arglist.count() i++))
             (§
@@ -11931,8 +10195,7 @@
             (§ return (§ expr nil))
         )
 
-        #_static
-        (§ method FnMethod parse(ObjExpr objx, ISeq form, Object rettag)
+        (§ defn FnMethod parse(ObjExpr objx, ISeq form, Object rettag)
             ;; ([args] body...)
             (§ let IPersistentVector parms = (IPersistentVector) RT.first(form))
             (§ let ISeq body = RT.next(form))
@@ -12099,7 +10362,6 @@
             )
         )
 
-        #_public
         (§ method void emit(ObjExpr fn, ClassVisitor cv)
             (§ if (fn.canBeDirect))
             (§
@@ -12115,7 +10377,6 @@
             )
         )
 
-        #_public
         (§ method void doEmitStatic(ObjExpr fn, ClassVisitor cv)
             (§ let Type returnType = Type.getType(retClass))
 
@@ -12212,7 +10473,6 @@
             )
         )
 
-        #_public
         (§ method void doEmitPrim(ObjExpr fn, ClassVisitor cv)
             (§ let Type returnType)
             (§ if (retClass == double.class || retClass == long.class))
@@ -12279,7 +10539,6 @@
             (§ call gen.endMethod())
         )
 
-        #_public
         (§ method void doEmit(ObjExpr fn, ClassVisitor cv)
             (§ let Method m = new Method(getMethodName(), getReturnType(), getArgTypes()))
 
@@ -12316,14 +10575,10 @@
             (§ call gen.endMethod())
         )
 
-        #_public
-        #_final
         (§ method PersistentVector reqParms()
             (§ return (§ expr reqParms))
         )
 
-        #_public
-        #_final
         (§ method LocalBinding restParm()
             (§ return (§ expr restParm))
         )
@@ -12366,13 +10621,9 @@
     )
 
     #_abstract
-    #_public
-    #_static
     (class-ns ObjMethod
         ;; when closures are defined inside other closures,
         ;; the closed over locals need to be propagated to the enclosing objx
-        #_public
-        #_final
         (§ field ObjMethod parent)
         ;; localbinding->localbinding
         (§ field IPersistentMap locals = nil)
@@ -12389,56 +10640,40 @@
         #_protected
         (§ field IPersistentMap methodMeta)
 
-        #_public
-        #_final
         (§ method IPersistentMap locals()
             (§ return (§ expr locals))
         )
 
-        #_public
-        #_final
         (§ method Expr body()
             (§ return (§ expr body))
         )
 
-        #_public
-        #_final
         (§ method ObjExpr objx()
             (§ return (§ expr objx))
         )
 
-        #_public
-        #_final
         (§ method PersistentVector argLocals()
             (§ return (§ expr argLocals))
         )
 
-        #_public
-        #_final
         (§ method int maxLocal()
             (§ return (§ expr maxLocal))
         )
 
-        #_public
-        #_final
         (§ method int line()
             (§ return (§ expr line))
         )
 
-        #_public
-        #_final
         (§ method int column()
             (§ return (§ expr column))
         )
 
-        #_public
-        (§ method ObjMethod(ObjExpr objx, ObjMethod parent)
+        (§ constructor ObjMethod(ObjExpr objx, ObjMethod parent)
             (§ ass this.parent = parent)
             (§ ass this.objx = objx)
         )
 
-        #_static
-        (§ method void emitBody(ObjExpr objx, GeneratorAdapter gen, Class retClass, Expr body)
+        (§ defn void emitBody(ObjExpr objx, GeneratorAdapter gen, Class retClass, Expr body)
             (§ let MaybePrimitiveExpr be = (MaybePrimitiveExpr) body)
             (§ if (Util.isPrimitive(retClass) && be.canEmitPrimitive()))
             (§
@@ -12491,7 +10726,6 @@
         (§ abstract Type getReturnType())
         (§ abstract Type[] getArgTypes())
 
-        #_public
         (§ method void emit(ObjExpr fn, ClassVisitor cv)
             (§ let Method m = new Method(getMethodName(), getReturnType(), getArgTypes()))
 
@@ -12560,36 +10794,19 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns LocalBinding
-        #_public
-        #_final
         (§ field Symbol sym)
-        #_public
-        #_final
         (§ field Symbol tag)
-        #_public
         (§ field Expr init)
         (§ field int idx)
-        #_public
-        #_final
         (§ field String name)
-        #_public
-        #_final
         (§ field boolean isArg)
-        #_public
-        #_final
         (§ field PathNode clearPathRoot)
-        #_public
         (§ field boolean canBeCleared = !RT.booleanCast(getCompilerOption(disableLocalsClearingKey)))
-        #_public
         (§ field boolean recurMistmatch = false)
-        #_public
         (§ field boolean used = false)
 
-        #_public
-        (§ method LocalBinding(int num, Symbol sym, Symbol tag, Expr init, boolean isArg, PathNode clearPathRoot)
+        (§ constructor LocalBinding(int num, Symbol sym, Symbol tag, Expr init, boolean isArg, PathNode clearPathRoot)
             (§ if (maybePrimitiveType(init) != nil && tag != nil))
             (§
                 (§ throw new UnsupportedOperationException("Can't type hint a local with a primitive initializer"))
@@ -12605,7 +10822,6 @@
 
         (§ field Boolean hjc)
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ if (hjc == nil))
             (§
@@ -12623,7 +10839,6 @@
 
         (§ field Class jc)
 
-        #_public
         (§ method Class getJavaClass()
             (§ if (jc == nil))
             (§
@@ -12632,33 +10847,20 @@
             (§ return (§ expr jc))
         )
 
-        #_public
         (§ method Class getPrimitiveType()
             (§ return (§ expr maybePrimitiveType(init)))
         )
     )
 
-    #_public
-    #_static
     (class-ns LocalBindingExpr (§ implements Expr, MaybePrimitiveExpr, AssignableExpr)
-        #_public
-        #_final
         (§ field LocalBinding b)
-        #_public
-        #_final
         (§ field Symbol tag)
 
-        #_public
-        #_final
         (§ field PathNode clearPath)
-        #_public
-        #_final
         (§ field PathNode clearRoot)
-        #_public
         (§ field boolean shouldClear = false)
 
-        #_public
-        (§ method LocalBindingExpr(LocalBinding b, Symbol tag)
+        (§ constructor LocalBindingExpr(LocalBinding b, Symbol tag)
             (§ if (b.getPrimitiveType() != nil && tag != nil))
             (§
                 (§ throw new UnsupportedOperationException("Can't type hint a primitive local"))
@@ -12695,22 +10897,18 @@
             )
         )
 
-        #_public
         (§ method Object eval()
             (§ throw new UnsupportedOperationException("Can't eval locals"))
         )
 
-        #_public
         (§ method boolean canEmitPrimitive()
             (§ return (§ expr (b.getPrimitiveType() != nil)))
         )
 
-        #_public
         (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call objx.emitUnboxedLocal(gen, b))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ if (context != C.STATEMENT))
             (§
@@ -12718,12 +10916,10 @@
             )
         )
 
-        #_public
         (§ method Object evalAssign(Expr val)
             (§ throw new UnsupportedOperationException("Can't eval locals"))
         )
 
-        #_public
         (§ method void emitAssign(C context, ObjExpr objx, GeneratorAdapter gen, Expr val)
             (§ call objx.emitAssignLocal(gen, b, val))
             (§ if (context != C.STATEMENT))
@@ -12732,14 +10928,12 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr (tag != nil || b.hasJavaClass())))
         )
 
         (§ field Class jc)
 
-        #_public
         (§ method Class getJavaClass()
             (§ if (jc == nil))
             (§
@@ -12756,25 +10950,18 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns BodyExpr (§ implements Expr, MaybePrimitiveExpr)
         (§ field PersistentVector exprs)
 
-        #_public
-        #_final
         (§ method PersistentVector exprs()
             (§ return (§ expr exprs))
         )
 
-        #_public
-        (§ method BodyExpr(PersistentVector exprs)
+        (§ constructor BodyExpr(PersistentVector exprs)
             (§ ass this.exprs = exprs)
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
-            #_public
             (§ method Expr parse(C context, Object frms)
                 (§ let ISeq forms = (ISeq) frms)
                 (§ if (Util.equals(RT.first(forms), DO)))
@@ -12795,7 +10982,6 @@
             )
         )
 
-        #_public
         (§ method Object eval()
             (§ let Object ret = nil)
             (§ for (Object o :in exprs))
@@ -12806,12 +10992,10 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method boolean canEmitPrimitive()
             (§ return (§ expr (lastExpr() instanceof MaybePrimitiveExpr && ((MaybePrimitiveExpr)lastExpr()).canEmitPrimitive())))
         )
 
-        #_public
         (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ for (int i = 0 i < exprs.count() - 1 i++))
             (§
@@ -12822,7 +11006,6 @@
             (§ call last.emitUnboxed(context, objx, gen))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ for (int i = 0 i < exprs.count() - 1 i++))
             (§
@@ -12833,66 +11016,47 @@
             (§ call last.emit(context, objx, gen))
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr lastExpr().hasJavaClass()))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr lastExpr().getJavaClass()))
         )
 
-        #_private
-        (§ method Expr lastExpr()
+        (§ method- Expr lastExpr()
             (§ return (§ expr (Expr) exprs.nth(exprs.count() - 1)))
         )
     )
 
-    #_public
-    #_static
     (class-ns BindingInit
         (§ field LocalBinding binding)
         (§ field Expr init)
 
-        #_public
-        #_final
         (§ method LocalBinding binding()
             (§ return (§ expr binding))
         )
 
-        #_public
-        #_final
         (§ method Expr init()
             (§ return (§ expr init))
         )
 
-        #_public
-        (§ method BindingInit(LocalBinding binding, Expr init)
+        (§ constructor BindingInit(LocalBinding binding, Expr init)
             (§ ass this.binding = binding)
             (§ ass this.init = init)
         )
     )
 
-    #_public
-    #_static
     (class-ns LetFnExpr (§ implements Expr)
-        #_public
-        #_final
         (§ field PersistentVector bindingInits)
-        #_public
-        #_final
         (§ field Expr body)
 
-        #_public
-        (§ method LetFnExpr(PersistentVector bindingInits, Expr body)
+        (§ constructor LetFnExpr(PersistentVector bindingInits, Expr body)
             (§ ass this.bindingInits = bindingInits)
             (§ ass this.body = body)
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
-            #_public
             (§ method Expr parse(C context, Object frm)
                 (§ let ISeq form = (ISeq) frm)
                 ;; (letfns* [var (fn [args] body) ...] body...)
@@ -12956,12 +11120,10 @@
             )
         )
 
-        #_public
         (§ method Object eval()
             (§ throw new UnsupportedOperationException("Can't eval letfns"))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ for (int i = 0 i < bindingInits.count() i++))
             (§
@@ -13013,40 +11175,27 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr body.hasJavaClass()))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr body.getJavaClass()))
         )
     )
 
-    #_public
-    #_static
     (class-ns LetExpr (§ implements Expr, MaybePrimitiveExpr)
-        #_public
-        #_final
         (§ field PersistentVector bindingInits)
-        #_public
-        #_final
         (§ field Expr body)
-        #_public
-        #_final
         (§ field boolean isLoop)
 
-        #_public
-        (§ method LetExpr(PersistentVector bindingInits, Expr body, boolean isLoop)
+        (§ constructor LetExpr(PersistentVector bindingInits, Expr body, boolean isLoop)
             (§ ass this.bindingInits = bindingInits)
             (§ ass this.body = body)
             (§ ass this.isLoop = isLoop)
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
-            #_public
             (§ method Expr parse(C context, Object frm)
                 (§ let ISeq form = (ISeq) frm)
                 ;; (let [var val var2 val2 ...] body...)
@@ -13202,22 +11351,18 @@
             )
         )
 
-        #_public
         (§ method Object eval()
             (§ throw new UnsupportedOperationException("Can't eval let/loop"))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call doEmit(context, objx, gen, false))
         )
 
-        #_public
         (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call doEmit(context, objx, gen, true))
         )
 
-        #_public
         (§ method void doEmit(C context, ObjExpr objx, GeneratorAdapter gen, boolean emitUnboxed)
             (§ let HashMap<BindingInit, Label> bindingLabels = new HashMap())
             (§ for (int i = 0 i < bindingInits.count() i++))
@@ -13295,41 +11440,28 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr body.hasJavaClass()))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr body.getJavaClass()))
         )
 
-        #_public
         (§ method boolean canEmitPrimitive()
             (§ return (§ expr (body instanceof MaybePrimitiveExpr && ((MaybePrimitiveExpr)body).canEmitPrimitive())))
         )
     )
 
-    #_public
-    #_static
     (class-ns RecurExpr (§ implements Expr, MaybePrimitiveExpr)
-        #_public
-        #_final
         (§ field IPersistentVector args)
-        #_public
-        #_final
         (§ field IPersistentVector loopLocals)
 
-        #_final
         (§ field int line)
-        #_final
         (§ field int column)
-        #_final
         (§ field String source)
 
-        #_public
-        (§ method RecurExpr(IPersistentVector loopLocals, IPersistentVector args, int line, int column, String source)
+        (§ constructor RecurExpr(IPersistentVector loopLocals, IPersistentVector args, int line, int column, String source)
             (§ ass this.loopLocals = loopLocals)
             (§ ass this.args = args)
             (§ ass this.line = line)
@@ -13337,12 +11469,10 @@
             (§ ass this.source = source)
         )
 
-        #_public
         (§ method Object eval()
             (§ throw new UnsupportedOperationException("Can't eval recur"))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ let Label loopLabel = (Label) LOOP_LABEL.deref())
             (§ if (loopLabel == nil))
@@ -13356,7 +11486,7 @@
                 (§ if (lb.getPrimitiveType() != nil))
                 (§
                     (§ let Class primc = lb.getPrimitiveType())
-                    (§ let final Class pc = maybePrimitiveType(arg))
+                    (§ let Class pc = maybePrimitiveType(arg))
                     (§ if (pc == primc))
                     (§
                         ((MaybePrimitiveExpr) arg).emitUnboxed(C.EXPRESSION, objx, gen)
@@ -13416,19 +11546,15 @@
             (§ call gen.goTo(loopLabel))
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr RECUR_CLASS))
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
-            #_public
             (§ method Expr parse(C context, Object frm)
                 (§ let int line = lineDeref())
                 (§ let int column = columnDeref())
@@ -13460,7 +11586,7 @@
                     (§ if (primc != nil))
                     (§
                         (§ let boolean mismatch = false)
-                        (§ let final Class pc = maybePrimitiveType((Expr) args.nth(i)))
+                        (§ let Class pc = maybePrimitiveType((Expr) args.nth(i)))
                         (§ if (primc == long.class))
                         (§
                             (§ if (!(pc == long.class || pc == int.class || pc == short.class || pc == char.class || pc == byte.class)))
@@ -13489,20 +11615,16 @@
             )
         )
 
-        #_public
         (§ method boolean canEmitPrimitive()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call emit(context, objx, gen))
         )
     )
 
-    #_private
-    #_static
-    (§ method LocalBinding registerLocal(Symbol sym, Symbol tag, Expr init, boolean isArg)
+    (§ defn- LocalBinding registerLocal(Symbol sym, Symbol tag, Expr init, boolean isArg)
         (§ let int num = getAndIncLocalNum())
         (§ let LocalBinding b = new LocalBinding(num, sym, tag, init, isArg, clearPathRoot()))
         (§ let IPersistentMap localsMap = (IPersistentMap) LOCAL_ENV.deref())
@@ -13513,9 +11635,7 @@
         (§ return (§ expr b))
     )
 
-    #_private
-    #_static
-    (§ method int getAndIncLocalNum()
+    (§ defn- int getAndIncLocalNum()
         (§ let int num = ((Number) NEXT_LOCAL_NUM.deref()).intValue())
         (§ let ObjMethod m = (ObjMethod) METHOD.deref())
         (§ if (num > m.maxLocal))
@@ -13526,15 +11646,11 @@
         (§ return (§ expr num))
     )
 
-    #_public
-    #_static
-    (§ method Expr analyze(C context, Object form)
+    (§ defn Expr analyze(C context, Object form)
         (§ return (§ expr analyze(context, form, nil)))
     )
 
-    #_private
-    #_static
-    (§ method Expr analyze(C context, Object form, String name)
+    (§ defn- Expr analyze(C context, Object form, String name)
         ;; todo symbol macro expansion?
         (§ try )
         (§
@@ -13626,33 +11742,23 @@
         )
     )
 
-    #_static
-    #_public
     (class-ns CompilerException (§ extends RuntimeException)
-        #_final
-        #_public
         (§ field String source)
 
-        #_final
-        #_public
         (§ field int line)
 
-        #_public
-        (§ method CompilerException(String source, int line, int column, Throwable cause)
+        (§ constructor CompilerException(String source, int line, int column, Throwable cause)
             (§ super(errorMsg(source, line, column, cause.toString()), cause))
             (§ ass this.source = source)
             (§ ass this.line = line)
         )
 
-        #_public
         (§ method String toString()
             (§ return (§ expr getMessage()))
         )
     )
 
-    #_static
-    #_public
-    (§ method Var isMacro(Object op)
+    (§ defn Var isMacro(Object op)
         ;; no local macros for now
         (§ if (op instanceof Symbol && referenceLocal((Symbol) op) != nil))
         (§
@@ -13673,9 +11779,7 @@
         (§ return (§ expr nil))
     )
 
-    #_static
-    #_public
-    (§ method IFn isInline(Object op, int arity)
+    (§ defn IFn isInline(Object op, int arity)
         ;; no local inlines for now
         (§ if (op instanceof Symbol && referenceLocal((Symbol) op) != nil))
         (§
@@ -13704,15 +11808,11 @@
         (§ return (§ expr nil))
     )
 
-    #_public
-    #_static
-    (§ method boolean namesStaticMember(Symbol sym)
+    (§ defn boolean namesStaticMember(Symbol sym)
         (§ return (§ expr (sym.ns != nil && namespaceFor(sym) == nil)))
     )
 
-    #_public
-    #_static
-    (§ method Object preserveTag(ISeq src, Object dst)
+    (§ defn Object preserveTag(ISeq src, Object dst)
         (§ let Symbol tag = tagOf(src))
         (§ if (tag != nil && dst instanceof IObj))
         (§
@@ -13722,22 +11822,13 @@
         (§ return (§ expr dst))
     )
 
-    #_private
-    #_static
     #_volatile
-    (§ field Var MACRO_CHECK = nil)
-    #_private
-    #_static
+    (§ def- Var MACRO_CHECK = nil)
     #_volatile
-    (§ field boolean MACRO_CHECK_LOADING = false)
-    #_private
-    #_static
-    #_final
-    (§ field Object MACRO_CHECK_LOCK = new Object())
+    (§ def- boolean MACRO_CHECK_LOADING = false)
+    (§ def- Object MACRO_CHECK_LOCK = new Object())
 
-    #_private
-    #_static
-    (§ method Var ensureMacroCheck() (§ throws ClassNotFoundException, IOException)
+    (§ defn- Var ensureMacroCheck() (§ throws ClassNotFoundException, IOException)
         (§ if (MACRO_CHECK == nil))
         (§
             (§ synchronized (MACRO_CHECK_LOCK))
@@ -13755,9 +11846,7 @@
         (§ return (§ expr MACRO_CHECK))
     )
 
-    #_public
-    #_static
-    (§ method void checkSpecs(Var v, ISeq form)
+    (§ defn void checkSpecs(Var v, ISeq form)
         (§ if (RT.CHECK_SPECS && !MACRO_CHECK_LOADING))
         (§
             (§ try )
@@ -13771,9 +11860,7 @@
         )
     )
 
-    #_public
-    #_static
-    (§ method Object macroexpand1(Object x)
+    (§ defn Object macroexpand1(Object x)
         (§ if (x instanceof ISeq))
         (§
             (§ let ISeq form = (ISeq) x)
@@ -13847,8 +11934,7 @@
         (§ return (§ expr x))
     )
 
-    #_static
-    (§ method Object macroexpand(Object form)
+    (§ defn Object macroexpand(Object form)
         (§ let Object exf = macroexpand1(form))
         (§ if (exf != form))
         (§
@@ -13857,9 +11943,7 @@
         (§ return (§ expr form))
     )
 
-    #_private
-    #_static
-    (§ method Expr analyzeSeq(C context, ISeq form, String name)
+    (§ defn- Expr analyzeSeq(C context, ISeq form, String name)
         (§ let Object line = lineDeref())
         (§ let Object column = columnDeref())
         (§ if (RT.meta(form) != nil && RT.meta(form).containsKey(RT.LINE_KEY)))
@@ -13920,20 +12004,15 @@
         )
     )
 
-    #_static
-    (§ method String errorMsg(String source, int line, int column, String s)
+    (§ defn String errorMsg(String source, int line, int column, String s)
         (§ return (§ expr String.format("%s, compiling:(%s:%d:%d)", s, source, line, column)))
     )
 
-    #_public
-    #_static
-    (§ method Object eval(Object form)
+    (§ defn Object eval(Object form)
         (§ return (§ expr eval(form, true)))
     )
 
-    #_public
-    #_static
-    (§ method Object eval(Object form, boolean freshLoader)
+    (§ defn Object eval(Object form, boolean freshLoader)
         (§ let boolean createdLoader = false)
         (§ if (true)) ;; !LOADER.isBound()
         (§
@@ -13991,9 +12070,7 @@
         )
     )
 
-    #_private
-    #_static
-    (§ method int registerConstant(Object o)
+    (§ defn- int registerConstant(Object o)
         (§ if (!CONSTANTS.isBound()))
         (§
             (§ return (§ expr -1))
@@ -14010,9 +12087,7 @@
         (§ return (§ expr v.count()))
     )
 
-    #_private
-    #_static
-    (§ method KeywordExpr registerKeyword(Keyword keyword)
+    (§ defn- KeywordExpr registerKeyword(Keyword keyword)
         (§ if (!KEYWORDS.isBound()))
         (§
             (§ return (§ expr new KeywordExpr(keyword)))
@@ -14027,9 +12102,7 @@
         (§ return (§ expr new KeywordExpr(keyword)))
     )
 
-    #_private
-    #_static
-    (§ method int registerKeywordCallsite(Keyword keyword)
+    (§ defn- int registerKeywordCallsite(Keyword keyword)
         (§ if (!KEYWORD_CALLSITES.isBound()))
         (§
             (§ throw new IllegalAccessError("KEYWORD_CALLSITES is not bound"))
@@ -14042,9 +12115,7 @@
         (§ return (§ expr keywordCallsites.count() - 1))
     )
 
-    #_private
-    #_static
-    (§ method int registerProtocolCallsite(Var v)
+    (§ defn- int registerProtocolCallsite(Var v)
         (§ if (!PROTOCOL_CALLSITES.isBound()))
         (§
             (§ throw new IllegalAccessError("PROTOCOL_CALLSITES is not bound"))
@@ -14057,9 +12128,7 @@
         (§ return (§ expr protocolCallsites.count() - 1))
     )
 
-    #_private
-    #_static
-    (§ method void registerVarCallsite(Var v)
+    (§ defn- void registerVarCallsite(Var v)
         (§ if (!VAR_CALLSITES.isBound()))
         (§
             (§ throw new IllegalAccessError("VAR_CALLSITES is not bound"))
@@ -14071,8 +12140,7 @@
         (§ call VAR_CALLSITES.set(varCallsites))
     )
 
-    #_static
-    (§ method ISeq fwdPath(PathNode p1)
+    (§ defn ISeq fwdPath(PathNode p1)
         (§ let ISeq ret = nil)
         (§ for (  p1 != nil p1 = p1.parent))
         (§
@@ -14081,8 +12149,7 @@
         (§ return (§ expr ret))
     )
 
-    #_static
-    (§ method PathNode commonPath(PathNode n1, PathNode n2)
+    (§ defn PathNode commonPath(PathNode n1, PathNode n2)
         (§ let ISeq xp = fwdPath(n1))
         (§ let ISeq yp = fwdPath(n2))
         (§ if (RT.first(xp) != RT.first(yp)))
@@ -14097,25 +12164,21 @@
         (§ return (§ expr (PathNode) RT.first(xp)))
     )
 
-    #_static
-    (§ method void addAnnotation(Object visitor, IPersistentMap meta)
+    (§ defn void addAnnotation(Object visitor, IPersistentMap meta)
         (§ if (meta != nil && ADD_ANNOTATIONS.isBound()))
         (§
             (§ call ADD_ANNOTATIONS.invoke(visitor, meta))
         )
     )
 
-    #_static
-    (§ method void addParameterAnnotation(Object visitor, IPersistentMap meta, int i)
+    (§ defn void addParameterAnnotation(Object visitor, IPersistentMap meta, int i)
         (§ if (meta != nil && ADD_ANNOTATIONS.isBound()))
         (§
             (§ call ADD_ANNOTATIONS.invoke(visitor, meta, i))
         )
     )
 
-    #_private
-    #_static
-    (§ method Expr analyzeSymbol(Symbol sym)
+    (§ defn- Expr analyzeSymbol(Symbol sym)
         (§ let Symbol tag = tagOf(sym))
         (§ if (sym.ns == nil)) ;; ns-qualified syms are always Vars
         (§
@@ -14165,8 +12228,7 @@
         (§ throw Util.runtimeException("Unable to resolve symbol: " + sym + " in this context"))
     )
 
-    #_static
-    (§ method String destubClassName(String className)
+    (§ defn String destubClassName(String className)
         ;; skip over prefix + '.' or '/'
         (§ if (className.startsWith(COMPILE_STUB_PREFIX)))
         (§
@@ -14175,8 +12237,7 @@
         (§ return (§ expr className))
     )
 
-    #_static
-    (§ method Type getType(Class c)
+    (§ defn Type getType(Class c)
         (§ let String descriptor = Type.getType(c).getDescriptor())
         (§ if (descriptor.startsWith("L")))
         (§
@@ -14185,23 +12246,19 @@
         (§ return (§ expr Type.getType(descriptor)))
     )
 
-    #_static
-    (§ method Object resolve(Symbol sym, boolean allowPrivate)
+    (§ defn Object resolve(Symbol sym, boolean allowPrivate)
         (§ return (§ expr resolveIn(currentNS(), sym, allowPrivate)))
     )
 
-    #_static
-    (§ method Object resolve(Symbol sym)
+    (§ defn Object resolve(Symbol sym)
         (§ return (§ expr resolveIn(currentNS(), sym, false)))
     )
 
-    #_static
-    (§ method Namespace namespaceFor(Symbol sym)
+    (§ defn Namespace namespaceFor(Symbol sym)
         (§ return (§ expr namespaceFor(currentNS(), sym)))
     )
 
-    #_static
-    (§ method Namespace namespaceFor(Namespace inns, Symbol sym)
+    (§ defn Namespace namespaceFor(Namespace inns, Symbol sym)
         ;; note, presumes non-nil sym.ns
         ;; first check against currentNS' aliases...
         (§ let Symbol nsSym = Symbol.intern(sym.ns))
@@ -14214,9 +12271,7 @@
         (§ return (§ expr ns))
     )
 
-    #_static
-    #_public
-    (§ method Object resolveIn(Namespace n, Symbol sym, boolean allowPrivate)
+    (§ defn Object resolveIn(Namespace n, Symbol sym, boolean allowPrivate)
         ;; note - ns-qualified vars must already exist
         (§ if (sym.ns != nil))
         (§
@@ -14271,9 +12326,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object maybeResolveIn(Namespace n, Symbol sym)
+    (§ defn Object maybeResolveIn(Namespace n, Symbol sym)
         ;; note - ns-qualified vars must already exist
         (§ if (sym.ns != nil))
         (§
@@ -14308,8 +12361,7 @@
         )
     )
 
-    #_static
-    (§ method Var lookupVar(Symbol sym, boolean internNew, boolean registerMacro)
+    (§ defn Var lookupVar(Symbol sym, boolean internNew, boolean registerMacro)
         (§ let Var var = nil)
 
         ;; note - ns-qualified vars in other namespaces must already exist
@@ -14366,14 +12418,11 @@
         (§ return (§ expr var))
     )
 
-    #_static
-    (§ method Var lookupVar(Symbol sym, boolean internNew)
+    (§ defn Var lookupVar(Symbol sym, boolean internNew)
         (§ return (§ expr lookupVar(sym, internNew, true)))
     )
 
-    #_private
-    #_static
-    (§ method void registerVar(Var var)
+    (§ defn- void registerVar(Var var)
         (§ if (!VARS.isBound()))
         (§
             (§ return (§ expr ))
@@ -14386,13 +12435,11 @@
         )
     )
 
-    #_static
-    (§ method Namespace currentNS()
+    (§ defn Namespace currentNS()
         (§ return (§ expr (Namespace) RT.CURRENT_NS.deref()))
     )
 
-    #_static
-    (§ method void closeOver(LocalBinding b, ObjMethod method)
+    (§ defn void closeOver(LocalBinding b, ObjMethod method)
         (§ if (b != nil && method != nil))
         (§
             (§ let LocalBinding lb = (LocalBinding) RT.get(method.locals, b))
@@ -14415,8 +12462,7 @@
         )
     )
 
-    #_static
-    (§ method LocalBinding referenceLocal(Symbol sym)
+    (§ defn LocalBinding referenceLocal(Symbol sym)
         (§ if (!LOCAL_ENV.isBound()))
         (§
             (§ return (§ expr nil))
@@ -14434,9 +12480,7 @@
         (§ return (§ expr b))
     )
 
-    #_private
-    #_static
-    (§ method Symbol tagOf(Object o)
+    (§ defn- Symbol tagOf(Object o)
         (§ let Object tag = RT.get(RT.meta(o), RT.TAG_KEY))
         (§ if (tag instanceof Symbol))
         (§
@@ -14449,9 +12493,7 @@
         (§ return (§ expr nil))
     )
 
-    #_public
-    #_static
-    (§ method Object loadFile(String file) (§ throws IOException)
+    (§ defn Object loadFile(String file) (§ throws IOException)
         (§ let FileInputStream f = new FileInputStream(file))
         (§ try )
         (§
@@ -14463,14 +12505,11 @@
         )
     )
 
-    #_public
-    #_static
-    (§ method Object load(Reader rdr)
+    (§ defn Object load(Reader rdr)
         (§ return (§ expr load(rdr, nil, "NO_SOURCE_FILE")))
     )
 
-    #_static
-    (§ method void consumeWhitespaces(LineNumberingPushbackReader pushbackReader)
+    (§ defn void consumeWhitespaces(LineNumberingPushbackReader pushbackReader)
         (§ let int ch = LispReader.read1(pushbackReader))
         (§ while (LispReader.isWhitespace(ch)))
         (§
@@ -14479,14 +12518,9 @@
         (§ call LispReader.unread(pushbackReader, ch))
     )
 
-    #_private
-    #_static
-    #_final
-    (§ field Object OPTS_COND_ALLOWED = RT.mapUniqueKeys(LispReader.OPT_READ_COND, LispReader.COND_ALLOW))
+    (§ def- Object OPTS_COND_ALLOWED = RT.mapUniqueKeys(LispReader.OPT_READ_COND, LispReader.COND_ALLOW))
 
-    #_private
-    #_static
-    (§ method Object readerOpts(String sourceName)
+    (§ defn- Object readerOpts(String sourceName)
         (§ if (sourceName != nil && sourceName.endsWith(".clic")))
         (§
             (§ return (§ expr OPTS_COND_ALLOWED))
@@ -14497,9 +12531,7 @@
         )
     )
 
-    #_public
-    #_static
-    (§ method Object load(Reader rdr, String sourcePath, String sourceName)
+    (§ defn Object load(Reader rdr, String sourcePath, String sourceName)
         (§ let Object EOF = new Object())
         (§ let Object ret = nil)
         (§ let LineNumberingPushbackReader pushbackReader = (rdr instanceof LineNumberingPushbackReader) ? (LineNumberingPushbackReader) rdr :or new LineNumberingPushbackReader(rdr))
@@ -14558,9 +12590,7 @@
         (§ return (§ expr ret))
     )
 
-    #_static
-    #_public
-    (§ method void writeClassFile(String internalName, byte[] bytecode) (§ throws IOException)
+    (§ defn void writeClassFile(String internalName, byte[] bytecode) (§ throws IOException)
         (§ let String genPath = (String) COMPILE_PATH.deref())
         (§ if (genPath == nil))
         (§
@@ -14588,26 +12618,19 @@
         )
     )
 
-    #_public
-    #_static
-    (§ method void pushNS()
+    (§ defn void pushNS()
         (§ call Var.pushThreadBindings(PersistentHashMap.create(Var.intern(Symbol.intern("cloiure.core"), Symbol.intern("*ns*")).setDynamic(), nil)))
     )
 
-    #_public
-    #_static
-    (§ method void pushNSandLoader(ClassLoader loader)
+    (§ defn void pushNSandLoader(ClassLoader loader)
         (§ call Var.pushThreadBindings(RT.map(Var.intern(Symbol.intern("cloiure.core"), Symbol.intern("*ns*")).setDynamic(), nil, RT.FN_LOADER_VAR, loader, RT.READEVAL, RT.T)))
     )
 
-    #_public
-    #_static
-    (§ method ILookupThunk getLookupThunk(Object target, Keyword k)
+    (§ defn ILookupThunk getLookupThunk(Object target, Keyword k)
         (§ return (§ expr nil))
     )
 
-    #_static
-    (§ method void compile1(GeneratorAdapter gen, ObjExpr objx, Object form)
+    (§ defn void compile1(GeneratorAdapter gen, ObjExpr objx, Object form)
         (§ let Object line = lineDeref())
         (§ let Object column = columnDeref())
         (§ if (RT.meta(form) != nil && RT.meta(form).containsKey(RT.LINE_KEY)))
@@ -14648,9 +12671,7 @@
         )
     )
 
-    #_public
-    #_static
-    (§ method Object compile(Reader rdr, String sourcePath, String sourceName) (§ throws IOException)
+    (§ defn Object compile(Reader rdr, String sourcePath, String sourceName) (§ throws IOException)
         (§ if (COMPILE_PATH.deref() == nil))
         (§
             (§ throw Util.runtimeException("*compile-path* not set"))
@@ -14718,7 +12739,7 @@
                 )
             )
 
-            (§ let final int INITS_PER = 100)
+            (§ let int INITS_PER = 100)
             (§ let int numInits =  objx.constants.count() / INITS_PER)
             (§ if (objx.constants.count() % INITS_PER != 0))
             (§
@@ -14801,23 +12822,18 @@
         (§ return (§ expr ret))
     )
 
-    #_static
-    #_public
     (class-ns NewInstanceExpr (§ extends ObjExpr)
         (§ field IPersistentCollection methods)
 
         (§ field Map<IPersistentVector, java.lang.reflect.Method> mmap)
         (§ field Map<IPersistentVector, Set<Class>> covariants)
 
-        #_public
-        (§ method NewInstanceExpr(Object tag)
+        (§ constructor NewInstanceExpr(Object tag)
             (§ super(tag))
         )
 
-        #_static
         (class-ns DeftypeParser (§ implements IParser)
-            #_public
-            (§ method Expr parse(C context, final Object frm)
+            (§ method Expr parse(C context, Object frm)
                 (§ let ISeq rform = (ISeq) frm)
                 ;; (deftype* tagname classname [fields] :implements [interfaces] :tag tagname methods*)
                 (§ ass rform = RT.next(rform))
@@ -14839,9 +12855,7 @@
             )
         )
 
-        #_static
         (class-ns ReifyParser (§ implements IParser)
-            #_public
             (§ method Expr parse(C context, Object frm)
                 ;; (reify this-name? [interfaces] (method-name [args] body)*)
                 (§ let ISeq form = (ISeq) frm)
@@ -14868,8 +12882,7 @@
             )
         )
 
-        #_static
-        (§ method ObjExpr build(IPersistentVector interfaceSyms, IPersistentVector fieldSyms, Symbol thisSym, String tagName, Symbol className, Symbol typeTag, ISeq methodForms, Object frm, IPersistentMap opts)
+        (§ defn ObjExpr build(IPersistentVector interfaceSyms, IPersistentVector fieldSyms, Symbol thisSym, String tagName, Symbol className, Symbol typeTag, ISeq methodForms, Object frm, IPersistentMap opts)
             (§ let NewInstanceExpr ret = new NewInstanceExpr(nil))
 
             (§ ass ret.src = frm)
@@ -15000,8 +13013,7 @@
          ; Use it as a type hint for this, and bind the simple name of the class to this stub (in resolve etc)
          ; Unmunge the name (using a magic prefix) on any code gen for classes
          ;;
-        #_static
-        (§ method Class compileStub(String superName, NewInstanceExpr ret, String[] interfaceNames, Object frm)
+        (§ defn Class compileStub(String superName, NewInstanceExpr ret, String[] interfaceNames, Object frm)
             (§ let ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS))
             (§ let ClassVisitor cv = cw)
             (§ call cv.visit(V1_5, ACC_PUBLIC + ACC_SUPER, COMPILE_STUB_PREFIX + "/" + ret.internalName, nil, superName, interfaceNames))
@@ -15084,8 +13096,7 @@
             (§ return (§ expr loader.defineClass(COMPILE_STUB_PREFIX + "." + ret.name, bytecode, frm)))
         )
 
-        #_static
-        (§ method String[] interfaceNames(IPersistentVector interfaces)
+        (§ defn String[] interfaceNames(IPersistentVector interfaces)
             (§ let int icnt = interfaces.count())
             (§ let String[] inames = (icnt > 0) ? new String[icnt] :or nil)
             (§ for (int i = 0 i < icnt i++))
@@ -15095,8 +13106,7 @@
             (§ return (§ expr inames))
         )
 
-        #_static
-        (§ method String slashname(Class c)
+        (§ defn String slashname(Class c)
             (§ return (§ expr c.getName().replace(\., \/)))
         )
 
@@ -15219,14 +13229,11 @@
             )
         )
 
-        #_static
-        #_public
-        (§ method IPersistentVector msig(java.lang.reflect.Method m)
+        (§ defn IPersistentVector msig(java.lang.reflect.Method m)
             (§ return (§ expr RT.vector(m.getName(), RT.seq(m.getParameterTypes()), m.getReturnType())))
         )
 
-        #_static
-        (§ method void considerMethod(java.lang.reflect.Method m, Map mm)
+        (§ defn void considerMethod(java.lang.reflect.Method m, Map mm)
             (§ let IPersistentVector mk = msig(m))
             (§ let int mods = m.getModifiers())
 
@@ -15236,8 +13243,7 @@
             )
         )
 
-        #_static
-        (§ method void gatherMethods(Class c, Map mm)
+        (§ defn void gatherMethods(Class c, Map mm)
             (§ for (  c != nil c = c.getSuperclass()))
             (§
                 (§ for (java.lang.reflect.Method m :in c.getDeclaredMethods()))
@@ -15251,9 +13257,7 @@
             )
         )
 
-        #_static
-        #_public
-        (§ method Map[] gatherMethods(Class sc, ISeq interfaces)
+        (§ defn Map[] gatherMethods(Class sc, ISeq interfaces)
             (§ let Map allm = new HashMap())
             (§ call gatherMethods(sc, allm))
             (§ for (  interfaces != nil interfaces = interfaces.next()))
@@ -15297,8 +13301,6 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns NewInstanceMethod (§ extends ObjMethod)
         (§ field String name)
         (§ field Type[] argTypes)
@@ -15306,13 +13308,10 @@
         (§ field Class retClass)
         (§ field Class[] exclasses)
 
-        #_static
-        (§ field Symbol dummyThis = Symbol.intern(nil, "dummy_this_dlskjsdfower"))
-        #_private
-        (§ field IPersistentVector parms)
+        (§ def Symbol dummyThis = Symbol.intern(nil, "dummy_this_dlskjsdfower"))
+        (§ field- IPersistentVector parms)
 
-        #_public
-        (§ method NewInstanceMethod(ObjExpr objx, ObjMethod parent)
+        (§ constructor NewInstanceMethod(ObjExpr objx, ObjMethod parent)
             (§ super(objx, parent))
         )
 
@@ -15332,14 +13331,11 @@
             (§ return (§ expr argTypes))
         )
 
-        #_static
-        #_public
-        (§ method IPersistentVector msig(String name, Class[] paramTypes)
+        (§ defn IPersistentVector msig(String name, Class[] paramTypes)
             (§ return (§ expr RT.vector(name, RT.seq(paramTypes))))
         )
 
-        #_static
-        (§ method NewInstanceMethod parse(ObjExpr objx, ISeq form, Symbol thistag, Map overrideables)
+        (§ defn NewInstanceMethod parse(ObjExpr objx, ISeq form, Symbol thistag, Map overrideables)
             ;; (methodname [this-name args*] body...)
             ;; this-name might be nil
             (§ let NewInstanceMethod method = new NewInstanceMethod(objx, (ObjMethod) METHOD.deref()))
@@ -15490,9 +13486,7 @@
             )
         )
 
-        #_private
-        #_static
-        (§ method Map findMethodsWithNameAndArity(String name, int arity, Map mm)
+        (§ defn- Map findMethodsWithNameAndArity(String name, int arity, Map mm)
             (§ let Map ret = new HashMap())
             (§ for (Object o :in mm.entrySet()))
             (§
@@ -15506,9 +13500,7 @@
             (§ return (§ expr ret))
         )
 
-        #_private
-        #_static
-        (§ method Map findMethodsWithName(String name, Map mm)
+        (§ defn- Map findMethodsWithName(String name, Map mm)
             (§ let Map ret = new HashMap())
             (§ for (Object o :in mm.entrySet()))
             (§
@@ -15522,7 +13514,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method void emit(ObjExpr obj, ClassVisitor cv)
             (§ let Method m = new Method(getMethodName(), getReturnType(), getArgTypes()))
 
@@ -15570,13 +13561,11 @@
         )
     )
 
-    #_static
-    (§ method boolean inty(Class c)
+    (§ defn boolean inty(Class c)
         (§ return (§ expr (c == int.class || c == short.class || c == byte.class || c == char.class)))
     )
 
-    #_static
-    (§ method Class retType(Class tc, Class ret)
+    (§ defn Class retType(Class tc, Class ret)
         (§ if (tc == nil))
         (§
             (§ return (§ expr ret))
@@ -15596,8 +13585,7 @@
         (§ return (§ expr tc))
     )
 
-    #_static
-    (§ method Class primClass(Symbol sym)
+    (§ defn Class primClass(Symbol sym)
         (§ if (sym == nil))
         (§
             (§ return (§ expr nil))
@@ -15642,8 +13630,7 @@
         (§ return (§ expr c))
     )
 
-    #_static
-    (§ method Class tagClass(Object tag)
+    (§ defn Class tagClass(Object tag)
         (§ if (tag == nil))
         (§
             (§ return (§ expr Object.class))
@@ -15660,13 +13647,11 @@
         (§ return (§ expr c))
     )
 
-    #_static
-    (§ method Class primClass(Class c)
+    (§ defn Class primClass(Class c)
         (§ return (§ expr c.isPrimitive() ? c :or Object.class))
     )
 
-    #_static
-    (§ method Class boxClass(Class p)
+    (§ defn Class boxClass(Class p)
         (§ if (!p.isPrimitive()))
         (§
             (§ return (§ expr p))
@@ -15710,120 +13695,65 @@
         (§ return (§ expr c))
     )
 
-    #_static
-    #_public
     (class-ns MethodParamExpr (§ implements Expr, MaybePrimitiveExpr)
-        #_final
         (§ field Class c)
 
-        #_public
-        (§ method MethodParamExpr(Class c)
+        (§ constructor MethodParamExpr(Class c)
             (§ ass this.c = c)
         )
 
-        #_public
         (§ method Object eval()
             (§ throw Util.runtimeException("Can't eval"))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ throw Util.runtimeException("Can't emit"))
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr (c != nil)))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr c))
         )
 
-        #_public
         (§ method boolean canEmitPrimitive()
             (§ return (§ expr Util.isPrimitive(c)))
         )
 
-        #_public
         (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ throw Util.runtimeException("Can't emit"))
         )
     )
 
-    #_public
-    #_static
     (class-ns CaseExpr (§ implements Expr, MaybePrimitiveExpr)
-        #_public
-        #_final
         (§ field LocalBindingExpr expr)
-        #_public
-        #_final
         (§ field int shift, mask, low, high)
-        #_public
-        #_final
         (§ field Expr defaultExpr)
-        #_public
-        #_final
         (§ field SortedMap<Integer, Expr> tests)
-        #_public
-        #_final
         (§ field HashMap<Integer, Expr> thens)
-        #_public
-        #_final
         (§ field Keyword switchType)
-        #_public
-        #_final
         (§ field Keyword testType)
-        #_public
-        #_final
         (§ field Set<Integer> skipCheck)
-        #_public
-        #_final
         (§ field Class returnType)
-        #_public
-        #_final
         (§ field int line)
-        #_public
-        #_final
         (§ field int column)
 
-        #_final
-        #_static
-        (§ field Type NUMBER_TYPE = Type.getType(Number.class))
-        #_final
-        #_static
-        (§ field Method intValueMethod = Method.getMethod("int intValue()"))
+        (§ def Type NUMBER_TYPE = Type.getType(Number.class))
+        (§ def Method intValueMethod = Method.getMethod("int intValue()"))
 
-        #_final
-        #_static
-        (§ field Method hashMethod = Method.getMethod("int hash(Object)"))
-        #_final
-        #_static
-        (§ field Method hashCodeMethod = Method.getMethod("int hashCode()"))
-        #_final
-        #_static
-        (§ field Method equivMethod = Method.getMethod("boolean equiv(Object, Object)"))
-        #_final
-        #_static
-        (§ field Keyword compactKey = Keyword.intern(nil, "compact"))
-        #_final
-        #_static
-        (§ field Keyword sparseKey = Keyword.intern(nil, "sparse"))
-        #_final
-        #_static
-        (§ field Keyword hashIdentityKey = Keyword.intern(nil, "hash-identity"))
-        #_final
-        #_static
-        (§ field Keyword hashEquivKey = Keyword.intern(nil, "hash-equiv"))
-        #_final
-        #_static
-        (§ field Keyword intKey = Keyword.intern(nil, "int"))
+        (§ def Method hashMethod = Method.getMethod("int hash(Object)"))
+        (§ def Method hashCodeMethod = Method.getMethod("int hashCode()"))
+        (§ def Method equivMethod = Method.getMethod("boolean equiv(Object, Object)"))
+        (§ def Keyword compactKey = Keyword.intern(nil, "compact"))
+        (§ def Keyword sparseKey = Keyword.intern(nil, "sparse"))
+        (§ def Keyword hashIdentityKey = Keyword.intern(nil, "hash-identity"))
+        (§ def Keyword hashEquivKey = Keyword.intern(nil, "hash-equiv"))
+        (§ def Keyword intKey = Keyword.intern(nil, "int"))
 
         ;; (case* expr shift mask default map<minhash, [test then]> table-type test-type skip-check?)
-        #_public
-        (§ method CaseExpr(int line, int column, LocalBindingExpr expr, int shift, int mask, int low, int high, Expr defaultExpr, SortedMap<Integer, Expr> tests, HashMap<Integer, Expr> thens, Keyword switchType, Keyword testType, Set<Integer> skipCheck)
+        (§ constructor CaseExpr(int line, int column, LocalBindingExpr expr, int shift, int mask, int low, int high, Expr defaultExpr, SortedMap<Integer, Expr> tests, HashMap<Integer, Expr> thens, Keyword switchType, Keyword testType, Set<Integer> skipCheck)
             (§ ass this.expr = expr)
             (§ ass this.shift = shift)
             (§ ass this.mask = mask)
@@ -15854,37 +13784,30 @@
             )
         )
 
-        #_public
         (§ method boolean hasJavaClass()
             (§ return (§ expr (returnType != nil)))
         )
 
-        #_public
         (§ method boolean canEmitPrimitive()
             (§ return (§ expr Util.isPrimitive(returnType)))
         )
 
-        #_public
         (§ method Class getJavaClass()
             (§ return (§ expr returnType))
         )
 
-        #_public
         (§ method Object eval()
             (§ throw new UnsupportedOperationException("Can't eval case"))
         )
 
-        #_public
         (§ method void emit(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call doEmit(context, objx, gen, false))
         )
 
-        #_public
         (§ method void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen)
             (§ call doEmit(context, objx, gen, true))
         )
 
-        #_public
         (§ method void doEmit(C context, ObjExpr objx, GeneratorAdapter gen, boolean emitUnboxed)
             (§ let Label defaultLabel = gen.newLabel())
             (§ let Label endLabel = gen.newLabel())
@@ -15953,13 +13876,11 @@
             )
         )
 
-        #_private
-        (§ method boolean isShiftMasked()
+        (§ method- boolean isShiftMasked()
             (§ return (§ expr (mask != 0)))
         )
 
-        #_private
-        (§ method void emitShiftMask(GeneratorAdapter gen)
+        (§ method- void emitShiftMask(GeneratorAdapter gen)
             (§ if (isShiftMasked()))
             (§
                 (§ call gen.push(shift))
@@ -15969,8 +13890,7 @@
             )
         )
 
-        #_private
-        (§ method void emitExprForInts(ObjExpr objx, GeneratorAdapter gen, Type exprType, Label defaultLabel)
+        (§ method- void emitExprForInts(ObjExpr objx, GeneratorAdapter gen, Type exprType, Label defaultLabel)
             (§ if (exprType == nil))
             (§
                 (§ if (RT.booleanCast(RT.WARN_ON_REFLECTION.deref())))
@@ -15997,8 +13917,7 @@
             )
         )
 
-        #_private
-        (§ method void emitThenForInts(ObjExpr objx, GeneratorAdapter gen, Type exprType, Expr test, Expr then, Label defaultLabel, boolean emitUnboxed)
+        (§ method- void emitThenForInts(ObjExpr objx, GeneratorAdapter gen, Type exprType, Expr test, Expr then, Label defaultLabel, boolean emitUnboxed)
             (§ if (exprType == nil))
             (§
                 (§ call expr.emit(C.EXPRESSION, objx, gen))
@@ -16032,15 +13951,13 @@
             )
         )
 
-        #_private
-        (§ method void emitExprForHashes(ObjExpr objx, GeneratorAdapter gen)
+        (§ method- void emitExprForHashes(ObjExpr objx, GeneratorAdapter gen)
             (§ call expr.emit(C.EXPRESSION, objx, gen))
             (§ call gen.invokeStatic(UTIL_TYPE, hashMethod))
             (§ call emitShiftMask(gen))
         )
 
-        #_private
-        (§ method void emitThenForHashes(ObjExpr objx, GeneratorAdapter gen, Expr test, Expr then, Label defaultLabel, boolean emitUnboxed)
+        (§ method- void emitThenForHashes(ObjExpr objx, GeneratorAdapter gen, Expr test, Expr then, Label defaultLabel, boolean emitUnboxed)
             (§ call expr.emit(C.EXPRESSION, objx, gen))
             (§ call test.emit(C.EXPRESSION, objx, gen))
             (§ if (testType == hashIdentityKey))
@@ -16055,9 +13972,7 @@
             (§ call emitExpr(objx, gen, then, emitUnboxed))
         )
 
-        #_private
-        #_static
-        (§ method void emitExpr(ObjExpr objx, GeneratorAdapter gen, Expr expr, boolean emitUnboxed)
+        (§ defn- void emitExpr(ObjExpr objx, GeneratorAdapter gen, Expr expr, boolean emitUnboxed)
             (§ if (emitUnboxed && expr instanceof MaybePrimitiveExpr))
             (§
                 ((MaybePrimitiveExpr)expr).emitUnboxed(C.EXPRESSION, objx, gen)
@@ -16068,13 +13983,11 @@
             )
         )
 
-        #_static
         (class-ns Parser (§ implements IParser)
             ;; (case* expr shift mask default map<minhash, [test then]> table-type test-type skip-check?)
             ;; prepared by case macro and presumed correct
             ;; case macro binds actual expr in let so expr is always a local,
             ;; no need to worry about multiple evaluation
-            #_public
             (§ method Expr parse(C context, Object frm)
                 (§ let ISeq form = (ISeq) frm)
                 (§ if (context == C.EVAL))
@@ -16143,8 +14056,7 @@
         )
     )
 
-    #_static
-    (§ method IPersistentCollection emptyVarCallSites()
+    (§ defn IPersistentCollection emptyVarCallSites()
         (§ return (§ expr PersistentHashSet.EMPTY))
     )
 )
@@ -16152,40 +14064,29 @@
 
 (java-ns cloiure.lang.Cons
 
-#_final
-#_public
 (class-ns Cons (§ extends ASeq)
-    #_private
-    #_final
-    (§ field Object _first)
-    #_private
-    #_final
-    (§ field ISeq _more)
+    (§ field- Object _first)
+    (§ field- ISeq _more)
 
-    #_public
-    (§ method Cons(Object first, ISeq _more)
+    (§ constructor Cons(Object first, ISeq _more)
         (§ ass this._first = first)
         (§ ass this._more = _more)
     )
 
-    #_public
-    (§ method Cons(IPersistentMap meta, Object _first, ISeq _more)
+    (§ constructor Cons(IPersistentMap meta, Object _first, ISeq _more)
         (§ super(meta))
         (§ ass this._first = _first)
         (§ ass this._more = _more)
     )
 
-    #_public
     (§ method Object first()
         (§ return (§ expr _first))
     )
 
-    #_public
     (§ method ISeq next()
         (§ return (§ expr more().seq()))
     )
 
-    #_public
     (§ method ISeq more()
         (§ if (_more == nil))
         (§
@@ -16194,12 +14095,10 @@
         (§ return (§ expr _more))
     )
 
-    #_public
     (§ method int count()
         (§ return (§ expr 1 + RT.count(_more)))
     )
 
-    #_public
     (§ method Cons withMeta(IPersistentMap meta)
         (§ return (§ expr new Cons(meta, _first, _more)))
     )
@@ -16212,7 +14111,6 @@
  ; A class that implements Counted promises that it is a collection
  ; that implement a constant-time count()
  ;;
-#_public
 (§ interface Counted
     (§ abstract int count())
 )
@@ -16220,30 +14118,21 @@
 
 (java-ns cloiure.lang.Cycle
 
-#_public
 (class-ns Cycle (§ extends ASeq) (§ implements IReduce, IPending)
-    #_private
-    #_final
-    (§ field ISeq all) ;; never nil
-    #_private
-    #_final
-    (§ field ISeq prev)
-    #_private
+    (§ field- ISeq all) ;; never nil
+    (§ field- ISeq prev)
     #_volatile
-    (§ field ISeq _current) ;; lazily realized
-    #_private
+    (§ field- ISeq _current) ;; lazily realized
     #_volatile
-    (§ field ISeq _next) ;; cached
+    (§ field- ISeq _next) ;; cached
 
-    #_private
-    (§ method Cycle(ISeq all, ISeq prev, ISeq current)
+    (§ constructor- Cycle(ISeq all, ISeq prev, ISeq current)
         (§ ass this.all = all)
         (§ ass this.prev = prev)
         (§ ass this._current = current)
     )
 
-    #_private
-    (§ method Cycle(IPersistentMap meta, ISeq all, ISeq prev, ISeq current, ISeq next)
+    (§ constructor- Cycle(IPersistentMap meta, ISeq all, ISeq prev, ISeq current, ISeq next)
         (§ super(meta))
         (§ ass this.all = all)
         (§ ass this.prev = prev)
@@ -16251,9 +14140,7 @@
         (§ ass this._next = next)
     )
 
-    #_public
-    #_static
-    (§ method ISeq create(ISeq vals)
+    (§ defn ISeq create(ISeq vals)
         (§ if (vals == nil))
         (§
             (§ return (§ expr PersistentList.EMPTY))
@@ -16262,8 +14149,7 @@
     )
 
     ;; realization for use of current
-    #_private
-    (§ method ISeq current()
+    (§ method- ISeq current()
         (§ if (_current == nil))
         (§
             (§ let ISeq current = prev.next())
@@ -16272,17 +14158,14 @@
         (§ return (§ expr _current))
     )
 
-    #_public
     (§ method boolean isRealized()
         (§ return (§ expr (_current != nil)))
     )
 
-    #_public
     (§ method Object first()
         (§ return (§ expr current().first()))
     )
 
-    #_public
     (§ method ISeq next()
         (§ if (_next == nil))
         (§
@@ -16291,12 +14174,10 @@
         (§ return (§ expr _next))
     )
 
-    #_public
     (§ method Cycle withMeta(IPersistentMap meta)
         (§ return (§ expr new Cycle(meta, all, prev, _current, _next)))
     )
 
-    #_public
     (§ method Object reduce(IFn f)
         (§ let ISeq s = current())
         (§ let Object ret = s.first())
@@ -16315,7 +14196,6 @@
         )
     )
 
-    #_public
     (§ method Object reduce(IFn f, Object start)
         (§ let Object ret = start)
         (§ let ISeq s = current())
@@ -16338,7 +14218,6 @@
 
 (java-ns cloiure.lang.Delay
 
-#_public
 (class-ns Delay (§ implements IDeref, IPending)
     #_volatile
     (§ field Object val)
@@ -16347,20 +14226,16 @@
     #_volatile
     (§ field IFn fn)
 
-    #_public
-    (§ method Delay(IFn fn)
+    (§ constructor Delay(IFn fn)
         (§ ass this.fn = fn)
         (§ ass this.val = nil)
         (§ ass this.exception = nil)
     )
 
-    #_static
-    #_public
-    (§ method Object force(Object x)
+    (§ defn Object force(Object x)
         (§ return (§ expr (x instanceof Delay) ? ((Delay) x).deref() :or x))
     )
 
-    #_public
     (§ method Object deref()
         (§ if (fn != nil))
         (§
@@ -16388,10 +14263,10 @@
         (§ return (§ expr val))
     )
 
-    #_synchronized
-    #_public
     (§ method boolean isRealized()
-        (§ return (§ expr (fn == nil)))
+        (§ synchronized (this)
+            (§ return (§ expr (fn == nil)))
+        )
     )
 )
 )
@@ -16407,32 +14282,23 @@
 (§ import java.lang.ref.ReferenceQueue)
 (§ import java.lang.ref.SoftReference)
 
-#_public
 (class-ns DynamicClassLoader (§ extends URLClassLoader)
     (§ field HashMap<Integer, Object[]> constantVals = new HashMap<Integer, Object[]>())
-    #_static
-    (§ field ConcurrentHashMap<String, Reference<Class>>classCache = new ConcurrentHashMap<String, Reference<Class> >())
+    (§ def ConcurrentHashMap<String, Reference<Class>>classCache = new ConcurrentHashMap<String, Reference<Class> >())
 
-    #_static
-    #_final
-    (§ field URL[] EMPTY_URLS = new URL[] (§))
+    (§ def URL[] EMPTY_URLS = new URL[] (§))
 
-    #_static
-    #_final
-    (§ field ReferenceQueue rq = new ReferenceQueue())
+    (§ def ReferenceQueue rq = new ReferenceQueue())
 
-    #_public
-    (§ method DynamicClassLoader()
+    (§ constructor DynamicClassLoader()
         ;; pseudo test in lieu of hasContextClassLoader()
         (§ super(EMPTY_URLS, (Thread.currentThread().getContextClassLoader() == nil || Thread.currentThread().getContextClassLoader() == ClassLoader.getSystemClassLoader()) ? Compiler.class.getClassLoader() :or Thread.currentThread().getContextClassLoader()))
     )
 
-    #_public
-    (§ method DynamicClassLoader(ClassLoader parent)
+    (§ constructor DynamicClassLoader(ClassLoader parent)
         (§ super(EMPTY_URLS, parent))
     )
 
-    #_public
     (§ method Class defineClass(String name, byte[] bytes, Object srcForm)
         (§ call Util.clearCache(rq, classCache))
         (§ let Class c = defineClass(name, bytes, 0, bytes.length))
@@ -16440,8 +14306,7 @@
         (§ return (§ expr c))
     )
 
-    #_static
-    (§ method Class<?> findInMemoryClass(String name)
+    (§ defn Class<?> findInMemoryClass(String name)
         (§ let Reference<Class> cr = classCache.get(name))
         (§ if (cr != nil))
         (§
@@ -16472,35 +14337,33 @@
     )
 
     #_protected
-    #_synchronized
     (§ method Class<?> loadClass(String name, boolean resolve) (§ throws ClassNotFoundException)
-        (§ let Class c = findLoadedClass(name))
-        (§ if (c == nil))
-        (§
-            (§ ass c = findInMemoryClass(name))
+        (§ synchronized (this)
+            (§ let Class c = findLoadedClass(name))
             (§ if (c == nil))
             (§
-                (§ ass c = super.loadClass(name, false))
+                (§ ass c = findInMemoryClass(name))
+                (§ if (c == nil))
+                (§
+                    (§ ass c = super.loadClass(name, false))
+                )
             )
+            (§ if (resolve))
+            (§
+                (§ call resolveClass(c))
+            )
+            (§ return (§ expr c))
         )
-        (§ if (resolve))
-        (§
-            (§ call resolveClass(c))
-        )
-        (§ return (§ expr c))
     )
 
-    #_public
     (§ method void registerConstants(int id, Object[] val)
         (§ call constantVals.put(id, val))
     )
 
-    #_public
     (§ method Object[] getConstants(int id)
         (§ return (§ expr constantVals.get(id)))
     )
 
-    #_public
     (§ method void addURL(URL url)
         (§ call super.addURL(url))
     )
@@ -16520,26 +14383,17 @@
 (§ import java.util.regex.Matcher)
 (§ import java.util.regex.Pattern)
 
-#_public
 (class-ns EdnReader
-    #_static
-    (§ field IFn[] macros = new IFn[256])
-    #_static
-    (§ field IFn[] dispatchMacros = new IFn[256])
-    #_static
-    (§ field Pattern symbolPat = Pattern.compile("[:]?([\\D&&[^/]].*/)?(/|[\\D&&[^/]][^/]*)"))
-    #_static
-    (§ field Pattern intPat = Pattern.compile("([-+]?)(?:(0)|([1-9][0-9]*)|0[xX]([0-9A-Fa-f]+)|0([0-7]+)|([1-9][0-9]?)[rR]([0-9A-Za-z]+)|0[0-9]+)(N)?"))
-    #_static
-    (§ field Pattern ratioPat = Pattern.compile("([-+]?[0-9]+)/([0-9]+)"))
-    #_static
-    (§ field Pattern floatPat = Pattern.compile("([-+]?[0-9]+(\\.[0-9]*)?([eE][-+]?[0-9]+)?)(M)?"))
+    (§ def IFn[] macros = new IFn[256])
+    (§ def IFn[] dispatchMacros = new IFn[256])
+    (§ def Pattern symbolPat = Pattern.compile("[:]?([\\D&&[^/]].*/)?(/|[\\D&&[^/]][^/]*)"))
+    (§ def Pattern intPat = Pattern.compile("([-+]?)(?:(0)|([1-9][0-9]*)|0[xX]([0-9A-Fa-f]+)|0([0-7]+)|([1-9][0-9]?)[rR]([0-9A-Za-z]+)|0[0-9]+)(N)?"))
+    (§ def Pattern ratioPat = Pattern.compile("([-+]?[0-9]+)/([0-9]+)"))
+    (§ def Pattern floatPat = Pattern.compile("([-+]?[0-9]+(\\.[0-9]*)?([eE][-+]?[0-9]+)?)(M)?"))
 
-    #_static
-    (§ field IFn taggedReader = new TaggedReader())
+    (§ def IFn taggedReader = new TaggedReader())
 
-    (§ static )
-    (§
+    (§ static
         (§ ass macros[\"] = new StringReader()) ;; oops! "
         (§ ass macros[\;] = new CommentReader())
         (§ ass macros[\^] = new MetaReader())
@@ -16560,25 +14414,20 @@
         (§ ass dispatchMacros[\:] = new NamespaceMapReader())
     )
 
-    #_static
-    (§ method boolean nonConstituent(int ch)
+    (§ defn boolean nonConstituent(int ch)
         (§ return (§ expr (ch == \@ || ch == \` || ch == \~)))
     )
 
-    #_static
-    #_public
-    (§ method Object readString(String s, IPersistentMap opts)
+    (§ defn Object readString(String s, IPersistentMap opts)
         (§ let PushbackReader r = new PushbackReader(new java.io.StringReader(s)))
         (§ return (§ expr read(r, opts)))
     )
 
-    #_static
-    (§ method boolean isWhitespace(int ch)
+    (§ defn boolean isWhitespace(int ch)
         (§ return (§ expr (Character.isWhitespace(ch) || ch == \,)))
     )
 
-    #_static
-    (§ method void unread(PushbackReader r, int ch)
+    (§ defn void unread(PushbackReader r, int ch)
         (§ if (ch != -1))
         (§
             (§ try )
@@ -16592,25 +14441,18 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns ReaderException (§ extends RuntimeException)
-        #_final
         (§ field int line)
-        #_final
         (§ field int column)
 
-        #_public
-        (§ method ReaderException(int line, int column, Throwable cause)
+        (§ constructor ReaderException(int line, int column, Throwable cause)
             (§ super(cause))
             (§ ass this.line = line)
             (§ ass this.column = column)
         )
     )
 
-    #_static
-    #_public
-    (§ method int read1(Reader r)
+    (§ defn int read1(Reader r)
         (§ try )
         (§
             (§ return (§ expr r.read()))
@@ -16621,19 +14463,13 @@
         )
     )
 
-    #_static
-    #_final
-    (§ field Keyword EOF = Keyword.intern(nil, "eof"))
+    (§ def Keyword EOF = Keyword.intern(nil, "eof"))
 
-    #_static
-    #_public
-    (§ method Object read(PushbackReader r, IPersistentMap opts)
+    (§ defn Object read(PushbackReader r, IPersistentMap opts)
         (§ return (§ expr read(r, !opts.containsKey(EOF), opts.valAt(EOF), false, opts)))
     )
 
-    #_static
-    #_public
-    (§ method Object read(PushbackReader r, boolean eofIsError, Object eofValue, boolean isRecursive, Object opts)
+    (§ defn Object read(PushbackReader r, boolean eofIsError, Object eofValue, boolean isRecursive, Object opts)
         (§ try )
         (§
             (§ while (true))
@@ -16715,9 +14551,7 @@
         )
     )
 
-    #_static
-    #_private
-    (§ method String readToken(PushbackReader r, char initch, boolean leadConstituent)
+    (§ defn- String readToken(PushbackReader r, char initch, boolean leadConstituent)
         (§ let StringBuilder sb = new StringBuilder())
         (§ if (leadConstituent && nonConstituent(initch)))
         (§
@@ -16743,9 +14577,7 @@
         )
     )
 
-    #_static
-    #_private
-    (§ method Object readNumber(PushbackReader r, char initch)
+    (§ defn- Object readNumber(PushbackReader r, char initch)
         (§ let StringBuilder sb = new StringBuilder())
         (§ call sb.append(initch))
 
@@ -16769,9 +14601,7 @@
         (§ return (§ expr n))
     )
 
-    #_static
-    #_private
-    (§ method int readUnicodeChar(String token, int offset, int length, int base)
+    (§ defn- int readUnicodeChar(String token, int offset, int length, int base)
         (§ if (token.length() != offset + length))
         (§
             (§ throw new IllegalArgumentException("Invalid unicode character: \\" + token))
@@ -16789,9 +14619,7 @@
         (§ return (§ expr (char) uc))
     )
 
-    #_static
-    #_private
-    (§ method int readUnicodeChar(PushbackReader r, int initch, int base, int length, boolean exact)
+    (§ defn- int readUnicodeChar(PushbackReader r, int initch, int base, int length, boolean exact)
         (§ let int uc = Character.digit(initch, base))
         (§ if (uc == -1))
         (§
@@ -16820,9 +14648,7 @@
         (§ return (§ expr uc))
     )
 
-    #_static
-    #_private
-    (§ method Object interpretToken(String s)
+    (§ defn- Object interpretToken(String s)
         (§ if (s.equals("nil")))
         (§
             (§ return (§ expr nil))
@@ -16847,9 +14673,7 @@
         (§ throw Util.runtimeException("Invalid token: " + s))
     )
 
-    #_private
-    #_static
-    (§ method Object matchSymbol(String s)
+    (§ defn- Object matchSymbol(String s)
         (§ let Matcher m = symbolPat.matcher(s))
         (§ if (m.matches()))
         (§
@@ -16875,9 +14699,7 @@
         (§ return (§ expr nil))
     )
 
-    #_private
-    #_static
-    (§ method Object matchNumber(String s)
+    (§ defn- Object matchNumber(String s)
         (§ let Matcher m = intPat.matcher(s))
         (§ if (m.matches()))
         (§
@@ -16946,9 +14768,7 @@
         (§ return (§ expr nil))
     )
 
-    #_static
-    #_private
-    (§ method IFn getMacro(int ch)
+    (§ defn- IFn getMacro(int ch)
         (§ if (ch < macros.length))
         (§
             (§ return (§ expr macros[ch]))
@@ -16956,22 +14776,15 @@
         (§ return (§ expr nil))
     )
 
-    #_static
-    #_private
-    (§ method boolean isMacro(int ch)
+    (§ defn- boolean isMacro(int ch)
         (§ return (§ expr (ch < macros.length && macros[ch] != nil)))
     )
 
-    #_static
-    #_private
-    (§ method boolean isTerminatingMacro(int ch)
+    (§ defn- boolean isTerminatingMacro(int ch)
         (§ return (§ expr (ch != \# && ch != \' && isMacro(ch))))
     )
 
-    #_public
-    #_static
     (class-ns StringReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object doublequote, Object opts)
             (§ let StringBuilder sb = new StringBuilder())
             (§ let Reader r = (Reader) reader)
@@ -17058,10 +14871,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns CommentReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object semicolon, Object opts)
             (§ let Reader r = (Reader) reader)
             (§ let int ch)
@@ -17073,10 +14883,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns DiscardReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object underscore, Object opts)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ call read(r, true, nil, true, opts))
@@ -17084,10 +14891,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns NamespaceMapReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object colon, Object opts)
             (§ let PushbackReader r = (PushbackReader) reader)
 
@@ -17154,10 +14958,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns DispatchReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object hash, Object opts)
             (§ let int ch = read1((Reader) reader))
             (§ if (ch == -1))
@@ -17181,10 +14982,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns MetaReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object caret, Object opts)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ let int line = -1)
@@ -17235,10 +15033,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns CharacterReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object backslash, Object opts)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ let int ch = read1(r))
@@ -17302,10 +15097,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns ListReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object leftparen, Object opts)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ let int line = -1)
@@ -17325,20 +15117,14 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns VectorReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object leftparen, Object opts)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ return (§ expr LazilyPersistentVector.create(readDelimitedList(\], r, true, opts))))
         )
     )
 
-    #_public
-    #_static
     (class-ns MapReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object leftparen, Object opts)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ let Object[] a = readDelimitedList(\}, r, true, opts).toArray())
@@ -17350,45 +15136,32 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns SetReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object leftbracket, Object opts)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ return (§ expr PersistentHashSet.createWithCheck(readDelimitedList(\}, r, true, opts))))
         )
     )
 
-    #_public
-    #_static
     (class-ns UnmatchedDelimiterReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object rightdelim, Object opts)
             (§ throw Util.runtimeException("Unmatched delimiter: " + rightdelim))
         )
     )
 
-    #_public
-    #_static
     (class-ns UnreadableReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object leftangle, Object opts)
             (§ throw Util.runtimeException("Unreadable form"))
         )
     )
 
-    #_public
-    #_static
     (class-ns SymbolicValueReader (§ extends AFn)
-        #_static
-        (§ field IPersistentMap specials = PersistentHashMap.create(
+        (§ def IPersistentMap specials = PersistentHashMap.create(
       #_map Symbol.intern("Inf"), Double.POSITIVE_INFINITY,
       #_map Symbol.intern("-Inf"), Double.NEGATIVE_INFINITY,
       #_map Symbol.intern("NaN"), Double.NaN
         ))
 
-        #_public
         (§ method Object invoke(Object reader, Object quote, Object opts)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ let Object o = read(r, true, nil, true, opts))
@@ -17406,10 +15179,8 @@
         )
     )
 
-    #_public
-    #_static
-    (§ method List readDelimitedList(char delim, PushbackReader r, boolean isRecursive, Object opts)
-        (§ let final int firstline = (r instanceof LineNumberingPushbackReader) ? ((LineNumberingPushbackReader) r).getLineNumber() :or -1)
+    (§ defn List readDelimitedList(char delim, PushbackReader r, boolean isRecursive, Object opts)
+        (§ let int firstline = (r instanceof LineNumberingPushbackReader) ? ((LineNumberingPushbackReader) r).getLineNumber() :or -1)
 
         (§ let ArrayList a = new ArrayList())
 
@@ -17464,10 +15235,7 @@
         (§ return (§ expr a))
     )
 
-    #_public
-    #_static
     (class-ns TaggedReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object firstChar, Object opts)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ let Object name = read(r, true, nil, false, opts))
@@ -17479,13 +15247,10 @@
             (§ return (§ expr readTagged(r, sym, (IPersistentMap) opts)))
         )
 
-        #_static
-        (§ field Keyword READERS = Keyword.intern(nil, "readers"))
-        #_static
-        (§ field Keyword DEFAULT = Keyword.intern(nil, "default"))
+        (§ def Keyword READERS = Keyword.intern(nil, "readers"))
+        (§ def Keyword DEFAULT = Keyword.intern(nil, "default"))
 
-        #_private
-        (§ method Object readTagged(PushbackReader reader, Symbol tag, IPersistentMap opts)
+        (§ method- Object readTagged(PushbackReader reader, Symbol tag, IPersistentMap opts)
             (§ let Object o = read(reader, true, nil, true, opts))
 
             (§ let ILookup readers = (ILookup)RT.get(opts, READERS))
@@ -17520,14 +15285,10 @@
 (§ import java.io.IOException)
 (§ import java.util.Enumeration)
 
-#_public
 (class-ns EnumerationSeq (§ extends ASeq)
-    #_final
     (§ field Enumeration iter)
-    #_final
     (§ field State state)
 
-    #_static
     (class-ns State
         #_volatile
         (§ field Object val)
@@ -17535,9 +15296,7 @@
         (§ field Object _rest)
     )
 
-    #_public
-    #_static
-    (§ method EnumerationSeq create(Enumeration iter)
+    (§ defn EnumerationSeq create(Enumeration iter)
         (§ if (iter.hasMoreElements()))
         (§
             (§ return (§ expr new EnumerationSeq(iter)))
@@ -17545,20 +15304,19 @@
         (§ return (§ expr nil))
     )
 
-    (§ method EnumerationSeq(Enumeration iter)
+    (§ constructor EnumerationSeq(Enumeration iter)
         (§ ass this.iter = iter)
         (§ ass state = new State())
         (§ ass this.state.val = state)
         (§ ass this.state._rest = state)
     )
 
-    (§ method EnumerationSeq(IPersistentMap meta, Enumeration iter, State state)
+    (§ constructor EnumerationSeq(IPersistentMap meta, Enumeration iter, State state)
         (§ super(meta))
         (§ ass this.iter = iter)
         (§ ass this.state = state)
     )
 
-    #_public
     (§ method Object first()
         (§ if (state.val == state))
         (§
@@ -17573,7 +15331,6 @@
         (§ return (§ expr state.val))
     )
 
-    #_public
     (§ method ISeq next()
         (§ if (state._rest == state))
         (§
@@ -17589,7 +15346,6 @@
         (§ return (§ expr (ISeq) state._rest))
     )
 
-    #_public
     (§ method EnumerationSeq withMeta(IPersistentMap meta)
         (§ return (§ expr new EnumerationSeq(meta, iter, state)))
     )
@@ -17603,19 +15359,14 @@
  ; richer semantics for exceptions should use this in lieu of defining project-specific
  ; exception classes.
  ;;
-#_public
 (class-ns ExceptionInfo (§ extends RuntimeException) (§ implements IExceptionInfo)
-    #_public
-    #_final
     (§ field IPersistentMap data)
 
-    #_public
-    (§ method ExceptionInfo(String s, IPersistentMap data)
+    (§ constructor ExceptionInfo(String s, IPersistentMap data)
         (§ this(s, data, nil))
     )
 
-    #_public
-    (§ method ExceptionInfo(String s, IPersistentMap data, Throwable throwable)
+    (§ constructor ExceptionInfo(String s, IPersistentMap data, Throwable throwable)
         ;; nil cause is equivalent to not passing a cause
         (§ super(s, throwable))
         (§ if (data != nil))
@@ -17628,12 +15379,10 @@
         )
     )
 
-    #_public
     (§ method IPersistentMap getData()
         (§ return (§ expr data))
     )
 
-    #_public
     (§ method String toString()
         (§ return (§ expr "cloiure.lang.ExceptionInfo: " + getMessage() + " " + data.toString()))
     )
@@ -17642,44 +15391,35 @@
 
 (java-ns cloiure.lang.Fn
 
-#_public
 (§ interface Fn
 )
 )
 
 (java-ns cloiure.lang.FnLoaderThunk
 
-#_public
 (class-ns FnLoaderThunk (§ extends RestFn)
-    #_final
     (§ field Var v)
-    #_final
     (§ field ClassLoader loader)
-    #_final
     (§ field String fnClassName)
     (§ field IFn fn)
 
-    #_public
-    (§ method FnLoaderThunk(Var v, String fnClassName)
+    (§ constructor FnLoaderThunk(Var v, String fnClassName)
         (§ ass this.v = v)
         (§ ass this.loader = (ClassLoader) RT.FN_LOADER_VAR.get())
         (§ ass this.fnClassName = fnClassName)
         (§ ass fn = nil)
     )
 
-    #_public
     (§ method Object invoke(Object arg1)
         (§ call load())
         (§ return (§ expr fn.invoke(arg1)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2)
         (§ call load())
         (§ return (§ expr fn.invoke(arg1, arg2)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3)
         (§ call load())
         (§ return (§ expr fn.invoke(arg1, arg2, arg3)))
@@ -17691,8 +15431,7 @@
         (§ return (§ expr fn.applyTo((ISeq) args)))
     )
 
-    #_private
-    (§ method void load()
+    (§ method- void load()
         (§ if (fn == nil))
         (§
             (§ try )
@@ -17707,17 +15446,14 @@
         )
     )
 
-    #_public
     (§ method int getRequiredArity()
         (§ return (§ expr 0))
     )
 
-    #_public
     (§ method IObj withMeta(IPersistentMap meta)
         (§ return (§ expr this))
     )
 
-    #_public
     (§ method IPersistentMap meta()
         (§ return (§ expr nil))
     )
@@ -17726,7 +15462,6 @@
 
 (java-ns cloiure.lang.IAtom
 
-#_public
 (§ interface IAtom
     (§ abstract Object swap(IFn f))
     (§ abstract Object swap(IFn f, Object arg))
@@ -17739,7 +15474,6 @@
 
 (java-ns cloiure.lang.IAtom2
 
-#_public
 (§ interface IAtom2 (§ extends IAtom)
     (§ abstract IPersistentVector swapVals(IFn f))
     (§ abstract IPersistentVector swapVals(IFn f, Object arg))
@@ -17751,7 +15485,6 @@
 
 (java-ns cloiure.lang.IBlockingDeref
 
-#_public
 (§ interface IBlockingDeref
     (§ abstract Object deref(long ms, Object timeoutValue))
 )
@@ -17759,7 +15492,6 @@
 
 (java-ns cloiure.lang.IChunk
 
-#_public
 (§ interface IChunk (§ extends Indexed)
     (§ abstract IChunk dropFirst())
     (§ abstract Object reduce(IFn f, Object start))
@@ -17768,7 +15500,6 @@
 
 (java-ns cloiure.lang.IChunkedSeq
 
-#_public
 (§ interface IChunkedSeq (§ extends ISeq, Sequential)
     (§ abstract IChunk chunkedFirst())
     (§ abstract ISeq chunkedNext())
@@ -17778,7 +15509,6 @@
 
 (java-ns cloiure.lang.IDeref
 
-#_public
 (§ interface IDeref
     (§ abstract Object deref())
 )
@@ -17786,7 +15516,6 @@
 
 (java-ns cloiure.lang.IEditableCollection
 
-#_public
 (§ interface IEditableCollection
     (§ abstract ITransientCollection asTransient())
 )
@@ -17799,9 +15528,8 @@
  ; programs that need richer semantics for exceptions should use this in lieu of
  ; defining project-specific exception classes.
  ;;
-#_public
 (§ interface IExceptionInfo
-    (§ abstract public IPersistentMap getData())
+    (§ abstract IPersistentMap getData())
 )
 )
 
@@ -17815,2212 +15543,1495 @@
  ; You can also access any other library written in Cloiure, after adding
  ; either its source or compiled form to the classpath.
  ;;
-#_public
 (§ interface IFn (§ extends Callable, Runnable)
-    (§ abstract public Object invoke())
-    (§ abstract public Object invoke(Object arg1))
-    (§ abstract public Object invoke(Object arg1, Object arg2))
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3))
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4))
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5))
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6))
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7))
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
+    (§ abstract Object invoke())
+    (§ abstract Object invoke(Object arg1))
+    (§ abstract Object invoke(Object arg1, Object arg2))
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3))
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4))
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5))
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6))
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7))
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8))
 
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9))
 
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10))
 
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11))
 
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12))
 
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13))
 
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14))
 
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15))
 
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16))
 
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17))
 
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18))
 
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19))
 
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20))
 
-    (§ abstract public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
+    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20,
       #_arg Object... args))
 
-    (§ abstract public Object applyTo(ISeq arglist))
+    (§ abstract Object applyTo(ISeq arglist))
 
-    #_static
-    #_public
     (§ interface L
         (§ abstract long invokePrim())
     )
 
-    #_static
-    #_public
     (§ interface D
         (§ abstract double invokePrim())
     )
 
-    #_static
-    #_public
     (§ interface OL
         (§ abstract long invokePrim(Object arg0))
     )
 
-    #_static
-    #_public
     (§ interface OD
         (§ abstract double invokePrim(Object arg0))
     )
 
-    #_static
-    #_public
     (§ interface LO
         (§ abstract Object invokePrim(long arg0))
     )
 
-    #_static
-    #_public
     (§ interface LL
         (§ abstract long invokePrim(long arg0))
     )
 
-    #_static
-    #_public
     (§ interface LD
         (§ abstract double invokePrim(long arg0))
     )
 
-    #_static
-    #_public
     (§ interface DO
         (§ abstract Object invokePrim(double arg0))
     )
 
-    #_static
-    #_public
     (§ interface DL
         (§ abstract long invokePrim(double arg0))
     )
 
-    #_static
-    #_public
     (§ interface DD
         (§ abstract double invokePrim(double arg0))
     )
 
-    #_static
-    #_public
     (§ interface OOL
         (§ abstract long invokePrim(Object arg0, Object arg1))
     )
 
-    #_static
-    #_public
     (§ interface OOD
         (§ abstract double invokePrim(Object arg0, Object arg1))
     )
 
-    #_static
-    #_public
     (§ interface OLO
         (§ abstract Object invokePrim(Object arg0, long arg1))
     )
 
-    #_static
-    #_public
     (§ interface OLL
         (§ abstract long invokePrim(Object arg0, long arg1))
     )
 
-    #_static
-    #_public
     (§ interface OLD
         (§ abstract double invokePrim(Object arg0, long arg1))
     )
 
-    #_static
-    #_public
     (§ interface ODO
         (§ abstract Object invokePrim(Object arg0, double arg1))
     )
 
-    #_static
-    #_public
     (§ interface ODL
         (§ abstract long invokePrim(Object arg0, double arg1))
     )
 
-    #_static
-    #_public
     (§ interface ODD
         (§ abstract double invokePrim(Object arg0, double arg1))
     )
 
-    #_static
-    #_public
     (§ interface LOO
         (§ abstract Object invokePrim(long arg0, Object arg1))
     )
 
-    #_static
-    #_public
     (§ interface LOL
         (§ abstract long invokePrim(long arg0, Object arg1))
     )
 
-    #_static
-    #_public
     (§ interface LOD
         (§ abstract double invokePrim(long arg0, Object arg1))
     )
 
-    #_static
-    #_public
     (§ interface LLO
         (§ abstract Object invokePrim(long arg0, long arg1))
     )
 
-    #_static
-    #_public
     (§ interface LLL
         (§ abstract long invokePrim(long arg0, long arg1))
     )
 
-    #_static
-    #_public
     (§ interface LLD
         (§ abstract double invokePrim(long arg0, long arg1))
     )
 
-    #_static
-    #_public
     (§ interface LDO
         (§ abstract Object invokePrim(long arg0, double arg1))
     )
 
-    #_static
-    #_public
     (§ interface LDL
         (§ abstract long invokePrim(long arg0, double arg1))
     )
 
-    #_static
-    #_public
     (§ interface LDD
         (§ abstract double invokePrim(long arg0, double arg1))
     )
 
-    #_static
-    #_public
     (§ interface DOO
         (§ abstract Object invokePrim(double arg0, Object arg1))
     )
 
-    #_static
-    #_public
     (§ interface DOL
         (§ abstract long invokePrim(double arg0, Object arg1))
     )
 
-    #_static
-    #_public
     (§ interface DOD
         (§ abstract double invokePrim(double arg0, Object arg1))
     )
 
-    #_static
-    #_public
     (§ interface DLO
         (§ abstract Object invokePrim(double arg0, long arg1))
     )
 
-    #_static
-    #_public
     (§ interface DLL
         (§ abstract long invokePrim(double arg0, long arg1))
     )
 
-    #_static
-    #_public
     (§ interface DLD
         (§ abstract double invokePrim(double arg0, long arg1))
     )
 
-    #_static
-    #_public
     (§ interface DDO
         (§ abstract Object invokePrim(double arg0, double arg1))
     )
 
-    #_static
-    #_public
     (§ interface DDL
         (§ abstract long invokePrim(double arg0, double arg1))
     )
 
-    #_static
-    #_public
     (§ interface DDD
         (§ abstract double invokePrim(double arg0, double arg1))
     )
 
-    #_static
-    #_public
     (§ interface OOOL
         (§ abstract long invokePrim(Object arg0, Object arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface OOOD
         (§ abstract double invokePrim(Object arg0, Object arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface OOLO
         (§ abstract Object invokePrim(Object arg0, Object arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface OOLL
         (§ abstract long invokePrim(Object arg0, Object arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface OOLD
         (§ abstract double invokePrim(Object arg0, Object arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface OODO
         (§ abstract Object invokePrim(Object arg0, Object arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface OODL
         (§ abstract long invokePrim(Object arg0, Object arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface OODD
         (§ abstract double invokePrim(Object arg0, Object arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface OLOO
         (§ abstract Object invokePrim(Object arg0, long arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface OLOL
         (§ abstract long invokePrim(Object arg0, long arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface OLOD
         (§ abstract double invokePrim(Object arg0, long arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface OLLO
         (§ abstract Object invokePrim(Object arg0, long arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface OLLL
         (§ abstract long invokePrim(Object arg0, long arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface OLLD
         (§ abstract double invokePrim(Object arg0, long arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface OLDO
         (§ abstract Object invokePrim(Object arg0, long arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface OLDL
         (§ abstract long invokePrim(Object arg0, long arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface OLDD
         (§ abstract double invokePrim(Object arg0, long arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface ODOO
         (§ abstract Object invokePrim(Object arg0, double arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface ODOL
         (§ abstract long invokePrim(Object arg0, double arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface ODOD
         (§ abstract double invokePrim(Object arg0, double arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface ODLO
         (§ abstract Object invokePrim(Object arg0, double arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface ODLL
         (§ abstract long invokePrim(Object arg0, double arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface ODLD
         (§ abstract double invokePrim(Object arg0, double arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface ODDO
         (§ abstract Object invokePrim(Object arg0, double arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface ODDL
         (§ abstract long invokePrim(Object arg0, double arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface ODDD
         (§ abstract double invokePrim(Object arg0, double arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface LOOO
         (§ abstract Object invokePrim(long arg0, Object arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface LOOL
         (§ abstract long invokePrim(long arg0, Object arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface LOOD
         (§ abstract double invokePrim(long arg0, Object arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface LOLO
         (§ abstract Object invokePrim(long arg0, Object arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface LOLL
         (§ abstract long invokePrim(long arg0, Object arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface LOLD
         (§ abstract double invokePrim(long arg0, Object arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface LODO
         (§ abstract Object invokePrim(long arg0, Object arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface LODL
         (§ abstract long invokePrim(long arg0, Object arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface LODD
         (§ abstract double invokePrim(long arg0, Object arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface LLOO
         (§ abstract Object invokePrim(long arg0, long arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface LLOL
         (§ abstract long invokePrim(long arg0, long arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface LLOD
         (§ abstract double invokePrim(long arg0, long arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface LLLO
         (§ abstract Object invokePrim(long arg0, long arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface LLLL
         (§ abstract long invokePrim(long arg0, long arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface LLLD
         (§ abstract double invokePrim(long arg0, long arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface LLDO
         (§ abstract Object invokePrim(long arg0, long arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface LLDL
         (§ abstract long invokePrim(long arg0, long arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface LLDD
         (§ abstract double invokePrim(long arg0, long arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface LDOO
         (§ abstract Object invokePrim(long arg0, double arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface LDOL
         (§ abstract long invokePrim(long arg0, double arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface LDOD
         (§ abstract double invokePrim(long arg0, double arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface LDLO
         (§ abstract Object invokePrim(long arg0, double arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface LDLL
         (§ abstract long invokePrim(long arg0, double arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface LDLD
         (§ abstract double invokePrim(long arg0, double arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface LDDO
         (§ abstract Object invokePrim(long arg0, double arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface LDDL
         (§ abstract long invokePrim(long arg0, double arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface LDDD
         (§ abstract double invokePrim(long arg0, double arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface DOOO
         (§ abstract Object invokePrim(double arg0, Object arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface DOOL
         (§ abstract long invokePrim(double arg0, Object arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface DOOD
         (§ abstract double invokePrim(double arg0, Object arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface DOLO
         (§ abstract Object invokePrim(double arg0, Object arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface DOLL
         (§ abstract long invokePrim(double arg0, Object arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface DOLD
         (§ abstract double invokePrim(double arg0, Object arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface DODO
         (§ abstract Object invokePrim(double arg0, Object arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface DODL
         (§ abstract long invokePrim(double arg0, Object arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface DODD
         (§ abstract double invokePrim(double arg0, Object arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface DLOO
         (§ abstract Object invokePrim(double arg0, long arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface DLOL
         (§ abstract long invokePrim(double arg0, long arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface DLOD
         (§ abstract double invokePrim(double arg0, long arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface DLLO
         (§ abstract Object invokePrim(double arg0, long arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface DLLL
         (§ abstract long invokePrim(double arg0, long arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface DLLD
         (§ abstract double invokePrim(double arg0, long arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface DLDO
         (§ abstract Object invokePrim(double arg0, long arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface DLDL
         (§ abstract long invokePrim(double arg0, long arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface DLDD
         (§ abstract double invokePrim(double arg0, long arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface DDOO
         (§ abstract Object invokePrim(double arg0, double arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface DDOL
         (§ abstract long invokePrim(double arg0, double arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface DDOD
         (§ abstract double invokePrim(double arg0, double arg1, Object arg2))
     )
 
-    #_static
-    #_public
     (§ interface DDLO
         (§ abstract Object invokePrim(double arg0, double arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface DDLL
         (§ abstract long invokePrim(double arg0, double arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface DDLD
         (§ abstract double invokePrim(double arg0, double arg1, long arg2))
     )
 
-    #_static
-    #_public
     (§ interface DDDO
         (§ abstract Object invokePrim(double arg0, double arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface DDDL
         (§ abstract long invokePrim(double arg0, double arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface DDDD
         (§ abstract double invokePrim(double arg0, double arg1, double arg2))
     )
 
-    #_static
-    #_public
     (§ interface OOOOL
         (§ abstract long invokePrim(Object arg0, Object arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OOOOD
         (§ abstract double invokePrim(Object arg0, Object arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OOOLO
         (§ abstract Object invokePrim(Object arg0, Object arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OOOLL
         (§ abstract long invokePrim(Object arg0, Object arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OOOLD
         (§ abstract double invokePrim(Object arg0, Object arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OOODO
         (§ abstract Object invokePrim(Object arg0, Object arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OOODL
         (§ abstract long invokePrim(Object arg0, Object arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OOODD
         (§ abstract double invokePrim(Object arg0, Object arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OOLOO
         (§ abstract Object invokePrim(Object arg0, Object arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OOLOL
         (§ abstract long invokePrim(Object arg0, Object arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OOLOD
         (§ abstract double invokePrim(Object arg0, Object arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OOLLO
         (§ abstract Object invokePrim(Object arg0, Object arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OOLLL
         (§ abstract long invokePrim(Object arg0, Object arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OOLLD
         (§ abstract double invokePrim(Object arg0, Object arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OOLDO
         (§ abstract Object invokePrim(Object arg0, Object arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OOLDL
         (§ abstract long invokePrim(Object arg0, Object arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OOLDD
         (§ abstract double invokePrim(Object arg0, Object arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OODOO
         (§ abstract Object invokePrim(Object arg0, Object arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OODOL
         (§ abstract long invokePrim(Object arg0, Object arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OODOD
         (§ abstract double invokePrim(Object arg0, Object arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OODLO
         (§ abstract Object invokePrim(Object arg0, Object arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OODLL
         (§ abstract long invokePrim(Object arg0, Object arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OODLD
         (§ abstract double invokePrim(Object arg0, Object arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OODDO
         (§ abstract Object invokePrim(Object arg0, Object arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OODDL
         (§ abstract long invokePrim(Object arg0, Object arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OODDD
         (§ abstract double invokePrim(Object arg0, Object arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLOOO
         (§ abstract Object invokePrim(Object arg0, long arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLOOL
         (§ abstract long invokePrim(Object arg0, long arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLOOD
         (§ abstract double invokePrim(Object arg0, long arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLOLO
         (§ abstract Object invokePrim(Object arg0, long arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLOLL
         (§ abstract long invokePrim(Object arg0, long arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLOLD
         (§ abstract double invokePrim(Object arg0, long arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLODO
         (§ abstract Object invokePrim(Object arg0, long arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLODL
         (§ abstract long invokePrim(Object arg0, long arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLODD
         (§ abstract double invokePrim(Object arg0, long arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLLOO
         (§ abstract Object invokePrim(Object arg0, long arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLLOL
         (§ abstract long invokePrim(Object arg0, long arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLLOD
         (§ abstract double invokePrim(Object arg0, long arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLLLO
         (§ abstract Object invokePrim(Object arg0, long arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLLLL
         (§ abstract long invokePrim(Object arg0, long arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLLLD
         (§ abstract double invokePrim(Object arg0, long arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLLDO
         (§ abstract Object invokePrim(Object arg0, long arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLLDL
         (§ abstract long invokePrim(Object arg0, long arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLLDD
         (§ abstract double invokePrim(Object arg0, long arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLDOO
         (§ abstract Object invokePrim(Object arg0, long arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLDOL
         (§ abstract long invokePrim(Object arg0, long arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLDOD
         (§ abstract double invokePrim(Object arg0, long arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLDLO
         (§ abstract Object invokePrim(Object arg0, long arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLDLL
         (§ abstract long invokePrim(Object arg0, long arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLDLD
         (§ abstract double invokePrim(Object arg0, long arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLDDO
         (§ abstract Object invokePrim(Object arg0, long arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLDDL
         (§ abstract long invokePrim(Object arg0, long arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface OLDDD
         (§ abstract double invokePrim(Object arg0, long arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODOOO
         (§ abstract Object invokePrim(Object arg0, double arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODOOL
         (§ abstract long invokePrim(Object arg0, double arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODOOD
         (§ abstract double invokePrim(Object arg0, double arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODOLO
         (§ abstract Object invokePrim(Object arg0, double arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODOLL
         (§ abstract long invokePrim(Object arg0, double arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODOLD
         (§ abstract double invokePrim(Object arg0, double arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODODO
         (§ abstract Object invokePrim(Object arg0, double arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODODL
         (§ abstract long invokePrim(Object arg0, double arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODODD
         (§ abstract double invokePrim(Object arg0, double arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODLOO
         (§ abstract Object invokePrim(Object arg0, double arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODLOL
         (§ abstract long invokePrim(Object arg0, double arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODLOD
         (§ abstract double invokePrim(Object arg0, double arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODLLO
         (§ abstract Object invokePrim(Object arg0, double arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODLLL
         (§ abstract long invokePrim(Object arg0, double arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODLLD
         (§ abstract double invokePrim(Object arg0, double arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODLDO
         (§ abstract Object invokePrim(Object arg0, double arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODLDL
         (§ abstract long invokePrim(Object arg0, double arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODLDD
         (§ abstract double invokePrim(Object arg0, double arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODDOO
         (§ abstract Object invokePrim(Object arg0, double arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODDOL
         (§ abstract long invokePrim(Object arg0, double arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODDOD
         (§ abstract double invokePrim(Object arg0, double arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODDLO
         (§ abstract Object invokePrim(Object arg0, double arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODDLL
         (§ abstract long invokePrim(Object arg0, double arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODDLD
         (§ abstract double invokePrim(Object arg0, double arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODDDO
         (§ abstract Object invokePrim(Object arg0, double arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODDDL
         (§ abstract long invokePrim(Object arg0, double arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface ODDDD
         (§ abstract double invokePrim(Object arg0, double arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOOOO
         (§ abstract Object invokePrim(long arg0, Object arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOOOL
         (§ abstract long invokePrim(long arg0, Object arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOOOD
         (§ abstract double invokePrim(long arg0, Object arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOOLO
         (§ abstract Object invokePrim(long arg0, Object arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOOLL
         (§ abstract long invokePrim(long arg0, Object arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOOLD
         (§ abstract double invokePrim(long arg0, Object arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOODO
         (§ abstract Object invokePrim(long arg0, Object arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOODL
         (§ abstract long invokePrim(long arg0, Object arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOODD
         (§ abstract double invokePrim(long arg0, Object arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOLOO
         (§ abstract Object invokePrim(long arg0, Object arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOLOL
         (§ abstract long invokePrim(long arg0, Object arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOLOD
         (§ abstract double invokePrim(long arg0, Object arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOLLO
         (§ abstract Object invokePrim(long arg0, Object arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOLLL
         (§ abstract long invokePrim(long arg0, Object arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOLLD
         (§ abstract double invokePrim(long arg0, Object arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOLDO
         (§ abstract Object invokePrim(long arg0, Object arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOLDL
         (§ abstract long invokePrim(long arg0, Object arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LOLDD
         (§ abstract double invokePrim(long arg0, Object arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LODOO
         (§ abstract Object invokePrim(long arg0, Object arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LODOL
         (§ abstract long invokePrim(long arg0, Object arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LODOD
         (§ abstract double invokePrim(long arg0, Object arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LODLO
         (§ abstract Object invokePrim(long arg0, Object arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LODLL
         (§ abstract long invokePrim(long arg0, Object arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LODLD
         (§ abstract double invokePrim(long arg0, Object arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LODDO
         (§ abstract Object invokePrim(long arg0, Object arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LODDL
         (§ abstract long invokePrim(long arg0, Object arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LODDD
         (§ abstract double invokePrim(long arg0, Object arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLOOO
         (§ abstract Object invokePrim(long arg0, long arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLOOL
         (§ abstract long invokePrim(long arg0, long arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLOOD
         (§ abstract double invokePrim(long arg0, long arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLOLO
         (§ abstract Object invokePrim(long arg0, long arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLOLL
         (§ abstract long invokePrim(long arg0, long arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLOLD
         (§ abstract double invokePrim(long arg0, long arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLODO
         (§ abstract Object invokePrim(long arg0, long arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLODL
         (§ abstract long invokePrim(long arg0, long arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLODD
         (§ abstract double invokePrim(long arg0, long arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLLOO
         (§ abstract Object invokePrim(long arg0, long arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLLOL
         (§ abstract long invokePrim(long arg0, long arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLLOD
         (§ abstract double invokePrim(long arg0, long arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLLLO
         (§ abstract Object invokePrim(long arg0, long arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLLLL
         (§ abstract long invokePrim(long arg0, long arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLLLD
         (§ abstract double invokePrim(long arg0, long arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLLDO
         (§ abstract Object invokePrim(long arg0, long arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLLDL
         (§ abstract long invokePrim(long arg0, long arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLLDD
         (§ abstract double invokePrim(long arg0, long arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLDOO
         (§ abstract Object invokePrim(long arg0, long arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLDOL
         (§ abstract long invokePrim(long arg0, long arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLDOD
         (§ abstract double invokePrim(long arg0, long arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLDLO
         (§ abstract Object invokePrim(long arg0, long arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLDLL
         (§ abstract long invokePrim(long arg0, long arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLDLD
         (§ abstract double invokePrim(long arg0, long arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLDDO
         (§ abstract Object invokePrim(long arg0, long arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLDDL
         (§ abstract long invokePrim(long arg0, long arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LLDDD
         (§ abstract double invokePrim(long arg0, long arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDOOO
         (§ abstract Object invokePrim(long arg0, double arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDOOL
         (§ abstract long invokePrim(long arg0, double arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDOOD
         (§ abstract double invokePrim(long arg0, double arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDOLO
         (§ abstract Object invokePrim(long arg0, double arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDOLL
         (§ abstract long invokePrim(long arg0, double arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDOLD
         (§ abstract double invokePrim(long arg0, double arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDODO
         (§ abstract Object invokePrim(long arg0, double arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDODL
         (§ abstract long invokePrim(long arg0, double arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDODD
         (§ abstract double invokePrim(long arg0, double arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDLOO
         (§ abstract Object invokePrim(long arg0, double arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDLOL
         (§ abstract long invokePrim(long arg0, double arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDLOD
         (§ abstract double invokePrim(long arg0, double arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDLLO
         (§ abstract Object invokePrim(long arg0, double arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDLLL
         (§ abstract long invokePrim(long arg0, double arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDLLD
         (§ abstract double invokePrim(long arg0, double arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDLDO
         (§ abstract Object invokePrim(long arg0, double arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDLDL
         (§ abstract long invokePrim(long arg0, double arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDLDD
         (§ abstract double invokePrim(long arg0, double arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDDOO
         (§ abstract Object invokePrim(long arg0, double arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDDOL
         (§ abstract long invokePrim(long arg0, double arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDDOD
         (§ abstract double invokePrim(long arg0, double arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDDLO
         (§ abstract Object invokePrim(long arg0, double arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDDLL
         (§ abstract long invokePrim(long arg0, double arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDDLD
         (§ abstract double invokePrim(long arg0, double arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDDDO
         (§ abstract Object invokePrim(long arg0, double arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDDDL
         (§ abstract long invokePrim(long arg0, double arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface LDDDD
         (§ abstract double invokePrim(long arg0, double arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOOOO
         (§ abstract Object invokePrim(double arg0, Object arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOOOL
         (§ abstract long invokePrim(double arg0, Object arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOOOD
         (§ abstract double invokePrim(double arg0, Object arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOOLO
         (§ abstract Object invokePrim(double arg0, Object arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOOLL
         (§ abstract long invokePrim(double arg0, Object arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOOLD
         (§ abstract double invokePrim(double arg0, Object arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOODO
         (§ abstract Object invokePrim(double arg0, Object arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOODL
         (§ abstract long invokePrim(double arg0, Object arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOODD
         (§ abstract double invokePrim(double arg0, Object arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOLOO
         (§ abstract Object invokePrim(double arg0, Object arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOLOL
         (§ abstract long invokePrim(double arg0, Object arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOLOD
         (§ abstract double invokePrim(double arg0, Object arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOLLO
         (§ abstract Object invokePrim(double arg0, Object arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOLLL
         (§ abstract long invokePrim(double arg0, Object arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOLLD
         (§ abstract double invokePrim(double arg0, Object arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOLDO
         (§ abstract Object invokePrim(double arg0, Object arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOLDL
         (§ abstract long invokePrim(double arg0, Object arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DOLDD
         (§ abstract double invokePrim(double arg0, Object arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DODOO
         (§ abstract Object invokePrim(double arg0, Object arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DODOL
         (§ abstract long invokePrim(double arg0, Object arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DODOD
         (§ abstract double invokePrim(double arg0, Object arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DODLO
         (§ abstract Object invokePrim(double arg0, Object arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DODLL
         (§ abstract long invokePrim(double arg0, Object arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DODLD
         (§ abstract double invokePrim(double arg0, Object arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DODDO
         (§ abstract Object invokePrim(double arg0, Object arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DODDL
         (§ abstract long invokePrim(double arg0, Object arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DODDD
         (§ abstract double invokePrim(double arg0, Object arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLOOO
         (§ abstract Object invokePrim(double arg0, long arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLOOL
         (§ abstract long invokePrim(double arg0, long arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLOOD
         (§ abstract double invokePrim(double arg0, long arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLOLO
         (§ abstract Object invokePrim(double arg0, long arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLOLL
         (§ abstract long invokePrim(double arg0, long arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLOLD
         (§ abstract double invokePrim(double arg0, long arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLODO
         (§ abstract Object invokePrim(double arg0, long arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLODL
         (§ abstract long invokePrim(double arg0, long arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLODD
         (§ abstract double invokePrim(double arg0, long arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLLOO
         (§ abstract Object invokePrim(double arg0, long arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLLOL
         (§ abstract long invokePrim(double arg0, long arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLLOD
         (§ abstract double invokePrim(double arg0, long arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLLLO
         (§ abstract Object invokePrim(double arg0, long arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLLLL
         (§ abstract long invokePrim(double arg0, long arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLLLD
         (§ abstract double invokePrim(double arg0, long arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLLDO
         (§ abstract Object invokePrim(double arg0, long arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLLDL
         (§ abstract long invokePrim(double arg0, long arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLLDD
         (§ abstract double invokePrim(double arg0, long arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLDOO
         (§ abstract Object invokePrim(double arg0, long arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLDOL
         (§ abstract long invokePrim(double arg0, long arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLDOD
         (§ abstract double invokePrim(double arg0, long arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLDLO
         (§ abstract Object invokePrim(double arg0, long arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLDLL
         (§ abstract long invokePrim(double arg0, long arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLDLD
         (§ abstract double invokePrim(double arg0, long arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLDDO
         (§ abstract Object invokePrim(double arg0, long arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLDDL
         (§ abstract long invokePrim(double arg0, long arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DLDDD
         (§ abstract double invokePrim(double arg0, long arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDOOO
         (§ abstract Object invokePrim(double arg0, double arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDOOL
         (§ abstract long invokePrim(double arg0, double arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDOOD
         (§ abstract double invokePrim(double arg0, double arg1, Object arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDOLO
         (§ abstract Object invokePrim(double arg0, double arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDOLL
         (§ abstract long invokePrim(double arg0, double arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDOLD
         (§ abstract double invokePrim(double arg0, double arg1, Object arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDODO
         (§ abstract Object invokePrim(double arg0, double arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDODL
         (§ abstract long invokePrim(double arg0, double arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDODD
         (§ abstract double invokePrim(double arg0, double arg1, Object arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDLOO
         (§ abstract Object invokePrim(double arg0, double arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDLOL
         (§ abstract long invokePrim(double arg0, double arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDLOD
         (§ abstract double invokePrim(double arg0, double arg1, long arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDLLO
         (§ abstract Object invokePrim(double arg0, double arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDLLL
         (§ abstract long invokePrim(double arg0, double arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDLLD
         (§ abstract double invokePrim(double arg0, double arg1, long arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDLDO
         (§ abstract Object invokePrim(double arg0, double arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDLDL
         (§ abstract long invokePrim(double arg0, double arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDLDD
         (§ abstract double invokePrim(double arg0, double arg1, long arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDDOO
         (§ abstract Object invokePrim(double arg0, double arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDDOL
         (§ abstract long invokePrim(double arg0, double arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDDOD
         (§ abstract double invokePrim(double arg0, double arg1, double arg2, Object arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDDLO
         (§ abstract Object invokePrim(double arg0, double arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDDLL
         (§ abstract long invokePrim(double arg0, double arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDDLD
         (§ abstract double invokePrim(double arg0, double arg1, double arg2, long arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDDDO
         (§ abstract Object invokePrim(double arg0, double arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDDDL
         (§ abstract long invokePrim(double arg0, double arg1, double arg2, double arg3))
     )
 
-    #_static
-    #_public
     (§ interface DDDDD
         (§ abstract double invokePrim(double arg0, double arg1, double arg2, double arg3))
     )
@@ -20029,7 +17040,6 @@
 
 (java-ns cloiure.lang.IHashEq
 
-#_public
 (§ interface IHashEq
     (§ abstract int hasheq())
 )
@@ -20037,7 +17047,6 @@
 
 (java-ns cloiure.lang.IKeywordLookup
 
-#_public
 (§ interface IKeywordLookup
     (§ abstract ILookupThunk getLookupThunk(Keyword k))
 )
@@ -20045,7 +17054,6 @@
 
 (java-ns cloiure.lang.IKVReduce
 
-#_public
 (§ interface IKVReduce
     (§ abstract Object kvreduce(IFn f, Object init))
 )
@@ -20053,7 +17061,6 @@
 
 (java-ns cloiure.lang.ILookup
 
-#_public
 (§ interface ILookup
     (§ abstract Object valAt(Object key))
     (§ abstract Object valAt(Object key, Object notFound))
@@ -20062,7 +17069,6 @@
 
 (java-ns cloiure.lang.ILookupSite
 
-#_public
 (§ interface ILookupSite
     (§ abstract ILookupThunk fault(Object target))
 )
@@ -20070,7 +17076,6 @@
 
 (java-ns cloiure.lang.ILookupThunk
 
-#_public
 (§ interface ILookupThunk
     (§ abstract Object get(Object target))
 )
@@ -20080,7 +17085,6 @@
 
 (§ import java.util.Map)
 
-#_public
 (§ interface IMapEntry (§ extends Map).Entry
     (§ abstract Object key())
     (§ abstract Object val())
@@ -20094,7 +17098,6 @@
 ;;;
  ; Indicate a map can provide more efficient key and val iterators.
  ;;
-#_public
 (§ interface IMapIterable
     (§ abstract Iterator keyIterator())
     (§ abstract Iterator valIterator())
@@ -20103,7 +17106,6 @@
 
 (java-ns cloiure.lang.IMeta
 
-#_public
 (§ interface IMeta
     (§ abstract IPersistentMap meta())
 )
@@ -20111,7 +17113,6 @@
 
 (java-ns cloiure.lang.Indexed
 
-#_public
 (§ interface Indexed (§ extends Counted)
     (§ abstract Object nth(int i))
     (§ abstract Object nth(int i, Object notFound))
@@ -20120,9 +17121,8 @@
 
 (java-ns cloiure.lang.IndexedSeq
 
-#_public
 (§ interface IndexedSeq (§ extends ISeq, Sequential, Counted)
-    (§ abstract public int index())
+    (§ abstract int index())
 )
 )
 
@@ -20130,16 +17130,12 @@
 
 (§ import cloiure.asm.Opcodes)
 
-#_public
 (class-ns Intrinsics (§ implements Opcodes)
-    #_private
-    #_static
-    (§ method Object[] oa(Object... arr)
+    (§ defn- Object[] oa(Object... arr)
         (§ return (§ expr arr))
     )
 
-    #_static
-    (§ field IPersistentMap ops = RT.map(
+    (§ def IPersistentMap ops = RT.map(
       #_map "public static double cloiure.lang.Numbers.add(double,double)", DADD,
       #_map "public static long cloiure.lang.Numbers.and(long,long)", LAND,
       #_map "public static long cloiure.lang.Numbers.or(long,long)", LOR,
@@ -20230,8 +17226,7 @@
     ))
 
     ;; map to instructions terminated with comparator for branch to false
-    #_static
-    (§ field IPersistentMap preds = RT.map(
+    (§ def IPersistentMap preds = RT.map(
       #_map "public static boolean cloiure.lang.Numbers.lt(double,double)", oa(DCMPG, IFGE),
       #_map "public static boolean cloiure.lang.Numbers.lt(long,long)", oa(LCMP, IFGE),
       #_map "public static boolean cloiure.lang.Numbers.equiv(double,double)", oa(DCMPL, IFNE),
@@ -20258,15 +17253,13 @@
 
 (java-ns cloiure.lang.IObj
 
-#_public
 (§ interface IObj (§ extends IMeta)
-    (§ abstract public IObj withMeta(IPersistentMap meta))
+    (§ abstract IObj withMeta(IPersistentMap meta))
 )
 )
 
 (java-ns cloiure.lang.IPending
 
-#_public
 (§ interface IPending
     (§ abstract boolean isRealized())
 )
@@ -20274,7 +17267,6 @@
 
 (java-ns cloiure.lang.IPersistentCollection
 
-#_public
 (§ interface IPersistentCollection (§ extends Seqable)
     (§ abstract int count())
     (§ abstract IPersistentCollection cons(Object o))
@@ -20285,14 +17277,12 @@
 
 (java-ns cloiure.lang.IPersistentList
 
-#_public
 (§ interface IPersistentList (§ extends Sequential, IPersistentStack)
 )
 )
 
 (java-ns cloiure.lang.IPersistentMap
 
-#_public
 (§ interface IPersistentMap (§ extends Iterable, Associative, Counted)
     (§ abstract IPersistentMap assoc(Object key, Object val))
     (§ abstract IPersistentMap assocEx(Object key, Object val))
@@ -20302,17 +17292,15 @@
 
 (java-ns cloiure.lang.IPersistentSet
 
-#_public
 (§ interface IPersistentSet (§ extends IPersistentCollection, Counted)
-    (§ abstract public IPersistentSet disjoin(Object key))
-    (§ abstract public boolean contains(Object key))
-    (§ abstract public Object get(Object key))
+    (§ abstract IPersistentSet disjoin(Object key))
+    (§ abstract boolean contains(Object key))
+    (§ abstract Object get(Object key))
 )
 )
 
 (java-ns cloiure.lang.IPersistentStack
 
-#_public
 (§ interface IPersistentStack (§ extends IPersistentCollection)
     (§ abstract Object peek())
     (§ abstract IPersistentStack pop())
@@ -20321,7 +17309,6 @@
 
 (java-ns cloiure.lang.IPersistentVector
 
-#_public
 (§ interface IPersistentVector (§ extends Associative, Sequential, IPersistentStack, Reversible, Indexed)
     (§ abstract int length())
     (§ abstract IPersistentVector assocN(int i, Object val))
@@ -20331,24 +17318,21 @@
 
 (java-ns cloiure.lang.IProxy
 
-#_public
 (§ interface IProxy
-    (§ abstract public void __initCloiureFnMappings(IPersistentMap m))
-    (§ abstract public void __updateCloiureFnMappings(IPersistentMap m))
-    (§ abstract public IPersistentMap __getCloiureFnMappings())
+    (§ abstract void __initCloiureFnMappings(IPersistentMap m))
+    (§ abstract void __updateCloiureFnMappings(IPersistentMap m))
+    (§ abstract IPersistentMap __getCloiureFnMappings())
 )
 )
 
 (java-ns cloiure.lang.IRecord
 
-#_public
 (§ interface IRecord
 )
 )
 
 (java-ns cloiure.lang.IReduce
 
-#_public
 (§ interface IReduce (§ extends IReduceInit)
     (§ abstract Object reduce(IFn f))
 )
@@ -20356,7 +17340,6 @@
 
 (java-ns cloiure.lang.IReduceInit
 
-#_public
 (§ interface IReduceInit
     (§ abstract Object reduce(IFn f, Object start))
 )
@@ -20364,7 +17347,6 @@
 
 (java-ns cloiure.lang.IRef
 
-#_public
 (§ interface IRef (§ extends IDeref)
     (§ abstract void setValidator(IFn vf))
     (§ abstract IFn getValidator())
@@ -20376,7 +17358,6 @@
 
 (java-ns cloiure.lang.IReference
 
-#_public
 (§ interface IReference (§ extends IMeta)
     (§ abstract IPersistentMap alterMeta(IFn alter, ISeq args))
     (§ abstract IPersistentMap resetMeta(IPersistentMap m))
@@ -20391,7 +17372,6 @@
  ; ISeqs are immutable values, i.e. neither first(), nor rest() changes
  ; or invalidates the ISeq
  ;;
-#_public
 (§ interface ISeq (§ extends IPersistentCollection)
     (§ abstract Object first())
     (§ abstract ISeq next())
@@ -20402,34 +17382,22 @@
 
 (java-ns cloiure.lang.Iterate
 
-#_public
 (class-ns Iterate (§ extends ASeq) (§ implements IReduce, IPending)
-    #_private
-    #_static
-    #_final
-    (§ field Object UNREALIZED_SEED = new Object())
-    #_private
-    #_final
-    (§ field IFn f) ;; never nil
-    #_private
-    #_final
-    (§ field Object prevSeed)
-    #_private
+    (§ def- Object UNREALIZED_SEED = new Object())
+    (§ field- IFn f) ;; never nil
+    (§ field- Object prevSeed)
     #_volatile
-    (§ field Object _seed) ;; lazily realized
-    #_private
+    (§ field- Object _seed) ;; lazily realized
     #_volatile
-    (§ field ISeq _next) ;; cached
+    (§ field- ISeq _next) ;; cached
 
-    #_private
-    (§ method Iterate(IFn f, Object prevSeed, Object seed)
+    (§ constructor- Iterate(IFn f, Object prevSeed, Object seed)
         (§ ass this.f = f)
         (§ ass this.prevSeed = prevSeed)
         (§ ass this._seed = seed)
     )
 
-    #_private
-    (§ method Iterate(IPersistentMap meta, IFn f, Object prevSeed, Object seed, ISeq next)
+    (§ constructor- Iterate(IPersistentMap meta, IFn f, Object prevSeed, Object seed, ISeq next)
         (§ super(meta))
         (§ ass this.f = f)
         (§ ass this.prevSeed = prevSeed)
@@ -20437,18 +17405,14 @@
         (§ ass this._next = next)
     )
 
-    #_public
-    #_static
-    (§ method ISeq create(IFn f, Object seed)
+    (§ defn ISeq create(IFn f, Object seed)
         (§ return (§ expr new Iterate(f, nil, seed)))
     )
 
-    #_public
     (§ method boolean isRealized()
         (§ return (§ expr (_seed != UNREALIZED_SEED)))
     )
 
-    #_public
     (§ method Object first()
         (§ if (_seed == UNREALIZED_SEED))
         (§
@@ -20457,7 +17421,6 @@
         (§ return (§ expr _seed))
     )
 
-    #_public
     (§ method ISeq next()
         (§ if (_next == nil))
         (§
@@ -20466,12 +17429,10 @@
         (§ return (§ expr _next))
     )
 
-    #_public
     (§ method Iterate withMeta(IPersistentMap meta)
         (§ return (§ expr new Iterate(meta, f, prevSeed, _seed, _next)))
     )
 
-    #_public
     (§ method Object reduce(IFn rf)
         (§ let Object first = first())
         (§ let Object ret = first)
@@ -20487,7 +17448,6 @@
         )
     )
 
-    #_public
     (§ method Object reduce(IFn rf, Object start)
         (§ let Object ret = start)
         (§ let Object v = first())
@@ -20509,14 +17469,10 @@
 (§ import java.io.IOException)
 (§ import java.util.Iterator)
 
-#_public
 (class-ns IteratorSeq (§ extends ASeq)
-    #_final
     (§ field Iterator iter)
-    #_final
     (§ field State state)
 
-    #_static
     (class-ns State
         #_volatile
         (§ field Object val)
@@ -20524,9 +17480,7 @@
         (§ field Object _rest)
     )
 
-    #_public
-    #_static
-    (§ method IteratorSeq create(Iterator iter)
+    (§ defn IteratorSeq create(Iterator iter)
         (§ if (iter.hasNext()))
         (§
             (§ return (§ expr new IteratorSeq(iter)))
@@ -20534,20 +17488,19 @@
         (§ return (§ expr nil))
     )
 
-    (§ method IteratorSeq(Iterator iter)
+    (§ constructor IteratorSeq(Iterator iter)
         (§ ass this.iter = iter)
         (§ ass state = new State())
         (§ ass this.state.val = state)
         (§ ass this.state._rest = state)
     )
 
-    (§ method IteratorSeq(IPersistentMap meta, Iterator iter, State state)
+    (§ constructor IteratorSeq(IPersistentMap meta, Iterator iter, State state)
         (§ super(meta))
         (§ ass this.iter = iter)
         (§ ass this.state = state)
     )
 
-    #_public
     (§ method Object first()
         (§ if (state.val == state))
         (§
@@ -20562,7 +17515,6 @@
         (§ return (§ expr state.val))
     )
 
-    #_public
     (§ method ISeq next()
         (§ if (state._rest == state))
         (§
@@ -20578,7 +17530,6 @@
         (§ return (§ expr (ISeq) state._rest))
     )
 
-    #_public
     (§ method IteratorSeq withMeta(IPersistentMap meta)
         (§ return (§ expr new IteratorSeq(meta, iter, state)))
     )
@@ -20587,7 +17538,6 @@
 
 (java-ns cloiure.lang.ITransientAssociative
 
-#_public
 (§ interface ITransientAssociative (§ extends ITransientCollection, ILookup)
     (§ abstract ITransientAssociative assoc(Object key, Object val))
 )
@@ -20595,7 +17545,6 @@
 
 (java-ns cloiure.lang.ITransientAssociative2
 
-#_public
 (§ interface ITransientAssociative2 (§ extends ITransientAssociative)
     (§ abstract boolean containsKey(Object key))
     (§ abstract IMapEntry entryAt(Object key))
@@ -20604,7 +17553,6 @@
 
 (java-ns cloiure.lang.ITransientCollection
 
-#_public
 (§ interface ITransientCollection
     (§ abstract ITransientCollection conj(Object val))
     (§ abstract IPersistentCollection persistent())
@@ -20613,7 +17561,6 @@
 
 (java-ns cloiure.lang.ITransientMap
 
-#_public
 (§ interface ITransientMap (§ extends ITransientAssociative, Counted)
     (§ abstract ITransientMap assoc(Object key, Object val))
     (§ abstract ITransientMap without(Object key))
@@ -20623,17 +17570,15 @@
 
 (java-ns cloiure.lang.ITransientSet
 
-#_public
 (§ interface ITransientSet (§ extends ITransientCollection, Counted)
-    (§ abstract public ITransientSet disjoin(Object key))
-    (§ abstract public boolean contains(Object key))
-    (§ abstract public Object get(Object key))
+    (§ abstract ITransientSet disjoin(Object key))
+    (§ abstract boolean contains(Object key))
+    (§ abstract Object get(Object key))
 )
 )
 
 (java-ns cloiure.lang.ITransientVector
 
-#_public
 (§ interface ITransientVector (§ extends ITransientAssociative, Indexed)
     (§ abstract ITransientVector assocN(int i, Object val))
     (§ abstract ITransientVector pop())
@@ -20642,7 +17587,6 @@
 
 (java-ns cloiure.lang.IType
 
-#_public
 (§ interface IType
 )
 )
@@ -20655,27 +17599,17 @@
 (§ import java.lang.ref.ReferenceQueue)
 (§ import java.lang.ref.SoftReference)
 
-#_public
 (class-ns Keyword (§ implements IFn, Comparable, Named, IHashEq)
-    #_private
-    #_static
-    (§ field ConcurrentHashMap<Symbol, Reference<Keyword>> table = new ConcurrentHashMap())
+    (§ def- ConcurrentHashMap<Symbol, Reference<Keyword>> table = new ConcurrentHashMap())
 
-    #_static
-    #_final
-    (§ field ReferenceQueue rq = new ReferenceQueue())
+    (§ def ReferenceQueue rq = new ReferenceQueue())
 
-    #_public
-    #_final
     (§ field Symbol sym)
-    #_final
     (§ field int hasheq)
     #_transient
     (§ field String _str)
 
-    #_public
-    #_static
-    (§ method Keyword intern(Symbol sym)
+    (§ defn Keyword intern(Symbol sym)
         (§ let Keyword k = nil)
         (§ let Reference<Keyword> existingRef = table.get(sym))
         (§ if (existingRef == nil))
@@ -20702,27 +17636,20 @@
         (§ return (§ expr intern(sym)))
     )
 
-    #_public
-    #_static
-    (§ method Keyword intern(String ns, String name)
+    (§ defn Keyword intern(String ns, String name)
         (§ return (§ expr intern(Symbol.intern(ns, name))))
     )
 
-    #_public
-    #_static
-    (§ method Keyword intern(String nsname)
+    (§ defn Keyword intern(String nsname)
         (§ return (§ expr intern(Symbol.intern(nsname))))
     )
 
-    #_private
-    (§ method Keyword(Symbol sym)
+    (§ constructor- Keyword(Symbol sym)
         (§ ass this.sym = sym)
         (§ ass hasheq = sym.hasheq() + 0x9e3779b9)
     )
 
-    #_public
-    #_static
-    (§ method Keyword find(Symbol sym)
+    (§ defn Keyword find(Symbol sym)
         (§ let Reference<Keyword> ref = table.get(sym))
         (§ if (ref != nil))
         (§
@@ -20734,30 +17661,22 @@
         )
     )
 
-    #_public
-    #_static
-    (§ method Keyword find(String ns, String name)
+    (§ defn Keyword find(String ns, String name)
         (§ return (§ expr find(Symbol.intern(ns, name))))
     )
 
-    #_public
-    #_static
-    (§ method Keyword find(String nsname)
+    (§ defn Keyword find(String nsname)
         (§ return (§ expr find(Symbol.intern(nsname))))
     )
 
-    #_public
-    #_final
     (§ method int hashCode()
         (§ return (§ expr sym.hashCode() + 0x9e3779b9))
     )
 
-    #_public
     (§ method int hasheq()
         (§ return (§ expr hasheq))
     )
 
-    #_public
     (§ method String toString()
         (§ if (_str == nil))
         (§
@@ -20766,37 +17685,30 @@
         (§ return (§ expr _str))
     )
 
-    #_public
     (§ method Object throwArity()
         (§ throw new IllegalArgumentException("Wrong number of args passed to keyword: " + toString()))
     )
 
-    #_public
     (§ method Object call()
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method void run()
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method Object invoke()
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method int compareTo(Object o)
         (§ return (§ expr sym.compareTo(((Keyword) o).sym)))
     )
 
-    #_public
     (§ method String getNamespace()
         (§ return (§ expr sym.getNamespace()))
     )
 
-    #_public
     (§ method String getName()
         (§ return (§ expr sym.getName()))
     )
@@ -20807,8 +17719,6 @@
      ; @param obj - must be IPersistentMap
      ; @return the value at the key or nil if not found
      ;;
-    #_final
-    #_public
     (§ method Object invoke(Object obj)
         (§ if (obj instanceof ILookup))
         (§
@@ -20817,8 +17727,6 @@
         (§ return (§ expr RT.get(obj, this)))
     )
 
-    #_final
-    #_public
     (§ method Object invoke(Object obj, Object notFound)
         (§ if (obj instanceof ILookup))
         (§
@@ -20827,81 +17735,68 @@
         (§ return (§ expr RT.get(obj, this, notFound)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3)
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4)
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6)
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7)
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8))
     (§
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9))
     (§
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10))
     (§
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11))
     (§
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12))
     (§
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13))
     (§
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14))
     (§
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15))
@@ -20909,7 +17804,6 @@
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16))
@@ -20917,7 +17811,6 @@
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17))
@@ -20925,7 +17818,6 @@
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18))
@@ -20933,7 +17825,6 @@
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19))
@@ -20941,7 +17832,6 @@
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20))
@@ -20949,7 +17839,6 @@
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20,
@@ -20958,7 +17847,6 @@
         (§ return (§ expr throwArity()))
     )
 
-    #_public
     (§ method Object applyTo(ISeq arglist)
         (§ return (§ expr AFn.applyToHelper(this, arglist)))
     )
@@ -20967,18 +17855,13 @@
 
 (java-ns cloiure.lang.KeywordLookupSite
 
-#_public
-#_final
 (class-ns KeywordLookupSite (§ implements ILookupSite, ILookupThunk)
-    #_final
     (§ field Keyword k)
 
-    #_public
-    (§ method KeywordLookupSite(Keyword k)
+    (§ constructor KeywordLookupSite(Keyword k)
         (§ ass this.k = k)
     )
 
-    #_public
     (§ method ILookupThunk fault(Object target)
         (§ if (target instanceof IKeywordLookup))
         (§
@@ -20991,7 +17874,6 @@
         (§ return (§ expr this))
     )
 
-    #_public
     (§ method Object get(Object target)
         (§ if (target instanceof IKeywordLookup || target instanceof ILookup))
         (§
@@ -21000,11 +17882,9 @@
         (§ return (§ expr RT.get(target, k)))
     )
 
-    #_private
-    (§ method ILookupThunk ilookupThunk(final Class c)
+    (§ method- ILookupThunk ilookupThunk(Class c)
         (§ return (§ expr new ILookupThunk()
-        (§ inner
-            #_public
+        (§ reify
             (§ method Object get(Object target)
                 (§ if (target != nil && target.getClass() == c))
                 (§
@@ -21015,8 +17895,7 @@
         )))
     )
 
-    #_private
-    (§ method ILookupThunk install(Object target)
+    (§ method- ILookupThunk install(Object target)
         (§ let ILookupThunk t = ((IKeywordLookup)target).getLookupThunk(k))
         (§ if (t != nil))
         (§
@@ -21032,11 +17911,8 @@
 (§ import java.util.Collection)
 (§ import java.util.RandomAccess)
 
-#_public
 (class-ns LazilyPersistentVector
-    #_static
-    #_public
-    (§ method IPersistentVector createOwning(Object... items)
+    (§ defn IPersistentVector createOwning(Object... items)
         (§ if (items.length <= 32))
         (§
             (§ return (§ expr new PersistentVector(items.length, 5, PersistentVector.EMPTY_NODE, items)))
@@ -21044,8 +17920,7 @@
         (§ return (§ expr PersistentVector.create(items)))
     )
 
-    #_static
-    (§ method int fcount(Object c)
+    (§ defn int fcount(Object c)
         (§ if (c instanceof Counted))
         (§
             (§ return (§ expr ((Counted) c).count()))
@@ -21053,9 +17928,7 @@
         (§ return (§ expr ((Collection)c).size()))
     )
 
-    #_static
-    #_public
-    (§ method IPersistentVector create(Object obj)
+    (§ defn IPersistentVector create(Object obj)
         (§ if (obj instanceof IReduceInit))
         (§
             (§ return (§ expr PersistentVector.create((IReduceInit) obj)))
@@ -21080,67 +17953,57 @@
 
 (§ import java.util.*)
 
-#_public
-#_final
 (class-ns LazySeq (§ extends Obj) (§ implements ISeq, Sequential, List, IPending, IHashEq)
-    #_private
-    (§ field IFn fn)
-    #_private
-    (§ field Object sv)
-    #_private
-    (§ field ISeq s)
+    (§ field- IFn fn)
+    (§ field- Object sv)
+    (§ field- ISeq s)
 
-    #_public
-    (§ method LazySeq(IFn fn)
+    (§ constructor LazySeq(IFn fn)
         (§ ass this.fn = fn)
     )
 
-    #_private
-    (§ method LazySeq(IPersistentMap meta, ISeq s)
+    (§ constructor- LazySeq(IPersistentMap meta, ISeq s)
         (§ super(meta))
         (§ ass this.fn = nil)
         (§ ass this.s = s)
     )
 
-    #_public
     (§ method Obj withMeta(IPersistentMap meta)
         (§ return (§ expr new LazySeq(meta, seq())))
     )
 
-    #_final
-    #_synchronized
     (§ method Object sval()
-        (§ if (fn != nil))
-        (§
-            (§ ass sv = fn.invoke())
-            (§ ass fn = nil)
-        )
-        (§ if (sv != nil))
-        (§
-            (§ return (§ expr sv))
-        )
-        (§ return (§ expr s))
-    )
-
-    #_final
-    #_synchronized
-    #_public
-    (§ method ISeq seq()
-        (§ call sval())
-        (§ if (sv != nil))
-        (§
-            (§ let Object ls = sv)
-            (§ ass sv = nil)
-            (§ while (ls instanceof LazySeq))
+        (§ synchronized (this)
+            (§ if (fn != nil))
             (§
-                (§ ass ls = ((LazySeq)ls).sval())
+                (§ ass sv = fn.invoke())
+                (§ ass fn = nil)
             )
-            (§ ass s = RT.seq(ls))
+            (§ if (sv != nil))
+            (§
+                (§ return (§ expr sv))
+            )
+            (§ return (§ expr s))
         )
-        (§ return (§ expr s))
     )
 
-    #_public
+    (§ method ISeq seq()
+        (§ synchronized (this)
+            (§ call sval())
+            (§ if (sv != nil))
+            (§
+                (§ let Object ls = sv)
+                (§ ass sv = nil)
+                (§ while (ls instanceof LazySeq))
+                (§
+                    (§ ass ls = ((LazySeq)ls).sval())
+                )
+                (§ ass s = RT.seq(ls))
+            )
+            (§ return (§ expr s))
+        )
+    )
+
     (§ method int count()
         (§ let int c = 0)
         (§ for (ISeq s = seq() s != nil s = s.next()))
@@ -21150,7 +18013,6 @@
         (§ return (§ expr c))
     )
 
-    #_public
     (§ method Object first()
         (§ call seq())
         (§ if (s == nil))
@@ -21160,7 +18022,6 @@
         (§ return (§ expr s.first()))
     )
 
-    #_public
     (§ method ISeq next()
         (§ call seq())
         (§ if (s == nil))
@@ -21170,7 +18031,6 @@
         (§ return (§ expr s.next()))
     )
 
-    #_public
     (§ method ISeq more()
         (§ call seq())
         (§ if (s == nil))
@@ -21180,17 +18040,14 @@
         (§ return (§ expr s.more()))
     )
 
-    #_public
     (§ method ISeq cons(Object o)
         (§ return (§ expr RT.cons(o, seq())))
     )
 
-    #_public
     (§ method IPersistentCollection empty()
         (§ return (§ expr PersistentList.EMPTY))
     )
 
-    #_public
     (§ method boolean equiv(Object o)
         (§ let ISeq s = seq())
         (§ if (s != nil))
@@ -21203,7 +18060,6 @@
         )
     )
 
-    #_public
     (§ method int hashCode()
         (§ let ISeq s = seq())
         (§ if (s == nil))
@@ -21213,12 +18069,10 @@
         (§ return (§ expr Util.hash(s)))
     )
 
-    #_public
     (§ method int hasheq()
         (§ return (§ expr Murmur3.hashOrdered(this)))
     )
 
-    #_public
     (§ method boolean equals(Object o)
         (§ let ISeq s = seq())
         (§ if (s != nil))
@@ -21231,42 +18085,34 @@
         )
     )
 
-    #_public
     (§ method Object[] toArray()
         (§ return (§ expr RT.seqToArray(seq())))
     )
 
-    #_public
     (§ method boolean add(Object o)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean remove(Object o)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean addAll(Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method void clear()
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean retainAll(Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean removeAll(Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean containsAll(Collection c)
         (§ for (Object o :in c))
         (§
@@ -21278,22 +18124,18 @@
         (§ return (§ expr true))
     )
 
-    #_public
     (§ method Object[] toArray(Object[] a)
         (§ return (§ expr RT.seqToPassedArray(seq(), a)))
     )
 
-    #_public
     (§ method int size()
         (§ return (§ expr count()))
     )
 
-    #_public
     (§ method boolean isEmpty()
         (§ return (§ expr (seq() == nil)))
     )
 
-    #_public
     (§ method boolean contains(Object o)
         (§ for (ISeq s = seq() s != nil s = s.next()))
         (§
@@ -21305,32 +18147,26 @@
         (§ return (§ expr false))
     )
 
-    #_public
     (§ method Iterator iterator()
         (§ return (§ expr new SeqIterator(this)))
     )
 
-    #_private
-    (§ method List reify()
+    (§ method- List reify()
         (§ return (§ expr new ArrayList(this)))
     )
 
-    #_public
     (§ method List subList(int fromIndex, int toIndex)
         (§ return (§ expr reify().subList(fromIndex, toIndex)))
     )
 
-    #_public
     (§ method Object set(int index, Object element)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method Object remove(int index)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method int indexOf(Object o)
         (§ let ISeq s = seq())
         (§ for (int i = 0 s != nil s = s.next(), i++))
@@ -21343,40 +18179,34 @@
         (§ return (§ expr -1))
     )
 
-    #_public
     (§ method int lastIndexOf(Object o)
         (§ return (§ expr reify().lastIndexOf(o)))
     )
 
-    #_public
     (§ method ListIterator listIterator()
         (§ return (§ expr reify().listIterator()))
     )
 
-    #_public
     (§ method ListIterator listIterator(int index)
         (§ return (§ expr reify().listIterator(index)))
     )
 
-    #_public
     (§ method Object get(int index)
         (§ return (§ expr RT.nth(this, index)))
     )
 
-    #_public
     (§ method void add(int index, Object element)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean addAll(int index, Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_synchronized
-    #_public
     (§ method boolean isRealized()
-        (§ return (§ expr (fn == nil)))
+        (§ synchronized (this)
+            (§ return (§ expr (fn == nil)))
+        )
     )
 )
 )
@@ -21388,51 +18218,38 @@
 (§ import java.io.LineNumberReader)
 (§ import java.io.IOException)
 
-#_public
 (class-ns LineNumberingPushbackReader (§ extends PushbackReader)
     ;; This class is a PushbackReader that wraps a LineNumberReader. The code
     ;; here to handle line terminators only mentions '\n' because
     ;; LineNumberReader collapses all occurrences of CR, LF, and CRLF into a
     ;; single '\n'.
 
-    #_private
-    #_static
-    #_final
-    (§ field int newline = (int) \newline)
+    (§ def- int newline = (int) \newline)
 
-    #_private
-    (§ field boolean _atLineStart = true)
-    #_private
-    (§ field boolean _prev)
-    #_private
-    (§ field int _columnNumber = 1)
+    (§ field- boolean _atLineStart = true)
+    (§ field- boolean _prev)
+    (§ field- int _columnNumber = 1)
 
-    #_public
-    (§ method LineNumberingPushbackReader(Reader r)
+    (§ constructor LineNumberingPushbackReader(Reader r)
         (§ super(new LineNumberReader(r)))
     )
 
-    #_public
-    (§ method LineNumberingPushbackReader(Reader r, int size)
+    (§ constructor LineNumberingPushbackReader(Reader r, int size)
         (§ super(new LineNumberReader(r, size)))
     )
 
-    #_public
     (§ method int getLineNumber()
         (§ return (§ expr ((LineNumberReader) in).getLineNumber() + 1))
     )
 
-    #_public
     (§ method void setLineNumber(int line)
         ((LineNumberReader) in).setLineNumber(line - 1)
     )
 
-    #_public
     (§ method int getColumnNumber()
         (§ return (§ expr _columnNumber))
     )
 
-    #_public
     (§ method int read() (§ throws IOException)
         (§ let int c = super.read())
         (§ ass _prev = _atLineStart)
@@ -21449,14 +18266,12 @@
         (§ return (§ expr c))
     )
 
-    #_public
     (§ method void unread(int c) (§ throws IOException)
         (§ call super.unread(c))
         (§ ass _atLineStart = _prev)
         (§ ass _columnNumber--)
     )
 
-    #_public
     (§ method String readLine() (§ throws IOException)
         (§ let int c = read())
         (§ let String line)
@@ -21486,7 +18301,6 @@
         (§ return (§ expr line))
     )
 
-    #_public
     (§ method boolean atLineStart()
         (§ return (§ expr _atLineStart))
     )
@@ -21523,75 +18337,44 @@
 (§ import java.util.regex.Matcher)
 (§ import java.util.regex.Pattern)
 
-#_public
 (class-ns LispReader
-    #_static
-    #_final
-    (§ field Symbol QUOTE = Symbol.intern("quote"))
-    #_static
-    #_final
-    (§ field Symbol THE_VAR = Symbol.intern("var"))
+    (§ def Symbol QUOTE = Symbol.intern("quote"))
+    (§ def Symbol THE_VAR = Symbol.intern("var"))
 
-    #_static
-    (§ field Symbol UNQUOTE = Symbol.intern("cloiure.core", "unquote"))
-    #_static
-    (§ field Symbol UNQUOTE_SPLICING = Symbol.intern("cloiure.core", "unquote-splicing"))
-    #_static
-    (§ field Symbol CONCAT = Symbol.intern("cloiure.core", "concat"))
-    #_static
-    (§ field Symbol SEQ = Symbol.intern("cloiure.core", "seq"))
-    #_static
-    (§ field Symbol LIST = Symbol.intern("cloiure.core", "list"))
-    #_static
-    (§ field Symbol APPLY = Symbol.intern("cloiure.core", "apply"))
-    #_static
-    (§ field Symbol HASHMAP = Symbol.intern("cloiure.core", "hash-map"))
-    #_static
-    (§ field Symbol HASHSET = Symbol.intern("cloiure.core", "hash-set"))
-    #_static
-    (§ field Symbol VECTOR = Symbol.intern("cloiure.core", "vector"))
-    #_static
-    (§ field Symbol WITH_META = Symbol.intern("cloiure.core", "with-meta"))
-    #_static
-    (§ field Symbol META = Symbol.intern("cloiure.core", "meta"))
-    #_static
-    (§ field Symbol DEREF = Symbol.intern("cloiure.core", "deref"))
-    #_static
-    (§ field Symbol READ_COND = Symbol.intern("cloiure.core", "read-cond"))
-    #_static
-    (§ field Symbol READ_COND_SPLICING = Symbol.intern("cloiure.core", "read-cond-splicing"))
-    #_static
-    (§ field Keyword UNKNOWN = Keyword.intern(nil, "unknown"))
+    (§ def Symbol UNQUOTE = Symbol.intern("cloiure.core", "unquote"))
+    (§ def Symbol UNQUOTE_SPLICING = Symbol.intern("cloiure.core", "unquote-splicing"))
+    (§ def Symbol CONCAT = Symbol.intern("cloiure.core", "concat"))
+    (§ def Symbol SEQ = Symbol.intern("cloiure.core", "seq"))
+    (§ def Symbol LIST = Symbol.intern("cloiure.core", "list"))
+    (§ def Symbol APPLY = Symbol.intern("cloiure.core", "apply"))
+    (§ def Symbol HASHMAP = Symbol.intern("cloiure.core", "hash-map"))
+    (§ def Symbol HASHSET = Symbol.intern("cloiure.core", "hash-set"))
+    (§ def Symbol VECTOR = Symbol.intern("cloiure.core", "vector"))
+    (§ def Symbol WITH_META = Symbol.intern("cloiure.core", "with-meta"))
+    (§ def Symbol META = Symbol.intern("cloiure.core", "meta"))
+    (§ def Symbol DEREF = Symbol.intern("cloiure.core", "deref"))
+    (§ def Symbol READ_COND = Symbol.intern("cloiure.core", "read-cond"))
+    (§ def Symbol READ_COND_SPLICING = Symbol.intern("cloiure.core", "read-cond-splicing"))
+    (§ def Keyword UNKNOWN = Keyword.intern(nil, "unknown"))
 
-    #_static
-    (§ field IFn[] macros = new IFn[256])
-    #_static
-    (§ field IFn[] dispatchMacros = new IFn[256])
+    (§ def IFn[] macros = new IFn[256])
+    (§ def IFn[] dispatchMacros = new IFn[256])
 
-    #_static
-    (§ field Pattern symbolPat = Pattern.compile("[:]?([\\D&&[^/]].*/)?(/|[\\D&&[^/]][^/]*)"))
-    #_static
-    (§ field Pattern intPat = Pattern.compile("([-+]?)(?:(0)|([1-9][0-9]*)|0[xX]([0-9A-Fa-f]+)|0([0-7]+)|([1-9][0-9]?)[rR]([0-9A-Za-z]+)|0[0-9]+)(N)?"))
-    #_static
-    (§ field Pattern ratioPat = Pattern.compile("([-+]?[0-9]+)/([0-9]+)"))
-    #_static
-    (§ field Pattern floatPat = Pattern.compile("([-+]?[0-9]+(\\.[0-9]*)?([eE][-+]?[0-9]+)?)(M)?"))
+    (§ def Pattern symbolPat = Pattern.compile("[:]?([\\D&&[^/]].*/)?(/|[\\D&&[^/]][^/]*)"))
+    (§ def Pattern intPat = Pattern.compile("([-+]?)(?:(0)|([1-9][0-9]*)|0[xX]([0-9A-Fa-f]+)|0([0-7]+)|([1-9][0-9]?)[rR]([0-9A-Za-z]+)|0[0-9]+)(N)?"))
+    (§ def Pattern ratioPat = Pattern.compile("([-+]?[0-9]+)/([0-9]+)"))
+    (§ def Pattern floatPat = Pattern.compile("([-+]?[0-9]+(\\.[0-9]*)?([eE][-+]?[0-9]+)?)(M)?"))
 
     ;; symbol->gensymbol
-    #_static
-    (§ field Var GENSYM_ENV = Var.create(nil).setDynamic())
+    (§ def Var GENSYM_ENV = Var.create(nil).setDynamic())
     ;; sorted-map num->gensymbol
-    #_static
-    (§ field Var ARG_ENV = Var.create(nil).setDynamic())
-    #_static
-    (§ field IFn ctorReader = new CtorReader())
+    (§ def Var ARG_ENV = Var.create(nil).setDynamic())
+    (§ def IFn ctorReader = new CtorReader())
 
     ;; Dynamic var set to true in a read-cond context
-    #_static
-    (§ field Var READ_COND_ENV = Var.create(nil).setDynamic())
+    (§ def Var READ_COND_ENV = Var.create(nil).setDynamic())
 
-    (§ static )
-    (§
+    (§ static
         (§ ass macros[\"] = new StringReader()) ;; oops! "
         (§ ass macros[\;] = new CommentReader())
         (§ ass macros[\'] = new WrappingReader(QUOTE))
@@ -21623,8 +18406,6 @@
         (§ ass dispatchMacros[\:] = new NamespaceMapReader())
     )
 
-    #_public
-    #_static
     (§ interface Resolver
         (§ abstract Symbol currentNS())
         (§ abstract Symbol resolveClass(Symbol sym))
@@ -21632,13 +18413,11 @@
         (§ abstract Symbol resolveVar(Symbol sym))
     )
 
-    #_static
-    (§ method boolean isWhitespace(int ch)
+    (§ defn boolean isWhitespace(int ch)
         (§ return (§ expr (Character.isWhitespace(ch) || ch == \,)))
     )
 
-    #_static
-    (§ method void unread(PushbackReader r, int ch)
+    (§ defn void unread(PushbackReader r, int ch)
         (§ if (ch != -1))
         (§
             (§ try )
@@ -21652,25 +18431,18 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns ReaderException (§ extends RuntimeException)
-        #_final
         (§ field int line)
-        #_final
         (§ field int column)
 
-        #_public
-        (§ method ReaderException(int line, int column, Throwable cause)
+        (§ constructor ReaderException(int line, int column, Throwable cause)
             (§ super(cause))
             (§ ass this.line = line)
             (§ ass this.column = column)
         )
     )
 
-    #_static
-    #_public
-    (§ method int read1(Reader r)
+    (§ defn int read1(Reader r)
         (§ try )
         (§
             (§ return (§ expr r.read()))
@@ -21682,48 +18454,22 @@
     )
 
     ;; Reader opts
-    #_static
-    #_public
-    #_final
-    (§ field Keyword OPT_EOF = Keyword.intern(nil, "eof"))
-    #_static
-    #_public
-    #_final
-    (§ field Keyword OPT_FEATURES = Keyword.intern(nil, "features"))
-    #_static
-    #_public
-    #_final
-    (§ field Keyword OPT_READ_COND = Keyword.intern(nil, "read-cond"))
+    (§ def Keyword OPT_EOF = Keyword.intern(nil, "eof"))
+    (§ def Keyword OPT_FEATURES = Keyword.intern(nil, "features"))
+    (§ def Keyword OPT_READ_COND = Keyword.intern(nil, "read-cond"))
 
     ;; EOF special value to throw on eof
-    #_static
-    #_public
-    #_final
-    (§ field Keyword EOFTHROW = Keyword.intern(nil, "eofthrow"))
+    (§ def Keyword EOFTHROW = Keyword.intern(nil, "eofthrow"))
 
     ;; Platform features - always installed
-    #_static
-    #_private
-    #_final
-    (§ field Keyword PLATFORM_KEY = Keyword.intern(nil, "cli"))
-    #_static
-    #_private
-    #_final
-    (§ field Object PLATFORM_FEATURES = PersistentHashSet.create(PLATFORM_KEY))
+    (§ def- Keyword PLATFORM_KEY = Keyword.intern(nil, "cli"))
+    (§ def- Object PLATFORM_FEATURES = PersistentHashSet.create(PLATFORM_KEY))
 
     ;; Reader conditional options - use with :read-cond
-    #_static
-    #_public
-    #_final
-    (§ field Keyword COND_ALLOW = Keyword.intern(nil, "allow"))
-    #_static
-    #_public
-    #_final
-    (§ field Keyword COND_PRESERVE = Keyword.intern(nil, "preserve"))
+    (§ def Keyword COND_ALLOW = Keyword.intern(nil, "allow"))
+    (§ def Keyword COND_PRESERVE = Keyword.intern(nil, "preserve"))
 
-    #_static
-    #_public
-    (§ method Object read(PushbackReader r, Object opts)
+    (§ defn Object read(PushbackReader r, Object opts)
         (§ let boolean eofIsError = true)
         (§ let Object eofValue = nil)
         (§ if (opts != nil && opts instanceof IPersistentMap))
@@ -21738,28 +18484,20 @@
         (§ return (§ expr read(r, eofIsError, eofValue, false, opts)))
     )
 
-    #_static
-    #_public
-    (§ method Object read(PushbackReader r, boolean eofIsError, Object eofValue, boolean isRecursive)
+    (§ defn Object read(PushbackReader r, boolean eofIsError, Object eofValue, boolean isRecursive)
         (§ return (§ expr read(r, eofIsError, eofValue, isRecursive, PersistentHashMap.EMPTY)))
     )
 
-    #_static
-    #_public
-    (§ method Object read(PushbackReader r, boolean eofIsError, Object eofValue, boolean isRecursive, Object opts)
+    (§ defn Object read(PushbackReader r, boolean eofIsError, Object eofValue, boolean isRecursive, Object opts)
         ;; start with pendingForms nil as reader conditional splicing is not allowed at top level
         (§ return (§ expr read(r, eofIsError, eofValue, nil, nil, isRecursive, opts, nil, (Resolver) RT.READER_RESOLVER.deref())))
     )
 
-    #_static
-    #_private
-    (§ method Object read(PushbackReader r, boolean eofIsError, Object eofValue, boolean isRecursive, Object opts, Object pendingForms)
+    (§ defn- Object read(PushbackReader r, boolean eofIsError, Object eofValue, boolean isRecursive, Object opts, Object pendingForms)
         (§ return (§ expr read(r, eofIsError, eofValue, nil, nil, isRecursive, opts, ensurePending(pendingForms), (Resolver) RT.READER_RESOLVER.deref())))
     )
 
-    #_static
-    #_private
-    (§ method Object ensurePending(Object pendingForms)
+    (§ defn- Object ensurePending(Object pendingForms)
         (§ if (pendingForms == nil))
         (§
             (§ return (§ expr new LinkedList()))
@@ -21770,9 +18508,7 @@
         )
     )
 
-    #_static
-    #_private
-    (§ method Object installPlatformFeature(Object opts)
+    (§ defn- Object installPlatformFeature(Object opts)
         (§ if (opts == nil))
         (§
             (§ return (§ expr RT.mapUniqueKeys(LispReader.OPT_FEATURES, PLATFORM_FEATURES)))
@@ -21792,9 +18528,7 @@
         )
     )
 
-    #_static
-    #_private
-    (§ method Object read(PushbackReader r, boolean eofIsError, Object eofValue, Character returnOn, Object returnOnValue, boolean isRecursive, Object opts, Object pendingForms, Resolver resolver)
+    (§ defn- Object read(PushbackReader r, boolean eofIsError, Object eofValue, Character returnOn, Object returnOnValue, boolean isRecursive, Object opts, Object pendingForms, Resolver resolver)
         (§ if (RT.READEVAL.deref() == UNKNOWN))
         (§
             (§ throw Util.runtimeException("Reading disallowed - *read-eval* bound to :unknown"))
@@ -21877,9 +18611,7 @@
         )
     )
 
-    #_static
-    #_private
-    (§ method String readToken(PushbackReader r, char initch)
+    (§ defn- String readToken(PushbackReader r, char initch)
         (§ let StringBuilder sb = new StringBuilder())
         (§ call sb.append(initch))
 
@@ -21895,9 +18627,7 @@
         )
     )
 
-    #_static
-    #_private
-    (§ method Object readNumber(PushbackReader r, char initch)
+    (§ defn- Object readNumber(PushbackReader r, char initch)
         (§ let StringBuilder sb = new StringBuilder())
         (§ call sb.append(initch))
 
@@ -21921,9 +18651,7 @@
         (§ return (§ expr n))
     )
 
-    #_static
-    #_private
-    (§ method int readUnicodeChar(String token, int offset, int length, int base)
+    (§ defn- int readUnicodeChar(String token, int offset, int length, int base)
         (§ if (token.length() != offset + length))
         (§
             (§ throw new IllegalArgumentException("Invalid unicode character: \\" + token))
@@ -21941,9 +18669,7 @@
         (§ return (§ expr (char) uc))
     )
 
-    #_static
-    #_private
-    (§ method int readUnicodeChar(PushbackReader r, int initch, int base, int length, boolean exact)
+    (§ defn- int readUnicodeChar(PushbackReader r, int initch, int base, int length, boolean exact)
         (§ let int uc = Character.digit(initch, base))
         (§ if (uc == -1))
         (§
@@ -21972,9 +18698,7 @@
         (§ return (§ expr uc))
     )
 
-    #_static
-    #_private
-    (§ method Object interpretToken(String s, Resolver resolver)
+    (§ defn- Object interpretToken(String s, Resolver resolver)
         (§ if (s.equals("nil")))
         (§
             (§ return (§ expr nil))
@@ -21998,9 +18722,7 @@
         (§ throw Util.runtimeException("Invalid token: " + s))
     )
 
-    #_private
-    #_static
-    (§ method Object matchSymbol(String s, Resolver resolver)
+    (§ defn- Object matchSymbol(String s, Resolver resolver)
         (§ let Matcher m = symbolPat.matcher(s))
         (§ if (m.matches()))
         (§
@@ -22068,9 +18790,7 @@
         (§ return (§ expr nil))
     )
 
-    #_private
-    #_static
-    (§ method Object matchNumber(String s)
+    (§ defn- Object matchNumber(String s)
         (§ let Matcher m = intPat.matcher(s))
         (§ if (m.matches()))
         (§
@@ -22138,9 +18858,7 @@
         (§ return (§ expr nil))
     )
 
-    #_static
-    #_private
-    (§ method IFn getMacro(int ch)
+    (§ defn- IFn getMacro(int ch)
         (§ if (ch < macros.length))
         (§
             (§ return (§ expr macros[ch]))
@@ -22148,25 +18866,17 @@
         (§ return (§ expr nil))
     )
 
-    #_static
-    #_private
-    (§ method boolean isMacro(int ch)
+    (§ defn- boolean isMacro(int ch)
         (§ return (§ expr (ch < macros.length && macros[ch] != nil)))
     )
 
-    #_static
-    #_private
-    (§ method boolean isTerminatingMacro(int ch)
+    (§ defn- boolean isTerminatingMacro(int ch)
         (§ return (§ expr (ch != \# && ch != \' && ch != \% && isMacro(ch))))
     )
 
-    #_public
-    #_static
     (class-ns RegexReader (§ extends AFn)
-        #_static
-        (§ field StringReader stringrdr = new StringReader())
+        (§ def StringReader stringrdr = new StringReader())
 
-        #_public
         (§ method Object invoke(Object reader, Object doublequote, Object opts, Object pendingForms)
             (§ let StringBuilder sb = new StringBuilder())
             (§ let Reader r = (Reader) reader)
@@ -22191,10 +18901,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns StringReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object doublequote, Object opts, Object pendingForms)
             (§ let StringBuilder sb = new StringBuilder())
             (§ let Reader r = (Reader) reader)
@@ -22281,10 +18988,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns CommentReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object semicolon, Object opts, Object pendingForms)
             (§ let Reader r = (Reader) reader)
             (§ let int ch)
@@ -22296,10 +19000,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns DiscardReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object underscore, Object opts, Object pendingForms)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ call read(r, true, nil, true, opts, ensurePending(pendingForms)))
@@ -22310,10 +19011,7 @@
     ;; :a.b{:c 1} => {:a.b/c 1}
     ;; ::{:c 1}   => {:a.b/c 1}  (where *ns* = a.b)
     ;; ::a{:c 1}  => {:a.b/c 1}  (where a is aliased to a.b)
-    #_public
-    #_static
     (class-ns NamespaceMapReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object colon, Object opts, Object pendingForms)
             (§ let PushbackReader r = (PushbackReader) reader)
 
@@ -22463,17 +19161,13 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns SymbolicValueReader (§ extends AFn)
-        #_static
-        (§ field IPersistentMap  specials = PersistentHashMap.create(
+        (§ def IPersistentMap  specials = PersistentHashMap.create(
       #_map Symbol.intern("Inf"), Double.POSITIVE_INFINITY,
       #_map Symbol.intern("-Inf"), Double.NEGATIVE_INFINITY,
       #_map Symbol.intern("NaN"), Double.NaN
         ))
 
-        #_public
         (§ method Object invoke(Object reader, Object quote, Object opts, Object pendingForms)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ let Object o = read(r, true, nil, true, opts, ensurePending(pendingForms)))
@@ -22491,18 +19185,13 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns WrappingReader (§ extends AFn)
-        #_final
         (§ field Symbol sym)
 
-        #_public
-        (§ method WrappingReader(Symbol sym)
+        (§ constructor WrappingReader(Symbol sym)
             (§ ass this.sym = sym)
         )
 
-        #_public
         (§ method Object invoke(Object reader, Object quote, Object opts, Object pendingForms)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ let Object o = read(r, true, nil, true, opts, ensurePending(pendingForms)))
@@ -22510,21 +19199,15 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns DeprecatedWrappingReader (§ extends AFn)
-        #_final
         (§ field Symbol sym)
-        #_final
         (§ field String macro)
 
-        #_public
-        (§ method DeprecatedWrappingReader(Symbol sym, String macro)
+        (§ constructor DeprecatedWrappingReader(Symbol sym, String macro)
             (§ ass this.sym = sym)
             (§ ass this.macro = macro)
         )
 
-        #_public
         (§ method Object invoke(Object reader, Object quote, Object opts, Object pendingForms)
             (§ call System.out.println("WARNING: reader macro " + macro + " is deprecated; use " + sym.getName() + " instead"))
             (§ let PushbackReader r = (PushbackReader) reader)
@@ -22533,10 +19216,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns VarReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object quote, Object opts, Object pendingForms)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ let Object o = read(r, true, nil, true, opts, ensurePending(pendingForms)))
@@ -22544,10 +19224,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns DispatchReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object hash, Object opts, Object pendingForms)
             (§ let int ch = read1((Reader) reader))
             (§ if (ch == -1))
@@ -22576,15 +19253,11 @@
         )
     )
 
-    #_static
-    (§ method Symbol garg(int n)
+    (§ defn Symbol garg(int n)
         (§ return (§ expr Symbol.intern(nil, ((n == -1) ? "rest" :or ("p" + n)) + "__" + RT.nextID() + "#")))
     )
 
-    #_public
-    #_static
     (class-ns FnReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object lparen, Object opts, Object pendingForms)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ if (ARG_ENV.deref() != nil))
@@ -22631,8 +19304,7 @@
         )
     )
 
-    #_static
-    (§ method Symbol registerArg(int n)
+    (§ defn Symbol registerArg(int n)
         (§ let PersistentTreeMap argsyms = (PersistentTreeMap) ARG_ENV.deref())
         (§ if (argsyms == nil))
         (§
@@ -22647,9 +19319,7 @@
         (§ return (§ expr ret))
     )
 
-    #_static
     (class-ns ArgReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object pct, Object opts, Object pendingForms)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ if (ARG_ENV.deref() == nil))
@@ -22676,10 +19346,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns MetaReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object caret, Object opts, Object pendingForms)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ let int line = -1)
@@ -22731,10 +19398,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns SyntaxQuoteReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object backquote, Object opts, Object pendingForms)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ try )
@@ -22750,8 +19414,7 @@
             )
         )
 
-        #_static
-        (§ method Object syntaxQuote(Object form)
+        (§ defn Object syntaxQuote(Object form)
             (§ let Object ret)
             (§ if (Compiler.isSpecial(form)))
             (§
@@ -22915,9 +19578,7 @@
             (§ return (§ expr ret))
         )
 
-        #_private
-        #_static
-        (§ method ISeq sqExpandList(ISeq seq)
+        (§ defn- ISeq sqExpandList(ISeq seq)
             (§ let PersistentVector ret = PersistentVector.EMPTY)
             (§ for (  seq != nil seq = seq.next()))
             (§
@@ -22938,9 +19599,7 @@
             (§ return (§ expr ret.seq()))
         )
 
-        #_private
-        #_static
-        (§ method IPersistentVector flattenMap(Object form)
+        (§ defn- IPersistentVector flattenMap(Object form)
             (§ let IPersistentVector keyvals = PersistentVector.EMPTY)
             (§ for (ISeq s = RT.seq(form) s != nil s = s.next()))
             (§
@@ -22952,19 +19611,15 @@
         )
     )
 
-    #_static
-    (§ method boolean isUnquoteSplicing(Object form)
+    (§ defn boolean isUnquoteSplicing(Object form)
         (§ return (§ expr form instanceof ISeq && Util.equals(RT.first(form), UNQUOTE_SPLICING)))
     )
 
-    #_static
-    (§ method boolean isUnquote(Object form)
+    (§ defn boolean isUnquote(Object form)
         (§ return (§ expr form instanceof ISeq && Util.equals(RT.first(form), UNQUOTE)))
     )
 
-    #_static
     (class-ns UnquoteReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object comma, Object opts, Object pendingForms)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ let int ch = read1(r))
@@ -22987,10 +19642,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns CharacterReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object backslash, Object opts, Object pendingForms)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ let int ch = read1(r))
@@ -23054,10 +19706,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns ListReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object leftparen, Object opts, Object pendingForms)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ let int line = -1)
@@ -23084,10 +19733,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns EvalReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object eq, Object opts, Object pendingForms)
             (§ if (!RT.booleanCast(RT.READEVAL.deref())))
             (§
@@ -23132,20 +19778,14 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns VectorReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object leftparen, Object opts, Object pendingForms)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ return (§ expr LazilyPersistentVector.create(readDelimitedList(\], r, true, opts, ensurePending(pendingForms)))))
         )
     )
 
-    #_public
-    #_static
     (class-ns MapReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object leftparen, Object opts, Object pendingForms)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ let Object[] a = readDelimitedList(\}, r, true, opts, ensurePending(pendingForms)).toArray())
@@ -23157,48 +19797,31 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns SetReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object leftbracket, Object opts, Object pendingForms)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ return (§ expr PersistentHashSet.createWithCheck(readDelimitedList(\}, r, true, opts, ensurePending(pendingForms)))))
         )
     )
 
-    #_public
-    #_static
     (class-ns UnmatchedDelimiterReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object rightdelim, Object opts, Object pendingForms)
             (§ throw Util.runtimeException("Unmatched delimiter: " + rightdelim))
         )
     )
 
-    #_public
-    #_static
     (class-ns UnreadableReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object leftangle, Object opts, Object pendingForms)
             (§ throw Util.runtimeException("Unreadable form"))
         )
     )
 
     ;; Sentinel values for reading lists
-    #_private
-    #_static
-    #_final
-    (§ field Object READ_EOF = new Object())
-    #_private
-    #_static
-    #_final
-    (§ field Object READ_FINISHED = new Object())
+    (§ def- Object READ_EOF = new Object())
+    (§ def- Object READ_FINISHED = new Object())
 
-    #_public
-    #_static
-    (§ method List readDelimitedList(char delim, PushbackReader r, boolean isRecursive, Object opts, Object pendingForms)
-        (§ let final int firstline = (r instanceof LineNumberingPushbackReader) ? ((LineNumberingPushbackReader) r).getLineNumber() :or -1)
+    (§ defn List readDelimitedList(char delim, PushbackReader r, boolean isRecursive, Object opts, Object pendingForms)
+        (§ let int firstline = (r instanceof LineNumberingPushbackReader) ? ((LineNumberingPushbackReader) r).getLineNumber() :or -1)
 
         (§ let ArrayList a = new ArrayList())
         (§ let Resolver resolver = (Resolver) RT.READER_RESOLVER.deref())
@@ -23227,10 +19850,7 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns CtorReader (§ extends AFn)
-        #_public
         (§ method Object invoke(Object reader, Object firstChar, Object opts, Object pendingForms)
             (§ let PushbackReader r = (PushbackReader) reader)
             (§ ass pendingForms = ensurePending(pendingForms))
@@ -23252,8 +19872,7 @@
             )
         )
 
-        #_private
-        (§ method Object readTagged(Object o, Symbol tag, Object opts, Object pendingForms)
+        (§ method- Object readTagged(Object o, Symbol tag, Object opts, Object pendingForms)
             (§ let ILookup data_readers = (ILookup)RT.DATA_READERS.deref())
             (§ let IFn data_reader = (IFn)RT.get(data_readers, tag))
             (§ if (data_reader == nil))
@@ -23277,8 +19896,7 @@
             (§ return (§ expr data_reader.invoke(o)))
         )
 
-        #_private
-        (§ method Object readRecord(Object form, Symbol recordName, Object opts, Object pendingForms)
+        (§ method- Object readRecord(Object form, Symbol recordName, Object opts, Object pendingForms)
             (§ let boolean readeval = RT.booleanCast(RT.READEVAL.deref()))
 
             (§ if (!readeval))
@@ -23342,8 +19960,7 @@
         )
     )
 
-    #_static
-    (§ method boolean isPreserveReadCond(Object opts)
+    (§ defn boolean isPreserveReadCond(Object opts)
         (§ if (RT.booleanCast(READ_COND_ENV.deref()) && opts instanceof IPersistentMap))
         (§
             (§ let Object readCond = ((IPersistentMap) opts).valAt(OPT_READ_COND))
@@ -23355,25 +19972,12 @@
         )
     )
 
-    #_public
-    #_static
     (class-ns ConditionalReader (§ extends AFn)
-        #_final
-        #_static
-        #_private
-        (§ field Object READ_STARTED = new Object())
-        #_final
-        #_static
-        #_public
-        (§ field Keyword DEFAULT_FEATURE = Keyword.intern(nil, "default"))
-        #_final
-        #_static
-        #_public
-        (§ field IPersistentSet RESERVED_FEATURES = RT.set(Keyword.intern(nil, "else"), Keyword.intern(nil, "none")))
+        (§ def- Object READ_STARTED = new Object())
+        (§ def Keyword DEFAULT_FEATURE = Keyword.intern(nil, "default"))
+        (§ def IPersistentSet RESERVED_FEATURES = RT.set(Keyword.intern(nil, "else"), Keyword.intern(nil, "none")))
 
-        #_public
-        #_static
-        (§ method boolean hasFeature(Object feature, Object opts)
+        (§ defn boolean hasFeature(Object feature, Object opts)
             (§ if (!(feature instanceof Keyword)))
             (§
                 (§ throw Util.runtimeException("Feature should be a keyword: " + feature))
@@ -23388,15 +19992,13 @@
             (§ return (§ expr (custom != nil && custom.contains(feature))))
         )
 
-        #_public
-        #_static
-        (§ method Object readCondDelimited(PushbackReader r, boolean splicing, Object opts, Object pendingForms)
+        (§ defn Object readCondDelimited(PushbackReader r, boolean splicing, Object opts, Object pendingForms)
             (§ let Object result = READ_STARTED)
             (§ let Object form) ;; The most recently ready form
             (§ let boolean toplevel = (pendingForms == nil))
             (§ ass pendingForms = ensurePending(pendingForms))
 
-            (§ let final int firstline = (r instanceof LineNumberingPushbackReader) ? ((LineNumberingPushbackReader) r).getLineNumber() :or -1)
+            (§ let int firstline = (r instanceof LineNumberingPushbackReader) ? ((LineNumberingPushbackReader) r).getLineNumber() :or -1)
 
             (§ while (true))
             (§
@@ -23515,9 +20117,7 @@
             )
         )
 
-        #_private
-        #_static
-        (§ method void checkConditionalAllowed(Object opts)
+        (§ defn- void checkConditionalAllowed(Object opts)
             (§ let IPersistentMap mopts = (IPersistentMap)opts)
             (§ if (!(opts != nil && (COND_ALLOW.equals(mopts.valAt(OPT_READ_COND)) || COND_PRESERVE.equals(mopts.valAt(OPT_READ_COND))))))
             (§
@@ -23525,7 +20125,6 @@
             )
         )
 
-        #_public
         (§ method Object invoke(Object reader, Object mode, Object opts, Object pendingForms)
             (§ call checkConditionalAllowed(opts))
 
@@ -23594,82 +20193,47 @@
 (§ import java.util.concurrent.CountDownLatch)
 
 (§ anno @SuppressWarnings((§ "SynchronizeOnNonFinalField" )))
-#_public
 (class-ns LockingTransaction
-    #_public
-    #_static
-    #_final
-    (§ field int RETRY_LIMIT = 10000)
-    #_public
-    #_static
-    #_final
-    (§ field int LOCK_WAIT_MSECS = 100)
-    #_public
-    #_static
-    #_final
-    (§ field long BARGE_WAIT_NANOS = 10 * 1000000)
+    (§ def int RETRY_LIMIT = 10000)
+    (§ def int LOCK_WAIT_MSECS = 100)
+    (§ def long BARGE_WAIT_NANOS = 10 * 1000000)
 
-    #_static
-    #_final
-    (§ field int RUNNING = 0)
-    #_static
-    #_final
-    (§ field int COMMITTING = 1)
-    #_static
-    #_final
-    (§ field int RETRY = 2)
-    #_static
-    #_final
-    (§ field int KILLED = 3)
-    #_static
-    #_final
-    (§ field int COMMITTED = 4)
+    (§ def int RUNNING = 0)
+    (§ def int COMMITTING = 1)
+    (§ def int RETRY = 2)
+    (§ def int KILLED = 3)
+    (§ def int COMMITTED = 4)
 
-    #_final
-    #_static
-    (§ field ThreadLocal<LockingTransaction> transaction = new ThreadLocal<LockingTransaction>())
+    (§ def ThreadLocal<LockingTransaction> transaction = new ThreadLocal<LockingTransaction>())
 
-    #_static
     (class-ns RetryEx (§ extends Error)
     )
 
-    #_static
     (class-ns AbortException (§ extends Exception)
     )
 
-    #_public
-    #_static
     (class-ns Info
-        #_final
         (§ field AtomicInteger status)
-        #_final
         (§ field long startPoint)
-        #_final
         (§ field CountDownLatch latch)
 
-        #_public
-        (§ method Info(int status, long startPoint)
+        (§ constructor Info(int status, long startPoint)
             (§ ass this.status = new AtomicInteger(status))
             (§ ass this.startPoint = startPoint)
             (§ ass this.latch = new CountDownLatch(1))
         )
 
-        #_public
         (§ method boolean running()
             (§ let int s = status.get())
             (§ return (§ expr (s == RUNNING || s == COMMITTING)))
         )
     )
 
-    #_static
     (class-ns CFn
-        #_final
         (§ field IFn fn)
-        #_final
         (§ field ISeq args)
 
-        #_public
-        (§ method CFn(IFn fn, ISeq args)
+        (§ constructor CFn(IFn fn, ISeq args)
             (§ ass this.fn = fn)
             (§ ass this.args = args)
         )
@@ -23677,10 +20241,7 @@
 
     ;; total order on transactions
     ;; transactions will consume a point for init, for each retry, and on commit if writing
-    #_final
-    #_private
-    #_static
-    (§ field AtomicLong lastPoint = new AtomicLong())
+    (§ def- AtomicLong lastPoint = new AtomicLong())
 
     (§ method void getReadPoint()
         (§ ass readPoint = lastPoint.incrementAndGet())
@@ -23710,18 +20271,12 @@
     (§ field long startPoint)
     (§ field long startTime)
 
-    #_final
     (§ field RetryEx retryex = new RetryEx())
-    #_final
     (§ field ArrayList<Agent.Action> actions = new ArrayList<Agent.Action>())
-    #_final
     (§ field HashMap<Ref, Object> vals = new HashMap<Ref, Object>())
-    #_final
     (§ field HashSet<Ref> sets = new HashSet<Ref>())
-    #_final
     (§ field TreeMap<Ref, ArrayList<CFn>> commutes = new TreeMap<Ref, ArrayList<CFn>>())
 
-    #_final
     (§ field HashSet<Ref> ensures = new HashSet<Ref>()) ;; all hold readLock
 
     (§ method void tryWriteLock(Ref ref)
@@ -23777,8 +20332,7 @@
         )
     )
 
-    #_private
-    (§ method Object blockAndBail(Info refinfo)
+    (§ method- Object blockAndBail(Info refinfo)
         ;; stop prior to blocking
         (§ call stop(RETRY))
         (§ try )
@@ -23792,8 +20346,7 @@
         (§ throw retryex)
     )
 
-    #_private
-    (§ method void releaseIfEnsured(Ref ref)
+    (§ method- void releaseIfEnsured(Ref ref)
         (§ if (ensures.contains(ref)))
         (§
             (§ call ensures.remove(ref))
@@ -23806,13 +20359,11 @@
         (§ throw new AbortException())
     )
 
-    #_private
-    (§ method boolean bargeTimeElapsed()
+    (§ method- boolean bargeTimeElapsed()
         (§ return (§ expr (System.nanoTime() - startTime > BARGE_WAIT_NANOS)))
     )
 
-    #_private
-    (§ method boolean barge(Info refinfo)
+    (§ method- boolean barge(Info refinfo)
         (§ let boolean barged = false)
         ;; if this transaction is older, try to abort the other
         (§ if (bargeTimeElapsed() && startPoint < refinfo.startPoint))
@@ -23826,8 +20377,7 @@
         (§ return (§ expr barged))
     )
 
-    #_static
-    (§ method LockingTransaction getEx()
+    (§ defn LockingTransaction getEx()
         (§ let LockingTransaction t = transaction.get())
         (§ if (t == nil || t.info == nil))
         (§
@@ -23836,14 +20386,11 @@
         (§ return (§ expr t))
     )
 
-    #_static
-    #_public
-    (§ method boolean isRunning()
+    (§ defn boolean isRunning()
         (§ return (§ expr (getRunning() != nil)))
     )
 
-    #_static
-    (§ method LockingTransaction getRunning()
+    (§ defn LockingTransaction getRunning()
         (§ let LockingTransaction t = transaction.get())
         (§ if (t == nil || t.info == nil))
         (§
@@ -23852,9 +20399,7 @@
         (§ return (§ expr t))
     )
 
-    #_static
-    #_public
-    (§ method Object runInTransaction(Callable fn) (§ throws Exception)
+    (§ defn Object runInTransaction(Callable fn) (§ throws Exception)
         (§ let LockingTransaction t = transaction.get())
         (§ let Object ret)
         (§ if (t == nil))
@@ -23884,19 +20429,12 @@
         (§ return (§ expr ret))
     )
 
-    #_static
     (class-ns Notify
-        #_final
-        #_public
         (§ field Ref ref)
-        #_final
-        #_public
         (§ field Object oldval)
-        #_final
-        #_public
         (§ field Object newval)
 
-        (§ method Notify(Ref ref, Object oldval, Object newval)
+        (§ constructor Notify(Ref ref, Object oldval, Object newval)
             (§ ass this.ref = ref)
             (§ ass this.oldval = oldval)
             (§ ass this.newval = newval)
@@ -24050,7 +20588,6 @@
         (§ return (§ expr ret))
     )
 
-    #_public
     (§ method void enqueue(Agent.Action action)
         (§ call actions.add(action))
     )
@@ -24183,73 +20720,53 @@
 ;;;
  ; Implements the special common case of a finite range based on long start, end, and step.
  ;;
-#_public
 (class-ns LongRange (§ extends ASeq) (§ implements Counted, IChunkedSeq, IReduce)
-    #_private
-    #_static
-    #_final
-    (§ field int CHUNK_SIZE = 32)
+    (§ def- int CHUNK_SIZE = 32)
 
     ;; Invariants guarantee this is never an empty or infinite seq
-    #_final
     (§ field long start)
-    #_final
     (§ field long end)
-    #_final
     (§ field long step)
-    #_final
     (§ field BoundsCheck boundsCheck)
 
-    #_private
     #_volatile
-    (§ field LongChunk _chunk) ;; lazy
-    #_private
+    (§ field- LongChunk _chunk) ;; lazy
     #_volatile
-    (§ field ISeq _chunkNext) ;; lazy
-    #_private
+    (§ field- ISeq _chunkNext) ;; lazy
     #_volatile
-    (§ field ISeq _next) ;; cached
+    (§ field- ISeq _next) ;; cached
 
     #_private
-    #_static
     (§ interface BoundsCheck
         (§ abstract boolean exceededBounds(long val))
     )
 
-    #_private
-    #_static
-    (§ method BoundsCheck positiveStep(final long end)
+    (§ defn- BoundsCheck positiveStep(long end)
         (§ return (§ expr new BoundsCheck()
-        (§ inner
-            #_public
+        (§ reify
             (§ method boolean exceededBounds(long val)
                 (§ return (§ expr (val >= end)))
             )
         )))
     )
 
-    #_private
-    #_static
-    (§ method BoundsCheck negativeStep(final long end)
+    (§ defn- BoundsCheck negativeStep(long end)
         (§ return (§ expr new BoundsCheck()
-        (§ inner
-            #_public
+        (§ reify
             (§ method boolean exceededBounds(long val)
                 (§ return (§ expr (val <= end)))
             )
         )))
     )
 
-    #_private
-    (§ method LongRange(long start, long end, long step, BoundsCheck boundsCheck)
+    (§ constructor- LongRange(long start, long end, long step, BoundsCheck boundsCheck)
         (§ ass this.start = start)
         (§ ass this.end = end)
         (§ ass this.step = step)
         (§ ass this.boundsCheck = boundsCheck)
     )
 
-    #_private
-    (§ method LongRange(long start, long end, long step, BoundsCheck boundsCheck, LongChunk chunk, ISeq chunkNext)
+    (§ constructor- LongRange(long start, long end, long step, BoundsCheck boundsCheck, LongChunk chunk, ISeq chunkNext)
         (§ ass this.start = start)
         (§ ass this.end = end)
         (§ ass this.step = step)
@@ -24258,8 +20775,7 @@
         (§ ass this._chunkNext = chunkNext)
     )
 
-    #_private
-    (§ method LongRange(IPersistentMap meta, long start, long end, long step, BoundsCheck boundsCheck, LongChunk chunk, ISeq chunkNext)
+    (§ constructor- LongRange(IPersistentMap meta, long start, long end, long step, BoundsCheck boundsCheck, LongChunk chunk, ISeq chunkNext)
         (§ super(meta))
         (§ ass this.start = start)
         (§ ass this.end = end)
@@ -24269,9 +20785,7 @@
         (§ ass this._chunkNext = chunkNext)
     )
 
-    #_public
-    #_static
-    (§ method ISeq create(long end)
+    (§ defn ISeq create(long end)
         (§ if (end > 0))
         (§
             (§ return (§ expr new LongRange(0, end, 1, positiveStep(end))))
@@ -24279,9 +20793,7 @@
         (§ return (§ expr PersistentList.EMPTY))
     )
 
-    #_public
-    #_static
-    (§ method ISeq create(long start, long end)
+    (§ defn ISeq create(long start, long end)
         (§ if (start >= end))
         (§
             (§ return (§ expr PersistentList.EMPTY))
@@ -24289,9 +20801,7 @@
         (§ return (§ expr new LongRange(start, end, 1, positiveStep(end))))
     )
 
-    #_public
-    #_static
-    (§ method ISeq create(final long start, long end, long step)
+    (§ defn ISeq create(long start, long end, long step)
         (§ if (step > 0))
         (§
             (§ if (end <= start))
@@ -24318,7 +20828,6 @@
         )
     )
 
-    #_public
     (§ method Obj withMeta(IPersistentMap meta)
         (§ if (meta == _meta))
         (§
@@ -24327,12 +20836,10 @@
         (§ return (§ expr new LongRange(meta, start, end, step, boundsCheck, _chunk, _chunkNext)))
     )
 
-    #_public
     (§ method Object first()
         (§ return (§ expr start))
     )
 
-    #_public
     (§ method void forceChunk()
         (§ if (_chunk != nil))
         (§
@@ -24364,7 +20871,6 @@
         )
     )
 
-    #_public
     (§ method ISeq next()
         (§ if (_next != nil))
         (§
@@ -24381,18 +20887,15 @@
         (§ return (§ expr chunkedNext()))
     )
 
-    #_public
     (§ method IChunk chunkedFirst()
         (§ call forceChunk())
         (§ return (§ expr _chunk))
     )
 
-    #_public
     (§ method ISeq chunkedNext()
         (§ return (§ expr chunkedMore().seq()))
     )
 
-    #_public
     (§ method ISeq chunkedMore()
         (§ call forceChunk())
         (§ if (_chunkNext == nil))
@@ -24437,7 +20940,6 @@
         (§ return (§ expr Numbers.add(Numbers.add(Numbers.minus(end, start), step), (this.step > 0) ? -1 :or 1) / step))
     )
 
-    #_public
     (§ method int count()
         (§ try )
         (§
@@ -24473,7 +20975,6 @@
         )
     )
 
-    #_public
     (§ method Object reduce(IFn f)
         (§ let Object acc = start)
         (§ let long i = start + step)
@@ -24489,7 +20990,6 @@
         (§ return (§ expr acc))
     )
 
-    #_public
     (§ method Object reduce(IFn f, Object val)
         (§ let Object acc = val)
         (§ let long i = start)
@@ -24505,29 +21005,24 @@
         (§ return (§ expr acc))
     )
 
-    #_public
     (§ method Iterator iterator()
         (§ return (§ expr new LongRangeIterator()))
     )
 
+    #_non-static
     (class-ns LongRangeIterator (§ implements Iterator)
-        #_private
-        (§ field long next)
-        #_private
-        (§ field boolean hasNext)
+        (§ field- long next)
+        (§ field- boolean hasNext)
 
-        #_public
-        (§ method LongRangeIterator()
+        (§ constructor LongRangeIterator()
             (§ ass this.next = start)
             (§ ass this.hasNext = true)
         )
 
-        #_public
         (§ method boolean hasNext()
             (§ return (§ expr hasNext))
         )
 
-        #_public
         (§ method Object next()
             (§ if (hasNext))
             (§
@@ -24549,40 +21044,31 @@
             )
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException())
         )
     )
 
     #_private
-    #_static
     (class-ns LongChunk (§ implements IChunk)
-        #_final
         (§ field long start)
-        #_final
         (§ field long step)
-        #_final
         (§ field int count)
 
-        #_public
-        (§ method LongChunk(long start, long step, int count)
+        (§ constructor LongChunk(long start, long step, int count)
             (§ ass this.start = start)
             (§ ass this.step = step)
             (§ ass this.count = count)
         )
 
-        #_public
         (§ method long first()
             (§ return (§ expr start))
         )
 
-        #_public
         (§ method Object nth(int i)
             (§ return (§ expr start + (i * step)))
         )
 
-        #_public
         (§ method Object nth(int i, Object notFound)
             (§ if (i >= 0 && i < count))
             (§
@@ -24591,12 +21077,10 @@
             (§ return (§ expr notFound))
         )
 
-        #_public
         (§ method int count()
             (§ return (§ expr count))
         )
 
-        #_public
         (§ method LongChunk dropFirst()
             (§ if (count <= 1))
             (§
@@ -24605,7 +21089,6 @@
             (§ return (§ expr new LongChunk(start + step, step, count - 1)))
         )
 
-        #_public
         (§ method Object reduce(IFn f, Object init)
             (§ let long x = start)
             (§ let Object ret = init)
@@ -24628,41 +21111,31 @@
 
 (§ import java.util.Iterator)
 
-#_public
 (class-ns MapEntry (§ extends AMapEntry)
-    #_final
     (§ field Object _key)
-    #_final
     (§ field Object _val)
 
-    #_static
-    #_public
-    (§ method MapEntry create(Object key, Object val)
+    (§ defn MapEntry create(Object key, Object val)
         (§ return (§ expr new MapEntry(key, val)))
     )
 
-    #_public
-    (§ method MapEntry(Object key, Object val)
+    (§ constructor MapEntry(Object key, Object val)
         (§ ass this._key = key)
         (§ ass this._val = val)
     )
 
-    #_public
     (§ method Object key()
         (§ return (§ expr _key))
     )
 
-    #_public
     (§ method Object val()
         (§ return (§ expr _val))
     )
 
-    #_public
     (§ method Object getKey()
         (§ return (§ expr key()))
     )
 
-    #_public
     (§ method Object getValue()
         (§ return (§ expr val()))
     )
@@ -24672,7 +21145,6 @@
 (java-ns cloiure.lang.MapEquivalence
 
 ;; marker interface
-#_public
 (§ interface MapEquivalence
 )
 )
@@ -24681,54 +21153,31 @@
 
 (§ import java.util.Map)
 
-#_public
-#_final
 (class-ns MethodImplCache
-    #_static
-    #_public
     (class-ns Entry
-        #_final
-        #_public
         (§ field Class c)
-        #_final
-        #_public
         (§ field IFn fn)
 
-        #_public
-        (§ method Entry(Class c, IFn fn)
+        (§ constructor Entry(Class c, IFn fn)
             (§ ass this.c = c)
             (§ ass this.fn = fn)
         )
     )
 
-    #_public
-    #_final
     (§ field IPersistentMap protocol)
-    #_public
-    #_final
     (§ field Keyword methodk)
-    #_public
-    #_final
     (§ field int shift)
-    #_public
-    #_final
     (§ field int mask)
-    #_public
-    #_final
     (§ field Object[] table) ;; [class, entry. class, entry ...]
-    #_public
-    #_final
     (§ field Map map)
 
     (§ field Entry mre = nil)
 
-    #_public
-    (§ method MethodImplCache(IPersistentMap protocol, Keyword methodk)
+    (§ constructor MethodImplCache(IPersistentMap protocol, Keyword methodk)
         (§ this(protocol, methodk, 0, 0, RT.EMPTY_ARRAY))
     )
 
-    #_public
-    (§ method MethodImplCache(IPersistentMap protocol, Keyword methodk, int shift, int mask, Object[] table)
+    (§ constructor MethodImplCache(IPersistentMap protocol, Keyword methodk, int shift, int mask, Object[] table)
         (§ ass this.protocol = protocol)
         (§ ass this.methodk = methodk)
         (§ ass this.shift = shift)
@@ -24737,8 +21186,7 @@
         (§ ass this.map = nil)
     )
 
-    #_public
-    (§ method MethodImplCache(IPersistentMap protocol, Keyword methodk, Map map)
+    (§ constructor MethodImplCache(IPersistentMap protocol, Keyword methodk, Map map)
         (§ ass this.protocol = protocol)
         (§ ass this.methodk = methodk)
         (§ ass this.shift = 0)
@@ -24747,7 +21195,6 @@
         (§ ass this.map = map)
     )
 
-    #_public
     (§ method IFn fnFor(Class c)
         (§ let Entry last = mre)
         (§ if (last != nil && last.c == c))
@@ -24784,20 +21231,11 @@
 (§ import java.util.Map)
 (§ import java.util.concurrent.locks.ReentrantReadWriteLock)
 
-#_public
 (class-ns MultiFn (§ extends AFn)
-    #_final
-    #_public
     (§ field IFn dispatchFn)
-    #_final
-    #_public
     (§ field Object defaultDispatchVal)
-    #_final
-    #_public
     (§ field IRef hierarchy)
-    #_final
     (§ field String name)
-    #_final
     (§ field ReentrantReadWriteLock rw)
 
     #_volatile
@@ -24809,21 +21247,12 @@
     #_volatile
     (§ field Object cachedHierarchy)
 
-    #_static
-    #_final
-    (§ field Var assoc = RT.var("cloiure.core", "assoc"))
-    #_static
-    #_final
-    (§ field Var dissoc = RT.var("cloiure.core", "dissoc"))
-    #_static
-    #_final
-    (§ field Var isa = RT.var("cloiure.core", "isa?"))
-    #_static
-    #_final
-    (§ field Var parents = RT.var("cloiure.core", "parents"))
+    (§ def Var assoc = RT.var("cloiure.core", "assoc"))
+    (§ def Var dissoc = RT.var("cloiure.core", "dissoc"))
+    (§ def Var isa = RT.var("cloiure.core", "isa?"))
+    (§ def Var parents = RT.var("cloiure.core", "parents"))
 
-    #_public
-    (§ method MultiFn(String name, IFn dispatchFn, Object defaultDispatchVal, IRef hierarchy)
+    (§ constructor MultiFn(String name, IFn dispatchFn, Object defaultDispatchVal, IRef hierarchy)
         (§ ass this.rw = new ReentrantReadWriteLock())
         (§ ass this.name = name)
         (§ ass this.dispatchFn = dispatchFn)
@@ -24835,7 +21264,6 @@
         (§ ass cachedHierarchy = nil)
     )
 
-    #_public
     (§ method MultiFn reset()
         (§ call rw.writeLock().lock())
         (§ try )
@@ -24850,7 +21278,6 @@
         )
     )
 
-    #_public
     (§ method MultiFn addMethod(Object dispatchVal, IFn method)
         (§ call rw.writeLock().lock())
         (§ try )
@@ -24865,7 +21292,6 @@
         )
     )
 
-    #_public
     (§ method MultiFn removeMethod(Object dispatchVal)
         (§ call rw.writeLock().lock())
         (§ try )
@@ -24880,7 +21306,6 @@
         )
     )
 
-    #_public
     (§ method MultiFn preferMethod(Object dispatchValX, Object dispatchValY)
         (§ call rw.writeLock().lock())
         (§ try )
@@ -24899,8 +21324,7 @@
         )
     )
 
-    #_private
-    (§ method boolean prefers(Object x, Object y)
+    (§ method- boolean prefers(Object x, Object y)
         (§ let IPersistentSet xprefs = (IPersistentSet) getPreferTable().valAt(x))
         (§ if (xprefs != nil && xprefs.contains(y)))
         (§
@@ -24923,18 +21347,15 @@
         (§ return (§ expr false))
     )
 
-    #_private
-    (§ method boolean isA(Object x, Object y)
+    (§ method- boolean isA(Object x, Object y)
         (§ return (§ expr RT.booleanCast(isa.invoke(hierarchy.deref(), x, y))))
     )
 
-    #_private
-    (§ method boolean dominates(Object x, Object y)
+    (§ method- boolean dominates(Object x, Object y)
         (§ return (§ expr prefers(x, y) || isA(x, y)))
     )
 
-    #_private
-    (§ method IPersistentMap resetCache()
+    (§ method- IPersistentMap resetCache()
         (§ call rw.writeLock().lock())
         (§ try )
         (§
@@ -24948,7 +21369,6 @@
         )
     )
 
-    #_public
     (§ method IFn getMethod(Object dispatchVal)
         (§ if (cachedHierarchy != hierarchy.deref()))
         (§
@@ -24962,8 +21382,7 @@
         (§ return (§ expr findAndCacheBestMethod(dispatchVal)))
     )
 
-    #_private
-    (§ method IFn getFn(Object dispatchVal)
+    (§ method- IFn getFn(Object dispatchVal)
         (§ let IFn targetFn = getMethod(dispatchVal))
         (§ if (targetFn == nil))
         (§
@@ -24972,8 +21391,7 @@
         (§ return (§ expr targetFn))
     )
 
-    #_private
-    (§ method IFn findAndCacheBestMethod(Object dispatchVal)
+    (§ method- IFn findAndCacheBestMethod(Object dispatchVal)
         (§ call rw.readLock().lock())
         (§ let Object bestValue)
         (§ let IPersistentMap mt = methodTable)
@@ -25037,29 +21455,24 @@
         )
     )
 
-    #_public
     (§ method Object invoke()
         (§ return (§ expr getFn(dispatchFn.invoke()).invoke()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1)
         (§ return (§ expr getFn(dispatchFn.invoke(arg1)).invoke(Util.ret1(arg1, arg1 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2)
         (§ return (§ expr getFn(dispatchFn.invoke(arg1, arg2)).
       #_arg invoke(Util.ret1(arg1, arg1 = nil), Util.ret1(arg2, arg2 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3)
         (§ return (§ expr getFn(dispatchFn.invoke(arg1, arg2, arg3)).
       #_arg invoke(Util.ret1(arg1, arg1 = nil), Util.ret1(arg2, arg2 = nil), Util.ret1(arg3, arg3 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4)
         (§ return (§ expr getFn(dispatchFn.invoke(arg1, arg2, arg3, arg4)).
       #_arg invoke(Util.ret1(arg1, arg1 = nil),
@@ -25068,7 +21481,6 @@
               #_arg Util.ret1(arg4, arg4 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
         (§ return (§ expr getFn(dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5)).
       #_arg invoke(Util.ret1(arg1, arg1 = nil),
@@ -25078,7 +21490,6 @@
               #_arg Util.ret1(arg5, arg5 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6)
         (§ return (§ expr getFn(dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6)).
       #_arg invoke(Util.ret1(arg1, arg1 = nil),
@@ -25089,7 +21500,6 @@
               #_arg Util.ret1(arg6, arg6 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7)
         (§ return (§ expr getFn(dispatchFn.invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7)).
       #_arg invoke(Util.ret1(arg1, arg1 = nil),
@@ -25101,7 +21511,6 @@
               #_arg Util.ret1(arg7, arg7 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8))
     (§
@@ -25116,7 +21525,6 @@
               #_arg Util.ret1(arg8, arg8 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9))
     (§
@@ -25132,7 +21540,6 @@
               #_arg Util.ret1(arg9, arg9 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10))
     (§
@@ -25149,7 +21556,6 @@
               #_arg Util.ret1(arg10, arg10 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11))
     (§
@@ -25167,7 +21573,6 @@
               #_arg Util.ret1(arg11, arg11 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12))
     (§
@@ -25186,7 +21591,6 @@
               #_arg Util.ret1(arg12, arg12 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13))
     (§
@@ -25206,7 +21610,6 @@
               #_arg Util.ret1(arg13, arg13 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14))
     (§
@@ -25228,7 +21631,6 @@
               #_arg Util.ret1(arg14, arg14 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15))
@@ -25253,7 +21655,6 @@
               #_arg Util.ret1(arg15, arg15 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16))
@@ -25279,7 +21680,6 @@
               #_arg Util.ret1(arg16, arg16 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17))
@@ -25306,7 +21706,6 @@
               #_arg Util.ret1(arg17, arg17 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18))
@@ -25334,7 +21733,6 @@
               #_arg Util.ret1(arg18, arg18 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19))
@@ -25363,7 +21761,6 @@
               #_arg Util.ret1(arg19, arg19 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20))
@@ -25393,7 +21790,6 @@
               #_arg Util.ret1(arg20, arg20 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20, Object... args))
@@ -25424,12 +21820,10 @@
               #_arg args)))
     )
 
-    #_public
     (§ method IPersistentMap getMethodTable()
         (§ return (§ expr methodTable))
     )
 
-    #_public
     (§ method IPersistentMap getPreferTable()
         (§ return (§ expr preferTable))
     )
@@ -25463,25 +21857,12 @@
  ; @author Dimitris Andreou
  ; @author Kurt Alfred Kluever
  ;;
-#_public
-#_final
 (class-ns Murmur3
-    #_private
-    #_static
-    #_final
-    (§ field int seed = 0)
-    #_private
-    #_static
-    #_final
-    (§ field int C1 = 0xcc9e2d51)
-    #_private
-    #_static
-    #_final
-    (§ field int C2 = 0x1b873593)
+    (§ def- int seed = 0)
+    (§ def- int C1 = 0xcc9e2d51)
+    (§ def- int C2 = 0x1b873593)
 
-    #_public
-    #_static
-    (§ method int hashInt(int input)
+    (§ defn int hashInt(int input)
         (§ if (input == 0))
         (§
             (§ return (§ expr 0))
@@ -25492,9 +21873,7 @@
         (§ return (§ expr fmix(h1, 4)))
     )
 
-    #_public
-    #_static
-    (§ method int hashLong(long input)
+    (§ defn int hashLong(long input)
         (§ if (input == 0))
         (§
             (§ return (§ expr 0))
@@ -25511,9 +21890,7 @@
         (§ return (§ expr fmix(h1, 8)))
     )
 
-    #_public
-    #_static
-    (§ method int hashUnencodedChars(CharSequence input)
+    (§ defn int hashUnencodedChars(CharSequence input)
         (§ let int h1 = seed)
 
         ;; step through the CharSequence 2 chars at a time
@@ -25535,18 +21912,14 @@
         (§ return (§ expr fmix(h1, 2 * input.length())))
     )
 
-    #_public
-    #_static
-    (§ method int mixCollHash(int hash, int count)
+    (§ defn int mixCollHash(int hash, int count)
         (§ let int h1 = seed)
         (§ let int k1 = mixK1(hash))
         (§ ass h1 = mixH1(h1, k1))
         (§ return (§ expr fmix(h1, count)))
     )
 
-    #_public
-    #_static
-    (§ method int hashOrdered(Iterable xs)
+    (§ defn int hashOrdered(Iterable xs)
         (§ let int n = 0)
         (§ let int hash = 1)
 
@@ -25559,9 +21932,7 @@
         (§ return (§ expr mixCollHash(hash, n)))
     )
 
-    #_public
-    #_static
-    (§ method int hashUnordered(Iterable xs)
+    (§ defn int hashUnordered(Iterable xs)
         (§ let int hash = 0)
         (§ let int n = 0)
         (§ for (Object x :in xs))
@@ -25573,18 +21944,14 @@
         (§ return (§ expr mixCollHash(hash, n)))
     )
 
-    #_private
-    #_static
-    (§ method int mixK1(int k1)
+    (§ defn- int mixK1(int k1)
         (§ ass k1 *= C1)
         (§ ass k1 = Integer.rotateLeft(k1, 15))
         (§ ass k1 *= C2)
         (§ return (§ expr k1))
     )
 
-    #_private
-    #_static
-    (§ method int mixH1(int h1, int k1)
+    (§ defn- int mixH1(int h1, int k1)
         (§ ass h1 ^= k1)
         (§ ass h1 = Integer.rotateLeft(h1, 13))
         (§ ass h1 = h1 * 5 + 0xe6546b64)
@@ -25592,9 +21959,7 @@
     )
 
     ;; Finalization mix - force all bits of a hash block to avalanche
-    #_private
-    #_static
-    (§ method int fmix(int h1, int length)
+    (§ defn- int fmix(int h1, int length)
         (§ ass h1 ^= length)
         (§ ass h1 ^= h1 >>> 16)
         (§ ass h1 *= 0x85ebca6b)
@@ -25608,7 +21973,6 @@
 
 (java-ns cloiure.lang.Named
 
-#_public
 (§ interface Named
     (§ abstract String getNamespace())
     (§ abstract String getName())
@@ -25620,52 +21984,39 @@
 (§ import java.util.concurrent.ConcurrentHashMap)
 (§ import java.util.concurrent.atomic.AtomicReference)
 
-#_public
 (class-ns Namespace (§ extends AReference)
-    #_final
-    #_public
     (§ field Symbol name)
 
     #_transient
-    #_final
     (§ field AtomicReference<IPersistentMap> mappings = new AtomicReference<IPersistentMap>())
     #_transient
-    #_final
     (§ field AtomicReference<IPersistentMap> aliases = new AtomicReference<IPersistentMap>())
 
-    #_final
-    #_static
-    (§ field ConcurrentHashMap<Symbol, Namespace> namespaces = new ConcurrentHashMap<Symbol, Namespace>())
+    (§ def ConcurrentHashMap<Symbol, Namespace> namespaces = new ConcurrentHashMap<Symbol, Namespace>())
 
-    #_public
     (§ method String toString()
         (§ return (§ expr name.toString()))
     )
 
-    (§ method Namespace(Symbol name)
+    (§ constructor Namespace(Symbol name)
         (§ super(name.meta()))
         (§ ass this.name = name)
         (§ call mappings.set(RT.DEFAULT_IMPORTS))
         (§ call aliases.set(RT.map()))
     )
 
-    #_public
-    #_static
-    (§ method ISeq all()
+    (§ defn ISeq all()
         (§ return (§ expr RT.seq(namespaces.values())))
     )
 
-    #_public
     (§ method Symbol getName()
         (§ return (§ expr name))
     )
 
-    #_public
     (§ method IPersistentMap getMappings()
         (§ return (§ expr mappings.get()))
     )
 
-    #_public
     (§ method Var intern(Symbol sym)
         (§ if (sym.ns != nil))
         (§
@@ -25704,8 +22055,7 @@
         (§ return (§ expr v))
     )
 
-    #_private
-    (§ method void warnOrFailOnReplace(Symbol sym, Object o, Object v)
+    (§ method- void warnOrFailOnReplace(Symbol sym, Object o, Object v)
         (§ if (o instanceof Var))
         (§
             (§ let Namespace ns = ((Var)o).ns)
@@ -25749,9 +22099,7 @@
         (§ return (§ expr val))
     )
 
-    #_public
-    #_static
-    (§ method boolean areDifferentInstancesOfSameClassName(Class cls1, Class cls2)
+    (§ defn boolean areDifferentInstancesOfSameClassName(Class cls1, Class cls2)
         (§ return (§ expr (cls1 != cls2) && (cls1.getName().equals(cls2.getName()))))
     )
 
@@ -25777,7 +22125,6 @@
         (§ throw new IllegalStateException(sym + " already refers to: " + c + " in namespace: " + name))
     )
 
-    #_public
     (§ method void unmap(Symbol sym)
         (§ if (sym.ns != nil))
         (§
@@ -25792,25 +22139,20 @@
         )
     )
 
-    #_public
     (§ method Class importClass(Symbol sym, Class c)
         (§ return (§ expr referenceClass(sym, c)))
     )
 
-    #_public
     (§ method Class importClass(Class c)
         (§ let String n = c.getName())
         (§ return (§ expr importClass(Symbol.intern(n.substring(n.lastIndexOf(\.) + 1)), c)))
     )
 
-    #_public
     (§ method Var refer(Symbol sym, Var var)
         (§ return (§ expr (Var) reference(sym, var)))
     )
 
-    #_public
-    #_static
-    (§ method Namespace findOrCreate(Symbol name)
+    (§ defn Namespace findOrCreate(Symbol name)
         (§ let Namespace ns = namespaces.get(name))
         (§ if (ns != nil))
         (§
@@ -25821,9 +22163,7 @@
         (§ return (§ expr (ns == nil) ? newns :or ns))
     )
 
-    #_public
-    #_static
-    (§ method Namespace remove(Symbol name)
+    (§ defn Namespace remove(Symbol name)
         (§ if (name.equals(RT.CLOIURE_NS.name)))
         (§
             (§ throw new IllegalArgumentException("Cannot remove cloiure namespace"))
@@ -25831,18 +22171,14 @@
         (§ return (§ expr namespaces.remove(name)))
     )
 
-    #_public
-    #_static
-    (§ method Namespace find(Symbol name)
+    (§ defn Namespace find(Symbol name)
         (§ return (§ expr namespaces.get(name)))
     )
 
-    #_public
     (§ method Object getMapping(Symbol name)
         (§ return (§ expr mappings.get().valAt(name)))
     )
 
-    #_public
     (§ method Var findInternedVar(Symbol symbol)
         (§ let Object o = mappings.get().valAt(symbol))
         (§ if (o != nil && o instanceof Var && ((Var) o).ns == this))
@@ -25852,18 +22188,15 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method IPersistentMap getAliases()
         (§ return (§ expr aliases.get()))
     )
 
-    #_public
     (§ method Namespace lookupAlias(Symbol alias)
         (§ let IPersistentMap map = getAliases())
         (§ return (§ expr (Namespace) map.valAt(alias)))
     )
 
-    #_public
     (§ method void addAlias(Symbol alias, Namespace ns)
         (§ if (alias == nil || ns == nil))
         (§
@@ -25883,7 +22216,6 @@
         )
     )
 
-    #_public
     (§ method void removeAlias(Symbol alias)
         (§ let IPersistentMap map = getAliases())
         (§ while (map.containsKey(alias)))
@@ -25902,9 +22234,7 @@
 (§ import java.math.BigDecimal)
 (§ import java.math.MathContext)
 
-#_public
 (class-ns Numbers
-    #_static
     (§ interface Ops
         (§ abstract Ops combine(Ops y))
         (§ abstract Ops opsWith(LongOps x))
@@ -25934,132 +22264,94 @@
         (§ abstract Number decP(Number x))
     )
 
-    #_static
     #_abstract
     (class-ns OpsP (§ implements Ops)
-        #_public
         (§ method Number addP(Number x, Number y)
             (§ return (§ expr add(x, y)))
         )
 
-        #_public
         (§ method Number multiplyP(Number x, Number y)
             (§ return (§ expr multiply(x, y)))
         )
 
-        #_public
         (§ method Number negateP(Number x)
             (§ return (§ expr negate(x)))
         )
 
-        #_public
         (§ method Number incP(Number x)
             (§ return (§ expr inc(x)))
         )
 
-        #_public
         (§ method Number decP(Number x)
             (§ return (§ expr dec(x)))
         )
     )
 
-    #_static
-    #_public
-    (§ method boolean isZero(Object x)
+    (§ defn boolean isZero(Object x)
         (§ return (§ expr ops(x).isZero((Number)x)))
     )
 
-    #_static
-    #_public
-    (§ method boolean isPos(Object x)
+    (§ defn boolean isPos(Object x)
         (§ return (§ expr ops(x).isPos((Number)x)))
     )
 
-    #_static
-    #_public
-    (§ method boolean isNeg(Object x)
+    (§ defn boolean isNeg(Object x)
         (§ return (§ expr ops(x).isNeg((Number)x)))
     )
 
-    #_static
-    #_public
-    (§ method Number minus(Object x)
+    (§ defn Number minus(Object x)
         (§ return (§ expr ops(x).negate((Number)x)))
     )
 
-    #_static
-    #_public
-    (§ method Number minusP(Object x)
+    (§ defn Number minusP(Object x)
         (§ return (§ expr ops(x).negateP((Number)x)))
     )
 
-    #_static
-    #_public
-    (§ method Number inc(Object x)
+    (§ defn Number inc(Object x)
         (§ return (§ expr ops(x).inc((Number)x)))
     )
 
-    #_static
-    #_public
-    (§ method Number incP(Object x)
+    (§ defn Number incP(Object x)
         (§ return (§ expr ops(x).incP((Number)x)))
     )
 
-    #_static
-    #_public
-    (§ method Number dec(Object x)
+    (§ defn Number dec(Object x)
         (§ return (§ expr ops(x).dec((Number)x)))
     )
 
-    #_static
-    #_public
-    (§ method Number decP(Object x)
+    (§ defn Number decP(Object x)
         (§ return (§ expr ops(x).decP((Number)x)))
     )
 
-    #_static
-    #_public
-    (§ method Number add(Object x, Object y)
+    (§ defn Number add(Object x, Object y)
         (§ return (§ expr ops(x).combine(ops(y)).add((Number)x, (Number)y)))
     )
 
-    #_static
-    #_public
-    (§ method Number addP(Object x, Object y)
+    (§ defn Number addP(Object x, Object y)
         (§ return (§ expr ops(x).combine(ops(y)).addP((Number)x, (Number)y)))
     )
 
-    #_static
-    #_public
-    (§ method Number minus(Object x, Object y)
+    (§ defn Number minus(Object x, Object y)
         (§ let Ops yops = ops(y))
         (§ return (§ expr ops(x).combine(yops).add((Number)x, yops.negate((Number)y))))
     )
 
-    #_static
-    #_public
-    (§ method Number minusP(Object x, Object y)
+    (§ defn Number minusP(Object x, Object y)
         (§ let Ops yops = ops(y))
         (§ let Number negativeY = yops.negateP((Number) y))
         (§ let Ops negativeYOps = ops(negativeY))
         (§ return (§ expr ops(x).combine(negativeYOps).addP((Number)x, negativeY)))
     )
 
-    #_static
-    #_public
-    (§ method Number multiply(Object x, Object y)
+    (§ defn Number multiply(Object x, Object y)
         (§ return (§ expr ops(x).combine(ops(y)).multiply((Number)x, (Number)y)))
     )
 
-    #_static
-    #_public
-    (§ method Number multiplyP(Object x, Object y)
+    (§ defn Number multiplyP(Object x, Object y)
         (§ return (§ expr ops(x).combine(ops(y)).multiplyP((Number)x, (Number)y)))
     )
 
-    #_static
-    #_public
-    (§ method Number divide(Object x, Object y)
+    (§ defn Number divide(Object x, Object y)
         (§ if (isNaN(x)))
         (§
             (§ return (§ expr (Number)x))
@@ -26076,9 +22368,7 @@
         (§ return (§ expr ops(x).combine(yops).divide((Number)x, (Number)y)))
     )
 
-    #_static
-    #_public
-    (§ method Number quotient(Object x, Object y)
+    (§ defn Number quotient(Object x, Object y)
         (§ let Ops yops = ops(y))
         (§ if (yops.isZero((Number) y)))
         (§
@@ -26087,9 +22377,7 @@
         (§ return (§ expr ops(x).combine(yops).quotient((Number)x, (Number)y)))
     )
 
-    #_static
-    #_public
-    (§ method Number remainder(Object x, Object y)
+    (§ defn Number remainder(Object x, Object y)
         (§ let Ops yops = ops(y))
         (§ if (yops.isZero((Number) y)))
         (§
@@ -26098,9 +22386,7 @@
         (§ return (§ expr ops(x).combine(yops).remainder((Number)x, (Number)y)))
     )
 
-    #_static
-    #_public
-    (§ method double quotient(double n, double d)
+    (§ defn double quotient(double n, double d)
         (§ if (d == 0))
         (§
             (§ throw new ArithmeticException("Divide by zero"))
@@ -26117,9 +22403,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method double remainder(double n, double d)
+    (§ defn double remainder(double n, double d)
         (§ if (d == 0))
         (§
             (§ throw new ArithmeticException("Divide by zero"))
@@ -26137,51 +22421,35 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(Object x, Object y)
+    (§ defn boolean equiv(Object x, Object y)
         (§ return (§ expr equiv((Number) x, (Number) y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(Number x, Number y)
+    (§ defn boolean equiv(Number x, Number y)
         (§ return (§ expr ops(x).combine(ops(y)).equiv(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equal(Number x, Number y)
+    (§ defn boolean equal(Number x, Number y)
         (§ return (§ expr (category(x) == category(y) && ops(x).combine(ops(y)).equiv(x, y))))
     )
 
-    #_static
-    #_public
-    (§ method boolean lt(Object x, Object y)
+    (§ defn boolean lt(Object x, Object y)
         (§ return (§ expr ops(x).combine(ops(y)).lt((Number)x, (Number)y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean lte(Object x, Object y)
+    (§ defn boolean lte(Object x, Object y)
         (§ return (§ expr ops(x).combine(ops(y)).lte((Number)x, (Number)y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean gt(Object x, Object y)
+    (§ defn boolean gt(Object x, Object y)
         (§ return (§ expr ops(x).combine(ops(y)).lt((Number)y, (Number)x)))
     )
 
-    #_static
-    #_public
-    (§ method boolean gte(Object x, Object y)
+    (§ defn boolean gte(Object x, Object y)
         (§ return (§ expr ops(x).combine(ops(y)).gte((Number)x, (Number)y)))
     )
 
-    #_static
-    #_public
-    (§ method int compare(Number x, Number y)
+    (§ defn int compare(Number x, Number y)
         (§ let Ops ops = ops(x).combine(ops(y)))
         (§ if (ops.lt(x, y)))
         (§
@@ -26195,8 +22463,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    (§ method BigInt toBigInt(Object x)
+    (§ defn BigInt toBigInt(Object x)
         (§ if (x instanceof BigInt))
         (§
             (§ return (§ expr (BigInt) x))
@@ -26212,8 +22479,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    (§ method BigInteger toBigInteger(Object x)
+    (§ defn BigInteger toBigInteger(Object x)
         (§ if (x instanceof BigInteger))
         (§
             (§ return (§ expr (BigInteger) x))
@@ -26229,8 +22495,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    (§ method BigDecimal toBigDecimal(Object x)
+    (§ defn BigDecimal toBigDecimal(Object x)
         (§ if (x instanceof BigDecimal))
         (§
             (§ return (§ expr (BigDecimal) x))
@@ -26271,9 +22536,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method Ratio toRatio(Object x)
+    (§ defn Ratio toRatio(Object x)
         (§ if (x instanceof Ratio))
         (§
             (§ return (§ expr (Ratio) x))
@@ -26296,9 +22559,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method Number rationalize(Number x)
+    (§ defn Number rationalize(Number x)
         (§ if (x instanceof Float || x instanceof Double))
         (§
             (§ return (§ expr rationalize(BigDecimal.valueOf(x.doubleValue()))))
@@ -26321,9 +22582,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method Number reduceBigInt(BigInt val)
+    (§ defn Number reduceBigInt(BigInt val)
         (§ if (val.bipart == nil))
         (§
             (§ return (§ expr num(val.lpart)))
@@ -26334,9 +22593,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Number divide(BigInteger n, BigInteger d)
+    (§ defn Number divide(BigInteger n, BigInteger d)
         (§ if (d.equals(BigInteger.ZERO)))
         (§
             (§ throw new ArithmeticException("Divide by zero"))
@@ -26359,148 +22616,98 @@
         (§ return (§ expr new Ratio(((d.signum() < 0) ? n.negate() :or n), ((d.signum() < 0) ? d.negate() :or d))))
     )
 
-    #_static
-    #_public
-    (§ method int shiftLeftInt(int x, int n)
+    (§ defn int shiftLeftInt(int x, int n)
         (§ return (§ expr x << n))
     )
 
-    #_static
-    #_public
-    (§ method long shiftLeft(Object x, Object y)
+    (§ defn long shiftLeft(Object x, Object y)
         (§ return (§ expr shiftLeft(bitOpsCast(x), bitOpsCast(y))))
     )
-    #_static
-    #_public
-    (§ method long shiftLeft(Object x, long y)
+    (§ defn long shiftLeft(Object x, long y)
         (§ return (§ expr shiftLeft(bitOpsCast(x), y)))
     )
-    #_static
-    #_public
-    (§ method long shiftLeft(long x, Object y)
+    (§ defn long shiftLeft(long x, Object y)
         (§ return (§ expr shiftLeft(x, bitOpsCast(y))))
     )
-    #_static
-    #_public
-    (§ method long shiftLeft(long x, long n)
+    (§ defn long shiftLeft(long x, long n)
         (§ return (§ expr x << n))
     )
 
-    #_static
-    #_public
-    (§ method int shiftRightInt(int x, int n)
+    (§ defn int shiftRightInt(int x, int n)
         (§ return (§ expr x >> n))
     )
 
-    #_static
-    #_public
-    (§ method long shiftRight(Object x, Object y)
+    (§ defn long shiftRight(Object x, Object y)
         (§ return (§ expr shiftRight(bitOpsCast(x), bitOpsCast(y))))
     )
-    #_static
-    #_public
-    (§ method long shiftRight(Object x, long y)
+    (§ defn long shiftRight(Object x, long y)
         (§ return (§ expr shiftRight(bitOpsCast(x), y)))
     )
-    #_static
-    #_public
-    (§ method long shiftRight(long x, Object y)
+    (§ defn long shiftRight(long x, Object y)
         (§ return (§ expr shiftRight(x, bitOpsCast(y))))
     )
-    #_static
-    #_public
-    (§ method long shiftRight(long x, long n)
+    (§ defn long shiftRight(long x, long n)
         (§ return (§ expr x >> n))
     )
 
-    #_static
-    #_public
-    (§ method int unsignedShiftRightInt(int x, int n)
+    (§ defn int unsignedShiftRightInt(int x, int n)
         (§ return (§ expr x >>> n))
     )
 
-    #_static
-    #_public
-    (§ method long unsignedShiftRight(Object x, Object y)
+    (§ defn long unsignedShiftRight(Object x, Object y)
         (§ return (§ expr unsignedShiftRight(bitOpsCast(x), bitOpsCast(y))))
     )
-    #_static
-    #_public
-    (§ method long unsignedShiftRight(Object x, long y)
+    (§ defn long unsignedShiftRight(Object x, long y)
         (§ return (§ expr unsignedShiftRight(bitOpsCast(x), y)))
     )
-    #_static
-    #_public
-    (§ method long unsignedShiftRight(long x, Object y)
+    (§ defn long unsignedShiftRight(long x, Object y)
         (§ return (§ expr unsignedShiftRight(x, bitOpsCast(y))))
     )
-    #_static
-    #_public
-    (§ method long unsignedShiftRight(long x, long n)
+    (§ defn long unsignedShiftRight(long x, long n)
         (§ return (§ expr x >>> n))
     )
 
-    #_final
-    #_static
     (class-ns LongOps (§ implements Ops)
-        #_public
         (§ method Ops combine(Ops y)
             (§ return (§ expr y.opsWith(this)))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(LongOps x)
             (§ return (§ expr this))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(DoubleOps x)
             (§ return (§ expr DOUBLE_OPS))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(RatioOps x)
             (§ return (§ expr RATIO_OPS))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(BigIntOps x)
             (§ return (§ expr BIGINT_OPS))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(BigDecimalOps x)
             (§ return (§ expr BIGDECIMAL_OPS))
         )
 
-        #_public
         (§ method boolean isZero(Number x)
             (§ return (§ expr (x.longValue() == 0)))
         )
 
-        #_public
         (§ method boolean isPos(Number x)
             (§ return (§ expr (x.longValue() > 0)))
         )
 
-        #_public
         (§ method boolean isNeg(Number x)
             (§ return (§ expr (x.longValue() < 0)))
         )
 
-        #_final
-        #_public
         (§ method Number add(Number x, Number y)
             (§ return (§ expr num(Numbers.add(x.longValue(), y.longValue()))))
         )
 
-        #_final
-        #_public
         (§ method Number addP(Number x, Number y)
             (§ let long lx = x.longValue(), ly = y.longValue())
             (§ let long ret = lx + ly)
@@ -26511,14 +22718,10 @@
             (§ return (§ expr num(ret)))
         )
 
-        #_final
-        #_public
         (§ method Number multiply(Number x, Number y)
             (§ return (§ expr num(Numbers.multiply(x.longValue(), y.longValue()))))
         )
 
-        #_final
-        #_public
         (§ method Number multiplyP(Number x, Number y)
             (§ let long lx = x.longValue(), ly = y.longValue())
             (§ if (lx == Long.MIN_VALUE && ly < 0))
@@ -26533,8 +22736,7 @@
             (§ return (§ expr num(ret)))
         )
 
-        #_static
-        (§ method long gcd(long u, long v)
+        (§ defn long gcd(long u, long v)
             (§ while (v != 0))
             (§
                 (§ let long r = u % v)
@@ -26544,7 +22746,6 @@
             (§ return (§ expr u))
         )
 
-        #_public
         (§ method Number divide(Number x, Number y)
             (§ let long n = x.longValue())
             (§ let long val = y.longValue())
@@ -26568,45 +22769,35 @@
             (§ return (§ expr new Ratio(BigInteger.valueOf(n), BigInteger.valueOf(d))))
         )
 
-        #_public
         (§ method Number quotient(Number x, Number y)
             (§ return (§ expr num(x.longValue() / y.longValue())))
         )
 
-        #_public
         (§ method Number remainder(Number x, Number y)
             (§ return (§ expr num(x.longValue() % y.longValue())))
         )
 
-        #_public
         (§ method boolean equiv(Number x, Number y)
             (§ return (§ expr (x.longValue() == y.longValue())))
         )
 
-        #_public
         (§ method boolean lt(Number x, Number y)
             (§ return (§ expr (x.longValue() < y.longValue())))
         )
 
-        #_public
         (§ method boolean lte(Number x, Number y)
             (§ return (§ expr (x.longValue() <= y.longValue())))
         )
 
-        #_public
         (§ method boolean gte(Number x, Number y)
             (§ return (§ expr (x.longValue() >= y.longValue())))
         )
 
-        #_final
-        #_public
         (§ method Number negate(Number x)
             (§ let long val = x.longValue())
             (§ return (§ expr num(Numbers.minus(val))))
         )
 
-        #_final
-        #_public
         (§ method Number negateP(Number x)
             (§ let long val = x.longValue())
             (§ if (val > Long.MIN_VALUE))
@@ -26616,13 +22807,11 @@
             (§ return (§ expr BigInt.fromBigInteger(BigInteger.valueOf(val).negate())))
         )
 
-        #_public
         (§ method Number inc(Number x)
             (§ let long val = x.longValue())
             (§ return (§ expr num(Numbers.inc(val))))
         )
 
-        #_public
         (§ method Number incP(Number x)
             (§ let long val = x.longValue())
             (§ if (val < Long.MAX_VALUE))
@@ -26632,13 +22821,11 @@
             (§ return (§ expr BIGINT_OPS.inc(x)))
         )
 
-        #_public
         (§ method Number dec(Number x)
             (§ let long val = x.longValue())
             (§ return (§ expr num(Numbers.dec(val))))
         )
 
-        #_public
         (§ method Number decP(Number x)
             (§ let long val = x.longValue())
             (§ if (val > Long.MIN_VALUE))
@@ -26649,186 +22836,136 @@
         )
     )
 
-    #_final
-    #_static
     (class-ns DoubleOps (§ extends OpsP)
-        #_public
         (§ method Ops combine(Ops y)
             (§ return (§ expr y.opsWith(this)))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(LongOps x)
             (§ return (§ expr this))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(DoubleOps x)
             (§ return (§ expr this))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(RatioOps x)
             (§ return (§ expr this))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(BigIntOps x)
             (§ return (§ expr this))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(BigDecimalOps x)
             (§ return (§ expr this))
         )
 
-        #_public
         (§ method boolean isZero(Number x)
             (§ return (§ expr (x.doubleValue() == 0)))
         )
 
-        #_public
         (§ method boolean isPos(Number x)
             (§ return (§ expr (x.doubleValue() > 0)))
         )
 
-        #_public
         (§ method boolean isNeg(Number x)
             (§ return (§ expr (x.doubleValue() < 0)))
         )
 
-        #_final
-        #_public
         (§ method Number add(Number x, Number y)
             (§ return (§ expr Double.valueOf(x.doubleValue() + y.doubleValue())))
         )
 
-        #_final
-        #_public
         (§ method Number multiply(Number x, Number y)
             (§ return (§ expr Double.valueOf(x.doubleValue() * y.doubleValue())))
         )
 
-        #_public
         (§ method Number divide(Number x, Number y)
             (§ return (§ expr Double.valueOf(x.doubleValue() / y.doubleValue())))
         )
 
-        #_public
         (§ method Number quotient(Number x, Number y)
             (§ return (§ expr Numbers.quotient(x.doubleValue(), y.doubleValue())))
         )
 
-        #_public
         (§ method Number remainder(Number x, Number y)
             (§ return (§ expr Numbers.remainder(x.doubleValue(), y.doubleValue())))
         )
 
-        #_public
         (§ method boolean equiv(Number x, Number y)
             (§ return (§ expr (x.doubleValue() == y.doubleValue())))
         )
 
-        #_public
         (§ method boolean lt(Number x, Number y)
             (§ return (§ expr (x.doubleValue() < y.doubleValue())))
         )
 
-        #_public
         (§ method boolean lte(Number x, Number y)
             (§ return (§ expr (x.doubleValue() <= y.doubleValue())))
         )
 
-        #_public
         (§ method boolean gte(Number x, Number y)
             (§ return (§ expr (x.doubleValue() >= y.doubleValue())))
         )
 
-        #_final
-        #_public
         (§ method Number negate(Number x)
             (§ return (§ expr Double.valueOf(-x.doubleValue())))
         )
 
-        #_public
         (§ method Number inc(Number x)
             (§ return (§ expr Double.valueOf(x.doubleValue() + 1)))
         )
 
-        #_public
         (§ method Number dec(Number x)
             (§ return (§ expr Double.valueOf(x.doubleValue() - 1)))
         )
     )
 
-    #_final
-    #_static
     (class-ns RatioOps (§ extends OpsP)
-        #_public
         (§ method Ops combine(Ops y)
             (§ return (§ expr y.opsWith(this)))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(LongOps x)
             (§ return (§ expr this))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(DoubleOps x)
             (§ return (§ expr DOUBLE_OPS))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(RatioOps x)
             (§ return (§ expr this))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(BigIntOps x)
             (§ return (§ expr this))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(BigDecimalOps x)
             (§ return (§ expr BIGDECIMAL_OPS))
         )
 
-        #_public
         (§ method boolean isZero(Number x)
             (§ let Ratio r = (Ratio) x)
             (§ return (§ expr (r.numerator.signum() == 0)))
         )
 
-        #_public
         (§ method boolean isPos(Number x)
             (§ let Ratio r = (Ratio) x)
             (§ return (§ expr (r.numerator.signum() > 0)))
         )
 
-        #_public
         (§ method boolean isNeg(Number x)
             (§ let Ratio r = (Ratio) x)
             (§ return (§ expr (r.numerator.signum() < 0)))
         )
 
-        #_static
-        (§ method Number normalizeRet(Number ret, Number x, Number y)
+        (§ defn Number normalizeRet(Number ret, Number x, Number y)
             (§ return (§ expr ret))
         )
 
-        #_final
-        #_public
         (§ method Number add(Number x, Number y)
             (§ let Ratio rx = toRatio(x))
             (§ let Ratio ry = toRatio(y))
@@ -26836,8 +22973,6 @@
             (§ return (§ expr normalizeRet(ret, x, y)))
         )
 
-        #_final
-        #_public
         (§ method Number multiply(Number x, Number y)
             (§ let Ratio rx = toRatio(x))
             (§ let Ratio ry = toRatio(y))
@@ -26845,7 +22980,6 @@
             (§ return (§ expr normalizeRet(ret, x, y)))
         )
 
-        #_public
         (§ method Number divide(Number x, Number y)
             (§ let Ratio rx = toRatio(x))
             (§ let Ratio ry = toRatio(y))
@@ -26853,7 +22987,6 @@
             (§ return (§ expr normalizeRet(ret, x, y)))
         )
 
-        #_public
         (§ method Number quotient(Number x, Number y)
             (§ let Ratio rx = toRatio(x))
             (§ let Ratio ry = toRatio(y))
@@ -26861,7 +22994,6 @@
             (§ return (§ expr normalizeRet(BigInt.fromBigInteger(q), x, y)))
         )
 
-        #_public
         (§ method Number remainder(Number x, Number y)
             (§ let Ratio rx = toRatio(x))
             (§ let Ratio ry = toRatio(y))
@@ -26870,91 +23002,69 @@
             (§ return (§ expr normalizeRet(ret, x, y)))
         )
 
-        #_public
         (§ method boolean equiv(Number x, Number y)
             (§ let Ratio rx = toRatio(x))
             (§ let Ratio ry = toRatio(y))
             (§ return (§ expr (rx.numerator.equals(ry.numerator) && rx.denominator.equals(ry.denominator))))
         )
 
-        #_public
         (§ method boolean lt(Number x, Number y)
             (§ let Ratio rx = toRatio(x))
             (§ let Ratio ry = toRatio(y))
             (§ return (§ expr Numbers.lt(rx.numerator.multiply(ry.denominator), ry.numerator.multiply(rx.denominator))))
         )
 
-        #_public
         (§ method boolean lte(Number x, Number y)
             (§ let Ratio rx = toRatio(x))
             (§ let Ratio ry = toRatio(y))
             (§ return (§ expr Numbers.lte(rx.numerator.multiply(ry.denominator), ry.numerator.multiply(rx.denominator))))
         )
 
-        #_public
         (§ method boolean gte(Number x, Number y)
             (§ let Ratio rx = toRatio(x))
             (§ let Ratio ry = toRatio(y))
             (§ return (§ expr Numbers.gte(rx.numerator.multiply(ry.denominator), ry.numerator.multiply(rx.denominator))))
         )
 
-        #_final
-        #_public
         (§ method Number negate(Number x)
             (§ let Ratio r = (Ratio) x)
             (§ return (§ expr new Ratio(r.numerator.negate(), r.denominator)))
         )
 
-        #_public
         (§ method Number inc(Number x)
             (§ return (§ expr Numbers.add(x, 1)))
         )
 
-        #_public
         (§ method Number dec(Number x)
             (§ return (§ expr Numbers.add(x, -1)))
         )
     )
 
-    #_final
-    #_static
     (class-ns BigIntOps (§ extends OpsP)
-        #_public
         (§ method Ops combine(Ops y)
             (§ return (§ expr y.opsWith(this)))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(LongOps x)
             (§ return (§ expr this))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(DoubleOps x)
             (§ return (§ expr DOUBLE_OPS))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(RatioOps x)
             (§ return (§ expr RATIO_OPS))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(BigIntOps x)
             (§ return (§ expr this))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(BigDecimalOps x)
             (§ return (§ expr BIGDECIMAL_OPS))
         )
 
-        #_public
         (§ method boolean isZero(Number x)
             (§ let BigInt bx = toBigInt(x))
             (§ if (bx.bipart == nil))
@@ -26964,7 +23074,6 @@
             (§ return (§ expr (bx.bipart.signum() == 0)))
         )
 
-        #_public
         (§ method boolean isPos(Number x)
             (§ let BigInt bx = toBigInt(x))
             (§ if (bx.bipart == nil))
@@ -26974,7 +23083,6 @@
             (§ return (§ expr (bx.bipart.signum() > 0)))
         )
 
-        #_public
         (§ method boolean isNeg(Number x)
             (§ let BigInt bx = toBigInt(x))
             (§ if (bx.bipart == nil))
@@ -26984,199 +23092,151 @@
             (§ return (§ expr (bx.bipart.signum() < 0)))
         )
 
-        #_final
-        #_public
         (§ method Number add(Number x, Number y)
             (§ return (§ expr toBigInt(x).add(toBigInt(y))))
         )
 
-        #_final
-        #_public
         (§ method Number multiply(Number x, Number y)
             (§ return (§ expr toBigInt(x).multiply(toBigInt(y))))
         )
 
-        #_public
         (§ method Number divide(Number x, Number y)
             (§ return (§ expr Numbers.divide(toBigInteger(x), toBigInteger(y))))
         )
 
-        #_public
         (§ method Number quotient(Number x, Number y)
             (§ return (§ expr toBigInt(x).quotient(toBigInt(y))))
         )
 
-        #_public
         (§ method Number remainder(Number x, Number y)
             (§ return (§ expr toBigInt(x).remainder(toBigInt(y))))
         )
 
-        #_public
         (§ method boolean equiv(Number x, Number y)
             (§ return (§ expr toBigInt(x).equals(toBigInt(y))))
         )
 
-        #_public
         (§ method boolean lt(Number x, Number y)
             (§ return (§ expr toBigInt(x).lt(toBigInt(y))))
         )
 
-        #_public
         (§ method boolean lte(Number x, Number y)
             (§ return (§ expr (toBigInteger(x).compareTo(toBigInteger(y)) <= 0)))
         )
 
-        #_public
         (§ method boolean gte(Number x, Number y)
             (§ return (§ expr (toBigInteger(x).compareTo(toBigInteger(y)) >= 0)))
         )
 
-        #_final
-        #_public
         (§ method Number negate(Number x)
             (§ return (§ expr BigInt.fromBigInteger(toBigInteger(x).negate())))
         )
 
-        #_public
         (§ method Number inc(Number x)
             (§ let BigInteger bx = toBigInteger(x))
             (§ return (§ expr BigInt.fromBigInteger(bx.add(BigInteger.ONE))))
         )
 
-        #_public
         (§ method Number dec(Number x)
             (§ let BigInteger bx = toBigInteger(x))
             (§ return (§ expr BigInt.fromBigInteger(bx.subtract(BigInteger.ONE))))
         )
     )
 
-    #_final
-    #_static
     (class-ns BigDecimalOps (§ extends OpsP)
-        #_final
-        #_static
-        (§ field Var MATH_CONTEXT = RT.MATH_CONTEXT)
+        (§ def Var MATH_CONTEXT = RT.MATH_CONTEXT)
 
-        #_public
         (§ method Ops combine(Ops y)
             (§ return (§ expr y.opsWith(this)))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(LongOps x)
             (§ return (§ expr this))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(DoubleOps x)
             (§ return (§ expr DOUBLE_OPS))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(RatioOps x)
             (§ return (§ expr this))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(BigIntOps x)
             (§ return (§ expr this))
         )
 
-        #_final
-        #_public
         (§ method Ops opsWith(BigDecimalOps x)
             (§ return (§ expr this))
         )
 
-        #_public
         (§ method boolean isZero(Number x)
             (§ let BigDecimal bx = (BigDecimal) x)
             (§ return (§ expr (bx.signum() == 0)))
         )
 
-        #_public
         (§ method boolean isPos(Number x)
             (§ let BigDecimal bx = (BigDecimal) x)
             (§ return (§ expr (bx.signum() > 0)))
         )
 
-        #_public
         (§ method boolean isNeg(Number x)
             (§ let BigDecimal bx = (BigDecimal) x)
             (§ return (§ expr (bx.signum() < 0)))
         )
 
-        #_final
-        #_public
         (§ method Number add(Number x, Number y)
             (§ let MathContext mc = (MathContext) MATH_CONTEXT.deref())
             (§ return (§ expr (mc == nil) ? toBigDecimal(x).add(toBigDecimal(y)) :or toBigDecimal(x).add(toBigDecimal(y), mc)))
         )
 
-        #_final
-        #_public
         (§ method Number multiply(Number x, Number y)
             (§ let MathContext mc = (MathContext) MATH_CONTEXT.deref())
             (§ return (§ expr (mc == nil) ? toBigDecimal(x).multiply(toBigDecimal(y)) :or toBigDecimal(x).multiply(toBigDecimal(y), mc)))
         )
 
-        #_public
         (§ method Number divide(Number x, Number y)
             (§ let MathContext mc = (MathContext) MATH_CONTEXT.deref())
             (§ return (§ expr (mc == nil) ? toBigDecimal(x).divide(toBigDecimal(y)) :or toBigDecimal(x).divide(toBigDecimal(y), mc)))
         )
 
-        #_public
         (§ method Number quotient(Number x, Number y)
             (§ let MathContext mc = (MathContext) MATH_CONTEXT.deref())
             (§ return (§ expr (mc == nil) ? toBigDecimal(x).divideToIntegralValue(toBigDecimal(y)) :or toBigDecimal(x).divideToIntegralValue(toBigDecimal(y), mc)))
         )
 
-        #_public
         (§ method Number remainder(Number x, Number y)
             (§ let MathContext mc = (MathContext) MATH_CONTEXT.deref())
             (§ return (§ expr (mc == nil) ? toBigDecimal(x).remainder(toBigDecimal(y)) :or toBigDecimal(x).remainder(toBigDecimal(y), mc)))
         )
 
-        #_public
         (§ method boolean equiv(Number x, Number y)
             (§ return (§ expr (toBigDecimal(x).compareTo(toBigDecimal(y)) == 0)))
         )
 
-        #_public
         (§ method boolean lt(Number x, Number y)
             (§ return (§ expr (toBigDecimal(x).compareTo(toBigDecimal(y)) < 0)))
         )
 
-        #_public
         (§ method boolean lte(Number x, Number y)
             (§ return (§ expr (toBigDecimal(x).compareTo(toBigDecimal(y)) <= 0)))
         )
 
-        #_public
         (§ method boolean gte(Number x, Number y)
             (§ return (§ expr (toBigDecimal(x).compareTo(toBigDecimal(y)) >= 0)))
         )
 
-        #_final
-        #_public
         (§ method Number negate(Number x)
             (§ let MathContext mc = (MathContext) MATH_CONTEXT.deref())
             (§ return (§ expr (mc == nil) ? ((BigDecimal) x).negate() :or ((BigDecimal) x).negate(mc)))
         )
 
-        #_public
         (§ method Number inc(Number x)
             (§ let MathContext mc = (MathContext) MATH_CONTEXT.deref())
             (§ let BigDecimal bx = (BigDecimal) x)
             (§ return (§ expr (mc == nil) ? bx.add(BigDecimal.ONE) :or bx.add(BigDecimal.ONE, mc)))
         )
 
-        #_public
         (§ method Number dec(Number x)
             (§ let MathContext mc = (MathContext) MATH_CONTEXT.deref())
             (§ let BigDecimal bx = (BigDecimal) x)
@@ -27184,24 +23244,12 @@
         )
     )
 
-    #_static
-    #_final
-    (§ field LongOps LONG_OPS = new LongOps())
-    #_static
-    #_final
-    (§ field DoubleOps DOUBLE_OPS = new DoubleOps())
-    #_static
-    #_final
-    (§ field RatioOps RATIO_OPS = new RatioOps())
-    #_static
-    #_final
-    (§ field BigIntOps BIGINT_OPS = new BigIntOps())
-    #_static
-    #_final
-    (§ field BigDecimalOps BIGDECIMAL_OPS = new BigDecimalOps())
+    (§ def LongOps LONG_OPS = new LongOps())
+    (§ def DoubleOps DOUBLE_OPS = new DoubleOps())
+    (§ def RatioOps RATIO_OPS = new RatioOps())
+    (§ def BigIntOps BIGINT_OPS = new BigIntOps())
+    (§ def BigDecimalOps BIGDECIMAL_OPS = new BigDecimalOps())
 
-    #_static
-    #_public
     (§ enum Category
         (§ item INTEGER),
         (§ item FLOATING),
@@ -27209,8 +23257,7 @@
         (§ item RATIO)
     )
 
-    #_static
-    (§ method Ops ops(Object x)
+    (§ defn Ops ops(Object x)
         (§ let Class xc = x.getClass())
 
         (§ if (xc == Long.class))
@@ -27252,8 +23299,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    (§ method int hasheqFrom(Number x, Class xc)
+    (§ defn int hasheqFrom(Number x, Class xc)
         (§ if (xc == Integer.class || xc == Short.class || xc == Byte.class || (xc == BigInteger.class && lte(x, Long.MAX_VALUE) && gte(x, Long.MIN_VALUE))))
         (§
             (§ let long lpart = x.longValue())
@@ -27283,8 +23329,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    (§ method int hasheq(Number x)
+    (§ defn int hasheq(Number x)
         (§ let Class xc = x.getClass())
 
         (§ if (xc == Long.class))
@@ -27303,8 +23348,7 @@
         (§ return (§ expr hasheqFrom(x, xc)))
     )
 
-    #_static
-    (§ method Category category(Object x)
+    (§ defn Category category(Object x)
         (§ let Class xc = x.getClass())
 
         (§ if (xc == Integer.class))
@@ -27341,8 +23385,7 @@
         )
     )
 
-    #_static
-    (§ method long bitOpsCast(Object x)
+    (§ defn long bitOpsCast(Object x)
         (§ let Class xc = x.getClass())
 
         (§ if (xc == Long.class || xc == Integer.class || xc == Short.class || xc == Byte.class))
@@ -27354,9 +23397,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method float[] float_array(int size, Object init)
+    (§ defn float[] float_array(int size, Object init)
         (§ let float[] ret = new float[size])
         (§ if (init instanceof Number))
         (§
@@ -27378,9 +23419,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method float[] float_array(Object sizeOrSeq)
+    (§ defn float[] float_array(Object sizeOrSeq)
         (§ if (sizeOrSeq instanceof Number))
         (§
             (§ return (§ expr new float[((Number) sizeOrSeq).intValue()]))
@@ -27399,9 +23438,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method double[] double_array(int size, Object init)
+    (§ defn double[] double_array(int size, Object init)
         (§ let double[] ret = new double[size])
         (§ if (init instanceof Number))
         (§
@@ -27423,9 +23460,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method double[] double_array(Object sizeOrSeq)
+    (§ defn double[] double_array(Object sizeOrSeq)
         (§ if (sizeOrSeq instanceof Number))
         (§
             (§ return (§ expr new double[((Number) sizeOrSeq).intValue()]))
@@ -27444,9 +23479,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method int[] int_array(int size, Object init)
+    (§ defn int[] int_array(int size, Object init)
         (§ let int[] ret = new int[size])
         (§ if (init instanceof Number))
         (§
@@ -27468,9 +23501,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method int[] int_array(Object sizeOrSeq)
+    (§ defn int[] int_array(Object sizeOrSeq)
         (§ if (sizeOrSeq instanceof Number))
         (§
             (§ return (§ expr new int[((Number) sizeOrSeq).intValue()]))
@@ -27489,9 +23520,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method long[] long_array(int size, Object init)
+    (§ defn long[] long_array(int size, Object init)
         (§ let long[] ret = new long[size])
         (§ if (init instanceof Number))
         (§
@@ -27513,9 +23542,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method long[] long_array(Object sizeOrSeq)
+    (§ defn long[] long_array(Object sizeOrSeq)
         (§ if (sizeOrSeq instanceof Number))
         (§
             (§ return (§ expr new long[((Number) sizeOrSeq).intValue()]))
@@ -27534,9 +23561,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method short[] short_array(int size, Object init)
+    (§ defn short[] short_array(int size, Object init)
         (§ let short[] ret = new short[size])
         (§ if (init instanceof Short))
         (§
@@ -27558,9 +23583,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method short[] short_array(Object sizeOrSeq)
+    (§ defn short[] short_array(Object sizeOrSeq)
         (§ if (sizeOrSeq instanceof Number))
         (§
             (§ return (§ expr new short[((Number) sizeOrSeq).intValue()]))
@@ -27579,9 +23602,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method char[] char_array(int size, Object init)
+    (§ defn char[] char_array(int size, Object init)
         (§ let char[] ret = new char[size])
         (§ if (init instanceof Character))
         (§
@@ -27603,9 +23624,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method char[] char_array(Object sizeOrSeq)
+    (§ defn char[] char_array(Object sizeOrSeq)
         (§ if (sizeOrSeq instanceof Number))
         (§
             (§ return (§ expr new char[((Number) sizeOrSeq).intValue()]))
@@ -27624,9 +23643,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method byte[] byte_array(int size, Object init)
+    (§ defn byte[] byte_array(int size, Object init)
         (§ let byte[] ret = new byte[size])
         (§ if (init instanceof Byte))
         (§
@@ -27648,9 +23665,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method byte[] byte_array(Object sizeOrSeq)
+    (§ defn byte[] byte_array(Object sizeOrSeq)
         (§ if (sizeOrSeq instanceof Number))
         (§
             (§ return (§ expr new byte[((Number) sizeOrSeq).intValue()]))
@@ -27669,9 +23684,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method boolean[] boolean_array(int size, Object init)
+    (§ defn boolean[] boolean_array(int size, Object init)
         (§ let boolean[] ret = new boolean[size])
         (§ if (init instanceof Boolean))
         (§
@@ -27693,9 +23706,7 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method boolean[] boolean_array(Object sizeOrSeq)
+    (§ defn boolean[] boolean_array(Object sizeOrSeq)
         (§ if (sizeOrSeq instanceof Number))
         (§
             (§ return (§ expr new boolean[((Number) sizeOrSeq).intValue()]))
@@ -27714,759 +23725,510 @@
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method boolean[] booleans(Object array)
+    (§ defn boolean[] booleans(Object array)
         (§ return (§ expr (boolean[]) array))
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method byte[] bytes(Object array)
+    (§ defn byte[] bytes(Object array)
         (§ return (§ expr (byte[]) array))
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method char[] chars(Object array)
+    (§ defn char[] chars(Object array)
         (§ return (§ expr (char[]) array))
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method short[] shorts(Object array)
+    (§ defn short[] shorts(Object array)
         (§ return (§ expr (short[]) array))
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method float[] floats(Object array)
+    (§ defn float[] floats(Object array)
         (§ return (§ expr (float[]) array))
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method double[] doubles(Object array)
+    (§ defn double[] doubles(Object array)
         (§ return (§ expr (double[]) array))
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method int[] ints(Object array)
+    (§ defn int[] ints(Object array)
         (§ return (§ expr (int[]) array))
     )
 
     (§ anno @WarnBoxedMath(false))
-    #_static
-    #_public
-    (§ method long[] longs(Object array)
+    (§ defn long[] longs(Object array)
         (§ return (§ expr (long[]) array))
     )
 
-    #_static
-    #_public
-    (§ method Number num(Object x)
+    (§ defn Number num(Object x)
         (§ return (§ expr (Number) x))
     )
 
-    #_static
-    #_public
-    (§ method Number num(float x)
+    (§ defn Number num(float x)
         (§ return (§ expr Float.valueOf(x)))
     )
 
-    #_static
-    #_public
-    (§ method Number num(double x)
+    (§ defn Number num(double x)
         (§ return (§ expr Double.valueOf(x)))
     )
 
-    #_static
-    #_public
-    (§ method double add(double x, double y)
+    (§ defn double add(double x, double y)
         (§ return (§ expr x + y))
     )
 
-    #_static
-    #_public
-    (§ method double addP(double x, double y)
+    (§ defn double addP(double x, double y)
         (§ return (§ expr x + y))
     )
 
-    #_static
-    #_public
-    (§ method double minus(double x, double y)
+    (§ defn double minus(double x, double y)
         (§ return (§ expr x - y))
     )
 
-    #_static
-    #_public
-    (§ method double minusP(double x, double y)
+    (§ defn double minusP(double x, double y)
         (§ return (§ expr x - y))
     )
 
-    #_static
-    #_public
-    (§ method double minus(double x)
+    (§ defn double minus(double x)
         (§ return (§ expr -x))
     )
 
-    #_static
-    #_public
-    (§ method double minusP(double x)
+    (§ defn double minusP(double x)
         (§ return (§ expr -x))
     )
 
-    #_static
-    #_public
-    (§ method double inc(double x)
+    (§ defn double inc(double x)
         (§ return (§ expr x + 1))
     )
 
-    #_static
-    #_public
-    (§ method double incP(double x)
+    (§ defn double incP(double x)
         (§ return (§ expr x + 1))
     )
 
-    #_static
-    #_public
-    (§ method double dec(double x)
+    (§ defn double dec(double x)
         (§ return (§ expr x - 1))
     )
 
-    #_static
-    #_public
-    (§ method double decP(double x)
+    (§ defn double decP(double x)
         (§ return (§ expr x - 1))
     )
 
-    #_static
-    #_public
-    (§ method double multiply(double x, double y)
+    (§ defn double multiply(double x, double y)
         (§ return (§ expr x * y))
     )
 
-    #_static
-    #_public
-    (§ method double multiplyP(double x, double y)
+    (§ defn double multiplyP(double x, double y)
         (§ return (§ expr x * y))
     )
 
-    #_static
-    #_public
-    (§ method double divide(double x, double y)
+    (§ defn double divide(double x, double y)
         (§ return (§ expr x / y))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(double x, double y)
+    (§ defn boolean equiv(double x, double y)
         (§ return (§ expr (x == y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean lt(double x, double y)
+    (§ defn boolean lt(double x, double y)
         (§ return (§ expr (x < y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean lte(double x, double y)
+    (§ defn boolean lte(double x, double y)
         (§ return (§ expr (x <= y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean gt(double x, double y)
+    (§ defn boolean gt(double x, double y)
         (§ return (§ expr (x > y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean gte(double x, double y)
+    (§ defn boolean gte(double x, double y)
         (§ return (§ expr (x >= y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean isPos(double x)
+    (§ defn boolean isPos(double x)
         (§ return (§ expr (x > 0)))
     )
 
-    #_static
-    #_public
-    (§ method boolean isNeg(double x)
+    (§ defn boolean isNeg(double x)
         (§ return (§ expr (x < 0)))
     )
 
-    #_static
-    #_public
-    (§ method boolean isZero(double x)
+    (§ defn boolean isZero(double x)
         (§ return (§ expr (x == 0)))
     )
 
-    #_static
-    (§ method int throwIntOverflow()
+    (§ defn int throwIntOverflow()
         (§ throw new ArithmeticException("integer overflow"))
     )
 
-    #_static
-    #_public
-    (§ method int unchecked_int_add(int x, int y)
+    (§ defn int unchecked_int_add(int x, int y)
         (§ return (§ expr x + y))
     )
 
-    #_static
-    #_public
-    (§ method int unchecked_int_subtract(int x, int y)
+    (§ defn int unchecked_int_subtract(int x, int y)
         (§ return (§ expr x - y))
     )
 
-    #_static
-    #_public
-    (§ method int unchecked_int_negate(int x)
+    (§ defn int unchecked_int_negate(int x)
         (§ return (§ expr -x))
     )
 
-    #_static
-    #_public
-    (§ method int unchecked_int_inc(int x)
+    (§ defn int unchecked_int_inc(int x)
         (§ return (§ expr x + 1))
     )
 
-    #_static
-    #_public
-    (§ method int unchecked_int_dec(int x)
+    (§ defn int unchecked_int_dec(int x)
         (§ return (§ expr x - 1))
     )
 
-    #_static
-    #_public
-    (§ method int unchecked_int_multiply(int x, int y)
+    (§ defn int unchecked_int_multiply(int x, int y)
         (§ return (§ expr x * y))
     )
 
-    #_static
-    #_public
-    (§ method long not(Object x)
+    (§ defn long not(Object x)
         (§ return (§ expr not(bitOpsCast(x))))
     )
 
-    #_static
-    #_public
-    (§ method long not(long x)
+    (§ defn long not(long x)
         (§ return (§ expr ~x))
     )
 
-    #_static
-    #_public
-    (§ method long and(Object x, Object y)
+    (§ defn long and(Object x, Object y)
         (§ return (§ expr and(bitOpsCast(x), bitOpsCast(y))))
     )
 
-    #_static
-    #_public
-    (§ method long and(Object x, long y)
+    (§ defn long and(Object x, long y)
         (§ return (§ expr and(bitOpsCast(x), y)))
     )
 
-    #_static
-    #_public
-    (§ method long and(long x, Object y)
+    (§ defn long and(long x, Object y)
         (§ return (§ expr and(x, bitOpsCast(y))))
     )
 
-    #_static
-    #_public
-    (§ method long and(long x, long y)
+    (§ defn long and(long x, long y)
         (§ return (§ expr x & y))
     )
 
-    #_static
-    #_public
-    (§ method long or(Object x, Object y)
+    (§ defn long or(Object x, Object y)
         (§ return (§ expr or(bitOpsCast(x), bitOpsCast(y))))
     )
 
-    #_static
-    #_public
-    (§ method long or(Object x, long y)
+    (§ defn long or(Object x, long y)
         (§ return (§ expr or(bitOpsCast(x), y)))
     )
 
-    #_static
-    #_public
-    (§ method long or(long x, Object y)
+    (§ defn long or(long x, Object y)
         (§ return (§ expr or(x, bitOpsCast(y))))
     )
 
-    #_static
-    #_public
-    (§ method long or(long x, long y)
+    (§ defn long or(long x, long y)
         (§ return (§ expr x | y))
     )
 
-    #_static
-    #_public
-    (§ method long xor(Object x, Object y)
+    (§ defn long xor(Object x, Object y)
         (§ return (§ expr xor(bitOpsCast(x), bitOpsCast(y))))
     )
 
-    #_static
-    #_public
-    (§ method long xor(Object x, long y)
+    (§ defn long xor(Object x, long y)
         (§ return (§ expr xor(bitOpsCast(x), y)))
     )
 
-    #_static
-    #_public
-    (§ method long xor(long x, Object y)
+    (§ defn long xor(long x, Object y)
         (§ return (§ expr xor(x, bitOpsCast(y))))
     )
 
-    #_static
-    #_public
-    (§ method long xor(long x, long y)
+    (§ defn long xor(long x, long y)
         (§ return (§ expr x :xor y))
     )
 
-    #_static
-    #_public
-    (§ method long andNot(Object x, Object y)
+    (§ defn long andNot(Object x, Object y)
         (§ return (§ expr andNot(bitOpsCast(x), bitOpsCast(y))))
     )
 
-    #_static
-    #_public
-    (§ method long andNot(Object x, long y)
+    (§ defn long andNot(Object x, long y)
         (§ return (§ expr andNot(bitOpsCast(x), y)))
     )
 
-    #_static
-    #_public
-    (§ method long andNot(long x, Object y)
+    (§ defn long andNot(long x, Object y)
         (§ return (§ expr andNot(x, bitOpsCast(y))))
     )
 
-    #_static
-    #_public
-    (§ method long andNot(long x, long y)
+    (§ defn long andNot(long x, long y)
         (§ return (§ expr x & ~y))
     )
 
-    #_static
-    #_public
-    (§ method long clearBit(Object x, Object y)
+    (§ defn long clearBit(Object x, Object y)
         (§ return (§ expr clearBit(bitOpsCast(x), bitOpsCast(y))))
     )
 
-    #_static
-    #_public
-    (§ method long clearBit(Object x, long y)
+    (§ defn long clearBit(Object x, long y)
         (§ return (§ expr clearBit(bitOpsCast(x), y)))
     )
 
-    #_static
-    #_public
-    (§ method long clearBit(long x, Object y)
+    (§ defn long clearBit(long x, Object y)
         (§ return (§ expr clearBit(x, bitOpsCast(y))))
     )
 
-    #_static
-    #_public
-    (§ method long clearBit(long x, long n)
+    (§ defn long clearBit(long x, long n)
         (§ return (§ expr x & ~(1 << n)))
     )
 
-    #_static
-    #_public
-    (§ method long setBit(Object x, Object y)
+    (§ defn long setBit(Object x, Object y)
         (§ return (§ expr setBit(bitOpsCast(x), bitOpsCast(y))))
     )
 
-    #_static
-    #_public
-    (§ method long setBit(Object x, long y)
+    (§ defn long setBit(Object x, long y)
         (§ return (§ expr setBit(bitOpsCast(x), y)))
     )
 
-    #_static
-    #_public
-    (§ method long setBit(long x, Object y)
+    (§ defn long setBit(long x, Object y)
         (§ return (§ expr setBit(x, bitOpsCast(y))))
     )
 
-    #_static
-    #_public
-    (§ method long setBit(long x, long n)
+    (§ defn long setBit(long x, long n)
         (§ return (§ expr x | (1 << n)))
     )
 
-    #_static
-    #_public
-    (§ method long flipBit(Object x, Object y)
+    (§ defn long flipBit(Object x, Object y)
         (§ return (§ expr flipBit(bitOpsCast(x), bitOpsCast(y))))
     )
 
-    #_static
-    #_public
-    (§ method long flipBit(Object x, long y)
+    (§ defn long flipBit(Object x, long y)
         (§ return (§ expr flipBit(bitOpsCast(x), y)))
     )
 
-    #_static
-    #_public
-    (§ method long flipBit(long x, Object y)
+    (§ defn long flipBit(long x, Object y)
         (§ return (§ expr flipBit(x, bitOpsCast(y))))
     )
 
-    #_static
-    #_public
-    (§ method long flipBit(long x, long n)
+    (§ defn long flipBit(long x, long n)
         (§ return (§ expr x :xor (1 << n)))
     )
 
-    #_static
-    #_public
-    (§ method boolean testBit(Object x, Object y)
+    (§ defn boolean testBit(Object x, Object y)
         (§ return (§ expr testBit(bitOpsCast(x), bitOpsCast(y))))
     )
 
-    #_static
-    #_public
-    (§ method boolean testBit(Object x, long y)
+    (§ defn boolean testBit(Object x, long y)
         (§ return (§ expr testBit(bitOpsCast(x), y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean testBit(long x, Object y)
+    (§ defn boolean testBit(long x, Object y)
         (§ return (§ expr testBit(x, bitOpsCast(y))))
     )
 
-    #_static
-    #_public
-    (§ method boolean testBit(long x, long n)
+    (§ defn boolean testBit(long x, long n)
         (§ return (§ expr ((x & (1 << n)) != 0)))
     )
 
-    #_static
-    #_public
-    (§ method int unchecked_int_divide(int x, int y)
+    (§ defn int unchecked_int_divide(int x, int y)
         (§ return (§ expr x / y))
     )
 
-    #_static
-    #_public
-    (§ method int unchecked_int_remainder(int x, int y)
+    (§ defn int unchecked_int_remainder(int x, int y)
         (§ return (§ expr x % y))
     )
 
-    #_static
-    #_public
-    (§ method Number num(long x)
+    (§ defn Number num(long x)
         (§ return (§ expr Long.valueOf(x)))
     )
 
-    #_static
-    #_public
-    (§ method long unchecked_add(long x, long y)
+    (§ defn long unchecked_add(long x, long y)
         (§ return (§ expr x + y))
     )
 
-    #_static
-    #_public
-    (§ method long unchecked_minus(long x, long y)
+    (§ defn long unchecked_minus(long x, long y)
         (§ return (§ expr x - y))
     )
 
-    #_static
-    #_public
-    (§ method long unchecked_multiply(long x, long y)
+    (§ defn long unchecked_multiply(long x, long y)
         (§ return (§ expr x * y))
     )
 
-    #_static
-    #_public
-    (§ method long unchecked_minus(long x)
+    (§ defn long unchecked_minus(long x)
         (§ return (§ expr -x))
     )
 
-    #_static
-    #_public
-    (§ method long unchecked_inc(long x)
+    (§ defn long unchecked_inc(long x)
         (§ return (§ expr x + 1))
     )
 
-    #_static
-    #_public
-    (§ method long unchecked_dec(long x)
+    (§ defn long unchecked_dec(long x)
         (§ return (§ expr x - 1))
     )
 
-    #_static
-    #_public
-    (§ method Number unchecked_add(Object x, Object y)
+    (§ defn Number unchecked_add(Object x, Object y)
         (§ return (§ expr add(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number unchecked_minus(Object x, Object y)
+    (§ defn Number unchecked_minus(Object x, Object y)
         (§ return (§ expr minus(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number unchecked_multiply(Object x, Object y)
+    (§ defn Number unchecked_multiply(Object x, Object y)
         (§ return (§ expr multiply(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number unchecked_minus(Object x)
+    (§ defn Number unchecked_minus(Object x)
         (§ return (§ expr minus(x)))
     )
 
-    #_static
-    #_public
-    (§ method Number unchecked_inc(Object x)
+    (§ defn Number unchecked_inc(Object x)
         (§ return (§ expr inc(x)))
     )
 
-    #_static
-    #_public
-    (§ method Number unchecked_dec(Object x)
+    (§ defn Number unchecked_dec(Object x)
         (§ return (§ expr dec(x)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_add(double x, double y)
+    (§ defn double unchecked_add(double x, double y)
         (§ return (§ expr add(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_minus(double x, double y)
+    (§ defn double unchecked_minus(double x, double y)
         (§ return (§ expr minus(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_multiply(double x, double y)
+    (§ defn double unchecked_multiply(double x, double y)
         (§ return (§ expr multiply(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_minus(double x)
+    (§ defn double unchecked_minus(double x)
         (§ return (§ expr minus(x)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_inc(double x)
+    (§ defn double unchecked_inc(double x)
         (§ return (§ expr inc(x)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_dec(double x)
+    (§ defn double unchecked_dec(double x)
         (§ return (§ expr dec(x)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_add(double x, Object y)
+    (§ defn double unchecked_add(double x, Object y)
         (§ return (§ expr add(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_minus(double x, Object y)
+    (§ defn double unchecked_minus(double x, Object y)
         (§ return (§ expr minus(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_multiply(double x, Object y)
+    (§ defn double unchecked_multiply(double x, Object y)
         (§ return (§ expr multiply(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_add(Object x, double y)
+    (§ defn double unchecked_add(Object x, double y)
         (§ return (§ expr add(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_minus(Object x, double y)
+    (§ defn double unchecked_minus(Object x, double y)
         (§ return (§ expr minus(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_multiply(Object x, double y)
+    (§ defn double unchecked_multiply(Object x, double y)
         (§ return (§ expr multiply(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_add(double x, long y)
+    (§ defn double unchecked_add(double x, long y)
         (§ return (§ expr add(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_minus(double x, long y)
+    (§ defn double unchecked_minus(double x, long y)
         (§ return (§ expr minus(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_multiply(double x, long y)
+    (§ defn double unchecked_multiply(double x, long y)
         (§ return (§ expr multiply(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_add(long x, double y)
+    (§ defn double unchecked_add(long x, double y)
         (§ return (§ expr add(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_minus(long x, double y)
+    (§ defn double unchecked_minus(long x, double y)
         (§ return (§ expr minus(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method double unchecked_multiply(long x, double y)
+    (§ defn double unchecked_multiply(long x, double y)
         (§ return (§ expr multiply(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number unchecked_add(long x, Object y)
+    (§ defn Number unchecked_add(long x, Object y)
         (§ return (§ expr add(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number unchecked_minus(long x, Object y)
+    (§ defn Number unchecked_minus(long x, Object y)
         (§ return (§ expr minus(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number unchecked_multiply(long x, Object y)
+    (§ defn Number unchecked_multiply(long x, Object y)
         (§ return (§ expr multiply(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number unchecked_add(Object x, long y)
+    (§ defn Number unchecked_add(Object x, long y)
         (§ return (§ expr add(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number unchecked_minus(Object x, long y)
+    (§ defn Number unchecked_minus(Object x, long y)
         (§ return (§ expr minus(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number unchecked_multiply(Object x, long y)
+    (§ defn Number unchecked_multiply(Object x, long y)
         (§ return (§ expr multiply(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number quotient(double x, Object y)
+    (§ defn Number quotient(double x, Object y)
         (§ return (§ expr quotient((Object)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number quotient(Object x, double y)
+    (§ defn Number quotient(Object x, double y)
         (§ return (§ expr quotient(x, (Object)y)))
     )
 
-    #_static
-    #_public
-    (§ method Number quotient(long x, Object y)
+    (§ defn Number quotient(long x, Object y)
         (§ return (§ expr quotient((Object)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number quotient(Object x, long y)
+    (§ defn Number quotient(Object x, long y)
         (§ return (§ expr quotient(x, (Object)y)))
     )
 
-    #_static
-    #_public
-    (§ method double quotient(double x, long y)
+    (§ defn double quotient(double x, long y)
         (§ return (§ expr quotient(x, (double)y)))
     )
 
-    #_static
-    #_public
-    (§ method double quotient(long x, double y)
+    (§ defn double quotient(long x, double y)
         (§ return (§ expr quotient((double)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number remainder(double x, Object y)
+    (§ defn Number remainder(double x, Object y)
         (§ return (§ expr remainder((Object)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number remainder(Object x, double y)
+    (§ defn Number remainder(Object x, double y)
         (§ return (§ expr remainder(x, (Object)y)))
     )
 
-    #_static
-    #_public
-    (§ method Number remainder(long x, Object y)
+    (§ defn Number remainder(long x, Object y)
         (§ return (§ expr remainder((Object)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number remainder(Object x, long y)
+    (§ defn Number remainder(Object x, long y)
         (§ return (§ expr remainder(x, (Object)y)))
     )
 
-    #_static
-    #_public
-    (§ method double remainder(double x, long y)
+    (§ defn double remainder(double x, long y)
         (§ return (§ expr remainder(x, (double)y)))
     )
 
-    #_static
-    #_public
-    (§ method double remainder(long x, double y)
+    (§ defn double remainder(long x, double y)
         (§ return (§ expr remainder((double)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method long add(long x, long y)
+    (§ defn long add(long x, long y)
         (§ let long ret = x + y)
         (§ if ((ret :xor x) < 0 && (ret :xor y) < 0))
         (§
@@ -28475,9 +24237,7 @@
         (§ return (§ expr ret))
     )
 
-    #_static
-    #_public
-    (§ method Number addP(long x, long y)
+    (§ defn Number addP(long x, long y)
         (§ let long ret = x + y)
         (§ if ((ret :xor x) < 0 && (ret :xor y) < 0))
         (§
@@ -28486,9 +24246,7 @@
         (§ return (§ expr num(ret)))
     )
 
-    #_static
-    #_public
-    (§ method long minus(long x, long y)
+    (§ defn long minus(long x, long y)
         (§ let long ret = x - y)
         (§ if (((ret :xor x) < 0 && (ret :xor ~y) < 0)))
         (§
@@ -28497,9 +24255,7 @@
         (§ return (§ expr ret))
     )
 
-    #_static
-    #_public
-    (§ method Number minusP(long x, long y)
+    (§ defn Number minusP(long x, long y)
         (§ let long ret = x - y)
         (§ if (((ret :xor x) < 0 && (ret :xor ~y) < 0)))
         (§
@@ -28508,9 +24264,7 @@
         (§ return (§ expr num(ret)))
     )
 
-    #_static
-    #_public
-    (§ method long minus(long x)
+    (§ defn long minus(long x)
         (§ if (x == Long.MIN_VALUE))
         (§
             (§ return (§ expr throwIntOverflow()))
@@ -28518,9 +24272,7 @@
         (§ return (§ expr -x))
     )
 
-    #_static
-    #_public
-    (§ method Number minusP(long x)
+    (§ defn Number minusP(long x)
         (§ if (x == Long.MIN_VALUE))
         (§
             (§ return (§ expr BigInt.fromBigInteger(BigInteger.valueOf(x).negate())))
@@ -28528,9 +24280,7 @@
         (§ return (§ expr num(-x)))
     )
 
-    #_static
-    #_public
-    (§ method long inc(long x)
+    (§ defn long inc(long x)
         (§ if (x == Long.MAX_VALUE))
         (§
             (§ return (§ expr throwIntOverflow()))
@@ -28538,9 +24288,7 @@
         (§ return (§ expr x + 1))
     )
 
-    #_static
-    #_public
-    (§ method Number incP(long x)
+    (§ defn Number incP(long x)
         (§ if (x == Long.MAX_VALUE))
         (§
             (§ return (§ expr BIGINT_OPS.inc(x)))
@@ -28548,9 +24296,7 @@
         (§ return (§ expr num(x + 1)))
     )
 
-    #_static
-    #_public
-    (§ method long dec(long x)
+    (§ defn long dec(long x)
         (§ if (x == Long.MIN_VALUE))
         (§
             (§ return (§ expr throwIntOverflow()))
@@ -28558,9 +24304,7 @@
         (§ return (§ expr x - 1))
     )
 
-    #_static
-    #_public
-    (§ method Number decP(long x)
+    (§ defn Number decP(long x)
         (§ if (x == Long.MIN_VALUE))
         (§
             (§ return (§ expr BIGINT_OPS.dec(x)))
@@ -28568,9 +24312,7 @@
         (§ return (§ expr num(x - 1)))
     )
 
-    #_static
-    #_public
-    (§ method long multiply(long x, long y)
+    (§ defn long multiply(long x, long y)
         (§ if (x == Long.MIN_VALUE && y < 0))
         (§
             (§ return (§ expr throwIntOverflow()))
@@ -28583,9 +24325,7 @@
         (§ return (§ expr ret))
     )
 
-    #_static
-    #_public
-    (§ method Number multiplyP(long x, long y)
+    (§ defn Number multiplyP(long x, long y)
         (§ if (x == Long.MIN_VALUE && y < 0))
         (§
             (§ return (§ expr multiplyP((Number)x, (Number)y)))
@@ -28598,520 +24338,349 @@
         (§ return (§ expr num(ret)))
     )
 
-    #_static
-    #_public
-    (§ method long quotient(long x, long y)
+    (§ defn long quotient(long x, long y)
         (§ return (§ expr x / y))
     )
 
-    #_static
-    #_public
-    (§ method long remainder(long x, long y)
+    (§ defn long remainder(long x, long y)
         (§ return (§ expr x % y))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(long x, long y)
+    (§ defn boolean equiv(long x, long y)
         (§ return (§ expr (x == y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean lt(long x, long y)
+    (§ defn boolean lt(long x, long y)
         (§ return (§ expr (x < y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean lte(long x, long y)
+    (§ defn boolean lte(long x, long y)
         (§ return (§ expr (x <= y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean gt(long x, long y)
+    (§ defn boolean gt(long x, long y)
         (§ return (§ expr (x > y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean gte(long x, long y)
+    (§ defn boolean gte(long x, long y)
         (§ return (§ expr (x >= y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean isPos(long x)
+    (§ defn boolean isPos(long x)
         (§ return (§ expr (x > 0)))
     )
 
-    #_static
-    #_public
-    (§ method boolean isNeg(long x)
+    (§ defn boolean isNeg(long x)
         (§ return (§ expr (x < 0)))
     )
 
-    #_static
-    #_public
-    (§ method boolean isZero(long x)
+    (§ defn boolean isZero(long x)
         (§ return (§ expr (x == 0)))
     )
 
     ;; overload resolution
 
-    #_static
-    #_public
-    (§ method Number add(long x, Object y)
+    (§ defn Number add(long x, Object y)
         (§ return (§ expr add((Object)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number add(Object x, long y)
+    (§ defn Number add(Object x, long y)
         (§ return (§ expr add(x, (Object)y)))
     )
 
-    #_static
-    #_public
-    (§ method Number addP(long x, Object y)
+    (§ defn Number addP(long x, Object y)
         (§ return (§ expr addP((Object)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number addP(Object x, long y)
+    (§ defn Number addP(Object x, long y)
         (§ return (§ expr addP(x, (Object)y)))
     )
 
-    #_static
-    #_public
-    (§ method double add(double x, Object y)
+    (§ defn double add(double x, Object y)
         (§ return (§ expr add(x, ((Number)y).doubleValue())))
     )
 
-    #_static
-    #_public
-    (§ method double add(Object x, double y)
+    (§ defn double add(Object x, double y)
         (§ return (§ expr add(((Number)x).doubleValue(), y)))
     )
 
-    #_static
-    #_public
-    (§ method double add(double x, long y)
+    (§ defn double add(double x, long y)
         (§ return (§ expr x + y))
     )
 
-    #_static
-    #_public
-    (§ method double add(long x, double y)
+    (§ defn double add(long x, double y)
         (§ return (§ expr x + y))
     )
 
-    #_static
-    #_public
-    (§ method double addP(double x, Object y)
+    (§ defn double addP(double x, Object y)
         (§ return (§ expr addP(x, ((Number)y).doubleValue())))
     )
 
-    #_static
-    #_public
-    (§ method double addP(Object x, double y)
+    (§ defn double addP(Object x, double y)
         (§ return (§ expr addP(((Number)x).doubleValue(), y)))
     )
 
-    #_static
-    #_public
-    (§ method double addP(double x, long y)
+    (§ defn double addP(double x, long y)
         (§ return (§ expr x + y))
     )
 
-    #_static
-    #_public
-    (§ method double addP(long x, double y)
+    (§ defn double addP(long x, double y)
         (§ return (§ expr x + y))
     )
 
-    #_static
-    #_public
-    (§ method Number minus(long x, Object y)
+    (§ defn Number minus(long x, Object y)
         (§ return (§ expr minus((Object)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number minus(Object x, long y)
+    (§ defn Number minus(Object x, long y)
         (§ return (§ expr minus(x, (Object)y)))
     )
 
-    #_static
-    #_public
-    (§ method Number minusP(long x, Object y)
+    (§ defn Number minusP(long x, Object y)
         (§ return (§ expr minusP((Object)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number minusP(Object x, long y)
+    (§ defn Number minusP(Object x, long y)
         (§ return (§ expr minusP(x, (Object)y)))
     )
 
-    #_static
-    #_public
-    (§ method double minus(double x, Object y)
+    (§ defn double minus(double x, Object y)
         (§ return (§ expr minus(x, ((Number)y).doubleValue())))
     )
 
-    #_static
-    #_public
-    (§ method double minus(Object x, double y)
+    (§ defn double minus(Object x, double y)
         (§ return (§ expr minus(((Number)x).doubleValue(), y)))
     )
 
-    #_static
-    #_public
-    (§ method double minus(double x, long y)
+    (§ defn double minus(double x, long y)
         (§ return (§ expr x - y))
     )
 
-    #_static
-    #_public
-    (§ method double minus(long x, double y)
+    (§ defn double minus(long x, double y)
         (§ return (§ expr x - y))
     )
 
-    #_static
-    #_public
-    (§ method double minusP(double x, Object y)
+    (§ defn double minusP(double x, Object y)
         (§ return (§ expr minus(x, ((Number)y).doubleValue())))
     )
 
-    #_static
-    #_public
-    (§ method double minusP(Object x, double y)
+    (§ defn double minusP(Object x, double y)
         (§ return (§ expr minus(((Number)x).doubleValue(), y)))
     )
 
-    #_static
-    #_public
-    (§ method double minusP(double x, long y)
+    (§ defn double minusP(double x, long y)
         (§ return (§ expr x - y))
     )
 
-    #_static
-    #_public
-    (§ method double minusP(long x, double y)
+    (§ defn double minusP(long x, double y)
         (§ return (§ expr x - y))
     )
 
-    #_static
-    #_public
-    (§ method Number multiply(long x, Object y)
+    (§ defn Number multiply(long x, Object y)
         (§ return (§ expr multiply((Object)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number multiply(Object x, long y)
+    (§ defn Number multiply(Object x, long y)
         (§ return (§ expr multiply(x, (Object)y)))
     )
 
-    #_static
-    #_public
-    (§ method Number multiplyP(long x, Object y)
+    (§ defn Number multiplyP(long x, Object y)
         (§ return (§ expr multiplyP((Object)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number multiplyP(Object x, long y)
+    (§ defn Number multiplyP(Object x, long y)
         (§ return (§ expr multiplyP(x, (Object)y)))
     )
 
-    #_static
-    #_public
-    (§ method double multiply(double x, Object y)
+    (§ defn double multiply(double x, Object y)
         (§ return (§ expr multiply(x, ((Number)y).doubleValue())))
     )
 
-    #_static
-    #_public
-    (§ method double multiply(Object x, double y)
+    (§ defn double multiply(Object x, double y)
         (§ return (§ expr multiply(((Number)x).doubleValue(), y)))
     )
 
-    #_static
-    #_public
-    (§ method double multiply(double x, long y)
+    (§ defn double multiply(double x, long y)
         (§ return (§ expr x * y))
     )
 
-    #_static
-    #_public
-    (§ method double multiply(long x, double y)
+    (§ defn double multiply(long x, double y)
         (§ return (§ expr x * y))
     )
 
-    #_static
-    #_public
-    (§ method double multiplyP(double x, Object y)
+    (§ defn double multiplyP(double x, Object y)
         (§ return (§ expr multiplyP(x, ((Number)y).doubleValue())))
     )
 
-    #_static
-    #_public
-    (§ method double multiplyP(Object x, double y)
+    (§ defn double multiplyP(Object x, double y)
         (§ return (§ expr multiplyP(((Number)x).doubleValue(), y)))
     )
 
-    #_static
-    #_public
-    (§ method double multiplyP(double x, long y)
+    (§ defn double multiplyP(double x, long y)
         (§ return (§ expr x * y))
     )
 
-    #_static
-    #_public
-    (§ method double multiplyP(long x, double y)
+    (§ defn double multiplyP(long x, double y)
         (§ return (§ expr x * y))
     )
 
-    #_static
-    #_public
-    (§ method Number divide(long x, Object y)
+    (§ defn Number divide(long x, Object y)
         (§ return (§ expr divide((Object)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Number divide(Object x, long y)
+    (§ defn Number divide(Object x, long y)
         (§ return (§ expr divide(x, (Object)y)))
     )
 
-    #_static
-    #_public
-    (§ method double divide(double x, Object y)
+    (§ defn double divide(double x, Object y)
         (§ return (§ expr x / ((Number)y).doubleValue()))
     )
 
-    #_static
-    #_public
-    (§ method double divide(Object x, double y)
+    (§ defn double divide(Object x, double y)
         (§ return (§ expr ((Number)x).doubleValue() / y))
     )
 
-    #_static
-    #_public
-    (§ method double divide(double x, long y)
+    (§ defn double divide(double x, long y)
         (§ return (§ expr x / y))
     )
 
-    #_static
-    #_public
-    (§ method double divide(long x, double y)
+    (§ defn double divide(long x, double y)
         (§ return (§ expr x / y))
     )
 
-    #_static
-    #_public
-    (§ method Number divide(long x, long y)
+    (§ defn Number divide(long x, long y)
         (§ return (§ expr divide((Number)x, (Number)y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean lt(long x, Object y)
+    (§ defn boolean lt(long x, Object y)
         (§ return (§ expr lt((Object)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean lt(Object x, long y)
+    (§ defn boolean lt(Object x, long y)
         (§ return (§ expr lt(x, (Object)y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean lt(double x, Object y)
+    (§ defn boolean lt(double x, Object y)
         (§ return (§ expr (x < ((Number)y).doubleValue())))
     )
 
-    #_static
-    #_public
-    (§ method boolean lt(Object x, double y)
+    (§ defn boolean lt(Object x, double y)
         (§ return (§ expr (((Number)x).doubleValue() < y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean lt(double x, long y)
+    (§ defn boolean lt(double x, long y)
         (§ return (§ expr (x < y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean lt(long x, double y)
+    (§ defn boolean lt(long x, double y)
         (§ return (§ expr (x < y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean lte(long x, Object y)
+    (§ defn boolean lte(long x, Object y)
         (§ return (§ expr lte((Object)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean lte(Object x, long y)
+    (§ defn boolean lte(Object x, long y)
         (§ return (§ expr lte(x, (Object)y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean lte(double x, Object y)
+    (§ defn boolean lte(double x, Object y)
         (§ return (§ expr (x <= ((Number)y).doubleValue())))
     )
 
-    #_static
-    #_public
-    (§ method boolean lte(Object x, double y)
+    (§ defn boolean lte(Object x, double y)
         (§ return (§ expr (((Number)x).doubleValue() <= y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean lte(double x, long y)
+    (§ defn boolean lte(double x, long y)
         (§ return (§ expr (x <= y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean lte(long x, double y)
+    (§ defn boolean lte(long x, double y)
         (§ return (§ expr (x <= y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean gt(long x, Object y)
+    (§ defn boolean gt(long x, Object y)
         (§ return (§ expr gt((Object)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean gt(Object x, long y)
+    (§ defn boolean gt(Object x, long y)
         (§ return (§ expr gt(x, (Object)y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean gt(double x, Object y)
+    (§ defn boolean gt(double x, Object y)
         (§ return (§ expr (x > ((Number)y).doubleValue())))
     )
 
-    #_static
-    #_public
-    (§ method boolean gt(Object x, double y)
+    (§ defn boolean gt(Object x, double y)
         (§ return (§ expr (((Number)x).doubleValue() > y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean gt(double x, long y)
+    (§ defn boolean gt(double x, long y)
         (§ return (§ expr (x > y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean gt(long x, double y)
+    (§ defn boolean gt(long x, double y)
         (§ return (§ expr (x > y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean gte(long x, Object y)
+    (§ defn boolean gte(long x, Object y)
         (§ return (§ expr gte((Object)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean gte(Object x, long y)
+    (§ defn boolean gte(Object x, long y)
         (§ return (§ expr gte(x, (Object)y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean gte(double x, Object y)
+    (§ defn boolean gte(double x, Object y)
         (§ return (§ expr (x >= ((Number)y).doubleValue())))
     )
 
-    #_static
-    #_public
-    (§ method boolean gte(Object x, double y)
+    (§ defn boolean gte(Object x, double y)
         (§ return (§ expr (((Number)x).doubleValue() >= y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean gte(double x, long y)
+    (§ defn boolean gte(double x, long y)
         (§ return (§ expr (x >= y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean gte(long x, double y)
+    (§ defn boolean gte(long x, double y)
         (§ return (§ expr (x >= y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(long x, Object y)
+    (§ defn boolean equiv(long x, Object y)
         (§ return (§ expr equiv((Object)x, y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(Object x, long y)
+    (§ defn boolean equiv(Object x, long y)
         (§ return (§ expr equiv(x, (Object)y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(double x, Object y)
+    (§ defn boolean equiv(double x, Object y)
         (§ return (§ expr (x == ((Number)y).doubleValue())))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(Object x, double y)
+    (§ defn boolean equiv(Object x, double y)
         (§ return (§ expr (((Number)x).doubleValue() == y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(double x, long y)
+    (§ defn boolean equiv(double x, long y)
         (§ return (§ expr (x == y)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(long x, double y)
+    (§ defn boolean equiv(long x, double y)
         (§ return (§ expr (x == y)))
     )
 
-    #_static
-    (§ method boolean isNaN(Object x)
+    (§ defn boolean isNaN(Object x)
         (§ return (§ expr (x instanceof Double) && ((Double)x).isNaN() || (x instanceof Float) && ((Float)x).isNaN()))
     )
 
-    #_static
-    #_public
-    (§ method double max(double x, double y)
+    (§ defn double max(double x, double y)
         (§ return (§ expr Math.max(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Object max(double x, long y)
+    (§ defn Object max(double x, long y)
         (§ if (Double.isNaN(x)))
         (§
             (§ return (§ expr x))
@@ -29126,9 +24695,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object max(double x, Object y)
+    (§ defn Object max(double x, Object y)
         (§ if (Double.isNaN(x)))
         (§
             (§ return (§ expr x))
@@ -29147,9 +24714,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object max(long x, double y)
+    (§ defn Object max(long x, double y)
         (§ if (Double.isNaN(y)))
         (§
             (§ return (§ expr y))
@@ -29164,9 +24729,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method long max(long x, long y)
+    (§ defn long max(long x, long y)
         (§ if (x > y))
         (§
             (§ return (§ expr x))
@@ -29177,9 +24740,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object max(long x, Object y)
+    (§ defn Object max(long x, Object y)
         (§ if (isNaN(y)))
         (§
             (§ return (§ expr y))
@@ -29194,9 +24755,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object max(Object x, long y)
+    (§ defn Object max(Object x, long y)
         (§ if (isNaN(x)))
         (§
             (§ return (§ expr x))
@@ -29211,9 +24770,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object max(Object x, double y)
+    (§ defn Object max(Object x, double y)
         (§ if (isNaN(x)))
         (§
             (§ return (§ expr x))
@@ -29232,9 +24789,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object max(Object x, Object y)
+    (§ defn Object max(Object x, Object y)
         (§ if (isNaN(x)))
         (§
             (§ return (§ expr x))
@@ -29253,15 +24808,11 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method double min(double x, double y)
+    (§ defn double min(double x, double y)
         (§ return (§ expr Math.min(x, y)))
     )
 
-    #_static
-    #_public
-    (§ method Object min(double x, long y)
+    (§ defn Object min(double x, long y)
         (§ if (Double.isNaN(x)))
         (§
             (§ return (§ expr x))
@@ -29276,9 +24827,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object min(double x, Object y)
+    (§ defn Object min(double x, Object y)
         (§ if (Double.isNaN(x)))
         (§
             (§ return (§ expr x))
@@ -29297,9 +24846,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object min(long x, double y)
+    (§ defn Object min(long x, double y)
         (§ if (Double.isNaN(y)))
         (§
             (§ return (§ expr y))
@@ -29314,9 +24861,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method long min(long x, long y)
+    (§ defn long min(long x, long y)
         (§ if (x < y))
         (§
             (§ return (§ expr x))
@@ -29327,9 +24872,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object min(long x, Object y)
+    (§ defn Object min(long x, Object y)
         (§ if (isNaN(y)))
         (§
             (§ return (§ expr y))
@@ -29344,9 +24887,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object min(Object x, long y)
+    (§ defn Object min(Object x, long y)
         (§ if (isNaN(x)))
         (§
             (§ return (§ expr x))
@@ -29361,9 +24902,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object min(Object x, double y)
+    (§ defn Object min(Object x, double y)
         (§ if (isNaN(x)))
         (§
             (§ return (§ expr x))
@@ -29382,9 +24921,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object min(Object x, Object y)
+    (§ defn Object min(Object x, Object y)
         (§ if (isNaN(x)))
         (§
             (§ return (§ expr x))
@@ -29407,29 +24944,23 @@
 
 (java-ns cloiure.lang.Obj
 
-#_public
 #_abstract
 (class-ns Obj (§ implements IObj)
-    #_final
     (§ field IPersistentMap _meta)
 
-    #_public
-    (§ method Obj(IPersistentMap meta)
+    (§ constructor Obj(IPersistentMap meta)
         (§ ass this._meta = meta)
     )
 
-    #_public
-    (§ method Obj()
+    (§ constructor Obj()
         (§ ass _meta = nil)
     )
 
-    #_final
-    #_public
     (§ method IPersistentMap meta()
         (§ return (§ expr _meta))
     )
 
-    (§ abstract public Obj withMeta(IPersistentMap meta))
+    (§ abstract Obj withMeta(IPersistentMap meta))
 )
 )
 
@@ -29450,25 +24981,14 @@
  ;
  ; nil keys and values are ok, but you won't be able to distinguish a nil value via valAt - use contains/entryAt
  ;;
-#_public
 (class-ns PersistentArrayMap (§ extends APersistentMap) (§ implements IObj, IEditableCollection, IMapIterable, IKVReduce)
-    #_final
     (§ field Object[] array)
-    #_static
-    #_final
-    (§ field int HASHTABLE_THRESHOLD = 16)
+    (§ def int HASHTABLE_THRESHOLD = 16)
 
-    #_public
-    #_static
-    #_final
-    (§ field PersistentArrayMap EMPTY = new PersistentArrayMap())
-    #_private
-    #_final
-    (§ field IPersistentMap _meta)
+    (§ def PersistentArrayMap EMPTY = new PersistentArrayMap())
+    (§ field- IPersistentMap _meta)
 
-    #_static
-    #_public
-    (§ method IPersistentMap create(Map other)
+    (§ defn IPersistentMap create(Map other)
         (§ let ITransientMap ret = EMPTY.asTransient())
         (§ for (Object o :in other.entrySet()))
         (§
@@ -29479,12 +24999,11 @@
     )
 
     #_protected
-    (§ method PersistentArrayMap()
+    (§ constructor PersistentArrayMap()
         (§ ass this.array = new Object[] (§))
         (§ ass this._meta = nil)
     )
 
-    #_public
     (§ method PersistentArrayMap withMeta(IPersistentMap meta)
         (§ return (§ expr new PersistentArrayMap(meta, array)))
     )
@@ -29497,9 +25016,7 @@
         (§ return (§ expr PersistentHashMap.create(meta(), init)))
     )
 
-    #_static
-    #_public
-    (§ method PersistentArrayMap createWithCheck(Object[] init)
+    (§ defn PersistentArrayMap createWithCheck(Object[] init)
         (§ for (int i = 0 i < init.length i += 2))
         (§
             (§ for (int j = i + 2 j < init.length j += 2))
@@ -29513,9 +25030,7 @@
         (§ return (§ expr new PersistentArrayMap(init)))
     )
 
-    #_static
-    #_public
-    (§ method PersistentArrayMap createAsIfByAssoc(Object[] init)
+    (§ defn PersistentArrayMap createAsIfByAssoc(Object[] init)
         (§ if ((init.length & 1) == 1))
         (§
             (§ throw new IllegalArgumentException(String.format("No value supplied for key: %s", init[init.length - 1])))
@@ -29590,29 +25105,24 @@
      ;
      ; @param init {key1, val1, key2, val2, ...}
      ;;
-    #_public
-    (§ method PersistentArrayMap(Object[] init)
+    (§ constructor PersistentArrayMap(Object[] init)
         (§ ass this.array = init)
         (§ ass this._meta = nil)
     )
 
-    #_public
-    (§ method PersistentArrayMap(IPersistentMap meta, Object[] init)
+    (§ constructor PersistentArrayMap(IPersistentMap meta, Object[] init)
         (§ ass this._meta = meta)
         (§ ass this.array = init)
     )
 
-    #_public
     (§ method int count()
         (§ return (§ expr array.length / 2))
     )
 
-    #_public
     (§ method boolean containsKey(Object key)
         (§ return (§ expr (indexOf(key) >= 0)))
     )
 
-    #_public
     (§ method IMapEntry entryAt(Object key)
         (§ let int i = indexOf(key))
         (§ if (i >= 0))
@@ -29622,7 +25132,6 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method IPersistentMap assocEx(Object key, Object val)
         (§ let int i = indexOf(key))
         (§ let Object[] newArray)
@@ -29647,7 +25156,6 @@
         (§ return (§ expr create(newArray)))
     )
 
-    #_public
     (§ method IPersistentMap assoc(Object key, Object val)
         (§ let int i = indexOf(key))
         (§ let Object[] newArray)
@@ -29677,7 +25185,6 @@
         (§ return (§ expr create(newArray)))
     )
 
-    #_public
     (§ method IPersistentMap without(Object key)
         (§ let int i = indexOf(key))
         (§ if (i >= 0)) ;; have key, will remove
@@ -29696,13 +25203,10 @@
         (§ return (§ expr this))
     )
 
-    #_public
     (§ method IPersistentMap empty()
         (§ return (§ expr (IPersistentMap) EMPTY.withMeta(meta())))
     )
 
-    #_final
-    #_public
     (§ method Object valAt(Object key, Object notFound)
         (§ let int i = indexOf(key))
         (§ if (i >= 0))
@@ -29712,18 +25216,15 @@
         (§ return (§ expr notFound))
     )
 
-    #_public
     (§ method Object valAt(Object key)
         (§ return (§ expr valAt(key, nil)))
     )
 
-    #_public
     (§ method int capacity()
         (§ return (§ expr count()))
     )
 
-    #_private
-    (§ method int indexOfObject(Object key)
+    (§ method- int indexOfObject(Object key)
         (§ let Util.EquivPred ep = Util.equivPred(key))
         (§ for (int i = 0 i < array.length i += 2))
         (§
@@ -29735,8 +25236,7 @@
         (§ return (§ expr -1))
     )
 
-    #_private
-    (§ method int indexOf(Object key)
+    (§ method- int indexOf(Object key)
         (§ if (key instanceof Keyword))
         (§
             (§ for (int i = 0 i < array.length i += 2))
@@ -29754,8 +25254,7 @@
         )
     )
 
-    #_static
-    (§ method boolean equalKey(Object k1, Object k2)
+    (§ defn boolean equalKey(Object k1, Object k2)
         (§ if (k1 instanceof Keyword))
         (§
             (§ return (§ expr (k1 == k2)))
@@ -29763,22 +25262,18 @@
         (§ return (§ expr Util.equiv(k1, k2)))
     )
 
-    #_public
     (§ method Iterator iterator()
         (§ return (§ expr new Iter(array, APersistentMap.MAKE_ENTRY)))
     )
 
-    #_public
     (§ method Iterator keyIterator()
         (§ return (§ expr new Iter(array, APersistentMap.MAKE_KEY)))
     )
 
-    #_public
     (§ method Iterator valIterator()
         (§ return (§ expr new Iter(array, APersistentMap.MAKE_VAL)))
     )
 
-    #_public
     (§ method ISeq seq()
         (§ if (array.length > 0))
         (§
@@ -29787,36 +25282,29 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method IPersistentMap meta()
         (§ return (§ expr _meta))
     )
 
-    #_static
     (class-ns Seq (§ extends ASeq) (§ implements Counted)
-        #_final
         (§ field Object[] array)
-        #_final
         (§ field int i)
 
-        (§ method Seq(Object[] array, int i)
+        (§ constructor Seq(Object[] array, int i)
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
-        (§ method Seq(IPersistentMap meta, Object[] array, int i)
+        (§ constructor Seq(IPersistentMap meta, Object[] array, int i)
             (§ super(meta))
             (§ ass this.array = array)
             (§ ass this.i = i)
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr MapEntry.create(array[i], array[i + 1])))
         )
 
-        #_public
         (§ method ISeq next()
             (§ if (i + 2 < array.length))
             (§
@@ -29825,41 +25313,36 @@
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method int count()
             (§ return (§ expr (array.length - i) / 2))
         )
 
-        #_public
         (§ method Obj withMeta(IPersistentMap meta)
             (§ return (§ expr new Seq(meta, array, i)))
         )
     )
 
-    #_static
     (class-ns Iter (§ implements Iterator)
         (§ field IFn f)
         (§ field Object[] array)
         (§ field int i)
 
         ;; for iterator
-        (§ method Iter(Object[] array, IFn f)
+        (§ constructor Iter(Object[] array, IFn f)
             (§ this(array, -2, f))
         )
 
         ;; for entryAt
-        (§ method Iter(Object[] array, int i, IFn f)
+        (§ constructor Iter(Object[] array, int i, IFn f)
             (§ ass this.array = array)
             (§ ass this.i = i)
             (§ ass this.f = f)
         )
 
-        #_public
         (§ method boolean hasNext()
             (§ return (§ expr (i < array.length - 2)))
         )
 
-        #_public
         (§ method Object next()
             (§ try )
             (§
@@ -29872,13 +25355,11 @@
             )
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException())
         )
     )
 
-    #_public
     (§ method Object kvreduce(IFn f, Object init)
         (§ for (int i = 0 i < array.length i += 2))
         (§
@@ -29891,31 +25372,25 @@
         (§ return (§ expr init))
     )
 
-    #_public
     (§ method ITransientMap asTransient()
         (§ return (§ expr new TransientArrayMap(array)))
     )
 
-    #_static
-    #_final
     (class-ns TransientArrayMap (§ extends ATransientMap)
         #_volatile
         (§ field int len)
-        #_final
         (§ field Object[] array)
         #_volatile
         (§ field Thread owner)
 
-        #_public
-        (§ method TransientArrayMap(Object[] array)
+        (§ constructor TransientArrayMap(Object[] array)
             (§ ass this.owner = Thread.currentThread())
             (§ ass this.array = new Object[Math.max(HASHTABLE_THRESHOLD, array.length)])
             (§ call System.arraycopy(array, 0, this.array, 0, array.length))
             (§ ass this.len = array.length)
         )
 
-        #_private
-        (§ method int indexOf(Object key)
+        (§ method- int indexOf(Object key)
             (§ for (int i = 0 i < len i += 2))
             (§
                 (§ if (equalKey(array[i], key)))
@@ -30007,31 +25482,17 @@
  ; No sub-tree pools or root-resizing
  ; Any errors are my own
  ;;
-#_public
 (class-ns PersistentHashMap (§ extends APersistentMap) (§ implements IEditableCollection, IObj, IMapIterable, IKVReduce)
-    #_final
     (§ field int count)
-    #_final
     (§ field INode root)
-    #_final
     (§ field boolean hasNull)
-    #_final
     (§ field Object nullValue)
-    #_final
     (§ field IPersistentMap _meta)
 
-    #_final
-    #_public
-    #_static
-    (§ field PersistentHashMap EMPTY = new PersistentHashMap(0, nil, false, nil))
-    #_final
-    #_private
-    #_static
-    (§ field Object NOT_FOUND = new Object())
+    (§ def PersistentHashMap EMPTY = new PersistentHashMap(0, nil, false, nil))
+    (§ def- Object NOT_FOUND = new Object())
 
-    #_static
-    #_public
-    (§ method IPersistentMap create(Map other)
+    (§ defn IPersistentMap create(Map other)
         (§ let ITransientMap ret = EMPTY.asTransient())
         (§ for (Object o :in other.entrySet()))
         (§
@@ -30044,9 +25505,7 @@
     ;;;
      ; @param init {key1, val1, key2, val2, ...}
      ;;
-    #_public
-    #_static
-    (§ method PersistentHashMap create(Object... init)
+    (§ defn PersistentHashMap create(Object... init)
         (§ let ITransientMap ret = EMPTY.asTransient())
         (§ for (int i = 0 i < init.length i += 2))
         (§
@@ -30055,9 +25514,7 @@
         (§ return (§ expr (PersistentHashMap) ret.persistent()))
     )
 
-    #_public
-    #_static
-    (§ method PersistentHashMap createWithCheck(Object... init)
+    (§ defn PersistentHashMap createWithCheck(Object... init)
         (§ let ITransientMap ret = EMPTY.asTransient())
         (§ for (int i = 0 i < init.length i += 2))
         (§
@@ -30070,9 +25527,7 @@
         (§ return (§ expr (PersistentHashMap) ret.persistent()))
     )
 
-    #_static
-    #_public
-    (§ method PersistentHashMap create(ISeq items)
+    (§ defn PersistentHashMap create(ISeq items)
         (§ let ITransientMap ret = EMPTY.asTransient())
         (§ for (  items != nil items = items.next().next()))
         (§
@@ -30085,9 +25540,7 @@
         (§ return (§ expr (PersistentHashMap) ret.persistent()))
     )
 
-    #_static
-    #_public
-    (§ method PersistentHashMap createWithCheck(ISeq items)
+    (§ defn PersistentHashMap createWithCheck(ISeq items)
         (§ let ITransientMap ret = EMPTY.asTransient())
         (§ for (int i = 0 items != nil items = items.next().next(), ++i))
         (§
@@ -30107,13 +25560,11 @@
     ;;;
      ; @param init {key1, val1, key2, val2, ...}
      ;;
-    #_public
-    #_static
-    (§ method PersistentHashMap create(IPersistentMap meta, Object... init)
+    (§ defn PersistentHashMap create(IPersistentMap meta, Object... init)
         (§ return (§ expr create(init).withMeta(meta)))
     )
 
-    (§ method PersistentHashMap(int count, INode root, boolean hasNull, Object nullValue)
+    (§ constructor PersistentHashMap(int count, INode root, boolean hasNull, Object nullValue)
         (§ ass this.count = count)
         (§ ass this.root = root)
         (§ ass this.hasNull = hasNull)
@@ -30121,8 +25572,7 @@
         (§ ass this._meta = nil)
     )
 
-    #_public
-    (§ method PersistentHashMap(IPersistentMap meta, int count, INode root, boolean hasNull, Object nullValue)
+    (§ constructor PersistentHashMap(IPersistentMap meta, int count, INode root, boolean hasNull, Object nullValue)
         (§ ass this._meta = meta)
         (§ ass this.count = count)
         (§ ass this.root = root)
@@ -30130,12 +25580,10 @@
         (§ ass this.nullValue = nullValue)
     )
 
-    #_static
-    (§ method int hash(Object k)
+    (§ defn int hash(Object k)
         (§ return (§ expr Util.hasheq(k)))
     )
 
-    #_public
     (§ method boolean containsKey(Object key)
         (§ if (key == nil))
         (§
@@ -30144,7 +25592,6 @@
         (§ return (§ expr (root != nil) ? (root.find(0, hash(key), key, NOT_FOUND) != NOT_FOUND) :or false))
     )
 
-    #_public
     (§ method IMapEntry entryAt(Object key)
         (§ if (key == nil))
         (§
@@ -30153,7 +25600,6 @@
         (§ return (§ expr (root != nil) ? root.find(0, hash(key), key) :or nil))
     )
 
-    #_public
     (§ method IPersistentMap assoc(Object key, Object val)
         (§ if (key == nil))
         (§
@@ -30172,7 +25618,6 @@
         (§ return (§ expr new PersistentHashMap(meta(), (addedLeaf.val == nil) ? count :or count + 1, newroot, hasNull, nullValue)))
     )
 
-    #_public
     (§ method Object valAt(Object key, Object notFound)
         (§ if (key == nil))
         (§
@@ -30181,12 +25626,10 @@
         (§ return (§ expr (root != nil) ? root.find(0, hash(key), key, notFound) :or notFound))
     )
 
-    #_public
     (§ method Object valAt(Object key)
         (§ return (§ expr valAt(key, nil)))
     )
 
-    #_public
     (§ method IPersistentMap assocEx(Object key, Object val)
         (§ if (containsKey(key)))
         (§
@@ -30195,7 +25638,6 @@
         (§ return (§ expr assoc(key, val)))
     )
 
-    #_public
     (§ method IPersistentMap without(Object key)
         (§ if (key == nil))
         (§
@@ -30213,37 +25655,29 @@
         (§ return (§ expr new PersistentHashMap(meta(), count - 1, newroot, hasNull, nullValue)))
     )
 
-    #_static
-    #_final
-    (§ field Iterator EMPTY_ITER = new Iterator()
-    (§ inner
-        #_public
+    (§ def Iterator EMPTY_ITER = new Iterator()
+    (§ reify
         (§ method boolean hasNext()
             (§ return (§ expr false))
         )
 
-        #_public
         (§ method Object next()
             (§ throw new NoSuchElementException())
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException())
         )
     ))
 
-    #_private
-    (§ method Iterator iterator(final IFn f)
-        (§ let final Iterator rootIter = (root == nil) ? EMPTY_ITER :or root.iterator(f))
+    (§ method- Iterator iterator(IFn f)
+        (§ let Iterator rootIter = (root == nil) ? EMPTY_ITER :or root.iterator(f))
         (§ if (hasNull))
         (§
             (§ return (§ expr new Iterator()
-            (§ inner
-                #_private
-                (§ field boolean seen = false)
+            (§ reify
+                (§ field- boolean seen = false)
 
-                #_public
                 (§ method boolean hasNext()
                     (§ if (!seen))
                     (§
@@ -30255,7 +25689,6 @@
                     )
                 )
 
-                #_public
                 (§ method Object next()
                     (§ if (!seen))
                     (§
@@ -30268,7 +25701,6 @@
                     )
                 )
 
-                #_public
                 (§ method void remove()
                     (§ throw new UnsupportedOperationException())
                 )
@@ -30280,22 +25712,18 @@
         )
     )
 
-    #_public
     (§ method Iterator iterator()
         (§ return (§ expr iterator(APersistentMap.MAKE_ENTRY)))
     )
 
-    #_public
     (§ method Iterator keyIterator()
         (§ return (§ expr iterator(APersistentMap.MAKE_KEY)))
     )
 
-    #_public
     (§ method Iterator valIterator()
         (§ return (§ expr iterator(APersistentMap.MAKE_VAL)))
     )
 
-    #_public
     (§ method Object kvreduce(IFn f, Object init)
         (§ ass init = hasNull ? f.invoke(init, nil, nullValue) :or init)
         (§ if (RT.isReduced(init)))
@@ -30317,12 +25745,10 @@
         (§ return (§ expr init))
     )
 
-    #_public
-    (§ method Object fold(long n, final IFn combinef, final IFn reducef, IFn fjinvoke, final IFn fjtask, final IFn fjfork, final IFn fjjoin)
+    (§ method Object fold(long n, IFn combinef, IFn reducef, IFn fjinvoke, IFn fjtask, IFn fjfork, IFn fjjoin)
         ;; we are ignoring n for now
         (§ let Callable top = new Callable()
-        (§ inner
-            #_public
+        (§ reify
             (§ method Object call() (§ throws Exception)
                 (§ let Object ret = combinef.invoke())
                 (§ if (root != nil))
@@ -30335,46 +25761,36 @@
         (§ return (§ expr fjinvoke.invoke(top)))
     )
 
-    #_public
     (§ method int count()
         (§ return (§ expr count))
     )
 
-    #_public
     (§ method ISeq seq()
         (§ let ISeq s = (root != nil) ? root.nodeSeq() :or nil)
         (§ return (§ expr hasNull ? new Cons(MapEntry.create(nil, nullValue), s) :or s))
     )
 
-    #_public
     (§ method IPersistentCollection empty()
         (§ return (§ expr EMPTY.withMeta(meta())))
     )
 
-    #_static
-    (§ method int mask(int hash, int shift)
+    (§ defn int mask(int hash, int shift)
         (§ return (§ expr (hash >>> shift) & 0x01f))
     )
 
-    #_public
     (§ method PersistentHashMap withMeta(IPersistentMap meta)
         (§ return (§ expr new PersistentHashMap(meta, count, root, hasNull, nullValue)))
     )
 
-    #_public
     (§ method TransientHashMap asTransient()
         (§ return (§ expr new TransientHashMap(this)))
     )
 
-    #_public
     (§ method IPersistentMap meta()
         (§ return (§ expr _meta))
     )
 
-    #_static
-    #_final
     (class-ns TransientHashMap (§ extends ATransientMap)
-        #_final
         (§ field AtomicReference<Thread> edit)
         #_volatile
         (§ field INode root)
@@ -30384,14 +25800,13 @@
         (§ field boolean hasNull)
         #_volatile
         (§ field Object nullValue)
-        #_final
         (§ field Box leafFlag = new Box(nil))
 
-        (§ method TransientHashMap(PersistentHashMap m)
+        (§ constructor TransientHashMap(PersistentHashMap m)
             (§ this(new AtomicReference<Thread>(Thread.currentThread()), m.root, m.count, m.hasNull, m.nullValue))
         )
 
-        (§ method TransientHashMap(AtomicReference<Thread> edit, INode root, int count, boolean hasNull, Object nullValue)
+        (§ constructor TransientHashMap(AtomicReference<Thread> edit, INode root, int count, boolean hasNull, Object nullValue)
             (§ ass this.edit = edit)
             (§ ass this.root = root)
             (§ ass this.count = count)
@@ -30491,7 +25906,6 @@
         )
     )
 
-    #_static
     (§ interface INode
         (§ abstract INode assoc(int shift, int hash, Object key, Object val, Box addedLeaf))
         (§ abstract INode without(int shift, int hash, Object key))
@@ -30506,22 +25920,17 @@
         (§ abstract Iterator iterator(IFn f))
     )
 
-    #_final
-    #_static
     (class-ns ArrayNode (§ implements INode)
         (§ field int count)
-        #_final
         (§ field INode[] array)
-        #_final
         (§ field AtomicReference<Thread> edit)
 
-        (§ method ArrayNode(AtomicReference<Thread> edit, int count, INode[] array)
+        (§ constructor ArrayNode(AtomicReference<Thread> edit, int count, INode[] array)
             (§ ass this.array = array)
             (§ ass this.edit = edit)
             (§ ass this.count = count)
         )
 
-        #_public
         (§ method INode assoc(int shift, int hash, Object key, Object val, Box addedLeaf)
             (§ let int idx = mask(hash, shift))
             (§ let INode node = array[idx])
@@ -30537,7 +25946,6 @@
             (§ return (§ expr new ArrayNode(nil, count, cloneAndSet(array, idx, n))))
         )
 
-        #_public
         (§ method INode without(int shift, int hash, Object key)
             (§ let int idx = mask(hash, shift))
             (§ let INode node = array[idx])
@@ -30564,7 +25972,6 @@
             )
         )
 
-        #_public
         (§ method IMapEntry find(int shift, int hash, Object key)
             (§ let int idx = mask(hash, shift))
             (§ let INode node = array[idx])
@@ -30575,7 +25982,6 @@
             (§ return (§ expr node.find(shift + 5, hash, key)))
         )
 
-        #_public
         (§ method Object find(int shift, int hash, Object key, Object notFound)
             (§ let int idx = mask(hash, shift))
             (§ let INode node = array[idx])
@@ -30586,17 +25992,14 @@
             (§ return (§ expr node.find(shift + 5, hash, key, notFound)))
         )
 
-        #_public
         (§ method ISeq nodeSeq()
             (§ return (§ expr Seq.create(array)))
         )
 
-        #_public
         (§ method Iterator iterator(IFn f)
             (§ return (§ expr new Iter(array, f)))
         )
 
-        #_public
         (§ method Object kvreduce(IFn f, Object init)
             (§ for (INode node :in array))
             (§
@@ -30612,16 +26015,14 @@
             (§ return (§ expr init))
         )
 
-        #_public
-        (§ method Object fold(final IFn combinef, final IFn reducef, final IFn fjtask, final IFn fjfork, final IFn fjjoin)
+        (§ method Object fold(IFn combinef, IFn reducef, IFn fjtask, IFn fjfork, IFn fjjoin)
             (§ let List<Callable> tasks = new ArrayList())
-            (§ for (final INode node :in array))
+            (§ for (INode node :in array))
             (§
                 (§ if (node != nil))
                 (§
                     (§ call tasks.add(new Callable()
-                    (§ inner
-                        #_public
+                    (§ reify
                         (§ method Object call() (§ throws Exception)
                             (§ return (§ expr node.fold(combinef, reducef, fjtask, fjfork, fjjoin)))
                         )
@@ -30632,9 +26033,7 @@
             (§ return (§ expr foldTasks(tasks, combinef, fjtask, fjfork, fjjoin)))
         )
 
-        #_static
-        #_public
-        (§ method Object foldTasks(List<Callable> tasks, final IFn combinef, final IFn fjtask, final IFn fjfork, final IFn fjjoin)
+        (§ defn Object foldTasks(List<Callable> tasks, IFn combinef, IFn fjtask, IFn fjfork, IFn fjjoin)
             (§ if (tasks.isEmpty()))
             (§
                 (§ return (§ expr combinef.invoke()))
@@ -30654,11 +26053,10 @@
             )
 
             (§ let List<Callable> t1 = tasks.subList(0, tasks.size() / 2))
-            (§ let final List<Callable> t2 = tasks.subList(tasks.size() / 2, tasks.size()))
+            (§ let List<Callable> t2 = tasks.subList(tasks.size() / 2, tasks.size()))
 
             (§ let Object forked = fjfork.invoke(fjtask.invoke(new Callable()
-            (§ inner
-                #_public
+            (§ reify
                 (§ method Object call() (§ throws Exception)
                     (§ return (§ expr foldTasks(t2, combinef, fjtask, fjfork, fjjoin)))
                 )
@@ -30667,8 +26065,7 @@
             (§ return (§ expr combinef.invoke(foldTasks(t1, combinef, fjtask, fjfork, fjjoin), fjjoin.invoke(forked))))
         )
 
-        #_private
-        (§ method ArrayNode ensureEditable(AtomicReference<Thread> edit)
+        (§ method- ArrayNode ensureEditable(AtomicReference<Thread> edit)
             (§ if (this.edit == edit))
             (§
                 (§ return (§ expr this))
@@ -30676,15 +26073,13 @@
             (§ return (§ expr new ArrayNode(edit, count, this.array.clone())))
         )
 
-        #_private
-        (§ method ArrayNode editAndSet(AtomicReference<Thread> edit, int i, INode n)
+        (§ method- ArrayNode editAndSet(AtomicReference<Thread> edit, int i, INode n)
             (§ let ArrayNode editable = ensureEditable(edit))
             (§ ass editable.array[i] = n)
             (§ return (§ expr editable))
         )
 
-        #_private
-        (§ method INode pack(AtomicReference<Thread> edit, int idx)
+        (§ method- INode pack(AtomicReference<Thread> edit, int idx)
             (§ let Object[] newArray = new Object[2 * (count - 1)])
             (§ let int j = 1)
             (§ let int bitmap = 0)
@@ -30709,7 +26104,6 @@
             (§ return (§ expr new BitmapIndexedNode(edit, bitmap, newArray)))
         )
 
-        #_public
         (§ method INode assoc(AtomicReference<Thread> edit, int shift, int hash, Object key, Object val, Box addedLeaf)
             (§ let int idx = mask(hash, shift))
             (§ let INode node = array[idx])
@@ -30727,7 +26121,6 @@
             (§ return (§ expr editAndSet(edit, idx, n)))
         )
 
-        #_public
         (§ method INode without(AtomicReference<Thread> edit, int shift, int hash, Object key, Box removedLeaf)
             (§ let int idx = mask(hash, shift))
             (§ let INode node = array[idx])
@@ -30753,23 +26146,16 @@
             (§ return (§ expr editAndSet(edit, idx, n)))
         )
 
-        #_static
         (class-ns Seq (§ extends ASeq)
-            #_final
             (§ field INode[] nodes)
-            #_final
             (§ field int i)
-            #_final
             (§ field ISeq s)
 
-            #_static
-            (§ method ISeq create(INode[] nodes)
+            (§ defn ISeq create(INode[] nodes)
                 (§ return (§ expr create(nil, nodes, 0, nil)))
             )
 
-            #_private
-            #_static
-            (§ method ISeq create(IPersistentMap meta, INode[] nodes, int i, ISeq s)
+            (§ defn- ISeq create(IPersistentMap meta, INode[] nodes, int i, ISeq s)
                 (§ if (s != nil))
                 (§
                     (§ return (§ expr new Seq(meta, nodes, i, s)))
@@ -30788,50 +26174,37 @@
                 (§ return (§ expr nil))
             )
 
-            #_private
-            (§ method Seq(IPersistentMap meta, INode[] nodes, int i, ISeq s)
+            (§ constructor- Seq(IPersistentMap meta, INode[] nodes, int i, ISeq s)
                 (§ super(meta))
                 (§ ass this.nodes = nodes)
                 (§ ass this.i = i)
                 (§ ass this.s = s)
             )
 
-            #_public
             (§ method Obj withMeta(IPersistentMap meta)
                 (§ return (§ expr new Seq(meta, nodes, i, s)))
             )
 
-            #_public
             (§ method Object first()
                 (§ return (§ expr s.first()))
             )
 
-            #_public
             (§ method ISeq next()
                 (§ return (§ expr create(nil, nodes, i, s.next())))
             )
         )
 
-        #_static
         (class-ns Iter (§ implements Iterator)
-            #_private
-            #_final
-            (§ field INode[] array)
-            #_private
-            #_final
-            (§ field IFn f)
-            #_private
-            (§ field int i = 0)
-            #_private
-            (§ field Iterator nestedIter)
+            (§ field- INode[] array)
+            (§ field- IFn f)
+            (§ field- int i = 0)
+            (§ field- Iterator nestedIter)
 
-            #_private
-            (§ method Iter(INode[] array, IFn f)
+            (§ constructor- Iter(INode[] array, IFn f)
                 (§ ass this.array = array)
                 (§ ass this.f = f)
             )
 
-            #_public
             (§ method boolean hasNext()
                 (§ while (true))
                 (§
@@ -30862,7 +26235,6 @@
                 )
             )
 
-            #_public
             (§ method Object next()
                 (§ if (hasNext()))
                 (§
@@ -30874,37 +26246,29 @@
                 )
             )
 
-            #_public
             (§ method void remove()
                 (§ throw new UnsupportedOperationException())
             )
         )
     )
 
-    #_final
-    #_static
     (class-ns BitmapIndexedNode (§ implements INode)
-        #_static
-        #_final
-        (§ field BitmapIndexedNode EMPTY = new BitmapIndexedNode(nil, 0, new Object[0]))
+        (§ def BitmapIndexedNode EMPTY = new BitmapIndexedNode(nil, 0, new Object[0]))
 
         (§ field int bitmap)
         (§ field Object[] array)
-        #_final
         (§ field AtomicReference<Thread> edit)
 
-        #_final
         (§ method int index(int bit)
             (§ return (§ expr Integer.bitCount(bitmap & (bit - 1))))
         )
 
-        (§ method BitmapIndexedNode(AtomicReference<Thread> edit, int bitmap, Object[] array)
+        (§ constructor BitmapIndexedNode(AtomicReference<Thread> edit, int bitmap, Object[] array)
             (§ ass this.bitmap = bitmap)
             (§ ass this.array = array)
             (§ ass this.edit = edit)
         )
 
-        #_public
         (§ method INode assoc(int shift, int hash, Object key, Object val, Box addedLeaf)
             (§ let int bit = bitpos(hash, shift))
             (§ let int idx = index(bit))
@@ -30971,7 +26335,6 @@
             )
         )
 
-        #_public
         (§ method INode without(int shift, int hash, Object key)
             (§ let int bit = bitpos(hash, shift))
             (§ if ((bitmap & bit) == 0))
@@ -31006,7 +26369,6 @@
             (§ return (§ expr this))
         )
 
-        #_public
         (§ method IMapEntry find(int shift, int hash, Object key)
             (§ let int bit = bitpos(hash, shift))
             (§ if ((bitmap & bit) == 0))
@@ -31027,7 +26389,6 @@
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method Object find(int shift, int hash, Object key, Object notFound)
             (§ let int bit = bitpos(hash, shift))
             (§ if ((bitmap & bit) == 0))
@@ -31048,28 +26409,23 @@
             (§ return (§ expr notFound))
         )
 
-        #_public
         (§ method ISeq nodeSeq()
             (§ return (§ expr NodeSeq.create(array)))
         )
 
-        #_public
         (§ method Iterator iterator(IFn f)
             (§ return (§ expr new NodeIter(array, f)))
         )
 
-        #_public
         (§ method Object kvreduce(IFn f, Object init)
             (§ return (§ expr NodeSeq.kvreduce(array, f, init)))
         )
 
-        #_public
         (§ method Object fold(IFn combinef, IFn reducef, IFn fjtask, IFn fjfork, IFn fjjoin)
             (§ return (§ expr NodeSeq.kvreduce(array, reducef, combinef.invoke())))
         )
 
-        #_private
-        (§ method BitmapIndexedNode ensureEditable(AtomicReference<Thread> edit)
+        (§ method- BitmapIndexedNode ensureEditable(AtomicReference<Thread> edit)
             (§ if (this.edit == edit))
             (§
                 (§ return (§ expr this))
@@ -31080,23 +26436,20 @@
             (§ return (§ expr new BitmapIndexedNode(edit, bitmap, newArray)))
         )
 
-        #_private
-        (§ method BitmapIndexedNode editAndSet(AtomicReference<Thread> edit, int i, Object a)
+        (§ method- BitmapIndexedNode editAndSet(AtomicReference<Thread> edit, int i, Object a)
             (§ let BitmapIndexedNode editable = ensureEditable(edit))
             (§ ass editable.array[i] = a)
             (§ return (§ expr editable))
         )
 
-        #_private
-        (§ method BitmapIndexedNode editAndSet(AtomicReference<Thread> edit, int i, Object a, int j, Object b)
+        (§ method- BitmapIndexedNode editAndSet(AtomicReference<Thread> edit, int i, Object a, int j, Object b)
             (§ let BitmapIndexedNode editable = ensureEditable(edit))
             (§ ass editable.array[i] = a)
             (§ ass editable.array[j] = b)
             (§ return (§ expr editable))
         )
 
-        #_private
-        (§ method BitmapIndexedNode editAndRemovePair(AtomicReference<Thread> edit, int bit, int i)
+        (§ method- BitmapIndexedNode editAndRemovePair(AtomicReference<Thread> edit, int bit, int i)
             (§ if (bitmap == bit))
             (§
                 (§ return (§ expr nil))
@@ -31109,7 +26462,6 @@
             (§ return (§ expr editable))
         )
 
-        #_public
         (§ method INode assoc(AtomicReference<Thread> edit, int shift, int hash, Object key, Object val, Box addedLeaf)
             (§ let int bit = bitpos(hash, shift))
             (§ let int idx = index(bit))
@@ -31189,7 +26541,6 @@
             )
         )
 
-        #_public
         (§ method INode without(AtomicReference<Thread> edit, int shift, int hash, Object key, Box removedLeaf)
             (§ let int bit = bitpos(hash, shift))
             (§ if ((bitmap & bit) == 0))
@@ -31226,24 +26577,19 @@
         )
     )
 
-    #_final
-    #_static
     (class-ns HashCollisionNode (§ implements INode)
-        #_final
         (§ field int hash)
         (§ field int count)
         (§ field Object[] array)
-        #_final
         (§ field AtomicReference<Thread> edit)
 
-        (§ method HashCollisionNode(AtomicReference<Thread> edit, int hash, int count, Object... array)
+        (§ constructor HashCollisionNode(AtomicReference<Thread> edit, int hash, int count, Object... array)
             (§ ass this.edit = edit)
             (§ ass this.hash = hash)
             (§ ass this.count = count)
             (§ ass this.array = array)
         )
 
-        #_public
         (§ method INode assoc(int shift, int hash, Object key, Object val, Box addedLeaf)
             (§ if (hash == this.hash))
             (§
@@ -31267,7 +26613,6 @@
             (§ return (§ expr new BitmapIndexedNode(nil, bitpos(this.hash, shift), new Object[] (§ nil, this )).assoc(shift, hash, key, val, addedLeaf)))
         )
 
-        #_public
         (§ method INode without(int shift, int hash, Object key)
             (§ let int idx = findIndex(key))
             (§ if (idx == -1))
@@ -31281,7 +26626,6 @@
             (§ return (§ expr new HashCollisionNode(nil, hash, count - 1, removePair(array, idx / 2))))
         )
 
-        #_public
         (§ method IMapEntry find(int shift, int hash, Object key)
             (§ let int idx = findIndex(key))
             (§ if (idx < 0))
@@ -31295,7 +26639,6 @@
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method Object find(int shift, int hash, Object key, Object notFound)
             (§ let int idx = findIndex(key))
             (§ if (idx < 0))
@@ -31309,27 +26652,22 @@
             (§ return (§ expr notFound))
         )
 
-        #_public
         (§ method ISeq nodeSeq()
             (§ return (§ expr NodeSeq.create(array)))
         )
 
-        #_public
         (§ method Iterator iterator(IFn f)
             (§ return (§ expr new NodeIter(array, f)))
         )
 
-        #_public
         (§ method Object kvreduce(IFn f, Object init)
             (§ return (§ expr NodeSeq.kvreduce(array, f, init)))
         )
 
-        #_public
         (§ method Object fold(IFn combinef, IFn reducef, IFn fjtask, IFn fjfork, IFn fjjoin)
             (§ return (§ expr NodeSeq.kvreduce(array, reducef, combinef.invoke())))
         )
 
-        #_public
         (§ method int findIndex(Object key)
             (§ for (int i = 0 i < 2 * count i += 2))
             (§
@@ -31341,8 +26679,7 @@
             (§ return (§ expr -1))
         )
 
-        #_private
-        (§ method HashCollisionNode ensureEditable(AtomicReference<Thread> edit)
+        (§ method- HashCollisionNode ensureEditable(AtomicReference<Thread> edit)
             (§ if (this.edit == edit))
             (§
                 (§ return (§ expr this))
@@ -31352,8 +26689,7 @@
             (§ return (§ expr new HashCollisionNode(edit, hash, count, newArray)))
         )
 
-        #_private
-        (§ method HashCollisionNode ensureEditable(AtomicReference<Thread> edit, int count, Object[] array)
+        (§ method- HashCollisionNode ensureEditable(AtomicReference<Thread> edit, int count, Object[] array)
             (§ if (this.edit == edit))
             (§
                 (§ ass this.array = array)
@@ -31363,22 +26699,19 @@
             (§ return (§ expr new HashCollisionNode(edit, hash, count, array)))
         )
 
-        #_private
-        (§ method HashCollisionNode editAndSet(AtomicReference<Thread> edit, int i, Object a)
+        (§ method- HashCollisionNode editAndSet(AtomicReference<Thread> edit, int i, Object a)
             (§ let HashCollisionNode editable = ensureEditable(edit))
             (§ ass editable.array[i] = a)
             (§ return (§ expr editable))
         )
 
-        #_private
-        (§ method HashCollisionNode editAndSet(AtomicReference<Thread> edit, int i, Object a, int j, Object b)
+        (§ method- HashCollisionNode editAndSet(AtomicReference<Thread> edit, int i, Object a, int j, Object b)
             (§ let HashCollisionNode editable = ensureEditable(edit))
             (§ ass editable.array[i] = a)
             (§ ass editable.array[j] = b)
             (§ return (§ expr editable))
         )
 
-        #_public
         (§ method INode assoc(AtomicReference<Thread> edit, int shift, int hash, Object key, Object val, Box addedLeaf)
             (§ if (hash == this.hash))
             (§
@@ -31409,7 +26742,6 @@
             (§ return (§ expr new BitmapIndexedNode(edit, bitpos(this.hash, shift), new Object[] (§ nil, this, nil, nil )).assoc(edit, shift, hash, key, val, addedLeaf)))
         )
 
-        #_public
         (§ method INode without(AtomicReference<Thread> edit, int shift, int hash, Object key, Box removedLeaf)
             (§ let int idx = findIndex(key))
             (§ if (idx == -1))
@@ -31430,43 +26762,33 @@
         )
     )
 
-    #_private
-    #_static
-    (§ method INode[] cloneAndSet(INode[] array, int i, INode a)
+    (§ defn- INode[] cloneAndSet(INode[] array, int i, INode a)
         (§ let INode[] clone = array.clone())
         (§ ass clone[i] = a)
         (§ return (§ expr clone))
     )
 
-    #_private
-    #_static
-    (§ method Object[] cloneAndSet(Object[] array, int i, Object a)
+    (§ defn- Object[] cloneAndSet(Object[] array, int i, Object a)
         (§ let Object[] clone = array.clone())
         (§ ass clone[i] = a)
         (§ return (§ expr clone))
     )
 
-    #_private
-    #_static
-    (§ method Object[] cloneAndSet(Object[] array, int i, Object a, int j, Object b)
+    (§ defn- Object[] cloneAndSet(Object[] array, int i, Object a, int j, Object b)
         (§ let Object[] clone = array.clone())
         (§ ass clone[i] = a)
         (§ ass clone[j] = b)
         (§ return (§ expr clone))
     )
 
-    #_private
-    #_static
-    (§ method Object[] removePair(Object[] array, int i)
+    (§ defn- Object[] removePair(Object[] array, int i)
         (§ let Object[] newArray = new Object[array.length - 2])
         (§ call System.arraycopy(array, 0, newArray, 0, 2 * i))
         (§ call System.arraycopy(array, 2 * (i + 1), newArray, 2 * i, newArray.length - 2 * i))
         (§ return (§ expr newArray))
     )
 
-    #_private
-    #_static
-    (§ method INode createNode(int shift, Object key1, Object val1, int key2hash, Object key2, Object val2)
+    (§ defn- INode createNode(int shift, Object key1, Object val1, int key2hash, Object key2, Object val2)
         (§ let int key1hash = hash(key1))
         (§ if (key1hash == key2hash))
         (§
@@ -31479,9 +26801,7 @@
       #_arg .assoc(edit, shift, key2hash, key2, val2, addedLeaf)))
     )
 
-    #_private
-    #_static
-    (§ method INode createNode(AtomicReference<Thread> edit, int shift, Object key1, Object val1, int key2hash, Object key2, Object val2)
+    (§ defn- INode createNode(AtomicReference<Thread> edit, int shift, Object key1, Object val1, int key2hash, Object key2, Object val2)
         (§ let int key1hash = hash(key1))
         (§ if (key1hash == key2hash))
         (§
@@ -31493,37 +26813,24 @@
       #_arg .assoc(edit, shift, key2hash, key2, val2, addedLeaf)))
     )
 
-    #_private
-    #_static
-    (§ method int bitpos(int hash, int shift)
+    (§ defn- int bitpos(int hash, int shift)
         (§ return (§ expr 1 << mask(hash, shift)))
     )
 
-    #_static
-    #_final
     (class-ns NodeIter (§ implements Iterator)
-        #_private
-        #_static
-        #_final
-        (§ field Object NULL = new Object())
-        #_final
+        (§ def- Object NULL = new Object())
         (§ field Object[] array)
-        #_final
         (§ field IFn f)
-        #_private
-        (§ field int i = 0)
-        #_private
-        (§ field Object nextEntry = NULL)
-        #_private
-        (§ field Iterator nextIter)
+        (§ field- int i = 0)
+        (§ field- Object nextEntry = NULL)
+        (§ field- Iterator nextIter)
 
-        (§ method NodeIter(Object[] array, IFn f)
+        (§ constructor NodeIter(Object[] array, IFn f)
             (§ ass this.array = array)
             (§ ass this.f = f)
         )
 
-        #_private
-        (§ method boolean advance()
+        (§ method- boolean advance()
             (§ while (i<array.length))
             (§
                 (§ let Object key = array[i])
@@ -31547,7 +26854,6 @@
             (§ return (§ expr false))
         )
 
-        #_public
         (§ method boolean hasNext()
             (§ if (nextEntry != NULL || nextIter != nil))
             (§
@@ -31556,7 +26862,6 @@
             (§ return (§ expr advance()))
         )
 
-        #_public
         (§ method Object next()
             (§ let Object ret = nextEntry)
             (§ if (ret != NULL))
@@ -31580,34 +26885,25 @@
             (§ throw new NoSuchElementException())
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException())
         )
     )
 
-    #_static
-    #_final
     (class-ns NodeSeq (§ extends ASeq)
-        #_final
         (§ field Object[] array)
-        #_final
         (§ field int i)
-        #_final
         (§ field ISeq s)
 
-        (§ method NodeSeq(Object[] array, int i)
+        (§ constructor NodeSeq(Object[] array, int i)
             (§ this(nil, array, i, nil))
         )
 
-        #_static
-        (§ method ISeq create(Object[] array)
+        (§ defn ISeq create(Object[] array)
             (§ return (§ expr create(array, 0, nil)))
         )
 
-        #_static
-        #_public
-        (§ method Object kvreduce(Object[] array, IFn f, Object init)
+        (§ defn Object kvreduce(Object[] array, IFn f, Object init)
             (§ for (int i = 0 i < array.length i += 2))
             (§
                 (§ if (array[i] != nil))
@@ -31630,9 +26926,7 @@
             (§ return (§ expr init))
         )
 
-        #_private
-        #_static
-        (§ method ISeq create(Object[] array, int i, ISeq s)
+        (§ defn- ISeq create(Object[] array, int i, ISeq s)
             (§ if (s != nil))
             (§
                 (§ return (§ expr new NodeSeq(nil, array, i, s)))
@@ -31656,19 +26950,17 @@
             (§ return (§ expr nil))
         )
 
-        (§ method NodeSeq(IPersistentMap meta, Object[] array, int i, ISeq s)
+        (§ constructor NodeSeq(IPersistentMap meta, Object[] array, int i, ISeq s)
             (§ super(meta))
             (§ ass this.array = array)
             (§ ass this.i = i)
             (§ ass this.s = s)
         )
 
-        #_public
         (§ method Obj withMeta(IPersistentMap meta)
             (§ return (§ expr new NodeSeq(meta, array, i, s)))
         )
 
-        #_public
         (§ method Object first()
             (§ if (s != nil))
             (§
@@ -31677,7 +26969,6 @@
             (§ return (§ expr MapEntry.create(array[i], array[i + 1])))
         )
 
-        #_public
         (§ method ISeq next()
             (§ if (s != nil))
             (§
@@ -31693,19 +26984,12 @@
 
 (§ import java.util.List)
 
-#_public
 (class-ns PersistentHashSet (§ extends APersistentSet) (§ implements IObj, IEditableCollection)
-    #_static
-    #_public
-    #_final
-    (§ field PersistentHashSet EMPTY = new PersistentHashSet(nil, PersistentHashMap.EMPTY))
+    (§ def PersistentHashSet EMPTY = new PersistentHashSet(nil, PersistentHashMap.EMPTY))
 
-    #_final
     (§ field IPersistentMap _meta)
 
-    #_public
-    #_static
-    (§ method PersistentHashSet create(Object... init)
+    (§ defn PersistentHashSet create(Object... init)
         (§ let ITransientSet ret = (ITransientSet)EMPTY.asTransient())
         (§ for (int i = 0 i < init.length i++))
         (§
@@ -31714,9 +26998,7 @@
         (§ return (§ expr (PersistentHashSet)ret.persistent()))
     )
 
-    #_public
-    #_static
-    (§ method PersistentHashSet create(List init)
+    (§ defn PersistentHashSet create(List init)
         (§ let ITransientSet ret = (ITransientSet)EMPTY.asTransient())
         (§ for (Object key :in init))
         (§
@@ -31725,9 +27007,7 @@
         (§ return (§ expr (PersistentHashSet)ret.persistent()))
     )
 
-    #_static
-    #_public
-    (§ method PersistentHashSet create(ISeq items)
+    (§ defn PersistentHashSet create(ISeq items)
         (§ let ITransientSet ret = (ITransientSet)EMPTY.asTransient())
         (§ for (  items != nil items = items.next()))
         (§
@@ -31736,9 +27016,7 @@
         (§ return (§ expr (PersistentHashSet)ret.persistent()))
     )
 
-    #_public
-    #_static
-    (§ method PersistentHashSet createWithCheck(Object... init)
+    (§ defn PersistentHashSet createWithCheck(Object... init)
         (§ let ITransientSet ret = (ITransientSet)EMPTY.asTransient())
         (§ for (int i = 0 i < init.length i++))
         (§
@@ -31751,9 +27029,7 @@
         (§ return (§ expr (PersistentHashSet) ret.persistent()))
     )
 
-    #_public
-    #_static
-    (§ method PersistentHashSet createWithCheck(List init)
+    (§ defn PersistentHashSet createWithCheck(List init)
         (§ let ITransientSet ret = (ITransientSet)EMPTY.asTransient())
         (§ let int i = 0)
         (§ for (Object key :in init))
@@ -31768,9 +27044,7 @@
         (§ return (§ expr (PersistentHashSet) ret.persistent()))
     )
 
-    #_static
-    #_public
-    (§ method PersistentHashSet createWithCheck(ISeq items)
+    (§ defn PersistentHashSet createWithCheck(ISeq items)
         (§ let ITransientSet ret = (ITransientSet)EMPTY.asTransient())
         (§ for (int i = 0 items != nil items = items.next(), ++i))
         (§
@@ -31783,12 +27057,11 @@
         (§ return (§ expr (PersistentHashSet) ret.persistent()))
     )
 
-    (§ method PersistentHashSet(IPersistentMap meta, IPersistentMap impl)
+    (§ constructor PersistentHashSet(IPersistentMap meta, IPersistentMap impl)
         (§ super(impl))
         (§ ass this._meta = meta)
     )
 
-    #_public
     (§ method IPersistentSet disjoin(Object key)
         (§ if (contains(key)))
         (§
@@ -31797,7 +27070,6 @@
         (§ return (§ expr this))
     )
 
-    #_public
     (§ method IPersistentSet cons(Object o)
         (§ if (contains(o)))
         (§
@@ -31806,34 +27078,27 @@
         (§ return (§ expr new PersistentHashSet(meta(), impl.assoc(o, o))))
     )
 
-    #_public
     (§ method IPersistentCollection empty()
         (§ return (§ expr EMPTY.withMeta(meta())))
     )
 
-    #_public
     (§ method PersistentHashSet withMeta(IPersistentMap meta)
         (§ return (§ expr new PersistentHashSet(meta, impl)))
     )
 
-    #_public
     (§ method ITransientCollection asTransient()
         (§ return (§ expr new TransientHashSet(((PersistentHashMap) impl).asTransient())))
     )
 
-    #_public
     (§ method IPersistentMap meta()
         (§ return (§ expr _meta))
     )
 
-    #_static
-    #_final
     (class-ns TransientHashSet (§ extends ATransientSet)
-        (§ method TransientHashSet(ITransientMap impl)
+        (§ constructor TransientHashSet(ITransientMap impl)
             (§ super(impl))
         )
 
-        #_public
         (§ method IPersistentCollection persistent()
             (§ return (§ expr new PersistentHashSet(nil, impl.persistent())))
         )
@@ -31845,28 +27110,16 @@
 
 (§ import java.util.*)
 
-#_public
 (class-ns PersistentList (§ extends ASeq) (§ implements IPersistentList, IReduce, List, Counted)
-    #_private
-    #_final
-    (§ field Object _first)
-    #_private
-    #_final
-    (§ field IPersistentList _rest)
-    #_private
-    #_final
-    (§ field int _count)
+    (§ field- Object _first)
+    (§ field- IPersistentList _rest)
+    (§ field- int _count)
 
-    #_static
-    #_public
     (class-ns Primordial (§ extends RestFn)
-        #_final
-        #_public
         (§ method int getRequiredArity()
             (§ return (§ expr 0))
         )
 
-        #_final
         #_protected
         (§ method Object doInvoke(Object args)
             (§ if (args instanceof ArraySeq))
@@ -31887,9 +27140,7 @@
             (§ return (§ expr create(list)))
         )
 
-        #_static
-        #_public
-        (§ method Object invokeStatic(ISeq args)
+        (§ defn Object invokeStatic(ISeq args)
             (§ if (args instanceof ArraySeq))
             (§
                 (§ let Object[] argsarray = ((ArraySeq) args).array)
@@ -31908,44 +27159,34 @@
             (§ return (§ expr create(list)))
         )
 
-        #_public
         (§ method IObj withMeta(IPersistentMap meta)
             (§ throw new UnsupportedOperationException())
         )
 
-        #_public
         (§ method IPersistentMap meta()
             (§ return (§ expr nil))
         )
     )
 
-    #_public
-    #_static
-    (§ field IFn creator = new Primordial())
+    (§ def IFn creator = new Primordial())
 
-    #_final
-    #_public
-    #_static
-    (§ field EmptyList EMPTY = new EmptyList(nil))
+    (§ def EmptyList EMPTY = new EmptyList(nil))
 
-    #_public
-    (§ method PersistentList(Object first)
+    (§ constructor PersistentList(Object first)
         (§ ass this._first = first)
         (§ ass this._rest = nil)
 
         (§ ass this._count = 1)
     )
 
-    (§ method PersistentList(IPersistentMap meta, Object _first, IPersistentList _rest, int _count)
+    (§ constructor PersistentList(IPersistentMap meta, Object _first, IPersistentList _rest, int _count)
         (§ super(meta))
         (§ ass this._first = _first)
         (§ ass this._rest = _rest)
         (§ ass this._count = _count)
     )
 
-    #_public
-    #_static
-    (§ method IPersistentList create(List init)
+    (§ defn IPersistentList create(List init)
         (§ let IPersistentList ret = EMPTY)
         (§ for (ListIterator i = init.listIterator(init.size()) i.hasPrevious() ))
         (§
@@ -31954,12 +27195,10 @@
         (§ return (§ expr ret))
     )
 
-    #_public
     (§ method Object first()
         (§ return (§ expr _first))
     )
 
-    #_public
     (§ method ISeq next()
         (§ if (_count == 1))
         (§
@@ -31968,12 +27207,10 @@
         (§ return (§ expr (ISeq) _rest))
     )
 
-    #_public
     (§ method Object peek()
         (§ return (§ expr first()))
     )
 
-    #_public
     (§ method IPersistentList pop()
         (§ if (_rest == nil))
         (§
@@ -31982,22 +27219,18 @@
         (§ return (§ expr _rest))
     )
 
-    #_public
     (§ method int count()
         (§ return (§ expr _count))
     )
 
-    #_public
     (§ method PersistentList cons(Object o)
         (§ return (§ expr new PersistentList(meta(), o, this, _count + 1)))
     )
 
-    #_public
     (§ method IPersistentCollection empty()
         (§ return (§ expr EMPTY.withMeta(meta())))
     )
 
-    #_public
     (§ method PersistentList withMeta(IPersistentMap meta)
         (§ if (meta != _meta))
         (§
@@ -32006,7 +27239,6 @@
         (§ return (§ expr this))
     )
 
-    #_public
     (§ method Object reduce(IFn f)
         (§ let Object ret = first())
         (§ for (ISeq s = next() s != nil s = s.next()))
@@ -32020,7 +27252,6 @@
         (§ return (§ expr ret))
     )
 
-    #_public
     (§ method Object reduce(IFn f, Object start)
         (§ let Object ret = f.invoke(start, first()))
         (§ for (ISeq s = next() s != nil s = s.next()))
@@ -32038,67 +27269,53 @@
         (§ return (§ expr ret))
     )
 
-    #_static
     (class-ns EmptyList (§ extends Obj) (§ implements IPersistentList, List, ISeq, Counted, IHashEq)
-        #_static
-        #_final
-        (§ field int hasheq = Murmur3.hashOrdered(Collections.EMPTY_LIST))
+        (§ def int hasheq = Murmur3.hashOrdered(Collections.EMPTY_LIST))
 
-        #_public
         (§ method int hashCode()
             (§ return (§ expr 1))
         )
 
-        #_public
         (§ method int hasheq()
             (§ return (§ expr hasheq))
         )
 
-        #_public
         (§ method String toString()
             (§ return (§ expr "()"))
         )
 
-        #_public
         (§ method boolean equals(Object o)
             (§ return (§ expr ((o instanceof Sequential || o instanceof List) && RT.seq(o) == nil)))
         )
 
-        #_public
         (§ method boolean equiv(Object o)
             (§ return (§ expr equals(o)))
         )
 
-        (§ method EmptyList(IPersistentMap meta)
+        (§ constructor EmptyList(IPersistentMap meta)
             (§ super(meta))
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method ISeq next()
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method ISeq more()
             (§ return (§ expr this))
         )
 
-        #_public
         (§ method PersistentList cons(Object o)
             (§ return (§ expr new PersistentList(meta(), o, nil, 1)))
         )
 
-        #_public
         (§ method IPersistentCollection empty()
             (§ return (§ expr this))
         )
 
-        #_public
         (§ method EmptyList withMeta(IPersistentMap meta)
             (§ if (meta != meta()))
             (§
@@ -32107,103 +27324,83 @@
             (§ return (§ expr this))
         )
 
-        #_public
         (§ method Object peek()
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method IPersistentList pop()
             (§ throw new IllegalStateException("Can't pop empty list"))
         )
 
-        #_public
         (§ method int count()
             (§ return (§ expr 0))
         )
 
-        #_public
         (§ method ISeq seq()
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method int size()
             (§ return (§ expr 0))
         )
 
-        #_public
         (§ method boolean isEmpty()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method boolean contains(Object o)
             (§ return (§ expr false))
         )
 
-        #_public
         (§ method Iterator iterator()
             (§ return (§ expr new Iterator()
-            (§ inner
-                #_public
+            (§ reify
                 (§ method boolean hasNext()
                     (§ return (§ expr false))
                 )
 
-                #_public
                 (§ method Object next()
                     (§ throw new NoSuchElementException())
                 )
 
-                #_public
                 (§ method void remove()
                     (§ throw new UnsupportedOperationException())
                 )
             )))
         )
 
-        #_public
         (§ method Object[] toArray()
             (§ return (§ expr RT.EMPTY_ARRAY))
         )
 
-        #_public
         (§ method boolean add(Object o)
             (§ throw new UnsupportedOperationException())
         )
 
-        #_public
         (§ method boolean remove(Object o)
             (§ throw new UnsupportedOperationException())
         )
 
-        #_public
         (§ method boolean addAll(Collection collection)
             (§ throw new UnsupportedOperationException())
         )
 
-        #_public
         (§ method void clear()
             (§ throw new UnsupportedOperationException())
         )
 
-        #_public
         (§ method boolean retainAll(Collection collection)
             (§ throw new UnsupportedOperationException())
         )
 
-        #_public
         (§ method boolean removeAll(Collection collection)
             (§ throw new UnsupportedOperationException())
         )
 
-        #_public
         (§ method boolean containsAll(Collection collection)
             (§ return (§ expr collection.isEmpty()))
         )
 
-        #_public
         (§ method Object[] toArray(Object[] objects)
             (§ if (objects.length > 0))
             (§
@@ -32212,27 +27409,22 @@
             (§ return (§ expr objects))
         )
 
-        #_private
-        (§ method List reify()
+        (§ method- List reify()
             (§ return (§ expr Collections.unmodifiableList(new ArrayList(this))))
         )
 
-        #_public
         (§ method List subList(int fromIndex, int toIndex)
             (§ return (§ expr reify().subList(fromIndex, toIndex)))
         )
 
-        #_public
         (§ method Object set(int index, Object element)
             (§ throw new UnsupportedOperationException())
         )
 
-        #_public
         (§ method Object remove(int index)
             (§ throw new UnsupportedOperationException())
         )
 
-        #_public
         (§ method int indexOf(Object o)
             (§ let ISeq s = seq())
             (§ for (int i = 0 s != nil s = s.next(), i++))
@@ -32245,32 +27437,26 @@
             (§ return (§ expr -1))
         )
 
-        #_public
         (§ method int lastIndexOf(Object o)
             (§ return (§ expr reify().lastIndexOf(o)))
         )
 
-        #_public
         (§ method ListIterator listIterator()
             (§ return (§ expr reify().listIterator()))
         )
 
-        #_public
         (§ method ListIterator listIterator(int index)
             (§ return (§ expr reify().listIterator(index)))
         )
 
-        #_public
         (§ method Object get(int index)
             (§ return (§ expr RT.nth(this, index)))
         )
 
-        #_public
         (§ method void add(int index, Object element)
             (§ throw new UnsupportedOperationException())
         )
 
-        #_public
         (§ method boolean addAll(int index, Collection c)
             (§ throw new UnsupportedOperationException())
         )
@@ -32290,30 +27476,22 @@
  ; This differs in that it uses a PersistentVector as the rear, which is in-order,
  ; so no reversing or suspensions required for persistent use
  ;;
-#_public
 (class-ns PersistentQueue (§ extends Obj) (§ implements IPersistentList, Collection, Counted, IHashEq)
-    #_final
-    #_public
-    #_static
-    (§ field PersistentQueue EMPTY = new PersistentQueue(nil, 0, nil, nil))
+    (§ def PersistentQueue EMPTY = new PersistentQueue(nil, 0, nil, nil))
 
-    #_final
     (§ field int cnt)
-    #_final
     (§ field ISeq f)
-    #_final
     (§ field PersistentVector r)
     (§ field int _hash)
     (§ field int _hasheq)
 
-    (§ method PersistentQueue(IPersistentMap meta, int cnt, ISeq f, PersistentVector r)
+    (§ constructor PersistentQueue(IPersistentMap meta, int cnt, ISeq f, PersistentVector r)
         (§ super(meta))
         (§ ass this.cnt = cnt)
         (§ ass this.f = f)
         (§ ass this.r = r)
     )
 
-    #_public
     (§ method boolean equiv(Object obj)
         (§ if (!(obj instanceof Sequential)))
         (§
@@ -32330,7 +27508,6 @@
         (§ return (§ expr (ms == nil)))
     )
 
-    #_public
     (§ method boolean equals(Object obj)
         (§ if (!(obj instanceof Sequential)))
         (§
@@ -32347,7 +27524,6 @@
         (§ return (§ expr (ms == nil)))
     )
 
-    #_public
     (§ method int hashCode()
         (§ let int hash = this._hash)
         (§ if (hash == 0))
@@ -32362,7 +27538,6 @@
         (§ return (§ expr hash))
     )
 
-    #_public
     (§ method int hasheq()
         (§ let int cached = this._hasheq)
         (§ if (cached == 0))
@@ -32372,12 +27547,10 @@
         (§ return (§ expr cached))
     )
 
-    #_public
     (§ method Object peek()
         (§ return (§ expr RT.first(f)))
     )
 
-    #_public
     (§ method PersistentQueue pop()
         (§ if (f == nil)) ;; hmmm... pop of empty queue -> empty queue?
         (§
@@ -32393,12 +27566,10 @@
         (§ return (§ expr new PersistentQueue(meta(), cnt - 1, f1, r1)))
     )
 
-    #_public
     (§ method int count()
         (§ return (§ expr cnt))
     )
 
-    #_public
     (§ method ISeq seq()
         (§ if (f == nil))
         (§
@@ -32407,7 +27578,6 @@
         (§ return (§ expr new Seq(f, RT.seq(r))))
     )
 
-    #_public
     (§ method PersistentQueue cons(Object o)
         (§ if (f == nil)) ;; empty
         (§
@@ -32419,40 +27589,33 @@
         )
     )
 
-    #_public
     (§ method IPersistentCollection empty()
         (§ return (§ expr EMPTY.withMeta(meta())))
     )
 
-    #_public
     (§ method PersistentQueue withMeta(IPersistentMap meta)
         (§ return (§ expr new PersistentQueue(meta, cnt, f, r)))
     )
 
-    #_static
     (class-ns Seq (§ extends ASeq)
-        #_final
         (§ field ISeq f)
-        #_final
         (§ field ISeq rseq)
 
-        (§ method Seq(ISeq f, ISeq rseq)
+        (§ constructor Seq(ISeq f, ISeq rseq)
             (§ ass this.f = f)
             (§ ass this.rseq = rseq)
         )
 
-        (§ method Seq(IPersistentMap meta, ISeq f, ISeq rseq)
+        (§ constructor Seq(IPersistentMap meta, ISeq f, ISeq rseq)
             (§ super(meta))
             (§ ass this.f = f)
             (§ ass this.rseq = rseq)
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr f.first()))
         )
 
-        #_public
         (§ method ISeq next()
             (§ let ISeq f1 = f.next())
             (§ let ISeq r1 = rseq)
@@ -32468,53 +27631,43 @@
             (§ return (§ expr new Seq(f1, r1)))
         )
 
-        #_public
         (§ method int count()
             (§ return (§ expr RT.count(f) + RT.count(rseq)))
         )
 
-        #_public
         (§ method Seq withMeta(IPersistentMap meta)
             (§ return (§ expr new Seq(meta, f, rseq)))
         )
     )
 
-    #_public
     (§ method Object[] toArray()
         (§ return (§ expr RT.seqToArray(seq())))
     )
 
-    #_public
     (§ method boolean add(Object o)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean remove(Object o)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean addAll(Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method void clear()
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean retainAll(Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean removeAll(Collection c)
         (§ throw new UnsupportedOperationException())
     )
 
-    #_public
     (§ method boolean containsAll(Collection c)
         (§ for (Object o :in c))
         (§
@@ -32526,22 +27679,18 @@
         (§ return (§ expr false))
     )
 
-    #_public
     (§ method Object[] toArray(Object[] a)
         (§ return (§ expr RT.seqToPassedArray(seq(), a)))
     )
 
-    #_public
     (§ method int size()
         (§ return (§ expr count()))
     )
 
-    #_public
     (§ method boolean isEmpty()
         (§ return (§ expr (count() == 0)))
     )
 
-    #_public
     (§ method boolean contains(Object o)
         (§ for (ISeq s = seq() s != nil s = s.next()))
         (§
@@ -32553,22 +27702,16 @@
         (§ return (§ expr false))
     )
 
-    #_public
     (§ method Iterator iterator()
         (§ return (§ expr new Iterator()
-        (§ inner
-            #_private
-            (§ field ISeq fseq = f)
-            #_private
-            #_final
-            (§ field Iterator riter = (r != nil) ? r.iterator() :or nil)
+        (§ reify
+            (§ field- ISeq fseq = f)
+            (§ field- Iterator riter = (r != nil) ? r.iterator() :or nil)
 
-            #_public
             (§ method boolean hasNext()
                 (§ return (§ expr ((fseq != nil && fseq.seq() != nil) || (riter != nil && riter.hasNext()))))
             )
 
-            #_public
             (§ method Object next()
                 (§ if (fseq != nil))
                 (§
@@ -32586,7 +27729,6 @@
                 )
             )
 
-            #_public
             (§ method void remove()
                 (§ throw new UnsupportedOperationException())
             )
@@ -32606,28 +27748,15 @@
  ;
  ; See Okasaki, Kahrs, Larsen et al
  ;;
-#_public
 (class-ns PersistentTreeMap (§ extends APersistentMap) (§ implements IObj, Reversible, Sorted, IKVReduce)
-    #_public
-    #_final
     (§ field Comparator comp)
-    #_public
-    #_final
     (§ field Node tree)
-    #_public
-    #_final
     (§ field int _count)
-    #_final
     (§ field IPersistentMap _meta)
 
-    #_final
-    #_static
-    #_public
-    (§ field PersistentTreeMap EMPTY = new PersistentTreeMap())
+    (§ def PersistentTreeMap EMPTY = new PersistentTreeMap())
 
-    #_static
-    #_public
-    (§ method IPersistentMap create(Map other)
+    (§ defn IPersistentMap create(Map other)
         (§ let IPersistentMap ret = EMPTY)
         (§ for (Object o :in other.entrySet()))
         (§
@@ -32637,39 +27766,33 @@
         (§ return (§ expr ret))
     )
 
-    #_public
-    (§ method PersistentTreeMap()
+    (§ constructor PersistentTreeMap()
         (§ this(RT.DEFAULT_COMPARATOR))
     )
 
-    #_public
     (§ method PersistentTreeMap withMeta(IPersistentMap meta)
         (§ return (§ expr new PersistentTreeMap(meta, comp, tree, _count)))
     )
 
-    #_private
-    (§ method PersistentTreeMap(Comparator comp)
+    (§ constructor- PersistentTreeMap(Comparator comp)
         (§ this(nil, comp))
     )
 
-    #_public
-    (§ method PersistentTreeMap(IPersistentMap meta, Comparator comp)
+    (§ constructor PersistentTreeMap(IPersistentMap meta, Comparator comp)
         (§ ass this.comp = comp)
         (§ ass this._meta = meta)
         (§ ass tree = nil)
         (§ ass _count = 0)
     )
 
-    (§ method PersistentTreeMap(IPersistentMap meta, Comparator comp, Node tree, int _count)
+    (§ constructor PersistentTreeMap(IPersistentMap meta, Comparator comp, Node tree, int _count)
         (§ ass this._meta = meta)
         (§ ass this.comp = comp)
         (§ ass this.tree = tree)
         (§ ass this._count = _count)
     )
 
-    #_static
-    #_public
-    (§ method PersistentTreeMap create(ISeq items)
+    (§ defn PersistentTreeMap create(ISeq items)
         (§ let IPersistentMap ret = EMPTY)
         (§ for (  items != nil items = items.next().next()))
         (§
@@ -32682,9 +27805,7 @@
         (§ return (§ expr (PersistentTreeMap) ret))
     )
 
-    #_static
-    #_public
-    (§ method PersistentTreeMap create(Comparator comp, ISeq items)
+    (§ defn PersistentTreeMap create(Comparator comp, ISeq items)
         (§ let IPersistentMap ret = new PersistentTreeMap(comp))
         (§ for (  items != nil items = items.next().next()))
         (§
@@ -32697,12 +27818,10 @@
         (§ return (§ expr (PersistentTreeMap) ret))
     )
 
-    #_public
     (§ method boolean containsKey(Object key)
         (§ return (§ expr (entryAt(key) != nil)))
     )
 
-    #_public
     (§ method boolean equals(Object obj)
         (§ try )
         (§
@@ -32714,7 +27833,6 @@
         )
     )
 
-    #_public
     (§ method boolean equiv(Object obj)
         (§ try )
         (§
@@ -32726,7 +27844,6 @@
         )
     )
 
-    #_public
     (§ method PersistentTreeMap assocEx(Object key, Object val)
         (§ let Box found = new Box(nil))
         (§ let Node t = add(tree, key, val, found))
@@ -32737,7 +27854,6 @@
         (§ return (§ expr new PersistentTreeMap(comp, t.blacken(), _count + 1, meta())))
     )
 
-    #_public
     (§ method PersistentTreeMap assoc(Object key, Object val)
         (§ let Box found = new Box(nil))
         (§ let Node t = add(tree, key, val, found))
@@ -32753,7 +27869,6 @@
         (§ return (§ expr new PersistentTreeMap(comp, t.blacken(), _count + 1, meta())))
     )
 
-    #_public
     (§ method PersistentTreeMap without(Object key)
         (§ let Box found = new Box(nil))
         (§ let Node t = remove(tree, key, found))
@@ -32769,7 +27884,6 @@
         (§ return (§ expr new PersistentTreeMap(comp, t.blacken(), _count - 1, meta())))
     )
 
-    #_public
     (§ method ISeq seq()
         (§ if (_count > 0))
         (§
@@ -32778,12 +27892,10 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method IPersistentCollection empty()
         (§ return (§ expr new PersistentTreeMap(meta(), comp)))
     )
 
-    #_public
     (§ method ISeq rseq()
         (§ if (_count > 0))
         (§
@@ -32792,17 +27904,14 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method Comparator comparator()
         (§ return (§ expr comp))
     )
 
-    #_public
     (§ method Object entryKey(Object entry)
         (§ return (§ expr ((IMapEntry) entry).key()))
     )
 
-    #_public
     (§ method ISeq seq(boolean ascending)
         (§ if (_count > 0))
         (§
@@ -32811,7 +27920,6 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method ISeq seqFrom(Object key, boolean ascending)
         (§ if (_count > 0))
         (§
@@ -32858,12 +27966,10 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method NodeIterator iterator()
         (§ return (§ expr new NodeIterator(tree, true)))
     )
 
-    #_public
     (§ method Object kvreduce(IFn f, Object init)
         (§ if (tree != nil))
         (§
@@ -32876,38 +27982,31 @@
         (§ return (§ expr init))
     )
 
-    #_public
     (§ method NodeIterator reverseIterator()
         (§ return (§ expr new NodeIterator(tree, false)))
     )
 
-    #_public
     (§ method Iterator keys()
         (§ return (§ expr keys(iterator())))
     )
 
-    #_public
     (§ method Iterator vals()
         (§ return (§ expr vals(iterator())))
     )
 
-    #_public
     (§ method Iterator keys(NodeIterator it)
         (§ return (§ expr new KeyIterator(it)))
     )
 
-    #_public
     (§ method Iterator vals(NodeIterator it)
         (§ return (§ expr new ValIterator(it)))
     )
 
-    #_public
     (§ method Object minKey()
         (§ let Node t = min())
         (§ return (§ expr (t != nil) ? t.key :or nil))
     )
 
-    #_public
     (§ method Node min()
         (§ let Node t = tree)
         (§ if (t != nil))
@@ -32920,13 +28019,11 @@
         (§ return (§ expr t))
     )
 
-    #_public
     (§ method Object maxKey()
         (§ let Node t = max())
         (§ return (§ expr (t != nil) ? t.key :or nil))
     )
 
-    #_public
     (§ method Node max()
         (§ let Node t = tree)
         (§ if (t != nil))
@@ -32939,7 +28036,6 @@
         (§ return (§ expr t))
     )
 
-    #_public
     (§ method int depth()
         (§ return (§ expr depth(tree)))
     )
@@ -32952,28 +28048,23 @@
         (§ return (§ expr 1 + Math.max(depth(t.left()), depth(t.right()))))
     )
 
-    #_public
     (§ method Object valAt(Object key, Object notFound)
         (§ let Node n = entryAt(key))
         (§ return (§ expr (n != nil) ? n.val() :or notFound))
     )
 
-    #_public
     (§ method Object valAt(Object key)
         (§ return (§ expr valAt(key, nil)))
     )
 
-    #_public
     (§ method int capacity()
         (§ return (§ expr _count))
     )
 
-    #_public
     (§ method int count()
         (§ return (§ expr _count))
     )
 
-    #_public
     (§ method Node entryAt(Object key)
         (§ let Node t = tree)
         (§ while (t != nil))
@@ -32995,7 +28086,6 @@
         (§ return (§ expr t))
     )
 
-    #_public
     (§ method int doCompare(Object k1, Object k2)
         (§ return (§ expr comp.compare(k1, k2)))
     )
@@ -33061,8 +28151,7 @@
         (§ return (§ expr red(t.key, t.val(), t.left(), del)))
     )
 
-    #_static
-    (§ method Node append(Node left, Node right)
+    (§ defn Node append(Node left, Node right)
         (§ if (left == nil))
         (§
             (§ return (§ expr right))
@@ -33108,8 +28197,7 @@
         )
     )
 
-    #_static
-    (§ method Node balanceLeftDel(Object key, Object val, Node del, Node right)
+    (§ defn Node balanceLeftDel(Object key, Object val, Node del, Node right)
         (§ if (del instanceof Red))
         (§
             (§ return (§ expr red(key, val, del.blacken(), right)))
@@ -33128,8 +28216,7 @@
         )
     )
 
-    #_static
-    (§ method Node balanceRightDel(Object key, Object val, Node left, Node del)
+    (§ defn Node balanceRightDel(Object key, Object val, Node left, Node del)
         (§ if (del instanceof Red))
         (§
             (§ return (§ expr red(key, val, left, del.blacken())))
@@ -33148,8 +28235,7 @@
         )
     )
 
-    #_static
-    (§ method Node leftBalance(Object key, Object val, Node ins, Node right)
+    (§ defn Node leftBalance(Object key, Object val, Node ins, Node right)
         (§ if (ins instanceof Red && ins.left() instanceof Red))
         (§
             (§ return (§ expr red(ins.key, ins.val(), ins.left().blacken(), black(key, val, ins.right(), right))))
@@ -33164,8 +28250,7 @@
         )
     )
 
-    #_static
-    (§ method Node rightBalance(Object key, Object val, Node left, Node ins)
+    (§ defn Node rightBalance(Object key, Object val, Node left, Node ins)
         (§ if (ins instanceof Red && ins.right() instanceof Red))
         (§
             (§ return (§ expr red(ins.key, ins.val(), black(key, val, left, ins.left()), ins.right().blacken())))
@@ -33185,15 +28270,14 @@
         (§ return (§ expr t.replace(t.key, (c == 0) ? val :or t.val(), (c < 0) ? replace(t.left(), key, val) :or t.left(), (c > 0) ? replace(t.right(), key, val) :or t.right())))
     )
 
-    (§ method PersistentTreeMap(Comparator comp, Node tree, int count, IPersistentMap meta)
+    (§ constructor PersistentTreeMap(Comparator comp, Node tree, int count, IPersistentMap meta)
         (§ ass this._meta = meta)
         (§ ass this.comp = comp)
         (§ ass this.tree = tree)
         (§ ass this._count = count)
     )
 
-    #_static
-    (§ method Red red(Object key, Object val, Node left, Node right)
+    (§ defn Red red(Object key, Object val, Node left, Node right)
         (§ if (left == nil && right == nil))
         (§
             (§ if (val == nil))
@@ -33209,8 +28293,7 @@
         (§ return (§ expr new RedBranchVal(key, val, left, right)))
     )
 
-    #_static
-    (§ method Black black(Object key, Object val, Node left, Node right)
+    (§ defn Black black(Object key, Object val, Node left, Node right)
         (§ if (left == nil && right == nil))
         (§
             (§ if (val == nil))
@@ -33226,37 +28309,30 @@
         (§ return (§ expr new BlackBranchVal(key, val, left, right)))
     )
 
-    #_public
     (§ method IPersistentMap meta()
         (§ return (§ expr _meta))
     )
 
-    #_static
     #_abstract
     (class-ns Node (§ extends AMapEntry)
-        #_final
         (§ field Object key)
 
-        (§ method Node(Object key)
+        (§ constructor Node(Object key)
             (§ ass this.key = key)
         )
 
-        #_public
         (§ method Object key()
             (§ return (§ expr key))
         )
 
-        #_public
         (§ method Object val()
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method Object getKey()
             (§ return (§ expr key()))
         )
 
-        #_public
         (§ method Object getValue()
             (§ return (§ expr val()))
         )
@@ -33286,7 +28362,6 @@
 
         (§ abstract Node replace(Object key, Object val, Node left, Node right))
 
-        #_public
         (§ method Object kvreduce(IFn f, Object init)
             (§ if (left() != nil))
             (§
@@ -33310,10 +28385,8 @@
         )
     )
 
-    #_static
     (class-ns Black (§ extends Node)
-        #_public
-        (§ method Black(Object key)
+        (§ constructor Black(Object key)
             (§ super(key))
         )
 
@@ -33346,18 +28419,14 @@
         )
     )
 
-    #_static
     (class-ns BlackVal (§ extends Black)
-        #_final
         (§ field Object val)
 
-        #_public
-        (§ method BlackVal(Object key, Object val)
+        (§ constructor BlackVal(Object key, Object val)
             (§ super(key))
             (§ ass this.val = val)
         )
 
-        #_public
         (§ method Object val()
             (§ return (§ expr val))
         )
@@ -33367,27 +28436,21 @@
         )
     )
 
-    #_static
     (class-ns BlackBranch (§ extends Black)
-        #_final
         (§ field Node left)
 
-        #_final
         (§ field Node right)
 
-        #_public
-        (§ method BlackBranch(Object key, Node left, Node right)
+        (§ constructor BlackBranch(Object key, Node left, Node right)
             (§ super(key))
             (§ ass this.left = left)
             (§ ass this.right = right)
         )
 
-        #_public
         (§ method Node left()
             (§ return (§ expr left))
         )
 
-        #_public
         (§ method Node right()
             (§ return (§ expr right))
         )
@@ -33397,18 +28460,14 @@
         )
     )
 
-    #_static
     (class-ns BlackBranchVal (§ extends BlackBranch)
-        #_final
         (§ field Object val)
 
-        #_public
-        (§ method BlackBranchVal(Object key, Object val, Node left, Node right)
+        (§ constructor BlackBranchVal(Object key, Object val, Node left, Node right)
             (§ super(key, left, right))
             (§ ass this.val = val)
         )
 
-        #_public
         (§ method Object val()
             (§ return (§ expr val))
         )
@@ -33418,10 +28477,8 @@
         )
     )
 
-    #_static
     (class-ns Red (§ extends Node)
-        #_public
-        (§ method Red(Object key)
+        (§ constructor Red(Object key)
             (§ super(key))
         )
 
@@ -33454,18 +28511,14 @@
         )
     )
 
-    #_static
     (class-ns RedVal (§ extends Red)
-        #_final
         (§ field Object val)
 
-        #_public
-        (§ method RedVal(Object key, Object val)
+        (§ constructor RedVal(Object key, Object val)
             (§ super(key))
             (§ ass this.val = val)
         )
 
-        #_public
         (§ method Object val()
             (§ return (§ expr val))
         )
@@ -33475,27 +28528,21 @@
         )
     )
 
-    #_static
     (class-ns RedBranch (§ extends Red)
-        #_final
         (§ field Node left)
 
-        #_final
         (§ field Node right)
 
-        #_public
-        (§ method RedBranch(Object key, Node left, Node right)
+        (§ constructor RedBranch(Object key, Node left, Node right)
             (§ super(key))
             (§ ass this.left = left)
             (§ ass this.right = right)
         )
 
-        #_public
         (§ method Node left()
             (§ return (§ expr left))
         )
 
-        #_public
         (§ method Node right()
             (§ return (§ expr right))
         )
@@ -33535,18 +28582,14 @@
         )
     )
 
-    #_static
     (class-ns RedBranchVal (§ extends RedBranch)
-        #_final
         (§ field Object val)
 
-        #_public
-        (§ method RedBranchVal(Object key, Object val, Node left, Node right)
+        (§ constructor RedBranchVal(Object key, Object val, Node left, Node right)
             (§ super(key, left, right))
             (§ ass this.val = val)
         )
 
-        #_public
         (§ method Object val()
             (§ return (§ expr val))
         )
@@ -33556,44 +28599,35 @@
         )
     )
 
-    #_static
-    #_public
     (class-ns Seq (§ extends ASeq)
-        #_final
         (§ field ISeq stack)
-        #_final
         (§ field boolean asc)
-        #_final
         (§ field int cnt)
 
-        #_public
-        (§ method Seq(ISeq stack, boolean asc)
+        (§ constructor Seq(ISeq stack, boolean asc)
             (§ ass this.stack = stack)
             (§ ass this.asc = asc)
             (§ ass this.cnt = -1)
         )
 
-        #_public
-        (§ method Seq(ISeq stack, boolean asc, int cnt)
+        (§ constructor Seq(ISeq stack, boolean asc, int cnt)
             (§ ass this.stack = stack)
             (§ ass this.asc = asc)
             (§ ass this.cnt = cnt)
         )
 
-        (§ method Seq(IPersistentMap meta, ISeq stack, boolean asc, int cnt)
+        (§ constructor Seq(IPersistentMap meta, ISeq stack, boolean asc, int cnt)
             (§ super(meta))
             (§ ass this.stack = stack)
             (§ ass this.asc = asc)
             (§ ass this.cnt = cnt)
         )
 
-        #_static
-        (§ method Seq create(Node t, boolean asc, int cnt)
+        (§ defn Seq create(Node t, boolean asc, int cnt)
             (§ return (§ expr new Seq(push(t, nil, asc), asc, cnt)))
         )
 
-        #_static
-        (§ method ISeq push(Node t, ISeq stack, boolean asc)
+        (§ defn ISeq push(Node t, ISeq stack, boolean asc)
             (§ while (t != nil))
             (§
                 (§ ass stack = RT.cons(t, stack))
@@ -33602,12 +28636,10 @@
             (§ return (§ expr stack))
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr stack.first()))
         )
 
-        #_public
         (§ method ISeq next()
             (§ let Node t = (Node) stack.first())
             (§ let ISeq nextstack = push(asc ? t.right() :or t.left(), stack.next(), asc))
@@ -33618,7 +28650,6 @@
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method int count()
             (§ if (cnt < 0))
             (§
@@ -33627,19 +28658,16 @@
             (§ return (§ expr cnt))
         )
 
-        #_public
         (§ method Obj withMeta(IPersistentMap meta)
             (§ return (§ expr new Seq(meta, stack, asc, cnt)))
         )
     )
 
-    #_static
-    #_public
     (class-ns NodeIterator (§ implements Iterator)
         (§ field Stack stack = new Stack())
         (§ field boolean asc)
 
-        (§ method NodeIterator(Node t, boolean asc)
+        (§ constructor NodeIterator(Node t, boolean asc)
             (§ ass this.asc = asc)
             (§ call push(t))
         )
@@ -33652,12 +28680,10 @@
             )
         )
 
-        #_public
         (§ method boolean hasNext()
             (§ return (§ expr !stack.isEmpty()))
         )
 
-        #_public
         (§ method Object next()
             (§ try )
             (§
@@ -33671,55 +28697,46 @@
             )
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException())
         )
     )
 
-    #_static
     (class-ns KeyIterator (§ implements Iterator)
         (§ field NodeIterator it)
 
-        (§ method KeyIterator(NodeIterator it)
+        (§ constructor KeyIterator(NodeIterator it)
             (§ ass this.it = it)
         )
 
-        #_public
         (§ method boolean hasNext()
             (§ return (§ expr it.hasNext()))
         )
 
-        #_public
         (§ method Object next()
             (§ return (§ expr ((Node) it.next()).key))
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException())
         )
     )
 
-    #_static
     (class-ns ValIterator (§ implements Iterator)
         (§ field NodeIterator it)
 
-        (§ method ValIterator(NodeIterator it)
+        (§ constructor ValIterator(NodeIterator it)
             (§ ass this.it = it)
         )
 
-        #_public
         (§ method boolean hasNext()
             (§ return (§ expr it.hasNext()))
         )
 
-        #_public
         (§ method Object next()
             (§ return (§ expr ((Node) it.next()).val()))
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException())
         )
@@ -33731,19 +28748,12 @@
 
 (§ import java.util.Comparator)
 
-#_public
 (class-ns PersistentTreeSet (§ extends APersistentSet) (§ implements IObj, Reversible, Sorted)
-    #_static
-    #_public
-    #_final
-    (§ field PersistentTreeSet EMPTY = new PersistentTreeSet(nil, PersistentTreeMap.EMPTY))
+    (§ def PersistentTreeSet EMPTY = new PersistentTreeSet(nil, PersistentTreeMap.EMPTY))
 
-    #_final
     (§ field IPersistentMap _meta)
 
-    #_static
-    #_public
-    (§ method PersistentTreeSet create(ISeq items)
+    (§ defn PersistentTreeSet create(ISeq items)
         (§ let PersistentTreeSet ret = EMPTY)
         (§ for (  items != nil items = items.next()))
         (§
@@ -33752,9 +28762,7 @@
         (§ return (§ expr ret))
     )
 
-    #_static
-    #_public
-    (§ method PersistentTreeSet create(Comparator comp, ISeq items)
+    (§ defn PersistentTreeSet create(Comparator comp, ISeq items)
         (§ let PersistentTreeSet ret = new PersistentTreeSet(nil, new PersistentTreeMap(nil, comp)))
         (§ for (  items != nil items = items.next()))
         (§
@@ -33763,12 +28771,11 @@
         (§ return (§ expr ret))
     )
 
-    (§ method PersistentTreeSet(IPersistentMap meta, IPersistentMap impl)
+    (§ constructor PersistentTreeSet(IPersistentMap meta, IPersistentMap impl)
         (§ super(impl))
         (§ ass this._meta = meta)
     )
 
-    #_public
     (§ method boolean equals(Object obj)
         (§ try )
         (§
@@ -33780,7 +28787,6 @@
         )
     )
 
-    #_public
     (§ method boolean equiv(Object obj)
         (§ try )
         (§
@@ -33792,7 +28798,6 @@
         )
     )
 
-    #_public
     (§ method IPersistentSet disjoin(Object key)
         (§ if (contains(key)))
         (§
@@ -33801,7 +28806,6 @@
         (§ return (§ expr this))
     )
 
-    #_public
     (§ method IPersistentSet cons(Object o)
         (§ if (contains(o)))
         (§
@@ -33810,44 +28814,36 @@
         (§ return (§ expr new PersistentTreeSet(meta(), impl.assoc(o, o))))
     )
 
-    #_public
     (§ method IPersistentCollection empty()
         (§ return (§ expr new PersistentTreeSet(meta(), (PersistentTreeMap)impl.empty())))
     )
 
-    #_public
     (§ method ISeq rseq()
         (§ return (§ expr APersistentMap.KeySeq.create(((Reversible) impl).rseq())))
     )
 
-    #_public
     (§ method PersistentTreeSet withMeta(IPersistentMap meta)
         (§ return (§ expr new PersistentTreeSet(meta, impl)))
     )
 
-    #_public
     (§ method Comparator comparator()
         (§ return (§ expr ((Sorted)impl).comparator()))
     )
 
-    #_public
     (§ method Object entryKey(Object entry)
         (§ return (§ expr entry))
     )
 
-    #_public
     (§ method ISeq seq(boolean ascending)
         (§ let PersistentTreeMap m = (PersistentTreeMap) impl)
         (§ return (§ expr RT.keys(m.seq(ascending))))
     )
 
-    #_public
     (§ method ISeq seqFrom(Object key, boolean ascending)
         (§ let PersistentTreeMap m = (PersistentTreeMap) impl)
         (§ return (§ expr RT.keys(m.seqFrom(key, ascending))))
     )
 
-    #_public
     (§ method IPersistentMap meta()
         (§ return (§ expr _meta))
     )
@@ -33862,90 +28858,55 @@
 (§ import java.util.NoSuchElementException)
 (§ import java.util.concurrent.atomic.AtomicReference)
 
-#_public
 (class-ns PersistentVector (§ extends APersistentVector) (§ implements IObj, IEditableCollection, IReduce, IKVReduce)
-    #_public
-    #_static
     (class-ns Node
         #_transient
-        #_public
-        #_final
         (§ field AtomicReference<Thread> edit)
-        #_public
-        #_final
         (§ field Object[] array)
 
-        #_public
-        (§ method Node(AtomicReference<Thread> edit, Object[] array)
+        (§ constructor Node(AtomicReference<Thread> edit, Object[] array)
             (§ ass this.edit = edit)
             (§ ass this.array = array)
         )
 
-        (§ method Node(AtomicReference<Thread> edit)
+        (§ constructor Node(AtomicReference<Thread> edit)
             (§ ass this.edit = edit)
             (§ ass this.array = new Object[32])
         )
     )
 
-    #_final
-    #_static
-    (§ field AtomicReference<Thread> NOEDIT = new AtomicReference<Thread>(nil))
-    #_public
-    #_final
-    #_static
-    (§ field Node EMPTY_NODE = new Node(NOEDIT, new Object[32]))
+    (§ def AtomicReference<Thread> NOEDIT = new AtomicReference<Thread>(nil))
+    (§ def Node EMPTY_NODE = new Node(NOEDIT, new Object[32]))
 
-    #_final
     (§ field int cnt)
-    #_public
-    #_final
     (§ field int shift)
-    #_public
-    #_final
     (§ field Node root)
-    #_public
-    #_final
     (§ field Object[] tail)
-    #_final
     (§ field IPersistentMap _meta)
 
-    #_public
-    #_final
-    #_static
-    (§ field PersistentVector EMPTY = new PersistentVector(0, 5, EMPTY_NODE, new Object[] (§)))
+    (§ def PersistentVector EMPTY = new PersistentVector(0, 5, EMPTY_NODE, new Object[] (§)))
 
-    #_private
-    #_static
-    #_final
-    (§ field IFn TRANSIENT_VECTOR_CONJ = new AFn()
-    (§ inner
-        #_public
+    (§ def- IFn TRANSIENT_VECTOR_CONJ = new AFn()
+    (§ reify
         (§ method Object invoke(Object coll, Object val)
             (§ return (§ expr ((ITransientVector)coll).conj(val)))
         )
-        #_public
         (§ method Object invoke(Object coll)
             (§ return (§ expr coll))
         )
     ))
 
-    #_static
-    #_public
-    (§ method PersistentVector adopt(Object [] items)
+    (§ defn PersistentVector adopt(Object [] items)
         (§ return (§ expr new PersistentVector(items.length, 5, EMPTY_NODE, items)))
     )
 
-    #_static
-    #_public
-    (§ method PersistentVector create(IReduceInit items)
+    (§ defn PersistentVector create(IReduceInit items)
         (§ let TransientVector ret = EMPTY.asTransient())
         (§ call items.reduce(TRANSIENT_VECTOR_CONJ, ret))
         (§ return (§ expr ret.persistent()))
     )
 
-    #_static
-    #_public
-    (§ method PersistentVector create(ISeq items)
+    (§ defn PersistentVector create(ISeq items)
         (§ let Object[] arr = new Object[32])
         (§ let int i = 0)
         (§ for (  items != nil && i < 32 items = items.next()))
@@ -33975,9 +28936,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method PersistentVector create(List list)
+    (§ defn PersistentVector create(List list)
         (§ let int size = list.size())
         (§ if (size <= 32))
         (§
@@ -33992,9 +28951,7 @@
         (§ return (§ expr ret.persistent()))
     )
 
-    #_static
-    #_public
-    (§ method PersistentVector create(Iterable items)
+    (§ defn PersistentVector create(Iterable items)
         ;; optimize common case
         (§ if (items instanceof ArrayList))
         (§
@@ -34010,9 +28967,7 @@
         (§ return (§ expr ret.persistent()))
     )
 
-    #_static
-    #_public
-    (§ method PersistentVector create(Object... items)
+    (§ defn PersistentVector create(Object... items)
         (§ let TransientVector ret = EMPTY.asTransient())
         (§ for (Object item :in items))
         (§
@@ -34021,7 +28976,7 @@
         (§ return (§ expr ret.persistent()))
     )
 
-    (§ method PersistentVector(int cnt, int shift, Node root, Object[] tail)
+    (§ constructor PersistentVector(int cnt, int shift, Node root, Object[] tail)
         (§ ass this._meta = nil)
         (§ ass this.cnt = cnt)
         (§ ass this.shift = shift)
@@ -34029,7 +28984,7 @@
         (§ ass this.tail = tail)
     )
 
-    (§ method PersistentVector(IPersistentMap meta, int cnt, int shift, Node root, Object[] tail)
+    (§ constructor PersistentVector(IPersistentMap meta, int cnt, int shift, Node root, Object[] tail)
         (§ ass this._meta = meta)
         (§ ass this.cnt = cnt)
         (§ ass this.shift = shift)
@@ -34037,12 +28992,10 @@
         (§ ass this.tail = tail)
     )
 
-    #_public
     (§ method TransientVector asTransient()
         (§ return (§ expr new TransientVector(this)))
     )
 
-    #_final
     (§ method int tailoff()
         (§ if (cnt < 32))
         (§
@@ -34051,7 +29004,6 @@
         (§ return (§ expr ((cnt - 1) >>> 5) << 5))
     )
 
-    #_public
     (§ method Object[] arrayFor(int i)
         (§ if (i >= 0 && i < cnt))
         (§
@@ -34069,13 +29021,11 @@
         (§ throw new IndexOutOfBoundsException())
     )
 
-    #_public
     (§ method Object nth(int i)
         (§ let Object[] node = arrayFor(i))
         (§ return (§ expr node[i & 0x01f]))
     )
 
-    #_public
     (§ method Object nth(int i, Object notFound)
         (§ if (i >= 0 && i < cnt))
         (§
@@ -34084,7 +29034,6 @@
         (§ return (§ expr notFound))
     )
 
-    #_public
     (§ method PersistentVector assocN(int i, Object val)
         (§ if (i >= 0 && i < cnt))
         (§
@@ -34106,9 +29055,7 @@
         (§ throw new IndexOutOfBoundsException())
     )
 
-    #_private
-    #_static
-    (§ method Node doAssoc(int level, Node node, int i, Object val)
+    (§ defn- Node doAssoc(int level, Node node, int i, Object val)
         (§ let Node ret = new Node(node.edit, node.array.clone()))
         (§ if (level == 0))
         (§
@@ -34122,22 +29069,18 @@
         (§ return (§ expr ret))
     )
 
-    #_public
     (§ method int count()
         (§ return (§ expr cnt))
     )
 
-    #_public
     (§ method PersistentVector withMeta(IPersistentMap meta)
         (§ return (§ expr new PersistentVector(meta, cnt, shift, root, tail)))
     )
 
-    #_public
     (§ method IPersistentMap meta()
         (§ return (§ expr _meta))
     )
 
-    #_public
     (§ method PersistentVector cons(Object val)
         ;; room in tail?
         (§ if (cnt - tailoff() < 32))
@@ -34166,8 +29109,7 @@
         (§ return (§ expr new PersistentVector(meta(), cnt + 1, newshift, newroot, new Object[] (§ val ))))
     )
 
-    #_private
-    (§ method Node pushTail(int level, Node parent, Node tailnode)
+    (§ method- Node pushTail(int level, Node parent, Node tailnode)
         ;; if parent is leaf, insert node,
         ;; else does it map to an existing child? -> nodeToInsert = pushNode one more level
         ;; else alloc new path
@@ -34188,9 +29130,7 @@
         (§ return (§ expr ret))
     )
 
-    #_private
-    #_static
-    (§ method Node newPath(AtomicReference<Thread> edit, int level, Node node)
+    (§ defn- Node newPath(AtomicReference<Thread> edit, int level, Node node)
         (§ if (level == 0))
         (§
             (§ return (§ expr node))
@@ -34200,7 +29140,6 @@
         (§ return (§ expr ret))
     )
 
-    #_public
     (§ method IChunkedSeq chunkedSeq()
         (§ if (count() == 0))
         (§
@@ -34209,25 +29148,22 @@
         (§ return (§ expr new ChunkedSeq(this, 0, 0)))
     )
 
-    #_public
     (§ method ISeq seq()
         (§ return (§ expr chunkedSeq()))
     )
 
     (§ anno @Override)
-    (§ method Iterator rangedIterator(final int start, final int end)
+    (§ method Iterator rangedIterator(int start, int end)
         (§ return (§ expr new Iterator()
-        (§ inner
+        (§ reify
             (§ let int i = start)
             (§ let int base = i - (i%32))
             (§ let Object[] array = (start < count()) ? arrayFor(i) :or nil)
 
-            #_public
             (§ method boolean hasNext()
                 (§ return (§ expr (i < end)))
             )
 
-            #_public
             (§ method Object next()
                 (§ if (i < end))
                 (§
@@ -34244,19 +29180,16 @@
                 )
             )
 
-            #_public
             (§ method void remove()
                 (§ throw new UnsupportedOperationException())
             )
         )))
     )
 
-    #_public
     (§ method Iterator iterator()
         (§ return (§ expr rangedIterator(0, count())))
     )
 
-    #_public
     (§ method Object reduce(IFn f)
         (§ let Object init)
         (§ if (cnt > 0))
@@ -34284,7 +29217,6 @@
         (§ return (§ expr init))
     )
 
-    #_public
     (§ method Object reduce(IFn f, Object init)
         (§ let int step = 0)
         (§ for (int i = 0 i < cnt i += step))
@@ -34303,7 +29235,6 @@
         (§ return (§ expr init))
     )
 
-    #_public
     (§ method Object kvreduce(IFn f, Object init)
         (§ let int step = 0)
         (§ for (int i = 0 i < cnt i += step))
@@ -34322,30 +29253,20 @@
         (§ return (§ expr init))
     )
 
-    #_static
-    #_public
-    #_final
     (class-ns ChunkedSeq (§ extends ASeq) (§ implements IChunkedSeq, Counted)
-        #_public
-        #_final
         (§ field PersistentVector vec)
-        #_final
         (§ field Object[] node)
-        #_final
         (§ field int i)
-        #_public
-        #_final
         (§ field int offset)
 
-        #_public
-        (§ method ChunkedSeq(PersistentVector vec, int i, int offset)
+        (§ constructor ChunkedSeq(PersistentVector vec, int i, int offset)
             (§ ass this.vec = vec)
             (§ ass this.i = i)
             (§ ass this.offset = offset)
             (§ ass this.node = vec.arrayFor(i))
         )
 
-        (§ method ChunkedSeq(IPersistentMap meta, PersistentVector vec, Object[] node, int i, int offset)
+        (§ constructor ChunkedSeq(IPersistentMap meta, PersistentVector vec, Object[] node, int i, int offset)
             (§ super(meta))
             (§ ass this.vec = vec)
             (§ ass this.node = node)
@@ -34353,19 +29274,17 @@
             (§ ass this.offset = offset)
         )
 
-        (§ method ChunkedSeq(PersistentVector vec, Object[] node, int i, int offset)
+        (§ constructor ChunkedSeq(PersistentVector vec, Object[] node, int i, int offset)
             (§ ass this.vec = vec)
             (§ ass this.node = node)
             (§ ass this.i = i)
             (§ ass this.offset = offset)
         )
 
-        #_public
         (§ method IChunk chunkedFirst()
             (§ return (§ expr new ArrayChunk(node, offset)))
         )
 
-        #_public
         (§ method ISeq chunkedNext()
             (§ if (i + node.length < vec.cnt))
             (§
@@ -34374,7 +29293,6 @@
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method ISeq chunkedMore()
             (§ let ISeq s = chunkedNext())
             (§ if (s == nil))
@@ -34384,7 +29302,6 @@
             (§ return (§ expr s))
         )
 
-        #_public
         (§ method Obj withMeta(IPersistentMap meta)
             (§ if (meta == this._meta))
             (§
@@ -34393,12 +29310,10 @@
             (§ return (§ expr new ChunkedSeq(meta, vec, node, i, offset)))
         )
 
-        #_public
         (§ method Object first()
             (§ return (§ expr node[offset]))
         )
 
-        #_public
         (§ method ISeq next()
             (§ if (offset + 1 < node.length))
             (§
@@ -34407,18 +29322,15 @@
             (§ return (§ expr chunkedNext()))
         )
 
-        #_public
         (§ method int count()
             (§ return (§ expr vec.cnt - (i + offset)))
         )
     )
 
-    #_public
     (§ method IPersistentCollection empty()
         (§ return (§ expr EMPTY.withMeta(meta())))
     )
 
-    #_public
     (§ method PersistentVector pop()
         (§ if (cnt == 0))
         (§
@@ -34450,8 +29362,7 @@
         (§ return (§ expr new PersistentVector(meta(), cnt - 1, newshift, newroot, newtail)))
     )
 
-    #_private
-    (§ method Node popTail(int level, Node node)
+    (§ method- Node popTail(int level, Node node)
         (§ let int subidx = ((cnt - 2) >>> level) & 0x01f)
         (§ if (level > 5))
         (§
@@ -34479,8 +29390,6 @@
         )
     )
 
-    #_static
-    #_final
     (class-ns TransientVector (§ extends AFn) (§ implements ITransientVector, ITransientAssociative2, Counted)
         #_volatile
         (§ field int cnt)
@@ -34491,18 +29400,17 @@
         #_volatile
         (§ field Object[] tail)
 
-        (§ method TransientVector(int cnt, int shift, Node root, Object[] tail)
+        (§ constructor TransientVector(int cnt, int shift, Node root, Object[] tail)
             (§ ass this.cnt = cnt)
             (§ ass this.shift = shift)
             (§ ass this.root = root)
             (§ ass this.tail = tail)
         )
 
-        (§ method TransientVector(PersistentVector v)
+        (§ constructor TransientVector(PersistentVector v)
             (§ this(v.cnt, v.shift, editableRoot(v.root), editableTail(v.tail)))
         )
 
-        #_public
         (§ method int count()
             (§ call ensureEditable())
             (§ return (§ expr cnt))
@@ -34523,12 +29431,10 @@
             )
         )
 
-        #_static
-        (§ method Node editableRoot(Node node)
+        (§ defn Node editableRoot(Node node)
             (§ return (§ expr new Node(new AtomicReference<Thread>(Thread.currentThread()), node.array.clone())))
         )
 
-        #_public
         (§ method PersistentVector persistent()
             (§ call ensureEditable())
             (§ call root.edit.set(nil))
@@ -34537,14 +29443,12 @@
             (§ return (§ expr new PersistentVector(cnt, shift, root, trimmedTail)))
         )
 
-        #_static
-        (§ method Object[] editableTail(Object[] tl)
+        (§ defn Object[] editableTail(Object[] tl)
             (§ let Object[] ret = new Object[32])
             (§ call System.arraycopy(tl, 0, ret, 0, tl.length))
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method TransientVector conj(Object val)
             (§ call ensureEditable())
             (§ let int i = cnt)
@@ -34579,8 +29483,7 @@
             (§ return (§ expr this))
         )
 
-        #_private
-        (§ method Node pushTail(int level, Node parent, Node tailnode)
+        (§ method- Node pushTail(int level, Node parent, Node tailnode)
             ;; if parent is leaf, insert node,
             ;; else does it map to an existing child? -> nodeToInsert = pushNode one more level
             ;; else alloc new path
@@ -34602,9 +29505,7 @@
             (§ return (§ expr ret))
         )
 
-        #_final
-        #_private
-        (§ method int tailoff()
+        (§ method- int tailoff()
             (§ if (cnt < 32))
             (§
                 (§ return (§ expr 0))
@@ -34612,8 +29513,7 @@
             (§ return (§ expr ((cnt - 1) >>> 5) << 5))
         )
 
-        #_private
-        (§ method Object[] arrayFor(int i)
+        (§ method- Object[] arrayFor(int i)
             (§ if (i >= 0 && i < cnt))
             (§
                 (§ if (i >= tailoff()))
@@ -34630,8 +29530,7 @@
             (§ throw new IndexOutOfBoundsException())
         )
 
-        #_private
-        (§ method Object[] editableArrayFor(int i)
+        (§ method- Object[] editableArrayFor(int i)
             (§ if (i >= 0 && i < cnt))
             (§
                 (§ if (i >= tailoff()))
@@ -34648,13 +29547,11 @@
             (§ throw new IndexOutOfBoundsException())
         )
 
-        #_public
         (§ method Object valAt(Object key)
             ;; note - relies on ensureEditable in 2-arg valAt
             (§ return (§ expr valAt(key, nil)))
         )
 
-        #_public
         (§ method Object valAt(Object key, Object notFound)
             (§ call ensureEditable())
             (§ if (Util.isInteger(key)))
@@ -34668,19 +29565,12 @@
             (§ return (§ expr notFound))
         )
 
-        #_private
-        #_static
-        #_final
-        (§ field Object NOT_FOUND = new Object())
+        (§ def- Object NOT_FOUND = new Object())
 
-        #_public
-        #_final
         (§ method boolean containsKey(Object key)
             (§ return (§ expr (valAt(key, NOT_FOUND) != NOT_FOUND)))
         )
 
-        #_public
-        #_final
         (§ method IMapEntry entryAt(Object key)
             (§ let Object v = valAt(key, NOT_FOUND))
             (§ if (v != NOT_FOUND))
@@ -34690,7 +29580,6 @@
             (§ return (§ expr nil))
         )
 
-        #_public
         (§ method Object invoke(Object arg1)
             ;; note - relies on ensureEditable in nth
             (§ if (Util.isInteger(arg1)))
@@ -34700,14 +29589,12 @@
             (§ throw new IllegalArgumentException("Key must be integer"))
         )
 
-        #_public
         (§ method Object nth(int i)
             (§ call ensureEditable())
             (§ let Object[] node = arrayFor(i))
             (§ return (§ expr node[i & 0x01f]))
         )
 
-        #_public
         (§ method Object nth(int i, Object notFound)
             (§ if (i >= 0 && i < count()))
             (§
@@ -34716,7 +29603,6 @@
             (§ return (§ expr notFound))
         )
 
-        #_public
         (§ method TransientVector assocN(int i, Object val)
             (§ call ensureEditable())
             (§ if (i >= 0 && i < cnt))
@@ -34737,7 +29623,6 @@
             (§ throw new IndexOutOfBoundsException())
         )
 
-        #_public
         (§ method TransientVector assoc(Object key, Object val)
             ;; note - relies on ensureEditable in assocN
             (§ if (Util.isInteger(key)))
@@ -34748,8 +29633,7 @@
             (§ throw new IllegalArgumentException("Key must be integer"))
         )
 
-        #_private
-        (§ method Node doAssoc(int level, Node node, int i, Object val)
+        (§ method- Node doAssoc(int level, Node node, int i, Object val)
             (§ ass node = ensureEditable(node))
             (§ let Node ret = node)
             (§ if (level == 0))
@@ -34764,7 +29648,6 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method TransientVector pop()
             (§ call ensureEditable())
             (§ if (cnt == 0))
@@ -34804,8 +29687,7 @@
             (§ return (§ expr this))
         )
 
-        #_private
-        (§ method Node popTail(int level, Node node)
+        (§ method- Node popTail(int level, Node node)
             (§ ass node = ensureEditable(node))
             (§ let int subidx = ((cnt - 2) >>> level) & 0x01f)
             (§ if (level > 5))
@@ -34842,18 +29724,14 @@
 (§ import java.lang.reflect.InvocationHandler)
 (§ import java.lang.reflect.Method)
 
-#_public
 (class-ns ProxyHandler (§ implements InvocationHandler)
     ;; method-name-string->fn
-    #_final
     (§ field IPersistentMap fns)
 
-    #_public
-    (§ method ProxyHandler(IPersistentMap fns)
+    (§ constructor ProxyHandler(IPersistentMap fns)
         (§ ass this.fns = fns)
     )
 
-    #_public
     (§ method Object invoke(Object proxy, Method method, Object[] args) (§ throws Throwable)
         (§ let Class rt = method.getReturnType())
         (§ let IFn fn = (IFn) fns.valAt(method.getName()))
@@ -34929,73 +29807,53 @@
 ;;;
  ; Implements generic numeric (potentially infinite) range.
  ;;
-#_public
 (class-ns Range (§ extends ASeq) (§ implements IChunkedSeq, IReduce)
-    #_private
-    #_static
-    #_final
-    (§ field int CHUNK_SIZE = 32)
+    (§ def- int CHUNK_SIZE = 32)
 
     ;; Invariants guarantee this is never an "empty" seq
-    #_final
     (§ field Object end)
-    #_final
     (§ field Object start)
-    #_final
     (§ field Object step)
-    #_final
     (§ field BoundsCheck boundsCheck)
 
-    #_private
     #_volatile
-    (§ field IChunk _chunk) ;; lazy
-    #_private
+    (§ field- IChunk _chunk) ;; lazy
     #_volatile
-    (§ field ISeq _chunkNext) ;; lazy
-    #_private
+    (§ field- ISeq _chunkNext) ;; lazy
     #_volatile
-    (§ field ISeq _next) ;; cached
+    (§ field- ISeq _next) ;; cached
 
     #_private
-    #_static
     (§ interface BoundsCheck
         (§ abstract boolean exceededBounds(Object val))
     )
 
-    #_private
-    #_static
-    (§ method BoundsCheck positiveStep(final Object end)
+    (§ defn- BoundsCheck positiveStep(Object end)
         (§ return (§ expr new BoundsCheck()
-        (§ inner
-            #_public
+        (§ reify
             (§ method boolean exceededBounds(Object val)
                 (§ return (§ expr Numbers.gte(val, end)))
             )
         )))
     )
 
-    #_private
-    #_static
-    (§ method BoundsCheck negativeStep(final Object end)
+    (§ defn- BoundsCheck negativeStep(Object end)
         (§ return (§ expr new BoundsCheck()
-        (§ inner
-            #_public
+        (§ reify
             (§ method boolean exceededBounds(Object val)
                 (§ return (§ expr Numbers.lte(val, end)))
             )
         )))
     )
 
-    #_private
-    (§ method Range(Object start, Object end, Object step, BoundsCheck boundsCheck)
+    (§ constructor- Range(Object start, Object end, Object step, BoundsCheck boundsCheck)
         (§ ass this.end = end)
         (§ ass this.start = start)
         (§ ass this.step = step)
         (§ ass this.boundsCheck = boundsCheck)
     )
 
-    #_private
-    (§ method Range(Object start, Object end, Object step, BoundsCheck boundsCheck, IChunk chunk, ISeq chunkNext)
+    (§ constructor- Range(Object start, Object end, Object step, BoundsCheck boundsCheck, IChunk chunk, ISeq chunkNext)
         (§ ass this.end = end)
         (§ ass this.start = start)
         (§ ass this.step = step)
@@ -35004,8 +29862,7 @@
         (§ ass this._chunkNext = chunkNext)
     )
 
-    #_private
-    (§ method Range(IPersistentMap meta, Object start, Object end, Object step, BoundsCheck boundsCheck, IChunk chunk, ISeq chunkNext)
+    (§ constructor- Range(IPersistentMap meta, Object start, Object end, Object step, BoundsCheck boundsCheck, IChunk chunk, ISeq chunkNext)
         (§ super(meta))
         (§ ass this.end = end)
         (§ ass this.start = start)
@@ -35015,9 +29872,7 @@
         (§ ass this._chunkNext = chunkNext)
     )
 
-    #_public
-    #_static
-    (§ method ISeq create(Object end)
+    (§ defn ISeq create(Object end)
         (§ if (Numbers.isPos(end)))
         (§
             (§ return (§ expr new Range(0, end, 1, positiveStep(end))))
@@ -35025,15 +29880,11 @@
         (§ return (§ expr PersistentList.EMPTY))
     )
 
-    #_public
-    #_static
-    (§ method ISeq create(Object start, Object end)
+    (§ defn ISeq create(Object start, Object end)
         (§ return (§ expr create(start, end, 1)))
     )
 
-    #_public
-    #_static
-    (§ method ISeq create(final Object start, Object end, Object step)
+    (§ defn ISeq create(Object start, Object end, Object step)
         (§ if ((Numbers.isPos(step) && Numbers.gt(start, end)) || (Numbers.isNeg(step) && Numbers.gt(end, start)) || Numbers.equiv(start, end)))
         (§
             (§ return (§ expr PersistentList.EMPTY))
@@ -35045,7 +29896,6 @@
         (§ return (§ expr new Range(start, end, step, Numbers.isPos(step) ? positiveStep(end) :or negativeStep(end))))
     )
 
-    #_public
     (§ method Obj withMeta(IPersistentMap meta)
         (§ if (meta == _meta))
         (§
@@ -35054,12 +29904,10 @@
         (§ return (§ expr new Range(meta, end, start, step, boundsCheck, _chunk, _chunkNext)))
     )
 
-    #_public
     (§ method Object first()
         (§ return (§ expr start))
     )
 
-    #_public
     (§ method void forceChunk()
         (§ if (_chunk != nil))
         (§
@@ -35093,7 +29941,6 @@
         (§ ass _chunkNext = new Range(val, end, step, boundsCheck))
     )
 
-    #_public
     (§ method ISeq next()
         (§ if (_next != nil))
         (§
@@ -35110,18 +29957,15 @@
         (§ return (§ expr chunkedNext()))
     )
 
-    #_public
     (§ method IChunk chunkedFirst()
         (§ call forceChunk())
         (§ return (§ expr _chunk))
     )
 
-    #_public
     (§ method ISeq chunkedNext()
         (§ return (§ expr chunkedMore().seq()))
     )
 
-    #_public
     (§ method ISeq chunkedMore()
         (§ call forceChunk())
         (§ if (_chunkNext == nil))
@@ -35131,7 +29975,6 @@
         (§ return (§ expr _chunkNext))
     )
 
-    #_public
     (§ method Object reduce(IFn f)
         (§ let Object acc = start)
         (§ let Number i = Numbers.addP(start, step))
@@ -35147,7 +29990,6 @@
         (§ return (§ expr acc))
     )
 
-    #_public
     (§ method Object reduce(IFn f, Object val)
         (§ let Object acc = val)
         (§ let Object i = start)
@@ -35163,27 +30005,23 @@
         (§ return (§ expr acc))
     )
 
-    #_public
     (§ method Iterator iterator()
         (§ return (§ expr new RangeIterator()))
     )
 
     #_private
+    #_non-static
     (class-ns RangeIterator (§ implements Iterator)
-        #_private
-        (§ field Object next)
+        (§ field- Object next)
 
-        #_public
-        (§ method RangeIterator()
+        (§ constructor RangeIterator()
             (§ ass this.next = start)
         )
 
-        #_public
         (§ method boolean hasNext()
             (§ return (§ expr (!boundsCheck.exceededBounds(next))))
         )
 
-        #_public
         (§ method Object next()
             (§ if (hasNext()))
             (§
@@ -35197,7 +30035,6 @@
             )
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException())
         )
@@ -35211,62 +30048,47 @@
 (§ import java.math.BigDecimal)
 (§ import java.math.MathContext)
 
-#_public
 (class-ns Ratio (§ extends Number) (§ implements Comparable)
-    #_final
-    #_public
     (§ field BigInteger numerator)
-    #_final
-    #_public
     (§ field BigInteger denominator)
 
-    #_public
-    (§ method Ratio(BigInteger numerator, BigInteger denominator)
+    (§ constructor Ratio(BigInteger numerator, BigInteger denominator)
         (§ ass this.numerator = numerator)
         (§ ass this.denominator = denominator)
     )
 
-    #_public
     (§ method boolean equals(Object arg0)
         (§ return (§ expr (arg0 != nil && arg0 instanceof Ratio && ((Ratio) arg0).numerator.equals(numerator) && ((Ratio) arg0).denominator.equals(denominator))))
     )
 
-    #_public
     (§ method int hashCode()
         (§ return (§ expr numerator.hashCode() :xor denominator.hashCode()))
     )
 
-    #_public
     (§ method String toString()
         (§ return (§ expr numerator.toString() + "/" + denominator.toString()))
     )
 
-    #_public
     (§ method int intValue()
         (§ return (§ expr (int) doubleValue()))
     )
 
-    #_public
     (§ method long longValue()
         (§ return (§ expr bigIntegerValue().longValue()))
     )
 
-    #_public
     (§ method float floatValue()
         (§ return (§ expr (float)doubleValue()))
     )
 
-    #_public
     (§ method double doubleValue()
         (§ return (§ expr decimalValue(MathContext.DECIMAL64).doubleValue()))
     )
 
-    #_public
     (§ method BigDecimal decimalValue()
         (§ return (§ expr decimalValue(MathContext.UNLIMITED)))
     )
 
-    #_public
     (§ method BigDecimal decimalValue(MathContext mc)
         (§ let BigDecimal numerator = new BigDecimal(this.numerator))
         (§ let BigDecimal denominator = new BigDecimal(this.denominator))
@@ -35274,12 +30096,10 @@
         (§ return (§ expr numerator.divide(denominator, mc)))
     )
 
-    #_public
     (§ method BigInteger bigIntegerValue()
         (§ return (§ expr numerator.divide(denominator)))
     )
 
-    #_public
     (§ method int compareTo(Object o)
         (§ let Number other = (Number)o)
         (§ return (§ expr Numbers.compare(this, other)))
@@ -35289,42 +30109,26 @@
 
 (java-ns cloiure.lang.ReaderConditional
 
-#_public
 (class-ns ReaderConditional (§ implements ILookup)
-    #_public
-    #_static
-    #_final
-    (§ field Keyword FORM_KW = Keyword.intern("form"))
-    #_public
-    #_static
-    #_final
-    (§ field Keyword SPLICING_KW = Keyword.intern("splicing?"))
+    (§ def Keyword FORM_KW = Keyword.intern("form"))
+    (§ def Keyword SPLICING_KW = Keyword.intern("splicing?"))
 
-    #_public
-    #_final
     (§ field Object form)
-    #_public
-    #_final
     (§ field Boolean splicing)
 
-    #_public
-    #_static
-    (§ method ReaderConditional create(Object form, boolean splicing)
+    (§ defn ReaderConditional create(Object form, boolean splicing)
         (§ return (§ expr new ReaderConditional(form, splicing)))
     )
 
-    #_private
-    (§ method ReaderConditional(Object form, boolean splicing)
+    (§ constructor- ReaderConditional(Object form, boolean splicing)
         (§ ass this.form = form)
         (§ ass this.splicing = splicing)
     )
 
-    #_public
     (§ method Object valAt(Object key)
         (§ return (§ expr valAt(key, nil)))
     )
 
-    #_public
     (§ method Object valAt(Object key, Object notFound)
         (§ if (FORM_KW.equals(key)))
         (§
@@ -35341,7 +30145,6 @@
     )
 
     (§ anno @Override)
-    #_public
     (§ method boolean equals(Object o)
         (§ if (this == o))
         (§
@@ -35366,7 +30169,6 @@
     )
 
     (§ anno @Override)
-    #_public
     (§ method int hashCode()
         (§ let int result = Util.hash(form))
         (§ ass result = 31 * result + Util.hash(splicing))
@@ -35379,28 +30181,20 @@
 
 (§ import java.util.Iterator)
 
-#_public
-#_final
 (class-ns RecordIterator (§ implements Iterator)
     (§ field int i = 0)
-    #_final
     (§ field int basecnt)
-    #_final
     (§ field ILookup rec)
-    #_final
     (§ field IPersistentVector basefields)
-    #_final
     (§ field Iterator extmap)
 
-    #_public
-    (§ method RecordIterator(ILookup rec, IPersistentVector basefields, Iterator extmap)
+    (§ constructor RecordIterator(ILookup rec, IPersistentVector basefields, Iterator extmap)
         (§ ass this.rec = rec)
         (§ ass this.basefields = basefields)
         (§ ass this.basecnt = basefields.count())
         (§ ass this.extmap = extmap)
     )
 
-    #_public
     (§ method boolean hasNext()
         (§ if (i < basecnt))
         (§
@@ -35412,7 +30206,6 @@
         )
     )
 
-    #_public
     (§ method Object next()
         (§ if (i < basecnt))
         (§
@@ -35426,7 +30219,6 @@
         )
     )
 
-    #_public
     (§ method void remove()
         (§ throw new UnsupportedOperationException())
     )
@@ -35435,17 +30227,13 @@
 
 (java-ns cloiure.lang.Reduced
 
-#_public
-#_final
 (class-ns Reduced (§ implements IDeref)
     (§ field Object val)
 
-    #_public
-    (§ method Reduced(Object val)
+    (§ constructor Reduced(Object val)
         (§ ass this.val = val)
     )
 
-    #_public
     (§ method Object deref()
         (§ return (§ expr val))
     )
@@ -35458,9 +30246,7 @@
 (§ import java.util.concurrent.atomic.AtomicLong)
 (§ import java.util.concurrent.locks.ReentrantReadWriteLock)
 
-#_public
 (class-ns Ref (§ extends ARef) (§ implements IFn, Comparable<Ref>, IRef)
-    #_public
     (§ method int compareTo(Ref ref)
         (§ if (this.id == ref.id))
         (§
@@ -35476,37 +30262,31 @@
         )
     )
 
-    #_public
     (§ method int getMinHistory()
         (§ return (§ expr minHistory))
     )
 
-    #_public
     (§ method Ref setMinHistory(int minHistory)
         (§ ass this.minHistory = minHistory)
         (§ return (§ expr this))
     )
 
-    #_public
     (§ method int getMaxHistory()
         (§ return (§ expr maxHistory))
     )
 
-    #_public
     (§ method Ref setMaxHistory(int maxHistory)
         (§ ass this.maxHistory = maxHistory)
         (§ return (§ expr this))
     )
 
-    #_public
-    #_static
     (class-ns TVal
         (§ field Object val)
         (§ field long point)
         (§ field TVal prior)
         (§ field TVal next)
 
-        (§ method TVal(Object val, long point, TVal prior)
+        (§ constructor TVal(Object val, long point, TVal prior)
             (§ ass this.val = val)
             (§ ass this.point = point)
             (§ ass this.prior = prior)
@@ -35515,7 +30295,7 @@
             (§ ass this.next.prior = this)
         )
 
-        (§ method TVal(Object val, long point)
+        (§ constructor TVal(Object val, long point)
             (§ ass this.val = val)
             (§ ass this.point = point)
             (§ ass this.next = this)
@@ -35524,12 +30304,9 @@
     )
 
     (§ field TVal tvals)
-    #_final
     (§ field AtomicInteger faults)
-    #_final
     (§ field ReentrantReadWriteLock lock)
     (§ field LockingTransaction.Info tinfo)
-    #_final
     (§ field long id)
 
     #_volatile
@@ -35537,17 +30314,13 @@
     #_volatile
     (§ field int maxHistory = 10)
 
-    #_static
-    #_final
-    (§ field AtomicLong ids = new AtomicLong())
+    (§ def AtomicLong ids = new AtomicLong())
 
-    #_public
-    (§ method Ref(Object initVal)
+    (§ constructor Ref(Object initVal)
         (§ this(initVal, nil))
     )
 
-    #_public
-    (§ method Ref(Object initVal, IPersistentMap meta)
+    (§ constructor Ref(Object initVal, IPersistentMap meta)
         (§ super(meta))
         (§ ass this.id = ids.getAndIncrement())
         (§ ass this.faults = new AtomicInteger())
@@ -35574,7 +30347,6 @@
         )
     )
 
-    #_public
     (§ method Object deref()
         (§ let LockingTransaction t = LockingTransaction.getRunning())
         (§ if (t == nil))
@@ -35584,23 +30356,19 @@
         (§ return (§ expr t.doGet(this)))
     )
 
-    #_public
     (§ method Object set(Object val)
         (§ return (§ expr LockingTransaction.getEx().doSet(this, val)))
     )
 
-    #_public
     (§ method Object commute(IFn fn, ISeq args)
         (§ return (§ expr LockingTransaction.getEx().doCommute(this, fn, args)))
     )
 
-    #_public
     (§ method Object alter(IFn fn, ISeq args)
         (§ let LockingTransaction t = LockingTransaction.getEx())
         (§ return (§ expr t.doSet(this, fn.applyTo(RT.cons(t.doGet(this), args)))))
     )
 
-    #_public
     (§ method void touch()
         (§ call LockingTransaction.getEx().doEnsure(this))
     )
@@ -35617,7 +30385,6 @@
         )
     )
 
-    #_public
     (§ method void trimHistory()
         (§ try )
         (§
@@ -35634,7 +30401,6 @@
         )
     )
 
-    #_public
     (§ method int getHistoryCount()
         (§ try )
         (§
@@ -35663,112 +30429,92 @@
         )
     )
 
-    #_final
-    #_public
     (§ method IFn fn()
         (§ return (§ expr (IFn) deref()))
     )
 
-    #_public
     (§ method Object call()
         (§ return (§ expr invoke()))
     )
 
-    #_public
     (§ method void run()
         (§ call invoke())
     )
 
-    #_public
     (§ method Object invoke()
         (§ return (§ expr fn().invoke()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1)
         (§ return (§ expr fn().invoke(arg1)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2)
         (§ return (§ expr fn().invoke(arg1, arg2)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3)
         (§ return (§ expr fn().invoke(arg1, arg2, arg3)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4)
         (§ return (§ expr fn().invoke(arg1, arg2, arg3, arg4)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
         (§ return (§ expr fn().invoke(arg1, arg2, arg3, arg4, arg5)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6)
         (§ return (§ expr fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7)
         (§ return (§ expr fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8))
     (§
         (§ return (§ expr fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9))
     (§
         (§ return (§ expr fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10))
     (§
         (§ return (§ expr fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11))
     (§
         (§ return (§ expr fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12))
     (§
         (§ return (§ expr fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13))
     (§
         (§ return (§ expr fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14))
     (§
         (§ return (§ expr fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15))
@@ -35776,7 +30522,6 @@
         (§ return (§ expr fn().invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16))
@@ -35785,7 +30530,6 @@
           #_arg arg16)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17))
@@ -35794,7 +30538,6 @@
           #_arg arg16, arg17)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18))
@@ -35803,7 +30546,6 @@
           #_arg arg16, arg17, arg18)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19))
@@ -35812,7 +30554,6 @@
           #_arg arg16, arg17, arg18, arg19)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20))
@@ -35821,7 +30562,6 @@
           #_arg arg16, arg17, arg18, arg19, arg20)))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20,
@@ -35831,7 +30571,6 @@
           #_arg arg16, arg17, arg18, arg19, arg20, args)))
     )
 
-    #_public
     (§ method Object applyTo(ISeq arglist)
         (§ return (§ expr AFn.applyToHelper(this, arglist)))
     )
@@ -35848,19 +30587,14 @@
 (§ import java.util.Iterator)
 (§ import java.util.List)
 
-#_public
 (class-ns Reflector
-    #_public
-    #_static
-    (§ method Object invokeInstanceMethod(Object target, String methodName, Object[] args)
+    (§ defn Object invokeInstanceMethod(Object target, String methodName, Object[] args)
         (§ let Class c = target.getClass())
         (§ let List methods = getMethods(c, args.length, methodName, false))
         (§ return (§ expr invokeMatchingMethod(methodName, methods, target, args)))
     )
 
-    #_private
-    #_static
-    (§ method Throwable getCauseOrElse(Exception e)
+    (§ defn- Throwable getCauseOrElse(Exception e)
         (§ if (e.getCause() != nil))
         (§
             (§ return (§ expr e.getCause()))
@@ -35868,9 +30602,7 @@
         (§ return (§ expr e))
     )
 
-    #_private
-    #_static
-    (§ method RuntimeException throwCauseOrElseException(Exception e)
+    (§ defn- RuntimeException throwCauseOrElseException(Exception e)
         (§ if (e.getCause() != nil))
         (§
             (§ throw Util.sneakyThrow(e.getCause()))
@@ -35878,14 +30610,11 @@
         (§ throw Util.sneakyThrow(e))
     )
 
-    #_private
-    #_static
-    (§ method String noMethodReport(String methodName, Object target)
+    (§ defn- String noMethodReport(String methodName, Object target)
         (§ return (§ expr "No matching method found: " + methodName + ((target == nil) ? "" :or " for " + target.getClass())))
     )
 
-    #_static
-    (§ method Object invokeMatchingMethod(String methodName, List methods, Object target, Object[] args)
+    (§ defn Object invokeMatchingMethod(String methodName, List methods, Object target, Object[] args)
         (§ let Method m = nil)
         (§ let Object[] boxedArgs = nil)
         (§ if (methods.isEmpty()))
@@ -35941,9 +30670,7 @@
         )
     )
 
-    #_public
-    #_static
-    (§ method Method getAsMethodOfPublicBase(Class c, Method m)
+    (§ defn Method getAsMethodOfPublicBase(Class c, Method m)
         (§ for (Class iface :in c.getInterfaces()))
         (§
             (§ for (Method im :in iface.getMethods()))
@@ -35969,9 +30696,7 @@
         (§ return (§ expr getAsMethodOfPublicBase(sc, m)))
     )
 
-    #_public
-    #_static
-    (§ method boolean isMatch(Method lhs, Method rhs)
+    (§ defn boolean isMatch(Method lhs, Method rhs)
         (§ if (!lhs.getName().equals(rhs.getName()) || !Modifier.isPublic(lhs.getDeclaringClass().getModifiers())))
         (§
             (§ return (§ expr false))
@@ -35996,9 +30721,7 @@
         (§ return (§ expr match))
     )
 
-    #_public
-    #_static
-    (§ method Object invokeConstructor(Class c, Object[] args)
+    (§ defn Object invokeConstructor(Class c, Object[] args)
         (§ try )
         (§
             (§ let Constructor[] allctors = c.getConstructors())
@@ -36041,22 +30764,16 @@
         )
     )
 
-    #_public
-    #_static
-    (§ method Object invokeStaticMethodVariadic(String className, String methodName, Object... args)
+    (§ defn Object invokeStaticMethodVariadic(String className, String methodName, Object... args)
         (§ return (§ expr invokeStaticMethod(className, methodName, args)))
     )
 
-    #_public
-    #_static
-    (§ method Object invokeStaticMethod(String className, String methodName, Object[] args)
+    (§ defn Object invokeStaticMethod(String className, String methodName, Object[] args)
         (§ let Class c = RT.classForName(className))
         (§ return (§ expr invokeStaticMethod(c, methodName, args)))
     )
 
-    #_public
-    #_static
-    (§ method Object invokeStaticMethod(Class c, String methodName, Object[] args)
+    (§ defn Object invokeStaticMethod(Class c, String methodName, Object[] args)
         (§ if (methodName.equals("new")))
         (§
             (§ return (§ expr invokeConstructor(c, args)))
@@ -36065,16 +30782,12 @@
         (§ return (§ expr invokeMatchingMethod(methodName, methods, nil, args)))
     )
 
-    #_public
-    #_static
-    (§ method Object getStaticField(String className, String fieldName)
+    (§ defn Object getStaticField(String className, String fieldName)
         (§ let Class c = RT.classForName(className))
         (§ return (§ expr getStaticField(c, fieldName)))
     )
 
-    #_public
-    #_static
-    (§ method Object getStaticField(Class c, String fieldName)
+    (§ defn Object getStaticField(Class c, String fieldName)
         (§ let Field f = getField(c, fieldName, true))
         (§ if (f != nil))
         (§
@@ -36090,16 +30803,12 @@
         (§ throw new IllegalArgumentException("No matching field found: " + fieldName + " for " + c))
     )
 
-    #_public
-    #_static
-    (§ method Object setStaticField(String className, String fieldName, Object val)
+    (§ defn Object setStaticField(String className, String fieldName, Object val)
         (§ let Class c = RT.classForName(className))
         (§ return (§ expr setStaticField(c, fieldName, val)))
     )
 
-    #_public
-    #_static
-    (§ method Object setStaticField(Class c, String fieldName, Object val)
+    (§ defn Object setStaticField(Class c, String fieldName, Object val)
         (§ let Field f = getField(c, fieldName, true))
         (§ if (f != nil))
         (§
@@ -36116,9 +30825,7 @@
         (§ throw new IllegalArgumentException("No matching field found: " + fieldName + " for " + c))
     )
 
-    #_public
-    #_static
-    (§ method Object getInstanceField(Object target, String fieldName)
+    (§ defn Object getInstanceField(Object target, String fieldName)
         (§ let Class c = target.getClass())
         (§ let Field f = getField(c, fieldName, false))
         (§ if (f != nil))
@@ -36135,9 +30842,7 @@
         (§ throw new IllegalArgumentException("No matching field found: " + fieldName + " for " + target.getClass()))
     )
 
-    #_public
-    #_static
-    (§ method Object setInstanceField(Object target, String fieldName, Object val)
+    (§ defn Object setInstanceField(Object target, String fieldName, Object val)
         (§ let Class c = target.getClass())
         (§ let Field f = getField(c, fieldName, false))
         (§ if (f != nil))
@@ -36156,15 +30861,11 @@
     )
 
     ;; not used as of Clojure 1.6, but left for runtime compatibility with compiled bytecode from older versions
-    #_public
-    #_static
-    (§ method Object invokeNoArgInstanceMember(Object target, String name)
+    (§ defn Object invokeNoArgInstanceMember(Object target, String name)
         (§ return (§ expr invokeNoArgInstanceMember(target, name, false)))
     )
 
-    #_public
-    #_static
-    (§ method Object invokeNoArgInstanceMember(Object target, String name, boolean requireField)
+    (§ defn Object invokeNoArgInstanceMember(Object target, String name, boolean requireField)
         (§ let Class c = target.getClass())
 
         (§ if (requireField))
@@ -36193,9 +30894,7 @@
         )
     )
 
-    #_public
-    #_static
-    (§ method Object invokeInstanceMember(Object target, String name)
+    (§ defn Object invokeInstanceMember(Object target, String name)
         ;; check for field first
         (§ let Class c = target.getClass())
         (§ let Field f = getField(c, name, false))
@@ -36213,9 +30912,7 @@
         (§ return (§ expr invokeInstanceMethod(target, name, RT.EMPTY_ARRAY)))
     )
 
-    #_public
-    #_static
-    (§ method Object invokeInstanceMember(String name, Object target, Object arg1)
+    (§ defn Object invokeInstanceMember(String name, Object target, Object arg1)
         ;; check for field first
         (§ let Class c = target.getClass())
         (§ let Field f = getField(c, name, false))
@@ -36234,15 +30931,11 @@
         (§ return (§ expr invokeInstanceMethod(target, name, new Object[] (§ arg1 ))))
     )
 
-    #_public
-    #_static
-    (§ method Object invokeInstanceMember(String name, Object target, Object... args)
+    (§ defn Object invokeInstanceMember(String name, Object target, Object... args)
         (§ return (§ expr invokeInstanceMethod(target, name, args)))
     )
 
-    #_static
-    #_public
-    (§ method Field getField(Class c, String name, boolean getStatics)
+    (§ defn Field getField(Class c, String name, boolean getStatics)
         (§ let Field[] allfields = c.getFields())
         (§ for (int i = 0 i < allfields.length i++))
         (§
@@ -36254,9 +30947,7 @@
         (§ return (§ expr nil))
     )
 
-    #_static
-    #_public
-    (§ method List getMethods(Class c, int arity, String name, boolean getStatics)
+    (§ defn List getMethods(Class c, int arity, String name, boolean getStatics)
         (§ let Method[] allmethods = c.getMethods())
         (§ let ArrayList methods = new ArrayList())
         (§ let ArrayList bridgeMethods = new ArrayList())
@@ -36300,8 +30991,7 @@
         (§ return (§ expr methods))
     )
 
-    #_static
-    (§ method Object boxArg(Class paramType, Object arg)
+    (§ defn Object boxArg(Class paramType, Object arg)
         (§ if (!paramType.isPrimitive()))
         (§
             (§ return (§ expr paramType.cast(arg)))
@@ -36345,8 +31035,7 @@
         (§ throw new IllegalArgumentException("Unexpected param type, expected: " + paramType + ", given: " + arg.getClass().getName()))
     )
 
-    #_static
-    (§ method Object[] boxArgs(Class[] params, Object[] args)
+    (§ defn Object[] boxArgs(Class[] params, Object[] args)
         (§ if (params.length == 0))
         (§
             (§ return (§ expr nil))
@@ -36361,9 +31050,7 @@
         (§ return (§ expr ret))
     )
 
-    #_static
-    #_public
-    (§ method boolean paramArgTypeMatch(Class paramType, Class argType)
+    (§ defn boolean paramArgTypeMatch(Class paramType, Class argType)
         (§ if (argType == nil))
         (§
             (§ return (§ expr !paramType.isPrimitive()))
@@ -36416,8 +31103,7 @@
         (§ return (§ expr false))
     )
 
-    #_static
-    (§ method boolean isCongruent(Class[] params, Object[] args)
+    (§ defn boolean isCongruent(Class[] params, Object[] args)
         (§ let boolean ret = false)
         (§ if (args == nil))
         (§
@@ -36437,9 +31123,7 @@
         (§ return (§ expr ret))
     )
 
-    #_public
-    #_static
-    (§ method Object prepRet(Class c, Object x)
+    (§ defn Object prepRet(Class c, Object x)
         (§ if (!(c.isPrimitive() || c == Boolean.class)))
         (§
             (§ return (§ expr x))
@@ -36455,45 +31139,30 @@
 
 (java-ns cloiure.lang.Repeat
 
-#_public
 (class-ns Repeat (§ extends ASeq) (§ implements IReduce)
-    #_private
-    #_static
-    #_final
-    (§ field long INFINITE = -1)
+    (§ def- long INFINITE = -1)
 
-    #_private
-    #_final
-    (§ field long count) ;; always INFINITE or >0
-    #_private
-    #_final
-    (§ field Object val)
-    #_private
+    (§ field- long count) ;; always INFINITE or >0
+    (§ field- Object val)
     #_volatile
-    (§ field ISeq _next) ;; cached
+    (§ field- ISeq _next) ;; cached
 
-    #_private
-    (§ method Repeat(long count, Object val)
+    (§ constructor- Repeat(long count, Object val)
         (§ ass this.count = count)
         (§ ass this.val = val)
     )
 
-    #_private
-    (§ method Repeat(IPersistentMap meta, long count, Object val)
+    (§ constructor- Repeat(IPersistentMap meta, long count, Object val)
         (§ super(meta))
         (§ ass this.count = count)
         (§ ass this.val = val)
     )
 
-    #_public
-    #_static
-    (§ method Repeat create(Object val)
+    (§ defn Repeat create(Object val)
         (§ return (§ expr new Repeat(INFINITE, val)))
     )
 
-    #_public
-    #_static
-    (§ method ISeq create(long count, Object val)
+    (§ defn ISeq create(long count, Object val)
         (§ if (count <= 0))
         (§
             (§ return (§ expr PersistentList.EMPTY))
@@ -36501,12 +31170,10 @@
         (§ return (§ expr new Repeat(count, val)))
     )
 
-    #_public
     (§ method Object first()
         (§ return (§ expr val))
     )
 
-    #_public
     (§ method ISeq next()
         (§ if (_next == nil))
         (§
@@ -36522,12 +31189,10 @@
         (§ return (§ expr _next))
     )
 
-    #_public
     (§ method Repeat withMeta(IPersistentMap meta)
         (§ return (§ expr new Repeat(meta, count, val)))
     )
 
-    #_public
     (§ method Object reduce(IFn f)
         (§ let Object ret = val)
         (§ if (count == INFINITE))
@@ -36555,7 +31220,6 @@
         )
     )
 
-    #_public
     (§ method Object reduce(IFn f, Object start)
         (§ let Object ret = start)
         (§ if (count == INFINITE))
@@ -36587,10 +31251,9 @@
 
 (java-ns cloiure.lang.RestFn
 
-#_public
 #_abstract
 (class-ns RestFn (§ extends AFunction)
-    (§ abstract public int getRequiredArity())
+    (§ abstract int getRequiredArity())
 
     #_protected
     (§ method Object doInvoke(Object args)
@@ -36734,7 +31397,6 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method Object applyTo(ISeq args)
         (§ if (RT.boundedLength(args, getRequiredArity()) <= getRequiredArity()))
         (§
@@ -37040,7 +31702,6 @@
         (§ return (§ expr throwArity(-1)))
     )
 
-    #_public
     (§ method Object invoke()
         (§ switch (getRequiredArity()))
         (§
@@ -37055,7 +31716,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1)
         (§ switch (getRequiredArity()))
         (§
@@ -37074,7 +31734,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2)
         (§ switch (getRequiredArity()))
         (§
@@ -37097,7 +31756,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3)
         (§ switch (getRequiredArity()))
         (§
@@ -37124,7 +31782,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4)
         (§ switch (getRequiredArity()))
         (§
@@ -37155,7 +31812,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
         (§ switch (getRequiredArity()))
         (§
@@ -37199,7 +31855,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6)
         (§ switch (getRequiredArity()))
         (§
@@ -37253,7 +31908,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7)
         (§ switch (getRequiredArity()))
         (§
@@ -37338,7 +31992,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8))
     (§
@@ -37443,7 +32096,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9))
     (§
@@ -37568,7 +32220,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10))
     (§
@@ -37718,7 +32369,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11))
     (§
@@ -37911,7 +32561,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12))
     (§
@@ -38132,7 +32781,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13))
     (§
@@ -38395,7 +33043,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14))
     (§
@@ -38690,7 +33337,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15))
@@ -39019,7 +33665,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16))
@@ -39383,7 +34028,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17))
@@ -39784,7 +34428,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18))
@@ -40224,7 +34867,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19))
@@ -40703,7 +35345,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20))
@@ -40979,7 +35620,6 @@
         )
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20, Object... args))
@@ -41220,8 +35860,7 @@
     )
 
     #_protected
-    #_static
-    (§ method ISeq ontoArrayPrepend(Object[] array, Object... args)
+    (§ defn ISeq ontoArrayPrepend(Object[] array, Object... args)
         (§ let ISeq ret = ArraySeq.create(array))
         (§ for (int i = args.length - 1 i >= 0 --i))
         (§
@@ -41231,8 +35870,7 @@
     )
 
     #_protected
-    #_static
-    (§ method ISeq findKey(Object key, ISeq args)
+    (§ defn ISeq findKey(Object key, ISeq args)
         (§ while (args != nil))
         (§
             (§ if (key == args.first()))
@@ -41249,7 +35887,6 @@
 
 (java-ns cloiure.lang.Reversible
 
-#_public
 (§ interface Reversible
     (§ abstract ISeq rseq())
 )
@@ -41274,26 +35911,13 @@
 (§ import java.nio.charset.Charset)
 (§ import java.net.URLConnection)
 
-#_public
 (class-ns RT
-    #_static
-    #_final
-    #_public
-    (§ field Boolean T = Boolean.TRUE)
-    #_static
-    #_final
-    #_public
-    (§ field Boolean F = Boolean.FALSE)
-    #_static
-    #_final
-    #_public
-    (§ field String LOADER_SUFFIX = "__init")
+    (§ def Boolean T = Boolean.TRUE)
+    (§ def Boolean F = Boolean.FALSE)
+    (§ def String LOADER_SUFFIX = "__init")
 
     ;; simple-symbol->class
-    #_final
-    #_static
-    #_public
-    (§ field IPersistentMap DEFAULT_IMPORTS = map(
+    (§ def IPersistentMap DEFAULT_IMPORTS = map(
       #_map Symbol.intern("Boolean"), Boolean.class,
       #_map Symbol.intern("Byte"), Byte.class,
       #_map Symbol.intern("Character"), Character.class,
@@ -41393,12 +36017,9 @@
     ))
 
     ;; single instance of UTF-8 Charset, so as to avoid catching UnsupportedCharsetExceptions everywhere
-    #_static
-    #_public
-    (§ field Charset UTF8 = Charset.forName("UTF-8"))
+    (§ def Charset UTF8 = Charset.forName("UTF-8"))
 
-    #_static
-    (§ method Object readTrueFalseUnknown(String s)
+    (§ defn Object readTrueFalseUnknown(String s)
         (§ if (s.equals("true")))
         (§
             (§ return (§ expr Boolean.TRUE))
@@ -41410,146 +36031,54 @@
         (§ return (§ expr Keyword.intern(nil, "unknown")))
     )
 
-    #_static
-    #_public
-    #_final
-    (§ field Namespace CLOIURE_NS = Namespace.findOrCreate(Symbol.intern("cloiure.core")))
-    #_final
-    #_static
-    #_public
-    (§ field Var OUT = Var.intern(CLOIURE_NS, Symbol.intern("*out*"), new OutputStreamWriter(System.out)).setDynamic())
-    #_final
-    #_static
-    #_public
-    (§ field Var IN = Var.intern(CLOIURE_NS, Symbol.intern("*in*"), new LineNumberingPushbackReader(new InputStreamReader(System.in))).setDynamic())
-    #_final
-    #_static
-    #_public
-    (§ field Var ERR = Var.intern(CLOIURE_NS, Symbol.intern("*err*"), new PrintWriter(new OutputStreamWriter(System.err), true)).setDynamic())
-    #_final
-    #_static
-    (§ field Keyword TAG_KEY = Keyword.intern(nil, "tag"))
-    #_final
-    #_static
-    (§ field Keyword CONST_KEY = Keyword.intern(nil, "const"))
-    #_final
-    #_static
-    #_public
-    (§ field Var AGENT = Var.intern(CLOIURE_NS, Symbol.intern("*agent*"), nil).setDynamic())
-    #_static
-    (§ field Object readeval = readTrueFalseUnknown(System.getProperty("cloiure.read.eval", "true")))
-    #_final
-    #_static
-    #_public
-    (§ field Var READEVAL = Var.intern(CLOIURE_NS, Symbol.intern("*read-eval*"),  readeval).setDynamic())
-    #_final
-    #_static
-    #_public
-    (§ field Var DATA_READERS = Var.intern(CLOIURE_NS, Symbol.intern("*data-readers*"), RT.map()).setDynamic())
-    #_final
-    #_static
-    #_public
-    (§ field Var DEFAULT_DATA_READER_FN = Var.intern(CLOIURE_NS, Symbol.intern("*default-data-reader-fn*"), RT.map()).setDynamic())
-    #_final
-    #_static
-    #_public
-    (§ field Var DEFAULT_DATA_READERS = Var.intern(CLOIURE_NS, Symbol.intern("default-data-readers"), RT.map()))
-    #_final
-    #_static
-    #_public
-    (§ field Var SUPPRESS_READ = Var.intern(CLOIURE_NS, Symbol.intern("*suppress-read*"), nil).setDynamic())
-    #_final
-    #_static
-    #_public
-    (§ field Var ASSERT = Var.intern(CLOIURE_NS, Symbol.intern("*assert*"), T).setDynamic())
-    #_final
-    #_static
-    #_public
-    (§ field Var MATH_CONTEXT = Var.intern(CLOIURE_NS, Symbol.intern("*math-context*"), nil).setDynamic())
-    #_static
-    (§ field Keyword LINE_KEY = Keyword.intern(nil, "line"))
-    #_static
-    (§ field Keyword COLUMN_KEY = Keyword.intern(nil, "column"))
-    #_static
-    (§ field Keyword FILE_KEY = Keyword.intern(nil, "file"))
-    #_static
-    (§ field Keyword DECLARED_KEY = Keyword.intern(nil, "declared"))
-    #_static
-    (§ field Keyword DOC_KEY = Keyword.intern(nil, "doc"))
-    #_final
-    #_static
-    #_public
-    (§ field Var USE_CONTEXT_CLASSLOADER = Var.intern(CLOIURE_NS, Symbol.intern("*use-context-classloader*"), T).setDynamic())
+    (§ def Namespace CLOIURE_NS = Namespace.findOrCreate(Symbol.intern("cloiure.core")))
+    (§ def Var OUT = Var.intern(CLOIURE_NS, Symbol.intern("*out*"), new OutputStreamWriter(System.out)).setDynamic())
+    (§ def Var IN = Var.intern(CLOIURE_NS, Symbol.intern("*in*"), new LineNumberingPushbackReader(new InputStreamReader(System.in))).setDynamic())
+    (§ def Var ERR = Var.intern(CLOIURE_NS, Symbol.intern("*err*"), new PrintWriter(new OutputStreamWriter(System.err), true)).setDynamic())
+    (§ def Keyword TAG_KEY = Keyword.intern(nil, "tag"))
+    (§ def Keyword CONST_KEY = Keyword.intern(nil, "const"))
+    (§ def Var AGENT = Var.intern(CLOIURE_NS, Symbol.intern("*agent*"), nil).setDynamic())
+    (§ def Object readeval = readTrueFalseUnknown(System.getProperty("cloiure.read.eval", "true")))
+    (§ def Var READEVAL = Var.intern(CLOIURE_NS, Symbol.intern("*read-eval*"),  readeval).setDynamic())
+    (§ def Var DATA_READERS = Var.intern(CLOIURE_NS, Symbol.intern("*data-readers*"), RT.map()).setDynamic())
+    (§ def Var DEFAULT_DATA_READER_FN = Var.intern(CLOIURE_NS, Symbol.intern("*default-data-reader-fn*"), RT.map()).setDynamic())
+    (§ def Var DEFAULT_DATA_READERS = Var.intern(CLOIURE_NS, Symbol.intern("default-data-readers"), RT.map()))
+    (§ def Var SUPPRESS_READ = Var.intern(CLOIURE_NS, Symbol.intern("*suppress-read*"), nil).setDynamic())
+    (§ def Var ASSERT = Var.intern(CLOIURE_NS, Symbol.intern("*assert*"), T).setDynamic())
+    (§ def Var MATH_CONTEXT = Var.intern(CLOIURE_NS, Symbol.intern("*math-context*"), nil).setDynamic())
+    (§ def Keyword LINE_KEY = Keyword.intern(nil, "line"))
+    (§ def Keyword COLUMN_KEY = Keyword.intern(nil, "column"))
+    (§ def Keyword FILE_KEY = Keyword.intern(nil, "file"))
+    (§ def Keyword DECLARED_KEY = Keyword.intern(nil, "declared"))
+    (§ def Keyword DOC_KEY = Keyword.intern(nil, "doc"))
+    (§ def Var USE_CONTEXT_CLASSLOADER = Var.intern(CLOIURE_NS, Symbol.intern("*use-context-classloader*"), T).setDynamic())
     ;; boolean
-    #_static
-    #_final
-    #_public
-    (§ field Var UNCHECKED_MATH = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*unchecked-math*"), Boolean.FALSE).setDynamic())
+    (§ def Var UNCHECKED_MATH = Var.intern(Namespace.findOrCreate(Symbol.intern("cloiure.core")), Symbol.intern("*unchecked-math*"), Boolean.FALSE).setDynamic())
 
-    #_final
-    #_static
-    (§ field Symbol LOAD_FILE = Symbol.intern("load-file"))
-    #_final
-    #_static
-    (§ field Symbol IN_NAMESPACE = Symbol.intern("in-ns"))
-    #_final
-    #_static
-    (§ field Symbol NAMESPACE = Symbol.intern("ns"))
-    #_static
-    #_final
-    (§ field Symbol IDENTICAL = Symbol.intern("identical?"))
-    #_final
-    #_static
-    (§ field Var CMD_LINE_ARGS = Var.intern(CLOIURE_NS, Symbol.intern("*command-line-args*"), nil).setDynamic())
+    (§ def Symbol LOAD_FILE = Symbol.intern("load-file"))
+    (§ def Symbol IN_NAMESPACE = Symbol.intern("in-ns"))
+    (§ def Symbol NAMESPACE = Symbol.intern("ns"))
+    (§ def Symbol IDENTICAL = Symbol.intern("identical?"))
+    (§ def Var CMD_LINE_ARGS = Var.intern(CLOIURE_NS, Symbol.intern("*command-line-args*"), nil).setDynamic())
     ;; symbol
-    #_final
-    #_public
-    #_static
-    (§ field Var CURRENT_NS = Var.intern(CLOIURE_NS, Symbol.intern("*ns*"), CLOIURE_NS).setDynamic())
+    (§ def Var CURRENT_NS = Var.intern(CLOIURE_NS, Symbol.intern("*ns*"), CLOIURE_NS).setDynamic())
 
-    #_final
-    #_static
-    (§ field Var FLUSH_ON_NEWLINE = Var.intern(CLOIURE_NS, Symbol.intern("*flush-on-newline*"), T).setDynamic())
-    #_final
-    #_static
-    (§ field Var PRINT_META = Var.intern(CLOIURE_NS, Symbol.intern("*print-meta*"), F).setDynamic())
-    #_final
-    #_static
-    (§ field Var PRINT_READABLY = Var.intern(CLOIURE_NS, Symbol.intern("*print-readably*"), T).setDynamic())
-    #_final
-    #_static
-    (§ field Var PRINT_DUP = Var.intern(CLOIURE_NS, Symbol.intern("*print-dup*"), F).setDynamic())
-    #_final
-    #_static
-    (§ field Var WARN_ON_REFLECTION = Var.intern(CLOIURE_NS, Symbol.intern("*warn-on-reflection*"), F).setDynamic())
-    #_final
-    #_static
-    (§ field Var ALLOW_UNRESOLVED_VARS = Var.intern(CLOIURE_NS, Symbol.intern("*allow-unresolved-vars*"), F).setDynamic())
-    #_final
-    #_static
-    (§ field Var READER_RESOLVER = Var.intern(CLOIURE_NS, Symbol.intern("*reader-resolver*"), nil).setDynamic())
+    (§ def Var FLUSH_ON_NEWLINE = Var.intern(CLOIURE_NS, Symbol.intern("*flush-on-newline*"), T).setDynamic())
+    (§ def Var PRINT_META = Var.intern(CLOIURE_NS, Symbol.intern("*print-meta*"), F).setDynamic())
+    (§ def Var PRINT_READABLY = Var.intern(CLOIURE_NS, Symbol.intern("*print-readably*"), T).setDynamic())
+    (§ def Var PRINT_DUP = Var.intern(CLOIURE_NS, Symbol.intern("*print-dup*"), F).setDynamic())
+    (§ def Var WARN_ON_REFLECTION = Var.intern(CLOIURE_NS, Symbol.intern("*warn-on-reflection*"), F).setDynamic())
+    (§ def Var ALLOW_UNRESOLVED_VARS = Var.intern(CLOIURE_NS, Symbol.intern("*allow-unresolved-vars*"), F).setDynamic())
+    (§ def Var READER_RESOLVER = Var.intern(CLOIURE_NS, Symbol.intern("*reader-resolver*"), nil).setDynamic())
 
-    #_final
-    #_static
-    (§ field Var IN_NS_VAR = Var.intern(CLOIURE_NS, Symbol.intern("in-ns"), F))
-    #_final
-    #_static
-    (§ field Var NS_VAR = Var.intern(CLOIURE_NS, Symbol.intern("ns"), F))
-    #_final
-    #_static
-    (§ field Var FN_LOADER_VAR = Var.intern(CLOIURE_NS, Symbol.intern("*fn-loader*"), nil).setDynamic())
-    #_static
-    #_final
-    (§ field Var PRINT_INITIALIZED = Var.intern(CLOIURE_NS, Symbol.intern("print-initialized")))
-    #_static
-    #_final
-    (§ field Var PR_ON = Var.intern(CLOIURE_NS, Symbol.intern("pr-on")))
+    (§ def Var IN_NS_VAR = Var.intern(CLOIURE_NS, Symbol.intern("in-ns"), F))
+    (§ def Var NS_VAR = Var.intern(CLOIURE_NS, Symbol.intern("ns"), F))
+    (§ def Var FN_LOADER_VAR = Var.intern(CLOIURE_NS, Symbol.intern("*fn-loader*"), nil).setDynamic())
+    (§ def Var PRINT_INITIALIZED = Var.intern(CLOIURE_NS, Symbol.intern("print-initialized")))
+    (§ def Var PR_ON = Var.intern(CLOIURE_NS, Symbol.intern("pr-on")))
 
-    #_final
-    #_static
-    (§ field IFn inNamespace = new AFn()
-    (§ inner
-        #_public
+    (§ def IFn inNamespace = new AFn()
+    (§ reify
         (§ method Object invoke(Object arg1)
             (§ let Symbol nsname = (Symbol) arg1)
             (§ let Namespace ns = Namespace.findOrCreate(nsname))
@@ -41558,11 +36087,8 @@
         )
     ))
 
-    #_final
-    #_static
-    (§ field IFn bootNamespace = new AFn()
-    (§ inner
-        #_public
+    (§ def IFn bootNamespace = new AFn()
+    (§ reify
         (§ method Object invoke(Object __form, Object __env, Object arg1)
             (§ let Symbol nsname = (Symbol) arg1)
             (§ let Namespace ns = Namespace.findOrCreate(nsname))
@@ -41571,9 +36097,7 @@
         )
     ))
 
-    #_public
-    #_static
-    (§ method List<String> processCommandLine(String[] args)
+    (§ defn List<String> processCommandLine(String[] args)
         (§ let List<String> arglist = Arrays.asList(args))
         (§ let int split = arglist.indexOf("--"))
         (§ if (split >= 0))
@@ -41585,9 +36109,7 @@
     )
 
     ;; duck typing stderr plays nice with e.g. swank
-    #_public
-    #_static
-    (§ method PrintWriter errPrintWriter()
+    (§ defn PrintWriter errPrintWriter()
         (§ let Writer w = (Writer) ERR.deref())
         (§ if (w instanceof PrintWriter))
         (§
@@ -41599,31 +36121,19 @@
         )
     )
 
-    #_static
-    #_public
-    #_final
-    (§ field Object[] EMPTY_ARRAY = new Object[] (§))
-    #_static
-    #_public
-    #_final
-    (§ field Comparator DEFAULT_COMPARATOR = new DefaultComparator())
+    (§ def Object[] EMPTY_ARRAY = new Object[] (§))
+    (§ def Comparator DEFAULT_COMPARATOR = new DefaultComparator())
 
     #_private
-    #_static
-    #_final
     (class-ns DefaultComparator (§ implements Comparator)
-        #_public
         (§ method int compare(Object o1, Object o2)
             (§ return (§ expr Util.compare(o1, o2)))
         )
     )
 
-    #_static
-    (§ field AtomicInteger id = new AtomicInteger(1))
+    (§ def AtomicInteger id = new AtomicInteger(1))
 
-    #_static
-    #_public
-    (§ method void addURL(Object url) (§ throws MalformedURLException)
+    (§ defn void addURL(Object url) (§ throws MalformedURLException)
         (§ let URL u = (url instanceof String) ? (new URL((String) url)) :or (URL) url)
         (§ let ClassLoader ccl = Thread.currentThread().getContextClassLoader())
         (§ if (ccl instanceof DynamicClassLoader))
@@ -41636,18 +36146,12 @@
         )
     )
 
-    #_public
-    #_static
-    (§ field boolean checkSpecAsserts = Boolean.getBoolean("cloiure.spec.check-asserts"))
-    #_public
-    #_static
-    (§ field boolean instrumentMacros = ! Boolean.getBoolean("cloiure.spec.skip-macros"))
-    #_static
+    (§ def boolean checkSpecAsserts = Boolean.getBoolean("cloiure.spec.check-asserts"))
+    (§ def boolean instrumentMacros = ! Boolean.getBoolean("cloiure.spec.skip-macros"))
     #_volatile
-    (§ field boolean CHECK_SPECS = false)
+    (§ def boolean CHECK_SPECS = false)
 
-    (§ static )
-    (§
+    (§ static
         (§ let Keyword arglistskw = Keyword.intern(nil, "arglists"))
         (§ let Symbol namesym = Symbol.intern("name"))
         (§ call OUT.setTag(Symbol.intern("java.io.Writer")))
@@ -41661,8 +36165,7 @@
         (§ ass v = Var.intern(CLOIURE_NS, IN_NAMESPACE, inNamespace))
         (§ call v.setMeta(map(DOC_KEY, "Sets *ns* to the namespace named by the symbol, creating it if needed.", arglistskw, list(vector(namesym)))))
         (§ ass v = Var.intern(CLOIURE_NS, LOAD_FILE, new AFn()
-        (§ inner
-            #_public
+        (§ reify
             (§ method Object invoke(Object arg1)
                 (§ try )
                 (§
@@ -41687,51 +36190,35 @@
         (§ ass CHECK_SPECS = RT.instrumentMacros)
     )
 
-    #_static
-    #_public
-    (§ method Keyword keyword(String ns, String name)
+    (§ defn Keyword keyword(String ns, String name)
         (§ return (§ expr Keyword.intern((Symbol.intern(ns, name)))))
     )
 
-    #_static
-    #_public
-    (§ method Var var(String ns, String name)
+    (§ defn Var var(String ns, String name)
         (§ return (§ expr Var.intern(Namespace.findOrCreate(Symbol.intern(nil, ns)), Symbol.intern(nil, name))))
     )
 
-    #_static
-    #_public
-    (§ method Var var(String ns, String name, Object init)
+    (§ defn Var var(String ns, String name, Object init)
         (§ return (§ expr Var.intern(Namespace.findOrCreate(Symbol.intern(nil, ns)), Symbol.intern(nil, name), init)))
     )
 
-    #_public
-    #_static
-    (§ method void loadResourceScript(String name) (§ throws IOException)
+    (§ defn void loadResourceScript(String name) (§ throws IOException)
         (§ call loadResourceScript(name, true))
     )
 
-    #_public
-    #_static
-    (§ method void maybeLoadResourceScript(String name) (§ throws IOException)
+    (§ defn void maybeLoadResourceScript(String name) (§ throws IOException)
         (§ call loadResourceScript(name, false))
     )
 
-    #_public
-    #_static
-    (§ method void loadResourceScript(String name, boolean failIfNotFound) (§ throws IOException)
+    (§ defn void loadResourceScript(String name, boolean failIfNotFound) (§ throws IOException)
         (§ call loadResourceScript(RT.class, name, failIfNotFound))
     )
 
-    #_public
-    #_static
-    (§ method void loadResourceScript(Class c, String name) (§ throws IOException)
+    (§ defn void loadResourceScript(Class c, String name) (§ throws IOException)
         (§ call loadResourceScript(c, name, true))
     )
 
-    #_public
-    #_static
-    (§ method void loadResourceScript(Class c, String name, boolean failIfNotFound) (§ throws IOException)
+    (§ defn void loadResourceScript(Class c, String name, boolean failIfNotFound) (§ throws IOException)
         (§ let int slash = name.lastIndexOf(\/))
         (§ let String file = (slash >= 0) ? name.substring(slash + 1) :or name)
         (§ let InputStream ins = resourceAsStream(baseLoader(), name))
@@ -41752,15 +36239,11 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method void init()
+    (§ defn void init()
         (§ call RT.errPrintWriter().println("No need to call RT.init() anymore"))
     )
 
-    #_static
-    #_public
-    (§ method long lastModified(URL url, String libfile) (§ throws IOException)
+    (§ defn long lastModified(URL url, String libfile) (§ throws IOException)
         (§ let URLConnection connection = url.openConnection())
         (§ try )
         (§
@@ -41783,8 +36266,7 @@
         )
     )
 
-    #_static
-    (§ method void compile(String cljfile) (§ throws IOException)
+    (§ defn void compile(String cljfile) (§ throws IOException)
         (§ let InputStream ins = resourceAsStream(baseLoader(), cljfile))
         (§ if (ins != nil))
         (§
@@ -41803,15 +36285,11 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method void load(String scriptbase) (§ throws IOException, ClassNotFoundException)
+    (§ defn void load(String scriptbase) (§ throws IOException, ClassNotFoundException)
         (§ call load(scriptbase, true))
     )
 
-    #_static
-    #_public
-    (§ method void load(String scriptbase, boolean failIfNotFound) (§ throws IOException, ClassNotFoundException)
+    (§ defn void load(String scriptbase, boolean failIfNotFound) (§ throws IOException, ClassNotFoundException)
         (§ let String classfile = scriptbase + LOADER_SUFFIX + ".class")
         (§ let String cljfile = scriptbase + ".cli")
         (§ let String scriptfile = cljfile)
@@ -41857,8 +36335,7 @@
         )
     )
 
-    #_static
-    (§ method void doInit() (§ throws ClassNotFoundException, IOException)
+    (§ defn void doInit() (§ throws ClassNotFoundException, IOException)
         (§ call load("cloiure/core"))
 
         (§ call Var.pushThreadBindings(RT.mapUniqueKeys(
@@ -41890,32 +36367,22 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method int nextID()
+    (§ defn int nextID()
         (§ return (§ expr id.getAndIncrement()))
     )
 
     ;; Load a library in the System ClassLoader instead of Cloiure's own.
-    #_public
-    #_static
-    (§ method void loadLibrary(String libname)
+    (§ defn void loadLibrary(String libname)
         (§ call System.loadLibrary(libname))
     )
 
-    #_private
-    #_static
-    #_final
-    (§ field int CHUNK_SIZE = 32)
+    (§ def- int CHUNK_SIZE = 32)
 
-    #_public
-    #_static
-    (§ method ISeq chunkIteratorSeq(final Iterator iter)
+    (§ defn ISeq chunkIteratorSeq(Iterator iter)
         (§ if (iter.hasNext()))
         (§
             (§ return (§ expr new LazySeq(new AFn()
-            (§ inner
-                #_public
+            (§ reify
                 (§ method Object invoke()
                     (§ let Object[] arr = new Object[CHUNK_SIZE])
                     (§ let int n = 0)
@@ -41930,9 +36397,7 @@
         (§ return (§ expr nil))
     )
 
-    #_static
-    #_public
-    (§ method ISeq seq(Object coll)
+    (§ defn ISeq seq(Object coll)
         (§ if (coll instanceof ASeq))
         (§
             (§ return (§ expr (ASeq) coll))
@@ -41948,8 +36413,7 @@
     )
 
     ;; N.B. canSeq must be kept in sync with this!
-    #_static
-    (§ method ISeq seqFrom(Object coll)
+    (§ defn ISeq seqFrom(Object coll)
         (§ if (coll instanceof Seqable))
         (§
             (§ return (§ expr ((Seqable) coll).seq()))
@@ -41982,9 +36446,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method boolean canSeq(Object coll)
+    (§ defn boolean canSeq(Object coll)
         (§ return (§ expr coll instanceof ISeq
       #_arg || coll instanceof Seqable
       #_arg || coll == nil
@@ -41994,9 +36456,7 @@
       #_arg || coll instanceof Map))
     )
 
-    #_static
-    #_public
-    (§ method Iterator iter(Object coll)
+    (§ defn Iterator iter(Object coll)
         (§ if (coll instanceof Iterable))
         (§
             (§ return (§ expr ((Iterable)coll).iterator()))
@@ -42004,18 +36464,15 @@
         (§ elseif (coll == nil))
         (§
             (§ return (§ expr new Iterator()
-            (§ inner
-                #_public
+            (§ reify
                 (§ method boolean hasNext()
                     (§ return (§ expr false))
                 )
 
-                #_public
                 (§ method Object next()
                     (§ throw new NoSuchElementException())
                 )
 
-                #_public
                 (§ method void remove()
                     (§ throw new UnsupportedOperationException())
                 )
@@ -42027,22 +36484,19 @@
         )
         (§ elseif (coll instanceof String))
         (§
-            (§ let final String s = (String) coll)
+            (§ let String s = (String) coll)
             (§ return (§ expr new Iterator()
-            (§ inner
+            (§ reify
                 (§ let int i = 0)
 
-                #_public
                 (§ method boolean hasNext()
                     (§ return (§ expr (i < s.length())))
                 )
 
-                #_public
                 (§ method Object next()
                     (§ return (§ expr s.charAt(i++)))
                 )
 
-                #_public
                 (§ method void remove()
                     (§ throw new UnsupportedOperationException())
                 )
@@ -42058,15 +36512,11 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object seqOrElse(Object o)
+    (§ defn Object seqOrElse(Object o)
         (§ return (§ expr (seq(o) == nil) ? nil :or o))
     )
 
-    #_static
-    #_public
-    (§ method ISeq keys(Object coll)
+    (§ defn ISeq keys(Object coll)
         (§ if (coll instanceof IPersistentMap))
         (§
             (§ return (§ expr APersistentMap.KeySeq.createFromMap((IPersistentMap)coll)))
@@ -42077,9 +36527,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method ISeq vals(Object coll)
+    (§ defn ISeq vals(Object coll)
         (§ if (coll instanceof IPersistentMap))
         (§
             (§ return (§ expr APersistentMap.ValSeq.createFromMap((IPersistentMap)coll)))
@@ -42090,9 +36538,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method IPersistentMap meta(Object x)
+    (§ defn IPersistentMap meta(Object x)
         (§ if (x instanceof IMeta))
         (§
             (§ return (§ expr ((IMeta) x).meta()))
@@ -42100,9 +36546,7 @@
         (§ return (§ expr nil))
     )
 
-    #_public
-    #_static
-    (§ method int count(Object o)
+    (§ defn int count(Object o)
         (§ if (o instanceof Counted))
         (§
             (§ return (§ expr ((Counted) o).count()))
@@ -42110,8 +36554,7 @@
         (§ return (§ expr countFrom(Util.ret1(o, o = nil))))
     )
 
-    #_static
-    (§ method int countFrom(Object o)
+    (§ defn int countFrom(Object o)
         (§ if (o == nil))
         (§
             (§ return (§ expr 0))
@@ -42155,9 +36598,7 @@
         (§ throw new UnsupportedOperationException("count not supported on this type: " + o.getClass().getSimpleName()))
     )
 
-    #_static
-    #_public
-    (§ method IPersistentCollection conj(IPersistentCollection coll, Object x)
+    (§ defn IPersistentCollection conj(IPersistentCollection coll, Object x)
         (§ if (coll == nil))
         (§
             (§ return (§ expr new PersistentList(x)))
@@ -42165,9 +36606,7 @@
         (§ return (§ expr coll.cons(x)))
     )
 
-    #_static
-    #_public
-    (§ method ISeq cons(Object x, Object coll)
+    (§ defn ISeq cons(Object x, Object coll)
         (§ if (coll == nil))
         (§
             (§ return (§ expr new PersistentList(x)))
@@ -42182,9 +36621,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object first(Object x)
+    (§ defn Object first(Object x)
         (§ if (x instanceof ISeq))
         (§
             (§ return (§ expr ((ISeq) x).first()))
@@ -42197,27 +36634,19 @@
         (§ return (§ expr seq.first()))
     )
 
-    #_static
-    #_public
-    (§ method Object second(Object x)
+    (§ defn Object second(Object x)
         (§ return (§ expr first(next(x))))
     )
 
-    #_static
-    #_public
-    (§ method Object third(Object x)
+    (§ defn Object third(Object x)
         (§ return (§ expr first(next(next(x)))))
     )
 
-    #_static
-    #_public
-    (§ method Object fourth(Object x)
+    (§ defn Object fourth(Object x)
         (§ return (§ expr first(next(next(next(x))))))
     )
 
-    #_static
-    #_public
-    (§ method ISeq next(Object x)
+    (§ defn ISeq next(Object x)
         (§ if (x instanceof ISeq))
         (§
             (§ return (§ expr ((ISeq) x).next()))
@@ -42230,9 +36659,7 @@
         (§ return (§ expr seq.next()))
     )
 
-    #_static
-    #_public
-    (§ method ISeq more(Object x)
+    (§ defn ISeq more(Object x)
         (§ if (x instanceof ISeq))
         (§
             (§ return (§ expr ((ISeq) x).more()))
@@ -42245,9 +36672,7 @@
         (§ return (§ expr seq.more()))
     )
 
-    #_static
-    #_public
-    (§ method Object peek(Object x)
+    (§ defn Object peek(Object x)
         (§ if (x == nil))
         (§
             (§ return (§ expr nil))
@@ -42255,9 +36680,7 @@
         (§ return (§ expr ((IPersistentStack) x).peek()))
     )
 
-    #_static
-    #_public
-    (§ method Object pop(Object x)
+    (§ defn Object pop(Object x)
         (§ if (x == nil))
         (§
             (§ return (§ expr nil))
@@ -42265,9 +36688,7 @@
         (§ return (§ expr ((IPersistentStack) x).pop()))
     )
 
-    #_static
-    #_public
-    (§ method Object get(Object coll, Object key)
+    (§ defn Object get(Object coll, Object key)
         (§ if (coll instanceof ILookup))
         (§
             (§ return (§ expr ((ILookup) coll).valAt(key)))
@@ -42275,8 +36696,7 @@
         (§ return (§ expr getFrom(coll, key)))
     )
 
-    #_static
-    (§ method Object getFrom(Object coll, Object key)
+    (§ defn Object getFrom(Object coll, Object key)
         (§ if (coll == nil))
         (§
             (§ return (§ expr nil))
@@ -42309,9 +36729,7 @@
         (§ return (§ expr nil))
     )
 
-    #_static
-    #_public
-    (§ method Object get(Object coll, Object key, Object notFound)
+    (§ defn Object get(Object coll, Object key, Object notFound)
         (§ if (coll instanceof ILookup))
         (§
             (§ return (§ expr ((ILookup) coll).valAt(key, notFound)))
@@ -42319,8 +36737,7 @@
         (§ return (§ expr getFrom(coll, key, notFound)))
     )
 
-    #_static
-    (§ method Object getFrom(Object coll, Object key, Object notFound)
+    (§ defn Object getFrom(Object coll, Object key, Object notFound)
         (§ if (coll == nil))
         (§
             (§ return (§ expr notFound))
@@ -42360,9 +36777,7 @@
         (§ return (§ expr notFound))
     )
 
-    #_static
-    #_public
-    (§ method Associative assoc(Object coll, Object key, Object val)
+    (§ defn Associative assoc(Object coll, Object key, Object val)
         (§ if (coll == nil))
         (§
             (§ return (§ expr new PersistentArrayMap(new Object[] (§ key, val ))))
@@ -42370,9 +36785,7 @@
         (§ return (§ expr ((Associative) coll).assoc(key, val)))
     )
 
-    #_static
-    #_public
-    (§ method Object contains(Object coll, Object key)
+    (§ defn Object contains(Object coll, Object key)
         (§ if (coll == nil))
         (§
             (§ return (§ expr F))
@@ -42411,9 +36824,7 @@
         (§ throw new IllegalArgumentException("contains? not supported on type: " + coll.getClass().getName()))
     )
 
-    #_static
-    #_public
-    (§ method Object find(Object coll, Object key)
+    (§ defn Object find(Object coll, Object key)
         (§ if (coll == nil))
         (§
             (§ return (§ expr nil))
@@ -42441,9 +36852,7 @@
     ;; takes a seq of key, val, key, val
 
     ;; returns tail starting at val of matching key if found, else nil
-    #_static
-    #_public
-    (§ method ISeq findKey(Keyword key, ISeq keyvals)
+    (§ defn ISeq findKey(Keyword key, ISeq keyvals)
         (§ while (keyvals != nil))
         (§
             (§ let ISeq r = keyvals.next())
@@ -42460,9 +36869,7 @@
         (§ return (§ expr nil))
     )
 
-    #_static
-    #_public
-    (§ method Object dissoc(Object coll, Object key)
+    (§ defn Object dissoc(Object coll, Object key)
         (§ if (coll == nil))
         (§
             (§ return (§ expr nil))
@@ -42470,9 +36877,7 @@
         (§ return (§ expr ((IPersistentMap) coll).without(key)))
     )
 
-    #_static
-    #_public
-    (§ method Object nth(Object coll, int n)
+    (§ defn Object nth(Object coll, int n)
         (§ if (coll instanceof Indexed))
         (§
             (§ return (§ expr ((Indexed) coll).nth(n)))
@@ -42480,8 +36885,7 @@
         (§ return (§ expr nthFrom(Util.ret1(coll, coll = nil), n)))
     )
 
-    #_static
-    (§ method Object nthFrom(Object coll, int n)
+    (§ defn Object nthFrom(Object coll, int n)
         (§ if (coll == nil))
         (§
             (§ return (§ expr nil))
@@ -42534,9 +36938,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object nth(Object coll, int n, Object notFound)
+    (§ defn Object nth(Object coll, int n, Object notFound)
         (§ if (coll instanceof Indexed))
         (§
             (§ let Indexed v = (Indexed) coll)
@@ -42545,8 +36947,7 @@
         (§ return (§ expr nthFrom(coll, n, notFound)))
     )
 
-    #_static
-    (§ method Object nthFrom(Object coll, int n, Object notFound)
+    (§ defn Object nthFrom(Object coll, int n, Object notFound)
         (§ if (coll == nil))
         (§
             (§ return (§ expr notFound))
@@ -42622,9 +37023,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object assocN(int n, Object val, Object coll)
+    (§ defn Object assocN(int n, Object val, Object coll)
         (§ if (coll == nil))
         (§
             (§ return (§ expr nil))
@@ -42646,74 +37045,51 @@
         )
     )
 
-    #_static
-    (§ method boolean hasTag(Object o, Object tag)
+    (§ defn boolean hasTag(Object o, Object tag)
         (§ return (§ expr Util.equals(tag, RT.get(RT.meta(o), TAG_KEY))))
     )
 
-    #_static
-    #_public
-    (§ method Object box(Object x)
+    (§ defn Object box(Object x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method Character box(char x)
+    (§ defn Character box(char x)
         (§ return (§ expr Character.valueOf(x)))
     )
 
-    #_static
-    #_public
-    (§ method Object box(boolean x)
+    (§ defn Object box(boolean x)
         (§ return (§ expr x ? T :or F))
     )
 
-    #_static
-    #_public
-    (§ method Object box(Boolean x)
+    (§ defn Object box(Boolean x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method Number box(byte x)
+    (§ defn Number box(byte x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method Number box(short x)
+    (§ defn Number box(short x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method Number box(int x)
+    (§ defn Number box(int x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method Number box(long x)
+    (§ defn Number box(long x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method Number box(float x)
+    (§ defn Number box(float x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method Number box(double x)
+    (§ defn Number box(double x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method char charCast(Object x)
+    (§ defn char charCast(Object x)
         (§ if (x instanceof Character))
         (§
             (§ return (§ expr ((Character) x).charValue()))
@@ -42726,9 +37102,7 @@
         (§ return (§ expr (char) n))
     )
 
-    #_static
-    #_public
-    (§ method char charCast(byte x)
+    (§ defn char charCast(byte x)
         (§ let char i = (char) x)
         (§ if (i != x))
         (§
@@ -42737,9 +37111,7 @@
         (§ return (§ expr i))
     )
 
-    #_static
-    #_public
-    (§ method char charCast(short x)
+    (§ defn char charCast(short x)
         (§ let char i = (char) x)
         (§ if (i != x))
         (§
@@ -42748,15 +37120,11 @@
         (§ return (§ expr i))
     )
 
-    #_static
-    #_public
-    (§ method char charCast(char x)
+    (§ defn char charCast(char x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method char charCast(int x)
+    (§ defn char charCast(int x)
         (§ let char i = (char) x)
         (§ if (i != x))
         (§
@@ -42765,9 +37133,7 @@
         (§ return (§ expr i))
     )
 
-    #_static
-    #_public
-    (§ method char charCast(long x)
+    (§ defn char charCast(long x)
         (§ let char i = (char) x)
         (§ if (i != x))
         (§
@@ -42776,9 +37142,7 @@
         (§ return (§ expr i))
     )
 
-    #_static
-    #_public
-    (§ method char charCast(float x)
+    (§ defn char charCast(float x)
         (§ if (x >= Character.MIN_VALUE && x <= Character.MAX_VALUE))
         (§
             (§ return (§ expr (char) x))
@@ -42786,9 +37150,7 @@
         (§ throw new IllegalArgumentException("Value out of range for char: " + x))
     )
 
-    #_static
-    #_public
-    (§ method char charCast(double x)
+    (§ defn char charCast(double x)
         (§ if (x >= Character.MIN_VALUE && x <= Character.MAX_VALUE))
         (§
             (§ return (§ expr (char) x))
@@ -42796,9 +37158,7 @@
         (§ throw new IllegalArgumentException("Value out of range for char: " + x))
     )
 
-    #_static
-    #_public
-    (§ method boolean booleanCast(Object x)
+    (§ defn boolean booleanCast(Object x)
         (§ if (x instanceof Boolean))
         (§
             (§ return (§ expr ((Boolean) x).booleanValue()))
@@ -42806,15 +37166,11 @@
         (§ return (§ expr (x != nil)))
     )
 
-    #_static
-    #_public
-    (§ method boolean booleanCast(boolean x)
+    (§ defn boolean booleanCast(boolean x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method byte byteCast(Object x)
+    (§ defn byte byteCast(Object x)
         (§ if (x instanceof Byte))
         (§
             (§ return (§ expr ((Byte) x).byteValue()))
@@ -42827,15 +37183,11 @@
         (§ return (§ expr (byte) n))
     )
 
-    #_static
-    #_public
-    (§ method byte byteCast(byte x)
+    (§ defn byte byteCast(byte x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method byte byteCast(short x)
+    (§ defn byte byteCast(short x)
         (§ let byte i = (byte) x)
         (§ if (i != x))
         (§
@@ -42844,9 +37196,7 @@
         (§ return (§ expr i))
     )
 
-    #_static
-    #_public
-    (§ method byte byteCast(int x)
+    (§ defn byte byteCast(int x)
         (§ let byte i = (byte) x)
         (§ if (i != x))
         (§
@@ -42855,9 +37205,7 @@
         (§ return (§ expr i))
     )
 
-    #_static
-    #_public
-    (§ method byte byteCast(long x)
+    (§ defn byte byteCast(long x)
         (§ let byte i = (byte) x)
         (§ if (i != x))
         (§
@@ -42866,9 +37214,7 @@
         (§ return (§ expr i))
     )
 
-    #_static
-    #_public
-    (§ method byte byteCast(float x)
+    (§ defn byte byteCast(float x)
         (§ if (x >= Byte.MIN_VALUE && x <= Byte.MAX_VALUE))
         (§
             (§ return (§ expr (byte) x))
@@ -42876,9 +37222,7 @@
         (§ throw new IllegalArgumentException("Value out of range for byte: " + x))
     )
 
-    #_static
-    #_public
-    (§ method byte byteCast(double x)
+    (§ defn byte byteCast(double x)
         (§ if (x >= Byte.MIN_VALUE && x <= Byte.MAX_VALUE))
         (§
             (§ return (§ expr (byte) x))
@@ -42886,9 +37230,7 @@
         (§ throw new IllegalArgumentException("Value out of range for byte: " + x))
     )
 
-    #_static
-    #_public
-    (§ method short shortCast(Object x)
+    (§ defn short shortCast(Object x)
         (§ if (x instanceof Short))
         (§
             (§ return (§ expr ((Short) x).shortValue()))
@@ -42901,21 +37243,15 @@
         (§ return (§ expr (short) n))
     )
 
-    #_static
-    #_public
-    (§ method short shortCast(byte x)
+    (§ defn short shortCast(byte x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method short shortCast(short x)
+    (§ defn short shortCast(short x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method short shortCast(int x)
+    (§ defn short shortCast(int x)
         (§ let short i = (short) x)
         (§ if (i != x))
         (§
@@ -42924,9 +37260,7 @@
         (§ return (§ expr i))
     )
 
-    #_static
-    #_public
-    (§ method short shortCast(long x)
+    (§ defn short shortCast(long x)
         (§ let short i = (short) x)
         (§ if (i != x))
         (§
@@ -42935,9 +37269,7 @@
         (§ return (§ expr i))
     )
 
-    #_static
-    #_public
-    (§ method short shortCast(float x)
+    (§ defn short shortCast(float x)
         (§ if (x >= Short.MIN_VALUE && x <= Short.MAX_VALUE))
         (§
             (§ return (§ expr (short) x))
@@ -42945,9 +37277,7 @@
         (§ throw new IllegalArgumentException("Value out of range for short: " + x))
     )
 
-    #_static
-    #_public
-    (§ method short shortCast(double x)
+    (§ defn short shortCast(double x)
         (§ if (x >= Short.MIN_VALUE && x <= Short.MAX_VALUE))
         (§
             (§ return (§ expr (short) x))
@@ -42955,9 +37285,7 @@
         (§ throw new IllegalArgumentException("Value out of range for short: " + x))
     )
 
-    #_static
-    #_public
-    (§ method int intCast(Object x)
+    (§ defn int intCast(Object x)
         (§ if (x instanceof Integer))
         (§
             (§ return (§ expr ((Integer)x).intValue()))
@@ -42970,33 +37298,23 @@
         (§ return (§ expr ((Character) x).charValue()))
     )
 
-    #_static
-    #_public
-    (§ method int intCast(char x)
+    (§ defn int intCast(char x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method int intCast(byte x)
+    (§ defn int intCast(byte x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method int intCast(short x)
+    (§ defn int intCast(short x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method int intCast(int x)
+    (§ defn int intCast(int x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method int intCast(float x)
+    (§ defn int intCast(float x)
         (§ if (x < Integer.MIN_VALUE || x > Integer.MAX_VALUE))
         (§
             (§ throw new IllegalArgumentException("Value out of range for int: " + x))
@@ -43004,9 +37322,7 @@
         (§ return (§ expr (int) x))
     )
 
-    #_static
-    #_public
-    (§ method int intCast(long x)
+    (§ defn int intCast(long x)
         (§ let int i = (int) x)
         (§ if (i != x))
         (§
@@ -43015,9 +37331,7 @@
         (§ return (§ expr i))
     )
 
-    #_static
-    #_public
-    (§ method int intCast(double x)
+    (§ defn int intCast(double x)
         (§ if (x < Integer.MIN_VALUE || x > Integer.MAX_VALUE))
         (§
             (§ throw new IllegalArgumentException("Value out of range for int: " + x))
@@ -43025,9 +37339,7 @@
         (§ return (§ expr (int) x))
     )
 
-    #_static
-    #_public
-    (§ method long longCast(Object x)
+    (§ defn long longCast(Object x)
         (§ if (x instanceof Integer || x instanceof Long))
         (§
             (§ return (§ expr ((Number) x).longValue()))
@@ -43074,27 +37386,19 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method long longCast(byte x)
+    (§ defn long longCast(byte x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method long longCast(short x)
+    (§ defn long longCast(short x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method long longCast(int x)
+    (§ defn long longCast(int x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method long longCast(float x)
+    (§ defn long longCast(float x)
         (§ if (x < Long.MIN_VALUE || x > Long.MAX_VALUE))
         (§
             (§ throw new IllegalArgumentException("Value out of range for long: " + x))
@@ -43102,15 +37406,11 @@
         (§ return (§ expr (long) x))
     )
 
-    #_static
-    #_public
-    (§ method long longCast(long x)
+    (§ defn long longCast(long x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method long longCast(double x)
+    (§ defn long longCast(double x)
         (§ if (x < Long.MIN_VALUE || x > Long.MAX_VALUE))
         (§
             (§ throw new IllegalArgumentException("Value out of range for long: " + x))
@@ -43118,9 +37418,7 @@
         (§ return (§ expr (long) x))
     )
 
-    #_static
-    #_public
-    (§ method float floatCast(Object x)
+    (§ defn float floatCast(Object x)
         (§ if (x instanceof Float))
         (§
             (§ return (§ expr ((Float) x).floatValue()))
@@ -43133,39 +37431,27 @@
         (§ return (§ expr (float) n))
     )
 
-    #_static
-    #_public
-    (§ method float floatCast(byte x)
+    (§ defn float floatCast(byte x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method float floatCast(short x)
+    (§ defn float floatCast(short x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method float floatCast(int x)
+    (§ defn float floatCast(int x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method float floatCast(float x)
+    (§ defn float floatCast(float x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method float floatCast(long x)
+    (§ defn float floatCast(long x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method float floatCast(double x)
+    (§ defn float floatCast(double x)
         (§ if (x < -Float.MAX_VALUE || x > Float.MAX_VALUE))
         (§
             (§ throw new IllegalArgumentException("Value out of range for float: " + x))
@@ -43173,135 +37459,91 @@
         (§ return (§ expr (float) x))
     )
 
-    #_static
-    #_public
-    (§ method double doubleCast(Object x)
+    (§ defn double doubleCast(Object x)
         (§ return (§ expr ((Number) x).doubleValue()))
     )
 
-    #_static
-    #_public
-    (§ method double doubleCast(byte x)
+    (§ defn double doubleCast(byte x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method double doubleCast(short x)
+    (§ defn double doubleCast(short x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method double doubleCast(int x)
+    (§ defn double doubleCast(int x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method double doubleCast(float x)
+    (§ defn double doubleCast(float x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method double doubleCast(long x)
+    (§ defn double doubleCast(long x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method double doubleCast(double x)
+    (§ defn double doubleCast(double x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method byte uncheckedByteCast(Object x)
+    (§ defn byte uncheckedByteCast(Object x)
         (§ return (§ expr ((Number) x).byteValue()))
     )
 
-    #_static
-    #_public
-    (§ method byte uncheckedByteCast(byte x)
+    (§ defn byte uncheckedByteCast(byte x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method byte uncheckedByteCast(short x)
+    (§ defn byte uncheckedByteCast(short x)
         (§ return (§ expr (byte) x))
     )
 
-    #_static
-    #_public
-    (§ method byte uncheckedByteCast(int x)
+    (§ defn byte uncheckedByteCast(int x)
         (§ return (§ expr (byte) x))
     )
 
-    #_static
-    #_public
-    (§ method byte uncheckedByteCast(long x)
+    (§ defn byte uncheckedByteCast(long x)
         (§ return (§ expr (byte) x))
     )
 
-    #_static
-    #_public
-    (§ method byte uncheckedByteCast(float x)
+    (§ defn byte uncheckedByteCast(float x)
         (§ return (§ expr (byte) x))
     )
 
-    #_static
-    #_public
-    (§ method byte uncheckedByteCast(double x)
+    (§ defn byte uncheckedByteCast(double x)
         (§ return (§ expr (byte) x))
     )
 
-    #_static
-    #_public
-    (§ method short uncheckedShortCast(Object x)
+    (§ defn short uncheckedShortCast(Object x)
         (§ return (§ expr ((Number) x).shortValue()))
     )
 
-    #_static
-    #_public
-    (§ method short uncheckedShortCast(byte x)
+    (§ defn short uncheckedShortCast(byte x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method short uncheckedShortCast(short x)
+    (§ defn short uncheckedShortCast(short x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method short uncheckedShortCast(int x)
+    (§ defn short uncheckedShortCast(int x)
         (§ return (§ expr (short) x))
     )
 
-    #_static
-    #_public
-    (§ method short uncheckedShortCast(long x)
+    (§ defn short uncheckedShortCast(long x)
         (§ return (§ expr (short) x))
     )
 
-    #_static
-    #_public
-    (§ method short uncheckedShortCast(float x)
+    (§ defn short uncheckedShortCast(float x)
         (§ return (§ expr (short) x))
     )
 
-    #_static
-    #_public
-    (§ method short uncheckedShortCast(double x)
+    (§ defn short uncheckedShortCast(double x)
         (§ return (§ expr (short) x))
     )
 
-    #_static
-    #_public
-    (§ method char uncheckedCharCast(Object x)
+    (§ defn char uncheckedCharCast(Object x)
         (§ if (x instanceof Character))
         (§
             (§ return (§ expr ((Character) x).charValue()))
@@ -43309,51 +37551,35 @@
         (§ return (§ expr (char) ((Number) x).longValue()))
     )
 
-    #_static
-    #_public
-    (§ method char uncheckedCharCast(byte x)
+    (§ defn char uncheckedCharCast(byte x)
         (§ return (§ expr (char) x))
     )
 
-    #_static
-    #_public
-    (§ method char uncheckedCharCast(short x)
+    (§ defn char uncheckedCharCast(short x)
         (§ return (§ expr (char) x))
     )
 
-    #_static
-    #_public
-    (§ method char uncheckedCharCast(char x)
+    (§ defn char uncheckedCharCast(char x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method char uncheckedCharCast(int x)
+    (§ defn char uncheckedCharCast(int x)
         (§ return (§ expr (char) x))
     )
 
-    #_static
-    #_public
-    (§ method char uncheckedCharCast(long x)
+    (§ defn char uncheckedCharCast(long x)
         (§ return (§ expr (char) x))
     )
 
-    #_static
-    #_public
-    (§ method char uncheckedCharCast(float x)
+    (§ defn char uncheckedCharCast(float x)
         (§ return (§ expr (char) x))
     )
 
-    #_static
-    #_public
-    (§ method char uncheckedCharCast(double x)
+    (§ defn char uncheckedCharCast(double x)
         (§ return (§ expr (char) x))
     )
 
-    #_static
-    #_public
-    (§ method int uncheckedIntCast(Object x)
+    (§ defn int uncheckedIntCast(Object x)
         (§ if (x instanceof Number))
         (§
             (§ return (§ expr ((Number)x).intValue()))
@@ -43361,177 +37587,119 @@
         (§ return (§ expr ((Character) x).charValue()))
     )
 
-    #_static
-    #_public
-    (§ method int uncheckedIntCast(byte x)
+    (§ defn int uncheckedIntCast(byte x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method int uncheckedIntCast(short x)
+    (§ defn int uncheckedIntCast(short x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method int uncheckedIntCast(char x)
+    (§ defn int uncheckedIntCast(char x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method int uncheckedIntCast(int x)
+    (§ defn int uncheckedIntCast(int x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method int uncheckedIntCast(long x)
+    (§ defn int uncheckedIntCast(long x)
         (§ return (§ expr (int) x))
     )
 
-    #_static
-    #_public
-    (§ method int uncheckedIntCast(float x)
+    (§ defn int uncheckedIntCast(float x)
         (§ return (§ expr (int) x))
     )
 
-    #_static
-    #_public
-    (§ method int uncheckedIntCast(double x)
+    (§ defn int uncheckedIntCast(double x)
         (§ return (§ expr (int) x))
     )
 
-    #_static
-    #_public
-    (§ method long uncheckedLongCast(Object x)
+    (§ defn long uncheckedLongCast(Object x)
         (§ return (§ expr ((Number) x).longValue()))
     )
 
-    #_static
-    #_public
-    (§ method long uncheckedLongCast(byte x)
+    (§ defn long uncheckedLongCast(byte x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method long uncheckedLongCast(short x)
+    (§ defn long uncheckedLongCast(short x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method long uncheckedLongCast(int x)
+    (§ defn long uncheckedLongCast(int x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method long uncheckedLongCast(long x)
+    (§ defn long uncheckedLongCast(long x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method long uncheckedLongCast(float x)
+    (§ defn long uncheckedLongCast(float x)
         (§ return (§ expr (long) x))
     )
 
-    #_static
-    #_public
-    (§ method long uncheckedLongCast(double x)
+    (§ defn long uncheckedLongCast(double x)
         (§ return (§ expr (long) x))
     )
 
-    #_static
-    #_public
-    (§ method float uncheckedFloatCast(Object x)
+    (§ defn float uncheckedFloatCast(Object x)
         (§ return (§ expr ((Number) x).floatValue()))
     )
 
-    #_static
-    #_public
-    (§ method float uncheckedFloatCast(byte x)
+    (§ defn float uncheckedFloatCast(byte x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method float uncheckedFloatCast(short x)
+    (§ defn float uncheckedFloatCast(short x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method float uncheckedFloatCast(int x)
+    (§ defn float uncheckedFloatCast(int x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method float uncheckedFloatCast(long x)
+    (§ defn float uncheckedFloatCast(long x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method float uncheckedFloatCast(float x)
+    (§ defn float uncheckedFloatCast(float x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method float uncheckedFloatCast(double x)
+    (§ defn float uncheckedFloatCast(double x)
         (§ return (§ expr (float) x))
     )
 
-    #_static
-    #_public
-    (§ method double uncheckedDoubleCast(Object x)
+    (§ defn double uncheckedDoubleCast(Object x)
         (§ return (§ expr ((Number) x).doubleValue()))
     )
 
-    #_static
-    #_public
-    (§ method double uncheckedDoubleCast(byte x)
+    (§ defn double uncheckedDoubleCast(byte x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method double uncheckedDoubleCast(short x)
+    (§ defn double uncheckedDoubleCast(short x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method double uncheckedDoubleCast(int x)
+    (§ defn double uncheckedDoubleCast(int x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method double uncheckedDoubleCast(long x)
+    (§ defn double uncheckedDoubleCast(long x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method double uncheckedDoubleCast(float x)
+    (§ defn double uncheckedDoubleCast(float x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method double uncheckedDoubleCast(double x)
+    (§ defn double uncheckedDoubleCast(double x)
         (§ return (§ expr x))
     )
 
-    #_static
-    #_public
-    (§ method IPersistentMap map(Object... init)
+    (§ defn IPersistentMap map(Object... init)
         (§ if (init == nil))
         (§
             (§ return (§ expr PersistentArrayMap.EMPTY))
@@ -43543,9 +37711,7 @@
         (§ return (§ expr PersistentHashMap.createWithCheck(init)))
     )
 
-    #_static
-    #_public
-    (§ method IPersistentMap mapUniqueKeys(Object... init)
+    (§ defn IPersistentMap mapUniqueKeys(Object... init)
         (§ if (init == nil))
         (§
             (§ return (§ expr PersistentArrayMap.EMPTY))
@@ -43557,21 +37723,15 @@
         (§ return (§ expr PersistentHashMap.create(init)))
     )
 
-    #_static
-    #_public
-    (§ method IPersistentSet set(Object... init)
+    (§ defn IPersistentSet set(Object... init)
         (§ return (§ expr PersistentHashSet.createWithCheck(init)))
     )
 
-    #_static
-    #_public
-    (§ method IPersistentVector vector(Object... init)
+    (§ defn IPersistentVector vector(Object... init)
         (§ return (§ expr LazilyPersistentVector.createOwning(init)))
     )
 
-    #_static
-    #_public
-    (§ method IPersistentVector subvec(IPersistentVector v, int start, int end)
+    (§ defn IPersistentVector subvec(IPersistentVector v, int start, int end)
         (§ if (end < start || start < 0 || end > v.count()))
         (§
             (§ throw new IndexOutOfBoundsException())
@@ -43583,75 +37743,51 @@
         (§ return (§ expr new APersistentVector.SubVector(nil, v, start, end)))
     )
 
-    #_static
-    #_public
-    (§ method ISeq list()
+    (§ defn ISeq list()
         (§ return (§ expr nil))
     )
 
-    #_static
-    #_public
-    (§ method ISeq list(Object arg1)
+    (§ defn ISeq list(Object arg1)
         (§ return (§ expr new PersistentList(arg1)))
     )
 
-    #_static
-    #_public
-    (§ method ISeq list(Object arg1, Object arg2)
+    (§ defn ISeq list(Object arg1, Object arg2)
         (§ return (§ expr listStar(arg1, arg2, nil)))
     )
 
-    #_static
-    #_public
-    (§ method ISeq list(Object arg1, Object arg2, Object arg3)
+    (§ defn ISeq list(Object arg1, Object arg2, Object arg3)
         (§ return (§ expr listStar(arg1, arg2, arg3, nil)))
     )
 
-    #_static
-    #_public
-    (§ method ISeq list(Object arg1, Object arg2, Object arg3, Object arg4)
+    (§ defn ISeq list(Object arg1, Object arg2, Object arg3, Object arg4)
         (§ return (§ expr listStar(arg1, arg2, arg3, arg4, nil)))
     )
 
-    #_static
-    #_public
-    (§ method ISeq list(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
+    (§ defn ISeq list(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
         (§ return (§ expr listStar(arg1, arg2, arg3, arg4, arg5, nil)))
     )
 
-    #_static
-    #_public
-    (§ method ISeq listStar(Object arg1, ISeq rest)
+    (§ defn ISeq listStar(Object arg1, ISeq rest)
         (§ return (§ expr (ISeq) cons(arg1, rest)))
     )
 
-    #_static
-    #_public
-    (§ method ISeq listStar(Object arg1, Object arg2, ISeq rest)
+    (§ defn ISeq listStar(Object arg1, Object arg2, ISeq rest)
         (§ return (§ expr (ISeq) cons(arg1, cons(arg2, rest))))
     )
 
-    #_static
-    #_public
-    (§ method ISeq listStar(Object arg1, Object arg2, Object arg3, ISeq rest)
+    (§ defn ISeq listStar(Object arg1, Object arg2, Object arg3, ISeq rest)
         (§ return (§ expr (ISeq) cons(arg1, cons(arg2, cons(arg3, rest)))))
     )
 
-    #_static
-    #_public
-    (§ method ISeq listStar(Object arg1, Object arg2, Object arg3, Object arg4, ISeq rest)
+    (§ defn ISeq listStar(Object arg1, Object arg2, Object arg3, Object arg4, ISeq rest)
         (§ return (§ expr (ISeq) cons(arg1, cons(arg2, cons(arg3, cons(arg4, rest))))))
     )
 
-    #_static
-    #_public
-    (§ method ISeq listStar(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, ISeq rest)
+    (§ defn ISeq listStar(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, ISeq rest)
         (§ return (§ expr (ISeq) cons(arg1, cons(arg2, cons(arg3, cons(arg4, cons(arg5, rest)))))))
     )
 
-    #_static
-    #_public
-    (§ method ISeq arrayToList(Object[] a)
+    (§ defn ISeq arrayToList(Object[] a)
         (§ let ISeq ret = nil)
         (§ for (int i = a.length - 1 i >= 0 --i))
         (§
@@ -43660,9 +37796,7 @@
         (§ return (§ expr ret))
     )
 
-    #_static
-    #_public
-    (§ method Object[] object_array(Object sizeOrSeq)
+    (§ defn Object[] object_array(Object sizeOrSeq)
         (§ if (sizeOrSeq instanceof Number))
         (§
             (§ return (§ expr new Object[((Number) sizeOrSeq).intValue()]))
@@ -43680,9 +37814,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object[] toArray(Object coll)
+    (§ defn Object[] toArray(Object coll)
         (§ if (coll == nil))
         (§
             (§ return (§ expr EMPTY_ARRAY))
@@ -43734,9 +37866,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object[] seqToArray(ISeq seq)
+    (§ defn Object[] seqToArray(ISeq seq)
         (§ let int len = length(seq))
         (§ let Object[] ret = new Object[len])
         (§ for (int i = 0 seq != nil ++i, seq = seq.next()))
@@ -43747,9 +37877,7 @@
     )
 
     ;; supports java Collection.toArray(T[])
-    #_static
-    #_public
-    (§ method Object[] seqToPassedArray(ISeq seq, Object[] passed)
+    (§ defn Object[] seqToPassedArray(ISeq seq, Object[] passed)
         (§ let Object[] dest = passed)
         (§ let int len = count(seq))
         (§ if (len > dest.length))
@@ -43767,16 +37895,12 @@
         (§ return (§ expr dest))
     )
 
-    #_static
-    #_public
-    (§ method Object seqToTypedArray(ISeq seq)
+    (§ defn Object seqToTypedArray(ISeq seq)
         (§ let Class type = (seq != nil && seq.first() != nil) ? seq.first().getClass() :or Object.class)
         (§ return (§ expr seqToTypedArray(type, seq)))
     )
 
-    #_static
-    #_public
-    (§ method Object seqToTypedArray(Class type, ISeq seq)
+    (§ defn Object seqToTypedArray(Class type, ISeq seq)
         (§ let Object ret = Array.newInstance(type, length(seq)))
         (§ if (type == Integer.TYPE))
         (§
@@ -43823,9 +37947,7 @@
         (§ return (§ expr ret))
     )
 
-    #_static
-    #_public
-    (§ method int length(ISeq list)
+    (§ defn int length(ISeq list)
         (§ let int i = 0)
         (§ for (ISeq c = list c != nil c = c.next()))
         (§
@@ -43834,9 +37956,7 @@
         (§ return (§ expr i))
     )
 
-    #_static
-    #_public
-    (§ method int boundedLength(ISeq list, int limit)
+    (§ defn int boundedLength(ISeq list, int limit)
         (§ let int i = 0)
         (§ for (ISeq c = list c != nil && i <= limit c = c.next()))
         (§
@@ -43845,8 +37965,7 @@
         (§ return (§ expr i))
     )
 
-    #_static
-    (§ method Character readRet(int ret)
+    (§ defn Character readRet(int ret)
         (§ if (ret == -1))
         (§
             (§ return (§ expr nil))
@@ -43854,16 +37973,12 @@
         (§ return (§ expr box((char) ret)))
     )
 
-    #_static
-    #_public
-    (§ method Character readChar(Reader r) (§ throws IOException)
+    (§ defn Character readChar(Reader r) (§ throws IOException)
         (§ let int ret = r.read())
         (§ return (§ expr readRet(ret)))
     )
 
-    #_static
-    #_public
-    (§ method Character peekChar(Reader r) (§ throws IOException)
+    (§ defn Character peekChar(Reader r) (§ throws IOException)
         (§ let int ret)
         (§ if (r instanceof PushbackReader))
         (§
@@ -43880,9 +37995,7 @@
         (§ return (§ expr readRet(ret)))
     )
 
-    #_static
-    #_public
-    (§ method int getLineNumber(Reader r)
+    (§ defn int getLineNumber(Reader r)
         (§ if (r instanceof LineNumberingPushbackReader))
         (§
             (§ return (§ expr ((LineNumberingPushbackReader) r).getLineNumber()))
@@ -43890,9 +38003,7 @@
         (§ return (§ expr 0))
     )
 
-    #_static
-    #_public
-    (§ method int getColumnNumber(Reader r)
+    (§ defn int getColumnNumber(Reader r)
         (§ if (r instanceof LineNumberingPushbackReader))
         (§
             (§ return (§ expr ((LineNumberingPushbackReader) r).getColumnNumber()))
@@ -43900,9 +38011,7 @@
         (§ return (§ expr 0))
     )
 
-    #_static
-    #_public
-    (§ method LineNumberingPushbackReader getLineNumberingReader(Reader r)
+    (§ defn LineNumberingPushbackReader getLineNumberingReader(Reader r)
         (§ if (isLineNumberingReader(r)))
         (§
             (§ return (§ expr (LineNumberingPushbackReader) r))
@@ -43910,34 +38019,24 @@
         (§ return (§ expr new LineNumberingPushbackReader(r)))
     )
 
-    #_static
-    #_public
-    (§ method boolean isLineNumberingReader(Reader r)
+    (§ defn boolean isLineNumberingReader(Reader r)
         (§ return (§ expr (r instanceof LineNumberingPushbackReader)))
     )
 
-    #_static
-    #_public
-    (§ method boolean isReduced(Object r)
+    (§ defn boolean isReduced(Object r)
         (§ return (§ expr (r instanceof Reduced)))
     )
 
-    #_static
-    #_public
-    (§ method String resolveClassNameInContext(String className)
+    (§ defn String resolveClassNameInContext(String className)
         ;; todo - look up in context var
         (§ return (§ expr className))
     )
 
-    #_static
-    #_public
-    (§ method boolean suppressRead()
+    (§ defn boolean suppressRead()
         (§ return (§ expr booleanCast(SUPPRESS_READ.deref())))
     )
 
-    #_static
-    #_public
-    (§ method String printString(Object x)
+    (§ defn String printString(Object x)
         (§ try )
         (§
             (§ let StringWriter sw = new StringWriter())
@@ -43950,22 +38049,16 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object readString(String s)
+    (§ defn Object readString(String s)
         (§ return (§ expr readString(s, nil)))
     )
 
-    #_static
-    #_public
-    (§ method Object readString(String s, Object opts)
+    (§ defn Object readString(String s, Object opts)
         (§ let PushbackReader r = new PushbackReader(new StringReader(s)))
         (§ return (§ expr LispReader.read(r, opts)))
     )
 
-    #_static
-    #_public
-    (§ method void print(Object x, Writer w) (§ throws IOException)
+    (§ defn void print(Object x, Writer w) (§ throws IOException)
         ;; call multimethod
         (§ if (PRINT_INITIALIZED.isBound() && RT.booleanCast(PRINT_INITIALIZED.deref())))
         (§
@@ -44192,9 +38285,7 @@
         )
     )
 
-    #_private
-    #_static
-    (§ method void printInnerSeq(ISeq x, Writer w) (§ throws IOException)
+    (§ defn- void printInnerSeq(ISeq x, Writer w) (§ throws IOException)
         (§ for (ISeq s = x s != nil s = s.next()))
         (§
             (§ call print(s.first(), w))
@@ -44205,9 +38296,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method void formatAesthetic(Writer w, Object obj) (§ throws IOException)
+    (§ defn void formatAesthetic(Writer w, Object obj) (§ throws IOException)
         (§ if (obj == nil))
         (§
             (§ call w.write("nil"))
@@ -44218,9 +38307,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method void formatStandard(Writer w, Object obj) (§ throws IOException)
+    (§ defn void formatStandard(Writer w, Object obj) (§ throws IOException)
         (§ if (obj == nil))
         (§
             (§ call w.write("nil"))
@@ -44275,9 +38362,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Object format(Object o, String s, Object... args) (§ throws IOException)
+    (§ defn Object format(Object o, String s, Object... args) (§ throws IOException)
         (§ let Writer w)
         (§ if (o == nil))
         (§
@@ -44299,9 +38384,7 @@
         (§ return (§ expr nil))
     )
 
-    #_static
-    #_public
-    (§ method ISeq doFormat(Writer w, String s, ISeq args) (§ throws IOException)
+    (§ defn ISeq doFormat(Writer w, String s, ISeq args) (§ throws IOException)
         (§ for (int i = 0 i < s.length() ))
         (§
             (§ let char c = s.charAt(i++))
@@ -44388,9 +38471,7 @@
         (§ return (§ expr args))
     )
 
-    #_static
-    #_public
-    (§ method Object[] setValues(Object... vals)
+    (§ defn Object[] setValues(Object... vals)
         (§ if (vals.length > 0))
         (§
             (§ return (§ expr vals))
@@ -44398,12 +38479,9 @@
         (§ return (§ expr nil))
     )
 
-    #_static
-    #_public
-    (§ method ClassLoader makeClassLoader()
+    (§ defn ClassLoader makeClassLoader()
         (§ return (§ expr (ClassLoader) AccessController.doPrivileged(new PrivilegedAction()
-        (§ inner
-            #_public
+        (§ reify
             (§ method Object run()
                 (§ try )
                 (§
@@ -44418,9 +38496,7 @@
         ))))
     )
 
-    #_static
-    #_public
-    (§ method ClassLoader baseLoader()
+    (§ defn ClassLoader baseLoader()
         (§ if (Compiler.LOADER.isBound()))
         (§
             (§ return (§ expr (ClassLoader) Compiler.LOADER.deref()))
@@ -44432,9 +38508,7 @@
         (§ return (§ expr Compiler.class.getClassLoader()))
     )
 
-    #_static
-    #_public
-    (§ method InputStream resourceAsStream(ClassLoader loader, String name)
+    (§ defn InputStream resourceAsStream(ClassLoader loader, String name)
         (§ if (loader == nil))
         (§
             (§ return (§ expr ClassLoader.getSystemResourceAsStream(name)))
@@ -44445,9 +38519,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method URL getResource(ClassLoader loader, String name)
+    (§ defn URL getResource(ClassLoader loader, String name)
         (§ if (loader == nil))
         (§
             (§ return (§ expr ClassLoader.getSystemResource(name)))
@@ -44458,9 +38530,7 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Class classForName(String name, boolean load, ClassLoader loader)
+    (§ defn Class classForName(String name, boolean load, ClassLoader loader)
         (§ try )
         (§
             (§ let Class c = nil)
@@ -44480,21 +38550,15 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method Class classForName(String name)
+    (§ defn Class classForName(String name)
         (§ return (§ expr classForName(name, true, baseLoader())))
     )
 
-    #_static
-    #_public
-    (§ method Class classForNameNonLoading(String name)
+    (§ defn Class classForNameNonLoading(String name)
         (§ return (§ expr classForName(name, false, baseLoader())))
     )
 
-    #_static
-    #_public
-    (§ method Class loadClassForName(String name)
+    (§ defn Class loadClassForName(String name)
         (§ try )
         (§
             (§ call classForNameNonLoading(name))
@@ -44513,228 +38577,156 @@
         (§ return (§ expr classForName(name)))
     )
 
-    #_static
-    #_public
-    (§ method float aget(float[] xs, int i)
+    (§ defn float aget(float[] xs, int i)
         (§ return (§ expr xs[i]))
     )
 
-    #_static
-    #_public
-    (§ method float aset(float[] xs, int i, float v)
+    (§ defn float aset(float[] xs, int i, float v)
         (§ ass xs[i] = v)
         (§ return (§ expr v))
     )
 
-    #_static
-    #_public
-    (§ method int alength(float[] xs)
+    (§ defn int alength(float[] xs)
         (§ return (§ expr xs.length))
     )
 
-    #_static
-    #_public
-    (§ method float[] aclone(float[] xs)
+    (§ defn float[] aclone(float[] xs)
         (§ return (§ expr xs.clone()))
     )
 
-    #_static
-    #_public
-    (§ method double aget(double[] xs, int i)
+    (§ defn double aget(double[] xs, int i)
         (§ return (§ expr xs[i]))
     )
 
-    #_static
-    #_public
-    (§ method double aset(double[] xs, int i, double v)
+    (§ defn double aset(double[] xs, int i, double v)
         (§ ass xs[i] = v)
         (§ return (§ expr v))
     )
 
-    #_static
-    #_public
-    (§ method int alength(double[] xs)
+    (§ defn int alength(double[] xs)
         (§ return (§ expr xs.length))
     )
 
-    #_static
-    #_public
-    (§ method double[] aclone(double[] xs)
+    (§ defn double[] aclone(double[] xs)
         (§ return (§ expr xs.clone()))
     )
 
-    #_static
-    #_public
-    (§ method int aget(int[] xs, int i)
+    (§ defn int aget(int[] xs, int i)
         (§ return (§ expr xs[i]))
     )
 
-    #_static
-    #_public
-    (§ method int aset(int[] xs, int i, int v)
+    (§ defn int aset(int[] xs, int i, int v)
         (§ ass xs[i] = v)
         (§ return (§ expr v))
     )
 
-    #_static
-    #_public
-    (§ method int alength(int[] xs)
+    (§ defn int alength(int[] xs)
         (§ return (§ expr xs.length))
     )
 
-    #_static
-    #_public
-    (§ method int[] aclone(int[] xs)
+    (§ defn int[] aclone(int[] xs)
         (§ return (§ expr xs.clone()))
     )
 
-    #_static
-    #_public
-    (§ method long aget(long[] xs, int i)
+    (§ defn long aget(long[] xs, int i)
         (§ return (§ expr xs[i]))
     )
 
-    #_static
-    #_public
-    (§ method long aset(long[] xs, int i, long v)
+    (§ defn long aset(long[] xs, int i, long v)
         (§ ass xs[i] = v)
         (§ return (§ expr v))
     )
 
-    #_static
-    #_public
-    (§ method int alength(long[] xs)
+    (§ defn int alength(long[] xs)
         (§ return (§ expr xs.length))
     )
 
-    #_static
-    #_public
-    (§ method long[] aclone(long[] xs)
+    (§ defn long[] aclone(long[] xs)
         (§ return (§ expr xs.clone()))
     )
 
-    #_static
-    #_public
-    (§ method char aget(char[] xs, int i)
+    (§ defn char aget(char[] xs, int i)
         (§ return (§ expr xs[i]))
     )
 
-    #_static
-    #_public
-    (§ method char aset(char[] xs, int i, char v)
+    (§ defn char aset(char[] xs, int i, char v)
         (§ ass xs[i] = v)
         (§ return (§ expr v))
     )
 
-    #_static
-    #_public
-    (§ method int alength(char[] xs)
+    (§ defn int alength(char[] xs)
         (§ return (§ expr xs.length))
     )
 
-    #_static
-    #_public
-    (§ method char[] aclone(char[] xs)
+    (§ defn char[] aclone(char[] xs)
         (§ return (§ expr xs.clone()))
     )
 
-    #_static
-    #_public
-    (§ method byte aget(byte[] xs, int i)
+    (§ defn byte aget(byte[] xs, int i)
         (§ return (§ expr xs[i]))
     )
 
-    #_static
-    #_public
-    (§ method byte aset(byte[] xs, int i, byte v)
+    (§ defn byte aset(byte[] xs, int i, byte v)
         (§ ass xs[i] = v)
         (§ return (§ expr v))
     )
 
-    #_static
-    #_public
-    (§ method int alength(byte[] xs)
+    (§ defn int alength(byte[] xs)
         (§ return (§ expr xs.length))
     )
 
-    #_static
-    #_public
-    (§ method byte[] aclone(byte[] xs)
+    (§ defn byte[] aclone(byte[] xs)
         (§ return (§ expr xs.clone()))
     )
 
-    #_static
-    #_public
-    (§ method short aget(short[] xs, int i)
+    (§ defn short aget(short[] xs, int i)
         (§ return (§ expr xs[i]))
     )
 
-    #_static
-    #_public
-    (§ method short aset(short[] xs, int i, short v)
+    (§ defn short aset(short[] xs, int i, short v)
         (§ ass xs[i] = v)
         (§ return (§ expr v))
     )
 
-    #_static
-    #_public
-    (§ method int alength(short[] xs)
+    (§ defn int alength(short[] xs)
         (§ return (§ expr xs.length))
     )
 
-    #_static
-    #_public
-    (§ method short[] aclone(short[] xs)
+    (§ defn short[] aclone(short[] xs)
         (§ return (§ expr xs.clone()))
     )
 
-    #_static
-    #_public
-    (§ method boolean aget(boolean[] xs, int i)
+    (§ defn boolean aget(boolean[] xs, int i)
         (§ return (§ expr xs[i]))
     )
 
-    #_static
-    #_public
-    (§ method boolean aset(boolean[] xs, int i, boolean v)
+    (§ defn boolean aset(boolean[] xs, int i, boolean v)
         (§ ass xs[i] = v)
         (§ return (§ expr v))
     )
 
-    #_static
-    #_public
-    (§ method int alength(boolean[] xs)
+    (§ defn int alength(boolean[] xs)
         (§ return (§ expr xs.length))
     )
 
-    #_static
-    #_public
-    (§ method boolean[] aclone(boolean[] xs)
+    (§ defn boolean[] aclone(boolean[] xs)
         (§ return (§ expr xs.clone()))
     )
 
-    #_static
-    #_public
-    (§ method Object aget(Object[] xs, int i)
+    (§ defn Object aget(Object[] xs, int i)
         (§ return (§ expr xs[i]))
     )
 
-    #_static
-    #_public
-    (§ method Object aset(Object[] xs, int i, Object v)
+    (§ defn Object aset(Object[] xs, int i, Object v)
         (§ ass xs[i] = v)
         (§ return (§ expr v))
     )
 
-    #_static
-    #_public
-    (§ method int alength(Object[] xs)
+    (§ defn int alength(Object[] xs)
         (§ return (§ expr xs.length))
     )
 
-    #_static
-    #_public
-    (§ method Object[] aclone(Object[] xs)
+    (§ defn Object[] aclone(Object[] xs)
         (§ return (§ expr xs.clone()))
     )
 )
@@ -44742,7 +38734,6 @@
 
 (java-ns cloiure.lang.Seqable
 
-#_public
 (§ interface Seqable
     (§ abstract ISeq seq())
 )
@@ -44752,21 +38743,17 @@
 
 (§ import java.util.Enumeration)
 
-#_public
 (class-ns SeqEnumeration (§ implements Enumeration)
     (§ field ISeq seq)
 
-    #_public
-    (§ method SeqEnumeration(ISeq seq)
+    (§ constructor SeqEnumeration(ISeq seq)
         (§ ass this.seq = seq)
     )
 
-    #_public
     (§ method boolean hasMoreElements()
         (§ return (§ expr (seq != nil)))
     )
 
-    #_public
     (§ method Object nextElement()
         (§ let Object ret = RT.first(seq))
         (§ ass seq = RT.next(seq))
@@ -44780,29 +38767,23 @@
 (§ import java.util.Iterator)
 (§ import java.util.NoSuchElementException)
 
-#_public
 (class-ns SeqIterator (§ implements Iterator)
-    #_static
-    #_final
-    (§ field Object START = new Object())
+    (§ def Object START = new Object())
 
     (§ field Object seq)
     (§ field Object next)
 
-    #_public
-    (§ method SeqIterator(Object o)
+    (§ constructor SeqIterator(Object o)
         (§ ass seq = START)
         (§ ass next = o)
     )
 
     ;; preserved for binary compatibility
-    #_public
-    (§ method SeqIterator(ISeq o)
+    (§ constructor SeqIterator(ISeq o)
         (§ ass seq = START)
         (§ ass next = o)
     )
 
-    #_public
     (§ method boolean hasNext()
         (§ if (seq == START))
         (§
@@ -44816,7 +38797,6 @@
         (§ return (§ expr (next != nil)))
     )
 
-    #_public
     (§ method Object next() (§ throws NoSuchElementException)
         (§ if (!hasNext()))
         (§
@@ -44826,7 +38806,6 @@
         (§ return (§ expr RT.first(next)))
     )
 
-    #_public
     (§ method void remove()
         (§ throw new UnsupportedOperationException())
     )
@@ -44835,14 +38814,12 @@
 
 (java-ns cloiure.lang.Sequential
 
-#_public
 (§ interface Sequential
 )
 )
 
 (java-ns cloiure.lang.Settable
 
-#_public
 (§ interface Settable
     (§ abstract Object doSet(Object val))
     (§ abstract Object doReset(Object val))
@@ -44853,7 +38830,6 @@
 
 (§ import java.util.Comparator)
 
-#_public
 (§ interface Sorted
     (§ abstract Comparator comparator())
     (§ abstract Object entryKey(Object entry))
@@ -44864,18 +38840,11 @@
 
 (java-ns cloiure.lang.StringSeq
 
-#_public
 (class-ns StringSeq (§ extends ASeq) (§ implements IndexedSeq)
-    #_public
-    #_final
     (§ field CharSequence s)
-    #_public
-    #_final
     (§ field int i)
 
-    #_static
-    #_public
-    (§ method StringSeq create(CharSequence s)
+    (§ defn StringSeq create(CharSequence s)
         (§ if (s.length() == 0))
         (§
             (§ return (§ expr nil))
@@ -44883,13 +38852,12 @@
         (§ return (§ expr new StringSeq(nil, s, 0)))
     )
 
-    (§ method StringSeq(IPersistentMap meta, CharSequence s, int i)
+    (§ constructor StringSeq(IPersistentMap meta, CharSequence s, int i)
         (§ super(meta))
         (§ ass this.s = s)
         (§ ass this.i = i)
     )
 
-    #_public
     (§ method Obj withMeta(IPersistentMap meta)
         (§ if (meta == meta()))
         (§
@@ -44898,12 +38866,10 @@
         (§ return (§ expr new StringSeq(meta, s, i)))
     )
 
-    #_public
     (§ method Object first()
         (§ return (§ expr Character.valueOf(s.charAt(i))))
     )
 
-    #_public
     (§ method ISeq next()
         (§ if (i + 1 < s.length()))
         (§
@@ -44912,12 +38878,10 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method int index()
         (§ return (§ expr i))
     )
 
-    #_public
     (§ method int count()
         (§ return (§ expr s.length() - i))
     )
@@ -44926,20 +38890,14 @@
 
 (java-ns cloiure.lang.Symbol
 
-#_public
 (class-ns Symbol (§ extends AFn) (§ implements IObj, Comparable, Named, IHashEq)
-    #_final
     (§ field String ns)
-    #_final
     (§ field String name)
-    #_private
-    (§ field int _hasheq)
-    #_final
+    (§ field- int _hasheq)
     (§ field IPersistentMap _meta)
     #_transient
     (§ field String _str)
 
-    #_public
     (§ method String toString()
         (§ if (_str == nil))
         (§
@@ -44955,39 +38913,29 @@
         (§ return (§ expr _str))
     )
 
-    #_public
     (§ method String getNamespace()
         (§ return (§ expr ns))
     )
 
-    #_public
     (§ method String getName()
         (§ return (§ expr name))
     )
 
     ;; the create thunks preserve binary compatibility with code compiled
     ;; against earlier version of Cloiure and can be removed (at some point).
-    #_static
-    #_public
-    (§ method Symbol create(String ns, String name)
+    (§ defn Symbol create(String ns, String name)
         (§ return (§ expr Symbol.intern(ns, name)))
     )
 
-    #_static
-    #_public
-    (§ method Symbol create(String nsname)
+    (§ defn Symbol create(String nsname)
         (§ return (§ expr Symbol.intern(nsname)))
     )
 
-    #_static
-    #_public
-    (§ method Symbol intern(String ns, String name)
+    (§ defn Symbol intern(String ns, String name)
         (§ return (§ expr new Symbol(ns, name)))
     )
 
-    #_static
-    #_public
-    (§ method Symbol intern(String nsname)
+    (§ defn Symbol intern(String nsname)
         (§ let int i = nsname.indexOf(\/))
         (§ if (i == -1 || nsname.equals("/")))
         (§
@@ -44999,14 +38947,12 @@
         )
     )
 
-    #_private
-    (§ method Symbol(String ns_interned, String name_interned)
+    (§ constructor- Symbol(String ns_interned, String name_interned)
         (§ ass this.name = name_interned)
         (§ ass this.ns = ns_interned)
         (§ ass this._meta = nil)
     )
 
-    #_public
     (§ method boolean equals(Object o)
         (§ if (this == o))
         (§
@@ -45022,12 +38968,10 @@
         (§ return (§ expr Util.equals(ns, symbol.ns) && name.equals(symbol.name)))
     )
 
-    #_public
     (§ method int hashCode()
         (§ return (§ expr Util.hashCombine(name.hashCode(), Util.hash(ns))))
     )
 
-    #_public
     (§ method int hasheq()
         (§ if (_hasheq == 0))
         (§
@@ -45036,19 +38980,16 @@
         (§ return (§ expr _hasheq))
     )
 
-    #_public
     (§ method IObj withMeta(IPersistentMap meta)
         (§ return (§ expr new Symbol(meta, ns, name)))
     )
 
-    #_private
-    (§ method Symbol(IPersistentMap meta, String ns, String name)
+    (§ constructor- Symbol(IPersistentMap meta, String ns, String name)
         (§ ass this.name = name)
         (§ ass this.ns = ns)
         (§ ass this._meta = meta)
     )
 
-    #_public
     (§ method int compareTo(Object o)
         (§ let Symbol s = (Symbol) o)
         (§ if (this.equals(o)))
@@ -45074,17 +39015,14 @@
         (§ return (§ expr this.name.compareTo(s.name)))
     )
 
-    #_public
     (§ method Object invoke(Object obj)
         (§ return (§ expr RT.get(obj, this)))
     )
 
-    #_public
     (§ method Object invoke(Object obj, Object notFound)
         (§ return (§ expr RT.get(obj, this, notFound)))
     )
 
-    #_public
     (§ method IPersistentMap meta()
         (§ return (§ expr _meta))
     )
@@ -45093,42 +39031,26 @@
 
 (java-ns cloiure.lang.TaggedLiteral
 
-#_public
 (class-ns TaggedLiteral (§ implements ILookup)
-    #_public
-    #_static
-    #_final
-    (§ field Keyword TAG_KW = Keyword.intern("tag"))
-    #_public
-    #_static
-    #_final
-    (§ field Keyword FORM_KW = Keyword.intern("form"))
+    (§ def Keyword TAG_KW = Keyword.intern("tag"))
+    (§ def Keyword FORM_KW = Keyword.intern("form"))
 
-    #_public
-    #_final
     (§ field Symbol tag)
-    #_public
-    #_final
     (§ field Object form)
 
-    #_public
-    #_static
-    (§ method TaggedLiteral create(Symbol tag, Object form)
+    (§ defn TaggedLiteral create(Symbol tag, Object form)
         (§ return (§ expr new TaggedLiteral(tag, form)))
     )
 
-    #_private
-    (§ method TaggedLiteral(Symbol tag, Object form)
+    (§ constructor- TaggedLiteral(Symbol tag, Object form)
         (§ ass this.tag = tag)
         (§ ass this.form = form)
     )
 
-    #_public
     (§ method Object valAt(Object key)
         (§ return (§ expr valAt(key, nil)))
     )
 
-    #_public
     (§ method Object valAt(Object key, Object notFound)
         (§ if (FORM_KW.equals(key)))
         (§
@@ -45145,7 +39067,6 @@
     )
 
     (§ anno @Override)
-    #_public
     (§ method boolean equals(Object o)
         (§ if (this == o))
         (§
@@ -45171,7 +39092,6 @@
     )
 
     (§ anno @Override)
-    #_public
     (§ method int hashCode()
         (§ let int result = Util.hash(tag))
         (§ ass result = 31 * result + Util.hash(form))
@@ -45185,16 +39105,13 @@
 (§ import java.util.concurrent.ConcurrentMap)
 (§ import java.util.*)
 
-#_public
 (class-ns TransactionalHashMap #_"<K, V>" (§ extends AbstractMap #_"<K, V>") (§ implements ConcurrentMap #_"<K, V>")
-    #_final
     (§ field Ref[] bins)
 
     (§ method IPersistentMap mapAt(int bin)
         (§ return (§ expr (IPersistentMap) bins[bin].deref()))
     )
 
-    #_final
     (§ method int binFor(Object k)
         ;; spread hashes, a la Cliff Click
         (§ let int h = k.hashCode())
@@ -45207,13 +39124,11 @@
         (§ return (§ expr mapAt(binFor(k)).entryAt(k)))
     )
 
-    #_public
-    (§ method TransactionalHashMap()
+    (§ constructor TransactionalHashMap()
         (§ this(421))
     )
 
-    #_public
-    (§ method TransactionalHashMap(int nBins)
+    (§ constructor TransactionalHashMap(int nBins)
         (§ ass bins = new Ref[nBins])
         (§ for (int i = 0 i < nBins i++))
         (§
@@ -45221,13 +39136,11 @@
         )
     )
 
-    #_public
-    (§ method TransactionalHashMap(Map<? extends K, ? extends V> m)
+    (§ constructor TransactionalHashMap(Map<? extends K, ? extends V> m)
         (§ this(m.size()))
         (§ call putAll(m))
     )
 
-    #_public
     (§ method int size()
         (§ let int n = 0)
         (§ for (int i = 0 i < bins.length i++))
@@ -45237,17 +39150,14 @@
         (§ return (§ expr n))
     )
 
-    #_public
     (§ method boolean isEmpty()
         (§ return (§ expr (size() == 0)))
     )
 
-    #_public
     (§ method boolean containsKey(Object k)
         (§ return (§ expr (entryAt(k) != nil)))
     )
 
-    #_public
     (§ method V get(Object k)
         (§ let Entry e = entryAt(k))
         (§ if (e != nil))
@@ -45257,7 +39167,6 @@
         (§ return (§ expr nil))
     )
 
-    #_public
     (§ method V put(K k, V v)
         (§ let Ref r = bins[binFor(k)])
         (§ let IPersistentMap map = (IPersistentMap) r.deref())
@@ -45266,7 +39175,6 @@
         (§ return (§ expr (V) ret))
     )
 
-    #_public
     (§ method V remove(Object k)
         (§ let Ref r = bins[binFor(k)])
         (§ let IPersistentMap map = (IPersistentMap) r.deref())
@@ -45275,7 +39183,6 @@
         (§ return (§ expr (V) ret))
     )
 
-    #_public
     (§ method void putAll(Map<? extends K, ? extends V> map)
         (§ for (Iterator i = map.entrySet().iterator() i.hasNext() ))
         (§
@@ -45284,7 +39191,6 @@
         )
     )
 
-    #_public
     (§ method void clear()
         (§ for (int i = 0 i < bins.length i++))
         (§
@@ -45297,9 +39203,8 @@
         )
     )
 
-    #_public
     (§ method Set<Entry<K, V>> entrySet()
-        (§ let final ArrayList<Map.Entry<K, V>> entries = new ArrayList(bins.length))
+        (§ let ArrayList<Map.Entry<K, V>> entries = new ArrayList(bins.length))
         (§ for (int i = 0 i < bins.length i++))
         (§
             (§ let IPersistentMap map = mapAt(i))
@@ -45310,19 +39215,16 @@
         )
         (§ return (§ expr new AbstractSet<Entry<K, V>>()
         (§
-            #_public
             (§ method Iterator iterator()
                 (§ return (§ expr Collections.unmodifiableList(entries).iterator()))
             )
 
-            #_public
             (§ method int size()
                 (§ return (§ expr entries.size()))
             )
         )))
     )
 
-    #_public
     (§ method V putIfAbsent(K k, V v)
         (§ let Ref r = bins[binFor(k)])
         (§ let IPersistentMap map = (IPersistentMap) r.deref())
@@ -45338,7 +39240,6 @@
         )
     )
 
-    #_public
     (§ method boolean remove(Object k, Object v)
         (§ let Ref r = bins[binFor(k)])
         (§ let IPersistentMap map = (IPersistentMap) r.deref())
@@ -45351,7 +39252,6 @@
         (§ return (§ expr false))
     )
 
-    #_public
     (§ method boolean replace(K k, V oldv, V newv)
         (§ let Ref r = bins[binFor(k)])
         (§ let IPersistentMap map = (IPersistentMap) r.deref())
@@ -45364,7 +39264,6 @@
         (§ return (§ expr false))
     )
 
-    #_public
     (§ method V replace(K k, V v)
         (§ let Ref r = bins[binFor(k)])
         (§ let IPersistentMap map = (IPersistentMap) r.deref())
@@ -45387,55 +39286,35 @@
 (§ import java.util.Queue)
 (§ import java.util.LinkedList)
 
-#_public
 (class-ns TransformerIterator (§ implements Iterator)
-    #_private
-    #_static
-    #_final
-    (§ field Buffer EMPTY = new Empty())
-    #_private
-    #_static
-    #_final
-    (§ field Object NONE = new Object())
+    (§ def- Buffer EMPTY = new Empty())
+    (§ def- Object NONE = new Object())
 
     ;; Source
-    #_private
-    #_final
-    (§ field Iterator sourceIter)
-    #_private
-    #_final
-    (§ field IFn xf)
-    #_private
-    #_final
-    (§ field boolean multi)
+    (§ field- Iterator sourceIter)
+    (§ field- IFn xf)
+    (§ field- boolean multi)
 
     ;; Iteration state
-    #_private
     #_volatile
-    (§ field Buffer buffer = EMPTY)
-    #_private
+    (§ field- Buffer buffer = EMPTY)
     #_volatile
-    (§ field Object next = NONE)
-    #_private
+    (§ field- Object next = NONE)
     #_volatile
-    (§ field boolean completed = false)
+    (§ field- boolean completed = false)
 
-    #_private
-    (§ method TransformerIterator(IFn xform, Iterator sourceIter, boolean multi)
+    (§ constructor- TransformerIterator(IFn xform, Iterator sourceIter, boolean multi)
         (§ ass this.sourceIter = sourceIter)
         (§ ass this.xf = (IFn) xform.invoke(new AFn()
-        (§ inner
-            #_public
+        (§ reify
             (§ method Object invoke()
                 (§ return (§ expr nil))
             )
 
-            #_public
             (§ method Object invoke(Object acc)
                 (§ return (§ expr acc))
             )
 
-            #_public
             (§ method Object invoke(Object acc, Object o)
                 (§ ass buffer = buffer.add(o))
                 (§ return (§ expr acc))
@@ -45444,15 +39323,11 @@
         (§ ass this.multi = multi)
     )
 
-    #_public
-    #_static
-    (§ method Iterator create(IFn xform, Iterator source)
+    (§ defn Iterator create(IFn xform, Iterator source)
         (§ return (§ expr new TransformerIterator(xform, source, false)))
     )
 
-    #_public
-    #_static
-    (§ method Iterator createMulti(IFn xform, List sources)
+    (§ defn Iterator createMulti(IFn xform, List sources)
         (§ let Iterator[] iters = new Iterator[sources.size()])
         (§ for (int i = 0 i < sources.size() i++))
         (§
@@ -45461,8 +39336,7 @@
         (§ return (§ expr new TransformerIterator(xform, new MultiIterator(iters), true)))
     )
 
-    #_private
-    (§ method boolean step()
+    (§ method- boolean step()
         (§ if (next != NONE))
         (§
             (§ return (§ expr true))
@@ -45508,12 +39382,10 @@
         (§ return (§ expr true))
     )
 
-    #_public
     (§ method boolean hasNext()
         (§ return (§ expr step()))
     )
 
-    #_public
     (§ method Object next()
         (§ if (hasNext()))
         (§
@@ -45524,13 +39396,11 @@
         (§ throw new NoSuchElementException())
     )
 
-    #_public
     (§ method void remove()
         (§ throw new UnsupportedOperationException())
     )
 
     #_private
-    #_static
     (§ interface Buffer
         (§ abstract Buffer add(Object o))
         (§ abstract Object remove())
@@ -45538,42 +39408,33 @@
     )
 
     #_private
-    #_static
     (class-ns Empty (§ implements Buffer)
-        #_public
         (§ method Buffer add(Object o)
             (§ return (§ expr new Single(o)))
         )
 
-        #_public
         (§ method Object remove()
             (§ throw new IllegalStateException("Removing object from empty buffer"))
         )
 
-        #_public
         (§ method boolean isEmpty()
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method String toString()
             (§ return (§ expr "Empty"))
         )
     )
 
     #_private
-    #_static
     (class-ns Single (§ implements Buffer)
-        #_private
         #_volatile
-        (§ field Object val)
+        (§ field- Object val)
 
-        #_public
-        (§ method Single(Object o)
+        (§ constructor Single(Object o)
             (§ ass this.val = o)
         )
 
-        #_public
         (§ method Buffer add(Object o)
             (§ if (val == NONE))
             (§
@@ -45586,7 +39447,6 @@
             )
         )
 
-        #_public
         (§ method Object remove()
             (§ if (val == NONE))
             (§
@@ -45597,65 +39457,50 @@
             (§ return (§ expr ret))
         )
 
-        #_public
         (§ method boolean isEmpty()
             (§ return (§ expr (val == NONE)))
         )
 
-        #_public
         (§ method String toString()
             (§ return (§ expr "Single: " + val))
         )
     )
 
     #_private
-    #_static
     (class-ns Many (§ implements Buffer)
-        #_private
-        #_final
-        (§ field Queue vals = new LinkedList())
+        (§ field- Queue vals = new LinkedList())
 
-        #_public
-        (§ method Many(Object o1, Object o2)
+        (§ constructor Many(Object o1, Object o2)
             (§ call vals.add(o1))
             (§ call vals.add(o2))
         )
 
-        #_public
         (§ method Buffer add(Object o)
             (§ call vals.add(o))
             (§ return (§ expr this))
         )
 
-        #_public
         (§ method Object remove()
             (§ return (§ expr vals.remove()))
         )
 
-        #_public
         (§ method boolean isEmpty()
             (§ return (§ expr vals.isEmpty()))
         )
 
-        #_public
         (§ method String toString()
             (§ return (§ expr "Many: " + vals.toString()))
         )
     )
 
     #_private
-    #_static
     (class-ns MultiIterator (§ implements Iterator)
-        #_private
-        #_final
-        (§ field Iterator[] iters)
+        (§ field- Iterator[] iters)
 
-        #_public
-        (§ method MultiIterator(Iterator[] iters)
+        (§ constructor MultiIterator(Iterator[] iters)
             (§ ass this.iters = iters)
         )
 
-        #_public
         (§ method boolean hasNext()
             (§ for (Iterator iter :in iters))
             (§
@@ -45667,7 +39512,6 @@
             (§ return (§ expr true))
         )
 
-        #_public
         (§ method Object next()
             (§ let Object[] nexts = new Object[iters.length])
             (§ for (int i = 0 i < iters.length i++))
@@ -45677,7 +39521,6 @@
             (§ return (§ expr new ArraySeq(nexts, 0)))
         )
 
-        #_public
         (§ method void remove()
             (§ throw new UnsupportedOperationException())
         )
@@ -45690,51 +39533,34 @@
 (§ import java.util.Collection)
 (§ import java.util.RandomAccess)
 
-#_public
 (class-ns Tuple
-    #_static
-    #_final
-    (§ field int MAX_SIZE = 6)
+    (§ def int MAX_SIZE = 6)
 
-    #_public
-    #_static
-    (§ method IPersistentVector create()
+    (§ defn IPersistentVector create()
         (§ return (§ expr PersistentVector.EMPTY))
     )
 
-    #_public
-    #_static
-    (§ method IPersistentVector create(Object v0)
+    (§ defn IPersistentVector create(Object v0)
         (§ return (§ expr RT.vector(v0)))
     )
 
-    #_public
-    #_static
-    (§ method IPersistentVector create(Object v0, Object v1)
+    (§ defn IPersistentVector create(Object v0, Object v1)
         (§ return (§ expr RT.vector(v0, v1)))
     )
 
-    #_public
-    #_static
-    (§ method IPersistentVector create(Object v0, Object v1, Object v2)
+    (§ defn IPersistentVector create(Object v0, Object v1, Object v2)
         (§ return (§ expr RT.vector(v0, v1, v2)))
     )
 
-    #_public
-    #_static
-    (§ method IPersistentVector create(Object v0, Object v1, Object v2, Object v3)
+    (§ defn IPersistentVector create(Object v0, Object v1, Object v2, Object v3)
         (§ return (§ expr RT.vector(v0, v1, v2, v3)))
     )
 
-    #_public
-    #_static
-    (§ method IPersistentVector create(Object v0, Object v1, Object v2, Object v3, Object v4)
+    (§ defn IPersistentVector create(Object v0, Object v1, Object v2, Object v3, Object v4)
         (§ return (§ expr RT.vector(v0, v1, v2, v3, v4)))
     )
 
-    #_public
-    #_static
-    (§ method IPersistentVector create(Object v0, Object v1, Object v2, Object v3, Object v4, Object v5)
+    (§ defn IPersistentVector create(Object v0, Object v1, Object v2, Object v3, Object v4, Object v5)
         (§ return (§ expr RT.vector(v0, v1, v2, v3, v4, v5)))
     )
 )
@@ -45750,11 +39576,8 @@
 (§ import java.util.concurrent.ConcurrentHashMap)
 (§ import java.lang.ref.ReferenceQueue)
 
-#_public
 (class-ns Util
-    #_static
-    #_public
-    (§ method boolean equiv(Object k1, Object k2)
+    (§ defn boolean equiv(Object k1, Object k2)
         (§ if (k1 == k2))
         (§
             (§ return (§ expr true))
@@ -45774,33 +39597,27 @@
         (§ return (§ expr false))
     )
 
-    #_public
+    #_non-static
     (§ interface EquivPred
         (§ abstract boolean equiv(Object k1, Object k2))
     )
 
-    #_static
-    (§ field EquivPred equivNull = new EquivPred()
-    (§ inner
-        #_public
+    (§ def EquivPred equivNull = new EquivPred()
+    (§ reify
         (§ method boolean equiv(Object k1, Object k2)
             (§ return (§ expr (k2 == nil)))
         )
     ))
 
-    #_static
-    (§ field EquivPred equivEquals = new EquivPred()
-    (§ inner
-        #_public
+    (§ def EquivPred equivEquals = new EquivPred()
+    (§ reify
         (§ method boolean equiv(Object k1, Object k2)
             (§ return (§ expr k1.equals(k2)))
         )
     ))
 
-    #_static
-    (§ field EquivPred equivNumber = new EquivPred()
-    (§ inner
-        #_public
+    (§ def EquivPred equivNumber = new EquivPred()
+    (§ reify
         (§ method boolean equiv(Object k1, Object k2)
             (§ if (k2 instanceof Number))
             (§
@@ -45810,10 +39627,8 @@
         )
     ))
 
-    #_static
-    (§ field EquivPred equivColl = new EquivPred()
-    (§ inner
-        #_public
+    (§ def EquivPred equivColl = new EquivPred()
+    (§ reify
         (§ method boolean equiv(Object k1, Object k2)
             (§ if (k1 instanceof IPersistentCollection || k2 instanceof IPersistentCollection))
             (§
@@ -45823,9 +39638,7 @@
         )
     ))
 
-    #_static
-    #_public
-    (§ method EquivPred equivPred(Object k1)
+    (§ defn EquivPred equivPred(Object k1)
         (§ if (k1 == nil))
         (§
             (§ return (§ expr equivNull))
@@ -45845,69 +39658,47 @@
         (§ return (§ expr equivEquals))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(long k1, long k2)
+    (§ defn boolean equiv(long k1, long k2)
         (§ return (§ expr (k1 == k2)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(Object k1, long k2)
+    (§ defn boolean equiv(Object k1, long k2)
         (§ return (§ expr equiv(k1, (Object)k2)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(long k1, Object k2)
+    (§ defn boolean equiv(long k1, Object k2)
         (§ return (§ expr equiv((Object)k1, k2)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(double k1, double k2)
+    (§ defn boolean equiv(double k1, double k2)
         (§ return (§ expr (k1 == k2)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(Object k1, double k2)
+    (§ defn boolean equiv(Object k1, double k2)
         (§ return (§ expr equiv(k1, (Object)k2)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(double k1, Object k2)
+    (§ defn boolean equiv(double k1, Object k2)
         (§ return (§ expr equiv((Object)k1, k2)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(boolean k1, boolean k2)
+    (§ defn boolean equiv(boolean k1, boolean k2)
         (§ return (§ expr (k1 == k2)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(Object k1, boolean k2)
+    (§ defn boolean equiv(Object k1, boolean k2)
         (§ return (§ expr equiv(k1, (Object)k2)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(boolean k1, Object k2)
+    (§ defn boolean equiv(boolean k1, Object k2)
         (§ return (§ expr equiv((Object)k1, k2)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equiv(char c1, char c2)
+    (§ defn boolean equiv(char c1, char c2)
         (§ return (§ expr (c1 == c2)))
     )
 
-    #_static
-    #_public
-    (§ method boolean pcequiv(Object k1, Object k2)
+    (§ defn boolean pcequiv(Object k1, Object k2)
         (§ if (k1 instanceof IPersistentCollection))
         (§
             (§ return (§ expr ((IPersistentCollection)k1).equiv(k2)))
@@ -45915,9 +39706,7 @@
         (§ return (§ expr ((IPersistentCollection)k2).equiv(k1)))
     )
 
-    #_static
-    #_public
-    (§ method boolean equals(Object k1, Object k2)
+    (§ defn boolean equals(Object k1, Object k2)
         (§ if (k1 == k2))
         (§
             (§ return (§ expr true))
@@ -45925,15 +39714,11 @@
         (§ return (§ expr (k1 != nil && k1.equals(k2))))
     )
 
-    #_static
-    #_public
-    (§ method boolean identical(Object k1, Object k2)
+    (§ defn boolean identical(Object k1, Object k2)
         (§ return (§ expr (k1 == k2)))
     )
 
-    #_static
-    #_public
-    (§ method Class classOf(Object x)
+    (§ defn Class classOf(Object x)
         (§ if (x != nil))
         (§
             (§ return (§ expr x.getClass()))
@@ -45941,9 +39726,7 @@
         (§ return (§ expr nil))
     )
 
-    #_static
-    #_public
-    (§ method int compare(Object k1, Object k2)
+    (§ defn int compare(Object k1, Object k2)
         (§ if (k1 == k2))
         (§
             (§ return (§ expr 0))
@@ -45963,9 +39746,7 @@
         (§ return (§ expr -1))
     )
 
-    #_static
-    #_public
-    (§ method int hash(Object o)
+    (§ defn int hash(Object o)
         (§ if (o == nil))
         (§
             (§ return (§ expr 0))
@@ -45973,9 +39754,7 @@
         (§ return (§ expr o.hashCode()))
     )
 
-    #_public
-    #_static
-    (§ method int hasheq(Object o)
+    (§ defn int hasheq(Object o)
         (§ if (o == nil))
         (§
             (§ return (§ expr 0))
@@ -45995,47 +39774,33 @@
         (§ return (§ expr o.hashCode()))
     )
 
-    #_private
-    #_static
-    (§ method int dohasheq(IHashEq o)
+    (§ defn- int dohasheq(IHashEq o)
         (§ return (§ expr o.hasheq()))
     )
 
-    #_static
-    #_public
-    (§ method int hashCombine(int seed, int hash)
+    (§ defn int hashCombine(int seed, int hash)
         ;; a la boost
         (§ ass seed ^= hash + 0x9e3779b9 + (seed << 6) + (seed >> 2))
         (§ return (§ expr seed))
     )
 
-    #_static
-    #_public
-    (§ method boolean isPrimitive(Class c)
+    (§ defn boolean isPrimitive(Class c)
         (§ return (§ expr (c != nil && c.isPrimitive() && !(c == Void.TYPE))))
     )
 
-    #_static
-    #_public
-    (§ method boolean isInteger(Object x)
+    (§ defn boolean isInteger(Object x)
         (§ return (§ expr (x instanceof Integer || x instanceof Long || x instanceof BigInt || x instanceof BigInteger)))
     )
 
-    #_static
-    #_public
-    (§ method Object ret1(Object ret, Object nil)
+    (§ defn Object ret1(Object ret, Object nil)
         (§ return (§ expr ret))
     )
 
-    #_static
-    #_public
-    (§ method ISeq ret1(ISeq ret, Object nil)
+    (§ defn ISeq ret1(ISeq ret, Object nil)
         (§ return (§ expr ret))
     )
 
-    #_static
-    #_public
-    (§ method <K, V> void clearCache(ReferenceQueue rq, ConcurrentHashMap<K, Reference<V>> cache)
+    (§ defn <K, V> void clearCache(ReferenceQueue rq, ConcurrentHashMap<K, Reference<V>> cache)
         ;; cleanup any dead entries
         (§ if (rq.poll() != nil))
         (§
@@ -46053,15 +39818,11 @@
         )
     )
 
-    #_static
-    #_public
-    (§ method RuntimeException runtimeException(String s)
+    (§ defn RuntimeException runtimeException(String s)
         (§ return (§ expr new RuntimeException(s)))
     )
 
-    #_static
-    #_public
-    (§ method RuntimeException runtimeException(String s, Throwable e)
+    (§ defn RuntimeException runtimeException(String s, Throwable e)
         (§ return (§ expr new RuntimeException(s, e)))
     )
 
@@ -46071,9 +39832,7 @@
      ;
      ; <code>throw sneakyThrow(some exception);</code>
      ;;
-    #_static
-    #_public
-    (§ method RuntimeException sneakyThrow(Throwable t)
+    (§ defn RuntimeException sneakyThrow(Throwable t)
         ;; http://www.mail-archive.com/javaposse@googlegroups.com/msg05984.html
         (§ if (t == nil))
         (§
@@ -46084,15 +39843,11 @@
     )
 
     (§ anno @SuppressWarnings("unchecked"))
-    #_static
-    #_private
-    (§ method <T extends Throwable> void sneakyThrow0(Throwable t) (§ throws T)
+    (§ defn- <T extends Throwable> void sneakyThrow0(Throwable t) (§ throws T)
         (§ throw (T) t)
     )
 
-    #_static
-    #_public
-    (§ method Object loadWithClass(String scriptbase, Class<?> loadFrom) (§ throws IOException, ClassNotFoundException)
+    (§ defn Object loadWithClass(String scriptbase, Class<?> loadFrom) (§ throws IOException, ClassNotFoundException)
         (§ call Var.pushThreadBindings(RT.map(new Object[] (§ Compiler.LOADER, loadFrom.getClassLoader() ))))
         (§ try )
         (§
@@ -46110,58 +39865,42 @@
 
 (§ import java.util.concurrent.atomic.AtomicBoolean)
 
-#_public
-#_final
 (class-ns Var (§ extends ARef) (§ implements IFn, IRef, Settable)
-    #_static
     (class-ns TBox
         #_volatile
         (§ field Object val)
-        #_final
         (§ field Thread thread)
 
-        #_public
-        (§ method TBox(Thread t, Object val)
+        (§ constructor TBox(Thread t, Object val)
             (§ ass this.thread = t)
             (§ ass this.val = val)
         )
     )
 
-    #_static
-    #_public
     (class-ns Unbound (§ extends AFn)
-        #_final
-        #_public
         (§ field Var v)
 
-        #_public
-        (§ method Unbound(Var v)
+        (§ constructor Unbound(Var v)
             (§ ass this.v = v)
         )
 
-        #_public
         (§ method String toString()
             (§ return (§ expr "Unbound: " + v))
         )
 
-        #_public
         (§ method Object throwArity(int n)
             (§ throw new IllegalStateException("Attempting to call unbound fn: " + v))
         )
     )
 
-    #_static
     (class-ns Frame
-        #_final
-        #_static
-        (§ field Frame TOP = new Frame(PersistentHashMap.EMPTY, nil))
+        (§ def Frame TOP = new Frame(PersistentHashMap.EMPTY, nil))
         ;; Var->TBox
         (§ field Associative bindings)
         ;; Var->val
         (§ field Frame prev)
 
-        #_public
-        (§ method Frame(Associative bindings, Frame prev)
+        (§ constructor Frame(Associative bindings, Frame prev)
             (§ ass this.bindings = bindings)
             (§ ass this.prev = prev)
         )
@@ -46172,31 +39911,22 @@
         )
     )
 
-    #_static
-    #_final
-    (§ field ThreadLocal<Frame> dvals = new ThreadLocal<Frame>()
-    (§ inner
+    (§ def ThreadLocal<Frame> dvals = new ThreadLocal<Frame>()
+    (§ reify
         #_protected
         (§ method Frame initialValue()
             (§ return (§ expr Frame.TOP))
         )
     ))
 
-    #_static
-    #_public
     #_volatile
-    (§ field int rev = 0)
+    (§ def int rev = 0)
 
-    #_static
-    (§ field Keyword privateKey = Keyword.intern(nil, "private"))
-    #_static
-    (§ field IPersistentMap privateMeta = new PersistentArrayMap(new Object[] (§ privateKey, Boolean.TRUE )))
-    #_static
-    (§ field Keyword macroKey = Keyword.intern(nil, "macro"))
-    #_static
-    (§ field Keyword nameKey = Keyword.intern(nil, "name"))
-    #_static
-    (§ field Keyword nsKey = Keyword.intern(nil, "ns"))
+    (§ def Keyword privateKey = Keyword.intern(nil, "private"))
+    (§ def IPersistentMap privateMeta = new PersistentArrayMap(new Object[] (§ privateKey, Boolean.TRUE )))
+    (§ def Keyword macroKey = Keyword.intern(nil, "macro"))
+    (§ def Keyword nameKey = Keyword.intern(nil, "name"))
+    (§ def Keyword nsKey = Keyword.intern(nil, "ns"))
 
     #_volatile
     (§ field Object root)
@@ -46204,60 +39934,41 @@
     #_volatile
     (§ field boolean dynamic = false)
     #_transient
-    #_final
     (§ field AtomicBoolean threadBound)
-    #_public
-    #_final
     (§ field Symbol sym)
-    #_public
-    #_final
     (§ field Namespace ns)
 
-    #_public
-    #_static
-    (§ method Object getThreadBindingFrame()
+    (§ defn Object getThreadBindingFrame()
         (§ return (§ expr dvals.get()))
     )
 
-    #_public
-    #_static
-    (§ method Object cloneThreadBindingFrame()
+    (§ defn Object cloneThreadBindingFrame()
         (§ return (§ expr dvals.get().clone()))
     )
 
-    #_public
-    #_static
-    (§ method void resetThreadBindingFrame(Object frame)
+    (§ defn void resetThreadBindingFrame(Object frame)
         (§ call dvals.set((Frame) frame))
     )
 
-    #_public
     (§ method Var setDynamic()
         (§ ass this.dynamic = true)
         (§ return (§ expr this))
     )
 
-    #_public
     (§ method Var setDynamic(boolean b)
         (§ ass this.dynamic = b)
         (§ return (§ expr this))
     )
 
-    #_public
-    #_final
     (§ method boolean isDynamic()
         (§ return (§ expr dynamic))
     )
 
-    #_public
-    #_static
-    (§ method Var intern(Namespace ns, Symbol sym, Object root)
+    (§ defn Var intern(Namespace ns, Symbol sym, Object root)
         (§ return (§ expr intern(ns, sym, root, true)))
     )
 
-    #_public
-    #_static
-    (§ method Var intern(Namespace ns, Symbol sym, Object root, boolean replaceRoot)
+    (§ defn Var intern(Namespace ns, Symbol sym, Object root, boolean replaceRoot)
         (§ let Var dvout = ns.intern(sym))
         (§ if (!dvout.hasRoot() || replaceRoot))
         (§
@@ -46266,7 +39977,6 @@
         (§ return (§ expr dvout))
     )
 
-    #_public
     (§ method String toString()
         (§ if (ns != nil))
         (§
@@ -46275,9 +39985,7 @@
         (§ return (§ expr "#<Var: " + ((sym != nil) ? sym.toString() :or "--unnamed--") + ">"))
     )
 
-    #_public
-    #_static
-    (§ method Var find(Symbol nsQualifiedSym)
+    (§ defn Var find(Symbol nsQualifiedSym)
         (§ if (nsQualifiedSym.ns == nil))
         (§
             (§ throw new IllegalArgumentException("Symbol must be namespace-qualified"))
@@ -46290,41 +39998,31 @@
         (§ return (§ expr ns.findInternedVar(Symbol.intern(nsQualifiedSym.name))))
     )
 
-    #_public
-    #_static
-    (§ method Var intern(Symbol nsName, Symbol sym)
+    (§ defn Var intern(Symbol nsName, Symbol sym)
         (§ let Namespace ns = Namespace.findOrCreate(nsName))
         (§ return (§ expr intern(ns, sym)))
     )
 
-    #_public
-    #_static
-    (§ method Var internPrivate(String nsName, String sym)
+    (§ defn Var internPrivate(String nsName, String sym)
         (§ let Namespace ns = Namespace.findOrCreate(Symbol.intern(nsName)))
         (§ let Var ret = intern(ns, Symbol.intern(sym)))
         (§ call ret.setMeta(privateMeta))
         (§ return (§ expr ret))
     )
 
-    #_public
-    #_static
-    (§ method Var intern(Namespace ns, Symbol sym)
+    (§ defn Var intern(Namespace ns, Symbol sym)
         (§ return (§ expr ns.intern(sym)))
     )
 
-    #_public
-    #_static
-    (§ method Var create()
+    (§ defn Var create()
         (§ return (§ expr new Var(nil, nil)))
     )
 
-    #_public
-    #_static
-    (§ method Var create(Object root)
+    (§ defn Var create(Object root)
         (§ return (§ expr new Var(nil, nil, root)))
     )
 
-    (§ method Var(Namespace ns, Symbol sym)
+    (§ constructor Var(Namespace ns, Symbol sym)
         (§ ass this.ns = ns)
         (§ ass this.sym = sym)
         (§ ass this.threadBound = new AtomicBoolean(false))
@@ -46332,19 +40030,16 @@
         (§ call setMeta(PersistentHashMap.EMPTY))
     )
 
-    (§ method Var(Namespace ns, Symbol sym, Object root)
+    (§ constructor Var(Namespace ns, Symbol sym, Object root)
         (§ this(ns, sym))
         (§ ass this.root = root)
         (§ ass ++rev)
     )
 
-    #_public
     (§ method boolean isBound()
         (§ return (§ expr (hasRoot() || (threadBound.get() && dvals.get().bindings.containsKey(this)))))
     )
 
-    #_final
-    #_public
     (§ method Object get()
         (§ if (!threadBound.get()))
         (§
@@ -46353,8 +40048,6 @@
         (§ return (§ expr deref()))
     )
 
-    #_final
-    #_public
     (§ method Object deref()
         (§ let TBox b = getThreadBinding())
         (§ if (b != nil))
@@ -46364,7 +40057,6 @@
         (§ return (§ expr root))
     )
 
-    #_public
     (§ method void setValidator(IFn vf)
         (§ if (hasRoot()))
         (§
@@ -46373,13 +40065,11 @@
         (§ ass validator = vf)
     )
 
-    #_public
     (§ method Object alter(IFn fn, ISeq args)
         (§ call set(fn.applyTo(RT.cons(deref(), args))))
         (§ return (§ expr this))
     )
 
-    #_public
     (§ method Object set(Object val)
         (§ call validate(getValidator(), val))
         (§ let TBox b = getThreadBinding())
@@ -46394,114 +40084,101 @@
         (§ throw new IllegalStateException(String.format("Can't change/establish root binding of: %s with set", sym)))
     )
 
-    #_public
     (§ method Object doSet(Object val)
         (§ return (§ expr set(val)))
     )
 
-    #_public
     (§ method Object doReset(Object val)
         (§ call bindRoot(val))
         (§ return (§ expr val))
     )
 
-    #_public
     (§ method void setMeta(IPersistentMap m)
         ;; ensure these basis keys
         (§ call resetMeta(m.assoc(nameKey, sym).assoc(nsKey, ns)))
     )
 
-    #_public
     (§ method void setMacro()
         (§ call alterMeta(assoc, RT.list(macroKey, RT.T)))
     )
 
-    #_public
     (§ method boolean isMacro()
         (§ return (§ expr RT.booleanCast(meta().valAt(macroKey))))
     )
 
-    #_public
     (§ method boolean isPublic()
         (§ return (§ expr !RT.booleanCast(meta().valAt(privateKey))))
     )
 
-    #_final
-    #_public
     (§ method Object getRawRoot()
         (§ return (§ expr root))
     )
 
-    #_public
     (§ method Object getTag()
         (§ return (§ expr meta().valAt(RT.TAG_KEY)))
     )
 
-    #_public
     (§ method void setTag(Symbol tag)
         (§ call alterMeta(assoc, RT.list(RT.TAG_KEY, tag)))
     )
 
-    #_final
-    #_public
     (§ method boolean hasRoot()
         (§ return (§ expr !(root instanceof Unbound)))
     )
 
     ;; binding root always clears macro flag
-    #_synchronized
-    #_public
     (§ method void bindRoot(Object root)
-        (§ call validate(getValidator(), root))
-        (§ let Object oldroot = this.root)
-        (§ ass this.root = root)
-        (§ ass ++rev)
-        (§ call alterMeta(dissoc, RT.list(macroKey)))
-        (§ call notifyWatches(oldroot, this.root))
+        (§ synchronized (this)
+            (§ call validate(getValidator(), root))
+            (§ let Object oldroot = this.root)
+            (§ ass this.root = root)
+            (§ ass ++rev)
+            (§ call alterMeta(dissoc, RT.list(macroKey)))
+            (§ call notifyWatches(oldroot, this.root))
+        )
     )
 
-    #_synchronized
     (§ method void swapRoot(Object root)
-        (§ call validate(getValidator(), root))
-        (§ let Object oldroot = this.root)
-        (§ ass this.root = root)
-        (§ ass ++rev)
-        (§ call notifyWatches(oldroot, root))
+        (§ synchronized (this)
+            (§ call validate(getValidator(), root))
+            (§ let Object oldroot = this.root)
+            (§ ass this.root = root)
+            (§ ass ++rev)
+            (§ call notifyWatches(oldroot, root))
+        )
     )
 
-    #_synchronized
-    #_public
     (§ method void unbindRoot()
-        (§ ass this.root = new Unbound(this))
-        (§ ass ++rev)
+        (§ synchronized (this)
+            (§ ass this.root = new Unbound(this))
+            (§ ass ++rev)
+        )
     )
 
-    #_synchronized
-    #_public
     (§ method void commuteRoot(IFn fn)
-        (§ let Object newRoot = fn.invoke(root))
-        (§ call validate(getValidator(), newRoot))
-        (§ let Object oldroot = root)
-        (§ ass this.root = newRoot)
-        (§ ass ++rev)
-        (§ call notifyWatches(oldroot, newRoot))
+        (§ synchronized (this)
+            (§ let Object newRoot = fn.invoke(root))
+            (§ call validate(getValidator(), newRoot))
+            (§ let Object oldroot = root)
+            (§ ass this.root = newRoot)
+            (§ ass ++rev)
+            (§ call notifyWatches(oldroot, newRoot))
+        )
     )
 
-    #_synchronized
-    #_public
     (§ method Object alterRoot(IFn fn, ISeq args)
-        (§ let Object newRoot = fn.applyTo(RT.cons(root, args)))
-        (§ call validate(getValidator(), newRoot))
-        (§ let Object oldroot = root)
-        (§ ass this.root = newRoot)
-        (§ ass ++rev)
-        (§ call notifyWatches(oldroot, newRoot))
-        (§ return (§ expr newRoot))
+        (§ synchronized (this)
+            (§ let Object newRoot = fn.applyTo(RT.cons(root, args)))
+            (§ call validate(getValidator(), newRoot))
+            (§ let Object oldroot = root)
+            (§ ass this.root = newRoot)
+            (§ ass ++rev)
+            (§ call notifyWatches(oldroot, newRoot))
+            (§ return (§ expr newRoot))
+        )
     )
 
-    #_public
-    #_static
-    (§ method void pushThreadBindings(Associative bindings)
+    (§ defn void pushThreadBindings(Associative bindings)
         (§ let Frame f = dvals.get())
         (§ let Associative bmap = f.bindings)
         (§ for (ISeq bs = bindings.seq() bs != nil bs = bs.next()))
@@ -46519,9 +40196,7 @@
         (§ call dvals.set(new Frame(bmap, f)))
     )
 
-    #_public
-    #_static
-    (§ method void popThreadBindings()
+    (§ defn void popThreadBindings()
         (§ let Frame f = dvals.get().prev)
         (§ if (f == nil))
         (§
@@ -46537,9 +40212,7 @@
         )
     )
 
-    #_public
-    #_static
-    (§ method Associative getThreadBindings()
+    (§ defn Associative getThreadBindings()
         (§ let Frame f = dvals.get())
         (§ let IPersistentMap ret = PersistentHashMap.EMPTY)
         (§ for (ISeq bs = f.bindings.seq() bs != nil bs = bs.next()))
@@ -46552,8 +40225,6 @@
         (§ return (§ expr ret))
     )
 
-    #_public
-    #_final
     (§ method TBox getThreadBinding()
         (§ if (threadBound.get()))
         (§
@@ -46566,46 +40237,37 @@
         (§ return (§ expr nil))
     )
 
-    #_final
-    #_public
     (§ method IFn fn()
         (§ return (§ expr (IFn) deref()))
     )
 
-    #_public
     (§ method Object call()
         (§ return (§ expr invoke()))
     )
 
-    #_public
     (§ method void run()
         (§ call invoke())
     )
 
-    #_public
     (§ method Object invoke()
         (§ return (§ expr fn().invoke()))
     )
 
-    #_public
     (§ method Object invoke(Object arg1)
         (§ return (§ expr fn().invoke(Util.ret1(arg1, arg1 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2)
         (§ return (§ expr fn().invoke(Util.ret1(arg1, arg1 = nil),
           #_arg Util.ret1(arg2, arg2 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3)
         (§ return (§ expr fn().invoke(Util.ret1(arg1, arg1 = nil),
           #_arg Util.ret1(arg2, arg2 = nil),
           #_arg Util.ret1(arg3, arg3 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4)
         (§ return (§ expr fn().invoke(Util.ret1(arg1, arg1 = nil),
           #_arg Util.ret1(arg2, arg2 = nil),
@@ -46613,7 +40275,6 @@
           #_arg Util.ret1(arg4, arg4 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
         (§ return (§ expr fn().invoke(Util.ret1(arg1, arg1 = nil),
           #_arg Util.ret1(arg2, arg2 = nil),
@@ -46622,7 +40283,6 @@
           #_arg Util.ret1(arg5, arg5 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6)
         (§ return (§ expr fn().invoke(Util.ret1(arg1, arg1 = nil),
           #_arg Util.ret1(arg2, arg2 = nil),
@@ -46632,7 +40292,6 @@
           #_arg Util.ret1(arg6, arg6 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7)
         (§ return (§ expr fn().invoke(Util.ret1(arg1, arg1 = nil),
           #_arg Util.ret1(arg2, arg2 = nil),
@@ -46643,7 +40302,6 @@
           #_arg Util.ret1(arg7, arg7 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8))
     (§
@@ -46657,7 +40315,6 @@
           #_arg Util.ret1(arg8, arg8 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9))
     (§
@@ -46672,7 +40329,6 @@
           #_arg Util.ret1(arg9, arg9 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10))
     (§
@@ -46688,7 +40344,6 @@
           #_arg Util.ret1(arg10, arg10 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11))
     (§
@@ -46705,7 +40360,6 @@
           #_arg Util.ret1(arg11, arg11 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12))
     (§
@@ -46723,7 +40377,6 @@
           #_arg Util.ret1(arg12, arg12 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13))
     (§
@@ -46742,7 +40395,6 @@
           #_arg Util.ret1(arg13, arg13 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14))
     (§
@@ -46762,7 +40414,6 @@
           #_arg Util.ret1(arg14, arg14 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15))
@@ -46784,7 +40435,6 @@
           #_arg Util.ret1(arg15, arg15 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16))
@@ -46807,7 +40457,6 @@
           #_arg Util.ret1(arg16, arg16 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17))
@@ -46831,7 +40480,6 @@
           #_arg Util.ret1(arg17, arg17 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18))
@@ -46856,7 +40504,6 @@
           #_arg Util.ret1(arg18, arg18 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19))
@@ -46882,7 +40529,6 @@
           #_arg Util.ret1(arg19, arg19 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20))
@@ -46909,7 +40555,6 @@
           #_arg Util.ret1(arg20, arg20 = nil))))
     )
 
-    #_public
     (§ method Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
       #_arg Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
       #_arg Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20,
@@ -46938,26 +40583,21 @@
                 (Object[])Util.ret1(args, args = nil))))
     )
 
-    #_public
     (§ method Object applyTo(ISeq arglist)
         (§ return (§ expr fn().applyTo(arglist)))
     )
 
-    #_static
-    (§ field IFn assoc = new AFn()
-    (§ inner
+    (§ def IFn assoc = new AFn()
+    (§ reify
         (§ anno @Override)
-        #_public
         (§ method Object invoke(Object m, Object k, Object v)
             (§ return (§ expr RT.assoc(m, k, v)))
         )
     ))
 
-    #_static
-    (§ field IFn dissoc = new AFn()
-    (§ inner
+    (§ def IFn dissoc = new AFn()
+    (§ reify
         (§ anno @Override)
-        #_public
         (§ method Object invoke(Object c, Object k)
             (§ return (§ expr RT.dissoc(c, k)))
         )
@@ -46967,23 +40607,18 @@
 
 (java-ns cloiure.lang.Volatile
 
-#_final
-#_public
 (class-ns Volatile (§ implements IDeref)
     #_volatile
     (§ field Object val)
 
-    #_public
-    (§ method Volatile(Object val)
+    (§ constructor Volatile(Object val)
         (§ ass this.val = val)
     )
 
-    #_public
     (§ method Object deref()
         (§ return (§ expr val))
     )
 
-    #_public
     (§ method Object reset(Object newval)
         (§ return (§ expr this.val = newval))
     )
@@ -46999,7 +40634,7 @@
 
 (§ anno @Retention(RetentionPolicy.RUNTIME))
 (§ anno @Target(ElementType.METHOD))
-(§ @interface public @interface WarnBoxedMath)
+(§ @interface WarnBoxedMath)
 (§
     (§ @abstract boolean value() default true)
 )
@@ -47011,24 +40646,12 @@
 (§ import cloiure.lang.Var)
 (§ import cloiure.lang.RT)
 
-#_public
 (class-ns main
-    #_final
-    #_static
-    #_private
-    (§ field Symbol CLOIURE_MAIN = Symbol.intern("cloiure.main"))
-    #_final
-    #_static
-    #_private
-    (§ field Var REQUIRE = RT.var("cloiure.core", "require"))
-    #_final
-    #_static
-    #_private
-    (§ field Var MAIN = RT.var("cloiure.main", "main"))
+    (§ def- Symbol CLOIURE_MAIN = Symbol.intern("cloiure.main"))
+    (§ def- Var REQUIRE = RT.var("cloiure.core", "require"))
+    (§ def- Var MAIN = RT.var("cloiure.main", "main"))
 
-    #_public
-    #_static
-    (§ method void main(String[] args)
+    (§ defn void main(String[] args)
         (§ call REQUIRE.invoke(CLOIURE_MAIN))
         (§ call MAIN.applyTo(RT.seq(args)))
     )
