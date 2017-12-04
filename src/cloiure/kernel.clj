@@ -577,9 +577,9 @@
     (§ field #_"AtomicReference<ActionQueue>" aq (ß new AtomicReference<ActionQueue>(ActionQueue.EMPTY)))
 
     #_volatile
-    (§ field #_"Keyword" errorMode (ß CONTINUE))
+    (§ field #_"Keyword" errorMode CONTINUE)
     #_volatile
-    (§ field #_"IFn" errorHandler (ß nil))
+    (§ field #_"IFn" errorHandler nil)
 
     (§ def- #_"AtomicLong" sendThreadPoolCounter (ß new AtomicLong(0)))
 
@@ -856,7 +856,7 @@
             (when (ß sends == nil)
                 (§ return 0)
             )
-            (loop-when-recur [(ß int i = 0)] (ß i < sends.count()) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < sends.count()) [(ß i = i + 1)]
                 (let [#_"Action" a (ß (Action) sends.valAt(i))]
                     (ß a.agent.enqueue(a))
                 )
@@ -886,7 +886,7 @@
             )
             :else
             (do
-                (throw (ß new IndexOutOfBoundsException()))
+                (throw (IndexOutOfBoundsException.))
             )
         )
     )
@@ -928,7 +928,7 @@
 
     #_method
     (§ defn #_"Object" setValue [this, #_"Object" value]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 )
 )
@@ -1049,7 +1049,7 @@
         (let [#_"int" hash 0]
             (loop-when-recur [(ß ISeq s = m.seq())] (ß s != nil) [(ß s = s.next())]
                 (let [(ß Map.Entry e = (Map.Entry) s.first())]
-                    (ß hash += ((e.getKey() == nil) ? 0 :or e.getKey().hashCode()) :xor ((e.getValue() == nil) ? 0 :or e.getValue().hashCode()))
+                    (ß hash = hash + (((e.getKey() == nil) ? 0 :or e.getKey().hashCode()) :xor ((e.getValue() == nil) ? 0 :or e.getValue().hashCode())))
                 )
             )
             hash
@@ -1146,7 +1146,7 @@
 
                         #_method
                         (§ defn #_"void" remove [this]
-                            (throw (ß new UnsupportedOperationException()))
+                            (throw (UnsupportedOperationException.))
                         )
                     )
                 )
@@ -1230,7 +1230,7 @@
 
                         #_method
                         (§ defn #_"void" remove [this]
-                            (throw (ß new UnsupportedOperationException()))
+                            (throw (UnsupportedOperationException.))
                         )
                     )
                 )
@@ -1277,7 +1277,7 @@
 
     #_method
     (§ defn #_"void" clear [this]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -1354,7 +1354,7 @@
 
                                 #_method
                                 (§ defn #_"void" remove [this]
-                                    (throw (ß new UnsupportedOperationException()))
+                                    (throw (UnsupportedOperationException.))
                                 )
                             )
                         )
@@ -1376,17 +1376,17 @@
 
     #_method
     (§ defn #_"Object" put [this, #_"Object" key, #_"Object" value]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"void" putAll [this, #_"Map" t]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"Object" remove [this, #_"Object" key]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -1417,7 +1417,7 @@
 
                                 #_method
                                 (§ defn #_"void" remove [this]
-                                    (throw (ß new UnsupportedOperationException()))
+                                    (throw (UnsupportedOperationException.))
                                 )
                             )
                         )
@@ -1536,7 +1536,7 @@
             (when (ß hash == 0)
                 (loop-when-recur [(ß ISeq s = seq())] (ß s != nil) [(ß s = s.next())]
                     (let [#_"Object" e (ß s.first())]
-                        (ß hash +=  Util.hash(e))
+                        (ß hash = hash + Util.hash(e))
                     )
                 )
                 (ß this._hash = hash)
@@ -1562,32 +1562,32 @@
 
     #_method
     (§ defn #_"boolean" add [this, #_"Object" o]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" remove [this, #_"Object" o]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" addAll [this, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"void" clear [this]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" retainAll [this, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" removeAll [this, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -1638,7 +1638,7 @@
 
                         #_method
                         (§ defn #_"void" remove [this]
-                            (throw (ß new UnsupportedOperationException()))
+                            (throw (UnsupportedOperationException.))
                         )
                     )
                 )
@@ -1685,7 +1685,7 @@
                     (when (ß ov.count() != v.count())
                         (§ return false)
                     )
-                    (loop-when-recur [(ß int i = 0)] (ß i < v.count()) [(ß i++)]
+                    (loop-when-recur [(ß int i = 0)] (ß i < v.count()) [(ß i = i + 1)]
                         (when (ß !Util.equals(v.nth(i), ov.nth(i)))
                             (§ return false)
                         )
@@ -1713,7 +1713,7 @@
                     (§ return false)
                 )
                 (let [#_"ISeq" ms (ß RT.seq(obj))]
-                    (loop-when-recur [(ß int i = 0)] (ß i < v.count()) [(ß i++, ms = ms.next())]
+                    (loop-when-recur [(ß int i = 0)] (ß i < v.count()) [(ß i = i + 1, ms = ms.next())]
                         (when (ß ms == nil || !Util.equals(v.nth(i), ms.first()))
                             (§ return false)
                         )
@@ -1735,7 +1735,7 @@
                     (when (ß ov.count() != v.count())
                         (§ return false)
                     )
-                    (loop-when-recur [(ß int i = 0)] (ß i < v.count()) [(ß i++)]
+                    (loop-when-recur [(ß int i = 0)] (ß i < v.count()) [(ß i = i + 1)]
                         (when (ß !Util.equiv(v.nth(i), ov.nth(i)))
                             (§ return false)
                         )
@@ -1763,7 +1763,7 @@
                     (§ return false)
                 )
                 (let [#_"ISeq" ms (ß RT.seq(obj))]
-                    (loop-when-recur [(ß int i = 0)] (ß i < v.count()) [(ß i++, ms = ms.next())]
+                    (loop-when-recur [(ß int i = 0)] (ß i < v.count()) [(ß i = i + 1, ms = ms.next())]
                         (when (ß ms == nil || !Util.equiv(v.nth(i), ms.first()))
                             (§ return false)
                         )
@@ -1799,7 +1799,7 @@
         (let [#_"int" hash (ß this._hash)]
             (when (ß hash == 0)
                 (ß hash = 1)
-                (loop-when-recur [(ß int i = 0)] (ß i < count()) [(ß i++)]
+                (loop-when-recur [(ß int i = 0)] (ß i < count()) [(ß i = i + 1)]
                     (let [#_"Object" obj (ß nth(i))]
                         (ß hash = 31 * hash + ((obj == nil) ? 0 :or obj.hashCode()))
                     )
@@ -1817,7 +1817,7 @@
                 (§ let [#_"int" n]
                     (ß hash = 1)
 
-                    (loop-when-recur [(ß n = 0)] (ß n < count()) [(ß ++n)]
+                    (loop-when-recur [(ß n = 0)] (ß n < count()) [(ß n = n + 1)]
                         (ß hash = 31 * hash + Util.hasheq(nth(n)))
                     )
 
@@ -1843,12 +1843,12 @@
 
     #_method
     (§ defn #_"Object" remove [this, #_"int" i]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"int" indexOf [this, #_"Object" o]
-        (loop-when-recur [(ß int i = 0)] (ß i < count()) [(ß i++)]
+        (loop-when-recur [(ß int i = 0)] (ß i < count()) [(ß i = i + 1)]
             (when (ß Util.equiv(nth(i), o))
                 (§ return i)
             )
@@ -1858,7 +1858,7 @@
 
     #_method
     (§ defn #_"int" lastIndexOf [this, #_"Object" o]
-        (loop-when-recur [(ß int i = count() - 1)] (ß i >= 0) [(ß i--)]
+        (loop-when-recur [(ß int i = count() - 1)] (ß i >= 0) [(ß i = i - 1)]
             (when (ß Util.equiv(nth(i), o))
                 (§ return i)
             )
@@ -1884,11 +1884,12 @@
                     #_method
                     (§ defn #_"Object" next [this]
                         (if (ß nexti < count())
-                            (do
-                                (ß nth(nexti++))
+                            (let [_ (ß nth(nexti))]
+                                (ß nexti = nexti + 1)
+                                _
                             )
                             (do
-                                (throw (ß new NoSuchElementException()))
+                                (throw (NoSuchElementException.))
                             )
                         )
                     )
@@ -1902,10 +1903,11 @@
                     (§ defn #_"Object" previous [this]
                         (if (ß nexti > 0)
                             (do
-                                (ß nth(--nexti))
+                                (ß nexti = nexti - 1)
+                                (ß nth(nexti))
                             )
                             (do
-                                (throw (ß new NoSuchElementException()))
+                                (throw (NoSuchElementException.))
                             )
                         )
                     )
@@ -1922,17 +1924,17 @@
 
                     #_method
                     (§ defn #_"void" remove [this]
-                        (throw (ß new UnsupportedOperationException()))
+                        (throw (UnsupportedOperationException.))
                     )
 
                     #_method
                     (§ defn #_"void" set [this, #_"Object" o]
-                        (throw (ß new UnsupportedOperationException()))
+                        (throw (UnsupportedOperationException.))
                     )
 
                     #_method
                     (§ defn #_"void" add [this, #_"Object" o]
-                        (throw (ß new UnsupportedOperationException()))
+                        (throw (UnsupportedOperationException.))
                     )
                 )
             )
@@ -1952,18 +1954,19 @@
                     #_method
                     (§ defn #_"Object" next [this]
                         (if (ß i < end)
-                            (do
-                                (ß nth(i++))
+                            (let [_ (ß nth(i))]
+                                (ß i = i + 1)
+                                _
                             )
                             (do
-                                (throw (ß new NoSuchElementException()))
+                                (throw (NoSuchElementException.))
                             )
                         )
                     )
 
                     #_method
                     (§ defn #_"void" remove [this]
-                        (throw (ß new UnsupportedOperationException()))
+                        (throw (UnsupportedOperationException.))
                     )
                 )
             )
@@ -1977,17 +1980,17 @@
 
     #_method
     (§ defn #_"Object" set [this, #_"int" i, #_"Object" o]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"void" add [this, #_"int" i, #_"Object" o]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" addAll [this, #_"int" i, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -2012,18 +2015,19 @@
                     #_method
                     (§ defn #_"Object" next [this]
                         (if (ß i < count())
-                            (do
-                                (ß nth(i++))
+                            (let [_ (ß nth(i))]
+                                (ß i = i + 1)
+                                _
                             )
                             (do
-                                (throw (ß new NoSuchElementException()))
+                                (throw (NoSuchElementException.))
                             )
                         )
                     )
 
                     #_method
                     (§ defn #_"void" remove [this]
-                        (throw (ß new UnsupportedOperationException()))
+                        (throw (UnsupportedOperationException.))
                     )
                 )
             )
@@ -2090,7 +2094,7 @@
     #_method
     (§ defn #_"Object[]" toArray [this]
         (let [#_"Object[]" ret (ß new Object[count()])]
-            (loop-when-recur [(ß int i = 0)] (ß i < count()) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < count()) [(ß i = i + 1)]
                 (ß ret[i] = nth(i))
             )
             ret
@@ -2099,32 +2103,32 @@
 
     #_method
     (§ defn #_"boolean" add [this, #_"Object" o]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" remove [this, #_"Object" o]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" addAll [this, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"void" clear [this]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" retainAll [this, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" removeAll [this, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -2179,7 +2183,7 @@
                     (§ return 1)
                 )
             )
-            (loop-when-recur [(ß int i = 0)] (ß i < count()) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < count()) [(ß i = i + 1)]
                 (let [#_"int" c (ß Util.compare(nth(i), v.nth(i)))]
                     (when (ß c != 0)
                         (§ return c)
@@ -2239,7 +2243,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß v.nth(i))]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < v.count()) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < v.count()) [(ß x = x + 1)]
                     (ß ret = f.invoke(ret, v.nth(x)))
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
@@ -2252,7 +2256,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, v.nth(i)))]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < v.count()) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < v.count()) [(ß x = x + 1)]
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
                     )
@@ -2323,8 +2327,8 @@
 
             (when (ß v instanceof APersistentVector.SubVector)
                 (let [(ß APersistentVector.SubVector sv = (APersistentVector.SubVector) v)]
-                    (ß start += sv.start)
-                    (ß end += sv.start)
+                    (ß start = start + sv.start)
+                    (ß end = end + sv.start)
                     (ß v = sv.v)
                 )
             )
@@ -2345,7 +2349,7 @@
         #_method
         (§ defn #_"Object" nth [this, #_"int" i]
             (when (ß (start + i >= end) || (i < 0))
-                (throw (ß new IndexOutOfBoundsException()))
+                (throw (IndexOutOfBoundsException.))
             )
             (ß v.nth(start + i))
         )
@@ -2354,7 +2358,7 @@
         (§ defn #_"IPersistentVector" assocN [this, #_"int" i, #_"Object" val]
             (cond (ß start + i > end)
                 (do
-                    (throw (ß new IndexOutOfBoundsException()))
+                    (throw (IndexOutOfBoundsException.))
                 )
                 (ß start + i == end)
                 (do
@@ -2411,7 +2415,7 @@
 (class-ns ARef (§ extends AReference) (§ implements IRef)
     #_protected
     #_volatile
-    (§ field #_"IFn" validator (ß nil))
+    (§ field #_"IFn" validator nil)
     #_volatile
     (§ field- #_"IPersistentMap" watches (ß PersistentHashMap.EMPTY))
 
@@ -2617,7 +2621,7 @@
             (when (ß RT.isReduced(ret))
                 (§ return ret)
             )
-            (loop-when-recur [(ß int x = off + 1)] (ß x < end) [(ß x++)]
+            (loop-when-recur [(ß int x = off + 1)] (ß x < end) [(ß x = x + 1)]
                 (ß ret = f.invoke(ret, array[x]))
                 (when (ß RT.isReduced(ret))
                     (§ return ret)
@@ -2658,19 +2662,19 @@
     ))
 
     (§ defn #_"Iterator" create []
-        (ß EMPTY_ITERATOR)
+        EMPTY_ITERATOR
     )
 
     (§ defn #_"Iterator" create [#_"Object..." array]
         (when (ß array == nil || array.length == 0)
-            (§ return (ß EMPTY_ITERATOR))
+            (§ return EMPTY_ITERATOR)
         )
         (ß new ArrayIter(array, 0))
     )
 
     (§ defn #_"Iterator" createFromObject [#_"Object" array]
         (when (ß array == nil || Array.getLength(array) == 0)
-            (§ return (ß EMPTY_ITERATOR))
+            (§ return EMPTY_ITERATOR)
         )
         (let [#_"Class" aclass (ß array.getClass())]
             (when (ß aclass == int[].class)
@@ -2715,7 +2719,10 @@
     #_method
     (§ defn #_"Object" next [this]
         (when (ß array != nil && i < array.length)
-            (§ return (ß array[i++]))
+            (let [_ (ß array[i])]
+                (ß i = i + 1)
+                (§ return _)
+            )
         )
         (throw (ß new java.util.NoSuchElementException()))
     )
@@ -2743,7 +2750,10 @@
         #_method
         (§ defn #_"Long" next [this]
             (when (ß array != nil && i < array.length)
-                (§ return (ß Long.valueOf(array[i++])))
+                (let [_ (ß Long.valueOf(array[i]))]
+                    (ß i = i + 1)
+                    (§ return _)
+                )
             )
             (throw (ß new java.util.NoSuchElementException()))
         )
@@ -2772,7 +2782,10 @@
         #_method
         (§ defn #_"Double" next [this]
             (when (ß array != nil && i < array.length)
-                (§ return (ß Double.valueOf(array[i++])))
+                (let [_ (ß Double.valueOf(array[i]))]
+                    (ß i = i + 1)
+                    (§ return _)
+                )
             )
             (throw (ß new java.util.NoSuchElementException()))
         )
@@ -2801,7 +2814,10 @@
         #_method
         (§ defn #_"Double" next [this]
             (when (ß array != nil && i < array.length)
-                (§ return (ß array[i++]))
+                (let [_ (ß array[i])]
+                    (ß i = i + 1)
+                    (§ return _)
+                )
             )
             (throw (ß new java.util.NoSuchElementException()))
         )
@@ -2830,7 +2846,10 @@
         #_method
         (§ defn #_"Long" next [this]
             (when (ß array != nil && i < array.length)
-                (§ return (ß Long.valueOf(array[i++])))
+                (let [_ (ß Long.valueOf(array[i]))]
+                    (ß i = i + 1)
+                    (§ return _)
+                )
             )
             (throw (ß new java.util.NoSuchElementException()))
         )
@@ -2859,7 +2878,10 @@
         #_method
         (§ defn #_"Byte" next [this]
             (when (ß array != nil && i < array.length)
-                (§ return (ß array[i++]))
+                (let [_ (ß array[i])]
+                    (ß i = i + 1)
+                    (§ return _)
+                )
             )
             (throw (ß new java.util.NoSuchElementException()))
         )
@@ -2888,7 +2910,10 @@
         #_method
         (§ defn #_"Character" next [this]
             (when (ß array != nil && i < array.length)
-                (§ return (ß array[i++]))
+                (let [_ (ß array[i])]
+                    (ß i = i + 1)
+                    (§ return _)
+                )
             )
             (throw (ß new java.util.NoSuchElementException()))
         )
@@ -2917,7 +2942,10 @@
         #_method
         (§ defn #_"Long" next [this]
             (when (ß array != nil && i < array.length)
-                (§ return (ß Long.valueOf(array[i++])))
+                (let [_ (ß Long.valueOf(array[i]))]
+                    (ß i = i + 1)
+                    (§ return _)
+                )
             )
             (throw (ß new java.util.NoSuchElementException()))
         )
@@ -2946,7 +2974,10 @@
         #_method
         (§ defn #_"Boolean" next [this]
             (when (ß array != nil && i < array.length)
-                (§ return (ß Boolean.valueOf(array[i++])))
+                (let [_ (ß Boolean.valueOf(array[i]))]
+                    (ß i = i + 1)
+                    (§ return _)
+                )
             )
             (throw (ß new java.util.NoSuchElementException()))
         )
@@ -3062,7 +3093,7 @@
     (§ defn #_"Object" reduce [this, #_"IFn" f]
         (when (ß array != nil)
             (let [#_"Object" ret (ß array[i])]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (ß ret = f.invoke(ret, array[x]))
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
@@ -3078,7 +3109,7 @@
     (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
         (when (ß array != nil)
             (let [#_"Object" ret (ß f.invoke(start, array[i]))]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
                     )
@@ -3096,7 +3127,7 @@
     #_method
     (§ defn #_"int" indexOf [this, #_"Object" o]
         (when (ß array != nil)
-            (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
+            (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j = j + 1)]
                 (when (ß Util.equals(o, array[j]))
                     (§ return (ß j - i))
                 )
@@ -3110,14 +3141,14 @@
         (when (ß array != nil)
             (if (ß o == nil)
                 (do
-                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
+                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j = j - 1)]
                         (when (ß array[j] == nil)
                             (§ return (ß j - i))
                         )
                     )
                 )
                 (do
-                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
+                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j = j - 1)]
                         (when (ß o.equals(array[j]))
                             (§ return (ß j - i))
                         )
@@ -3170,7 +3201,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß array[i])]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (ß ret = f.invoke(ret, array[x]))
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
@@ -3183,7 +3214,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, array[i]))]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
                     )
@@ -3200,7 +3231,7 @@
         (§ defn #_"int" indexOf [this, #_"Object" o]
             (when (ß o instanceof Number)
                 (let [#_"int" k (ß ((Number) o).intValue())]
-                    (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
+                    (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j = j + 1)]
                         (when (ß k == array[j])
                             (§ return (ß j - i))
                         )
@@ -3215,7 +3246,7 @@
         (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (when (ß o instanceof Number)
                 (let [#_"int" k (ß ((Number) o).intValue())]
-                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
+                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j = j - 1)]
                         (when (ß k == array[j])
                             (§ return (ß j - i))
                         )
@@ -3269,7 +3300,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß Numbers.num(array[i]))]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (ß ret = f.invoke(ret, Numbers.num(array[x])))
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
@@ -3282,7 +3313,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, Numbers.num(array[i])))]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
                     )
@@ -3299,7 +3330,7 @@
         (§ defn #_"int" indexOf [this, #_"Object" o]
             (when (ß o instanceof Number)
                 (let [#_"float" f (ß ((Number) o).floatValue())]
-                    (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
+                    (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j = j + 1)]
                         (when (ß f == array[j])
                             (§ return (ß j - i))
                         )
@@ -3313,7 +3344,7 @@
         (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (when (ß o instanceof Number)
                 (let [#_"float" f (ß ((Number) o).floatValue())]
-                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
+                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j = j - 1)]
                         (when (ß f == array[j])
                             (§ return (ß j - i))
                         )
@@ -3366,7 +3397,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß array[i])]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (ß ret = f.invoke(ret, array[x]))
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
@@ -3379,7 +3410,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, array[i]))]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
                     )
@@ -3396,7 +3427,7 @@
         (§ defn #_"int" indexOf [this, #_"Object" o]
             (when (ß o instanceof Number)
                 (let [#_"double" d (ß ((Number) o).doubleValue())]
-                    (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
+                    (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j = j + 1)]
                         (when (ß d == array[j])
                             (§ return (ß j - i))
                         )
@@ -3411,7 +3442,7 @@
         (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (when (ß o instanceof Number)
                 (let [#_"double" d (ß ((Number) o).doubleValue())]
-                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
+                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j = j - 1)]
                         (when (ß d == array[j])
                             (§ return (ß j - i))
                         )
@@ -3465,7 +3496,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß Numbers.num(array[i]))]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (ß ret = f.invoke(ret, Numbers.num(array[x])))
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
@@ -3478,7 +3509,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, Numbers.num(array[i])))]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
                     )
@@ -3495,7 +3526,7 @@
         (§ defn #_"int" indexOf [this, #_"Object" o]
             (when (ß o instanceof Number)
                 (let [#_"long" l (ß ((Number) o).longValue())]
-                    (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
+                    (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j = j + 1)]
                         (when (ß l == array[j])
                             (§ return (ß j - i))
                         )
@@ -3510,7 +3541,7 @@
         (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (when (ß o instanceof Number)
                 (let [#_"long" l (ß ((Number) o).longValue())]
-                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
+                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j = j - 1)]
                         (when (ß l == array[j])
                             (§ return (ß j - i))
                         )
@@ -3564,7 +3595,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß array[i])]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (ß ret = f.invoke(ret, array[x]))
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
@@ -3577,7 +3608,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, array[i]))]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
                     )
@@ -3594,7 +3625,7 @@
         (§ defn #_"int" indexOf [this, #_"Object" o]
             (when (ß o instanceof Byte)
                 (let [#_"byte" b (ß ((Byte) o).byteValue())]
-                    (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
+                    (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j = j + 1)]
                         (when (ß b == array[j])
                             (§ return (ß j - i))
                         )
@@ -3604,7 +3635,7 @@
             (when (ß o == nil)
                 (§ return -1)
             )
-            (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
+            (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j = j + 1)]
                 (when (ß o.equals(array[j]))
                     (§ return (ß j - i))
                 )
@@ -3616,7 +3647,7 @@
         (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (when (ß o instanceof Byte)
                 (let [#_"byte" b (ß ((Byte) o).byteValue())]
-                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
+                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j = j - 1)]
                         (when (ß b == array[j])
                             (§ return (ß j - i))
                         )
@@ -3626,7 +3657,7 @@
             (when (ß o == nil)
                 (§ return -1)
             )
-            (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
+            (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j = j - 1)]
                 (when (ß o.equals(array[j]))
                     (§ return (ß j - i))
                 )
@@ -3677,7 +3708,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß array[i])]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (ß ret = f.invoke(ret, array[x]))
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
@@ -3690,7 +3721,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, array[i]))]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
                     )
@@ -3707,7 +3738,7 @@
         (§ defn #_"int" indexOf [this, #_"Object" o]
             (when (ß o instanceof Character)
                 (let [#_"char" c (ß ((Character) o).charValue())]
-                    (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
+                    (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j = j + 1)]
                         (when (ß c == array[j])
                             (§ return (ß j - i))
                         )
@@ -3717,7 +3748,7 @@
             (when (ß o == nil)
                 (§ return -1)
             )
-            (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
+            (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j = j + 1)]
                 (when (ß o.equals(array[j]))
                     (§ return (ß j - i))
                 )
@@ -3729,7 +3760,7 @@
         (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (when (ß o instanceof Character)
                 (let [#_"char" c (ß ((Character) o).charValue())]
-                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
+                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j = j - 1)]
                         (when (ß c == array[j])
                             (§ return (ß j - i))
                         )
@@ -3739,7 +3770,7 @@
             (when (ß o == nil)
                 (§ return -1)
             )
-            (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
+            (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j = j - 1)]
                 (when (ß o.equals(array[j]))
                     (§ return (ß j - i))
                 )
@@ -3790,7 +3821,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß array[i])]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (ß ret = f.invoke(ret, array[x]))
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
@@ -3803,7 +3834,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, array[i]))]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
                     )
@@ -3820,7 +3851,7 @@
         (§ defn #_"int" indexOf [this, #_"Object" o]
             (when (ß o instanceof Short)
                 (let [#_"short" s (ß ((Short) o).shortValue())]
-                    (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
+                    (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j = j + 1)]
                         (when (ß s == array[j])
                             (§ return (ß j - i))
                         )
@@ -3830,7 +3861,7 @@
             (when (ß o == nil)
                 (§ return -1)
             )
-            (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
+            (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j = j + 1)]
                 (when (ß o.equals(array[j]))
                     (§ return (ß j - i))
                 )
@@ -3842,7 +3873,7 @@
         (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (when (ß o instanceof Short)
                 (let [#_"short" s (ß ((Short) o).shortValue())]
-                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
+                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j = j - 1)]
                         (when (ß s == array[j])
                             (§ return (ß j - i))
                         )
@@ -3852,7 +3883,7 @@
             (when (ß o == nil)
                 (§ return -1)
             )
-            (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
+            (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j = j - 1)]
                 (when (ß o.equals(array[j]))
                     (§ return (ß j - i))
                 )
@@ -3903,7 +3934,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f]
             (let [#_"Object" ret (ß array[i])]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (ß ret = f.invoke(ret, array[x]))
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
@@ -3916,7 +3947,7 @@
         #_method
         (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" start]
             (let [#_"Object" ret (ß f.invoke(start, array[i]))]
-                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x++)]
+                (loop-when-recur [(ß int x = i + 1)] (ß x < array.length) [(ß x = x + 1)]
                     (when (ß RT.isReduced(ret))
                         (§ return (ß ((IDeref)ret).deref()))
                     )
@@ -3933,7 +3964,7 @@
         (§ defn #_"int" indexOf [this, #_"Object" o]
             (when (ß o instanceof Boolean)
                 (let [#_"boolean" b (ß ((Boolean) o).booleanValue())]
-                    (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
+                    (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j = j + 1)]
                         (when (ß b == array[j])
                             (§ return (ß j - i))
                         )
@@ -3943,7 +3974,7 @@
             (when (ß o == nil)
                 (§ return -1)
             )
-            (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j++)]
+            (loop-when-recur [(ß int j = i)] (ß j < array.length) [(ß j = j + 1)]
                 (when (ß o.equals(array[j]))
                     (§ return (ß j - i))
                 )
@@ -3955,7 +3986,7 @@
         (§ defn #_"int" lastIndexOf [this, #_"Object" o]
             (when (ß o instanceof Boolean)
                 (let [#_"boolean" b (ß ((Boolean) o).booleanValue())]
-                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
+                    (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j = j - 1)]
                         (when (ß b == array[j])
                             (§ return (ß j - i))
                         )
@@ -3965,7 +3996,7 @@
             (when (ß o == nil)
                 (§ return -1)
             )
-            (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j--)]
+            (loop-when-recur [(ß int j = array.length - 1)] (ß j >= i) [(ß j = j - 1)]
                 (when (ß o.equals(array[j]))
                     (§ return (ß j - i))
                 )
@@ -4065,7 +4096,7 @@
     #_method
     (§ defn #_"int" count [this]
         (let [#_"int" i 1]
-            (loop-when-recur [(ß ISeq s = next())] (ß s != nil) [(ß s = s.next(), i++)]
+            (loop-when-recur [(ß ISeq s = next())] (ß s != nil) [(ß s = s.next(), i = i + 1)]
                 (when (ß s instanceof Counted)
                     (§ return (ß i + s.count()))
                 )
@@ -4101,32 +4132,32 @@
 
     #_method
     (§ defn #_"boolean" add [this, #_"Object" o]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" remove [this, #_"Object" o]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" addAll [this, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"void" clear [this]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" retainAll [this, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" removeAll [this, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -4181,18 +4212,18 @@
 
     #_method
     (§ defn #_"Object" set [this, #_"int" index, #_"Object" element]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"Object" remove [this, #_"int" index]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"int" indexOf [this, #_"Object" o]
         (let [#_"ISeq" s (ß seq())]
-            (loop-when-recur [(ß int i = 0)] (ß s != nil) [(ß s = s.next(), i++)]
+            (loop-when-recur [(ß int i = 0)] (ß s != nil) [(ß s = s.next(), i = i + 1)]
                 (when (ß Util.equiv(s.first(), o))
                     (§ return i)
                 )
@@ -4223,12 +4254,12 @@
 
     #_method
     (§ defn #_"void" add [this, #_"int" index, #_"Object" element]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" addAll [this, #_"int" index, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 )
 )
@@ -4236,9 +4267,12 @@
 (java-ns cloiure.lang.Associative
 
 (§ interface Associative (§ extends IPersistentCollection, ILookup)
-    (§ abstract boolean containsKey(Object key))
-    (§ abstract IMapEntry entryAt(Object key))
-    (§ abstract Associative assoc(Object key, Object val))
+    #_abstract
+    (#_"boolean" containsKey [this, #_"Object" key])
+    #_abstract
+    (#_"IMapEntry" entryAt [this, #_"Object" key])
+    #_abstract
+    (#_"Associative" assoc [this, #_"Object" key, #_"Object" val])
 )
 )
 
@@ -4429,12 +4463,18 @@
 
 #_abstract
 (class-ns ATransientMap (§ extends AFn) (§ implements ITransientMap, ITransientAssociative2)
-    (§ abstract void ensureEditable())
-    (§ abstract ITransientMap doAssoc(Object key, Object val))
-    (§ abstract ITransientMap doWithout(Object key))
-    (§ abstract Object doValAt(Object key, Object notFound))
-    (§ abstract int doCount())
-    (§ abstract IPersistentMap doPersistent())
+    #_abstract
+    (§ defn #_"void" ensureEditable [this])
+    #_abstract
+    (§ defn #_"ITransientMap" doAssoc [this, #_"Object" key, #_"Object" val])
+    #_abstract
+    (§ defn #_"ITransientMap" doWithout [this, #_"Object" key])
+    #_abstract
+    (§ defn #_"Object" doValAt [this, #_"Object" key, #_"Object" notFound])
+    #_abstract
+    (§ defn #_"int" doCount [this])
+    #_abstract
+    (§ defn #_"IPersistentMap" doPersistent [this])
 
     #_method
     (§ defn #_"ITransientMap" conj [this, #_"Object" o]
@@ -4505,7 +4545,7 @@
         (ß doValAt(key, notFound))
     )
 
-    (§ def- #_"Object" NOT_FOUND (ß new Object()))
+    (§ def- #_"Object" NOT_FOUND (Object.))
     #_method
     (§ defn #_"boolean" containsKey [this, #_"Object" key]
         (ß (valAt(key, NOT_FOUND) != NOT_FOUND))
@@ -4865,7 +4905,8 @@
 
     #_method
     (§ defn #_"void" add [this, #_"Object" o]
-        (ß buffer[end++] = o)
+        (ß buffer[end] = o)
+        (ß end = end + 1)
         nil
     )
 
@@ -5126,7 +5167,7 @@
   #_map _AMP_, nil
     )))
 
-    (§ def- #_"int" MAX_POSITIONAL_ARITY (ß 20))
+    (§ def- #_"int" MAX_POSITIONAL_ARITY 20)
     (§ def- #_"Type" OBJECT_TYPE)
     (§ def- #_"Type" KEYWORD_TYPE (ß Type.getType(Keyword.class)))
     (§ def- #_"Type" VAR_TYPE (ß Type.getType(Var.class)))
@@ -5163,16 +5204,16 @@
     (§ static
         (ß OBJECT_TYPE = Type.getType(Object.class))
         (ß ARG_TYPES = new Type[MAX_POSITIONAL_ARITY + 2][])
-        (loop-when-recur [(ß int i = 0)] (ß i <= MAX_POSITIONAL_ARITY) [(ß ++i)]
+        (loop-when-recur [(ß int i = 0)] (ß i <= MAX_POSITIONAL_ARITY) [(ß i = i + 1)]
             (let [#_"Type[]" a (ß new Type[i])]
-                (loop-when-recur [(ß int j = 0)] (ß j < i) [(ß j++)]
+                (loop-when-recur [(ß int j = 0)] (ß j < i) [(ß j = j + 1)]
                     (ß a[j] = OBJECT_TYPE)
                 )
                 (ß ARG_TYPES[i] = a)
             )
         )
         (let [#_"Type[]" a (ß new Type[MAX_POSITIONAL_ARITY + 1])]
-            (loop-when-recur [(ß int j = 0)] (ß j < MAX_POSITIONAL_ARITY) [(ß j++)]
+            (loop-when-recur [(ß int j = 0)] (ß j < MAX_POSITIONAL_ARITY) [(ß j = j + 1)]
                 (ß a[j] = OBJECT_TYPE)
             )
             (ß a[MAX_POSITIONAL_ARITY] = Type.getType("[Ljava/lang/Object;"))
@@ -5328,10 +5369,14 @@
 
     #_non-static
     (§ interface Expr
-        (§ abstract Object eval())
-        (§ abstract void emit(C context, ObjExpr objx, GeneratorAdapter gen))
-        (§ abstract boolean hasJavaClass())
-        (§ abstract Class getJavaClass())
+        #_abstract
+        (#_"Object" eval [this])
+        #_abstract
+        (#_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen])
+        #_abstract
+        (#_"boolean" hasJavaClass [this])
+        #_abstract
+        (#_"Class" getJavaClass [this])
     )
 
     #_abstract
@@ -5349,7 +5394,8 @@
 
     #_non-static
     (§ interface IParser
-        (§ abstract Expr parse(C context, Object form))
+        #_abstract
+        (#_"Expr" parse [this, #_"C" context, #_"Object" form])
     )
 
     (§ defn #_"boolean" isSpecial [#_"Object" sym]
@@ -5426,7 +5472,7 @@
 
         #_method
         (§ defn- #_"boolean" includesExplicitMetadata [this, #_"MapExpr" expr]
-            (loop-when-recur [(ß int i = 0)] (ß i < expr.keyvals.count()) [(ß i += 2)]
+            (loop-when-recur [(ß int i = 0)] (ß i < expr.keyvals.count()) [(ß i = i + 2)]
                 (let [#_"Keyword" k (ß ((KeywordExpr) expr.keyvals.nth(i)).k)]
                     (when (ß (k != RT.FILE_KEY) && (k != RT.DECLARED_KEY) && (k != RT.LINE_KEY) && (k != RT.COLUMN_KEY))
                         (§ return true)
@@ -5840,7 +5886,8 @@
 
     #_abstract
     (class-ns LiteralExpr (§ implements Expr)
-        (§ abstract Object val())
+        #_abstract
+        (§ defn #_"Object" val [this])
 
         #_method
         (§ defn #_"Object" eval [this]
@@ -5849,13 +5896,17 @@
     )
 
     (§ interface AssignableExpr
-        (§ abstract Object evalAssign(Expr val))
-        (§ abstract void emitAssign(C context, ObjExpr objx, GeneratorAdapter gen, Expr val))
+        #_abstract
+        (#_"Object" evalAssign [this, #_"Expr" val])
+        #_abstract
+        (#_"void" emitAssign [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val])
     )
 
     (§ interface MaybePrimitiveExpr (§ extends Expr)
-        (§ abstract boolean canEmitPrimitive())
-        (§ abstract void emitUnboxed(C context, ObjExpr objx, GeneratorAdapter gen))
+        #_abstract
+        (#_"boolean" canEmitPrimitive [this])
+        #_abstract
+        (#_"void" emitUnboxed [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen])
     )
 
     #_abstract
@@ -6515,7 +6566,7 @@
         (§ defn #_"void" emitArgsAsArray [#_"IPersistentVector" args, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (ß gen.push(args.count()))
             (ß gen.newArray(OBJECT_TYPE))
-            (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i = i + 1)]
                 (ß gen.dup())
                 (ß gen.push(i))
                 (ß ((Expr) args.nth(i)).emit(C.EXPRESSION, objx, gen))
@@ -6525,7 +6576,7 @@
         )
 
         (§ defn #_"void" emitTypedArgs [#_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Class[]" parameterTypes, #_"IPersistentVector" args]
-            (loop-when-recur [(ß int i = 0)] (ß i < parameterTypes.length) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < parameterTypes.length) [(ß i = i + 1)]
                 (let [#_"Expr" e (ß (Expr) args.nth(i))]
                     (try
                         (let [#_"Class" primc (ß maybePrimitiveType(e))]
@@ -6624,9 +6675,9 @@
                             (do
                                 (let [#_"int" methodidx 0]
                                     (when (ß methods.size() > 1)
-                                        (let [#_"ArrayList<Class[]>" params (ß new ArrayList())]
-                                            (let [#_"ArrayList<Class>" rets (ß new ArrayList())]
-                                                (loop-when-recur [(ß int i = 0)] (ß i < methods.size()) [(ß i++)]
+                                        (let [#_"ArrayList<Class[]>" params (ArrayList.)]
+                                            (let [#_"ArrayList<Class>" rets (ArrayList.)]
+                                                (loop-when-recur [(ß int i = 0)] (ß i < methods.size()) [(ß i = i + 1)]
                                                     (let [(ß java.lang.reflect.Method m = (java.lang.reflect.Method) methods.get(i))]
                                                         (ß params.add(m.getParameterTypes()))
                                                         (ß rets.add(m.getReturnType()))
@@ -6666,11 +6717,11 @@
             (try
                 (let [#_"Object" targetval (ß target.eval())]
                     (let [#_"Object[]" argvals (ß new Object[args.count()])]
-                        (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i = i + 1)]
                             (ß argvals[i] = ((Expr) args.nth(i)).eval())
                         )
                         (when (ß method != nil)
-                            (let [#_"LinkedList" ms (ß new LinkedList())]
+                            (let [#_"LinkedList" ms (LinkedList.)]
                                 (ß ms.add(method))
                                 (§ return (ß Reflector.invokeMatchingMethod(methodName, ms, targetval, argvals)))
                             )
@@ -6823,9 +6874,9 @@
 
                 (let [#_"int" methodidx 0]
                     (when (ß methods.size() > 1)
-                        (let [#_"ArrayList<Class[]>" params (ß new ArrayList())]
-                            (let [#_"ArrayList<Class>" rets (ß new ArrayList())]
-                                (loop-when-recur [(ß int i = 0)] (ß i < methods.size()) [(ß i++)]
+                        (let [#_"ArrayList<Class[]>" params (ArrayList.)]
+                            (let [#_"ArrayList<Class>" rets (ArrayList.)]
+                                (loop-when-recur [(ß int i = 0)] (ß i < methods.size()) [(ß i = i + 1)]
                                     (let [(ß java.lang.reflect.Method m = (java.lang.reflect.Method) methods.get(i))]
                                         (ß params.add(m.getParameterTypes()))
                                         (ß rets.add(m.getReturnType()))
@@ -6850,16 +6901,10 @@
         (§ defn #_"boolean" isBoxedMath [#_"java.lang.reflect.Method" m]
             (let [#_"Class" c (ß m.getDeclaringClass())]
                 (when (ß c.equals(Numbers.class))
-                    (let [#_"WarnBoxedMath" boxedMath (ß m.getAnnotation(WarnBoxedMath.class))]
-                        (when (ß boxedMath != nil)
-                            (§ return (ß boxedMath.value()))
-                        )
-
-                        (let [#_"Class[]" argTypes (ß m.getParameterTypes())]
-                            (doseq [#_"Class" argType argTypes]
-                                (when (ß argType.equals(Object.class) || argType.equals(Number.class))
-                                    (§ return true)
-                                )
+                    (let [#_"Class[]" argTypes (ß m.getParameterTypes())]
+                        (doseq [#_"Class" argType argTypes]
+                            (when (ß argType.equals(Object.class) || argType.equals(Number.class))
+                                (§ return true)
                             )
                         )
                     )
@@ -6872,11 +6917,11 @@
         (§ defn #_"Object" eval [this]
             (try
                 (let [#_"Object[]" argvals (ß new Object[args.count()])]
-                    (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
+                    (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i = i + 1)]
                         (ß argvals[i] = ((Expr) args.nth(i)).eval())
                     )
                     (when (ß method != nil)
-                        (let [#_"LinkedList" ms (ß new LinkedList())]
+                        (let [#_"LinkedList" ms (LinkedList.)]
                             (ß ms.add(method))
                             (§ return (ß Reflector.invokeMatchingMethod(methodName, ms, nil, argvals)))
                         )
@@ -6918,7 +6963,7 @@
                         )
                     )
                     (let [#_"Object[]" predOps (ß (Object[]) RT.get(Intrinsics.preds, method.toString()))]
-                        (loop-when-recur [(ß int i = 0)] (ß i < predOps.length - 1) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < predOps.length - 1) [(ß i = i + 1)]
                             (ß gen.visitInsn((Integer)predOps[i]))
                         )
                         (ß gen.visitJumpInsn((Integer)predOps[predOps.length - 1], falseLabel))
@@ -7223,15 +7268,15 @@
                     (let [#_"Object" v (ß RT.second(form))]
                         (cond (ß v == nil)
                             (do
-                                (§ return (ß NIL_EXPR))
+                                (§ return NIL_EXPR)
                             )
                             (ß v == Boolean.TRUE)
                             (do
-                                (§ return (ß TRUE_EXPR))
+                                (§ return TRUE_EXPR)
                             )
                             (ß v == Boolean.FALSE)
                             (do
-                                (§ return (ß FALSE_EXPR))
+                                (§ return FALSE_EXPR)
                             )
                         )
                         (cond (ß v instanceof Number)
@@ -7283,7 +7328,7 @@
         )
     )
 
-    (§ def #_"NilExpr" NIL_EXPR (ß new NilExpr()))
+    (§ def #_"NilExpr" NIL_EXPR (NilExpr.))
 
     (class-ns BooleanExpr (§ extends LiteralExpr)
         (§ field #_"boolean" val)
@@ -7461,7 +7506,7 @@
                     (let [#_"Label" end (ß gen.newLabel())]
                         (let [#_"Label" ret (ß gen.newLabel())]
                             (let [#_"Label" finallyLabel (ß gen.newLabel())]
-                                (loop-when-recur [(ß int i = 0)] (ß i < catchExprs.count()) [(ß i++)]
+                                (loop-when-recur [(ß int i = 0)] (ß i < catchExprs.count()) [(ß i = i + 1)]
                                     (let [#_"CatchClause" clause (ß (CatchClause) catchExprs.nth(i))]
                                         (ß clause.label = gen.newLabel())
                                         (ß clause.endLabel = gen.newLabel())
@@ -7479,7 +7524,7 @@
                                 )
                                 (ß gen.goTo(ret))
 
-                                (loop-when-recur [(ß int i = 0)] (ß i < catchExprs.count()) [(ß i++)]
+                                (loop-when-recur [(ß int i = 0)] (ß i < catchExprs.count()) [(ß i = i + 1)]
                                     (let [#_"CatchClause" clause (ß (CatchClause) catchExprs.nth(i))]
                                         (ß gen.mark(clause.label))
                                         ;; exception should be on stack
@@ -7510,20 +7555,20 @@
                                     (ß gen.visitVarInsn(OBJECT_TYPE.getOpcode(Opcodes.ILOAD), retLocal))
                                 )
                                 (ß gen.mark(end))
-                                (loop-when-recur [(ß int i = 0)] (ß i < catchExprs.count()) [(ß i++)]
+                                (loop-when-recur [(ß int i = 0)] (ß i < catchExprs.count()) [(ß i = i + 1)]
                                     (let [#_"CatchClause" clause (ß (CatchClause) catchExprs.nth(i))]
                                         (ß gen.visitTryCatchBlock(startTry, endTry, clause.label, clause.c.getName().replace(\., \/)))
                                     )
                                 )
                                 (when (ß finallyExpr != nil)
                                     (ß gen.visitTryCatchBlock(startTry, endTry, finallyLabel, nil))
-                                    (loop-when-recur [(ß int i = 0)] (ß i < catchExprs.count()) [(ß i++)]
+                                    (loop-when-recur [(ß int i = 0)] (ß i < catchExprs.count()) [(ß i = i + 1)]
                                         (let [#_"CatchClause" clause (ß (CatchClause) catchExprs.nth(i))]
                                             (ß gen.visitTryCatchBlock(clause.label, clause.endLabel, finallyLabel, nil))
                                         )
                                     )
                                 )
-                                (loop-when-recur [(ß int i = 0)] (ß i < catchExprs.count()) [(ß i++)]
+                                (loop-when-recur [(ß int i = 0)] (ß i < catchExprs.count()) [(ß i = i + 1)]
                                     (let [#_"CatchClause" clause (ß (CatchClause) catchExprs.nth(i))]
                                         (ß gen.visitLocalVariable(clause.lb.name, "Ljava/lang/Object;", nil, clause.label, clause.endLabel, clause.lb.idx))
                                     )
@@ -7707,7 +7752,7 @@
     (§ defn #_"boolean" subsumes [#_"Class[]" c1, #_"Class[]" c2]
         ;; presumes matching lengths
         (let [#_"Boolean" better false]
-            (loop-when-recur [(ß int i = 0)] (ß i < c1.length) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < c1.length) [(ß i = i + 1)]
                 (when (ß c1[i] != c2[i]) ;; || c2[i].isPrimitive() && c1[i] == Object.class
                     (if (ß !c1[i].isPrimitive() && c2[i].isPrimitive() || c2[i].isAssignableFrom(c1[i]))
                         (do
@@ -7724,8 +7769,8 @@
     )
 
     (§ defn #_"String" getTypeStringForArgs [#_"IPersistentVector" args]
-        (let [#_"StringBuilder" sb (ß new StringBuilder())]
-            (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
+        (let [#_"StringBuilder" sb (StringBuilder.)]
+            (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i = i + 1)]
                 (let [#_"Expr" arg (ß (Expr) args.nth(i))]
                     (when (ß i > 0)
                         (ß sb.append(", "))
@@ -7742,17 +7787,17 @@
         (let [#_"int" matchIdx -1]
             (let [#_"boolean" tied false]
                 (let [#_"boolean" foundExact false]
-                    (loop-when-recur [(ß int i = 0)] (ß i < paramlists.size()) [(ß i++)]
+                    (loop-when-recur [(ß int i = 0)] (ß i < paramlists.size()) [(ß i = i + 1)]
                         (let [#_"boolean" match true]
                             (let [#_"ISeq" aseq (ß argexprs.seq())]
                                 (let [#_"int" exact 0]
-                                    (loop-when-recur [(ß int p = 0)] (ß match && p < argexprs.count() && aseq != nil) [(ß ++p, aseq = aseq.next())]
+                                    (loop-when-recur [(ß int p = 0)] (ß match && p < argexprs.count() && aseq != nil) [(ß p = p + 1, aseq = aseq.next())]
                                         (let [#_"Expr" arg (ß (Expr) aseq.first())]
                                             (let [#_"Class" aclass (ß arg.hasJavaClass() ? arg.getJavaClass() :or Object.class)]
                                                 (let [#_"Class" pclass (ß paramlists.get(i)[p])]
                                                     (if (ß arg.hasJavaClass() && aclass == pclass)
                                                         (do
-                                                            (ß exact++)
+                                                            (ß exact = exact + 1)
                                                         )
                                                         (do
                                                             (ß match = Reflector.paramArgTypeMatch(pclass, aclass))
@@ -7823,10 +7868,10 @@
             (ß this.args = args)
             (ß this.c = c)
             (let [#_"Constructor[]" allctors (ß c.getConstructors())]
-                (let [#_"ArrayList" ctors (ß new ArrayList())]
-                    (let [#_"ArrayList<Class[]>" params (ß new ArrayList())]
-                        (let [#_"ArrayList<Class>" rets (ß new ArrayList())]
-                            (loop-when-recur [(ß int i = 0)] (ß i < allctors.length) [(ß i++)]
+                (let [#_"ArrayList" ctors (ArrayList.)]
+                    (let [#_"ArrayList<Class[]>" params (ArrayList.)]
+                        (let [#_"ArrayList<Class>" rets (ArrayList.)]
+                            (loop-when-recur [(ß int i = 0)] (ß i < allctors.length) [(ß i = i + 1)]
                                 (let [#_"Constructor" ctor (ß allctors[i])]
                                     (when (ß ctor.getParameterTypes().length == args.count())
                                         (ß ctors.add(ctor))
@@ -7859,7 +7904,7 @@
         #_method
         (§ defn #_"Object" eval [this]
             (let [#_"Object[]" argvals (ß new Object[args.count()])]
-                (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
+                (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i = i + 1)]
                     (ß argvals[i] = ((Expr) args.nth(i)).eval())
                 )
                 (when (ß this.ctor != nil)
@@ -8206,7 +8251,7 @@
                         )
                     ))
                 )
-                (let [#_"StringBuilder" sb (ß new StringBuilder())]
+                (let [#_"StringBuilder" sb (StringBuilder.)]
                     (let [#_"boolean" first true]
                         (doseq [#_"Object" s mungeStrs]
                             (let [#_"String" escapeStr (ß (String) s)]
@@ -8227,7 +8272,7 @@
     )
 
     (§ defn #_"String" munge [#_"String" name]
-        (let [#_"StringBuilder" sb (ß new StringBuilder())]
+        (let [#_"StringBuilder" sb (StringBuilder.)]
             (doseq [#_"char" c (ß name.toCharArray())]
                 (let [#_"String" sub (ß (String) CHAR_MAP.valAt(c))]
                     (if (ß sub != nil)
@@ -8245,7 +8290,7 @@
     )
 
     (§ defn #_"String" demunge [#_"String" mungedName]
-        (let [#_"StringBuilder" sb (ß new StringBuilder())]
+        (let [#_"StringBuilder" sb (StringBuilder.)]
             (let [#_"Matcher" m (ß DEMUNGE_PATTERN.matcher(mungedName))]
                 (let [#_"int" lastMatchEnd 0]
                     (while (ß m.find())
@@ -8363,7 +8408,7 @@
         #_method
         (§ defn #_"Object" eval [this]
             (let [#_"IPersistentVector" ret (ß PersistentVector.EMPTY)]
-                (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
+                (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i = i + 1)]
                     (ß ret = (IPersistentVector) ret.cons(((Expr) args.nth(i)).eval()))
                 )
                 (ß ret.seq())
@@ -8405,7 +8450,7 @@
         #_method
         (§ defn #_"Object" eval [this]
             (let [#_"Object[]" ret (ß new Object[keyvals.count()])]
-                (loop-when-recur [(ß int i = 0)] (ß i < keyvals.count()) [(ß i++)]
+                (loop-when-recur [(ß int i = 0)] (ß i < keyvals.count()) [(ß i = i + 1)]
                     (ß ret[i] = ((Expr) keyvals.nth(i)).eval())
                 )
                 (ß RT.map(ret))
@@ -8517,7 +8562,7 @@
                                             (if valsConstant
                                                 (do
                                                     (let [#_"IPersistentMap" m (ß PersistentArrayMap.EMPTY)]
-                                                        (loop-when-recur [(ß int i = 0)] (ß i < keyvals.length()) [(ß i += 2)]
+                                                        (loop-when-recur [(ß int i = 0)] (ß i < keyvals.length()) [(ß i = i + 2)]
                                                             (ß m = m.assoc(((LiteralExpr)keyvals.nth(i)).val(), ((LiteralExpr)keyvals.nth(i + 1)).val()))
                                                         )
                                                         (ß new ConstantExpr(m))
@@ -8555,7 +8600,7 @@
         #_method
         (§ defn #_"Object" eval [this]
             (let [#_"Object[]" ret (ß new Object[keys.count()])]
-                (loop-when-recur [(ß int i = 0)] (ß i < keys.count()) [(ß i++)]
+                (loop-when-recur [(ß int i = 0)] (ß i < keys.count()) [(ß i = i + 1)]
                     (ß ret[i] = ((Expr) keys.nth(i)).eval())
                 )
                 (ß RT.set(ret))
@@ -8603,7 +8648,7 @@
                             constant
                             (do
                                 (let [#_"IPersistentSet" set (ß PersistentHashSet.EMPTY)]
-                                    (loop-when-recur [(ß int i = 0)] (ß i < keys.count()) [(ß i++)]
+                                    (loop-when-recur [(ß int i = 0)] (ß i < keys.count()) [(ß i = i + 1)]
                                         (let [#_"LiteralExpr" ve (ß (LiteralExpr)keys.nth(i))]
                                             (ß set = (IPersistentSet)set.cons(ve.val()))
                                         )
@@ -8635,7 +8680,7 @@
         #_method
         (§ defn #_"Object" eval [this]
             (let [#_"IPersistentVector" ret (ß PersistentVector.EMPTY)]
-                (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
+                (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i = i + 1)]
                     (ß ret = (IPersistentVector) ret.cons(((Expr) args.nth(i)).eval()))
                 )
                 ret
@@ -8646,7 +8691,7 @@
         (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (if (ß args.count() <= Tuple.MAX_SIZE)
                 (do
-                    (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
+                    (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i = i + 1)]
                         (ß ((Expr) args.nth(i)).emit(C.EXPRESSION, objx, gen))
                     )
                     (ß gen.invokeStatic(TUPLE_TYPE, createTupleMethods[args.count()]))
@@ -8676,7 +8721,7 @@
         (§ defn #_"Expr" parse [#_"C" context, #_"IPersistentVector" form]
             (let [#_"boolean" constant true]
                 (let [#_"IPersistentVector" args (ß PersistentVector.EMPTY)]
-                    (loop-when-recur [(ß int i = 0)] (ß i < form.count()) [(ß i++)]
+                    (loop-when-recur [(ß int i = 0)] (ß i < form.count()) [(ß i = i + 1)]
                         (let [#_"Expr" v (ß analyze((context == C.EVAL) ? context :or C.EXPRESSION, form.nth(i)))]
                             (ß args = (IPersistentVector) args.cons(v))
                             (when (ß !(v instanceof LiteralExpr))
@@ -8692,7 +8737,7 @@
                             constant
                             (do
                                 (let [#_"IPersistentVector" rv (ß PersistentVector.EMPTY)]
-                                    (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
+                                    (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i = i + 1)]
                                         (let [#_"LiteralExpr" ve (ß (LiteralExpr)args.nth(i))]
                                             (ß rv = rv.cons(ve.val()))
                                         )
@@ -8925,7 +8970,7 @@
             (let [#_"Method" ms (ß new Method("invokeStatic", getReturnType(), paramtypes))]
                 (if variadic
                     (do
-                        (loop-when-recur [(ß int i = 0)] (ß i < paramclasses.length - 1) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < paramclasses.length - 1) [(ß i = i + 1)]
                             (let [#_"Expr" e (ß (Expr) args.nth(i))]
                                 (if (ß maybePrimitiveType(e) == paramclasses[i])
                                     (do
@@ -9000,7 +9045,7 @@
                                     (let [#_"Class" retClass (ß method.getReturnType())]
                                         (let [#_"Class[]" paramClasses (ß method.getParameterTypes())]
                                             (let [#_"Type[]" paramTypes (ß new Type[paramClasses.length])]
-                                                (loop-when-recur [(ß int i = 0)] (ß i < paramClasses.length) [(ß i++)]
+                                                (loop-when-recur [(ß int i = 0)] (ß i < paramClasses.length) [(ß i = i + 1)]
                                                     (ß paramTypes[i] = Type.getType(paramClasses[i]))
                                                 )
 
@@ -9034,9 +9079,9 @@
         (§ field #_"boolean" tailPosition)
         (§ field #_"String" source)
 
-        (§ field #_"boolean" isProtocol (ß false))
-        (§ field #_"boolean" isDirect (ß false))
-        (§ field #_"int" siteIndex (ß -1))
+        (§ field #_"boolean" isProtocol false)
+        (§ field #_"boolean" isDirect false)
+        (§ field #_"int" siteIndex -1)
         (§ field #_"Class" protocolOn)
         (§ field #_"java.lang.reflect.Method" onMethod)
 
@@ -9128,7 +9173,7 @@
             (try
                 (let [#_"IFn" fn (ß (IFn) fexpr.eval())]
                     (let [#_"PersistentVector" argvs (ß PersistentVector.EMPTY)]
-                        (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i = i + 1)]
                             (ß argvs = argvs.cons(((Expr) args.nth(i)).eval()))
                         )
                         (ß fn.applyTo(RT.seq(Util.ret1(argvs, argvs = nil))))
@@ -9221,14 +9266,14 @@
 
         #_method
         (§ defn #_"void" emitArgsAndCall [this, #_"int" firstArgToEmit, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-            (loop-when-recur [(ß int i = firstArgToEmit)] (ß i < Math.min(MAX_POSITIONAL_ARITY, args.count())) [(ß i++)]
+            (loop-when-recur [(ß int i = firstArgToEmit)] (ß i < Math.min(MAX_POSITIONAL_ARITY, args.count())) [(ß i = i + 1)]
                 (let [#_"Expr" e (ß (Expr) args.nth(i))]
                     (ß e.emit(C.EXPRESSION, objx, gen))
                 )
             )
             (when (ß args.count() > MAX_POSITIONAL_ARITY)
                 (let [#_"PersistentVector" restArgs (ß PersistentVector.EMPTY)]
-                    (loop-when-recur [(ß int i = MAX_POSITIONAL_ARITY)] (ß i < args.count()) [(ß i++)]
+                    (loop-when-recur [(ß int i = MAX_POSITIONAL_ARITY)] (ß i < args.count()) [(ß i = i + 1)]
                         (ß restArgs = restArgs.cons(args.nth(i)))
                     )
                     (ß MethodExpr.emitArgsAsArray(restArgs, objx, gen))
@@ -9357,7 +9402,7 @@
         (§ def #_"Type" restFnType (ß Type.getType(RestFn.class)))
 
         ;; if there is a variadic overload (there can only be one) it is stored here
-        (§ field #_"FnMethod" variadicMethod (ß nil))
+        (§ field #_"FnMethod" variadicMethod nil)
         (§ field #_"IPersistentCollection" methods)
         (§ field- #_"boolean" hasPrimSigs)
         (§ field- #_"boolean" hasMeta)
@@ -9435,7 +9480,7 @@
                                                     )
                                                     (ß enclosingMethod != nil)
                                                     (do
-                                                        (ß name += "__" + RT.nextID())
+                                                        (ß name = name + "__" + RT.nextID())
                                                     )
                                                 )
                                             )
@@ -9445,7 +9490,7 @@
                                             (ß fn.name = basename + simpleName)
                                             (ß fn.internalName = fn.name.replace(\., \/))
                                             (ß fn.objtype = Type.getObjectType(fn.internalName))
-                                            (let [#_"ArrayList<String>" prims (ß new ArrayList())]
+                                            (let [#_"ArrayList<String>" prims (ArrayList.)]
                                                 (try
                                                     (ß Var.pushThreadBindings(RT.mapUniqueKeys(
                                                         #_map CONSTANTS, PersistentVector.EMPTY,
@@ -9505,7 +9550,7 @@
                                                                     )
                                                                 )
                                                                 (when (ß variadicMethod != nil)
-                                                                    (loop-when-recur [(ß int i = variadicMethod.reqParms.count() + 1)] (ß i <= MAX_POSITIONAL_ARITY) [(ß i++)]
+                                                                    (loop-when-recur [(ß int i = variadicMethod.reqParms.count() + 1)] (ß i <= MAX_POSITIONAL_ARITY) [(ß i = i + 1)]
                                                                         (when (ß methodArray[i] != nil)
                                                                             (throw (ß Util.runtimeException("Can't have fixed arity function with more params than variadic function")))
                                                                         )
@@ -9515,7 +9560,7 @@
                                                                 (ß fn.canBeDirect = (!fn.hasEnclosingMethod && fn.closes.count() == 0 && !usesThis))
 
                                                                 (let [#_"IPersistentCollection" methods nil]
-                                                                    (loop-when-recur [(ß int i = 0)] (ß i < methodArray.length) [(ß i++)]
+                                                                    (loop-when-recur [(ß int i = 0)] (ß i < methodArray.length) [(ß i = i + 1)]
                                                                         (when (ß methodArray[i] != nil)
                                                                             (ß methods = RT.conj(methods, methodArray[i]))
                                                                         )
@@ -9529,7 +9574,7 @@
                                                                             (when (ß fm.locals != nil)
                                                                                 (doseq [#_"LocalBinding" lb (ß (Collection<LocalBinding>)RT.keys(fm.locals))]
                                                                                     (when (ß lb.isArg)
-                                                                                        (ß lb.idx -= 1)
+                                                                                        (ß lb.idx = lb.idx - 1)
                                                                                     )
                                                                                 )
                                                                             )
@@ -9628,7 +9673,7 @@
         (§ field #_"IPersistentSet" volatiles (ß PersistentHashSet.EMPTY))
 
         ;; symbol->lb
-        (§ field #_"IPersistentMap" fields (ß nil))
+        (§ field #_"IPersistentMap" fields nil)
 
         ;; hinted fields
         (§ field #_"IPersistentVector" hintedFields (ß PersistentVector.EMPTY))
@@ -9643,12 +9688,12 @@
         (§ field #_"IPersistentSet" usedConstants (ß PersistentHashSet.EMPTY))
 
         (§ field #_"int" constantsID)
-        (§ field #_"int" altCtorDrops (ß 0))
+        (§ field #_"int" altCtorDrops 0)
 
         (§ field #_"IPersistentVector" keywordCallsites)
         (§ field #_"IPersistentVector" protocolCallsites)
         (§ field #_"IPersistentSet" varCallsites)
-        (§ field #_"boolean" onceOnly (ß false))
+        (§ field #_"boolean" onceOnly false)
 
         (§ field #_"Object" src)
 
@@ -9764,7 +9809,7 @@
                     )
                 )
                 (let [#_"Type[]" ret (ß new Type[tv.count()])]
-                    (loop-when-recur [(ß int i = 0)] (ß i < tv.count()) [(ß i++)]
+                    (loop-when-recur [(ß int i = 0)] (ß i < tv.count()) [(ß i = i + 1)]
                         (ß ret[i] = (Type) tv.nth(i))
                     )
                     ret
@@ -9844,7 +9889,7 @@
                                         )
 
                                         ;; static fields for callsites and thunks
-                                        (loop-when-recur [(ß int i = 0)] (ß i < protocolCallsites.count()) [(ß i++)]
+                                        (loop-when-recur [(ß int i = 0)] (ß i < protocolCallsites.count()) [(ß i = i + 1)]
                                             (ß cv.visitField(ACC_PRIVATE + ACC_STATIC, cachedClassName(i), CLASS_TYPE.getDescriptor(), nil, nil))
                                         )
 
@@ -9866,7 +9911,7 @@
                                                         )
 
                                                         (let [#_"int" a (ß supportsMeta() ? 2 :or 1)]
-                                                            (loop-when-recur [(ß ISeq s = RT.keys(closes))] (ß s != nil) [(ß s = s.next(), ++a)]
+                                                            (loop-when-recur [(ß ISeq s = RT.keys(closes))] (ß s != nil) [(ß s = s.next(), a = a + 1)]
                                                                 (let [#_"LocalBinding" lb (ß (LocalBinding) s.first())]
                                                                     (ß ctorgen.loadThis())
                                                                     (let [#_"Class" primc (ß lb.getPrimitiveType())]
@@ -9875,7 +9920,7 @@
                                                                                 (ß ctorgen.visitVarInsn(Type.getType(primc).getOpcode(Opcodes.ILOAD), a))
                                                                                 (ß ctorgen.putField(objtype, lb.name, Type.getType(primc)))
                                                                                 (when (ß primc == Long.TYPE || primc == Double.TYPE)
-                                                                                    (ß ++a)
+                                                                                    (ß a = a + 1)
                                                                                 )
                                                                             )
                                                                             (do
@@ -9898,7 +9943,7 @@
                                                                 ;; ctor that takes closed-overs and inits base + fields
                                                                 (let [#_"Type[]" ctorTypes (ß ctorTypes())]
                                                                     (let [#_"Type[]" altCtorTypes (ß new Type[ctorTypes.length-altCtorDrops])]
-                                                                        (loop-when-recur [(ß int i = 0)] (ß i < altCtorTypes.length) [(ß i++)]
+                                                                        (loop-when-recur [(ß int i = 0)] (ß i < altCtorTypes.length) [(ß i = i + 1)]
                                                                             (ß altCtorTypes[i] = ctorTypes[i])
                                                                         )
                                                                         (let [#_"Method" alt (ß new Method("<init>", Type.VOID_TYPE, altCtorTypes))]
@@ -9919,7 +9964,7 @@
 
                                                                             ;; alt ctor no __hash, __hasheq
                                                                             (ß altCtorTypes = new Type[ctorTypes.length-2])
-                                                                            (loop-when-recur [(ß int i = 0)] (ß i < altCtorTypes.length) [(ß i++)]
+                                                                            (loop-when-recur [(ß int i = 0)] (ß i < altCtorTypes.length) [(ß i = i + 1)]
                                                                                 (ß altCtorTypes[i] = ctorTypes[i])
                                                                             )
 
@@ -9945,7 +9990,7 @@
                                                                 ;; ctor that takes closed-overs but not meta
                                                                 (let [#_"Type[]" ctorTypes (ß ctorTypes())]
                                                                     (let [#_"Type[]" noMetaCtorTypes (ß new Type[ctorTypes.length-1])]
-                                                                        (loop-when-recur [(ß int i = 1)] (ß i < ctorTypes.length) [(ß i++)]
+                                                                        (loop-when-recur [(ß int i = 1)] (ß i < ctorTypes.length) [(ß i = i + 1)]
                                                                             (ß noMetaCtorTypes[i - 1] = ctorTypes[i])
                                                                         )
                                                                         (let [#_"Method" alt (ß new Method("<init>", Type.VOID_TYPE, noMetaCtorTypes))]
@@ -9978,7 +10023,7 @@
                                                                                     (ß gen.dup())
                                                                                     (ß gen.loadArg(0))
 
-                                                                                    (loop-when-recur [(ß ISeq s = RT.keys(closes))] (ß s != nil) [(ß s = s.next(), ++a)]
+                                                                                    (loop-when-recur [(ß ISeq s = RT.keys(closes))] (ß s != nil) [(ß s = s.next(), a = a + 1)]
                                                                                         (let [#_"LocalBinding" lb (ß (LocalBinding) s.first())]
                                                                                             (ß gen.loadThis())
                                                                                             (let [#_"Class" primc (ß lb.getPrimitiveType())]
@@ -10008,14 +10053,14 @@
                                                             (ß emitMethods(cv))
 
                                                             ;; static fields for constants
-                                                            (loop-when-recur [(ß int i = 0)] (ß i < constants.count()) [(ß i++)]
+                                                            (loop-when-recur [(ß int i = 0)] (ß i < constants.count()) [(ß i = i + 1)]
                                                                 (when (ß usedConstants.contains(i))
                                                                     (ß cv.visitField(ACC_PUBLIC + ACC_FINAL + ACC_STATIC, constantName(i), constantType(i).getDescriptor(), nil, nil))
                                                                 )
                                                             )
 
                                                             ;; static fields for lookup sites
-                                                            (loop-when-recur [(ß int i = 0)] (ß i < keywordCallsites.count()) [(ß i++)]
+                                                            (loop-when-recur [(ß int i = 0)] (ß i < keywordCallsites.count()) [(ß i = i + 1)]
                                                                 (ß cv.visitField(ACC_FINAL + ACC_STATIC, siteNameStatic(i), KEYWORD_LOOKUPSITE_TYPE.getDescriptor(), nil, nil))
                                                                 (ß cv.visitField(ACC_STATIC, thunkNameStatic(i), ILOOKUP_THUNK_TYPE.getDescriptor(), nil, nil))
                                                             )
@@ -10078,7 +10123,7 @@
 
         #_method
         (§ defn- #_"void" emitKeywordCallsites [this, #_"GeneratorAdapter" clinitgen]
-            (loop-when-recur [(ß int i = 0)] (ß i < keywordCallsites.count()) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < keywordCallsites.count()) [(ß i = i + 1)]
                 (let [#_"Keyword" k (ß (Keyword) keywordCallsites.nth(i))]
                     (ß clinitgen.newInstance(KEYWORD_LOOKUPSITE_TYPE))
                     (ß clinitgen.dup())
@@ -10109,7 +10154,7 @@
             (ß gen.push(((List) value).size()))
             (ß gen.newArray(OBJECT_TYPE))
             (let [#_"int" i 0]
-                (loop-when-recur [(ß Iterator it = ((List) value).iterator())] (ß it.hasNext()) [(ß i++)]
+                (loop-when-recur [(ß Iterator it = ((List) value).iterator())] (ß it.hasNext()) [(ß i = i + 1)]
                     (ß gen.dup())
                     (ß gen.push(i))
                     (ß emitValue(it.next(), gen))
@@ -10272,7 +10317,7 @@
                     )
                     (ß value instanceof IPersistentMap)
                     (do
-                        (let [#_"List" entries (ß new ArrayList())]
+                        (let [#_"List" entries (ArrayList.)]
                             (doseq [#_"Map.Entry" entry (ß (Set<Map.Entry>) ((Map) value).entrySet())]
                                 (ß entries.add(entry.getKey()))
                                 (ß entries.add(entry.getValue()))
@@ -10286,7 +10331,7 @@
                         (let [#_"IPersistentVector" args (ß (IPersistentVector) value)]
                             (if (ß args.count() <= Tuple.MAX_SIZE)
                                 (do
-                                    (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i++)]
+                                    (loop-when-recur [(ß int i = 0)] (ß i < args.count()) [(ß i = i + 1)]
                                         (ß emitValue(args.nth(i), gen))
                                     )
                                     (ß gen.invokeStatic(TUPLE_TYPE, createTupleMethods[args.count()]))
@@ -10366,7 +10411,7 @@
             (try
                 (ß Var.pushThreadBindings(RT.map(RT.PRINT_DUP, RT.T)))
 
-                (loop-when-recur [(ß int i = 0)] (ß i < constants.count()) [(ß i++)]
+                (loop-when-recur [(ß int i = 0)] (ß i < constants.count()) [(ß i = i + 1)]
                     (when (ß usedConstants.contains(i))
                         (ß emitValue(constants.nth(i), clinitgen))
                         (ß clinitgen.checkCast(constantType(i)))
@@ -10735,7 +10780,7 @@
                             )
                         )
                     )
-                    (ß OBJECT_TYPE)
+                    OBJECT_TYPE
                 )
             )
         )
@@ -10772,7 +10817,7 @@
     (class-ns FnMethod (§ extends ObjMethod)
         ;; localbinding->localbinding
         (§ field #_"PersistentVector" reqParms (ß PersistentVector.EMPTY))
-        (§ field #_"LocalBinding" restParm (ß nil))
+        (§ field #_"LocalBinding" restParm nil)
         (§ field #_"Type[]" argtypes)
         (§ field #_"Class[]" argclasses)
         (§ field #_"Class" retClass)
@@ -10808,8 +10853,8 @@
         )
 
         (§ defn #_"String" primInterface [#_"IPersistentVector" arglist]
-            (let [#_"StringBuilder" sb (ß new StringBuilder())]
-                (loop-when-recur [(ß int i = 0)] (ß i < arglist.count()) [(ß i++)]
+            (let [#_"StringBuilder" sb (StringBuilder.)]
+                (loop-when-recur [(ß int i = 0)] (ß i < arglist.count()) [(ß i = i + 1)]
                     (ß sb.append(classChar(tagOf(arglist.nth(i)))))
                 )
                 (ß sb.append(classChar(tagOf(arglist))))
@@ -10891,9 +10936,9 @@
                                 )
                                 (let [#_"PSTATE" state (ß PSTATE.REQ)]
                                     (let [#_"PersistentVector" argLocals (ß PersistentVector.EMPTY)]
-                                        (let [#_"ArrayList<Type>" argtypes (ß new ArrayList())]
-                                            (let [#_"ArrayList<Class>" argclasses (ß new ArrayList())]
-                                                (loop-when-recur [(ß int i = 0)] (ß i < parms.count()) [(ß i++)]
+                                        (let [#_"ArrayList<Type>" argtypes (ArrayList.)]
+                                            (let [#_"ArrayList<Class>" argclasses (ArrayList.)]
+                                                (loop-when-recur [(ß int i = 0)] (ß i < parms.count()) [(ß i = i + 1)]
                                                     (when (ß !(parms.nth(i) instanceof Symbol))
                                                         (throw (ß new IllegalArgumentException("fn params must be Symbols")))
                                                     )
@@ -10963,7 +11008,7 @@
                                                 (ß method.argtypes = argtypes.toArray(new Type[argtypes.size()]))
                                                 (ß method.argclasses = argclasses.toArray(new Class[argtypes.size()]))
                                                 (when (ß method.prim != nil)
-                                                    (loop-when-recur [(ß int i = 0)] (ß i < method.argclasses.length) [(ß i++)]
+                                                    (loop-when-recur [(ß int i = 0)] (ß i < method.argclasses.length) [(ß i = i + 1)]
                                                         (when (ß method.argclasses[i] == long.class || method.argclasses[i] == double.class)
                                                             (ß getAndIncLocalNum())
                                                         )
@@ -11036,7 +11081,7 @@
                                 ;; todo don't hardwire EXCEPTION_TYPES
                                 (ß gen = new GeneratorAdapter(ACC_PUBLIC, m, nil, EXCEPTION_TYPES, cv))
                                 (ß gen.visitCode())
-                                (loop-when-recur [(ß int i = 0)] (ß i < argtypes.length) [(ß i++)]
+                                (loop-when-recur [(ß int i = 0)] (ß i < argtypes.length) [(ß i = i + 1)]
                                     (ß gen.loadArg(i))
                                     (ß HostExpr.emitUnboxArg(fn, gen, argclasses[i]))
                                     (when (ß !argclasses[i].isPrimitive())
@@ -11057,12 +11102,12 @@
                                         (when (ß retClass == double.class || retClass == long.class)
                                             (ß returnType = getReturnType())
                                         )
-                                        (let [#_"else" returnType (ß OBJECT_TYPE)]
+                                        (let [#_"else" returnType OBJECT_TYPE]
                                             (let [#_"Method" pm (ß new Method("invokePrim", returnType, argtypes))]
                                                 ;; todo don't hardwire EXCEPTION_TYPES
                                                 (ß gen = new GeneratorAdapter(ACC_PUBLIC + ACC_FINAL, pm, nil, EXCEPTION_TYPES, cv))
                                                 (ß gen.visitCode())
-                                                (loop-when-recur [(ß int i = 0)] (ß i < argtypes.length) [(ß i++)]
+                                                (loop-when-recur [(ß int i = 0)] (ß i < argtypes.length) [(ß i = i + 1)]
                                                     (ß gen.loadArg(i))
                                                     (when (ß !argclasses[i].isPrimitive())
                                                         (ß gen.visitInsn(Opcodes.ACONST_NULL))
@@ -11129,7 +11174,7 @@
                                 (ß gen = new GeneratorAdapter(ACC_PUBLIC, m, nil, EXCEPTION_TYPES, cv))
                                 (ß gen.visitCode())
                                 (ß gen.loadThis())
-                                (loop-when-recur [(ß int i = 0)] (ß i < argtypes.length) [(ß i++)]
+                                (loop-when-recur [(ß int i = 0)] (ß i < argtypes.length) [(ß i = i + 1)]
                                     (ß gen.loadArg(i))
                                     (ß HostExpr.emitUnboxArg(fn, gen, argclasses[i]))
                                 )
@@ -11210,14 +11255,14 @@
             (when (ß prim != nil) ;; objx.isStatic
                 (§ return (ß Type.getType(retClass)))
             )
-            (ß OBJECT_TYPE)
+            OBJECT_TYPE
         )
 
         #_method
         (§ defn #_"Type[]" getArgTypes [this]
             (when (ß isVariadic() && reqParms.count() == MAX_POSITIONAL_ARITY)
                 (let [#_"Type[]" ret (ß new Type[MAX_POSITIONAL_ARITY + 1])]
-                    (loop-when-recur [(ß int i = 0)] (ß i < MAX_POSITIONAL_ARITY + 1) [(ß i++)]
+                    (loop-when-recur [(ß int i = 0)] (ß i < MAX_POSITIONAL_ARITY + 1) [(ß i = i + 1)]
                         (ß ret[i] = OBJECT_TYPE)
                     )
                     (§ return ret)
@@ -11238,16 +11283,16 @@
         ;; the closed over locals need to be propagated to the enclosing objx
         (§ field #_"ObjMethod" parent)
         ;; localbinding->localbinding
-        (§ field #_"IPersistentMap" locals (ß nil))
+        (§ field #_"IPersistentMap" locals nil)
         ;; num->localbinding
-        (§ field #_"IPersistentMap" indexlocals (ß nil))
-        (§ field #_"Expr" body (ß nil))
+        (§ field #_"IPersistentMap" indexlocals nil)
+        (§ field #_"Expr" body nil)
         (§ field #_"ObjExpr" objx)
         (§ field #_"PersistentVector" argLocals)
-        (§ field #_"int" maxLocal (ß 0))
+        (§ field #_"int" maxLocal 0)
         (§ field #_"int" line)
         (§ field #_"int" column)
-        (§ field #_"boolean" usesThis (ß false))
+        (§ field #_"boolean" usesThis false)
         (§ field #_"PersistentHashSet" localsUsedInCatchFinally (ß PersistentHashSet.EMPTY))
         #_protected
         (§ field #_"IPersistentMap" methodMeta)
@@ -11345,10 +11390,14 @@
             )
         )
 
-        (§ abstract int numParams())
-        (§ abstract String getMethodName())
-        (§ abstract Type getReturnType())
-        (§ abstract Type[] getArgTypes())
+        #_abstract
+        (§ defn #_"int" numParams [this])
+        #_abstract
+        (§ defn #_"String" getMethodName [this])
+        #_abstract
+        (§ defn #_"Type" getReturnType [this])
+        #_abstract
+        (§ defn #_"Type[]" getArgTypes [this])
 
         #_method
         (§ defn #_"void" emit [this, #_"ObjExpr" fn, #_"ClassVisitor" cv]
@@ -11391,7 +11440,7 @@
 
         #_method
         (§ defn #_"void" emitClearLocalsOld [this, #_"GeneratorAdapter" gen]
-            (loop-when-recur [(ß int i = 0)] (ß i < argLocals.count()) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < argLocals.count()) [(ß i = i + 1)]
                 (let [#_"LocalBinding" lb (ß (LocalBinding) argLocals.nth(i))]
                     (when (ß !localsUsedInCatchFinally.contains(lb.idx) && lb.getPrimitiveType() == nil)
                         (ß gen.visitInsn(Opcodes.ACONST_NULL))
@@ -11399,7 +11448,7 @@
                     )
                 )
             )
-            (loop-when-recur [(ß int i = numParams() + 1)] (ß i < maxLocal + 1) [(ß i++)]
+            (loop-when-recur [(ß int i = numParams() + 1)] (ß i < maxLocal + 1) [(ß i = i + 1)]
                 (when (ß !localsUsedInCatchFinally.contains(i))
                     (let [#_"LocalBinding" b (ß (LocalBinding) RT.get(indexlocals, i))]
                         (when (ß b == nil || maybePrimitiveType(b.init) == nil)
@@ -11429,8 +11478,8 @@
         (§ field #_"boolean" isArg)
         (§ field #_"PathNode" clearPathRoot)
         (§ field #_"boolean" canBeCleared (ß !RT.booleanCast(getCompilerOption(disableLocalsClearingKey))))
-        (§ field #_"boolean" recurMistmatch (ß false))
-        (§ field #_"boolean" used (ß false))
+        (§ field #_"boolean" recurMistmatch false)
+        (§ field #_"boolean" used false)
 
         (§ constructor #_"LocalBinding" LocalBinding [#_"int" num, #_"Symbol" sym, #_"Symbol" tag, #_"Expr" init, #_"boolean" isArg, #_"PathNode" clearPathRoot]
             (when (ß maybePrimitiveType(init) != nil && tag != nil)
@@ -11485,7 +11534,7 @@
 
         (§ field #_"PathNode" clearPath)
         (§ field #_"PathNode" clearRoot)
-        (§ field #_"boolean" shouldClear (ß false))
+        (§ field #_"boolean" shouldClear false)
 
         (§ constructor #_"LocalBindingExpr" LocalBindingExpr [#_"LocalBinding" b, #_"Symbol" tag]
             (when (ß b.getPrimitiveType() != nil && tag != nil)
@@ -11637,7 +11686,7 @@
 
         #_method
         (§ defn #_"void" emitUnboxed [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-            (loop-when-recur [(ß int i = 0)] (ß i < exprs.count() - 1) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < exprs.count() - 1) [(ß i = i + 1)]
                 (let [#_"Expr" e (ß (Expr) exprs.nth(i))]
                     (ß e.emit(C.STATEMENT, objx, gen))
                 )
@@ -11650,7 +11699,7 @@
 
         #_method
         (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-            (loop-when-recur [(ß int i = 0)] (ß i < exprs.count() - 1) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < exprs.count() - 1) [(ß i = i + 1)]
                 (let [#_"Expr" e (ß (Expr) exprs.nth(i))]
                     (ß e.emit(C.STATEMENT, objx, gen))
                 )
@@ -11733,7 +11782,7 @@
 
                                     ;; pre-seed env (like Lisp labels)
                                     (let [#_"PersistentVector" lbs (ß PersistentVector.EMPTY)]
-                                        (loop-when-recur [(ß int i = 0)] (ß i < bindings.count()) [(ß i += 2)]
+                                        (loop-when-recur [(ß int i = 0)] (ß i < bindings.count()) [(ß i = i + 2)]
                                             (when (ß !(bindings.nth(i) instanceof Symbol))
                                                 (throw (ß new IllegalArgumentException("Bad binding form, expected symbol, got: " + bindings.nth(i))))
                                             )
@@ -11748,7 +11797,7 @@
                                             )
                                         )
                                         (let [#_"PersistentVector" bindingInits (ß PersistentVector.EMPTY)]
-                                            (loop-when-recur [(ß int i = 0)] (ß i < bindings.count()) [(ß i += 2)]
+                                            (loop-when-recur [(ß int i = 0)] (ß i < bindings.count()) [(ß i = i + 2)]
                                                 (let [#_"Symbol" sym (ß (Symbol) bindings.nth(i))]
                                                     (let [#_"Expr" init (ß analyze(C.EXPRESSION, bindings.nth(i + 1), sym.name))]
                                                         (let [#_"LocalBinding" lb (ß (LocalBinding) lbs.nth(i / 2))]
@@ -11781,7 +11830,7 @@
 
         #_method
         (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-            (loop-when-recur [(ß int i = 0)] (ß i < bindingInits.count()) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < bindingInits.count()) [(ß i = i + 1)]
                 (let [#_"BindingInit" bi (ß (BindingInit) bindingInits.nth(i))]
                     (ß gen.visitInsn(Opcodes.ACONST_NULL))
                     (ß gen.visitVarInsn(OBJECT_TYPE.getOpcode(Opcodes.ISTORE), bi.binding.idx))
@@ -11789,7 +11838,7 @@
             )
 
             (let [#_"IPersistentSet" lbset (ß PersistentHashSet.EMPTY)]
-                (loop-when-recur [(ß int i = 0)] (ß i < bindingInits.count()) [(ß i++)]
+                (loop-when-recur [(ß int i = 0)] (ß i < bindingInits.count()) [(ß i = i + 1)]
                     (let [#_"BindingInit" bi (ß (BindingInit) bindingInits.nth(i))]
                         (ß lbset = (IPersistentSet) lbset.cons(bi.binding))
                         (ß bi.init.emit(C.EXPRESSION, objx, gen))
@@ -11797,7 +11846,7 @@
                     )
                 )
 
-                (loop-when-recur [(ß int i = 0)] (ß i < bindingInits.count()) [(ß i++)]
+                (loop-when-recur [(ß int i = 0)] (ß i < bindingInits.count()) [(ß i = i + 1)]
                     (let [#_"BindingInit" bi (ß (BindingInit) bindingInits.nth(i))]
                         (let [#_"ObjExpr" fe (ß (ObjExpr) bi.init)]
                             (ß gen.visitVarInsn(OBJECT_TYPE.getOpcode(Opcodes.ILOAD), bi.binding.idx))
@@ -11814,7 +11863,7 @@
                             (let [#_"BindingInit" bi (ß (BindingInit) bis.first())]
                                 (let [#_"String" lname (ß bi.binding.name)]
                                     (when (ß lname.endsWith("__auto__"))
-                                        (ß lname += RT.nextID())
+                                        (ß lname = lname + RT.nextID())
                                     )
                                     (let [#_"Class" primc (ß maybePrimitiveType(bi.init))]
                                         (if (ß primc != nil)
@@ -11882,7 +11931,7 @@
                                     (let [#_"IPersistentMap" backupMethodLocals (ß method.locals)]
                                         (let [#_"IPersistentMap" backupMethodIndexLocals (ß method.indexlocals)]
                                             (let [#_"IPersistentVector" recurMismatches (ß PersistentVector.EMPTY)]
-                                                (loop-when-recur [(ß int i = 0)] (ß i < bindings.count() / 2) [(ß i++)]
+                                                (loop-when-recur [(ß int i = 0)] (ß i < bindings.count() / 2) [(ß i = i + 1)]
                                                     (ß recurMismatches = recurMismatches.cons(RT.F))
                                                 )
 
@@ -11904,7 +11953,7 @@
 
                                                                         (let [#_"PersistentVector" bindingInits (ß PersistentVector.EMPTY)]
                                                                             (let [#_"PersistentVector" loopLocals (ß PersistentVector.EMPTY)]
-                                                                                (loop-when-recur [(ß int i = 0)] (ß i < bindings.count()) [(ß i += 2)]
+                                                                                (loop-when-recur [(ß int i = 0)] (ß i < bindings.count()) [(ß i = i + 2)]
                                                                                     (when (ß !(bindings.nth(i) instanceof Symbol))
                                                                                         (throw (ß new IllegalArgumentException("Bad binding form, expected symbol, got: " + bindings.nth(i))))
                                                                                     )
@@ -11973,7 +12022,7 @@
                                                                                             (finally
                                                                                                 (when isLoop
                                                                                                     (ß Var.popThreadBindings())
-                                                                                                    (loop-when-recur [(ß int i = 0)] (ß i < loopLocals.count()) [(ß i++)]
+                                                                                                    (loop-when-recur [(ß int i = 0)] (ß i < loopLocals.count()) [(ß i = i + 1)]
                                                                                                         (let [#_"LocalBinding" lb (ß (LocalBinding) loopLocals.nth(i))]
                                                                                                             (when (ß lb.recurMistmatch)
                                                                                                                 (ß recurMismatches = (IPersistentVector)recurMismatches.assoc(i, RT.T))
@@ -12031,7 +12080,7 @@
         #_method
         (§ defn #_"void" doEmit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"boolean" emitUnboxed]
             (let [(ß HashMap<BindingInit, Label> bindingLabels = new HashMap())]
-                (loop-when-recur [(ß int i = 0)] (ß i < bindingInits.count()) [(ß i++)]
+                (loop-when-recur [(ß int i = 0)] (ß i < bindingInits.count()) [(ß i = i + 1)]
                     (let [#_"BindingInit" bi (ß (BindingInit) bindingInits.nth(i))]
                         (let [#_"Class" primc (ß maybePrimitiveType(bi.init))]
                             (if (ß primc != nil)
@@ -12089,7 +12138,7 @@
                             (let [#_"BindingInit" bi (ß (BindingInit) bis.first())]
                                 (let [#_"String" lname (ß bi.binding.name)]
                                     (when (ß lname.endsWith("__auto__"))
-                                        (ß lname += RT.nextID())
+                                        (ß lname = lname + RT.nextID())
                                     )
                                     (let [#_"Class" primc (ß maybePrimitiveType(bi.init))]
                                         (if (ß primc != nil)
@@ -12152,9 +12201,9 @@
         (§ defn #_"void" emit [this, #_"C" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
             (let [#_"Label" loopLabel (ß (Label) LOOP_LABEL.deref())]
                 (when (ß loopLabel == nil)
-                    (throw (ß new IllegalStateException()))
+                    (throw (IllegalStateException.))
                 )
-                (loop-when-recur [(ß int i = 0)] (ß i < loopLocals.count()) [(ß i++)]
+                (loop-when-recur [(ß int i = 0)] (ß i < loopLocals.count()) [(ß i = i + 1)]
                     (let [#_"LocalBinding" lb (ß (LocalBinding) loopLocals.nth(i))]
                         (let [#_"Expr" arg (ß (Expr) args.nth(i))]
                             (if (ß lb.getPrimitiveType() != nil)
@@ -12201,7 +12250,7 @@
                     )
                 )
 
-                (loop-when-recur [(ß int i = loopLocals.count() - 1)] (ß i >= 0) [(ß i--)]
+                (loop-when-recur [(ß int i = loopLocals.count() - 1)] (ß i >= 0) [(ß i = i - 1)]
                     (let [#_"LocalBinding" lb (ß (LocalBinding) loopLocals.nth(i))]
                         (let [#_"Class" primc (ß lb.getPrimitiveType())]
                             (if (ß lb.isArg)
@@ -12235,7 +12284,7 @@
 
         #_method
         (§ defn #_"Class" getJavaClass [this]
-            (ß RECUR_CLASS)
+            RECUR_CLASS
         )
 
         (class-ns Parser (§ implements IParser)
@@ -12259,7 +12308,7 @@
                                         (when (ß args.count() != loopLocals.count())
                                             (throw (ß new IllegalArgumentException(String.format("Mismatched argument count to recur, expected: %d args, got: %d", loopLocals.count(), args.count()))))
                                         )
-                                        (loop-when-recur [(ß int i = 0)] (ß i < loopLocals.count()) [(ß i++)]
+                                        (loop-when-recur [(ß int i = 0)] (ß i < loopLocals.count()) [(ß i = i + 1)]
                                             (let [#_"LocalBinding" lb (ß (LocalBinding) loopLocals.nth(i))]
                                                 (let [#_"Class" primc (ß lb.getPrimitiveType())]
                                                     (when (ß primc != nil)
@@ -12357,15 +12406,15 @@
             )
             (cond (ß form == nil)
                 (do
-                    (§ return (ß NIL_EXPR))
+                    (§ return NIL_EXPR)
                 )
                 (ß form == Boolean.TRUE)
                 (do
-                    (§ return (ß TRUE_EXPR))
+                    (§ return TRUE_EXPR)
                 )
                 (ß form == Boolean.FALSE)
                 (do
-                    (§ return (ß FALSE_EXPR))
+                    (§ return FALSE_EXPR)
                 )
             )
             (let [#_"Class" fclass (ß form.getClass())]
@@ -12513,14 +12562,14 @@
     )
 
     #_volatile
-    (§ def- #_"Var" MACRO_CHECK (ß nil))
+    (§ def- #_"Var" MACRO_CHECK nil)
     #_volatile
-    (§ def- #_"boolean" MACRO_CHECK_LOADING (ß false))
-    (§ def- #_"Object" MACRO_CHECK_LOCK (ß new Object()))
+    (§ def- #_"boolean" MACRO_CHECK_LOADING false)
+    (§ def- #_"Object" MACRO_CHECK_LOCK (Object.))
 
     (§ defn- #_"Var" ensureMacroCheck [] (§ throws ClassNotFoundException, IOException)
         (when (ß MACRO_CHECK == nil)
-            (§ sync (ß MACRO_CHECK_LOCK)
+            (§ sync MACRO_CHECK_LOCK
                 (when (ß MACRO_CHECK == nil)
                     (ß MACRO_CHECK_LOADING = true)
                     (ß RT.load("cloiure/spec/alpha"))
@@ -12530,7 +12579,7 @@
                 )
             )
         )
-        (ß MACRO_CHECK)
+        MACRO_CHECK
     )
 
     (§ defn #_"void" checkSpecs [#_"Var" v, #_"ISeq" form]
@@ -13219,7 +13268,7 @@
     (§ defn- #_"Object" readerOpts [#_"String" sourceName]
         (if (ß sourceName != nil && sourceName.endsWith(".clic"))
             (do
-                (ß OPTS_COND_ALLOWED)
+                OPTS_COND_ALLOWED
             )
             (do
                 nil
@@ -13292,8 +13341,8 @@
             )
             (let [#_"String[]" dirs (ß internalName.split("/"))]
                 (let [#_"String" p genPath]
-                    (loop-when-recur [(ß int i = 0)] (ß i < dirs.length - 1) [(ß i++)]
-                        (ß p += File.separator + dirs[i])
+                    (loop-when-recur [(ß int i = 0)] (ß i < dirs.length - 1) [(ß i = i + 1)]
+                        (ß p = p + File.separator + dirs[i])
                         (ß (new File(p)).mkdir())
                     )
                     (let [#_"String" path (ß genPath + File.separator + internalName + ".class")]
@@ -13427,7 +13476,7 @@
                                             (ß gen.endMethod())
 
                                             ;; static fields for constants
-                                            (loop-when-recur [(ß int i = 0)] (ß i < objx.constants.count()) [(ß i++)]
+                                            (loop-when-recur [(ß int i = 0)] (ß i < objx.constants.count()) [(ß i = i + 1)]
                                                 (when (ß objx.usedConstants.contains(i))
                                                     (ß cv.visitField(ACC_PUBLIC + ACC_FINAL + ACC_STATIC, objx.constantName(i), objx.constantType(i).getDescriptor(), nil, nil))
                                                 )
@@ -13436,16 +13485,16 @@
                                             (let [(ß int INITS_PER = 100)]
                                                 (let [#_"int" numInits (ß  objx.constants.count() / INITS_PER)]
                                                     (when (ß objx.constants.count() % INITS_PER != 0)
-                                                        (ß ++numInits)
+                                                        (ß numInits = numInits + 1)
                                                     )
 
-                                                    (loop-when-recur [(ß int n = 0)] (ß n < numInits) [(ß n++)]
+                                                    (loop-when-recur [(ß int n = 0)] (ß n < numInits) [(ß n = n + 1)]
                                                         (let [#_"GeneratorAdapter" clinitgen (ß new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, Method.getMethod("void __init" + n + "()"), nil, nil, cv))]
                                                             (ß clinitgen.visitCode())
                                                             (try
                                                                 (ß Var.pushThreadBindings(RT.map(RT.PRINT_DUP, RT.T)))
 
-                                                                (loop-when-recur [(ß int i = n * INITS_PER)] (ß i < objx.constants.count() && i < (n + 1) * INITS_PER) [(ß i++)]
+                                                                (loop-when-recur [(ß int i = n * INITS_PER)] (ß i < objx.constants.count() && i < (n + 1) * INITS_PER) [(ß i = i + 1)]
                                                                     (when (ß objx.usedConstants.contains(i))
                                                                         (ß objx.emitValue(objx.constants.nth(i), clinitgen))
                                                                         (ß clinitgen.checkCast(objx.constantType(i)))
@@ -13468,7 +13517,7 @@
                                                             (let [#_"Label" endTry (ß clinitgen.newLabel())]
                                                                 (let [#_"Label" end (ß clinitgen.newLabel())]
                                                                     (let [#_"Label" finallyLabel (ß clinitgen.newLabel())]
-                                                                        (loop-when-recur [(ß int n = 0)] (ß n < numInits) [(ß n++)]
+                                                                        (loop-when-recur [(ß int n = 0)] (ß n < numInits) [(ß n = n + 1)]
                                                                             (ß clinitgen.invokeStatic(objx.objtype, Method.getMethod("void __init" + n + "()")))
                                                                         )
 
@@ -13611,7 +13660,7 @@
                 (when (ß fieldSyms != nil)
                     (let [#_"IPersistentMap" fmap (ß PersistentHashMap.EMPTY)]
                         (let [#_"Object[]" closesvec (ß new Object[2 * fieldSyms.count()])]
-                            (loop-when-recur [(ß int i = 0)] (ß i < fieldSyms.count()) [(ß i++)]
+                            (loop-when-recur [(ß int i = 0)] (ß i < fieldSyms.count()) [(ß i = i + 1)]
                                 (let [#_"Symbol" sym (ß (Symbol) fieldSyms.nth(i))]
                                     (let [#_"LocalBinding" lb (ß new LocalBinding(-1, sym, nil, new MethodParamExpr(tagClass(tagOf(sym))), false, nil))]
                                         (ß fmap = fmap.assoc(sym, lb))
@@ -13625,8 +13674,8 @@
                             ;; use array map to preserve ctor order
                             (ß ret.closes = new PersistentArrayMap(closesvec))
                             (ß ret.fields = fmap)
-                            (loop-when-recur [(ß int i = fieldSyms.count() - 1)] (ß i >= 0 && (((Symbol)fieldSyms.nth(i)).name.equals("__meta") || ((Symbol)fieldSyms.nth(i)).name.equals("__extmap") || ((Symbol)fieldSyms.nth(i)).name.equals("__hash") || ((Symbol)fieldSyms.nth(i)).name.equals("__hasheq"))) [(ß --i)]
-                                (ß ret.altCtorDrops++)
+                            (loop-when-recur [(ß int i = fieldSyms.count() - 1)] (ß i >= 0 && (((Symbol)fieldSyms.nth(i)).name.equals("__meta") || ((Symbol)fieldSyms.nth(i)).name.equals("__extmap") || ((Symbol)fieldSyms.nth(i)).name.equals("__hash") || ((Symbol)fieldSyms.nth(i)).name.equals("__hasheq"))) [(ß i = i - 1)]
+                                (ß ret.altCtorDrops = ret.altCtorDrops + 1)
                             )
                         )
                     )
@@ -13760,7 +13809,7 @@
                             (when (ß ret.altCtorDrops > 0)
                                 (let [#_"Type[]" ctorTypes (ß ret.ctorTypes())]
                                     (let [#_"Type[]" altCtorTypes (ß new Type[ctorTypes.length-ret.altCtorDrops])]
-                                        (loop-when-recur [(ß int i = 0)] (ß i < altCtorTypes.length) [(ß i++)]
+                                        (loop-when-recur [(ß int i = 0)] (ß i < altCtorTypes.length) [(ß i = i + 1)]
                                             (ß altCtorTypes[i] = ctorTypes[i])
                                         )
                                         (let [#_"Method" alt (ß new Method("<init>", Type.VOID_TYPE, altCtorTypes))]
@@ -13781,7 +13830,7 @@
 
                                             ;; alt ctor no __hash, __hasheq
                                             (ß altCtorTypes = new Type[ctorTypes.length-2])
-                                            (loop-when-recur [(ß int i = 0)] (ß i < altCtorTypes.length) [(ß i++)]
+                                            (loop-when-recur [(ß int i = 0)] (ß i < altCtorTypes.length) [(ß i = i + 1)]
                                                 (ß altCtorTypes[i] = ctorTypes[i])
                                             )
 
@@ -13819,7 +13868,7 @@
         (§ defn #_"String[]" interfaceNames [#_"IPersistentVector" interfaces]
             (let [#_"int" icnt (ß interfaces.count())]
                 (let [#_"String[]" inames (ß (icnt > 0) ? new String[icnt] :or nil)]
-                    (loop-when-recur [(ß int i = 0)] (ß i < icnt) [(ß i++)]
+                    (loop-when-recur [(ß int i = 0)] (ß i < icnt) [(ß i = i + 1)]
                         (ß inames[i] = slashname((Class) interfaces.nth(i)))
                     )
                     inames
@@ -13850,7 +13899,7 @@
                                         (let [#_"MethodVisitor" mv (ß cv.visitMethod(ACC_PUBLIC + ACC_STATIC, "create", "(Lcloiure/lang/IPersistentMap;)L" + className + ";", nil, nil))]
                                             (ß mv.visitCode())
 
-                                            (loop-when-recur [(ß ISeq s = RT.seq(hintedFields))] (ß s != nil) [(ß s = s.next(), i++)]
+                                            (loop-when-recur [(ß ISeq s = RT.seq(hintedFields))] (ß s != nil) [(ß s = s.next(), i = i + 1)]
                                                 (let [#_"String" bName (ß ((Symbol)s.first()).name)]
                                                     (let [#_"Class" k (ß tagClass(tagOf(s.first())))]
                                                         (ß mv.visitVarInsn(ALOAD, 0))
@@ -13876,7 +13925,7 @@
 
                                             (let [#_"Method" ctor (ß new Method("<init>", Type.VOID_TYPE, ctorTypes()))]
                                                 (when (ß hintedFields.count() > 0)
-                                                    (loop-when-recur [(ß i = 1)] (ß i <= fieldCount) [(ß i++)]
+                                                    (loop-when-recur [(ß i = 1)] (ß i <= fieldCount) [(ß i = i + 1)]
                                                         (ß mv.visitVarInsn(ALOAD, i))
                                                         (let [#_"Class" k (ß tagClass(tagOf(hintedFields.nth(i - 1))))]
                                                             (when (ß k.isPrimitive())
@@ -13926,7 +13975,7 @@
                 (let [(ß java.lang.reflect.Method m = mmap.get(e.getKey()))]
                     (let [#_"Class[]" params (ß m.getParameterTypes())]
                         (let [#_"Type[]" argTypes (ß new Type[params.length])]
-                            (loop-when-recur [(ß int i = 0)] (ß i < params.length) [(ß i++)]
+                            (loop-when-recur [(ß int i = 0)] (ß i < params.length) [(ß i = i + 1)]
                                 (ß argTypes[i] = Type.getType(params[i]))
                             )
 
@@ -13980,7 +14029,7 @@
         )
 
         (§ defn #_"Map[]" gatherMethods [#_"Class" sc, #_"ISeq" interfaces]
-            (let [#_"Map" allm (ß new HashMap())]
+            (let [#_"Map" allm (HashMap.)]
                 (ß gatherMethods(sc, allm))
                 (loop-when-recur [(ß )] (ß interfaces != nil) [(ß interfaces = interfaces.next())]
                     (ß gatherMethods((Class) interfaces.first(), allm))
@@ -14112,7 +14161,7 @@
                                                 (let [#_"boolean" hinted (ß tagOf(name) != nil)]
                                                     (let [#_"Class[]" pclasses (ß new Class[parms.count()])]
                                                         (let [#_"Symbol[]" psyms (ß new Symbol[parms.count()])]
-                                                            (loop-when-recur [(ß int i = 0)] (ß i < parms.count()) [(ß i++)]
+                                                            (loop-when-recur [(ß int i = 0)] (ß i < parms.count()) [(ß i = i + 1)]
                                                                 (when (ß !(parms.nth(i) instanceof Symbol))
                                                                     (throw (ß new IllegalArgumentException("params must be Symbols")))
                                                                 )
@@ -14184,13 +14233,13 @@
                                                                         (ß method.retType = Type.getType(method.retClass))
                                                                         (ß method.exclasses = m.getExceptionTypes())
 
-                                                                        (loop-when-recur [(ß int i = 0)] (ß i < parms.count()) [(ß i++)]
+                                                                        (loop-when-recur [(ß int i = 0)] (ß i < parms.count()) [(ß i = i + 1)]
                                                                             (let [#_"LocalBinding" lb (ß registerLocal(psyms[i], nil, new MethodParamExpr(pclasses[i]), true))]
                                                                                 (ß argLocals = argLocals.assocN(i, lb))
                                                                                 (ß method.argTypes[i] = Type.getType(pclasses[i]))
                                                                             )
                                                                         )
-                                                                        (loop-when-recur [(ß int i = 0)] (ß i < parms.count()) [(ß i++)]
+                                                                        (loop-when-recur [(ß int i = 0)] (ß i < parms.count()) [(ß i = i + 1)]
                                                                             (when (ß pclasses[i] == long.class || pclasses[i] == double.class)
                                                                                 (ß getAndIncLocalNum())
                                                                             )
@@ -14223,7 +14272,7 @@
         )
 
         (§ defn- #_"Map" findMethodsWithNameAndArity [#_"String" name, #_"int" arity, #_"Map" mm]
-            (let [#_"Map" ret (ß new HashMap())]
+            (let [#_"Map" ret (HashMap.)]
                 (doseq [#_"Object" o (ß mm.entrySet())]
                     (let [(ß Map.Entry e = (Map.Entry) o)]
                         (let [(ß java.lang.reflect.Method m = (java.lang.reflect.Method) e.getValue())]
@@ -14238,7 +14287,7 @@
         )
 
         (§ defn- #_"Map" findMethodsWithName [#_"String" name, #_"Map" mm]
-            (let [#_"Map" ret (ß new HashMap())]
+            (let [#_"Map" ret (HashMap.)]
                 (doseq [#_"Object" o (ß mm.entrySet())]
                     (let [(ß Map.Entry e = (Map.Entry) o)]
                         (let [(ß java.lang.reflect.Method m = (java.lang.reflect.Method) e.getValue())]
@@ -14258,13 +14307,13 @@
                 (let [#_"Type[]" extypes nil]
                     (when (ß exclasses.length > 0)
                         (ß extypes = new Type[exclasses.length])
-                        (loop-when-recur [(ß int i = 0)] (ß i < exclasses.length) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < exclasses.length) [(ß i = i + 1)]
                             (ß extypes[i] = Type.getType(exclasses[i]))
                         )
                     )
                     (let [#_"GeneratorAdapter" gen (ß new GeneratorAdapter(ACC_PUBLIC, m, nil, extypes, cv))]
                         (ß addAnnotation(gen, methodMeta))
-                        (loop-when-recur [(ß int i = 0)] (ß i < parms.count()) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < parms.count()) [(ß i = i + 1)]
                             (let [#_"IPersistentMap" meta (ß RT.meta(parms.nth(i)))]
                                 (ß addParameterAnnotation(gen, meta, i))
                             )
@@ -14592,7 +14641,7 @@
                                     )
                                     (do
                                         (let [#_"Label[]" la (ß new Label[(high - low) + 1])]
-                                            (loop-when-recur [(ß int i = low)] (ß i <= high) [(ß i++)]
+                                            (loop-when-recur [(ß int i = low)] (ß i <= high) [(ß i = i + 1)]
                                                 (ß la[i - low] = labels.containsKey(i) ? labels.get(i) :or defaultLabel)
                                             )
                                             (ß gen.visitTableSwitchInsn(low, high, defaultLabel, la))
@@ -14900,7 +14949,8 @@
  ; that implement a constant-time count()
  ;;
 (§ interface Counted
-    (§ abstract int count())
+    #_abstract
+    (#_"int" count [this])
 )
 )
 
@@ -15078,7 +15128,7 @@
 
     (§ def #_"URL[]" EMPTY_URLS (ß new URL[] (§)))
 
-    (§ def #_"ReferenceQueue" rq (ß new ReferenceQueue()))
+    (§ def #_"ReferenceQueue" rq (ReferenceQueue.))
 
     (§ constructor #_"DynamicClassLoader" DynamicClassLoader []
         ;; pseudo test in lieu of hasContextClassLoader()
@@ -15192,7 +15242,7 @@
     (§ def #_"Pattern" ratioPat (ß Pattern.compile("([-+]?[0-9]+)/([0-9]+)")))
     (§ def #_"Pattern" floatPat (ß Pattern.compile("([-+]?[0-9]+(\\.[0-9]*)?([eE][-+]?[0-9]+)?)(M)?")))
 
-    (§ def #_"IFn" taggedReader (ß new TaggedReader()))
+    (§ def #_"IFn" taggedReader (TaggedReader.))
 
     (§ static
         (ß macros[\"] = new StringReader()) ;; oops! "
@@ -15342,7 +15392,7 @@
     )
 
     (§ defn- #_"String" readToken [#_"PushbackReader" r, #_"char" initch, #_"boolean" leadConstituent]
-        (let [#_"StringBuilder" sb (ß new StringBuilder())]
+        (let [#_"StringBuilder" sb (StringBuilder.)]
             (when (ß leadConstituent && nonConstituent(initch))
                 (throw (ß Util.runtimeException("Invalid leading character: " + (char)initch)))
             )
@@ -15368,7 +15418,7 @@
     )
 
     (§ defn- #_"Object" readNumber [#_"PushbackReader" r, #_"char" initch]
-        (let [#_"StringBuilder" sb (ß new StringBuilder())]
+        (let [#_"StringBuilder" sb (StringBuilder.)]
             (ß sb.append(initch))
 
             (while true
@@ -15397,7 +15447,7 @@
             (throw (ß new IllegalArgumentException("Invalid unicode character: \\" + token)))
         )
         (let [#_"int" uc 0]
-            (loop-when-recur [(ß int i = offset)] (ß i < offset + length) [(ß ++i)]
+            (loop-when-recur [(ß int i = offset)] (ß i < offset + length) [(ß i = i + 1)]
                 (let [#_"int" d (ß Character.digit(token.charAt(i), base))]
                     (when (ß d == -1)
                         (throw (ß new IllegalArgumentException("Invalid digit: " + token.charAt(i))))
@@ -15415,7 +15465,7 @@
                 (throw (ß new IllegalArgumentException("Invalid digit: " + (char) initch)))
             )
             (let [#_"int" i 1]
-                (loop-when-recur [(ß )] (ß i < length) [(ß ++i)]
+                (loop-when-recur [(ß )] (ß i < length) [(ß i = i + 1)]
                     (let [#_"int" ch (ß read1(r))]
                         (when (ß ch == -1 || isWhitespace(ch) || isMacro(ch))
                             (ß unread(r, ch))
@@ -15574,7 +15624,7 @@
     (class-ns StringReader (§ extends AFn)
         #_method
         (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" doublequote, #_"Object" opts]
-            (let [#_"StringBuilder" sb (ß new StringBuilder())]
+            (let [#_"StringBuilder" sb (StringBuilder.)]
                 (let [#_"Reader" r (ß (Reader) reader)]
                     (loop-when-recur [(ß int ch = read1(r))] (ß ch != \") [(ß ch = read1(r))] ;; oops! "
                         (when (ß ch == -1)
@@ -15704,7 +15754,7 @@
                                 ;; Construct output map
                                 (let [#_"Object[]" a (ß new Object[kvs.size()])]
                                     (let [#_"Iterator" iter (ß kvs.iterator())]
-                                        (loop-when-recur [(ß int i = 0)] (ß iter.hasNext()) [(ß i += 2)]
+                                        (loop-when-recur [(ß int i = 0)] (ß iter.hasNext()) [(ß i = i + 2)]
                                             (let [#_"Object" key (ß iter.next())]
                                                 (let [#_"Object" val (ß iter.next())]
                                                     (cond (ß key instanceof Keyword)
@@ -15995,7 +16045,7 @@
 
     (§ defn #_"List" readDelimitedList [#_"char" delim, #_"PushbackReader" r, #_"boolean" isRecursive, #_"Object" opts]
         (let [#_"int" firstline (ß (r instanceof LineNumberingPushbackReader) ? ((LineNumberingPushbackReader) r).getLineNumber() :or -1)]
-            (let [#_"ArrayList" a (ß new ArrayList())]
+            (let [#_"ArrayList" a (ArrayList.)]
                 (while true
                     (let [#_"int" ch (ß read1(r))]
                         (while (ß isWhitespace(ch))
@@ -16289,61 +16339,80 @@
 (java-ns cloiure.lang.IAtom
 
 (§ interface IAtom
-    (§ abstract Object swap(IFn f))
-    (§ abstract Object swap(IFn f, Object arg))
-    (§ abstract Object swap(IFn f, Object arg1, Object arg2))
-    (§ abstract Object swap(IFn f, Object x, Object y, ISeq args))
-    (§ abstract boolean compareAndSet(Object oldv, Object newv))
-    (§ abstract Object reset(Object newval))
+    #_abstract
+    (#_"Object" swap [this, #_"IFn" f])
+    #_abstract
+    (#_"Object" swap [this, #_"IFn" f, #_"Object" arg])
+    #_abstract
+    (#_"Object" swap [this, #_"IFn" f, #_"Object" arg1, #_"Object" arg2])
+    #_abstract
+    (#_"Object" swap [this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" args])
+    #_abstract
+    (#_"boolean" compareAndSet [this, #_"Object" oldv, #_"Object" newv])
+    #_abstract
+    (#_"Object" reset [this, #_"Object" newval])
 )
 )
 
 (java-ns cloiure.lang.IAtom2
 
 (§ interface IAtom2 (§ extends IAtom)
-    (§ abstract IPersistentVector swapVals(IFn f))
-    (§ abstract IPersistentVector swapVals(IFn f, Object arg))
-    (§ abstract IPersistentVector swapVals(IFn f, Object arg1, Object arg2))
-    (§ abstract IPersistentVector swapVals(IFn f, Object x, Object y, ISeq args))
-    (§ abstract IPersistentVector resetVals(Object newv))
+    #_abstract
+    (#_"IPersistentVector" swapVals [this, #_"IFn" f])
+    #_abstract
+    (#_"IPersistentVector" swapVals [this, #_"IFn" f, #_"Object" arg])
+    #_abstract
+    (#_"IPersistentVector" swapVals [this, #_"IFn" f, #_"Object" arg1, #_"Object" arg2])
+    #_abstract
+    (#_"IPersistentVector" swapVals [this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" args])
+    #_abstract
+    (#_"IPersistentVector" resetVals [this, #_"Object" newv])
 )
 )
 
 (java-ns cloiure.lang.IBlockingDeref
 
 (§ interface IBlockingDeref
-    (§ abstract Object deref(long ms, Object timeoutValue))
+    #_abstract
+    (#_"Object" deref [this, #_"long" ms, #_"Object" timeoutValue])
 )
 )
 
 (java-ns cloiure.lang.IChunk
 
 (§ interface IChunk (§ extends Indexed)
-    (§ abstract IChunk dropFirst())
-    (§ abstract Object reduce(IFn f, Object start))
+    #_abstract
+    (#_"IChunk" dropFirst [this])
+    #_abstract
+    (#_"Object" reduce [this, #_"IFn" f, #_"Object" start])
 )
 )
 
 (java-ns cloiure.lang.IChunkedSeq
 
 (§ interface IChunkedSeq (§ extends ISeq, Sequential)
-    (§ abstract IChunk chunkedFirst())
-    (§ abstract ISeq chunkedNext())
-    (§ abstract ISeq chunkedMore())
+    #_abstract
+    (#_"IChunk" chunkedFirst [this])
+    #_abstract
+    (#_"ISeq" chunkedNext [this])
+    #_abstract
+    (#_"ISeq" chunkedMore [this])
 )
 )
 
 (java-ns cloiure.lang.IDeref
 
 (§ interface IDeref
-    (§ abstract Object deref())
+    #_abstract
+    (#_"Object" deref [this])
 )
 )
 
 (java-ns cloiure.lang.IEditableCollection
 
 (§ interface IEditableCollection
-    (§ abstract ITransientCollection asTransient())
+    #_abstract
+    (#_"ITransientCollection" asTransient [this])
 )
 )
 
@@ -16355,7 +16424,8 @@
  ; defining project-specific exception classes.
  ;;
 (§ interface IExceptionInfo
-    (§ abstract IPersistentMap getData())
+    #_abstract
+    (#_"IPersistentMap" getData [this])
 )
 )
 
@@ -16370,1496 +16440,1855 @@
  ; either its source or compiled form to the classpath.
  ;;
 (§ interface IFn (§ extends Callable, Runnable)
-    (§ abstract Object invoke())
-    (§ abstract Object invoke(Object arg1))
-    (§ abstract Object invoke(Object arg1, Object arg2))
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3))
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4))
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5))
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6))
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7))
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8))
+    #_abstract
+    (#_"Object" invoke [this])
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1])
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2])
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3])
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4])
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5])
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6])
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7])
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8])
 
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9))
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9])
 
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10))
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10])
 
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11))
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11])
 
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12))
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12])
 
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13))
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13])
 
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14))
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14])
 
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15))
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15])
 
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16))
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16])
 
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17))
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17])
 
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18))
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18])
 
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19))
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19])
 
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20))
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20])
 
-    (§ abstract Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7,
-            Object arg8, Object arg9, Object arg10, Object arg11, Object arg12, Object arg13, Object arg14,
-            Object arg15, Object arg16, Object arg17, Object arg18, Object arg19, Object arg20,
-            Object... args))
+    #_abstract
+    (#_"Object" invoke [this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20, #_"Object..." args])
 
-    (§ abstract Object applyTo(ISeq arglist))
+    #_abstract
+    (#_"Object" applyTo [this, #_"ISeq" arglist])
 
     (§ interface L
-        (§ abstract long invokePrim())
+        #_abstract
+        (#_"long" invokePrim [this])
     )
 
     (§ interface D
-        (§ abstract double invokePrim())
+        #_abstract
+        (#_"double" invokePrim [this])
     )
 
     (§ interface OL
-        (§ abstract long invokePrim(Object arg0))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0])
     )
 
     (§ interface OD
-        (§ abstract double invokePrim(Object arg0))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0])
     )
 
     (§ interface LO
-        (§ abstract Object invokePrim(long arg0))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0])
     )
 
     (§ interface LL
-        (§ abstract long invokePrim(long arg0))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0])
     )
 
     (§ interface LD
-        (§ abstract double invokePrim(long arg0))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0])
     )
 
     (§ interface DO
-        (§ abstract Object invokePrim(double arg0))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0])
     )
 
     (§ interface DL
-        (§ abstract long invokePrim(double arg0))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0])
     )
 
     (§ interface DD
-        (§ abstract double invokePrim(double arg0))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0])
     )
 
     (§ interface OOL
-        (§ abstract long invokePrim(Object arg0, Object arg1))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"Object" arg1])
     )
 
     (§ interface OOD
-        (§ abstract double invokePrim(Object arg0, Object arg1))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"Object" arg1])
     )
 
     (§ interface OLO
-        (§ abstract Object invokePrim(Object arg0, long arg1))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"long" arg1])
     )
 
     (§ interface OLL
-        (§ abstract long invokePrim(Object arg0, long arg1))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"long" arg1])
     )
 
     (§ interface OLD
-        (§ abstract double invokePrim(Object arg0, long arg1))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"long" arg1])
     )
 
     (§ interface ODO
-        (§ abstract Object invokePrim(Object arg0, double arg1))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"double" arg1])
     )
 
     (§ interface ODL
-        (§ abstract long invokePrim(Object arg0, double arg1))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"double" arg1])
     )
 
     (§ interface ODD
-        (§ abstract double invokePrim(Object arg0, double arg1))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"double" arg1])
     )
 
     (§ interface LOO
-        (§ abstract Object invokePrim(long arg0, Object arg1))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"Object" arg1])
     )
 
     (§ interface LOL
-        (§ abstract long invokePrim(long arg0, Object arg1))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"Object" arg1])
     )
 
     (§ interface LOD
-        (§ abstract double invokePrim(long arg0, Object arg1))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"Object" arg1])
     )
 
     (§ interface LLO
-        (§ abstract Object invokePrim(long arg0, long arg1))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"long" arg1])
     )
 
     (§ interface LLL
-        (§ abstract long invokePrim(long arg0, long arg1))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"long" arg1])
     )
 
     (§ interface LLD
-        (§ abstract double invokePrim(long arg0, long arg1))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"long" arg1])
     )
 
     (§ interface LDO
-        (§ abstract Object invokePrim(long arg0, double arg1))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"double" arg1])
     )
 
     (§ interface LDL
-        (§ abstract long invokePrim(long arg0, double arg1))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"double" arg1])
     )
 
     (§ interface LDD
-        (§ abstract double invokePrim(long arg0, double arg1))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"double" arg1])
     )
 
     (§ interface DOO
-        (§ abstract Object invokePrim(double arg0, Object arg1))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"Object" arg1])
     )
 
     (§ interface DOL
-        (§ abstract long invokePrim(double arg0, Object arg1))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"Object" arg1])
     )
 
     (§ interface DOD
-        (§ abstract double invokePrim(double arg0, Object arg1))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"Object" arg1])
     )
 
     (§ interface DLO
-        (§ abstract Object invokePrim(double arg0, long arg1))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"long" arg1])
     )
 
     (§ interface DLL
-        (§ abstract long invokePrim(double arg0, long arg1))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"long" arg1])
     )
 
     (§ interface DLD
-        (§ abstract double invokePrim(double arg0, long arg1))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"long" arg1])
     )
 
     (§ interface DDO
-        (§ abstract Object invokePrim(double arg0, double arg1))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"double" arg1])
     )
 
     (§ interface DDL
-        (§ abstract long invokePrim(double arg0, double arg1))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"double" arg1])
     )
 
     (§ interface DDD
-        (§ abstract double invokePrim(double arg0, double arg1))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"double" arg1])
     )
 
     (§ interface OOOL
-        (§ abstract long invokePrim(Object arg0, Object arg1, Object arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"Object" arg2])
     )
 
     (§ interface OOOD
-        (§ abstract double invokePrim(Object arg0, Object arg1, Object arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"Object" arg2])
     )
 
     (§ interface OOLO
-        (§ abstract Object invokePrim(Object arg0, Object arg1, long arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"long" arg2])
     )
 
     (§ interface OOLL
-        (§ abstract long invokePrim(Object arg0, Object arg1, long arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"long" arg2])
     )
 
     (§ interface OOLD
-        (§ abstract double invokePrim(Object arg0, Object arg1, long arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"long" arg2])
     )
 
     (§ interface OODO
-        (§ abstract Object invokePrim(Object arg0, Object arg1, double arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"double" arg2])
     )
 
     (§ interface OODL
-        (§ abstract long invokePrim(Object arg0, Object arg1, double arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"double" arg2])
     )
 
     (§ interface OODD
-        (§ abstract double invokePrim(Object arg0, Object arg1, double arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"double" arg2])
     )
 
     (§ interface OLOO
-        (§ abstract Object invokePrim(Object arg0, long arg1, Object arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"Object" arg2])
     )
 
     (§ interface OLOL
-        (§ abstract long invokePrim(Object arg0, long arg1, Object arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"Object" arg2])
     )
 
     (§ interface OLOD
-        (§ abstract double invokePrim(Object arg0, long arg1, Object arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"Object" arg2])
     )
 
     (§ interface OLLO
-        (§ abstract Object invokePrim(Object arg0, long arg1, long arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"long" arg2])
     )
 
     (§ interface OLLL
-        (§ abstract long invokePrim(Object arg0, long arg1, long arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"long" arg2])
     )
 
     (§ interface OLLD
-        (§ abstract double invokePrim(Object arg0, long arg1, long arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"long" arg2])
     )
 
     (§ interface OLDO
-        (§ abstract Object invokePrim(Object arg0, long arg1, double arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"double" arg2])
     )
 
     (§ interface OLDL
-        (§ abstract long invokePrim(Object arg0, long arg1, double arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"double" arg2])
     )
 
     (§ interface OLDD
-        (§ abstract double invokePrim(Object arg0, long arg1, double arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"double" arg2])
     )
 
     (§ interface ODOO
-        (§ abstract Object invokePrim(Object arg0, double arg1, Object arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"Object" arg2])
     )
 
     (§ interface ODOL
-        (§ abstract long invokePrim(Object arg0, double arg1, Object arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"Object" arg2])
     )
 
     (§ interface ODOD
-        (§ abstract double invokePrim(Object arg0, double arg1, Object arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"Object" arg2])
     )
 
     (§ interface ODLO
-        (§ abstract Object invokePrim(Object arg0, double arg1, long arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"long" arg2])
     )
 
     (§ interface ODLL
-        (§ abstract long invokePrim(Object arg0, double arg1, long arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"long" arg2])
     )
 
     (§ interface ODLD
-        (§ abstract double invokePrim(Object arg0, double arg1, long arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"long" arg2])
     )
 
     (§ interface ODDO
-        (§ abstract Object invokePrim(Object arg0, double arg1, double arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"double" arg2])
     )
 
     (§ interface ODDL
-        (§ abstract long invokePrim(Object arg0, double arg1, double arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"double" arg2])
     )
 
     (§ interface ODDD
-        (§ abstract double invokePrim(Object arg0, double arg1, double arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"double" arg2])
     )
 
     (§ interface LOOO
-        (§ abstract Object invokePrim(long arg0, Object arg1, Object arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"Object" arg2])
     )
 
     (§ interface LOOL
-        (§ abstract long invokePrim(long arg0, Object arg1, Object arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"Object" arg2])
     )
 
     (§ interface LOOD
-        (§ abstract double invokePrim(long arg0, Object arg1, Object arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"Object" arg2])
     )
 
     (§ interface LOLO
-        (§ abstract Object invokePrim(long arg0, Object arg1, long arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"long" arg2])
     )
 
     (§ interface LOLL
-        (§ abstract long invokePrim(long arg0, Object arg1, long arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"long" arg2])
     )
 
     (§ interface LOLD
-        (§ abstract double invokePrim(long arg0, Object arg1, long arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"long" arg2])
     )
 
     (§ interface LODO
-        (§ abstract Object invokePrim(long arg0, Object arg1, double arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"double" arg2])
     )
 
     (§ interface LODL
-        (§ abstract long invokePrim(long arg0, Object arg1, double arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"double" arg2])
     )
 
     (§ interface LODD
-        (§ abstract double invokePrim(long arg0, Object arg1, double arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"double" arg2])
     )
 
     (§ interface LLOO
-        (§ abstract Object invokePrim(long arg0, long arg1, Object arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"Object" arg2])
     )
 
     (§ interface LLOL
-        (§ abstract long invokePrim(long arg0, long arg1, Object arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"Object" arg2])
     )
 
     (§ interface LLOD
-        (§ abstract double invokePrim(long arg0, long arg1, Object arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"Object" arg2])
     )
 
     (§ interface LLLO
-        (§ abstract Object invokePrim(long arg0, long arg1, long arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"long" arg2])
     )
 
     (§ interface LLLL
-        (§ abstract long invokePrim(long arg0, long arg1, long arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"long" arg2])
     )
 
     (§ interface LLLD
-        (§ abstract double invokePrim(long arg0, long arg1, long arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"long" arg2])
     )
 
     (§ interface LLDO
-        (§ abstract Object invokePrim(long arg0, long arg1, double arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"double" arg2])
     )
 
     (§ interface LLDL
-        (§ abstract long invokePrim(long arg0, long arg1, double arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"double" arg2])
     )
 
     (§ interface LLDD
-        (§ abstract double invokePrim(long arg0, long arg1, double arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"double" arg2])
     )
 
     (§ interface LDOO
-        (§ abstract Object invokePrim(long arg0, double arg1, Object arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"Object" arg2])
     )
 
     (§ interface LDOL
-        (§ abstract long invokePrim(long arg0, double arg1, Object arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"Object" arg2])
     )
 
     (§ interface LDOD
-        (§ abstract double invokePrim(long arg0, double arg1, Object arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"Object" arg2])
     )
 
     (§ interface LDLO
-        (§ abstract Object invokePrim(long arg0, double arg1, long arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"long" arg2])
     )
 
     (§ interface LDLL
-        (§ abstract long invokePrim(long arg0, double arg1, long arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"long" arg2])
     )
 
     (§ interface LDLD
-        (§ abstract double invokePrim(long arg0, double arg1, long arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"long" arg2])
     )
 
     (§ interface LDDO
-        (§ abstract Object invokePrim(long arg0, double arg1, double arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"double" arg2])
     )
 
     (§ interface LDDL
-        (§ abstract long invokePrim(long arg0, double arg1, double arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"double" arg2])
     )
 
     (§ interface LDDD
-        (§ abstract double invokePrim(long arg0, double arg1, double arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"double" arg2])
     )
 
     (§ interface DOOO
-        (§ abstract Object invokePrim(double arg0, Object arg1, Object arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"Object" arg2])
     )
 
     (§ interface DOOL
-        (§ abstract long invokePrim(double arg0, Object arg1, Object arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"Object" arg2])
     )
 
     (§ interface DOOD
-        (§ abstract double invokePrim(double arg0, Object arg1, Object arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"Object" arg2])
     )
 
     (§ interface DOLO
-        (§ abstract Object invokePrim(double arg0, Object arg1, long arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"long" arg2])
     )
 
     (§ interface DOLL
-        (§ abstract long invokePrim(double arg0, Object arg1, long arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"long" arg2])
     )
 
     (§ interface DOLD
-        (§ abstract double invokePrim(double arg0, Object arg1, long arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"long" arg2])
     )
 
     (§ interface DODO
-        (§ abstract Object invokePrim(double arg0, Object arg1, double arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"double" arg2])
     )
 
     (§ interface DODL
-        (§ abstract long invokePrim(double arg0, Object arg1, double arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"double" arg2])
     )
 
     (§ interface DODD
-        (§ abstract double invokePrim(double arg0, Object arg1, double arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"double" arg2])
     )
 
     (§ interface DLOO
-        (§ abstract Object invokePrim(double arg0, long arg1, Object arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"Object" arg2])
     )
 
     (§ interface DLOL
-        (§ abstract long invokePrim(double arg0, long arg1, Object arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"Object" arg2])
     )
 
     (§ interface DLOD
-        (§ abstract double invokePrim(double arg0, long arg1, Object arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"Object" arg2])
     )
 
     (§ interface DLLO
-        (§ abstract Object invokePrim(double arg0, long arg1, long arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"long" arg2])
     )
 
     (§ interface DLLL
-        (§ abstract long invokePrim(double arg0, long arg1, long arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"long" arg2])
     )
 
     (§ interface DLLD
-        (§ abstract double invokePrim(double arg0, long arg1, long arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"long" arg2])
     )
 
     (§ interface DLDO
-        (§ abstract Object invokePrim(double arg0, long arg1, double arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"double" arg2])
     )
 
     (§ interface DLDL
-        (§ abstract long invokePrim(double arg0, long arg1, double arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"double" arg2])
     )
 
     (§ interface DLDD
-        (§ abstract double invokePrim(double arg0, long arg1, double arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"double" arg2])
     )
 
     (§ interface DDOO
-        (§ abstract Object invokePrim(double arg0, double arg1, Object arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"Object" arg2])
     )
 
     (§ interface DDOL
-        (§ abstract long invokePrim(double arg0, double arg1, Object arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"Object" arg2])
     )
 
     (§ interface DDOD
-        (§ abstract double invokePrim(double arg0, double arg1, Object arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"Object" arg2])
     )
 
     (§ interface DDLO
-        (§ abstract Object invokePrim(double arg0, double arg1, long arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"long" arg2])
     )
 
     (§ interface DDLL
-        (§ abstract long invokePrim(double arg0, double arg1, long arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"long" arg2])
     )
 
     (§ interface DDLD
-        (§ abstract double invokePrim(double arg0, double arg1, long arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"long" arg2])
     )
 
     (§ interface DDDO
-        (§ abstract Object invokePrim(double arg0, double arg1, double arg2))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"double" arg2])
     )
 
     (§ interface DDDL
-        (§ abstract long invokePrim(double arg0, double arg1, double arg2))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"double" arg2])
     )
 
     (§ interface DDDD
-        (§ abstract double invokePrim(double arg0, double arg1, double arg2))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"double" arg2])
     )
 
     (§ interface OOOOL
-        (§ abstract long invokePrim(Object arg0, Object arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface OOOOD
-        (§ abstract double invokePrim(Object arg0, Object arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface OOOLO
-        (§ abstract Object invokePrim(Object arg0, Object arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface OOOLL
-        (§ abstract long invokePrim(Object arg0, Object arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface OOOLD
-        (§ abstract double invokePrim(Object arg0, Object arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface OOODO
-        (§ abstract Object invokePrim(Object arg0, Object arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface OOODL
-        (§ abstract long invokePrim(Object arg0, Object arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface OOODD
-        (§ abstract double invokePrim(Object arg0, Object arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface OOLOO
-        (§ abstract Object invokePrim(Object arg0, Object arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface OOLOL
-        (§ abstract long invokePrim(Object arg0, Object arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface OOLOD
-        (§ abstract double invokePrim(Object arg0, Object arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface OOLLO
-        (§ abstract Object invokePrim(Object arg0, Object arg1, long arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface OOLLL
-        (§ abstract long invokePrim(Object arg0, Object arg1, long arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface OOLLD
-        (§ abstract double invokePrim(Object arg0, Object arg1, long arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface OOLDO
-        (§ abstract Object invokePrim(Object arg0, Object arg1, long arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface OOLDL
-        (§ abstract long invokePrim(Object arg0, Object arg1, long arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface OOLDD
-        (§ abstract double invokePrim(Object arg0, Object arg1, long arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface OODOO
-        (§ abstract Object invokePrim(Object arg0, Object arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface OODOL
-        (§ abstract long invokePrim(Object arg0, Object arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface OODOD
-        (§ abstract double invokePrim(Object arg0, Object arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface OODLO
-        (§ abstract Object invokePrim(Object arg0, Object arg1, double arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface OODLL
-        (§ abstract long invokePrim(Object arg0, Object arg1, double arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface OODLD
-        (§ abstract double invokePrim(Object arg0, Object arg1, double arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface OODDO
-        (§ abstract Object invokePrim(Object arg0, Object arg1, double arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface OODDL
-        (§ abstract long invokePrim(Object arg0, Object arg1, double arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface OODDD
-        (§ abstract double invokePrim(Object arg0, Object arg1, double arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"Object" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface OLOOO
-        (§ abstract Object invokePrim(Object arg0, long arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface OLOOL
-        (§ abstract long invokePrim(Object arg0, long arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface OLOOD
-        (§ abstract double invokePrim(Object arg0, long arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface OLOLO
-        (§ abstract Object invokePrim(Object arg0, long arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface OLOLL
-        (§ abstract long invokePrim(Object arg0, long arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface OLOLD
-        (§ abstract double invokePrim(Object arg0, long arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface OLODO
-        (§ abstract Object invokePrim(Object arg0, long arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface OLODL
-        (§ abstract long invokePrim(Object arg0, long arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface OLODD
-        (§ abstract double invokePrim(Object arg0, long arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface OLLOO
-        (§ abstract Object invokePrim(Object arg0, long arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface OLLOL
-        (§ abstract long invokePrim(Object arg0, long arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface OLLOD
-        (§ abstract double invokePrim(Object arg0, long arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface OLLLO
-        (§ abstract Object invokePrim(Object arg0, long arg1, long arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface OLLLL
-        (§ abstract long invokePrim(Object arg0, long arg1, long arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface OLLLD
-        (§ abstract double invokePrim(Object arg0, long arg1, long arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface OLLDO
-        (§ abstract Object invokePrim(Object arg0, long arg1, long arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface OLLDL
-        (§ abstract long invokePrim(Object arg0, long arg1, long arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface OLLDD
-        (§ abstract double invokePrim(Object arg0, long arg1, long arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface OLDOO
-        (§ abstract Object invokePrim(Object arg0, long arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface OLDOL
-        (§ abstract long invokePrim(Object arg0, long arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface OLDOD
-        (§ abstract double invokePrim(Object arg0, long arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface OLDLO
-        (§ abstract Object invokePrim(Object arg0, long arg1, double arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface OLDLL
-        (§ abstract long invokePrim(Object arg0, long arg1, double arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface OLDLD
-        (§ abstract double invokePrim(Object arg0, long arg1, double arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface OLDDO
-        (§ abstract Object invokePrim(Object arg0, long arg1, double arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface OLDDL
-        (§ abstract long invokePrim(Object arg0, long arg1, double arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface OLDDD
-        (§ abstract double invokePrim(Object arg0, long arg1, double arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"long" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface ODOOO
-        (§ abstract Object invokePrim(Object arg0, double arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface ODOOL
-        (§ abstract long invokePrim(Object arg0, double arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface ODOOD
-        (§ abstract double invokePrim(Object arg0, double arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface ODOLO
-        (§ abstract Object invokePrim(Object arg0, double arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface ODOLL
-        (§ abstract long invokePrim(Object arg0, double arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface ODOLD
-        (§ abstract double invokePrim(Object arg0, double arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface ODODO
-        (§ abstract Object invokePrim(Object arg0, double arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface ODODL
-        (§ abstract long invokePrim(Object arg0, double arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface ODODD
-        (§ abstract double invokePrim(Object arg0, double arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface ODLOO
-        (§ abstract Object invokePrim(Object arg0, double arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface ODLOL
-        (§ abstract long invokePrim(Object arg0, double arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface ODLOD
-        (§ abstract double invokePrim(Object arg0, double arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface ODLLO
-        (§ abstract Object invokePrim(Object arg0, double arg1, long arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface ODLLL
-        (§ abstract long invokePrim(Object arg0, double arg1, long arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface ODLLD
-        (§ abstract double invokePrim(Object arg0, double arg1, long arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface ODLDO
-        (§ abstract Object invokePrim(Object arg0, double arg1, long arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface ODLDL
-        (§ abstract long invokePrim(Object arg0, double arg1, long arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface ODLDD
-        (§ abstract double invokePrim(Object arg0, double arg1, long arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface ODDOO
-        (§ abstract Object invokePrim(Object arg0, double arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface ODDOL
-        (§ abstract long invokePrim(Object arg0, double arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface ODDOD
-        (§ abstract double invokePrim(Object arg0, double arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface ODDLO
-        (§ abstract Object invokePrim(Object arg0, double arg1, double arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface ODDLL
-        (§ abstract long invokePrim(Object arg0, double arg1, double arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface ODDLD
-        (§ abstract double invokePrim(Object arg0, double arg1, double arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface ODDDO
-        (§ abstract Object invokePrim(Object arg0, double arg1, double arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface ODDDL
-        (§ abstract long invokePrim(Object arg0, double arg1, double arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface ODDDD
-        (§ abstract double invokePrim(Object arg0, double arg1, double arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"Object" arg0, #_"double" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface LOOOO
-        (§ abstract Object invokePrim(long arg0, Object arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface LOOOL
-        (§ abstract long invokePrim(long arg0, Object arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface LOOOD
-        (§ abstract double invokePrim(long arg0, Object arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface LOOLO
-        (§ abstract Object invokePrim(long arg0, Object arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface LOOLL
-        (§ abstract long invokePrim(long arg0, Object arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface LOOLD
-        (§ abstract double invokePrim(long arg0, Object arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface LOODO
-        (§ abstract Object invokePrim(long arg0, Object arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface LOODL
-        (§ abstract long invokePrim(long arg0, Object arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface LOODD
-        (§ abstract double invokePrim(long arg0, Object arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface LOLOO
-        (§ abstract Object invokePrim(long arg0, Object arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface LOLOL
-        (§ abstract long invokePrim(long arg0, Object arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface LOLOD
-        (§ abstract double invokePrim(long arg0, Object arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface LOLLO
-        (§ abstract Object invokePrim(long arg0, Object arg1, long arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface LOLLL
-        (§ abstract long invokePrim(long arg0, Object arg1, long arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface LOLLD
-        (§ abstract double invokePrim(long arg0, Object arg1, long arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface LOLDO
-        (§ abstract Object invokePrim(long arg0, Object arg1, long arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface LOLDL
-        (§ abstract long invokePrim(long arg0, Object arg1, long arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface LOLDD
-        (§ abstract double invokePrim(long arg0, Object arg1, long arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface LODOO
-        (§ abstract Object invokePrim(long arg0, Object arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface LODOL
-        (§ abstract long invokePrim(long arg0, Object arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface LODOD
-        (§ abstract double invokePrim(long arg0, Object arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface LODLO
-        (§ abstract Object invokePrim(long arg0, Object arg1, double arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface LODLL
-        (§ abstract long invokePrim(long arg0, Object arg1, double arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface LODLD
-        (§ abstract double invokePrim(long arg0, Object arg1, double arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface LODDO
-        (§ abstract Object invokePrim(long arg0, Object arg1, double arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface LODDL
-        (§ abstract long invokePrim(long arg0, Object arg1, double arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface LODDD
-        (§ abstract double invokePrim(long arg0, Object arg1, double arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"Object" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface LLOOO
-        (§ abstract Object invokePrim(long arg0, long arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface LLOOL
-        (§ abstract long invokePrim(long arg0, long arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface LLOOD
-        (§ abstract double invokePrim(long arg0, long arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface LLOLO
-        (§ abstract Object invokePrim(long arg0, long arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface LLOLL
-        (§ abstract long invokePrim(long arg0, long arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface LLOLD
-        (§ abstract double invokePrim(long arg0, long arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface LLODO
-        (§ abstract Object invokePrim(long arg0, long arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface LLODL
-        (§ abstract long invokePrim(long arg0, long arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface LLODD
-        (§ abstract double invokePrim(long arg0, long arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface LLLOO
-        (§ abstract Object invokePrim(long arg0, long arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface LLLOL
-        (§ abstract long invokePrim(long arg0, long arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface LLLOD
-        (§ abstract double invokePrim(long arg0, long arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface LLLLO
-        (§ abstract Object invokePrim(long arg0, long arg1, long arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface LLLLL
-        (§ abstract long invokePrim(long arg0, long arg1, long arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface LLLLD
-        (§ abstract double invokePrim(long arg0, long arg1, long arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface LLLDO
-        (§ abstract Object invokePrim(long arg0, long arg1, long arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface LLLDL
-        (§ abstract long invokePrim(long arg0, long arg1, long arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface LLLDD
-        (§ abstract double invokePrim(long arg0, long arg1, long arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface LLDOO
-        (§ abstract Object invokePrim(long arg0, long arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface LLDOL
-        (§ abstract long invokePrim(long arg0, long arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface LLDOD
-        (§ abstract double invokePrim(long arg0, long arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface LLDLO
-        (§ abstract Object invokePrim(long arg0, long arg1, double arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface LLDLL
-        (§ abstract long invokePrim(long arg0, long arg1, double arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface LLDLD
-        (§ abstract double invokePrim(long arg0, long arg1, double arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface LLDDO
-        (§ abstract Object invokePrim(long arg0, long arg1, double arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface LLDDL
-        (§ abstract long invokePrim(long arg0, long arg1, double arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface LLDDD
-        (§ abstract double invokePrim(long arg0, long arg1, double arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"long" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface LDOOO
-        (§ abstract Object invokePrim(long arg0, double arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface LDOOL
-        (§ abstract long invokePrim(long arg0, double arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface LDOOD
-        (§ abstract double invokePrim(long arg0, double arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface LDOLO
-        (§ abstract Object invokePrim(long arg0, double arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface LDOLL
-        (§ abstract long invokePrim(long arg0, double arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface LDOLD
-        (§ abstract double invokePrim(long arg0, double arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface LDODO
-        (§ abstract Object invokePrim(long arg0, double arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface LDODL
-        (§ abstract long invokePrim(long arg0, double arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface LDODD
-        (§ abstract double invokePrim(long arg0, double arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface LDLOO
-        (§ abstract Object invokePrim(long arg0, double arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface LDLOL
-        (§ abstract long invokePrim(long arg0, double arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface LDLOD
-        (§ abstract double invokePrim(long arg0, double arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface LDLLO
-        (§ abstract Object invokePrim(long arg0, double arg1, long arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface LDLLL
-        (§ abstract long invokePrim(long arg0, double arg1, long arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface LDLLD
-        (§ abstract double invokePrim(long arg0, double arg1, long arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface LDLDO
-        (§ abstract Object invokePrim(long arg0, double arg1, long arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface LDLDL
-        (§ abstract long invokePrim(long arg0, double arg1, long arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface LDLDD
-        (§ abstract double invokePrim(long arg0, double arg1, long arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface LDDOO
-        (§ abstract Object invokePrim(long arg0, double arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface LDDOL
-        (§ abstract long invokePrim(long arg0, double arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface LDDOD
-        (§ abstract double invokePrim(long arg0, double arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface LDDLO
-        (§ abstract Object invokePrim(long arg0, double arg1, double arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface LDDLL
-        (§ abstract long invokePrim(long arg0, double arg1, double arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface LDDLD
-        (§ abstract double invokePrim(long arg0, double arg1, double arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface LDDDO
-        (§ abstract Object invokePrim(long arg0, double arg1, double arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface LDDDL
-        (§ abstract long invokePrim(long arg0, double arg1, double arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface LDDDD
-        (§ abstract double invokePrim(long arg0, double arg1, double arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"long" arg0, #_"double" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface DOOOO
-        (§ abstract Object invokePrim(double arg0, Object arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface DOOOL
-        (§ abstract long invokePrim(double arg0, Object arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface DOOOD
-        (§ abstract double invokePrim(double arg0, Object arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface DOOLO
-        (§ abstract Object invokePrim(double arg0, Object arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface DOOLL
-        (§ abstract long invokePrim(double arg0, Object arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface DOOLD
-        (§ abstract double invokePrim(double arg0, Object arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface DOODO
-        (§ abstract Object invokePrim(double arg0, Object arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface DOODL
-        (§ abstract long invokePrim(double arg0, Object arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface DOODD
-        (§ abstract double invokePrim(double arg0, Object arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface DOLOO
-        (§ abstract Object invokePrim(double arg0, Object arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface DOLOL
-        (§ abstract long invokePrim(double arg0, Object arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface DOLOD
-        (§ abstract double invokePrim(double arg0, Object arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface DOLLO
-        (§ abstract Object invokePrim(double arg0, Object arg1, long arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface DOLLL
-        (§ abstract long invokePrim(double arg0, Object arg1, long arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface DOLLD
-        (§ abstract double invokePrim(double arg0, Object arg1, long arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface DOLDO
-        (§ abstract Object invokePrim(double arg0, Object arg1, long arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface DOLDL
-        (§ abstract long invokePrim(double arg0, Object arg1, long arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface DOLDD
-        (§ abstract double invokePrim(double arg0, Object arg1, long arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface DODOO
-        (§ abstract Object invokePrim(double arg0, Object arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface DODOL
-        (§ abstract long invokePrim(double arg0, Object arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface DODOD
-        (§ abstract double invokePrim(double arg0, Object arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface DODLO
-        (§ abstract Object invokePrim(double arg0, Object arg1, double arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface DODLL
-        (§ abstract long invokePrim(double arg0, Object arg1, double arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface DODLD
-        (§ abstract double invokePrim(double arg0, Object arg1, double arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface DODDO
-        (§ abstract Object invokePrim(double arg0, Object arg1, double arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface DODDL
-        (§ abstract long invokePrim(double arg0, Object arg1, double arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface DODDD
-        (§ abstract double invokePrim(double arg0, Object arg1, double arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"Object" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface DLOOO
-        (§ abstract Object invokePrim(double arg0, long arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface DLOOL
-        (§ abstract long invokePrim(double arg0, long arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface DLOOD
-        (§ abstract double invokePrim(double arg0, long arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface DLOLO
-        (§ abstract Object invokePrim(double arg0, long arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface DLOLL
-        (§ abstract long invokePrim(double arg0, long arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface DLOLD
-        (§ abstract double invokePrim(double arg0, long arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface DLODO
-        (§ abstract Object invokePrim(double arg0, long arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface DLODL
-        (§ abstract long invokePrim(double arg0, long arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface DLODD
-        (§ abstract double invokePrim(double arg0, long arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface DLLOO
-        (§ abstract Object invokePrim(double arg0, long arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface DLLOL
-        (§ abstract long invokePrim(double arg0, long arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface DLLOD
-        (§ abstract double invokePrim(double arg0, long arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface DLLLO
-        (§ abstract Object invokePrim(double arg0, long arg1, long arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface DLLLL
-        (§ abstract long invokePrim(double arg0, long arg1, long arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface DLLLD
-        (§ abstract double invokePrim(double arg0, long arg1, long arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface DLLDO
-        (§ abstract Object invokePrim(double arg0, long arg1, long arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface DLLDL
-        (§ abstract long invokePrim(double arg0, long arg1, long arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface DLLDD
-        (§ abstract double invokePrim(double arg0, long arg1, long arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface DLDOO
-        (§ abstract Object invokePrim(double arg0, long arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface DLDOL
-        (§ abstract long invokePrim(double arg0, long arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface DLDOD
-        (§ abstract double invokePrim(double arg0, long arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface DLDLO
-        (§ abstract Object invokePrim(double arg0, long arg1, double arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface DLDLL
-        (§ abstract long invokePrim(double arg0, long arg1, double arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface DLDLD
-        (§ abstract double invokePrim(double arg0, long arg1, double arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface DLDDO
-        (§ abstract Object invokePrim(double arg0, long arg1, double arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface DLDDL
-        (§ abstract long invokePrim(double arg0, long arg1, double arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface DLDDD
-        (§ abstract double invokePrim(double arg0, long arg1, double arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"long" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface DDOOO
-        (§ abstract Object invokePrim(double arg0, double arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface DDOOL
-        (§ abstract long invokePrim(double arg0, double arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface DDOOD
-        (§ abstract double invokePrim(double arg0, double arg1, Object arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"Object" arg2, #_"Object" arg3])
     )
 
     (§ interface DDOLO
-        (§ abstract Object invokePrim(double arg0, double arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface DDOLL
-        (§ abstract long invokePrim(double arg0, double arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface DDOLD
-        (§ abstract double invokePrim(double arg0, double arg1, Object arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"Object" arg2, #_"long" arg3])
     )
 
     (§ interface DDODO
-        (§ abstract Object invokePrim(double arg0, double arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface DDODL
-        (§ abstract long invokePrim(double arg0, double arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface DDODD
-        (§ abstract double invokePrim(double arg0, double arg1, Object arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"Object" arg2, #_"double" arg3])
     )
 
     (§ interface DDLOO
-        (§ abstract Object invokePrim(double arg0, double arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface DDLOL
-        (§ abstract long invokePrim(double arg0, double arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface DDLOD
-        (§ abstract double invokePrim(double arg0, double arg1, long arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"long" arg2, #_"Object" arg3])
     )
 
     (§ interface DDLLO
-        (§ abstract Object invokePrim(double arg0, double arg1, long arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface DDLLL
-        (§ abstract long invokePrim(double arg0, double arg1, long arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface DDLLD
-        (§ abstract double invokePrim(double arg0, double arg1, long arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"long" arg2, #_"long" arg3])
     )
 
     (§ interface DDLDO
-        (§ abstract Object invokePrim(double arg0, double arg1, long arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface DDLDL
-        (§ abstract long invokePrim(double arg0, double arg1, long arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface DDLDD
-        (§ abstract double invokePrim(double arg0, double arg1, long arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"long" arg2, #_"double" arg3])
     )
 
     (§ interface DDDOO
-        (§ abstract Object invokePrim(double arg0, double arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface DDDOL
-        (§ abstract long invokePrim(double arg0, double arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface DDDOD
-        (§ abstract double invokePrim(double arg0, double arg1, double arg2, Object arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"double" arg2, #_"Object" arg3])
     )
 
     (§ interface DDDLO
-        (§ abstract Object invokePrim(double arg0, double arg1, double arg2, long arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface DDDLL
-        (§ abstract long invokePrim(double arg0, double arg1, double arg2, long arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface DDDLD
-        (§ abstract double invokePrim(double arg0, double arg1, double arg2, long arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"double" arg2, #_"long" arg3])
     )
 
     (§ interface DDDDO
-        (§ abstract Object invokePrim(double arg0, double arg1, double arg2, double arg3))
+        #_abstract
+        (#_"Object" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface DDDDL
-        (§ abstract long invokePrim(double arg0, double arg1, double arg2, double arg3))
+        #_abstract
+        (#_"long" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"double" arg2, #_"double" arg3])
     )
 
     (§ interface DDDDD
-        (§ abstract double invokePrim(double arg0, double arg1, double arg2, double arg3))
+        #_abstract
+        (#_"double" invokePrim [this, #_"double" arg0, #_"double" arg1, #_"double" arg2, #_"double" arg3])
     )
 )
 )
@@ -17867,43 +18296,50 @@
 (java-ns cloiure.lang.IHashEq
 
 (§ interface IHashEq
-    (§ abstract int hasheq())
+    #_abstract
+    (#_"int" hasheq [this])
 )
 )
 
 (java-ns cloiure.lang.IKeywordLookup
 
 (§ interface IKeywordLookup
-    (§ abstract ILookupThunk getLookupThunk(Keyword k))
+    #_abstract
+    (#_"ILookupThunk" getLookupThunk [this, #_"Keyword" k])
 )
 )
 
 (java-ns cloiure.lang.IKVReduce
 
 (§ interface IKVReduce
-    (§ abstract Object kvreduce(IFn f, Object init))
+    #_abstract
+    (#_"Object" kvreduce [this, #_"IFn" f, #_"Object" init])
 )
 )
 
 (java-ns cloiure.lang.ILookup
 
 (§ interface ILookup
-    (§ abstract Object valAt(Object key))
-    (§ abstract Object valAt(Object key, Object notFound))
+    #_abstract
+    (#_"Object" valAt [this, #_"Object" key])
+    #_abstract
+    (#_"Object" valAt [this, #_"Object" key, #_"Object" notFound])
 )
 )
 
 (java-ns cloiure.lang.ILookupSite
 
 (§ interface ILookupSite
-    (§ abstract ILookupThunk fault(Object target))
+    #_abstract
+    (#_"ILookupThunk" fault [this, #_"Object" target])
 )
 )
 
 (java-ns cloiure.lang.ILookupThunk
 
 (§ interface ILookupThunk
-    (§ abstract Object get(Object target))
+    #_abstract
+    (#_"Object" get [this, #_"Object" target])
 )
 )
 
@@ -17912,8 +18348,10 @@
 (§ import java.util.Map)
 
 (§ interface IMapEntry (§ extends Map).Entry
-    (§ abstract Object key())
-    (§ abstract Object val())
+    #_abstract
+    (#_"Object" key [this])
+    #_abstract
+    (#_"Object" val [this])
 )
 )
 
@@ -17925,30 +18363,36 @@
  ; Indicate a map can provide more efficient key and val iterators.
  ;;
 (§ interface IMapIterable
-    (§ abstract Iterator keyIterator())
-    (§ abstract Iterator valIterator())
+    #_abstract
+    (#_"Iterator" keyIterator [this])
+    #_abstract
+    (#_"Iterator" valIterator [this])
 )
 )
 
 (java-ns cloiure.lang.IMeta
 
 (§ interface IMeta
-    (§ abstract IPersistentMap meta())
+    #_abstract
+    (#_"IPersistentMap" meta [this])
 )
 )
 
 (java-ns cloiure.lang.Indexed
 
 (§ interface Indexed (§ extends Counted)
-    (§ abstract Object nth(int i))
-    (§ abstract Object nth(int i, Object notFound))
+    #_abstract
+    (#_"Object" nth [this, #_"int" i])
+    #_abstract
+    (#_"Object" nth [this, #_"int" i, #_"Object" notFound])
 )
 )
 
 (java-ns cloiure.lang.IndexedSeq
 
 (§ interface IndexedSeq (§ extends ISeq, Sequential, Counted)
-    (§ abstract int index())
+    #_abstract
+    (#_"int" index [this])
 )
 )
 
@@ -18080,24 +18524,30 @@
 (java-ns cloiure.lang.IObj
 
 (§ interface IObj (§ extends IMeta)
-    (§ abstract IObj withMeta(IPersistentMap meta))
+    #_abstract
+    (#_"IObj" withMeta [this, #_"IPersistentMap" meta])
 )
 )
 
 (java-ns cloiure.lang.IPending
 
 (§ interface IPending
-    (§ abstract boolean isRealized())
+    #_abstract
+    (#_"boolean" isRealized [this])
 )
 )
 
 (java-ns cloiure.lang.IPersistentCollection
 
 (§ interface IPersistentCollection (§ extends Seqable)
-    (§ abstract int count())
-    (§ abstract IPersistentCollection cons(Object o))
-    (§ abstract IPersistentCollection empty())
-    (§ abstract boolean equiv(Object o))
+    #_abstract
+    (#_"int" count [this])
+    #_abstract
+    (#_"IPersistentCollection" cons [this, #_"Object" o])
+    #_abstract
+    (#_"IPersistentCollection" empty [this])
+    #_abstract
+    (#_"boolean" equiv [this, #_"Object" o])
 )
 )
 
@@ -18110,44 +18560,58 @@
 (java-ns cloiure.lang.IPersistentMap
 
 (§ interface IPersistentMap (§ extends Iterable, Associative, Counted)
-    (§ abstract IPersistentMap assoc(Object key, Object val))
-    (§ abstract IPersistentMap assocEx(Object key, Object val))
-    (§ abstract IPersistentMap without(Object key))
+    #_abstract
+    (#_"IPersistentMap" assoc [this, #_"Object" key, #_"Object" val])
+    #_abstract
+    (#_"IPersistentMap" assocEx [this, #_"Object" key, #_"Object" val])
+    #_abstract
+    (#_"IPersistentMap" without [this, #_"Object" key])
 )
 )
 
 (java-ns cloiure.lang.IPersistentSet
 
 (§ interface IPersistentSet (§ extends IPersistentCollection, Counted)
-    (§ abstract IPersistentSet disjoin(Object key))
-    (§ abstract boolean contains(Object key))
-    (§ abstract Object get(Object key))
+    #_abstract
+    (#_"IPersistentSet" disjoin [this, #_"Object" key])
+    #_abstract
+    (#_"boolean" contains [this, #_"Object" key])
+    #_abstract
+    (#_"Object" get [this, #_"Object" key])
 )
 )
 
 (java-ns cloiure.lang.IPersistentStack
 
 (§ interface IPersistentStack (§ extends IPersistentCollection)
-    (§ abstract Object peek())
-    (§ abstract IPersistentStack pop())
+    #_abstract
+    (#_"Object" peek [this])
+    #_abstract
+    (#_"IPersistentStack" pop [this])
 )
 )
 
 (java-ns cloiure.lang.IPersistentVector
 
 (§ interface IPersistentVector (§ extends Associative, Sequential, IPersistentStack, Reversible, Indexed)
-    (§ abstract int length())
-    (§ abstract IPersistentVector assocN(int i, Object val))
-    (§ abstract IPersistentVector cons(Object o))
+    #_abstract
+    (#_"int" length [this])
+    #_abstract
+    (#_"IPersistentVector" assocN [this, #_"int" i, #_"Object" val])
+    #_abstract
+    (#_"IPersistentVector" cons [this, #_"Object" o])
 )
 )
 
 (java-ns cloiure.lang.IProxy
 
 (§ interface IProxy
-    (§ abstract void __initCloiureFnMappings(IPersistentMap m))
-    (§ abstract void __updateCloiureFnMappings(IPersistentMap m))
-    (§ abstract IPersistentMap __getCloiureFnMappings())
+    #_abstract
+    (#_"void" __initCloiureFnMappings [this, #_"IPersistentMap" m])
+    #_abstract
+    (#_"void" __updateCloiureFnMappings [this, #_"IPersistentMap" m])
+    #_abstract
+    (#_"IPersistentMap" __getCloiureFnMappings [this])
 )
 )
 
@@ -18160,33 +18624,42 @@
 (java-ns cloiure.lang.IReduce
 
 (§ interface IReduce (§ extends IReduceInit)
-    (§ abstract Object reduce(IFn f))
+    #_abstract
+    (#_"Object" reduce [this, #_"IFn" f])
 )
 )
 
 (java-ns cloiure.lang.IReduceInit
 
 (§ interface IReduceInit
-    (§ abstract Object reduce(IFn f, Object start))
+    #_abstract
+    (#_"Object" reduce [this, #_"IFn" f, #_"Object" start])
 )
 )
 
 (java-ns cloiure.lang.IRef
 
 (§ interface IRef (§ extends IDeref)
-    (§ abstract void setValidator(IFn vf))
-    (§ abstract IFn getValidator())
-    (§ abstract IPersistentMap getWatches())
-    (§ abstract IRef addWatch(Object key, IFn callback))
-    (§ abstract IRef removeWatch(Object key))
+    #_abstract
+    (#_"void" setValidator [this, #_"IFn" vf])
+    #_abstract
+    (#_"IFn" getValidator [this])
+    #_abstract
+    (#_"IPersistentMap" getWatches [this])
+    #_abstract
+    (#_"IRef" addWatch [this, #_"Object" key, #_"IFn" callback])
+    #_abstract
+    (#_"IRef" removeWatch [this, #_"Object" key])
 )
 )
 
 (java-ns cloiure.lang.IReference
 
 (§ interface IReference (§ extends IMeta)
-    (§ abstract IPersistentMap alterMeta(IFn alter, ISeq args))
-    (§ abstract IPersistentMap resetMeta(IPersistentMap m))
+    #_abstract
+    (#_"IPersistentMap" alterMeta [this, #_"IFn" alter, #_"ISeq" args])
+    #_abstract
+    (#_"IPersistentMap" resetMeta [this, #_"IPersistentMap" m])
 )
 )
 
@@ -18199,17 +18672,21 @@
  ; or invalidates the ISeq
  ;;
 (§ interface ISeq (§ extends IPersistentCollection)
-    (§ abstract Object first())
-    (§ abstract ISeq next())
-    (§ abstract ISeq more())
-    (§ abstract ISeq cons(Object o))
+    #_abstract
+    (#_"Object" first [this])
+    #_abstract
+    (#_"ISeq" next [this])
+    #_abstract
+    (#_"ISeq" more [this])
+    #_abstract
+    (#_"ISeq" cons [this, #_"Object" o])
 )
 )
 
 (java-ns cloiure.lang.Iterate
 
 (class-ns Iterate (§ extends ASeq) (§ implements IReduce, IPending)
-    (§ def- #_"Object" UNREALIZED_SEED (ß new Object()))
+    (§ def- #_"Object" UNREALIZED_SEED (Object.))
     (§ field- #_"IFn" f) ;; never nil
     (§ field- #_"Object" prevSeed)
     #_volatile
@@ -18370,49 +18847,62 @@
 (java-ns cloiure.lang.ITransientAssociative
 
 (§ interface ITransientAssociative (§ extends ITransientCollection, ILookup)
-    (§ abstract ITransientAssociative assoc(Object key, Object val))
+    #_abstract
+    (#_"ITransientAssociative" assoc [this, #_"Object" key, #_"Object" val])
 )
 )
 
 (java-ns cloiure.lang.ITransientAssociative2
 
 (§ interface ITransientAssociative2 (§ extends ITransientAssociative)
-    (§ abstract boolean containsKey(Object key))
-    (§ abstract IMapEntry entryAt(Object key))
+    #_abstract
+    (#_"boolean" containsKey [this, #_"Object" key])
+    #_abstract
+    (#_"IMapEntry" entryAt [this, #_"Object" key])
 )
 )
 
 (java-ns cloiure.lang.ITransientCollection
 
 (§ interface ITransientCollection
-    (§ abstract ITransientCollection conj(Object val))
-    (§ abstract IPersistentCollection persistent())
+    #_abstract
+    (#_"ITransientCollection" conj [this, #_"Object" val])
+    #_abstract
+    (#_"IPersistentCollection" persistent [this])
 )
 )
 
 (java-ns cloiure.lang.ITransientMap
 
 (§ interface ITransientMap (§ extends ITransientAssociative, Counted)
-    (§ abstract ITransientMap assoc(Object key, Object val))
-    (§ abstract ITransientMap without(Object key))
-    (§ abstract IPersistentMap persistent())
+    #_abstract
+    (#_"ITransientMap" assoc [this, #_"Object" key, #_"Object" val])
+    #_abstract
+    (#_"ITransientMap" without [this, #_"Object" key])
+    #_abstract
+    (#_"IPersistentMap" persistent [this])
 )
 )
 
 (java-ns cloiure.lang.ITransientSet
 
 (§ interface ITransientSet (§ extends ITransientCollection, Counted)
-    (§ abstract ITransientSet disjoin(Object key))
-    (§ abstract boolean contains(Object key))
-    (§ abstract Object get(Object key))
+    #_abstract
+    (#_"ITransientSet" disjoin [this, #_"Object" key])
+    #_abstract
+    (#_"boolean" contains [this, #_"Object" key])
+    #_abstract
+    (#_"Object" get [this, #_"Object" key])
 )
 )
 
 (java-ns cloiure.lang.ITransientVector
 
 (§ interface ITransientVector (§ extends ITransientAssociative, Indexed)
-    (§ abstract ITransientVector assocN(int i, Object val))
-    (§ abstract ITransientVector pop())
+    #_abstract
+    (#_"ITransientVector" assocN [this, #_"int" i, #_"Object" val])
+    #_abstract
+    (#_"ITransientVector" pop [this])
 )
 )
 
@@ -18431,9 +18921,9 @@
 (§ import java.lang.ref.SoftReference)
 
 (class-ns Keyword (§ implements IFn, Comparable, Named, IHashEq)
-    (§ def- #_"ConcurrentHashMap<Symbol, Reference<Keyword>>" table (ß new ConcurrentHashMap()))
+    (§ def- #_"ConcurrentHashMap<Symbol, Reference<Keyword>>" table (ConcurrentHashMap.))
 
-    (§ def #_"ReferenceQueue" rq (ß new ReferenceQueue()))
+    (§ def #_"ReferenceQueue" rq (ReferenceQueue.))
 
     (§ field #_"Symbol" sym)
     (§ field #_"int" hasheq)
@@ -18531,7 +19021,7 @@
 
     #_method
     (§ defn #_"void" run [this]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -18840,7 +19330,7 @@
     (§ defn #_"int" count [this]
         (let [#_"int" c 0]
             (loop-when-recur [(ß ISeq s = seq())] (ß s != nil) [(ß s = s.next())]
-                (ß ++c)
+                (ß c = c + 1)
             )
             c
         )
@@ -18933,32 +19423,32 @@
 
     #_method
     (§ defn #_"boolean" add [this, #_"Object" o]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" remove [this, #_"Object" o]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" addAll [this, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"void" clear [this]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" retainAll [this, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" removeAll [this, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -19013,18 +19503,18 @@
 
     #_method
     (§ defn #_"Object" set [this, #_"int" index, #_"Object" element]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"Object" remove [this, #_"int" index]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"int" indexOf [this, #_"Object" o]
         (let [#_"ISeq" s (ß seq())]
-            (loop-when-recur [(ß int i = 0)] (ß s != nil) [(ß s = s.next(), i++)]
+            (loop-when-recur [(ß int i = 0)] (ß s != nil) [(ß s = s.next(), i = i + 1)]
                 (when (ß Util.equiv(s.first(), o))
                     (§ return i)
                 )
@@ -19055,12 +19545,12 @@
 
     #_method
     (§ defn #_"void" add [this, #_"int" index, #_"Object" element]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" addAll [this, #_"int" index, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -19087,9 +19577,9 @@
 
     (§ def- #_"int" newline (ß (int) \newline))
 
-    (§ field- #_"boolean" _atLineStart (ß true))
+    (§ field- #_"boolean" _atLineStart true)
     (§ field- #_"boolean" _prev)
-    (§ field- #_"int" _columnNumber (ß 1))
+    (§ field- #_"int" _columnNumber 1)
 
     (§ constructor #_"LineNumberingPushbackReader" LineNumberingPushbackReader [#_"Reader" r]
         (§ super(new LineNumberReader(r)))
@@ -19128,7 +19618,7 @@
                 )
                 (do
                     (ß _atLineStart = false)
-                    (ß _columnNumber++)
+                    (ß _columnNumber = _columnNumber + 1)
                 )
             )
             c
@@ -19139,7 +19629,7 @@
     (§ defn #_"void" unread [this, #_"int" c] (§ throws IOException)
         (ß super.unread(c))
         (ß _atLineStart = _prev)
-        (ß _columnNumber--)
+        (ß _columnNumber = _columnNumber - 1)
         nil
     )
 
@@ -19245,7 +19735,7 @@
     (§ def #_"Var" GENSYM_ENV (ß Var.create(nil).setDynamic()))
     ;; sorted-map num->gensymbol
     (§ def #_"Var" ARG_ENV (ß Var.create(nil).setDynamic()))
-    (§ def #_"IFn" ctorReader (ß new CtorReader()))
+    (§ def #_"IFn" ctorReader (CtorReader.))
 
     ;; Dynamic var set to true in a read-cond context
     (§ def #_"Var" READ_COND_ENV (ß Var.create(nil).setDynamic()))
@@ -19283,10 +19773,14 @@
     )
 
     (§ interface Resolver
-        (§ abstract Symbol currentNS())
-        (§ abstract Symbol resolveClass(Symbol sym))
-        (§ abstract Symbol resolveAlias(Symbol sym))
-        (§ abstract Symbol resolveVar(Symbol sym))
+        #_abstract
+        (#_"Symbol" currentNS [this])
+        #_abstract
+        (#_"Symbol" resolveClass [this, #_"Symbol" sym])
+        #_abstract
+        (#_"Symbol" resolveAlias [this, #_"Symbol" sym])
+        #_abstract
+        (#_"Symbol" resolveVar [this, #_"Symbol" sym])
     )
 
     (§ defn #_"boolean" isWhitespace [#_"int" ch]
@@ -19374,7 +19868,7 @@
     (§ defn- #_"Object" ensurePending [#_"Object" pendingForms]
         (if (ß pendingForms == nil)
             (do
-                (ß new LinkedList())
+                (LinkedList.)
             )
             (do
                 pendingForms
@@ -19480,7 +19974,7 @@
     )
 
     (§ defn- #_"String" readToken [#_"PushbackReader" r, #_"char" initch]
-        (let [#_"StringBuilder" sb (ß new StringBuilder())]
+        (let [#_"StringBuilder" sb (StringBuilder.)]
             (ß sb.append(initch))
 
             (while true
@@ -19496,7 +19990,7 @@
     )
 
     (§ defn- #_"Object" readNumber [#_"PushbackReader" r, #_"char" initch]
-        (let [#_"StringBuilder" sb (ß new StringBuilder())]
+        (let [#_"StringBuilder" sb (StringBuilder.)]
             (ß sb.append(initch))
 
             (while true
@@ -19525,7 +20019,7 @@
             (throw (ß new IllegalArgumentException("Invalid unicode character: \\" + token)))
         )
         (let [#_"int" uc 0]
-            (loop-when-recur [(ß int i = offset)] (ß i < offset + length) [(ß ++i)]
+            (loop-when-recur [(ß int i = offset)] (ß i < offset + length) [(ß i = i + 1)]
                 (let [#_"int" d (ß Character.digit(token.charAt(i), base))]
                     (when (ß d == -1)
                         (throw (ß new IllegalArgumentException("Invalid digit: " + token.charAt(i))))
@@ -19543,7 +20037,7 @@
                 (throw (ß new IllegalArgumentException("Invalid digit: " + (char) initch)))
             )
             (let [#_"int" i 1]
-                (loop-when-recur [(ß )] (ß i < length) [(ß ++i)]
+                (loop-when-recur [(ß )] (ß i < length) [(ß i = i + 1)]
                     (let [#_"int" ch (ß read1(r))]
                         (when (ß ch == -1 || isWhitespace(ch) || isMacro(ch))
                             (ß unread(r, ch))
@@ -19743,11 +20237,11 @@
     )
 
     (class-ns RegexReader (§ extends AFn)
-        (§ def #_"StringReader" stringrdr (ß new StringReader()))
+        (§ def #_"StringReader" stringrdr (StringReader.))
 
         #_method
         (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" doublequote, #_"Object" opts, #_"Object" pendingForms]
-            (let [#_"StringBuilder" sb (ß new StringBuilder())]
+            (let [#_"StringBuilder" sb (StringBuilder.)]
                 (let [#_"Reader" r (ß (Reader) reader)]
                     (loop-when-recur [(ß int ch = read1(r))] (ß ch != \") [(ß ch = read1(r))] ;; oops! "
                         (when (ß ch == -1)
@@ -19771,7 +20265,7 @@
     (class-ns StringReader (§ extends AFn)
         #_method
         (§ defn #_"Object" invoke [this, #_"Object" reader, #_"Object" doublequote, #_"Object" opts, #_"Object" pendingForms]
-            (let [#_"StringBuilder" sb (ß new StringBuilder())]
+            (let [#_"StringBuilder" sb (StringBuilder.)]
                 (let [#_"Reader" r (ß (Reader) reader)]
                     (loop-when-recur [(ß int ch = read1(r))] (ß ch != \") [(ß ch = read1(r))] ;; oops! "
                         (when (ß ch == -1)
@@ -19993,7 +20487,7 @@
                                         ;; Construct output map
                                         (let [#_"Object[]" a (ß new Object[kvs.size()])]
                                             (let [#_"Iterator" iter (ß kvs.iterator())]
-                                                (loop-when-recur [(ß int i = 0)] (ß iter.hasNext()) [(ß i += 2)]
+                                                (loop-when-recur [(ß int i = 0)] (ß iter.hasNext()) [(ß i = i + 2)]
                                                     (let [#_"Object" key (ß iter.next())]
                                                         (let [#_"Object" val (ß iter.next())]
                                                             (cond (ß key instanceof Keyword)
@@ -20167,7 +20661,7 @@
                                     (when (ß rargs != nil)
                                         (let [#_"int" higharg (ß (Integer) ((Map.Entry) rargs.first()).getKey())]
                                             (when (ß higharg > 0)
-                                                (loop-when-recur [(ß int i = 1)] (ß i <= higharg) [(ß ++i)]
+                                                (loop-when-recur [(ß int i = 1)] (ß i <= higharg) [(ß i = i + 1)]
                                                     (let [#_"Object" sym (ß argsyms.valAt(i))]
                                                         (when (ß sym == nil)
                                                             (ß sym = garg(i))
@@ -20752,12 +21246,12 @@
     )
 
     ;; Sentinel values for reading lists
-    (§ def- #_"Object" READ_EOF (ß new Object()))
-    (§ def- #_"Object" READ_FINISHED (ß new Object()))
+    (§ def- #_"Object" READ_EOF (Object.))
+    (§ def- #_"Object" READ_FINISHED (Object.))
 
     (§ defn #_"List" readDelimitedList [#_"char" delim, #_"PushbackReader" r, #_"boolean" isRecursive, #_"Object" opts, #_"Object" pendingForms]
         (let [#_"int" firstline (ß (r instanceof LineNumberingPushbackReader) ? ((LineNumberingPushbackReader) r).getLineNumber() :or -1)]
-            (let [#_"ArrayList" a (ß new ArrayList())]
+            (let [#_"ArrayList" a (ArrayList.)]
                 (let [#_"Resolver" resolver (ß (Resolver) RT.READER_RESOLVER.deref())]
                     (while true
                         (let [#_"Object" form (ß read(r, false, READ_EOF, delim, READ_FINISHED, isRecursive, opts, pendingForms, resolver))]
@@ -20915,7 +21409,7 @@
     )
 
     (class-ns ConditionalReader (§ extends AFn)
-        (§ def- #_"Object" READ_STARTED (ß new Object()))
+        (§ def- #_"Object" READ_STARTED (Object.))
         (§ def #_"Keyword" DEFAULT_FEATURE (ß Keyword.intern(nil, "default")))
         (§ def #_"IPersistentSet" RESERVED_FEATURES (ß RT.set(Keyword.intern(nil, "else"), Keyword.intern(nil, "none"))))
 
@@ -20934,7 +21428,7 @@
         )
 
         (§ defn #_"Object" readCondDelimited [#_"PushbackReader" r, #_"boolean" splicing, #_"Object" opts, #_"Object" pendingForms]
-            (let [#_"Object" result (ß READ_STARTED)]
+            (let [#_"Object" result READ_STARTED]
                 (§ let [#_"Object" form] ;; The most recently ready form
                     (let [#_"boolean" toplevel (ß (pendingForms == nil))]
                         (ß pendingForms = ensurePending(pendingForms))
@@ -21128,17 +21622,16 @@
 (§ import java.util.concurrent.TimeUnit)
 (§ import java.util.concurrent.CountDownLatch)
 
-(§ anno @SuppressWarnings((§ "SynchronizeOnNonFinalField" )))
 (class-ns LockingTransaction
-    (§ def #_"int" RETRY_LIMIT (ß 10000))
-    (§ def #_"int" LOCK_WAIT_MSECS (ß 100))
+    (§ def #_"int" RETRY_LIMIT 10000)
+    (§ def #_"int" LOCK_WAIT_MSECS 100)
     (§ def #_"long" BARGE_WAIT_NANOS (ß 10 * 1000000))
 
-    (§ def #_"int" RUNNING (ß 0))
-    (§ def #_"int" COMMITTING (ß 1))
-    (§ def #_"int" RETRY (ß 2))
-    (§ def #_"int" KILLED (ß 3))
-    (§ def #_"int" COMMITTED (ß 4))
+    (§ def #_"int" RUNNING 0)
+    (§ def #_"int" COMMITTING 1)
+    (§ def #_"int" RETRY 2)
+    (§ def #_"int" KILLED 3)
+    (§ def #_"int" COMMITTED 4)
 
     (§ def #_"ThreadLocal<LockingTransaction>" transaction (ß new ThreadLocal<LockingTransaction>()))
 
@@ -21181,7 +21674,7 @@
 
     ;; total order on transactions
     ;; transactions will consume a point for init, for each retry, and on commit if writing
-    (§ def- #_"AtomicLong" lastPoint (ß new AtomicLong()))
+    (§ def- #_"AtomicLong" lastPoint (AtomicLong.))
 
     #_method
     (§ defn #_"void" getReadPoint [this]
@@ -21214,7 +21707,7 @@
     (§ field #_"long" startPoint)
     (§ field #_"long" startTime)
 
-    (§ field #_"RetryEx" retryex (ß new RetryEx()))
+    (§ field #_"RetryEx" retryex (RetryEx.))
     (§ field #_"ArrayList<Agent.Action>" actions (ß new ArrayList<Agent.Action>()))
     (§ field #_"HashMap<Ref, Object>" vals (ß new HashMap<Ref, Object>()))
     (§ field #_"HashSet<Ref>" sets (ß new HashSet<Ref>()))
@@ -21295,7 +21788,7 @@
     #_method
     (§ defn #_"void" abort [this] (§ throws AbortException)
         (ß stop(KILLED))
-        (throw (ß new AbortException()))
+        (throw (AbortException.))
     )
 
     #_method
@@ -21388,7 +21881,7 @@
             (let [#_"Object" ret nil]
                 (let [#_"ArrayList<Ref>" locked (ß new ArrayList<Ref>())]
                     (let [#_"ArrayList<Notify>" notify (ß new ArrayList<Notify>())]
-                        (loop-when-recur [(ß int i = 0)] (ß !done && i < RETRY_LIMIT) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß !done && i < RETRY_LIMIT) [(ß i = i + 1)]
                             (try
                                 (ß getReadPoint())
                                 (when (ß i == 0)
@@ -21483,7 +21976,7 @@
                                     ;; eat this so we retry rather than fall out
                                 )
                                 (finally
-                                    (loop-when-recur [(ß int k = locked.size() - 1)] (ß k >= 0) [(ß --k)]
+                                    (loop-when-recur [(ß int k = locked.size() - 1)] (ß k >= 0) [(ß k = k - 1)]
                                         (ß locked.get(k).lock.writeLock().unlock())
                                     )
                                     (ß locked.clear())
@@ -21645,7 +22138,7 @@
  ; Implements the special common case of a finite range based on long start, end, and step.
  ;;
 (class-ns LongRange (§ extends ASeq) (§ implements Counted, IChunkedSeq, IReduce)
-    (§ def- #_"int" CHUNK_SIZE (ß 32))
+    (§ def- #_"int" CHUNK_SIZE 32)
 
     ;; Invariants guarantee this is never an empty or infinite seq
     (§ field #_"long" start)
@@ -21662,7 +22155,8 @@
 
     #_private
     (§ interface BoundsCheck
-        (§ abstract boolean exceededBounds(long val))
+        #_abstract
+        (#_"boolean" exceededBounds [this, #_"long" val])
     )
 
     (§ defn- #_"BoundsCheck" positiveStep [#_"long" end]
@@ -21851,7 +22345,7 @@
                                 (§ break )
                             )
                             (do
-                                (ß count++)
+                                (ß count = count + 1)
                             )
                         )
                         (catch ArithmeticException e
@@ -21892,7 +22386,7 @@
                     (let [#_"long" count 0]
                         (while (ß iter.hasNext())
                             (ß iter.next())
-                            (ß count++)
+                            (ß count = count + 1)
                         )
 
                         (if (ß count > Integer.MAX_VALUE)
@@ -21918,7 +22412,7 @@
                     (when (ß acc instanceof Reduced)
                         (§ return (ß ((Reduced)acc).deref()))
                     )
-                    (ß i += step)
+                    (ß i = i + step)
                 )
                 acc
             )
@@ -21934,7 +22428,7 @@
                     (when (ß RT.isReduced(acc))
                         (§ return (ß ((Reduced)acc).deref()))
                     )
-                    (ß i += step)
+                    (ß i = i + step)
                     (§ recur-if (!boundsCheck.exceededBounds(i)))
                 )
                 acc
@@ -21944,7 +22438,7 @@
 
     #_method
     (§ defn #_"Iterator" iterator [this]
-        (ß new LongRangeIterator())
+        (LongRangeIterator.)
     )
 
     #_non-static
@@ -21979,14 +22473,14 @@
                     )
                 )
                 (do
-                    (throw (ß new NoSuchElementException()))
+                    (throw (NoSuchElementException.))
                 )
             )
         )
 
         #_method
         (§ defn #_"void" remove [this]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
     )
 
@@ -22038,12 +22532,12 @@
         (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" init]
             (let [#_"long" x start]
                 (let [#_"Object" ret init]
-                    (loop-when-recur [(ß int i = 0)] (ß i < count) [(ß i++)]
+                    (loop-when-recur [(ß int i = 0)] (ß i < count) [(ß i = i + 1)]
                         (ß ret = f.invoke(ret, x))
                         (when (ß RT.isReduced(ret))
                             (§ return ret)
                         )
-                        (ß x += step)
+                        (ß x = x + step)
                     )
                     ret
                 )
@@ -22123,7 +22617,7 @@
     (§ field #_"Object[]" table) ;; [class, entry. class, entry ...]
     (§ field #_"Map" map)
 
-    (§ field #_"Entry" mre (ß nil))
+    (§ field #_"Entry" mre nil)
 
     (§ constructor #_"MethodImplCache" MethodImplCache [#_"IPersistentMap" protocol, #_"Keyword" methodk]
         (§ this(protocol, methodk, 0, 0, RT.EMPTY_ARRAY))
@@ -22799,9 +23293,9 @@
  ; @author Kurt Alfred Kluever
  ;;
 (class-ns Murmur3
-    (§ def- #_"int" seed (ß 0))
-    (§ def- #_"int" C1 (ß 0xcc9e2d51))
-    (§ def- #_"int" C2 (ß 0x1b873593))
+    (§ def- #_"int" seed 0)
+    (§ def- #_"int" C1 0xcc9e2d51)
+    (§ def- #_"int" C2 0x1b873593)
 
     (§ defn #_"int" hashInt [#_"int" input]
         (when (ß input == 0)
@@ -22835,7 +23329,7 @@
     (§ defn #_"int" hashUnencodedChars [#_"CharSequence" input]
         (let [#_"int" h1 seed]
             ;; step through the CharSequence 2 chars at a time
-            (loop-when-recur [(ß int i = 1)] (ß i < input.length()) [(ß i += 2)]
+            (loop-when-recur [(ß int i = 1)] (ß i < input.length()) [(ß i = i + 2)]
                 (let [#_"int" k1 (ß input.charAt(i - 1) | (input.charAt(i) << 16))]
                     (ß k1 = mixK1(k1))
                     (ß h1 = mixH1(h1, k1))
@@ -22846,7 +23340,7 @@
             (when (ß (input.length() & 1) == 1)
                 (let [#_"int" k1 (ß input.charAt(input.length() - 1))]
                     (ß k1 = mixK1(k1))
-                    (ß h1 ^= k1)
+                    (ß h1 = h1 :xor k1)
                 )
             )
 
@@ -22868,7 +23362,7 @@
             (let [#_"int" hash 1]
                 (doseq [#_"Object" x xs]
                     (ß hash = 31 * hash + Util.hasheq(x))
-                    (ß ++n)
+                    (ß n = n + 1)
                 )
 
                 (ß mixCollHash(hash, n))
@@ -22880,8 +23374,8 @@
         (let [#_"int" hash 0]
             (let [#_"int" n 0]
                 (doseq [#_"Object" x xs]
-                    (ß hash += Util.hasheq(x))
-                    (ß ++n)
+                    (ß hash = hash + Util.hasheq(x))
+                    (ß n = n + 1)
                 )
 
                 (ß mixCollHash(hash, n))
@@ -22890,14 +23384,14 @@
     )
 
     (§ defn- #_"int" mixK1 [#_"int" k1]
-        (ß k1 *= C1)
+        (ß k1 = k1 * C1)
         (ß k1 = Integer.rotateLeft(k1, 15))
-        (ß k1 *= C2)
+        (ß k1 = k1 * C2)
         k1
     )
 
     (§ defn- #_"int" mixH1 [#_"int" h1, #_"int" k1]
-        (ß h1 ^= k1)
+        (ß h1 = h1 :xor k1)
         (ß h1 = Integer.rotateLeft(h1, 13))
         (ß h1 = h1 * 5 + 0xe6546b64)
         h1
@@ -22905,12 +23399,12 @@
 
     ;; Finalization mix - force all bits of a hash block to avalanche
     (§ defn- #_"int" fmix [#_"int" h1, #_"int" length]
-        (ß h1 ^= length)
-        (ß h1 ^= h1 >>> 16)
-        (ß h1 *= 0x85ebca6b)
-        (ß h1 ^= h1 >>> 13)
-        (ß h1 *= 0xc2b2ae35)
-        (ß h1 ^= h1 >>> 16)
+        (ß h1 = h1 :xor length)
+        (ß h1 = h1 :xor (h1 >>> 16))
+        (ß h1 = h1 * 0x85ebca6b)
+        (ß h1 = h1 :xor (h1 >>> 13))
+        (ß h1 = h1 * 0xc2b2ae35)
+        (ß h1 = h1 :xor (h1 >>> 16))
         h1
     )
 )
@@ -22919,8 +23413,10 @@
 (java-ns cloiure.lang.Named
 
 (§ interface Named
-    (§ abstract String getNamespace())
-    (§ abstract String getName())
+    #_abstract
+    (#_"String" getNamespace [this])
+    #_abstract
+    (#_"String" getName [this])
 )
 )
 
@@ -23200,32 +23696,58 @@
 
 (class-ns Numbers
     (§ interface Ops
-        (§ abstract Ops combine(Ops y))
-        (§ abstract Ops opsWith(LongOps x))
-        (§ abstract Ops opsWith(DoubleOps x))
-        (§ abstract Ops opsWith(RatioOps x))
-        (§ abstract Ops opsWith(BigIntOps x))
-        (§ abstract Ops opsWith(BigDecimalOps x))
-        (§ abstract boolean isZero(Number x))
-        (§ abstract boolean isPos(Number x))
-        (§ abstract boolean isNeg(Number x))
-        (§ abstract Number add(Number x, Number y))
-        (§ abstract Number addP(Number x, Number y))
-        (§ abstract Number multiply(Number x, Number y))
-        (§ abstract Number multiplyP(Number x, Number y))
-        (§ abstract Number divide(Number x, Number y))
-        (§ abstract Number quotient(Number x, Number y))
-        (§ abstract Number remainder(Number x, Number y))
-        (§ abstract boolean equiv(Number x, Number y))
-        (§ abstract boolean lt(Number x, Number y))
-        (§ abstract boolean lte(Number x, Number y))
-        (§ abstract boolean gte(Number x, Number y))
-        (§ abstract Number negate(Number x))
-        (§ abstract Number negateP(Number x))
-        (§ abstract Number inc(Number x))
-        (§ abstract Number incP(Number x))
-        (§ abstract Number dec(Number x))
-        (§ abstract Number decP(Number x))
+        #_abstract
+        (#_"Ops" combine [this, #_"Ops" y])
+        #_abstract
+        (#_"Ops" opsWith [this, #_"LongOps" x])
+        #_abstract
+        (#_"Ops" opsWith [this, #_"DoubleOps" x])
+        #_abstract
+        (#_"Ops" opsWith [this, #_"RatioOps" x])
+        #_abstract
+        (#_"Ops" opsWith [this, #_"BigIntOps" x])
+        #_abstract
+        (#_"Ops" opsWith [this, #_"BigDecimalOps" x])
+        #_abstract
+        (#_"boolean" isZero [this, #_"Number" x])
+        #_abstract
+        (#_"boolean" isPos [this, #_"Number" x])
+        #_abstract
+        (#_"boolean" isNeg [this, #_"Number" x])
+        #_abstract
+        (#_"Number" add [this, #_"Number" x, #_"Number" y])
+        #_abstract
+        (#_"Number" addP [this, #_"Number" x, #_"Number" y])
+        #_abstract
+        (#_"Number" multiply [this, #_"Number" x, #_"Number" y])
+        #_abstract
+        (#_"Number" multiplyP [this, #_"Number" x, #_"Number" y])
+        #_abstract
+        (#_"Number" divide [this, #_"Number" x, #_"Number" y])
+        #_abstract
+        (#_"Number" quotient [this, #_"Number" x, #_"Number" y])
+        #_abstract
+        (#_"Number" remainder [this, #_"Number" x, #_"Number" y])
+        #_abstract
+        (#_"boolean" equiv [this, #_"Number" x, #_"Number" y])
+        #_abstract
+        (#_"boolean" lt [this, #_"Number" x, #_"Number" y])
+        #_abstract
+        (#_"boolean" lte [this, #_"Number" x, #_"Number" y])
+        #_abstract
+        (#_"boolean" gte [this, #_"Number" x, #_"Number" y])
+        #_abstract
+        (#_"Number" negate [this, #_"Number" x])
+        #_abstract
+        (#_"Number" negateP [this, #_"Number" x])
+        #_abstract
+        (#_"Number" inc [this, #_"Number" x])
+        #_abstract
+        (#_"Number" incP [this, #_"Number" x])
+        #_abstract
+        (#_"Number" dec [this, #_"Number" x])
+        #_abstract
+        (#_"Number" decP [this, #_"Number" x])
     )
 
     #_abstract
@@ -23441,7 +23963,6 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"BigInt" toBigInt [#_"Object" x]
         (when (ß x instanceof BigInt)
             (§ return (ß (BigInt) x))
@@ -23456,7 +23977,6 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"BigInteger" toBigInteger [#_"Object" x]
         (cond (ß x instanceof BigInteger)
             (do
@@ -23473,7 +23993,6 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"BigDecimal" toBigDecimal [#_"Object" x]
         (cond (ß x instanceof BigDecimal)
             (do
@@ -23517,7 +24036,6 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"Ratio" toRatio [#_"Object" x]
         (cond (ß x instanceof Ratio)
             (do
@@ -23544,7 +24062,6 @@
         (ß new Ratio(toBigInteger(x), BigInteger.ONE))
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"Number" rationalize [#_"Number" x]
         (cond (ß x instanceof Float || x instanceof Double)
             (do
@@ -23571,7 +24088,6 @@
         x
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"Number" reduceBigInt [#_"BigInt" val]
         (if (ß val.bipart == nil)
             (do
@@ -23670,22 +24186,22 @@
 
         #_method
         (§ defn #_"Ops" opsWith [this, #_"DoubleOps" x]
-            (ß DOUBLE_OPS)
+            DOUBLE_OPS
         )
 
         #_method
         (§ defn #_"Ops" opsWith [this, #_"RatioOps" x]
-            (ß RATIO_OPS)
+            RATIO_OPS
         )
 
         #_method
         (§ defn #_"Ops" opsWith [this, #_"BigIntOps" x]
-            (ß BIGINT_OPS)
+            BIGINT_OPS
         )
 
         #_method
         (§ defn #_"Ops" opsWith [this, #_"BigDecimalOps" x]
-            (ß BIGDECIMAL_OPS)
+            BIGDECIMAL_OPS
         )
 
         #_method
@@ -23977,7 +24493,7 @@
 
         #_method
         (§ defn #_"Ops" opsWith [this, #_"DoubleOps" x]
-            (ß DOUBLE_OPS)
+            DOUBLE_OPS
         )
 
         #_method
@@ -23992,7 +24508,7 @@
 
         #_method
         (§ defn #_"Ops" opsWith [this, #_"BigDecimalOps" x]
-            (ß BIGDECIMAL_OPS)
+            BIGDECIMAL_OPS
         )
 
         #_method
@@ -24144,12 +24660,12 @@
 
         #_method
         (§ defn #_"Ops" opsWith [this, #_"DoubleOps" x]
-            (ß DOUBLE_OPS)
+            DOUBLE_OPS
         )
 
         #_method
         (§ defn #_"Ops" opsWith [this, #_"RatioOps" x]
-            (ß RATIO_OPS)
+            RATIO_OPS
         )
 
         #_method
@@ -24159,7 +24675,7 @@
 
         #_method
         (§ defn #_"Ops" opsWith [this, #_"BigDecimalOps" x]
-            (ß BIGDECIMAL_OPS)
+            BIGDECIMAL_OPS
         )
 
         #_method
@@ -24272,7 +24788,7 @@
 
         #_method
         (§ defn #_"Ops" opsWith [this, #_"DoubleOps" x]
-            (ß DOUBLE_OPS)
+            DOUBLE_OPS
         )
 
         #_method
@@ -24392,11 +24908,11 @@
         )
     )
 
-    (§ def #_"LongOps" LONG_OPS (ß new LongOps()))
-    (§ def #_"DoubleOps" DOUBLE_OPS (ß new DoubleOps()))
-    (§ def #_"RatioOps" RATIO_OPS (ß new RatioOps()))
-    (§ def #_"BigIntOps" BIGINT_OPS (ß new BigIntOps()))
-    (§ def #_"BigDecimalOps" BIGDECIMAL_OPS (ß new BigDecimalOps()))
+    (§ def #_"LongOps" LONG_OPS (LongOps.))
+    (§ def #_"DoubleOps" DOUBLE_OPS (DoubleOps.))
+    (§ def #_"RatioOps" RATIO_OPS (RatioOps.))
+    (§ def #_"BigIntOps" BIGINT_OPS (BigIntOps.))
+    (§ def #_"BigDecimalOps" BIGDECIMAL_OPS (BigDecimalOps.))
 
     (§ enum Category
         (§ item INTEGER),
@@ -24409,45 +24925,44 @@
         (let [#_"Class" xc (ß x.getClass())]
             (cond (ß xc == Long.class)
                 (do
-                    (ß LONG_OPS)
+                    LONG_OPS
                 )
                 (ß xc == Double.class)
                 (do
-                    (ß DOUBLE_OPS)
+                    DOUBLE_OPS
                 )
                 (ß xc == Integer.class)
                 (do
-                    (ß LONG_OPS)
+                    LONG_OPS
                 )
                 (ß xc == Float.class)
                 (do
-                    (ß DOUBLE_OPS)
+                    DOUBLE_OPS
                 )
                 (ß xc == BigInt.class)
                 (do
-                    (ß BIGINT_OPS)
+                    BIGINT_OPS
                 )
                 (ß xc == BigInteger.class)
                 (do
-                    (ß BIGINT_OPS)
+                    BIGINT_OPS
                 )
                 (ß xc == Ratio.class)
                 (do
-                    (ß RATIO_OPS)
+                    RATIO_OPS
                 )
                 (ß xc == BigDecimal.class)
                 (do
-                    (ß BIGDECIMAL_OPS)
+                    BIGDECIMAL_OPS
                 )
                 :else
                 (do
-                    (ß LONG_OPS)
+                    LONG_OPS
                 )
             )
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"int" hasheqFrom [#_"Number" x, #_"Class" xc]
         (when (ß xc == Integer.class || xc == Short.class || xc == Byte.class || (xc == BigInteger.class && lte(x, Long.MAX_VALUE) && gte(x, Long.MIN_VALUE)))
             (let [#_"long" lpart (ß x.longValue())]
@@ -24475,7 +24990,6 @@
         (ß x.hashCode())
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"int" hasheq [#_"Number" x]
         (let [#_"Class" xc (ß x.getClass())]
             (when (ß xc == Long.class)
@@ -24541,20 +25055,19 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"float[]" float_array [#_"int" size, #_"Object" init]
         (let [#_"float[]" ret (ß new float[size])]
             (if (ß init instanceof Number)
                 (do
                     (let [#_"float" f (ß ((Number) init).floatValue())]
-                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i = i + 1)]
                             (ß ret[i] = f)
                         )
                     )
                 )
                 (do
                     (let [#_"ISeq" s (ß RT.seq(init))]
-                        (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                        (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                             (ß ret[i] = ((Number) s.first()).floatValue())
                         )
                     )
@@ -24564,7 +25077,6 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"float[]" float_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
@@ -24574,7 +25086,7 @@
                 (let [#_"ISeq" s (ß RT.seq(sizeOrSeq))]
                     (let [#_"int" size (ß RT.count(s))]
                         (let [#_"float[]" ret (ß new float[size])]
-                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                                 (ß ret[i] = ((Number) s.first()).floatValue())
                             )
                             ret
@@ -24585,20 +25097,19 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"double[]" double_array [#_"int" size, #_"Object" init]
         (let [#_"double[]" ret (ß new double[size])]
             (if (ß init instanceof Number)
                 (do
                     (let [#_"double" f (ß ((Number) init).doubleValue())]
-                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i = i + 1)]
                             (ß ret[i] = f)
                         )
                     )
                 )
                 (do
                     (let [#_"ISeq" s (ß RT.seq(init))]
-                        (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                        (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                             (ß ret[i] = ((Number) s.first()).doubleValue())
                         )
                     )
@@ -24608,7 +25119,6 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"double[]" double_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
@@ -24618,7 +25128,7 @@
                 (let [#_"ISeq" s (ß RT.seq(sizeOrSeq))]
                     (let [#_"int" size (ß RT.count(s))]
                         (let [#_"double[]" ret (ß new double[size])]
-                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                                 (ß ret[i] = ((Number) s.first()).doubleValue())
                             )
                             ret
@@ -24629,20 +25139,19 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"int[]" int_array [#_"int" size, #_"Object" init]
         (let [#_"int[]" ret (ß new int[size])]
             (if (ß init instanceof Number)
                 (do
                     (let [#_"int" f (ß ((Number) init).intValue())]
-                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i = i + 1)]
                             (ß ret[i] = f)
                         )
                     )
                 )
                 (do
                     (let [#_"ISeq" s (ß RT.seq(init))]
-                        (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                        (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                             (ß ret[i] = ((Number) s.first()).intValue())
                         )
                     )
@@ -24652,7 +25161,6 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"int[]" int_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
@@ -24662,7 +25170,7 @@
                 (let [#_"ISeq" s (ß RT.seq(sizeOrSeq))]
                     (let [#_"int" size (ß RT.count(s))]
                         (let [#_"int[]" ret (ß new int[size])]
-                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                                 (ß ret[i] = ((Number) s.first()).intValue())
                             )
                             ret
@@ -24673,20 +25181,19 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"long[]" long_array [#_"int" size, #_"Object" init]
         (let [#_"long[]" ret (ß new long[size])]
             (if (ß init instanceof Number)
                 (do
                     (let [#_"long" f (ß ((Number) init).longValue())]
-                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i = i + 1)]
                             (ß ret[i] = f)
                         )
                     )
                 )
                 (do
                     (let [#_"ISeq" s (ß RT.seq(init))]
-                        (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                        (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                             (ß ret[i] = ((Number) s.first()).longValue())
                         )
                     )
@@ -24696,7 +25203,6 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"long[]" long_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
@@ -24706,7 +25212,7 @@
                 (let [#_"ISeq" s (ß RT.seq(sizeOrSeq))]
                     (let [#_"int" size (ß RT.count(s))]
                         (let [#_"long[]" ret (ß new long[size])]
-                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                                 (ß ret[i] = ((Number) s.first()).longValue())
                             )
                             ret
@@ -24717,20 +25223,19 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"short[]" short_array [#_"int" size, #_"Object" init]
         (let [#_"short[]" ret (ß new short[size])]
             (if (ß init instanceof Short)
                 (do
                     (let [#_"short" s (ß (Short) init)]
-                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i = i + 1)]
                             (ß ret[i] = s)
                         )
                     )
                 )
                 (do
                     (let [#_"ISeq" s (ß RT.seq(init))]
-                        (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                        (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                             (ß ret[i] = ((Number) s.first()).shortValue())
                         )
                     )
@@ -24740,7 +25245,6 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"short[]" short_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
@@ -24750,7 +25254,7 @@
                 (let [#_"ISeq" s (ß RT.seq(sizeOrSeq))]
                     (let [#_"int" size (ß RT.count(s))]
                         (let [#_"short[]" ret (ß new short[size])]
-                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                                 (ß ret[i] = ((Number) s.first()).shortValue())
                             )
                             ret
@@ -24761,20 +25265,19 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"char[]" char_array [#_"int" size, #_"Object" init]
         (let [#_"char[]" ret (ß new char[size])]
             (if (ß init instanceof Character)
                 (do
                     (let [#_"char" c (ß (Character) init)]
-                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i = i + 1)]
                             (ß ret[i] = c)
                         )
                     )
                 )
                 (do
                     (let [#_"ISeq" s (ß RT.seq(init))]
-                        (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                        (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                             (ß ret[i] = (Character) s.first())
                         )
                     )
@@ -24784,7 +25287,6 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"char[]" char_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
@@ -24794,7 +25296,7 @@
                 (let [#_"ISeq" s (ß RT.seq(sizeOrSeq))]
                     (let [#_"int" size (ß RT.count(s))]
                         (let [#_"char[]" ret (ß new char[size])]
-                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                                 (ß ret[i] = (Character) s.first())
                             )
                             ret
@@ -24805,20 +25307,19 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"byte[]" byte_array [#_"int" size, #_"Object" init]
         (let [#_"byte[]" ret (ß new byte[size])]
             (if (ß init instanceof Byte)
                 (do
                     (let [#_"byte" b (ß (Byte) init)]
-                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i = i + 1)]
                             (ß ret[i] = b)
                         )
                     )
                 )
                 (do
                     (let [#_"ISeq" s (ß RT.seq(init))]
-                        (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                        (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                             (ß ret[i] = ((Number) s.first()).byteValue())
                         )
                     )
@@ -24828,7 +25329,6 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"byte[]" byte_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
@@ -24838,7 +25338,7 @@
                 (let [#_"ISeq" s (ß RT.seq(sizeOrSeq))]
                     (let [#_"int" size (ß RT.count(s))]
                         (let [#_"byte[]" ret (ß new byte[size])]
-                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                                 (ß ret[i] = ((Number) s.first()).byteValue())
                             )
                             ret
@@ -24849,20 +25349,19 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"boolean[]" boolean_array [#_"int" size, #_"Object" init]
         (let [#_"boolean[]" ret (ß new boolean[size])]
             (if (ß init instanceof Boolean)
                 (do
                     (let [#_"boolean" b (ß (Boolean) init)]
-                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i = i + 1)]
                             (ß ret[i] = b)
                         )
                     )
                 )
                 (do
                     (let [#_"ISeq" s (ß RT.seq(init))]
-                        (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                        (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                             (ß ret[i] = (Boolean)s.first())
                         )
                     )
@@ -24872,7 +25371,6 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"boolean[]" boolean_array [#_"Object" sizeOrSeq]
         (if (ß sizeOrSeq instanceof Number)
             (do
@@ -24882,7 +25380,7 @@
                 (let [#_"ISeq" s (ß RT.seq(sizeOrSeq))]
                     (let [#_"int" size (ß RT.count(s))]
                         (let [#_"boolean[]" ret (ß new boolean[size])]
-                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                                 (ß ret[i] = (Boolean)s.first())
                             )
                             ret
@@ -24893,42 +25391,34 @@
         )
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"boolean[]" booleans [#_"Object" array]
         (ß (boolean[]) array)
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"byte[]" bytes [#_"Object" array]
         (ß (byte[]) array)
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"char[]" chars [#_"Object" array]
         (ß (char[]) array)
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"short[]" shorts [#_"Object" array]
         (ß (short[]) array)
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"float[]" floats [#_"Object" array]
         (ß (float[]) array)
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"double[]" doubles [#_"Object" array]
         (ß (double[]) array)
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"int[]" ints [#_"Object" array]
         (ß (int[]) array)
     )
 
-    (§ anno @WarnBoxedMath(false))
     (§ defn #_"long[]" longs [#_"Object" array]
         (ß (long[]) array)
     )
@@ -26122,7 +26612,8 @@
         (ß _meta)
     )
 
-    (§ abstract Obj withMeta(IPersistentMap meta))
+    #_abstract
+    (§ defn #_"Obj" withMeta [this, #_"IPersistentMap" meta])
 )
 )
 
@@ -26145,9 +26636,9 @@
  ;;
 (class-ns PersistentArrayMap (§ extends APersistentMap) (§ implements IObj, IEditableCollection, IMapIterable, IKVReduce)
     (§ field #_"Object[]" array)
-    (§ def #_"int" HASHTABLE_THRESHOLD (ß 16))
+    (§ def #_"int" HASHTABLE_THRESHOLD 16)
 
-    (§ def #_"PersistentArrayMap" EMPTY (ß new PersistentArrayMap()))
+    (§ def #_"PersistentArrayMap" EMPTY (PersistentArrayMap.))
     (§ field- #_"IPersistentMap" _meta)
 
     (§ defn #_"IPersistentMap" create [#_"Map" other]
@@ -26184,8 +26675,8 @@
     )
 
     (§ defn #_"PersistentArrayMap" createWithCheck [#_"Object[]" init]
-        (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i += 2)]
-            (loop-when-recur [(ß int j = i + 2)] (ß j < init.length) [(ß j += 2)]
+        (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i = i + 2)]
+            (loop-when-recur [(ß int j = i + 2)] (ß j < init.length) [(ß j = j + 2)]
                 (when (ß equalKey(init[i], init[j]))
                     (throw (ß new IllegalArgumentException("Duplicate key: " + init[i])))
                 )
@@ -26203,16 +26694,16 @@
         ;; createWithCheck(), never modify init arg, and only
         ;; allocate memory if there are duplicate keys.
         (let [#_"int" n 0]
-            (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i += 2)]
+            (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i = i + 2)]
                 (let [#_"boolean" duplicateKey false]
-                    (loop-when-recur [(ß int j = 0)] (ß j < i) [(ß j += 2)]
+                    (loop-when-recur [(ß int j = 0)] (ß j < i) [(ß j = j + 2)]
                         (when (ß equalKey(init[i], init[j]))
                             (ß duplicateKey = true)
                             (§ break )
                         )
                     )
                     (when (ß !duplicateKey)
-                        (ß n += 2)
+                        (ß n = n + 2)
                     )
                 )
             )
@@ -26224,9 +26715,9 @@
                 ;; later equal keys.
                 (let [#_"Object[]" nodups (ß new Object[n])]
                     (let [#_"int" m 0]
-                        (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i += 2)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i = i + 2)]
                             (let [#_"boolean" duplicateKey false]
-                                (loop-when-recur [(ß int j = 0)] (ß j < m) [(ß j += 2)]
+                                (loop-when-recur [(ß int j = 0)] (ß j < m) [(ß j = j + 2)]
                                     (when (ß equalKey(init[i], nodups[j]))
                                         (ß duplicateKey = true)
                                         (§ break )
@@ -26234,14 +26725,14 @@
                                 )
                                 (when (ß !duplicateKey)
                                     (§ let [#_"int" j]
-                                        (loop-when-recur [(ß j = init.length - 2)] (ß j >= i) [(ß j -= 2)]
+                                        (loop-when-recur [(ß j = init.length - 2)] (ß j >= i) [(ß j = j - 2)]
                                             (when (ß equalKey(init[i], init[j]))
                                                 (§ break )
                                             )
                                         )
                                         (ß nodups[m] = init[i])
                                         (ß nodups[m + 1] = init[j + 1])
-                                        (ß m += 2)
+                                        (ß m = m + 2)
                                     )
                                 )
                             )
@@ -26398,7 +26889,7 @@
     #_method
     (§ defn- #_"int" indexOfObject [this, #_"Object" key]
         (let [(ß Util.EquivPred ep = Util.equivPred(key))]
-            (loop-when-recur [(ß int i = 0)] (ß i < array.length) [(ß i += 2)]
+            (loop-when-recur [(ß int i = 0)] (ß i < array.length) [(ß i = i + 2)]
                 (when (ß ep.equiv(key, array[i]))
                     (§ return i)
                 )
@@ -26411,7 +26902,7 @@
     (§ defn- #_"int" indexOf [this, #_"Object" key]
         (if (ß key instanceof Keyword)
             (do
-                (loop-when-recur [(ß int i = 0)] (ß i < array.length) [(ß i += 2)]
+                (loop-when-recur [(ß int i = 0)] (ß i < array.length) [(ß i = i + 2)]
                     (when (ß key == array[i])
                         (§ return i)
                     )
@@ -26527,23 +27018,23 @@
         #_method
         (§ defn #_"Object" next [this]
             (try
-                (ß i += 2)
+                (ß i = i + 2)
                 (ß f.invoke(array[i], array[i + 1]))
                 (catch IndexOutOfBoundsException e
-                    (throw (ß new NoSuchElementException()))
+                    (throw (NoSuchElementException.))
                 )
             )
         )
 
         #_method
         (§ defn #_"void" remove [this]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
     )
 
     #_method
     (§ defn #_"Object" kvreduce [this, #_"IFn" f, #_"Object" init]
-        (loop-when-recur [(ß int i = 0)] (ß i < array.length) [(ß i += 2)]
+        (loop-when-recur [(ß int i = 0)] (ß i < array.length) [(ß i = i + 2)]
             (ß init = f.invoke(init, array[i], array[i + 1]))
             (when (ß RT.isReduced(init))
                 (§ return (ß ((IDeref)init).deref()))
@@ -26574,7 +27065,7 @@
 
         #_method
         (§ defn- #_"int" indexOf [this, #_"Object" key]
-            (loop-when-recur [(ß int i = 0)] (ß i < len) [(ß i += 2)]
+            (loop-when-recur [(ß int i = 0)] (ß i < len) [(ß i = i + 2)]
                 (when (ß equalKey(array[i], key))
                     (§ return i)
                 )
@@ -26596,8 +27087,10 @@
                         (when (ß len >= array.length)
                             (§ return (ß PersistentHashMap.create(array).asTransient().assoc(key, val)))
                         )
-                        (ß array[len++] = key)
-                        (ß array[len++] = val)
+                        (ß array[len] = key)
+                        (ß len = len + 1)
+                        (ß array[len] = val)
+                        (ß len = len + 1)
                     )
                 )
                 this
@@ -26612,7 +27105,7 @@
                         (ß array[i] = array[len - 2])
                         (ß array[i + 1] = array[len - 1])
                     )
-                    (ß len -= 2)
+                    (ß len = len - 2)
                 )
                 this
             )
@@ -26677,7 +27170,7 @@
     (§ field #_"IPersistentMap" _meta)
 
     (§ def #_"PersistentHashMap" EMPTY (ß new PersistentHashMap(0, nil, false, nil)))
-    (§ def- #_"Object" NOT_FOUND (ß new Object()))
+    (§ def- #_"Object" NOT_FOUND (Object.))
 
     (§ defn #_"IPersistentMap" create [#_"Map" other]
         (let [#_"ITransientMap" ret (ß EMPTY.asTransient())]
@@ -26695,7 +27188,7 @@
      ;;
     (§ defn #_"PersistentHashMap" create [#_"Object..." init]
         (let [#_"ITransientMap" ret (ß EMPTY.asTransient())]
-            (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i += 2)]
+            (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i = i + 2)]
                 (ß ret = ret.assoc(init[i], init[i + 1]))
             )
             (ß (PersistentHashMap) ret.persistent())
@@ -26704,7 +27197,7 @@
 
     (§ defn #_"PersistentHashMap" createWithCheck [#_"Object..." init]
         (let [#_"ITransientMap" ret (ß EMPTY.asTransient())]
-            (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i += 2)]
+            (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i = i + 2)]
                 (ß ret = ret.assoc(init[i], init[i + 1]))
                 (when (ß ret.count() != i / 2 + 1)
                     (throw (ß new IllegalArgumentException("Duplicate key: " + init[i])))
@@ -26728,7 +27221,7 @@
 
     (§ defn #_"PersistentHashMap" createWithCheck [#_"ISeq" items]
         (let [#_"ITransientMap" ret (ß EMPTY.asTransient())]
-            (loop-when-recur [(ß int i = 0)] (ß items != nil) [(ß items = items.next().next(), ++i)]
+            (loop-when-recur [(ß int i = 0)] (ß items != nil) [(ß items = items.next().next(), i = i + 1)]
                 (when (ß items.next() == nil)
                     (throw (ß new IllegalArgumentException(String.format("No value supplied for key: %s", items.first()))))
                 )
@@ -26850,12 +27343,12 @@
 
             #_method
             (§ defn #_"Object" next [this]
-                (throw (ß new NoSuchElementException()))
+                (throw (NoSuchElementException.))
             )
 
             #_method
             (§ defn #_"void" remove [this]
-                (throw (ß new UnsupportedOperationException()))
+                (throw (UnsupportedOperationException.))
             )
         )
     ))
@@ -26867,7 +27360,7 @@
                 (do
                     (ß new Iterator()
                         (§ reify
-                            (§ field- #_"boolean" seen (ß false))
+                            (§ field- #_"boolean" seen false)
 
                             #_method
                             (§ defn #_"boolean" hasNext [this]
@@ -26896,7 +27389,7 @@
 
                             #_method
                             (§ defn #_"void" remove [this]
-                                (throw (ß new UnsupportedOperationException()))
+                                (throw (UnsupportedOperationException.))
                             )
                         )
                     )
@@ -27033,7 +27526,7 @@
                     (ß this.nullValue = val)
                 )
                 (when (ß !hasNull)
-                    (ß this.count++)
+                    (ß this.count = this.count + 1)
                     (ß this.hasNull = true)
                 )
                 (§ return this)
@@ -27044,7 +27537,7 @@
                     (ß this.root = n)
                 )
                 (when (ß leafFlag.val != nil)
-                    (ß this.count++)
+                    (ß this.count = this.count + 1)
                 )
                 this
             )
@@ -27058,7 +27551,7 @@
                 )
                 (ß hasNull = false)
                 (ß nullValue = nil)
-                (ß this.count--)
+                (ß this.count = this.count - 1)
                 (§ return this)
             )
             (when (ß root == nil)
@@ -27070,7 +27563,7 @@
                     (ß this.root = n)
                 )
                 (when (ß leafFlag.val != nil)
-                    (ß this.count--)
+                    (ß this.count = this.count - 1)
                 )
                 this
             )
@@ -27115,17 +27608,27 @@
     )
 
     (§ interface INode
-        (§ abstract INode assoc(int shift, int hash, Object key, Object val, Box addedLeaf))
-        (§ abstract INode without(int shift, int hash, Object key))
-        (§ abstract IMapEntry find(int shift, int hash, Object key))
-        (§ abstract Object find(int shift, int hash, Object key, Object notFound))
-        (§ abstract ISeq nodeSeq())
-        (§ abstract INode assoc(AtomicReference<Thread> edit, int shift, int hash, Object key, Object val, Box addedLeaf))
-        (§ abstract INode without(AtomicReference<Thread> edit, int shift, int hash, Object key, Box removedLeaf))
-        (§ abstract Object kvreduce(IFn f, Object init))
-        (§ abstract Object fold(IFn combinef, IFn reducef, IFn fjtask, IFn fjfork, IFn fjjoin))
+        #_abstract
+        (#_"INode" assoc [this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf])
+        #_abstract
+        (#_"INode" without [this, #_"int" shift, #_"int" hash, #_"Object" key])
+        #_abstract
+        (#_"IMapEntry" find [this, #_"int" shift, #_"int" hash, #_"Object" key])
+        #_abstract
+        (#_"Object" find [this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound])
+        #_abstract
+        (#_"ISeq" nodeSeq [this])
+        #_abstract
+        (#_"INode" assoc [this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf])
+        #_abstract
+        (#_"INode" without [this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf])
+        #_abstract
+        (#_"Object" kvreduce [this, #_"IFn" f, #_"Object" init])
+        #_abstract
+        (#_"Object" fold [this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin])
         ;; returns the result of (f [k v]) for each iterated element
-        (§ abstract Iterator iterator(IFn f))
+        #_abstract
+        (#_"Iterator" iterator [this, #_"IFn" f])
     )
 
     (class-ns ArrayNode (§ implements INode)
@@ -27233,7 +27736,7 @@
 
         #_method
         (§ defn #_"Object" fold [this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
-            (let [#_"List<Callable>" tasks (ß new ArrayList())]
+            (let [#_"List<Callable>" tasks (ArrayList.)]
                 (doseq [#_"INode" node array]
                     (when (ß node != nil)
                         (ß tasks.add(new Callable()
@@ -27305,18 +27808,18 @@
             (let [#_"Object[]" newArray (ß new Object[2 * (count - 1)])]
                 (let [#_"int" j 1]
                     (let [#_"int" bitmap 0]
-                        (loop-when-recur [(ß int i = 0)] (ß i < idx) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < idx) [(ß i = i + 1)]
                             (when (ß array[i] != nil)
                                 (ß newArray[j] = array[i])
-                                (ß bitmap |= 1 << i)
-                                (ß j += 2)
+                                (ß bitmap = bitmap | (1 << i))
+                                (ß j = j + 2)
                             )
                         )
-                        (loop-when-recur [(ß int i = idx + 1)] (ß i < array.length) [(ß i++)]
+                        (loop-when-recur [(ß int i = idx + 1)] (ß i < array.length) [(ß i = i + 1)]
                             (when (ß array[i] != nil)
                                 (ß newArray[j] = array[i])
-                                (ß bitmap |= 1 << i)
-                                (ß j += 2)
+                                (ß bitmap = bitmap | (1 << i))
+                                (ß j = j + 2)
                             )
                         )
                         (ß new BitmapIndexedNode(edit, bitmap, newArray))
@@ -27331,7 +27834,7 @@
                 (let [#_"INode" node (ß array[idx])]
                     (when (ß node == nil)
                         (let [#_"ArrayNode" editable (ß editAndSet(edit, idx, BitmapIndexedNode.EMPTY.assoc(edit, shift + 5, hash, key, val, addedLeaf)))]
-                            (ß editable.count++)
+                            (ß editable.count = editable.count + 1)
                             (§ return editable)
                         )
                     )
@@ -27361,7 +27864,7 @@
                                 (§ return (ß pack(edit, idx)))
                             )
                             (let [#_"ArrayNode" editable (ß editAndSet(edit, idx, n))]
-                                (ß editable.count--)
+                                (ß editable.count = editable.count - 1)
                                 (§ return editable)
                             )
                         )
@@ -27384,7 +27887,7 @@
                 (when (ß s != nil)
                     (§ return (ß new Seq(meta, nodes, i, s)))
                 )
-                (loop-when-recur [(ß int j = i)] (ß j < nodes.length) [(ß j++)]
+                (loop-when-recur [(ß int j = i)] (ß j < nodes.length) [(ß j = j + 1)]
                     (when (ß nodes[j] != nil)
                         (let [#_"ISeq" ns (ß nodes[j].nodeSeq())]
                             (when (ß ns != nil)
@@ -27423,7 +27926,7 @@
         (class-ns Iter (§ implements Iterator)
             (§ field- #_"INode[]" array)
             (§ field- #_"IFn" f)
-            (§ field- #_"int" i (ß 0))
+            (§ field- #_"int" i 0)
             (§ field- #_"Iterator" nestedIter)
 
             (§ constructor- #_"Iter" Iter [#_"INode[]" array, #_"IFn" f]
@@ -27448,7 +27951,8 @@
 
                     (if (ß i < array.length)
                         (do
-                            (let [#_"INode" node (ß array[i++])]
+                            (let [#_"INode" node (ß array[i])]
+                                (ß i = i + 1)
                                 (when (ß node != nil)
                                     (ß nestedIter = node.iterator(f))
                                 )
@@ -27468,14 +27972,14 @@
                         (ß nestedIter.next())
                     )
                     (do
-                        (throw (ß new NoSuchElementException()))
+                        (throw (NoSuchElementException.))
                     )
                 )
             )
 
             #_method
             (§ defn #_"void" remove [this]
-                (throw (ß new UnsupportedOperationException()))
+                (throw (UnsupportedOperationException.))
             )
         )
     )
@@ -27534,7 +28038,7 @@
                                             (let [#_"int" jdx (ß mask(hash, shift))]
                                                 (ß nodes[jdx] = EMPTY.assoc(shift + 5, hash, key, val, addedLeaf))
                                                 (let [#_"int" j 0]
-                                                    (loop-when-recur [(ß int i = 0)] (ß i < 32) [(ß i++)]
+                                                    (loop-when-recur [(ß int i = 0)] (ß i < 32) [(ß i = i + 1)]
                                                         (when (ß ((bitmap >>> i) & 1) != 0)
                                                             (if (ß array[j] == nil)
                                                                 (do
@@ -27544,7 +28048,7 @@
                                                                     (ß nodes[i] = EMPTY.assoc(shift + 5, hash(array[j]), array[j], array[j + 1], addedLeaf))
                                                                 )
                                                             )
-                                                            (ß j += 2)
+                                                            (ß j = j + 2)
                                                         )
                                                     )
                                                     (ß new ArrayNode(nil, n + 1, nodes))
@@ -27704,7 +28208,7 @@
                 (§ return nil)
             )
             (let [#_"BitmapIndexedNode" editable (ß ensureEditable(edit))]
-                (ß editable.bitmap ^= bit)
+                (ß editable.bitmap = editable.bitmap :xor bit)
                 (ß System.arraycopy(editable.array, 2 * (i + 1), editable.array, 2 * i, editable.array.length - 2 * (i + 1)))
                 (ß editable.array[editable.array.length - 2] = nil)
                 (ß editable.array[editable.array.length - 1] = nil)
@@ -27747,7 +28251,7 @@
                                         (ß System.arraycopy(editable.array, 2 * idx, editable.array, 2 * (idx + 1), 2 * (n - idx)))
                                         (ß editable.array[2 * idx] = key)
                                         (ß editable.array[2 * idx + 1] = val)
-                                        (ß editable.bitmap |= bit)
+                                        (ß editable.bitmap = editable.bitmap | bit)
                                         (§ return editable)
                                     )
                                 )
@@ -27757,7 +28261,7 @@
                                             (let [#_"int" jdx (ß mask(hash, shift))]
                                                 (ß nodes[jdx] = EMPTY.assoc(edit, shift + 5, hash, key, val, addedLeaf))
                                                 (let [#_"int" j 0]
-                                                    (loop-when-recur [(ß int i = 0)] (ß i < 32) [(ß i++)]
+                                                    (loop-when-recur [(ß int i = 0)] (ß i < 32) [(ß i = i + 1)]
                                                         (when (ß ((bitmap >>> i) & 1) != 0)
                                                             (if (ß array[j] == nil)
                                                                 (do
@@ -27767,7 +28271,7 @@
                                                                     (ß nodes[i] = EMPTY.assoc(edit, shift + 5, hash(array[j]), array[j], array[j + 1], addedLeaf))
                                                                 )
                                                             )
-                                                            (ß j += 2)
+                                                            (ß j = j + 2)
                                                         )
                                                     )
                                                     (ß new ArrayNode(edit, n + 1, nodes))
@@ -27784,7 +28288,7 @@
                                             (ß System.arraycopy(array, 2 * idx, newArray, 2 * (idx + 1), 2 * (n - idx)))
                                             (let [#_"BitmapIndexedNode" editable (ß ensureEditable(edit))]
                                                 (ß editable.array = newArray)
-                                                (ß editable.bitmap |= bit)
+                                                (ß editable.bitmap = editable.bitmap | bit)
                                                 editable
                                             )
                                         )
@@ -27931,7 +28435,7 @@
 
         #_method
         (§ defn #_"int" findIndex [this, #_"Object" key]
-            (loop-when-recur [(ß int i = 0)] (ß i < 2 * count) [(ß i += 2)]
+            (loop-when-recur [(ß int i = 0)] (ß i < 2 * count) [(ß i = i + 2)]
                 (when (ß Util.equiv(key, array[i]))
                     (§ return i)
                 )
@@ -27990,7 +28494,7 @@
                     (when (ß array.length > 2 * count)
                         (ß addedLeaf.val = addedLeaf)
                         (let [#_"HashCollisionNode" editable (ß editAndSet(edit, 2 * count, key, 2 * count + 1, val))]
-                            (ß editable.count++)
+                            (ß editable.count = editable.count + 1)
                             (§ return editable)
                         )
                     )
@@ -28021,7 +28525,7 @@
                     (ß editable.array[idx] = editable.array[2 * count - 2])
                     (ß editable.array[idx + 1] = editable.array[2 * count - 1])
                     (ß editable.array[2 * count - 2] = editable.array[2 * count - 1] = nil)
-                    (ß editable.count--)
+                    (ß editable.count = editable.count - 1)
                     editable
                 )
             )
@@ -28087,11 +28591,11 @@
     )
 
     (class-ns NodeIter (§ implements Iterator)
-        (§ def- #_"Object" NULL (ß new Object()))
+        (§ def- #_"Object" NULL (Object.))
         (§ field #_"Object[]" array)
         (§ field #_"IFn" f)
-        (§ field- #_"int" i (ß 0))
-        (§ field- #_"Object" nextEntry (ß NULL))
+        (§ field- #_"int" i 0)
+        (§ field- #_"Object" nextEntry NULL)
         (§ field- #_"Iterator" nextIter)
 
         (§ constructor #_"NodeIter" NodeIter [#_"Object[]" array, #_"IFn" f]
@@ -28105,7 +28609,7 @@
             (while (ß i < array.length)
                 (let [#_"Object" key (ß array[i])]
                     (let [#_"Object" nodeOrVal (ß array[i + 1])]
-                        (ß i += 2)
+                        (ß i = i + 2)
                         (cond (ß key != nil)
                             (do
                                 (ß nextEntry = f.invoke(key, nodeOrVal))
@@ -28156,13 +28660,13 @@
                         (§ return (ß next()))
                     )
                 )
-                (throw (ß new NoSuchElementException()))
+                (throw (NoSuchElementException.))
             )
         )
 
         #_method
         (§ defn #_"void" remove [this]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
     )
 
@@ -28181,7 +28685,7 @@
         )
 
         (§ defn #_"Object" kvreduce [#_"Object[]" array, #_"IFn" f, #_"Object" init]
-            (loop-when-recur [(ß int i = 0)] (ß i < array.length) [(ß i += 2)]
+            (loop-when-recur [(ß int i = 0)] (ß i < array.length) [(ß i = i + 2)]
                 (if (ß array[i] != nil)
                     (do
                         (ß init = f.invoke(init, array[i], array[i + 1]))
@@ -28265,7 +28769,7 @@
 
     (§ defn #_"PersistentHashSet" create [#_"Object..." init]
         (let [#_"ITransientSet" ret (ß (ITransientSet)EMPTY.asTransient())]
-            (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i = i + 1)]
                 (ß ret = (ITransientSet)ret.conj(init[i]))
             )
             (ß (PersistentHashSet)ret.persistent())
@@ -28292,7 +28796,7 @@
 
     (§ defn #_"PersistentHashSet" createWithCheck [#_"Object..." init]
         (let [#_"ITransientSet" ret (ß (ITransientSet)EMPTY.asTransient())]
-            (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < init.length) [(ß i = i + 1)]
                 (ß ret = (ITransientSet) ret.conj(init[i]))
                 (when (ß ret.count() != i + 1)
                     (throw (ß new IllegalArgumentException("Duplicate key: " + init[i])))
@@ -28310,7 +28814,7 @@
                     (when (ß ret.count() != i + 1)
                         (throw (ß new IllegalArgumentException("Duplicate key: " + key)))
                     )
-                    (ß ++i)
+                    (ß i = i + 1)
                 )
                 (ß (PersistentHashSet) ret.persistent())
             )
@@ -28319,7 +28823,7 @@
 
     (§ defn #_"PersistentHashSet" createWithCheck [#_"ISeq" items]
         (let [#_"ITransientSet" ret (ß (ITransientSet)EMPTY.asTransient())]
-            (loop-when-recur [(ß int i = 0)] (ß items != nil) [(ß items = items.next(), ++i)]
+            (loop-when-recur [(ß int i = 0)] (ß items != nil) [(ß items = items.next(), i = i + 1)]
                 (ß ret = (ITransientSet) ret.conj(items.first()))
                 (when (ß ret.count() != i + 1)
                     (throw (ß new IllegalArgumentException("Duplicate key: " + items.first())))
@@ -28405,15 +28909,15 @@
         (§ defn #_"Object" doInvoke [this, #_"Object" args]
             (when (ß args instanceof ArraySeq)
                 (let [#_"Object[]" argsarray (ß ((ArraySeq) args).array)]
-                    (let [#_"IPersistentList" ret (ß EMPTY)]
-                        (loop-when-recur [(ß int i = argsarray.length - 1)] (ß i >= ((ArraySeq)args).i) [(ß --i)]
+                    (let [#_"IPersistentList" ret EMPTY]
+                        (loop-when-recur [(ß int i = argsarray.length - 1)] (ß i >= ((ArraySeq)args).i) [(ß i = i - 1)]
                             (ß ret = (IPersistentList) ret.cons(argsarray[i]))
                         )
                         (§ return ret)
                     )
                 )
             )
-            (let [#_"LinkedList" list (ß new LinkedList())]
+            (let [#_"LinkedList" list (LinkedList.)]
                 (loop-when-recur [(ß ISeq s = RT.seq(args))] (ß s != nil) [(ß s = s.next())]
                     (ß list.add(s.first()))
                 )
@@ -28424,15 +28928,15 @@
         (§ defn #_"Object" invokeStatic [#_"ISeq" args]
             (when (ß args instanceof ArraySeq)
                 (let [#_"Object[]" argsarray (ß ((ArraySeq) args).array)]
-                    (let [#_"IPersistentList" ret (ß EMPTY)]
-                        (loop-when-recur [(ß int i = argsarray.length - 1)] (ß i >= 0) [(ß --i)]
+                    (let [#_"IPersistentList" ret EMPTY]
+                        (loop-when-recur [(ß int i = argsarray.length - 1)] (ß i >= 0) [(ß i = i - 1)]
                             (ß ret = (IPersistentList) ret.cons(argsarray[i]))
                         )
                         (§ return ret)
                     )
                 )
             )
-            (let [#_"LinkedList" list (ß new LinkedList())]
+            (let [#_"LinkedList" list (LinkedList.)]
                 (loop-when-recur [(ß ISeq s = RT.seq(args))] (ß s != nil) [(ß s = s.next())]
                     (ß list.add(s.first()))
                 )
@@ -28442,7 +28946,7 @@
 
         #_method
         (§ defn #_"IObj" withMeta [this, #_"IPersistentMap" meta]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
 
         #_method
@@ -28451,7 +28955,7 @@
         )
     )
 
-    (§ def #_"IFn" creator (ß new Primordial()))
+    (§ def #_"IFn" creator (Primordial.))
 
     (§ def #_"EmptyList" EMPTY (ß new EmptyList(nil)))
 
@@ -28472,7 +28976,7 @@
     )
 
     (§ defn #_"IPersistentList" create [#_"List" init]
-        (let [#_"IPersistentList" ret (ß EMPTY)]
+        (let [#_"IPersistentList" ret EMPTY]
             (loop-when-recur [(ß ListIterator i = init.listIterator(init.size()))] (ß i.hasPrevious()) [(ß )]
                 (ß ret = (IPersistentList) ret.cons(i.previous()))
             )
@@ -28670,12 +29174,12 @@
 
                     #_method
                     (§ defn #_"Object" next [this]
-                        (throw (ß new NoSuchElementException()))
+                        (throw (NoSuchElementException.))
                     )
 
                     #_method
                     (§ defn #_"void" remove [this]
-                        (throw (ß new UnsupportedOperationException()))
+                        (throw (UnsupportedOperationException.))
                     )
                 )
             )
@@ -28688,32 +29192,32 @@
 
         #_method
         (§ defn #_"boolean" add [this, #_"Object" o]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
 
         #_method
         (§ defn #_"boolean" remove [this, #_"Object" o]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
 
         #_method
         (§ defn #_"boolean" addAll [this, #_"Collection" collection]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
 
         #_method
         (§ defn #_"void" clear [this]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
 
         #_method
         (§ defn #_"boolean" retainAll [this, #_"Collection" collection]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
 
         #_method
         (§ defn #_"boolean" removeAll [this, #_"Collection" collection]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
 
         #_method
@@ -28741,18 +29245,18 @@
 
         #_method
         (§ defn #_"Object" set [this, #_"int" index, #_"Object" element]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
 
         #_method
         (§ defn #_"Object" remove [this, #_"int" index]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
 
         #_method
         (§ defn #_"int" indexOf [this, #_"Object" o]
             (let [#_"ISeq" s (ß seq())]
-                (loop-when-recur [(ß int i = 0)] (ß s != nil) [(ß s = s.next(), i++)]
+                (loop-when-recur [(ß int i = 0)] (ß s != nil) [(ß s = s.next(), i = i + 1)]
                     (when (ß Util.equiv(s.first(), o))
                         (§ return i)
                     )
@@ -28783,12 +29287,12 @@
 
         #_method
         (§ defn #_"void" add [this, #_"int" index, #_"Object" element]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
 
         #_method
         (§ defn #_"boolean" addAll [this, #_"int" index, #_"Collection" c]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
     )
 )
@@ -28989,32 +29493,32 @@
 
     #_method
     (§ defn #_"boolean" add [this, #_"Object" o]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" remove [this, #_"Object" o]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" addAll [this, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"void" clear [this]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" retainAll [this, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
     (§ defn #_"boolean" removeAll [this, #_"Collection" c]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -29056,7 +29560,7 @@
     (§ defn #_"Iterator" iterator [this]
         (ß new Iterator()
             (§ reify
-                (§ field- #_"ISeq" fseq (ß f))
+                (§ field- #_"ISeq" fseq f)
                 (§ field- #_"Iterator" riter (ß (r != nil) ? r.iterator() :or nil))
 
                 #_method
@@ -29079,14 +29583,14 @@
                         )
                         :else
                         (do
-                            (throw (ß new NoSuchElementException()))
+                            (throw (NoSuchElementException.))
                         )
                     )
                 )
 
                 #_method
                 (§ defn #_"void" remove [this]
-                    (throw (ß new UnsupportedOperationException()))
+                    (throw (UnsupportedOperationException.))
                 )
             )
         )
@@ -29111,10 +29615,10 @@
     (§ field #_"int" _count)
     (§ field #_"IPersistentMap" _meta)
 
-    (§ def #_"PersistentTreeMap" EMPTY (ß new PersistentTreeMap()))
+    (§ def #_"PersistentTreeMap" EMPTY (PersistentTreeMap.))
 
     (§ defn #_"IPersistentMap" create [#_"Map" other]
-        (let [#_"IPersistentMap" ret (ß EMPTY)]
+        (let [#_"IPersistentMap" ret EMPTY]
             (doseq [#_"Object" o (ß other.entrySet())]
                 (let [(ß Map.Entry e = (Entry) o)]
                     (ß ret = ret.assoc(e.getKey(), e.getValue()))
@@ -29156,7 +29660,7 @@
     )
 
     (§ defn #_"PersistentTreeMap" create [#_"ISeq" items]
-        (let [#_"IPersistentMap" ret (ß EMPTY)]
+        (let [#_"IPersistentMap" ret EMPTY]
             (loop-when-recur [(ß )] (ß items != nil) [(ß items = items.next().next())]
                 (when (ß items.next() == nil)
                     (throw (ß new IllegalArgumentException(String.format("No value supplied for key: %s", items.first()))))
@@ -29742,12 +30246,18 @@
             nil
         )
 
-        (§ abstract Node addLeft(Node ins))
-        (§ abstract Node addRight(Node ins))
-        (§ abstract Node removeLeft(Node del))
-        (§ abstract Node removeRight(Node del))
-        (§ abstract Node blacken())
-        (§ abstract Node redden())
+        #_abstract
+        (§ defn #_"Node" addLeft [this, #_"Node" ins])
+        #_abstract
+        (§ defn #_"Node" addRight [this, #_"Node" ins])
+        #_abstract
+        (§ defn #_"Node" removeLeft [this, #_"Node" del])
+        #_abstract
+        (§ defn #_"Node" removeRight [this, #_"Node" del])
+        #_abstract
+        (§ defn #_"Node" blacken [this])
+        #_abstract
+        (§ defn #_"Node" redden [this])
 
         #_method
         (§ defn #_"Node" balanceLeft [this, #_"Node" parent]
@@ -29759,7 +30269,8 @@
             (ß black(parent.key, parent.val(), parent.left(), this))
         )
 
-        (§ abstract Node replace(Object key, Object val, Node left, Node right))
+        #_abstract
+        (§ defn #_"Node" replace [this, #_"Object" key, #_"Object" val, #_"Node" left, #_"Node" right])
 
         #_method
         (§ defn #_"Object" kvreduce [this, #_"IFn" f, #_"Object" init]
@@ -30106,7 +30617,7 @@
     )
 
     (class-ns NodeIterator (§ implements Iterator)
-        (§ field #_"Stack" stack (ß new Stack()))
+        (§ field #_"Stack" stack (Stack.))
         (§ field #_"boolean" asc)
 
         (§ constructor #_"NodeIterator" NodeIterator [#_"Node" t, #_"boolean" asc]
@@ -30137,14 +30648,14 @@
                     t
                 )
                 (catch EmptyStackException e
-                    (throw (ß new NoSuchElementException()))
+                    (throw (NoSuchElementException.))
                 )
             )
         )
 
         #_method
         (§ defn #_"void" remove [this]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
     )
 
@@ -30168,7 +30679,7 @@
 
         #_method
         (§ defn #_"void" remove [this]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
     )
 
@@ -30192,7 +30703,7 @@
 
         #_method
         (§ defn #_"void" remove [this]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
     )
 )
@@ -30208,7 +30719,7 @@
     (§ field #_"IPersistentMap" _meta)
 
     (§ defn #_"PersistentTreeSet" create [#_"ISeq" items]
-        (let [#_"PersistentTreeSet" ret (ß EMPTY)]
+        (let [#_"PersistentTreeSet" ret EMPTY]
             (loop-when-recur [(ß )] (ß items != nil) [(ß items = items.next())]
                 (ß ret = (PersistentTreeSet) ret.cons(items.first()))
             )
@@ -30379,7 +30890,8 @@
         (let [#_"Object[]" arr (ß new Object[32])]
             (let [#_"int" i 0]
                 (loop-when-recur [(ß )] (ß items != nil && i < 32) [(ß items = items.next())]
-                    (ß arr[i++] = items.first())
+                    (ß arr[i] = items.first())
+                    (ß i = i + 1)
                 )
 
                 (cond (ß items != nil) ;; >32, construct with array directly
@@ -30416,7 +30928,7 @@
             )
 
             (let [#_"TransientVector" ret (ß EMPTY.asTransient())]
-                (loop-when-recur [(ß int i = 0)] (ß i < size) [(ß i++)]
+                (loop-when-recur [(ß int i = 0)] (ß i < size) [(ß i = i + 1)]
                     (ß ret = ret.conj(list.get(i)))
                 )
                 (ß ret.persistent())
@@ -30487,13 +30999,13 @@
                 (§ return tail)
             )
             (let [#_"Node" node root]
-                (loop-when-recur [(ß int level = shift)] (ß level > 0) [(ß level -= 5)]
+                (loop-when-recur [(ß int level = shift)] (ß level > 0) [(ß level = level - 5)]
                     (ß node = (Node) node.array[(i >>> level) & 0x01f])
                 )
                 (§ return (ß node.array))
             )
         )
-        (throw (ß new IndexOutOfBoundsException()))
+        (throw (IndexOutOfBoundsException.))
     )
 
     #_method
@@ -30528,7 +31040,7 @@
         (when (ß i == cnt)
             (§ return (ß cons(val)))
         )
-        (throw (ß new IndexOutOfBoundsException()))
+        (throw (IndexOutOfBoundsException.))
     )
 
     (§ defn- #_"Node" doAssoc [#_"int" level, #_"Node" node, #_"int" i, #_"Object" val]
@@ -30582,7 +31094,7 @@
                             (ß newroot = new Node(root.edit))
                             (ß newroot.array[0] = root)
                             (ß newroot.array[1] = newPath(root.edit, shift, tailnode))
-                            (ß newshift += 5)
+                            (ß newshift = newshift + 5)
                         )
                         (do
                             (ß newroot = pushTail(shift, root, tailnode))
@@ -30643,7 +31155,7 @@
         (ß chunkedSeq())
     )
 
-    (§ anno @Override)
+    #_override
     #_method
     (§ defn #_"Iterator" rangedIterator [this, #_"int" start, #_"int" end]
         (ß new Iterator()
@@ -30662,19 +31174,22 @@
                                     (do
                                         (when (ß i - base == 32)
                                             (ß array = arrayFor(i))
-                                            (ß base += 32)
+                                            (ß base = base + 32)
                                         )
-                                        (ß array[i++ & 0x01f])
+                                        (let [_ (ß array[i & 0x01f])]
+                                            (ß i = i + 1)
+                                            _
+                                        )
                                     )
                                     (do
-                                        (throw (ß new NoSuchElementException()))
+                                        (throw (NoSuchElementException.))
                                     )
                                 )
                             )
 
                             #_method
                             (§ defn #_"void" remove [this]
-                                (throw (ß new UnsupportedOperationException()))
+                                (throw (UnsupportedOperationException.))
                             )
                         )
                     )
@@ -30700,9 +31215,9 @@
                 )
             )
             (let [#_"int" step 0]
-                (loop-when-recur [(ß int i = 0)] (ß i < cnt) [(ß i += step)]
+                (loop-when-recur [(ß int i = 0)] (ß i < cnt) [(ß i = i + step)]
                     (let [#_"Object[]" array (ß arrayFor(i))]
-                        (loop-when-recur [(ß int j = (i == 0) ? 1 :or 0)] (ß j < array.length) [(ß ++j)]
+                        (loop-when-recur [(ß int j = (i == 0) ? 1 :or 0)] (ß j < array.length) [(ß j = j + 1)]
                             (ß init = f.invoke(init, array[j]))
                             (when (ß RT.isReduced(init))
                                 (§ return (ß ((IDeref)init).deref()))
@@ -30719,9 +31234,9 @@
     #_method
     (§ defn #_"Object" reduce [this, #_"IFn" f, #_"Object" init]
         (let [#_"int" step 0]
-            (loop-when-recur [(ß int i = 0)] (ß i < cnt) [(ß i += step)]
+            (loop-when-recur [(ß int i = 0)] (ß i < cnt) [(ß i = i + step)]
                 (let [#_"Object[]" array (ß arrayFor(i))]
-                    (loop-when-recur [(ß int j = 0)] (ß j < array.length) [(ß ++j)]
+                    (loop-when-recur [(ß int j = 0)] (ß j < array.length) [(ß j = j + 1)]
                         (ß init = f.invoke(init, array[j]))
                         (when (ß RT.isReduced(init))
                             (§ return (ß ((IDeref)init).deref()))
@@ -30737,9 +31252,9 @@
     #_method
     (§ defn #_"Object" kvreduce [this, #_"IFn" f, #_"Object" init]
         (let [#_"int" step 0]
-            (loop-when-recur [(ß int i = 0)] (ß i < cnt) [(ß i += step)]
+            (loop-when-recur [(ß int i = 0)] (ß i < cnt) [(ß i = i + step)]
                 (let [#_"Object[]" array (ß arrayFor(i))]
-                    (loop-when-recur [(ß int j = 0)] (ß j < array.length) [(ß ++j)]
+                    (loop-when-recur [(ß int j = 0)] (ß j < array.length) [(ß j = j + 1)]
                         (ß init = f.invoke(init, j + i, array[j]))
                         (when (ß RT.isReduced(init))
                             (§ return (ß ((IDeref)init).deref()))
@@ -30860,7 +31375,7 @@
                     )
                     (when (ß shift > 5 && newroot.array[1] == nil)
                         (ß newroot = (Node) newroot.array[0])
-                        (ß newshift -= 5)
+                        (ß newshift = newshift - 5)
                     )
                     (ß new PersistentVector(meta(), cnt - 1, newshift, newroot, newtail))
                 )
@@ -30975,7 +31490,7 @@
                 ;; room in tail?
                 (when (ß i - tailoff() < 32)
                     (ß tail[i & 0x01f] = val)
-                    (ß ++cnt)
+                    (ß cnt = cnt + 1)
                     (§ return this)
                 )
                 ;; full tail, push into tree
@@ -30990,7 +31505,7 @@
                                     (ß newroot = new Node(root.edit))
                                     (ß newroot.array[0] = root)
                                     (ß newroot.array[1] = newPath(root.edit, shift, tailnode))
-                                    (ß newshift += 5)
+                                    (ß newshift = newshift + 5)
                                 )
                                 (do
                                     (ß newroot = pushTail(shift, root, tailnode))
@@ -30998,7 +31513,7 @@
                             )
                             (ß root = newroot)
                             (ß shift = newshift)
-                            (ß ++cnt)
+                            (ß cnt = cnt + 1)
                             this
                         )
                     )
@@ -31048,13 +31563,13 @@
                     (§ return tail)
                 )
                 (let [#_"Node" node root]
-                    (loop-when-recur [(ß int level = shift)] (ß level > 0) [(ß level -= 5)]
+                    (loop-when-recur [(ß int level = shift)] (ß level > 0) [(ß level = level - 5)]
                         (ß node = (Node) node.array[(i >>> level) & 0x01f])
                     )
                     (§ return (ß node.array))
                 )
             )
-            (throw (ß new IndexOutOfBoundsException()))
+            (throw (IndexOutOfBoundsException.))
         )
 
         #_method
@@ -31064,13 +31579,13 @@
                     (§ return tail)
                 )
                 (let [#_"Node" node root]
-                    (loop-when-recur [(ß int level = shift)] (ß level > 0) [(ß level -= 5)]
+                    (loop-when-recur [(ß int level = shift)] (ß level > 0) [(ß level = level - 5)]
                         (ß node = ensureEditable((Node) node.array[(i >>> level) & 0x01f]))
                     )
                     (§ return (ß node.array))
                 )
             )
-            (throw (ß new IndexOutOfBoundsException()))
+            (throw (IndexOutOfBoundsException.))
         )
 
         #_method
@@ -31092,7 +31607,7 @@
             notFound
         )
 
-        (§ def- #_"Object" NOT_FOUND (ß new Object()))
+        (§ def- #_"Object" NOT_FOUND (Object.))
 
         #_method
         (§ defn #_"boolean" containsKey [this, #_"Object" key]
@@ -31149,7 +31664,7 @@
             (when (ß i == cnt)
                 (§ return (ß conj(val)))
             )
-            (throw (ß new IndexOutOfBoundsException()))
+            (throw (IndexOutOfBoundsException.))
         )
 
         #_method
@@ -31194,7 +31709,7 @@
             (let [#_"int" i (ß cnt - 1)]
                 ;; pop in tail?
                 (when (ß (i & 0x01f) > 0)
-                    (ß --cnt)
+                    (ß cnt = cnt - 1)
                     (§ return this)
                 )
 
@@ -31206,11 +31721,11 @@
                             )
                             (when (ß shift > 5 && newroot.array[1] == nil)
                                 (ß newroot = ensureEditable((Node) newroot.array[0]))
-                                (ß newshift -= 5)
+                                (ß newshift = newshift - 5)
                             )
                             (ß root = newroot)
                             (ß shift = newshift)
-                            (ß --cnt)
+                            (ß cnt = cnt - 1)
                             (ß tail = newtail)
                             this
                         )
@@ -31293,7 +31808,7 @@
                             (§ return (ß "Proxy: " + System.identityHashCode(proxy)))
                         )
                     )
-                    (throw (ß new UnsupportedOperationException()))
+                    (throw (UnsupportedOperationException.))
                 )
                 (let [#_"Object" ret (ß fn.applyTo(ArraySeq.create(args)))]
                     (cond (ß rt == Void.TYPE)
@@ -31353,7 +31868,7 @@
  ; Implements generic numeric (potentially infinite) range.
  ;;
 (class-ns Range (§ extends ASeq) (§ implements IChunkedSeq, IReduce)
-    (§ def- #_"int" CHUNK_SIZE (ß 32))
+    (§ def- #_"int" CHUNK_SIZE 32)
 
     ;; Invariants guarantee this is never an "empty" seq
     (§ field #_"Object" end)
@@ -31370,7 +31885,8 @@
 
     #_private
     (§ interface BoundsCheck
-        (§ abstract boolean exceededBounds(Object val))
+        #_abstract
+        (#_"boolean" exceededBounds [this, #_"Object" val])
     )
 
     (§ defn- #_"BoundsCheck" positiveStep [#_"Object" end]
@@ -31468,7 +31984,8 @@
             (let [#_"int" n 0]
                 (let [#_"Object" val start]
                     (while (ß n < CHUNK_SIZE)
-                        (ß arr[n++] = val)
+                        (ß arr[n] = val)
+                        (ß n = n + 1)
                         (ß val = Numbers.addP(val, step))
                         (when (ß boundsCheck.exceededBounds(val))
                             ;; partial last chunk
@@ -31562,7 +32079,7 @@
 
     #_method
     (§ defn #_"Iterator" iterator [this]
-        (ß new RangeIterator())
+        (RangeIterator.)
     )
 
     #_private
@@ -31590,14 +32107,14 @@
                     )
                 )
                 (do
-                    (throw (ß new NoSuchElementException()))
+                    (throw (NoSuchElementException.))
                 )
             )
         )
 
         #_method
         (§ defn #_"void" remove [this]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
     )
 )
@@ -31723,7 +32240,7 @@
         )
     )
 
-    (§ anno @Override)
+    #_override
     #_method
     (§ defn #_"boolean" equals [this, #_"Object" o]
         (when (ß this == o)
@@ -31744,7 +32261,7 @@
         )
     )
 
-    (§ anno @Override)
+    #_override
     #_method
     (§ defn #_"int" hashCode [this]
         (let [#_"int" result (ß Util.hash(form))]
@@ -31760,7 +32277,7 @@
 (§ import java.util.Iterator)
 
 (class-ns RecordIterator (§ implements Iterator)
-    (§ field #_"int" i (ß 0))
+    (§ field #_"int" i 0)
     (§ field #_"int" basecnt)
     (§ field #_"ILookup" rec)
     (§ field #_"IPersistentVector" basefields)
@@ -31791,7 +32308,7 @@
         (if (ß i < basecnt)
             (do
                 (let [#_"Object" k (ß basefields.nth(i))]
-                    (ß i++)
+                    (ß i = i + 1)
                     (ß MapEntry.create(k, rec.valAt(k)))
                 )
             )
@@ -31803,7 +32320,7 @@
 
     #_method
     (§ defn #_"void" remove [this]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 )
 )
@@ -31903,11 +32420,11 @@
     (§ field #_"long" id)
 
     #_volatile
-    (§ field #_"int" minHistory (ß 0))
+    (§ field #_"int" minHistory 0)
     #_volatile
-    (§ field #_"int" maxHistory (ß 10))
+    (§ field #_"int" maxHistory 10)
 
-    (§ def #_"AtomicLong" ids (ß new AtomicLong()))
+    (§ def #_"AtomicLong" ids (AtomicLong.))
 
     (§ constructor #_"Ref" Ref [#_"Object" initVal]
         (§ this(initVal, nil))
@@ -32019,7 +32536,7 @@
             (do
                 (let [#_"int" count 0]
                     (loop-when-recur [(ß TVal tv = tvals.next)] (ß tv != tvals) [(ß tv = tv.next)]
-                        (ß count++)
+                        (ß count = count + 1)
                     )
                     count
                 )
@@ -32290,7 +32807,7 @@
                 )
 
                 (let [#_"boolean" match true]
-                    (loop-when-recur [(ß int i = 0)] (ß i < types1.length) [(ß ++i)]
+                    (loop-when-recur [(ß int i = 0)] (ß i < types1.length) [(ß i = i + 1)]
                         (when (ß !types1[i].isAssignableFrom(types2[i]))
                             (ß match = false)
                             (§ break )
@@ -32305,8 +32822,8 @@
     (§ defn #_"Object" invokeConstructor [#_"Class" c, #_"Object[]" args]
         (try
             (let [#_"Constructor[]" allctors (ß c.getConstructors())]
-                (let [#_"ArrayList" ctors (ß new ArrayList())]
-                    (loop-when-recur [(ß int i = 0)] (ß i < allctors.length) [(ß i++)]
+                (let [#_"ArrayList" ctors (ArrayList.)]
+                    (loop-when-recur [(ß int i = 0)] (ß i < allctors.length) [(ß i = i + 1)]
                         (let [#_"Constructor" ctor (ß allctors[i])]
                             (when (ß ctor.getParameterTypes().length == args.length)
                                 (ß ctors.add(ctor))
@@ -32517,7 +33034,7 @@
 
     (§ defn #_"Field" getField [#_"Class" c, #_"String" name, #_"boolean" getStatics]
         (let [#_"Field[]" allfields (ß c.getFields())]
-            (loop-when-recur [(ß int i = 0)] (ß i < allfields.length) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < allfields.length) [(ß i = i + 1)]
                 (when (ß name.equals(allfields[i].getName()) && Modifier.isStatic(allfields[i].getModifiers()) == getStatics)
                     (§ return (ß allfields[i]))
                 )
@@ -32528,9 +33045,9 @@
 
     (§ defn #_"List" getMethods [#_"Class" c, #_"int" arity, #_"String" name, #_"boolean" getStatics]
         (let [#_"Method[]" allmethods (ß c.getMethods())]
-            (let [#_"ArrayList" methods (ß new ArrayList())]
-                (let [#_"ArrayList" bridgeMethods (ß new ArrayList())]
-                    (loop-when-recur [(ß int i = 0)] (ß i < allmethods.length) [(ß i++)]
+            (let [#_"ArrayList" methods (ArrayList.)]
+                (let [#_"ArrayList" bridgeMethods (ArrayList.)]
+                    (loop-when-recur [(ß int i = 0)] (ß i < allmethods.length) [(ß i = i + 1)]
                         (let [#_"Method" method (ß allmethods[i])]
                             (when (ß name.equals(method.getName()) && Modifier.isStatic(method.getModifiers()) == getStatics && method.getParameterTypes().length == arity)
                                 (try
@@ -32554,7 +33071,7 @@
                     )
                     (when (ß !getStatics && c.isInterface())
                         (ß allmethods = Object.class.getMethods())
-                        (loop-when-recur [(ß int i = 0)] (ß i < allmethods.length) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < allmethods.length) [(ß i = i + 1)]
                             (when (ß name.equals(allmethods[i].getName()) && Modifier.isStatic(allmethods[i].getModifiers()) == getStatics && allmethods[i].getParameterTypes().length == arity)
                                 (ß methods.add(allmethods[i]))
                             )
@@ -32618,7 +33135,7 @@
             (§ return nil)
         )
         (let [#_"Object[]" ret (ß new Object[params.length])]
-            (loop-when-recur [(ß int i = 0)] (ß i < params.length) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < params.length) [(ß i = i + 1)]
                 (let [#_"Object" arg (ß args[i])]
                     (let [#_"Class" paramType (ß params[i])]
                         (ß ret[i] = boxArg(paramType, arg))
@@ -32688,7 +33205,7 @@
             )
             (when (ß params.length == args.length)
                 (ß ret = true)
-                (loop-when-recur [(ß int i = 0)] (ß ret && i < params.length) [(ß i++)]
+                (loop-when-recur [(ß int i = 0)] (ß ret && i < params.length) [(ß i = i + 1)]
                     (let [#_"Object" arg (ß args[i])]
                         (let [#_"Class" argType (ß (arg == nil) ? nil :or arg.getClass())]
                             (let [#_"Class" paramType (ß params[i])]
@@ -32717,7 +33234,7 @@
 (java-ns cloiure.lang.Repeat
 
 (class-ns Repeat (§ extends ASeq) (§ implements IReduce)
-    (§ def- #_"long" INFINITE (ß -1))
+    (§ def- #_"long" INFINITE -1)
 
     (§ field- #_"long" count) ;; always INFINITE or >0
     (§ field- #_"Object" val)
@@ -32787,7 +33304,7 @@
                     )
                 )
                 (do
-                    (loop-when-recur [(ß long i = 1)] (ß i < count) [(ß i++)]
+                    (loop-when-recur [(ß long i = 1)] (ß i < count) [(ß i = i + 1)]
                         (ß ret = f.invoke(ret, val))
                         (when (ß RT.isReduced(ret))
                             (§ return (ß ((IDeref)ret).deref()))
@@ -32812,7 +33329,7 @@
                     )
                 )
                 (do
-                    (loop-when-recur [(ß long i = 0)] (ß i < count) [(ß i++)]
+                    (loop-when-recur [(ß long i = 0)] (ß i < count) [(ß i = i + 1)]
                         (ß ret = f.invoke(ret, val))
                         (when (ß RT.isReduced(ret))
                             (§ return (ß ((IDeref)ret).deref()))
@@ -32830,7 +33347,8 @@
 
 #_abstract
 (class-ns RestFn (§ extends AFunction)
-    (§ abstract int getRequiredArity())
+    #_abstract
+    (§ defn #_"int" getRequiredArity [this])
 
     #_protected
     #_method
@@ -38221,7 +38739,7 @@
     #_protected
     (§ defn #_"ISeq" ontoArrayPrepend [#_"Object[]" array, #_"Object..." args]
         (let [#_"ISeq" ret (ß ArraySeq.create(array))]
-            (loop-when-recur [(ß int i = args.length - 1)] (ß i >= 0) [(ß --i)]
+            (loop-when-recur [(ß int i = args.length - 1)] (ß i >= 0) [(ß i = i - 1)]
                 (ß ret = RT.cons(args[i], ret))
             )
             ret
@@ -38245,7 +38763,8 @@
 (java-ns cloiure.lang.Reversible
 
 (§ interface Reversible
-    (§ abstract ISeq rseq())
+    #_abstract
+    (#_"ISeq" rseq [this])
 )
 )
 
@@ -38490,7 +39009,7 @@
     )
 
     (§ def #_"Object[]" EMPTY_ARRAY (ß new Object[] (§)))
-    (§ def #_"Comparator" DEFAULT_COMPARATOR (ß new DefaultComparator()))
+    (§ def #_"Comparator" DEFAULT_COMPARATOR (DefaultComparator.))
 
     #_private
     (class-ns DefaultComparator (§ implements Comparator)
@@ -38521,7 +39040,7 @@
     (§ def #_"boolean" checkSpecAsserts (ß Boolean.getBoolean("cloiure.spec.check-asserts")))
     (§ def #_"boolean" instrumentMacros (ß ! Boolean.getBoolean("cloiure.spec.skip-macros")))
     #_volatile
-    (§ def #_"boolean" CHECK_SPECS (ß false))
+    (§ def #_"boolean" CHECK_SPECS false)
 
     (§ static
         (let [#_"Keyword" arglistskw (ß Keyword.intern(nil, "arglists"))]
@@ -38767,7 +39286,7 @@
         nil
     )
 
-    (§ def- #_"int" CHUNK_SIZE (ß 32))
+    (§ def- #_"int" CHUNK_SIZE 32)
 
     (§ defn #_"ISeq" chunkIteratorSeq [#_"Iterator" iter]
         (when (ß iter.hasNext())
@@ -38778,7 +39297,8 @@
                         (let [#_"Object[]" arr (ß new Object[CHUNK_SIZE])]
                             (let [#_"int" n 0]
                                 (while (ß iter.hasNext() && n < CHUNK_SIZE)
-                                    (ß arr[n++] = iter.next())
+                                    (ß arr[n] = iter.next())
+                                    (ß n = n + 1)
                                 )
                                 (ß new ChunkedCons(new ArrayChunk(arr, 0, n), chunkIteratorSeq(iter)))
                             )
@@ -38869,12 +39389,12 @@
 
                         #_method
                         (§ defn #_"Object" next [this]
-                            (throw (ß new NoSuchElementException()))
+                            (throw (NoSuchElementException.))
                         )
 
                         #_method
                         (§ defn #_"void" remove [this]
-                            (throw (ß new UnsupportedOperationException()))
+                            (throw (UnsupportedOperationException.))
                         )
                     )
                 )
@@ -38896,12 +39416,15 @@
 
                                 #_method
                                 (§ defn #_"Object" next [this]
-                                    (ß s.charAt(i++))
+                                    (let [_ (ß s.charAt(i))]
+                                        (ß i = i + 1)
+                                        _
+                                    )
                                 )
 
                                 #_method
                                 (§ defn #_"void" remove [this]
-                                    (throw (ß new UnsupportedOperationException()))
+                                    (throw (UnsupportedOperationException.))
                                 )
                             )
                         )
@@ -38973,7 +39496,7 @@
                             (when (ß s instanceof Counted)
                                 (§ return (ß i + s.count()))
                             )
-                            (ß i++)
+                            (ß i = i + 1)
                         )
                         (§ return i)
                     )
@@ -39192,7 +39715,7 @@
     (§ defn #_"Object" contains [#_"Object" coll, #_"Object" key]
         (cond (ß coll == nil)
             (do
-                (§ return (ß F))
+                (§ return F)
             )
             (ß coll instanceof Associative)
             (do
@@ -39323,19 +39846,19 @@
                             (§ return (ß e.getValue()))
                         )
                     )
-                    (throw (ß new IndexOutOfBoundsException()))
+                    (throw (IndexOutOfBoundsException.))
                 )
             )
             (ß coll instanceof Sequential)
             (do
                 (let [#_"ISeq" seq (ß RT.seq(coll))]
                     (ß coll = nil)
-                    (loop-when-recur [(ß int i = 0)] (ß i <= n && seq != nil) [(ß ++i, seq = seq.next())]
+                    (loop-when-recur [(ß int i = 0)] (ß i <= n && seq != nil) [(ß i = i + 1, seq = seq.next())]
                         (when (ß i == n)
                             (§ return (ß seq.first()))
                         )
                     )
-                    (throw (ß new IndexOutOfBoundsException()))
+                    (throw (IndexOutOfBoundsException.))
                 )
             )
             :else
@@ -39416,7 +39939,7 @@
             (do
                 (let [#_"ISeq" seq (ß RT.seq(coll))]
                     (ß coll = nil)
-                    (loop-when-recur [(ß int i = 0)] (ß i <= n && seq != nil) [(ß ++i, seq = seq.next())]
+                    (loop-when-recur [(ß int i = 0)] (ß i <= n && seq != nil) [(ß i = i + 1, seq = seq.next())]
                         (when (ß i == n)
                             (§ return (ß seq.first()))
                         )
@@ -40129,7 +40652,7 @@
 
     (§ defn #_"IPersistentVector" subvec [#_"IPersistentVector" v, #_"int" start, #_"int" end]
         (when (ß end < start || start < 0 || end > v.count())
-            (throw (ß new IndexOutOfBoundsException()))
+            (throw (IndexOutOfBoundsException.))
         )
         (when (ß start == end)
             (§ return (ß PersistentVector.EMPTY))
@@ -40183,7 +40706,7 @@
 
     (§ defn #_"ISeq" arrayToList [#_"Object[]" a]
         (let [#_"ISeq" ret nil]
-            (loop-when-recur [(ß int i = a.length - 1)] (ß i >= 0) [(ß --i)]
+            (loop-when-recur [(ß int i = a.length - 1)] (ß i >= 0) [(ß i = i - 1)]
                 (ß ret = (ISeq) cons(a[i], ret))
             )
             ret
@@ -40199,7 +40722,7 @@
                 (let [#_"ISeq" s (ß RT.seq(sizeOrSeq))]
                     (let [#_"int" size (ß RT.count(s))]
                         (let [#_"Object[]" ret (ß new Object[size])]
-                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i++, s = s.next())]
+                            (loop-when-recur [(ß int i = 0)] (ß i < size && s != nil) [(ß i = i + 1, s = s.next())]
                                 (ß ret[i] = s.first())
                             )
                             ret
@@ -40213,7 +40736,7 @@
     (§ defn #_"Object[]" toArray [#_"Object" coll]
         (cond (ß coll == nil)
             (do
-                (ß EMPTY_ARRAY)
+                EMPTY_ARRAY
             )
             (ß coll instanceof Object[])
             (do
@@ -40225,7 +40748,7 @@
             )
             (ß coll instanceof Iterable)
             (do
-                (let [#_"ArrayList" ret (ß new ArrayList())]
+                (let [#_"ArrayList" ret (ArrayList.)]
                     (doseq [#_"Object" o (ß (Iterable)coll)]
                         (ß ret.add(o))
                     )
@@ -40240,7 +40763,7 @@
             (do
                 (let [#_"char[]" chars (ß ((String) coll).toCharArray())]
                     (let [#_"Object[]" ret (ß new Object[chars.length])]
-                        (loop-when-recur [(ß int i = 0)] (ß i < chars.length) [(ß i++)]
+                        (loop-when-recur [(ß int i = 0)] (ß i < chars.length) [(ß i = i + 1)]
                             (ß ret[i] = chars[i])
                         )
                         ret
@@ -40251,7 +40774,7 @@
             (do
                 (let [#_"ISeq" s (ß (seq(coll)))]
                     (let [#_"Object[]" ret (ß new Object[count(s)])]
-                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i++, s = s.next())]
+                        (loop-when-recur [(ß int i = 0)] (ß i < ret.length) [(ß i = i + 1, s = s.next())]
                             (ß ret[i] = s.first())
                         )
                         ret
@@ -40268,7 +40791,7 @@
     (§ defn #_"Object[]" seqToArray [#_"ISeq" seq]
         (let [#_"int" len (ß length(seq))]
             (let [#_"Object[]" ret (ß new Object[len])]
-                (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß ++i, seq = seq.next())]
+                (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß i = i + 1, seq = seq.next())]
                     (ß ret[i] = seq.first())
                 )
                 ret
@@ -40283,7 +40806,7 @@
                 (when (ß len > dest.length)
                     (ß dest = (Object[]) Array.newInstance(passed.getClass().getComponentType(), len))
                 )
-                (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß ++i, seq = seq.next())]
+                (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß i = i + 1, seq = seq.next())]
                     (ß dest[i] = seq.first())
                 )
                 (when (ß len < passed.length)
@@ -40304,37 +40827,37 @@
         (let [#_"Object" ret (ß Array.newInstance(type, length(seq)))]
             (cond (ß type == Integer.TYPE)
                 (do
-                    (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß ++i, seq = seq.next())]
+                    (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß i = i + 1, seq = seq.next())]
                         (ß Array.set(ret, i, intCast(seq.first())))
                     )
                 )
                 (ß type == Byte.TYPE)
                 (do
-                    (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß ++i, seq = seq.next())]
+                    (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß i = i + 1, seq = seq.next())]
                         (ß Array.set(ret, i, byteCast(seq.first())))
                     )
                 )
                 (ß type == Float.TYPE)
                 (do
-                    (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß ++i, seq = seq.next())]
+                    (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß i = i + 1, seq = seq.next())]
                         (ß Array.set(ret, i, floatCast(seq.first())))
                     )
                 )
                 (ß type == Short.TYPE)
                 (do
-                    (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß ++i, seq = seq.next())]
+                    (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß i = i + 1, seq = seq.next())]
                         (ß Array.set(ret, i, shortCast(seq.first())))
                     )
                 )
                 (ß type == Character.TYPE)
                 (do
-                    (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß ++i, seq = seq.next())]
+                    (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß i = i + 1, seq = seq.next())]
                         (ß Array.set(ret, i, charCast(seq.first())))
                     )
                 )
                 :else
                 (do
-                    (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß ++i, seq = seq.next())]
+                    (loop-when-recur [(ß int i = 0)] (ß seq != nil) [(ß i = i + 1, seq = seq.next())]
                         (ß Array.set(ret, i, seq.first()))
                     )
                 )
@@ -40346,7 +40869,7 @@
     (§ defn #_"int" length [#_"ISeq" list]
         (let [#_"int" i 0]
             (loop-when-recur [(ß ISeq c = list)] (ß c != nil) [(ß c = c.next())]
-                (ß i++)
+                (ß i = i + 1)
             )
             i
         )
@@ -40355,7 +40878,7 @@
     (§ defn #_"int" boundedLength [#_"ISeq" list, #_"int" limit]
         (let [#_"int" i 0]
             (loop-when-recur [(ß ISeq c = list)] (ß c != nil && i <= limit) [(ß c = c.next())]
-                (ß i++)
+                (ß i = i + 1)
             )
             i
         )
@@ -40432,7 +40955,7 @@
 
     (§ defn #_"String" printString [#_"Object" x]
         (try
-            (let [#_"StringWriter" sw (ß new StringWriter())]
+            (let [#_"StringWriter" sw (StringWriter.)]
                 (ß print(x, sw))
                 (ß sw.toString())
             )
@@ -40497,7 +41020,7 @@
                                     )
                                     (do
                                         (ß w.write(\")) ;; oops! "
-                                        (loop-when-recur [(ß int i = 0)] (ß i < s.length()) [(ß i++)]
+                                        (loop-when-recur [(ß int i = 0)] (ß i < s.length()) [(ß i = i + 1)]
                                             (let [#_"char" c (ß s.charAt(i))]
                                                 (§ switch c
                                                     (§ case \newline)
@@ -40567,7 +41090,7 @@
                         (do
                             (let [#_"IPersistentVector" a (ß (IPersistentVector) x)]
                                 (ß w.write(\[))
-                                (loop-when-recur [(ß int i = 0)] (ß i < a.count()) [(ß i++)]
+                                (loop-when-recur [(ß int i = 0)] (ß i < a.count()) [(ß i = i + 1)]
                                     (ß print(a.nth(i), w))
                                     (when (ß i < a.count() - 1)
                                         (ß w.write(\space))
@@ -40784,11 +41307,13 @@
 
     (§ defn #_"ISeq" doFormat [#_"Writer" w, #_"String" s, #_"ISeq" args] (§ throws IOException)
         (loop-when-recur [(ß int i = 0)] (ß i < s.length()) [(ß )]
-            (let [#_"char" c (ß s.charAt(i++))]
+            (let [#_"char" c (ß s.charAt(i))]
+                (ß i = i + 1)
                 (§ switch (ß Character.toLowerCase(c))
                     (§ case \~)
                     (do
-                        (let [#_"char" d (ß s.charAt(i++))]
+                        (let [#_"char" d (ß s.charAt(i))]
+                            (ß i = i + 1)
                             (§ switch (ß Character.toLowerCase(d))
                                 (§ case \%)
                                 (do
@@ -41124,7 +41649,8 @@
 (java-ns cloiure.lang.Seqable
 
 (§ interface Seqable
-    (§ abstract ISeq seq())
+    #_abstract
+    (#_"ISeq" seq [this])
 )
 )
 
@@ -41161,7 +41687,7 @@
 (§ import java.util.NoSuchElementException)
 
 (class-ns SeqIterator (§ implements Iterator)
-    (§ def #_"Object" START (ß new Object()))
+    (§ def #_"Object" START (Object.))
 
     (§ field #_"Object" seq)
     (§ field #_"Object" next)
@@ -41197,7 +41723,7 @@
     #_method
     (§ defn #_"Object" next [this] (§ throws NoSuchElementException)
         (when (ß !hasNext())
-            (throw (ß new NoSuchElementException()))
+            (throw (NoSuchElementException.))
         )
         (ß seq = next)
         (ß RT.first(next))
@@ -41205,7 +41731,7 @@
 
     #_method
     (§ defn #_"void" remove [this]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 )
 )
@@ -41219,8 +41745,10 @@
 (java-ns cloiure.lang.Settable
 
 (§ interface Settable
-    (§ abstract Object doSet(Object val))
-    (§ abstract Object doReset(Object val))
+    #_abstract
+    (#_"Object" doSet [this, #_"Object" val])
+    #_abstract
+    (#_"Object" doReset [this, #_"Object" val])
 )
 )
 
@@ -41229,10 +41757,14 @@
 (§ import java.util.Comparator)
 
 (§ interface Sorted
-    (§ abstract Comparator comparator())
-    (§ abstract Object entryKey(Object entry))
-    (§ abstract ISeq seq(boolean ascending))
-    (§ abstract ISeq seqFrom(Object key, boolean ascending))
+    #_abstract
+    (#_"Comparator" comparator [this])
+    #_abstract
+    (#_"Object" entryKey [this, #_"Object" entry])
+    #_abstract
+    (#_"ISeq" seq [this, #_"boolean" ascending])
+    #_abstract
+    (#_"ISeq" seqFrom [this, #_"Object" key, #_"boolean" ascending])
 )
 )
 
@@ -41478,7 +42010,7 @@
         )
     )
 
-    (§ anno @Override)
+    #_override
     #_method
     (§ defn #_"boolean" equals [this, #_"Object" o]
         (when (ß this == o)
@@ -41500,7 +42032,7 @@
         )
     )
 
-    (§ anno @Override)
+    #_override
     #_method
     (§ defn #_"int" hashCode [this]
         (let [#_"int" result (ß Util.hash(tag))]
@@ -41528,8 +42060,8 @@
     (§ defn #_"int" binFor [this, #_"Object" k]
         ;; spread hashes, a la Cliff Click
         (let [#_"int" h (ß k.hashCode())]
-            (ß h ^= (h >>> 20) :xor (h >>> 12))
-            (ß h ^= (h >>> 7) :xor (h >>> 4))
+            (ß h = h :xor ((h >>> 20) :xor (h >>> 12)))
+            (ß h = h :xor ((h >>> 7) :xor (h >>> 4)))
             (ß h % bins.length)
         )
     )
@@ -41546,7 +42078,7 @@
 
     (§ constructor #_"TransactionalHashMap" TransactionalHashMap [#_"int" nBins]
         (ß bins = new Ref[nBins])
-        (loop-when-recur [(ß int i = 0)] (ß i < nBins) [(ß i++)]
+        (loop-when-recur [(ß int i = 0)] (ß i < nBins) [(ß i = i + 1)]
             (ß bins[i] = new Ref(PersistentHashMap.EMPTY))
         )
         this
@@ -41561,8 +42093,8 @@
     #_method
     (§ defn #_"int" size [this]
         (let [#_"int" n 0]
-            (loop-when-recur [(ß int i = 0)] (ß i < bins.length) [(ß i++)]
-                (ß n += mapAt(i).count())
+            (loop-when-recur [(ß int i = 0)] (ß i < bins.length) [(ß i = i + 1)]
+                (ß n = n + mapAt(i).count())
             )
             n
         )
@@ -41624,7 +42156,7 @@
 
     #_method
     (§ defn #_"void" clear [this]
-        (loop-when-recur [(ß int i = 0)] (ß i < bins.length) [(ß i++)]
+        (loop-when-recur [(ß int i = 0)] (ß i < bins.length) [(ß i = i + 1)]
             (let [#_"Ref" r (ß bins[i])]
                 (let [#_"IPersistentMap" map (ß (IPersistentMap) r.deref())]
                     (when (ß map.count() > 0)
@@ -41639,7 +42171,7 @@
     #_method
     (§ defn #_"Set<Entry<K, V>>" entrySet [this]
         (let [(ß ArrayList<Map.Entry<K, V>> entries = new ArrayList(bins.length))]
-            (loop-when-recur [(ß int i = 0)] (ß i < bins.length) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < bins.length) [(ß i = i + 1)]
                 (let [#_"IPersistentMap" map (ß mapAt(i))]
                     (when (ß map.count() > 0)
                         (ß entries.addAll((Collection) RT.seq(map)))
@@ -41737,8 +42269,8 @@
 (§ import java.util.LinkedList)
 
 (class-ns TransformerIterator (§ implements Iterator)
-    (§ def- #_"Buffer" EMPTY (ß new Empty()))
-    (§ def- #_"Object" NONE (ß new Object()))
+    (§ def- #_"Buffer" EMPTY (Empty.))
+    (§ def- #_"Object" NONE (Object.))
 
     ;; Source
     (§ field- #_"Iterator" sourceIter)
@@ -41747,11 +42279,11 @@
 
     ;; Iteration state
     #_volatile
-    (§ field- #_"Buffer" buffer (ß EMPTY))
+    (§ field- #_"Buffer" buffer EMPTY)
     #_volatile
-    (§ field- #_"Object" next (ß NONE))
+    (§ field- #_"Object" next NONE)
     #_volatile
-    (§ field- #_"boolean" completed (ß false))
+    (§ field- #_"boolean" completed false)
 
     (§ constructor- #_"TransformerIterator" TransformerIterator [#_"IFn" xform, #_"Iterator" sourceIter, #_"boolean" multi]
         (ß this.sourceIter = sourceIter)
@@ -41784,7 +42316,7 @@
 
     (§ defn #_"Iterator" createMulti [#_"IFn" xform, #_"List" sources]
         (let [#_"Iterator[]" iters (ß new Iterator[sources.size()])]
-            (loop-when-recur [(ß int i = 0)] (ß i < sources.size()) [(ß i++)]
+            (loop-when-recur [(ß int i = 0)] (ß i < sources.size()) [(ß i = i + 1)]
                 (ß iters[i] = (Iterator)sources.get(i))
             )
             (ß new TransformerIterator(xform, new MultiIterator(iters), true))
@@ -41850,19 +42382,22 @@
                 (§ return ret)
             )
         )
-        (throw (ß new NoSuchElementException()))
+        (throw (NoSuchElementException.))
     )
 
     #_method
     (§ defn #_"void" remove [this]
-        (throw (ß new UnsupportedOperationException()))
+        (throw (UnsupportedOperationException.))
     )
 
     #_private
     (§ interface Buffer
-        (§ abstract Buffer add(Object o))
-        (§ abstract Object remove())
-        (§ abstract boolean isEmpty())
+        #_abstract
+        (#_"Buffer" add [this, #_"Object" o])
+        #_abstract
+        (#_"Object" remove [this])
+        #_abstract
+        (#_"boolean" isEmpty [this])
     )
 
     #_private
@@ -41935,7 +42470,7 @@
 
     #_private
     (class-ns Many (§ implements Buffer)
-        (§ field- #_"Queue" vals (ß new LinkedList()))
+        (§ field- #_"Queue" vals (LinkedList.))
 
         (§ constructor #_"Many" Many [#_"Object" o1, #_"Object" o2]
             (ß vals.add(o1))
@@ -41987,7 +42522,7 @@
         #_method
         (§ defn #_"Object" next [this]
             (let [#_"Object[]" nexts (ß new Object[iters.length])]
-                (loop-when-recur [(ß int i = 0)] (ß i < iters.length) [(ß i++)]
+                (loop-when-recur [(ß int i = 0)] (ß i < iters.length) [(ß i = i + 1)]
                     (ß nexts[i] = iters[i].next())
                 )
                 (ß new ArraySeq(nexts, 0))
@@ -41996,7 +42531,7 @@
 
         #_method
         (§ defn #_"void" remove [this]
-            (throw (ß new UnsupportedOperationException()))
+            (throw (UnsupportedOperationException.))
         )
     )
 )
@@ -42008,7 +42543,7 @@
 (§ import java.util.RandomAccess)
 
 (class-ns Tuple
-    (§ def #_"int" MAX_SIZE (ß 6))
+    (§ def #_"int" MAX_SIZE 6)
 
     (§ defn #_"IPersistentVector" create []
         (ß PersistentVector.EMPTY)
@@ -42072,7 +42607,8 @@
 
     #_non-static
     (§ interface EquivPred
-        (§ abstract boolean equiv(Object k1, Object k2))
+        #_abstract
+        (#_"boolean" equiv [this, #_"Object" k1, #_"Object" k2])
     )
 
     (§ def #_"EquivPred" equivNull (ß new EquivPred()
@@ -42248,7 +42784,7 @@
 
     (§ defn #_"int" hashCombine [#_"int" seed, #_"int" hash]
         ;; a la boost
-        (ß seed ^= hash + 0x9e3779b9 + (seed << 6) + (seed >> 2))
+        (ß seed = seed :xor (hash + 0x9e3779b9 + (seed << 6) + (seed >> 2)))
         seed
     )
 
@@ -42301,13 +42837,12 @@
     (§ defn #_"RuntimeException" sneakyThrow [#_"Throwable" t]
         ;; http://www.mail-archive.com/javaposse@googlegroups.com/msg05984.html
         (when (ß t == nil)
-            (throw (ß new NullPointerException()))
+            (throw (NullPointerException.))
         )
         (ß Util.<RuntimeException>sneakyThrow0(t))
         nil
     )
 
-    (§ anno @SuppressWarnings("unchecked"))
     (§ defn- #_"<T extends Throwable> void" sneakyThrow0 [#_"Throwable" t] (§ throws T)
         (throw (ß (T) t))
     )
@@ -42391,7 +42926,7 @@
     ))
 
     #_volatile
-    (§ def #_"int" rev (ß 0))
+    (§ def #_"int" rev 0)
 
     (§ def #_"Keyword" privateKey (ß Keyword.intern(nil, "private")))
     (§ def #_"IPersistentMap" privateMeta (ß new PersistentArrayMap(new Object[] (§ privateKey, Boolean.TRUE ))))
@@ -42403,7 +42938,7 @@
     (§ field #_"Object" root)
 
     #_volatile
-    (§ field #_"boolean" dynamic (ß false))
+    (§ field #_"boolean" dynamic false)
     #_transient
     (§ field #_"AtomicBoolean" threadBound)
     (§ field #_"Symbol" sym)
@@ -42511,7 +43046,7 @@
     (§ constructor #_"Var" Var [#_"Namespace" ns, #_"Symbol" sym, #_"Object" root]
         (§ this(ns, sym))
         (ß this.root = root)
-        (ß ++rev)
+        (ß rev = rev + 1)
         this
     )
 
@@ -42629,7 +43164,7 @@
             (ß validate(getValidator(), root))
             (let [#_"Object" oldroot (ß this.root)]
                 (ß this.root = root)
-                (ß ++rev)
+                (ß rev = rev + 1)
                 (ß alterMeta(dissoc, RT.list(macroKey)))
                 (ß notifyWatches(oldroot, this.root))
             )
@@ -42643,7 +43178,7 @@
             (ß validate(getValidator(), root))
             (let [#_"Object" oldroot (ß this.root)]
                 (ß this.root = root)
-                (ß ++rev)
+                (ß rev = rev + 1)
                 (ß notifyWatches(oldroot, root))
             )
         )
@@ -42654,7 +43189,7 @@
     (§ defn #_"void" unbindRoot [this]
         (§ sync this
             (ß this.root = new Unbound(this))
-            (ß ++rev)
+            (ß rev = rev + 1)
         )
         nil
     )
@@ -42666,7 +43201,7 @@
                 (ß validate(getValidator(), newRoot))
                 (let [#_"Object" oldroot root]
                     (ß this.root = newRoot)
-                    (ß ++rev)
+                    (ß rev = rev + 1)
                     (ß notifyWatches(oldroot, newRoot))
                 )
             )
@@ -42681,7 +43216,7 @@
                 (ß validate(getValidator(), newRoot))
                 (let [#_"Object" oldroot root]
                     (ß this.root = newRoot)
-                    (ß ++rev)
+                    (ß rev = rev + 1)
                     (ß notifyWatches(oldroot, newRoot))
                     newRoot
                 )
@@ -43101,7 +43636,7 @@
 
     (§ def #_"IFn" assoc (ß new AFn()
         (§ reify
-            (§ anno @Override)
+            #_override
             #_method
             (§ defn #_"Object" invoke [this, #_"Object" m, #_"Object" k, #_"Object" v]
                 (ß RT.assoc(m, k, v))
@@ -43111,7 +43646,7 @@
 
     (§ def #_"IFn" dissoc (ß new AFn()
         (§ reify
-            (§ anno @Override)
+            #_override
             #_method
             (§ defn #_"Object" invoke [this, #_"Object" c, #_"Object" k]
                 (ß RT.dissoc(c, k))
@@ -43142,19 +43677,6 @@
         (ß this.val = newval)
     )
 )
-)
-
-(java-ns cloiure.lang.WarnBoxedMath
-
-(§ import java.lang.annotation.Retention)
-(§ import java.lang.annotation.RetentionPolicy)
-(§ import java.lang.annotation.ElementType)
-(§ import java.lang.annotation.Target)
-
-(§ anno @Retention(RetentionPolicy.RUNTIME))
-(§ anno @Target(ElementType.METHOD))
-(§ @interface WarnBoxedMath)
-    (§ @abstract boolean value() default true)
 )
 
 (java-ns cloiure.main
