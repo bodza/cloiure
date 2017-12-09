@@ -46,7 +46,7 @@
     (:use [cloiure slang]))
 
 (import
-    [java.io File FileInputStream FileNotFoundException FileOutputStream InputStreamReader IOException LineNumberReader OutputStreamWriter PrintWriter PushbackReader Reader StringWriter]
+    [java.io File FileInputStream FileNotFoundException FileOutputStream InputStreamReader IOException LineNumberReader OutputStreamWriter PrintWriter PushbackReader Reader StringReader StringWriter]
   #_[java.lang Character Class Exception IllegalArgumentException IllegalStateException Integer Number NumberFormatException Object RuntimeException String StringBuilder Throwable UnsupportedOperationException]
     [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
     [java.lang.reflect Array Constructor Field InvocationHandler #_Method Modifier]
@@ -26070,7 +26070,7 @@
     )
 
     (defn #_"boolean" Numbers'equiv-2oo [#_"Object" ___x, #_"Object" ___y]
-        (ß this.equiv((Number) ___x, (Number) ___y))
+        (Numbers'equiv-2nn (cast Number ___x), (cast Number ___y))
     )
 
     (defn #_"boolean" Numbers'equiv-2nn [#_"Number" ___x, #_"Number" ___y]
@@ -26175,7 +26175,7 @@
             (ß ___x instanceof Ratio)
             (do
                 (let [#_"Ratio" ___r (ß (Ratio)___x)]
-                    (ß (BigDecimal)this.divide((§ unsure BigDecimal. (:numerator ___r)), (:denominator ___r)))
+                    (cast BigDecimal (Numbers'divide-2oo (§ unsure BigDecimal. (:numerator ___r)), (:denominator ___r)))
                 )
             )
             :else
@@ -26208,7 +26208,7 @@
                 )
             )
         )
-        (ß Ratio'new(this.toBigInteger(___x), BigInteger/ONE))
+        (Ratio'new (Numbers'toBigInteger ___x), BigInteger/ONE)
     )
 
     (defn #_"Number" Numbers'rationalize [#_"Number" ___x]
@@ -26226,7 +26226,7 @@
                                     (§ return (ß BigInt'fromBigInteger(___bv.multiply(BigInteger/TEN.pow(-scale)))))
                                 )
                                 (do
-                                    (§ return (ß this.divide(___bv, BigInteger/TEN.pow(___scale))))
+                                    (§ return (ß Numbers'divide-ii(___bv, BigInteger/TEN.pow(___scale))))
                                 )
                             )
                         )
@@ -26272,7 +26272,7 @@
     )
 
     (defn #_"int" Numbers'shiftLeftInt [#_"int" ___x, #_"int" ___n]
-        (ß ___x << ___n)
+        (<< ___x ___n)
     )
 
     (defn #_"long" Numbers'shiftLeft-2oo [#_"Object" ___x, #_"Object" ___y]
@@ -26285,11 +26285,11 @@
         (ß shiftLeft(___x, bitOpsCast(___y)))
     )
     (defn #_"long" Numbers'shiftLeft-2ll [#_"long" ___x, #_"long" ___n]
-        (ß ___x << ___n)
+        (<< ___x ___n)
     )
 
     (defn #_"int" Numbers'shiftRightInt [#_"int" ___x, #_"int" ___n]
-        (ß ___x >> ___n)
+        (>> ___x ___n)
     )
 
     (defn #_"long" Numbers'shiftRight-2oo [#_"Object" ___x, #_"Object" ___y]
@@ -26302,11 +26302,11 @@
         (ß shiftRight(___x, bitOpsCast(___y)))
     )
     (defn #_"long" Numbers'shiftRight-2ll [#_"long" ___x, #_"long" ___n]
-        (ß ___x >> ___n)
+        (>> ___x ___n)
     )
 
     (defn #_"int" Numbers'unsignedShiftRightInt [#_"int" ___x, #_"int" ___n]
-        (ß ___x >>> ___n)
+        (>>> ___x ___n)
     )
 
     (defn #_"long" Numbers'unsignedShiftRight-2oo [#_"Object" ___x, #_"Object" ___y]
@@ -26319,7 +26319,7 @@
         (ß unsignedShiftRight(___x, bitOpsCast(___y)))
     )
     (defn #_"long" Numbers'unsignedShiftRight-2ll [#_"long" ___x, #_"long" ___n]
-        (ß ___x >>> ___n)
+        (>>> ___x ___n)
     )
 
     (§ def #_"LongOps" Numbers'LONG_OPS (LongOps'new))
@@ -26371,7 +26371,7 @@
     )
 
     (defn #_"int" Numbers'hasheqFrom [#_"Number" ___x, #_"Class" ___xc]
-        (when (ß ___xc == (§ class Integer) || ___xc == (§ class Short) || ___xc == (§ class Byte) || (___xc == (§ class BigInteger) && this.lte(___x, Long/MAX_VALUE) && this.gte(___x, Long/MIN_VALUE)))
+        (when (ß ___xc == (§ class Integer) || ___xc == (§ class Short) || ___xc == (§ class Byte) || (___xc == (§ class BigInteger) && Numbers'lte-2ol(___x, Long/MAX_VALUE) && Numbers'gte-2ol(___x, Long/MIN_VALUE)))
             (let [#_"long" ___lpart (.longValue ___x)]
                 (§ return (Murmur3'hashLong ___lpart))
             )
@@ -26831,7 +26831,7 @@
     )
 
     (defn #_"Number" Numbers'num-1o [#_"Object" ___x]
-        (ß (Number) ___x)
+        (cast Number ___x)
     )
 
     (defn #_"Number" Numbers'num-1f [#_"float" ___x]
@@ -26867,19 +26867,19 @@
     )
 
     (defn #_"double" Numbers'inc-1d [#_"double" ___x]
-        (inc ___x)
+        (+ ___x 1)
     )
 
     (defn #_"double" Numbers'incP-1d [#_"double" ___x]
-        (inc ___x)
+        (+ ___x 1)
     )
 
     (defn #_"double" Numbers'dec-1d [#_"double" ___x]
-        (dec ___x)
+        (- ___x 1)
     )
 
     (defn #_"double" Numbers'decP-1d [#_"double" ___x]
-        (dec ___x)
+        (- ___x 1)
     )
 
     (defn #_"double" Numbers'multiply-2dd [#_"double" ___x, #_"double" ___y]
@@ -26943,11 +26943,11 @@
     )
 
     (defn #_"int" Numbers'unchecked_int_inc [#_"int" ___x]
-        (inc ___x)
+        (+ ___x 1)
     )
 
     (defn #_"int" Numbers'unchecked_int_dec [#_"int" ___x]
-        (dec ___x)
+        (- ___x 1)
     )
 
     (defn #_"int" Numbers'unchecked_int_multiply [#_"int" ___x, #_"int" ___y]
@@ -27119,179 +27119,179 @@
     )
 
     (defn #_"long" Numbers'unchecked_inc-1l [#_"long" ___x]
-        (inc ___x)
+        (+ ___x 1)
     )
 
     (defn #_"long" Numbers'unchecked_dec-1l [#_"long" ___x]
-        (dec ___x)
+        (- ___x 1)
     )
 
     (defn #_"Number" Numbers'unchecked_add-2oo [#_"Object" ___x, #_"Object" ___y]
-        (.add this, ___x, ___y)
+        (Numbers'add-2oo ___x, ___y)
     )
 
     (defn #_"Number" Numbers'unchecked_minus-2oo [#_"Object" ___x, #_"Object" ___y]
-        (ß minus(___x, ___y))
+        (Numbers'minus-2oo ___x, ___y)
     )
 
     (defn #_"Number" Numbers'unchecked_multiply-2oo [#_"Object" ___x, #_"Object" ___y]
-        (.multiply this, ___x, ___y)
+        (Numbers'multiply-2oo ___x, ___y)
     )
 
     (defn #_"Number" Numbers'unchecked_minus-1o [#_"Object" ___x]
-        (ß minus(___x))
+        (Numbers'minus-1o ___x)
     )
 
     (defn #_"Number" Numbers'unchecked_inc-1o [#_"Object" ___x]
-        (.inc this, ___x)
+        (Numbers'inc-1o ___x)
     )
 
     (defn #_"Number" Numbers'unchecked_dec-1o [#_"Object" ___x]
-        (.dec this, ___x)
+        (Numbers'dec-1o ___x)
     )
 
     (defn #_"double" Numbers'unchecked_add-2dd [#_"double" ___x, #_"double" ___y]
-        (.add this, ___x, ___y)
+        (Numbers'add-2dd ___x, ___y)
     )
 
     (defn #_"double" Numbers'unchecked_minus-2dd [#_"double" ___x, #_"double" ___y]
-        (ß minus(___x, ___y))
+        (Numbers'minus-2dd ___x, ___y)
     )
 
     (defn #_"double" Numbers'unchecked_multiply-2dd [#_"double" ___x, #_"double" ___y]
-        (.multiply this, ___x, ___y)
+        (Numbers'multiply-2dd ___x, ___y)
     )
 
     (defn #_"double" Numbers'unchecked_minus-1d [#_"double" ___x]
-        (ß minus(___x))
+        (Numbers'minus-1d ___x)
     )
 
     (defn #_"double" Numbers'unchecked_inc-1d [#_"double" ___x]
-        (.inc this, ___x)
+        (Numbers'inc-1d ___x)
     )
 
     (defn #_"double" Numbers'unchecked_dec-1d [#_"double" ___x]
-        (.dec this, ___x)
+        (Numbers'dec-1d ___x)
     )
 
     (defn #_"double" Numbers'unchecked_add-2do [#_"double" ___x, #_"Object" ___y]
-        (.add this, ___x, ___y)
+        (Numbers'add-2do ___x, ___y)
     )
 
     (defn #_"double" Numbers'unchecked_minus-2do [#_"double" ___x, #_"Object" ___y]
-        (ß minus(___x, ___y))
+        (Numbers'minus-2do ___x, ___y)
     )
 
     (defn #_"double" Numbers'unchecked_multiply-2do [#_"double" ___x, #_"Object" ___y]
-        (.multiply this, ___x, ___y)
+        (Numbers'multiply-2do ___x, ___y)
     )
 
     (defn #_"double" Numbers'unchecked_add-2od [#_"Object" ___x, #_"double" ___y]
-        (.add this, ___x, ___y)
+        (Numbers'add-2od ___x, ___y)
     )
 
     (defn #_"double" Numbers'unchecked_minus-2od [#_"Object" ___x, #_"double" ___y]
-        (ß minus(___x, ___y))
+        (Numbers'minus-2od ___x, ___y)
     )
 
     (defn #_"double" Numbers'unchecked_multiply-2od [#_"Object" ___x, #_"double" ___y]
-        (.multiply this, ___x, ___y)
+        (Numbers'multiply-2od ___x, ___y)
     )
 
     (defn #_"double" Numbers'unchecked_add-2dl [#_"double" ___x, #_"long" ___y]
-        (.add this, ___x, ___y)
+        (Numbers'add-2dl ___x, ___y)
     )
 
     (defn #_"double" Numbers'unchecked_minus-2dl [#_"double" ___x, #_"long" ___y]
-        (ß minus(___x, ___y))
+        (Numbers'minus-2dl ___x, ___y)
     )
 
     (defn #_"double" Numbers'unchecked_multiply-2dl [#_"double" ___x, #_"long" ___y]
-        (.multiply this, ___x, ___y)
+        (Numbers'multiply-2dl ___x, ___y)
     )
 
     (defn #_"double" Numbers'unchecked_add-2ld [#_"long" ___x, #_"double" ___y]
-        (.add this, ___x, ___y)
+        (Numbers'add-2ld ___x, ___y)
     )
 
     (defn #_"double" Numbers'unchecked_minus-2ld [#_"long" ___x, #_"double" ___y]
-        (ß minus(___x, ___y))
+        (Numbers'minus-2ld ___x, ___y)
     )
 
     (defn #_"double" Numbers'unchecked_multiply-2ld [#_"long" ___x, #_"double" ___y]
-        (.multiply this, ___x, ___y)
+        (Numbers'multiply-2ld ___x, ___y)
     )
 
     (defn #_"Number" Numbers'unchecked_add-2lo [#_"long" ___x, #_"Object" ___y]
-        (.add this, ___x, ___y)
+        (Numbers'add-2lo ___x, ___y)
     )
 
     (defn #_"Number" Numbers'unchecked_minus-2lo [#_"long" ___x, #_"Object" ___y]
-        (ß minus(___x, ___y))
+        (Numbers'minus-2lo ___x, ___y)
     )
 
     (defn #_"Number" Numbers'unchecked_multiply-2lo [#_"long" ___x, #_"Object" ___y]
-        (.multiply this, ___x, ___y)
+        (Numbers'multiply-2lo ___x, ___y)
     )
 
     (defn #_"Number" Numbers'unchecked_add-2ol [#_"Object" ___x, #_"long" ___y]
-        (.add this, ___x, ___y)
+        (Numbers'add-2ol ___x, ___y)
     )
 
     (defn #_"Number" Numbers'unchecked_minus-2ol [#_"Object" ___x, #_"long" ___y]
-        (ß minus(___x, ___y))
+        (Numbers'minus-2ol ___x, ___y)
     )
 
     (defn #_"Number" Numbers'unchecked_multiply-2ol [#_"Object" ___x, #_"long" ___y]
-        (.multiply this, ___x, ___y)
+        (Numbers'multiply-2ol ___x, ___y)
     )
 
     (defn #_"Number" Numbers'quotient-2do [#_"double" ___x, #_"Object" ___y]
-        (ß this.quotient((Object)___x, ___y))
+        (Numbers'quotient-2oo (cast Object ___x), ___y)
     )
 
     (defn #_"Number" Numbers'quotient-2od [#_"Object" ___x, #_"double" ___y]
-        (ß this.quotient(___x, (Object)___y))
+        (Numbers'quotient-2oo ___x, (cast Object ___y))
     )
 
     (defn #_"Number" Numbers'quotient-2lo [#_"long" ___x, #_"Object" ___y]
-        (ß this.quotient((Object)___x, ___y))
+        (Numbers'quotient-2oo (cast Object ___x), ___y)
     )
 
     (defn #_"Number" Numbers'quotient-2ol [#_"Object" ___x, #_"long" ___y]
-        (ß this.quotient(___x, (Object)___y))
+        (Numbers'quotient-2oo ___x, (cast Object ___y))
     )
 
     (defn #_"double" Numbers'quotient-2dl [#_"double" ___x, #_"long" ___y]
-        (ß this.quotient(___x, (double)___y))
+        (Numbers'quotient-2dd ___x, (double ___y))
     )
 
     (defn #_"double" Numbers'quotient-2ld [#_"long" ___x, #_"double" ___y]
-        (ß this.quotient((double)___x, ___y))
+        (Numbers'quotient-2dd (double ___x), ___y)
     )
 
     (defn #_"Number" Numbers'remainder-2do [#_"double" ___x, #_"Object" ___y]
-        (ß this.remainder((Object)___x, ___y))
+        (Numbers'remainder-2oo (cast Object ___x), ___y)
     )
 
     (defn #_"Number" Numbers'remainder-2od [#_"Object" ___x, #_"double" ___y]
-        (ß this.remainder(___x, (Object)___y))
+        (Numbers'remainder-2oo ___x, (cast Object ___y))
     )
 
     (defn #_"Number" Numbers'remainder-2lo [#_"long" ___x, #_"Object" ___y]
-        (ß this.remainder((Object)___x, ___y))
+        (Numbers'remainder-2oo (cast Object ___x), ___y)
     )
 
     (defn #_"Number" Numbers'remainder-2ol [#_"Object" ___x, #_"long" ___y]
-        (ß this.remainder(___x, (Object)___y))
+        (Numbers'remainder-2oo ___x, (cast Object ___y))
     )
 
     (defn #_"double" Numbers'remainder-2dl [#_"double" ___x, #_"long" ___y]
-        (ß this.remainder(___x, (double)___y))
+        (Numbers'remainder-2dd ___x, (double ___y))
     )
 
     (defn #_"double" Numbers'remainder-2ld [#_"long" ___x, #_"double" ___y]
-        (ß this.remainder((double)___x, ___y))
+        (Numbers'remainder-2dd (double ___x), ___y)
     )
 
     (defn #_"long" Numbers'add-2ll [#_"long" ___x, #_"long" ___y]
@@ -27306,7 +27306,7 @@
     (defn #_"Number" Numbers'addP-2ll [#_"long" ___x, #_"long" ___y]
         (let [#_"long" ___ret (+ ___x ___y)]
             (when (ß (___ret :xor ___x) < 0 && (___ret :xor ___y) < 0)
-                (§ return (ß this.addP((Number)___x, (Number)___y)))
+                (§ return (Numbers'addP-2oo (cast Number ___x), (cast Number ___y)))
             )
             (ß num(___ret))
         )
@@ -27386,11 +27386,11 @@
 
     (defn #_"Number" Numbers'multiplyP-2ll [#_"long" ___x, #_"long" ___y]
         (when (ß ___x == Long/MIN_VALUE && ___y < 0)
-            (§ return (ß this.multiplyP((Number)___x, (Number)___y)))
+            (§ return (Numbers'multiplyP (cast Number ___x), (cast Number ___y)))
         )
         (let [#_"long" ___ret (* ___x ___y)]
             (when (ß ___y != 0 && ___ret / ___y != ___x)
-                (§ return (ß this.multiplyP((Number)___x, (Number)___y)))
+                (§ return (Numbers'multiplyP (cast Number ___x), (cast Number ___y)))
             )
             (ß num(___ret))
         )
@@ -27439,27 +27439,27 @@
     ;; overload resolution
 
     (defn #_"Number" Numbers'add-2lo [#_"long" ___x, #_"Object" ___y]
-        (ß this.add((Object)___x, ___y))
+        (Numbers'add-2oo (cast Object ___x), ___y)
     )
 
     (defn #_"Number" Numbers'add-2ol [#_"Object" ___x, #_"long" ___y]
-        (ß this.add(___x, (Object)___y))
+        (Numbers'add-2oo ___x, (cast Object ___y))
     )
 
     (defn #_"Number" Numbers'addP-2lo [#_"long" ___x, #_"Object" ___y]
-        (ß this.addP((Object)___x, ___y))
+        (Numbers'addP-2oo (cast Object ___x), ___y)
     )
 
     (defn #_"Number" Numbers'addP-2ol [#_"Object" ___x, #_"long" ___y]
-        (ß this.addP(___x, (Object)___y))
+        (Numbers'addP-2oo ___x, (cast Object ___y))
     )
 
     (defn #_"double" Numbers'add-2do [#_"double" ___x, #_"Object" ___y]
-        (ß this.add(___x, (§ cast Number ___y).doubleValue()))
+        (Numbers'add-2dd ___x, (.doubleValue (cast Number ___y)))
     )
 
     (defn #_"double" Numbers'add-2od [#_"Object" ___x, #_"double" ___y]
-        (ß this.add((§ cast Number ___x).doubleValue(), ___y))
+        (Numbers'add-2dd (.doubleValue (cast Number ___x)), ___y)
     )
 
     (defn #_"double" Numbers'add-2dl [#_"double" ___x, #_"long" ___y]
@@ -27471,11 +27471,11 @@
     )
 
     (defn #_"double" Numbers'addP-2do [#_"double" ___x, #_"Object" ___y]
-        (ß this.addP(___x, (§ cast Number ___y).doubleValue()))
+        (Numbers'addP-2dd ___x, (.doubleValue (cast Number ___y)))
     )
 
     (defn #_"double" Numbers'addP-2od [#_"Object" ___x, #_"double" ___y]
-        (ß this.addP((§ cast Number ___x).doubleValue(), ___y))
+        (Numbers'addP-2dd (.doubleValue (cast Number ___x)), ___y)
     )
 
     (defn #_"double" Numbers'addP-2dl [#_"double" ___x, #_"long" ___y]
@@ -27487,27 +27487,27 @@
     )
 
     (defn #_"Number" Numbers'minus-2lo [#_"long" ___x, #_"Object" ___y]
-        (ß minus((Object)___x, ___y))
+        (Numbers'minus-2oo (cast Object ___x), ___y)
     )
 
     (defn #_"Number" Numbers'minus-2ol [#_"Object" ___x, #_"long" ___y]
-        (ß minus(___x, (Object)___y))
+        (Numbers'minus-2oo ___x, (cast Object ___y))
     )
 
     (defn #_"Number" Numbers'minusP-2lo [#_"long" ___x, #_"Object" ___y]
-        (ß minusP((Object)___x, ___y))
+        (Numbers'minusP-2oo (cast Object ___x), ___y)
     )
 
     (defn #_"Number" Numbers'minusP-2ol [#_"Object" ___x, #_"long" ___y]
-        (ß minusP(___x, (Object)___y))
+        (Numbers'minusP-2oo ___x, (cast Object ___y))
     )
 
     (defn #_"double" Numbers'minus-2do [#_"double" ___x, #_"Object" ___y]
-        (ß minus(___x, (§ cast Number ___y).doubleValue()))
+        (Numbers'minus-2dd ___x, (.doubleValue (cast Number ___y)))
     )
 
     (defn #_"double" Numbers'minus-2od [#_"Object" ___x, #_"double" ___y]
-        (ß minus((§ cast Number ___x).doubleValue(), ___y))
+        (Numbers'minus-2dd (.doubleValue (cast Number ___x)), ___y)
     )
 
     (defn #_"double" Numbers'minus-2dl [#_"double" ___x, #_"long" ___y]
@@ -27519,11 +27519,11 @@
     )
 
     (defn #_"double" Numbers'minusP-2do [#_"double" ___x, #_"Object" ___y]
-        (ß minus(___x, (§ cast Number ___y).doubleValue()))
+        (Numbers'minus-2dd ___x, (.doubleValue (cast Number ___y)))
     )
 
     (defn #_"double" Numbers'minusP-2od [#_"Object" ___x, #_"double" ___y]
-        (ß minus((§ cast Number ___x).doubleValue(), ___y))
+        (Numbers'minus-2dd (.doubleValue (cast Number ___x)), ___y)
     )
 
     (defn #_"double" Numbers'minusP-2dl [#_"double" ___x, #_"long" ___y]
@@ -27535,27 +27535,27 @@
     )
 
     (defn #_"Number" Numbers'multiply-2lo [#_"long" ___x, #_"Object" ___y]
-        (ß this.multiply((Object)___x, ___y))
+        (Numbers'multiply-2oo (cast Object ___x), ___y)
     )
 
     (defn #_"Number" Numbers'multiply-2ol [#_"Object" ___x, #_"long" ___y]
-        (ß this.multiply(___x, (Object)___y))
+        (Numbers'multiply-2oo ___x, (cast Object ___y))
     )
 
     (defn #_"Number" Numbers'multiplyP-2lo [#_"long" ___x, #_"Object" ___y]
-        (ß this.multiplyP((Object)___x, ___y))
+        (Numbers'multiplyP-2oo (cast Object ___x), ___y)
     )
 
     (defn #_"Number" Numbers'multiplyP-2ol [#_"Object" ___x, #_"long" ___y]
-        (ß this.multiplyP(___x, (Object)___y))
+        (Numbers'multiplyP-2oo ___x, (cast Object ___y))
     )
 
     (defn #_"double" Numbers'multiply-2do [#_"double" ___x, #_"Object" ___y]
-        (ß this.multiply(___x, (§ cast Number ___y).doubleValue()))
+        (Numbers'multiply-2dd ___x, (.doubleValue (cast Number ___y)))
     )
 
     (defn #_"double" Numbers'multiply-2od [#_"Object" ___x, #_"double" ___y]
-        (ß this.multiply((§ cast Number ___x).doubleValue(), ___y))
+        (Numbers'multiply-2dd (.doubleValue (cast Number ___x)), ___y)
     )
 
     (defn #_"double" Numbers'multiply-2dl [#_"double" ___x, #_"long" ___y]
@@ -27567,11 +27567,11 @@
     )
 
     (defn #_"double" Numbers'multiplyP-2do [#_"double" ___x, #_"Object" ___y]
-        (ß this.multiplyP(___x, (§ cast Number ___y).doubleValue()))
+        (Numbers'multiplyP-2dd ___x, (.doubleValue (cast Number ___y)))
     )
 
     (defn #_"double" Numbers'multiplyP-2od [#_"Object" ___x, #_"double" ___y]
-        (ß this.multiplyP((§ cast Number ___x).doubleValue(), ___y))
+        (Numbers'multiplyP-2dd (.doubleValue (cast Number ___x)), ___y)
     )
 
     (defn #_"double" Numbers'multiplyP-2dl [#_"double" ___x, #_"long" ___y]
@@ -27583,11 +27583,11 @@
     )
 
     (defn #_"Number" Numbers'divide-2lo [#_"long" ___x, #_"Object" ___y]
-        (ß this.divide((Object)___x, ___y))
+        (Numbers'divide-2oo (cast Object ___x), ___y)
     )
 
     (defn #_"Number" Numbers'divide-2ol [#_"Object" ___x, #_"long" ___y]
-        (ß this.divide(___x, (Object)___y))
+        (Numbers'divide-2oo ___x, (cast Object ___y))
     )
 
     (defn #_"double" Numbers'divide-2do [#_"double" ___x, #_"Object" ___y]
@@ -27607,15 +27607,15 @@
     )
 
     (defn #_"Number" Numbers'divide-2ll [#_"long" ___x, #_"long" ___y]
-        (ß this.divide((Number)___x, (Number)___y))
+        (Numbers'divide-2oo (cast Number ___x), (cast Number ___y))
     )
 
     (defn #_"boolean" Numbers'lt-2lo [#_"long" ___x, #_"Object" ___y]
-        (ß this.lt((Object)___x, ___y))
+        (Numbers'lt-2oo (cast Object ___x), ___y)
     )
 
     (defn #_"boolean" Numbers'lt-2ol [#_"Object" ___x, #_"long" ___y]
-        (ß this.lt(___x, (Object)___y))
+        (Numbers'lt-2oo ___x, (cast Object ___y))
     )
 
     (defn #_"boolean" Numbers'lt-2do [#_"double" ___x, #_"Object" ___y]
@@ -27635,11 +27635,11 @@
     )
 
     (defn #_"boolean" Numbers'lte-2lo [#_"long" ___x, #_"Object" ___y]
-        (ß this.lte((Object)___x, ___y))
+        (Numbers'lte-2oo (cast Object ___x), ___y)
     )
 
     (defn #_"boolean" Numbers'lte-2ol [#_"Object" ___x, #_"long" ___y]
-        (ß this.lte(___x, (Object)___y))
+        (Numbers'lte-2oo ___x, (cast Object ___y))
     )
 
     (defn #_"boolean" Numbers'lte-2do [#_"double" ___x, #_"Object" ___y]
@@ -27659,11 +27659,11 @@
     )
 
     (defn #_"boolean" Numbers'gt-2lo [#_"long" ___x, #_"Object" ___y]
-        (ß gt((Object)___x, ___y))
+        (Numbers'gt-2oo (cast Object ___x), ___y)
     )
 
     (defn #_"boolean" Numbers'gt-2ol [#_"Object" ___x, #_"long" ___y]
-        (ß gt(___x, (Object)___y))
+        (Numbers'gt-2oo ___x, (cast Object ___y))
     )
 
     (defn #_"boolean" Numbers'gt-2do [#_"double" ___x, #_"Object" ___y]
@@ -27683,11 +27683,11 @@
     )
 
     (defn #_"boolean" Numbers'gte-2lo [#_"long" ___x, #_"Object" ___y]
-        (ß this.gte((Object)___x, ___y))
+        (Numbers'gte-2oo (cast Object ___x), ___y)
     )
 
     (defn #_"boolean" Numbers'gte-2ol [#_"Object" ___x, #_"long" ___y]
-        (ß this.gte(___x, (Object)___y))
+        (Numbers'gte-2oo ___x, (cast Object ___y))
     )
 
     (defn #_"boolean" Numbers'gte-2do [#_"double" ___x, #_"Object" ___y]
@@ -27707,11 +27707,11 @@
     )
 
     (defn #_"boolean" Numbers'equiv-2lo [#_"long" ___x, #_"Object" ___y]
-        (ß this.equiv((Object)___x, ___y))
+        (Numbers'equiv-2oo (cast Object ___x), ___y)
     )
 
     (defn #_"boolean" Numbers'equiv-2ol [#_"Object" ___x, #_"long" ___y]
-        (ß this.equiv(___x, (Object)___y))
+        (Numbers'equiv-2oo ___x, (cast Object ___y))
     )
 
     (defn #_"boolean" Numbers'equiv-2do [#_"double" ___x, #_"Object" ___y]
@@ -27932,7 +27932,7 @@
         (when (ß isNaN(___y))
             (§ return ___y)
         )
-        (if (.lt this, ___x, ___y)
+        (if (Numbers'lt-2lo ___x, ___y)
             (do
                 ___x
             )
@@ -27946,7 +27946,7 @@
         (when (ß isNaN(___x))
             (§ return ___x)
         )
-        (if (.lt this, ___x, ___y)
+        (if (Numbers'lt-2ol ___x, ___y)
             (do
                 ___x
             )
@@ -27986,7 +27986,7 @@
                 (§ return ___y)
             )
         )
-        (if (.lt this, ___x, ___y)
+        (if (Numbers'lt-2oo ___x, ___y)
             (do
                 ___x
             )
@@ -30416,7 +30416,7 @@
             (loop-when-recur [#_"ISeq" ___s (RT'seq ___args)] (some? ___s) [(next ___s)]
                 (ß ___list.add((first ___s)))
             )
-            (.create this, ___list)
+            (PersistentList'create ___list)
         )
     )
 
@@ -30435,7 +30435,7 @@
             (loop-when-recur [#_"ISeq" ___s (RT'seq ___args)] (some? ___s) [(next ___s)]
                 (ß ___list.add((first ___s)))
             )
-            (.create this, ___list)
+            (PersistentList'create ___list)
         )
     )
 
@@ -40912,7 +40912,7 @@
                                     (do
                                         (if (ß booleanCast(Compiler'COMPILE_FILES.deref()))
                                             (do
-                                                (.compile this, ___scriptfile)
+                                                (RT'compile ___scriptfile)
                                             )
                                             (do
                                                 (ß loadResourceScript((§ class RT), ___scriptfile))
@@ -41018,7 +41018,7 @@
             )
             :else
             (do
-                (.seqFrom this, ___coll)
+                (RT'seqFrom ___coll)
             )
         )
     )
@@ -41047,15 +41047,11 @@
             )
             (ß ___coll instanceof Map)
             (do
-                (ß this.seq((§ cast Map ___coll).entrySet()))
+                (RT'seq (.entrySet (cast Map ___coll)))
             )
             :else
             (do
-                (let [#_"Class" ___c (.getClass ___coll)]
-                    (let [#_"Class" ___sc (.getSuperclass ___c)]
-                        (throw (IllegalArgumentException. (str "Don't know how to create ISeq from: " (.getName ___c))))
-                    )
-                )
+                (throw (IllegalArgumentException. (str "Don't know how to create ISeq from: " (.getName (.getClass ___coll)))))
             )
         )
     )
@@ -41130,13 +41126,13 @@
             )
             :else
             (do
-                (ß iter(this.seq(___coll)))
+                (ß iter((RT'seq ___coll)))
             )
         )
     )
 
     (defn #_"Object" RT'seqOrElse [#_"Object" ___o]
-        (ß (this.seq(___o) == nil) ? nil :or ___o)
+        (ß ((RT'seq ___o) == nil) ? nil :or ___o)
     )
 
     (defn #_"ISeq" RT'keys [#_"Object" ___coll]
@@ -41145,7 +41141,7 @@
                 (ß KeySeq'createFromMap((§ cast IPersistentMap ___coll)))
             )
             (do
-                (ß KeySeq'create(this.seq(___coll)))
+                (ß KeySeq'create((RT'seq ___coll)))
             )
         )
     )
@@ -41156,7 +41152,7 @@
                 (ß ValSeq'createFromMap((§ cast IPersistentMap ___coll)))
             )
             (do
-                (ß ValSeq'create(this.seq(___coll)))
+                (ß ValSeq'create((RT'seq ___coll)))
             )
         )
     )
@@ -41182,7 +41178,7 @@
             )
             (ß ___o instanceof IPersistentCollection)
             (do
-                (let [#_"ISeq" ___s (.seq this, ___o)]
+                (let [#_"ISeq" ___s (RT'seq ___o)]
                     (§ ass ___o nil)
                     (let [#_"int" ___i 0]
                         (loop-when-recur [___s ___s] (some? ___s) [(next ___s)]
@@ -41238,7 +41234,7 @@
             )
             :else
             (do
-                (ß Cons'new-2(___x, this.seq(___coll)))
+                (ß Cons'new-2(___x, (RT'seq ___coll)))
             )
         )
     )
@@ -41247,7 +41243,7 @@
         (when (ß ___x instanceof ISeq)
             (§ return (ß (§ cast ISeq ___x).first()))
         )
-        (let [#_"ISeq" ___seq (.seq this, ___x)]
+        (let [#_"ISeq" ___seq (RT'seq ___x)]
             (when (nil? ___seq)
                 (§ return nil)
             )
@@ -41256,22 +41252,22 @@
     )
 
     (defn #_"Object" RT'second [#_"Object" ___x]
-        (ß this.first(this.next(___x)))
+        (RT'first (RT'next ___x))
     )
 
     (defn #_"Object" RT'third [#_"Object" ___x]
-        (ß this.first(this.next(this.next(___x))))
+        (RT'first (RT'next (RT'next ___x)))
     )
 
     (defn #_"Object" RT'fourth [#_"Object" ___x]
-        (ß this.first(this.next(this.next(this.next(___x)))))
+        (RT'first (RT'next (RT'next (RT'next ___x))))
     )
 
     (defn #_"ISeq" RT'next [#_"Object" ___x]
         (when (ß ___x instanceof ISeq)
             (§ return (ß (§ cast ISeq ___x).next()))
         )
-        (let [#_"ISeq" ___seq (.seq this, ___x)]
+        (let [#_"ISeq" ___seq (RT'seq ___x)]
             (when (nil? ___seq)
                 (§ return nil)
             )
@@ -41283,7 +41279,7 @@
         (when (ß ___x instanceof ISeq)
             (§ return (ß (§ cast ISeq ___x).more()))
         )
-        (let [#_"ISeq" ___seq (.seq this, ___x)]
+        (let [#_"ISeq" ___seq (RT'seq ___x)]
             (when (nil? ___seq)
                 (§ return PersistentList'EMPTY)
             )
@@ -41332,8 +41328,8 @@
             (ß ___key instanceof Number && (___coll instanceof String || (.getClass ___coll).isArray()))
             (do
                 (let [#_"int" ___n (ß (§ cast Number ___key).intValue())]
-                    (when (ß ___n >= 0 && ___n < this.count(___coll))
-                        (§ return (.nth this, ___coll, ___n))
+                    (when (ß ___n >= 0 && ___n < RT'count(___coll))
+                        (§ return (RT'nth ___coll, ___n))
                     )
                     (§ return nil)
                 )
@@ -41382,7 +41378,7 @@
             (ß ___key instanceof Number && (___coll instanceof String || (.getClass ___coll).isArray()))
             (do
                 (let [#_"int" ___n (ß (§ cast Number ___key).intValue())]
-                    (§ return (ß (___n >= 0 && ___n < this.count(___coll)) ? this.nth(___coll, ___n) :or ___notFound))
+                    (§ return (ß (___n >= 0 && ___n < RT'count(___coll)) ? RT'nth(___coll, ___n) :or ___notFound))
                 )
             )
             (ß ___coll instanceof ITransientSet)
@@ -41433,7 +41429,7 @@
             (ß ___key instanceof Number && (___coll instanceof String || (.getClass ___coll).isArray()))
             (do
                 (let [#_"int" ___n (ß (§ cast Number ___key).intValue())]
-                    (§ return (ß (___n >= 0 && ___n < this.count(___coll)) ? RT'T :or RT'F))
+                    (§ return (ß (___n >= 0 && ___n < RT'count(___coll)) ? RT'T :or RT'F))
                 )
             )
             (ß ___coll instanceof ITransientSet)
@@ -42378,29 +42374,29 @@
     )
 
     (defn #_"ISeq" RT'listStar-2 [#_"Object" ___arg1, #_"ISeq" ___rest]
-        (ß (ISeq) this.cons(___arg1, ___rest))
+        (ß (ISeq) RT'cons(___arg1, ___rest))
     )
 
     (defn #_"ISeq" RT'listStar-3 [#_"Object" ___arg1, #_"Object" ___arg2, #_"ISeq" ___rest]
-        (ß (ISeq) this.cons(___arg1, this.cons(___arg2, ___rest)))
+        (ß (ISeq) RT'cons(___arg1, RT'cons(___arg2, ___rest)))
     )
 
     (defn #_"ISeq" RT'listStar-4 [#_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"ISeq" ___rest]
-        (ß (ISeq) this.cons(___arg1, this.cons(___arg2, this.cons(___arg3, ___rest))))
+        (ß (ISeq) RT'cons(___arg1, RT'cons(___arg2, RT'cons(___arg3, ___rest))))
     )
 
     (defn #_"ISeq" RT'listStar-5 [#_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"ISeq" ___rest]
-        (ß (ISeq) this.cons(___arg1, this.cons(___arg2, this.cons(___arg3, this.cons(___arg4, ___rest)))))
+        (ß (ISeq) RT'cons(___arg1, RT'cons(___arg2, RT'cons(___arg3, RT'cons(___arg4, ___rest)))))
     )
 
     (defn #_"ISeq" RT'listStar-6 [#_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"ISeq" ___rest]
-        (ß (ISeq) this.cons(___arg1, this.cons(___arg2, this.cons(___arg3, this.cons(___arg4, this.cons(___arg5, ___rest))))))
+        (ß (ISeq) RT'cons(___arg1, RT'cons(___arg2, RT'cons(___arg3, RT'cons(___arg4, RT'cons(___arg5, ___rest))))))
     )
 
     (defn #_"ISeq" RT'arrayToList [#_"Object[]" ___a]
         (let [#_"ISeq" ___ret nil]
             (loop-when-recur [#_"int" ___i (ß ___a.length - 1)] (ß ___i >= 0) [(dec ___i)]
-                (§ ass ___ret (ß (ISeq) this.cons(___a[___i], ___ret)))
+                (§ ass ___ret (ß (ISeq) RT'cons(___a[___i], ___ret)))
             )
             ___ret
         )
@@ -42465,8 +42461,8 @@
             )
             (.isArray (.getClass ___coll))
             (do
-                (let [#_"ISeq" ___s (ß (this.seq(___coll)))]
-                    (let [#_"Object[]" ___ret (make-array Object (.count this, ___s))]
+                (let [#_"ISeq" ___s (RT'seq ___coll)]
+                    (let [#_"Object[]" ___ret (make-array Object (RT'count ___s))]
                         (loop-when-recur [#_"int" ___i 0 ___s ___s] (ß ___i < ___ret.length) [(inc ___i) (next ___s)]
                             (§ ass (ß ___ret[___i]) (first ___s))
                         )
@@ -42482,7 +42478,7 @@
     )
 
     (defn #_"Object[]" RT'seqToArray [#_"ISeq" ___seq]
-        (let [#_"int" ___len (.length this, ___seq)]
+        (let [#_"int" ___len (RT'length ___seq)]
             (let [#_"Object[]" ___ret (make-array Object ___len)]
                 (loop-when-recur [#_"int" ___i 0 ___seq ___seq] (some? ___seq) [(inc ___i) (next ___seq)]
                     (§ ass (ß ___ret[___i]) (first ___seq))
@@ -42495,7 +42491,7 @@
     ;; supports java Collection.toArray(T[])
     (defn #_"Object[]" RT'seqToPassedArray [#_"ISeq" ___seq, #_"Object[]" ___passed]
         (let [#_"Object[]" ___dest ___passed]
-            (let [#_"int" ___len (.count this, ___seq)]
+            (let [#_"int" ___len (RT'count ___seq)]
                 (when (ß ___len > ___dest.length)
                     (§ ass ___dest (ß (Object[]) Array/newInstance((.getClass ___passed).getComponentType(), ___len)))
                 )
@@ -42517,7 +42513,7 @@
     )
 
     (defn #_"Object" RT'seqToTypedArray-2 [#_"Class" ___type, #_"ISeq" ___seq]
-        (let [#_"Object" ___ret (ß Array/newInstance(___type, this.length(___seq)))]
+        (let [#_"Object" ___ret (ß Array/newInstance(___type, RT'length(___seq)))]
             (cond (ß ___type == Integer/TYPE)
                 (do
                     (loop-when-recur [#_"int" ___i 0 ___seq ___seq] (some? ___seq) [(inc ___i) (next ___seq)]
@@ -42701,7 +42697,7 @@
                         (ß ___x instanceof ISeq || ___x instanceof IPersistentList)
                         (do
                             (ß ___w.write(\())
-                            (ß printInnerSeq(this.seq(___x), ___w))
+                            (ß printInnerSeq(RT'seq(___x), ___w))
                             (.write ___w, \))
                         )
                         (ß ___x instanceof String)
@@ -42767,7 +42763,7 @@
                         (ß ___x instanceof IPersistentMap)
                         (do
                             (ß ___w.write(\{))
-                            (loop-when-recur [#_"ISeq" ___s (.seq this, ___x)] (some? ___s) [(next ___s)]
+                            (loop-when-recur [#_"ISeq" ___s (RT'seq ___x)] (some? ___s) [(next ___s)]
                                 (let [#_"IMapEntry" ___e (ß (IMapEntry) (first ___s))]
                                     (ß print((.key ___e), ___w))
                                     (ß ___w.write(\space))
@@ -42795,7 +42791,7 @@
                         (ß ___x instanceof IPersistentSet)
                         (do
                             (.write ___w, "#{")
-                            (loop-when-recur [#_"ISeq" ___s (.seq this, ___x)] (some? ___s) [(next ___s)]
+                            (loop-when-recur [#_"ISeq" ___s (RT'seq ___x)] (some? ___s) [(next ___s)]
                                 (ß print((first ___s), ___w))
                                 (when (ß (next ___s) != nil)
                                     (.write ___w, " ")
@@ -44756,7 +44752,7 @@
     (defn #_"Var" Var'internPrivate [#_"String" ___nsName, #_"String" ___sym]
         (let [#_"Namespace" ___ns (ß Namespace'findOrCreate(Symbol'intern-1(___nsName)))]
             (let [#_"Var" ___ret (Var'intern-2n ___ns, (Symbol'intern-1 ___sym))]
-                (.setMeta ___ret, privateMeta)
+                (.setMeta ___ret, Var'privateMeta)
                 ___ret
             )
         )
