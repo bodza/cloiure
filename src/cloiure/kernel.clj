@@ -48,7 +48,7 @@
     (:use [cloiure slang]))
 
 (import
-    [java.io File FileInputStream FileNotFoundException FileOutputStream InputStreamReader IOException LineNumberReader OutputStreamWriter PrintWriter PushbackReader Reader StringReader StringWriter]
+    [java.io File FileInputStream FileNotFoundException FileOutputStream InputStreamReader IOException LineNumberReader OutputStreamWriter PrintWriter PushbackReader Reader StringReader StringWriter Writer]
   #_[java.lang Character Class Exception IllegalArgumentException IllegalStateException Integer Number NumberFormatException Object RuntimeException String StringBuilder Throwable UnsupportedOperationException]
     [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
     [java.lang.reflect Array Constructor Field InvocationHandler #_Method Modifier]
@@ -773,7 +773,7 @@
                 (§ return (if (RT'booleanCast-1o (.invoke this, ___o2, ___o1)) 1 0))
             )
 
-            (let [#_"Number" ___n (ß (Number) ___o)]
+            (let [#_"Number" ___n (cast Number ___o)]
                 (.intValue ___n)
             )
         )
@@ -849,7 +849,7 @@
 
     (defn #_"void" AgentAction'doRun [#_"AgentAction" ___action]
         (try
-            (ß Agent'nested.set(PersistentVector'EMPTY))
+            (.set Agent'nested, PersistentVector'EMPTY)
 
             (let [#_"Throwable" ___error nil]
                 (try
@@ -866,10 +866,10 @@
 
                 (if (nil? ___error)
                     (do
-                        (ß releasePendingSends())
+                        (Agent'releasePendingSends)
                     )
                     (do
-                        (ß Agent'nested.set(nil)) ;; allow errorHandler to send
+                        (.set Agent'nested, nil) ;; allow errorHandler to send
                         (when (ß (:errorHandler (:agent ___action)) != nil)
                             (try
                                 (ß (:errorHandler (:agent ___action)).invoke((:agent ___action), ___error))
@@ -900,7 +900,7 @@
                 )
             )
             (finally
-                (ß Agent'nested.set(nil))
+                (.set Agent'nested, nil)
             )
         )
         nil
@@ -1051,7 +1051,7 @@
                 (throw (Util'runtimeException-2 "Agent is failed, needs restart", ___error))
             )
             (let [#_"AgentAction" ___action (AgentAction'new this, ___fn, ___args, ___exec)]
-                (ß dispatchAction(___action))
+                (dispatchAction ___action)
 
                 this
             )
@@ -1105,11 +1105,11 @@
                 (§ return 0)
             )
             (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___sends)) [(inc ___i)]
-                (let [#_"AgentAction" ___a (ß (AgentAction) ___sends.valAt(___i))]
+                (let [#_"AgentAction" ___a (cast' AgentAction (.valAt ___sends, ___i))]
                     (ß (:agent ___a).enqueue(___a))
                 )
             )
-            (ß Agent'nested.set(PersistentVector'EMPTY))
+            (.set Agent'nested, PersistentVector'EMPTY)
             (count ___sends)
         )
     )
@@ -1236,7 +1236,7 @@
 
     #_method
     (§ defn #_"Object" (§ method first) [#_"KeySeq" this]
-        (ß ((Map$Entry) (:seq this).first()).getKey())
+        (ß (cast Map$Entry (ß (:seq this).first())).getKey())
     )
 
     #_method
@@ -1268,7 +1268,7 @@
 
                 #_method
                 (§ defn #_"Object" (§ method next) [#_"Iterator" this]
-                    (ß ((Map$Entry)___mapIter.next()).getKey())
+                    (ß (cast Map$Entry (ß ___mapIter.next())).getKey())
                 )
 
                 #_method
@@ -1325,7 +1325,7 @@
 
     #_method
     (§ defn #_"Object" (§ method first) [#_"ValSeq" this]
-        (ß ((Map$Entry) (:seq this).first()).getValue())
+        (ß (cast Map$Entry (ß (:seq this).first())).getValue())
     )
 
     #_method
@@ -1357,7 +1357,7 @@
 
                 #_method
                 (§ defn #_"Object" (§ method next) [#_"Iterator" this]
-                    (ß ((Map$Entry)___mapIter.next()).getValue())
+                    (ß (cast Map$Entry (ß ___mapIter.next())).getValue())
                 )
 
                 #_method
@@ -1392,13 +1392,13 @@
     (§ defn #_"IPersistentCollection" (§ method cons) [#_"APersistentMap" this, #_"Object" ___o]
         (cond (ß ___o instanceof Map$Entry)
             (do
-                (let [#_"Map$Entry" ___e (ß (Map$Entry) ___o)]
+                (let [#_"Map$Entry" ___e (cast Map$Entry ___o)]
                     (§ return (ß this.assoc((.getKey ___e), (.getValue ___e))))
                 )
             )
             (ß ___o instanceof IPersistentVector)
             (do
-                (let [#_"IPersistentVector" ___v (ß (IPersistentVector) ___o)]
+                (let [#_"IPersistentVector" ___v (cast' IPersistentVector ___o)]
                     (when (ß (count ___v) != 2)
                         (throw (IllegalArgumentException. "Vector arg to map conj must be a pair"))
                     )
@@ -1409,7 +1409,7 @@
 
         (let [#_"IPersistentMap" ___ret this]
             (loop-when-recur [#_"ISeq" ___es (RT'seq ___o)] (some? ___es) [(next ___es)]
-                (let [#_"Map$Entry" ___e (ß (Map$Entry) (first ___es))]
+                (let [#_"Map$Entry" ___e (cast Map$Entry (first ___es))]
                     (§ ass ___ret (ß ___ret.assoc((.getKey ___e), (.getValue ___e))))
                 )
             )
@@ -1419,7 +1419,7 @@
 
     #_method
     (§ defn #_"boolean" (§ method equals) [#_"APersistentMap" this, #_"Object" ___obj]
-        (ß mapEquals(this, ___obj))
+        (mapEquals this, ___obj)
     )
 
     (defn #_"boolean" APersistentMap'mapEquals [#_"IPersistentMap" ___m1, #_"Object" ___obj]
@@ -1429,13 +1429,13 @@
         (when (not (ß ___obj instanceof Map))
             (§ return false)
         )
-        (let [#_"Map" ___m (ß (Map) ___obj)]
+        (let [#_"Map" ___m (cast Map ___obj)]
             (when (ß (.size ___m) != (count ___m1))
                 (§ return false)
             )
 
             (loop-when-recur [#_"ISeq" ___s (.seq ___m1)] (some? ___s) [(next ___s)]
-                (let [#_"Map$Entry" ___e (ß (Map$Entry) (first ___s))]
+                (let [#_"Map$Entry" ___e (cast Map$Entry (first ___s))]
                     (let [#_"boolean" ___found (ß ___m.containsKey((.getKey ___e)))]
                         (when (ß (not ___found) || (not (Util'equals (.getValue ___e), (ß ___m.get((.getKey ___e))))))
                             (§ return false)
@@ -1457,13 +1457,13 @@
             (§ return false)
         )
 
-        (let [#_"Map" ___m (ß (Map) ___obj)]
+        (let [#_"Map" ___m (cast Map ___obj)]
             (when (ß (.size ___m) != (.size this))
                 (§ return false)
             )
 
             (loop-when-recur [#_"ISeq" ___s (.seq this)] (some? ___s) [(next ___s)]
-                (let [#_"Map$Entry" ___e (ß (Map$Entry) (first ___s))]
+                (let [#_"Map$Entry" ___e (cast Map$Entry (first ___s))]
                     (let [#_"boolean" ___found (ß ___m.containsKey((.getKey ___e)))]
                         (when (ß (not ___found) || (not (Util'equiv-2oo (.getValue ___e), (ß ___m.get((.getKey ___e))))))
                             (§ return false)
@@ -1480,7 +1480,7 @@
     (§ defn #_"int" (§ method hashCode) [#_"APersistentMap" this]
         (let [#_"int" ___cached (:_hash this)]
             (when (ß ___cached == 0)
-                (§ ass (:_hash this) (§ ass ___cached (ß mapHash(this))))
+                (§ ass (:_hash this) (§ ass ___cached (mapHash this)))
             )
             ___cached
         )
@@ -1489,7 +1489,7 @@
     (defn #_"int" APersistentMap'mapHash [#_"IPersistentMap" ___m]
         (let [#_"int" ___hash 0]
             (loop-when-recur [#_"ISeq" ___s (.seq ___m)] (some? ___s) [(next ___s)]
-                (let [#_"Map$Entry" ___e (ß (Map$Entry) (first ___s))]
+                (let [#_"Map$Entry" ___e (cast Map$Entry (first ___s))]
                     (§ ass ___hash (+ ___hash (ß (if (ß (.getKey ___e) == nil) 0 (ß (.getKey ___e).hashCode())) :xor (if (ß (.getValue ___e) == nil) 0 (ß (.getValue ___e).hashCode())))))
                 )
             )
@@ -1579,7 +1579,7 @@
             #_method
             (§ defn #_"boolean" (§ method contains) [#_"AbstractSet" this, #_"Object" ___o]
                 (when (ß ___o instanceof Entry)
-                    (let [#_"Entry" ___e (ß (Entry) ___o)]
+                    (let [#_"Entry" ___e (cast' Entry ___o)]
                         (let [#_"Entry" ___found (ß this.entryAt((.getKey ___e)))]
                             (when (ß ___found != nil && Util'equals((.getValue ___found), (.getValue ___e)))
                                 (§ return true)
@@ -1616,7 +1616,7 @@
 
                         #_method
                         (§ defn #_"Object" (§ method next) [#_"Iterator" this]
-                            (let [#_"Entry" ___e (ß (Entry) (next ___mi))]
+                            (let [#_"Entry" ___e (cast' Entry (next ___mi))]
                                 (.getKey ___e)
                             )
                         )
@@ -1675,7 +1675,7 @@
 
                         #_method
                         (§ defn #_"Object" (§ method next) [#_"Iterator" this]
-                            (let [#_"Entry" ___e (ß (Entry) (next ___mi))]
+                            (let [#_"Entry" ___e (cast' Entry (next ___mi))]
                                 (.getValue ___e)
                             )
                         )
@@ -1763,13 +1763,13 @@
         (when (not (ß ___obj instanceof Set))
             (§ return false)
         )
-        (let [#_"Set" ___m (ß (Set) ___obj)]
+        (let [#_"Set" ___m (cast Set ___obj)]
             (when (ß (.size ___m) != (count ___s1))
                 (§ return false)
             )
 
             (doseq [#_"Object" ___aM ___m]
-                (when (not (ß ___s1.contains(___aM)))
+                (when (not (.contains ___s1, ___aM))
                     (§ return false)
                 )
             )
@@ -1784,13 +1784,13 @@
             (§ return false)
         )
 
-        (let [#_"Set" ___m (ß (Set) ___obj)]
+        (let [#_"Set" ___m (cast Set ___obj)]
             (when (ß (.size ___m) != (.size this))
                 (§ return false)
             )
 
             (doseq [#_"Object" ___aM ___m]
-                (when (not (ß this.contains(___aM)))
+                (when (not (.contains this, ___aM))
                     (§ return false)
                 )
             )
@@ -1862,7 +1862,7 @@
     #_method
     (§ defn #_"boolean" (§ method containsAll) [#_"APersistentSet" this, #_"Collection" ___c]
         (doseq [#_"Object" ___o ___c]
-            (when (not (ß this.contains(___o)))
+            (when (not (.contains this, ___o))
                 (§ return false)
             )
         )
@@ -2074,7 +2074,7 @@
             (§ ass (:_meta this) ___meta)
 
             (when (ß ___v instanceof SubVector)
-                (let [#_"SubVector" ___sv (ß (SubVector) ___v)]
+                (let [#_"SubVector" ___sv (cast' SubVector ___v)]
                     (§ ass ___start (ß ___start + (:start ___sv)))
                     (§ ass ___end (ß ___end + (:start ___sv)))
                     (§ ass ___v (:v ___sv))
@@ -2192,7 +2192,7 @@
     (defn #_"boolean" APersistentVector'doEquals [#_"IPersistentVector" ___v, #_"Object" ___obj]
         (cond (ß ___obj instanceof IPersistentVector)
             (do
-                (let [#_"IPersistentVector" ___ov (ß (IPersistentVector) ___obj)]
+                (let [#_"IPersistentVector" ___ov (cast' IPersistentVector ___obj)]
                     (when (ß (count ___ov) != (count ___v))
                         (§ return false)
                     )
@@ -2206,7 +2206,7 @@
             )
             (ß ___obj instanceof List)
             (do
-                (let [#_"Collection" ___ma (ß (Collection) ___obj)]
+                (let [#_"Collection" ___ma (cast Collection ___obj)]
                     (when (ß (.size ___ma) != (count ___v) || (.hashCode ___ma) != (.hashCode ___v))
                         (§ return false)
                     )
@@ -2242,7 +2242,7 @@
     (defn #_"boolean" APersistentVector'doEquiv [#_"IPersistentVector" ___v, #_"Object" ___obj]
         (cond (ß ___obj instanceof IPersistentVector)
             (do
-                (let [#_"IPersistentVector" ___ov (ß (IPersistentVector) ___obj)]
+                (let [#_"IPersistentVector" ___ov (cast' IPersistentVector ___obj)]
                     (when (ß (count ___ov) != (count ___v))
                         (§ return false)
                     )
@@ -2256,7 +2256,7 @@
             )
             (ß ___obj instanceof List)
             (do
-                (let [#_"Collection" ___ma (ß (Collection) ___obj)]
+                (let [#_"Collection" ___ma (cast Collection ___obj)]
                     (when (ß (.size ___ma) != (count ___v))
                         (§ return false)
                     )
@@ -2294,7 +2294,7 @@
         (when (ß ___obj == this)
             (§ return true)
         )
-        (ß doEquals(this, ___obj))
+        (doEquals this, ___obj)
     )
 
     #_method
@@ -2482,7 +2482,7 @@
 
     #_method
     (§ defn #_"List" (§ method subList) [#_"APersistentVector" this, #_"int" ___fromIndex, #_"int" ___toIndex]
-        (ß (List) RT'subvec(this, ___fromIndex, ___toIndex))
+        (cast List (RT'subvec this, ___fromIndex, ___toIndex))
     )
 
     #_method
@@ -2562,7 +2562,7 @@
         (when (Util'isInteger ___key)
             (let [#_"int" ___i (ß (cast Number ___key).intValue())]
                 (when (ß ___i >= 0 && ___i < (count this))
-                    (§ return (ß (IMapEntry) MapEntry'create(___key, this.nth(___i))))
+                    (§ return (cast' IMapEntry (ß MapEntry'create(___key, this.nth(___i)))))
                 )
             )
         )
@@ -2639,7 +2639,7 @@
     #_method
     (§ defn #_"boolean" (§ method containsAll) [#_"APersistentVector" this, #_"Collection" ___c]
         (doseq [#_"Object" ___o ___c]
-            (when (not (ß this.contains(___o)))
+            (when (not (.contains this, ___o))
                 (§ return false)
             )
         )
@@ -2678,7 +2678,7 @@
 
     #_method
     (§ defn #_"int" (§ method compareTo) [#_"APersistentVector" this, #_"Object" ___o]
-        (let [#_"IPersistentVector" ___v (ß (IPersistentVector) ___o)]
+        (let [#_"IPersistentVector" ___v (cast' IPersistentVector ___o)]
             (cond (ß (count this) < (count ___v))
                 (do
                     (§ return -1)
@@ -2785,8 +2785,8 @@
         (let [#_"IPersistentMap" ___ws (:watches this)]
             (when (ß (count ___ws) > 0)
                 (loop-when-recur [#_"ISeq" ___s (.seq ___ws)] (some? ___s) [(next ___s)]
-                    (let [#_"Map$Entry" ___e (ß (Map$Entry) (first ___s))]
-                        (let [#_"IFn" ___fn (ß (IFn) (.getValue ___e))]
+                    (let [#_"Map$Entry" ___e (cast Map$Entry (first ___s))]
+                        (let [#_"IFn" ___fn (cast' IFn (.getValue ___e))]
                             (when (some? ___fn)
                                 (ß ___fn.invoke((.getKey ___e), this, ___oldval, ___newval))
                             )
@@ -2830,7 +2830,7 @@
     #_method
     (§ defn #_"IPersistentMap" (§ method alterMeta) [#_"AReference" this, #_"IFn" ___alter, #_"ISeq" ___args]
         (§ sync this
-            (§ ass (:_meta this) (ß (IPersistentMap) ___alter.applyTo(Cons'new-2((:_meta this), ___args))))
+            (§ ass (:_meta this) (cast' IPersistentMap (ß ___alter.applyTo(Cons'new-2((:_meta this), ___args)))))
             (:_meta this)
         )
     )
@@ -4575,7 +4575,7 @@
     #_method
     (§ defn #_"boolean" (§ method containsAll) [#_"ASeq" this, #_"Collection" ___c]
         (doseq [#_"Object" ___o ___c]
-            (when (not (ß this.contains(___o)))
+            (when (not (.contains this, ___o))
                 (§ return false)
             )
         )
@@ -4902,13 +4902,13 @@
         (.ensureEditable this)
         (cond (ß ___o instanceof Map$Entry)
             (do
-                (let [#_"Map$Entry" ___e (ß (Map$Entry) ___o)]
+                (let [#_"Map$Entry" ___e (cast Map$Entry ___o)]
                     (§ return (ß this.assoc((.getKey ___e), (.getValue ___e))))
                 )
             )
             (ß ___o instanceof IPersistentVector)
             (do
-                (let [#_"IPersistentVector" ___v (ß (IPersistentVector) ___o)]
+                (let [#_"IPersistentVector" ___v (cast' IPersistentVector ___o)]
                     (when (ß (count ___v) != 2)
                         (throw (IllegalArgumentException. "Vector arg to map conj must be a pair"))
                     )
@@ -4919,7 +4919,7 @@
 
         (let [#_"ITransientMap" ___ret this]
             (loop-when-recur [#_"ISeq" ___es (RT'seq ___o)] (some? ___es) [(next ___es)]
-                (let [#_"Map$Entry" ___e (ß (Map$Entry) (first ___es))]
+                (let [#_"Map$Entry" ___e (cast Map$Entry (first ___es))]
                     (§ ass ___ret (ß ___ret.assoc((.getKey ___e), (.getValue ___e))))
                 )
             )
@@ -4975,7 +4975,7 @@
 
     #_method
     (§ defn #_"IMapEntry" (§ method entryAt) [#_"ATransientMap" this, #_"Object" ___key]
-        (let [#_"Object" ___v (ß this.valAt(___key, ATransientMap'NOT_FOUND))]
+        (let [#_"Object" ___v (.valAt this, ___key, ATransientMap'NOT_FOUND)]
             (when (ß ___v != ATransientMap'NOT_FOUND)
                 (§ return (MapEntry'create ___key, ___v))
             )
@@ -5103,7 +5103,7 @@
             (§ return true)
         )
         (when (ß ___obj instanceof BigInt)
-            (let [#_"BigInt" ___o (ß (BigInt) ___obj)]
+            (let [#_"BigInt" ___o (cast' BigInt ___obj)]
                 (when (nil? (:bipart this))
                     (§ return (ß ((:bipart ___o) == nil && (:lpart this) == (:lpart ___o))))
                 )
@@ -5477,7 +5477,7 @@
     (§ def- #_"Var" Compile'unchecked_math (RT'var-2 "cloiure.core", "*unchecked-math*"))
 
     (defn #_"void" Compile'main [#_"String[]" ___args] #_(§ throws IOException, ClassNotFoundException)
-        (let [#_"OutputStreamWriter" ___out (ß (OutputStreamWriter) RT'OUT.deref())]
+        (let [#_"OutputStreamWriter" ___out (cast OutputStreamWriter (ß RT'OUT.deref()))]
             (let [#_"PrintWriter" ___err (RT'errPrintWriter)]
                 (let [#_"String" ___path (System/getProperty Compile'PATH_PROP)]
                     (let [#_"int" ___count (ß ___args.length)]
@@ -5611,7 +5611,7 @@
         ;; (def x) or (def x initexpr) or (def x "docstring" initexpr)
         (let [#_"String" ___docstring nil]
             (when (ß RT'count(___form) == 4 && (RT'third(___form) instanceof String))
-                (§ ass ___docstring (ß (String) RT'third(___form)))
+                (§ ass ___docstring (cast String (RT'third ___form)))
                 (§ ass ___form (ß RT'list-3(RT'first(___form), RT'second(___form), RT'fourth(___form))))
             )
             (cond (ß RT'count(___form) > 3)
@@ -5627,7 +5627,7 @@
                     (throw (Util'runtimeException-1 "First argument to def must be a Symbol"))
                 )
             )
-            (let [#_"Symbol" ___sym (ß (Symbol) RT'second(___form))]
+            (let [#_"Symbol" ___sym (cast' Symbol (RT'second ___form))]
                 (let [#_"Var" ___v (ß Compiler'lookupVar-2(___sym, true))]
                     (when (nil? ___v)
                         (throw (Util'runtimeException-1 "Can't refer to qualified var that doesn't exist"))
@@ -5638,7 +5638,7 @@
                                 (do
                                     (§ ass ___v (.intern (.currentNS this), ___sym))
                                     (§ ass ___shadowsCoreMapping true)
-                                    (ß registerVar(___v))
+                                    (Compiler'registerVar ___v)
                                 )
                                 (do
                                     (throw (Util'runtimeException-1 "Can't create defs outside of current ns"))
@@ -5646,28 +5646,28 @@
                             )
                         )
                         (let [#_"IPersistentMap" ___mm (.meta ___sym)]
-                            (let [#_"boolean" ___isDynamic (ß RT'booleanCast-1o(RT'get-2(___mm, dynamicKey)))]
+                            (let [#_"boolean" ___isDynamic (ß RT'booleanCast-1o(RT'get-2(___mm, Compiler'dynamicKey)))]
                                 (when ___isDynamic
                                     (.setDynamic ___v)
                                 )
                                 (when (ß (not ___isDynamic) && (:name ___sym).startsWith("*") && (:name ___sym).endsWith("*") && (:name ___sym).length() > 2)
                                     (.format (RT'errPrintWriter), "Warning: %1$s not declared dynamic and thus is not dynamically rebindable, but its name suggests otherwise. Please either indicate ^:dynamic %1$s or change the name. (%2$s:%3$d)\n", (object-array [ ___sym, (.get Compiler'SOURCE_PATH), (.get Compiler'LINE) ]))
                                 )
-                                (when (RT'booleanCast-1o (RT'get-2 ___mm, arglistsKey))
+                                (when (RT'booleanCast-1o (RT'get-2 ___mm, Compiler'arglistsKey))
                                     (let [#_"IPersistentMap" ___vm (.meta ___v)]
                                         ;; drop quote
-                                        (§ ass ___vm (ß (IPersistentMap) RT'assoc(___vm, arglistsKey, RT'second(___mm.valAt(arglistsKey)))))
+                                        (§ ass ___vm (cast' IPersistentMap (ß RT'assoc(___vm, Compiler'arglistsKey, RT'second(___mm.valAt(Compiler'arglistsKey))))))
                                         (.setMeta ___v, ___vm)
                                     )
                                 )
                                 (let [#_"Object" ___source_path (or (.get Compiler'SOURCE_PATH) "NO_SOURCE_FILE")]
-                                    (§ ass ___mm (ß (IPersistentMap) RT'assoc(___mm, RT'LINE_KEY, Compiler'LINE.get()).assoc(RT'COLUMN_KEY, Compiler'COLUMN.get()).assoc(RT'FILE_KEY, ___source_path)))
+                                    (§ ass ___mm (cast' IPersistentMap (ß RT'assoc(___mm, RT'LINE_KEY, Compiler'LINE.get()).assoc(RT'COLUMN_KEY, Compiler'COLUMN.get()).assoc(RT'FILE_KEY, ___source_path))))
                                     (when (some? ___docstring)
-                                        (§ ass ___mm (ß (IPersistentMap) RT'assoc(___mm, RT'DOC_KEY, ___docstring)))
+                                        (§ ass ___mm (cast' IPersistentMap (RT'assoc ___mm, RT'DOC_KEY, ___docstring)))
                                     )
-                                    (§ ass ___mm (ß (IPersistentMap) elideMeta(___mm)))
-                                    (let [#_"Expr" ___meta (if (zero? (count ___mm)) nil (analyze (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), ___mm))]
-                                        (DefExpr'new (cast String (ß Compiler'SOURCE.deref())), (ß Compiler'lineDeref()), (ß Compiler'columnDeref()), ___v, (analyze (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), (RT'third ___form), (:name (:sym ___v))), ___meta, (ß RT'count(___form) == 3), ___isDynamic, ___shadowsCoreMapping)
+                                    (§ ass ___mm (cast' IPersistentMap (Compiler'elideMeta ___mm)))
+                                    (let [#_"Expr" ___meta (if (zero? (count ___mm)) nil (Compiler'analyze-2 (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), ___mm))]
+                                        (DefExpr'new (cast String (ß Compiler'SOURCE.deref())), (Compiler'lineDeref), (Compiler'columnDeref), ___v, (Compiler'analyze-3 (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), (RT'third ___form), (:name (:sym ___v))), ___meta, (ß RT'count(___form) == 3), ___isDynamic, ___shadowsCoreMapping)
                                     )
                                 )
                             )
@@ -5735,7 +5735,7 @@
                 (ß (:var this).bindRoot((:init this).eval()))
             )
             (when (some? (:meta this))
-                (let [#_"IPersistentMap" ___metaMap (ß (IPersistentMap) (:meta this).eval())]
+                (let [#_"IPersistentMap" ___metaMap (cast' IPersistentMap (ß (:meta this).eval()))]
                     (when (ß (:initProvided this) || true) ;; includesExplicitMetadata((MapExpr) meta)
                         (ß (:var this).setMeta(___metaMap))
                     )
@@ -5748,7 +5748,7 @@
                         (throw (CompilerException'new (:source this), (:line this), (:column this), ___e))
                     )
                     (do
-                        (throw (ß (CompilerException) ___e))
+                        (throw (cast' CompilerException ___e))
                     )
                 )
             )
@@ -5761,24 +5761,24 @@
 
         (when (:shadowsCoreMapping this)
             (.dup ___gen)
-            (ß ___gen.getField(Compiler'VAR_TYPE, "ns", Compiler'NS_TYPE))
+            (.getField ___gen, Compiler'VAR_TYPE, "ns", Compiler'NS_TYPE)
             (.swap ___gen)
             (.dup ___gen)
-            (ß ___gen.getField(Compiler'VAR_TYPE, "sym", Compiler'SYMBOL_TYPE))
+            (.getField ___gen, Compiler'VAR_TYPE, "sym", Compiler'SYMBOL_TYPE)
             (.swap ___gen)
-            (ß ___gen.invokeVirtual(Compiler'NS_TYPE, DefExpr'internVar))
+            (.invokeVirtual ___gen, Compiler'NS_TYPE, DefExpr'internVar)
         )
 
         (when (:isDynamic this)
             (.push ___gen, (:isDynamic this))
-            (ß ___gen.invokeVirtual(Compiler'VAR_TYPE, setDynamicMethod))
+            (.invokeVirtual ___gen, Compiler'VAR_TYPE, setDynamicMethod)
         )
         (when (some? (:meta this))
             (when (ß (:initProvided this) || true) ;; includesExplicitMetadata((MapExpr) meta)
                 (.dup ___gen)
                 (ß (:meta this).emit(:Context'EXPRESSION, ___objx, ___gen))
-                (ß ___gen.checkCast(Compiler'IPERSISTENTMAP_TYPE))
-                (ß ___gen.invokeVirtual(Compiler'VAR_TYPE, setMetaMethod))
+                (.checkCast ___gen, Compiler'IPERSISTENTMAP_TYPE)
+                (.invokeVirtual ___gen, Compiler'VAR_TYPE, setMetaMethod)
             )
         )
         (when (:initProvided this)
@@ -5791,7 +5791,7 @@
                     (ß (:init this).emit(:Context'EXPRESSION, ___objx, ___gen))
                 )
             )
-            (ß ___gen.invokeVirtual(Compiler'VAR_TYPE, bindRootMethod))
+            (.invokeVirtual ___gen, Compiler'VAR_TYPE, bindRootMethod)
         )
 
         (when (ß ___context == :Context'STATEMENT)
@@ -5819,15 +5819,15 @@
 
     #_method
     (§ defn #_"Expr" (§ method parse) [#_"AssignParser" this, #_"Context" ___context, #_"Object" ___frm]
-        (let [#_"ISeq" ___form (ß (ISeq) ___frm)]
+        (let [#_"ISeq" ___form (cast' ISeq ___frm)]
             (when (ß RT'length(___form) != 3)
                 (throw (IllegalArgumentException. "Malformed assignment, expecting (set! target val)"))
             )
-            (let [#_"Expr" ___target (ß analyze(:Context'EXPRESSION, RT'second(___form)))]
+            (let [#_"Expr" ___target (ß Compiler'analyze-2(:Context'EXPRESSION, RT'second(___form)))]
                 (when (not (ß ___target instanceof AssignableExpr))
                     (throw (IllegalArgumentException. "Invalid assignment target"))
                 )
-                (ß AssignExpr'new((AssignableExpr) ___target, analyze(:Context'EXPRESSION, RT'third(___form))))
+                (ß AssignExpr'new((AssignableExpr) ___target, Compiler'analyze-2(:Context'EXPRESSION, RT'third(___form))))
             )
         )
     )
@@ -5928,7 +5928,7 @@
     (§ defn #_"void" (§ method emitAssign) [#_"VarExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen, #_"Expr" ___val]
         (.emitVar ___objx, ___gen, (:var this))
         (ß ___val.emit(:Context'EXPRESSION, ___objx, ___gen))
-        (ß ___gen.invokeVirtual(Compiler'VAR_TYPE, VarExpr'setMethod))
+        (.invokeVirtual ___gen, Compiler'VAR_TYPE, VarExpr'setMethod)
         (when (ß ___context == :Context'STATEMENT)
             (.pop ___gen)
         )
@@ -5944,7 +5944,7 @@
 
     #_method
     (§ defn #_"Expr" (§ method parse) [#_"TheVarParser" this, #_"Context" ___context, #_"Object" ___form]
-        (let [#_"Symbol" ___sym (ß (Symbol) RT'second(___form))]
+        (let [#_"Symbol" ___sym (cast' Symbol (RT'second ___form))]
             (let [#_"Var" ___v (ß Compiler'lookupVar-2(___sym, false))]
                 (when (some? ___v)
                     (§ return (TheVarExpr'new ___v))
@@ -6070,7 +6070,7 @@
 
     #_method
     (§ defn #_"Object" (§ method eval) [#_"ImportExpr" this]
-        (let [#_"Namespace" ___ns (ß (Namespace) RT'CURRENT_NS.deref())]
+        (let [#_"Namespace" ___ns (cast' Namespace (ß RT'CURRENT_NS.deref()))]
             (ß ___ns.importClass(RT'classForNameNonLoading((:c this))))
             nil
         )
@@ -6078,12 +6078,12 @@
 
     #_method
     (§ defn #_"void" (§ method emit) [#_"ImportExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
-        (ß ___gen.getStatic(Compiler'RT_TYPE, "CURRENT_NS", Compiler'VAR_TYPE))
-        (ß ___gen.invokeVirtual(Compiler'VAR_TYPE, ImportExpr'derefMethod))
-        (ß ___gen.checkCast(Compiler'NS_TYPE))
+        (.getStatic ___gen, Compiler'RT_TYPE, "CURRENT_NS", Compiler'VAR_TYPE)
+        (.invokeVirtual ___gen, Compiler'VAR_TYPE, ImportExpr'derefMethod)
+        (.checkCast ___gen, Compiler'NS_TYPE)
         (.push ___gen, (:c this))
-        (ß ___gen.invokeStatic(Compiler'RT_TYPE, forNameMethod))
-        (ß ___gen.invokeVirtual(Compiler'NS_TYPE, importClassMethod))
+        (.invokeStatic ___gen, Compiler'RT_TYPE, ImportExpr'forNameMethod)
+        (.invokeVirtual ___gen, Compiler'NS_TYPE, importClassMethod)
         (when (ß ___context == :Context'STATEMENT)
             (.pop ___gen)
         )
@@ -6140,7 +6140,7 @@
 
     #_method
     (§ defn #_"Expr" (§ method parse) [#_"HostParser" this, #_"Context" ___context, #_"Object" ___frm]
-        (let [#_"ISeq" ___form (ß (ISeq) ___frm)]
+        (let [#_"ISeq" ___form (cast' ISeq ___frm)]
             ;; (. x fieldname-sym) or
             ;; (. x 0-ary-method)
             ;; (. x methodname-sym args+)
@@ -6150,26 +6150,26 @@
             )
             ;; determine static or instance
             ;; static target must be symbol, either fully.qualified.Classname or Classname that has been imported
-            (let [#_"int" ___line (ß Compiler'lineDeref())]
-                (let [#_"int" ___column (ß Compiler'columnDeref())]
-                    (let [#_"String" ___source (ß (String) Compiler'SOURCE.deref())]
+            (let [#_"int" ___line (Compiler'lineDeref)]
+                (let [#_"int" ___column (Compiler'columnDeref)]
+                    (let [#_"String" ___source (cast String (ß Compiler'SOURCE.deref()))]
                         (let [#_"Class" ___c (ß maybeClass(RT'second(___form), false))]
                             ;; at this point c will be non-null if static
                             (let [#_"Expr" ___instance nil]
                                 (when (nil? ___c)
-                                    (§ ass ___instance (analyze (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), (RT'second ___form)))
+                                    (§ ass ___instance (Compiler'analyze-2 (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), (RT'second ___form)))
                                 )
 
                                 (let [#_"boolean" ___maybeField (ß (RT'length(___form) == 3) && (RT'third(___form) instanceof Symbol))]
-                                    (when (ß ___maybeField && ((:name (cast' Symbol (ß RT'third(___form)))).charAt(0) != \-))
-                                        (let [#_"Symbol" ___sym (ß (Symbol) RT'third(___form))]
+                                    (when (ß ___maybeField && ((:name (cast' Symbol (RT'third ___form))).charAt(0) != \-))
+                                        (let [#_"Symbol" ___sym (cast' Symbol (RT'third ___form))]
                                             (cond (some? ___c)
                                                 (do
-                                                    (§ ass ___maybeField (ß Reflector'getMethods(___c, 0, munge((:name ___sym)), true).size() == 0))
+                                                    (§ ass ___maybeField (ß Reflector'getMethods(___c, 0, Compiler'munge((:name ___sym)), true).size() == 0))
                                                 )
                                                 (ß ___instance != nil && (.hasJavaClass ___instance) && (.getJavaClass ___instance) != nil)
                                                 (do
-                                                    (§ ass ___maybeField (ß Reflector'getMethods((.getJavaClass ___instance), 0, munge((:name ___sym)), false).size() == 0))
+                                                    (§ ass ___maybeField (ß Reflector'getMethods((.getJavaClass ___instance), 0, Compiler'munge((:name ___sym)), false).size() == 0))
                                                 )
                                             )
                                         )
@@ -6177,37 +6177,37 @@
 
                                     (if ___maybeField ;; field
                                         (do
-                                            (let [#_"Symbol" ___sym (ß ((:name (cast' Symbol (ß RT'third(___form)))).charAt(0) == \-) ? Symbol'intern-1((:name (cast' Symbol (ß RT'third(___form)))).substring(1)) :or (Symbol) RT'third(___form))]
-                                                (let [#_"Symbol" ___tag (ß tagOf(___form))]
+                                            (let [#_"Symbol" ___sym (if (ß (:name (cast' Symbol (RT'third ___form))).charAt(0) == \-) (ß Symbol'intern-1((:name (cast' Symbol (RT'third ___form))).substring(1))) (cast' Symbol (RT'third ___form)))]
+                                                (let [#_"Symbol" ___tag (Compiler'tagOf ___form)]
                                                     (if (some? ___c)
                                                         (do
-                                                            (ß StaticFieldExpr'new(___line, ___column, ___c, munge((:name ___sym)), ___tag))
+                                                            (ß StaticFieldExpr'new(___line, ___column, ___c, Compiler'munge((:name ___sym)), ___tag))
                                                         )
                                                         (do
-                                                            (ß InstanceFieldExpr'new(___line, ___column, ___instance, munge((:name ___sym)), ___tag, ((:name (cast' Symbol (ß RT'third(___form)))).charAt(0) == \-)))
+                                                            (ß InstanceFieldExpr'new(___line, ___column, ___instance, Compiler'munge((:name ___sym)), ___tag, ((:name (cast' Symbol (RT'third ___form))).charAt(0) == \-)))
                                                         )
                                                     )
                                                 )
                                             )
                                         )
                                         (do
-                                            (let [#_"ISeq" ___call (ß (ISeq) ((RT'third(___form) instanceof ISeq) ? RT'third(___form) :or RT'next(RT'next(___form))))]
+                                            (let [#_"ISeq" ___call (cast' ISeq (if (ß RT'third(___form) instanceof ISeq) (RT'third ___form) (ß RT'next(RT'next(___form)))))]
                                                 (when (not (ß RT'first(___call) instanceof Symbol))
                                                     (throw (IllegalArgumentException. "Malformed member expression"))
                                                 )
-                                                (let [#_"Symbol" ___sym (ß (Symbol) RT'first(___call))]
-                                                    (let [#_"Symbol" ___tag (ß tagOf(___form))]
+                                                (let [#_"Symbol" ___sym (cast' Symbol (RT'first ___call))]
+                                                    (let [#_"Symbol" ___tag (Compiler'tagOf ___form)]
                                                         (let [#_"PersistentVector" ___args PersistentVector'EMPTY]
-                                                            (let [#_"boolean" ___tailPosition (ß inTailCall(___context))]
+                                                            (let [#_"boolean" ___tailPosition (Compiler'inTailCall ___context)]
                                                                 (loop-when-recur [#_"ISeq" ___s (RT'next ___call)] (some? ___s) [(next ___s)]
-                                                                    (§ ass ___args (ß ___args.cons(analyze((___context == :Context'EVAL) ? ___context :or :Context'EXPRESSION, (first ___s)))))
+                                                                    (§ ass ___args (.cons ___args, (Compiler'analyze-2 (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), (first ___s))))
                                                                 )
                                                                 (if (some? ___c)
                                                                     (do
-                                                                        (ß StaticMethodExpr'new(___source, ___line, ___column, ___tag, ___c, munge((:name ___sym)), ___args, ___tailPosition))
+                                                                        (ß StaticMethodExpr'new(___source, ___line, ___column, ___tag, ___c, Compiler'munge((:name ___sym)), ___args, ___tailPosition))
                                                                     )
                                                                     (do
-                                                                        (ß InstanceMethodExpr'new(___source, ___line, ___column, ___tag, ___instance, munge((:name ___sym)), ___args, ___tailPosition))
+                                                                        (ß InstanceMethodExpr'new(___source, ___line, ___column, ___tag, ___instance, Compiler'munge((:name ___sym)), ___args, ___tailPosition))
                                                                     )
                                                                 )
                                                             )
@@ -6273,11 +6273,11 @@
                 (do
                     (let [#_"Label" ___falseLabel (.newLabel ___gen)]
                         (let [#_"Label" ___endLabel (.newLabel ___gen)]
-                            (ß ___gen.ifZCmp(GeneratorAdapter/EQ, ___falseLabel))
-                            (ß ___gen.getStatic(Compiler'BOOLEAN_OBJECT_TYPE, "TRUE", Compiler'BOOLEAN_OBJECT_TYPE))
+                            (.ifZCmp ___gen, GeneratorAdapter/EQ, ___falseLabel)
+                            (.getStatic ___gen, Compiler'BOOLEAN_OBJECT_TYPE, "TRUE", Compiler'BOOLEAN_OBJECT_TYPE)
                             (.goTo ___gen, ___endLabel)
                             (.mark ___gen, ___falseLabel)
-                            (ß ___gen.getStatic(Compiler'BOOLEAN_OBJECT_TYPE, "FALSE", Compiler'BOOLEAN_OBJECT_TYPE))
+                            (.getStatic ___gen, Compiler'BOOLEAN_OBJECT_TYPE, "FALSE", Compiler'BOOLEAN_OBJECT_TYPE)
                             (.mark ___gen, ___endLabel)
                         )
                     )
@@ -6288,21 +6288,21 @@
                 )
                 (ß ___returnType == (§ class char))
                 (do
-                    (ß ___gen.invokeStatic(HostExpr'CHAR_TYPE, charValueOfMethod))
+                    (.invokeStatic ___gen, HostExpr'CHAR_TYPE, HostExpr'charValueOfMethod)
                 )
                 :else
                 (do
                     (cond (ß ___returnType == (§ class int))
                         (do
-                            (ß ___gen.invokeStatic(HostExpr'INTEGER_TYPE, intValueOfMethod))
+                            (.invokeStatic ___gen, HostExpr'INTEGER_TYPE, HostExpr'intValueOfMethod)
                         )
                         (ß ___returnType == (§ class float))
                         (do
-                            (ß ___gen.invokeStatic(HostExpr'FLOAT_TYPE, floatValueOfMethod))
+                            (.invokeStatic ___gen, HostExpr'FLOAT_TYPE, HostExpr'floatValueOfMethod)
                         )
                         (ß ___returnType == (§ class double))
                         (do
-                            (ß ___gen.invokeStatic(HostExpr'DOUBLE_TYPE, doubleValueOfMethod))
+                            (.invokeStatic ___gen, HostExpr'DOUBLE_TYPE, HostExpr'doubleValueOfMethod)
                         )
                         (ß ___returnType == (§ class long))
                         (do
@@ -6310,11 +6310,11 @@
                         )
                         (ß ___returnType == (§ class byte))
                         (do
-                            (ß ___gen.invokeStatic(HostExpr'BYTE_TYPE, byteValueOfMethod))
+                            (.invokeStatic ___gen, HostExpr'BYTE_TYPE, HostExpr'byteValueOfMethod)
                         )
                         (ß ___returnType == (§ class short))
                         (do
-                            (ß ___gen.invokeStatic(HostExpr'SHORT_TYPE, shortValueOfMethod))
+                            (.invokeStatic ___gen, HostExpr'SHORT_TYPE, HostExpr'shortValueOfMethod)
                         )
                     )
                 )
@@ -6328,18 +6328,18 @@
             (do
                 (cond (ß ___paramType == (§ class boolean))
                     (do
-                        (ß ___gen.checkCast(HostExpr'BOOLEAN_TYPE))
-                        (ß ___gen.invokeVirtual(HostExpr'BOOLEAN_TYPE, booleanValueMethod))
+                        (.checkCast ___gen, HostExpr'BOOLEAN_TYPE)
+                        (.invokeVirtual ___gen, HostExpr'BOOLEAN_TYPE, HostExpr'booleanValueMethod)
                     )
                     (ß ___paramType == (§ class char))
                     (do
-                        (ß ___gen.checkCast(HostExpr'CHAR_TYPE))
-                        (ß ___gen.invokeVirtual(HostExpr'CHAR_TYPE, charValueMethod))
+                        (.checkCast ___gen, HostExpr'CHAR_TYPE)
+                        (.invokeVirtual ___gen, HostExpr'CHAR_TYPE, HostExpr'charValueMethod)
                     )
                     :else
                     (do
                         (let [#_"Method" ___m nil]
-                            (ß ___gen.checkCast(HostExpr'NUMBER_TYPE))
+                            (.checkCast ___gen, HostExpr'NUMBER_TYPE)
                             (if (ß RT'booleanCast-1o(RT'UNCHECKED_MATH.deref()))
                                 (do
                                     (cond (ß ___paramType == (§ class int))
@@ -6396,7 +6396,7 @@
                                     )
                                 )
                             )
-                            (ß ___gen.invokeStatic(Compiler'RT_TYPE, ___m))
+                            (.invokeStatic ___gen, Compiler'RT_TYPE, ___m)
                         )
                     )
                 )
@@ -6410,15 +6410,15 @@
 
     (defn #_"Class" HostExpr'maybeClass [#_"Object" ___form, #_"boolean" ___stringOk]
         (when (ß ___form instanceof Class)
-            (§ return (ß (Class) ___form))
+            (§ return (cast Class ___form))
         )
         (let [#_"Class" ___c nil]
             (cond (ß ___form instanceof Symbol)
                 (do
-                    (let [#_"Symbol" ___sym (ß (Symbol) ___form)]
+                    (let [#_"Symbol" ___sym (cast' Symbol ___form)]
                         (when (ß (:ns ___sym) == nil) ;; if ns-qualified can't be classname
                             (when (ß Util'equals(___sym, Compiler'COMPILE_STUB_SYM.get()))
-                                (§ return (ß (Class) Compiler'COMPILE_STUB_CLASS.get()))
+                                (§ return (cast Class (ß Compiler'COMPILE_STUB_CLASS.get())))
                             )
                             (if (ß (:name ___sym).indexOf(\.) > 0 || (:name ___sym).charAt(0) == \[)
                                 (do
@@ -6428,7 +6428,7 @@
                                     (let [#_"Object" ___o (ß (.currentNS this).getMapping(___sym))]
                                         (cond (ß ___o instanceof Class)
                                             (do
-                                                (§ ass ___c (ß (Class) ___o))
+                                                (§ ass ___c (cast Class ___o))
                                             )
                                             (ß Compiler'LOCAL_ENV.deref() != nil && ((java.util.Map)Compiler'LOCAL_ENV.deref()).containsKey(___form))
                                             (do
@@ -6461,7 +6461,7 @@
     )
 
     (defn #_"Class" HostExpr'maybeSpecialTag [#_"Symbol" ___sym]
-        (let [#_"Class" ___c (ß primClass(___sym))]
+        (let [#_"Class" ___c (Compiler'primClass-1s ___sym)]
             (cond (some? ___c)
                 (do
                     (§ return ___c)
@@ -6510,14 +6510,14 @@
     (defn #_"Class" HostExpr'tagToClass [#_"Object" ___tag]
         (let [#_"Class" ___c nil]
             (when (ß ___tag instanceof Symbol)
-                (let [#_"Symbol" ___sym (ß (Symbol) ___tag)]
+                (let [#_"Symbol" ___sym (cast' Symbol ___tag)]
                     (when (ß (:ns ___sym) == nil) ;; if ns-qualified can't be classname
-                        (§ ass ___c (ß maybeSpecialTag(___sym)))
+                        (§ ass ___c (maybeSpecialTag ___sym))
                     )
                 )
             )
             (when (nil? ___c)
-                (§ ass ___c (ß maybeClass(___tag, true)))
+                (§ ass ___c (maybeClass ___tag, true))
             )
             (when (some? ___c)
                 (§ return ___c)
@@ -6597,8 +6597,8 @@
             (do
                 (ß (:target this).emit(:Context'EXPRESSION, ___objx, ___gen))
                 (ß ___gen.visitLineNumber((:line this), (.mark ___gen)))
-                (ß ___gen.checkCast(getType((:targetClass this))))
-                (ß ___gen.getField(getType((:targetClass this)), (:fieldName this), Type/getType((:field this).getType())))
+                (ß ___gen.checkCast(Compiler'getType((:targetClass this))))
+                (ß ___gen.getField(Compiler'getType((:targetClass this)), (:fieldName this), Type/getType((:field this).getType())))
             )
             (do
                 (throw (UnsupportedOperationException. "Unboxed emit of unknown member"))
@@ -6613,8 +6613,8 @@
             (do
                 (ß (:target this).emit(:Context'EXPRESSION, ___objx, ___gen))
                 (ß ___gen.visitLineNumber((:line this), (.mark ___gen)))
-                (ß ___gen.checkCast(getType((:targetClass this))))
-                (ß ___gen.getField(getType((:targetClass this)), (:fieldName this), Type/getType((:field this).getType())))
+                (ß ___gen.checkCast(Compiler'getType((:targetClass this))))
+                (ß ___gen.getField(Compiler'getType((:targetClass this)), (:fieldName this), Type/getType((:field this).getType())))
                 (ß HostExpr'emitBoxReturn(___objx, ___gen, (:field this).getType()))
                 (when (ß ___context == :Context'STATEMENT)
                     (.pop ___gen)
@@ -6625,7 +6625,7 @@
                 (ß ___gen.visitLineNumber((:line this), (.mark ___gen)))
                 (.push ___gen, (:fieldName this))
                 (.push ___gen, (:requireField this))
-                (ß ___gen.invokeStatic(Compiler'REFLECTOR_TYPE, invokeNoArgInstanceMember))
+                (.invokeStatic ___gen, Compiler'REFLECTOR_TYPE, InstanceFieldExpr'invokeNoArgInstanceMember)
                 (when (ß ___context == :Context'STATEMENT)
                     (.pop ___gen)
                 )
@@ -6657,19 +6657,19 @@
         (if (ß (:targetClass this) != nil && (:field this) != nil)
             (do
                 (ß (:target this).emit(:Context'EXPRESSION, ___objx, ___gen))
-                (ß ___gen.checkCast(getType((:targetClass this))))
+                (ß ___gen.checkCast(Compiler'getType((:targetClass this))))
                 (ß ___val.emit(:Context'EXPRESSION, ___objx, ___gen))
                 (ß ___gen.visitLineNumber((:line this), (.mark ___gen)))
                 (.dupX1 ___gen)
                 (ß HostExpr'emitUnboxArg(___objx, ___gen, (:field this).getType()))
-                (ß ___gen.putField(getType((:targetClass this)), (:fieldName this), Type/getType((:field this).getType())))
+                (ß ___gen.putField(Compiler'getType((:targetClass this)), (:fieldName this), Type/getType((:field this).getType())))
             )
             (do
                 (ß (:target this).emit(:Context'EXPRESSION, ___objx, ___gen))
                 (.push ___gen, (:fieldName this))
                 (ß ___val.emit(:Context'EXPRESSION, ___objx, ___gen))
                 (ß ___gen.visitLineNumber((:line this), (.mark ___gen)))
-                (ß ___gen.invokeStatic(Compiler'REFLECTOR_TYPE, InstanceFieldExpr'setInstanceFieldMethod))
+                (.invokeStatic ___gen, Compiler'REFLECTOR_TYPE, InstanceFieldExpr'setInstanceFieldMethod)
             )
         )
         (when (ß ___context == :Context'STATEMENT)
@@ -6782,37 +6782,37 @@
 
     (defn #_"void" MethodExpr'emitArgsAsArray [#_"IPersistentVector" ___args, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (ß ___gen.push((count ___args)))
-        (ß ___gen.newArray(Compiler'OBJECT_TYPE))
+        (.newArray ___gen, Compiler'OBJECT_TYPE)
         (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___args)) [(inc ___i)]
             (.dup ___gen)
             (.push ___gen, ___i)
             (ß ((Expr) ___args.nth(___i)).emit(:Context'EXPRESSION, ___objx, ___gen))
-            (ß ___gen.arrayStore(Compiler'OBJECT_TYPE))
+            (.arrayStore ___gen, Compiler'OBJECT_TYPE)
         )
         nil
     )
 
     (defn #_"void" MethodExpr'emitTypedArgs [#_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen, #_"Class[]" ___parameterTypes, #_"IPersistentVector" ___args]
         (loop-when-recur [#_"int" ___i 0] (ß ___i < ___parameterTypes.length) [(inc ___i)]
-            (let [#_"Expr" ___e (ß (Expr) ___args.nth(___i))]
+            (let [#_"Expr" ___e (cast' Expr (.nth ___args, ___i))]
                 (try
-                    (let [#_"Class" ___primc (ß maybePrimitiveType(___e))]
+                    (let [#_"Class" ___primc (Compiler'maybePrimitiveType ___e)]
                         (cond (ß ___primc == ___parameterTypes[___i])
                             (do
-                                (let [#_"MaybePrimitiveExpr" ___pe (ß (MaybePrimitiveExpr) ___e)]
+                                (let [#_"MaybePrimitiveExpr" ___pe (cast' MaybePrimitiveExpr ___e)]
                                     (ß ___pe.emitUnboxed(:Context'EXPRESSION, ___objx, ___gen))
                                 )
                             )
                             (ß ___primc == (§ class int) && ___parameterTypes[___i] == (§ class long))
                             (do
-                                (let [#_"MaybePrimitiveExpr" ___pe (ß (MaybePrimitiveExpr) ___e)]
+                                (let [#_"MaybePrimitiveExpr" ___pe (cast' MaybePrimitiveExpr ___e)]
                                     (ß ___pe.emitUnboxed(:Context'EXPRESSION, ___objx, ___gen))
                                     (.visitInsn ___gen, Opcodes/I2L)
                                 )
                             )
                             (ß ___primc == (§ class long) && ___parameterTypes[___i] == (§ class int))
                             (do
-                                (let [#_"MaybePrimitiveExpr" ___pe (ß (MaybePrimitiveExpr) ___e)]
+                                (let [#_"MaybePrimitiveExpr" ___pe (cast' MaybePrimitiveExpr ___e)]
                                     (ß ___pe.emitUnboxed(:Context'EXPRESSION, ___objx, ___gen))
                                     (if (ß RT'booleanCast-1o(RT'UNCHECKED_MATH.deref()))
                                         (do
@@ -6826,14 +6826,14 @@
                             )
                             (ß ___primc == (§ class float) && ___parameterTypes[___i] == (§ class double))
                             (do
-                                (let [#_"MaybePrimitiveExpr" ___pe (ß (MaybePrimitiveExpr) ___e)]
+                                (let [#_"MaybePrimitiveExpr" ___pe (cast' MaybePrimitiveExpr ___e)]
                                     (ß ___pe.emitUnboxed(:Context'EXPRESSION, ___objx, ___gen))
                                     (.visitInsn ___gen, Opcodes/F2D)
                                 )
                             )
                             (ß ___primc == (§ class double) && ___parameterTypes[___i] == (§ class float))
                             (do
-                                (let [#_"MaybePrimitiveExpr" ___pe (ß (MaybePrimitiveExpr) ___e)]
+                                (let [#_"MaybePrimitiveExpr" ___pe (cast' MaybePrimitiveExpr ___e)]
                                     (ß ___pe.emitUnboxed(:Context'EXPRESSION, ___objx, ___gen))
                                     (.visitInsn ___gen, Opcodes/D2F)
                                 )
@@ -6905,18 +6905,18 @@
                                                         (ß ___rets.add((.getReturnType ___m)))
                                                     )
                                                 )
-                                                (§ ass ___methodidx (ß getMatchingParams(___methodName, ___params, ___args, ___rets)))
+                                                (§ ass ___methodidx (Compiler'getMatchingParams ___methodName, ___params, ___args, ___rets))
                                             )
                                         )
                                     )
-                                    (let [#_"java.lang.reflect.Method" ___m (ß (java.lang.reflect.Method) ((___methodidx >= 0) ? (ß ___methods.get(___methodidx)) :or nil))]
+                                    (let [#_"java.lang.reflect.Method" ___m (cast java.lang.reflect.Method (when (ß ___methodidx >= 0) (.get ___methods, ___methodidx)))]
                                         (when (ß ___m != nil && (not (ß Modifier/isPublic((.getDeclaringClass ___m).getModifiers()))))
                                             ;; public method of non-public class, try to find it in hierarchy
                                             (§ ass ___m (ß Reflector'getAsMethodOfPublicBase((.getDeclaringClass ___m), ___m)))
                                         )
                                         (§ ass (:method this) ___m)
                                         (when (ß (:method this) == nil && RT'booleanCast-1o(RT'WARN_ON_REFLECTION.deref()))
-                                            (ß RT'errPrintWriter().format("Reflection warning, %s:%d:%d - call to method %s on %s can't be resolved (argument types: %s).\n", (object-array [ (deref Compiler'SOURCE_PATH), ___line, ___column, ___methodName, (.getName (.getJavaClass ___target)), (ß getTypeStringForArgs(___args)) ])))
+                                            (ß RT'errPrintWriter().format("Reflection warning, %s:%d:%d - call to method %s on %s can't be resolved (argument types: %s).\n", (object-array [ (deref Compiler'SOURCE_PATH), ___line, ___column, ___methodName, (.getName (.getJavaClass ___target)), (Compiler'getTypeStringForArgs ___args) ])))
                                         )
                                     )
                                 )
@@ -6958,7 +6958,7 @@
                         (throw (CompilerException'new (:source this), (:line this), (:column this), ___e))
                     )
                     (do
-                        (throw (ß (CompilerException) ___e))
+                        (throw (cast' CompilerException ___e))
                     )
                 )
             )
@@ -6980,7 +6980,7 @@
                     (ß MethodExpr'emitTypedArgs(___objx, ___gen, (:method this).getParameterTypes(), (:args this)))
                     (ß ___gen.visitLineNumber((:line this), (.mark ___gen)))
                     (when (ß (:tailPosition this) && (not (:canBeDirect ___objx)))
-                        (let [#_"ObjMethod" ___method (ß (ObjMethod) Compiler'METHOD.deref())]
+                        (let [#_"ObjMethod" ___method (cast' ObjMethod (ß Compiler'METHOD.deref()))]
                             (.emitClearThis ___method, ___gen)
                         )
                     )
@@ -7013,7 +7013,7 @@
                     (ß MethodExpr'emitTypedArgs(___objx, ___gen, (:method this).getParameterTypes(), (:args this)))
                     (ß ___gen.visitLineNumber((:line this), (.mark ___gen)))
                     (when (ß ___context == :Context'RETURN)
-                        (let [#_"ObjMethod" ___method (ß (ObjMethod) Compiler'METHOD.deref())]
+                        (let [#_"ObjMethod" ___method (cast' ObjMethod (ß Compiler'METHOD.deref()))]
                             (.emitClearLocals ___method, ___gen)
                         )
                     )
@@ -7036,11 +7036,11 @@
                 (ß emitArgsAsArray((:args this), ___objx, ___gen))
                 (ß ___gen.visitLineNumber((:line this), (.mark ___gen)))
                 (when (ß ___context == :Context'RETURN)
-                    (let [#_"ObjMethod" ___method (ß (ObjMethod) Compiler'METHOD.deref())]
+                    (let [#_"ObjMethod" ___method (cast' ObjMethod (ß Compiler'METHOD.deref()))]
                         (.emitClearLocals ___method, ___gen)
                     )
                 )
-                (ß ___gen.invokeStatic(Compiler'REFLECTOR_TYPE, InstanceMethodExpr'invokeInstanceMethodMethod))
+                (.invokeStatic ___gen, Compiler'REFLECTOR_TYPE, InstanceMethodExpr'invokeInstanceMethodMethod)
             )
         )
         (when (ß ___context == :Context'STATEMENT)
@@ -7057,7 +7057,7 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"InstanceMethodExpr" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (ß retType(((:tag this) != nil) ? HostExpr'tagToClass((:tag this)) :or nil, ((:method this) != nil) ? (:method this).getReturnType() :or nil)))
+            (§ ass (:jc this) (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this)))))
         )
         (:jc this)
     )
@@ -7110,13 +7110,13 @@
                                         (ß ___rets.add((.getReturnType ___m)))
                                     )
                                 )
-                                (§ ass ___methodidx (ß getMatchingParams(___methodName, ___params, ___args, ___rets)))
+                                (§ ass ___methodidx (Compiler'getMatchingParams ___methodName, ___params, ___args, ___rets))
                             )
                         )
                     )
-                    (§ ass (:method this) (ß (java.lang.reflect.Method) ((___methodidx >= 0) ? (ß ___methods.get(___methodidx)) :or nil)))
+                    (§ ass (:method this) (cast java.lang.reflect.Method (when (ß ___methodidx >= 0) (.get ___methods, ___methodidx))))
                     (when (ß (:method this) == nil && RT'booleanCast-1o(RT'WARN_ON_REFLECTION.deref()))
-                        (ß RT'errPrintWriter().format("Reflection warning, %s:%d:%d - call to static method %s on %s can't be resolved (argument types: %s).\n", (object-array [ (deref Compiler'SOURCE_PATH), ___line, ___column, ___methodName, (.getName ___c), (ß getTypeStringForArgs(___args)) ])))
+                        (ß RT'errPrintWriter().format("Reflection warning, %s:%d:%d - call to static method %s on %s can't be resolved (argument types: %s).\n", (object-array [ (deref Compiler'SOURCE_PATH), ___line, ___column, ___methodName, (.getName ___c), (Compiler'getTypeStringForArgs ___args) ])))
                     )
                     (when (ß (:method this) != nil && warnOnBoxedKeyword.equals(RT'UNCHECKED_MATH.deref()) && StaticMethodExpr'isBoxedMath((:method this)))
                         (ß RT'errPrintWriter().format("Boxed math warning, %s:%d:%d - call: %s.\n", (object-array [ (deref Compiler'SOURCE_PATH), ___line, ___column, (.toString (:method this)) ])))
@@ -7163,7 +7163,7 @@
                         (throw (CompilerException'new (:source this), (:line this), (:column this), ___e))
                     )
                     (do
-                        (throw (ß (CompilerException) ___e))
+                        (throw (cast' CompilerException ___e))
                     )
                 )
             )
@@ -7187,7 +7187,7 @@
             (do
                 (ß MethodExpr'emitTypedArgs(___objx, ___gen, (:method this).getParameterTypes(), (:args this)))
                 (when (ß ___context == :Context'RETURN)
-                    (let [#_"ObjMethod" ___method (ß (ObjMethod) Compiler'METHOD.deref())]
+                    (let [#_"ObjMethod" ___method (cast' ObjMethod (ß Compiler'METHOD.deref()))]
                         (.emitClearLocals ___method, ___gen)
                     )
                 )
@@ -7212,7 +7212,7 @@
                 (ß MethodExpr'emitTypedArgs(___objx, ___gen, (:method this).getParameterTypes(), (:args this)))
                 (ß ___gen.visitLineNumber((:line this), (.mark ___gen)))
                 (when (ß ___context == :Context'RETURN)
-                    (let [#_"ObjMethod" ___method (ß (ObjMethod) Compiler'METHOD.deref())]
+                    (let [#_"ObjMethod" ___method (cast' ObjMethod (ß Compiler'METHOD.deref()))]
                         (.emitClearLocals ___method, ___gen)
                     )
                 )
@@ -7254,7 +7254,7 @@
                 (ß MethodExpr'emitTypedArgs(___objx, ___gen, (:method this).getParameterTypes(), (:args this)))
                 (ß ___gen.visitLineNumber((:line this), (.mark ___gen)))
                 (when (ß (:tailPosition this) && (not (:canBeDirect ___objx)))
-                    (let [#_"ObjMethod" ___method (ß (ObjMethod) Compiler'METHOD.deref())]
+                    (let [#_"ObjMethod" ___method (cast' ObjMethod (ß Compiler'METHOD.deref()))]
                         (.emitClearThis ___method, ___gen)
                     )
                 )
@@ -7285,16 +7285,16 @@
             (do
                 (ß ___gen.visitLineNumber((:line this), (.mark ___gen)))
                 (ß ___gen.push((:c this).getName()))
-                (ß ___gen.invokeStatic(Compiler'RT_TYPE, forNameMethod))
+                (.invokeStatic ___gen, Compiler'RT_TYPE, StaticMethodExpr'forNameMethod)
                 (.push ___gen, (:methodName this))
                 (ß emitArgsAsArray((:args this), ___objx, ___gen))
                 (ß ___gen.visitLineNumber((:line this), (.mark ___gen)))
                 (when (ß ___context == :Context'RETURN)
-                    (let [#_"ObjMethod" ___method (ß (ObjMethod) Compiler'METHOD.deref())]
+                    (let [#_"ObjMethod" ___method (cast' ObjMethod (ß Compiler'METHOD.deref()))]
                         (.emitClearLocals ___method, ___gen)
                     )
                 )
-                (ß ___gen.invokeStatic(Compiler'REFLECTOR_TYPE, invokeStaticMethodMethod))
+                (.invokeStatic ___gen, Compiler'REFLECTOR_TYPE, StaticMethodExpr'invokeStaticMethodMethod)
                 (when (ß ___context == :Context'STATEMENT)
                     (.pop ___gen)
                 )
@@ -7311,7 +7311,7 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"StaticMethodExpr" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (ß retType(((:tag this) != nil) ? HostExpr'tagToClass((:tag this)) :or nil, ((:method this) != nil) ? (:method this).getReturnType() :or nil)))
+            (§ ass (:jc this) (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this)))))
         )
         (:jc this)
     )
@@ -7363,7 +7363,7 @@
     (defn #_"NumberExpr" NumberExpr'new [#_"Number" ___n]
         (let [this (merge (LiteralExpr'new) (NumberExpr'init))]
             (§ ass (:n this) ___n)
-            (§ ass (:id this) (ß registerConstant(___n)))
+            (§ ass (:id this) (Compiler'registerConstant ___n))
             this
         )
     )
@@ -7507,7 +7507,7 @@
     (defn #_"ConstantExpr" ConstantExpr'new [#_"Object" ___v]
         (let [this (merge (LiteralExpr'new) (ConstantExpr'init))]
             (§ ass (:v this) ___v)
-            (§ ass (:id this) (ß registerConstant(___v)))
+            (§ ass (:id this) (Compiler'registerConstant ___v))
             this
         )
     )
@@ -7566,7 +7566,7 @@
 
     #_method
     (§ defn #_"void" (§ method emit) [#_"NilExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
-        (ß ___gen.visitInsn(Opcodes/ACONST_NULL))
+        (.visitInsn ___gen, Opcodes/ACONST_NULL)
         (when (ß ___context == :Context'STATEMENT)
             (.pop ___gen)
         )
@@ -7600,17 +7600,17 @@
 
     #_method
     (§ defn #_"Object" (§ method val) [#_"BooleanExpr" this]
-        (ß (:val this) ? RT'T :or RT'F)
+        (if (:val this) RT'T RT'F)
     )
 
     #_method
     (§ defn #_"void" (§ method emit) [#_"BooleanExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (if (:val this)
             (do
-                (ß ___gen.getStatic(Compiler'BOOLEAN_OBJECT_TYPE, "TRUE", Compiler'BOOLEAN_OBJECT_TYPE))
+                (.getStatic ___gen, Compiler'BOOLEAN_OBJECT_TYPE, "TRUE", Compiler'BOOLEAN_OBJECT_TYPE)
             )
             (do
-                (ß ___gen.getStatic(Compiler'BOOLEAN_OBJECT_TYPE, "FALSE", Compiler'BOOLEAN_OBJECT_TYPE))
+                (.getStatic ___gen, Compiler'BOOLEAN_OBJECT_TYPE, "FALSE", Compiler'BOOLEAN_OBJECT_TYPE)
             )
         )
         (when (ß ___context == :Context'STATEMENT)
@@ -7676,7 +7676,7 @@
 
     #_method
     (§ defn #_"Expr" (§ method parse) [#_"MonitorEnterParser" this, #_"Context" ___context, #_"Object" ___form]
-        (ß MonitorEnterExpr'new(analyze(:Context'EXPRESSION, RT'second(___form))))
+        (ß MonitorEnterExpr'new(Compiler'analyze-2(:Context'EXPRESSION, RT'second(___form))))
     )
 )
 
@@ -7703,7 +7703,7 @@
     (§ defn #_"void" (§ method emit) [#_"MonitorEnterExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (ß (:target this).emit(:Context'EXPRESSION, ___objx, ___gen))
         (.monitorEnter ___gen)
-        (ß Compiler'NIL_EXPR.emit(___context, ___objx, ___gen))
+        (.emit Compiler'NIL_EXPR, ___context, ___objx, ___gen)
         nil
     )
 )
@@ -7716,7 +7716,7 @@
 
     #_method
     (§ defn #_"Expr" (§ method parse) [#_"MonitorExitParser" this, #_"Context" ___context, #_"Object" ___form]
-        (ß MonitorExitExpr'new(analyze(:Context'EXPRESSION, RT'second(___form))))
+        (ß MonitorExitExpr'new(Compiler'analyze-2(:Context'EXPRESSION, RT'second(___form))))
     )
 )
 
@@ -7743,7 +7743,7 @@
     (§ defn #_"void" (§ method emit) [#_"MonitorExitExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (ß (:target this).emit(:Context'EXPRESSION, ___objx, ___gen))
         (.monitorExit ___gen)
-        (ß Compiler'NIL_EXPR.emit(___context, ___objx, ___gen))
+        (.emit Compiler'NIL_EXPR, ___context, ___objx, ___gen)
         nil
     )
 )
@@ -7777,9 +7777,9 @@
 
     #_method
     (§ defn #_"Expr" (§ method parse) [#_"TryParser" this, #_"Context" ___context, #_"Object" ___frm]
-        (let [#_"ISeq" ___form (ß (ISeq) ___frm)]
+        (let [#_"ISeq" ___form (cast' ISeq ___frm)]
             (when (ß ___context != :Context'RETURN)
-                (§ return (ß analyze(___context, RT'list-1(RT'list-3(Compiler'FNONCE, PersistentVector'EMPTY, ___form)))))
+                (§ return (ß Compiler'analyze-2(___context, RT'list-1(RT'list-3(Compiler'FNONCE, PersistentVector'EMPTY, ___form)))))
             )
 
             ;; (try try-expr* catch-expr* finally-expr?)
@@ -7791,11 +7791,11 @@
                     (let [#_"Expr" ___bodyExpr nil]
                         (let [#_"Expr" ___finallyExpr nil]
                             (let [#_"boolean" ___caught false]
-                                (let [#_"int" ___retLocal (ß getAndIncLocalNum())]
-                                    (let [#_"int" ___finallyLocal (ß getAndIncLocalNum())]
+                                (let [#_"int" ___retLocal (Compiler'getAndIncLocalNum)]
+                                    (let [#_"int" ___finallyLocal (Compiler'getAndIncLocalNum)]
                                         (loop-when-recur [#_"ISeq" ___fs (next ___form)] (some? ___fs) [(next ___fs)]
                                             (let [#_"Object" ___f (first ___fs)]
-                                                (let [#_"Object" ___op (ß (___f instanceof ISeq) ? (cast' ISeq ___f).first() :or nil)]
+                                                (let [#_"Object" ___op (when (ß ___f instanceof ISeq) (ß (cast' ISeq ___f).first()))]
                                                     (if (and (not (Util'equals ___op, Compiler'CATCH)) (not (Util'equals ___op, Compiler'FINALLY)))
                                                         (do
                                                             (when ___caught
@@ -7823,12 +7823,12 @@
                                                                 (do
                                                                     (let [#_"Class" ___c (ß HostExpr'maybeClass(RT'second(___f), false))]
                                                                         (when (nil? ___c)
-                                                                            (throw (IllegalArgumentException. (str "Unable to resolve classname: " (ß RT'second(___f)))))
+                                                                            (throw (IllegalArgumentException. (str "Unable to resolve classname: " (RT'second ___f))))
                                                                         )
                                                                         (when (not (ß RT'third(___f) instanceof Symbol))
-                                                                            (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " (ß RT'third(___f)))))
+                                                                            (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " (RT'third ___f))))
                                                                         )
-                                                                        (let [#_"Symbol" ___sym (ß (Symbol) RT'third(___f))]
+                                                                        (let [#_"Symbol" ___sym (cast' Symbol (RT'third ___f))]
                                                                             (when (ß (.getNamespace ___sym) != nil)
                                                                                 (throw (Util'runtimeException-1 (str "Can't bind qualified name:" ___sym)))
                                                                             )
@@ -7843,7 +7843,7 @@
                                                                                     ))]
                                                                                 (try
                                                                                     (Var'pushThreadBindings ___dynamicBindings)
-                                                                                    (let [#_"LocalBinding" ___lb (ß Compiler'registerLocal(___sym, (Symbol) ((RT'second(___f) instanceof Symbol) ? RT'second(___f) :or nil), nil, false))]
+                                                                                    (let [#_"LocalBinding" ___lb (Compiler'registerLocal ___sym, (cast' Symbol (when (ß RT'second(___f) instanceof Symbol) (RT'second ___f))), nil, false)]
                                                                                         (let [#_"Expr" ___handler (ß (BodyParser'new()).parse(:Context'EXPRESSION, RT'next(RT'next(RT'next(___f)))))]
                                                                                             (§ ass ___catches (ß ___catches.cons(CatchClause'new(___c, ___lb, ___handler))))
                                                                                         )
@@ -7944,7 +7944,7 @@
                     (let [#_"Label" ___ret (.newLabel ___gen)]
                         (let [#_"Label" ___finallyLabel (.newLabel ___gen)]
                             (loop-when-recur [#_"int" ___i 0] (ß ___i < (:catchExprs this).count()) [(inc ___i)]
-                                (let [#_"CatchClause" ___clause (ß (CatchClause) (:catchExprs this).nth(___i))]
+                                (let [#_"CatchClause" ___clause (cast' CatchClause (ß (:catchExprs this).nth(___i)))]
                                     (§ ass (:label ___clause) (.newLabel ___gen))
                                     (§ ass (:endLabel ___clause) (.newLabel ___gen))
                                 )
@@ -7962,7 +7962,7 @@
                             (.goTo ___gen, ___ret)
 
                             (loop-when-recur [#_"int" ___i 0] (ß ___i < (:catchExprs this).count()) [(inc ___i)]
-                                (let [#_"CatchClause" ___clause (ß (CatchClause) (:catchExprs this).nth(___i))]
+                                (let [#_"CatchClause" ___clause (cast' CatchClause (ß (:catchExprs this).nth(___i)))]
                                     (.mark ___gen, (:label ___clause))
                                     ;; exception should be on stack
                                     ;; put in clause local
@@ -7993,20 +7993,20 @@
                             )
                             (.mark ___gen, ___end)
                             (loop-when-recur [#_"int" ___i 0] (ß ___i < (:catchExprs this).count()) [(inc ___i)]
-                                (let [#_"CatchClause" ___clause (ß (CatchClause) (:catchExprs this).nth(___i))]
+                                (let [#_"CatchClause" ___clause (cast' CatchClause (ß (:catchExprs this).nth(___i)))]
                                     (ß ___gen.visitTryCatchBlock(___startTry, ___endTry, (:label ___clause), (:c ___clause).getName().replace(\., \/)))
                                 )
                             )
                             (when (some? (:finallyExpr this))
                                 (.visitTryCatchBlock ___gen, ___startTry, ___endTry, ___finallyLabel, nil)
                                 (loop-when-recur [#_"int" ___i 0] (ß ___i < (:catchExprs this).count()) [(inc ___i)]
-                                    (let [#_"CatchClause" ___clause (ß (CatchClause) (:catchExprs this).nth(___i))]
+                                    (let [#_"CatchClause" ___clause (cast' CatchClause (ß (:catchExprs this).nth(___i)))]
                                         (.visitTryCatchBlock ___gen, (:label ___clause), (:endLabel ___clause), ___finallyLabel, nil)
                                     )
                                 )
                             )
                             (loop-when-recur [#_"int" ___i 0] (ß ___i < (:catchExprs this).count()) [(inc ___i)]
-                                (let [#_"CatchClause" ___clause (ß (CatchClause) (:catchExprs this).nth(___i))]
+                                (let [#_"CatchClause" ___clause (cast' CatchClause (ß (:catchExprs this).nth(___i)))]
                                     (ß ___gen.visitLocalVariable((:name (:lb ___clause)), "Ljava/lang/Object;", nil, (:label ___clause), (:endLabel ___clause), (:idx (:lb ___clause))))
                                 )
                             )
@@ -8039,7 +8039,7 @@
     (§ defn #_"Expr" (§ method parse) [#_"ThrowParser" this, #_"Context" ___context, #_"Object" ___form]
         (cond (ß ___context == :Context'EVAL)
             (do
-                (§ return (ß analyze(___context, RT'list-1(RT'list-3(Compiler'FNONCE, PersistentVector'EMPTY, ___form)))))
+                (§ return (ß Compiler'analyze-2(___context, RT'list-1(RT'list-3(Compiler'FNONCE, PersistentVector'EMPTY, ___form)))))
             )
             (ß RT'count(___form) == 1)
             (do
@@ -8050,7 +8050,7 @@
                 (throw (Util'runtimeException-1 "Too many arguments to throw, throw expects a single Throwable instance"))
             )
         )
-        (ß ThrowExpr'new(analyze(:Context'EXPRESSION, RT'second(___form))))
+        (ß ThrowExpr'new(Compiler'analyze-2(:Context'EXPRESSION, RT'second(___form))))
     )
 )
 
@@ -8076,7 +8076,7 @@
     #_method
     (§ defn #_"void" (§ method emit) [#_"ThrowExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (ß (:excExpr this).emit(:Context'EXPRESSION, ___objx, ___gen))
-        (ß ___gen.checkCast(Compiler'THROWABLE_TYPE))
+        (.checkCast ___gen, Compiler'THROWABLE_TYPE)
         (.throwException ___gen)
         nil
     )
@@ -8090,20 +8090,20 @@
 
     #_method
     (§ defn #_"Expr" (§ method parse) [#_"NewParser" this, #_"Context" ___context, #_"Object" ___frm]
-        (let [#_"int" ___line (ß Compiler'lineDeref())]
-            (let [#_"int" ___column (ß Compiler'columnDeref())]
-                (let [#_"ISeq" ___form (ß (ISeq) ___frm)]
+        (let [#_"int" ___line (Compiler'lineDeref)]
+            (let [#_"int" ___column (Compiler'columnDeref)]
+                (let [#_"ISeq" ___form (cast' ISeq ___frm)]
                     ;; (new Classname args...)
                     (when (ß (count ___form) < 2)
                         (throw (Util'runtimeException-1 "wrong number of arguments, expecting: (new Classname args...)"))
                     )
                     (let [#_"Class" ___c (ß HostExpr'maybeClass(RT'second(___form), false))]
                         (when (nil? ___c)
-                            (throw (IllegalArgumentException. (str "Unable to resolve classname: " (ß RT'second(___form)))))
+                            (throw (IllegalArgumentException. (str "Unable to resolve classname: " (RT'second ___form))))
                         )
                         (let [#_"PersistentVector" ___args PersistentVector'EMPTY]
                             (loop-when-recur [#_"ISeq" ___s (ß RT'next(RT'next(___form)))] (some? ___s) [(next ___s)]
-                                (§ ass ___args (ß ___args.cons(analyze((___context == :Context'EVAL) ? ___context :or :Context'EXPRESSION, (first ___s)))))
+                                (§ ass ___args (.cons ___args, (Compiler'analyze-2 (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), (first ___s))))
                             )
                             (NewExpr'new ___c, ___args, ___line, ___column)
                         )
@@ -8149,10 +8149,10 @@
 
                             (let [#_"int" ___ctoridx 0]
                                 (when (ß (.size ___ctors) > 1)
-                                    (§ ass ___ctoridx (ß getMatchingParams((.getName ___c), ___params, ___args, ___rets)))
+                                    (§ ass ___ctoridx (ß Compiler'getMatchingParams((.getName ___c), ___params, ___args, ___rets)))
                                 )
 
-                                (§ ass (:ctor this) (ß (___ctoridx >= 0) ? (Constructor) ___ctors.get(___ctoridx) :or nil))
+                                (§ ass (:ctor this) (when (ß ___ctoridx >= 0) (cast Constructor (.get ___ctors, ___ctoridx))))
                                 (when (ß (:ctor this) == nil && RT'booleanCast-1o(RT'WARN_ON_REFLECTION.deref()))
                                     (ß RT'errPrintWriter().format("Reflection warning, %s:%d:%d - call to %s ctor can't be resolved.\n", (object-array [ (deref Compiler'SOURCE_PATH), ___line, ___column, (.getName ___c) ])))
                                 )
@@ -8187,7 +8187,7 @@
     (§ defn #_"void" (§ method emit) [#_"NewExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (if (ß (:ctor this) != nil)
             (do
-                (let [#_"Type" ___type (ß getType((:c this)))]
+                (let [#_"Type" ___type (ß Compiler'getType((:c this)))]
                     (.newInstance ___gen, ___type)
                     (.dup ___gen)
                     (ß MethodExpr'emitTypedArgs(___objx, ___gen, (:ctor this).getParameterTypes(), (:args this)))
@@ -8195,10 +8195,10 @@
                 )
             )
             (do
-                (ß ___gen.push(destubClassName((:c this).getName())))
-                (ß ___gen.invokeStatic(Compiler'RT_TYPE, NewExpr'forNameMethod))
+                (ß ___gen.push(Compiler'destubClassName((:c this).getName())))
+                (.invokeStatic ___gen, Compiler'RT_TYPE, NewExpr'forNameMethod)
                 (MethodExpr'emitArgsAsArray (:args this), ___objx, ___gen)
-                (ß ___gen.invokeStatic(Compiler'REFLECTOR_TYPE, invokeConstructorMethod))
+                (.invokeStatic ___gen, Compiler'REFLECTOR_TYPE, invokeConstructorMethod)
             )
         )
         (when (ß ___context == :Context'STATEMENT)
@@ -8245,10 +8245,10 @@
     #_method
     (§ defn #_"void" (§ method emit) [#_"MetaExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (ß (:expr this).emit(:Context'EXPRESSION, ___objx, ___gen))
-        (ß ___gen.checkCast(MetaExpr'IOBJ_TYPE))
+        (.checkCast ___gen, MetaExpr'IOBJ_TYPE)
         (ß (:meta this).emit(:Context'EXPRESSION, ___objx, ___gen))
-        (ß ___gen.checkCast(Compiler'IPERSISTENTMAP_TYPE))
-        (ß ___gen.invokeInterface(MetaExpr'IOBJ_TYPE, MetaExpr'withMetaMethod))
+        (.checkCast ___gen, Compiler'IPERSISTENTMAP_TYPE)
+        (.invokeInterface ___gen, MetaExpr'IOBJ_TYPE, MetaExpr'withMetaMethod)
         (when (ß ___context == :Context'STATEMENT)
             (.pop ___gen)
         )
@@ -8274,7 +8274,7 @@
 
     #_method
     (§ defn #_"Expr" (§ method parse) [#_"IfParser" this, #_"Context" ___context, #_"Object" ___frm]
-        (let [#_"ISeq" ___form (ß (ISeq) ___frm)]
+        (let [#_"ISeq" ___form (cast' ISeq ___frm)]
             ;; (if test then) or (if test then else)
             (cond (ß (count ___form) > 4)
                 (do
@@ -8286,7 +8286,7 @@
                 )
             )
             (let [#_"PathNode" ___branch (ß PathNode'new(:PathType'BRANCH, (PathNode) Compiler'CLEAR_PATH.get()))]
-                (let [#_"Expr" ___testexpr (ß analyze((___context == :Context'EVAL) ? ___context :or :Context'EXPRESSION, RT'second(___form)))]
+                (let [#_"Expr" ___testexpr (Compiler'analyze-2 (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), (RT'second ___form))]
                     (let [(ß Expr thenexpr, elseexpr)]
                         (try
                             (ß Var'pushThreadBindings(RT'map(
@@ -8294,7 +8294,7 @@
                                     Compiler'CLEAR_PATH PathNode'new(:PathType'PATH, ___branch)
                                 ])
                             )))
-                            (§ ass thenexpr (ß analyze(___context, RT'third(___form))))
+                            (§ ass thenexpr (ß Compiler'analyze-2(___context, RT'third(___form))))
                             (finally
                                 (Var'popThreadBindings)
                             )
@@ -8305,7 +8305,7 @@
                                     Compiler'CLEAR_PATH PathNode'new(:PathType'PATH, ___branch)
                                 ])
                             )))
-                            (§ ass elseexpr (ß analyze(___context, RT'fourth(___form))))
+                            (§ ass elseexpr (ß Compiler'analyze-2(___context, RT'fourth(___form))))
                             (finally
                                 (Var'popThreadBindings)
                             )
@@ -8373,7 +8373,7 @@
                         (do
                             (ß ((StaticMethodExpr) (:testExpr this)).emitIntrinsicPredicate(:Context'EXPRESSION, ___objx, ___gen, ___falseLabel))
                         )
-                        (ß maybePrimitiveType((:testExpr this)) == (§ class boolean))
+                        (ß Compiler'maybePrimitiveType((:testExpr this)) == (§ class boolean))
                         (do
                             (ß ((MaybePrimitiveExpr) (:testExpr this)).emitUnboxed(:Context'EXPRESSION, ___objx, ___gen))
                             (ß ___gen.ifZCmp(___gen.EQ, ___falseLabel))
@@ -8383,7 +8383,7 @@
                             (ß (:testExpr this).emit(:Context'EXPRESSION, ___objx, ___gen))
                             (.dup ___gen)
                             (.ifNull ___gen, ___nullLabel)
-                            (ß ___gen.getStatic(Compiler'BOOLEAN_OBJECT_TYPE, "FALSE", Compiler'BOOLEAN_OBJECT_TYPE))
+                            (.getStatic ___gen, Compiler'BOOLEAN_OBJECT_TYPE, "FALSE", Compiler'BOOLEAN_OBJECT_TYPE)
                             (.visitJumpInsn ___gen, Opcodes/IF_ACMPEQ, ___falseLabel)
                         )
                     )
@@ -8483,19 +8483,19 @@
     (§ defn #_"void" (§ method emit) [#_"EmptyExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (cond (ß (:coll this) instanceof IPersistentList)
             (do
-                (ß ___gen.getStatic(EmptyExpr'LIST_TYPE, "EMPTY", EmptyExpr'EMPTY_LIST_TYPE))
+                (.getStatic ___gen, EmptyExpr'LIST_TYPE, "EMPTY", EmptyExpr'EMPTY_LIST_TYPE)
             )
             (ß (:coll this) instanceof IPersistentVector)
             (do
-                (ß ___gen.getStatic(EmptyExpr'VECTOR_TYPE, "EMPTY", EmptyExpr'VECTOR_TYPE))
+                (.getStatic ___gen, EmptyExpr'VECTOR_TYPE, "EMPTY", EmptyExpr'VECTOR_TYPE)
             )
             (ß (:coll this) instanceof IPersistentMap)
             (do
-                (ß ___gen.getStatic(EmptyExpr'HASHMAP_TYPE, "EMPTY", EmptyExpr'HASHMAP_TYPE))
+                (.getStatic ___gen, EmptyExpr'HASHMAP_TYPE, "EMPTY", EmptyExpr'HASHMAP_TYPE)
             )
             (ß (:coll this) instanceof IPersistentSet)
             (do
-                (ß ___gen.getStatic(EmptyExpr'HASHSET_TYPE, "EMPTY", EmptyExpr'HASHSET_TYPE))
+                (.getStatic ___gen, EmptyExpr'HASHSET_TYPE, "EMPTY", EmptyExpr'HASHSET_TYPE)
             )
             :else
             (do
@@ -8559,7 +8559,7 @@
     (§ defn #_"Object" (§ method eval) [#_"ListExpr" this]
         (let [#_"IPersistentVector" ___ret PersistentVector'EMPTY]
             (loop-when-recur [#_"int" ___i 0] (ß ___i < (:args this).count()) [(inc ___i)]
-                (§ ass ___ret (ß (IPersistentVector) ___ret.cons(((Expr) (:args this).nth(___i)).eval())))
+                (§ ass ___ret (cast' IPersistentVector (ß ___ret.cons(((Expr) (:args this).nth(___i)).eval()))))
             )
             (.seq ___ret)
         )
@@ -8568,7 +8568,7 @@
     #_method
     (§ defn #_"void" (§ method emit) [#_"ListExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (MethodExpr'emitArgsAsArray (:args this), ___objx, ___gen)
-        (ß ___gen.invokeStatic(Compiler'RT_TYPE, ListExpr'arrayToListMethod))
+        (.invokeStatic ___gen, Compiler'RT_TYPE, ListExpr'arrayToListMethod)
         (when (ß ___context == :Context'STATEMENT)
             (.pop ___gen)
         )
@@ -8619,7 +8619,7 @@
             (let [#_"boolean" ___allConstantKeysUnique true]
                 (let [#_"IPersistentSet" ___constantKeys PersistentHashSet'EMPTY]
                     (loop-when-recur [#_"int" ___i 0] (ß ___i < (:keyvals this).count()) [(+ ___i 2)]
-                        (let [#_"Expr" ___k (ß (Expr) (:keyvals this).nth(___i))]
+                        (let [#_"Expr" ___k (cast' Expr (ß (:keyvals this).nth(___i)))]
                             (if (ß ___k instanceof LiteralExpr)
                                 (do
                                     (let [#_"Object" ___kval (.eval ___k)]
@@ -8628,7 +8628,7 @@
                                                 (§ ass ___allConstantKeysUnique false)
                                             )
                                             (do
-                                                (§ ass ___constantKeys (ß (IPersistentSet)___constantKeys.cons(___kval)))
+                                                (§ ass ___constantKeys (cast' IPersistentSet (.cons ___constantKeys, ___kval)))
                                             )
                                         )
                                     )
@@ -8642,10 +8642,10 @@
                     (MethodExpr'emitArgsAsArray (:keyvals this), ___objx, ___gen)
                     (if (ß (___allKeysConstant && ___allConstantKeysUnique) || ((:keyvals this).count() <= 2))
                         (do
-                            (ß ___gen.invokeStatic(Compiler'RT_TYPE, mapUniqueKeysMethod))
+                            (.invokeStatic ___gen, Compiler'RT_TYPE, mapUniqueKeysMethod)
                         )
                         (do
-                            (ß ___gen.invokeStatic(Compiler'RT_TYPE, mapMethod))
+                            (.invokeStatic ___gen, Compiler'RT_TYPE, mapMethod)
                         )
                     )
                     (when (ß ___context == :Context'STATEMENT)
@@ -8674,11 +8674,11 @@
                     (let [#_"boolean" ___allConstantKeysUnique true]
                         (let [#_"IPersistentSet" ___constantKeys PersistentHashSet'EMPTY]
                             (loop-when-recur [#_"ISeq" ___s (RT'seq ___form)] (some? ___s) [(next ___s)]
-                                (let [#_"IMapEntry" ___e (ß (IMapEntry) (first ___s))]
-                                    (let [#_"Expr" ___k (ß analyze((___context == :Context'EVAL) ? ___context :or :Context'EXPRESSION, (.key ___e)))]
-                                        (let [#_"Expr" ___v (ß analyze((___context == :Context'EVAL) ? ___context :or :Context'EXPRESSION, (.val ___e)))]
-                                            (§ ass ___keyvals (ß (IPersistentVector) ___keyvals.cons(___k)))
-                                            (§ ass ___keyvals (ß (IPersistentVector) ___keyvals.cons(___v)))
+                                (let [#_"IMapEntry" ___e (cast' IMapEntry (first ___s))]
+                                    (let [#_"Expr" ___k (Compiler'analyze-2 (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), (.key ___e))]
+                                        (let [#_"Expr" ___v (Compiler'analyze-2 (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), (.val ___e))]
+                                            (§ ass ___keyvals (cast' IPersistentVector (.cons ___keyvals, ___k)))
+                                            (§ ass ___keyvals (cast' IPersistentVector (.cons ___keyvals, ___v)))
                                             (if (ß ___k instanceof LiteralExpr)
                                                 (do
                                                     (let [#_"Object" ___kval (.eval ___k)]
@@ -8687,7 +8687,7 @@
                                                                 (§ ass ___allConstantKeysUnique false)
                                                             )
                                                             (do
-                                                                (§ ass ___constantKeys (ß (IPersistentSet)___constantKeys.cons(___kval)))
+                                                                (§ ass ___constantKeys (cast' IPersistentSet (.cons ___constantKeys, ___kval)))
                                                             )
                                                         )
                                                     )
@@ -8707,7 +8707,7 @@
                             (let [#_"Expr" ___ret (MapExpr'new ___keyvals)]
                                 (cond (ß ___form instanceof IObj && (cast' IObj ___form).meta() != nil)
                                     (do
-                                        (ß MetaExpr'new(___ret, MapExpr'parse((___context == :Context'EVAL) ? ___context :or :Context'EXPRESSION, (cast' IObj ___form).meta())))
+                                        (MetaExpr'new ___ret, (MapExpr'parse (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), (ß (cast' IObj ___form).meta())))
                                     )
                                     ___keysConstant
                                     (do
@@ -8772,7 +8772,7 @@
     #_method
     (§ defn #_"void" (§ method emit) [#_"SetExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (MethodExpr'emitArgsAsArray (:keys this), ___objx, ___gen)
-        (ß ___gen.invokeStatic(Compiler'RT_TYPE, setMethod))
+        (.invokeStatic ___gen, Compiler'RT_TYPE, setMethod)
         (when (ß ___context == :Context'STATEMENT)
             (.pop ___gen)
         )
@@ -8794,8 +8794,8 @@
             (let [#_"boolean" ___constant true]
                 (loop-when-recur [#_"ISeq" ___s (RT'seq ___form)] (some? ___s) [(next ___s)]
                     (let [#_"Object" ___e (first ___s)]
-                        (let [#_"Expr" ___expr (ß analyze((___context == :Context'EVAL) ? ___context :or :Context'EXPRESSION, ___e))]
-                            (§ ass ___keys (ß (IPersistentVector) ___keys.cons(___expr)))
+                        (let [#_"Expr" ___expr (Compiler'analyze-2 (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), ___e)]
+                            (§ ass ___keys (cast' IPersistentVector (.cons ___keys, ___expr)))
                             (when (not (ß ___expr instanceof LiteralExpr))
                                 (§ ass ___constant false)
                             )
@@ -8805,14 +8805,14 @@
                 (let [#_"Expr" ___ret (SetExpr'new ___keys)]
                     (cond (ß ___form instanceof IObj && (cast' IObj ___form).meta() != nil)
                         (do
-                            (ß MetaExpr'new(___ret, MapExpr'parse((___context == :Context'EVAL) ? ___context :or :Context'EXPRESSION, (cast' IObj ___form).meta())))
+                            (MetaExpr'new ___ret, (MapExpr'parse (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), (ß (cast' IObj ___form).meta())))
                         )
                         ___constant
                         (do
                             (let [#_"IPersistentSet" ___set PersistentHashSet'EMPTY]
                                 (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___keys)) [(inc ___i)]
-                                    (let [#_"LiteralExpr" ___ve (ß (LiteralExpr)___keys.nth(___i))]
-                                        (§ ass ___set (ß (IPersistentSet)___set.cons((.val ___ve))))
+                                    (let [#_"LiteralExpr" ___ve (cast' LiteralExpr (.nth ___keys, ___i))]
+                                        (§ ass ___set (cast' IPersistentSet (ß ___set.cons((.val ___ve)))))
                                     )
                                 )
                                 (ConstantExpr'new ___set)
@@ -8849,7 +8849,7 @@
     (§ defn #_"Object" (§ method eval) [#_"VectorExpr" this]
         (let [#_"IPersistentVector" ___ret PersistentVector'EMPTY]
             (loop-when-recur [#_"int" ___i 0] (ß ___i < (:args this).count()) [(inc ___i)]
-                (§ ass ___ret (ß (IPersistentVector) ___ret.cons(((Expr) (:args this).nth(___i)).eval())))
+                (§ ass ___ret (cast' IPersistentVector (ß ___ret.cons(((Expr) (:args this).nth(___i)).eval()))))
             )
             ___ret
         )
@@ -8862,11 +8862,11 @@
                 (loop-when-recur [#_"int" ___i 0] (ß ___i < (:args this).count()) [(inc ___i)]
                     (ß ((Expr) (:args this).nth(___i)).emit(:Context'EXPRESSION, ___objx, ___gen))
                 )
-                (ß ___gen.invokeStatic(Compiler'TUPLE_TYPE, createTupleMethods[(:args this).count()]))
+                (ß ___gen.invokeStatic(Compiler'TUPLE_TYPE, Compiler'createTupleMethods[(:args this).count()]))
             )
             (do
                 (MethodExpr'emitArgsAsArray (:args this), ___objx, ___gen)
-                (ß ___gen.invokeStatic(Compiler'RT_TYPE, vectorMethod))
+                (.invokeStatic ___gen, Compiler'RT_TYPE, vectorMethod)
             )
         )
 
@@ -8890,8 +8890,8 @@
         (let [#_"boolean" ___constant true]
             (let [#_"IPersistentVector" ___args PersistentVector'EMPTY]
                 (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___form)) [(inc ___i)]
-                    (let [#_"Expr" ___v (ß analyze((___context == :Context'EVAL) ? ___context :or :Context'EXPRESSION, ___form.nth(___i)))]
-                        (§ ass ___args (ß (IPersistentVector) ___args.cons(___v)))
+                    (let [#_"Expr" ___v (Compiler'analyze-2 (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), (.nth ___form, ___i))]
+                        (§ ass ___args (cast' IPersistentVector (.cons ___args, ___v)))
                         (when (not (ß ___v instanceof LiteralExpr))
                             (§ ass ___constant false)
                         )
@@ -8900,13 +8900,13 @@
                 (let [#_"Expr" ___ret (VectorExpr'new ___args)]
                     (cond (ß ___form instanceof IObj && (cast' IObj ___form).meta() != nil)
                         (do
-                            (ß MetaExpr'new(___ret, MapExpr'parse((___context == :Context'EVAL) ? ___context :or :Context'EXPRESSION, (cast' IObj ___form).meta())))
+                            (MetaExpr'new ___ret, (MapExpr'parse (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), (ß (cast' IObj ___form).meta())))
                         )
                         ___constant
                         (do
                             (let [#_"IPersistentVector" ___rv PersistentVector'EMPTY]
                                 (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___args)) [(inc ___i)]
-                                    (let [#_"LiteralExpr" ___ve (ß (LiteralExpr)___args.nth(___i))]
+                                    (let [#_"LiteralExpr" ___ve (cast' LiteralExpr (.nth ___args, ___i))]
                                         (§ ass ___rv (ß ___rv.cons((.val ___ve))))
                                     )
                                 )
@@ -8949,7 +8949,7 @@
             (§ ass (:line this) ___line)
             (§ ass (:column this) ___column)
             (§ ass (:tag this) ___tag)
-            (§ ass (:siteIndex this) (ß registerKeywordCallsite((:k ___kw))))
+            (§ ass (:siteIndex this) (ß Compiler'registerKeywordCallsite((:k ___kw))))
             this
         )
     )
@@ -8964,7 +8964,7 @@
                         (throw (CompilerException'new (:source this), (:line this), (:column this), ___e))
                     )
                     (do
-                        (throw (ß (CompilerException) ___e))
+                        (throw (cast' CompilerException ___e))
                     )
                 )
             )
@@ -9054,7 +9054,7 @@
     #_method
     (§ defn #_"void" (§ method emitUnboxed) [#_"InstanceOfExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (ß (:expr this).emit(:Context'EXPRESSION, ___objx, ___gen))
-        (ß ___gen.instanceOf(getType((:c this))))
+        (ß ___gen.instanceOf(Compiler'getType((:c this))))
         nil
     )
 
@@ -9141,7 +9141,7 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"StaticInvokeExpr" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (ß retType(((:tag this) != nil) ? HostExpr'tagToClass((:tag this)) :or nil, (:retClass this))))
+            (§ ass (:jc this) (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (:retClass this)))
         )
         (:jc this)
     )
@@ -9157,8 +9157,8 @@
             (if (:variadic this)
                 (do
                     (loop-when-recur [#_"int" ___i 0] (ß ___i < (:paramclasses this).length - 1) [(inc ___i)]
-                        (let [#_"Expr" ___e (ß (Expr) (:args this).nth(___i))]
-                            (if (ß maybePrimitiveType(___e) == (:paramclasses this)[___i])
+                        (let [#_"Expr" ___e (cast' Expr (ß (:args this).nth(___i)))]
+                            (if (ß Compiler'maybePrimitiveType(___e) == (:paramclasses this)[___i])
                                 (do
                                     (ß (cast' MaybePrimitiveExpr ___e).emitUnboxed(:Context'EXPRESSION, ___objx, ___gen))
                                 )
@@ -9180,7 +9180,7 @@
             )
 
             (when (ß (:tailPosition this) && (not (:canBeDirect ___objx)))
-                (let [#_"ObjMethod" ___method (ß (ObjMethod) Compiler'METHOD.deref())]
+                (let [#_"ObjMethod" ___method (cast' ObjMethod (ß Compiler'METHOD.deref()))]
                     (.emitClearThis ___method, ___gen)
                 )
             )
@@ -9238,7 +9238,7 @@
                                             (let [#_"Type" ___target (§ unsure Type/getType ___c)]
                                                 (let [#_"PersistentVector" ___argv PersistentVector'EMPTY]
                                                     (loop-when-recur [#_"ISeq" ___s (RT'seq ___args)] (some? ___s) [(next ___s)]
-                                                        (§ ass ___argv (ß ___argv.cons(analyze(:Context'EXPRESSION, (first ___s)))))
+                                                        (§ ass ___argv (ß ___argv.cons(Compiler'analyze-2(:Context'EXPRESSION, (first ___s)))))
                                                     )
 
                                                     (StaticInvokeExpr'new ___target, ___retClass, ___paramClasses, ___paramTypes, ___variadic, ___argv, ___tag, ___tailPosition)
@@ -9261,13 +9261,13 @@
     (§ def #_"Keyword" InvokeExpr'methodMapKey (Keyword'intern-1 "method-map"))
 
     (defn #_"Object" InvokeExpr'sigTag [#_"int" ___argcount, #_"Var" ___v]
-        (let [#_"Object" ___arglists (ß RT'get-2(RT'meta(___v), arglistsKey))]
+        (let [#_"Object" ___arglists (ß RT'get-2(RT'meta(___v), Compiler'arglistsKey))]
             (let [#_"Object" ___sigTag nil]
                 (loop-when-recur [#_"ISeq" ___s (RT'seq ___arglists)] (some? ___s) [(next ___s)]
-                    (let [#_"APersistentVector" ___sig (ß (APersistentVector) (first ___s))]
-                        (let [#_"int" ___restOffset (ß ___sig.indexOf(Compiler'_AMP_))]
+                    (let [#_"APersistentVector" ___sig (cast' APersistentVector (first ___s))]
+                        (let [#_"int" ___restOffset (.indexOf ___sig, Compiler'_AMP_)]
                             (when (ß ___argcount == (count ___sig) || (___restOffset > -1 && ___argcount >= ___restOffset))
-                                (§ return (ß tagOf(___sig)))
+                                (§ return (Compiler'tagOf ___sig))
                             )
                         )
                     )
@@ -9308,19 +9308,19 @@
 
             (when (ß ___fexpr instanceof VarExpr)
                 (let [#_"Var" ___fvar (:var (cast' VarExpr ___fexpr))]
-                    (let [#_"Var" ___pvar (ß (Var)RT'get-2((.meta ___fvar), protocolKey))]
+                    (let [#_"Var" ___pvar (cast' Var (ß RT'get-2((.meta ___fvar), Compiler'protocolKey)))]
                         (when (ß ___pvar != nil && Compiler'PROTOCOL_CALLSITES.isBound())
                             (§ ass (:isProtocol this) true)
-                            (§ ass (:siteIndex this) (ß registerProtocolCallsite((:var (cast' VarExpr ___fexpr)))))
-                            (let [#_"Object" ___pon (ß RT'get-2((.get ___pvar), onKey))]
+                            (§ ass (:siteIndex this) (ß Compiler'registerProtocolCallsite((:var (cast' VarExpr ___fexpr)))))
+                            (let [#_"Object" ___pon (ß RT'get-2((.get ___pvar), Compiler'onKey))]
                                 (§ ass (:protocolOn this) (HostExpr'maybeClass ___pon, false))
                                 (when (ß (:protocolOn this) != nil)
-                                    (let [#_"IPersistentMap" ___mmap (ß (IPersistentMap) RT'get-2((.get ___pvar), methodMapKey))]
-                                        (let [#_"Keyword" ___mmapVal (ß (Keyword) ___mmap.valAt(Keyword'intern((:sym ___fvar))))]
+                                    (let [#_"IPersistentMap" ___mmap (cast' IPersistentMap (ß RT'get-2((.get ___pvar), methodMapKey)))]
+                                        (let [#_"Keyword" ___mmapVal (cast' Keyword (ß ___mmap.valAt(Keyword'intern((:sym ___fvar)))))]
                                             (when (nil? ___mmapVal)
                                                 (throw (IllegalArgumentException. (str "No method of interface: " (.getName (:protocolOn this)) " found for function: " (:sym ___fvar) " of protocol: " (:sym ___pvar) " (The protocol method may have been defined before and removed.)")))
                                             )
-                                            (let [#_"String" ___mname (ß munge((:sym ___mmapVal).toString()))]
+                                            (let [#_"String" ___mname (ß Compiler'munge((:sym ___mmapVal).toString()))]
                                                 (let [#_"List" ___methods (ß Reflector'getMethods((:protocolOn this), (count ___args) - 1, ___mname, false))]
                                                     (when (ß (.size ___methods) != 1)
                                                         (throw (IllegalArgumentException. (str "No single method: " ___mname " of interface: " (.getName (:protocolOn this)) " found for function: " (:sym ___fvar) " of protocol: " (:sym ___pvar))))
@@ -9344,9 +9344,9 @@
                 (ß ___fexpr instanceof VarExpr)
                 (do
                     (let [#_"Var" ___v (:var (cast' VarExpr ___fexpr))]
-                        (let [#_"Object" ___arglists (ß RT'get-2(RT'meta(___v), arglistsKey))]
-                            (let [#_"Object" ___sigTag (ß ___sigTag((count ___args), ___v))]
-                                (§ ass (:tag this) (ß (nil? ___sigTag) ? (:tag (cast' VarExpr ___fexpr)) :or ___sigTag))
+                        (let [#_"Object" ___arglists (ß RT'get-2(RT'meta(___v), Compiler'arglistsKey))]
+                            (let [#_"Object" ___sigTag (ß InvokeExpr'sigTag((count ___args), ___v))]
+                                (§ ass (:tag this) (or ___sigTag (:tag (cast' VarExpr ___fexpr))))
                             )
                         )
                     )
@@ -9363,7 +9363,7 @@
     #_method
     (§ defn #_"Object" (§ method eval) [#_"InvokeExpr" this]
         (try
-            (let [#_"IFn" ___fn (ß (IFn) (:fexpr this).eval())]
+            (let [#_"IFn" ___fn (cast' IFn (ß (:fexpr this).eval()))]
                 (let [#_"PersistentVector" ___argvs PersistentVector'EMPTY]
                     (loop-when-recur [#_"int" ___i 0] (ß ___i < (:args this).count()) [(inc ___i)]
                         (§ ass ___argvs (ß ___argvs.cons(((Expr) (:args this).nth(___i)).eval())))
@@ -9377,7 +9377,7 @@
                         (throw (CompilerException'new (:source this), (:line this), (:column this), ___e))
                     )
                     (do
-                        (throw (ß (CompilerException) ___e))
+                        (throw (cast' CompilerException ___e))
                     )
                 )
             )
@@ -9394,7 +9394,7 @@
             (do
                 (ß (:fexpr this).emit(:Context'EXPRESSION, ___objx, ___gen))
                 (ß ___gen.visitLineNumber((:line this), (.mark ___gen)))
-                (ß ___gen.checkCast(Compiler'IFN_TYPE))
+                (.checkCast ___gen, Compiler'IFN_TYPE)
                 (.emitArgsAndCall this, 0, ___context, ___objx, ___gen)
             )
         )
@@ -9410,7 +9410,7 @@
             (let [#_"Label" ___callLabel (.newLabel ___gen)]
                 (let [#_"Label" ___endLabel (.newLabel ___gen)]
                     (let [#_"Var" ___v (:var (cast' VarExpr (:fexpr this)))]
-                        (let [#_"Expr" ___e (ß (Expr) (:args this).nth(0))]
+                        (let [#_"Expr" ___e (cast' Expr (ß (:args this).nth(0)))]
                             (ß ___e.emit(:Context'EXPRESSION, ___objx, ___gen))
                             (.dup ___gen) ;; target, target
                             (ß ___gen.invokeStatic(Compiler'UTIL_TYPE, Method/getMethod("Class classOf(Object)"))) ;; target, class
@@ -9419,7 +9419,7 @@
                             (when (some? (:protocolOn this))
                                 (.dup ___gen) ;; target, target
                                 (ß ___gen.instanceOf(Type/getType((:protocolOn this))))
-                                (ß ___gen.ifZCmp(GeneratorAdapter/NE, ___onLabel))
+                                (.ifZCmp ___gen, GeneratorAdapter/NE, ___onLabel)
                             )
 
                             (.dup ___gen) ;; target, target
@@ -9438,7 +9438,7 @@
                                 (ß ___gen.checkCast(Type/getType((:protocolOn this))))
                                 (ß MethodExpr'emitTypedArgs(___objx, ___gen, (:onMethod this).getParameterTypes(), RT'subvec((:args this), 1, (:args this).count())))
                                 (when (ß ___context == :Context'RETURN)
-                                    (let [#_"ObjMethod" ___method (ß (ObjMethod) Compiler'METHOD.deref())]
+                                    (let [#_"ObjMethod" ___method (cast' ObjMethod (ß Compiler'METHOD.deref()))]
                                         (.emitClearLocals ___method, ___gen)
                                     )
                                 )
@@ -9459,7 +9459,7 @@
     #_method
     (§ defn #_"void" (§ method emitArgsAndCall) [#_"InvokeExpr" this, #_"int" ___firstArgToEmit, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (loop-when-recur [#_"int" ___i ___firstArgToEmit] (ß ___i < Math/min(Compiler'MAX_POSITIONAL_ARITY, (:args this).count())) [(inc ___i)]
-            (let [#_"Expr" ___e (ß (Expr) (:args this).nth(___i))]
+            (let [#_"Expr" ___e (cast' Expr (ß (:args this).nth(___i)))]
                 (ß ___e.emit(:Context'EXPRESSION, ___objx, ___gen))
             )
         )
@@ -9474,7 +9474,7 @@
         (ß ___gen.visitLineNumber((:line this), (.mark ___gen)))
 
         (when (ß (:tailPosition this) && (not (:canBeDirect ___objx)))
-            (let [#_"ObjMethod" ___method (ß (ObjMethod) Compiler'METHOD.deref())]
+            (let [#_"ObjMethod" ___method (cast' ObjMethod (ß Compiler'METHOD.deref()))]
                 (.emitClearThis ___method, ___gen)
             )
         )
@@ -9497,32 +9497,32 @@
     )
 
     (defn #_"Expr" InvokeExpr'parse [#_"Context" ___context, #_"ISeq" ___form]
-        (let [#_"boolean" ___tailPosition (ß inTailCall(___context))]
+        (let [#_"boolean" ___tailPosition (Compiler'inTailCall ___context)]
             (when (ß ___context != :Context'EVAL)
                 (§ ass ___context (ß :Context'EXPRESSION))
             )
-            (let [#_"Expr" ___fexpr (ß analyze(___context, (first ___form)))]
+            (let [#_"Expr" ___fexpr (ß Compiler'analyze-2(___context, (first ___form)))]
                 (when (ß ___fexpr instanceof VarExpr && (:var (cast' VarExpr ___fexpr)).equals(Compiler'INSTANCE) && RT'count(___form) == 3)
-                    (let [#_"Expr" ___sexpr (ß analyze(:Context'EXPRESSION, RT'second(___form)))]
+                    (let [#_"Expr" ___sexpr (ß Compiler'analyze-2(:Context'EXPRESSION, RT'second(___form)))]
                         (when (ß ___sexpr instanceof ConstantExpr)
                             (let [#_"Object" ___val (ß (cast' ConstantExpr ___sexpr).val())]
                                 (when (ß ___val instanceof Class)
-                                    (§ return (ß InstanceOfExpr'new((Class) ___val, analyze(___context, RT'third(___form)))))
+                                    (§ return (ß InstanceOfExpr'new((Class) ___val, Compiler'analyze-2(___context, RT'third(___form)))))
                                 )
                             )
                         )
                     )
                 )
 
-                (when (ß RT'booleanCast-1o(Compiler'getCompilerOption(directLinkingKey)) && ___fexpr instanceof VarExpr && ___context != :Context'EVAL)
+                (when (ß RT'booleanCast-1o(Compiler'getCompilerOption(Compiler'directLinkingKey)) && ___fexpr instanceof VarExpr && ___context != :Context'EVAL)
                     (let [#_"Var" ___v (:var (cast' VarExpr ___fexpr))]
-                        (when (ß (not (ß ___v.isDynamic())) && (not (RT'booleanCast-1o (RT'get-3 (.meta ___v), redefKey, false))))
-                            (let [#_"Symbol" ___formtag (ß tagOf(___form))]
-                                (let [#_"Object" ___arglists (ß RT'get-2(RT'meta(___v), arglistsKey))]
+                        (when (ß (not (ß ___v.isDynamic())) && (not (RT'booleanCast-1o (RT'get-3 (.meta ___v), Compiler'redefKey, false))))
+                            (let [#_"Symbol" ___formtag (Compiler'tagOf ___form)]
+                                (let [#_"Object" ___arglists (ß RT'get-2(RT'meta(___v), Compiler'arglistsKey))]
                                     (let [#_"int" ___arity (ß RT'count((next ___form)))]
-                                        (let [#_"Object" ___sigtag (ß sigTag(___arity, ___v))]
+                                        (let [#_"Object" ___sigtag (InvokeExpr'sigTag ___arity, ___v)]
                                             (let [#_"Object" ___vtag (ß RT'get-2(RT'meta(___v), RT'TAG_KEY))]
-                                                (let [#_"Expr" ___ret (ß StaticInvokeExpr'parse(___v, RT'next(___form), (some? ___formtag) ? ___formtag :or (some? ___sigtag) ? ___sigtag :or ___vtag, ___tailPosition))]
+                                                (let [#_"Expr" ___ret (StaticInvokeExpr'parse ___v, (RT'next ___form), (or ___formtag ___sigtag ___vtag), ___tailPosition)]
                                                     (when (some? ___ret)
                                                         (§ return ___ret)
                                                     )
@@ -9538,14 +9538,14 @@
 
                 (when (ß ___fexpr instanceof VarExpr && ___context != :Context'EVAL)
                     (let [#_"Var" ___v (:var (cast' VarExpr ___fexpr))]
-                        (let [#_"Object" ___arglists (ß RT'get-2(RT'meta(___v), arglistsKey))]
+                        (let [#_"Object" ___arglists (ß RT'get-2(RT'meta(___v), Compiler'arglistsKey))]
                             (let [#_"int" ___arity (ß RT'count((next ___form)))]
                                 (loop-when-recur [#_"ISeq" ___s (RT'seq ___arglists)] (some? ___s) [(next ___s)]
-                                    (let [#_"IPersistentVector" ___args (ß (IPersistentVector) (first ___s))]
+                                    (let [#_"IPersistentVector" ___args (cast' IPersistentVector (first ___s))]
                                         (when (ß (count ___args) == ___arity)
                                             (let [#_"String" ___primc (FnMethod'primInterface ___args)]
                                                 (when (some? ___primc)
-                                                    (§ return (ß analyze(___context, ((IObj)RT'listStar-3(Symbol'intern-1(".invokePrim"), ((Symbol) (first ___form)).withMeta(RT'map(RT'TAG_KEY, Symbol'intern-1(___primc))), (next ___form))).withMeta((IPersistentMap)RT'conj(RT'meta(___v), RT'meta(___form))))))
+                                                    (§ return (ß Compiler'analyze-2(___context, ((IObj)RT'listStar-3(Symbol'intern-1(".invokePrim"), ((Symbol) (first ___form)).withMeta(RT'map(RT'TAG_KEY, Symbol'intern-1(___primc))), (next ___form))).withMeta((IPersistentMap)RT'conj(RT'meta(___v), RT'meta(___form))))))
                                                 )
                                                 (§ break )
                                             )
@@ -9558,16 +9558,16 @@
                 )
 
                 (when (ß ___fexpr instanceof KeywordExpr && RT'count(___form) == 2 && Compiler'KEYWORD_CALLSITES.isBound())
-                    (let [#_"Expr" ___target (ß analyze(___context, RT'second(___form)))]
-                        (§ return (ß KeywordInvokeExpr'new((String) Compiler'SOURCE.deref(), Compiler'lineDeref(), Compiler'columnDeref(), tagOf(___form), (KeywordExpr) ___fexpr, ___target)))
+                    (let [#_"Expr" ___target (ß Compiler'analyze-2(___context, RT'second(___form)))]
+                        (§ return (ß KeywordInvokeExpr'new((String) Compiler'SOURCE.deref(), Compiler'lineDeref(), Compiler'columnDeref(), Compiler'tagOf(___form), (KeywordExpr) ___fexpr, ___target)))
                     )
                 )
                 (let [#_"PersistentVector" ___args PersistentVector'EMPTY]
                     (loop-when-recur [#_"ISeq" ___s (ß RT'seq((next ___form)))] (some? ___s) [(next ___s)]
-                        (§ ass ___args (ß ___args.cons(analyze(___context, (first ___s)))))
+                        (§ ass ___args (ß ___args.cons(Compiler'analyze-2(___context, (first ___s)))))
                     )
 
-                    (ß InvokeExpr'new((String) Compiler'SOURCE.deref(), Compiler'lineDeref(), Compiler'columnDeref(), tagOf(___form), ___fexpr, ___args, ___tailPosition))
+                    (ß InvokeExpr'new((String) Compiler'SOURCE.deref(), Compiler'lineDeref(), Compiler'columnDeref(), Compiler'tagOf(___form), ___fexpr, ___args, ___tailPosition))
                 )
             )
         )
@@ -9582,7 +9582,7 @@
 
     #_method
     (§ defn #_"void" (§ method writeSMAP) [#_"SourceDebugExtensionAttribute" this, #_"ClassWriter" ___cw, #_"String" ___smap]
-        (let [#_"ByteVector" ___bv (ß write(___cw, nil, -1, -1, -1))]
+        (let [#_"ByteVector" ___bv (write ___cw, nil, -1, -1, -1)]
             (.putUTF8 ___bv, ___smap)
             nil
         )
@@ -9623,7 +9623,7 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"FnExpr" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (ß ((:tag this) != nil) ? HostExpr'tagToClass((:tag this)) :or (§ class AFunction)))
+            (§ ass (:jc this) (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (§ class AFunction)))
         )
         (:jc this)
     )
@@ -9633,7 +9633,7 @@
     (§ defn #_"void" (§ method emitMethods) [#_"FnExpr" this, #_"ClassVisitor" ___cv]
         ;; override of invoke/doInvoke for each method
         (loop-when-recur [#_"ISeq" ___s (RT'seq (:methods this))] (some? ___s) [(next ___s)]
-            (let [#_"ObjMethod" ___method (ß (ObjMethod) (first ___s))]
+            (let [#_"ObjMethod" ___method (cast' ObjMethod (first ___s))]
                 (.emit ___method, this, ___cv)
             )
         )
@@ -9651,17 +9651,17 @@
 
     (defn #_"Expr" FnExpr'parse [#_"Context" ___context, #_"ISeq" ___form, #_"String" ___name]
         (let [#_"ISeq" ___origForm ___form]
-            (let [#_"FnExpr" ___fn (ß FnExpr'new(tagOf(___form)))]
+            (let [#_"FnExpr" ___fn (ß FnExpr'new(Compiler'tagOf(___form)))]
                 (let [#_"Keyword" ___retkey (Keyword'intern-2 nil, "rettag")]
                     (let [#_"Object" ___rettag (ß RT'get-2(RT'meta(___form), ___retkey))]
                         (§ ass (:src ___fn) ___form)
-                        (let [#_"ObjMethod" ___enclosingMethod (ß (ObjMethod) Compiler'METHOD.deref())]
+                        (let [#_"ObjMethod" ___enclosingMethod (cast' ObjMethod (ß Compiler'METHOD.deref()))]
                             (§ ass (:hasEnclosingMethod ___fn) (ß ___enclosingMethod != nil))
                             (when (ß ((IMeta) (first ___form)).meta() != nil)
                                 (§ ass (:onceOnly ___fn) (ß RT'booleanCast-1o(RT'get-2(RT'meta((first ___form)), Keyword'intern-2(nil, "once")))))
                             )
 
-                            (let [#_"String" ___basename (str (if (ß ___enclosingMethod != nil) (:name (:objx ___enclosingMethod)) (ß munge((:name (:name (.currentNS this)))))) "$")]
+                            (let [#_"String" ___basename (str (if (ß ___enclosingMethod != nil) (:name (:objx ___enclosingMethod)) (ß Compiler'munge((:name (:name (.currentNS this)))))) "$")]
                                 (let [#_"Symbol" ___nm nil]
                                     (if (ß RT'second(___form) instanceof Symbol)
                                         (do
@@ -9681,7 +9681,7 @@
                                         )
                                     )
 
-                                    (let [#_"String" ___simpleName (ß munge(___name).replace(".", "_DOT_"))]
+                                    (let [#_"String" ___simpleName (ß Compiler'munge(___name).replace(".", "_DOT_"))]
                                         (§ ass (:name ___fn) (+ ___basename ___simpleName))
                                         (§ ass (:internalName ___fn) (ß (:name ___fn).replace(\., \/)))
                                         (§ ass (:objtype ___fn) (ß Type/getObjectType((:internalName ___fn))))
@@ -9695,7 +9695,7 @@
                                                         Compiler'VARS               PersistentHashMap'EMPTY
                                                         Compiler'KEYWORD_CALLSITES  PersistentVector'EMPTY
                                                         Compiler'PROTOCOL_CALLSITES PersistentVector'EMPTY
-                                                        Compiler'VAR_CALLSITES      (ß emptyVarCallSites())
+                                                        Compiler'VAR_CALLSITES      (Compiler'emptyVarCallSites)
                                                         Compiler'NO_RECUR           nil
                                                     ])
                                                 )))
@@ -9711,8 +9711,8 @@
                                                 (when (ß RT'second(___form) instanceof IPersistentVector)
                                                     (§ ass ___form (ß RT'list-2(Compiler'FN, RT'next(___form))))
                                                 )
-                                                (§ ass (:line ___fn) (ß Compiler'lineDeref()))
-                                                (§ ass (:column ___fn) (ß Compiler'columnDeref()))
+                                                (§ ass (:line ___fn) (Compiler'lineDeref))
+                                                (§ ass (:column ___fn) (Compiler'columnDeref))
                                                 (let [#_"FnMethod[]" ___methodArray (ß FnMethod'new[Compiler'MAX_POSITIONAL_ARITY + 1])]
                                                     (let [#_"FnMethod" ___variadicMethod nil]
                                                         (let [#_"boolean" ___usesThis false]
@@ -9780,12 +9780,12 @@
 
                                                                 (§ ass (:methods ___fn) ___methods)
                                                                 (§ ass (:variadicMethod ___fn) ___variadicMethod)
-                                                                (§ ass (:keywords ___fn) (ß (IPersistentMap) Compiler'KEYWORDS.deref()))
-                                                                (§ ass (:vars ___fn) (ß (IPersistentMap) Compiler'VARS.deref()))
-                                                                (§ ass (:constants ___fn) (ß (PersistentVector) Compiler'CONSTANTS.deref()))
-                                                                (§ ass (:keywordCallsites ___fn) (ß (IPersistentVector) Compiler'KEYWORD_CALLSITES.deref()))
-                                                                (§ ass (:protocolCallsites ___fn) (ß (IPersistentVector) Compiler'PROTOCOL_CALLSITES.deref()))
-                                                                (§ ass (:varCallsites ___fn) (ß (IPersistentSet) Compiler'VAR_CALLSITES.deref()))
+                                                                (§ ass (:keywords ___fn) (cast' IPersistentMap (ß Compiler'KEYWORDS.deref())))
+                                                                (§ ass (:vars ___fn) (cast' IPersistentMap (ß Compiler'VARS.deref())))
+                                                                (§ ass (:constants ___fn) (cast' PersistentVector (ß Compiler'CONSTANTS.deref())))
+                                                                (§ ass (:keywordCallsites ___fn) (cast' IPersistentVector (ß Compiler'KEYWORD_CALLSITES.deref())))
+                                                                (§ ass (:protocolCallsites ___fn) (cast' IPersistentVector (ß Compiler'PROTOCOL_CALLSITES.deref())))
+                                                                (§ ass (:varCallsites ___fn) (cast' IPersistentSet (ß Compiler'VAR_CALLSITES.deref())))
 
                                                                 (§ ass (:constantsID ___fn) (RT'nextID))
                                                             )
@@ -9805,7 +9805,7 @@
                                                 (§ ass (:hasMeta ___fn) (ß RT'count(___fmeta) > 0))
 
                                                 (try
-                                                    (ß ___fn.compile((ß (.isVariadic ___fn) ? "cloiure/lang/RestFn" :or "cloiure/lang/AFunction"), (ß ((.size ___prims) == 0) ? nil :or (ß ___prims.toArray(.new String[(.size ___prims)]))), (:onceOnly ___fn)))
+                                                    (.compile ___fn, (if (.isVariadic ___fn) "cloiure/lang/RestFn" "cloiure/lang/AFunction"), (if (zero? (.size ___prims)) nil (ß ___prims.toArray(.new String[(.size ___prims)]))), (:onceOnly ___fn))
                                                     (catch IOException ___e
                                                         (throw (Util'sneakyThrow ___e))
                                                     )
@@ -9814,7 +9814,7 @@
 
                                                 (if (.supportsMeta ___fn)
                                                     (do
-                                                        (ß MetaExpr'new(___fn, MapExpr'parse((___context == :Context'EVAL) ? ___context :or :Context'EXPRESSION, ___fmeta)))
+                                                        (MetaExpr'new ___fn, (MapExpr'parse (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), ___fmeta))
                                                     )
                                                     (do
                                                         ___fn
@@ -9995,28 +9995,28 @@
 
     (defn #_"String" ObjExpr'trimGenID [#_"String" ___name]
         (let [#_"int" ___i (.lastIndexOf ___name, "__")]
-            (ß (___i == -1) ? ___name :or (ß ___name.substring(0, ___i)))
+            (if (ß ___i == -1) ___name (.substring ___name, 0, ___i))
         )
     )
 
     #_method
     (§ defn #_"Type[]" (§ method ctorTypes) [#_"ObjExpr" this]
-        (let [#_"IPersistentVector" ___tv (ß (not (ß this.supportsMeta())) ? PersistentVector'EMPTY :or RT'vector(Compiler'IPERSISTENTMAP_TYPE))]
+        (let [#_"IPersistentVector" ___tv (if (not (.supportsMeta this)) PersistentVector'EMPTY (RT'vector Compiler'IPERSISTENTMAP_TYPE))]
             (loop-when-recur [#_"ISeq" ___s (RT'keys (:closes this))] (some? ___s) [(next ___s)]
-                (let [#_"LocalBinding" ___lb (ß (LocalBinding) (first ___s))]
+                (let [#_"LocalBinding" ___lb (cast' LocalBinding (first ___s))]
                     (if (ß (.getPrimitiveType ___lb) != nil)
                         (do
                             (§ ass ___tv (ß ___tv.cons(Type/getType((.getPrimitiveType ___lb)))))
                         )
                         (do
-                            (§ ass ___tv (ß ___tv.cons(Compiler'OBJECT_TYPE)))
+                            (§ ass ___tv (.cons ___tv, Compiler'OBJECT_TYPE))
                         )
                     )
                 )
             )
             (let [#_"Type[]" ___ret (make-array Type (count ___tv))]
                 (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___tv)) [(inc ___i)]
-                    (§ ass (ß ___ret[___i]) (ß (Type) ___tv.nth(___i)))
+                    (§ ass (ß ___ret[___i]) (cast Type (.nth ___tv, ___i)))
                 )
                 ___ret
             )
@@ -10032,21 +10032,21 @@
         (let [#_"ClassWriter" ___cw (ClassWriter. ClassWriter/COMPUTE_MAXS)]
             (let [#_"ClassVisitor" ___cv ___cw]
                 (ß ___cv.visit(Opcodes/V1_5, Opcodes/ACC_PUBLIC + Opcodes/ACC_SUPER + Opcodes/ACC_FINAL, (:internalName this), nil, ___superName, ___interfaceNames))
-                (let [#_"String" ___source (ß (String) Compiler'SOURCE.deref())]
-                    (let [#_"int" ___lineBefore (ß (Integer) Compiler'LINE_BEFORE.deref())]
-                        (let [#_"int" ___lineAfter (ß (Integer) Compiler'LINE_AFTER.deref() + 1)]
-                            (let [#_"int" ___columnBefore (ß (Integer) Compiler'COLUMN_BEFORE.deref())]
-                                (let [#_"int" ___columnAfter (ß (Integer) Compiler'COLUMN_AFTER.deref() + 1)]
+                (let [#_"String" ___source (cast String (ß Compiler'SOURCE.deref()))]
+                    (let [#_"int" ___lineBefore (cast Integer (ß Compiler'LINE_BEFORE.deref()))]
+                        (let [#_"int" ___lineAfter (cast Integer (ß Compiler'LINE_AFTER.deref() + 1))]
+                            (let [#_"int" ___columnBefore (cast Integer (ß Compiler'COLUMN_BEFORE.deref()))]
+                                (let [#_"int" ___columnAfter (cast Integer (ß Compiler'COLUMN_AFTER.deref() + 1))]
                                     (when (ß ___source != nil && Compiler'SOURCE_PATH.deref() != nil)
                                         (let [#_"String" ___smap
                                                 (str "SMAP\n"
-                                                    (ß (___source.lastIndexOf(\.) > 0) ? (ß ___source.substring(0, ___source.lastIndexOf(\.))) :or ___source) ;; :or simpleName
+                                                    (if (pos? (ß ___source.lastIndexOf(\.))) (ß ___source.substring(0, ___source.lastIndexOf(\.))) ___source)
                                                     ".java\n"
                                                     "Cloiure\n"
                                                     "*S Cloiure\n"
                                                     "*F\n"
                                                     "+ 1 " ___source "\n"
-                                                    (ß (String) Compiler'SOURCE_PATH.deref()) "\n"
+                                                    (cast String (ß Compiler'SOURCE_PATH.deref())) "\n"
                                                     "*L\n"
                                                     (ß String/format("%d#1,%d:%d\n", (object-array [ ___lineBefore, (- ___lineAfter ___lineBefore), ___lineBefore ])))
                                                     "*E"
@@ -10054,17 +10054,17 @@
                                             (.visitSource ___cv, ___source, ___smap)
                                         )
                                     )
-                                    (ß addAnnotation(___cv, (:classMeta this)))
+                                    (ß Compiler'addAnnotation(___cv, (:classMeta this)))
 
                                     (when (.supportsMeta this)
                                         (ß ___cv.visitField(Opcodes/ACC_FINAL, "__meta", Compiler'IPERSISTENTMAP_TYPE.getDescriptor(), nil, nil))
                                     )
                                     ;; instance fields for closed-overs
                                     (loop-when-recur [#_"ISeq" ___s (RT'keys (:closes this))] (some? ___s) [(next ___s)]
-                                        (let [#_"LocalBinding" ___lb (ß (LocalBinding) (first ___s))]
+                                        (let [#_"LocalBinding" ___lb (cast' LocalBinding (first ___s))]
                                             (if (.isDeftype this)
                                                 (do
-                                                    (let [#_"int" ___access (ß (ß this.isVolatile(___lb)) ? Opcodes/ACC_VOLATILE :or (ß (ß this.isMutable(___lb)) ? 0 :or (+ Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL)))]
+                                                    (let [#_"int" ___access (if (.isVolatile this, ___lb) Opcodes/ACC_VOLATILE (if (.isMutable this, ___lb) 0 (+ Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL)))]
                                                         (§ let [#_"FieldVisitor" ___fv]
                                                             (if (ß (.getPrimitiveType ___lb) != nil)
                                                                 (do
@@ -10075,7 +10075,7 @@
                                                                     (§ ass ___fv (ß ___cv.visitField(___access, (:name ___lb), Compiler'OBJECT_TYPE.getDescriptor(), nil, nil)))
                                                                 )
                                                             )
-                                                            (ß addAnnotation(___fv, RT'meta((:sym ___lb))))
+                                                            (ß Compiler'addAnnotation(___fv, RT'meta((:sym ___lb))))
                                                         )
                                                     )
                                                 )
@@ -10083,7 +10083,7 @@
                                                     ;; todo - only enable this non-private+writability for letfns where we need it
                                                     (if (ß (.getPrimitiveType ___lb) != nil)
                                                         (do
-                                                            (ß ___cv.visitField(0 + (this.isVolatile(___lb) ? Opcodes/ACC_VOLATILE :or 0), (:name ___lb), Type/getType((.getPrimitiveType ___lb)).getDescriptor(), nil, nil))
+                                                            (ß ___cv.visitField((if (.isVolatile this, ___lb) Opcodes/ACC_VOLATILE 0), (:name ___lb), (ß Type/getType((.getPrimitiveType ___lb)).getDescriptor()), nil, nil))
                                                         )
                                                         (do
                                                             (ß ___cv.visitField(0, (:name ___lb), Compiler'OBJECT_TYPE.getDescriptor(), nil, nil))
@@ -10116,9 +10116,9 @@
                                                         (ß ___ctorgen.putField((:objtype this), "__meta", Compiler'IPERSISTENTMAP_TYPE))
                                                     )
 
-                                                    (let [#_"int" ___a (ß (.supportsMeta this) ? 2 :or 1)]
+                                                    (let [#_"int" ___a (if (.supportsMeta this) 2 1)]
                                                         (loop-when-recur [#_"ISeq" ___s (RT'keys (:closes this)) ___a ___a] (some? ___s) [(next ___s) (inc ___a)]
-                                                            (let [#_"LocalBinding" ___lb (ß (LocalBinding) (first ___s))]
+                                                            (let [#_"LocalBinding" ___lb (cast' LocalBinding (first ___s))]
                                                                 (.loadThis ___ctorgen)
                                                                 (let [#_"Class" ___primc (.getPrimitiveType ___lb)]
                                                                     (if (some? ___primc)
@@ -10147,7 +10147,7 @@
 
                                                         (when (> (:altCtorDrops this) 0)
                                                             ;; ctor that takes closed-overs and inits base + fields
-                                                            (let [#_"Type[]" ___ctorTypes (ß ___ctorTypes())]
+                                                            (let [#_"Type[]" ___ctorTypes (ß this.ctorTypes())]
                                                                 (let [#_"Type[]" ___altCtorTypes (make-array Type (ß ___ctorTypes.length - (:altCtorDrops this)))]
                                                                     (loop-when-recur [#_"int" ___i 0] (ß ___i < ___altCtorTypes.length) [(inc ___i)]
                                                                         (§ ass (ß ___altCtorTypes[___i]) (ß ___ctorTypes[___i]))
@@ -10158,10 +10158,10 @@
                                                                         (.loadThis ___ctorgen)
                                                                         (.loadArgs ___ctorgen)
 
-                                                                        (ß ___ctorgen.visitInsn(Opcodes/ACONST_NULL)) ;; __meta
-                                                                        (ß ___ctorgen.visitInsn(Opcodes/ACONST_NULL)) ;; __extmap
-                                                                        (ß ___ctorgen.visitInsn(Opcodes/ICONST_0)) ;; __hash
-                                                                        (ß ___ctorgen.visitInsn(Opcodes/ICONST_0)) ;; __hasheq
+                                                                        (.visitInsn ___ctorgen, Opcodes/ACONST_NULL) ;; __meta
+                                                                        (.visitInsn ___ctorgen, Opcodes/ACONST_NULL) ;; __extmap
+                                                                        (.visitInsn ___ctorgen, Opcodes/ICONST_0) ;; __hash
+                                                                        (.visitInsn ___ctorgen, Opcodes/ICONST_0) ;; __hasheq
 
                                                                         (ß ___ctorgen.invokeConstructor((:objtype this), (Method. "<init>", Type/VOID_TYPE, ___ctorTypes)))
 
@@ -10180,8 +10180,8 @@
                                                                         (.loadThis ___ctorgen)
                                                                         (.loadArgs ___ctorgen)
 
-                                                                        (ß ___ctorgen.visitInsn(Opcodes/ICONST_0)) ;; __hash
-                                                                        (ß ___ctorgen.visitInsn(Opcodes/ICONST_0)) ;; __hasheq
+                                                                        (.visitInsn ___ctorgen, Opcodes/ICONST_0) ;; __hash
+                                                                        (.visitInsn ___ctorgen, Opcodes/ICONST_0) ;; __hasheq
 
                                                                         (ß ___ctorgen.invokeConstructor((:objtype this), (Method. "<init>", Type/VOID_TYPE, ___ctorTypes)))
 
@@ -10194,7 +10194,7 @@
 
                                                         (when (.supportsMeta this)
                                                             ;; ctor that takes closed-overs but not meta
-                                                            (let [#_"Type[]" ___ctorTypes (ß ___ctorTypes())]
+                                                            (let [#_"Type[]" ___ctorTypes (ß this.ctorTypes())]
                                                                 (let [#_"Type[]" ___noMetaCtorTypes (make-array Type (ß ___ctorTypes.length - 1))]
                                                                     (loop-when-recur [#_"int" ___i 1] (ß ___i < ___ctorTypes.length) [(inc ___i)]
                                                                         (§ ass (ß ___noMetaCtorTypes[___i - 1]) (ß ___ctorTypes[___i]))
@@ -10203,7 +10203,7 @@
                                                                         (§ ass ___ctorgen (GeneratorAdapter. Opcodes/ACC_PUBLIC, ___alt, nil, nil, ___cv))
                                                                         (.visitCode ___ctorgen)
                                                                         (.loadThis ___ctorgen)
-                                                                        (ß ___ctorgen.visitInsn(Opcodes/ACONST_NULL)) ;; nil meta
+                                                                        (.visitInsn ___ctorgen, Opcodes/ACONST_NULL) ;; nil meta
                                                                         (.loadArgs ___ctorgen)
                                                                         (ß ___ctorgen.invokeConstructor((:objtype this), (Method. "<init>", Type/VOID_TYPE, ___ctorTypes)))
 
@@ -10230,7 +10230,7 @@
                                                                                 (.loadArg ___gen, 0)
 
                                                                                 (loop-when-recur [#_"ISeq" ___s (RT'keys (:closes this)) ___a ___a] (some? ___s) [(next ___s) (inc ___a)]
-                                                                                    (let [#_"LocalBinding" ___lb (ß (LocalBinding) (first ___s))]
+                                                                                    (let [#_"LocalBinding" ___lb (cast' LocalBinding (first ___s))]
                                                                                         (.loadThis ___gen)
                                                                                         (let [#_"Class" ___primc (.getPrimitiveType ___lb)]
                                                                                             (if (some? ___primc)
@@ -10284,14 +10284,14 @@
                                                                 (.emitKeywordCallsites this, ___clinitgen)
                                                             )
 
-                                                            (when (ß (.isDeftype this) && RT'booleanCast-1o(RT'get-2((:opts this), loadNs)))
+                                                            (when (ß (.isDeftype this) && RT'booleanCast-1o(RT'get-2((:opts this), Compiler'loadNs)))
                                                                 (let [#_"String" ___nsname (ß ((Symbol)RT'second((:src this))).getNamespace())]
-                                                                    (when (not (ß ___nsname.equals("cloiure.core")))
+                                                                    (when (not (.equals ___nsname, "cloiure.core"))
                                                                         (.push ___clinitgen, "cloiure.core")
                                                                         (.push ___clinitgen, "require")
                                                                         (ß ___clinitgen.invokeStatic(Compiler'RT_TYPE, Method/getMethod("cloiure.lang.Var var(String, String)")))
                                                                         (ß ___clinitgen.invokeVirtual(Compiler'VAR_TYPE, Method/getMethod("Object getRawRoot()")))
-                                                                        (ß ___clinitgen.checkCast(Compiler'IFN_TYPE))
+                                                                        (.checkCast ___clinitgen, Compiler'IFN_TYPE)
                                                                         (.push ___clinitgen, ___nsname)
                                                                         (ß ___clinitgen.invokeStatic(Compiler'SYMBOL_TYPE, Method/getMethod("cloiure.lang.Symbol create(String)")))
                                                                         (ß ___clinitgen.invokeInterface(Compiler'IFN_TYPE, Method/getMethod("Object invoke(Object)")))
@@ -10309,7 +10309,7 @@
 
                                                             (§ ass (:bytecode this) (.toByteArray ___cw))
                                                             (when (ß RT'booleanCast-1o(Compiler'COMPILE_FILES.deref()))
-                                                                (ß writeClassFile((:internalName this), (:bytecode this)))
+                                                                (ß Compiler'writeClassFile((:internalName this), (:bytecode this)))
                                                             )
                                                             nil
                                                         )
@@ -10330,8 +10330,8 @@
     #_method
     (§ defn- #_"void" (§ method emitKeywordCallsites) [#_"ObjExpr" this, #_"GeneratorAdapter" ___clinitgen]
         (loop-when-recur [#_"int" ___i 0] (ß ___i < (:keywordCallsites this).count()) [(inc ___i)]
-            (let [#_"Keyword" ___k (ß (Keyword) (:keywordCallsites this).nth(___i))]
-                (ß ___clinitgen.newInstance(ObjExpr'KEYWORD_LOOKUPSITE_TYPE))
+            (let [#_"Keyword" ___k (cast' Keyword (ß (:keywordCallsites this).nth(___i)))]
+                (.newInstance ___clinitgen, ObjExpr'KEYWORD_LOOKUPSITE_TYPE)
                 (.dup ___clinitgen)
                 (.emitValue this, ___k, ___clinitgen)
                 (ß ___clinitgen.invokeConstructor(ObjExpr'KEYWORD_LOOKUPSITE_TYPE, Method/getMethod("void <init>(cloiure.lang.Keyword)")))
@@ -10358,12 +10358,12 @@
     #_method
     (§ defn #_"void" (§ method emitListAsObjectArray) [#_"ObjExpr" this, #_"Object" ___value, #_"GeneratorAdapter" ___gen]
         (ß ___gen.push((cast List ___value).size()))
-        (ß ___gen.newArray(Compiler'OBJECT_TYPE))
+        (.newArray ___gen, Compiler'OBJECT_TYPE)
         (loop-when-recur [#_"Iterator" ___it (ß (cast List ___value).iterator()) #_"int" ___i 0] (.hasNext ___it) [___it (inc ___i)]
             (.dup ___gen)
             (.push ___gen, ___i)
             (ß this.emitValue((next ___it), ___gen))
-            (ß ___gen.arrayStore(Compiler'OBJECT_TYPE))
+            (.arrayStore ___gen, Compiler'OBJECT_TYPE)
         )
         nil
     )
@@ -10373,7 +10373,7 @@
         (let [#_"boolean" ___partial true]
             (cond (nil? ___value)
                 (do
-                    (ß ___gen.visitInsn(Opcodes/ACONST_NULL))
+                    (.visitInsn ___gen, Opcodes/ACONST_NULL)
                 )
                 (ß ___value instanceof String)
                 (do
@@ -10383,10 +10383,10 @@
                 (do
                     (if (ß (cast Boolean ___value).booleanValue())
                         (do
-                            (ß ___gen.getStatic(Compiler'BOOLEAN_OBJECT_TYPE, "TRUE", Compiler'BOOLEAN_OBJECT_TYPE))
+                            (.getStatic ___gen, Compiler'BOOLEAN_OBJECT_TYPE, "TRUE", Compiler'BOOLEAN_OBJECT_TYPE)
                         )
                         (do
-                            (ß ___gen.getStatic(Compiler'BOOLEAN_OBJECT_TYPE, "FALSE", Compiler'BOOLEAN_OBJECT_TYPE))
+                            (.getStatic ___gen, Compiler'BOOLEAN_OBJECT_TYPE, "FALSE", Compiler'BOOLEAN_OBJECT_TYPE)
                         )
                     )
                 )
@@ -10412,7 +10412,7 @@
                 )
                 (ß ___value instanceof Class)
                 (do
-                    (let [#_"Class" ___cc (ß (Class)___value)]
+                    (let [#_"Class" ___cc (cast Class ___value)]
                         (if (.isPrimitive ___cc)
                             (do
                                 (§ let [#_"Type" ___bt]
@@ -10457,7 +10457,7 @@
                                 )
                             )
                             (do
-                                (ß ___gen.push(destubClassName((.getName ___cc))))
+                                (ß ___gen.push(Compiler'destubClassName((.getName ___cc))))
                                 (ß ___gen.invokeStatic(Compiler'RT_TYPE, Method/getMethod("Class classForName(String)")))
                             )
                         )
@@ -10477,7 +10477,7 @@
                 )
                 (ß ___value instanceof Var)
                 (do
-                    (let [#_"Var" ___var (ß (Var) ___value)]
+                    (let [#_"Var" ___var (cast' Var ___value)]
                         (ß ___gen.push((:name (:ns ___var)).toString()))
                         (ß ___gen.push((:sym ___var).toString()))
                         (ß ___gen.invokeStatic(Compiler'RT_TYPE, Method/getMethod("cloiure.lang.Var var(String, String)")))
@@ -10488,15 +10488,15 @@
                     (let [#_"Method" ___ctor (Method. "<init>", (Type/getConstructorDescriptor (ß (.getClass ___value).getConstructors()[0])))]
                         (ß ___gen.newInstance(Type/getType((.getClass ___value))))
                         (.dup ___gen)
-                        (let [#_"IPersistentVector" ___fields (ß (IPersistentVector) Reflector'invokeStaticMethod-3c((.getClass ___value), "getBasis", (object-array 0)))]
+                        (let [#_"IPersistentVector" ___fields (cast' IPersistentVector (ß Reflector'invokeStaticMethod-3c((.getClass ___value), "getBasis", (object-array 0))))]
                             (loop-when-recur [#_"ISeq" ___s (RT'seq ___fields)] (some? ___s) [(next ___s)]
-                                (let [#_"Symbol" ___field (ß (Symbol) (first ___s))]
-                                    (let [#_"Class" ___k (ß tagClass(tagOf(___field)))]
-                                        (let [#_"Object" ___val (ß Reflector'getInstanceField(___value, munge((:name ___field))))]
+                                (let [#_"Symbol" ___field (cast' Symbol (first ___s))]
+                                    (let [#_"Class" ___k (ß Compiler'tagClass(Compiler'tagOf(___field)))]
+                                        (let [#_"Object" ___val (ß Reflector'getInstanceField(___value, Compiler'munge((:name ___field))))]
                                             (.emitValue this, ___val, ___gen)
 
                                             (when (.isPrimitive ___k)
-                                                (let [#_"Type" ___b (ß Type/getType(boxClass(___k)))]
+                                                (let [#_"Type" ___b (ß Type/getType(Compiler'boxClass(___k)))]
                                                     (let [#_"String" ___p (ß Type/getType(___k).getDescriptor())]
                                                         (let [#_"String" ___n (.getName ___k)]
                                                             (ß ___gen.invokeVirtual(___b, (Method. (str ___n "Value"), (str "()" ___p))))
@@ -10516,7 +10516,7 @@
                 (do
                     (let [#_"Method" ___createMethod (Method/getMethod (str (ß (.getClass ___value).getName()) " create(cloiure.lang.IPersistentMap)"))]
                         (ß this.emitValue(PersistentArrayMap'create((java.util.Map) ___value), ___gen))
-                        (ß ___gen.invokeStatic(getType((.getClass ___value)), ___createMethod))
+                        (ß ___gen.invokeStatic(Compiler'getType((.getClass ___value)), ___createMethod))
                     )
                 )
                 (ß ___value instanceof IPersistentMap)
@@ -10532,13 +10532,13 @@
                 )
                 (ß ___value instanceof IPersistentVector)
                 (do
-                    (let [#_"IPersistentVector" ___args (ß (IPersistentVector) ___value)]
+                    (let [#_"IPersistentVector" ___args (cast' IPersistentVector ___value)]
                         (if (ß (count ___args) <= Tuple'MAX_SIZE)
                             (do
                                 (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___args)) [(inc ___i)]
                                     (ß this.emitValue(___args.nth(___i), ___gen))
                                 )
-                                (ß ___gen.invokeStatic(Compiler'TUPLE_TYPE, createTupleMethods[(count ___args)]))
+                                (ß ___gen.invokeStatic(Compiler'TUPLE_TYPE, Compiler'createTupleMethods[(count ___args)]))
                             )
                             (do
                                 (.emitListAsObjectArray this, ___value, ___gen)
@@ -10590,7 +10590,7 @@
                         )
 
                         (.push ___gen, ___cs)
-                        (ß ___gen.invokeStatic(Compiler'RT_TYPE, readStringMethod))
+                        (.invokeStatic ___gen, Compiler'RT_TYPE, readStringMethod)
                         (§ ass ___partial false)
                     )
                 )
@@ -10598,10 +10598,10 @@
 
             (when ___partial
                 (when (ß ___value instanceof IObj && RT'count((cast' IObj ___value).meta()) > 0)
-                    (ß ___gen.checkCast(Compiler'IOBJ_TYPE))
+                    (.checkCast ___gen, Compiler'IOBJ_TYPE)
                     (let [#_"Object" ___m (ß (cast' IObj ___value).meta())]
-                        (ß this.emitValue(elideMeta(___m), ___gen))
-                        (ß ___gen.checkCast(Compiler'IPERSISTENTMAP_TYPE))
+                        (ß this.emitValue(Compiler'elideMeta(___m), ___gen))
+                        (.checkCast ___gen, Compiler'IPERSISTENTMAP_TYPE)
                         (ß ___gen.invokeInterface(Compiler'IOBJ_TYPE, Method/getMethod("cloiure.lang.IObj withMeta(cloiure.lang.IPersistentMap)")))
                     )
                 )
@@ -10662,7 +10662,7 @@
     (§ defn #_"Class" (§ method getCompiledClass) [#_"ObjExpr" this]
         (§ sync this
             (when (nil? (:compiledClass this))
-                (§ ass (:loader this) (ß (DynamicClassLoader) Compiler'LOADER.deref()))
+                (§ ass (:loader this) (cast' DynamicClassLoader (ß Compiler'LOADER.deref())))
                 (§ ass (:compiledClass this) (ß (:loader this).defineClass((:name this), (:bytecode this), (:src this))))
             )
             (:compiledClass this)
@@ -10688,7 +10688,7 @@
         (.checkCast ___gen, (:objtype this))
 
         (loop-when-recur [#_"ISeq" ___s (RT'keys (:closes this))] (some? ___s) [(next ___s)]
-            (let [#_"LocalBinding" ___lb (ß (LocalBinding) (first ___s))]
+            (let [#_"LocalBinding" ___lb (cast' LocalBinding (first ___s))]
                 (when (.contains ___letFnLocals, ___lb)
                     (let [#_"Class" ___primc (.getPrimitiveType ___lb)]
                         (.dup ___gen)
@@ -10716,16 +10716,16 @@
         ;; objx arg is enclosing objx, not this
         (if (.isDeftype this)
             (do
-                (ß ___gen.visitInsn(Opcodes/ACONST_NULL))
+                (.visitInsn ___gen, Opcodes/ACONST_NULL)
             )
             (do
                 (.newInstance ___gen, (:objtype this))
                 (.dup ___gen)
                 (when (.supportsMeta this)
-                    (ß ___gen.visitInsn(Opcodes/ACONST_NULL))
+                    (.visitInsn ___gen, Opcodes/ACONST_NULL)
                 )
                 (loop-when-recur [#_"ISeq" ___s (RT'seq (:closesExprs this))] (some? ___s) [(next ___s)]
-                    (let [#_"LocalBindingExpr" ___lbe (ß (LocalBindingExpr) (first ___s))]
+                    (let [#_"LocalBindingExpr" ___lbe (cast' LocalBindingExpr (first ___s))]
                         (let [#_"LocalBinding" ___lb (:b ___lbe)]
                             (if (ß (.getPrimitiveType ___lb) != nil)
                                 (do
@@ -10755,14 +10755,14 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"ObjExpr" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (ß ((:compiledClass this) != nil) ? (:compiledClass this) :or ((:tag this) != nil) ? HostExpr'tagToClass((:tag this)) :or (§ class IFn)))
+            (§ ass (:jc this) (cond (some? (:compiledClass this)) (:compiledClass this) (some? (:tag this)) (HostExpr'tagToClass (:tag this)) :else (§ class IFn)))
         )
         (:jc this)
     )
 
     #_method
     (§ defn #_"void" (§ method emitAssignLocal) [#_"ObjExpr" this, #_"GeneratorAdapter" ___gen, #_"LocalBinding" ___lb, #_"Expr" ___val]
-        (when (not (ß this.isMutable(___lb)))
+        (when (not (.isMutable this, ___lb))
             (throw (IllegalArgumentException. (str "Cannot assign to non-mutable: " (:name ___lb))))
         )
         (let [#_"Class" ___primc (.getPrimitiveType ___lb)]
@@ -10772,7 +10772,7 @@
                     (when (not (ß ___val instanceof MaybePrimitiveExpr && (cast' MaybePrimitiveExpr ___val).canEmitPrimitive()))
                         (throw (IllegalArgumentException. (str "Must assign primitive to primitive mutable: " (:name ___lb))))
                     )
-                    (let [#_"MaybePrimitiveExpr" ___me (ß (MaybePrimitiveExpr) ___val)]
+                    (let [#_"MaybePrimitiveExpr" ___me (cast' MaybePrimitiveExpr ___val)]
                         (ß ___me.emitUnboxed(:Context'EXPRESSION, this, ___gen))
                         (ß ___gen.putField((:objtype this), (:name ___lb), Type/getType(___primc)))
                     )
@@ -10801,7 +10801,7 @@
                             (ß ___gen.getField((:objtype this), (:name ___lb), Compiler'OBJECT_TYPE))
                             (when (ß (:onceOnly this) && ___clear && (:canBeCleared ___lb))
                                 (.loadThis ___gen)
-                                (ß ___gen.visitInsn(Opcodes/ACONST_NULL))
+                                (.visitInsn ___gen, Opcodes/ACONST_NULL)
                                 (ß ___gen.putField((:objtype this), (:name ___lb), Compiler'OBJECT_TYPE))
                             )
                         )
@@ -10809,7 +10809,7 @@
                 )
             )
             (do
-                (let [#_"int" ___argoff (ß (:canBeDirect this) ? 0 :or 1)]
+                (let [#_"int" ___argoff (if (:canBeDirect this) 0 1)]
                     (let [#_"Class" ___primc (.getPrimitiveType ___lb)]
                         (if (:isArg ___lb)
                             (do
@@ -10820,7 +10820,7 @@
                                     )
                                     (ß ___clear && (:canBeCleared ___lb))
                                     (do
-                                        (ß ___gen.visitInsn(Opcodes/ACONST_NULL))
+                                        (.visitInsn ___gen, Opcodes/ACONST_NULL)
                                         (ß ___gen.storeArg((:idx ___lb) - ___argoff))
                                     )
                                 )
@@ -10834,7 +10834,7 @@
                                     (do
                                         (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ILOAD), (:idx ___lb)))
                                         (when (ß ___clear && (:canBeCleared ___lb))
-                                            (ß ___gen.visitInsn(Opcodes/ACONST_NULL))
+                                            (.visitInsn ___gen, Opcodes/ACONST_NULL)
                                             (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ISTORE), (:idx ___lb)))
                                         )
                                     )
@@ -10850,7 +10850,7 @@
 
     #_method
     (§ defn- #_"void" (§ method emitUnboxedLocal) [#_"ObjExpr" this, #_"GeneratorAdapter" ___gen, #_"LocalBinding" ___lb]
-        (let [#_"int" ___argoff (ß (:canBeDirect this) ? 0 :or 1)]
+        (let [#_"int" ___argoff (if (:canBeDirect this) 0 1)]
             (let [#_"Class" ___primc (.getPrimitiveType ___lb)]
                 (cond (ß (:closes this).containsKey(___lb))
                     (do
@@ -10873,7 +10873,7 @@
 
     #_method
     (§ defn #_"void" (§ method emitVar) [#_"ObjExpr" this, #_"GeneratorAdapter" ___gen, #_"Var" ___var]
-        (let [#_"Integer" ___i (ß (Integer) (:vars this).valAt(___var))]
+        (let [#_"Integer" ___i (cast Integer (ß (:vars this).valAt(___var)))]
             (.emitConstant this, ___gen, ___i)
             nil
         )
@@ -10884,15 +10884,15 @@
 
     #_method
     (§ defn #_"void" (§ method emitVarValue) [#_"ObjExpr" this, #_"GeneratorAdapter" ___gen, #_"Var" ___v]
-        (let [#_"Integer" ___i (ß (Integer) (:vars this).valAt(___v))]
+        (let [#_"Integer" ___i (cast Integer (ß (:vars this).valAt(___v)))]
             (if (not (ß ___v.isDynamic()))
                 (do
                     (.emitConstant this, ___gen, ___i)
-                    (ß ___gen.invokeVirtual(Compiler'VAR_TYPE, ObjExpr'varGetRawMethod))
+                    (.invokeVirtual ___gen, Compiler'VAR_TYPE, ObjExpr'varGetRawMethod)
                 )
                 (do
                     (.emitConstant this, ___gen, ___i)
-                    (ß ___gen.invokeVirtual(Compiler'VAR_TYPE, varGetMethod))
+                    (.invokeVirtual ___gen, Compiler'VAR_TYPE, varGetMethod)
                 )
             )
             nil
@@ -10901,7 +10901,7 @@
 
     #_method
     (§ defn #_"void" (§ method emitKeyword) [#_"ObjExpr" this, #_"GeneratorAdapter" ___gen, #_"Keyword" ___k]
-        (let [#_"Integer" ___i (ß (Integer) (:keywords this).valAt(___k))]
+        (let [#_"Integer" ___i (cast Integer (ß (:keywords this).valAt(___k)))]
             (.emitConstant this, ___gen, ___i)
             nil
         )
@@ -10909,7 +10909,7 @@
 
     #_method
     (§ defn #_"void" (§ method emitConstant) [#_"ObjExpr" this, #_"GeneratorAdapter" ___gen, #_"int" ___id]
-        (§ ass (:usedConstants this) (ß (IPersistentSet) (:usedConstants this).cons(___id)))
+        (§ ass (:usedConstants this) (cast' IPersistentSet (ß (:usedConstants this).cons(___id))))
         (ß ___gen.getStatic((:objtype this), this.constantName(___id), this.constantType(___id)))
         nil
     )
@@ -10926,7 +10926,7 @@
 
     #_method
     (§ defn #_"String" (§ method siteNameStatic) [#_"ObjExpr" this, #_"int" ___n]
-        (str (ß this.siteName(___n)) "__")
+        (str (.siteName this, ___n) "__")
     )
 
     #_method
@@ -10951,7 +10951,7 @@
 
     #_method
     (§ defn #_"String" (§ method thunkNameStatic) [#_"ObjExpr" this, #_"int" ___n]
-        (str (ß this.thunkName(___n)) "__")
+        (str (.thunkName this, ___n) "__")
     )
 
     #_method
@@ -11045,11 +11045,11 @@
         (let [#_"Class" ___c nil]
             (cond (ß ___x instanceof Class)
                 (do
-                    (§ ass ___c (ß (Class) ___x))
+                    (§ ass ___c (cast Class ___x))
                 )
                 (ß ___x instanceof Symbol)
                 (do
-                    (§ ass ___c (ß primClass((cast' Symbol ___x))))
+                    (§ ass ___c (ß Compiler'primClass-1s((cast' Symbol ___x))))
                 )
             )
             (when (ß ___c == nil || (not (ß ___c.isPrimitive())))
@@ -11068,9 +11068,9 @@
     (defn #_"String" FnMethod'primInterface [#_"IPersistentVector" ___arglist]
         (let [#_"StringBuilder" ___sb (StringBuilder.)]
             (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___arglist)) [(inc ___i)]
-                (ß ___sb.append(classChar(tagOf(___arglist.nth(___i)))))
+                (ß ___sb.append(classChar(Compiler'tagOf(___arglist.nth(___i)))))
             )
-            (ß ___sb.append(classChar(tagOf(___arglist))))
+            (ß ___sb.append(classChar(Compiler'tagOf(___arglist))))
             (let [#_"String" ___ret (.toString ___sb)]
                 (let [#_"boolean" ___prim (ß ___ret.contains("L") || ___ret.contains("D"))]
                     (when (ß ___prim && (count ___arglist) > 4)
@@ -11087,14 +11087,14 @@
 
     (defn #_"FnMethod" FnMethod'parse [#_"ObjExpr" ___objx, #_"ISeq" ___form, #_"Object" ___rettag]
         ;; ([args] body...)
-        (let [#_"IPersistentVector" ___parms (ß (IPersistentVector) RT'first(___form))]
+        (let [#_"IPersistentVector" ___parms (cast' IPersistentVector (RT'first ___form))]
             (let [#_"ISeq" ___body (RT'next ___form)]
                 (try
                     (let [#_"FnMethod" ___method (ß FnMethod'new(___objx, (ObjMethod) Compiler'METHOD.deref()))]
-                        (§ ass (:line ___method) (ß Compiler'lineDeref()))
-                        (§ ass (:column ___method) (ß Compiler'columnDeref()))
+                        (§ ass (:line ___method) (Compiler'lineDeref))
+                        (§ ass (:column ___method) (Compiler'columnDeref))
                         ;; register as the current method and set up a new env frame
-                        (let [#_"PathNode" ___pnode (ß (PathNode) Compiler'CLEAR_PATH.get())]
+                        (let [#_"PathNode" ___pnode (cast' PathNode (ß Compiler'CLEAR_PATH.get()))]
                             (when (nil? ___pnode)
                                 (§ ass ___pnode (ß PathNode'new(:PathType'PATH, nil)))
                             )
@@ -11111,7 +11111,7 @@
                                 ])
                             )))
 
-                            (§ ass (:prim ___method) (ß primInterface(___parms)))
+                            (§ ass (:prim ___method) (primInterface ___parms))
                             (when (ß (:prim ___method) != nil)
                                 (§ ass (:prim ___method) (ß (:prim ___method).replace(\., \/)))
                             )
@@ -11129,7 +11129,7 @@
                                     )
                                 )
                             )
-                            (§ ass (:retClass ___method) (ß tagClass((tagOf(___parms) != nil) ? tagOf(___parms) :or ___rettag)))
+                            (§ ass (:retClass ___method) (Compiler'tagClass (or (Compiler'tagOf ___parms) ___rettag)))
                             (if (.isPrimitive (:retClass ___method))
                                 (do
                                     (when (not (ß (:retClass ___method) == (§ class double) || (:retClass ___method) == (§ class long)))
@@ -11146,7 +11146,7 @@
                                     (ß Compiler'registerLocal(Symbol'intern-1((:thisName ___objx)), nil, nil, false))
                                 )
                                 (do
-                                    (ß getAndIncLocalNum())
+                                    (Compiler'getAndIncLocalNum)
                                 )
                             )
                             (let [#_"PState" ___state (ß :PState'REQ)]
@@ -11157,11 +11157,11 @@
                                                 (when (not (ß ___parms.nth(___i) instanceof Symbol))
                                                     (throw (IllegalArgumentException. "fn params must be Symbols"))
                                                 )
-                                                (let [#_"Symbol" ___p (ß (Symbol) ___parms.nth(___i))]
+                                                (let [#_"Symbol" ___p (cast' Symbol (.nth ___parms, ___i))]
                                                     (when (ß (.getNamespace ___p) != nil)
                                                         (throw (Util'runtimeException-1 (str "Can't use qualified name as parameter: " ___p)))
                                                     )
-                                                    (if (ß ___p.equals(Compiler'_AMP_))
+                                                    (if (.equals ___p, Compiler'_AMP_)
                                                         (do
                                                             (if (ß ___state == :PState'REQ)
                                                                 (do
@@ -11173,12 +11173,12 @@
                                                             )
                                                         )
                                                         (do
-                                                            (let [#_"Class" ___pc (ß primClass(tagClass(tagOf(___p))))]
+                                                            (let [#_"Class" ___pc (ß Compiler'primClass-1c(Compiler'tagClass(Compiler'tagOf(___p))))]
                                                                 (when (ß (.isPrimitive ___pc) && (not (ß ___pc == (§ class double) || ___pc == (§ class long))))
                                                                     (throw (IllegalArgumentException. (str "Only long and double primitives are supported: " ___p)))
                                                                 )
 
-                                                                (when (ß ___state == :PState'REST && tagOf(___p) != nil)
+                                                                (when (ß ___state == :PState'REST && Compiler'tagOf(___p) != nil)
                                                                     (throw (Util'runtimeException-1 "& arg cannot have type hint"))
                                                                 )
                                                                 (when (ß ___state == :PState'REST && (:prim ___method) != nil)
@@ -11190,7 +11190,7 @@
                                                                 )
                                                                 (ß ___argtypes.add(Type/getType(___pc)))
                                                                 (.add ___argclasses, ___pc)
-                                                                (let [#_"LocalBinding" ___lb (ß (.isPrimitive ___pc) ? Compiler'registerLocal(___p, nil, MethodParamExpr'new(___pc), true) :or Compiler'registerLocal(___p, (___state == :PState'REST) ? Compiler'ISEQ :or tagOf(___p), nil, true))]
+                                                                (let [#_"LocalBinding" ___lb (if (.isPrimitive ___pc) (Compiler'registerLocal ___p, nil, (MethodParamExpr'new ___pc), true) (Compiler'registerLocal ___p, (if (= ___state :PState'REST) Compiler'ISEQ (Compiler'tagOf ___p)), nil, true))]
                                                                     (§ ass ___argLocals (.cons ___argLocals, ___lb))
                                                                     (§ switch ___state
                                                                         (§ case :PState'REQ)
@@ -11218,14 +11218,14 @@
                                             (when (ß (:reqParms ___method).count() > Compiler'MAX_POSITIONAL_ARITY)
                                                 (throw (Util'runtimeException-1 (str "Can't specify more than " Compiler'MAX_POSITIONAL_ARITY " params")))
                                             )
-                                            (ß Compiler'LOOP_LOCALS.set(___argLocals))
+                                            (.set Compiler'LOOP_LOCALS, ___argLocals)
                                             (§ ass (:argLocals ___method) ___argLocals)
                                             (§ ass (:argtypes ___method) (ß ___argtypes.toArray(.new Type[(.size ___argtypes)])))
                                             (§ ass (:argclasses ___method) (ß ___argclasses.toArray(.new Class[(.size ___argtypes)])))
                                             (when (ß (:prim ___method) != nil)
                                                 (loop-when-recur [#_"int" ___i 0] (ß ___i < (:argclasses ___method).length) [(inc ___i)]
                                                     (when (ß (:argclasses ___method)[___i] == (§ class long) || (:argclasses ___method)[___i] == (§ class double))
-                                                        (ß getAndIncLocalNum())
+                                                        (Compiler'getAndIncLocalNum)
                                                     )
                                                 )
                                             )
@@ -11283,7 +11283,7 @@
 
                             (let [#_"Label" ___end (.mark ___gen)]
                                 (loop-when-recur [#_"ISeq" ___lbs (.seq (:argLocals this))] (some? ___lbs) [(next ___lbs)]
-                                    (let [#_"LocalBinding" ___lb (ß (LocalBinding) (first ___lbs))]
+                                    (let [#_"LocalBinding" ___lb (cast' LocalBinding (first ___lbs))]
                                         (ß ___gen.visitLocalVariable((:name ___lb), (:argtypes this)[(:idx ___lb)].getDescriptor(), nil, ___loopLabel, ___end, (:idx ___lb)))
                                     )
                                 )
@@ -11305,7 +11305,7 @@
                                 (.loadArg ___gen, ___i)
                                 (ß HostExpr'emitUnboxArg(___fn, ___gen, (:argclasses this)[___i]))
                                 (when (not (ß (:argclasses this)[___i].isPrimitive()))
-                                    (ß ___gen.visitInsn(Opcodes/ACONST_NULL))
+                                    (.visitInsn ___gen, Opcodes/ACONST_NULL)
                                     (.storeArg ___gen, ___i)
                                 )
                             )
@@ -11330,7 +11330,7 @@
                                             (loop-when-recur [#_"int" ___i 0] (ß ___i < (:argtypes this).length) [(inc ___i)]
                                                 (.loadArg ___gen, ___i)
                                                 (when (not (ß (:argclasses this)[___i].isPrimitive()))
-                                                    (ß ___gen.visitInsn(Opcodes/ACONST_NULL))
+                                                    (.visitInsn ___gen, Opcodes/ACONST_NULL)
                                                     (.storeArg ___gen, ___i)
                                                 )
                                             )
@@ -11380,7 +11380,7 @@
                             (let [#_"Label" ___end (.mark ___gen)]
                                 (.visitLocalVariable ___gen, "this", "Ljava/lang/Object;", nil, ___loopLabel, ___end, 0)
                                 (loop-when-recur [#_"ISeq" ___lbs (.seq (:argLocals this))] (some? ___lbs) [(next ___lbs)]
-                                    (let [#_"LocalBinding" ___lb (ß (LocalBinding) (first ___lbs))]
+                                    (let [#_"LocalBinding" ___lb (cast' LocalBinding (first ___lbs))]
                                         (ß ___gen.visitLocalVariable((:name ___lb), (:argtypes this)[___lb.idx-1].getDescriptor(), nil, ___loopLabel, ___end, (:idx ___lb)))
                                     )
                                 )
@@ -11437,7 +11437,7 @@
                         (let [#_"Label" ___end (.mark ___gen)]
                             (.visitLocalVariable ___gen, "this", "Ljava/lang/Object;", nil, ___loopLabel, ___end, 0)
                             (loop-when-recur [#_"ISeq" ___lbs (.seq (:argLocals this))] (some? ___lbs) [(next ___lbs)]
-                                (let [#_"LocalBinding" ___lb (ß (LocalBinding) (first ___lbs))]
+                                (let [#_"LocalBinding" ___lb (cast' LocalBinding (first ___lbs))]
                                     (.visitLocalVariable ___gen, (:name ___lb), "Ljava/lang/Object;", nil, ___loopLabel, ___end, (:idx ___lb))
                                 )
                             )
@@ -11467,17 +11467,17 @@
 
     #_method
     (§ defn #_"boolean" (§ method isVariadic) [#_"FnMethod" this]
-        (ß ((:restParm this) != nil))
+        (some? (:restParm this))
     )
 
     #_method
     (§ defn #_"int" (§ method numParams) [#_"FnMethod" this]
-        (ß (:reqParms this).count() + ((.isVariadic this) ? 1 :or 0))
+        (+ (.count (:reqParms this)) (if (.isVariadic this) 1 0))
     )
 
     #_method
     (§ defn #_"String" (§ method getMethodName) [#_"FnMethod" this]
-        (ß (.isVariadic this) ? "doInvoke" :or "invoke")
+        (if (.isVariadic this) "doInvoke" "invoke")
     )
 
     #_method
@@ -11575,10 +11575,10 @@
     )
 
     (defn #_"void" ObjMethod'emitBody [#_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen, #_"Class" ___retClass, #_"Expr" ___body]
-        (let [#_"MaybePrimitiveExpr" ___be (ß (MaybePrimitiveExpr) ___body)]
+        (let [#_"MaybePrimitiveExpr" ___be (cast' MaybePrimitiveExpr ___body)]
             (if (ß Util'isPrimitive(___retClass) && (.canEmitPrimitive ___be))
                 (do
-                    (let [#_"Class" ___bc (ß maybePrimitiveType(___be))]
+                    (let [#_"Class" ___bc (Compiler'maybePrimitiveType ___be)]
                         (cond (ß ___bc == ___retClass)
                             (do
                                 (ß ___be.emitUnboxed(:Context'RETURN, ___objx, ___gen))
@@ -11656,7 +11656,7 @@
                         (let [#_"Label" ___end (.mark ___gen)]
                             (.visitLocalVariable ___gen, "this", "Ljava/lang/Object;", nil, ___loopLabel, ___end, 0)
                             (loop-when-recur [#_"ISeq" ___lbs (.seq (:argLocals this))] (some? ___lbs) [(next ___lbs)]
-                                (let [#_"LocalBinding" ___lb (ß (LocalBinding) (first ___lbs))]
+                                (let [#_"LocalBinding" ___lb (cast' LocalBinding (first ___lbs))]
                                     (.visitLocalVariable ___gen, (:name ___lb), "Ljava/lang/Object;", nil, ___loopLabel, ___end, (:idx ___lb))
                                 )
                             )
@@ -11682,18 +11682,18 @@
     #_method
     (§ defn #_"void" (§ method emitClearLocalsOld) [#_"ObjMethod" this, #_"GeneratorAdapter" ___gen]
         (loop-when-recur [#_"int" ___i 0] (ß ___i < (:argLocals this).count()) [(inc ___i)]
-            (let [#_"LocalBinding" ___lb (ß (LocalBinding) (:argLocals this).nth(___i))]
+            (let [#_"LocalBinding" ___lb (cast' LocalBinding (ß (:argLocals this).nth(___i)))]
                 (when (ß (not (ß (:localsUsedInCatchFinally this).contains((:idx ___lb)))) && (.getPrimitiveType ___lb) == nil)
-                    (ß ___gen.visitInsn(Opcodes/ACONST_NULL))
+                    (.visitInsn ___gen, Opcodes/ACONST_NULL)
                     (ß ___gen.storeArg((:idx ___lb) - 1))
                 )
             )
         )
         (loop-when-recur [#_"int" ___i (ß (.numParams this) + 1)] (ß ___i < (:maxLocal this) + 1) [(inc ___i)]
             (when (not (ß (:localsUsedInCatchFinally this).contains(___i)))
-                (let [#_"LocalBinding" ___b (ß (LocalBinding) RT'get-2((:indexlocals this), ___i))]
-                    (when (ß ___b == nil || maybePrimitiveType((:init ___b)) == nil)
-                        (ß ___gen.visitInsn(Opcodes/ACONST_NULL))
+                (let [#_"LocalBinding" ___b (cast' LocalBinding (ß RT'get-2((:indexlocals this), ___i)))]
+                    (when (ß ___b == nil || Compiler'maybePrimitiveType((:init ___b)) == nil)
+                        (.visitInsn ___gen, Opcodes/ACONST_NULL)
                         (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ISTORE), ___i))
                     )
                 )
@@ -11704,8 +11704,8 @@
 
     #_method
     (§ defn #_"void" (§ method emitClearThis) [#_"ObjMethod" this, #_"GeneratorAdapter" ___gen]
-        (ß ___gen.visitInsn(Opcodes/ACONST_NULL))
-        (ß ___gen.visitVarInsn(Opcodes/ASTORE, 0))
+        (.visitInsn ___gen, Opcodes/ACONST_NULL)
+        (.visitVarInsn ___gen, Opcodes/ASTORE, 0)
         nil
     )
 )
@@ -11732,7 +11732,7 @@
 
     (defn #_"LocalBinding" LocalBinding'new [#_"int" ___num, #_"Symbol" ___sym, #_"Symbol" ___tag, #_"Expr" ___init, #_"boolean" ___isArg, #_"PathNode" ___clearPathRoot]
         (let [this (LocalBinding'init)]
-            (when (ß maybePrimitiveType(___init) != nil && ___tag != nil)
+            (when (ß Compiler'maybePrimitiveType(___init) != nil && ___tag != nil)
                 (throw (UnsupportedOperationException. "Can't type hint a local with a primitive initializer"))
             )
             (§ ass (:idx this) ___num)
@@ -11741,7 +11741,7 @@
             (§ ass (:init this) ___init)
             (§ ass (:isArg this) ___isArg)
             (§ ass (:clearPathRoot this) ___clearPathRoot)
-            (§ ass (:name this) (ß munge((:name ___sym))))
+            (§ ass (:name this) (ß Compiler'munge((:name ___sym))))
             this
         )
     )
@@ -11764,14 +11764,14 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"LocalBinding" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (ß ((:tag this) != nil) ? HostExpr'tagToClass((:tag this)) :or (:init this).getJavaClass()))
+            (§ ass (:jc this) (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getJavaClass (:init this))))
         )
         (:jc this)
     )
 
     #_method
     (§ defn #_"Class" (§ method getPrimitiveType) [#_"LocalBinding" this]
-        (ß maybePrimitiveType((:init this)))
+        (ß Compiler'maybePrimitiveType((:init this)))
     )
 )
 
@@ -11797,16 +11797,16 @@
             (§ ass (:b this) ___b)
             (§ ass (:tag this) ___tag)
 
-            (§ ass (:clearPath this) (ß (PathNode)Compiler'CLEAR_PATH.get()))
-            (§ ass (:clearRoot this) (ß (PathNode)Compiler'CLEAR_ROOT.get()))
-            (let [#_"IPersistentCollection" ___sites (ß (IPersistentCollection) RT'get-2(Compiler'CLEAR_SITES.get(), ___b))]
+            (§ ass (:clearPath this) (cast' PathNode (ß Compiler'CLEAR_PATH.get())))
+            (§ ass (:clearRoot this) (cast' PathNode (ß Compiler'CLEAR_ROOT.get())))
+            (let [#_"IPersistentCollection" ___sites (cast' IPersistentCollection (ß RT'get-2(Compiler'CLEAR_SITES.get(), ___b)))]
                 (§ ass (:used ___b) true)
 
                 (when (ß (:idx ___b) > 0)
                     (when (some? ___sites)
                         (loop-when-recur [#_"ISeq" ___s (.seq ___sites)] (some? ___s) [(next ___s)]
-                            (let [#_"LocalBindingExpr" ___o (ß (LocalBindingExpr) (first ___s))]
-                                (let [#_"PathNode" ___common (ß commonPath((:clearPath this), (:clearPath ___o)))]
+                            (let [#_"LocalBindingExpr" ___o (cast' LocalBindingExpr (first ___s))]
+                                (let [#_"PathNode" ___common (ß Compiler'commonPath((:clearPath this), (:clearPath ___o)))]
                                     (when (ß ___common != nil && (:type ___common) == :PathType'PATH)
                                         (§ ass (:shouldClear ___o) false)
                                     )
@@ -11893,18 +11893,18 @@
 
     #_method
     (§ defn #_"Expr" (§ method parse) [#_"BodyParser" this, #_"Context" ___context, #_"Object" ___frms]
-        (let [#_"ISeq" ___forms (ß (ISeq) ___frms)]
+        (let [#_"ISeq" ___forms (cast' ISeq ___frms)]
             (when (ß Util'equals(RT'first(___forms), Compiler'DO))
                 (§ ass ___forms (RT'next ___forms))
             )
             (let [#_"PersistentVector" ___exprs PersistentVector'EMPTY]
                 (loop-when-recur [___forms ___forms] (some? ___forms) [(next ___forms)]
-                    (let [#_"Expr" ___e (ß (___context != :Context'EVAL && (___context == :Context'STATEMENT || (next ___forms) != nil)) ? analyze(:Context'STATEMENT, (first ___forms)) :or analyze(___context, (first ___forms)))]
+                    (let [#_"Expr" ___e (if (and (not= ___context :Context'EVAL) (or (= ___context :Context'STATEMENT) (some? (next ___forms)))) (Compiler'analyze-2 :Context'STATEMENT, (first ___forms)) (Compiler'analyze-2 ___context, (first ___forms)))]
                         (§ ass ___exprs (.cons ___exprs, ___e))
                     )
                 )
                 (when (ß (count ___exprs) == 0)
-                    (§ ass ___exprs (ß ___exprs.cons(Compiler'NIL_EXPR)))
+                    (§ ass ___exprs (.cons ___exprs, Compiler'NIL_EXPR))
                 )
                 (BodyExpr'new ___exprs)
             )
@@ -11935,7 +11935,7 @@
     (§ defn #_"Object" (§ method eval) [#_"BodyExpr" this]
         (let [#_"Object" ___ret nil]
             (doseq [#_"Object" ___o (:exprs this)]
-                (let [#_"Expr" ___e (ß (Expr) ___o)]
+                (let [#_"Expr" ___e (cast' Expr ___o)]
                     (§ ass ___ret (.eval ___e))
                 )
             )
@@ -11951,11 +11951,11 @@
     #_method
     (§ defn #_"void" (§ method emitUnboxed) [#_"BodyExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (loop-when-recur [#_"int" ___i 0] (ß ___i < (:exprs this).count() - 1) [(inc ___i)]
-            (let [#_"Expr" ___e (ß (Expr) (:exprs this).nth(___i))]
+            (let [#_"Expr" ___e (cast' Expr (ß (:exprs this).nth(___i)))]
                 (ß ___e.emit(:Context'STATEMENT, ___objx, ___gen))
             )
         )
-        (let [#_"MaybePrimitiveExpr" ___last (ß (MaybePrimitiveExpr) (:exprs this).nth((:exprs this).count() - 1))]
+        (let [#_"MaybePrimitiveExpr" ___last (cast' MaybePrimitiveExpr (ß (:exprs this).nth((:exprs this).count() - 1)))]
             (.emitUnboxed ___last, ___context, ___objx, ___gen)
             nil
         )
@@ -11964,11 +11964,11 @@
     #_method
     (§ defn #_"void" (§ method emit) [#_"BodyExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (loop-when-recur [#_"int" ___i 0] (ß ___i < (:exprs this).count() - 1) [(inc ___i)]
-            (let [#_"Expr" ___e (ß (Expr) (:exprs this).nth(___i))]
+            (let [#_"Expr" ___e (cast' Expr (ß (:exprs this).nth(___i)))]
                 (ß ___e.emit(:Context'STATEMENT, ___objx, ___gen))
             )
         )
-        (let [#_"Expr" ___last (ß (Expr) (:exprs this).nth((:exprs this).count() - 1))]
+        (let [#_"Expr" ___last (cast' Expr (ß (:exprs this).nth((:exprs this).count() - 1)))]
             (.emit ___last, ___context, ___objx, ___gen)
             nil
         )
@@ -11986,7 +11986,7 @@
 
     #_method
     (§ defn- #_"Expr" (§ method lastExpr) [#_"BodyExpr" this]
-        (ß (Expr) (:exprs this).nth((:exprs this).count() - 1))
+        (cast' Expr (ß (:exprs this).nth((:exprs this).count() - 1)))
     )
 )
 
@@ -12025,20 +12025,20 @@
 
     #_method
     (§ defn #_"Expr" (§ method parse) [#_"LetFnParser" this, #_"Context" ___context, #_"Object" ___frm]
-        (let [#_"ISeq" ___form (ß (ISeq) ___frm)]
+        (let [#_"ISeq" ___form (cast' ISeq ___frm)]
             ;; (letfns* [var (fn [args] body) ...] body...)
             (when (not (ß RT'second(___form) instanceof IPersistentVector))
                 (throw (IllegalArgumentException. "Bad binding form, expected vector"))
             )
 
-            (let [#_"IPersistentVector" ___bindings (ß (IPersistentVector) RT'second(___form))]
+            (let [#_"IPersistentVector" ___bindings (cast' IPersistentVector (RT'second ___form))]
                 (when (ß ((count ___bindings) % 2) != 0)
                     (throw (IllegalArgumentException. "Bad binding form, expected matched symbol expression pairs"))
                 )
 
                 (let [#_"ISeq" ___body (ß RT'next(RT'next(___form)))]
                     (when (ß ___context == :Context'EVAL)
-                        (§ return (ß analyze(___context, RT'list-1(RT'list-3(Compiler'FNONCE, PersistentVector'EMPTY, ___form)))))
+                        (§ return (ß Compiler'analyze-2(___context, RT'list-1(RT'list-3(Compiler'FNONCE, PersistentVector'EMPTY, ___form)))))
                     )
 
                     (let [#_"IPersistentMap" ___dynamicBindings
@@ -12057,11 +12057,11 @@
                                     (when (not (ß ___bindings.nth(___i) instanceof Symbol))
                                         (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " (.nth ___bindings, ___i))))
                                     )
-                                    (let [#_"Symbol" ___sym (ß (Symbol) ___bindings.nth(___i))]
+                                    (let [#_"Symbol" ___sym (cast' Symbol (.nth ___bindings, ___i))]
                                         (when (ß (.getNamespace ___sym) != nil)
                                             (throw (Util'runtimeException-1 (str "Can't let qualified name: " ___sym)))
                                         )
-                                        (let [#_"LocalBinding" ___lb (ß Compiler'registerLocal(___sym, tagOf(___sym), nil, false))]
+                                        (let [#_"LocalBinding" ___lb (ß Compiler'registerLocal(___sym, Compiler'tagOf(___sym), nil, false))]
                                             (§ ass (:canBeCleared ___lb) false)
                                             (§ ass ___lbs (.cons ___lbs, ___lb))
                                         )
@@ -12069,9 +12069,9 @@
                                 )
                                 (let [#_"PersistentVector" ___bindingInits PersistentVector'EMPTY]
                                     (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___bindings)) [(+ ___i 2)]
-                                        (let [#_"Symbol" ___sym (ß (Symbol) ___bindings.nth(___i))]
-                                            (let [#_"Expr" ___init (ß analyze(:Context'EXPRESSION, ___bindings.nth(___i + 1), (:name ___sym)))]
-                                                (let [#_"LocalBinding" ___lb (ß (LocalBinding) ___lbs.nth(___i / 2))]
+                                        (let [#_"Symbol" ___sym (cast' Symbol (.nth ___bindings, ___i))]
+                                            (let [#_"Expr" ___init (ß Compiler'analyze-3(:Context'EXPRESSION, ___bindings.nth(___i + 1), (:name ___sym)))]
+                                                (let [#_"LocalBinding" ___lb (cast' LocalBinding (ß ___lbs.nth(___i / 2)))]
                                                     (§ ass (:init ___lb) ___init)
                                                     (let [#_"BindingInit" ___bi (BindingInit'new ___lb, ___init)]
                                                         (§ ass ___bindingInits (.cons ___bindingInits, ___bi))
@@ -12118,24 +12118,24 @@
     #_method
     (§ defn #_"void" (§ method emit) [#_"LetFnExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (loop-when-recur [#_"int" ___i 0] (ß ___i < (:bindingInits this).count()) [(inc ___i)]
-            (let [#_"BindingInit" ___bi (ß (BindingInit) (:bindingInits this).nth(___i))]
-                (ß ___gen.visitInsn(Opcodes/ACONST_NULL))
+            (let [#_"BindingInit" ___bi (cast' BindingInit (ß (:bindingInits this).nth(___i)))]
+                (.visitInsn ___gen, Opcodes/ACONST_NULL)
                 (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ISTORE), (:idx (:binding ___bi))))
             )
         )
 
         (let [#_"IPersistentSet" ___lbset PersistentHashSet'EMPTY]
             (loop-when-recur [#_"int" ___i 0] (ß ___i < (:bindingInits this).count()) [(inc ___i)]
-                (let [#_"BindingInit" ___bi (ß (BindingInit) (:bindingInits this).nth(___i))]
-                    (§ ass ___lbset (ß (IPersistentSet) ___lbset.cons((:binding ___bi))))
+                (let [#_"BindingInit" ___bi (cast' BindingInit (ß (:bindingInits this).nth(___i)))]
+                    (§ ass ___lbset (cast' IPersistentSet (ß ___lbset.cons((:binding ___bi)))))
                     (ß (:init ___bi).emit(:Context'EXPRESSION, ___objx, ___gen))
                     (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ISTORE), (:idx (:binding ___bi))))
                 )
             )
 
             (loop-when-recur [#_"int" ___i 0] (ß ___i < (:bindingInits this).count()) [(inc ___i)]
-                (let [#_"BindingInit" ___bi (ß (BindingInit) (:bindingInits this).nth(___i))]
-                    (let [#_"ObjExpr" ___fe (ß (ObjExpr) (:init ___bi))]
+                (let [#_"BindingInit" ___bi (cast' BindingInit (ß (:bindingInits this).nth(___i)))]
+                    (let [#_"ObjExpr" ___fe (cast' ObjExpr (:init ___bi))]
                         (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ILOAD), (:idx (:binding ___bi))))
                         (.emitLetFnInits ___fe, ___gen, ___objx, ___lbset)
                     )
@@ -12147,12 +12147,12 @@
 
                 (let [#_"Label" ___end (.mark ___gen)]
                     (loop-when-recur [#_"ISeq" ___bis (.seq (:bindingInits this))] (some? ___bis) [(next ___bis)]
-                        (let [#_"BindingInit" ___bi (ß (BindingInit) (first ___bis))]
+                        (let [#_"BindingInit" ___bi (cast' BindingInit (first ___bis))]
                             (let [#_"String" ___lname (:name (:binding ___bi))]
                                 (when (.endsWith ___lname, "__auto__")
                                     (§ ass ___lname (ß ___lname + RT'nextID()))
                                 )
-                                (let [#_"Class" ___primc (ß maybePrimitiveType((:init ___bi)))]
+                                (let [#_"Class" ___primc (ß Compiler'maybePrimitiveType((:init ___bi)))]
                                     (if (some? ___primc)
                                         (do
                                             (ß ___gen.visitLocalVariable(___lname, Type/getDescriptor(___primc), nil, ___loopLabel, ___end, (:idx (:binding ___bi))))
@@ -12190,29 +12190,29 @@
 
     #_method
     (§ defn #_"Expr" (§ method parse) [#_"LetParser" this, #_"Context" ___context, #_"Object" ___frm]
-        (let [#_"ISeq" ___form (ß (ISeq) ___frm)]
+        (let [#_"ISeq" ___form (cast' ISeq ___frm)]
             ;; (let [var val var2 val2 ...] body...)
             (let [#_"boolean" ___isLoop (ß RT'first(___form).equals(Compiler'LOOP))]
                 (when (not (ß RT'second(___form) instanceof IPersistentVector))
                     (throw (IllegalArgumentException. "Bad binding form, expected vector"))
                 )
 
-                (let [#_"IPersistentVector" ___bindings (ß (IPersistentVector) RT'second(___form))]
+                (let [#_"IPersistentVector" ___bindings (cast' IPersistentVector (RT'second ___form))]
                     (when (ß ((count ___bindings) % 2) != 0)
                         (throw (IllegalArgumentException. "Bad binding form, expected matched symbol expression pairs"))
                     )
 
                     (let [#_"ISeq" ___body (ß RT'next(RT'next(___form)))]
                         (when (ß ___context == :Context'EVAL || (___context == :Context'EXPRESSION && ___isLoop))
-                            (§ return (ß analyze(___context, RT'list-1(RT'list-3(Compiler'FNONCE, PersistentVector'EMPTY, ___form)))))
+                            (§ return (ß Compiler'analyze-2(___context, RT'list-1(RT'list-3(Compiler'FNONCE, PersistentVector'EMPTY, ___form)))))
                         )
 
-                        (let [#_"ObjMethod" ___method (ß (ObjMethod) Compiler'METHOD.deref())]
+                        (let [#_"ObjMethod" ___method (cast' ObjMethod (ß Compiler'METHOD.deref()))]
                             (let [#_"IPersistentMap" ___backupMethodLocals (:locals ___method)]
                                 (let [#_"IPersistentMap" ___backupMethodIndexLocals (:indexlocals ___method)]
                                     (let [#_"IPersistentVector" ___recurMismatches PersistentVector'EMPTY]
                                         (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___bindings) / 2) [(inc ___i)]
-                                            (§ ass ___recurMismatches (ß ___recurMismatches.cons(RT'F)))
+                                            (§ ass ___recurMismatches (.cons ___recurMismatches, RT'F))
                                         )
 
                                         ;; may repeat once for each binding with a mismatch, return breaks
@@ -12231,7 +12231,7 @@
                                                     (let [#_"PathNode" ___clearroot (ß PathNode'new(:PathType'PATH, ___looproot))]
                                                         (let [#_"PathNode" ___clearpath (ß PathNode'new(:PathType'PATH, ___looproot))]
                                                             (when ___isLoop
-                                                                (§ ass ___dynamicBindings (ß ___dynamicBindings.assoc(Compiler'LOOP_LOCALS, nil)))
+                                                                (§ ass ___dynamicBindings (.assoc ___dynamicBindings, Compiler'LOOP_LOCALS, nil))
                                                             )
 
                                                             (try
@@ -12243,11 +12243,11 @@
                                                                             (when (not (ß ___bindings.nth(___i) instanceof Symbol))
                                                                                 (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " (.nth ___bindings, ___i))))
                                                                             )
-                                                                            (let [#_"Symbol" ___sym (ß (Symbol) ___bindings.nth(___i))]
+                                                                            (let [#_"Symbol" ___sym (cast' Symbol (.nth ___bindings, ___i))]
                                                                                 (when (ß (.getNamespace ___sym) != nil)
                                                                                     (throw (Util'runtimeException-1 (str "Can't let qualified name: " ___sym)))
                                                                                 )
-                                                                                (let [#_"Expr" ___init (ß analyze(:Context'EXPRESSION, ___bindings.nth(___i + 1), (:name ___sym)))]
+                                                                                (let [#_"Expr" ___init (ß Compiler'analyze-3(:Context'EXPRESSION, ___bindings.nth(___i + 1), (:name ___sym)))]
                                                                                     (when ___isLoop
                                                                                         (cond (ß ___recurMismatches != nil && RT'booleanCast-1o(___recurMismatches.nth(___i / 2)))
                                                                                             (do
@@ -12256,11 +12256,11 @@
                                                                                                     (.println (RT'errPrintWriter), (str "Auto-boxing loop arg: " ___sym))
                                                                                                 )
                                                                                             )
-                                                                                            (ß maybePrimitiveType(___init) == (§ class int))
+                                                                                            (ß Compiler'maybePrimitiveType(___init) == (§ class int))
                                                                                             (do
                                                                                                 (§ ass ___init (ß StaticMethodExpr'new("", 0, 0, nil, (§ class RT), "longCast", RT'vector(___init), false)))
                                                                                             )
-                                                                                            (ß maybePrimitiveType(___init) == (§ class float))
+                                                                                            (ß Compiler'maybePrimitiveType(___init) == (§ class float))
                                                                                             (do
                                                                                                 (§ ass ___init (ß StaticMethodExpr'new("", 0, 0, nil, (§ class RT), "doubleCast", RT'vector(___init), false)))
                                                                                             )
@@ -12277,7 +12277,7 @@
                                                                                                 ])
                                                                                             )))
                                                                                         )
-                                                                                        (let [#_"LocalBinding" ___lb (ß Compiler'registerLocal(___sym, tagOf(___sym), ___init, false))]
+                                                                                        (let [#_"LocalBinding" ___lb (ß Compiler'registerLocal(___sym, Compiler'tagOf(___sym), ___init, false))]
                                                                                             (let [#_"BindingInit" ___bi (BindingInit'new ___lb, ___init)]
                                                                                                 (§ ass ___bindingInits (.cons ___bindingInits, ___bi))
                                                                                                 (when ___isLoop
@@ -12295,13 +12295,13 @@
                                                                             )
                                                                         )
                                                                         (when ___isLoop
-                                                                            (ß Compiler'LOOP_LOCALS.set(___loopLocals))
+                                                                            (.set Compiler'LOOP_LOCALS, ___loopLocals)
                                                                         )
                                                                         (§ let [#_"Expr" ___bodyExpr]
                                                                             (let [#_"boolean" ___moreMismatches false]
                                                                                 (try
                                                                                     (when ___isLoop
-                                                                                        (let [#_"Object" ___methodReturnContext (ß (___context == :Context'RETURN) ? Compiler'METHOD_RETURN_CONTEXT.deref() :or nil)]
+                                                                                        (let [#_"Object" ___methodReturnContext (when (= ___context :Context'RETURN) (.deref Compiler'METHOD_RETURN_CONTEXT))]
                                                                                             (ß Var'pushThreadBindings(RT'map(
                                                                                                 (object-array [
                                                                                                     Compiler'CLEAR_PATH            ___clearpath
@@ -12312,14 +12312,14 @@
                                                                                             )))
                                                                                         )
                                                                                     )
-                                                                                    (§ ass ___bodyExpr (ß (BodyParser'new()).parse(___isLoop ? :Context'RETURN :or ___context, ___body)))
+                                                                                    (§ ass ___bodyExpr (.parse (BodyParser'new), (if ___isLoop :Context'RETURN ___context), ___body))
                                                                                     (finally
                                                                                         (when ___isLoop
                                                                                             (Var'popThreadBindings)
                                                                                             (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___loopLocals)) [(inc ___i)]
-                                                                                                (let [#_"LocalBinding" ___lb (ß (LocalBinding) ___loopLocals.nth(___i))]
+                                                                                                (let [#_"LocalBinding" ___lb (cast' LocalBinding (.nth ___loopLocals, ___i))]
                                                                                                     (when (:recurMistmatch ___lb)
-                                                                                                        (§ ass ___recurMismatches (ß (IPersistentVector)___recurMismatches.assoc(___i, RT'T)))
+                                                                                                        (§ ass ___recurMismatches (cast' IPersistentVector (.assoc ___recurMismatches, ___i, RT'T)))
                                                                                                         (§ ass ___moreMismatches true)
                                                                                                     )
                                                                                                 )
@@ -12393,8 +12393,8 @@
     (§ defn #_"void" (§ method doEmit) [#_"LetExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen, #_"boolean" ___emitUnboxed]
         (let [#_"HashMap<BindingInit, Label>" ___bindingLabels (HashMap.)]
             (loop-when-recur [#_"int" ___i 0] (ß ___i < (:bindingInits this).count()) [(inc ___i)]
-                (let [#_"BindingInit" ___bi (ß (BindingInit) (:bindingInits this).nth(___i))]
-                    (let [#_"Class" ___primc (ß maybePrimitiveType((:init ___bi)))]
+                (let [#_"BindingInit" ___bi (cast' BindingInit (ß (:bindingInits this).nth(___i)))]
+                    (let [#_"Class" ___primc (ß Compiler'maybePrimitiveType((:init ___bi)))]
                         (if (some? ___primc)
                             (do
                                 (ß ((MaybePrimitiveExpr) (:init ___bi)).emitUnboxed(:Context'EXPRESSION, ___objx, ___gen))
@@ -12447,12 +12447,12 @@
                 )
                 (let [#_"Label" ___end (.mark ___gen)]
                     (loop-when-recur [#_"ISeq" ___bis (.seq (:bindingInits this))] (some? ___bis) [(next ___bis)]
-                        (let [#_"BindingInit" ___bi (ß (BindingInit) (first ___bis))]
+                        (let [#_"BindingInit" ___bi (cast' BindingInit (first ___bis))]
                             (let [#_"String" ___lname (:name (:binding ___bi))]
                                 (when (.endsWith ___lname, "__auto__")
                                     (§ ass ___lname (ß ___lname + RT'nextID()))
                                 )
-                                (let [#_"Class" ___primc (ß maybePrimitiveType((:init ___bi)))]
+                                (let [#_"Class" ___primc (ß Compiler'maybePrimitiveType((:init ___bi)))]
                                     (if (some? ___primc)
                                         (do
                                             (ß ___gen.visitLocalVariable(___lname, Type/getDescriptor(___primc), nil, ___bindingLabels.get(___bi), ___end, (:idx (:binding ___bi))))
@@ -12495,11 +12495,11 @@
 
     #_method
     (§ defn #_"Expr" (§ method parse) [#_"RecurParser" this, #_"Context" ___context, #_"Object" ___frm]
-        (let [#_"int" ___line (ß Compiler'lineDeref())]
-            (let [#_"int" ___column (ß Compiler'columnDeref())]
-                (let [#_"String" ___source (ß (String) Compiler'SOURCE.deref())]
-                    (let [#_"ISeq" ___form (ß (ISeq) ___frm)]
-                        (let [#_"IPersistentVector" ___loopLocals (ß (IPersistentVector) Compiler'LOOP_LOCALS.deref())]
+        (let [#_"int" ___line (Compiler'lineDeref)]
+            (let [#_"int" ___column (Compiler'columnDeref)]
+                (let [#_"String" ___source (cast String (ß Compiler'SOURCE.deref()))]
+                    (let [#_"ISeq" ___form (cast' ISeq ___frm)]
+                        (let [#_"IPersistentVector" ___loopLocals (cast' IPersistentVector (ß Compiler'LOOP_LOCALS.deref()))]
                             (when (ß ___context != :Context'RETURN || ___loopLocals == nil)
                                 (throw (UnsupportedOperationException. "Can only recur from tail position"))
                             )
@@ -12508,17 +12508,17 @@
                             )
                             (let [#_"PersistentVector" ___args PersistentVector'EMPTY]
                                 (loop-when-recur [#_"ISeq" ___s (ß RT'seq((next ___form)))] (some? ___s) [(next ___s)]
-                                    (§ ass ___args (ß ___args.cons(analyze(:Context'EXPRESSION, (first ___s)))))
+                                    (§ ass ___args (ß ___args.cons(Compiler'analyze-2(:Context'EXPRESSION, (first ___s)))))
                                 )
                                 (when (ß (count ___args) != (count ___loopLocals))
                                     (throw (IllegalArgumentException. (String/format "Mismatched argument count to recur, expected: %d args, got: %d", (object-array [ (count ___loopLocals), (count ___args) ]))))
                                 )
                                 (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___loopLocals)) [(inc ___i)]
-                                    (let [#_"LocalBinding" ___lb (ß (LocalBinding) ___loopLocals.nth(___i))]
+                                    (let [#_"LocalBinding" ___lb (cast' LocalBinding (.nth ___loopLocals, ___i))]
                                         (let [#_"Class" ___primc (.getPrimitiveType ___lb)]
                                             (when (some? ___primc)
                                                 (let [#_"boolean" ___mismatch false]
-                                                    (let [#_"Class" ___pc (ß maybePrimitiveType((Expr) ___args.nth(___i)))]
+                                                    (let [#_"Class" ___pc (ß Compiler'maybePrimitiveType((Expr) ___args.nth(___i)))]
                                                         (cond (ß ___primc == (§ class long))
                                                             (do
                                                                 (when (not (ß ___pc == (§ class long) || ___pc == (§ class int) || ___pc == (§ class short) || ___pc == (§ class char) || ___pc == (§ class byte)))
@@ -12584,17 +12584,17 @@
 
     #_method
     (§ defn #_"void" (§ method emit) [#_"RecurExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
-        (let [#_"Label" ___loopLabel (ß (Label) Compiler'LOOP_LABEL.deref())]
+        (let [#_"Label" ___loopLabel (cast Label (ß Compiler'LOOP_LABEL.deref()))]
             (when (nil? ___loopLabel)
                 (throw (IllegalStateException.))
             )
             (loop-when-recur [#_"int" ___i 0] (ß ___i < (:loopLocals this).count()) [(inc ___i)]
-                (let [#_"LocalBinding" ___lb (ß (LocalBinding) (:loopLocals this).nth(___i))]
-                    (let [#_"Expr" ___arg (ß (Expr) (:args this).nth(___i))]
+                (let [#_"LocalBinding" ___lb (cast' LocalBinding (ß (:loopLocals this).nth(___i)))]
+                    (let [#_"Expr" ___arg (cast' Expr (ß (:args this).nth(___i)))]
                         (if (ß (.getPrimitiveType ___lb) != nil)
                             (do
                                 (let [#_"Class" ___primc (.getPrimitiveType ___lb)]
-                                    (let [#_"Class" ___pc (ß maybePrimitiveType(___arg))]
+                                    (let [#_"Class" ___pc (Compiler'maybePrimitiveType ___arg)]
                                         (cond (ß ___pc == ___primc)
                                             (do
                                                 (ß (cast' MaybePrimitiveExpr ___arg).emitUnboxed(:Context'EXPRESSION, ___objx, ___gen))
@@ -12636,7 +12636,7 @@
             )
 
             (loop-when-recur [#_"int" ___i (ß (:loopLocals this).count() - 1)] (ß ___i >= 0) [(dec ___i)]
-                (let [#_"LocalBinding" ___lb (ß (LocalBinding) (:loopLocals this).nth(___i))]
+                (let [#_"LocalBinding" ___lb (cast' LocalBinding (ß (:loopLocals this).nth(___i)))]
                     (let [#_"Class" ___primc (.getPrimitiveType ___lb)]
                         (if (:isArg ___lb)
                             (do
@@ -12693,7 +12693,7 @@
     )
 
     (defn #_"CompilerException" CompilerException'new [#_"String" ___source, #_"int" ___line, #_"int" ___column, #_"Throwable" ___cause]
-        (let [this (merge (§ foreign RuntimeException'new (ß errorMsg(___source, ___line, ___column, (.toString ___cause))), ___cause) (CompilerException'init))]
+        (let [this (merge (§ foreign RuntimeException'new (ß Compiler'errorMsg(___source, ___line, ___column, (.toString ___cause))), ___cause) (CompilerException'init))]
             (§ ass (:source this) ___source)
             (§ ass (:line this) ___line)
             this
@@ -12702,7 +12702,7 @@
 
     #_method
     (§ defn #_"String" (§ method toString) [#_"CompilerException" this]
-        (ß getMessage())
+        (.getMessage this)
     )
 )
 
@@ -12714,14 +12714,14 @@
 
     #_method
     (§ defn #_"Expr" (§ method parse) [#_"DeftypeParser" this, #_"Context" ___context, #_"Object" ___frm]
-        (let [#_"ISeq" ___rform (ß (ISeq) ___frm)]
+        (let [#_"ISeq" ___rform (cast' ISeq ___frm)]
             ;; (deftype* tagname classname [fields] :implements [interfaces] :tag tagname methods*)
             (§ ass ___rform (RT'next ___rform))
             (let [#_"String" ___tagname (ß ((Symbol) (first ___rform)).getName())]
                 (§ ass ___rform (next ___rform))
-                (let [#_"Symbol" ___classname (ß (Symbol) (first ___rform))]
+                (let [#_"Symbol" ___classname (cast' Symbol (first ___rform))]
                     (§ ass ___rform (next ___rform))
-                    (let [#_"IPersistentVector" ___fields (ß (IPersistentVector) (first ___rform))]
+                    (let [#_"IPersistentVector" ___fields (cast' IPersistentVector (first ___rform))]
                         (§ ass ___rform (next ___rform))
                         (let [#_"IPersistentMap" ___opts PersistentHashMap'EMPTY]
                             (while (ß ___rform != nil && (first ___rform) instanceof Keyword)
@@ -12729,7 +12729,7 @@
                                 (§ ass ___rform (next (next ___rform)))
                             )
 
-                            (let [#_"ObjExpr" ___ret (ß build((IPersistentVector)RT'get-3(___opts, implementsKey, PersistentVector'EMPTY), ___fields, nil, ___tagname, ___classname, (Symbol) RT'get-2(___opts, RT'TAG_KEY), ___rform, ___frm, ___opts))]
+                            (let [#_"ObjExpr" ___ret (ß build((IPersistentVector)RT'get-3(___opts, Compiler'implementsKey, PersistentVector'EMPTY), ___fields, nil, ___tagname, ___classname, (Symbol) RT'get-2(___opts, RT'TAG_KEY), ___rform, ___frm, ___opts))]
                                 ___ret
                             )
                         )
@@ -12749,9 +12749,9 @@
     #_method
     (§ defn #_"Expr" (§ method parse) [#_"ReifyParser" this, #_"Context" ___context, #_"Object" ___frm]
         ;; (reify this-name? [interfaces] (method-name [args] body)*)
-        (let [#_"ISeq" ___form (ß (ISeq) ___frm)]
-            (let [#_"ObjMethod" ___enclosingMethod (ß (ObjMethod) Compiler'METHOD.deref())]
-                (let [#_"String" ___basename (str (if (ß ___enclosingMethod != nil) (ß trimGenID((:name (:objx ___enclosingMethod)))) (ß munge((:name (:name (.currentNS this)))))) "$")]
+        (let [#_"ISeq" ___form (cast' ISeq ___frm)]
+            (let [#_"ObjMethod" ___enclosingMethod (cast' ObjMethod (ß Compiler'METHOD.deref()))]
+                (let [#_"String" ___basename (str (if (ß ___enclosingMethod != nil) (ß trimGenID((:name (:objx ___enclosingMethod)))) (ß Compiler'munge((:name (:name (.currentNS this)))))) "$")]
                     (let [#_"String" ___simpleName (str "reify__" (RT'nextID))]
                         (let [#_"String" ___classname (+ ___basename ___simpleName)]
                             (let [#_"ISeq" ___rform (RT'next ___form)]
@@ -12809,8 +12809,8 @@
                 (let [#_"IPersistentMap" ___fmap PersistentHashMap'EMPTY]
                     (let [#_"Object[]" ___closesvec (make-array Object (ß 2 * (count ___fieldSyms)))]
                         (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___fieldSyms)) [(inc ___i)]
-                            (let [#_"Symbol" ___sym (ß (Symbol) ___fieldSyms.nth(___i))]
-                                (let [#_"LocalBinding" ___lb (ß LocalBinding'new(-1, ___sym, nil, MethodParamExpr'new(tagClass(tagOf(___sym))), false, nil))]
+                            (let [#_"Symbol" ___sym (cast' Symbol (.nth ___fieldSyms, ___i))]
+                                (let [#_"LocalBinding" ___lb (ß LocalBinding'new(-1, ___sym, nil, MethodParamExpr'new(Compiler'tagClass(Compiler'tagOf(___sym))), false, nil))]
                                     (§ ass ___fmap (.assoc ___fmap, ___sym, ___lb))
                                     (§ ass (ß ___closesvec[___i * 2]) ___lb)
                                     (§ ass (ß ___closesvec[___i * 2 + 1]) ___lb)
@@ -12831,7 +12831,7 @@
 
             (let [#_"PersistentVector" ___interfaces PersistentVector'EMPTY]
                 (loop-when-recur [#_"ISeq" ___s (RT'seq ___interfaceSyms)] (some? ___s) [(next ___s)]
-                    (let [#_"Class" ___c (ß (Class) resolve((Symbol) (first ___s)))]
+                    (let [#_"Class" ___c (cast Class (ß resolve((Symbol) (first ___s))))]
                         (when (not (ß ___c.isInterface()))
                             (throw (IllegalArgumentException. (str "only interfaces are supported, had: " (.getName ___c))))
                         )
@@ -12845,7 +12845,7 @@
                                 (§ ass (:mmap ___ret) ___overrideables)
                                 (§ ass (:covariants ___ret) ___covariants)
 
-                                (let [#_"String[]" ___inames (ß interfaceNames(___interfaces))]
+                                (let [#_"String[]" ___inames (NewInstanceExpr'interfaceNames ___interfaces)]
                                     (let [#_"Class" ___stub (ß compileStub(slashname(___superClass), ___ret, ___inames, ___frm))]
                                         (let [#_"Symbol" ___thistag (ß Symbol'intern-2(nil, (.getName ___stub)))]
                                             (try
@@ -12857,7 +12857,7 @@
                                                         Compiler'VARS               PersistentHashMap'EMPTY
                                                         Compiler'KEYWORD_CALLSITES  PersistentVector'EMPTY
                                                         Compiler'PROTOCOL_CALLSITES PersistentVector'EMPTY
-                                                        Compiler'VAR_CALLSITES      (ß emptyVarCallSites())
+                                                        Compiler'VAR_CALLSITES      (Compiler'emptyVarCallSites)
                                                         Compiler'NO_RECUR           nil
                                                     ])
                                                 )))
@@ -12875,8 +12875,8 @@
                                                 )
 
                                                 ;; now (methodname [args] body)*
-                                                (§ ass (:line ___ret) (ß Compiler'lineDeref()))
-                                                (§ ass (:column ___ret) (ß Compiler'columnDeref()))
+                                                (§ ass (:line ___ret) (Compiler'lineDeref))
+                                                (§ ass (:column ___ret) (Compiler'columnDeref))
                                                 (let [#_"IPersistentCollection" ___methods nil]
                                                     (loop-when-recur [#_"ISeq" ___s ___methodForms] (some? ___s) [(RT'next ___s)]
                                                         (let [#_"NewInstanceMethod" ___m (ß NewInstanceMethod'parse(___ret, (ISeq) RT'first(___s), ___thistag, ___overrideables))]
@@ -12885,13 +12885,13 @@
                                                     )
 
                                                     (§ ass (:methods ___ret) ___methods)
-                                                    (§ ass (:keywords ___ret) (ß (IPersistentMap) Compiler'KEYWORDS.deref()))
-                                                    (§ ass (:vars ___ret) (ß (IPersistentMap) Compiler'VARS.deref()))
-                                                    (§ ass (:constants ___ret) (ß (PersistentVector) Compiler'CONSTANTS.deref()))
+                                                    (§ ass (:keywords ___ret) (cast' IPersistentMap (ß Compiler'KEYWORDS.deref())))
+                                                    (§ ass (:vars ___ret) (cast' IPersistentMap (ß Compiler'VARS.deref())))
+                                                    (§ ass (:constants ___ret) (cast' PersistentVector (ß Compiler'CONSTANTS.deref())))
                                                     (§ ass (:constantsID ___ret) (RT'nextID))
-                                                    (§ ass (:keywordCallsites ___ret) (ß (IPersistentVector) Compiler'KEYWORD_CALLSITES.deref()))
-                                                    (§ ass (:protocolCallsites ___ret) (ß (IPersistentVector) Compiler'PROTOCOL_CALLSITES.deref()))
-                                                    (§ ass (:varCallsites ___ret) (ß (IPersistentSet) Compiler'VAR_CALLSITES.deref()))
+                                                    (§ ass (:keywordCallsites ___ret) (cast' IPersistentVector (ß Compiler'KEYWORD_CALLSITES.deref())))
+                                                    (§ ass (:protocolCallsites ___ret) (cast' IPersistentVector (ß Compiler'PROTOCOL_CALLSITES.deref())))
+                                                    (§ ass (:varCallsites ___ret) (cast' IPersistentSet (ß Compiler'VAR_CALLSITES.deref())))
                                                 )
                                                 (finally
                                                     (when (.isDeftype ___ret)
@@ -12934,8 +12934,8 @@
 
                 ;; instance fields for closed-overs
                 (loop-when-recur [#_"ISeq" ___s (ß RT'keys((:closes ___ret)))] (some? ___s) [(next ___s)]
-                    (let [#_"LocalBinding" ___lb (ß (LocalBinding) (first ___s))]
-                        (let [#_"int" ___access (+ Opcodes/ACC_PUBLIC (if (ß ___ret.isVolatile(___lb)) Opcodes/ACC_VOLATILE (if (ß ___ret.isMutable(___lb)) 0 Opcodes/ACC_FINAL)))]
+                    (let [#_"LocalBinding" ___lb (cast' LocalBinding (first ___s))]
+                        (let [#_"int" ___access (+ Opcodes/ACC_PUBLIC (if (.isVolatile ___ret, ___lb) Opcodes/ACC_VOLATILE (if (.isMutable ___ret, ___lb) 0 Opcodes/ACC_FINAL)))]
                             (if (ß (.getPrimitiveType ___lb) != nil)
                                 (do
                                     (ß ___cv.visitField(___access, (:name ___lb), Type/getType((.getPrimitiveType ___lb)).getDescriptor(), nil, nil))
@@ -12970,10 +12970,10 @@
                                         (.loadThis ___ctorgen)
                                         (.loadArgs ___ctorgen)
 
-                                        (ß ___ctorgen.visitInsn(Opcodes/ACONST_NULL)) ;; __meta
-                                        (ß ___ctorgen.visitInsn(Opcodes/ACONST_NULL)) ;; __extmap
-                                        (ß ___ctorgen.visitInsn(Opcodes/ICONST_0)) ;; __hash
-                                        (ß ___ctorgen.visitInsn(Opcodes/ICONST_0)) ;; __hasheq
+                                        (.visitInsn ___ctorgen, Opcodes/ACONST_NULL) ;; __meta
+                                        (.visitInsn ___ctorgen, Opcodes/ACONST_NULL) ;; __extmap
+                                        (.visitInsn ___ctorgen, Opcodes/ICONST_0) ;; __hash
+                                        (.visitInsn ___ctorgen, Opcodes/ICONST_0) ;; __hasheq
 
                                         (.invokeConstructor ___ctorgen, (Type/getObjectType (str Compiler'COMPILE_STUB_PREFIX "/" (:internalName ___ret))), (Method. "<init>", Type/VOID_TYPE, ___ctorTypes))
 
@@ -12992,8 +12992,8 @@
                                         (.loadThis ___ctorgen)
                                         (.loadArgs ___ctorgen)
 
-                                        (ß ___ctorgen.visitInsn(Opcodes/ICONST_0)) ;; __hash
-                                        (ß ___ctorgen.visitInsn(Opcodes/ICONST_0)) ;; __hasheq
+                                        (.visitInsn ___ctorgen, Opcodes/ICONST_0) ;; __hash
+                                        (.visitInsn ___ctorgen, Opcodes/ICONST_0) ;; __hasheq
 
                                         (.invokeConstructor ___ctorgen, (Type/getObjectType (str Compiler'COMPILE_STUB_PREFIX "/" (:internalName ___ret))), (Method. "<init>", Type/VOID_TYPE, ___ctorTypes))
 
@@ -13007,7 +13007,7 @@
                         (.visitEnd ___cv)
 
                         (let [#_"byte[]" ___bytecode (.toByteArray ___cw)]
-                            (let [#_"DynamicClassLoader" ___loader (ß (DynamicClassLoader) Compiler'LOADER.deref())]
+                            (let [#_"DynamicClassLoader" ___loader (cast' DynamicClassLoader (ß Compiler'LOADER.deref()))]
                                 (.defineClass ___loader, (str Compiler'COMPILE_STUB_PREFIX "." (:name ___ret)), ___bytecode, ___frm)
                             )
                         )
@@ -13053,14 +13053,14 @@
 
                                         (loop-when-recur [#_"ISeq" ___s (RT'seq (:hintedFields this)) ___i ___i] (some? ___s) [(next ___s) (inc ___i)]
                                             (let [#_"String" ___bName (:name (cast' Symbol (first ___s)))]
-                                                (let [#_"Class" ___k (ß tagClass(tagOf((first ___s))))]
+                                                (let [#_"Class" ___k (ß Compiler'tagClass(Compiler'tagOf((first ___s))))]
                                                     (.visitVarInsn ___mv, Opcodes/ALOAD, 0)
                                                     (.visitLdcInsn ___mv, ___bName)
                                                     (.visitMethodInsn ___mv, Opcodes/INVOKESTATIC, "cloiure/lang/Keyword", "intern", "(Ljava/lang/String;)Lcloiure/lang/Keyword;")
                                                     (.visitInsn ___mv, Opcodes/ACONST_NULL)
                                                     (.visitMethodInsn ___mv, Opcodes/INVOKEINTERFACE, "cloiure/lang/IPersistentMap", "valAt", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;")
                                                     (when (.isPrimitive ___k)
-                                                        (ß ___mv.visitTypeInsn(Opcodes/CHECKCAST, Type/getType(boxClass(___k)).getInternalName()))
+                                                        (ß ___mv.visitTypeInsn(Opcodes/CHECKCAST, Type/getType(Compiler'boxClass(___k)).getInternalName()))
                                                     )
                                                     (.visitVarInsn ___mv, Opcodes/ASTORE, ___i)
                                                     (.visitVarInsn ___mv, Opcodes/ALOAD, 0)
@@ -13072,16 +13072,16 @@
                                             )
                                         )
 
-                                        (ß ___mv.visitTypeInsn(Opcodes/NEW, ___className))
+                                        (.visitTypeInsn ___mv, Opcodes/NEW, ___className)
                                         (.visitInsn ___mv, Opcodes/DUP)
 
                                         (let [#_"Method" ___ctor (Method. "<init>", Type/VOID_TYPE, (.ctorTypes this))]
                                             (when (ß (:hintedFields this).count() > 0)
                                                 (loop-when-recur [___i 1] (ß ___i <= ___fieldCount) [(inc ___i)]
                                                     (.visitVarInsn ___mv, Opcodes/ALOAD, ___i)
-                                                    (let [#_"Class" ___k (ß tagClass(tagOf((:hintedFields this).nth(___i - 1))))]
+                                                    (let [#_"Class" ___k (ß Compiler'tagClass(Compiler'tagOf((:hintedFields this).nth(___i - 1))))]
                                                         (when (.isPrimitive ___k)
-                                                            (let [#_"String" ___b (ß Type/getType(boxClass(___k)).getInternalName())]
+                                                            (let [#_"String" ___b (ß Type/getType(Compiler'boxClass(___k)).getInternalName())]
                                                                 (let [#_"String" ___p (ß Type/getType(___k).getDescriptor())]
                                                                     (let [#_"String" ___n (.getName ___k)]
                                                                         (.visitMethodInsn ___mv, Opcodes/INVOKEVIRTUAL, ___b, (str ___n "Value"), (str "()" ___p))
@@ -13118,7 +13118,7 @@
     #_method
     (§ defn #_"void" (§ method emitMethods) [#_"NewInstanceExpr" this, #_"ClassVisitor" ___cv]
         (loop-when-recur [#_"ISeq" ___s (RT'seq (:methods this))] (some? ___s) [(next ___s)]
-            (let [#_"ObjMethod" ___method (ß (ObjMethod) (first ___s))]
+            (let [#_"ObjMethod" ___method (cast' ObjMethod (first ___s))]
                 (.emit ___method, this, ___cv)
             )
         )
@@ -13158,7 +13158,7 @@
     )
 
     (defn #_"void" NewInstanceExpr'considerMethod [#_"java.lang.reflect.Method" ___m, #_"Map" ___mm]
-        (let [#_"IPersistentVector" ___mk (ß msig(___m))]
+        (let [#_"IPersistentVector" ___mk (NewInstanceExpr'msig ___m)]
             (let [#_"int" ___mods (.getModifiers ___m)]
                 (when (not (ß ___mm.containsKey(___mk) || (not (ß Modifier/isPublic(___mods) || Modifier/isProtected(___mods))) || Modifier/isStatic(___mods) || Modifier/isFinal(___mods)))
                     (.put ___mm, ___mk, ___m)
@@ -13171,10 +13171,10 @@
     (defn #_"void" NewInstanceExpr'gatherMethods-2m [#_"Class" ___c, #_"Map" ___mm]
         (loop-when-recur [___c ___c] (some? ___c) [(.getSuperclass ___c)]
             (doseq [#_"java.lang.reflect.Method" ___m (.getDeclaredMethods ___c)]
-                (ß considerMethod(___m, ___mm))
+                (NewInstanceExpr'considerMethod ___m, ___mm)
             )
             (doseq [#_"java.lang.reflect.Method" ___m (.getMethods ___c)]
-                (ß considerMethod(___m, ___mm))
+                (NewInstanceExpr'considerMethod ___m, ___mm)
             )
         )
         nil
@@ -13190,9 +13190,9 @@
             (let [#_"Map<IPersistentVector, java.lang.reflect.Method>" ___mm (HashMap.)]
                 (let [#_"Map<IPersistentVector, Set<Class>>" ___covariants (HashMap.)]
                     (doseq [#_"Object" ___o (.entrySet ___allm)]
-                        (let [#_"Map$Entry" ___e (ß (Map$Entry) ___o)]
-                            (let [#_"IPersistentVector" ___mk (ß (IPersistentVector) (.getKey ___e))]
-                                (§ ass ___mk (ß (IPersistentVector) (.pop ___mk)))
+                        (let [#_"Map$Entry" ___e (cast Map$Entry ___o)]
+                            (let [#_"IPersistentVector" ___mk (cast' IPersistentVector (.getKey ___e))]
+                                (§ ass ___mk (cast' IPersistentVector (.pop ___mk)))
                                 (let [#_"java.lang.reflect.Method" ___m (ß (java.lang.reflect.Method) (.getValue ___e))]
                                     (if (.containsKey ___mm, ___mk) ;; covariant return
                                         (do
@@ -13276,18 +13276,18 @@
         ;; (methodname [this-name args*] body...)
         ;; this-name might be nil
         (let [#_"NewInstanceMethod" ___method (ß NewInstanceMethod'new(___objx, (ObjMethod) Compiler'METHOD.deref()))]
-            (let [#_"Symbol" ___dotname (ß (Symbol)RT'first(___form))]
-                (let [#_"Symbol" ___name (ß (Symbol) Symbol'intern-2(nil, munge((:name ___dotname))).withMeta(RT'meta(___dotname)))]
-                    (let [#_"IPersistentVector" ___parms (ß (IPersistentVector) RT'second(___form))]
+            (let [#_"Symbol" ___dotname (cast' Symbol (RT'first ___form))]
+                (let [#_"Symbol" ___name (cast' Symbol (ß Symbol'intern-2(nil, Compiler'munge((:name ___dotname))).withMeta(RT'meta(___dotname))))]
+                    (let [#_"IPersistentVector" ___parms (cast' IPersistentVector (RT'second ___form))]
                         (when (ß (count ___parms) == 0)
                             (throw (IllegalArgumentException. (str "Must supply at least one argument for 'this' in: " ___dotname)))
                         )
-                        (let [#_"Symbol" ___thisName (ß (Symbol) ___parms.nth(0))]
+                        (let [#_"Symbol" ___thisName (cast' Symbol (.nth ___parms, 0))]
                             (§ ass ___parms (ß RT'subvec(___parms, 1, (count ___parms))))
                             (let [#_"ISeq" ___body (ß RT'next(RT'next(___form)))]
                                 (try
-                                    (§ ass (:line ___method) (ß Compiler'lineDeref()))
-                                    (§ ass (:column ___method) (ß Compiler'columnDeref()))
+                                    (§ ass (:line ___method) (Compiler'lineDeref))
+                                    (§ ass (:column ___method) (Compiler'columnDeref))
                                     ;; register as the current method and set up a new env frame
                                     (let [#_"PathNode" ___pnode (ß PathNode'new(:PathType'PATH, (PathNode) Compiler'CLEAR_PATH.get()))]
                                         (ß Var'pushThreadBindings(RT'mapUniqueKeys(
@@ -13309,29 +13309,29 @@
                                                 (Compiler'registerLocal (or ___thisName NewInstanceMethod'dummyThis), ___thistag, nil, false)
                                             )
                                             (do
-                                                (ß getAndIncLocalNum())
+                                                (Compiler'getAndIncLocalNum)
                                             )
                                         )
 
                                         (let [#_"PersistentVector" ___argLocals PersistentVector'EMPTY]
-                                            (§ ass (:retClass ___method) (ß tagClass(tagOf(___name))))
+                                            (§ ass (:retClass ___method) (ß Compiler'tagClass(Compiler'tagOf(___name))))
                                             (§ ass (:argTypes ___method) (make-array Type (count ___parms)))
-                                            (let [#_"boolean" ___hinted (ß tagOf(___name) != nil)]
+                                            (let [#_"boolean" ___hinted (ß Compiler'tagOf(___name) != nil)]
                                                 (let [#_"Class[]" ___pclasses (make-array Class (count ___parms))]
                                                     (let [#_"Symbol[]" ___psyms (§ typeless make-array Symbol (count ___parms))]
                                                         (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___parms)) [(inc ___i)]
                                                             (when (not (ß ___parms.nth(___i) instanceof Symbol))
                                                                 (throw (IllegalArgumentException. "params must be Symbols"))
                                                             )
-                                                            (let [#_"Symbol" ___p (ß (Symbol) ___parms.nth(___i))]
-                                                                (let [#_"Object" ___tag (ß tagOf(___p))]
+                                                            (let [#_"Symbol" ___p (cast' Symbol (.nth ___parms, ___i))]
+                                                                (let [#_"Object" ___tag (Compiler'tagOf ___p)]
                                                                     (when (some? ___tag)
                                                                         (§ ass ___hinted true)
                                                                     )
                                                                     (when (ß (.getNamespace ___p) != nil)
                                                                         (§ ass ___p (ß Symbol'intern-1((:name ___p))))
                                                                     )
-                                                                    (let [#_"Class" ___pclass (ß tagClass(___tag))]
+                                                                    (let [#_"Class" ___pclass (Compiler'tagClass ___tag)]
                                                                         (§ ass (ß ___pclasses[___i]) ___pclass)
                                                                         (§ ass (ß ___psyms[___i]) ___p)
                                                                     )
@@ -13339,7 +13339,7 @@
                                                             )
                                                         )
                                                         (let [#_"Map" ___matches (ß findMethodsWithNameAndArity((:name ___name), (count ___parms), ___overrideables))]
-                                                            (let [#_"Object" ___mk (ß msig((:name ___name), ___pclasses))]
+                                                            (let [#_"Object" ___mk (ß NewInstanceMethod'msig((:name ___name), ___pclasses))]
                                                                 (let [#_"java.lang.reflect.Method" ___m nil]
                                                                     (if (ß (.size ___matches) > 0)
                                                                         (do
@@ -13399,10 +13399,10 @@
                                                                     )
                                                                     (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___parms)) [(inc ___i)]
                                                                         (when (ß ___pclasses[___i] == (§ class long) || ___pclasses[___i] == (§ class double))
-                                                                            (ß getAndIncLocalNum())
+                                                                            (Compiler'getAndIncLocalNum)
                                                                         )
                                                                     )
-                                                                    (ß Compiler'LOOP_LOCALS.set(___argLocals))
+                                                                    (.set Compiler'LOOP_LOCALS, ___argLocals)
                                                                     (§ ass (:name ___method) (:name ___name))
                                                                     (§ ass (:methodMeta ___method) (RT'meta ___name))
                                                                     (§ ass (:parms ___method) ___parms)
@@ -13432,7 +13432,7 @@
     (defn- #_"Map" NewInstanceMethod'findMethodsWithNameAndArity [#_"String" ___name, #_"int" ___arity, #_"Map" ___mm]
         (let [#_"Map" ___ret (HashMap.)]
             (doseq [#_"Object" ___o (.entrySet ___mm)]
-                (let [#_"Map$Entry" ___e (ß (Map$Entry) ___o)]
+                (let [#_"Map$Entry" ___e (cast Map$Entry ___o)]
                     (let [#_"java.lang.reflect.Method" ___m (ß (java.lang.reflect.Method) (.getValue ___e))]
                         (when (ß ___name.equals((.getName ___m)) && (.getParameterTypes ___m).length == ___arity)
                             (ß ___ret.put((.getKey ___e), (.getValue ___e)))
@@ -13447,7 +13447,7 @@
     (defn- #_"Map" NewInstanceMethod'findMethodsWithName [#_"String" ___name, #_"Map" ___mm]
         (let [#_"Map" ___ret (HashMap.)]
             (doseq [#_"Object" ___o (.entrySet ___mm)]
-                (let [#_"Map$Entry" ___e (ß (Map$Entry) ___o)]
+                (let [#_"Map$Entry" ___e (cast Map$Entry ___o)]
                     (let [#_"java.lang.reflect.Method" ___m (ß (java.lang.reflect.Method) (.getValue ___e))]
                         (when (ß ___name.equals((.getName ___m)))
                             (ß ___ret.put((.getKey ___e), (.getValue ___e)))
@@ -13470,10 +13470,10 @@
                     )
                 )
                 (let [#_"GeneratorAdapter" ___gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, ___m, nil, ___extypes, ___cv)]
-                    (ß addAnnotation(___gen, (:methodMeta this)))
+                    (ß Compiler'addAnnotation(___gen, (:methodMeta this)))
                     (loop-when-recur [#_"int" ___i 0] (ß ___i < (:parms this).count()) [(inc ___i)]
                         (let [#_"IPersistentMap" ___meta (ß RT'meta((:parms this).nth(___i)))]
-                            (ß addParameterAnnotation(___gen, ___meta, ___i))
+                            (Compiler'addParameterAnnotation ___gen, ___meta, ___i)
                         )
                     )
                     (.visitCode ___gen)
@@ -13487,7 +13487,7 @@
                             (let [#_"Label" ___end (.mark ___gen)]
                                 (ß ___gen.visitLocalVariable("this", (:objtype ___obj).getDescriptor(), nil, ___loopLabel, ___end, 0))
                                 (loop-when-recur [#_"ISeq" ___lbs (.seq (:argLocals this))] (some? ___lbs) [(next ___lbs)]
-                                    (let [#_"LocalBinding" ___lb (ß (LocalBinding) (first ___lbs))]
+                                    (let [#_"LocalBinding" ___lb (cast' LocalBinding (first ___lbs))]
                                         (ß ___gen.visitLocalVariable((:name ___lb), (:argTypes this)[___lb.idx-1].getDescriptor(), nil, ___loopLabel, ___end, (:idx ___lb)))
                                     )
                                 )
@@ -13564,39 +13564,39 @@
     ;; no need to worry about multiple evaluation
     #_method
     (§ defn #_"Expr" (§ method parse) [#_"CaseParser" this, #_"Context" ___context, #_"Object" ___frm]
-        (let [#_"ISeq" ___form (ß (ISeq) ___frm)]
+        (let [#_"ISeq" ___form (cast' ISeq ___frm)]
             (when (ß ___context == :Context'EVAL)
-                (§ return (ß analyze(___context, RT'list-1(RT'list-3(Compiler'FNONCE, PersistentVector'EMPTY, ___form)))))
+                (§ return (ß Compiler'analyze-2(___context, RT'list-1(RT'list-3(Compiler'FNONCE, PersistentVector'EMPTY, ___form)))))
             )
             (let [#_"IPersistentVector" ___args (ß LazilyPersistentVector'create((next ___form)))]
                 (let [#_"Object" ___exprForm (.nth ___args, 0)]
                     (let [#_"int" ___shift (ß ((Number)___args.nth(1)).intValue())]
                         (let [#_"int" ___mask (ß ((Number)___args.nth(2)).intValue())]
                             (let [#_"Object" ___defaultForm (.nth ___args, 3)]
-                                (let [#_"Map" ___caseMap (ß (Map)___args.nth(4))]
+                                (let [#_"Map" ___caseMap (cast Map (.nth ___args, 4))]
                                     (let [#_"Keyword" ___switchType (ß ((Keyword)___args.nth(5)))]
                                         (let [#_"Keyword" ___testType (ß ((Keyword)___args.nth(6)))]
-                                            (let [#_"Set" ___skipCheck (ß (RT'count(___args) < 8) ? nil :or (Set)___args.nth(7))]
+                                            (let [#_"Set" ___skipCheck (if (< (RT'count ___args) 8) nil (cast Set (.nth ___args, 7)))]
                                                 (let [#_"ISeq" ___keys (RT'keys ___caseMap)]
                                                     (let [#_"int" ___low (ß ((Number)RT'first(___keys)).intValue())]
                                                         (let [#_"int" ___high (ß ((Number)RT'nth-2(___keys, RT'count(___keys) - 1)).intValue())]
-                                                            (let [#_"LocalBindingExpr" ___testexpr (ß (LocalBindingExpr) analyze(:Context'EXPRESSION, ___exprForm))]
+                                                            (let [#_"LocalBindingExpr" ___testexpr (cast' LocalBindingExpr (ß Compiler'analyze-2(:Context'EXPRESSION, ___exprForm)))]
                                                                 (§ ass (:shouldClear ___testexpr) false)
 
                                                                 (let [#_"SortedMap<Integer, Expr>" ___tests (TreeMap.)]
                                                                     (let [#_"HashMap<Integer, Expr>" ___thens (HashMap.)]
                                                                         (let [#_"PathNode" ___branch (ß PathNode'new(:PathType'BRANCH, (PathNode) Compiler'CLEAR_PATH.get()))]
                                                                             (doseq [#_"Object" ___o (.entrySet ___caseMap)]
-                                                                                (let [#_"Map$Entry" ___e (ß (Map$Entry) ___o)]
+                                                                                (let [#_"Map$Entry" ___e (cast Map$Entry ___o)]
                                                                                     (let [#_"Integer" ___minhash (ß ((Number)___e.getKey()).intValue())]
                                                                                         (let [#_"Object" ___pair (.getValue ___e)] ;; [test-val then-expr]
-                                                                                            (let [#_"Expr" ___testExpr (ß (___testType == intKey) ? NumberExpr'parse(((Number)RT'first(___pair)).intValue()) :or ConstantExpr'new(RT'first(___pair)))]
+                                                                                            (let [#_"Expr" ___testExpr (if (ß ___testType == intKey) (NumberExpr'parse (.intValue (cast Number (RT'first ___pair)))) (ConstantExpr'new (RT'first ___pair)))]
                                                                                                 (.put ___tests, ___minhash, ___testExpr)
 
                                                                                                 (§ let [#_"Expr" ___thenExpr]
                                                                                                     (try
                                                                                                         (ß Var'pushThreadBindings(RT'map(Compiler'CLEAR_PATH, PathNode'new(:PathType'PATH, ___branch))))
-                                                                                                        (§ ass ___thenExpr (ß analyze(___context, RT'second(___pair))))
+                                                                                                        (§ ass ___thenExpr (ß Compiler'analyze-2(___context, RT'second(___pair))))
                                                                                                         (finally
                                                                                                             (Var'popThreadBindings)
                                                                                                         )
@@ -13612,7 +13612,7 @@
                                                                             (§ let [#_"Expr" ___defaultExpr]
                                                                                 (try
                                                                                     (ß Var'pushThreadBindings(RT'map(Compiler'CLEAR_PATH, PathNode'new(:PathType'PATH, ___branch))))
-                                                                                    (§ ass ___defaultExpr (ß analyze(___context, ___args.nth(3))))
+                                                                                    (§ ass ___defaultExpr (ß Compiler'analyze-2(___context, ___args.nth(3))))
                                                                                     (finally
                                                                                         (Var'popThreadBindings)
                                                                                     )
@@ -13700,7 +13700,7 @@
             (§ ass (:skipCheck this) ___skipCheck)
             (let [#_"Collection<Expr>" ___returns (ArrayList. (.values ___thens))]
                 (.add ___returns, ___defaultExpr)
-                (§ ass (:returnType this) (ß maybeJavaClass(___returns)))
+                (§ ass (:returnType this) (Compiler'maybeJavaClass ___returns))
                 (when (ß RT'count(___skipCheck) > 0 && RT'booleanCast-1o(RT'WARN_ON_REFLECTION.deref()))
                     (ß RT'errPrintWriter().format("Performance warning, %s:%d:%d - hash collision of some case test constants; if selected, those entries will be tested sequentially.\n", (object-array [ (deref Compiler'SOURCE_PATH), ___line, ___column ])))
                 )
@@ -13752,8 +13752,8 @@
 
                     (ß ___gen.visitLineNumber((:line this), (.mark ___gen)))
 
-                    (let [#_"Class" ___primExprClass (ß maybePrimitiveType((:expr this)))]
-                        (let [#_"Type" ___primExprType (ß (nil? ___primExprClass) ? nil :or Type/getType(___primExprClass))]
+                    (let [#_"Class" ___primExprClass (ß Compiler'maybePrimitiveType((:expr this)))]
+                        (let [#_"Type" ___primExprType (when (some? ___primExprClass) (Type/getType ___primExprClass))]
                             (if (ß (:testType this) == intKey)
                                 (do
                                     (.emitExprForInts this, ___objx, ___gen, ___primExprType, ___defaultLabel)
@@ -13775,7 +13775,7 @@
                                 (do
                                     (let [#_"Label[]" ___la (make-array Label (ß ((:high this) - (:low this)) + 1))]
                                         (loop-when-recur [#_"int" ___i (:low this)] (ß ___i <= (:high this)) [(inc ___i)]
-                                            (§ ass (ß ___la[___i - (:low this)]) (if (ß ___labels.containsKey(___i)) (ß ___labels.get(___i)) ___defaultLabel))
+                                            (§ ass (ß ___la[___i - (:low this)]) (if (.containsKey ___labels, ___i) (.get ___labels, ___i) ___defaultLabel))
                                         )
                                         (.visitTableSwitchInsn ___gen, (:low this), (:high this), ___defaultLabel, ___la)
                                     )
@@ -13838,17 +13838,17 @@
                     (ß RT'errPrintWriter().format("Performance warning, %s:%d:%d - case has int tests, but tested expression is not primitive.\n", (object-array [ (deref Compiler'SOURCE_PATH), (:line this), (:column this) ])))
                 )
                 (ß (:expr this).emit(:Context'EXPRESSION, ___objx, ___gen))
-                (ß ___gen.instanceOf(CaseExpr'NUMBER_TYPE))
-                (ß ___gen.ifZCmp(GeneratorAdapter/EQ, ___defaultLabel))
+                (.instanceOf ___gen, CaseExpr'NUMBER_TYPE)
+                (.ifZCmp ___gen, GeneratorAdapter/EQ, ___defaultLabel)
                 (ß (:expr this).emit(:Context'EXPRESSION, ___objx, ___gen))
-                (ß ___gen.checkCast(CaseExpr'NUMBER_TYPE))
-                (ß ___gen.invokeVirtual(CaseExpr'NUMBER_TYPE, intValueMethod))
+                (.checkCast ___gen, CaseExpr'NUMBER_TYPE)
+                (.invokeVirtual ___gen, CaseExpr'NUMBER_TYPE, HostExpr'intValueMethod)
                 (.emitShiftMask this, ___gen)
             )
             (ß ___exprType == Type/LONG_TYPE || ___exprType == Type/INT_TYPE || ___exprType == Type/SHORT_TYPE || ___exprType == Type/BYTE_TYPE)
             (do
                 (ß (:expr this).emitUnboxed(:Context'EXPRESSION, ___objx, ___gen))
-                (ß ___gen.cast(___exprType, Type/INT_TYPE))
+                (.cast ___gen, ___exprType, Type/INT_TYPE)
                 (.emitShiftMask this, ___gen)
             )
             :else
@@ -13865,15 +13865,15 @@
             (do
                 (ß (:expr this).emit(:Context'EXPRESSION, ___objx, ___gen))
                 (ß ___test.emit(:Context'EXPRESSION, ___objx, ___gen))
-                (ß ___gen.invokeStatic(Compiler'UTIL_TYPE, equivMethod))
-                (ß ___gen.ifZCmp(GeneratorAdapter/EQ, ___defaultLabel))
+                (.invokeStatic ___gen, Compiler'UTIL_TYPE, equivMethod)
+                (.ifZCmp ___gen, GeneratorAdapter/EQ, ___defaultLabel)
                 (CaseExpr'emitExpr ___objx, ___gen, ___then, ___emitUnboxed)
             )
             (ß ___exprType == Type/LONG_TYPE)
             (do
                 (ß (cast' NumberExpr ___test).emitUnboxed(:Context'EXPRESSION, ___objx, ___gen))
                 (ß (:expr this).emitUnboxed(:Context'EXPRESSION, ___objx, ___gen))
-                (ß ___gen.ifCmp(Type/LONG_TYPE, GeneratorAdapter/NE, ___defaultLabel))
+                (.ifCmp ___gen, Type/LONG_TYPE, GeneratorAdapter/NE, ___defaultLabel)
                 (CaseExpr'emitExpr ___objx, ___gen, ___then, ___emitUnboxed)
             )
             (ß ___exprType == Type/INT_TYPE || ___exprType == Type/SHORT_TYPE || ___exprType == Type/BYTE_TYPE)
@@ -13881,8 +13881,8 @@
                 (when (.isShiftMasked this)
                     (ß (cast' NumberExpr ___test).emitUnboxed(:Context'EXPRESSION, ___objx, ___gen))
                     (ß (:expr this).emitUnboxed(:Context'EXPRESSION, ___objx, ___gen))
-                    (ß ___gen.cast(___exprType, Type/LONG_TYPE))
-                    (ß ___gen.ifCmp(Type/LONG_TYPE, GeneratorAdapter/NE, ___defaultLabel))
+                    (.cast ___gen, ___exprType, Type/LONG_TYPE)
+                    (.ifCmp ___gen, Type/LONG_TYPE, GeneratorAdapter/NE, ___defaultLabel)
                 )
                 ;; else direct match
                 (CaseExpr'emitExpr ___objx, ___gen, ___then, ___emitUnboxed)
@@ -13898,7 +13898,7 @@
     #_method
     (§ defn- #_"void" (§ method emitExprForHashes) [#_"CaseExpr" this, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (ß (:expr this).emit(:Context'EXPRESSION, ___objx, ___gen))
-        (ß ___gen.invokeStatic(Compiler'UTIL_TYPE, hashMethod))
+        (.invokeStatic ___gen, Compiler'UTIL_TYPE, hashMethod)
         (.emitShiftMask this, ___gen)
         nil
     )
@@ -13912,8 +13912,8 @@
                 (.visitJumpInsn ___gen, Opcodes/IF_ACMPNE, ___defaultLabel)
             )
             (do
-                (ß ___gen.invokeStatic(Compiler'UTIL_TYPE, equivMethod))
-                (ß ___gen.ifZCmp(GeneratorAdapter/EQ, ___defaultLabel))
+                (.invokeStatic ___gen, Compiler'UTIL_TYPE, equivMethod)
+                (.ifZCmp ___gen, GeneratorAdapter/EQ, ___defaultLabel)
             )
         )
         (CaseExpr'emitExpr ___objx, ___gen, ___then, ___emitUnboxed)
@@ -13943,7 +13943,7 @@
     (§ def #_"Symbol" Compiler'LETFN (Symbol'intern-1 "letfn*"))
     (§ def #_"Symbol" Compiler'DO (Symbol'intern-1 "do"))
     (§ def #_"Symbol" Compiler'FN (Symbol'intern-1 "fn*"))
-    (§ def #_"Symbol" Compiler'FNONCE (ß (Symbol) Symbol'intern-1("fn*").withMeta(RT'map(Keyword'intern-2(nil, "once"), RT'T))))
+    (§ def #_"Symbol" Compiler'FNONCE (cast' Symbol (ß Symbol'intern-1("fn*").withMeta(RT'map(Keyword'intern-2(nil, "once"), RT'T)))))
     (§ def #_"Symbol" Compiler'QUOTE (Symbol'intern-1 "quote"))
     (§ def #_"Symbol" Compiler'THE_VAR (Symbol'intern-1 "var"))
     (§ def #_"Symbol" Compiler'DOT (Symbol'intern-1 "."))
@@ -14145,8 +14145,8 @@
     (§ static
         (let [#_"Object" ___compilerOptions nil]
             (doseq [#_"Map$Entry" ___e (ß System/getProperties().entrySet())]
-                (let [#_"String" ___name (ß (String) (.getKey ___e))]
-                    (let [#_"String" ___v (ß (String) (.getValue ___e))]
+                (let [#_"String" ___name (cast String (.getKey ___e))]
+                    (let [#_"String" ___v (cast String (.getValue ___e))]
                         (when (.startsWith ___name, "cloiure.compiler.")
                             (§ ass ___compilerOptions (ß RT'assoc(___compilerOptions, RT'keyword(nil, ___name.substring(1 + ___name.lastIndexOf(\.))), RT'readString-1(___v))))
                         )
@@ -14159,7 +14159,7 @@
     )
 
     (defn #_"Object" Compiler'elideMeta [#_"Object" ___m]
-        (let [#_"Collection<Object>" ___elides (ß (Collection<Object>) Compiler'getCompilerOption(elideMetaKey))]
+        (let [#_"Collection<Object>" ___elides (ß (Collection<Object>) Compiler'getCompilerOption(Compiler'elideMetaKey))]
             (when (some? ___elides)
                 (doseq [#_"Object" ___k ___elides]
                     (§ ass ___m (RT'dissoc ___m, ___k))
@@ -14221,8 +14221,8 @@
             (§ return ___sym)
         )
         (when (ß (:ns ___sym) != nil)
-            (let [#_"Namespace" ___ns (ß namespaceFor(___sym))]
-                (when (ß ___ns == nil || (((:name (:name ___ns)) == nil) ? ((:ns ___sym) == nil) :or (:name (:name ___ns)).equals((:ns ___sym))))
+            (let [#_"Namespace" ___ns (Compiler'namespaceFor-1 ___sym)]
+                (when (or (nil? ___ns) (if (nil? (:name (:name ___ns))) (nil? (:ns ___sym)) (.equals (:name (:name ___ns)), (:ns ___sym))))
                     (§ return ___sym)
                 )
                 (§ return (ß Symbol'intern-2((:name (:name ___ns)), (:name ___sym))))
@@ -14239,7 +14239,7 @@
                 )
                 (ß ___o instanceof Var)
                 (do
-                    (let [#_"Var" ___v (ß (Var) ___o)]
+                    (let [#_"Var" ___v (cast' Var ___o)]
                         (§ return (ß Symbol'intern-2((:name (:name (:ns ___v))), (:name (:sym ___v)))))
                     )
                 )
@@ -14316,11 +14316,11 @@
     (defn #_"String" Compiler'getTypeStringForArgs [#_"IPersistentVector" ___args]
         (let [#_"StringBuilder" ___sb (StringBuilder.)]
             (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___args)) [(inc ___i)]
-                (let [#_"Expr" ___arg (ß (Expr) ___args.nth(___i))]
+                (let [#_"Expr" ___arg (cast' Expr (.nth ___args, ___i))]
                     (when (> ___i 0)
                         (.append ___sb, ", ")
                     )
-                    (ß ___sb.append(((.hasJavaClass ___arg) && (.getJavaClass ___arg) != nil) ? (.getJavaClass ___arg).getName() :or "unknown"))
+                    (.append ___sb, (if (and (.hasJavaClass ___arg) (some? (.getJavaClass ___arg))) (.getName (.getJavaClass ___arg)) "unknown"))
                 )
             )
             (.toString ___sb)
@@ -14337,7 +14337,7 @@
                             (let [#_"ISeq" ___aseq (.seq ___argexprs)]
                                 (let [#_"int" ___exact 0]
                                     (loop-when-recur [#_"int" ___p 0 ___aseq ___aseq] (ß ___match && ___p < (count ___argexprs) && ___aseq != nil) [(inc ___p) (next ___aseq)]
-                                        (let [#_"Expr" ___arg (ß (Expr) (first ___aseq))]
+                                        (let [#_"Expr" ___arg (cast' Expr (first ___aseq))]
                                             (let [#_"Class" ___aclass (if (.hasJavaClass ___arg) (.getJavaClass ___arg) Object)]
                                                 (let [#_"Class" ___pclass (ß ___paramlists.get(___i)[___p])]
                                                     (if (ß (.hasJavaClass ___arg) && ___aclass == ___pclass)
@@ -14367,7 +14367,7 @@
                                                     (§ ass ___matchIdx ___i)
                                                 )
                                                 (do
-                                                    (cond (ß subsumes(___paramlists.get(___i), ___paramlists.get(___matchIdx)))
+                                                    (cond (ß Compiler'subsumes(___paramlists.get(___i), ___paramlists.get(___matchIdx)))
                                                         (do
                                                             (§ ass ___matchIdx ___i)
                                                             (§ ass ___tied false)
@@ -14378,7 +14378,7 @@
                                                                 (§ ass ___matchIdx ___i)
                                                             )
                                                         )
-                                                        (not (ß subsumes(___paramlists.get(___matchIdx), ___paramlists.get(___i))))
+                                                        (not (ß Compiler'subsumes(___paramlists.get(___matchIdx), ___paramlists.get(___i))))
                                                         (do
                                                             (§ ass ___tied true)
                                                         )
@@ -14438,9 +14438,9 @@
         ;; direction that CHAR_MAP does, plus it maps "$" to '/'
         (let [#_"IPersistentMap" ___m (ß RT'map("$", \/))]
             (loop-when-recur [#_"ISeq" ___s (RT'seq Compiler'CHAR_MAP)] (some? ___s) [(next ___s)]
-                (let [#_"IMapEntry" ___e (ß (IMapEntry) (first ___s))]
-                    (let [#_"Character" ___origCh (ß (Character) (.key ___e))]
-                        (let [#_"String" ___escapeStr (ß (String) (.val ___e))]
+                (let [#_"IMapEntry" ___e (cast' IMapEntry (first ___s))]
+                    (let [#_"Character" ___origCh (cast Character (.key ___e))]
+                        (let [#_"String" ___escapeStr (cast String (.val ___e))]
                             (§ ass ___m (.assoc ___m, ___escapeStr, ___origCh))
                         )
                     )
@@ -14468,7 +14468,7 @@
                 (let [#_"StringBuilder" ___sb (StringBuilder.)]
                     (let [#_"boolean" ___first true]
                         (doseq [#_"Object" ___s ___mungeStrs]
-                            (let [#_"String" ___escapeStr (ß (String) ___s)]
+                            (let [#_"String" ___escapeStr (cast String ___s)]
                                 (when (not ___first)
                                     (.append ___sb, "|")
                                 )
@@ -14505,7 +14505,7 @@
 
     (defn #_"String" Compiler'demunge [#_"String" ___mungedName]
         (let [#_"StringBuilder" ___sb (StringBuilder.)]
-            (let [#_"Matcher" ___m (ß Compiler'DEMUNGE_PATTERN.matcher(___mungedName))]
+            (let [#_"Matcher" ___m (.matcher Compiler'DEMUNGE_PATTERN, ___mungedName)]
                 (let [#_"int" ___lastMatchEnd 0]
                     (while (.find ___m)
                         (let [#_"int" ___start (.start ___m)]
@@ -14529,17 +14529,17 @@
     )
 
     (defn #_"PathNode" Compiler'clearPathRoot []
-        (ß (PathNode) Compiler'CLEAR_ROOT.get())
+        (cast' PathNode (ß Compiler'CLEAR_ROOT.get()))
     )
 
     (defn- #_"LocalBinding" Compiler'registerLocal [#_"Symbol" ___sym, #_"Symbol" ___tag, #_"Expr" ___init, #_"boolean" ___isArg]
-        (let [#_"int" ___num (ß getAndIncLocalNum())]
-            (let [#_"LocalBinding" ___b (ß LocalBinding'new(___num, ___sym, ___tag, ___init, ___isArg, clearPathRoot()))]
-                (let [#_"IPersistentMap" ___localsMap (ß (IPersistentMap) Compiler'LOCAL_ENV.deref())]
+        (let [#_"int" ___num (Compiler'getAndIncLocalNum)]
+            (let [#_"LocalBinding" ___b (ß LocalBinding'new(___num, ___sym, ___tag, ___init, ___isArg, Compiler'clearPathRoot()))]
+                (let [#_"IPersistentMap" ___localsMap (cast' IPersistentMap (ß Compiler'LOCAL_ENV.deref()))]
                     (ß Compiler'LOCAL_ENV.set(RT'assoc(___localsMap, (:sym ___b), ___b)))
-                    (let [#_"ObjMethod" ___method (ß (ObjMethod) Compiler'METHOD.deref())]
-                        (§ ass (:locals ___method) (ß (IPersistentMap) RT'assoc((:locals ___method), ___b, ___b)))
-                        (§ ass (:indexlocals ___method) (ß (IPersistentMap) RT'assoc((:indexlocals ___method), ___num, ___b)))
+                    (let [#_"ObjMethod" ___method (cast' ObjMethod (ß Compiler'METHOD.deref()))]
+                        (§ ass (:locals ___method) (cast' IPersistentMap (ß RT'assoc((:locals ___method), ___b, ___b))))
+                        (§ ass (:indexlocals ___method) (cast' IPersistentMap (ß RT'assoc((:indexlocals ___method), ___num, ___b))))
                         ___b
                     )
                 )
@@ -14549,7 +14549,7 @@
 
     (defn- #_"int" Compiler'getAndIncLocalNum []
         (let [#_"int" ___num (ß ((Number) Compiler'NEXT_LOCAL_NUM.deref()).intValue())]
-            (let [#_"ObjMethod" ___m (ß (ObjMethod) Compiler'METHOD.deref())]
+            (let [#_"ObjMethod" ___m (cast' ObjMethod (ß Compiler'METHOD.deref()))]
                 (when (ß ___num > (:maxLocal ___m))
                     (§ ass (:maxLocal ___m) ___num)
                 )
@@ -14560,7 +14560,7 @@
     )
 
     (defn #_"Expr" Compiler'analyze-2 [#_"Context" ___context, #_"Object" ___form]
-        (ß analyze(___context, ___form, nil))
+        (Compiler'analyze-3 ___context, ___form, nil)
     )
 
     (defn- #_"Expr" Compiler'analyze-3 [#_"Context" ___context, #_"Object" ___form, #_"String" ___name]
@@ -14591,11 +14591,11 @@
             (let [#_"Class" ___fclass (.getClass ___form)]
                 (cond (ß ___fclass == (§ class Symbol))
                     (do
-                        (§ return (ß analyzeSymbol((cast' Symbol ___form))))
+                        (§ return (ß Compiler'analyzeSymbol((cast' Symbol ___form))))
                     )
                     (ß ___fclass == (§ class Keyword))
                     (do
-                        (§ return (ß registerKeyword((cast' Keyword ___form))))
+                        (§ return (ß Compiler'registerKeyword((cast' Keyword ___form))))
                     )
                     (ß ___form instanceof Number)
                     (do
@@ -14616,7 +14616,7 @@
                     )
                     (ß ___form instanceof ISeq)
                     (do
-                        (§ return (ß analyzeSeq(___context, (ISeq) ___form, ___name)))
+                        (§ return (ß Compiler'analyzeSeq(___context, (ISeq) ___form, ___name)))
                     )
                     (ß ___form instanceof IPersistentVector)
                     (do
@@ -14648,7 +14648,7 @@
                         (throw (ß CompilerException'new((String) Compiler'SOURCE_PATH.deref(), Compiler'lineDeref(), Compiler'columnDeref(), ___e)))
                     )
                     (do
-                        (throw (ß (CompilerException) ___e))
+                        (throw (cast' CompilerException ___e))
                     )
                 )
             )
@@ -14657,7 +14657,7 @@
 
     (defn #_"Var" Compiler'isMacro [#_"Object" ___op]
         ;; no local macros for now
-        (when (ß ___op instanceof Symbol && referenceLocal((cast' Symbol ___op)) != nil)
+        (when (ß ___op instanceof Symbol && Compiler'referenceLocal((cast' Symbol ___op)) != nil)
             (§ return nil)
         )
         (when (ß ___op instanceof Symbol || ___op instanceof Var)
@@ -14675,7 +14675,7 @@
 
     (defn #_"IFn" Compiler'isInline [#_"Object" ___op, #_"int" ___arity]
         ;; no local inlines for now
-        (when (ß ___op instanceof Symbol && referenceLocal((cast' Symbol ___op)) != nil)
+        (when (ß ___op instanceof Symbol && Compiler'referenceLocal((cast' Symbol ___op)) != nil)
             (§ return nil)
         )
         (when (ß ___op instanceof Symbol || ___op instanceof Var)
@@ -14684,9 +14684,9 @@
                     (when (ß (:ns ___v) != (.currentNS this) && (not (ß ___v.isPublic())))
                         (throw (IllegalStateException. (str "var: " ___v " is not public")))
                     )
-                    (let [#_"IFn" ___ret (ß (IFn) RT'get-2((.meta ___v), inlineKey))]
+                    (let [#_"IFn" ___ret (cast' IFn (ß RT'get-2((.meta ___v), Compiler'inlineKey)))]
                         (when (some? ___ret)
-                            (let [#_"IFn" ___arityPred (ß (IFn) RT'get-2((.meta ___v), inlineAritiesKey))]
+                            (let [#_"IFn" ___arityPred (cast' IFn (ß RT'get-2((.meta ___v), Compiler'inlineAritiesKey)))]
                                 (when (ß ___arityPred == nil || RT'booleanCast-1o(___arityPred.invoke(___arity)))
                                     (§ return ___ret)
                                 )
@@ -14700,11 +14700,11 @@
     )
 
     (defn #_"boolean" Compiler'namesStaticMember [#_"Symbol" ___sym]
-        (ß ((:ns ___sym) != nil && namespaceFor(___sym) == nil))
+        (ß ((:ns ___sym) != nil && Compiler'namespaceFor-1(___sym) == nil))
     )
 
     (defn #_"Object" Compiler'preserveTag [#_"ISeq" ___src, #_"Object" ___dst]
-        (let [#_"Symbol" ___tag (ß tagOf(___src))]
+        (let [#_"Symbol" ___tag (Compiler'tagOf ___src)]
             (when (ß ___tag != nil && ___dst instanceof IObj)
                 (let [#_"IPersistentMap" ___meta (RT'meta ___dst)]
                     (§ return (ß (cast' IObj ___dst).withMeta((IPersistentMap) RT'assoc(___meta, RT'TAG_KEY, ___tag))))
@@ -14738,7 +14738,7 @@
     (defn #_"void" Compiler'checkSpecs [#_"Var" ___v, #_"ISeq" ___form]
         (when (ß RT'CHECK_SPECS && (not Compiler'MACRO_CHECK_LOADING))
             (try
-                (ß ensureMacroCheck().applyTo(RT'cons(___v, RT'list-1((next ___form)))))
+                (ß Compiler'ensureMacroCheck().applyTo(RT'cons(___v, RT'list-1((next ___form)))))
                 (catch Exception ___e
                     (throw (ß CompilerException'new((String) Compiler'SOURCE_PATH.deref(), Compiler'lineDeref(), Compiler'columnDeref(), ___e)))
                 )
@@ -14749,16 +14749,16 @@
 
     (defn #_"Object" Compiler'macroexpand1 [#_"Object" ___x]
         (when (ß ___x instanceof ISeq)
-            (let [#_"ISeq" ___form (ß (ISeq) ___x)]
+            (let [#_"ISeq" ___form (cast' ISeq ___x)]
                 (let [#_"Object" ___op (RT'first ___form)]
-                    (when (ß isSpecial(___op))
+                    (when (Compiler'isSpecial ___op)
                         (§ return ___x)
                     )
                     ;; macro expansion
                     (let [#_"Var" ___v (Compiler'isMacro ___op)]
                         (if (some? ___v)
                             (do
-                                (ß checkSpecs(___v, ___form))
+                                (Compiler'checkSpecs ___v, ___form)
 
                                 (try
                                     (let [#_"ISeq" ___args (ß RT'cons(___form, RT'cons(Compiler'LOCAL_ENV.get(), (next ___form))))]
@@ -14772,7 +14772,7 @@
                             )
                             (do
                                 (when (ß ___op instanceof Symbol)
-                                    (let [#_"Symbol" ___sym (ß (Symbol) ___op)]
+                                    (let [#_"Symbol" ___sym (cast' Symbol ___op)]
                                         (let [#_"String" ___sname (:name ___sym)]
                                             ;; (.substring s 2 5) => (. s substring 2 5)
                                             (cond (ß (:name ___sym).charAt(0) == \.)
@@ -14785,17 +14785,17 @@
                                                             (when (ß HostExpr'maybeClass(___target, false) != nil)
                                                                 (§ ass ___target (ß ((IObj)RT'list-2(Compiler'IDENTITY, ___target)).withMeta(RT'map(RT'TAG_KEY, Compiler'CLASS))))
                                                             )
-                                                            (§ return (ß preserveTag(___form, RT'listStar-4(Compiler'DOT, ___target, ___meth, (next ___form).next()))))
+                                                            (§ return (ß Compiler'preserveTag(___form, RT'listStar-4(Compiler'DOT, ___target, ___meth, (next ___form).next()))))
                                                         )
                                                     )
                                                 )
-                                                (ß namesStaticMember(___sym))
+                                                (Compiler'namesStaticMember ___sym)
                                                 (do
                                                     (let [#_"Symbol" ___target (ß Symbol'intern-1((:ns ___sym)))]
                                                         (let [#_"Class" ___c (HostExpr'maybeClass ___target, false)]
                                                             (when (some? ___c)
                                                                 (let [#_"Symbol" ___meth (ß Symbol'intern-1((:name ___sym)))]
-                                                                    (§ return (ß preserveTag(___form, RT'listStar-4(Compiler'DOT, ___target, ___meth, (next ___form)))))
+                                                                    (§ return (ß Compiler'preserveTag(___form, RT'listStar-4(Compiler'DOT, ___target, ___meth, (next ___form)))))
                                                                 )
                                                             )
                                                         )
@@ -14826,17 +14826,17 @@
     )
 
     (defn #_"Object" Compiler'macroexpand [#_"Object" ___form]
-        (let [#_"Object" ___exf (ß macroexpand1(___form))]
+        (let [#_"Object" ___exf (Compiler'macroexpand1 ___form)]
             (when (ß ___exf != ___form)
-                (§ return (ß macroexpand(___exf)))
+                (§ return (Compiler'macroexpand ___exf))
             )
             ___form
         )
     )
 
     (defn- #_"Expr" Compiler'analyzeSeq [#_"Context" ___context, #_"ISeq" ___form, #_"String" ___name]
-        (let [#_"Object" ___line (ß Compiler'lineDeref())]
-            (let [#_"Object" ___column (ß Compiler'columnDeref())]
+        (let [#_"Object" ___line (Compiler'lineDeref)]
+            (let [#_"Object" ___column (Compiler'columnDeref)]
                 (when (ß RT'meta(___form) != nil && RT'meta(___form).containsKey(RT'LINE_KEY))
                     (§ ass ___line (ß RT'meta(___form).valAt(RT'LINE_KEY)))
                 )
@@ -14845,25 +14845,25 @@
                 )
                 (ß Var'pushThreadBindings(RT'map(Compiler'LINE, ___line, Compiler'COLUMN, ___column)))
                 (try
-                    (let [#_"Object" ___me (ß macroexpand1(___form))]
+                    (let [#_"Object" ___me (Compiler'macroexpand1 ___form)]
                         (when (ß ___me != ___form)
-                            (§ return (ß analyze(___context, ___me, ___name)))
+                            (§ return (Compiler'analyze-3 ___context, ___me, ___name))
                         )
 
                         (let [#_"Object" ___op (RT'first ___form)]
                             (when (nil? ___op)
                                 (throw (IllegalArgumentException. (str "Can't call nil, form: " ___form)))
                             )
-                            (let [#_"IFn" ___inline (ß isInline(___op, RT'count(RT'next(___form))))]
+                            (let [#_"IFn" ___inline (ß Compiler'isInline(___op, RT'count(RT'next(___form))))]
                                 (when (some? ___inline)
-                                    (§ return (ß analyze(___context, preserveTag(___form, ___inline.applyTo(RT'next(___form))))))
+                                    (§ return (ß Compiler'analyze-2(___context, Compiler'preserveTag(___form, ___inline.applyTo(RT'next(___form))))))
                                 )
                                 (§ let [#_"IParser" ___p]
-                                    (cond (ß ___op.equals(Compiler'FN))
+                                    (cond (.equals ___op, Compiler'FN)
                                         (do
                                             (FnExpr'parse ___context, ___form, ___name)
                                         )
-                                        (some? (§ ass ___p (ß (IParser) Compiler'specials.valAt(___op))))
+                                        (some? (§ ass ___p (cast' IParser (.valAt Compiler'specials, ___op))))
                                         (do
                                             (.parse ___p, ___context, ___form)
                                         )
@@ -14882,7 +14882,7 @@
                                 (throw (ß CompilerException'new((String) Compiler'SOURCE_PATH.deref(), Compiler'lineDeref(), Compiler'columnDeref(), ___e)))
                             )
                             (do
-                                (throw (ß (CompilerException) ___e))
+                                (throw (cast' CompilerException ___e))
                             )
                         )
                     )
@@ -14909,8 +14909,8 @@
                 (§ ass ___createdLoader true)
             )
             (try
-                (let [#_"Object" ___line (ß Compiler'lineDeref())]
-                    (let [#_"Object" ___column (ß Compiler'columnDeref())]
+                (let [#_"Object" ___line (Compiler'lineDeref)]
+                    (let [#_"Object" ___column (Compiler'columnDeref)]
                         (when (ß RT'meta(___form) != nil && RT'meta(___form).containsKey(RT'LINE_KEY))
                             (§ ass ___line (ß RT'meta(___form).valAt(RT'LINE_KEY)))
                         )
@@ -14919,7 +14919,7 @@
                         )
                         (ß Var'pushThreadBindings(RT'map(Compiler'LINE, ___line, Compiler'COLUMN, ___column)))
                         (try
-                            (§ ass ___form (ß macroexpand(___form)))
+                            (§ ass ___form (Compiler'macroexpand ___form))
                             (cond (ß ___form instanceof ISeq && Util'equals(RT'first(___form), Compiler'DO))
                                 (do
                                     (let [#_"ISeq" ___s (RT'next ___form)]
@@ -14929,17 +14929,17 @@
                                         (ß Compiler'eval-2(RT'first(___s), false))
                                     )
                                 )
-                                (ß (___form instanceof IType) || (___form instanceof IPersistentCollection && (not (ß RT'first(___form) instanceof Symbol && (:name (cast' Symbol (ß RT'first(___form)))).startsWith("def")))))
+                                (ß (___form instanceof IType) || (___form instanceof IPersistentCollection && (not (ß RT'first(___form) instanceof Symbol && (:name (cast' Symbol (RT'first ___form))).startsWith("def")))))
                                 (do
-                                    (let [#_"ObjExpr" ___fexpr (ß (ObjExpr) analyze(:Context'EXPRESSION, RT'list-3(Compiler'FN, PersistentVector'EMPTY, ___form), (str "eval" (RT'nextID))))]
-                                        (let [#_"IFn" ___fn (ß (IFn) (.eval ___fexpr))]
+                                    (let [#_"ObjExpr" ___fexpr (cast' ObjExpr (ß Compiler'analyze-3(:Context'EXPRESSION, RT'list-3(Compiler'FN, PersistentVector'EMPTY, ___form), (str "eval" (RT'nextID)))))]
+                                        (let [#_"IFn" ___fn (cast' IFn (.eval ___fexpr))]
                                             (.invoke ___fn)
                                         )
                                     )
                                 )
                                 :else
                                 (do
-                                    (let [#_"Expr" ___expr (ß analyze(:Context'EVAL, ___form))]
+                                    (let [#_"Expr" ___expr (ß Compiler'analyze-2(:Context'EVAL, ___form))]
                                         (.eval ___expr)
                                     )
                                 )
@@ -14963,7 +14963,7 @@
         (when (not (ß Compiler'CONSTANTS.isBound()))
             (§ return -1)
         )
-        (let [#_"PersistentVector" ___v (ß (PersistentVector) Compiler'CONSTANTS.deref())]
+        (let [#_"PersistentVector" ___v (cast' PersistentVector (ß Compiler'CONSTANTS.deref()))]
             (let [#_"IdentityHashMap<Object, Integer>" ___ids (ß (IdentityHashMap<Object, Integer>) Compiler'CONSTANT_IDS.deref())]
                 (let [#_"Integer" ___i (.get ___ids, ___o)]
                     (when (some? ___i)
@@ -14982,10 +14982,10 @@
             (§ return (KeywordExpr'new ___keyword))
         )
 
-        (let [#_"IPersistentMap" ___keywordsMap (ß (IPersistentMap) Compiler'KEYWORDS.deref())]
+        (let [#_"IPersistentMap" ___keywordsMap (cast' IPersistentMap (ß Compiler'KEYWORDS.deref()))]
             (let [#_"Object" ___id (RT'get-2 ___keywordsMap, ___keyword)]
                 (when (nil? ___id)
-                    (ß Compiler'KEYWORDS.set(RT'assoc(___keywordsMap, ___keyword, registerConstant(___keyword))))
+                    (ß Compiler'KEYWORDS.set(RT'assoc(___keywordsMap, ___keyword, Compiler'registerConstant(___keyword))))
                 )
                 (KeywordExpr'new ___keyword)
             )
@@ -14997,9 +14997,9 @@
             (throw (IllegalAccessError. "KEYWORD_CALLSITES is not bound"))
         )
 
-        (let [#_"IPersistentVector" ___keywordCallsites (ß (IPersistentVector) Compiler'KEYWORD_CALLSITES.deref())]
+        (let [#_"IPersistentVector" ___keywordCallsites (cast' IPersistentVector (ß Compiler'KEYWORD_CALLSITES.deref()))]
             (§ ass ___keywordCallsites (.cons ___keywordCallsites, ___keyword))
-            (ß Compiler'KEYWORD_CALLSITES.set(___keywordCallsites))
+            (.set Compiler'KEYWORD_CALLSITES, ___keywordCallsites)
             (ß (count ___keywordCallsites) - 1)
         )
     )
@@ -15009,9 +15009,9 @@
             (throw (IllegalAccessError. "PROTOCOL_CALLSITES is not bound"))
         )
 
-        (let [#_"IPersistentVector" ___protocolCallsites (ß (IPersistentVector) Compiler'PROTOCOL_CALLSITES.deref())]
+        (let [#_"IPersistentVector" ___protocolCallsites (cast' IPersistentVector (ß Compiler'PROTOCOL_CALLSITES.deref()))]
             (§ ass ___protocolCallsites (.cons ___protocolCallsites, ___v))
-            (ß Compiler'PROTOCOL_CALLSITES.set(___protocolCallsites))
+            (.set Compiler'PROTOCOL_CALLSITES, ___protocolCallsites)
             (ß (count ___protocolCallsites) - 1)
         )
     )
@@ -15021,9 +15021,9 @@
             (throw (IllegalAccessError. "VAR_CALLSITES is not bound"))
         )
 
-        (let [#_"IPersistentCollection" ___varCallsites (ß (IPersistentCollection) Compiler'VAR_CALLSITES.deref())]
+        (let [#_"IPersistentCollection" ___varCallsites (cast' IPersistentCollection (ß Compiler'VAR_CALLSITES.deref()))]
             (§ ass ___varCallsites (.cons ___varCallsites, ___v))
-            (ß Compiler'VAR_CALLSITES.set(___varCallsites))
+            (.set Compiler'VAR_CALLSITES, ___varCallsites)
             nil
         )
     )
@@ -15038,8 +15038,8 @@
     )
 
     (defn #_"PathNode" Compiler'commonPath [#_"PathNode" ___n1, #_"PathNode" ___n2]
-        (let [#_"ISeq" ___xp (ß fwdPath(___n1))]
-            (let [#_"ISeq" ___yp (ß fwdPath(___n2))]
+        (let [#_"ISeq" ___xp (Compiler'fwdPath ___n1)]
+            (let [#_"ISeq" ___yp (Compiler'fwdPath ___n2)]
                 (when (ß RT'first(___xp) != RT'first(___yp))
                     (§ return nil)
                 )
@@ -15047,36 +15047,36 @@
                     (§ ass ___xp (next ___xp))
                     (§ ass ___yp (next ___yp))
                 )
-                (ß (PathNode) RT'first(___xp))
+                (cast' PathNode (RT'first ___xp))
             )
         )
     )
 
     (defn #_"void" Compiler'addAnnotation [#_"Object" ___visitor, #_"IPersistentMap" ___meta]
         (when (ß ___meta != nil && Compiler'ADD_ANNOTATIONS.isBound())
-            (ß Compiler'ADD_ANNOTATIONS.invoke(___visitor, ___meta))
+            (.invoke Compiler'ADD_ANNOTATIONS, ___visitor, ___meta)
         )
         nil
     )
 
     (defn #_"void" Compiler'addParameterAnnotation [#_"Object" ___visitor, #_"IPersistentMap" ___meta, #_"int" ___i]
         (when (ß ___meta != nil && Compiler'ADD_ANNOTATIONS.isBound())
-            (ß Compiler'ADD_ANNOTATIONS.invoke(___visitor, ___meta, ___i))
+            (.invoke Compiler'ADD_ANNOTATIONS, ___visitor, ___meta, ___i)
         )
         nil
     )
 
     (defn- #_"Expr" Compiler'analyzeSymbol [#_"Symbol" ___sym]
-        (let [#_"Symbol" ___tag (ß tagOf(___sym))]
+        (let [#_"Symbol" ___tag (Compiler'tagOf ___sym)]
             (cond (ß (:ns ___sym) == nil) ;; ns-qualified syms are always Vars
                 (do
-                    (let [#_"LocalBinding" ___b (ß referenceLocal(___sym))]
+                    (let [#_"LocalBinding" ___b (Compiler'referenceLocal ___sym)]
                         (when (some? ___b)
                             (§ return (LocalBindingExpr'new ___b, ___tag))
                         )
                     )
                 )
-                (ß namespaceFor(___sym) == nil)
+                (ß Compiler'namespaceFor-1(___sym) == nil)
                 (do
                     (let [#_"Symbol" ___nsSym (ß Symbol'intern-1((:ns ___sym)))]
                         (let [#_"Class" ___c (HostExpr'maybeClass ___nsSym, false)]
@@ -15090,17 +15090,17 @@
                     )
                 )
             )
-            (let [#_"Object" ___o (ß resolve(___sym))]
+            (let [#_"Object" ___o (resolve ___sym)]
                 (cond (ß ___o instanceof Var)
                     (do
-                        (let [#_"Var" ___v (ß (Var) ___o)]
+                        (let [#_"Var" ___v (cast' Var ___o)]
                             (when (some? (Compiler'isMacro ___v))
                                 (throw (Util'runtimeException-1 (str "Can't take value of a macro: " ___v)))
                             )
                             (when (ß RT'booleanCast-1o(RT'get-2((.meta ___v), RT'CONST_KEY)))
-                                (§ return (ß analyze(:Context'EXPRESSION, RT'list-2(Compiler'QUOTE, (.get ___v)))))
+                                (§ return (ß Compiler'analyze-2(:Context'EXPRESSION, RT'list-2(Compiler'QUOTE, (.get ___v)))))
                             )
-                            (ß registerVar(___v))
+                            (Compiler'registerVar ___v)
                             (§ return (VarExpr'new ___v, ___tag))
                         )
                     )
@@ -15121,7 +15121,7 @@
 
     (defn #_"String" Compiler'destubClassName [#_"String" ___className]
         ;; skip over prefix + '.' or '/'
-        (when (ß ___className.startsWith(Compiler'COMPILE_STUB_PREFIX))
+        (when (.startsWith ___className, Compiler'COMPILE_STUB_PREFIX)
             (§ return (ß ___className.substring(Compiler'COMPILE_STUB_PREFIX.length() + 1)))
         )
         ___className
@@ -15130,22 +15130,22 @@
     (defn #_"Type" Compiler'getType [#_"Class" ___c]
         (let [#_"String" ___descriptor (ß Type/getType(___c).getDescriptor())]
             (when (.startsWith ___descriptor, "L")
-                (§ ass ___descriptor (str "L" (ß destubClassName(___descriptor.substring(1)))))
+                (§ ass ___descriptor (str "L" (ß Compiler'destubClassName(___descriptor.substring(1)))))
             )
             (§ unsure Type/getType ___descriptor)
         )
     )
 
     (defn #_"Object" Compiler'resolve-2 [#_"Symbol" ___sym, #_"boolean" ___allowPrivate]
-        (ß resolveIn((.currentNS this), ___sym, ___allowPrivate))
+        (ß Compiler'resolveIn((.currentNS this), ___sym, ___allowPrivate))
     )
 
     (defn #_"Object" Compiler'resolve-1 [#_"Symbol" ___sym]
-        (ß resolveIn((.currentNS this), ___sym, false))
+        (ß Compiler'resolveIn((.currentNS this), ___sym, false))
     )
 
     (defn #_"Namespace" Compiler'namespaceFor-1 [#_"Symbol" ___sym]
-        (ß namespaceFor((.currentNS this), ___sym))
+        (ß Compiler'namespaceFor-2((.currentNS this), ___sym))
     )
 
     (defn #_"Namespace" Compiler'namespaceFor-2 [#_"Namespace" ___inns, #_"Symbol" ___sym]
@@ -15166,7 +15166,7 @@
         ;; note - ns-qualified vars must already exist
         (cond (ß (:ns ___sym) != nil)
             (do
-                (let [#_"Namespace" ___ns (ß namespaceFor(___n, ___sym))]
+                (let [#_"Namespace" ___ns (Compiler'namespaceFor-2 ___n, ___sym)]
                     (when (nil? ___ns)
                         (throw (Util'runtimeException-1 (str "No such namespace: " (:ns ___sym))))
                     )
@@ -15189,11 +15189,11 @@
             (do
                 (ß RT'classForName-1((:name ___sym)))
             )
-            (ß ___sym.equals(Compiler'NS))
+            (.equals ___sym, Compiler'NS)
             (do
                 RT'NS_VAR
             )
-            (ß ___sym.equals(Compiler'IN_NS))
+            (.equals ___sym, Compiler'IN_NS)
             (do
                 RT'IN_NS_VAR
             )
@@ -15223,7 +15223,7 @@
         ;; note - ns-qualified vars must already exist
         (cond (ß (:ns ___sym) != nil)
             (do
-                (let [#_"Namespace" ___ns (ß namespaceFor(___n, ___sym))]
+                (let [#_"Namespace" ___ns (Compiler'namespaceFor-2 ___n, ___sym)]
                     (when (nil? ___ns)
                         (§ return nil)
                     )
@@ -15239,11 +15239,11 @@
             (do
                 (ß RT'classForName-1((:name ___sym)))
             )
-            (ß ___sym.equals(Compiler'NS))
+            (.equals ___sym, Compiler'NS)
             (do
                 RT'NS_VAR
             )
-            (ß ___sym.equals(Compiler'IN_NS))
+            (.equals ___sym, Compiler'IN_NS)
             (do
                 RT'IN_NS_VAR
             )
@@ -15261,7 +15261,7 @@
             ;; note - ns-qualified vars in other namespaces must already exist
             (cond (ß (:ns ___sym) != nil)
                 (do
-                    (let [#_"Namespace" ___ns (ß namespaceFor(___sym))]
+                    (let [#_"Namespace" ___ns (Compiler'namespaceFor-1 ___sym)]
                         (when (nil? ___ns)
                             (§ return nil)
                         )
@@ -15277,11 +15277,11 @@
                         )
                     )
                 )
-                (ß ___sym.equals(Compiler'NS))
+                (.equals ___sym, Compiler'NS)
                 (do
                     (§ ass ___var RT'NS_VAR)
                 )
-                (ß ___sym.equals(Compiler'IN_NS))
+                (.equals ___sym, Compiler'IN_NS)
                 (do
                     (§ ass ___var RT'IN_NS_VAR)
                 )
@@ -15298,7 +15298,7 @@
                             )
                             (ß ___o instanceof Var)
                             (do
-                                (§ ass ___var (ß (Var) ___o))
+                                (§ ass ___var (cast' Var ___o))
                             )
                             :else
                             (do
@@ -15309,7 +15309,7 @@
                 )
             )
             (when (ß ___var != nil && (ß (not (.isMacro ___var)) || ___registerMacro))
-                (ß registerVar(___var))
+                (Compiler'registerVar ___var)
             )
             ___var
         )
@@ -15323,10 +15323,10 @@
         (when (not (ß Compiler'VARS.isBound()))
             (§ return nil)
         )
-        (let [#_"IPersistentMap" ___varsMap (ß (IPersistentMap) Compiler'VARS.deref())]
+        (let [#_"IPersistentMap" ___varsMap (cast' IPersistentMap (ß Compiler'VARS.deref()))]
             (let [#_"Object" ___id (RT'get-2 ___varsMap, ___var)]
                 (when (nil? ___id)
-                    (ß Compiler'VARS.set(RT'assoc(___varsMap, ___var, registerConstant(___var))))
+                    (ß Compiler'VARS.set(RT'assoc(___varsMap, ___var, Compiler'registerConstant(___var))))
                 )
                 nil
             )
@@ -15334,23 +15334,23 @@
     )
 
     (defn #_"Namespace" Compiler'currentNS []
-        (ß (Namespace) RT'CURRENT_NS.deref())
+        (cast' Namespace (ß RT'CURRENT_NS.deref()))
     )
 
     (defn #_"void" Compiler'closeOver [#_"LocalBinding" ___b, #_"ObjMethod" ___method]
         (when (ß ___b != nil && ___method != nil)
-            (let [#_"LocalBinding" ___lb (ß (LocalBinding) RT'get-2((:locals ___method), ___b))]
+            (let [#_"LocalBinding" ___lb (cast' LocalBinding (ß RT'get-2((:locals ___method), ___b)))]
                 (if (nil? ___lb)
                     (do
-                        (§ ass (:closes (:objx ___method)) (ß (IPersistentMap) RT'assoc((:closes (:objx ___method)), ___b, ___b)))
-                        (ß closeOver(___b, (:parent ___method)))
+                        (§ ass (:closes (:objx ___method)) (cast' IPersistentMap (ß RT'assoc((:closes (:objx ___method)), ___b, ___b))))
+                        (ß Compiler'closeOver(___b, (:parent ___method)))
                     )
                     (do
                         (when (ß (:idx ___lb) == 0)
                             (§ ass (:usesThis ___method) true)
                         )
                         (when (ß Compiler'IN_CATCH_FINALLY.deref() != nil)
-                            (§ ass (:localsUsedInCatchFinally ___method) (ß (PersistentHashSet) (:localsUsedInCatchFinally ___method).cons((:idx ___b))))
+                            (§ ass (:localsUsedInCatchFinally ___method) (cast' PersistentHashSet (ß (:localsUsedInCatchFinally ___method).cons((:idx ___b)))))
                         )
                     )
                 )
@@ -15363,13 +15363,13 @@
         (when (not (ß Compiler'LOCAL_ENV.isBound()))
             (§ return nil)
         )
-        (let [#_"LocalBinding" ___b (ß (LocalBinding) RT'get-2(Compiler'LOCAL_ENV.deref(), ___sym))]
+        (let [#_"LocalBinding" ___b (cast' LocalBinding (ß RT'get-2(Compiler'LOCAL_ENV.deref(), ___sym)))]
             (when (some? ___b)
-                (let [#_"ObjMethod" ___method (ß (ObjMethod) Compiler'METHOD.deref())]
+                (let [#_"ObjMethod" ___method (cast' ObjMethod (ß Compiler'METHOD.deref()))]
                     (when (ß (:idx ___b) == 0)
                         (§ ass (:usesThis ___method) true)
                     )
-                    (ß closeOver(___b, ___method))
+                    (Compiler'closeOver ___b, ___method)
                 )
             )
             ___b
@@ -15380,7 +15380,7 @@
         (let [#_"Object" ___tag (ß RT'get-2(RT'meta(___o), RT'TAG_KEY))]
             (cond (ß ___tag instanceof Symbol)
                 (do
-                    (§ return (ß (Symbol) ___tag))
+                    (§ return (cast' Symbol ___tag))
                 )
                 (ß ___tag instanceof String)
                 (do
@@ -15432,8 +15432,8 @@
     (defn #_"Object" Compiler'load-3 [#_"Reader" ___rdr, #_"String" ___sourcePath, #_"String" ___sourceName]
         (let [#_"Object" ___EOF (Object.)]
             (let [#_"Object" ___ret nil]
-                (let [#_"LineNumberingPushbackReader" ___pushbackReader (ß (___rdr instanceof LineNumberingPushbackReader) ? (LineNumberingPushbackReader) ___rdr :or LineNumberingPushbackReader'new-1(___rdr))]
-                    (ß consumeWhitespaces(___pushbackReader))
+                (let [#_"LineNumberingPushbackReader" ___pushbackReader (if (ß ___rdr instanceof LineNumberingPushbackReader) (cast' LineNumberingPushbackReader ___rdr) (LineNumberingPushbackReader'new-1 ___rdr))]
+                    (Compiler'consumeWhitespaces ___pushbackReader)
                     (ß Var'pushThreadBindings(RT'mapUniqueKeys(
                         (object-array [
                             Compiler'LOADER                (RT'makeClassLoader)
@@ -15455,10 +15455,10 @@
                         ])
                     )))
 
-                    (let [#_"Object" ___readerOpts (ß ___readerOpts(___sourceName))]
+                    (let [#_"Object" ___readerOpts (Compiler'readerOpts ___sourceName)]
                         (try
                             (loop-when-recur [#_"Object" ___r (LispReader'read-5 ___pushbackReader, false, ___EOF, false, ___readerOpts)] (ß ___r != ___EOF) [(LispReader'read-5 ___pushbackReader, false, ___EOF, false, ___readerOpts)]
-                                (ß consumeWhitespaces(___pushbackReader))
+                                (Compiler'consumeWhitespaces ___pushbackReader)
                                 (ß Compiler'LINE_AFTER.set((.getLineNumber ___pushbackReader)))
                                 (ß Compiler'COLUMN_AFTER.set((.getColumnNumber ___pushbackReader)))
                                 (§ ass ___ret (Compiler'eval-2 ___r, false))
@@ -15474,7 +15474,7 @@
                                         (throw (ß CompilerException'new(___sourcePath, (Integer) Compiler'LINE_BEFORE.deref(), (Integer) Compiler'COLUMN_BEFORE.deref(), ___e)))
                                     )
                                     (do
-                                        (throw (ß (CompilerException) ___e))
+                                        (throw (cast' CompilerException ___e))
                                     )
                                 )
                             )
@@ -15490,7 +15490,7 @@
     )
 
     (defn #_"void" Compiler'writeClassFile [#_"String" ___internalName, #_"byte[]" ___bytecode] #_(§ throws IOException)
-        (let [#_"String" ___genPath (ß (String) Compiler'COMPILE_PATH.deref())]
+        (let [#_"String" ___genPath (cast String (ß Compiler'COMPILE_PATH.deref()))]
             (when (nil? ___genPath)
                 (throw (Util'runtimeException-1 "*compile-path* not set"))
             )
@@ -15545,8 +15545,8 @@
     )
 
     (defn #_"void" Compiler'compile1 [#_"GeneratorAdapter" ___gen, #_"ObjExpr" ___objx, #_"Object" ___form]
-        (let [#_"Object" ___line (ß Compiler'lineDeref())]
-            (let [#_"Object" ___column (ß Compiler'columnDeref())]
+        (let [#_"Object" ___line (Compiler'lineDeref)]
+            (let [#_"Object" ___column (Compiler'columnDeref)]
                 (when (ß RT'meta(___form) != nil && RT'meta(___form).containsKey(RT'LINE_KEY))
                     (§ ass ___line (ß RT'meta(___form).valAt(RT'LINE_KEY)))
                 )
@@ -15561,18 +15561,18 @@
                     ])
                 )))
                 (try
-                    (§ ass ___form (ß macroexpand(___form)))
+                    (§ ass ___form (Compiler'macroexpand ___form))
                     (if (ß ___form instanceof ISeq && Util'equals(RT'first(___form), Compiler'DO))
                         (do
                             (loop-when-recur [#_"ISeq" ___s (RT'next ___form)] (some? ___s) [(RT'next ___s)]
-                                (ß compile1(___gen, ___objx, RT'first(___s)))
+                                (ß Compiler'compile1(___gen, ___objx, RT'first(___s)))
                             )
                         )
                         (do
-                            (let [#_"Expr" ___expr (ß analyze(:Context'EVAL, ___form))]
-                                (§ ass (:keywords ___objx) (ß (IPersistentMap) Compiler'KEYWORDS.deref()))
-                                (§ ass (:vars ___objx) (ß (IPersistentMap) Compiler'VARS.deref()))
-                                (§ ass (:constants ___objx) (ß (PersistentVector) Compiler'CONSTANTS.deref()))
+                            (let [#_"Expr" ___expr (ß Compiler'analyze-2(:Context'EVAL, ___form))]
+                                (§ ass (:keywords ___objx) (cast' IPersistentMap (ß Compiler'KEYWORDS.deref())))
+                                (§ ass (:vars ___objx) (cast' IPersistentMap (ß Compiler'VARS.deref())))
+                                (§ ass (:constants ___objx) (cast' PersistentVector (ß Compiler'CONSTANTS.deref())))
                                 (ß ___expr.emit(:Context'EXPRESSION, ___objx, ___gen))
                                 (.eval ___expr)
                             )
@@ -15594,7 +15594,7 @@
 
         (let [#_"Object" ___EOF (Object.)]
             (let [#_"Object" ___ret nil]
-                (let [#_"LineNumberingPushbackReader" ___pushbackReader (ß (___rdr instanceof LineNumberingPushbackReader) ? (LineNumberingPushbackReader) ___rdr :or LineNumberingPushbackReader'new-1(___rdr))]
+                (let [#_"LineNumberingPushbackReader" ___pushbackReader (if (ß ___rdr instanceof LineNumberingPushbackReader) (cast' LineNumberingPushbackReader ___rdr) (LineNumberingPushbackReader'new-1 ___rdr))]
                     (ß Var'pushThreadBindings(RT'mapUniqueKeys(
                         (object-array [
                             Compiler'SOURCE_PATH           ___sourcePath
@@ -15622,22 +15622,22 @@
                     (try
                         ;; generate loader class
                         (let [#_"ObjExpr" ___objx (ObjExpr'new nil)]
-                            (§ ass (:internalName ___objx) (ß ___sourcePath.replace(File/separator, "/").substring(0, ___sourcePath.lastIndexOf(\.)) + RT'LOADER_SUFFIX))
+                            (§ ass (:internalName ___objx) (str (ß ___sourcePath.replace(File/separator, "/").substring(0, ___sourcePath.lastIndexOf(\.))) RT'LOADER_SUFFIX))
 
                             (§ ass (:objtype ___objx) (ß Type/getObjectType((:internalName ___objx))))
                             (let [#_"ClassWriter" ___cw (ClassWriter. ClassWriter/COMPUTE_MAXS)]
                                 (let [#_"ClassVisitor" ___cv ___cw]
-                                    (ß ___cv.visit(Opcodes/V1_5, Opcodes/ACC_PUBLIC + Opcodes/ACC_SUPER, (:internalName ___objx), nil, "java/lang/Object", nil))
+                                    (ß ___cv.visit(Opcodes/V1_5, (+ Opcodes/ACC_PUBLIC Opcodes/ACC_SUPER), (:internalName ___objx), nil, "java/lang/Object", nil))
 
                                     ;; static load method
                                     (let [#_"GeneratorAdapter" ___gen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), (Method/getMethod "void load ()"), nil, nil, ___cv)]
                                         (.visitCode ___gen)
 
-                                        (let [#_"Object" ___readerOpts (ß ___readerOpts(___sourceName))]
+                                        (let [#_"Object" ___readerOpts (Compiler'readerOpts ___sourceName)]
                                             (loop-when-recur [#_"Object" ___r (LispReader'read-5 ___pushbackReader, false, ___EOF, false, ___readerOpts)] (ß ___r != ___EOF) [(LispReader'read-5 ___pushbackReader, false, ___EOF, false, ___readerOpts)]
                                                 (ß Compiler'LINE_AFTER.set((.getLineNumber ___pushbackReader)))
                                                 (ß Compiler'COLUMN_AFTER.set((.getColumnNumber ___pushbackReader)))
-                                                (ß compile1(___gen, ___objx, ___r))
+                                                (Compiler'compile1 ___gen, ___objx, ___r)
                                                 (ß Compiler'LINE_BEFORE.set((.getLineNumber ___pushbackReader)))
                                                 (ß Compiler'COLUMN_BEFORE.set((.getColumnNumber ___pushbackReader)))
                                             )
@@ -15648,7 +15648,7 @@
                                             ;; static fields for constants
                                             (loop-when-recur [#_"int" ___i 0] (ß ___i < (:constants ___objx).count()) [(inc ___i)]
                                                 (when (ß (:usedConstants ___objx).contains(___i))
-                                                    (ß ___cv.visitField(Opcodes/ACC_PUBLIC + Opcodes/ACC_FINAL + Opcodes/ACC_STATIC, ___objx.constantName(___i), ___objx.constantType(___i).getDescriptor(), nil, nil))
+                                                    (ß ___cv.visitField((+ Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL Opcodes/ACC_STATIC), ___objx.constantName(___i), ___objx.constantType(___i).getDescriptor(), nil, nil))
                                                 )
                                             )
 
@@ -15715,7 +15715,7 @@
                                                                         ;; end of class
                                                                         (.visitEnd ___cv)
 
-                                                                        (ß writeClassFile((:internalName ___objx), (.toByteArray ___cw)))
+                                                                        (ß Compiler'writeClassFile((:internalName ___objx), (.toByteArray ___cw)))
                                                                     )
                                                                 )
                                                             )
@@ -15753,7 +15753,7 @@
             (§ return ___tc)
         )
         (when (ß (.isPrimitive ___ret) && (.isPrimitive ___tc))
-            (when (ß (inty(___ret) && inty(___tc)) || (___ret == ___tc))
+            (when (ß (Compiler'inty(___ret) && Compiler'inty(___tc)) || (___ret == ___tc))
                 (§ return ___tc)
             )
             (throw (UnsupportedOperationException. (str "Cannot coerce " ___ret " to " ___tc ", use a cast instead")))
@@ -15813,7 +15813,7 @@
         )
         (let [#_"Class" ___c nil]
             (when (ß ___tag instanceof Symbol)
-                (§ ass ___c (ß primClass((cast' Symbol ___tag))))
+                (§ ass ___c (ß Compiler'primClass-1s((cast' Symbol ___tag))))
             )
             (when (nil? ___c)
                 (§ ass ___c (HostExpr'tagToClass ___tag))
@@ -16140,7 +16140,7 @@
 
     (defn #_"DynamicClassLoader" DynamicClassLoader'new-0 []
         ;; pseudo test in lieu of hasContextClassLoader()
-        (merge (URLClassLoader'new DynamicClassLoader'EMPTY_URLS, (ß (Thread/currentThread().getContextClassLoader() == nil || Thread/currentThread().getContextClassLoader() == ClassLoader/getSystemClassLoader()) ? (§ class Compiler).getClassLoader() :or Thread/currentThread().getContextClassLoader())) (DynamicClassLoader'init))
+        (merge (URLClassLoader'new DynamicClassLoader'EMPTY_URLS, (if (ß Thread/currentThread().getContextClassLoader() == nil || Thread/currentThread().getContextClassLoader() == ClassLoader/getSystemClassLoader()) (ß (§ class Compiler).getClassLoader()) (ß Thread/currentThread().getContextClassLoader()))) (DynamicClassLoader'init))
     )
 
     (defn #_"DynamicClassLoader" DynamicClassLoader'new-1 [#_"ClassLoader" ___parent]
@@ -16193,7 +16193,7 @@
     #_method
     (§ defn #_"Class<?>" (§ method loadClass) [#_"DynamicClassLoader" this, #_"String" ___name, #_"boolean" ___resolve] #_(§ throws ClassNotFoundException)
         (§ sync this
-            (let [#_"Class" ___c (ß findLoadedClass(___name))]
+            (let [#_"Class" ___c (findLoadedClass ___name)]
                 (when (nil? ___c)
                     (§ ass ___c (DynamicClassLoader'findInMemoryClass ___name))
                     (when (nil? ___c)
@@ -16266,13 +16266,13 @@
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"EdnStringReader" this, #_"Object" ___reader, #_"Object" ___doublequote, #_"Object" ___opts]
         (let [#_"StringBuilder" ___sb (StringBuilder.)]
-            (let [#_"Reader" ___r (ß (Reader) ___reader)]
-                (loop-when-recur [#_"int" ___ch (ß EdnReader'read1(___r))] (ß ___ch != \") [(ß EdnReader'read1(___r))] ;; oops! "
+            (let [#_"Reader" ___r (cast Reader ___reader)]
+                (loop-when-recur [#_"int" ___ch (EdnReader'read1 ___r)] (ß ___ch != \") [(EdnReader'read1 ___r)] ;; oops! "
                     (when (ß ___ch == -1)
                         (throw (Util'runtimeException-1 "EOF while reading string"))
                     )
                     (when (ß ___ch == \\) ;; escape
-                        (§ ass ___ch (ß EdnReader'read1(___r)))
+                        (§ ass ___ch (EdnReader'read1 ___r))
                         (when (ß ___ch == -1)
                             (throw (Util'runtimeException-1 "EOF while reading string"))
                         )
@@ -16312,7 +16312,7 @@
                             )
                             (§ case \u)
                             (do
-                                (§ ass ___ch (ß EdnReader'read1(___r)))
+                                (§ ass ___ch (EdnReader'read1 ___r))
                                 (when (ß Character/digit(___ch, 16) == -1)
                                     (throw (Util'runtimeException-1 (str "Invalid unicode escape: \\u" (ß (char) ___ch))))
                                 )
@@ -16352,10 +16352,10 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"EdnCommentReader" this, #_"Object" ___reader, #_"Object" ___semicolon, #_"Object" ___opts]
-        (let [#_"Reader" ___r (ß (Reader) ___reader)]
+        (let [#_"Reader" ___r (cast Reader ___reader)]
             (§ let [#_"int" ___ch]
                 (§ loop
-                    (§ ass ___ch (ß EdnReader'read1(___r)))
+                    (§ ass ___ch (EdnReader'read1 ___r))
                     (§ recur-if (___ch != -1 && ___ch != \newline && ___ch != \return))
                 )
                 ___r
@@ -16372,7 +16372,7 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"EdnDiscardReader" this, #_"Object" ___reader, #_"Object" ___underscore, #_"Object" ___opts]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
             (EdnReader'read-5 ___r, true, nil, true, ___opts)
             ___r
         )
@@ -16387,7 +16387,7 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"EdnNamespaceMapReader" this, #_"Object" ___reader, #_"Object" ___colon, #_"Object" ___opts]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
             ;; Read ns symbol
             (let [#_"Object" ___sym (EdnReader'read-5 ___r, true, nil, false, ___opts)]
                 (when (ß (not (ß ___sym instanceof Symbol)) || (cast' Symbol ___sym).getNamespace() != nil)
@@ -16395,9 +16395,9 @@
                 )
                 (let [#_"String" ___ns (ß (cast' Symbol ___sym).getName())]
                     ;; Read map
-                    (let [#_"int" ___nextChar (ß EdnReader'read1(___r))]
-                        (while (ß isWhitespace(___nextChar))
-                            (§ ass ___nextChar (ß EdnReader'read1(___r)))
+                    (let [#_"int" ___nextChar (EdnReader'read1 ___r)]
+                        (while (EdnReader'isWhitespace ___nextChar)
+                            (§ ass ___nextChar (EdnReader'read1 ___r))
                         )
                         (when (ß \{ != ___nextChar)
                             (throw (RuntimeException. "Namespaced map must specify a map"))
@@ -16415,7 +16415,7 @@
                                             (let [#_"Object" ___val (next ___iter)]
                                                 (cond (ß ___key instanceof Keyword)
                                                     (do
-                                                        (let [#_"Keyword" ___kw (ß (Keyword) ___key)]
+                                                        (let [#_"Keyword" ___kw (cast' Keyword ___key)]
                                                             (cond (ß (.getNamespace ___kw) == nil)
                                                                 (do
                                                                     (§ ass ___key (ß Keyword'intern-2(___ns, (.getName ___kw))))
@@ -16429,7 +16429,7 @@
                                                     )
                                                     (ß ___key instanceof Symbol)
                                                     (do
-                                                        (let [#_"Symbol" ___s (ß (Symbol) ___key)]
+                                                        (let [#_"Symbol" ___s (cast' Symbol ___key)]
                                                             (cond (ß (.getNamespace ___s) == nil)
                                                                 (do
                                                                     (§ ass ___key (ß Symbol'intern-2(___ns, (.getName ___s))))
@@ -16494,7 +16494,7 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"EdnMetaReader" this, #_"Object" ___reader, #_"Object" ___caret, #_"Object" ___opts]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
             (let [#_"int" ___line -1]
                 (let [#_"int" ___column -1]
                     (when (ß ___r instanceof LineNumberingPushbackReader)
@@ -16528,7 +16528,7 @@
                                     )
                                     (let [#_"Object" ___ometa (RT'meta ___o)]
                                         (loop-when-recur [#_"ISeq" ___s (RT'seq ___meta)] (some? ___s) [(next ___s)]
-                                            (let [#_"IMapEntry" ___kv (ß (IMapEntry) (first ___s))]
+                                            (let [#_"IMapEntry" ___kv (cast' IMapEntry (first ___s))]
                                                 (§ ass ___ometa (ß RT'assoc(___ometa, (.getKey ___kv), (.getValue ___kv))))
                                             )
                                         )
@@ -16555,8 +16555,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"EdnCharacterReader" this, #_"Object" ___reader, #_"Object" ___backslash, #_"Object" ___opts]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
-            (let [#_"int" ___ch (ß EdnReader'read1(___r))]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
+            (let [#_"int" ___ch (EdnReader'read1 ___r)]
                 (when (ß ___ch == -1)
                     (throw (Util'runtimeException-1 "EOF while reading character"))
                 )
@@ -16604,7 +16604,7 @@
                                 (when (> ___len 3)
                                     (throw (Util'runtimeException-1 (str "Invalid octal escape sequence length: " ___len)))
                                 )
-                                (let [#_"int" ___uc (ß readUnicodeChar(___token, 1, ___len, 8))]
+                                (let [#_"int" ___uc (readUnicodeChar ___token, 1, ___len, 8)]
                                     (when (> ___uc 0377)
                                         (throw (Util'runtimeException-1 "Octal escape sequence must be in range [0, 377]."))
                                     )
@@ -16628,7 +16628,7 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"EdnListReader" this, #_"Object" ___reader, #_"Object" ___leftparen, #_"Object" ___opts]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
             (let [#_"int" ___line -1]
                 (let [#_"int" ___column -1]
                     (when (ß ___r instanceof LineNumberingPushbackReader)
@@ -16639,7 +16639,7 @@
                         (when (.isEmpty ___list)
                             (§ return PersistentList'EMPTY)
                         )
-                        (let [#_"IObj" ___s (ß (IObj) PersistentList'create(___list))]
+                        (let [#_"IObj" ___s (cast' IObj (PersistentList'create ___list))]
                             ___s
                         )
                     )
@@ -16657,7 +16657,7 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"EdnVectorReader" this, #_"Object" ___reader, #_"Object" ___leftparen, #_"Object" ___opts]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
             (ß LazilyPersistentVector'create(readDelimitedList(\], ___r, true, ___opts)))
         )
     )
@@ -16671,7 +16671,7 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"EdnMapReader" this, #_"Object" ___reader, #_"Object" ___leftparen, #_"Object" ___opts]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
             (let [#_"Object[]" ___a (ß readDelimitedList(\}, ___r, true, ___opts).toArray())]
                 (when (ß (___a.length & 1) == 1)
                     (throw (Util'runtimeException-1 "Map literal must contain an even number of forms"))
@@ -16690,7 +16690,7 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"EdnSetReader" this, #_"Object" ___reader, #_"Object" ___leftbracket, #_"Object" ___opts]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
             (ß PersistentHashSet'createWithCheck-1l(readDelimitedList(\}, ___r, true, ___opts)))
         )
     )
@@ -16736,16 +16736,16 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"EdnSymbolicValueReader" this, #_"Object" ___reader, #_"Object" ___quote, #_"Object" ___opts]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
             (let [#_"Object" ___o (EdnReader'read-5 ___r, true, nil, true, ___opts)]
                 (when (not (ß ___o instanceof Symbol))
                     (throw (Util'runtimeException-1 (str "Invalid token: ##" ___o)))
                 )
-                (when (not (ß EdnSymbolicValueReader'specials.containsKey(___o)))
+                (when (not (.containsKey EdnSymbolicValueReader'specials, ___o))
                     (throw (Util'runtimeException-1 (str "Unknown symbolic value: ##" ___o)))
                 )
 
-                (ß EdnSymbolicValueReader'specials.valAt(___o))
+                (.valAt EdnSymbolicValueReader'specials, ___o)
             )
         )
     )
@@ -16759,12 +16759,12 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"TaggedReader" this, #_"Object" ___reader, #_"Object" ___firstChar, #_"Object" ___opts]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
             (let [#_"Object" ___name (EdnReader'read-5 ___r, true, nil, false, ___opts)]
                 (when (not (ß ___name instanceof Symbol))
                     (throw (RuntimeException. "Reader tag must be a symbol"))
                 )
-                (let [#_"Symbol" ___sym (ß (Symbol)___name)]
+                (let [#_"Symbol" ___sym (cast' Symbol ___name)]
                     (ß this.readTagged(___r, ___sym, (IPersistentMap) ___opts))
                 )
             )
@@ -16777,14 +16777,14 @@
     #_method
     (§ defn- #_"Object" (§ method readTagged) [#_"TaggedReader" this, #_"PushbackReader" ___reader, #_"Symbol" ___tag, #_"IPersistentMap" ___opts]
         (let [#_"Object" ___o (EdnReader'read-5 ___reader, true, nil, true, ___opts)]
-            (let [#_"ILookup" ___readers (ß (ILookup)RT'get-2(___opts, TaggedReader'READERS))]
-                (let [#_"IFn" ___dataReader (ß (IFn)RT'get-2(___readers, ___tag))]
+            (let [#_"ILookup" ___readers (cast' ILookup (ß RT'get-2(___opts, TaggedReader'READERS)))]
+                (let [#_"IFn" ___dataReader (cast' IFn (ß RT'get-2(___readers, ___tag)))]
                     (when (nil? ___dataReader)
-                        (§ ass ___dataReader (ß (IFn)RT'get-2(RT'DEFAULT_DATA_READERS.deref(), ___tag)))
+                        (§ ass ___dataReader (cast' IFn (ß RT'get-2(RT'DEFAULT_DATA_READERS.deref(), ___tag))))
                     )
                     (if (nil? ___dataReader)
                         (do
-                            (let [#_"IFn" ___defaultReader (ß (IFn)RT'get-2(___opts, TaggedReader'DEFAULT))]
+                            (let [#_"IFn" ___defaultReader (cast' IFn (ß RT'get-2(___opts, TaggedReader'DEFAULT)))]
                                 (if (some? ___defaultReader)
                                     (do
                                         (.invoke ___defaultReader, ___tag, ___o)
@@ -16875,15 +16875,15 @@
     (§ def #_"Keyword" EdnReader'EOF (Keyword'intern-2 nil, "eof"))
 
     (defn #_"Object" EdnReader'read-2 [#_"PushbackReader" ___r, #_"IPersistentMap" ___opts]
-        (EdnReader'read-5 ___r, (not (ß ___opts.containsKey(EdnReader'EOF))), (ß ___opts.valAt(EdnReader'EOF)), false, ___opts)
+        (EdnReader'read-5 ___r, (not (.containsKey ___opts, EdnReader'EOF)), (.valAt ___opts, EdnReader'EOF), false, ___opts)
     )
 
     (defn #_"Object" EdnReader'read-5 [#_"PushbackReader" ___r, #_"boolean" ___eofIsError, #_"Object" ___eofValue, #_"boolean" ___isRecursive, #_"Object" ___opts]
         (try
             (while true
-                (let [#_"int" ___ch (ß EdnReader'read1(___r))]
-                    (while (ß isWhitespace(___ch))
-                        (§ ass ___ch (ß EdnReader'read1(___r)))
+                (let [#_"int" ___ch (EdnReader'read1 ___r)]
+                    (while (EdnReader'isWhitespace ___ch)
+                        (§ ass ___ch (EdnReader'read1 ___r))
                     )
 
                     (when (ß ___ch == -1)
@@ -16902,7 +16902,7 @@
                         )
                     )
 
-                    (let [#_"IFn" ___macroFn (ß getMacro(___ch))]
+                    (let [#_"IFn" ___macroFn (EdnReader'getMacro ___ch)]
                         (when (some? ___macroFn)
                             (let [#_"Object" ___ret (ß ___macroFn.invoke(___r, (char) ___ch, ___opts))]
                                 (when (RT'suppressRead)
@@ -16917,7 +16917,7 @@
                         )
 
                         (when (ß ___ch == \+ || ___ch == \-)
-                            (let [#_"int" ___ch2 (ß EdnReader'read1(___r))]
+                            (let [#_"int" ___ch2 (EdnReader'read1 ___r)]
                                 (when (Character/isDigit ___ch2)
                                     (EdnReader'unread ___r, ___ch2)
                                     (let [#_"Object" ___n (ß readNumber(___r, (char) ___ch))]
@@ -16935,7 +16935,7 @@
                             (when (RT'suppressRead)
                                 (§ return nil)
                             )
-                            (§ return (ß interpretToken(___token)))
+                            (§ return (interpretToken ___token))
                         )
                     )
                 )
@@ -16944,7 +16944,7 @@
                 (when (ß ___isRecursive || (not (ß ___r instanceof LineNumberingPushbackReader)))
                     (throw (Util'sneakyThrow ___e))
                 )
-                (let [#_"LineNumberingPushbackReader" ___rdr (ß (LineNumberingPushbackReader) ___r)]
+                (let [#_"LineNumberingPushbackReader" ___rdr (cast' LineNumberingPushbackReader ___r)]
                     (throw (ß EdnReaderException'new((.getLineNumber ___rdr), (.getColumnNumber ___rdr), ___e)))
                 )
             )
@@ -16953,20 +16953,20 @@
 
     (defn- #_"String" EdnReader'readToken [#_"PushbackReader" ___r, #_"char" ___initch, #_"boolean" ___leadConstituent]
         (let [#_"StringBuilder" ___sb (StringBuilder.)]
-            (when (ß ___leadConstituent && nonConstituent(___initch))
+            (when (ß ___leadConstituent && EdnReader'nonConstituent(___initch))
                 (throw (Util'runtimeException-1 (str "Invalid leading character: " (ß (char)___initch))))
             )
 
             (.append ___sb, ___initch)
 
             (while true
-                (let [#_"int" ___ch (ß EdnReader'read1(___r))]
-                    (cond (ß ___ch == -1 || isWhitespace(___ch) || isTerminatingMacro(___ch))
+                (let [#_"int" ___ch (EdnReader'read1 ___r)]
+                    (cond (ß ___ch == -1 || EdnReader'isWhitespace(___ch) || EdnReader'isTerminatingMacro(___ch))
                         (do
                             (EdnReader'unread ___r, ___ch)
                             (§ return (.toString ___sb))
                         )
-                        (ß nonConstituent(___ch))
+                        (EdnReader'nonConstituent ___ch)
                         (do
                             (throw (Util'runtimeException-1 (str "Invalid constituent character: " (ß (char)___ch))))
                         )
@@ -16982,8 +16982,8 @@
             (.append ___sb, ___initch)
 
             (while true
-                (let [#_"int" ___ch (ß EdnReader'read1(___r))]
-                    (when (ß ___ch == -1 || isWhitespace(___ch) || EdnReader'isMacro(___ch))
+                (let [#_"int" ___ch (EdnReader'read1 ___r)]
+                    (when (ß ___ch == -1 || EdnReader'isWhitespace(___ch) || EdnReader'isMacro(___ch))
                         (EdnReader'unread ___r, ___ch)
                         (§ break )
                     )
@@ -16992,7 +16992,7 @@
             )
 
             (let [#_"String" ___s (.toString ___sb)]
-                (let [#_"Object" ___n (ß matchNumber(___s))]
+                (let [#_"Object" ___n (EdnReader'matchNumber ___s)]
                     (when (nil? ___n)
                         (throw (NumberFormatException. (str "Invalid number: " ___s)))
                     )
@@ -17026,8 +17026,8 @@
             )
             (let [#_"int" ___i 1]
                 (loop-when-recur [___i ___i] (< ___i ___length) [(inc ___i)]
-                    (let [#_"int" ___ch (ß EdnReader'read1(___r))]
-                        (when (ß ___ch == -1 || isWhitespace(___ch) || EdnReader'isMacro(___ch))
+                    (let [#_"int" ___ch (EdnReader'read1 ___r)]
+                        (when (ß ___ch == -1 || EdnReader'isWhitespace(___ch) || EdnReader'isMacro(___ch))
                             (EdnReader'unread ___r, ___ch)
                             (§ break )
                         )
@@ -17063,7 +17063,7 @@
         )
 
         (let [#_"Object" ___ret nil]
-            (§ ass ___ret (ß matchSymbol(___s)))
+            (§ ass ___ret (matchSymbol ___s))
             (when (some? ___ret)
                 (§ return ___ret)
             )
@@ -17182,12 +17182,12 @@
     )
 
     (defn #_"List" EdnReader'readDelimitedList [#_"char" ___delim, #_"PushbackReader" ___r, #_"boolean" ___isRecursive, #_"Object" ___opts]
-        (let [#_"int" ___firstline (ß (___r instanceof LineNumberingPushbackReader) ? (cast' LineNumberingPushbackReader ___r).getLineNumber() :or -1)]
+        (let [#_"int" ___firstline (if (ß ___r instanceof LineNumberingPushbackReader) (ß (cast' LineNumberingPushbackReader ___r).getLineNumber()) -1)]
             (let [#_"ArrayList" ___a (ArrayList.)]
                 (while true
-                    (let [#_"int" ___ch (ß EdnReader'read1(___r))]
-                        (while (ß isWhitespace(___ch))
-                            (§ ass ___ch (ß EdnReader'read1(___r)))
+                    (let [#_"int" ___ch (EdnReader'read1 ___r)]
+                        (while (EdnReader'isWhitespace ___ch)
+                            (§ ass ___ch (EdnReader'read1 ___r))
                         )
 
                         (when (ß ___ch == -1)
@@ -17205,7 +17205,7 @@
                             (§ break )
                         )
 
-                        (let [#_"IFn" ___macroFn (ß getMacro(___ch))]
+                        (let [#_"IFn" ___macroFn (EdnReader'getMacro ___ch)]
                             (if (some? ___macroFn)
                                 (do
                                     (let [#_"Object" ___mret (ß ___macroFn.invoke(___r, (char) ___ch, ___opts))]
@@ -17311,7 +17311,7 @@
                 )
             )
         )
-        (ß (ISeq) (:_rest (:state this)))
+        (cast' ISeq (:_rest (:state this)))
     )
 
     #_method
@@ -17387,7 +17387,7 @@
     (defn #_"FnLoaderThunk" FnLoaderThunk'new [#_"Var" ___v, #_"String" ___fnClassName]
         (let [this (merge (RestFn'new) (FnLoaderThunk'init))]
             (§ ass (:v this) ___v)
-            (§ ass (:loader this) (ß (ClassLoader) RT'FN_LOADER_VAR.get()))
+            (§ ass (:loader this) (cast ClassLoader (ß RT'FN_LOADER_VAR.get())))
             (§ ass (:fnClassName this) ___fnClassName)
             (§ ass (:fn this) nil)
             this
@@ -17423,7 +17423,7 @@
     (§ defn- #_"void" (§ method load) [#_"FnLoaderThunk" this]
         (when (nil? (:fn this))
             (try
-                (§ ass (:fn this) (ß (IFn) Class/forName((:fnClassName this), true, (:loader this)).newInstance()))
+                (§ ass (:fn this) (cast' IFn (ß Class/forName((:fnClassName this), true, (:loader this)).newInstance())))
                 (catch Exception ___e
                     (throw (Util'sneakyThrow ___e))
                 )
@@ -19529,13 +19529,13 @@
             "public static double cloiure.lang.Numbers.multiply(double,double)"           Opcodes/DMUL
             "public static double cloiure.lang.Numbers.divide(double,double)"             Opcodes/DDIV
             "public static long cloiure.lang.Numbers.remainder(long,long)"                Opcodes/LREM
-            "public static long cloiure.lang.Numbers.shiftLeft(long,long)"                (ß oa(Opcodes/L2I, Opcodes/LSHL))
-            "public static long cloiure.lang.Numbers.shiftRight(long,long)"               (ß oa(Opcodes/L2I, Opcodes/LSHR))
-            "public static long cloiure.lang.Numbers.unsignedShiftRight(long,long)"       (ß oa(Opcodes/L2I, Opcodes/LUSHR))
+            "public static long cloiure.lang.Numbers.shiftLeft(long,long)"                (oa Opcodes/L2I, Opcodes/LSHL)
+            "public static long cloiure.lang.Numbers.shiftRight(long,long)"               (oa Opcodes/L2I, Opcodes/LSHR)
+            "public static long cloiure.lang.Numbers.unsignedShiftRight(long,long)"       (oa Opcodes/L2I, Opcodes/LUSHR)
             "public static double cloiure.lang.Numbers.minus(double)"                     Opcodes/DNEG
             "public static double cloiure.lang.Numbers.minus(double,double)"              Opcodes/DSUB
-            "public static double cloiure.lang.Numbers.inc(double)"                       (ß oa(Opcodes/DCONST_1, Opcodes/DADD))
-            "public static double cloiure.lang.Numbers.dec(double)"                       (ß oa(Opcodes/DCONST_1, Opcodes/DSUB))
+            "public static double cloiure.lang.Numbers.inc(double)"                       (oa Opcodes/DCONST_1, Opcodes/DADD)
+            "public static double cloiure.lang.Numbers.dec(double)"                       (oa Opcodes/DCONST_1, Opcodes/DSUB)
             "public static long cloiure.lang.Numbers.quotient(long,long)"                 Opcodes/LDIV
             "public static int cloiure.lang.Numbers.shiftLeftInt(int,int)"                Opcodes/ISHL
             "public static int cloiure.lang.Numbers.shiftRightInt(int,int)"               Opcodes/ISHR
@@ -19543,8 +19543,8 @@
             "public static int cloiure.lang.Numbers.unchecked_int_add(int,int)"           Opcodes/IADD
             "public static int cloiure.lang.Numbers.unchecked_int_subtract(int,int)"      Opcodes/ISUB
             "public static int cloiure.lang.Numbers.unchecked_int_negate(int)"            Opcodes/INEG
-            "public static int cloiure.lang.Numbers.unchecked_int_inc(int)"               (ß oa(Opcodes/ICONST_1, Opcodes/IADD))
-            "public static int cloiure.lang.Numbers.unchecked_int_dec(int)"               (ß oa(Opcodes/ICONST_1, Opcodes/ISUB))
+            "public static int cloiure.lang.Numbers.unchecked_int_inc(int)"               (oa Opcodes/ICONST_1, Opcodes/IADD)
+            "public static int cloiure.lang.Numbers.unchecked_int_dec(int)"               (oa Opcodes/ICONST_1, Opcodes/ISUB)
             "public static int cloiure.lang.Numbers.unchecked_int_multiply(int,int)"      Opcodes/IMUL
             "public static int cloiure.lang.Numbers.unchecked_int_divide(int,int)"        Opcodes/IDIV
             "public static int cloiure.lang.Numbers.unchecked_int_remainder(int,int)"     Opcodes/IREM
@@ -19556,10 +19556,10 @@
             "public static long cloiure.lang.Numbers.unchecked_minus(long,long)"          Opcodes/LSUB
             "public static long cloiure.lang.Numbers.unchecked_multiply(long,long)"       Opcodes/LMUL
             "public static double cloiure.lang.Numbers.unchecked_multiply(double,double)" Opcodes/DMUL
-            "public static double cloiure.lang.Numbers.unchecked_inc(double)"             (ß oa(Opcodes/DCONST_1, Opcodes/DADD))
-            "public static long cloiure.lang.Numbers.unchecked_inc(long)"                 (ß oa(Opcodes/LCONST_1, Opcodes/LADD))
-            "public static double cloiure.lang.Numbers.unchecked_dec(double)"             (ß oa(Opcodes/DCONST_1, Opcodes/DSUB))
-            "public static long cloiure.lang.Numbers.unchecked_dec(long)"                 (ß oa(Opcodes/LCONST_1, Opcodes/LSUB))
+            "public static double cloiure.lang.Numbers.unchecked_inc(double)"             (oa Opcodes/DCONST_1, Opcodes/DADD)
+            "public static long cloiure.lang.Numbers.unchecked_inc(long)"                 (oa Opcodes/LCONST_1, Opcodes/LADD)
+            "public static double cloiure.lang.Numbers.unchecked_dec(double)"             (oa Opcodes/DCONST_1, Opcodes/DSUB)
+            "public static long cloiure.lang.Numbers.unchecked_dec(long)"                 (oa Opcodes/LCONST_1, Opcodes/LSUB)
 
             "public static short cloiure.lang.RT.aget(short[],int)"                       Opcodes/SALOAD
             "public static float cloiure.lang.RT.aget(float[],int)"                       Opcodes/FALOAD
@@ -19615,26 +19615,26 @@
     ;; map to instructions terminated with comparator for branch to false
     (def #_"IPersistentMap" Intrinsics'preds (ß RT'map(
         (object-array [
-            "public static boolean cloiure.lang.Numbers.lt(double,double)"    (ß oa(Opcodes/DCMPG, Opcodes/IFGE))
-            "public static boolean cloiure.lang.Numbers.lt(long,long)"        (ß oa(Opcodes/LCMP, Opcodes/IFGE))
-            "public static boolean cloiure.lang.Numbers.equiv(double,double)" (ß oa(Opcodes/DCMPL, Opcodes/IFNE))
-            "public static boolean cloiure.lang.Numbers.equiv(long,long)"     (ß oa(Opcodes/LCMP, Opcodes/IFNE))
-            "public static boolean cloiure.lang.Numbers.lte(double,double)"   (ß oa(Opcodes/DCMPG, Opcodes/IFGT))
-            "public static boolean cloiure.lang.Numbers.lte(long,long)"       (ß oa(Opcodes/LCMP, Opcodes/IFGT))
-            "public static boolean cloiure.lang.Numbers.gt(long,long)"        (ß oa(Opcodes/LCMP, Opcodes/IFLE))
-            "public static boolean cloiure.lang.Numbers.gt(double,double)"    (ß oa(Opcodes/DCMPL, Opcodes/IFLE))
-            "public static boolean cloiure.lang.Numbers.gte(long,long)"       (ß oa(Opcodes/LCMP, Opcodes/IFLT))
-            "public static boolean cloiure.lang.Numbers.gte(double,double)"   (ß oa(Opcodes/DCMPL, Opcodes/IFLT))
-            "public static boolean cloiure.lang.Util.equiv(long,long)"        (ß oa(Opcodes/LCMP, Opcodes/IFNE))
-            "public static boolean cloiure.lang.Util.equiv(boolean,boolean)"  (ß oa(Opcodes/IF_ICMPNE))
-            "public static boolean cloiure.lang.Util.equiv(double,double)"    (ß oa(Opcodes/DCMPL, Opcodes/IFNE))
+            "public static boolean cloiure.lang.Numbers.lt(double,double)"    (oa Opcodes/DCMPG, Opcodes/IFGE)
+            "public static boolean cloiure.lang.Numbers.lt(long,long)"        (oa Opcodes/LCMP, Opcodes/IFGE)
+            "public static boolean cloiure.lang.Numbers.equiv(double,double)" (oa Opcodes/DCMPL, Opcodes/IFNE)
+            "public static boolean cloiure.lang.Numbers.equiv(long,long)"     (oa Opcodes/LCMP, Opcodes/IFNE)
+            "public static boolean cloiure.lang.Numbers.lte(double,double)"   (oa Opcodes/DCMPG, Opcodes/IFGT)
+            "public static boolean cloiure.lang.Numbers.lte(long,long)"       (oa Opcodes/LCMP, Opcodes/IFGT)
+            "public static boolean cloiure.lang.Numbers.gt(long,long)"        (oa Opcodes/LCMP, Opcodes/IFLE)
+            "public static boolean cloiure.lang.Numbers.gt(double,double)"    (oa Opcodes/DCMPL, Opcodes/IFLE)
+            "public static boolean cloiure.lang.Numbers.gte(long,long)"       (oa Opcodes/LCMP, Opcodes/IFLT)
+            "public static boolean cloiure.lang.Numbers.gte(double,double)"   (oa Opcodes/DCMPL, Opcodes/IFLT)
+            "public static boolean cloiure.lang.Util.equiv(long,long)"        (oa Opcodes/LCMP, Opcodes/IFNE)
+            "public static boolean cloiure.lang.Util.equiv(boolean,boolean)"  (oa Opcodes/IF_ICMPNE)
+            "public static boolean cloiure.lang.Util.equiv(double,double)"    (oa Opcodes/DCMPL, Opcodes/IFNE)
 
-            "public static boolean cloiure.lang.Numbers.isZero(double)"       (ß oa(Opcodes/DCONST_0, Opcodes/DCMPL, Opcodes/IFNE))
-            "public static boolean cloiure.lang.Numbers.isZero(long)"         (ß oa(Opcodes/LCONST_0, Opcodes/LCMP, Opcodes/IFNE))
-            "public static boolean cloiure.lang.Numbers.isPos(long)"          (ß oa(Opcodes/LCONST_0, Opcodes/LCMP, Opcodes/IFLE))
-            "public static boolean cloiure.lang.Numbers.isPos(double)"        (ß oa(Opcodes/DCONST_0, Opcodes/DCMPL, Opcodes/IFLE))
-            "public static boolean cloiure.lang.Numbers.isNeg(long)"          (ß oa(Opcodes/LCONST_0, Opcodes/LCMP, Opcodes/IFGE))
-            "public static boolean cloiure.lang.Numbers.isNeg(double)"        (ß oa(Opcodes/DCONST_0, Opcodes/DCMPG, Opcodes/IFGE))
+            "public static boolean cloiure.lang.Numbers.isZero(double)"       (oa Opcodes/DCONST_0, Opcodes/DCMPL, Opcodes/IFNE)
+            "public static boolean cloiure.lang.Numbers.isZero(long)"         (oa Opcodes/LCONST_0, Opcodes/LCMP, Opcodes/IFNE)
+            "public static boolean cloiure.lang.Numbers.isPos(long)"          (oa Opcodes/LCONST_0, Opcodes/LCMP, Opcodes/IFLE)
+            "public static boolean cloiure.lang.Numbers.isPos(double)"        (oa Opcodes/DCONST_0, Opcodes/DCMPL, Opcodes/IFLE)
+            "public static boolean cloiure.lang.Numbers.isNeg(long)"          (oa Opcodes/LCONST_0, Opcodes/LCMP, Opcodes/IFGE)
+            "public static boolean cloiure.lang.Numbers.isNeg(double)"        (oa Opcodes/DCONST_0, Opcodes/DCMPG, Opcodes/IFGE)
         ])
     )))
 )
@@ -19976,7 +19976,7 @@
                 )
             )
         )
-        (ß (ISeq) (:_rest (:state this)))
+        (cast' ISeq (:_rest (:state this)))
     )
 
     #_method
@@ -20069,11 +20069,11 @@
 
     (defn #_"Keyword" Keyword'intern [#_"Symbol" ___sym]
         (let [#_"Keyword" ___k nil]
-            (let [#_"Reference<Keyword>" ___existingRef (ß Keyword'TABLE.get(___sym))]
+            (let [#_"Reference<Keyword>" ___existingRef (.get Keyword'TABLE, ___sym)]
                 (when (nil? ___existingRef)
                     (Util'clearCache Keyword'RQ, Keyword'TABLE)
                     (when (ß (.meta ___sym) != nil)
-                        (§ ass ___sym (ß (Symbol) ___sym.withMeta(nil)))
+                        (§ ass ___sym (cast' Symbol (.withMeta ___sym, nil)))
                     )
                     (§ ass ___k (Keyword'new ___sym))
                     (§ ass ___existingRef (ß Keyword'TABLE.putIfAbsent(___sym, new WeakReference<Keyword>(___k, Keyword'RQ))))
@@ -20086,7 +20086,7 @@
                         (§ return ___existingk)
                     )
                     ;; entry died in the interim, do over
-                    (ß Keyword'TABLE.remove(___sym, ___existingRef))
+                    (.remove Keyword'TABLE, ___sym, ___existingRef)
                     (Keyword'intern ___sym)
                 )
             )
@@ -20119,7 +20119,7 @@
     )
 
     (defn #_"Keyword" Keyword'find [#_"Symbol" ___sym]
-        (let [#_"Reference<Keyword>" ___ref (ß Keyword'TABLE.get(___sym))]
+        (let [#_"Reference<Keyword>" ___ref (.get Keyword'TABLE, ___sym)]
             (if (some? ___ref)
                 (do
                     (.get ___ref)
@@ -20614,7 +20614,7 @@
     #_method
     (§ defn #_"boolean" (§ method containsAll) [#_"LazySeq" this, #_"Collection" ___c]
         (doseq [#_"Object" ___o ___c]
-            (when (not (ß this.contains(___o)))
+            (when (not (.contains this, ___o))
                 (§ return false)
             )
         )
@@ -20901,14 +20901,14 @@
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RegexReader" this, #_"Object" ___reader, #_"Object" ___doublequote, #_"Object" ___opts, #_"Object" ___pendingForms]
         (let [#_"StringBuilder" ___sb (StringBuilder.)]
-            (let [#_"Reader" ___r (ß (Reader) ___reader)]
-                (loop-when-recur [#_"int" ___ch (ß LispReader'read1(___r))] (ß ___ch != \") [(ß LispReader'read1(___r))] ;; oops! "
+            (let [#_"Reader" ___r (cast Reader ___reader)]
+                (loop-when-recur [#_"int" ___ch (LispReader'read1 ___r)] (ß ___ch != \") [(LispReader'read1 ___r)] ;; oops! "
                     (when (ß ___ch == -1)
                         (throw (Util'runtimeException-1 "EOF while reading regex"))
                     )
                     (ß ___sb.append((char) ___ch))
                     (when (ß ___ch == \\) ;; escape
-                        (§ ass ___ch (ß LispReader'read1(___r)))
+                        (§ ass ___ch (LispReader'read1 ___r))
                         (when (ß ___ch == -1)
                             (throw (Util'runtimeException-1 "EOF while reading regex"))
                         )
@@ -20930,13 +20930,13 @@
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"LispStringReader" this, #_"Object" ___reader, #_"Object" ___doublequote, #_"Object" ___opts, #_"Object" ___pendingForms]
         (let [#_"StringBuilder" ___sb (StringBuilder.)]
-            (let [#_"Reader" ___r (ß (Reader) ___reader)]
-                (loop-when-recur [#_"int" ___ch (ß LispReader'read1(___r))] (ß ___ch != \") [(ß LispReader'read1(___r))] ;; oops! "
+            (let [#_"Reader" ___r (cast Reader ___reader)]
+                (loop-when-recur [#_"int" ___ch (LispReader'read1 ___r)] (ß ___ch != \") [(LispReader'read1 ___r)] ;; oops! "
                     (when (ß ___ch == -1)
                         (throw (Util'runtimeException-1 "EOF while reading string"))
                     )
                     (when (ß ___ch == \\) ;; escape
-                        (§ ass ___ch (ß LispReader'read1(___r)))
+                        (§ ass ___ch (LispReader'read1 ___r))
                         (when (ß ___ch == -1)
                             (throw (Util'runtimeException-1 "EOF while reading string"))
                         )
@@ -20976,7 +20976,7 @@
                             )
                             (§ case \u)
                             (do
-                                (§ ass ___ch (ß LispReader'read1(___r)))
+                                (§ ass ___ch (LispReader'read1 ___r))
                                 (when (ß Character/digit(___ch, 16) == -1)
                                     (throw (Util'runtimeException-1 (str "Invalid unicode escape: \\u" (ß (char) ___ch))))
                                 )
@@ -21016,10 +21016,10 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"LispCommentReader" this, #_"Object" ___reader, #_"Object" ___semicolon, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"Reader" ___r (ß (Reader) ___reader)]
+        (let [#_"Reader" ___r (cast Reader ___reader)]
             (§ let [#_"int" ___ch]
                 (§ loop
-                    (§ ass ___ch (ß LispReader'read1(___r)))
+                    (§ ass ___ch (LispReader'read1 ___r))
                     (§ recur-if (___ch != -1 && ___ch != \newline && ___ch != \return))
                 )
                 ___r
@@ -21036,8 +21036,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"LispDiscardReader" this, #_"Object" ___reader, #_"Object" ___underscore, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
-            (LispReader'read-6 ___r, true, nil, true, ___opts, (ß ensurePending(___pendingForms)))
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
+            (LispReader'read-6 ___r, true, nil, true, ___opts, (LispReader'ensurePending ___pendingForms))
             ___r
         )
     )
@@ -21054,9 +21054,9 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"LispNamespaceMapReader" this, #_"Object" ___reader, #_"Object" ___colon, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
             (let [#_"boolean" ___auto false]
-                (let [#_"int" ___autoChar (ß LispReader'read1(___r))]
+                (let [#_"int" ___autoChar (LispReader'read1 ___r)]
                     (if (ß ___autoChar == \:)
                         (do
                             (§ ass ___auto true)
@@ -21067,13 +21067,13 @@
                     )
 
                     (let [#_"Object" ___sym nil]
-                        (let [#_"int" ___nextChar (ß LispReader'read1(___r))]
-                            (cond (ß isWhitespace(___nextChar)) ;; the #:: { } case or an error
+                        (let [#_"int" ___nextChar (LispReader'read1 ___r)]
+                            (cond (LispReader'isWhitespace ___nextChar) ;; the #:: { } case or an error
                                 (do
                                     (if ___auto
                                         (do
-                                            (while (ß isWhitespace(___nextChar))
-                                                (§ ass ___nextChar (ß LispReader'read1(___r)))
+                                            (while (LispReader'isWhitespace ___nextChar)
+                                                (§ ass ___nextChar (LispReader'read1 ___r))
                                             )
                                             (when (ß ___nextChar != \{)
                                                 (LispReader'unread ___r, ___nextChar)
@@ -21090,9 +21090,9 @@
                                 (do
                                     (LispReader'unread ___r, ___nextChar)
                                     (§ ass ___sym (LispReader'read-6 ___r, true, nil, false, ___opts, ___pendingForms))
-                                    (§ ass ___nextChar (ß LispReader'read1(___r)))
-                                    (while (ß isWhitespace(___nextChar))
-                                        (§ ass ___nextChar (ß LispReader'read1(___r)))
+                                    (§ ass ___nextChar (LispReader'read1 ___r))
+                                    (while (LispReader'isWhitespace ___nextChar)
+                                        (§ ass ___nextChar (LispReader'read1 ___r))
                                     )
                                 )
                             )
@@ -21104,7 +21104,7 @@
                             (§ let [#_"String" ___ns]
                                 (cond ___auto
                                     (do
-                                        (let [#_"Resolver" ___resolver (ß (Resolver) RT'READER_RESOLVER.deref())]
+                                        (let [#_"Resolver" ___resolver (cast' Resolver (ß RT'READER_RESOLVER.deref()))]
                                             (cond (nil? ___sym)
                                                 (do
                                                     (if (some? ___resolver)
@@ -21158,7 +21158,7 @@
                                 )
 
                                 ;; Read map
-                                (let [#_"List" ___kvs (ß readDelimitedList(\}, ___r, true, ___opts, ensurePending(___pendingForms)))]
+                                (let [#_"List" ___kvs (ß readDelimitedList(\}, ___r, true, ___opts, LispReader'ensurePending(___pendingForms)))]
                                     (when (ß ((.size ___kvs) & 1) == 1)
                                         (throw (Util'runtimeException-1 "Namespaced map literal must contain an even number of forms"))
                                     )
@@ -21171,7 +21171,7 @@
                                                     (let [#_"Object" ___val (next ___iter)]
                                                         (cond (ß ___key instanceof Keyword)
                                                             (do
-                                                                (let [#_"Keyword" ___kw (ß (Keyword) ___key)]
+                                                                (let [#_"Keyword" ___kw (cast' Keyword ___key)]
                                                                     (cond (ß (.getNamespace ___kw) == nil)
                                                                         (do
                                                                             (§ ass ___key (ß Keyword'intern-2(___ns, (.getName ___kw))))
@@ -21185,7 +21185,7 @@
                                                             )
                                                             (ß ___key instanceof Symbol)
                                                             (do
-                                                                (let [#_"Symbol" ___s (ß (Symbol) ___key)]
+                                                                (let [#_"Symbol" ___s (cast' Symbol ___key)]
                                                                     (cond (ß (.getNamespace ___s) == nil)
                                                                         (do
                                                                             (§ ass ___key (ß Symbol'intern-2(___ns, (.getName ___s))))
@@ -21232,16 +21232,16 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"LispSymbolicValueReader" this, #_"Object" ___reader, #_"Object" ___quote, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
-            (let [#_"Object" ___o (LispReader'read-6 ___r, true, nil, true, ___opts, (ß ensurePending(___pendingForms)))]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
+            (let [#_"Object" ___o (LispReader'read-6 ___r, true, nil, true, ___opts, (LispReader'ensurePending ___pendingForms))]
                 (when (not (ß ___o instanceof Symbol))
                     (throw (Util'runtimeException-1 (str "Invalid token: ##" ___o)))
                 )
-                (when (not (ß LispSymbolicValueReader'specials.containsKey(___o)))
+                (when (not (.containsKey LispSymbolicValueReader'specials, ___o))
                     (throw (Util'runtimeException-1 (str "Unknown symbolic value: ##" ___o)))
                 )
 
-                (ß LispSymbolicValueReader'specials.valAt(___o))
+                (.valAt LispSymbolicValueReader'specials, ___o)
             )
         )
     )
@@ -21263,8 +21263,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"WrappingReader" this, #_"Object" ___reader, #_"Object" ___quote, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
-            (let [#_"Object" ___o (LispReader'read-6 ___r, true, nil, true, ___opts, (ß ensurePending(___pendingForms)))]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
+            (let [#_"Object" ___o (LispReader'read-6 ___r, true, nil, true, ___opts, (LispReader'ensurePending ___pendingForms))]
                 (RT'list-2 (:sym this), ___o)
             )
         )
@@ -21290,8 +21290,8 @@
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"DeprecatedWrappingReader" this, #_"Object" ___reader, #_"Object" ___quote, #_"Object" ___opts, #_"Object" ___pendingForms]
         (System/out.println (str "WARNING: reader macro " (:macro this) " is deprecated; use " (ß (:sym this).getName()) " instead"))
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
-            (let [#_"Object" ___o (LispReader'read-6 ___r, true, nil, true, ___opts, (ß ensurePending(___pendingForms)))]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
+            (let [#_"Object" ___o (LispReader'read-6 ___r, true, nil, true, ___opts, (LispReader'ensurePending ___pendingForms))]
                 (RT'list-2 (:sym this), ___o)
             )
         )
@@ -21306,8 +21306,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"VarReader" this, #_"Object" ___reader, #_"Object" ___quote, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
-            (let [#_"Object" ___o (LispReader'read-6 ___r, true, nil, true, ___opts, (ß ensurePending(___pendingForms)))]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
+            (let [#_"Object" ___o (LispReader'read-6 ___r, true, nil, true, ___opts, (LispReader'ensurePending ___pendingForms))]
                 (RT'list-2 LispReader'THE_VAR, ___o)
             )
         )
@@ -21330,7 +21330,7 @@
                 ;; Try the ctor reader first
                 (when (nil? ___fn)
                     (LispReader'unread (cast PushbackReader ___reader), ___ch)
-                    (§ ass ___pendingForms (ß ensurePending(___pendingForms)))
+                    (§ ass ___pendingForms (LispReader'ensurePending ___pendingForms))
                     (let [#_"Object" ___result (.invoke ctorReader, ___reader, ___ch, ___opts, ___pendingForms)]
                         (if (some? ___result)
                             (do
@@ -21356,24 +21356,24 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"FnReader" this, #_"Object" ___reader, #_"Object" ___lparen, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
             (when (ß LispReader'ARG_ENV.deref() != nil)
                 (throw (IllegalStateException. "Nested #()s are not allowed"))
             )
             (try
                 (ß Var'pushThreadBindings(RT'map(LispReader'ARG_ENV, PersistentTreeMap'EMPTY)))
                 (LispReader'unread ___r, \()
-                (let [#_"Object" ___form (LispReader'read-6 ___r, true, nil, true, ___opts, (ß ensurePending(___pendingForms)))]
+                (let [#_"Object" ___form (LispReader'read-6 ___r, true, nil, true, ___opts, (LispReader'ensurePending ___pendingForms))]
                     (let [#_"PersistentVector" ___args PersistentVector'EMPTY]
-                        (let [#_"PersistentTreeMap" ___argsyms (ß (PersistentTreeMap) LispReader'ARG_ENV.deref())]
+                        (let [#_"PersistentTreeMap" ___argsyms (cast' PersistentTreeMap (ß LispReader'ARG_ENV.deref()))]
                             (let [#_"ISeq" ___rargs (.rseq ___argsyms)]
                                 (when (some? ___rargs)
-                                    (let [#_"int" ___higharg (ß (Integer) ((Map$Entry) (first ___rargs)).getKey())]
+                                    (let [#_"int" ___higharg (cast Integer (ß (cast Map$Entry (first ___rargs)).getKey()))]
                                         (when (> ___higharg 0)
                                             (loop-when-recur [#_"int" ___i 1] (ß ___i <= ___higharg) [(inc ___i)]
                                                 (let [#_"Object" ___sym (.valAt ___argsyms, ___i)]
                                                     (when (nil? ___sym)
-                                                        (§ ass ___sym (ß garg(___i)))
+                                                        (§ ass ___sym (garg ___i))
                                                     )
                                                     (§ ass ___args (.cons ___args, ___sym))
                                                 )
@@ -21381,7 +21381,7 @@
                                         )
                                         (let [#_"Object" ___restsym (.valAt ___argsyms, -1)]
                                             (when (some? ___restsym)
-                                                (§ ass ___args (ß ___args.cons(Compiler'_AMP_)))
+                                                (§ ass ___args (.cons ___args, Compiler'_AMP_))
                                                 (§ ass ___args (.cons ___args, ___restsym))
                                             )
                                         )
@@ -21408,19 +21408,19 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"ArgReader" this, #_"Object" ___reader, #_"Object" ___pct, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
             (when (ß LispReader'ARG_ENV.deref() == nil)
                 (§ return (ß interpretToken(readToken(___r, \%), nil)))
             )
-            (let [#_"int" ___ch (ß LispReader'read1(___r))]
+            (let [#_"int" ___ch (LispReader'read1 ___r)]
                 (LispReader'unread ___r, ___ch)
                 ;; % alone is first arg
-                (when (ß ___ch == -1 || isWhitespace(___ch) || isTerminatingMacro(___ch))
-                    (§ return (ß registerArg(1)))
+                (when (ß ___ch == -1 || LispReader'isWhitespace(___ch) || LispReader'isTerminatingMacro(___ch))
+                    (§ return (registerArg 1))
                 )
-                (let [#_"Object" ___n (LispReader'read-6 ___r, true, nil, true, ___opts, (ß ensurePending(___pendingForms)))]
-                    (when (ß ___n.equals(Compiler'_AMP_))
-                        (§ return (ß registerArg(-1)))
+                (let [#_"Object" ___n (LispReader'read-6 ___r, true, nil, true, ___opts, (LispReader'ensurePending ___pendingForms))]
+                    (when (.equals ___n, Compiler'_AMP_)
+                        (§ return (registerArg -1))
                     )
                     (when (not (ß ___n instanceof Number))
                         (throw (IllegalStateException. "arg literal must be %, %& or %integer"))
@@ -21440,14 +21440,14 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"LispMetaReader" this, #_"Object" ___reader, #_"Object" ___caret, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
             (let [#_"int" ___line -1]
                 (let [#_"int" ___column -1]
                     (when (ß ___r instanceof LineNumberingPushbackReader)
                         (§ ass ___line (ß (cast' LineNumberingPushbackReader ___r).getLineNumber()))
                         (§ ass ___column (ß (cast' LineNumberingPushbackReader ___r).getColumnNumber()-1))
                     )
-                    (§ ass ___pendingForms (ß ensurePending(___pendingForms)))
+                    (§ ass ___pendingForms (LispReader'ensurePending ___pendingForms))
                     (let [#_"Object" ___meta (LispReader'read-6 ___r, true, nil, true, ___opts, ___pendingForms)]
                         (cond (ß ___meta instanceof Symbol || ___meta instanceof String)
                             (do
@@ -21475,7 +21475,7 @@
                                     )
                                     (let [#_"Object" ___ometa (RT'meta ___o)]
                                         (loop-when-recur [#_"ISeq" ___s (RT'seq ___meta)] (some? ___s) [(next ___s)]
-                                            (let [#_"IMapEntry" ___kv (ß (IMapEntry) (first ___s))]
+                                            (let [#_"IMapEntry" ___kv (cast' IMapEntry (first ___s))]
                                                 (§ ass ___ometa (ß RT'assoc(___ometa, (.getKey ___kv), (.getValue ___kv))))
                                             )
                                         )
@@ -21502,12 +21502,12 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"SyntaxQuoteReader" this, #_"Object" ___reader, #_"Object" ___backquote, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
             (try
                 (ß Var'pushThreadBindings(RT'map(LispReader'GENSYM_ENV, PersistentHashMap'EMPTY)))
 
-                (let [#_"Object" ___form (LispReader'read-6 ___r, true, nil, true, ___opts, (ß ensurePending(___pendingForms)))]
-                    (ß syntaxQuote(___form))
+                (let [#_"Object" ___form (LispReader'read-6 ___r, true, nil, true, ___opts, (LispReader'ensurePending ___pendingForms))]
+                    (syntaxQuote ___form)
                 )
                 (finally
                     (Var'popThreadBindings)
@@ -21524,15 +21524,15 @@
                 )
                 (ß ___form instanceof Symbol)
                 (do
-                    (let [#_"Resolver" ___resolver (ß (Resolver) RT'READER_RESOLVER.deref())]
-                        (let [#_"Symbol" ___sym (ß (Symbol) ___form)]
+                    (let [#_"Resolver" ___resolver (cast' Resolver (ß RT'READER_RESOLVER.deref()))]
+                        (let [#_"Symbol" ___sym (cast' Symbol ___form)]
                             (cond (ß (:ns ___sym) == nil && (:name ___sym).endsWith("#"))
                                 (do
-                                    (let [#_"IPersistentMap" ___gmap (ß (IPersistentMap) LispReader'GENSYM_ENV.deref())]
+                                    (let [#_"IPersistentMap" ___gmap (cast' IPersistentMap (ß LispReader'GENSYM_ENV.deref()))]
                                         (when (nil? ___gmap)
                                             (throw (IllegalStateException. "Gensym literal not in syntax-quote"))
                                         )
-                                        (let [#_"Symbol" ___gs (ß (Symbol) ___gmap.valAt(___sym))]
+                                        (let [#_"Symbol" ___gs (cast' Symbol (.valAt ___gmap, ___sym))]
                                             (when (nil? ___gs)
                                                 (§ ass ___gs (Symbol'intern-2 nil, (str (ß (:name ___sym).substring(0, (:name ___sym).length() - 1)) "__" (RT'nextID) "__auto__")))
                                                 (ß LispReader'GENSYM_ENV.set(___gmap.assoc(___sym, ___gs)))
@@ -21621,11 +21621,11 @@
                         )
                     )
                 )
-                (ß isUnquote(___form))
+                (LispReader'isUnquote ___form)
                 (do
                     (§ return (RT'second ___form))
                 )
-                (ß isUnquoteSplicing(___form))
+                (LispReader'isUnquoteSplicing ___form)
                 (do
                     (throw (IllegalStateException. "splice not in list"))
                 )
@@ -21694,11 +21694,11 @@
         (let [#_"PersistentVector" ___ret PersistentVector'EMPTY]
             (loop-when-recur [___seq ___seq] (some? ___seq) [(next ___seq)]
                 (let [#_"Object" ___item (first ___seq)]
-                    (cond (ß isUnquote(___item))
+                    (cond (LispReader'isUnquote ___item)
                         (do
                             (§ ass ___ret (ß ___ret.cons(RT'list-2(LispReader'LIST, RT'second(___item)))))
                         )
-                        (ß isUnquoteSplicing(___item))
+                        (LispReader'isUnquoteSplicing ___item)
                         (do
                             (§ ass ___ret (ß ___ret.cons(RT'second(___item))))
                         )
@@ -21716,9 +21716,9 @@
     (defn- #_"IPersistentVector" SyntaxQuoteReader'flattenMap [#_"Object" ___form]
         (let [#_"IPersistentVector" ___keyvals PersistentVector'EMPTY]
             (loop-when-recur [#_"ISeq" ___s (RT'seq ___form)] (some? ___s) [(next ___s)]
-                (let [#_"IMapEntry" ___e (ß (IMapEntry) (first ___s))]
-                    (§ ass ___keyvals (ß (IPersistentVector) ___keyvals.cons((.key ___e))))
-                    (§ ass ___keyvals (ß (IPersistentVector) ___keyvals.cons((.val ___e))))
+                (let [#_"IMapEntry" ___e (cast' IMapEntry (first ___s))]
+                    (§ ass ___keyvals (cast' IPersistentVector (ß ___keyvals.cons((.key ___e)))))
+                    (§ ass ___keyvals (cast' IPersistentVector (ß ___keyvals.cons((.val ___e)))))
                 )
             )
             ___keyvals
@@ -21734,12 +21734,12 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"UnquoteReader" this, #_"Object" ___reader, #_"Object" ___comma, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
-            (let [#_"int" ___ch (ß LispReader'read1(___r))]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
+            (let [#_"int" ___ch (LispReader'read1 ___r)]
                 (when (ß ___ch == -1)
                     (throw (Util'runtimeException-1 "EOF while reading character"))
                 )
-                (§ ass ___pendingForms (ß ensurePending(___pendingForms)))
+                (§ ass ___pendingForms (LispReader'ensurePending ___pendingForms))
                 (if (ß ___ch == \@)
                     (do
                         (let [#_"Object" ___o (LispReader'read-6 ___r, true, nil, true, ___opts, ___pendingForms)]
@@ -21766,8 +21766,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"LispCharacterReader" this, #_"Object" ___reader, #_"Object" ___backslash, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
-            (let [#_"int" ___ch (ß LispReader'read1(___r))]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
+            (let [#_"int" ___ch (LispReader'read1 ___r)]
                 (when (ß ___ch == -1)
                     (throw (Util'runtimeException-1 "EOF while reading character"))
                 )
@@ -21815,7 +21815,7 @@
                                 (when (> ___len 3)
                                     (throw (Util'runtimeException-1 (str "Invalid octal escape sequence length: " ___len)))
                                 )
-                                (let [#_"int" ___uc (ß readUnicodeChar(___token, 1, ___len, 8))]
+                                (let [#_"int" ___uc (readUnicodeChar ___token, 1, ___len, 8)]
                                     (when (> ___uc 0377)
                                         (throw (Util'runtimeException-1 "Octal escape sequence must be in range [0, 377]."))
                                     )
@@ -21839,18 +21839,18 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"LispListReader" this, #_"Object" ___reader, #_"Object" ___leftparen, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
             (let [#_"int" ___line -1]
                 (let [#_"int" ___column -1]
                     (when (ß ___r instanceof LineNumberingPushbackReader)
                         (§ ass ___line (ß (cast' LineNumberingPushbackReader ___r).getLineNumber()))
                         (§ ass ___column (ß (cast' LineNumberingPushbackReader ___r).getColumnNumber()-1))
                     )
-                    (let [#_"List" ___list (ß readDelimitedList(\), ___r, true, ___opts, ensurePending(___pendingForms)))]
+                    (let [#_"List" ___list (ß readDelimitedList(\), ___r, true, ___opts, LispReader'ensurePending(___pendingForms)))]
                         (when (.isEmpty ___list)
                             (§ return PersistentList'EMPTY)
                         )
-                        (let [#_"IObj" ___s (ß (IObj) PersistentList'create(___list))]
+                        (let [#_"IObj" ___s (cast' IObj (PersistentList'create ___list))]
                             (if (ß ___line != -1)
                                 (do
                                     (ß ___s.withMeta(RT'map(
@@ -21884,17 +21884,17 @@
             (throw (Util'runtimeException-1 "EvalReader not allowed when *read-eval* is false."))
         )
 
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
-            (let [#_"Object" ___o (LispReader'read-6 ___r, true, nil, true, ___opts, (ß ensurePending(___pendingForms)))]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
+            (let [#_"Object" ___o (LispReader'read-6 ___r, true, nil, true, ___opts, (LispReader'ensurePending ___pendingForms))]
                 (cond (ß ___o instanceof Symbol)
                     (do
                         (ß RT'classForName-1((.toString ___o)))
                     )
                     (ß ___o instanceof IPersistentList)
                     (do
-                        (let [#_"Symbol" ___fs (ß (Symbol) RT'first(___o))]
-                            (when (ß ___fs.equals(LispReader'THE_VAR))
-                                (let [#_"Symbol" ___vs (ß (Symbol) RT'second(___o))]
+                        (let [#_"Symbol" ___fs (cast' Symbol (RT'first ___o))]
+                            (when (.equals ___fs, LispReader'THE_VAR)
+                                (let [#_"Symbol" ___vs (cast' Symbol (RT'second ___o))]
                                     (§ return (ß RT'var-2((:ns ___vs), (:name ___vs))))
                                 )
                             )
@@ -21934,8 +21934,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"LispVectorReader" this, #_"Object" ___reader, #_"Object" ___leftparen, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
-            (ß LazilyPersistentVector'create(readDelimitedList(\], ___r, true, ___opts, ensurePending(___pendingForms))))
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
+            (ß LazilyPersistentVector'create(readDelimitedList(\], ___r, true, ___opts, LispReader'ensurePending(___pendingForms))))
         )
     )
 )
@@ -21948,8 +21948,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"LispMapReader" this, #_"Object" ___reader, #_"Object" ___leftparen, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
-            (let [#_"Object[]" ___a (ß readDelimitedList(\}, ___r, true, ___opts, ensurePending(___pendingForms)).toArray())]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
+            (let [#_"Object[]" ___a (ß readDelimitedList(\}, ___r, true, ___opts, LispReader'ensurePending(___pendingForms)).toArray())]
                 (when (ß (___a.length & 1) == 1)
                     (throw (Util'runtimeException-1 "Map literal must contain an even number of forms"))
                 )
@@ -21967,8 +21967,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"LispSetReader" this, #_"Object" ___reader, #_"Object" ___leftbracket, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
-            (ß PersistentHashSet'createWithCheck-1l(readDelimitedList(\}, ___r, true, ___opts, ensurePending(___pendingForms))))
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
+            (ß PersistentHashSet'createWithCheck-1l(readDelimitedList(\}, ___r, true, ___opts, LispReader'ensurePending(___pendingForms))))
         )
     )
 )
@@ -22005,13 +22005,13 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"CtorReader" this, #_"Object" ___reader, #_"Object" ___firstChar, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
-            (§ ass ___pendingForms (ß ensurePending(___pendingForms)))
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
+            (§ ass ___pendingForms (LispReader'ensurePending ___pendingForms))
             (let [#_"Object" ___name (LispReader'read-6 ___r, true, nil, false, ___opts, ___pendingForms)]
                 (when (not (ß ___name instanceof Symbol))
                     (throw (RuntimeException. "Reader tag must be a symbol"))
                 )
-                (let [#_"Symbol" ___sym (ß (Symbol)___name)]
+                (let [#_"Symbol" ___sym (cast' Symbol ___name)]
                     (let [#_"Object" ___form (LispReader'read-6 ___r, true, nil, true, ___opts, ___pendingForms)]
                         (if (ß isPreserveReadCond(___opts) || RT'suppressRead())
                             (do
@@ -22029,13 +22029,13 @@
 
     #_method
     (§ defn- #_"Object" (§ method readTagged) [#_"CtorReader" this, #_"Object" ___o, #_"Symbol" ___tag, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"ILookup" ___data_readers (ß (ILookup)RT'DATA_READERS.deref())]
-            (let [#_"IFn" ___data_reader (ß (IFn)RT'get-2(___data_readers, ___tag))]
+        (let [#_"ILookup" ___data_readers (cast' ILookup (ß RT'DATA_READERS.deref()))]
+            (let [#_"IFn" ___data_reader (cast' IFn (ß RT'get-2(___data_readers, ___tag)))]
                 (when (nil? ___data_reader)
-                    (§ ass ___data_readers (ß (ILookup)RT'DEFAULT_DATA_READERS.deref()))
-                    (§ ass ___data_reader (ß (IFn)RT'get-2(___data_readers, ___tag)))
+                    (§ ass ___data_readers (cast' ILookup (ß RT'DEFAULT_DATA_READERS.deref())))
+                    (§ ass ___data_reader (cast' IFn (ß RT'get-2(___data_readers, ___tag))))
                     (when (nil? ___data_reader)
-                        (let [#_"IFn" ___default_reader (ß (IFn)RT'DEFAULT_DATA_READER_FN.deref())]
+                        (let [#_"IFn" ___default_reader (cast' IFn (ß RT'DEFAULT_DATA_READER_FN.deref()))]
                             (if (some? ___default_reader)
                                 (do
                                     (§ return (.invoke ___default_reader, ___tag, ___o))
@@ -22080,7 +22080,7 @@
                         (let [#_"Constructor[]" ___allctors (ß (cast Class ___recordClass).getConstructors())]
                             (if ___shortForm
                                 (do
-                                    (let [#_"IPersistentVector" ___recordEntries (ß (IPersistentVector)___form)]
+                                    (let [#_"IPersistentVector" ___recordEntries (cast' IPersistentVector ___form)]
                                         (let [#_"boolean" ___ctorFound false]
                                             (doseq [#_"Constructor" ___ctor ___allctors]
                                                 (when (ß (.getParameterTypes ___ctor).length == (count ___recordEntries))
@@ -22097,7 +22097,7 @@
                                     )
                                 )
                                 (do
-                                    (let [#_"IPersistentMap" ___vals (ß (IPersistentMap)___form)]
+                                    (let [#_"IPersistentMap" ___vals (cast' IPersistentMap ___form)]
                                         (loop-when-recur [#_"ISeq" ___s (RT'keys ___vals)] (some? ___s) [(next ___s)]
                                             (when (not (ß (first ___s) instanceof Keyword))
                                                 (throw (Util'runtimeException-1 (str "Unreadable defrecord form: key must be of type cloiure.lang.Keyword, got " (.toString (first ___s)))))
@@ -22132,11 +22132,11 @@
             (throw (Util'runtimeException-1 (str "Feature should be a keyword: " ___feature)))
         )
 
-        (when (ß ConditionalReader'DEFAULT_FEATURE.equals(___feature))
+        (when (.equals ConditionalReader'DEFAULT_FEATURE, ___feature)
             (§ return true)
         )
 
-        (let [#_"IPersistentSet" ___custom (ß (IPersistentSet) (cast' IPersistentMap ___opts).valAt(LispReader'OPT_FEATURES))]
+        (let [#_"IPersistentSet" ___custom (cast' IPersistentSet (ß (cast' IPersistentMap ___opts).valAt(LispReader'OPT_FEATURES)))]
             (ß (___custom != nil && ___custom.contains(___feature)))
         )
     )
@@ -22145,9 +22145,9 @@
         (let [#_"Object" ___result ConditionalReader'READ_STARTED]
             (§ let [#_"Object" ___form] ;; The most recently ready form
                 (let [#_"boolean" ___toplevel (ß ___pendingForms == nil)]
-                    (§ ass ___pendingForms (ß ensurePending(___pendingForms)))
+                    (§ ass ___pendingForms (LispReader'ensurePending ___pendingForms))
 
-                    (let [#_"int" ___firstline (ß (___r instanceof LineNumberingPushbackReader) ? (cast' LineNumberingPushbackReader ___r).getLineNumber() :or -1)]
+                    (let [#_"int" ___firstline (if (ß ___r instanceof LineNumberingPushbackReader) (ß (cast' LineNumberingPushbackReader ___r).getLineNumber()) -1)]
                         (while true
                             (when (ß ___result == ConditionalReader'READ_STARTED)
                                 ;; Read the next feature
@@ -22170,13 +22170,13 @@
                                     )
                                 )
 
-                                (when (ß ConditionalReader'RESERVED_FEATURES.contains(___form))
+                                (when (.contains ConditionalReader'RESERVED_FEATURES, ___form)
                                     (throw (Util'runtimeException-1 (str "Feature name " ___form " is reserved.")))
                                 )
 
-                                (when (ß hasFeature(___form, ___opts))
+                                (when (hasFeature ___form, ___opts)
                                     ;; Read the form corresponding to the feature, and assign it to result if everything is kosher
-                                    (§ ass ___form (LispReader'read-9 ___r, false, LispReader'READ_EOF, \), LispReader'READ_FINISHED, true, ___opts, ___pendingForms, (ß (Resolver) RT'READER_RESOLVER.deref())))
+                                    (§ ass ___form (LispReader'read-9 ___r, false, LispReader'READ_EOF, \), LispReader'READ_FINISHED, true, ___opts, ___pendingForms, (cast' Resolver (ß RT'READER_RESOLVER.deref()))))
 
                                     (cond (ß ___form == LispReader'READ_EOF)
                                         (do
@@ -22211,7 +22211,7 @@
                             ;; When we already have a result, or when the feature didn't match, discard the next form in the reader
                             (try
                                 (ß Var'pushThreadBindings(RT'map(RT'SUPPRESS_READ, RT'T)))
-                                (§ ass ___form (LispReader'read-9 ___r, false, LispReader'READ_EOF, \), LispReader'READ_FINISHED, true, ___opts, ___pendingForms, (ß (Resolver) RT'READER_RESOLVER.deref())))
+                                (§ ass ___form (LispReader'read-9 ___r, false, LispReader'READ_EOF, \), LispReader'READ_FINISHED, true, ___opts, ___pendingForms, (cast' Resolver (ß RT'READER_RESOLVER.deref()))))
 
                                 (cond (ß ___form == LispReader'READ_EOF)
                                     (do
@@ -22264,7 +22264,7 @@
     )
 
     (defn- #_"void" ConditionalReader'checkConditionalAllowed [#_"Object" ___opts]
-        (let [#_"IPersistentMap" ___mopts (ß (IPersistentMap)___opts)]
+        (let [#_"IPersistentMap" ___mopts (cast' IPersistentMap ___opts)]
             (when (not (ß ___opts != nil && (LispReader'COND_ALLOW.equals(___mopts.valAt(LispReader'OPT_READ_COND)) || LispReader'COND_PRESERVE.equals(___mopts.valAt(LispReader'OPT_READ_COND)))))
                 (throw (Util'runtimeException-1 "Conditional read not allowed"))
             )
@@ -22276,8 +22276,8 @@
     (§ defn #_"Object" (§ method invoke) [#_"ConditionalReader" this, #_"Object" ___reader, #_"Object" ___mode, #_"Object" ___opts, #_"Object" ___pendingForms]
         (ConditionalReader'checkConditionalAllowed ___opts)
 
-        (let [#_"PushbackReader" ___r (ß (PushbackReader) ___reader)]
-            (let [#_"int" ___ch (ß LispReader'read1(___r))]
+        (let [#_"PushbackReader" ___r (cast PushbackReader ___reader)]
+            (let [#_"int" ___ch (LispReader'read1 ___r)]
                 (when (ß ___ch == -1)
                     (throw (Util'runtimeException-1 "EOF while reading character"))
                 )
@@ -22285,11 +22285,11 @@
                 (let [#_"boolean" ___splicing false]
                     (when (ß ___ch == \@)
                         (§ ass ___splicing true)
-                        (§ ass ___ch (ß LispReader'read1(___r)))
+                        (§ ass ___ch (LispReader'read1 ___r))
                     )
 
-                    (while (ß isWhitespace(___ch))
-                        (§ ass ___ch (ß LispReader'read1(___r)))
+                    (while (LispReader'isWhitespace ___ch)
+                        (§ ass ___ch (LispReader'read1 ___r))
                     )
 
                     (when (ß ___ch == -1)
@@ -22303,16 +22303,16 @@
                     (try
                         (ß Var'pushThreadBindings(RT'map(LispReader'READ_COND_ENV, RT'T)))
 
-                        (if (ß isPreserveReadCond(___opts))
+                        (if (isPreserveReadCond ___opts)
                             (do
-                                (let [#_"IFn" ___listReader (ß getMacro(___ch))] ;; should always be a list
-                                    (let [#_"Object" ___form (ß ___listReader.invoke(___r, ___ch, ___opts, ensurePending(___pendingForms)))]
+                                (let [#_"IFn" ___listReader (EdnReader'getMacro ___ch)] ;; should always be a list
+                                    (let [#_"Object" ___form (ß ___listReader.invoke(___r, ___ch, ___opts, LispReader'ensurePending(___pendingForms)))]
                                         (ReaderConditional'create ___form, ___splicing)
                                     )
                                 )
                             )
                             (do
-                                (ß readCondDelimited(___r, ___splicing, ___opts, ___pendingForms))
+                                (readCondDelimited ___r, ___splicing, ___opts, ___pendingForms)
                             )
                         )
                         (finally
@@ -22441,7 +22441,7 @@
             (let [#_"Object" ___eofValue nil]
                 (when (ß ___opts != nil && ___opts instanceof IPersistentMap)
                     (let [#_"Object" ___eof (ß (cast' IPersistentMap ___opts).valAt(LispReader'OPT_EOF, LispReader'EOFTHROW))]
-                        (when (not (ß LispReader'EOFTHROW.equals(___eof)))
+                        (when (not (.equals LispReader'EOFTHROW, ___eof))
                             (§ ass ___eofIsError false)
                             (§ ass ___eofValue ___eof)
                         )
@@ -22458,11 +22458,11 @@
 
     (defn #_"Object" LispReader'read-5 [#_"PushbackReader" ___r, #_"boolean" ___eofIsError, #_"Object" ___eofValue, #_"boolean" ___isRecursive, #_"Object" ___opts]
         ;; start with pendingForms nil as reader conditional splicing is not allowed at top level
-        (LispReader'read-9 ___r, ___eofIsError, ___eofValue, nil, nil, ___isRecursive, ___opts, nil, (ß (Resolver) RT'READER_RESOLVER.deref()))
+        (LispReader'read-9 ___r, ___eofIsError, ___eofValue, nil, nil, ___isRecursive, ___opts, nil, (cast' Resolver (ß RT'READER_RESOLVER.deref())))
     )
 
     (defn- #_"Object" LispReader'read-6 [#_"PushbackReader" ___r, #_"boolean" ___eofIsError, #_"Object" ___eofValue, #_"boolean" ___isRecursive, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (LispReader'read-9 ___r, ___eofIsError, ___eofValue, nil, nil, ___isRecursive, ___opts, (ß ensurePending(___pendingForms)), (ß (Resolver) RT'READER_RESOLVER.deref()))
+        (LispReader'read-9 ___r, ___eofIsError, ___eofValue, nil, nil, ___isRecursive, ___opts, (LispReader'ensurePending ___pendingForms), (cast' Resolver (ß RT'READER_RESOLVER.deref())))
     )
 
     (defn- #_"Object" LispReader'ensurePending [#_"Object" ___pendingForms]
@@ -22482,11 +22482,11 @@
                 (RT'mapUniqueKeys LispReader'OPT_FEATURES, LispReader'PLATFORM_FEATURES)
             )
             (do
-                (let [#_"IPersistentMap" ___mopts (ß (IPersistentMap) ___opts)]
-                    (let [#_"Object" ___features (ß ___mopts.valAt(LispReader'OPT_FEATURES))]
+                (let [#_"IPersistentMap" ___mopts (cast' IPersistentMap ___opts)]
+                    (let [#_"Object" ___features (.valAt ___mopts, LispReader'OPT_FEATURES)]
                         (if (nil? ___features)
                             (do
-                                (ß ___mopts.assoc(LispReader'OPT_FEATURES, LispReader'PLATFORM_FEATURES))
+                                (.assoc ___mopts, LispReader'OPT_FEATURES, LispReader'PLATFORM_FEATURES)
                             )
                             (do
                                 (ß ___mopts.assoc(LispReader'OPT_FEATURES, RT'conj((IPersistentSet) ___features, LispReader'PLATFORM_KEY)))
@@ -22503,7 +22503,7 @@
             (throw (Util'runtimeException-1 "Reading disallowed - *read-eval* bound to :unknown"))
         )
 
-        (§ ass ___opts (ß installPlatformFeature(___opts)))
+        (§ ass ___opts (installPlatformFeature ___opts))
 
         (try
             (while true
@@ -22511,9 +22511,9 @@
                     (§ return (ß (cast List ___pendingForms).remove(0)))
                 )
 
-                (let [#_"int" ___ch (ß LispReader'read1(___r))]
-                    (while (ß isWhitespace(___ch))
-                        (§ ass ___ch (ß LispReader'read1(___r)))
+                (let [#_"int" ___ch (LispReader'read1 ___r)]
+                    (while (LispReader'isWhitespace ___ch)
+                        (§ ass ___ch (LispReader'read1 ___r))
                     )
 
                     (when (ß ___ch == -1)
@@ -22533,7 +22533,7 @@
                         )
                     )
 
-                    (let [#_"IFn" ___macroFn (ß getMacro(___ch))]
+                    (let [#_"IFn" ___macroFn (EdnReader'getMacro ___ch)]
                         (when (some? ___macroFn)
                             (let [#_"Object" ___ret (ß ___macroFn.invoke(___r, (char) ___ch, ___opts, ___pendingForms))]
                                 ;; no op macros return the reader
@@ -22545,7 +22545,7 @@
                         )
 
                         (when (ß ___ch == \+ || ___ch == \-)
-                            (let [#_"int" ___ch2 (ß LispReader'read1(___r))]
+                            (let [#_"int" ___ch2 (LispReader'read1 ___r)]
                                 (when (Character/isDigit ___ch2)
                                     (LispReader'unread ___r, ___ch2)
                                     (let [#_"Object" ___n (ß readNumber(___r, (char) ___ch))]
@@ -22557,7 +22557,7 @@
                         )
 
                         (let [#_"String" ___token (ß readToken(___r, (char) ___ch))]
-                            (§ return (ß interpretToken(___token, ___resolver)))
+                            (§ return (interpretToken ___token, ___resolver))
                         )
                     )
                 )
@@ -22566,7 +22566,7 @@
                 (when (ß ___isRecursive || (not (ß ___r instanceof LineNumberingPushbackReader)))
                     (throw (Util'sneakyThrow ___e))
                 )
-                (let [#_"LineNumberingPushbackReader" ___rdr (ß (LineNumberingPushbackReader) ___r)]
+                (let [#_"LineNumberingPushbackReader" ___rdr (cast' LineNumberingPushbackReader ___r)]
                     (throw (ß LispReaderException'new((.getLineNumber ___rdr), (.getColumnNumber ___rdr), ___e)))
                 )
             )
@@ -22578,8 +22578,8 @@
             (.append ___sb, ___initch)
 
             (while true
-                (let [#_"int" ___ch (ß LispReader'read1(___r))]
-                    (when (ß ___ch == -1 || isWhitespace(___ch) || isTerminatingMacro(___ch))
+                (let [#_"int" ___ch (LispReader'read1 ___r)]
+                    (when (ß ___ch == -1 || LispReader'isWhitespace(___ch) || LispReader'isTerminatingMacro(___ch))
                         (LispReader'unread ___r, ___ch)
                         (§ return (.toString ___sb))
                     )
@@ -22594,8 +22594,8 @@
             (.append ___sb, ___initch)
 
             (while true
-                (let [#_"int" ___ch (ß LispReader'read1(___r))]
-                    (when (ß ___ch == -1 || isWhitespace(___ch) || LispReader'isMacro(___ch))
+                (let [#_"int" ___ch (LispReader'read1 ___r)]
+                    (when (ß ___ch == -1 || LispReader'isWhitespace(___ch) || LispReader'isMacro(___ch))
                         (LispReader'unread ___r, ___ch)
                         (§ break )
                     )
@@ -22604,7 +22604,7 @@
             )
 
             (let [#_"String" ___s (.toString ___sb)]
-                (let [#_"Object" ___n (ß matchNumber(___s))]
+                (let [#_"Object" ___n (LispReader'matchNumber ___s)]
                     (when (nil? ___n)
                         (throw (NumberFormatException. (str "Invalid number: " ___s)))
                     )
@@ -22638,8 +22638,8 @@
             )
             (let [#_"int" ___i 1]
                 (loop-when-recur [___i ___i] (< ___i ___length) [(inc ___i)]
-                    (let [#_"int" ___ch (ß LispReader'read1(___r))]
-                        (when (ß ___ch == -1 || isWhitespace(___ch) || LispReader'isMacro(___ch))
+                    (let [#_"int" ___ch (LispReader'read1 ___r)]
+                        (when (ß ___ch == -1 || LispReader'isWhitespace(___ch) || LispReader'isMacro(___ch))
                             (LispReader'unread ___r, ___ch)
                             (§ break )
                         )
@@ -22674,7 +22674,7 @@
             )
         )
         (let [#_"Object" ___ret nil]
-            (§ ass ___ret (ß matchSymbol(___s, ___resolver)))
+            (§ ass ___ret (matchSymbol ___s, ___resolver))
             (when (some? ___ret)
                 (§ return ___ret)
             )
@@ -22841,13 +22841,13 @@
     )
 
     (defn #_"Symbol" LispReader'registerArg [#_"int" ___n]
-        (let [#_"PersistentTreeMap" ___argsyms (ß (PersistentTreeMap) LispReader'ARG_ENV.deref())]
+        (let [#_"PersistentTreeMap" ___argsyms (cast' PersistentTreeMap (ß LispReader'ARG_ENV.deref()))]
             (when (nil? ___argsyms)
                 (throw (IllegalStateException. "arg literal not in #()"))
             )
-            (let [#_"Symbol" ___ret (ß (Symbol) ___argsyms.valAt(___n))]
+            (let [#_"Symbol" ___ret (cast' Symbol (.valAt ___argsyms, ___n))]
                 (when (nil? ___ret)
-                    (§ ass ___ret (ß garg(___n)))
+                    (§ ass ___ret (garg ___n))
                     (ß LispReader'ARG_ENV.set(___argsyms.assoc(___n, ___ret)))
                 )
                 ___ret
@@ -22868,9 +22868,9 @@
     (def- #_"Object" LispReader'READ_FINISHED (Object.))
 
     (defn #_"List" LispReader'readDelimitedList [#_"char" ___delim, #_"PushbackReader" ___r, #_"boolean" ___isRecursive, #_"Object" ___opts, #_"Object" ___pendingForms]
-        (let [#_"int" ___firstline (ß (___r instanceof LineNumberingPushbackReader) ? (cast' LineNumberingPushbackReader ___r).getLineNumber() :or -1)]
+        (let [#_"int" ___firstline (if (ß ___r instanceof LineNumberingPushbackReader) (ß (cast' LineNumberingPushbackReader ___r).getLineNumber()) -1)]
             (let [#_"ArrayList" ___a (ArrayList.)]
-                (let [#_"Resolver" ___resolver (ß (Resolver) RT'READER_RESOLVER.deref())]
+                (let [#_"Resolver" ___resolver (cast' Resolver (ß RT'READER_RESOLVER.deref()))]
                     (while true
                         (let [#_"Object" ___form (LispReader'read-9 ___r, false, LispReader'READ_EOF, ___delim, LispReader'READ_FINISHED, ___isRecursive, ___opts, ___pendingForms, ___resolver)]
                             (cond (ß ___form == LispReader'READ_EOF)
@@ -22902,7 +22902,7 @@
         (if (ß RT'booleanCast-1o(LispReader'READ_COND_ENV.deref()) && ___opts instanceof IPersistentMap)
             (do
                 (let [#_"Object" ___readCond (ß (cast' IPersistentMap ___opts).valAt(LispReader'OPT_READ_COND))]
-                    (ß LispReader'COND_PRESERVE.equals(___readCond))
+                    (.equals LispReader'COND_PRESERVE, ___readCond)
                 )
             )
             (do
@@ -23090,7 +23090,7 @@
                 (let [#_"LockingTransactionInfo" ___refinfo (:tinfo ___ref)]
                     ;; write lock conflict
                     (when (ß ___refinfo != nil && ___refinfo != (:info this) && (.running ___refinfo))
-                        (when (not (ß this.barge(___refinfo)))
+                        (when (not (.barge this, ___refinfo))
                             (ß (:lock ___ref).writeLock().unlock())
                             (§ ass ___unlocked true)
                             (§ return (.blockAndBail this, ___refinfo))
@@ -23111,7 +23111,7 @@
     #_method
     (§ defn- #_"Object" (§ method blockAndBail) [#_"LockingTransaction" this, #_"LockingTransactionInfo" ___refinfo]
         ;; stop prior to blocking
-        (ß this.stop(LockingTransaction'RETRY))
+        (.stop this, LockingTransaction'RETRY)
         (try
             (ß (:latch ___refinfo).await(LockingTransaction'LOCK_WAIT_MSECS, TimeUnit/MILLISECONDS))
             (catch InterruptedException ___e
@@ -23132,7 +23132,7 @@
 
     #_method
     (§ defn #_"void" (§ method abort) [#_"LockingTransaction" this] #_(§ throws AbortException)
-        (ß this.stop(LockingTransaction'KILLED))
+        (.stop this, LockingTransaction'KILLED)
         (throw (AbortException'new))
     )
 
@@ -23218,7 +23218,7 @@
                                 (.getReadPoint this)
                                 (when (ß ___i == 0)
                                     (§ ass (:startPoint this) (:readPoint this))
-                                    (§ ass (:startTime this) (ß System/nanoTime()))
+                                    (§ ass (:startTime this) (System/nanoTime))
                                 )
                                 (§ ass (:info this) (LockingTransactionInfo'new LockingTransaction'RUNNING, (:startPoint this)))
                                 (§ ass ___ret (.call ___fn))
@@ -23241,7 +23241,7 @@
 
                                                 (let [#_"LockingTransactionInfo" ___refinfo (:tinfo ___ref)]
                                                     (when (ß ___refinfo != nil && ___refinfo != (:info this) && (.running ___refinfo))
-                                                        (when (not (ß this.barge(___refinfo)))
+                                                        (when (not (.barge this, ___refinfo))
                                                             (throw (:retryex this))
                                                         )
                                                     )
@@ -23665,7 +23665,7 @@
 
     (defn #_"ISeq" LongRange'create-1 [#_"long" ___end]
         (when (> ___end 0)
-            (§ return (ß LongRange'new-4(0, ___end, 1, positiveStep(___end))))
+            (§ return (ß LongRange'new-4(0, ___end, 1, LongRange'positiveStep(___end))))
         )
         PersistentList'EMPTY
     )
@@ -23674,7 +23674,7 @@
         (when (ß ___start >= ___end)
             (§ return PersistentList'EMPTY)
         )
-        (ß LongRange'new-4(___start, ___end, 1, positiveStep(___end)))
+        (ß LongRange'new-4(___start, ___end, 1, LongRange'positiveStep(___end)))
     )
 
     (defn #_"ISeq" LongRange'create-3 [#_"long" ___start, #_"long" ___end, #_"long" ___step]
@@ -23683,14 +23683,14 @@
                 (when (ß ___end <= ___start)
                     (§ return PersistentList'EMPTY)
                 )
-                (ß LongRange'new-4(___start, ___end, ___step, positiveStep(___end)))
+                (ß LongRange'new-4(___start, ___end, ___step, LongRange'positiveStep(___end)))
             )
             (< ___step 0)
             (do
                 (when (ß ___end >= ___start)
                     (§ return PersistentList'EMPTY)
                 )
-                (ß LongRange'new-4(___start, ___end, ___step, negativeStep(___end)))
+                (ß LongRange'new-4(___start, ___end, ___step, LongRange'negativeStep(___end)))
             )
             :else
             (do
@@ -24026,7 +24026,7 @@
     (§ defn #_"IFn" (§ method findFnFor) [#_"MethodImplCache" this, #_"Class" ___c]
         (if (some? (:map this))
             (do
-                (let [#_"Entry" ___e (ß (Entry) (:map this).get(___c))]
+                (let [#_"Entry" ___e (cast' Entry (ß (:map this).get(___c)))]
                     (§ ass (:mre this) ___e)
                     (when (some? ___e) (:fn ___e))
                 )
@@ -24149,7 +24149,7 @@
 
     #_method
     (§ defn- #_"boolean" (§ method prefers) [#_"MultiFn" this, #_"Object" ___x, #_"Object" ___y]
-        (let [#_"IPersistentSet" ___xprefs (ß (IPersistentSet) (.getPreferTable this).valAt(___x))]
+        (let [#_"IPersistentSet" ___xprefs (cast' IPersistentSet (ß (.getPreferTable this).valAt(___x)))]
             (when (ß ___xprefs != nil && ___xprefs.contains(___y))
                 (§ return true)
             )
@@ -24195,7 +24195,7 @@
         (when (ß (:cachedHierarchy this) != (:hierarchy this).deref())
             (.resetCache this)
         )
-        (let [#_"IFn" ___targetFn (ß (IFn) (:methodCache this).valAt(___dispatchVal))]
+        (let [#_"IFn" ___targetFn (cast' IFn (ß (:methodCache this).valAt(___dispatchVal)))]
             (when (some? ___targetFn)
                 (§ return ___targetFn)
             )
@@ -24223,7 +24223,7 @@
                         (try
                             (let [#_"Map$Entry" ___bestEntry nil]
                                 (doseq [#_"Object" ___o (.getMethodTable this)]
-                                    (let [#_"Map$Entry" ___e (ß (Map$Entry) ___o)]
+                                    (let [#_"Map$Entry" ___e (cast Map$Entry ___o)]
                                         (when (ß this.isA(___dispatchVal, (.getKey ___e)))
                                             (when (ß ___bestEntry == nil || this.dominates((.getKey ___e), (.getKey ___bestEntry)))
                                                 (§ ass ___bestEntry ___e)
@@ -24258,7 +24258,7 @@
                                 (do
                                     ;; place in cache
                                     (§ ass (:methodCache this) (ß (:methodCache this).assoc(___dispatchVal, ___bestValue)))
-                                    (ß (IFn) ___bestValue)
+                                    (cast' IFn ___bestValue)
                                 )
                                 (do
                                     (.resetCache this)
@@ -24676,8 +24676,8 @@
         (when (ß ___input == 0)
             (§ return 0)
         )
-        (let [#_"int" ___k1 (ß mixK1(___input))]
-            (let [#_"int" ___h1 (ß mixH1(Murmur3'seed, ___k1))]
+        (let [#_"int" ___k1 (Murmur3'mixK1 ___input)]
+            (let [#_"int" ___h1 (Murmur3'mixH1 Murmur3'seed, ___k1)]
                 (Murmur3'fmix ___h1, 4)
             )
         )
@@ -24689,10 +24689,10 @@
         )
         (let [#_"int" ___low (ß (int) ___input)]
             (let [#_"int" ___high (ß (int) (___input >>> 32))]
-                (let [#_"int" ___k1 (ß mixK1(___low))]
-                    (let [#_"int" ___h1 (ß mixH1(Murmur3'seed, ___k1))]
-                        (§ ass ___k1 (ß mixK1(___high)))
-                        (§ ass ___h1 (ß mixH1(___h1, ___k1)))
+                (let [#_"int" ___k1 (Murmur3'mixK1 ___low)]
+                    (let [#_"int" ___h1 (Murmur3'mixH1 Murmur3'seed, ___k1)]
+                        (§ ass ___k1 (Murmur3'mixK1 ___high))
+                        (§ ass ___h1 (Murmur3'mixH1 ___h1, ___k1))
 
                         (Murmur3'fmix ___h1, 8)
                     )
@@ -24706,15 +24706,15 @@
             ;; step through the CharSequence 2 chars at a time
             (loop-when-recur [#_"int" ___i 1] (ß ___i < (.length ___input)) [(+ ___i 2)]
                 (let [#_"int" ___k1 (ß ___input.charAt(___i - 1) | (___input.charAt(___i) << 16))]
-                    (§ ass ___k1 (ß mixK1(___k1)))
-                    (§ ass ___h1 (ß mixH1(___h1, ___k1)))
+                    (§ ass ___k1 (Murmur3'mixK1 ___k1))
+                    (§ ass ___h1 (Murmur3'mixH1 ___h1, ___k1))
                 )
             )
 
             ;; deal with any remaining characters
             (when (ß ((.length ___input) & 1) == 1)
                 (let [#_"int" ___k1 (ß ___input.charAt((.length ___input) - 1))]
-                    (§ ass ___k1 (ß mixK1(___k1)))
+                    (§ ass ___k1 (Murmur3'mixK1 ___k1))
                     (§ ass ___h1 (ß ___h1 :xor ___k1))
                 )
             )
@@ -24725,8 +24725,8 @@
 
     (defn #_"int" Murmur3'mixCollHash [#_"int" ___hash, #_"int" ___count]
         (let [#_"int" ___h1 Murmur3'seed]
-            (let [#_"int" ___k1 (ß mixK1(___hash))]
-                (§ ass ___h1 (ß mixH1(___h1, ___k1)))
+            (let [#_"int" ___k1 (Murmur3'mixK1 ___hash)]
+                (§ ass ___h1 (Murmur3'mixH1 ___h1, ___k1))
                 (Murmur3'fmix ___h1, ___count)
             )
         )
@@ -24740,7 +24740,7 @@
                     (§ ass ___n (inc ___n))
                 )
 
-                (ß mixCollHash(___hash, ___n))
+                (Murmur3'mixCollHash ___hash, ___n)
             )
         )
     )
@@ -24753,7 +24753,7 @@
                     (§ ass ___n (inc ___n))
                 )
 
-                (ß mixCollHash(___hash, ___n))
+                (Murmur3'mixCollHash ___hash, ___n)
             )
         )
     )
@@ -24860,7 +24860,7 @@
                         )
                     )
                     (when (ß ___o instanceof Var && (:ns (cast' Var ___o)) == this)
-                        (§ return (ß (Var) ___o))
+                        (§ return (cast' Var ___o))
                     )
 
                     (when (nil? ___v)
@@ -24933,12 +24933,12 @@
             (throw (IllegalArgumentException. "Can't intern namespace-qualified symbol"))
         )
         (let [#_"IPersistentMap" ___map (.getMappings this)]
-            (let [#_"Class" ___c (ß (Class) ___map.valAt(___sym))]
+            (let [#_"Class" ___c (cast Class (.valAt ___map, ___sym))]
                 (while (ß (nil? ___c) || (areDifferentInstancesOfSameClassName(___c, ___val)))
                     (let [#_"IPersistentMap" ___newMap (.assoc ___map, ___sym, ___val)]
                         (ß (:mappings this).compareAndSet(___map, ___newMap))
                         (§ ass ___map (.getMappings this))
-                        (§ ass ___c (ß (Class) ___map.valAt(___sym)))
+                        (§ ass ___c (cast Class (.valAt ___map, ___sym)))
                     )
                 )
                 (when (ß ___c == ___val)
@@ -24980,7 +24980,7 @@
 
     #_method
     (§ defn #_"Var" (§ method refer) [#_"Namespace" this, #_"Symbol" ___sym, #_"Var" ___var]
-        (ß (Var) this.reference(___sym, ___var))
+        (cast' Var (.reference this, ___sym, ___var))
     )
 
     (defn #_"Namespace" Namespace'findOrCreate [#_"Symbol" ___name]
@@ -25015,7 +25015,7 @@
     (§ defn #_"Var" (§ method findInternedVar) [#_"Namespace" this, #_"Symbol" ___symbol]
         (let [#_"Object" ___o (ß (:mappings this).get().valAt(___symbol))]
             (when (ß ___o != nil && ___o instanceof Var && (:ns (cast' Var ___o)) == this)
-                (§ return (ß (Var) ___o))
+                (§ return (cast' Var ___o))
             )
             nil
         )
@@ -25029,7 +25029,7 @@
     #_method
     (§ defn #_"Namespace" (§ method lookupAlias) [#_"Namespace" this, #_"Symbol" ___alias]
         (let [#_"IPersistentMap" ___map (.getAliases this)]
-            (ß (Namespace) ___map.valAt(___alias))
+            (cast' Namespace (.valAt ___map, ___alias))
         )
     )
 
@@ -25039,7 +25039,7 @@
             (throw (NullPointerException. "Expecting Symbol + Namespace"))
         )
         (let [#_"IPersistentMap" ___map (.getAliases this)]
-            (while (not (ß ___map.containsKey(___alias)))
+            (while (not (.containsKey ___map, ___alias))
                 (let [#_"IPersistentMap" ___newMap (.assoc ___map, ___alias, ___ns)]
                     (ß (:aliases this).compareAndSet(___map, ___newMap))
                     (§ ass ___map (.getAliases this))
@@ -25223,9 +25223,9 @@
         (let [#_"long" ___lx (.longValue ___x) #_"long" ___ly (.longValue ___y)]
             (let [#_"long" ___ret (+ ___lx ___ly)]
                 (when (ß (___ret :xor ___lx) < 0 && (___ret :xor ___ly) < 0)
-                    (§ return (ß Numbers'BIGINT_OPS.add(___x, ___y)))
+                    (§ return (.add Numbers'BIGINT_OPS, ___x, ___y))
                 )
-                (ß num(___ret))
+                (num ___ret)
             )
         )
     )
@@ -25239,13 +25239,13 @@
     (§ defn #_"Number" (§ method multiplyP) [#_"LongOps" this, #_"Number" ___x, #_"Number" ___y]
         (let [#_"long" ___lx (.longValue ___x) #_"long" ___ly (.longValue ___y)]
             (when (ß ___lx == Long/MIN_VALUE && ___ly < 0)
-                (§ return (ß Numbers'BIGINT_OPS.multiply(___x, ___y)))
+                (§ return (.multiply Numbers'BIGINT_OPS, ___x, ___y))
             )
             (let [#_"long" ___ret (* ___lx ___ly)]
                 (when (ß ___ly != 0 && ___ret / ___ly != ___lx)
-                    (§ return (ß Numbers'BIGINT_OPS.multiply(___x, ___y)))
+                    (§ return (.multiply Numbers'BIGINT_OPS, ___x, ___y))
                 )
-                (ß num(___ret))
+                (num ___ret)
             )
         )
     )
@@ -25266,13 +25266,13 @@
             (let [#_"long" ___val (.longValue ___y)]
                 (let [#_"long" ___gcd (LongOps'gcd ___n, ___val)]
                     (when (ß ___gcd == 0)
-                        (§ return (ß num(0)))
+                        (§ return (num 0))
                     )
 
                     (§ ass ___n (/ ___n ___gcd))
                     (let [#_"long" ___d (/ ___val ___gcd)]
                         (when (ß ___d == 1)
-                            (§ return (ß num(___n)))
+                            (§ return (num ___n))
                         )
                         (when (< ___d 0)
                             (§ ass ___n (- ___n))
@@ -25326,7 +25326,7 @@
     (§ defn #_"Number" (§ method negateP) [#_"LongOps" this, #_"Number" ___x]
         (let [#_"long" ___val (.longValue ___x)]
             (when (ß ___val > Long/MIN_VALUE)
-                (§ return (ß num(-val)))
+                (§ return (num (- val)))
             )
             (ß BigInt'fromBigInteger(BigInteger/valueOf(___val).negate()))
         )
@@ -25345,7 +25345,7 @@
             (when (ß ___val < Long/MAX_VALUE)
                 (§ return (ß num(___val + 1)))
             )
-            (ß Numbers'BIGINT_OPS.inc(___x))
+            (.inc Numbers'BIGINT_OPS, ___x)
         )
     )
 
@@ -25362,7 +25362,7 @@
             (when (ß ___val > Long/MIN_VALUE)
                 (§ return (ß num(___val - 1)))
             )
-            (ß Numbers'BIGINT_OPS.dec(___x))
+            (.dec Numbers'BIGINT_OPS, ___x)
         )
     )
 )
@@ -25515,21 +25515,21 @@
 
     #_method
     (§ defn #_"boolean" (§ method isZero) [#_"RatioOps" this, #_"Number" ___x]
-        (let [#_"Ratio" ___r (ß (Ratio) ___x)]
+        (let [#_"Ratio" ___r (cast' Ratio ___x)]
             (ß ((:numerator ___r).signum() == 0))
         )
     )
 
     #_method
     (§ defn #_"boolean" (§ method isPos) [#_"RatioOps" this, #_"Number" ___x]
-        (let [#_"Ratio" ___r (ß (Ratio) ___x)]
+        (let [#_"Ratio" ___r (cast' Ratio ___x)]
             (ß ((:numerator ___r).signum() > 0))
         )
     )
 
     #_method
     (§ defn #_"boolean" (§ method isNeg) [#_"RatioOps" this, #_"Number" ___x]
-        (let [#_"Ratio" ___r (ß (Ratio) ___x)]
+        (let [#_"Ratio" ___r (cast' Ratio ___x)]
             (ß ((:numerator ___r).signum() < 0))
         )
     )
@@ -25540,8 +25540,8 @@
 
     #_method
     (§ defn #_"Number" (§ method add) [#_"RatioOps" this, #_"Number" ___x, #_"Number" ___y]
-        (let [#_"Ratio" ___rx (ß toRatio(___x))]
-            (let [#_"Ratio" ___ry (ß toRatio(___y))]
+        (let [#_"Ratio" ___rx (toRatio ___x)]
+            (let [#_"Ratio" ___ry (toRatio ___y)]
                 (let [#_"Number" ___ret (ß this.divide((:numerator ___ry).multiply((:denominator ___rx)).add((:numerator ___rx).multiply((:denominator ___ry))), (:denominator ___ry).multiply((:denominator ___rx))))]
                     (RatioOps'normalizeRet ___ret, ___x, ___y)
                 )
@@ -25551,8 +25551,8 @@
 
     #_method
     (§ defn #_"Number" (§ method multiply) [#_"RatioOps" this, #_"Number" ___x, #_"Number" ___y]
-        (let [#_"Ratio" ___rx (ß toRatio(___x))]
-            (let [#_"Ratio" ___ry (ß toRatio(___y))]
+        (let [#_"Ratio" ___rx (toRatio ___x)]
+            (let [#_"Ratio" ___ry (toRatio ___y)]
                 (let [#_"Number" ___ret (ß Numbers'divide-2ii((:numerator ___ry).multiply((:numerator ___rx)), (:denominator ___ry).multiply((:denominator ___rx))))]
                     (RatioOps'normalizeRet ___ret, ___x, ___y)
                 )
@@ -25562,8 +25562,8 @@
 
     #_method
     (§ defn #_"Number" (§ method divide) [#_"RatioOps" this, #_"Number" ___x, #_"Number" ___y]
-        (let [#_"Ratio" ___rx (ß toRatio(___x))]
-            (let [#_"Ratio" ___ry (ß toRatio(___y))]
+        (let [#_"Ratio" ___rx (toRatio ___x)]
+            (let [#_"Ratio" ___ry (toRatio ___y)]
                 (let [#_"Number" ___ret (ß Numbers'divide-2ii((:denominator ___ry).multiply((:numerator ___rx)), (:numerator ___ry).multiply((:denominator ___rx))))]
                     (RatioOps'normalizeRet ___ret, ___x, ___y)
                 )
@@ -25573,8 +25573,8 @@
 
     #_method
     (§ defn #_"Number" (§ method quotient) [#_"RatioOps" this, #_"Number" ___x, #_"Number" ___y]
-        (let [#_"Ratio" ___rx (ß toRatio(___x))]
-            (let [#_"Ratio" ___ry (ß toRatio(___y))]
+        (let [#_"Ratio" ___rx (toRatio ___x)]
+            (let [#_"Ratio" ___ry (toRatio ___y)]
                 (let [#_"BigInteger" ___q (ß (:numerator ___rx).multiply((:denominator ___ry)).divide((:denominator ___rx).multiply((:numerator ___ry))))]
                     (ß RatioOps'normalizeRet(BigInt'fromBigInteger(___q), ___x, ___y))
                 )
@@ -25584,8 +25584,8 @@
 
     #_method
     (§ defn #_"Number" (§ method remainder) [#_"RatioOps" this, #_"Number" ___x, #_"Number" ___y]
-        (let [#_"Ratio" ___rx (ß toRatio(___x))]
-            (let [#_"Ratio" ___ry (ß toRatio(___y))]
+        (let [#_"Ratio" ___rx (toRatio ___x)]
+            (let [#_"Ratio" ___ry (toRatio ___y)]
                 (let [#_"BigInteger" ___q (ß (:numerator ___rx).multiply((:denominator ___ry)).divide((:denominator ___rx).multiply((:numerator ___ry))))]
                     (let [#_"Number" ___ret (ß Numbers'minus-2oo(___x, Numbers'multiply-2oo(___q, ___y)))]
                         (RatioOps'normalizeRet ___ret, ___x, ___y)
@@ -25597,8 +25597,8 @@
 
     #_method
     (§ defn #_"boolean" (§ method equiv) [#_"RatioOps" this, #_"Number" ___x, #_"Number" ___y]
-        (let [#_"Ratio" ___rx (ß toRatio(___x))]
-            (let [#_"Ratio" ___ry (ß toRatio(___y))]
+        (let [#_"Ratio" ___rx (toRatio ___x)]
+            (let [#_"Ratio" ___ry (toRatio ___y)]
                 (ß ((:numerator ___rx).equals((:numerator ___ry)) && (:denominator ___rx).equals((:denominator ___ry))))
             )
         )
@@ -25606,8 +25606,8 @@
 
     #_method
     (§ defn #_"boolean" (§ method lt) [#_"RatioOps" this, #_"Number" ___x, #_"Number" ___y]
-        (let [#_"Ratio" ___rx (ß toRatio(___x))]
-            (let [#_"Ratio" ___ry (ß toRatio(___y))]
+        (let [#_"Ratio" ___rx (toRatio ___x)]
+            (let [#_"Ratio" ___ry (toRatio ___y)]
                 (ß Numbers'lt-2oo((:numerator ___rx).multiply((:denominator ___ry)), (:numerator ___ry).multiply((:denominator ___rx))))
             )
         )
@@ -25615,8 +25615,8 @@
 
     #_method
     (§ defn #_"boolean" (§ method lte) [#_"RatioOps" this, #_"Number" ___x, #_"Number" ___y]
-        (let [#_"Ratio" ___rx (ß toRatio(___x))]
-            (let [#_"Ratio" ___ry (ß toRatio(___y))]
+        (let [#_"Ratio" ___rx (toRatio ___x)]
+            (let [#_"Ratio" ___ry (toRatio ___y)]
                 (ß Numbers'lte-2oo((:numerator ___rx).multiply((:denominator ___ry)), (:numerator ___ry).multiply((:denominator ___rx))))
             )
         )
@@ -25624,8 +25624,8 @@
 
     #_method
     (§ defn #_"boolean" (§ method gte) [#_"RatioOps" this, #_"Number" ___x, #_"Number" ___y]
-        (let [#_"Ratio" ___rx (ß toRatio(___x))]
-            (let [#_"Ratio" ___ry (ß toRatio(___y))]
+        (let [#_"Ratio" ___rx (toRatio ___x)]
+            (let [#_"Ratio" ___ry (toRatio ___y)]
                 (ß Numbers'gte-2oo((:numerator ___rx).multiply((:denominator ___ry)), (:numerator ___ry).multiply((:denominator ___rx))))
             )
         )
@@ -25633,7 +25633,7 @@
 
     #_method
     (§ defn #_"Number" (§ method negate) [#_"RatioOps" this, #_"Number" ___x]
-        (let [#_"Ratio" ___r (ß (Ratio) ___x)]
+        (let [#_"Ratio" ___r (cast' Ratio ___x)]
             (ß Ratio'new((:numerator ___r).negate(), (:denominator ___r)))
         )
     )
@@ -25686,7 +25686,7 @@
 
     #_method
     (§ defn #_"boolean" (§ method isZero) [#_"BigIntOps" this, #_"Number" ___x]
-        (let [#_"BigInt" ___bx (ß toBigInt(___x))]
+        (let [#_"BigInt" ___bx (toBigInt ___x)]
             (when (ß (:bipart ___bx) == nil)
                 (§ return (ß ((:lpart ___bx) == 0)))
             )
@@ -25696,7 +25696,7 @@
 
     #_method
     (§ defn #_"boolean" (§ method isPos) [#_"BigIntOps" this, #_"Number" ___x]
-        (let [#_"BigInt" ___bx (ß toBigInt(___x))]
+        (let [#_"BigInt" ___bx (toBigInt ___x)]
             (when (ß (:bipart ___bx) == nil)
                 (§ return (ß ((:lpart ___bx) > 0)))
             )
@@ -25706,7 +25706,7 @@
 
     #_method
     (§ defn #_"boolean" (§ method isNeg) [#_"BigIntOps" this, #_"Number" ___x]
-        (let [#_"BigInt" ___bx (ß toBigInt(___x))]
+        (let [#_"BigInt" ___bx (toBigInt ___x)]
             (when (ß (:bipart ___bx) == nil)
                 (§ return (ß ((:lpart ___bx) < 0)))
             )
@@ -25818,56 +25818,56 @@
 
     #_method
     (§ defn #_"boolean" (§ method isZero) [#_"BigDecimalOps" this, #_"Number" ___x]
-        (let [#_"BigDecimal" ___bx (ß (BigDecimal) ___x)]
+        (let [#_"BigDecimal" ___bx (cast BigDecimal ___x)]
             (ß ((.signum ___bx) == 0))
         )
     )
 
     #_method
     (§ defn #_"boolean" (§ method isPos) [#_"BigDecimalOps" this, #_"Number" ___x]
-        (let [#_"BigDecimal" ___bx (ß (BigDecimal) ___x)]
+        (let [#_"BigDecimal" ___bx (cast BigDecimal ___x)]
             (ß ((.signum ___bx) > 0))
         )
     )
 
     #_method
     (§ defn #_"boolean" (§ method isNeg) [#_"BigDecimalOps" this, #_"Number" ___x]
-        (let [#_"BigDecimal" ___bx (ß (BigDecimal) ___x)]
+        (let [#_"BigDecimal" ___bx (cast BigDecimal ___x)]
             (ß ((.signum ___bx) < 0))
         )
     )
 
     #_method
     (§ defn #_"Number" (§ method add) [#_"BigDecimalOps" this, #_"Number" ___x, #_"Number" ___y]
-        (let [#_"MathContext" ___mc (ß (MathContext) BigDecimalOps'MATH_CONTEXT.deref())]
+        (let [#_"MathContext" ___mc (cast MathContext (ß BigDecimalOps'MATH_CONTEXT.deref()))]
             (if (nil? ___mc) (ß this.toBigDecimal(___x).add(this.toBigDecimal(___y))) (ß this.toBigDecimal(___x).add(this.toBigDecimal(___y), ___mc)))
         )
     )
 
     #_method
     (§ defn #_"Number" (§ method multiply) [#_"BigDecimalOps" this, #_"Number" ___x, #_"Number" ___y]
-        (let [#_"MathContext" ___mc (ß (MathContext) BigDecimalOps'MATH_CONTEXT.deref())]
+        (let [#_"MathContext" ___mc (cast MathContext (ß BigDecimalOps'MATH_CONTEXT.deref()))]
             (if (nil? ___mc) (ß this.toBigDecimal(___x).multiply(this.toBigDecimal(___y))) (ß this.toBigDecimal(___x).multiply(this.toBigDecimal(___y), ___mc)))
         )
     )
 
     #_method
     (§ defn #_"Number" (§ method divide) [#_"BigDecimalOps" this, #_"Number" ___x, #_"Number" ___y]
-        (let [#_"MathContext" ___mc (ß (MathContext) BigDecimalOps'MATH_CONTEXT.deref())]
+        (let [#_"MathContext" ___mc (cast MathContext (ß BigDecimalOps'MATH_CONTEXT.deref()))]
             (if (nil? ___mc) (ß this.toBigDecimal(___x).divide(this.toBigDecimal(___y))) (ß this.toBigDecimal(___x).divide(this.toBigDecimal(___y), ___mc)))
         )
     )
 
     #_method
     (§ defn #_"Number" (§ method quotient) [#_"BigDecimalOps" this, #_"Number" ___x, #_"Number" ___y]
-        (let [#_"MathContext" ___mc (ß (MathContext) BigDecimalOps'MATH_CONTEXT.deref())]
+        (let [#_"MathContext" ___mc (cast MathContext (ß BigDecimalOps'MATH_CONTEXT.deref()))]
             (if (nil? ___mc) (ß this.toBigDecimal(___x).divideToIntegralValue(this.toBigDecimal(___y))) (ß this.toBigDecimal(___x).divideToIntegralValue(this.toBigDecimal(___y), ___mc)))
         )
     )
 
     #_method
     (§ defn #_"Number" (§ method remainder) [#_"BigDecimalOps" this, #_"Number" ___x, #_"Number" ___y]
-        (let [#_"MathContext" ___mc (ß (MathContext) BigDecimalOps'MATH_CONTEXT.deref())]
+        (let [#_"MathContext" ___mc (cast MathContext (ß BigDecimalOps'MATH_CONTEXT.deref()))]
             (if (nil? ___mc) (ß this.toBigDecimal(___x).remainder(this.toBigDecimal(___y))) (ß this.toBigDecimal(___x).remainder(this.toBigDecimal(___y), ___mc)))
         )
     )
@@ -25894,25 +25894,25 @@
 
     #_method
     (§ defn #_"Number" (§ method negate) [#_"BigDecimalOps" this, #_"Number" ___x]
-        (let [#_"MathContext" ___mc (ß (MathContext) BigDecimalOps'MATH_CONTEXT.deref())]
+        (let [#_"MathContext" ___mc (cast MathContext (ß BigDecimalOps'MATH_CONTEXT.deref()))]
             (if (nil? ___mc) (ß (cast BigDecimal ___x).negate()) (ß (cast BigDecimal ___x).negate(___mc)))
         )
     )
 
     #_method
     (§ defn #_"Number" (§ method inc) [#_"BigDecimalOps" this, #_"Number" ___x]
-        (let [#_"MathContext" ___mc (ß (MathContext) BigDecimalOps'MATH_CONTEXT.deref())]
-            (let [#_"BigDecimal" ___bx (ß (BigDecimal) ___x)]
-                (if (nil? ___mc) (ß ___bx.add(BigDecimal/ONE)) (ß ___bx.add(BigDecimal/ONE, ___mc)))
+        (let [#_"MathContext" ___mc (cast MathContext (ß BigDecimalOps'MATH_CONTEXT.deref()))]
+            (let [#_"BigDecimal" ___bx (cast BigDecimal ___x)]
+                (if (nil? ___mc) (.add ___bx, BigDecimal/ONE) (.add ___bx, BigDecimal/ONE, ___mc))
             )
         )
     )
 
     #_method
     (§ defn #_"Number" (§ method dec) [#_"BigDecimalOps" this, #_"Number" ___x]
-        (let [#_"MathContext" ___mc (ß (MathContext) BigDecimalOps'MATH_CONTEXT.deref())]
-            (let [#_"BigDecimal" ___bx (ß (BigDecimal) ___x)]
-                (if (nil? ___mc) (ß ___bx.subtract(BigDecimal/ONE)) (ß ___bx.subtract(BigDecimal/ONE, ___mc)))
+        (let [#_"MathContext" ___mc (cast MathContext (ß BigDecimalOps'MATH_CONTEXT.deref()))]
+            (let [#_"BigDecimal" ___bx (cast BigDecimal ___x)]
+                (if (nil? ___mc) (.subtract ___bx, BigDecimal/ONE) (.subtract ___bx, BigDecimal/ONE, ___mc))
             )
         )
     )
@@ -25930,106 +25930,106 @@
 #_stateless
 (class-ns Numbers
     (defn #_"boolean" Numbers'isZero-1o [#_"Object" ___x]
-        (ß ops(___x).isZero((cast Number ___x)))
+        (ß Numbers'ops(___x).isZero((cast Number ___x)))
     )
 
     (defn #_"boolean" Numbers'isPos-1o [#_"Object" ___x]
-        (ß ops(___x).isPos((cast Number ___x)))
+        (ß Numbers'ops(___x).isPos((cast Number ___x)))
     )
 
     (defn #_"boolean" Numbers'isNeg-1o [#_"Object" ___x]
-        (ß ops(___x).isNeg((cast Number ___x)))
+        (ß Numbers'ops(___x).isNeg((cast Number ___x)))
     )
 
     (defn #_"Number" Numbers'minus-1o [#_"Object" ___x]
-        (ß ops(___x).negate((cast Number ___x)))
+        (ß Numbers'ops(___x).negate((cast Number ___x)))
     )
 
     (defn #_"Number" Numbers'minusP-1o [#_"Object" ___x]
-        (ß ops(___x).negateP((Number)___x))
+        (ß Numbers'ops(___x).negateP((Number)___x))
     )
 
     (defn #_"Number" Numbers'inc-1o [#_"Object" ___x]
-        (ß ops(___x).inc((cast Number ___x)))
+        (ß Numbers'ops(___x).inc((cast Number ___x)))
     )
 
     (defn #_"Number" Numbers'incP-1o [#_"Object" ___x]
-        (ß ops(___x).incP((Number)___x))
+        (ß Numbers'ops(___x).incP((Number)___x))
     )
 
     (defn #_"Number" Numbers'dec-1o [#_"Object" ___x]
-        (ß ops(___x).dec((cast Number ___x)))
+        (ß Numbers'ops(___x).dec((cast Number ___x)))
     )
 
     (defn #_"Number" Numbers'decP-1o [#_"Object" ___x]
-        (ß ops(___x).decP((Number)___x))
+        (ß Numbers'ops(___x).decP((Number)___x))
     )
 
     (defn #_"Number" Numbers'add-2oo [#_"Object" ___x, #_"Object" ___y]
-        (ß ops(___x).combine(ops(___y)).add((Number)___x, (Number)___y))
+        (ß Numbers'ops(___x).combine(Numbers'ops(___y)).add((Number)___x, (Number)___y))
     )
 
     (defn #_"Number" Numbers'addP-2oo [#_"Object" ___x, #_"Object" ___y]
-        (ß ops(___x).combine(ops(___y)).addP((Number)___x, (Number)___y))
+        (ß Numbers'ops(___x).combine(Numbers'ops(___y)).addP((Number)___x, (Number)___y))
     )
 
     (defn #_"Number" Numbers'minus-2oo [#_"Object" ___x, #_"Object" ___y]
-        (let [#_"Ops" ___yops (ß ops(___y))]
-            (ß ops(___x).combine(___yops).add((Number)___x, ___yops.negate((cast Number ___y))))
+        (let [#_"Ops" ___yops (Numbers'ops ___y)]
+            (ß Numbers'ops(___x).combine(___yops).add((Number)___x, ___yops.negate((cast Number ___y))))
         )
     )
 
     (defn #_"Number" Numbers'minusP-2oo [#_"Object" ___x, #_"Object" ___y]
-        (let [#_"Ops" ___yops (ß ops(___y))]
+        (let [#_"Ops" ___yops (Numbers'ops ___y)]
             (let [#_"Number" ___negativeY (ß ___yops.negateP((Number)___y))]
-                (let [#_"Ops" ___negativeYOps (ß ops(___negativeY))]
-                    (ß ops(___x).combine(___negativeYOps).addP((Number)___x, ___negativeY))
+                (let [#_"Ops" ___negativeYOps (Numbers'ops ___negativeY)]
+                    (ß Numbers'ops(___x).combine(___negativeYOps).addP((Number)___x, ___negativeY))
                 )
             )
         )
     )
 
     (defn #_"Number" Numbers'multiply-2oo [#_"Object" ___x, #_"Object" ___y]
-        (ß ops(___x).combine(ops(___y)).multiply((Number)___x, (Number)___y))
+        (ß Numbers'ops(___x).combine(Numbers'ops(___y)).multiply((Number)___x, (Number)___y))
     )
 
     (defn #_"Number" Numbers'multiplyP-2oo [#_"Object" ___x, #_"Object" ___y]
-        (ß ops(___x).combine(ops(___y)).multiplyP((Number)___x, (Number)___y))
+        (ß Numbers'ops(___x).combine(Numbers'ops(___y)).multiplyP((Number)___x, (Number)___y))
     )
 
     (defn #_"Number" Numbers'divide-2oo [#_"Object" ___x, #_"Object" ___y]
-        (cond (ß isNaN(___x))
+        (cond (Numbers'isNaN ___x)
             (do
-                (§ return (ß (Number)___x))
+                (§ return (cast Number ___x))
             )
-            (ß isNaN(___y))
+            (Numbers'isNaN ___y)
             (do
-                (§ return (ß (Number)___y))
+                (§ return (cast Number ___y))
             )
         )
-        (let [#_"Ops" ___yops (ß ops(___y))]
+        (let [#_"Ops" ___yops (Numbers'ops ___y)]
             (when (ß ___yops.isZero((cast Number ___y)))
                 (throw (ArithmeticException. "Divide by zero"))
             )
-            (ß ops(___x).combine(___yops).divide((Number)___x, (Number)___y))
+            (ß Numbers'ops(___x).combine(___yops).divide((Number)___x, (Number)___y))
         )
     )
 
     (defn #_"Number" Numbers'quotient-2oo [#_"Object" ___x, #_"Object" ___y]
-        (let [#_"Ops" ___yops (ß ops(___y))]
+        (let [#_"Ops" ___yops (Numbers'ops ___y)]
             (when (ß ___yops.isZero((cast Number ___y)))
                 (throw (ArithmeticException. "Divide by zero"))
             )
-            (ß ops(___x).combine(___yops).quotient((Number)___x, (Number)___y))
+            (ß Numbers'ops(___x).combine(___yops).quotient((Number)___x, (Number)___y))
         )
     )
 
     (defn #_"Number" Numbers'remainder-2oo [#_"Object" ___x, #_"Object" ___y]
-        (let [#_"Ops" ___yops (ß ops(___y))]
+        (let [#_"Ops" ___yops (Numbers'ops ___y)]
             (when (ß ___yops.isZero((cast Number ___y)))
                 (throw (ArithmeticException. "Divide by zero"))
             )
-            (ß ops(___x).combine(___yops).remainder((Number)___x, (Number)___y))
+            (ß Numbers'ops(___x).combine(___yops).remainder((Number)___x, (Number)___y))
         )
     )
 
@@ -26076,31 +26076,31 @@
     )
 
     (defn #_"boolean" Numbers'equiv-2nn [#_"Number" ___x, #_"Number" ___y]
-        (ß ops(___x).combine(ops(___y)).equiv(___x, ___y))
+        (ß Numbers'ops(___x).combine(Numbers'ops(___y)).equiv(___x, ___y))
     )
 
     (defn #_"boolean" Numbers'equal [#_"Number" ___x, #_"Number" ___y]
-        (ß (category(___x) == category(___y) && ops(___x).combine(ops(___y)).equiv(___x, ___y)))
+        (ß (category(___x) == category(___y) && Numbers'ops(___x).combine(Numbers'ops(___y)).equiv(___x, ___y)))
     )
 
     (defn #_"boolean" Numbers'lt-2oo [#_"Object" ___x, #_"Object" ___y]
-        (ß ops(___x).combine(ops(___y)).lt((Number)___x, (Number)___y))
+        (ß Numbers'ops(___x).combine(Numbers'ops(___y)).lt((Number)___x, (Number)___y))
     )
 
     (defn #_"boolean" Numbers'lte-2oo [#_"Object" ___x, #_"Object" ___y]
-        (ß ops(___x).combine(ops(___y)).lte((Number)___x, (Number)___y))
+        (ß Numbers'ops(___x).combine(Numbers'ops(___y)).lte((Number)___x, (Number)___y))
     )
 
     (defn #_"boolean" Numbers'gt-2oo [#_"Object" ___x, #_"Object" ___y]
-        (ß ops(___x).combine(ops(___y)).lt((Number)___y, (Number)___x))
+        (ß Numbers'ops(___x).combine(Numbers'ops(___y)).lt((Number)___y, (Number)___x))
     )
 
     (defn #_"boolean" Numbers'gte-2oo [#_"Object" ___x, #_"Object" ___y]
-        (ß ops(___x).combine(ops(___y)).gte((Number)___x, (Number)___y))
+        (ß Numbers'ops(___x).combine(Numbers'ops(___y)).gte((Number)___x, (Number)___y))
     )
 
     (defn #_"int" Numbers'compare [#_"Number" ___x, #_"Number" ___y]
-        (let [#_"Ops" ___ops (ß ops(___x).combine(ops(___y)))]
+        (let [#_"Ops" ___ops (ß Numbers'ops(___x).combine(Numbers'ops(___y)))]
             (cond (.lt ___ops, ___x, ___y)
                 (do
                     (§ return -1)
@@ -26116,7 +26116,7 @@
 
     (defn #_"BigInt" Numbers'toBigInt [#_"Object" ___x]
         (when (ß ___x instanceof BigInt)
-            (§ return (ß (BigInt) ___x))
+            (§ return (cast' BigInt ___x))
         )
         (if (ß ___x instanceof BigInteger)
             (do
@@ -26131,7 +26131,7 @@
     (defn #_"BigInteger" Numbers'toBigInteger [#_"Object" ___x]
         (cond (ß ___x instanceof BigInteger)
             (do
-                (ß (BigInteger) ___x)
+                (cast BigInteger ___x)
             )
             (ß ___x instanceof BigInt)
             (do
@@ -26147,11 +26147,11 @@
     (defn #_"BigDecimal" Numbers'toBigDecimal [#_"Object" ___x]
         (cond (ß ___x instanceof BigDecimal)
             (do
-                (ß (BigDecimal) ___x)
+                (cast BigDecimal ___x)
             )
             (ß ___x instanceof BigInt)
             (do
-                (let [#_"BigInt" ___bi (ß (BigInt) ___x)]
+                (let [#_"BigInt" ___bi (cast' BigInt ___x)]
                     (if (ß (:bipart ___bi) == nil)
                         (do
                             (ß BigDecimal/valueOf((:lpart ___bi)))
@@ -26164,7 +26164,7 @@
             )
             (ß ___x instanceof BigInteger)
             (do
-                (§ unsure BigDecimal. (ß (BigInteger) ___x))
+                (§ unsure BigDecimal. (cast BigInteger ___x))
             )
             (ß ___x instanceof Double)
             (do
@@ -26176,7 +26176,7 @@
             )
             (ß ___x instanceof Ratio)
             (do
-                (let [#_"Ratio" ___r (ß (Ratio)___x)]
+                (let [#_"Ratio" ___r (cast' Ratio ___x)]
                     (cast BigDecimal (Numbers'divide-2oo (§ unsure BigDecimal. (:numerator ___r)), (:denominator ___r)))
                 )
             )
@@ -26190,11 +26190,11 @@
     (defn #_"Ratio" Numbers'toRatio [#_"Object" ___x]
         (cond (ß ___x instanceof Ratio)
             (do
-                (§ return (ß (Ratio) ___x))
+                (§ return (cast' Ratio ___x))
             )
             (ß ___x instanceof BigDecimal)
             (do
-                (let [#_"BigDecimal" ___bx (ß (BigDecimal) ___x)]
+                (let [#_"BigDecimal" ___bx (cast BigDecimal ___x)]
                     (let [#_"BigInteger" ___bv (.unscaledValue ___bx)]
                         (let [#_"int" ___scale (.scale ___bx)]
                             (if (< ___scale 0)
@@ -26220,7 +26220,7 @@
             )
             (ß ___x instanceof BigDecimal)
             (do
-                (let [#_"BigDecimal" ___bx (ß (BigDecimal) ___x)]
+                (let [#_"BigDecimal" ___bx (cast BigDecimal ___x)]
                     (let [#_"BigInteger" ___bv (.unscaledValue ___bx)]
                         (let [#_"int" ___scale (.scale ___bx)]
                             (if (< ___scale 0)
@@ -26251,16 +26251,16 @@
     )
 
     (defn #_"Number" Numbers'divide-2ii [#_"BigInteger" ___n, #_"BigInteger" ___d]
-        (when (ß ___d.equals(BigInteger/ZERO))
+        (when (.equals ___d, BigInteger/ZERO)
             (throw (ArithmeticException. "Divide by zero"))
         )
         (let [#_"BigInteger" ___gcd (.gcd ___n, ___d)]
-            (when (ß ___gcd.equals(BigInteger/ZERO))
+            (when (.equals ___gcd, BigInteger/ZERO)
                 (§ return BigInt'ZERO)
             )
             (§ ass ___n (.divide ___n, ___gcd))
             (§ ass ___d (.divide ___d, ___gcd))
-            (cond (ß ___d.equals(BigInteger/ONE))
+            (cond (.equals ___d, BigInteger/ONE)
                 (do
                     (§ return (BigInt'fromBigInteger ___n))
                 )
@@ -26412,7 +26412,7 @@
                 )
                 (§ return (.hashCode ___x))
             )
-            (ß hasheqFrom(___x, ___xc))
+            (Numbers'hasheqFrom ___x, ___xc)
         )
     )
 
@@ -26636,7 +26636,7 @@
         (let [#_"short[]" ___ret (.short-array ___size)]
             (if (ß ___init instanceof Short)
                 (do
-                    (let [#_"short" ___s (ß (Short) ___init)]
+                    (let [#_"short" ___s (cast Short ___init)]
                         (loop-when-recur [#_"int" ___i 0] (ß ___i < ___ret.length) [(inc ___i)]
                             (§ ass (ß ___ret[___i]) ___s)
                         )
@@ -26678,7 +26678,7 @@
         (let [#_"char[]" ___ret (.char-array ___size)]
             (if (ß ___init instanceof Character)
                 (do
-                    (let [#_"char" ___c (ß (Character) ___init)]
+                    (let [#_"char" ___c (cast Character ___init)]
                         (loop-when-recur [#_"int" ___i 0] (ß ___i < ___ret.length) [(inc ___i)]
                             (§ ass (ß ___ret[___i]) ___c)
                         )
@@ -26687,7 +26687,7 @@
                 (do
                     (let [#_"ISeq" ___s (RT'seq ___init)]
                         (loop-when-recur [#_"int" ___i 0 ___s ___s] (ß ___i < ___size && ___s != nil) [(inc ___i) (next ___s)]
-                            (§ ass (ß ___ret[___i]) (ß (Character) (first ___s)))
+                            (§ ass (ß ___ret[___i]) (cast Character (first ___s)))
                         )
                     )
                 )
@@ -26706,7 +26706,7 @@
                     (let [#_"int" ___size (RT'count ___s)]
                         (let [#_"char[]" ___ret (.char-array ___size)]
                             (loop-when-recur [#_"int" ___i 0 ___s ___s] (ß ___i < ___size && ___s != nil) [(inc ___i) (next ___s)]
-                                (§ ass (ß ___ret[___i]) (ß (Character) (first ___s)))
+                                (§ ass (ß ___ret[___i]) (cast Character (first ___s)))
                             )
                             ___ret
                         )
@@ -26720,7 +26720,7 @@
         (let [#_"byte[]" ___ret (.byte-array ___size)]
             (if (ß ___init instanceof Byte)
                 (do
-                    (let [#_"byte" ___b (ß (Byte) ___init)]
+                    (let [#_"byte" ___b (cast Byte ___init)]
                         (loop-when-recur [#_"int" ___i 0] (ß ___i < ___ret.length) [(inc ___i)]
                             (§ ass (ß ___ret[___i]) ___b)
                         )
@@ -26762,7 +26762,7 @@
         (let [#_"boolean[]" ___ret (.boolean-array ___size)]
             (if (ß ___init instanceof Boolean)
                 (do
-                    (let [#_"boolean" ___b (ß (Boolean) ___init)]
+                    (let [#_"boolean" ___b (cast Boolean ___init)]
                         (loop-when-recur [#_"int" ___i 0] (ß ___i < ___ret.length) [(inc ___i)]
                             (§ ass (ß ___ret[___i]) ___b)
                         )
@@ -26771,7 +26771,7 @@
                 (do
                     (let [#_"ISeq" ___s (RT'seq ___init)]
                         (loop-when-recur [#_"int" ___i 0 ___s ___s] (ß ___i < ___size && ___s != nil) [(inc ___i) (next ___s)]
-                            (§ ass (ß ___ret[___i]) (ß (Boolean)___s.first()))
+                            (§ ass (ß ___ret[___i]) (cast Boolean (ß ___s.first())))
                         )
                     )
                 )
@@ -26790,7 +26790,7 @@
                     (let [#_"int" ___size (RT'count ___s)]
                         (let [#_"boolean[]" ___ret (.boolean-array ___size)]
                             (loop-when-recur [#_"int" ___i 0 ___s ___s] (ß ___i < ___size && ___s != nil) [(inc ___i) (next ___s)]
-                                (§ ass (ß ___ret[___i]) (ß (Boolean)___s.first()))
+                                (§ ass (ß ___ret[___i]) (cast Boolean (ß ___s.first())))
                             )
                             ___ret
                         )
@@ -27299,7 +27299,7 @@
     (defn #_"long" Numbers'add-2ll [#_"long" ___x, #_"long" ___y]
         (let [#_"long" ___ret (+ ___x ___y)]
             (when (ß (___ret :xor ___x) < 0 && (___ret :xor ___y) < 0)
-                (§ return (ß throwIntOverflow()))
+                (§ return (throwIntOverflow))
             )
             ___ret
         )
@@ -27310,14 +27310,14 @@
             (when (ß (___ret :xor ___x) < 0 && (___ret :xor ___y) < 0)
                 (§ return (Numbers'addP-2oo (cast Number ___x), (cast Number ___y)))
             )
-            (ß num(___ret))
+            (num ___ret)
         )
     )
 
     (defn #_"long" Numbers'minus-2ll [#_"long" ___x, #_"long" ___y]
         (let [#_"long" ___ret (- ___x ___y)]
             (when (ß ((___ret :xor ___x) < 0 && (___ret :xor ~___y) < 0))
-                (§ return (ß throwIntOverflow()))
+                (§ return (throwIntOverflow))
             )
             ___ret
         )
@@ -27328,13 +27328,13 @@
             (when (ß ((___ret :xor ___x) < 0 && (___ret :xor ~___y) < 0))
                 (§ return (ß minusP((Number)___x, (Number)___y)))
             )
-            (ß num(___ret))
+            (num ___ret)
         )
     )
 
     (defn #_"long" Numbers'minus-1l [#_"long" ___x]
         (when (ß ___x == Long/MIN_VALUE)
-            (§ return (ß throwIntOverflow()))
+            (§ return (throwIntOverflow))
         )
         (- ___x)
     )
@@ -27343,44 +27343,44 @@
         (when (ß ___x == Long/MIN_VALUE)
             (§ return (ß BigInt'fromBigInteger(BigInteger/valueOf(___x).negate())))
         )
-        (ß num(-x))
+        (num (- ___x))
     )
 
     (defn #_"long" Numbers'inc-1l [#_"long" ___x]
         (when (ß ___x == Long/MAX_VALUE)
-            (§ return (ß throwIntOverflow()))
+            (§ return (throwIntOverflow))
         )
         (inc ___x)
     )
 
     (defn #_"Number" Numbers'incP-1l [#_"long" ___x]
         (when (ß ___x == Long/MAX_VALUE)
-            (§ return (ß Numbers'BIGINT_OPS.inc(___x)))
+            (§ return (.inc Numbers'BIGINT_OPS, ___x))
         )
         (ß num(___x + 1))
     )
 
     (defn #_"long" Numbers'dec-1l [#_"long" ___x]
         (when (ß ___x == Long/MIN_VALUE)
-            (§ return (ß throwIntOverflow()))
+            (§ return (throwIntOverflow))
         )
         (dec ___x)
     )
 
     (defn #_"Number" Numbers'decP-1l [#_"long" ___x]
         (when (ß ___x == Long/MIN_VALUE)
-            (§ return (ß Numbers'BIGINT_OPS.dec(___x)))
+            (§ return (.dec Numbers'BIGINT_OPS, ___x))
         )
         (ß num(___x - 1))
     )
 
     (defn #_"long" Numbers'multiply-2ll [#_"long" ___x, #_"long" ___y]
         (when (ß ___x == Long/MIN_VALUE && ___y < 0)
-            (§ return (ß throwIntOverflow()))
+            (§ return (throwIntOverflow))
         )
         (let [#_"long" ___ret (* ___x ___y)]
             (when (ß ___y != 0 && ___ret / ___y != ___x)
-                (§ return (ß throwIntOverflow()))
+                (§ return (throwIntOverflow))
             )
             ___ret
         )
@@ -27394,7 +27394,7 @@
             (when (ß ___y != 0 && ___ret / ___y != ___x)
                 (§ return (Numbers'multiplyP (cast Number ___x), (cast Number ___y)))
             )
-            (ß num(___ret))
+            (num ___ret)
         )
     )
 
@@ -27759,7 +27759,7 @@
             (do
                 (§ return ___x)
             )
-            (ß isNaN(___y))
+            (Numbers'isNaN ___y)
             (do
                 (§ return ___y)
             )
@@ -27800,10 +27800,10 @@
     )
 
     (defn #_"Object" Numbers'max-2lo [#_"long" ___x, #_"Object" ___y]
-        (when (ß isNaN(___y))
+        (when (Numbers'isNaN ___y)
             (§ return ___y)
         )
-        (if (ß gt(___x, ___y))
+        (if (Numbers'gt-2lo ___x, ___y)
             (do
                 ___x
             )
@@ -27814,10 +27814,10 @@
     )
 
     (defn #_"Object" Numbers'max-2ol [#_"Object" ___x, #_"long" ___y]
-        (when (ß isNaN(___x))
+        (when (Numbers'isNaN ___x)
             (§ return ___x)
         )
-        (if (ß gt(___x, ___y))
+        (if (Numbers'gt-2ol ___x, ___y)
             (do
                 ___x
             )
@@ -27828,7 +27828,7 @@
     )
 
     (defn #_"Object" Numbers'max-2od [#_"Object" ___x, #_"double" ___y]
-        (cond (ß isNaN(___x))
+        (cond (Numbers'isNaN ___x)
             (do
                 (§ return ___x)
             )
@@ -27848,16 +27848,16 @@
     )
 
     (defn #_"Object" Numbers'max-2oo [#_"Object" ___x, #_"Object" ___y]
-        (cond (ß isNaN(___x))
+        (cond (Numbers'isNaN ___x)
             (do
                 (§ return ___x)
             )
-            (ß isNaN(___y))
+            (Numbers'isNaN ___y)
             (do
                 (§ return ___y)
             )
         )
-        (if (ß gt(___x, ___y))
+        (if (Numbers'gt-2oo ___x, ___y)
             (do
                 ___x
             )
@@ -27890,7 +27890,7 @@
             (do
                 (§ return ___x)
             )
-            (ß isNaN(___y))
+            (Numbers'isNaN ___y)
             (do
                 (§ return ___y)
             )
@@ -27931,7 +27931,7 @@
     )
 
     (defn #_"Object" Numbers'min-2lo [#_"long" ___x, #_"Object" ___y]
-        (when (ß isNaN(___y))
+        (when (Numbers'isNaN ___y)
             (§ return ___y)
         )
         (if (Numbers'lt-2lo ___x, ___y)
@@ -27945,7 +27945,7 @@
     )
 
     (defn #_"Object" Numbers'min-2ol [#_"Object" ___x, #_"long" ___y]
-        (when (ß isNaN(___x))
+        (when (Numbers'isNaN ___x)
             (§ return ___x)
         )
         (if (Numbers'lt-2ol ___x, ___y)
@@ -27959,7 +27959,7 @@
     )
 
     (defn #_"Object" Numbers'min-2od [#_"Object" ___x, #_"double" ___y]
-        (cond (ß isNaN(___x))
+        (cond (Numbers'isNaN ___x)
             (do
                 (§ return ___x)
             )
@@ -27979,11 +27979,11 @@
     )
 
     (defn #_"Object" Numbers'min-2oo [#_"Object" ___x, #_"Object" ___y]
-        (cond (ß isNaN(___x))
+        (cond (Numbers'isNaN ___x)
             (do
                 (§ return ___x)
             )
-            (ß isNaN(___y))
+            (Numbers'isNaN ___y)
             (do
                 (§ return ___y)
             )
@@ -28148,7 +28148,7 @@
 
     (defn #_"TransientArrayMap" TransientArrayMap'new [#_"Object[]" ___array]
         (let [this (merge (ATransientMap'new) (TransientArrayMap'init))]
-            (§ ass (:owner this) (ß Thread/currentThread()))
+            (§ ass (:owner this) (Thread/currentThread))
             (§ ass (:array this) (make-array Object (ß Math/max(PersistentArrayMap'HASHTABLE_THRESHOLD, ___array.length))))
             (ß System/arraycopy(___array, 0, (:array this), 0, ___array.length))
             (§ ass (:len this) (ß ___array.length))
@@ -28255,7 +28255,7 @@
     (defn #_"IPersistentMap" PersistentArrayMap'create [#_"Map" ___other]
         (let [#_"ITransientMap" ___ret (.asTransient PersistentArrayMap'EMPTY)]
             (doseq [#_"Object" ___o (.entrySet ___other)]
-                (let [#_"Map$Entry" ___e (ß (Entry) ___o)]
+                (let [#_"Map$Entry" ___e (cast' Entry ___o)]
                     (§ ass ___ret (ß ___ret.assoc((.getKey ___e), (.getValue ___e))))
                 )
             )
@@ -28403,7 +28403,7 @@
     (§ defn #_"IMapEntry" (§ method entryAt) [#_"PersistentArrayMap" this, #_"Object" ___key]
         (let [#_"int" ___i (.indexOf this, ___key)]
             (when (ß ___i >= 0)
-                (§ return (ß (IMapEntry) MapEntry'create((:array this)[___i], (:array this)[___i + 1])))
+                (§ return (cast' IMapEntry (ß MapEntry'create((:array this)[___i], (:array this)[___i + 1]))))
             )
             nil
         )
@@ -28487,7 +28487,7 @@
 
     #_method
     (§ defn #_"IPersistentMap" (§ method empty) [#_"PersistentArrayMap" this]
-        (ß (IPersistentMap) PersistentArrayMap'EMPTY.withMeta((.meta this)))
+        (cast' IPersistentMap (ß PersistentArrayMap'EMPTY.withMeta((.meta this))))
     )
 
     #_method
@@ -28642,7 +28642,7 @@
             (§ return this)
         )
         (§ ass (:val (:leafFlag this)) nil)
-        (let [#_"INode" ___n (ß (((:root this) == nil) ? BitmapIndexedNode'EMPTY :or (:root this)).assoc((:edit this), 0, hash(___key), ___key, ___val, (:leafFlag this)))]
+        (let [#_"INode" ___n (.assoc (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (PersistentHashMap'hash ___key), ___key, ___val, (:leafFlag this))]
             (when (ß ___n != (:root this))
                 (§ ass (:root this) ___n)
             )
@@ -28668,7 +28668,7 @@
             (§ return this)
         )
         (§ ass (:val (:leafFlag this)) nil)
-        (let [#_"INode" ___n (ß (:root this).without((:edit this), 0, hash(___key), ___key, (:leafFlag this)))]
+        (let [#_"INode" ___n (ß (:root this).without((:edit this), 0, PersistentHashMap'hash(___key), ___key, (:leafFlag this)))]
             (when (ß ___n != (:root this))
                 (§ ass (:root this) ___n)
             )
@@ -28700,7 +28700,7 @@
         (when (nil? (:root this))
             (§ return ___notFound)
         )
-        (ß (:root this).find(0, hash(___key), ___key, ___notFound))
+        (ß (:root this).find(0, PersistentHashMap'hash(___key), ___key, ___notFound))
     )
 
     #_method
@@ -28881,7 +28881,7 @@
 
     #_method
     (§ defn #_"INode" (§ method assoc) [#_"ArrayNode" this, #_"int" ___shift, #_"int" ___hash, #_"Object" ___key, #_"Object" ___val, #_"Box" ___addedLeaf]
-        (let [#_"int" ___idx (ß mask(___hash, ___shift))]
+        (let [#_"int" ___idx (mask ___hash, ___shift)]
             (let [#_"INode" ___node (ß (:array this)[___idx])]
                 (when (nil? ___node)
                     (§ return (ß ArrayNode'new(nil, (:count this) + 1, cloneAndSet((:array this), ___idx, BitmapIndexedNode'EMPTY.assoc(___shift + 5, ___hash, ___key, ___val, ___addedLeaf)))))
@@ -28898,7 +28898,7 @@
 
     #_method
     (§ defn #_"INode" (§ method without) [#_"ArrayNode" this, #_"int" ___shift, #_"int" ___hash, #_"Object" ___key]
-        (let [#_"int" ___idx (ß mask(___hash, ___shift))]
+        (let [#_"int" ___idx (mask ___hash, ___shift)]
             (let [#_"INode" ___node (ß (:array this)[___idx])]
                 (when (nil? ___node)
                     (§ return this)
@@ -28925,7 +28925,7 @@
 
     #_method
     (§ defn #_"IMapEntry" (§ method find) [#_"ArrayNode" this, #_"int" ___shift, #_"int" ___hash, #_"Object" ___key]
-        (let [#_"int" ___idx (ß mask(___hash, ___shift))]
+        (let [#_"int" ___idx (mask ___hash, ___shift)]
             (let [#_"INode" ___node (ß (:array this)[___idx])]
                 (when (nil? ___node)
                     (§ return nil)
@@ -28937,7 +28937,7 @@
 
     #_method
     (§ defn #_"Object" (§ method find) [#_"ArrayNode" this, #_"int" ___shift, #_"int" ___hash, #_"Object" ___key, #_"Object" ___notFound]
-        (let [#_"int" ___idx (ß mask(___hash, ___shift))]
+        (let [#_"int" ___idx (mask ___hash, ___shift)]
             (let [#_"INode" ___node (ß (:array this)[___idx])]
                 (when (nil? ___node)
                     (§ return ___notFound)
@@ -29068,7 +29068,7 @@
 
     #_method
     (§ defn #_"INode" (§ method assoc) [#_"ArrayNode" this, #_"AtomicReference<Thread>" ___edit, #_"int" ___shift, #_"int" ___hash, #_"Object" ___key, #_"Object" ___val, #_"Box" ___addedLeaf]
-        (let [#_"int" ___idx (ß mask(___hash, ___shift))]
+        (let [#_"int" ___idx (mask ___hash, ___shift)]
             (let [#_"INode" ___node (ß (:array this)[___idx])]
                 (when (nil? ___node)
                     (let [#_"ArrayNode" ___editable (ß this.editAndSet(___edit, ___idx, BitmapIndexedNode'EMPTY.assoc(___edit, ___shift + 5, ___hash, ___key, ___val, ___addedLeaf)))]
@@ -29088,7 +29088,7 @@
 
     #_method
     (§ defn #_"INode" (§ method without) [#_"ArrayNode" this, #_"AtomicReference<Thread>" ___edit, #_"int" ___shift, #_"int" ___hash, #_"Object" ___key, #_"Box" ___removedLeaf]
-        (let [#_"int" ___idx (ß mask(___hash, ___shift))]
+        (let [#_"int" ___idx (mask ___hash, ___shift)]
             (let [#_"INode" ___node (ß (:array this)[___idx])]
                 (when (nil? ___node)
                     (§ return this)
@@ -29140,7 +29140,7 @@
 
     #_method
     (§ defn #_"INode" (§ method assoc) [#_"BitmapIndexedNode" this, #_"int" ___shift, #_"int" ___hash, #_"Object" ___key, #_"Object" ___val, #_"Box" ___addedLeaf]
-        (let [#_"int" ___bit (ß bitpos(___hash, ___shift))]
+        (let [#_"int" ___bit (bitpos ___hash, ___shift)]
             (let [#_"int" ___idx (.index this, ___bit)]
                 (if (ß ((:bitmap this) & ___bit) != 0)
                     (do
@@ -29170,17 +29170,17 @@
                             (if (ß ___n >= 16)
                                 (do
                                     (let [#_"INode[]" ___nodes (§ typeless make-array INode 32)]
-                                        (let [#_"int" ___jdx (ß mask(___hash, ___shift))]
+                                        (let [#_"int" ___jdx (mask ___hash, ___shift)]
                                             (§ ass (ß ___nodes[___jdx]) (ß BitmapIndexedNode'EMPTY.assoc(___shift + 5, ___hash, ___key, ___val, ___addedLeaf)))
                                             (let [#_"int" ___j 0]
                                                 (loop-when-recur [#_"int" ___i 0] (< ___i 32) [(inc ___i)]
                                                     (when (ß (((:bitmap this) >>> ___i) & 1) != 0)
                                                         (if (ß (:array this)[___j] == nil)
                                                             (do
-                                                                (§ ass (ß ___nodes[___i]) (ß (INode) (:array this)[___j + 1]))
+                                                                (§ ass (ß ___nodes[___i]) (cast' INode (ß (:array this)[___j + 1])))
                                                             )
                                                             (do
-                                                                (§ ass (ß ___nodes[___i]) (ß BitmapIndexedNode'EMPTY.assoc(___shift + 5, hash((:array this)[___j]), (:array this)[___j], (:array this)[___j + 1], ___addedLeaf)))
+                                                                (§ ass (ß ___nodes[___i]) (ß BitmapIndexedNode'EMPTY.assoc(___shift + 5, PersistentHashMap'hash((:array this)[___j]), (:array this)[___j], (:array this)[___j + 1], ___addedLeaf)))
                                                             )
                                                         )
                                                         (§ ass ___j (+ ___j 2))
@@ -29211,7 +29211,7 @@
 
     #_method
     (§ defn #_"INode" (§ method without) [#_"BitmapIndexedNode" this, #_"int" ___shift, #_"int" ___hash, #_"Object" ___key]
-        (let [#_"int" ___bit (ß bitpos(___hash, ___shift))]
+        (let [#_"int" ___bit (bitpos ___hash, ___shift)]
             (when (ß ((:bitmap this) & ___bit) == 0)
                 (§ return this)
             )
@@ -29245,7 +29245,7 @@
 
     #_method
     (§ defn #_"IMapEntry" (§ method find) [#_"BitmapIndexedNode" this, #_"int" ___shift, #_"int" ___hash, #_"Object" ___key]
-        (let [#_"int" ___bit (ß bitpos(___hash, ___shift))]
+        (let [#_"int" ___bit (bitpos ___hash, ___shift)]
             (when (ß ((:bitmap this) & ___bit) == 0)
                 (§ return nil)
             )
@@ -29256,7 +29256,7 @@
                             (§ return (ß (cast' INode ___valOrNode).find(___shift + 5, ___hash, ___key)))
                         )
                         (when (Util'equiv-2oo ___key, ___keyOrNull)
-                            (§ return (ß (IMapEntry) MapEntry'create(___keyOrNull, ___valOrNode)))
+                            (§ return (cast' IMapEntry (MapEntry'create ___keyOrNull, ___valOrNode)))
                         )
                         nil
                     )
@@ -29267,7 +29267,7 @@
 
     #_method
     (§ defn #_"Object" (§ method find) [#_"BitmapIndexedNode" this, #_"int" ___shift, #_"int" ___hash, #_"Object" ___key, #_"Object" ___notFound]
-        (let [#_"int" ___bit (ß bitpos(___hash, ___shift))]
+        (let [#_"int" ___bit (bitpos ___hash, ___shift)]
             (when (ß ((:bitmap this) & ___bit) == 0)
                 (§ return ___notFound)
             )
@@ -29353,7 +29353,7 @@
 
     #_method
     (§ defn #_"INode" (§ method assoc) [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" ___edit, #_"int" ___shift, #_"int" ___hash, #_"Object" ___key, #_"Object" ___val, #_"Box" ___addedLeaf]
-        (let [#_"int" ___bit (ß bitpos(___hash, ___shift))]
+        (let [#_"int" ___bit (bitpos ___hash, ___shift)]
             (let [#_"int" ___idx (.index this, ___bit)]
                 (if (ß ((:bitmap this) & ___bit) != 0)
                     (do
@@ -29393,17 +29393,17 @@
                             (if (ß ___n >= 16)
                                 (do
                                     (let [#_"INode[]" ___nodes (§ typeless make-array INode 32)]
-                                        (let [#_"int" ___jdx (ß mask(___hash, ___shift))]
+                                        (let [#_"int" ___jdx (mask ___hash, ___shift)]
                                             (§ ass (ß ___nodes[___jdx]) (ß BitmapIndexedNode'EMPTY.assoc(___edit, ___shift + 5, ___hash, ___key, ___val, ___addedLeaf)))
                                             (let [#_"int" ___j 0]
                                                 (loop-when-recur [#_"int" ___i 0] (< ___i 32) [(inc ___i)]
                                                     (when (ß (((:bitmap this) >>> ___i) & 1) != 0)
                                                         (if (ß (:array this)[___j] == nil)
                                                             (do
-                                                                (§ ass (ß ___nodes[___i]) (ß (INode) (:array this)[___j + 1]))
+                                                                (§ ass (ß ___nodes[___i]) (cast' INode (ß (:array this)[___j + 1])))
                                                             )
                                                             (do
-                                                                (§ ass (ß ___nodes[___i]) (ß BitmapIndexedNode'EMPTY.assoc(___edit, ___shift + 5, hash((:array this)[___j]), (:array this)[___j], (:array this)[___j + 1], ___addedLeaf)))
+                                                                (§ ass (ß ___nodes[___i]) (ß BitmapIndexedNode'EMPTY.assoc(___edit, ___shift + 5, PersistentHashMap'hash((:array this)[___j]), (:array this)[___j], (:array this)[___j + 1], ___addedLeaf)))
                                                             )
                                                         )
                                                         (§ ass ___j (+ ___j 2))
@@ -29438,7 +29438,7 @@
 
     #_method
     (§ defn #_"INode" (§ method without) [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" ___edit, #_"int" ___shift, #_"int" ___hash, #_"Object" ___key, #_"Box" ___removedLeaf]
-        (let [#_"int" ___bit (ß bitpos(___hash, ___shift))]
+        (let [#_"int" ___bit (bitpos ___hash, ___shift)]
             (when (ß ((:bitmap this) & ___bit) == 0)
                 (§ return this)
             )
@@ -29535,7 +29535,7 @@
                 (§ return nil)
             )
             (when (ß Util'equiv-2oo(___key, (:array this)[___idx]))
-                (§ return (ß (IMapEntry) MapEntry'create((:array this)[___idx], (:array this)[___idx + 1])))
+                (§ return (cast' IMapEntry (ß MapEntry'create((:array this)[___idx], (:array this)[___idx + 1]))))
             )
             nil
         )
@@ -29784,7 +29784,7 @@
                     (§ ass ___init (ß ___f.invoke(___init, ___array[___i], ___array[___i + 1])))
                 )
                 (do
-                    (let [#_"INode" ___node (ß (INode) ___array[___i + 1])]
+                    (let [#_"INode" ___node (cast' INode (ß ___array[___i + 1]))]
                         (when (some? ___node)
                             (§ ass ___init (.kvreduce ___node, ___f, ___init))
                         )
@@ -29806,7 +29806,7 @@
             (when (ß ___array[___j] != nil)
                 (§ return (NodeSeq'new-4 nil, ___array, ___j, nil))
             )
-            (let [#_"INode" ___node (ß (INode) ___array[___j + 1])]
+            (let [#_"INode" ___node (cast' INode (ß ___array[___j + 1]))]
                 (when (some? ___node)
                     (let [#_"ISeq" ___nodeSeq (.nodeSeq ___node)]
                         (when (some? ___nodeSeq)
@@ -29866,7 +29866,7 @@
     (defn #_"IPersistentMap" PersistentHashMap'create-1m [#_"Map" ___other]
         (let [#_"ITransientMap" ___ret (.asTransient PersistentHashMap'EMPTY)]
             (doseq [#_"Object" ___o (.entrySet ___other)]
-                (let [#_"Map$Entry" ___e (ß (Entry) ___o)]
+                (let [#_"Map$Entry" ___e (cast' Entry ___o)]
                     (§ ass ___ret (ß ___ret.assoc((.getKey ___e), (.getValue ___e))))
                 )
             )
@@ -29882,7 +29882,7 @@
             (loop-when-recur [#_"int" ___i 0] (ß ___i < ___init.length) [(+ ___i 2)]
                 (§ ass ___ret (ß ___ret.assoc(___init[___i], ___init[___i + 1])))
             )
-            (ß (PersistentHashMap) (.persistent ___ret))
+            (cast' PersistentHashMap (.persistent ___ret))
         )
     )
 
@@ -29894,7 +29894,7 @@
                     (throw (IllegalArgumentException. (str "Duplicate key: " (ß ___init[___i]))))
                 )
             )
-            (ß (PersistentHashMap) (.persistent ___ret))
+            (cast' PersistentHashMap (.persistent ___ret))
         )
     )
 
@@ -29906,7 +29906,7 @@
                 )
                 (§ ass ___ret (ß ___ret.assoc((first ___items), RT'second(___items))))
             )
-            (ß (PersistentHashMap) (.persistent ___ret))
+            (cast' PersistentHashMap (.persistent ___ret))
         )
     )
 
@@ -29921,7 +29921,7 @@
                     (throw (IllegalArgumentException. (str "Duplicate key: " (first ___items))))
                 )
             )
-            (ß (PersistentHashMap) (.persistent ___ret))
+            (cast' PersistentHashMap (.persistent ___ret))
         )
     )
 
@@ -29973,7 +29973,7 @@
         (when (nil? ___key)
             (§ return (:hasNull this))
         )
-        (and (some? (:root this)) (ß (ß (:root this).find(0, hash(___key), ___key, PersistentHashMap'NOT_FOUND)) != PersistentHashMap'NOT_FOUND))
+        (and (some? (:root this)) (ß (ß (:root this).find(0, PersistentHashMap'hash(___key), ___key, PersistentHashMap'NOT_FOUND)) != PersistentHashMap'NOT_FOUND))
     )
 
     #_method
@@ -29981,7 +29981,7 @@
         (when (nil? ___key)
             (§ return (when (:hasNull this) (cast' IMapEntry (MapEntry'create nil, (:nullValue this)))))
         )
-        (when (some? (:root this)) (ß (:root this).find(0, hash(___key), ___key)))
+        (when (some? (:root this)) (ß (:root this).find(0, PersistentHashMap'hash(___key), ___key)))
     )
 
     #_method
@@ -29993,7 +29993,7 @@
             (§ return (PersistentHashMap'new-5 (.meta this), (if (:hasNull this) (:count this) (inc (:count this))), (:root this), true, ___val))
         )
         (let [#_"Box" ___addedLeaf (Box'new nil)]
-            (let [#_"INode" ___newroot (.assoc (or (:root this) BitmapIndexedNode'EMPTY), 0, (ß hash(___key)), ___key, ___val, ___addedLeaf)]
+            (let [#_"INode" ___newroot (.assoc (or (:root this) BitmapIndexedNode'EMPTY), 0, (PersistentHashMap'hash ___key), ___key, ___val, ___addedLeaf)]
                 (when (ß ___newroot == (:root this))
                     (§ return this)
                 )
@@ -30007,7 +30007,7 @@
         (when (nil? ___key)
             (§ return (if (:hasNull this) (:nullValue this) ___notFound))
         )
-        (if (some? (:root this)) (ß (:root this).find(0, hash(___key), ___key, ___notFound)) ___notFound)
+        (if (some? (:root this)) (ß (:root this).find(0, PersistentHashMap'hash(___key), ___key, ___notFound)) ___notFound)
     )
 
     #_method
@@ -30031,7 +30031,7 @@
         (when (nil? (:root this))
             (§ return this)
         )
-        (let [#_"INode" ___newroot (ß (:root this).without(0, hash(___key), ___key))]
+        (let [#_"INode" ___newroot (ß (:root this).without(0, PersistentHashMap'hash(___key), ___key))]
             (when (ß ___newroot == (:root this))
                 (§ return this)
             )
@@ -30110,17 +30110,17 @@
 
     #_method
     (§ defn #_"Iterator" (§ method iterator) [#_"PersistentHashMap" this]
-        (ß this.iterator(APersistentMap'MAKE_ENTRY))
+        (.iterator this, APersistentMap'MAKE_ENTRY)
     )
 
     #_method
     (§ defn #_"Iterator" (§ method keyIterator) [#_"PersistentHashMap" this]
-        (ß this.iterator(APersistentMap'MAKE_KEY))
+        (.iterator this, APersistentMap'MAKE_KEY)
     )
 
     #_method
     (§ defn #_"Iterator" (§ method valIterator) [#_"PersistentHashMap" this]
-        (ß this.iterator(APersistentMap'MAKE_VAL))
+        (.iterator this, APersistentMap'MAKE_VAL)
     )
 
     #_method
@@ -30222,7 +30222,7 @@
     )
 
     (defn- #_"INode" PersistentHashMap'createNode-6 [#_"int" ___shift, #_"Object" ___key1, #_"Object" ___val1, #_"int" ___key2hash, #_"Object" ___key2, #_"Object" ___val2]
-        (let [#_"int" ___key1hash (ß hash(___key1))]
+        (let [#_"int" ___key1hash (PersistentHashMap'hash ___key1)]
             (when (ß ___key1hash == ___key2hash)
                 (§ return (ß HashCollisionNode'new(nil, ___key1hash, 2, (object-array [ ___key1, ___val1, ___key2, ___val2 ]))))
             )
@@ -30235,7 +30235,7 @@
     )
 
     (defn- #_"INode" PersistentHashMap'createNode-7 [#_"AtomicReference<Thread>" ___edit, #_"int" ___shift, #_"Object" ___key1, #_"Object" ___val1, #_"int" ___key2hash, #_"Object" ___key2, #_"Object" ___val2]
-        (let [#_"int" ___key1hash (ß hash(___key1))]
+        (let [#_"int" ___key1hash (PersistentHashMap'hash ___key1)]
             (when (ß ___key1hash == ___key2hash)
                 (§ return (ß HashCollisionNode'new(nil, ___key1hash, 2, (object-array [ ___key1, ___val1, ___key2, ___val2 ]))))
             )
@@ -30271,68 +30271,68 @@
     (§ def #_"PersistentHashSet" PersistentHashSet'EMPTY (PersistentHashSet'new nil, PersistentHashMap'EMPTY))
 
     (defn #_"PersistentHashSet" PersistentHashSet'create-1a [#_"Object..." ___init]
-        (let [#_"ITransientSet" ___ret (ß (ITransientSet)PersistentHashSet'EMPTY.asTransient())]
+        (let [#_"ITransientSet" ___ret (cast' ITransientSet (ß PersistentHashSet'EMPTY.asTransient()))]
             (loop-when-recur [#_"int" ___i 0] (ß ___i < ___init.length) [(inc ___i)]
-                (§ ass ___ret (ß (ITransientSet)___ret.conj(___init[___i])))
+                (§ ass ___ret (cast' ITransientSet (ß ___ret.conj(___init[___i]))))
             )
-            (ß (PersistentHashSet)___ret.persistent())
+            (cast' PersistentHashSet (ß ___ret.persistent()))
         )
     )
 
     (defn #_"PersistentHashSet" PersistentHashSet'create-1l [#_"List" ___init]
-        (let [#_"ITransientSet" ___ret (ß (ITransientSet)PersistentHashSet'EMPTY.asTransient())]
+        (let [#_"ITransientSet" ___ret (cast' ITransientSet (ß PersistentHashSet'EMPTY.asTransient()))]
             (doseq [#_"Object" ___key ___init]
-                (§ ass ___ret (ß (ITransientSet) ___ret.conj(___key)))
+                (§ ass ___ret (cast' ITransientSet (.conj ___ret, ___key)))
             )
-            (ß (PersistentHashSet)___ret.persistent())
+            (cast' PersistentHashSet (ß ___ret.persistent()))
         )
     )
 
     (defn #_"PersistentHashSet" PersistentHashSet'create-1s [#_"ISeq" ___items]
-        (let [#_"ITransientSet" ___ret (ß (ITransientSet)PersistentHashSet'EMPTY.asTransient())]
+        (let [#_"ITransientSet" ___ret (cast' ITransientSet (ß PersistentHashSet'EMPTY.asTransient()))]
             (loop-when-recur [___items ___items] (some? ___items) [(next ___items)]
-                (§ ass ___ret (ß (ITransientSet) ___ret.conj((first ___items))))
+                (§ ass ___ret (cast' ITransientSet (ß ___ret.conj((first ___items)))))
             )
-            (ß (PersistentHashSet)___ret.persistent())
+            (cast' PersistentHashSet (ß ___ret.persistent()))
         )
     )
 
     (defn #_"PersistentHashSet" PersistentHashSet'createWithCheck-1a [#_"Object..." ___init]
-        (let [#_"ITransientSet" ___ret (ß (ITransientSet)PersistentHashSet'EMPTY.asTransient())]
+        (let [#_"ITransientSet" ___ret (cast' ITransientSet (ß PersistentHashSet'EMPTY.asTransient()))]
             (loop-when-recur [#_"int" ___i 0] (ß ___i < ___init.length) [(inc ___i)]
-                (§ ass ___ret (ß (ITransientSet) ___ret.conj(___init[___i])))
+                (§ ass ___ret (cast' ITransientSet (ß ___ret.conj(___init[___i]))))
                 (when (ß (count ___ret) != ___i + 1)
                     (throw (IllegalArgumentException. (str "Duplicate key: " (ß ___init[___i]))))
                 )
             )
-            (ß (PersistentHashSet) (.persistent ___ret))
+            (cast' PersistentHashSet (.persistent ___ret))
         )
     )
 
     (defn #_"PersistentHashSet" PersistentHashSet'createWithCheck-1l [#_"List" ___init]
-        (let [#_"ITransientSet" ___ret (ß (ITransientSet)PersistentHashSet'EMPTY.asTransient())]
+        (let [#_"ITransientSet" ___ret (cast' ITransientSet (ß PersistentHashSet'EMPTY.asTransient()))]
             (let [#_"int" ___i 0]
                 (doseq [#_"Object" ___key ___init]
-                    (§ ass ___ret (ß (ITransientSet) ___ret.conj(___key)))
+                    (§ ass ___ret (cast' ITransientSet (.conj ___ret, ___key)))
                     (when (ß (count ___ret) != ___i + 1)
                         (throw (IllegalArgumentException. (str "Duplicate key: " ___key)))
                     )
                     (§ ass ___i (inc ___i))
                 )
-                (ß (PersistentHashSet) (.persistent ___ret))
+                (cast' PersistentHashSet (.persistent ___ret))
             )
         )
     )
 
     (defn #_"PersistentHashSet" PersistentHashSet'createWithCheck-1s [#_"ISeq" ___items]
-        (let [#_"ITransientSet" ___ret (ß (ITransientSet)PersistentHashSet'EMPTY.asTransient())]
+        (let [#_"ITransientSet" ___ret (cast' ITransientSet (ß PersistentHashSet'EMPTY.asTransient()))]
             (loop-when-recur [___items ___items #_"int" ___i 0] (some? ___items) [(next ___items) (inc ___i)]
-                (§ ass ___ret (ß (ITransientSet) ___ret.conj((first ___items))))
+                (§ ass ___ret (cast' ITransientSet (ß ___ret.conj((first ___items)))))
                 (when (ß (count ___ret) != ___i + 1)
                     (throw (IllegalArgumentException. (str "Duplicate key: " (first ___items))))
                 )
             )
-            (ß (PersistentHashSet) (.persistent ___ret))
+            (cast' PersistentHashSet (.persistent ___ret))
         )
     )
 
@@ -30408,7 +30408,7 @@
             (let [#_"Object[]" ___argsarray (:array (cast' ArraySeq ___args))]
                 (let [#_"IPersistentList" ___ret PersistentList'EMPTY]
                     (loop-when-recur [#_"int" ___i (ß ___argsarray.length - 1)] (ß ___i >= (:i (cast' ArraySeq ___args))) [(dec ___i)]
-                        (§ ass ___ret (ß (IPersistentList) ___ret.cons(___argsarray[___i])))
+                        (§ ass ___ret (cast' IPersistentList (ß ___ret.cons(___argsarray[___i]))))
                     )
                     (§ return ___ret)
                 )
@@ -30427,7 +30427,7 @@
             (let [#_"Object[]" ___argsarray (:array (cast' ArraySeq ___args))]
                 (let [#_"IPersistentList" ___ret PersistentList'EMPTY]
                     (loop-when-recur [#_"int" ___i (ß ___argsarray.length - 1)] (ß ___i >= 0) [(dec ___i)]
-                        (§ ass ___ret (ß (IPersistentList) ___ret.cons(___argsarray[___i])))
+                        (§ ass ___ret (cast' IPersistentList (ß ___ret.cons(___argsarray[___i]))))
                     )
                     (§ return ___ret)
                 )
@@ -30717,7 +30717,7 @@
     (defn #_"IPersistentList" PersistentList'create [#_"List" ___init]
         (let [#_"IPersistentList" ___ret PersistentList'EMPTY]
             (loop-when-recur [#_"ListIterator" ___i (ß ___init.listIterator((.size ___init)))] (.hasPrevious ___i) [___i]
-                (§ ass ___ret (ß (IPersistentList) ___ret.cons((.previous ___i))))
+                (§ ass ___ret (cast' IPersistentList (ß ___ret.cons((.previous ___i)))))
             )
             ___ret
         )
@@ -30733,7 +30733,7 @@
         (when (ß (:_count this) == 1)
             (§ return nil)
         )
-        (ß (ISeq) (:_rest this))
+        (cast' ISeq (:_rest this))
     )
 
     #_method
@@ -30985,10 +30985,10 @@
     (§ defn #_"PersistentQueue" (§ method cons) [#_"PersistentQueue" this, #_"Object" ___o]
         (if (nil? (:f this)) ;; empty
             (do
-                (ß PersistentQueue'new((.meta this), (:cnt this) + 1, RT'list-1(___o), nil))
+                (PersistentQueue'new (.meta this), (inc (:cnt this)), (RT'list-1 ___o), nil)
             )
             (do
-                (ß PersistentQueue'new((.meta this), (:cnt this) + 1, (:f this), (((:r this) != nil) ? (:r this) :or PersistentVector'EMPTY).cons(___o)))
+                (PersistentQueue'new (.meta this), (inc (:cnt this)), (:f this), (.cons (or (:r this) PersistentVector'EMPTY), ___o))
             )
         )
     )
@@ -31250,7 +31250,7 @@
 
     #_method
     (§ defn #_"TNode" (§ method replace) [#_"Black" this, #_"Object" ___key, #_"Object" ___val, #_"TNode" ___left, #_"TNode" ___right]
-        (ß black(___key, ___val, ___left, ___right))
+        (black ___key, ___val, ___left, ___right)
     )
 )
 
@@ -31374,7 +31374,7 @@
 
     #_method
     (§ defn #_"TNode" (§ method replace) [#_"Red" this, #_"Object" ___key, #_"Object" ___val, #_"TNode" ___left, #_"TNode" ___right]
-        (ß red(___key, ___val, ___left, ___right))
+        (red ___key, ___val, ___left, ___right)
     )
 )
 
@@ -31549,7 +31549,7 @@
 
     #_method
     (§ defn #_"ISeq" (§ method next) [#_"TSeq" this]
-        (let [#_"TNode" ___t (ß (TNode) (:stack this).first())]
+        (let [#_"TNode" ___t (cast' TNode (ß (:stack this).first()))]
             (let [#_"ISeq" ___nextstack (TSeq'push (if (:asc this) (.right ___t) (.left ___t)), (.next (:stack this)), (:asc this))]
                 (when (some? ___nextstack)
                     (§ return (ß TSeq'new-3(___nextstack, (:asc this), (:cnt this) - 1)))
@@ -31606,7 +31606,7 @@
     #_method
     (§ defn #_"Object" (§ method next) [#_"NodeIterator" this]
         (try
-            (let [#_"TNode" ___t (ß (TNode) (:stack this).pop())]
+            (let [#_"TNode" ___t (cast' TNode (ß (:stack this).pop()))]
                 (.push this, (if (:asc this) (.right ___t) (.left ___t)))
                 ___t
             )
@@ -31695,7 +31695,7 @@
     (defn #_"IPersistentMap" PersistentTreeMap'create-1m [#_"Map" ___other]
         (let [#_"IPersistentMap" ___ret PersistentTreeMap'EMPTY]
             (doseq [#_"Object" ___o (.entrySet ___other)]
-                (let [#_"Map$Entry" ___e (ß (Entry) ___o)]
+                (let [#_"Map$Entry" ___e (cast' Entry ___o)]
                     (§ ass ___ret (ß ___ret.assoc((.getKey ___e), (.getValue ___e))))
                 )
             )
@@ -31753,7 +31753,7 @@
                 )
                 (§ ass ___ret (ß ___ret.assoc((first ___items), RT'second(___items))))
             )
-            (ß (PersistentTreeMap) ___ret)
+            (cast' PersistentTreeMap ___ret)
         )
     )
 
@@ -31765,7 +31765,7 @@
                 )
                 (§ ass ___ret (ß ___ret.assoc((first ___items), RT'second(___items))))
             )
-            (ß (PersistentTreeMap) ___ret)
+            (cast' PersistentTreeMap ___ret)
         )
     )
 
@@ -31811,7 +31811,7 @@
         (let [#_"Box" ___found (Box'new nil)]
             (let [#_"TNode" ___t (.add this, (:tree this), ___key, ___val, ___found)]
                 (when (nil? ___t) ;; nil == already contains key
-                    (let [#_"TNode" ___foundNode (ß (TNode) (:val ___found))]
+                    (let [#_"TNode" ___foundNode (cast' TNode (:val ___found))]
                         (when (ß (.val ___foundNode) == ___val) ;; note only get same collection on identity of val, not equals()
                             (§ return this)
                         )
@@ -32082,7 +32082,7 @@
                 (§ ass (:val ___found) ___t)
                 (§ return nil)
             )
-            (let [#_"TNode" ___ins (ß (___c < 0) ? (ß this.add((.left ___t), ___key, ___val, ___found)) :or (ß this.add((.right ___t), ___key, ___val, ___found)))]
+            (let [#_"TNode" ___ins (if (neg? ___c) (.add this, (.left ___t), ___key, ___val, ___found) (.add this, (.right ___t), ___key, ___val, ___found))]
                 (when (nil? ___ins) ;; found below
                     (§ return nil)
                 )
@@ -32104,7 +32104,7 @@
                 (§ ass (:val ___found) ___t)
                 (§ return (ß append((.left ___t), (.right ___t))))
             )
-            (let [#_"TNode" ___del (ß (___c < 0) ? (ß this.remove((.left ___t), ___key, ___found)) :or (ß this.remove((.right ___t), ___key, ___found)))]
+            (let [#_"TNode" ___del (if (neg? ___c) (.remove this, (.left ___t), ___key, ___found) (.remove this, (.right ___t), ___key, ___found))]
                 (when (ß ___del == nil && (:val ___found) == nil) ;; not found below
                     (§ return nil)
                 )
@@ -32250,7 +32250,7 @@
     #_method
     (§ defn #_"TNode" (§ method replace) [#_"PersistentTreeMap" this, #_"TNode" ___t, #_"Object" ___key, #_"Object" ___val]
         (let [#_"int" ___c (.doCompare this, ___key, (:key ___t))]
-            (ß ___t.replace((:key ___t), (___c == 0) ? ___val :or (.val ___t), (___c < 0) ? (ß this.replace((.left ___t), ___key, ___val)) :or (.left ___t), (___c > 0) ? (ß this.replace((.right ___t), ___key, ___val)) :or (.right ___t)))
+            (.replace ___t, (:key ___t), (if (zero? ___c) ___val (.val ___t)), (if (neg? ___c) (.replace this, (.left ___t), ___key, ___val) (.left ___t)), (if (pos? ___c) (.replace this, (.right ___t), ___key, ___val) (.right ___t)))
         )
     )
 
@@ -32307,7 +32307,7 @@
     (defn #_"PersistentTreeSet" PersistentTreeSet'create-1 [#_"ISeq" ___items]
         (let [#_"PersistentTreeSet" ___ret PersistentTreeSet'EMPTY]
             (loop-when-recur [___items ___items] (some? ___items) [(next ___items)]
-                (§ ass ___ret (ß (PersistentTreeSet) ___ret.cons((first ___items))))
+                (§ ass ___ret (cast' PersistentTreeSet (ß ___ret.cons((first ___items)))))
             )
             ___ret
         )
@@ -32316,7 +32316,7 @@
     (defn #_"PersistentTreeSet" PersistentTreeSet'create-2 [#_"Comparator" ___comp, #_"ISeq" ___items]
         (let [#_"PersistentTreeSet" ___ret (ß PersistentTreeSet'new(nil, PersistentTreeMap'new-2(nil, ___comp)))]
             (loop-when-recur [___items ___items] (some? ___items) [(next ___items)]
-                (§ ass ___ret (ß (PersistentTreeSet) ___ret.cons((first ___items))))
+                (§ ass ___ret (cast' PersistentTreeSet (ß ___ret.cons((first ___items)))))
             )
             ___ret
         )
@@ -32398,14 +32398,14 @@
 
     #_method
     (§ defn #_"ISeq" (§ method seq) [#_"PersistentTreeSet" this, #_"boolean" ___ascending]
-        (let [#_"PersistentTreeMap" ___m (ß (PersistentTreeMap) (:impl this))]
+        (let [#_"PersistentTreeMap" ___m (cast' PersistentTreeMap (:impl this))]
             (ß RT'keys(___m.seq(___ascending)))
         )
     )
 
     #_method
     (§ defn #_"ISeq" (§ method seqFrom) [#_"PersistentTreeSet" this, #_"Object" ___key, #_"boolean" ___ascending]
-        (let [#_"PersistentTreeMap" ___m (ß (PersistentTreeMap) (:impl this))]
+        (let [#_"PersistentTreeMap" ___m (cast' PersistentTreeMap (:impl this))]
             (ß RT'keys(___m.seqFrom(___key, ___ascending)))
         )
     )
@@ -32665,8 +32665,8 @@
                             (§ ass ___nodeToInsert ___tailnode)
                         )
                         (do
-                            (let [#_"VNode" ___child (ß (VNode) (:array ___parent)[___subidx])]
-                                (§ ass ___nodeToInsert (ß (some? ___child) ? (ß this.pushTail(___level - 5, ___child, ___tailnode)) :or newPath((:edit (:root this)), ___level - 5, ___tailnode)))
+                            (let [#_"VNode" ___child (cast' VNode (ß (:array ___parent)[___subidx]))]
+                                (§ ass ___nodeToInsert (if (some? ___child) (.pushTail this, (- ___level 5), ___child, ___tailnode) (newPath (:edit (:root this)), (- ___level 5), ___tailnode)))
                             )
                         )
                     )
@@ -32693,7 +32693,7 @@
             )
             (let [#_"VNode" ___node (:root this)]
                 (loop-when-recur [#_"int" ___level (:shift this)] (> ___level 0) [(- ___level 5)]
-                    (§ ass ___node (ß (VNode) (:array ___node)[(___i >>> ___level) & 0x01f]))
+                    (§ ass ___node (cast' VNode (ß (:array ___node)[(___i >>> ___level) & 0x01f])))
                 )
                 (§ return (:array ___node))
             )
@@ -32745,7 +32745,7 @@
 
     #_method
     (§ defn #_"IMapEntry" (§ method entryAt) [#_"TransientVector" this, #_"Object" ___key]
-        (let [#_"Object" ___v (ß this.valAt(___key, TransientVector'NOT_FOUND))]
+        (let [#_"Object" ___v (.valAt this, ___key, TransientVector'NOT_FOUND)]
             (when (ß ___v != TransientVector'NOT_FOUND)
                 (§ return (MapEntry'create ___key, ___v))
             )
@@ -32924,7 +32924,7 @@
 
     (defn #_"PersistentVector" PersistentVector'create-1r [#_"IReduceInit" ___items]
         (let [#_"TransientVector" ___ret (.asTransient PersistentVector'EMPTY)]
-            (ß ___items.reduce(PersistentVector'TRANSIENT_VECTOR_CONJ, ___ret))
+            (.reduce ___items, PersistentVector'TRANSIENT_VECTOR_CONJ, ___ret)
             (.persistent ___ret)
         )
     )
@@ -33057,7 +33057,7 @@
             )
             (let [#_"VNode" ___node (:root this)]
                 (loop-when-recur [#_"int" ___level (:shift this)] (> ___level 0) [(- ___level 5)]
-                    (§ ass ___node (ß (VNode) (:array ___node)[(___i >>> ___level) & 0x01f]))
+                    (§ ass ___node (cast' VNode (ß (:array ___node)[(___i >>> ___level) & 0x01f])))
                 )
                 (§ return (:array ___node))
             )
@@ -33177,8 +33177,8 @@
                             (§ ass ___nodeToInsert ___tailnode)
                         )
                         (do
-                            (let [#_"VNode" ___child (ß (VNode) (:array ___parent)[___subidx])]
-                                (§ ass ___nodeToInsert (ß (some? ___child) ? (ß this.pushTail(___level - 5, ___child, ___tailnode)) :or PersistentVector'newPath((:edit (:root this)), ___level - 5, ___tailnode)))
+                            (let [#_"VNode" ___child (cast' VNode (ß (:array ___parent)[___subidx]))]
+                                (§ ass ___nodeToInsert (if (some? ___child) (.pushTail this, (- ___level 5), ___child, ___tailnode) (PersistentVector'newPath (:edit (:root this)), (- ___level 5), ___tailnode)))
                             )
                         )
                     )
@@ -33220,7 +33220,7 @@
                 (hash-map
                     #_"int" :i ___start
                     #_"int" :base (- (:i this) (% (:i this) 32))
-                    #_"Object[]" :array (ß (___start < (count this)) ? (ß this.arrayFor((:i this))) :or nil)
+                    #_"Object[]" :array (when (< ___start (count this)) (.arrayFor this, (:i this)))
                 )
             )
 
@@ -33350,7 +33350,7 @@
                         (§ ass ___newroot PersistentVector'EMPTY_NODE)
                     )
                     (when (ß (:shift this) > 5 && (:array ___newroot)[1] == nil)
-                        (§ ass ___newroot (ß (VNode) (:array ___newroot)[0]))
+                        (§ ass ___newroot (cast' VNode (ß (:array ___newroot)[0])))
                         (§ ass ___newshift (- ___newshift 5))
                     )
                     (ß PersistentVector'new-5((.meta this), (:cnt this) - 1, ___newshift, ___newroot, ___newtail))
@@ -33418,7 +33418,7 @@
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"ProxyHandler" this, #_"Object" ___proxy, #_"java.lang.reflect.Method" ___method, #_"Object[]" ___args] #_(§ throws Throwable)
         (let [#_"Class" ___rt (.getReturnType ___method)]
-            (let [#_"IFn" ___fn (ß (IFn) (:fns this).valAt((.getName ___method)))]
+            (let [#_"IFn" ___fn (cast' IFn (ß (:fns this).valAt((.getName ___method))))]
                 (when (nil? ___fn)
                     (cond (ß ___rt == Void/TYPE)
                         (do
@@ -33618,7 +33618,7 @@
 
     (defn #_"ISeq" Range'create-1 [#_"Object" ___end]
         (when (Numbers'isPos-1o ___end)
-            (§ return (ß Range'new-4(0, ___end, 1, positiveStep(___end))))
+            (§ return (ß Range'new-4(0, ___end, 1, Range'positiveStep(___end))))
         )
         PersistentList'EMPTY
     )
@@ -33634,7 +33634,7 @@
         (when (Numbers'isZero-1o ___step)
             (§ return (Repeat'create-1 ___start))
         )
-        (ß Range'new-4(___start, ___end, ___step, Numbers'isPos-1o(___step) ? positiveStep(___end) :or negativeStep(___end)))
+        (Range'new-4 ___start, ___end, ___step, (if (Numbers'isPos-1o ___step) (Range'positiveStep ___end) (Range'negativeStep ___end)))
     )
 
     #_method
@@ -33819,7 +33819,7 @@
 
     #_method
     (§ defn #_"BigDecimal" (§ method decimalValue) [#_"Ratio" this]
-        (ß this.decimalValue(MathContext/UNLIMITED))
+        (.decimalValue this, MathContext/UNLIMITED)
     )
 
     #_method
@@ -33838,7 +33838,7 @@
 
     #_method
     (§ defn #_"int" (§ method compareTo) [#_"Ratio" this, #_"Object" ___o]
-        (let [#_"Number" ___other (ß (Number)___o)]
+        (let [#_"Number" ___other (cast Number ___o)]
             (Numbers'compare this, ___other)
         )
     )
@@ -33877,11 +33877,11 @@
 
     #_method
     (§ defn #_"Object" (§ method valAt) [#_"ReaderConditional" this, #_"Object" ___key, #_"Object" ___notFound]
-        (cond (ß ReaderConditional'FORM_KW.equals(___key))
+        (cond (.equals ReaderConditional'FORM_KW, ___key)
             (do
                 (:form this)
             )
-            (ß ReaderConditional'SPLICING_KW.equals(___key))
+            (.equals ReaderConditional'SPLICING_KW, ___key)
             (do
                 (:splicing this)
             )
@@ -33902,11 +33902,11 @@
             (§ return false)
         )
 
-        (let [#_"ReaderConditional" ___that (ß (ReaderConditional) ___o)]
-            (when (ß ((:form this) != nil) ? (not (ß (:form this).equals((:form ___that)))) :or (:form ___that) != nil)
+        (let [#_"ReaderConditional" ___that (cast' ReaderConditional ___o)]
+            (when (if (some? (:form this)) (not (ß (:form this).equals((:form ___that)))) (some? (:form ___that)))
                 (§ return false)
             )
-            (when (ß ((:splicing this) != nil) ? (not (ß (:splicing this).equals((:splicing ___that)))) :or (:splicing ___that) != nil)
+            (when (if (some? (:splicing this)) (not (ß (:splicing this).equals((:splicing ___that)))) (some? (:splicing ___that)))
                 (§ return false)
             )
             true
@@ -34222,7 +34222,7 @@
 
     #_method
     (§ defn #_"IFn" (§ method fn) [#_"Ref" this]
-        (ß (IFn) (deref this))
+        (cast' IFn (deref this))
     )
 
     #_method
@@ -34373,8 +34373,8 @@
 (class-ns Reflector
     (defn #_"Object" Reflector'invokeInstanceMethod [#_"Object" ___target, #_"String" ___methodName, #_"Object[]" ___args]
         (let [#_"Class" ___c (.getClass ___target)]
-            (let [#_"List" ___methods (ß getMethods(___c, ___args.length, ___methodName, false))]
-                (ß invokeMatchingMethod(___methodName, ___methods, ___target, ___args))
+            (let [#_"List" ___methods (ß Reflector'getMethods(___c, ___args.length, ___methodName, false))]
+                (Reflector'invokeMatchingMethod ___methodName, ___methods, ___target, ___args)
             )
         )
     )
@@ -34402,12 +34402,12 @@
             (let [#_"Object[]" ___boxedArgs nil]
                 (cond (.isEmpty ___methods)
                     (do
-                        (throw (§ unsure IllegalArgumentException. (ß noMethodReport(___methodName, ___target))))
+                        (throw (§ unsure IllegalArgumentException. (Reflector'noMethodReport ___methodName, ___target)))
                     )
                     (ß (.size ___methods) == 1)
                     (do
                         (§ ass ___m (ß (java.lang.reflect.Method) ___methods.get(0)))
-                        (§ ass ___boxedArgs (ß boxArgs((.getParameterTypes ___m), ___args)))
+                        (§ ass ___boxedArgs (ß Reflector'boxArgs((.getParameterTypes ___m), ___args)))
                     )
                     :else ;; overloaded w/same arity
                     (do
@@ -34416,10 +34416,10 @@
                                 (§ ass ___m (ß (java.lang.reflect.Method) (next ___i)))
 
                                 (let [#_"Class[]" ___params (.getParameterTypes ___m)]
-                                    (when (ß isCongruent(___params, ___args))
+                                    (when (Reflector'isCongruent ___params, ___args)
                                         (when (ß ___foundm == nil || Compiler'subsumes(___params, (.getParameterTypes ___foundm)))
                                             (§ ass ___foundm ___m)
-                                            (§ ass ___boxedArgs (ß boxArgs(___params, ___args)))
+                                            (§ ass ___boxedArgs (Reflector'boxArgs ___params, ___args))
                                         )
                                     )
                                 )
@@ -34429,13 +34429,13 @@
                     )
                 )
                 (when (nil? ___m)
-                    (throw (§ unsure IllegalArgumentException. (ß noMethodReport(___methodName, ___target))))
+                    (throw (§ unsure IllegalArgumentException. (Reflector'noMethodReport ___methodName, ___target)))
                 )
 
                 (when (not (Modifier/isPublic (ß (.getDeclaringClass ___m).getModifiers())))
                     ;; public method of non-public class, try to find it in hierarchy
                     (let [#_"java.lang.reflect.Method" ___oldm ___m]
-                        (§ ass ___m (ß getAsMethodOfPublicBase((.getClass ___target), ___m)))
+                        (§ ass ___m (ß Reflector'getAsMethodOfPublicBase((.getClass ___target), ___m)))
                         (when (nil? ___m)
                             (throw (IllegalArgumentException. (str "Can't call public method of non-public class: " (.toString ___oldm))))
                         )
@@ -34444,7 +34444,7 @@
                 (try
                     (ß Reflector'prepRet((.getReturnType ___m), ___m.invoke(___target, ___boxedArgs)))
                     (catch Exception ___e
-                        (throw (ß Util'sneakyThrow(getCauseOrElse(___e))))
+                        (throw (ß Util'sneakyThrow(Reflector'getCauseOrElse(___e))))
                     )
                 )
             )
@@ -34454,7 +34454,7 @@
     (defn #_"java.lang.reflect.Method" Reflector'getAsMethodOfPublicBase [#_"Class" ___c, #_"java.lang.reflect.Method" ___m]
         (doseq [#_"Class" ___iface (.getInterfaces ___c)]
             (doseq [#_"java.lang.reflect.Method" ___im (.getMethods ___iface)]
-                (when (ß isMatch(___im, ___m))
+                (when (Reflector'isMatch ___im, ___m)
                     (§ return ___im)
                 )
             )
@@ -34464,11 +34464,11 @@
                 (§ return nil)
             )
             (doseq [#_"java.lang.reflect.Method" ___scm (.getMethods ___sc)]
-                (when (ß isMatch(___scm, ___m))
+                (when (Reflector'isMatch ___scm, ___m)
                     (§ return ___scm)
                 )
             )
-            (ß getAsMethodOfPublicBase(___sc, ___m))
+            (Reflector'getAsMethodOfPublicBase ___sc, ___m)
         )
     )
 
@@ -34513,17 +34513,17 @@
                         )
                         (ß (.size ___ctors) == 1)
                         (do
-                            (let [#_"Constructor" ___ctor (ß (Constructor) ___ctors.get(0))]
-                                (ß ___ctor.newInstance(boxArgs((.getParameterTypes ___ctor), ___args)))
+                            (let [#_"Constructor" ___ctor (cast Constructor (.get ___ctors, 0))]
+                                (ß ___ctor.newInstance(Reflector'boxArgs((.getParameterTypes ___ctor), ___args)))
                             )
                         )
                         :else ;; overloaded w/same arity
                         (do
                             (loop-when-recur [#_"Iterator" ___iterator (.iterator ___ctors)] (.hasNext ___iterator) [___iterator]
-                                (let [#_"Constructor" ___ctor (ß (Constructor) (next ___iterator))]
+                                (let [#_"Constructor" ___ctor (cast Constructor (next ___iterator))]
                                     (let [#_"Class[]" ___params (.getParameterTypes ___ctor)]
-                                        (when (ß isCongruent(___params, ___args))
-                                            (let [#_"Object[]" ___boxedArgs (ß boxArgs(___params, ___args))]
+                                        (when (Reflector'isCongruent ___params, ___args)
+                                            (let [#_"Object[]" ___boxedArgs (Reflector'boxArgs ___params, ___args)]
                                                 (§ return (.newInstance ___ctor, ___boxedArgs))
                                             )
                                         )
@@ -34536,38 +34536,38 @@
                 )
             )
             (catch Exception ___e
-                (throw (ß Util'sneakyThrow(getCauseOrElse(___e))))
+                (throw (ß Util'sneakyThrow(Reflector'getCauseOrElse(___e))))
             )
         )
     )
 
     (defn #_"Object" Reflector'invokeStaticMethodVariadic [#_"String" ___className, #_"String" ___methodName, #_"Object..." ___args]
-        (ß invokeStaticMethod(___className, ___methodName, ___args))
+        (Reflector'invokeStaticMethod-3s ___className, ___methodName, ___args)
     )
 
     (defn #_"Object" Reflector'invokeStaticMethod-3s [#_"String" ___className, #_"String" ___methodName, #_"Object[]" ___args]
         (let [#_"Class" ___c (RT'classForName-1 ___className)]
-            (ß invokeStaticMethod(___c, ___methodName, ___args))
+            (Reflector'invokeStaticMethod-3c ___c, ___methodName, ___args)
         )
     )
 
     (defn #_"Object" Reflector'invokeStaticMethod-3c [#_"Class" ___c, #_"String" ___methodName, #_"Object[]" ___args]
         (when (.equals ___methodName, "new")
-            (§ return (ß invokeConstructor(___c, ___args)))
+            (§ return (Reflector'invokeConstructor ___c, ___args))
         )
-        (let [#_"List" ___methods (ß getMethods(___c, ___args.length, ___methodName, true))]
-            (ß invokeMatchingMethod(___methodName, ___methods, nil, ___args))
+        (let [#_"List" ___methods (ß Reflector'getMethods(___c, ___args.length, ___methodName, true))]
+            (Reflector'invokeMatchingMethod ___methodName, ___methods, nil, ___args)
         )
     )
 
     (defn #_"Object" Reflector'getStaticField-2s [#_"String" ___className, #_"String" ___fieldName]
         (let [#_"Class" ___c (RT'classForName-1 ___className)]
-            (ß getStaticField(___c, ___fieldName))
+            (Reflector'getStaticField-2c ___c, ___fieldName)
         )
     )
 
     (defn #_"Object" Reflector'getStaticField-2c [#_"Class" ___c, #_"String" ___fieldName]
-        (let [#_"Field" ___f (ß getField(___c, ___fieldName, true))]
+        (let [#_"Field" ___f (Reflector'getField ___c, ___fieldName, true)]
             (when (some? ___f)
                 (try
                     (§ return (ß Reflector'prepRet((.getType ___f), ___f.get(nil))))
@@ -34582,15 +34582,15 @@
 
     (defn #_"Object" Reflector'setStaticField-3s [#_"String" ___className, #_"String" ___fieldName, #_"Object" ___val]
         (let [#_"Class" ___c (RT'classForName-1 ___className)]
-            (ß setStaticField(___c, ___fieldName, ___val))
+            (Reflector'setStaticField-3c ___c, ___fieldName, ___val)
         )
     )
 
     (defn #_"Object" Reflector'setStaticField-3c [#_"Class" ___c, #_"String" ___fieldName, #_"Object" ___val]
-        (let [#_"Field" ___f (ß getField(___c, ___fieldName, true))]
+        (let [#_"Field" ___f (Reflector'getField ___c, ___fieldName, true)]
             (when (some? ___f)
                 (try
-                    (ß ___f.set(nil, boxArg((.getType ___f), ___val)))
+                    (ß ___f.set(nil, Reflector'boxArg((.getType ___f), ___val)))
                     (catch IllegalAccessException ___e
                         (throw (Util'sneakyThrow ___e))
                     )
@@ -34603,7 +34603,7 @@
 
     (defn #_"Object" Reflector'getInstanceField [#_"Object" ___target, #_"String" ___fieldName]
         (let [#_"Class" ___c (.getClass ___target)]
-            (let [#_"Field" ___f (ß getField(___c, ___fieldName, false))]
+            (let [#_"Field" ___f (Reflector'getField ___c, ___fieldName, false)]
                 (when (some? ___f)
                     (try
                         (§ return (ß Reflector'prepRet((.getType ___f), ___f.get(___target))))
@@ -34619,10 +34619,10 @@
 
     (defn #_"Object" Reflector'setInstanceField [#_"Object" ___target, #_"String" ___fieldName, #_"Object" ___val]
         (let [#_"Class" ___c (.getClass ___target)]
-            (let [#_"Field" ___f (ß getField(___c, ___fieldName, false))]
+            (let [#_"Field" ___f (Reflector'getField ___c, ___fieldName, false)]
                 (when (some? ___f)
                     (try
-                        (ß ___f.set(___target, boxArg((.getType ___f), ___val)))
+                        (ß ___f.set(___target, Reflector'boxArg((.getType ___f), ___val)))
                         (catch IllegalAccessException ___e
                             (throw (Util'sneakyThrow ___e))
                         )
@@ -34636,17 +34636,17 @@
 
     ;; not used as of Clojure 1.6, but left for runtime compatibility with compiled bytecode from older versions
     (defn #_"Object" Reflector'invokeNoArgInstanceMember-2 [#_"Object" ___target, #_"String" ___name]
-        (ß invokeNoArgInstanceMember(___target, ___name, false))
+        (Reflector'invokeNoArgInstanceMember-3 ___target, ___name, false)
     )
 
     (defn #_"Object" Reflector'invokeNoArgInstanceMember-3 [#_"Object" ___target, #_"String" ___name, #_"boolean" ___requireField]
         (let [#_"Class" ___c (.getClass ___target)]
             (if ___requireField
                 (do
-                    (let [#_"Field" ___f (ß getField(___c, ___name, false))]
+                    (let [#_"Field" ___f (Reflector'getField ___c, ___name, false)]
                         (if (some? ___f)
                             (do
-                                (ß getInstanceField(___target, ___name))
+                                (Reflector'getInstanceField ___target, ___name)
                             )
                             (do
                                 (throw (IllegalArgumentException. (str "No matching field found: " ___name " for " (.getClass ___target))))
@@ -34655,13 +34655,13 @@
                     )
                 )
                 (do
-                    (let [#_"List" ___meths (ß getMethods(___c, 0, ___name, false))]
+                    (let [#_"List" ___meths (Reflector'getMethods ___c, 0, ___name, false)]
                         (if (ß (.size ___meths) > 0)
                             (do
-                                (ß invokeMatchingMethod(___name, ___meths, ___target, RT'EMPTY_ARRAY))
+                                (Reflector'invokeMatchingMethod ___name, ___meths, ___target, RT'EMPTY_ARRAY)
                             )
                             (do
-                                (ß getInstanceField(___target, ___name))
+                                (Reflector'getInstanceField ___target, ___name)
                             )
                         )
                     )
@@ -34673,7 +34673,7 @@
     (defn #_"Object" Reflector'invokeInstanceMember-2 [#_"Object" ___target, #_"String" ___name]
         ;; check for field first
         (let [#_"Class" ___c (.getClass ___target)]
-            (let [#_"Field" ___f (ß getField(___c, ___name, false))]
+            (let [#_"Field" ___f (Reflector'getField ___c, ___name, false)]
                 (when (some? ___f) ;; field get
                     (try
                         (§ return (ß Reflector'prepRet((.getType ___f), ___f.get(___target))))
@@ -34682,7 +34682,7 @@
                         )
                     )
                 )
-                (ß invokeInstanceMethod(___target, ___name, RT'EMPTY_ARRAY))
+                (Reflector'invokeInstanceMethod ___target, ___name, RT'EMPTY_ARRAY)
             )
         )
     )
@@ -34690,23 +34690,23 @@
     (defn #_"Object" Reflector'invokeInstanceMember-3o [#_"String" ___name, #_"Object" ___target, #_"Object" ___arg1]
         ;; check for field first
         (let [#_"Class" ___c (.getClass ___target)]
-            (let [#_"Field" ___f (ß getField(___c, ___name, false))]
+            (let [#_"Field" ___f (Reflector'getField ___c, ___name, false)]
                 (when (some? ___f) ;; field set
                     (try
-                        (ß ___f.set(___target, boxArg((.getType ___f), ___arg1)))
+                        (ß ___f.set(___target, Reflector'boxArg((.getType ___f), ___arg1)))
                         (catch IllegalAccessException ___e
                             (throw (Util'sneakyThrow ___e))
                         )
                     )
                     (§ return ___arg1)
                 )
-                (ß invokeInstanceMethod(___target, ___name, (object-array [ ___arg1 ])))
+                (ß Reflector'invokeInstanceMethod(___target, ___name, (object-array [ ___arg1 ])))
             )
         )
     )
 
     (defn #_"Object" Reflector'invokeInstanceMember-3a [#_"String" ___name, #_"Object" ___target, #_"Object..." ___args]
-        (ß invokeInstanceMethod(___target, ___name, ___args))
+        (Reflector'invokeInstanceMethod ___target, ___name, ___args)
     )
 
     (defn #_"Field" Reflector'getField [#_"Class" ___c, #_"String" ___name, #_"boolean" ___getStatics]
@@ -34775,7 +34775,7 @@
             )
             (ß ___arg instanceof Number)
             (do
-                (let [#_"Number" ___n (ß (Number) ___arg)]
+                (let [#_"Number" ___n (cast Number ___arg)]
                     (cond (ß ___paramType == (§ class int))
                         (do
                             (§ return (.intValue ___n))
@@ -34815,7 +34815,7 @@
             (loop-when-recur [#_"int" ___i 0] (ß ___i < ___params.length) [(inc ___i)]
                 (let [#_"Object" ___arg (ß ___args[___i])]
                     (let [#_"Class" ___paramType (ß ___params[___i])]
-                        (§ ass (ß ___ret[___i]) (ß boxArg(___paramType, ___arg)))
+                        (§ ass (ß ___ret[___i]) (Reflector'boxArg ___paramType, ___arg))
                     )
                 )
             )
@@ -34884,9 +34884,9 @@
                 (§ ass ___ret true)
                 (loop-when-recur [#_"int" ___i 0] (ß ___ret && ___i < ___params.length) [(inc ___i)]
                     (let [#_"Object" ___arg (ß ___args[___i])]
-                        (let [#_"Class" ___argType (ß (nil? ___arg) ? nil :or (.getClass ___arg))]
+                        (let [#_"Class" ___argType (when (some? ___arg) (.getClass ___arg))]
                             (let [#_"Class" ___paramType (ß ___params[___i])]
-                                (§ ass ___ret (ß paramArgTypeMatch(___paramType, ___argType)))
+                                (§ ass ___ret (Reflector'paramArgTypeMatch ___paramType, ___argType))
                             )
                         )
                     )
@@ -40664,9 +40664,9 @@
         (§ reify AFn()
             #_method
             (§ defn #_"Object" (§ method invoke) [#_"AFn" this, #_"Object" ___arg1]
-                (let [#_"Symbol" ___nsname (ß (Symbol) ___arg1)]
+                (let [#_"Symbol" ___nsname (cast' Symbol ___arg1)]
                     (let [#_"Namespace" ___ns (Namespace'findOrCreate ___nsname)]
-                        (ß RT'CURRENT_NS.set(___ns))
+                        (.set RT'CURRENT_NS, ___ns)
                         ___ns
                     )
                 )
@@ -40678,9 +40678,9 @@
         (§ reify AFn()
             #_method
             (§ defn #_"Object" (§ method invoke) [#_"AFn" this, #_"Object" _____form, #_"Object" _____env, #_"Object" ___arg1]
-                (let [#_"Symbol" ___nsname (ß (Symbol) ___arg1)]
+                (let [#_"Symbol" ___nsname (cast' Symbol ___arg1)]
                     (let [#_"Namespace" ___ns (Namespace'findOrCreate ___nsname)]
-                        (ß RT'CURRENT_NS.set(___ns))
+                        (.set RT'CURRENT_NS, ___ns)
                         ___ns
                     )
                 )
@@ -40702,10 +40702,10 @@
 
     ;; duck typing stderr plays nice with e.g. swank
     (defn #_"PrintWriter" RT'errPrintWriter []
-        (let [#_"Writer" ___w (ß (Writer) RT'ERR.deref())]
+        (let [#_"Writer" ___w (cast Writer (ß RT'ERR.deref()))]
             (if (ß ___w instanceof PrintWriter)
                 (do
-                    (ß (PrintWriter) ___w)
+                    (cast PrintWriter ___w)
                 )
                 (do
                     (§ unsure PrintWriter. ___w)
@@ -40720,7 +40720,7 @@
     (def #_"AtomicInteger" RT'ID (AtomicInteger. 1))
 
     (defn #_"void" RT'addURL [#_"Object" ___url] #_(§ throws MalformedURLException)
-        (let [#_"URL" ___u (ß (___url instanceof String) ? (URL. (cast String ___url)) :or (cast URL ___url))]
+        (let [#_"URL" ___u (if (ß ___url instanceof String) (URL. (cast String ___url)) (cast URL ___url))]
             (let [#_"ClassLoader" ___ccl (ß Thread/currentThread().getContextClassLoader())]
                 (if (ß ___ccl instanceof DynamicClassLoader)
                     (do
@@ -40769,7 +40769,7 @@
                         )
                         (ß ___v.setMeta(map(RT'DOC_KEY, "Sequentially read and evaluate the set of forms contained in the file.", ___arglistskw, list(vector(___namesym)))))
                         (try
-                            (ß doInit())
+                            (doInit)
                             (catch Exception ___e
                                 (throw (Util'sneakyThrow ___e))
                             )
@@ -40795,28 +40795,28 @@
     )
 
     (defn #_"void" RT'loadResourceScript-1 [#_"String" ___name] #_(§ throws IOException)
-        (ß loadResourceScript(___name, true))
+        (RT'loadResourceScript-2s ___name, true)
         nil
     )
 
     (defn #_"void" RT'maybeLoadResourceScript [#_"String" ___name] #_(§ throws IOException)
-        (ß loadResourceScript(___name, false))
+        (RT'loadResourceScript-2s ___name, false)
         nil
     )
 
     (defn #_"void" RT'loadResourceScript-2s [#_"String" ___name, #_"boolean" ___failIfNotFound] #_(§ throws IOException)
-        (ß loadResourceScript((§ class RT), ___name, ___failIfNotFound))
+        (ß RT'loadResourceScript-3((§ class RT), ___name, ___failIfNotFound))
         nil
     )
 
     (defn #_"void" RT'loadResourceScript-2c [#_"Class" ___c, #_"String" ___name] #_(§ throws IOException)
-        (ß loadResourceScript(___c, ___name, true))
+        (RT'loadResourceScript-3 ___c, ___name, true)
         nil
     )
 
     (defn #_"void" RT'loadResourceScript-3 [#_"Class" ___c, #_"String" ___name, #_"boolean" ___failIfNotFound] #_(§ throws IOException)
-        (let [#_"int" ___slash (ß ___name.lastIndexOf(\/))]
-            (let [#_"String" ___file (ß (___slash >= 0) ? (ß ___name.substring(___slash + 1)) :or ___name)]
+        (let [#_"int" ___slash (.lastIndexOf ___name, \/)]
+            (let [#_"String" ___file (if (ß ___slash >= 0) (ß ___name.substring(___slash + 1)) ___name)]
                 (let [#_"InputStream" ___ins (ß resourceAsStream(baseLoader(), ___name))]
                     (cond (some? ___ins)
                         (do
@@ -40888,11 +40888,11 @@
         (let [#_"String" ___classfile (str ___scriptbase RT'LOADER_SUFFIX ".class")]
             (let [#_"String" ___cljfile (str ___scriptbase ".cli")]
                 (let [#_"String" ___scriptfile ___cljfile]
-                    (let [#_"URL" ___classURL (ß getResource(baseLoader(), ___classfile))]
-                        (let [#_"URL" ___cljURL (ß getResource(baseLoader(), ___scriptfile))]
+                    (let [#_"URL" ___classURL (ß RT'getResource(baseLoader(), ___classfile))]
+                        (let [#_"URL" ___cljURL (ß RT'getResource(baseLoader(), ___scriptfile))]
                             (when (nil? ___cljURL)
                                 (§ ass ___scriptfile (str ___scriptbase ".clic"))
-                                (§ ass ___cljURL (ß getResource(baseLoader(), ___scriptfile)))
+                                (§ ass ___cljURL (ß RT'getResource(baseLoader(), ___scriptfile)))
                             )
                             (let [#_"boolean" ___loaded false]
                                 (when (ß (___classURL != nil && (___cljURL == nil || lastModified(___classURL, ___classfile) > lastModified(___cljURL, ___scriptfile))) || ___classURL == nil)
@@ -40904,7 +40904,7 @@
                                                 RT'UNCHECKED_MATH  (deref RT'UNCHECKED_MATH)
                                             ])
                                         )))
-                                        (§ ass ___loaded (ß (loadClassForName(___scriptbase.replace(\/, \.) + RT'LOADER_SUFFIX) != nil)))
+                                        (§ ass ___loaded (ß (RT'loadClassForName(___scriptbase.replace(\/, \.) + RT'LOADER_SUFFIX) != nil)))
                                         (finally
                                             (Var'popThreadBindings)
                                         )
@@ -40912,12 +40912,12 @@
                                 )
                                 (cond (and (not ___loaded) (some? ___cljURL))
                                     (do
-                                        (if (ß booleanCast(Compiler'COMPILE_FILES.deref()))
+                                        (if (ß RT'booleanCast-1o(Compiler'COMPILE_FILES.deref()))
                                             (do
                                                 (RT'compile ___scriptfile)
                                             )
                                             (do
-                                                (ß loadResourceScript((§ class RT), ___scriptfile))
+                                                (ß RT'loadResourceScript-2c((§ class RT), ___scriptfile))
                                             )
                                         )
                                     )
@@ -41012,7 +41012,7 @@
     (defn #_"ISeq" RT'seq [#_"Object" ___coll]
         (cond (ß ___coll instanceof ASeq)
             (do
-                (ß (ASeq) ___coll)
+                (cast' ASeq ___coll)
             )
             (ß ___coll instanceof LazySeq)
             (do
@@ -41098,7 +41098,7 @@
             )
             (ß ___coll instanceof String)
             (do
-                (let [#_"String" ___s (ß (String) ___coll)]
+                (let [#_"String" ___s (cast String ___coll)]
                     (§ reify Iterator()
                         (let [#_"int" ___i 0]
                             #_method
@@ -41134,7 +41134,7 @@
     )
 
     (defn #_"Object" RT'seqOrElse [#_"Object" ___o]
-        (ß ((RT'seq ___o) == nil) ? nil :or ___o)
+        (when (some? (RT'seq ___o)) ___o)
     )
 
     (defn #_"ISeq" RT'keys [#_"Object" ___coll]
@@ -41307,7 +41307,7 @@
         (when (ß ___coll instanceof ILookup)
             (§ return (ß (cast' ILookup ___coll).valAt(___key)))
         )
-        (ß getFrom(___coll, ___key))
+        (RT'getFrom-2 ___coll, ___key)
     )
 
     (defn #_"Object" RT'getFrom-2 [#_"Object" ___coll, #_"Object" ___key]
@@ -41317,13 +41317,13 @@
             )
             (ß ___coll instanceof Map)
             (do
-                (let [#_"Map" ___m (ß (Map) ___coll)]
+                (let [#_"Map" ___m (cast Map ___coll)]
                     (§ return (.get ___m, ___key))
                 )
             )
             (ß ___coll instanceof IPersistentSet)
             (do
-                (let [#_"IPersistentSet" ___set (ß (IPersistentSet) ___coll)]
+                (let [#_"IPersistentSet" ___set (cast' IPersistentSet ___coll)]
                     (§ return (.get ___set, ___key))
                 )
             )
@@ -41338,7 +41338,7 @@
             )
             (ß ___coll instanceof ITransientSet)
             (do
-                (let [#_"ITransientSet" ___set (ß (ITransientSet) ___coll)]
+                (let [#_"ITransientSet" ___set (cast' ITransientSet ___coll)]
                     (§ return (.get ___set, ___key))
                 )
             )
@@ -41351,7 +41351,7 @@
         (when (ß ___coll instanceof ILookup)
             (§ return (ß (cast' ILookup ___coll).valAt(___key, ___notFound)))
         )
-        (ß getFrom(___coll, ___key, ___notFound))
+        (RT'getFrom-3 ___coll, ___key, ___notFound)
     )
 
     (defn #_"Object" RT'getFrom-3 [#_"Object" ___coll, #_"Object" ___key, #_"Object" ___notFound]
@@ -41361,7 +41361,7 @@
             )
             (ß ___coll instanceof Map)
             (do
-                (let [#_"Map" ___m (ß (Map) ___coll)]
+                (let [#_"Map" ___m (cast Map ___coll)]
                     (when (.containsKey ___m, ___key)
                         (§ return (.get ___m, ___key))
                     )
@@ -41370,7 +41370,7 @@
             )
             (ß ___coll instanceof IPersistentSet)
             (do
-                (let [#_"IPersistentSet" ___set (ß (IPersistentSet) ___coll)]
+                (let [#_"IPersistentSet" ___set (cast' IPersistentSet ___coll)]
                     (when (.contains ___set, ___key)
                         (§ return (.get ___set, ___key))
                     )
@@ -41380,12 +41380,12 @@
             (ß ___key instanceof Number && (___coll instanceof String || (.getClass ___coll).isArray()))
             (do
                 (let [#_"int" ___n (ß (cast Number ___key).intValue())]
-                    (§ return (ß (___n >= 0 && ___n < RT'count(___coll)) ? RT'nth(___coll, ___n) :or ___notFound))
+                    (§ return (if (ß ___n >= 0 && ___n < RT'count(___coll)) (RT'nth ___coll, ___n) ___notFound))
                 )
             )
             (ß ___coll instanceof ITransientSet)
             (do
-                (let [#_"ITransientSet" ___set (ß (ITransientSet) ___coll)]
+                (let [#_"ITransientSet" ___set (cast' ITransientSet ___coll)]
                     (when (.contains ___set, ___key)
                         (§ return (.get ___set, ___key))
                     )
@@ -41410,37 +41410,37 @@
             )
             (ß ___coll instanceof Associative)
             (do
-                (§ return (ß (cast' Associative ___coll).containsKey(___key) ? RT'T :or RT'F))
+                (§ return (if (ß (cast' Associative ___coll).containsKey(___key)) RT'T RT'F))
             )
             (ß ___coll instanceof IPersistentSet)
             (do
-                (§ return (ß (cast' IPersistentSet ___coll).contains(___key) ? RT'T :or RT'F))
+                (§ return (if (ß (cast' IPersistentSet ___coll).contains(___key)) RT'T RT'F))
             )
             (ß ___coll instanceof Map)
             (do
-                (let [#_"Map" ___m (ß (Map) ___coll)]
-                    (§ return (ß ___m.containsKey(___key) ? RT'T :or RT'F))
+                (let [#_"Map" ___m (cast Map ___coll)]
+                    (§ return (if (.containsKey ___m, ___key) RT'T RT'F))
                 )
             )
             (ß ___coll instanceof Set)
             (do
-                (let [#_"Set" ___s (ß (Set) ___coll)]
-                    (§ return (ß ___s.contains(___key) ? RT'T :or RT'F))
+                (let [#_"Set" ___s (cast Set ___coll)]
+                    (§ return (if (.contains ___s, ___key) RT'T RT'F))
                 )
             )
             (ß ___key instanceof Number && (___coll instanceof String || (.getClass ___coll).isArray()))
             (do
                 (let [#_"int" ___n (ß (cast Number ___key).intValue())]
-                    (§ return (ß (___n >= 0 && ___n < RT'count(___coll)) ? RT'T :or RT'F))
+                    (§ return (if (ß ___n >= 0 && ___n < RT'count(___coll)) RT'T RT'F))
                 )
             )
             (ß ___coll instanceof ITransientSet)
             (do
-                (§ return (ß (cast' ITransientSet ___coll).contains(___key) ? RT'T :or RT'F))
+                (§ return (if (ß (cast' ITransientSet ___coll).contains(___key)) RT'T RT'F))
             )
             (ß ___coll instanceof ITransientAssociative2)
             (do
-                (§ return (ß ((cast' ITransientAssociative2 ___coll).containsKey(___key)) ? RT'T :or RT'F))
+                (§ return (if (ß (cast' ITransientAssociative2 ___coll).containsKey(___key)) RT'T RT'F))
             )
         )
         (throw (IllegalArgumentException. (str "contains? not supported on type: " (.getName (.getClass ___coll)))))
@@ -41457,7 +41457,7 @@
             )
             (ß ___coll instanceof Map)
             (do
-                (let [#_"Map" ___m (ß (Map) ___coll)]
+                (let [#_"Map" ___m (cast Map ___coll)]
                     (when (.containsKey ___m, ___key)
                         (§ return (ß MapEntry'create(___key, ___m.get(___key))))
                     )
@@ -41501,7 +41501,7 @@
         (when (ß ___coll instanceof Indexed)
             (§ return (ß (cast' Indexed ___coll).nth(___n)))
         )
-        (ß nthFrom(Util'ret1(___coll, (§ ass ___coll nil)), ___n))
+        (ß RT'nthFrom-2(Util'ret1(___coll, (§ ass ___coll nil)), ___n))
     )
 
     (defn #_"Object" RT'nthFrom-2 [#_"Object" ___coll, #_"int" ___n]
@@ -41527,7 +41527,7 @@
             )
             (ß ___coll instanceof Map$Entry)
             (do
-                (let [#_"Map$Entry" ___e (ß (Map$Entry) ___coll)]
+                (let [#_"Map$Entry" ___e (cast Map$Entry ___coll)]
                     (cond (ß ___n == 0)
                         (do
                             (§ return (.getKey ___e))
@@ -41561,11 +41561,11 @@
 
     (defn #_"Object" RT'nth-3 [#_"Object" ___coll, #_"int" ___n, #_"Object" ___notFound]
         (when (ß ___coll instanceof Indexed)
-            (let [#_"Indexed" ___v (ß (Indexed) ___coll)]
+            (let [#_"Indexed" ___v (cast' Indexed ___coll)]
                 (§ return (.nth ___v, ___n, ___notFound))
             )
         )
-        (ß nthFrom(___coll, ___n, ___notFound))
+        (RT'nthFrom-3 ___coll, ___n, ___notFound)
     )
 
     (defn #_"Object" RT'nthFrom-3 [#_"Object" ___coll, #_"int" ___n, #_"Object" ___notFound]
@@ -41579,7 +41579,7 @@
             )
             (ß ___coll instanceof CharSequence)
             (do
-                (let [#_"CharSequence" ___s (ß (CharSequence) ___coll)]
+                (let [#_"CharSequence" ___s (cast CharSequence ___coll)]
                     (when (ß ___n < (.length ___s))
                         (§ return (ß Character/valueOf(___s.charAt(___n))))
                     )
@@ -41595,7 +41595,7 @@
             )
             (ß ___coll instanceof RandomAccess)
             (do
-                (let [#_"List" ___list (ß (List) ___coll)]
+                (let [#_"List" ___list (cast List ___coll)]
                     (when (ß ___n < (.size ___list))
                         (§ return (.get ___list, ___n))
                     )
@@ -41604,7 +41604,7 @@
             )
             (ß ___coll instanceof Matcher)
             (do
-                (let [#_"Matcher" ___m (ß (Matcher) ___coll)]
+                (let [#_"Matcher" ___m (cast Matcher ___coll)]
                     (when (ß ___n < (.groupCount ___m))
                         (§ return (.group ___m, ___n))
                     )
@@ -41613,7 +41613,7 @@
             )
             (ß ___coll instanceof Map$Entry)
             (do
-                (let [#_"Map$Entry" ___e (ß (Map$Entry) ___coll)]
+                (let [#_"Map$Entry" ___e (cast Map$Entry ___coll)]
                     (cond (ß ___n == 0)
                         (do
                             (§ return (.getKey ___e))
@@ -41794,7 +41794,7 @@
         (when (ß ___x instanceof Byte)
             (§ return (ß (cast Byte ___x).byteValue()))
         )
-        (let [#_"long" ___n (ß longCast(___x))]
+        (let [#_"long" ___n (RT'longCast-1o ___x)]
             (when (ß ___n < Byte/MIN_VALUE || ___n > Byte/MAX_VALUE)
                 (throw (IllegalArgumentException. (str "Value out of range for byte: " ___x)))
             )
@@ -41851,7 +41851,7 @@
         (when (ß ___x instanceof Short)
             (§ return (ß (cast Short ___x).shortValue()))
         )
-        (let [#_"long" ___n (ß longCast(___x))]
+        (let [#_"long" ___n (RT'longCast-1o ___x)]
             (when (ß ___n < Short/MIN_VALUE || ___n > Short/MAX_VALUE)
                 (throw (IllegalArgumentException. (str "Value out of range for short: " ___x)))
             )
@@ -41904,8 +41904,8 @@
             (§ return (ß (cast Integer ___x).intValue()))
         )
         (when (ß ___x instanceof Number)
-            (let [#_"long" ___n (ß longCast(___x))]
-                (§ return (ß intCast(___n)))
+            (let [#_"long" ___n (RT'longCast-1o ___x)]
+                (§ return (intCast ___n))
             )
         )
         (ß (cast Character ___x).charValue())
@@ -41957,7 +41957,7 @@
             )
             (ß ___x instanceof BigInt)
             (do
-                (let [#_"BigInt" ___bi (ß (BigInt) ___x)]
+                (let [#_"BigInt" ___bi (cast' BigInt ___x)]
                     (if (ß (:bipart ___bi) == nil)
                         (do
                             (:lpart ___bi)
@@ -41970,7 +41970,7 @@
             )
             (ß ___x instanceof BigInteger)
             (do
-                (let [#_"BigInteger" ___bi (ß (BigInteger) ___x)]
+                (let [#_"BigInteger" ___bi (cast BigInteger ___x)]
                     (if (ß (.bitLength ___bi) < 64)
                         (do
                             (.longValue ___bi)
@@ -41987,15 +41987,15 @@
             )
             (ß ___x instanceof Ratio)
             (do
-                (ß longCast((cast' Ratio ___x).bigIntegerValue()))
+                (ß RT'longCast-1o((cast' Ratio ___x).bigIntegerValue()))
             )
             (ß ___x instanceof Character)
             (do
-                (ß longCast((cast Character ___x).charValue()))
+                (ß RT'longCast-1l((cast Character ___x).charValue()))
             )
             :else
             (do
-                (ß longCast((cast Number ___x).doubleValue()))
+                (ß RT'longCast-1d((cast Number ___x).doubleValue()))
             )
         )
     )
@@ -42035,7 +42035,7 @@
             (§ return (ß (cast Float ___x).floatValue()))
         )
         (let [#_"double" ___n (ß (cast Number ___x).doubleValue())]
-            (when (ß ___n < -Float/MAX_VALUE || ___n > Float/MAX_VALUE)
+            (when (ß ___n < (- Float/MAX_VALUE) || ___n > Float/MAX_VALUE)
                 (throw (IllegalArgumentException. (str "Value out of range for float: " ___x)))
             )
             (ß (float) ___n)
@@ -42063,7 +42063,7 @@
     )
 
     (defn #_"float" RT'floatCast-1d [#_"double" ___x]
-        (when (ß ___x < -Float/MAX_VALUE || ___x > Float/MAX_VALUE)
+        (when (ß ___x < (- Float/MAX_VALUE) || ___x > Float/MAX_VALUE)
             (throw (IllegalArgumentException. (str "Value out of range for float: " ___x)))
         )
         (ß (float) ___x)
@@ -42360,45 +42360,45 @@
     )
 
     (defn #_"ISeq" RT'list-2 [#_"Object" ___arg1, #_"Object" ___arg2]
-        (ß listStar(___arg1, ___arg2, nil))
+        (RT'listStar-3 ___arg1, ___arg2, nil)
     )
 
     (defn #_"ISeq" RT'list-3 [#_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3]
-        (ß listStar(___arg1, ___arg2, ___arg3, nil))
+        (RT'listStar-4 ___arg1, ___arg2, ___arg3, nil)
     )
 
     (defn #_"ISeq" RT'list-4 [#_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4]
-        (ß listStar(___arg1, ___arg2, ___arg3, ___arg4, nil))
+        (RT'listStar-5 ___arg1, ___arg2, ___arg3, ___arg4, nil)
     )
 
     (defn #_"ISeq" RT'list-5 [#_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5]
-        (ß listStar(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, nil))
+        (RT'listStar-6 ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, nil)
     )
 
     (defn #_"ISeq" RT'listStar-2 [#_"Object" ___arg1, #_"ISeq" ___rest]
-        (ß (ISeq) RT'cons(___arg1, ___rest))
+        (cast' ISeq (RT'cons ___arg1, ___rest))
     )
 
     (defn #_"ISeq" RT'listStar-3 [#_"Object" ___arg1, #_"Object" ___arg2, #_"ISeq" ___rest]
-        (ß (ISeq) RT'cons(___arg1, RT'cons(___arg2, ___rest)))
+        (cast' ISeq (ß RT'cons(___arg1, RT'cons(___arg2, ___rest))))
     )
 
     (defn #_"ISeq" RT'listStar-4 [#_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"ISeq" ___rest]
-        (ß (ISeq) RT'cons(___arg1, RT'cons(___arg2, RT'cons(___arg3, ___rest))))
+        (cast' ISeq (ß RT'cons(___arg1, RT'cons(___arg2, RT'cons(___arg3, ___rest)))))
     )
 
     (defn #_"ISeq" RT'listStar-5 [#_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"ISeq" ___rest]
-        (ß (ISeq) RT'cons(___arg1, RT'cons(___arg2, RT'cons(___arg3, RT'cons(___arg4, ___rest)))))
+        (cast' ISeq (ß RT'cons(___arg1, RT'cons(___arg2, RT'cons(___arg3, RT'cons(___arg4, ___rest))))))
     )
 
     (defn #_"ISeq" RT'listStar-6 [#_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"ISeq" ___rest]
-        (ß (ISeq) RT'cons(___arg1, RT'cons(___arg2, RT'cons(___arg3, RT'cons(___arg4, RT'cons(___arg5, ___rest))))))
+        (cast' ISeq (ß RT'cons(___arg1, RT'cons(___arg2, RT'cons(___arg3, RT'cons(___arg4, RT'cons(___arg5, ___rest)))))))
     )
 
     (defn #_"ISeq" RT'arrayToList [#_"Object[]" ___a]
         (let [#_"ISeq" ___ret nil]
             (loop-when-recur [#_"int" ___i (ß ___a.length - 1)] (ß ___i >= 0) [(dec ___i)]
-                (§ ass ___ret (ß (ISeq) RT'cons(___a[___i], ___ret)))
+                (§ ass ___ret (cast' ISeq (ß RT'cons(___a[___i], ___ret))))
             )
             ___ret
         )
@@ -42440,7 +42440,7 @@
             (ß ___coll instanceof Iterable)
             (do
                 (let [#_"ArrayList" ___ret (ArrayList.)]
-                    (doseq [#_"Object" ___o (ß (Iterable)___coll)]
+                    (doseq [#_"Object" ___o (cast Iterable ___coll)]
                         (.add ___ret, ___o)
                     )
                     (.toArray ___ret)
@@ -42509,8 +42509,8 @@
     )
 
     (defn #_"Object" RT'seqToTypedArray-1 [#_"ISeq" ___seq]
-        (let [#_"Class" ___type (ß (___seq != nil && (first ___seq) != nil) ? (first ___seq).getClass() :or (§ class Object))]
-            (ß seqToTypedArray(___type, ___seq))
+        (let [#_"Class" ___type (if (ß ___seq != nil && (first ___seq) != nil) (ß (first ___seq).getClass()) Object)]
+            (RT'seqToTypedArray-2 ___type, ___seq)
         )
     )
 
@@ -42579,12 +42579,12 @@
         (when (ß ___ret == -1)
             (§ return nil)
         )
-        (ß box((char) ___ret))
+        (RT'box-1c (char ___ret))
     )
 
     (defn #_"Character" RT'readChar [#_"Reader" ___r] #_(§ throws IOException)
         (let [#_"int" ___ret (.read ___r)]
-            (ß readRet(___ret))
+            (RT'readRet ___ret)
         )
     )
 
@@ -42602,7 +42602,7 @@
                 )
             )
 
-            (ß readRet(___ret))
+            (RT'readRet ___ret)
         )
     )
 
@@ -42621,8 +42621,8 @@
     )
 
     (defn #_"LineNumberingPushbackReader" RT'getLineNumberingReader [#_"Reader" ___r]
-        (when (ß isLineNumberingReader(___r))
-            (§ return (ß (LineNumberingPushbackReader) ___r))
+        (when (RT'isLineNumberingReader ___r)
+            (§ return (cast' LineNumberingPushbackReader ___r))
         )
         (LineNumberingPushbackReader'new-1 ___r)
     )
@@ -42641,13 +42641,13 @@
     )
 
     (defn #_"boolean" RT'suppressRead []
-        (ß booleanCast(RT'SUPPRESS_READ.deref()))
+        (ß RT'booleanCast-1o(RT'SUPPRESS_READ.deref()))
     )
 
     (defn #_"String" RT'printString [#_"Object" ___x]
         (try
             (let [#_"StringWriter" ___sw (StringWriter.)]
-                (ß print(___x, ___sw))
+                (print ___x, ___sw)
                 (.toString ___sw)
             )
             (catch Exception ___e
@@ -42657,7 +42657,7 @@
     )
 
     (defn #_"Object" RT'readString-1 [#_"String" ___s]
-        (ß readString(___s, nil))
+        (RT'readString-2 ___s, nil)
     )
 
     (defn #_"Object" RT'readString-2 [#_"String" ___s, #_"Object" ___opts]
@@ -42670,13 +42670,13 @@
         ;; call multimethod
         (if (ß RT'PRINT_INITIALIZED.isBound() && RT'booleanCast-1o(RT'PRINT_INITIALIZED.deref()))
             (do
-                (ß RT'PR_ON.invoke(___x, ___w))
+                (.invoke RT'PR_ON, ___x, ___w)
             )
             (do
-                (let [#_"boolean" ___readably (ß booleanCast(RT'PRINT_READABLY.deref()))]
+                (let [#_"boolean" ___readably (ß RT'booleanCast-1o(RT'PRINT_READABLY.deref()))]
                     (when (ß ___x instanceof Obj)
-                        (let [#_"Obj" ___o (ß (Obj) ___x)]
-                            (when (ß RT'count((.meta ___o)) > 0 && ((___readably && booleanCast(RT'PRINT_META.deref())) || booleanCast(RT'PRINT_DUP.deref())))
+                        (let [#_"Obj" ___o (cast' Obj ___x)]
+                            (when (ß RT'count((.meta ___o)) > 0 && ((___readably && RT'booleanCast-1o(RT'PRINT_META.deref())) || RT'booleanCast-1o(RT'PRINT_DUP.deref())))
                                 (let [#_"IPersistentMap" ___meta (.meta ___o)]
                                     (.write ___w, "#^")
                                     (if (ß (count ___meta) == 1 && ___meta.containsKey(RT'TAG_KEY))
@@ -42684,10 +42684,10 @@
                                             (ß print(___meta.valAt(RT'TAG_KEY), ___w))
                                         )
                                         (do
-                                            (ß print(___meta, ___w))
+                                            (print ___meta, ___w)
                                         )
                                     )
-                                    (ß ___w.write(\space))
+                                    (.write ___w, \space)
                                 )
                             )
                         )
@@ -42704,7 +42704,7 @@
                         )
                         (ß ___x instanceof String)
                         (do
-                            (let [#_"String" ___s (ß (String) ___x)]
+                            (let [#_"String" ___s (cast String ___x)]
                                 (if (not ___readably)
                                     (do
                                         (.write ___w, ___s)
@@ -42766,9 +42766,9 @@
                         (do
                             (ß ___w.write(\{))
                             (loop-when-recur [#_"ISeq" ___s (RT'seq ___x)] (some? ___s) [(next ___s)]
-                                (let [#_"IMapEntry" ___e (ß (IMapEntry) (first ___s))]
+                                (let [#_"IMapEntry" ___e (cast' IMapEntry (first ___s))]
                                     (ß print((.key ___e), ___w))
-                                    (ß ___w.write(\space))
+                                    (.write ___w, \space)
                                     (ß print((.val ___e), ___w))
                                     (when (ß (next ___s) != nil)
                                         (.write ___w, ", ")
@@ -42779,12 +42779,12 @@
                         )
                         (ß ___x instanceof IPersistentVector)
                         (do
-                            (let [#_"IPersistentVector" ___a (ß (IPersistentVector) ___x)]
+                            (let [#_"IPersistentVector" ___a (cast' IPersistentVector ___x)]
                                 (ß ___w.write(\[))
                                 (loop-when-recur [#_"int" ___i 0] (ß ___i < (count ___a)) [(inc ___i)]
                                     (ß print(___a.nth(___i), ___w))
                                     (when (ß ___i < (count ___a) - 1)
-                                        (ß ___w.write(\space))
+                                        (.write ___w, \space)
                                     )
                                 )
                                 (ß ___w.write(\]))
@@ -42859,12 +42859,12 @@
                         (ß ___x instanceof BigDecimal && ___readably)
                         (do
                             (ß ___w.write((.toString ___x)))
-                            (ß ___w.write(\M))
+                            (.write ___w, \M)
                         )
                         (ß ___x instanceof BigInt && ___readably)
                         (do
                             (ß ___w.write((.toString ___x)))
-                            (ß ___w.write(\N))
+                            (.write ___w, \N)
                         )
                         (ß ___x instanceof BigInteger && ___readably)
                         (do
@@ -42873,13 +42873,13 @@
                         )
                         (ß ___x instanceof Var)
                         (do
-                            (let [#_"Var" ___v (ß (Var) ___x)]
+                            (let [#_"Var" ___v (cast' Var ___x)]
                                 (.write ___w, (str "#=(var " (:name (:ns ___v)) "/" (:sym ___v) ")"))
                             )
                         )
                         (ß ___x instanceof Pattern)
                         (do
-                            (let [#_"Pattern" ___p (ß (Pattern) ___x)]
+                            (let [#_"Pattern" ___p (cast Pattern ___x)]
                                 (.write ___w, (str "#\"" (.pattern ___p) "\""))
                             )
                         )
@@ -42898,7 +42898,7 @@
         (loop-when-recur [#_"ISeq" ___s ___x] (some? ___s) [(next ___s)]
             (ß print((first ___s), ___w))
             (when (ß (next ___s) != nil)
-                (ß ___w.write(\space))
+                (.write ___w, \space)
             )
         )
         nil
@@ -42981,11 +42981,11 @@
                 )
                 (Util'equals ___o, RT'T)
                 (do
-                    (§ ass ___w (ß (Writer) RT'OUT.deref()))
+                    (§ ass ___w (cast Writer (ß RT'OUT.deref())))
                 )
                 :else
                 (do
-                    (§ ass ___w (ß (Writer) ___o))
+                    (§ ass ___w (cast Writer ___o))
                 )
             )
             (ß doFormat(___w, ___s, ArraySeq'create-1(___args)))
@@ -43008,12 +43008,12 @@
                             (§ switch (Character/toLowerCase ___d)
                                 (§ case \%)
                                 (do
-                                    (ß ___w.write(\newline))
+                                    (.write ___w, \newline)
                                     (§ break )
                                 )
                                 (§ case \t)
                                 (do
-                                    (ß ___w.write(\tab))
+                                    (.write ___w, \tab)
                                     (§ break )
                                 )
                                 (§ case \a)
@@ -43042,7 +43042,7 @@
                                         )
                                         (let [#_"String" ___subs (.substring ___s, ___i, ___j)]
                                             (loop-when-recur [#_"ISeq" ___sargs (ß RT'seq(RT'first(___args)))] (some? ___sargs) [___sargs]
-                                                (§ ass ___sargs (ß doFormat(___w, ___subs, ___sargs)))
+                                                (§ ass ___sargs (doFormat ___w, ___subs, ___sargs))
                                             )
                                             (§ ass ___args (RT'next ___args))
                                             (§ ass ___i (+ ___j 2)) ;; skip "~}"
@@ -43089,7 +43089,7 @@
     )
 
     (defn #_"ClassLoader" RT'makeClassLoader []
-        (ß (ClassLoader) AccessController/doPrivileged(
+        (cast ClassLoader (AccessController/doPrivileged(
                 (§ reify PrivilegedAction()
                     #_method
                     (§ defn #_"Object" (§ method run) [#_"PrivilegedAction" this]
@@ -43103,15 +43103,15 @@
                     )
                 )
             )
-        )
+        ))
     )
 
     (defn #_"ClassLoader" RT'baseLoader []
         (cond (.isBound Compiler'LOADER)
             (do
-                (§ return (ß (ClassLoader) Compiler'LOADER.deref()))
+                (§ return (cast ClassLoader (ß Compiler'LOADER.deref())))
             )
-            (ß booleanCast(RT'USE_CONTEXT_CLASSLOADER.deref()))
+            (ß RT'booleanCast-1o(RT'USE_CONTEXT_CLASSLOADER.deref()))
             (do
                 (§ return (ß Thread/currentThread().getContextClassLoader()))
             )
@@ -43159,16 +43159,16 @@
     )
 
     (defn #_"Class" RT'classForName-1 [#_"String" ___name]
-        (ß classForName(___name, true, baseLoader()))
+        (ß RT'classForName-3(___name, true, baseLoader()))
     )
 
     (defn #_"Class" RT'classForNameNonLoading [#_"String" ___name]
-        (ß classForName(___name, false, baseLoader()))
+        (ß RT'classForName-3(___name, false, baseLoader()))
     )
 
     (defn #_"Class" RT'loadClassForName [#_"String" ___name]
         (try
-            (ß classForNameNonLoading(___name))
+            (RT'classForNameNonLoading ___name)
             (catch Exception ___e
                 (if (ß ___e instanceof ClassNotFoundException)
                     (do
@@ -43180,7 +43180,7 @@
                 )
             )
         )
-        (ß classForName(___name))
+        (RT'classForName-1 ___name)
     )
 
     (defn #_"float" RT'aget-2f [#_"float[]" ___xs, #_"int" ___i]
@@ -43541,7 +43541,7 @@
     )
 
     (defn #_"Symbol" Symbol'intern-1 [#_"String" ___nsname]
-        (let [#_"int" ___i (ß ___nsname.indexOf(\/))]
+        (let [#_"int" ___i (.indexOf ___nsname, \/)]
             (if (ß ___i == -1 || ___nsname.equals("/"))
                 (do
                     (Symbol'new-2 nil, ___nsname)
@@ -43607,7 +43607,7 @@
             (§ return false)
         )
 
-        (let [#_"Symbol" ___symbol (ß (Symbol) ___o)]
+        (let [#_"Symbol" ___symbol (cast' Symbol ___o)]
             (ß Util'equals((:ns this), (:ns ___symbol)) && (:name this).equals((:name ___symbol)))
         )
     )
@@ -43641,7 +43641,7 @@
 
     #_method
     (§ defn #_"int" (§ method compareTo) [#_"Symbol" this, #_"Object" ___o]
-        (let [#_"Symbol" ___s (ß (Symbol) ___o)]
+        (let [#_"Symbol" ___s (cast' Symbol ___o)]
             (when (.equals this, ___o)
                 (§ return 0)
             )
@@ -43711,11 +43711,11 @@
 
     #_method
     (§ defn #_"Object" (§ method valAt) [#_"TaggedLiteral" this, #_"Object" ___key, #_"Object" ___notFound]
-        (cond (ß TaggedLiteral'FORM_KW.equals(___key))
+        (cond (.equals TaggedLiteral'FORM_KW, ___key)
             (do
                 (:form this)
             )
-            (ß TaggedLiteral'TAG_KW.equals(___key))
+            (.equals TaggedLiteral'TAG_KW, ___key)
             (do
                 (:tag this)
             )
@@ -43736,11 +43736,11 @@
             (§ return false)
         )
 
-        (let [#_"TaggedLiteral" ___that (ß (TaggedLiteral) ___o)]
-            (when (ß ((:form this) != nil) ? (not (ß (:form this).equals((:form ___that)))) :or (:form ___that) != nil)
+        (let [#_"TaggedLiteral" ___that (cast' TaggedLiteral ___o)]
+            (when (if (some? (:form this)) (not (ß (:form this).equals((:form ___that)))) (some? (:form ___that)))
                 (§ return false)
             )
-            (when (ß ((:tag this) != nil) ? (not (ß (:tag this).equals((:tag ___that)))) :or (:tag ___that) != nil)
+            (when (if (some? (:tag this)) (not (ß (:tag this).equals((:tag ___that)))) (some? (:tag ___that)))
                 (§ return false)
             )
 
@@ -43794,7 +43794,7 @@
 
     #_method
     (§ defn #_"IPersistentMap" (§ method mapAt) [#_"TransactionalHashMap" this, #_"int" ___bin]
-        (ß (IPersistentMap) (:bins this)[___bin].deref())
+        (cast' IPersistentMap (ß (:bins this)[___bin].deref()))
     )
 
     #_method
@@ -43836,7 +43836,7 @@
     (§ defn #_"V" (§ method get) [#_"TransactionalHashMap" this, #_"Object" ___k]
         (let [#_"Entry" ___e (.entryAt this, ___k)]
             (when (some? ___e)
-                (§ return (ß (V) (.getValue ___e)))
+                (§ return (cast' V (.getValue ___e)))
             )
             nil
         )
@@ -43845,10 +43845,10 @@
     #_method
     (§ defn #_"V" (§ method put) [#_"TransactionalHashMap" this, #_"K" ___k, #_"V" ___v]
         (let [#_"Ref" ___r (ß (:bins this)[this.binFor(___k)])]
-            (let [#_"IPersistentMap" ___map (ß (IPersistentMap) (deref ___r))]
+            (let [#_"IPersistentMap" ___map (cast' IPersistentMap (deref ___r))]
                 (let [#_"Object" ___ret (.valAt ___map, ___k)]
                     (ß ___r.set(___map.assoc(___k, ___v)))
-                    (ß (V) ___ret)
+                    (cast' V ___ret)
                 )
             )
         )
@@ -43857,10 +43857,10 @@
     #_method
     (§ defn #_"V" (§ method remove) [#_"TransactionalHashMap" this, #_"Object" ___k]
         (let [#_"Ref" ___r (ß (:bins this)[this.binFor(___k)])]
-            (let [#_"IPersistentMap" ___map (ß (IPersistentMap) (deref ___r))]
+            (let [#_"IPersistentMap" ___map (cast' IPersistentMap (deref ___r))]
                 (let [#_"Object" ___ret (.valAt ___map, ___k)]
                     (ß ___r.set(___map.without(___k)))
-                    (ß (V) ___ret)
+                    (cast' V ___ret)
                 )
             )
         )
@@ -43869,7 +43869,7 @@
     #_method
     (§ defn #_"void" (§ method putAll) [#_"TransactionalHashMap" this, #_"Map<? extends K, ? extends V>" ___map]
         (loop-when-recur [#_"Iterator" ___i (.iterator (.entrySet ___map))] (.hasNext ___i) [___i]
-            (let [#_"Entry<K, V>" ___e (ß (Entry) (next ___i))]
+            (let [#_"Entry<K, V>" ___e (cast' Entry (next ___i))]
                 (ß this.put((.getKey ___e), (.getValue ___e)))
             )
         )
@@ -43880,9 +43880,9 @@
     (§ defn #_"void" (§ method clear) [#_"TransactionalHashMap" this]
         (loop-when-recur [#_"int" ___i 0] (ß ___i < (:bins this).length) [(inc ___i)]
             (let [#_"Ref" ___r (ß (:bins this)[___i])]
-                (let [#_"IPersistentMap" ___map (ß (IPersistentMap) (deref ___r))]
+                (let [#_"IPersistentMap" ___map (cast' IPersistentMap (deref ___r))]
                     (when (ß (count ___map) > 0)
-                        (ß ___r.set(PersistentHashMap'EMPTY))
+                        (.set ___r, PersistentHashMap'EMPTY)
                     )
                 )
             )
@@ -43917,7 +43917,7 @@
     #_method
     (§ defn #_"V" (§ method putIfAbsent) [#_"TransactionalHashMap" this, #_"K" ___k, #_"V" ___v]
         (let [#_"Ref" ___r (ß (:bins this)[this.binFor(___k)])]
-            (let [#_"IPersistentMap" ___map (ß (IPersistentMap) (deref ___r))]
+            (let [#_"IPersistentMap" ___map (cast' IPersistentMap (deref ___r))]
                 (let [#_"Entry" ___e (.entryAt ___map, ___k)]
                     (if (nil? ___e)
                         (do
@@ -43925,7 +43925,7 @@
                             nil
                         )
                         (do
-                            (ß (V) (.getValue ___e))
+                            (cast' V (.getValue ___e))
                         )
                     )
                 )
@@ -43936,7 +43936,7 @@
     #_method
     (§ defn #_"boolean" (§ method remove) [#_"TransactionalHashMap" this, #_"Object" ___k, #_"Object" ___v]
         (let [#_"Ref" ___r (ß (:bins this)[this.binFor(___k)])]
-            (let [#_"IPersistentMap" ___map (ß (IPersistentMap) (deref ___r))]
+            (let [#_"IPersistentMap" ___map (cast' IPersistentMap (deref ___r))]
                 (let [#_"Entry" ___e (.entryAt ___map, ___k)]
                     (when (ß ___e != nil && (.getValue ___e).equals(___v))
                         (ß ___r.set(___map.without(___k)))
@@ -43951,7 +43951,7 @@
     #_method
     (§ defn #_"boolean" (§ method replace) [#_"TransactionalHashMap" this, #_"K" ___k, #_"V" ___oldv, #_"V" ___newv]
         (let [#_"Ref" ___r (ß (:bins this)[this.binFor(___k)])]
-            (let [#_"IPersistentMap" ___map (ß (IPersistentMap) (deref ___r))]
+            (let [#_"IPersistentMap" ___map (cast' IPersistentMap (deref ___r))]
                 (let [#_"Entry" ___e (.entryAt ___map, ___k)]
                     (when (ß ___e != nil && (.getValue ___e).equals(___oldv))
                         (ß ___r.set(___map.assoc(___k, ___newv)))
@@ -43966,11 +43966,11 @@
     #_method
     (§ defn #_"V" (§ method replace) [#_"TransactionalHashMap" this, #_"K" ___k, #_"V" ___v]
         (let [#_"Ref" ___r (ß (:bins this)[this.binFor(___k)])]
-            (let [#_"IPersistentMap" ___map (ß (IPersistentMap) (deref ___r))]
+            (let [#_"IPersistentMap" ___map (cast' IPersistentMap (deref ___r))]
                 (let [#_"Entry" ___e (.entryAt ___map, ___k)]
                     (when (some? ___e)
                         (ß ___r.set(___map.assoc(___k, ___v)))
-                        (§ return (ß (V) (.getValue ___e)))
+                        (§ return (cast' V (.getValue ___e)))
                     )
                     nil
                 )
@@ -44179,26 +44179,25 @@
     (defn- #_"TransformerIterator" TransformerIterator'new [#_"IFn" ___xform, #_"Iterator" ___sourceIter, #_"boolean" ___multi]
         (let [this (TransformerIterator'init)]
             (§ ass (:sourceIter this) ___sourceIter)
-            (§ ass (:xf this) (ß (IFn) ___xform.invoke(
-                    (§ reify AFn()
-                        #_method
-                        (§ defn #_"Object" (§ method invoke) [#_"AFn" this]
-                            nil
-                        )
+            (§ ass (:xf this) (cast' IFn (.invoke ___xform,
+                (§ reify AFn()
+                    #_method
+                    (§ defn #_"Object" (§ method invoke) [#_"AFn" this]
+                        nil
+                    )
 
-                        #_method
-                        (§ defn #_"Object" (§ method invoke) [#_"AFn" this, #_"Object" ___acc]
-                            ___acc
-                        )
+                    #_method
+                    (§ defn #_"Object" (§ method invoke) [#_"AFn" this, #_"Object" ___acc]
+                        ___acc
+                    )
 
-                        #_method
-                        (§ defn #_"Object" (§ method invoke) [#_"AFn" this, #_"Object" ___acc, #_"Object" ___o]
-                            (§ ass (:buffer this) (ß (:buffer this).add(___o)))
-                            ___acc
-                        )
+                    #_method
+                    (§ defn #_"Object" (§ method invoke) [#_"AFn" this, #_"Object" ___acc, #_"Object" ___o]
+                        (§ ass (:buffer this) (ß (:buffer this).add(___o)))
+                        ___acc
                     )
                 )
-            ))
+            )))
             (§ ass (:multi this) ___multi)
             this
         )
@@ -44211,7 +44210,7 @@
     (defn #_"Iterator" TransformerIterator'createMulti [#_"IFn" ___xform, #_"List" ___sources]
         (let [#_"Iterator[]" ___iters (make-array Iterator (.size ___sources))]
             (loop-when-recur [#_"int" ___i 0] (ß ___i < (.size ___sources)) [(inc ___i)]
-                (§ ass (ß ___iters[___i]) (ß (Iterator)___sources.get(___i)))
+                (§ ass (ß ___iters[___i]) (cast Iterator (.get ___sources, ___i)))
             )
             (ß TransformerIterator'new(___xform, MultiIterator'new(___iters), true))
         )
@@ -44353,7 +44352,7 @@
                 )
                 (ß ___k1 instanceof IPersistentCollection || ___k2 instanceof IPersistentCollection)
                 (do
-                    (§ return (ß pcequiv(___k1, ___k2)))
+                    (§ return (Util'pcequiv ___k1, ___k2))
                 )
             )
             (§ return (.equals ___k1, ___k2))
@@ -44396,7 +44395,7 @@
             #_method
             (§ defn #_"boolean" (§ method equiv) [#_"EquivPred" this, #_"Object" ___k1, #_"Object" ___k2]
                 (when (ß ___k1 instanceof IPersistentCollection || ___k2 instanceof IPersistentCollection)
-                    (§ return (ß pcequiv(___k1, ___k2)))
+                    (§ return (Util'pcequiv ___k1, ___k2))
                 )
                 (.equals ___k1, ___k2)
             )
@@ -44590,7 +44589,7 @@
     )
 
     (defn- #_"<T extends Throwable> void" Util'sneakyThrow0 [#_"Throwable" ___t] #_(§ throws T)
-        (throw (ß (T) ___t))
+        (throw (cast' T ___t))
     )
 
     (defn #_"Object" Util'loadWithClass [#_"String" ___scriptbase, #_"Class<?>" ___loadFrom] #_(§ throws IOException, ClassNotFoundException)
@@ -44788,7 +44787,7 @@
             (§ ass (:sym this) ___sym)
             (§ ass (:threadBound this) (AtomicBoolean. false))
             (§ ass (:root this) (Unbound'new this))
-            (ß this.setMeta(PersistentHashMap'EMPTY))
+            (.setMeta this, PersistentHashMap'EMPTY)
             this
         )
     )
@@ -45005,8 +45004,8 @@
         (let [#_"Frame" ___f (.get Var'dvals)]
             (let [#_"Associative" ___bmap (:bindings ___f)]
                 (loop-when-recur [#_"ISeq" ___bs (.seq ___bindings)] (some? ___bs) [(next ___bs)]
-                    (let [#_"IMapEntry" ___e (ß (IMapEntry) (first ___bs))]
-                        (let [#_"Var" ___v (ß (Var) (.key ___e))]
+                    (let [#_"IMapEntry" ___e (cast' IMapEntry (first ___bs))]
+                        (let [#_"Var" ___v (cast' Var (.key ___e))]
                             (when (not (:dynamic ___v))
                                 (throw (IllegalStateException. (String/format "Can't dynamically bind non-dynamic var: %s/%s", (object-array [ (:ns ___v), (:sym ___v) ]))))
                             )
@@ -45034,7 +45033,7 @@
                 )
                 :else
                 (do
-                    (ß Var'dvals.set(___f))
+                    (.set Var'dvals, ___f)
                 )
             )
             nil
@@ -45045,9 +45044,9 @@
         (let [#_"Frame" ___f (.get Var'dvals)]
             (let [#_"IPersistentMap" ___ret PersistentHashMap'EMPTY]
                 (loop-when-recur [#_"ISeq" ___bs (.seq (:bindings ___f))] (some? ___bs) [(next ___bs)]
-                    (let [#_"IMapEntry" ___e (ß (IMapEntry) (first ___bs))]
-                        (let [#_"Var" ___v (ß (Var) (.key ___e))]
-                            (let [#_"TBox" ___b (ß (TBox) (.val ___e))]
+                    (let [#_"IMapEntry" ___e (cast' IMapEntry (first ___bs))]
+                        (let [#_"Var" ___v (cast' Var (.key ___e))]
+                            (let [#_"TBox" ___b (cast' TBox (.val ___e))]
                                 (§ ass ___ret (.assoc ___ret, ___v, (:val ___b)))
                             )
                         )
@@ -45063,7 +45062,7 @@
         (when (.get (:threadBound this))
             (let [#_"IMapEntry" ___e (ß (:bindings (.get Var'dvals)).entryAt(this))]
                 (when (some? ___e)
-                    (§ return (ß (TBox) (.val ___e)))
+                    (§ return (cast' TBox (.val ___e)))
                 )
             )
         )
@@ -45072,7 +45071,7 @@
 
     #_method
     (§ defn #_"IFn" (§ method fn) [#_"Var" this]
-        (ß (IFn) (deref this))
+        (cast' IFn (deref this))
     )
 
     #_method
@@ -45475,7 +45474,7 @@
     (§ def- #_"Var" main'MAIN (RT'var-2 "cloiure.main", "main"))
 
     (defn #_"void" -main [#_"String[]" ___args]
-        (ß main'REQUIRE.invoke(main'CLOIURE_MAIN))
+        (.invoke main'REQUIRE, main'CLOIURE_MAIN)
         (ß main'MAIN.applyTo(RT'seq(___args)))
         nil
     )
