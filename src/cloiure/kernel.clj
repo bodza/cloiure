@@ -802,8 +802,8 @@
 
     (defn #_"ActionQueue" ActionQueue'new [#_"IPersistentStack" ___q, #_"Throwable" ___error]
         (let [this (ActionQueue'init)]
-            (§ ass (:q this) ___q)
-            (§ ass (:error this) ___error)
+            (§ ass this (assoc this :q ___q))
+            (§ ass this (assoc this :error ___error))
             this
         )
     )
@@ -821,10 +821,10 @@
 
     (defn #_"AgentAction" AgentAction'new [#_"Agent" ___agent, #_"IFn" ___fn, #_"ISeq" ___args, #_"Executor" ___exec]
         (let [this (AgentAction'init)]
-            (§ ass (:agent this) ___agent)
-            (§ ass (:args this) ___args)
-            (§ ass (:fn this) ___fn)
-            (§ ass (:exec this) ___exec)
+            (§ ass this (assoc this :agent ___agent))
+            (§ ass this (assoc this :args ___args))
+            (§ ass this (assoc this :fn ___fn))
+            (§ ass this (assoc this :exec ___exec))
             this
         )
     )
@@ -974,7 +974,7 @@
     (§ defn #_"boolean" (§ method setState) [#_"Agent" this, #_"Object" ___newState]
         (.validate this, ___newState)
         (let [#_"boolean" ___ret (not= (:state this) ___newState)]
-            (§ ass (:state this) ___newState)
+            (§ ass this (assoc this :state ___newState))
             ___ret
         )
     )
@@ -991,7 +991,7 @@
 
     #_method
     (§ defn #_"void" (§ method setErrorMode) [#_"Agent" this, #_"Keyword" ___k]
-        (§ ass (:errorMode this) ___k)
+        (§ ass this (assoc this :errorMode ___k))
         nil
     )
 
@@ -1002,7 +1002,7 @@
 
     #_method
     (§ defn #_"void" (§ method setErrorHandler) [#_"Agent" this, #_"IFn" ___f]
-        (§ ass (:errorHandler this) ___f)
+        (§ ass this (assoc this :errorHandler ___f))
         nil
     )
 
@@ -1018,7 +1018,7 @@
                 (throw (Util'runtimeException-1 "Agent does not need a restart"))
             )
             (.validate this, ___newState)
-            (§ ass (:state this) ___newState)
+            (§ ass this (assoc this :state ___newState))
 
             (if ___clearActions
                 (do
@@ -1220,16 +1220,16 @@
 
     (defn- #_"KeySeq" KeySeq'new-2 [#_"ISeq" ___seq, #_"Iterable" ___iterable]
         (let [this (merge (ASeq'new) (KeySeq'init))]
-            (§ ass (:seq this) ___seq)
-            (§ ass (:iterable this) ___iterable)
+            (§ ass this (assoc this :seq ___seq))
+            (§ ass this (assoc this :iterable ___iterable))
             this
         )
     )
 
     (defn- #_"KeySeq" KeySeq'new-3 [#_"IPersistentMap" ___meta, #_"ISeq" ___seq, #_"Iterable" ___iterable]
         (let [this (merge (ASeq'new ___meta) (KeySeq'init))]
-            (§ ass (:seq this) ___seq)
-            (§ ass (:iterable this) ___iterable)
+            (§ ass this (assoc this :seq ___seq))
+            (§ ass this (assoc this :iterable ___iterable))
             this
         )
     )
@@ -1309,16 +1309,16 @@
 
     (defn- #_"ValSeq" ValSeq'new-2 [#_"ISeq" ___seq, #_"Iterable" ___iterable]
         (let [this (merge (ASeq'new) (ValSeq'init))]
-            (§ ass (:seq this) ___seq)
-            (§ ass (:iterable this) ___iterable)
+            (§ ass this (assoc this :seq ___seq))
+            (§ ass this (assoc this :iterable ___iterable))
             this
         )
     )
 
     (defn- #_"ValSeq" ValSeq'new-3 [#_"IPersistentMap" ___meta, #_"ISeq" ___seq, #_"Iterable" ___iterable]
         (let [this (merge (ASeq'new ___meta) (ValSeq'init))]
-            (§ ass (:seq this) ___seq)
-            (§ ass (:iterable this) ___iterable)
+            (§ ass this (assoc this :seq ___seq))
+            (§ ass this (assoc this :iterable ___iterable))
             this
         )
     )
@@ -1480,7 +1480,7 @@
     (§ defn #_"int" (§ method hashCode) [#_"APersistentMap" this]
         (let [#_"int" ___cached (:_hash this)]
             (when (zero? ___cached)
-                (§ ass (:_hash this) (§ ass ___cached (mapHash this)))
+                (§ ass this (assoc this :_hash (§ ass ___cached (mapHash this))))
             )
             ___cached
         )
@@ -1501,7 +1501,7 @@
     (§ defn #_"int" (§ method hasheq) [#_"APersistentMap" this]
         (let [#_"int" ___cached (:_hasheq this)]
             (when (zero? ___cached)
-                (§ ass (:_hasheq this) (§ ass ___cached (Murmur3'hashUnordered this)))
+                (§ ass this (assoc this :_hasheq (§ ass ___cached (Murmur3'hashUnordered this))))
             )
             ___cached
         )
@@ -1716,7 +1716,7 @@
     #_protected
     (defn #_"APersistentSet" APersistentSet'new [#_"IPersistentMap" ___impl]
         (let [this (merge (AFn'new) (APersistentSet'init))]
-            (§ ass (:impl this) ___impl)
+            (§ ass this (assoc this :impl ___impl))
             this
         )
     )
@@ -1808,7 +1808,7 @@
                         (§ ass ___hash (+ ___hash (Util'hash ___e)))
                     )
                 )
-                (§ ass (:_hash this) ___hash)
+                (§ ass this (assoc this :_hash ___hash))
             )
             ___hash
         )
@@ -1818,7 +1818,7 @@
     (§ defn #_"int" (§ method hasheq) [#_"APersistentSet" this]
         (let [#_"int" ___cached (:_hasheq this)]
             (when (zero? ___cached)
-                (§ ass (:_hasheq this) (§ ass ___cached (Murmur3'hashUnordered this)))
+                (§ ass this (assoc this :_hasheq (§ ass ___cached (Murmur3'hashUnordered this))))
             )
             ___cached
         )
@@ -1934,16 +1934,16 @@
 
     (defn #_"VSeq" VSeq'new-2 [#_"IPersistentVector" ___v, #_"int" ___i]
         (let [this (merge (ASeq'new) (VSeq'init))]
-            (§ ass (:v this) ___v)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :v ___v))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
 
     (defn #_"VSeq" VSeq'new-3 [#_"IPersistentMap" ___meta, #_"IPersistentVector" ___v, #_"int" ___i]
         (let [this (merge (ASeq'new ___meta) (VSeq'init))]
-            (§ ass (:v this) ___v)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :v ___v))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -2016,16 +2016,16 @@
 
     (defn #_"RSeq" RSeq'new-2 [#_"IPersistentVector" ___vector, #_"int" ___i]
         (let [this (merge (ASeq'new) (RSeq'init))]
-            (§ ass (:v this) ___vector)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :v ___vector))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
 
     (defn #_"RSeq" RSeq'new-3 [#_"IPersistentMap" ___meta, #_"IPersistentVector" ___v, #_"int" ___i]
         (let [this (merge (ASeq'new ___meta) (RSeq'init))]
-            (§ ass (:v this) ___v)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :v ___v))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -2071,7 +2071,7 @@
 
     (defn #_"SubVector" SubVector'new [#_"IPersistentMap" ___meta, #_"IPersistentVector" ___v, #_"int" ___start, #_"int" ___end]
         (let [this (merge (APersistentVector'new) (SubVector'init))]
-            (§ ass (:_meta this) ___meta)
+            (§ ass this (assoc this :_meta ___meta))
 
             (when (§ instance? SubVector ___v)
                 (let [#_"SubVector" ___sv (cast' SubVector ___v)]
@@ -2080,9 +2080,9 @@
                     (§ ass ___v (:v ___sv))
                 )
             )
-            (§ ass (:v this) ___v)
-            (§ ass (:start this) ___start)
-            (§ ass (:end this) ___end)
+            (§ ass this (assoc this :v ___v))
+            (§ ass this (assoc this :start ___start))
+            (§ ass this (assoc this :end ___end))
             this
         )
     )
@@ -2315,7 +2315,7 @@
                         (§ ass ___hash (+ (* 31 ___hash) (if (nil? ___obj) 0 (.hashCode ___obj))))
                     )
                 )
-                (§ ass (:_hash this) ___hash)
+                (§ ass this (assoc this :_hash ___hash))
             )
             ___hash
         )
@@ -2332,7 +2332,7 @@
                         (§ ass ___hash (+ (* 31 ___hash) (Util'hasheq (.nth this, ___n))))
                     )
 
-                    (§ ass (:_hasheq this) (§ ass ___hash (Murmur3'mixCollHash ___hash, ___n)))
+                    (§ ass this (assoc this :_hasheq (§ ass ___hash (Murmur3'mixCollHash ___hash, ___n))))
                 )
             )
             ___hash
@@ -2369,7 +2369,7 @@
 
     #_method
     (§ defn #_"int" (§ method lastIndexOf) [#_"APersistentVector" this, #_"Object" ___o]
-        (loop-when-recur [#_"int" ___i (dec (count this))] (>= ___i 0) [(dec ___i)]
+        (loop-when-recur [#_"int" ___i (dec (count this))] (<= 0 ___i) [(dec ___i)]
             (when (Util'equiv-2oo (.nth this, ___i), ___o)
                 (§ return ___i)
             )
@@ -2406,12 +2406,12 @@
 
                 #_method
                 (§ defn #_"boolean" (§ method hasPrevious) [#_"ListIterator" this]
-                    (> ___nexti 0)
+                    (< 0 ___nexti)
                 )
 
                 #_method
                 (§ defn #_"Object" (§ method previous) [#_"ListIterator" this]
-                    (if (> ___nexti 0)
+                    (if (< 0 ___nexti)
                         (do
                             (§ ass ___nexti (dec ___nexti))
                             (.nth this, ___nexti)
@@ -2750,7 +2750,7 @@
     #_method
     (§ defn #_"void" (§ method setValidator) [#_"ARef" this, #_"IFn" ___vf]
         (.validate this, ___vf, (.deref this))
-        (§ ass (:validator this) ___vf)
+        (§ ass this (assoc this :validator ___vf))
         nil
     )
 
@@ -2767,7 +2767,7 @@
     #_method
     (§ defn #_"IRef" (§ method addWatch) [#_"ARef" this, #_"Object" ___key, #_"IFn" ___callback]
         (§ sync this
-            (§ ass (:watches this) (.assoc (:watches this), ___key, ___callback))
+            (§ ass this (assoc this :watches (.assoc (:watches this), ___key, ___callback)))
             this
         )
     )
@@ -2775,7 +2775,7 @@
     #_method
     (§ defn #_"IRef" (§ method removeWatch) [#_"ARef" this, #_"Object" ___key]
         (§ sync this
-            (§ ass (:watches this) (.without (:watches this), ___key))
+            (§ ass this (assoc this :watches (.without (:watches this), ___key)))
             this
         )
     )
@@ -2815,7 +2815,7 @@
 
     (defn #_"AReference" AReference'new-1 [#_"IPersistentMap" ___meta]
         (let [this (AReference'init)]
-            (§ ass (:_meta this) ___meta)
+            (§ ass this (assoc this :_meta ___meta))
             this
         )
     )
@@ -2830,7 +2830,7 @@
     #_method
     (§ defn #_"IPersistentMap" (§ method alterMeta) [#_"AReference" this, #_"IFn" ___alter, #_"ISeq" ___args]
         (§ sync this
-            (§ ass (:_meta this) (cast' IPersistentMap (.applyTo___alter, (Cons'new-2 (:_meta this), ___args))))
+            (§ ass this (assoc this :_meta (cast' IPersistentMap (.applyTo___alter, (Cons'new-2 (:_meta this), ___args)))))
             (:_meta this)
         )
     )
@@ -2838,7 +2838,7 @@
     #_method
     (§ defn #_"IPersistentMap" (§ method resetMeta) [#_"AReference" this, #_"IPersistentMap" ___m]
         (§ sync this
-            (§ ass (:_meta this) ___m)
+            (§ ass this (assoc this :_meta ___m))
             ___m
         )
     )
@@ -2861,8 +2861,8 @@
 
     (defn #_"ArityException" ArityException'new-3 [#_"int" ___actual, #_"String" ___name, #_"Throwable" ___cause]
         (let [this (merge (§ foreign IllegalArgumentException'new (str "Wrong number of args (" ___actual ") passed to: " ___name), ___cause) (ArityException'init))]
-            (§ ass (:actual this) ___actual)
-            (§ ass (:name this) ___name)
+            (§ ass this (assoc this :actual ___actual))
+            (§ ass this (assoc this :name ___name))
             this
         )
     )
@@ -2890,9 +2890,9 @@
 
     (defn #_"ArrayChunk" ArrayChunk'new-3 [#_"Object[]" ___array, #_"int" ___off, #_"int" ___end]
         (let [this (ArrayChunk'init)]
-            (§ ass (:array this) ___array)
-            (§ ass (:off this) ___off)
-            (§ ass (:end this) ___end)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :off ___off))
+            (§ ass this (assoc this :end ___end))
             this
         )
     )
@@ -2956,8 +2956,8 @@
 
     (defn #_"ArrayIter_int" ArrayIter_int'new [#_"int[]" ___array, #_"int" ___i]
         (let [this (ArrayIter_int'init)]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -2971,7 +2971,7 @@
     (§ defn #_"Long" (§ method next) [#_"ArrayIter_int" this]
         (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
             (let [_ (Long/valueOf (§ aget (:array this) (:i this)))]
-                (§ ass (:i this) (+ (:i this) 1))
+                (§ ass this (assoc this :i (+ (:i this) 1)))
                 (§ return _)
             )
         )
@@ -2994,8 +2994,8 @@
 
     (defn #_"ArrayIter_float" ArrayIter_float'new [#_"float[]" ___array, #_"int" ___i]
         (let [this (ArrayIter_float'init)]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -3009,7 +3009,7 @@
     (§ defn #_"Double" (§ method next) [#_"ArrayIter_float" this]
         (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
             (let [_ (Double/valueOf (§ aget (:array this) (:i this)))]
-                (§ ass (:i this) (+ (:i this) 1))
+                (§ ass this (assoc this :i (+ (:i this) 1)))
                 (§ return _)
             )
         )
@@ -3032,8 +3032,8 @@
 
     (defn #_"ArrayIter_double" ArrayIter_double'new [#_"double[]" ___array, #_"int" ___i]
         (let [this (ArrayIter_double'init)]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -3047,7 +3047,7 @@
     (§ defn #_"Double" (§ method next) [#_"ArrayIter_double" this]
         (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
             (let [_ (§ aget (:array this) (:i this))]
-                (§ ass (:i this) (+ (:i this) 1))
+                (§ ass this (assoc this :i (+ (:i this) 1)))
                 (§ return _)
             )
         )
@@ -3070,8 +3070,8 @@
 
     (defn #_"ArrayIter_long" ArrayIter_long'new [#_"long[]" ___array, #_"int" ___i]
         (let [this (ArrayIter_long'init)]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -3085,7 +3085,7 @@
     (§ defn #_"Long" (§ method next) [#_"ArrayIter_long" this]
         (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
             (let [_ (Long/valueOf (§ aget (:array this) (:i this)))]
-                (§ ass (:i this) (+ (:i this) 1))
+                (§ ass this (assoc this :i (+ (:i this) 1)))
                 (§ return _)
             )
         )
@@ -3108,8 +3108,8 @@
 
     (defn #_"ArrayIter_byte" ArrayIter_byte'new [#_"byte[]" ___array, #_"int" ___i]
         (let [this (ArrayIter_byte'init)]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -3123,7 +3123,7 @@
     (§ defn #_"Byte" (§ method next) [#_"ArrayIter_byte" this]
         (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
             (let [_ (§ aget (:array this) (:i this))]
-                (§ ass (:i this) (+ (:i this) 1))
+                (§ ass this (assoc this :i (+ (:i this) 1)))
                 (§ return _)
             )
         )
@@ -3146,8 +3146,8 @@
 
     (defn #_"ArrayIter_char" ArrayIter_char'new [#_"char[]" ___array, #_"int" ___i]
         (let [this (ArrayIter_char'init)]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -3161,7 +3161,7 @@
     (§ defn #_"Character" (§ method next) [#_"ArrayIter_char" this]
         (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
             (let [_ (§ aget (:array this) (:i this))]
-                (§ ass (:i this) (+ (:i this) 1))
+                (§ ass this (assoc this :i (+ (:i this) 1)))
                 (§ return _)
             )
         )
@@ -3184,8 +3184,8 @@
 
     (defn #_"ArrayIter_short" ArrayIter_short'new [#_"short[]" ___array, #_"int" ___i]
         (let [this (ArrayIter_short'init)]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -3199,7 +3199,7 @@
     (§ defn #_"Long" (§ method next) [#_"ArrayIter_short" this]
         (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
             (let [_ (Long/valueOf (§ aget (:array this) (:i this)))]
-                (§ ass (:i this) (+ (:i this) 1))
+                (§ ass this (assoc this :i (+ (:i this) 1)))
                 (§ return _)
             )
         )
@@ -3222,8 +3222,8 @@
 
     (defn #_"ArrayIter_boolean" ArrayIter_boolean'new [#_"boolean[]" ___array, #_"int" ___i]
         (let [this (ArrayIter_boolean'init)]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -3237,7 +3237,7 @@
     (§ defn #_"Boolean" (§ method next) [#_"ArrayIter_boolean" this]
         (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
             (let [_ (Boolean/valueOf (§ aget (:array this) (:i this)))]
-                (§ ass (:i this) (+ (:i this) 1))
+                (§ ass this (assoc this :i (+ (:i this) 1)))
                 (§ return _)
             )
         )
@@ -3323,8 +3323,8 @@
 
     (defn #_"ArrayIter" ArrayIter'new [#_"Object" ___array, #_"int" ___i]
         (let [this (ArrayIter'init)]
-            (§ ass (:i this) ___i)
-            (§ ass (:array this) (§ cast Object[] ___array))
+            (§ ass this (assoc this :i ___i))
+            (§ ass this (assoc this :array (§ cast Object[] ___array)))
             this
         )
     )
@@ -3338,7 +3338,7 @@
     (§ defn #_"Object" (§ method next) [#_"ArrayIter" this]
         (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
             (let [_ (§ aget (:array this) (:i this))]
-                (§ ass (:i this) (+ (:i this) 1))
+                (§ ass this (assoc this :i (+ (:i this) 1)))
                 (§ return _)
             )
         )
@@ -3366,8 +3366,8 @@
 
     (defn #_"ArraySeq_int" ArraySeq_int'new [#_"IPersistentMap" ___meta, #_"int[]" ___array, #_"int" ___i]
         (let [this (merge (ASeq'new ___meta) (ArraySeq_int'init))]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -3448,7 +3448,7 @@
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_int" this, #_"Object" ___o]
         (when (instance? Number ___o)
             (let [#_"int" ___k (.intValue (cast Number ___o))]
-                (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (>= ___j (:i this)) [(dec ___j)]
+                (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (<= (:i this) ___j) [(dec ___j)]
                     (when (= ___k (§ aget (:array this) ___j))
                         (§ return (- ___j (:i this)))
                     )
@@ -3470,8 +3470,8 @@
 
     (defn #_"ArraySeq_float" ArraySeq_float'new [#_"IPersistentMap" ___meta, #_"float[]" ___array, #_"int" ___i]
         (let [this (merge (ASeq'new ___meta) (ArraySeq_float'init))]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -3551,7 +3551,7 @@
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_float" this, #_"Object" ___o]
         (when (instance? Number ___o)
             (let [#_"float" ___f (.floatValue (cast Number ___o))]
-                (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (>= ___j (:i this)) [(dec ___j)]
+                (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (<= (:i this) ___j) [(dec ___j)]
                     (when (= ___f (§ aget (:array this) ___j))
                         (§ return (- ___j (:i this)))
                     )
@@ -3572,8 +3572,8 @@
 
     (defn #_"ArraySeq_double" ArraySeq_double'new [#_"IPersistentMap" ___meta, #_"double[]" ___array, #_"int" ___i]
         (let [this (merge (ASeq'new ___meta) (ArraySeq_double'init))]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -3654,7 +3654,7 @@
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_double" this, #_"Object" ___o]
         (when (instance? Number ___o)
             (let [#_"double" ___d (.doubleValue (cast Number ___o))]
-                (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (>= ___j (:i this)) [(dec ___j)]
+                (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (<= (:i this) ___j) [(dec ___j)]
                     (when (= ___d (§ aget (:array this) ___j))
                         (§ return (- ___j (:i this)))
                     )
@@ -3676,8 +3676,8 @@
 
     (defn #_"ArraySeq_long" ArraySeq_long'new [#_"IPersistentMap" ___meta, #_"long[]" ___array, #_"int" ___i]
         (let [this (merge (ASeq'new ___meta) (ArraySeq_long'init))]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -3758,7 +3758,7 @@
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_long" this, #_"Object" ___o]
         (when (instance? Number ___o)
             (let [#_"long" ___l (.longValue (cast Number ___o))]
-                (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (>= ___j (:i this)) [(dec ___j)]
+                (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (<= (:i this) ___j) [(dec ___j)]
                     (when (= ___l (§ aget (:array this) ___j))
                         (§ return (- ___j (:i this)))
                     )
@@ -3780,8 +3780,8 @@
 
     (defn #_"ArraySeq_byte" ArraySeq_byte'new [#_"IPersistentMap" ___meta, #_"byte[]" ___array, #_"int" ___i]
         (let [this (merge (ASeq'new ___meta) (ArraySeq_byte'init))]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -3869,7 +3869,7 @@
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_byte" this, #_"Object" ___o]
         (when (instance? Byte ___o)
             (let [#_"byte" ___b (.byteValue (cast Byte ___o))]
-                (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (>= ___j (:i this)) [(dec ___j)]
+                (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (<= (:i this) ___j) [(dec ___j)]
                     (when (= ___b (§ aget (:array this) ___j))
                         (§ return (- ___j (:i this)))
                     )
@@ -3879,7 +3879,7 @@
         (when (nil? ___o)
             (§ return -1)
         )
-        (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (>= ___j (:i this)) [(dec ___j)]
+        (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (<= (:i this) ___j) [(dec ___j)]
             (when (.equals ___o, (§ aget (:array this) ___j))
                 (§ return (- ___j (:i this)))
             )
@@ -3898,8 +3898,8 @@
 
     (defn #_"ArraySeq_char" ArraySeq_char'new [#_"IPersistentMap" ___meta, #_"char[]" ___array, #_"int" ___i]
         (let [this (merge (ASeq'new ___meta) (ArraySeq_char'init))]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -3987,7 +3987,7 @@
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_char" this, #_"Object" ___o]
         (when (instance? Character ___o)
             (let [#_"char" ___c (.charValue (cast Character ___o))]
-                (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (>= ___j (:i this)) [(dec ___j)]
+                (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (<= (:i this) ___j) [(dec ___j)]
                     (when (= ___c (§ aget (:array this) ___j))
                         (§ return (- ___j (:i this)))
                     )
@@ -3997,7 +3997,7 @@
         (when (nil? ___o)
             (§ return -1)
         )
-        (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (>= ___j (:i this)) [(dec ___j)]
+        (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (<= (:i this) ___j) [(dec ___j)]
             (when (.equals ___o, (§ aget (:array this) ___j))
                 (§ return (- ___j (:i this)))
             )
@@ -4016,8 +4016,8 @@
 
     (defn #_"ArraySeq_short" ArraySeq_short'new [#_"IPersistentMap" ___meta, #_"short[]" ___array, #_"int" ___i]
         (let [this (merge (ASeq'new ___meta) (ArraySeq_short'init))]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -4105,7 +4105,7 @@
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_short" this, #_"Object" ___o]
         (when (instance? Short ___o)
             (let [#_"short" ___s (.shortValue (cast Short ___o))]
-                (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (>= ___j (:i this)) [(dec ___j)]
+                (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (<= (:i this) ___j) [(dec ___j)]
                     (when (= ___s (§ aget (:array this) ___j))
                         (§ return (- ___j (:i this)))
                     )
@@ -4115,7 +4115,7 @@
         (when (nil? ___o)
             (§ return -1)
         )
-        (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (>= ___j (:i this)) [(dec ___j)]
+        (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (<= (:i this) ___j) [(dec ___j)]
             (when (.equals ___o, (§ aget (:array this) ___j))
                 (§ return (- ___j (:i this)))
             )
@@ -4134,8 +4134,8 @@
 
     (defn #_"ArraySeq_boolean" ArraySeq_boolean'new [#_"IPersistentMap" ___meta, #_"boolean[]" ___array, #_"int" ___i]
         (let [this (merge (ASeq'new ___meta) (ArraySeq_boolean'init))]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -4223,7 +4223,7 @@
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_boolean" this, #_"Object" ___o]
         (when (instance? Boolean ___o)
             (let [#_"boolean" ___b (.booleanValue (cast Boolean ___o))]
-                (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (>= ___j (:i this)) [(dec ___j)]
+                (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (<= (:i this) ___j) [(dec ___j)]
                     (when (= ___b (§ aget (:array this) ___j))
                         (§ return (- ___j (:i this)))
                     )
@@ -4233,7 +4233,7 @@
         (when (nil? ___o)
             (§ return -1)
         )
-        (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (>= ___j (:i this)) [(dec ___j)]
+        (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (<= (:i this) ___j) [(dec ___j)]
             (when (.equals ___o, (§ aget (:array this) ___j))
                 (§ return (- ___j (:i this)))
             )
@@ -4296,16 +4296,16 @@
 
     (defn #_"ArraySeq" ArraySeq'new-2 [#_"Object" ___array, #_"int" ___i]
         (let [this (merge (ASeq'new) (ArraySeq'init))]
-            (§ ass (:i this) ___i)
-            (§ ass (:array this) (§ cast Object[] ___array))
+            (§ ass this (assoc this :i ___i))
+            (§ ass this (assoc this :array (§ cast Object[] ___array)))
             this
         )
     )
 
     (defn #_"ArraySeq" ArraySeq'new-3 [#_"IPersistentMap" ___meta, #_"Object" ___array, #_"int" ___i]
         (let [this (merge (ASeq'new ___meta) (ArraySeq'init))]
-            (§ ass (:i this) ___i)
-            (§ ass (:array this) (§ cast Object[] ___array))
+            (§ ass this (assoc this :i ___i))
+            (§ ass this (assoc this :array (§ cast Object[] ___array)))
             this
         )
     )
@@ -4396,14 +4396,14 @@
         (when (some? (:array this))
             (if (nil? ___o)
                 (do
-                    (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (>= ___j (:i this)) [(dec ___j)]
+                    (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (<= (:i this) ___j) [(dec ___j)]
                         (when (nil? (§ aget (:array this) ___j))
                             (§ return (- ___j (:i this)))
                         )
                     )
                 )
                 (do
-                    (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (>= ___j (:i this)) [(dec ___j)]
+                    (loop-when-recur [#_"int" ___j (dec (§ alength (:array this)))] (<= (:i this) ___j) [(dec ___j)]
                         (when (.equals ___o, (§ aget (:array this) ___j))
                             (§ return (- ___j (:i this)))
                         )
@@ -4491,7 +4491,7 @@
                 (loop-when-recur [#_"ISeq" ___s (.seq this)] (some? ___s) [(next ___s)]
                     (§ ass ___hash (+ (* 31 ___hash) (if (nil? (first ___s)) 0 (.hashCode (first ___s)))))
                 )
-                (§ ass (:_hash this) ___hash)
+                (§ ass this (assoc this :_hash ___hash))
             )
         )
         (:_hash this)
@@ -4500,7 +4500,7 @@
     #_method
     (§ defn #_"int" (§ method hasheq) [#_"ASeq" this]
         (when (zero? (:_hasheq this))
-            (§ ass (:_hasheq this) (Murmur3'hashOrdered this))
+            (§ ass this (assoc this :_hasheq (Murmur3'hashOrdered this)))
         )
         (:_hasheq this)
     )
@@ -4699,14 +4699,14 @@
 
     (defn #_"Atom" Atom'new-1 [#_"Object" ___state]
         (let [this (merge (ARef'new-0) (Atom'init))]
-            (§ ass (:state this) (AtomicReference. ___state))
+            (§ ass this (assoc this :state (AtomicReference. ___state)))
             this
         )
     )
 
     (defn #_"Atom" Atom'new-2 [#_"Object" ___state, #_"IPersistentMap" ___meta]
         (let [this (merge (ARef'new-1 ___meta) (Atom'init))]
-            (§ ass (:state this) (AtomicReference. ___state))
+            (§ ass this (assoc this :state (AtomicReference. ___state)))
             this
         )
     )
@@ -5004,7 +5004,7 @@
 
     (defn #_"ATransientSet" ATransientSet'new [#_"ITransientMap" ___impl]
         (let [this (merge (AFn'new) (ATransientSet'init))]
-            (§ ass (:impl this) ___impl)
+            (§ ass this (assoc this :impl ___impl))
             this
         )
     )
@@ -5018,7 +5018,7 @@
     (§ defn #_"ITransientSet" (§ method conj) [#_"ATransientSet" this, #_"Object" ___val]
         (let [#_"ITransientMap" ___m (.assoc (:impl this), ___val, ___val)]
             (when-not (= ___m (:impl this))
-                (§ ass (:impl this) ___m)
+                (§ ass this (assoc this :impl ___m))
             )
             this
         )
@@ -5033,7 +5033,7 @@
     (§ defn #_"ITransientSet" (§ method disjoin) [#_"ATransientSet" this, #_"Object" ___key]
         (let [#_"ITransientMap" ___m (.without (:impl this), ___key)]
             (when-not (= ___m (:impl this))
-                (§ ass (:impl this) ___m)
+                (§ ass this (assoc this :impl ___m))
             )
             this
         )
@@ -5074,8 +5074,8 @@
 
     (defn- #_"BigInt" BigInt'new [#_"long" ___lpart, #_"BigInteger" ___bipart]
         (let [this (merge (Number'new) (BigInt'init))]
-            (§ ass (:lpart this) ___lpart)
-            (§ ass (:bipart this) ___bipart)
+            (§ ass this (assoc this :lpart ___lpart))
+            (§ ass this (assoc this :bipart ___bipart))
             this
         )
     )
@@ -5306,16 +5306,16 @@
 
     (defn #_"Binding" Binding'new-1 [#_"T" ___val]
         (let [this (Binding'init)]
-            (§ ass (:val this) ___val)
-            (§ ass (:rest this) nil)
+            (§ ass this (assoc this :val ___val))
+            (§ ass this (assoc this :rest nil))
             this
         )
     )
 
     (defn #_"Binding" Binding'new-2 [#_"T" ___val, #_"Binding" ___rest]
         (let [this (Binding'init)]
-            (§ ass (:val this) ___val)
-            (§ ass (:rest this) ___rest)
+            (§ ass this (assoc this :val ___val))
+            (§ ass this (assoc this :rest ___rest))
             this
         )
     )
@@ -5333,7 +5333,7 @@
 
     (defn #_"Box" Box'new [#_"Object" ___val]
         (let [this (Box'init)]
-            (§ ass (:val this) ___val)
+            (§ ass this (assoc this :val ___val))
             this
         )
     )
@@ -5352,8 +5352,8 @@
 
     (defn #_"ChunkBuffer" ChunkBuffer'new [#_"int" ___capacity]
         (let [this (ChunkBuffer'init)]
-            (§ ass (:buffer this) (make-array Object ___capacity))
-            (§ ass (:end this) 0)
+            (§ ass this (assoc this :buffer (make-array Object ___capacity)))
+            (§ ass this (assoc this :end 0))
             this
         )
     )
@@ -5361,14 +5361,14 @@
     #_method
     (§ defn #_"void" (§ method add) [#_"ChunkBuffer" this, #_"Object" ___o]
         (§ ass (§ aget (:buffer this) (:end this)) ___o)
-        (§ ass (:end this) (+ (:end this) 1))
+        (§ ass this (assoc this :end (+ (:end this) 1)))
         nil
     )
 
     #_method
     (§ defn #_"IChunk" (§ method chunk) [#_"ChunkBuffer" this]
         (let [#_"ArrayChunk" ___ret (ArrayChunk'new-3 (:buffer this), 0, (:end this))]
-            (§ ass (:buffer this) nil)
+            (§ ass this (assoc this :buffer nil))
             ___ret
         )
     )
@@ -5392,8 +5392,8 @@
 
     (defn #_"ChunkedCons" ChunkedCons'new-3 [#_"IPersistentMap" ___meta, #_"IChunk" ___chunk, #_"ISeq" ___more]
         (let [this (merge (ASeq'new ___meta) (ChunkedCons'init))]
-            (§ ass (:chunk this) ___chunk)
-            (§ ass (:_more this) ___more)
+            (§ ass this (assoc this :chunk ___chunk))
+            (§ ass this (assoc this :_more ___more))
             this
         )
     )
@@ -5709,15 +5709,15 @@
 
     (defn #_"DefExpr" DefExpr'new [#_"String" ___source, #_"int" ___line, #_"int" ___column, #_"Var" ___var, #_"Expr" ___init, #_"Expr" ___meta, #_"boolean" ___initProvided, #_"boolean" ___isDynamic, #_"boolean" ___shadowsCoreMapping]
         (let [this (DefExpr'init)]
-            (§ ass (:source this) ___source)
-            (§ ass (:line this) ___line)
-            (§ ass (:column this) ___column)
-            (§ ass (:var this) ___var)
-            (§ ass (:init this) ___init)
-            (§ ass (:meta this) ___meta)
-            (§ ass (:isDynamic this) ___isDynamic)
-            (§ ass (:shadowsCoreMapping this) ___shadowsCoreMapping)
-            (§ ass (:initProvided this) ___initProvided)
+            (§ ass this (assoc this :source ___source))
+            (§ ass this (assoc this :line ___line))
+            (§ ass this (assoc this :column ___column))
+            (§ ass this (assoc this :var ___var))
+            (§ ass this (assoc this :init ___init))
+            (§ ass this (assoc this :meta ___meta))
+            (§ ass this (assoc this :isDynamic ___isDynamic))
+            (§ ass this (assoc this :shadowsCoreMapping ___shadowsCoreMapping))
+            (§ ass this (assoc this :initProvided ___initProvided))
             this
         )
     )
@@ -5849,8 +5849,8 @@
 
     (defn #_"AssignExpr" AssignExpr'new [#_"AssignableExpr" ___target, #_"Expr" ___val]
         (let [this (AssignExpr'init)]
-            (§ ass (:target this) ___target)
-            (§ ass (:val this) ___val)
+            (§ ass this (assoc this :target ___target))
+            (§ ass this (assoc this :val ___val))
             this
         )
     )
@@ -5892,8 +5892,8 @@
 
     (defn #_"VarExpr" VarExpr'new [#_"Var" ___var, #_"Symbol" ___tag]
         (let [this (VarExpr'init)]
-            (§ ass (:var this) ___var)
-            (§ ass (:tag this) (or ___tag (.getTag ___var)))
+            (§ ass this (assoc this :var ___var))
+            (§ ass this (assoc this :tag (or ___tag (.getTag ___var))))
             this
         )
     )
@@ -5920,7 +5920,7 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"VarExpr" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (HostExpr'tagToClass (:tag this)))
+            (§ ass this (assoc this :jc (HostExpr'tagToClass (:tag this))))
         )
         (:jc this)
     )
@@ -5970,7 +5970,7 @@
 
     (defn #_"TheVarExpr" TheVarExpr'new [#_"Var" ___var]
         (let [this (TheVarExpr'init)]
-            (§ ass (:var this) ___var)
+            (§ ass this (assoc this :var ___var))
             this
         )
     )
@@ -6009,7 +6009,7 @@
 
     (defn #_"KeywordExpr" KeywordExpr'new [#_"Keyword" ___k]
         (let [this (merge (LiteralExpr'new) (KeywordExpr'init))]
-            (§ ass (:k this) ___k)
+            (§ ass this (assoc this :k ___k))
             this
         )
     )
@@ -6069,7 +6069,7 @@
 
     (defn #_"ImportExpr" ImportExpr'new [#_"String" ___c]
         (let [this (ImportExpr'init)]
-            (§ ass (:c this) ___c)
+            (§ ass this (assoc this :c ___c))
             this
         )
     )
@@ -6564,14 +6564,14 @@
 
     (defn #_"InstanceFieldExpr" InstanceFieldExpr'new [#_"int" ___line, #_"int" ___column, #_"Expr" ___target, #_"String" ___fieldName, #_"Symbol" ___tag, #_"boolean" ___requireField]
         (let [this (merge (FieldExpr'new) (InstanceFieldExpr'init))]
-            (§ ass (:target this) ___target)
-            (§ ass (:targetClass this) (when (.hasJavaClass ___target) (.getJavaClass ___target)))
-            (§ ass (:field this) (when (some? (:targetClass this)) (Reflector'getField (:targetClass this), ___fieldName, false)))
-            (§ ass (:fieldName this) ___fieldName)
-            (§ ass (:line this) ___line)
-            (§ ass (:column this) ___column)
-            (§ ass (:tag this) ___tag)
-            (§ ass (:requireField this) ___requireField)
+            (§ ass this (assoc this :target ___target))
+            (§ ass this (assoc this :targetClass (when (.hasJavaClass ___target) (.getJavaClass ___target))))
+            (§ ass this (assoc this :field (when (some? (:targetClass this)) (Reflector'getField (:targetClass this), ___fieldName, false))))
+            (§ ass this (assoc this :fieldName ___fieldName))
+            (§ ass this (assoc this :line ___line))
+            (§ ass this (assoc this :column ___column))
+            (§ ass this (assoc this :tag ___tag))
+            (§ ass this (assoc this :requireField ___requireField))
 
             (when (and (nil? (:field this)) (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION)))
                 (if (nil? (:targetClass this))
@@ -6648,7 +6648,7 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"InstanceFieldExpr" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getType (:field this))))
+            (§ ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getType (:field this)))))
         )
         (:jc this)
     )
@@ -6702,17 +6702,17 @@
 
     (defn #_"StaticFieldExpr" StaticFieldExpr'new [#_"int" ___line, #_"int" ___column, #_"Class" ___c, #_"String" ___fieldName, #_"Symbol" ___tag]
         (let [this (merge (FieldExpr'new) (StaticFieldExpr'init))]
-            (§ ass (:fieldName this) ___fieldName)
-            (§ ass (:line this) ___line)
-            (§ ass (:column this) ___column)
-            (§ ass (:c this) ___c)
+            (§ ass this (assoc this :fieldName ___fieldName))
+            (§ ass this (assoc this :line ___line))
+            (§ ass this (assoc this :column ___column))
+            (§ ass this (assoc this :c ___c))
             (try
-                (§ ass (:field this) (.getField ___c, ___fieldName))
+                (§ ass this (assoc this :field (.getField ___c, ___fieldName)))
                 (catch NoSuchFieldException ___e
                     (throw (Util'sneakyThrow ___e))
                 )
             )
-            (§ ass (:tag this) ___tag)
+            (§ ass this (assoc this :tag ___tag))
             this
         )
     )
@@ -6754,7 +6754,7 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"StaticFieldExpr" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getType (:field this))))
+            (§ ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getType (:field this)))))
         )
         (:jc this)
     )
@@ -6882,20 +6882,20 @@
 
     (defn #_"InstanceMethodExpr" InstanceMethodExpr'new [#_"String" ___source, #_"int" ___line, #_"int" ___column, #_"Symbol" ___tag, #_"Expr" ___target, #_"String" ___methodName, #_"IPersistentVector" ___args, #_"boolean" ___tailPosition]
         (let [this (merge (MethodExpr'new) (InstanceMethodExpr'init))]
-            (§ ass (:source this) ___source)
-            (§ ass (:line this) ___line)
-            (§ ass (:column this) ___column)
-            (§ ass (:args this) ___args)
-            (§ ass (:methodName this) ___methodName)
-            (§ ass (:target this) ___target)
-            (§ ass (:tag this) ___tag)
-            (§ ass (:tailPosition this) ___tailPosition)
+            (§ ass this (assoc this :source ___source))
+            (§ ass this (assoc this :line ___line))
+            (§ ass this (assoc this :column ___column))
+            (§ ass this (assoc this :args ___args))
+            (§ ass this (assoc this :methodName ___methodName))
+            (§ ass this (assoc this :target ___target))
+            (§ ass this (assoc this :tag ___tag))
+            (§ ass this (assoc this :tailPosition ___tailPosition))
             (if (and (.hasJavaClass ___target) (some? (.getJavaClass ___target)))
                 (do
                     (let [#_"List" ___methods (Reflector'getMethods (.getJavaClass ___target), (count ___args), ___methodName, false)]
                         (if (.isEmpty ___methods)
                             (do
-                                (§ ass (:method this) nil)
+                                (§ ass this (assoc this :method nil))
                                 (when (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION))
                                     (.format (RT'errPrintWriter), "Reflection warning, %s:%d:%d - call to method %s on %s can't be resolved (no such method).\n", (object-array [ (.deref Compiler'SOURCE_PATH), ___line, ___column, ___methodName, (.getName (.getJavaClass ___target)) ]))
                                 )
@@ -6915,12 +6915,12 @@
                                             )
                                         )
                                     )
-                                    (let [#_"java.lang.reflect.Method" ___m (cast java.lang.reflect.Method (when (>= ___methodidx 0) (.get ___methods, ___methodidx)))]
+                                    (let [#_"java.lang.reflect.Method" ___m (cast java.lang.reflect.Method (when (<= 0 ___methodidx) (.get ___methods, ___methodidx)))]
                                         (when (and (some? ___m) (not (Modifier/isPublic (.getModifiers (.getDeclaringClass ___m)))))
                                             ;; public method of non-public class, try to find it in hierarchy
                                             (§ ass ___m (Reflector'getAsMethodOfPublicBase (.getDeclaringClass ___m), ___m))
                                         )
-                                        (§ ass (:method this) ___m)
+                                        (§ ass this (assoc this :method ___m))
                                         (when (and (nil? (:method this)) (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION)))
                                             (.format (RT'errPrintWriter), "Reflection warning, %s:%d:%d - call to method %s on %s can't be resolved (argument types: %s).\n", (object-array [ (.deref Compiler'SOURCE_PATH), ___line, ___column, ___methodName, (.getName (.getJavaClass ___target)), (Compiler'getTypeStringForArgs ___args) ]))
                                         )
@@ -6931,7 +6931,7 @@
                     )
                 )
                 (do
-                    (§ ass (:method this) nil)
+                    (§ ass this (assoc this :method nil))
                     (when (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION))
                         (.format (RT'errPrintWriter), "Reflection warning, %s:%d:%d - call to method %s can't be resolved (target class is unknown).\n", (object-array [ (.deref Compiler'SOURCE_PATH), ___line, ___column, ___methodName ]))
                     )
@@ -7063,7 +7063,7 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"InstanceMethodExpr" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this)))))
+            (§ ass this (assoc this :jc (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this))))))
         )
         (:jc this)
     )
@@ -7092,14 +7092,14 @@
 
     (defn #_"StaticMethodExpr" StaticMethodExpr'new [#_"String" ___source, #_"int" ___line, #_"int" ___column, #_"Symbol" ___tag, #_"Class" ___c, #_"String" ___methodName, #_"IPersistentVector" ___args, #_"boolean" ___tailPosition]
         (let [this (merge (MethodExpr'new) (StaticMethodExpr'init))]
-            (§ ass (:c this) ___c)
-            (§ ass (:methodName this) ___methodName)
-            (§ ass (:args this) ___args)
-            (§ ass (:source this) ___source)
-            (§ ass (:line this) ___line)
-            (§ ass (:column this) ___column)
-            (§ ass (:tag this) ___tag)
-            (§ ass (:tailPosition this) ___tailPosition)
+            (§ ass this (assoc this :c ___c))
+            (§ ass this (assoc this :methodName ___methodName))
+            (§ ass this (assoc this :args ___args))
+            (§ ass this (assoc this :source ___source))
+            (§ ass this (assoc this :line ___line))
+            (§ ass this (assoc this :column ___column))
+            (§ ass this (assoc this :tag ___tag))
+            (§ ass this (assoc this :tailPosition ___tailPosition))
 
             (let [#_"List" ___methods (Reflector'getMethods ___c, (count ___args), ___methodName, true)]
                 (when (.isEmpty ___methods)
@@ -7120,7 +7120,7 @@
                             )
                         )
                     )
-                    (§ ass (:method this) (cast java.lang.reflect.Method (when (<= 0 ___methodidx) (.get ___methods, ___methodidx))))
+                    (§ ass this (assoc this :method (cast java.lang.reflect.Method (when (<= 0 ___methodidx) (.get ___methods, ___methodidx)))))
                     (when (and (nil? (:method this)) (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION)))
                         (.format (RT'errPrintWriter), "Reflection warning, %s:%d:%d - call to static method %s on %s can't be resolved (argument types: %s).\n", (object-array [ (.deref Compiler'SOURCE_PATH), ___line, ___column, ___methodName, (.getName ___c), (Compiler'getTypeStringForArgs ___args) ]))
                     )
@@ -7317,7 +7317,7 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"StaticMethodExpr" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this)))))
+            (§ ass this (assoc this :jc (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this))))))
         )
         (:jc this)
     )
@@ -7332,7 +7332,7 @@
 
     (defn #_"UnresolvedVarExpr" UnresolvedVarExpr'new [#_"Symbol" ___symbol]
         (let [this (UnresolvedVarExpr'init)]
-            (§ ass (:symbol this) ___symbol)
+            (§ ass this (assoc this :symbol ___symbol))
             this
         )
     )
@@ -7368,8 +7368,8 @@
 
     (defn #_"NumberExpr" NumberExpr'new [#_"Number" ___n]
         (let [this (merge (LiteralExpr'new) (NumberExpr'init))]
-            (§ ass (:n this) ___n)
-            (§ ass (:id this) (Compiler'registerConstant ___n))
+            (§ ass this (assoc this :n ___n))
+            (§ ass this (assoc this :id (Compiler'registerConstant ___n)))
             this
         )
     )
@@ -7512,8 +7512,8 @@
 
     (defn #_"ConstantExpr" ConstantExpr'new [#_"Object" ___v]
         (let [this (merge (LiteralExpr'new) (ConstantExpr'init))]
-            (§ ass (:v this) ___v)
-            (§ ass (:id this) (Compiler'registerConstant ___v))
+            (§ ass this (assoc this :v ___v))
+            (§ ass this (assoc this :id (Compiler'registerConstant ___v)))
             this
         )
     )
@@ -7599,7 +7599,7 @@
 
     (defn #_"BooleanExpr" BooleanExpr'new [#_"boolean" ___val]
         (let [this (merge (LiteralExpr'new) (BooleanExpr'init))]
-            (§ ass (:val this) ___val)
+            (§ ass this (assoc this :val ___val))
             this
         )
     )
@@ -7645,7 +7645,7 @@
 
     (defn #_"StringExpr" StringExpr'new [#_"String" ___str]
         (let [this (merge (LiteralExpr'new) (StringExpr'init))]
-            (§ ass (:str this) ___str)
+            (§ ass this (assoc this :str ___str))
             this
         )
     )
@@ -7695,7 +7695,7 @@
 
     (defn #_"MonitorEnterExpr" MonitorEnterExpr'new [#_"Expr" ___target]
         (let [this (merge (UntypedExpr'new) (MonitorEnterExpr'init))]
-            (§ ass (:target this) ___target)
+            (§ ass this (assoc this :target ___target))
             this
         )
     )
@@ -7735,7 +7735,7 @@
 
     (defn #_"MonitorExitExpr" MonitorExitExpr'new [#_"Expr" ___target]
         (let [this (merge (UntypedExpr'new) (MonitorExitExpr'init))]
-            (§ ass (:target this) ___target)
+            (§ ass this (assoc this :target ___target))
             this
         )
     )
@@ -7767,9 +7767,9 @@
 
     (defn #_"CatchClause" CatchClause'new [#_"Class" ___c, #_"LocalBinding" ___lb, #_"Expr" ___handler]
         (let [this (CatchClause'init)]
-            (§ ass (:c this) ___c)
-            (§ ass (:lb this) ___lb)
-            (§ ass (:handler this) ___handler)
+            (§ ass this (assoc this :c ___c))
+            (§ ass this (assoc this :lb ___lb))
+            (§ ass this (assoc this :handler ___handler))
             this
         )
     )
@@ -7928,11 +7928,11 @@
 
     (defn #_"TryExpr" TryExpr'new [#_"Expr" ___tryExpr, #_"PersistentVector" ___catchExprs, #_"Expr" ___finallyExpr, #_"int" ___retLocal, #_"int" ___finallyLocal]
         (let [this (TryExpr'init)]
-            (§ ass (:tryExpr this) ___tryExpr)
-            (§ ass (:catchExprs this) ___catchExprs)
-            (§ ass (:finallyExpr this) ___finallyExpr)
-            (§ ass (:retLocal this) ___retLocal)
-            (§ ass (:finallyLocal this) ___finallyLocal)
+            (§ ass this (assoc this :tryExpr ___tryExpr))
+            (§ ass this (assoc this :catchExprs ___catchExprs))
+            (§ ass this (assoc this :finallyExpr ___finallyExpr))
+            (§ ass this (assoc this :retLocal ___retLocal))
+            (§ ass this (assoc this :finallyLocal ___finallyLocal))
             this
         )
     )
@@ -8069,7 +8069,7 @@
 
     (defn #_"ThrowExpr" ThrowExpr'new [#_"Expr" ___excExpr]
         (let [this (merge (UntypedExpr'new) (ThrowExpr'init))]
-            (§ ass (:excExpr this) ___excExpr)
+            (§ ass this (assoc this :excExpr ___excExpr))
             this
         )
     )
@@ -8134,8 +8134,8 @@
 
     (defn #_"NewExpr" NewExpr'new [#_"Class" ___c, #_"IPersistentVector" ___args, #_"int" ___line, #_"int" ___column]
         (let [this (NewExpr'init)]
-            (§ ass (:args this) ___args)
-            (§ ass (:c this) ___c)
+            (§ ass this (assoc this :args ___args))
+            (§ ass this (assoc this :c ___c))
             (let [#_"Constructor[]" ___allctors (.getConstructors ___c)]
                 (let [#_"ArrayList" ___ctors (ArrayList.)]
                     (let [#_"ArrayList<Class[]>" ___params (ArrayList.)]
@@ -8158,7 +8158,7 @@
                                     (§ ass ___ctoridx (Compiler'getMatchingParams (.getName ___c), ___params, ___args, ___rets))
                                 )
 
-                                (§ ass (:ctor this) (when (>= ___ctoridx 0) (cast Constructor (.get ___ctors, ___ctoridx))))
+                                (§ ass this (assoc this :ctor (when (<= 0 ___ctoridx) (cast Constructor (.get ___ctors, ___ctoridx)))))
                                 (when (and (nil? (:ctor this)) (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION)))
                                     (.format (RT'errPrintWriter), "Reflection warning, %s:%d:%d - call to %s ctor can't be resolved.\n", (object-array [ (.deref Compiler'SOURCE_PATH), ___line, ___column, (.getName ___c) ]))
                                 )
@@ -8237,8 +8237,8 @@
 
     (defn #_"MetaExpr" MetaExpr'new [#_"Expr" ___expr, #_"Expr" ___meta]
         (let [this (MetaExpr'init)]
-            (§ ass (:expr this) ___expr)
-            (§ ass (:meta this) ___meta)
+            (§ ass this (assoc this :expr ___expr))
+            (§ ass this (assoc this :meta ___meta))
             this
         )
     )
@@ -8339,11 +8339,11 @@
 
     (defn #_"IfExpr" IfExpr'new [#_"int" ___line, #_"int" ___column, #_"Expr" ___testExpr, #_"Expr" ___thenExpr, #_"Expr" ___elseExpr]
         (let [this (IfExpr'init)]
-            (§ ass (:testExpr this) ___testExpr)
-            (§ ass (:thenExpr this) ___thenExpr)
-            (§ ass (:elseExpr this) ___elseExpr)
-            (§ ass (:line this) ___line)
-            (§ ass (:column this) ___column)
+            (§ ass this (assoc this :testExpr ___testExpr))
+            (§ ass this (assoc this :thenExpr ___thenExpr))
+            (§ ass this (assoc this :elseExpr ___elseExpr))
+            (§ ass this (assoc this :line ___line))
+            (§ ass this (assoc this :column ___column))
             this
         )
     )
@@ -8477,7 +8477,7 @@
 
     (defn #_"EmptyExpr" EmptyExpr'new [#_"Object" ___coll]
         (let [this (EmptyExpr'init)]
-            (§ ass (:coll this) ___coll)
+            (§ ass this (assoc this :coll ___coll))
             this
         )
     )
@@ -8558,7 +8558,7 @@
 
     (defn #_"ListExpr" ListExpr'new [#_"IPersistentVector" ___args]
         (let [this (ListExpr'init)]
-            (§ ass (:args this) ___args)
+            (§ ass this (assoc this :args ___args))
             this
         )
     )
@@ -8606,7 +8606,7 @@
 
     (defn #_"MapExpr" MapExpr'new [#_"IPersistentVector" ___keyvals]
         (let [this (MapExpr'init)]
-            (§ ass (:keyvals this) ___keyvals)
+            (§ ass this (assoc this :keyvals ___keyvals))
             this
         )
     )
@@ -8762,7 +8762,7 @@
 
     (defn #_"SetExpr" SetExpr'new [#_"IPersistentVector" ___keys]
         (let [this (SetExpr'init)]
-            (§ ass (:keys this) ___keys)
+            (§ ass this (assoc this :keys ___keys))
             this
         )
     )
@@ -8848,7 +8848,7 @@
 
     (defn #_"VectorExpr" VectorExpr'new [#_"IPersistentVector" ___args]
         (let [this (VectorExpr'init)]
-            (§ ass (:args this) ___args)
+            (§ ass this (assoc this :args ___args))
             this
         )
     )
@@ -8951,13 +8951,13 @@
 
     (defn #_"KeywordInvokeExpr" KeywordInvokeExpr'new [#_"String" ___source, #_"int" ___line, #_"int" ___column, #_"Symbol" ___tag, #_"KeywordExpr" ___kw, #_"Expr" ___target]
         (let [this (KeywordInvokeExpr'init)]
-            (§ ass (:source this) ___source)
-            (§ ass (:kw this) ___kw)
-            (§ ass (:target this) ___target)
-            (§ ass (:line this) ___line)
-            (§ ass (:column this) ___column)
-            (§ ass (:tag this) ___tag)
-            (§ ass (:siteIndex this) (Compiler'registerKeywordCallsite (:k ___kw)))
+            (§ ass this (assoc this :source ___source))
+            (§ ass this (assoc this :kw ___kw))
+            (§ ass this (assoc this :target ___target))
+            (§ ass this (assoc this :line ___line))
+            (§ ass this (assoc this :column ___column))
+            (§ ass this (assoc this :tag ___tag))
+            (§ ass this (assoc this :siteIndex (Compiler'registerKeywordCallsite (:k ___kw))))
             this
         )
     )
@@ -9024,7 +9024,7 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"KeywordInvokeExpr" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (HostExpr'tagToClass (:tag this)))
+            (§ ass this (assoc this :jc (HostExpr'tagToClass (:tag this))))
         )
         (:jc this)
     )
@@ -9040,8 +9040,8 @@
 
     (defn #_"InstanceOfExpr" InstanceOfExpr'new [#_"Class" ___c, #_"Expr" ___expr]
         (let [this (InstanceOfExpr'init)]
-            (§ ass (:expr this) ___expr)
-            (§ ass (:c this) ___c)
+            (§ ass this (assoc this :expr ___expr))
+            (§ ass this (assoc this :c ___c))
             this
         )
     )
@@ -9102,14 +9102,14 @@
 
     (defn #_"StaticInvokeExpr" StaticInvokeExpr'new [#_"Type" ___target, #_"Class" ___retClass, #_"Class[]" ___paramclasses, #_"Type[]" ___paramtypes, #_"boolean" ___variadic, #_"IPersistentVector" ___args, #_"Object" ___tag, #_"boolean" ___tailPosition]
         (let [this (StaticInvokeExpr'init)]
-            (§ ass (:target this) ___target)
-            (§ ass (:retClass this) ___retClass)
-            (§ ass (:paramclasses this) ___paramclasses)
-            (§ ass (:paramtypes this) ___paramtypes)
-            (§ ass (:args this) ___args)
-            (§ ass (:variadic this) ___variadic)
-            (§ ass (:tailPosition this) ___tailPosition)
-            (§ ass (:tag this) ___tag)
+            (§ ass this (assoc this :target ___target))
+            (§ ass this (assoc this :retClass ___retClass))
+            (§ ass this (assoc this :paramclasses ___paramclasses))
+            (§ ass this (assoc this :paramtypes ___paramtypes))
+            (§ ass this (assoc this :args ___args))
+            (§ ass this (assoc this :variadic ___variadic))
+            (§ ass this (assoc this :tailPosition ___tailPosition))
+            (§ ass this (assoc this :tag ___tag))
             this
         )
     )
@@ -9146,7 +9146,7 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"StaticInvokeExpr" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (:retClass this)))
+            (§ ass this (assoc this :jc (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (:retClass this))))
         )
         (:jc this)
     )
@@ -9304,21 +9304,21 @@
 
     (defn #_"InvokeExpr" InvokeExpr'new [#_"String" ___source, #_"int" ___line, #_"int" ___column, #_"Symbol" ___tag, #_"Expr" ___fexpr, #_"IPersistentVector" ___args, #_"boolean" ___tailPosition]
         (let [this (InvokeExpr'init)]
-            (§ ass (:source this) ___source)
-            (§ ass (:fexpr this) ___fexpr)
-            (§ ass (:args this) ___args)
-            (§ ass (:line this) ___line)
-            (§ ass (:column this) ___column)
-            (§ ass (:tailPosition this) ___tailPosition)
+            (§ ass this (assoc this :source ___source))
+            (§ ass this (assoc this :fexpr ___fexpr))
+            (§ ass this (assoc this :args ___args))
+            (§ ass this (assoc this :line ___line))
+            (§ ass this (assoc this :column ___column))
+            (§ ass this (assoc this :tailPosition ___tailPosition))
 
             (when (§ instance? VarExpr ___fexpr)
                 (let [#_"Var" ___fvar (:var (cast' VarExpr ___fexpr))]
                     (let [#_"Var" ___pvar (cast' Var (RT'get-2 (.meta ___fvar), Compiler'protocolKey))]
                         (when (and (some? ___pvar) (.isBound Compiler'PROTOCOL_CALLSITES))
-                            (§ ass (:isProtocol this) true)
-                            (§ ass (:siteIndex this) (Compiler'registerProtocolCallsite (:var (cast' VarExpr ___fexpr))))
+                            (§ ass this (assoc this :isProtocol true))
+                            (§ ass this (assoc this :siteIndex (Compiler'registerProtocolCallsite (:var (cast' VarExpr ___fexpr)))))
                             (let [#_"Object" ___pon (RT'get-2 (.get ___pvar), Compiler'onKey)]
-                                (§ ass (:protocolOn this) (HostExpr'maybeClass ___pon, false))
+                                (§ ass this (assoc this :protocolOn (HostExpr'maybeClass ___pon, false)))
                                 (when (some? (:protocolOn this))
                                     (let [#_"IPersistentMap" ___mmap (cast' IPersistentMap (RT'get-2 (.get ___pvar), InvokeExpr'methodMapKey))]
                                         (let [#_"Keyword" ___mmapVal (cast' Keyword (.valAt ___mmap, (Keyword'intern (:sym ___fvar))))]
@@ -9330,7 +9330,7 @@
                                                     (when (not= (.size ___methods) 1)
                                                         (throw (IllegalArgumentException. (str "No single method: " ___mname " of interface: " (.getName (:protocolOn this)) " found for function: " (:sym ___fvar) " of protocol: " (:sym ___pvar))))
                                                     )
-                                                    (§ ass (:onMethod this) (cast java.lang.reflect.Method (.get ___methods, 0)))
+                                                    (§ ass this (assoc this :onMethod (cast java.lang.reflect.Method (.get ___methods, 0))))
                                                 )
                                             )
                                         )
@@ -9344,21 +9344,21 @@
 
             (cond (some? ___tag)
                 (do
-                    (§ ass (:tag this) ___tag)
+                    (§ ass this (assoc this :tag ___tag))
                 )
                 (§ instance? VarExpr ___fexpr)
                 (do
                     (let [#_"Var" ___v (:var (cast' VarExpr ___fexpr))]
                         (let [#_"Object" ___arglists (RT'get-2 (RT'meta ___v), Compiler'arglistsKey)]
                             (let [#_"Object" ___sigTag (InvokeExpr'sigTag (count ___args), ___v)]
-                                (§ ass (:tag this) (or ___sigTag (:tag (cast' VarExpr ___fexpr))))
+                                (§ ass this (assoc this :tag (or ___sigTag (:tag (cast' VarExpr ___fexpr)))))
                             )
                         )
                     )
                 )
                 :else
                 (do
-                    (§ ass (:tag this) nil)
+                    (§ ass this (assoc this :tag nil))
                 )
             )
             this
@@ -9496,7 +9496,7 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"InvokeExpr" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (HostExpr'tagToClass (:tag this)))
+            (§ ass this (assoc this :jc (HostExpr'tagToClass (:tag this))))
         )
         (:jc this)
     )
@@ -9628,7 +9628,7 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"FnExpr" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (§ class AFunction)))
+            (§ ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (§ class AFunction))))
         )
         (:jc this)
     )
@@ -9933,7 +9933,7 @@
 
     (defn #_"ObjExpr" ObjExpr'new [#_"Object" ___tag]
         (let [this (ObjExpr'init)]
-            (§ ass (:tag this) ___tag)
+            (§ ass this (assoc this :tag ___tag))
             this
         )
     )
@@ -10139,7 +10139,7 @@
                                                                             (.putField ___ctorgen, (:objtype this), (:name ___lb), Compiler'OBJECT_TYPE)
                                                                         )
                                                                     )
-                                                                    (§ ass (:closesExprs this) (.cons (:closesExprs this), (LocalBindingExpr'new ___lb, nil)))
+                                                                    (§ ass this (assoc this :closesExprs (.cons (:closesExprs this), (LocalBindingExpr'new ___lb, nil))))
                                                                 )
                                                             )
                                                         )
@@ -10312,7 +10312,7 @@
                                                             ;; end of class
                                                             (.visitEnd ___cv)
 
-                                                            (§ ass (:bytecode this) (.toByteArray ___cw))
+                                                            (§ ass this (assoc this :bytecode (.toByteArray ___cw)))
                                                             (when (RT'booleanCast-1o (.deref Compiler'COMPILE_FILES))
                                                                 (Compiler'writeClassFile (:internalName this), (:bytecode this))
                                                             )
@@ -10667,8 +10667,8 @@
     (§ defn #_"Class" (§ method getCompiledClass) [#_"ObjExpr" this]
         (§ sync this
             (when (nil? (:compiledClass this))
-                (§ ass (:loader this) (cast' DynamicClassLoader (.deref Compiler'LOADER)))
-                (§ ass (:compiledClass this) (.defineClass (:loader this), (:name this), (:bytecode this), (:src this)))
+                (§ ass this (assoc this :loader (cast' DynamicClassLoader (.deref Compiler'LOADER))))
+                (§ ass this (assoc this :compiledClass (.defineClass (:loader this), (:name this), (:bytecode this), (:src this))))
             )
             (:compiledClass this)
         )
@@ -10760,7 +10760,7 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"ObjExpr" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (cond (some? (:compiledClass this)) (:compiledClass this) (some? (:tag this)) (HostExpr'tagToClass (:tag this)) :else (§ class IFn)))
+            (§ ass this (assoc this :jc (cond (some? (:compiledClass this)) (:compiledClass this) (some? (:tag this)) (HostExpr'tagToClass (:tag this)) :else (§ class IFn))))
         )
         (:jc this)
     )
@@ -10914,7 +10914,7 @@
 
     #_method
     (§ defn #_"void" (§ method emitConstant) [#_"ObjExpr" this, #_"GeneratorAdapter" ___gen, #_"int" ___id]
-        (§ ass (:usedConstants this) (cast' IPersistentSet (.cons (:usedConstants this), ___id)))
+        (§ ass this (assoc this :usedConstants (cast' IPersistentSet (.cons (:usedConstants this), ___id))))
         (.getStatic ___gen, (:objtype this), (.constantName this, ___id), (.constantType this, ___id))
         nil
     )
@@ -11014,8 +11014,8 @@
 
     (defn #_"PathNode" PathNode'new [#_"PathType" ___type, #_"PathNode" ___parent]
         (let [this (PathNode'init)]
-            (§ ass (:type this) ___type)
-            (§ ass (:parent this) ___parent)
+            (§ ass this (assoc this :type ___type))
+            (§ ass this (assoc this :parent ___parent))
             this
         )
     )
@@ -11197,19 +11197,18 @@
                                                                 (.add ___argclasses, ___pc)
                                                                 (let [#_"LocalBinding" ___lb (if (.isPrimitive ___pc) (Compiler'registerLocal ___p, nil, (MethodParamExpr'new ___pc), true) (Compiler'registerLocal ___p, (if (= ___state :PState'REST) Compiler'ISEQ (Compiler'tagOf ___p)), nil, true))]
                                                                     (§ ass ___argLocals (.cons ___argLocals, ___lb))
-                                                                    (§ switch ___state
-                                                                        (§ case :PState'REQ)
+                                                                    (case ___state
+                                                                        :PState'REQ
                                                                         (do
                                                                             (§ ass (:reqParms ___method) (.cons (:reqParms ___method), ___lb))
                                                                             (§ break )
                                                                         )
-                                                                        (§ case :PState'REST)
+                                                                        :PState'REST
                                                                         (do
                                                                             (§ ass (:restParm ___method) ___lb)
                                                                             (§ ass ___state :PState'DONE)
                                                                             (§ break )
                                                                         )
-                                                                        (§ default )
                                                                         (do
                                                                             (throw (Util'runtimeException-1 "Unexpected parameter"))
                                                                         )
@@ -11538,8 +11537,8 @@
 
     (defn #_"ObjMethod" ObjMethod'new [#_"ObjExpr" ___objx, #_"ObjMethod" ___parent]
         (let [this (ObjMethod'init)]
-            (§ ass (:parent this) ___parent)
-            (§ ass (:objx this) ___objx)
+            (§ ass this (assoc this :parent ___parent))
+            (§ ass this (assoc this :objx ___objx))
             this
         )
     )
@@ -11740,13 +11739,13 @@
             (when (and (some? (Compiler'maybePrimitiveType ___init)) (some? ___tag))
                 (throw (UnsupportedOperationException. "Can't type hint a local with a primitive initializer"))
             )
-            (§ ass (:idx this) ___num)
-            (§ ass (:sym this) ___sym)
-            (§ ass (:tag this) ___tag)
-            (§ ass (:init this) ___init)
-            (§ ass (:isArg this) ___isArg)
-            (§ ass (:clearPathRoot this) ___clearPathRoot)
-            (§ ass (:name this) (Compiler'munge (:name ___sym)))
+            (§ ass this (assoc this :idx ___num))
+            (§ ass this (assoc this :sym ___sym))
+            (§ ass this (assoc this :tag ___tag))
+            (§ ass this (assoc this :init ___init))
+            (§ ass this (assoc this :isArg ___isArg))
+            (§ ass this (assoc this :clearPathRoot ___clearPathRoot))
+            (§ ass this (assoc this :name (Compiler'munge (:name ___sym))))
             this
         )
     )
@@ -11756,10 +11755,10 @@
         (when (nil? (:hjc this))
             (if (and (some? (:init this)) (.hasJavaClass (:init this)) (Util'isPrimitive (.getJavaClass (:init this))) (not (§ instance? MaybePrimitiveExpr (:init this))))
                 (do
-                    (§ ass (:hjc this) false)
+                    (§ ass this (assoc this :hjc false))
                 )
                 (do
-                    (§ ass (:hjc this) (or (some? (:tag this)) (and (some? (:init this)) (.hasJavaClass (:init this)))))
+                    (§ ass this (assoc this :hjc (or (some? (:tag this)) (and (some? (:init this)) (.hasJavaClass (:init this))))))
                 )
             )
         )
@@ -11769,7 +11768,7 @@
     #_method
     (§ defn #_"Class" (§ method getJavaClass) [#_"LocalBinding" this]
         (when (nil? (:jc this))
-            (§ ass (:jc this) (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getJavaClass (:init this))))
+            (§ ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getJavaClass (:init this)))))
         )
         (:jc this)
     )
@@ -11799,11 +11798,11 @@
             (when (and (some? (.getPrimitiveType ___b)) (some? ___tag))
                 (throw (UnsupportedOperationException. "Can't type hint a primitive local"))
             )
-            (§ ass (:b this) ___b)
-            (§ ass (:tag this) ___tag)
+            (§ ass this (assoc this :b ___b))
+            (§ ass this (assoc this :tag ___tag))
 
-            (§ ass (:clearPath this) (cast' PathNode (.get Compiler'CLEAR_PATH)))
-            (§ ass (:clearRoot this) (cast' PathNode (.get Compiler'CLEAR_ROOT)))
+            (§ ass this (assoc this :clearPath (cast' PathNode (.get Compiler'CLEAR_PATH))))
+            (§ ass this (assoc this :clearRoot (cast' PathNode (.get Compiler'CLEAR_ROOT))))
             (let [#_"IPersistentCollection" ___sites (cast' IPersistentCollection (RT'get-2 (.get Compiler'CLEAR_SITES), ___b))]
                 (§ ass (:used ___b) true)
 
@@ -11821,7 +11820,7 @@
                     )
 
                     (when (= (:clearRoot this) (:clearPathRoot ___b))
-                        (§ ass (:shouldClear this) true)
+                        (§ ass this (assoc this :shouldClear true))
                         (§ ass ___sites (RT'conj ___sites, this))
                         (.set Compiler'CLEAR_SITES, (RT'assoc (.get Compiler'CLEAR_SITES), ___b, ___sites))
                     )
@@ -11879,10 +11878,10 @@
         (when (nil? (:jc this))
             (if (some? (:tag this))
                 (do
-                    (§ ass (:jc this) (HostExpr'tagToClass (:tag this)))
+                    (§ ass this (assoc this :jc (HostExpr'tagToClass (:tag this))))
                 )
                 (do
-                    (§ ass (:jc this) (.getJavaClass (:b this)))
+                    (§ ass this (assoc this :jc (.getJavaClass (:b this))))
                 )
             )
         )
@@ -11926,7 +11925,7 @@
 
     (defn #_"BodyExpr" BodyExpr'new [#_"PersistentVector" ___exprs]
         (let [this (BodyExpr'init)]
-            (§ ass (:exprs this) ___exprs)
+            (§ ass this (assoc this :exprs ___exprs))
             this
         )
     )
@@ -12005,8 +12004,8 @@
 
     (defn #_"BindingInit" BindingInit'new [#_"LocalBinding" ___binding, #_"Expr" ___init]
         (let [this (BindingInit'init)]
-            (§ ass (:binding this) ___binding)
-            (§ ass (:init this) ___init)
+            (§ ass this (assoc this :binding ___binding))
+            (§ ass this (assoc this :init ___init))
             this
         )
     )
@@ -12109,8 +12108,8 @@
 
     (defn #_"LetFnExpr" LetFnExpr'new [#_"PersistentVector" ___bindingInits, #_"Expr" ___body]
         (let [this (LetFnExpr'init)]
-            (§ ass (:bindingInits this) ___bindingInits)
-            (§ ass (:body this) ___body)
+            (§ ass this (assoc this :bindingInits ___bindingInits))
+            (§ ass this (assoc this :body ___body))
             this
         )
     )
@@ -12370,9 +12369,9 @@
 
     (defn #_"LetExpr" LetExpr'new [#_"PersistentVector" ___bindingInits, #_"Expr" ___body, #_"boolean" ___isLoop]
         (let [this (LetExpr'init)]
-            (§ ass (:bindingInits this) ___bindingInits)
-            (§ ass (:body this) ___body)
-            (§ ass (:isLoop this) ___isLoop)
+            (§ ass this (assoc this :bindingInits ___bindingInits))
+            (§ ass this (assoc this :body ___body))
+            (§ ass this (assoc this :isLoop ___isLoop))
             this
         )
     )
@@ -12573,11 +12572,11 @@
 
     (defn #_"RecurExpr" RecurExpr'new [#_"IPersistentVector" ___loopLocals, #_"IPersistentVector" ___args, #_"int" ___line, #_"int" ___column, #_"String" ___source]
         (let [this (RecurExpr'init)]
-            (§ ass (:loopLocals this) ___loopLocals)
-            (§ ass (:args this) ___args)
-            (§ ass (:line this) ___line)
-            (§ ass (:column this) ___column)
-            (§ ass (:source this) ___source)
+            (§ ass this (assoc this :loopLocals ___loopLocals))
+            (§ ass this (assoc this :args ___args))
+            (§ ass this (assoc this :line ___line))
+            (§ ass this (assoc this :column ___column))
+            (§ ass this (assoc this :source ___source))
             this
         )
     )
@@ -12640,7 +12639,7 @@
                 )
             )
 
-            (loop-when-recur [#_"int" ___i (dec (.count (:loopLocals this)))] (>= ___i 0) [(dec ___i)]
+            (loop-when-recur [#_"int" ___i (dec (.count (:loopLocals this)))] (<= 0 ___i) [(dec ___i)]
                 (let [#_"LocalBinding" ___lb (cast' LocalBinding (.nth (:loopLocals this), ___i))]
                     (let [#_"Class" ___primc (.getPrimitiveType ___lb)]
                         (if (:isArg ___lb)
@@ -12699,8 +12698,8 @@
 
     (defn #_"CompilerException" CompilerException'new [#_"String" ___source, #_"int" ___line, #_"int" ___column, #_"Throwable" ___cause]
         (let [this (merge (§ foreign RuntimeException'new (Compiler'errorMsg ___source, ___line, ___column, (.toString ___cause)), ___cause) (CompilerException'init))]
-            (§ ass (:source this) ___source)
-            (§ ass (:line this) ___line)
+            (§ ass this (assoc this :source ___source))
+            (§ ass this (assoc this :line ___line))
             this
         )
     )
@@ -13521,7 +13520,7 @@
 
     (defn #_"MethodParamExpr" MethodParamExpr'new [#_"Class" ___c]
         (let [this (MethodParamExpr'init)]
-            (§ ass (:c this) ___c)
+            (§ ass this (assoc this :c ___c))
             this
         )
     )
@@ -13684,28 +13683,28 @@
     ;; (case* expr shift mask default map<minhash, [test then]> table-type test-type skip-check?)
     (defn #_"CaseExpr" CaseExpr'new [#_"int" ___line, #_"int" ___column, #_"LocalBindingExpr" ___expr, #_"int" ___shift, #_"int" ___mask, #_"int" ___low, #_"int" ___high, #_"Expr" ___defaultExpr, #_"SortedMap<Integer, Expr>" ___tests, #_"HashMap<Integer, Expr>" ___thens, #_"Keyword" ___switchType, #_"Keyword" ___testType, #_"Set<Integer>" ___skipCheck]
         (let [this (CaseExpr'init)]
-            (§ ass (:expr this) ___expr)
-            (§ ass (:shift this) ___shift)
-            (§ ass (:mask this) ___mask)
-            (§ ass (:low this) ___low)
-            (§ ass (:high this) ___high)
-            (§ ass (:defaultExpr this) ___defaultExpr)
-            (§ ass (:tests this) ___tests)
-            (§ ass (:thens this) ___thens)
-            (§ ass (:line this) ___line)
-            (§ ass (:column this) ___column)
+            (§ ass this (assoc this :expr ___expr))
+            (§ ass this (assoc this :shift ___shift))
+            (§ ass this (assoc this :mask ___mask))
+            (§ ass this (assoc this :low ___low))
+            (§ ass this (assoc this :high ___high))
+            (§ ass this (assoc this :defaultExpr ___defaultExpr))
+            (§ ass this (assoc this :tests ___tests))
+            (§ ass this (assoc this :thens ___thens))
+            (§ ass this (assoc this :line ___line))
+            (§ ass this (assoc this :column ___column))
             (when (and (not= ___switchType CaseExpr'compactKey) (not= ___switchType CaseExpr'sparseKey))
                 (throw (IllegalArgumentException. (str "Unexpected switch type: " ___switchType)))
             )
-            (§ ass (:switchType this) ___switchType)
+            (§ ass this (assoc this :switchType ___switchType))
             (when (and (not= ___testType CaseExpr'intKey) (not= ___testType CaseExpr'hashEquivKey) (not= ___testType CaseExpr'hashIdentityKey))
                 (throw (IllegalArgumentException. (str "Unexpected test type: " ___switchType)))
             )
-            (§ ass (:testType this) ___testType)
-            (§ ass (:skipCheck this) ___skipCheck)
+            (§ ass this (assoc this :testType ___testType))
+            (§ ass this (assoc this :skipCheck ___skipCheck))
             (let [#_"Collection<Expr>" ___returns (ArrayList. (.values ___thens))]
                 (.add ___returns, ___defaultExpr)
-                (§ ass (:returnType this) (Compiler'maybeJavaClass ___returns))
+                (§ ass this (assoc this :returnType (Compiler'maybeJavaClass ___returns)))
                 (when (and (pos? (RT'count ___skipCheck)) (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION)))
                     (.format (RT'errPrintWriter), "Performance warning, %s:%d:%d - hash collision of some case test constants; if selected, those entries will be tested sequentially.\n", (object-array [ (.deref Compiler'SOURCE_PATH), ___line, ___column ]))
                 )
@@ -14322,7 +14321,7 @@
         (let [#_"StringBuilder" ___sb (StringBuilder.)]
             (loop-when-recur [#_"int" ___i 0] (< ___i (count ___args)) [(inc ___i)]
                 (let [#_"Expr" ___arg (cast' Expr (.nth ___args, ___i))]
-                    (when (> ___i 0)
+                    (when (< 0 ___i)
                         (.append ___sb, ", ")
                     )
                     (.append ___sb, (if (and (.hasJavaClass ___arg) (some? (.getJavaClass ___arg))) (.getName (.getJavaClass ___arg)) "unknown"))
@@ -14554,7 +14553,7 @@
     (defn- #_"int" Compiler'getAndIncLocalNum []
         (let [#_"int" ___num (.intValue (cast Number (.deref Compiler'NEXT_LOCAL_NUM)))]
             (let [#_"ObjMethod" ___m (cast' ObjMethod (.deref Compiler'METHOD))]
-                (when (> ___num (:maxLocal ___m))
+                (when (< (:maxLocal ___m) ___num)
                     (§ ass (:maxLocal ___m) ___num)
                 )
                 (.set Compiler'NEXT_LOCAL_NUM, (inc ___num))
@@ -15892,16 +15891,16 @@
 
     (defn #_"Cons" Cons'new-2 [#_"Object" ___first, #_"ISeq" ____more]
         (let [this (merge (ASeq'new) (Cons'init))]
-            (§ ass (:_first this) ___first)
-            (§ ass (:_more this) ____more)
+            (§ ass this (assoc this :_first ___first))
+            (§ ass this (assoc this :_more ____more))
             this
         )
     )
 
     (defn #_"Cons" Cons'new-3 [#_"IPersistentMap" ___meta, #_"Object" ____first, #_"ISeq" ____more]
         (let [this (merge (ASeq'new ___meta) (Cons'init))]
-            (§ ass (:_first this) ____first)
-            (§ ass (:_more this) ____more)
+            (§ ass this (assoc this :_first ____first))
+            (§ ass this (assoc this :_more ____more))
             this
         )
     )
@@ -15964,19 +15963,19 @@
 
     (defn- #_"Cycle" Cycle'new-3 [#_"ISeq" ___all, #_"ISeq" ___prev, #_"ISeq" ___current]
         (let [this (merge (ASeq'new) (Cycle'init))]
-            (§ ass (:all this) ___all)
-            (§ ass (:prev this) ___prev)
-            (§ ass (:_current this) ___current)
+            (§ ass this (assoc this :all ___all))
+            (§ ass this (assoc this :prev ___prev))
+            (§ ass this (assoc this :_current ___current))
             this
         )
     )
 
     (defn- #_"Cycle" Cycle'new-5 [#_"IPersistentMap" ___meta, #_"ISeq" ___all, #_"ISeq" ___prev, #_"ISeq" ___current, #_"ISeq" ___next]
         (let [this (merge (ASeq'new ___meta) (Cycle'init))]
-            (§ ass (:all this) ___all)
-            (§ ass (:prev this) ___prev)
-            (§ ass (:_current this) ___current)
-            (§ ass (:_next this) ___next)
+            (§ ass this (assoc this :all ___all))
+            (§ ass this (assoc this :prev ___prev))
+            (§ ass this (assoc this :_current ___current))
+            (§ ass this (assoc this :_next ___next))
             this
         )
     )
@@ -15993,7 +15992,7 @@
     (§ defn- #_"ISeq" (§ method current) [#_"Cycle" this]
         (when (nil? (:_current this))
             (let [#_"ISeq" ___current (next (:prev this))]
-                (§ ass (:_current this) (or ___current (:all this)))
+                (§ ass this (assoc this :_current (or ___current (:all this))))
             )
         )
         (:_current this)
@@ -16012,7 +16011,7 @@
     #_method
     (§ defn #_"ISeq" (§ method next) [#_"Cycle" this]
         (when (nil? (:_next this))
-            (§ ass (:_next this) (Cycle'new-3 (:all this), (.current this), nil))
+            (§ ass this (assoc this :_next (Cycle'new-3 (:all this), (.current this), nil)))
         )
         (:_next this)
     )
@@ -16076,9 +16075,9 @@
 
     (defn #_"Delay" Delay'new [#_"IFn" ___fn]
         (let [this (Delay'init)]
-            (§ ass (:fn this) ___fn)
-            (§ ass (:val this) nil)
-            (§ ass (:exception this) nil)
+            (§ ass this (assoc this :fn ___fn))
+            (§ ass this (assoc this :val nil))
+            (§ ass this (assoc this :exception nil))
             this
         )
     )
@@ -16094,12 +16093,12 @@
                 ;; double check
                 (when (some? (:fn this))
                     (try
-                        (§ ass (:val this) (.invoke (:fn this)))
+                        (§ ass this (assoc this :val (.invoke (:fn this))))
                         (catch Throwable ___t
-                            (§ ass (:exception this) ___t)
+                            (§ ass this (assoc this :exception ___t))
                         )
                     )
-                    (§ ass (:fn this) nil)
+                    (§ ass this (assoc this :fn nil))
                 )
             )
         )
@@ -16254,8 +16253,8 @@
 
     (defn #_"EdnReaderException" EdnReaderException'new [#_"int" ___line, #_"int" ___column, #_"Throwable" ___cause]
         (let [this (merge (§ foreign RuntimeException'new ___cause) (EdnReaderException'init))]
-            (§ ass (:line this) ___line)
-            (§ ass (:column this) ___column)
+            (§ ass this (assoc this :line ___line))
+            (§ ass this (assoc this :column ___column))
             this
         )
     )
@@ -16280,41 +16279,41 @@
                         (when (= ___ch -1)
                             (throw (Util'runtimeException-1 "EOF while reading string"))
                         )
-                        (§ switch ___ch
-                            (§ case \t)
+                        (case ___ch
+                            \t
                             (do
                                 (§ ass ___ch \tab)
                                 (§ break )
                             )
-                            (§ case \r)
+                            \r
                             (do
                                 (§ ass ___ch \return)
                                 (§ break )
                             )
-                            (§ case \n)
+                            \n
                             (do
                                 (§ ass ___ch \newline)
                                 (§ break )
                             )
-                            (§ case \\)
+                            \\
                             (do
                                 (§ break )
                             )
-                            (§ case \") ;; oops! "
+                            \" ;; oops! "
                             (do
                                 (§ break )
                             )
-                            (§ case \b)
+                            \b
                             (do
                                 (§ ass ___ch \backspace)
                                 (§ break )
                             )
-                            (§ case \f)
+                            \f
                             (do
                                 (§ ass ___ch \formfeed)
                                 (§ break )
                             )
-                            (§ case \u)
+                            \u
                             (do
                                 (§ ass ___ch (EdnReader'read1 ___r))
                                 (when (= (Character/digit ___ch, 16) -1)
@@ -16323,12 +16322,11 @@
                                 (§ ass ___ch (readUnicodeChar (cast PushbackReader ___r), ___ch, 16, 4, true))
                                 (§ break )
                             )
-                            (§ default )
                             (do
                                 (if (Character/isDigit ___ch)
                                     (do
                                         (§ ass ___ch (readUnicodeChar (cast PushbackReader ___r), ___ch, 8, 3, false))
-                                        (when (> ___ch 0377)
+                                        (when (< 0377 ___ch)
                                             (throw (Util'runtimeException-1 "Octal escape sequence must be in range [0, 377]."))
                                         )
                                     )
@@ -16596,7 +16594,7 @@
                         (.startsWith ___token, "u")
                         (do
                             (let [#_"char" ___c (char (readUnicodeChar ___token, 1, 4, 16))]
-                                (when (and (>= ___c (§ char "\ud800")) (<= ___c (§ char "\udfff"))) ;; surrogate code unit?
+                                (when (<= (§ char "\ud800") ___c (§ char "\udfff")) ;; surrogate code unit?
                                     (throw (Util'runtimeException-1 (str "Invalid character constant: \\u" (Integer/toString ___c, 16))))
                                 )
                                 (§ return ___c)
@@ -16605,11 +16603,11 @@
                         (.startsWith ___token, "o")
                         (do
                             (let [#_"int" ___len (dec (.length ___token))]
-                                (when (> ___len 3)
+                                (when (< 3 ___len)
                                     (throw (Util'runtimeException-1 (str "Invalid octal escape sequence length: " ___len)))
                                 )
                                 (let [#_"int" ___uc (readUnicodeChar ___token, 1, ___len, 8)]
-                                    (when (> ___uc 0377)
+                                    (when (< 0377 ___uc)
                                         (throw (Util'runtimeException-1 "Octal escape sequence must be in range [0, 377]."))
                                     )
                                     (§ return (char ___uc))
@@ -17277,8 +17275,8 @@
 
     (defn #_"EnumerationSeq" EnumerationSeq'new-1 [#_"Enumeration" ___iter]
         (let [this (merge (ASeq'new) (EnumerationSeq'init))]
-            (§ ass (:iter this) ___iter)
-            (§ ass (:state this) (EnumerationSeqState'new))
+            (§ ass this (assoc this :iter ___iter))
+            (§ ass this (assoc this :state (EnumerationSeqState'new)))
             (§ ass (:val (:state this)) (:state this))
             (§ ass (:_rest (:state this)) (:state this))
             this
@@ -17287,8 +17285,8 @@
 
     (defn #_"EnumerationSeq" EnumerationSeq'new-3 [#_"IPersistentMap" ___meta, #_"Enumeration" ___iter, #_"EnumerationSeqState" ___state]
         (let [this (merge (ASeq'new ___meta) (EnumerationSeq'init))]
-            (§ ass (:iter this) ___iter)
-            (§ ass (:state this) ___state)
+            (§ ass this (assoc this :iter ___iter))
+            (§ ass this (assoc this :state ___state))
             this
         )
     )
@@ -17348,7 +17346,7 @@
             ;; nil cause is equivalent to not passing a cause
             (if (some? ___data)
                 (do
-                    (§ ass (:data this) ___data)
+                    (§ ass this (assoc this :data ___data))
                 )
                 (do
                     (throw (IllegalArgumentException. "Additional data must be non-nil."))
@@ -17390,10 +17388,10 @@
 
     (defn #_"FnLoaderThunk" FnLoaderThunk'new [#_"Var" ___v, #_"String" ___fnClassName]
         (let [this (merge (RestFn'new) (FnLoaderThunk'init))]
-            (§ ass (:v this) ___v)
-            (§ ass (:loader this) (cast ClassLoader (.get RT'FN_LOADER_VAR)))
-            (§ ass (:fnClassName this) ___fnClassName)
-            (§ ass (:fn this) nil)
+            (§ ass this (assoc this :v ___v))
+            (§ ass this (assoc this :loader (cast ClassLoader (.get RT'FN_LOADER_VAR))))
+            (§ ass this (assoc this :fnClassName ___fnClassName))
+            (§ ass this (assoc this :fn nil))
             this
         )
     )
@@ -17427,7 +17425,7 @@
     (§ defn- #_"void" (§ method load) [#_"FnLoaderThunk" this]
         (when (nil? (:fn this))
             (try
-                (§ ass (:fn this) (cast' IFn (.newInstance (Class/forName (:fnClassName this), true, (:loader this)))))
+                (§ ass this (assoc this :fn (cast' IFn (.newInstance (Class/forName (:fnClassName this), true, (:loader this))))))
                 (catch Exception ___e
                     (throw (Util'sneakyThrow ___e))
                 )
@@ -19824,19 +19822,19 @@
 
     (defn- #_"Iterate" Iterate'new-3 [#_"IFn" ___f, #_"Object" ___prevSeed, #_"Object" ___seed]
         (let [this (merge (ASeq'new) (Iterate'init))]
-            (§ ass (:f this) ___f)
-            (§ ass (:prevSeed this) ___prevSeed)
-            (§ ass (:_seed this) ___seed)
+            (§ ass this (assoc this :f ___f))
+            (§ ass this (assoc this :prevSeed ___prevSeed))
+            (§ ass this (assoc this :_seed ___seed))
             this
         )
     )
 
     (defn- #_"Iterate" Iterate'new-5 [#_"IPersistentMap" ___meta, #_"IFn" ___f, #_"Object" ___prevSeed, #_"Object" ___seed, #_"ISeq" ___next]
         (let [this (merge (ASeq'new ___meta) (Iterate'init))]
-            (§ ass (:f this) ___f)
-            (§ ass (:prevSeed this) ___prevSeed)
-            (§ ass (:_seed this) ___seed)
-            (§ ass (:_next this) ___next)
+            (§ ass this (assoc this :f ___f))
+            (§ ass this (assoc this :prevSeed ___prevSeed))
+            (§ ass this (assoc this :_seed ___seed))
+            (§ ass this (assoc this :_next ___next))
             this
         )
     )
@@ -19853,7 +19851,7 @@
     #_method
     (§ defn #_"Object" (§ method first) [#_"Iterate" this]
         (when (= (:_seed this) Iterate'UNREALIZED_SEED)
-            (§ ass (:_seed this) (.invoke (:f this), (:prevSeed this)))
+            (§ ass this (assoc this :_seed (.invoke (:f this), (:prevSeed this))))
         )
         (:_seed this)
     )
@@ -19861,7 +19859,7 @@
     #_method
     (§ defn #_"ISeq" (§ method next) [#_"Iterate" this]
         (when (nil? (:_next this))
-            (§ ass (:_next this) (Iterate'new-3 (:f this), (first this), Iterate'UNREALIZED_SEED))
+            (§ ass this (assoc this :_next (Iterate'new-3 (:f this), (first this), Iterate'UNREALIZED_SEED)))
         )
         (:_next this)
     )
@@ -19942,8 +19940,8 @@
 
     (defn #_"IteratorSeq" IteratorSeq'new-1 [#_"Iterator" ___iter]
         (let [this (merge (ASeq'new) (IteratorSeq'init))]
-            (§ ass (:iter this) ___iter)
-            (§ ass (:state this) (IteratorSeqState'new))
+            (§ ass this (assoc this :iter ___iter))
+            (§ ass this (assoc this :state (IteratorSeqState'new)))
             (§ ass (:val (:state this)) (:state this))
             (§ ass (:_rest (:state this)) (:state this))
             this
@@ -19952,8 +19950,8 @@
 
     (defn #_"IteratorSeq" IteratorSeq'new-3 [#_"IPersistentMap" ___meta, #_"Iterator" ___iter, #_"IteratorSeqState" ___state]
         (let [this (merge (ASeq'new ___meta) (IteratorSeq'init))]
-            (§ ass (:iter this) ___iter)
-            (§ ass (:state this) ___state)
+            (§ ass this (assoc this :iter ___iter))
+            (§ ass this (assoc this :state ___state))
             this
         )
     )
@@ -20116,8 +20114,8 @@
 
     (defn- #_"Keyword" Keyword'new [#_"Symbol" ___sym]
         (let [this (Keyword'init)]
-            (§ ass (:sym this) ___sym)
-            (§ ass (:hasheq this) (+ (.hasheq ___sym) 0x9e3779b9))
+            (§ ass this (assoc this :sym ___sym))
+            (§ ass this (assoc this :hasheq (+ (.hasheq ___sym) 0x9e3779b9)))
             this
         )
     )
@@ -20156,7 +20154,7 @@
     #_method
     (§ defn #_"String" (§ method toString) [#_"Keyword" this]
         (when (nil? (:_str this))
-            (§ ass (:_str this) (str ":" (:sym this)))
+            (§ ass this (assoc this :_str (str ":" (:sym this))))
         )
         (:_str this)
     )
@@ -20331,7 +20329,7 @@
 
     (defn #_"KeywordLookupSite" KeywordLookupSite'new [#_"Keyword" ___k]
         (let [this (KeywordLookupSite'init)]
-            (§ ass (:k this) ___k)
+            (§ ass this (assoc this :k ___k))
             this
         )
     )
@@ -20441,15 +20439,15 @@
 
     (defn #_"LazySeq" LazySeq'new-1 [#_"IFn" ___fn]
         (let [this (merge (Obj'new) (LazySeq'init))]
-            (§ ass (:fn this) ___fn)
+            (§ ass this (assoc this :fn ___fn))
             this
         )
     )
 
     (defn- #_"LazySeq" LazySeq'new-2 [#_"IPersistentMap" ___meta, #_"ISeq" ___s]
         (let [this (merge (Obj'new ___meta) (LazySeq'init))]
-            (§ ass (:fn this) nil)
-            (§ ass (:s this) ___s)
+            (§ ass this (assoc this :fn nil))
+            (§ ass this (assoc this :s ___s))
             this
         )
     )
@@ -20463,8 +20461,8 @@
     (§ defn #_"Object" (§ method sval) [#_"LazySeq" this]
         (§ sync this
             (when (some? (:fn this))
-                (§ ass (:sv this) (.invoke (:fn this)))
-                (§ ass (:fn this) nil)
+                (§ ass this (assoc this :sv (.invoke (:fn this))))
+                (§ ass this (assoc this :fn nil))
             )
             (when (some? (:sv this))
                 (§ return (:sv this))
@@ -20479,11 +20477,11 @@
             (.sval this)
             (when (some? (:sv this))
                 (let [#_"Object" ___ls (:sv this)]
-                    (§ ass (:sv this) nil)
+                    (§ ass this (assoc this :sv nil))
                     (while (§ instance? LazySeq ___ls)
                         (§ ass ___ls (.sval (cast' LazySeq ___ls)))
                     )
-                    (§ ass (:s this) (RT'seq ___ls))
+                    (§ ass this (assoc this :s (RT'seq ___ls)))
                 )
             )
             (:s this)
@@ -20773,15 +20771,15 @@
     #_method
     (§ defn #_"int" (§ method read) [#_"LineNumberingPushbackReader" this] #_(§ throws IOException)
         (let [#_"int" ___c (.read super)]
-            (§ ass (:_prev this) (:_atLineStart this))
+            (§ ass this (assoc this :_prev (:_atLineStart this)))
             (if (or (= ___c LineNumberingPushbackReader'newline) (= ___c -1))
                 (do
-                    (§ ass (:_atLineStart this) true)
-                    (§ ass (:_columnNumber this) 1)
+                    (§ ass this (assoc this :_atLineStart true))
+                    (§ ass this (assoc this :_columnNumber 1))
                 )
                 (do
-                    (§ ass (:_atLineStart this) false)
-                    (§ ass (:_columnNumber this) (inc (:_columnNumber this)))
+                    (§ ass this (assoc this :_atLineStart false))
+                    (§ ass this (assoc this :_columnNumber (inc (:_columnNumber this))))
                 )
             )
             ___c
@@ -20791,8 +20789,8 @@
     #_method
     (§ defn #_"void" (§ method unread) [#_"LineNumberingPushbackReader" this, #_"int" ___c] #_(§ throws IOException)
         (.unread super, ___c)
-        (§ ass (:_atLineStart this) (:_prev this))
-        (§ ass (:_columnNumber this) (dec (:_columnNumber this)))
+        (§ ass this (assoc this :_atLineStart (:_prev this)))
+        (§ ass this (assoc this :_columnNumber (dec (:_columnNumber this))))
         nil
     )
 
@@ -20800,25 +20798,24 @@
     (§ defn #_"String" (§ method readLine) [#_"LineNumberingPushbackReader" this] #_(§ throws IOException)
         (let [#_"int" ___c (.read this)]
             (§ let [#_"String" ___line]
-                (§ switch ___c
-                    (§ case -1)
+                (condp = ___c
+                    -1
                     (do
                         (§ ass ___line nil)
                         (§ break )
                     )
-                    (§ case LineNumberingPushbackReader'newline)
+                    LineNumberingPushbackReader'newline
                     (do
                         (§ ass ___line "")
                         (§ break )
                     )
-                    (§ default )
                     (do
                         (let [#_"String" ___first (String/valueOf (char ___c))]
                             (let [#_"String" ___rest (.readLine (cast LineNumberReader in))]
                                 (§ ass ___line (if (nil? ___rest) ___first (str ___first ___rest)))
-                                (§ ass (:_prev this) false)
-                                (§ ass (:_atLineStart this) true)
-                                (§ ass (:_columnNumber this) 1)
+                                (§ ass this (assoc this :_prev false))
+                                (§ ass this (assoc this :_atLineStart true))
+                                (§ ass this (assoc this :_columnNumber 1))
                                 (§ break )
                             )
                         )
@@ -20887,8 +20884,8 @@
 
     (defn #_"LispReaderException" LispReaderException'new [#_"int" ___line, #_"int" ___column, #_"Throwable" ___cause]
         (let [this (merge (§ foreign RuntimeException'new ___cause) (LispReaderException'init))]
-            (§ ass (:line this) ___line)
-            (§ ass (:column this) ___column)
+            (§ ass this (assoc this :line ___line))
+            (§ ass this (assoc this :column ___column))
             this
         )
     )
@@ -20944,41 +20941,41 @@
                         (when (= ___ch -1)
                             (throw (Util'runtimeException-1 "EOF while reading string"))
                         )
-                        (§ switch ___ch
-                            (§ case \t)
+                        (case ___ch
+                            \t
                             (do
                                 (§ ass ___ch \tab)
                                 (§ break )
                             )
-                            (§ case \r)
+                            \r
                             (do
                                 (§ ass ___ch \return)
                                 (§ break )
                             )
-                            (§ case \n)
+                            \n
                             (do
                                 (§ ass ___ch \newline)
                                 (§ break )
                             )
-                            (§ case \\)
+                            \\
                             (do
                                 (§ break )
                             )
-                            (§ case \") ;; oops! "
+                            \" ;; oops! "
                             (do
                                 (§ break )
                             )
-                            (§ case \b)
+                            \b
                             (do
                                 (§ ass ___ch \backspace)
                                 (§ break )
                             )
-                            (§ case \f)
+                            \f
                             (do
                                 (§ ass ___ch \formfeed)
                                 (§ break )
                             )
-                            (§ case \u)
+                            \u
                             (do
                                 (§ ass ___ch (LispReader'read1 ___r))
                                 (when (= (Character/digit ___ch, 16) -1)
@@ -20987,12 +20984,11 @@
                                 (§ ass ___ch (readUnicodeChar (cast PushbackReader ___r), ___ch, 16, 4, true))
                                 (§ break )
                             )
-                            (§ default )
                             (do
                                 (if (Character/isDigit ___ch)
                                     (do
                                         (§ ass ___ch (readUnicodeChar (cast PushbackReader ___r), ___ch, 8, 3, false))
-                                        (when (> ___ch 0377)
+                                        (when (< 0377 ___ch)
                                             (throw (Util'runtimeException-1 "Octal escape sequence must be in range [0, 377]."))
                                         )
                                     )
@@ -21260,7 +21256,7 @@
 
     (defn #_"WrappingReader" WrappingReader'new [#_"Symbol" ___sym]
         (let [this (merge (AFn'new) (WrappingReader'init))]
-            (§ ass (:sym this) ___sym)
+            (§ ass this (assoc this :sym ___sym))
             this
         )
     )
@@ -21285,8 +21281,8 @@
 
     (defn #_"DeprecatedWrappingReader" DeprecatedWrappingReader'new [#_"Symbol" ___sym, #_"String" ___macro]
         (let [this (merge (AFn'new) (DeprecatedWrappingReader'init))]
-            (§ ass (:sym this) ___sym)
-            (§ ass (:macro this) ___macro)
+            (§ ass this (assoc this :sym ___sym))
+            (§ ass this (assoc this :macro ___macro))
             this
         )
     )
@@ -21373,7 +21369,7 @@
                             (let [#_"ISeq" ___rargs (.rseq ___argsyms)]
                                 (when (some? ___rargs)
                                     (let [#_"int" ___higharg (cast Integer (.getKey (cast Map$Entry (first ___rargs))))]
-                                        (when (> ___higharg 0)
+                                        (when (< 0 ___higharg)
                                             (loop-when-recur [#_"int" ___i 1] (<= ___i ___higharg) [(inc ___i)]
                                                 (let [#_"Object" ___sym (.valAt ___argsyms, ___i)]
                                                     (when (nil? ___sym)
@@ -21807,7 +21803,7 @@
                         (.startsWith ___token, "u")
                         (do
                             (let [#_"char" ___c (char (readUnicodeChar ___token, 1, 4, 16))]
-                                (when (and (>= ___c (§ char "\ud800")) (<= ___c (§ char "\udfff"))) ;; surrogate code unit?
+                                (when (<= (§ char "\ud800") ___c (§ char "\udfff")) ;; surrogate code unit?
                                     (throw (Util'runtimeException-1 (str "Invalid character constant: \\u" (Integer/toString ___c, 16))))
                                 )
                                 (§ return ___c)
@@ -21816,11 +21812,11 @@
                         (.startsWith ___token, "o")
                         (do
                             (let [#_"int" ___len (dec (.length ___token))]
-                                (when (> ___len 3)
+                                (when (< 3 ___len)
                                     (throw (Util'runtimeException-1 (str "Invalid octal escape sequence length: " ___len)))
                                 )
                                 (let [#_"int" ___uc (readUnicodeChar ___token, 1, ___len, 8)]
-                                    (when (> ___uc 0377)
+                                    (when (< 0377 ___uc)
                                         (throw (Util'runtimeException-1 "Octal escape sequence must be in range [0, 377]."))
                                     )
                                     (§ return (char ___uc))
@@ -22952,9 +22948,9 @@
 
     (defn #_"LockingTransactionInfo" LockingTransactionInfo'new [#_"int" ___status, #_"long" ___startPoint]
         (let [this (LockingTransactionInfo'init)]
-            (§ ass (:status this) (AtomicInteger. ___status))
-            (§ ass (:startPoint this) ___startPoint)
-            (§ ass (:latch this) (CountDownLatch. 1))
+            (§ ass this (assoc this :status (AtomicInteger. ___status)))
+            (§ ass this (assoc this :startPoint ___startPoint))
+            (§ ass this (assoc this :latch (CountDownLatch. 1)))
             this
         )
     )
@@ -22977,8 +22973,8 @@
 
     (defn #_"CFn" CFn'new [#_"IFn" ___fn, #_"ISeq" ___args]
         (let [this (CFn'init)]
-            (§ ass (:fn this) ___fn)
-            (§ ass (:args this) ___args)
+            (§ ass this (assoc this :fn ___fn))
+            (§ ass this (assoc this :args ___args))
             this
         )
     )
@@ -22995,9 +22991,9 @@
 
     (defn #_"Notify" Notify'new [#_"Ref" ___ref, #_"Object" ___oldval, #_"Object" ___newval]
         (let [this (Notify'init)]
-            (§ ass (:ref this) ___ref)
-            (§ ass (:oldval this) ___oldval)
-            (§ ass (:newval this) ___newval)
+            (§ ass this (assoc this :ref ___ref))
+            (§ ass this (assoc this :oldval ___oldval))
+            (§ ass this (assoc this :newval ___newval))
             this
         )
     )
@@ -23043,7 +23039,7 @@
 
     #_method
     (§ defn #_"void" (§ method getReadPoint) [#_"LockingTransaction" this]
-        (§ ass (:readPoint this) (.incrementAndGet lastPoint))
+        (§ ass this (assoc this :readPoint (.incrementAndGet lastPoint)))
         nil
     )
 
@@ -23059,7 +23055,7 @@
                 (.set (:status (:info this)), ___status)
                 (.countDown (:latch (:info this)))
             )
-            (§ ass (:info this) nil)
+            (§ ass this (assoc this :info nil))
             (.clear (:vals this))
             (.clear (:sets this))
             (.clear (:commutes this))
@@ -23224,10 +23220,10 @@
                             (try
                                 (.getReadPoint this)
                                 (when (zero? ___i)
-                                    (§ ass (:startPoint this) (:readPoint this))
-                                    (§ ass (:startTime this) (System/nanoTime))
+                                    (§ ass this (assoc this :startPoint (:readPoint this)))
+                                    (§ ass this (assoc this :startTime (System/nanoTime)))
                                 )
-                                (§ ass (:info this) (LockingTransactionInfo'new LockingTransaction'RUNNING, (:startPoint this)))
+                                (§ ass this (assoc this :info (LockingTransactionInfo'new LockingTransaction'RUNNING, (:startPoint this))))
                                 (§ ass ___ret (.call ___fn))
                                 ;; make sure no one has killed us before this point, and can't from now on
                                 (when (.compareAndSet (:status (:info this)), LockingTransaction'RUNNING, LockingTransaction'COMMITTING)
@@ -23315,7 +23311,7 @@
                                     ;; eat this so we retry rather than fall out
                                 )
                                 (finally
-                                    (loop-when-recur [#_"int" ___k (dec (.size ___locked))] (>= ___k 0) [(dec ___k)]
+                                    (loop-when-recur [#_"int" ___k (dec (.size ___locked))] (<= 0 ___k) [(dec ___k)]
                                         (.unlock (.writeLock (:lock (.get ___locked, ___k))))
                                     )
                                     (.clear ___locked)
@@ -23490,8 +23486,8 @@
 
     (defn #_"LongRangeIterator" LongRangeIterator'new []
         (let [this (LongRangeIterator'init)]
-            (§ ass (:next this) (:start this))
-            (§ ass (:hasNext this) true)
+            (§ ass this (assoc this :next (:start this)))
+            (§ ass this (assoc this :hasNext true))
             this
         )
     )
@@ -23507,10 +23503,10 @@
             (do
                 (let [#_"long" ___ret (:next this)]
                     (try
-                        (§ ass (:next this) (Numbers'add-2ll (:next this), (:step this)))
-                        (§ ass (:hasNext this) (not (.exceededBounds (:boundsCheck this), (:next this))))
+                        (§ ass this (assoc this :next (Numbers'add-2ll (:next this), (:step this))))
+                        (§ ass this (assoc this :hasNext (not (.exceededBounds (:boundsCheck this), (:next this)))))
                         (catch ArithmeticException ___e
-                            (§ ass (:hasNext this) false)
+                            (§ ass this (assoc this :hasNext false))
                         )
                     )
                     ___ret
@@ -23540,9 +23536,9 @@
 
     (defn #_"LongChunk" LongChunk'new [#_"long" ___start, #_"long" ___step, #_"int" ___count]
         (let [this (LongChunk'init)]
-            (§ ass (:start this) ___start)
-            (§ ass (:step this) ___step)
-            (§ ass (:count this) ___count)
+            (§ ass this (assoc this :start ___start))
+            (§ ass this (assoc this :step ___step))
+            (§ ass this (assoc this :count ___count))
             this
         )
     )
@@ -23605,7 +23601,7 @@
         (§ reify LongRangeBoundsCheck()
             #_method
             (§ defn #_"boolean" (§ method exceededBounds) [#_"LongRangeBoundsCheck" this, #_"long" ___val]
-                (>= ___val ___end)
+                (<= ___end ___val)
             )
         )
     )
@@ -23638,54 +23634,54 @@
 
     (defn- #_"LongRange" LongRange'new-4 [#_"long" ___start, #_"long" ___end, #_"long" ___step, #_"LongRangeBoundsCheck" ___boundsCheck]
         (let [this (merge (ASeq'new) (LongRange'init))]
-            (§ ass (:start this) ___start)
-            (§ ass (:end this) ___end)
-            (§ ass (:step this) ___step)
-            (§ ass (:boundsCheck this) ___boundsCheck)
+            (§ ass this (assoc this :start ___start))
+            (§ ass this (assoc this :end ___end))
+            (§ ass this (assoc this :step ___step))
+            (§ ass this (assoc this :boundsCheck ___boundsCheck))
             this
         )
     )
 
     (defn- #_"LongRange" LongRange'new-6 [#_"long" ___start, #_"long" ___end, #_"long" ___step, #_"LongRangeBoundsCheck" ___boundsCheck, #_"LongChunk" ___chunk, #_"ISeq" ___chunkNext]
         (let [this (merge (ASeq'new) (LongRange'init))]
-            (§ ass (:start this) ___start)
-            (§ ass (:end this) ___end)
-            (§ ass (:step this) ___step)
-            (§ ass (:boundsCheck this) ___boundsCheck)
-            (§ ass (:_chunk this) ___chunk)
-            (§ ass (:_chunkNext this) ___chunkNext)
+            (§ ass this (assoc this :start ___start))
+            (§ ass this (assoc this :end ___end))
+            (§ ass this (assoc this :step ___step))
+            (§ ass this (assoc this :boundsCheck ___boundsCheck))
+            (§ ass this (assoc this :_chunk ___chunk))
+            (§ ass this (assoc this :_chunkNext ___chunkNext))
             this
         )
     )
 
     (defn- #_"LongRange" LongRange'new-7 [#_"IPersistentMap" ___meta, #_"long" ___start, #_"long" ___end, #_"long" ___step, #_"LongRangeBoundsCheck" ___boundsCheck, #_"LongChunk" ___chunk, #_"ISeq" ___chunkNext]
         (let [this (merge (ASeq'new ___meta) (LongRange'init))]
-            (§ ass (:start this) ___start)
-            (§ ass (:end this) ___end)
-            (§ ass (:step this) ___step)
-            (§ ass (:boundsCheck this) ___boundsCheck)
-            (§ ass (:_chunk this) ___chunk)
-            (§ ass (:_chunkNext this) ___chunkNext)
+            (§ ass this (assoc this :start ___start))
+            (§ ass this (assoc this :end ___end))
+            (§ ass this (assoc this :step ___step))
+            (§ ass this (assoc this :boundsCheck ___boundsCheck))
+            (§ ass this (assoc this :_chunk ___chunk))
+            (§ ass this (assoc this :_chunkNext ___chunkNext))
             this
         )
     )
 
     (defn #_"ISeq" LongRange'create-1 [#_"long" ___end]
-        (when (> ___end 0)
+        (when (< 0 ___end)
             (§ return (LongRange'new-4 0, ___end, 1, (LongRange'positiveStep ___end)))
         )
         PersistentList'EMPTY
     )
 
     (defn #_"ISeq" LongRange'create-2 [#_"long" ___start, #_"long" ___end]
-        (when (>= ___start ___end)
+        (when (<= ___end ___start)
             (§ return PersistentList'EMPTY)
         )
         (LongRange'new-4 ___start, ___end, 1, (LongRange'positiveStep ___end))
     )
 
     (defn #_"ISeq" LongRange'create-3 [#_"long" ___start, #_"long" ___end, #_"long" ___step]
-        (cond (> ___step 0)
+        (cond (< 0 ___step)
             (do
                 (when (<= ___end ___start)
                     (§ return PersistentList'EMPTY)
@@ -23694,7 +23690,7 @@
             )
             (< ___step 0)
             (do
-                (when (>= ___end ___start)
+                (when (<= ___start ___end)
                     (§ return PersistentList'EMPTY)
                 )
                 (LongRange'new-4 ___start, ___end, ___step, (LongRange'negativeStep ___end))
@@ -23739,16 +23735,16 @@
                 )
             )
 
-            (cond (> ___count LongRange'CHUNK_SIZE) ;; not last chunk
+            (cond (< LongRange'CHUNK_SIZE ___count) ;; not last chunk
                 (do
                     (let [#_"long" ___nextStart (+ (:start this) (* (:step this) LongRange'CHUNK_SIZE))] ;; cannot overflow, must be < end
-                        (§ ass (:_chunkNext this) (LongRange'new-4 ___nextStart, (:end this), (:step this), (:boundsCheck this)))
-                        (§ ass (:_chunk this) (LongChunk'new (:start this), (:step this), LongRange'CHUNK_SIZE))
+                        (§ ass this (assoc this :_chunkNext (LongRange'new-4 ___nextStart, (:end this), (:step this), (:boundsCheck this))))
+                        (§ ass this (assoc this :_chunk (LongChunk'new (:start this), (:step this), LongRange'CHUNK_SIZE)))
                     )
                 )
                 :else ;; last chunk
                 (do
-                    (§ ass (:_chunk this) (LongChunk'new (:start this), (:step this), (int ___count))) ;; count must be <= CHUNK_SIZE
+                    (§ ass this (assoc this :_chunk (LongChunk'new (:start this), (:step this), (int ___count)))) ;; count must be <= CHUNK_SIZE
                 )
             )
             nil
@@ -23764,7 +23760,7 @@
         (.forceChunk this)
         (when (< 1 (.count (:_chunk this)))
             (let [#_"LongChunk" ___smallerChunk (.dropFirst (:_chunk this))]
-                (§ ass (:_next this) (LongRange'new-6 (first ___smallerChunk), (:end this), (:step this), (:boundsCheck this), ___smallerChunk, (:_chunkNext this)))
+                (§ ass this (assoc this :_next (LongRange'new-6 (first ___smallerChunk), (:end this), (:step this), (:boundsCheck this), ___smallerChunk, (:_chunkNext this))))
                 (§ return (:_next this))
             )
         )
@@ -23831,7 +23827,7 @@
     (§ defn #_"int" (§ method count) [#_"LongRange" this]
         (try
             (let [#_"long" ___c (.rangeCount this, (:start this), (:end this), (:step this))]
-                (if (> ___c Integer/MAX_VALUE)
+                (if (< Integer/MAX_VALUE ___c)
                     (do
                         (Numbers'throwIntOverflow)
                     )
@@ -23849,7 +23845,7 @@
                             (§ ass ___count (inc ___count))
                         )
 
-                        (if (> ___count Integer/MAX_VALUE)
+                        (if (< Integer/MAX_VALUE ___count)
                             (do
                                 (Numbers'throwIntOverflow)
                             )
@@ -23921,8 +23917,8 @@
 
     (defn #_"MapEntry" MapEntry'new [#_"Object" ___key, #_"Object" ___val]
         (let [this (merge (AMapEntry'new) (MapEntry'init))]
-            (§ ass (:_key this) ___key)
-            (§ ass (:_val this) ___val)
+            (§ ass this (assoc this :_key ___key))
+            (§ ass this (assoc this :_val ___val))
             this
         )
     )
@@ -23970,8 +23966,8 @@
 
     (defn #_"Entry" Entry'new [#_"Class" ___c, #_"IFn" ___fn]
         (let [this (Entry'init)]
-            (§ ass (:c this) ___c)
-            (§ ass (:fn this) ___fn)
+            (§ ass this (assoc this :c ___c))
+            (§ ass this (assoc this :fn ___fn))
             this
         )
     )
@@ -23997,24 +23993,24 @@
 
     (defn #_"MethodImplCache" MethodImplCache'new-5 [#_"IPersistentMap" ___protocol, #_"Keyword" ___methodk, #_"int" ___shift, #_"int" ___mask, #_"Object[]" ___table]
         (let [this (MethodImplCache'init)]
-            (§ ass (:protocol this) ___protocol)
-            (§ ass (:methodk this) ___methodk)
-            (§ ass (:shift this) ___shift)
-            (§ ass (:mask this) ___mask)
-            (§ ass (:table this) ___table)
-            (§ ass (:map this) nil)
+            (§ ass this (assoc this :protocol ___protocol))
+            (§ ass this (assoc this :methodk ___methodk))
+            (§ ass this (assoc this :shift ___shift))
+            (§ ass this (assoc this :mask ___mask))
+            (§ ass this (assoc this :table ___table))
+            (§ ass this (assoc this :map nil))
             this
         )
     )
 
     (defn #_"MethodImplCache" MethodImplCache'new-3 [#_"IPersistentMap" ___protocol, #_"Keyword" ___methodk, #_"Map" ___map]
         (let [this (MethodImplCache'init)]
-            (§ ass (:protocol this) ___protocol)
-            (§ ass (:methodk this) ___methodk)
-            (§ ass (:shift this) 0)
-            (§ ass (:mask this) 0)
-            (§ ass (:table this) nil)
-            (§ ass (:map this) ___map)
+            (§ ass this (assoc this :protocol ___protocol))
+            (§ ass this (assoc this :methodk ___methodk))
+            (§ ass this (assoc this :shift 0))
+            (§ ass this (assoc this :mask 0))
+            (§ ass this (assoc this :table nil))
+            (§ ass this (assoc this :map ___map))
             this
         )
     )
@@ -24034,7 +24030,7 @@
         (if (some? (:map this))
             (do
                 (let [#_"Entry" ___e (cast' Entry (.get (:map this), ___c))]
-                    (§ ass (:mre this) ___e)
+                    (§ ass this (assoc this :mre ___e))
                     (when (some? ___e) (:fn ___e))
                 )
             )
@@ -24042,7 +24038,7 @@
                 (let [#_"int" ___idx (<< (& (>> (Util'hash ___c) (:shift this)) (:mask this)) 1)]
                     (when (and (< ___idx (§ alength (:table this))) (= (§ aget (:table this) ___idx) ___c))
                         (let [#_"Entry" ___e (cast' Entry (§ aget (:table this) (inc ___idx)))]
-                            (§ ass (:mre this) ___e)
+                            (§ ass this (assoc this :mre ___e))
                             (§ return (when (some? ___e) (:fn ___e)))
                         )
                     )
@@ -24086,15 +24082,15 @@
 
     (defn #_"MultiFn" MultiFn'new [#_"String" ___name, #_"IFn" ___dispatchFn, #_"Object" ___defaultDispatchVal, #_"IRef" ___hierarchy]
         (let [this (merge (AFn'new) (MultiFn'init))]
-            (§ ass (:rw this) (ReentrantReadWriteLock.))
-            (§ ass (:name this) ___name)
-            (§ ass (:dispatchFn this) ___dispatchFn)
-            (§ ass (:defaultDispatchVal this) ___defaultDispatchVal)
-            (§ ass (:methodTable this) PersistentHashMap'EMPTY)
-            (§ ass (:methodCache this) (.getMethodTable this))
-            (§ ass (:preferTable this) PersistentHashMap'EMPTY)
-            (§ ass (:hierarchy this) ___hierarchy)
-            (§ ass (:cachedHierarchy this) nil)
+            (§ ass this (assoc this :rw (ReentrantReadWriteLock.)))
+            (§ ass this (assoc this :name ___name))
+            (§ ass this (assoc this :dispatchFn ___dispatchFn))
+            (§ ass this (assoc this :defaultDispatchVal ___defaultDispatchVal))
+            (§ ass this (assoc this :methodTable PersistentHashMap'EMPTY))
+            (§ ass this (assoc this :methodCache (.getMethodTable this)))
+            (§ ass this (assoc this :preferTable PersistentHashMap'EMPTY))
+            (§ ass this (assoc this :hierarchy ___hierarchy))
+            (§ ass this (assoc this :cachedHierarchy nil))
             this
         )
     )
@@ -24103,8 +24099,8 @@
     (§ defn #_"MultiFn" (§ method reset) [#_"MultiFn" this]
         (.lock (.writeLock (:rw this)))
         (try
-            (§ ass (:methodTable this) (§ ass (:methodCache this) (§ ass (:preferTable this) PersistentHashMap'EMPTY)))
-            (§ ass (:cachedHierarchy this) nil)
+            (§ ass this (assoc this :methodTable (§ ass this (assoc this :methodCache (§ ass this (assoc this :preferTable PersistentHashMap'EMPTY))))))
+            (§ ass this (assoc this :cachedHierarchy nil))
             this
             (finally
                 (.unlock (.writeLock (:rw this)))
@@ -24116,7 +24112,7 @@
     (§ defn #_"MultiFn" (§ method addMethod) [#_"MultiFn" this, #_"Object" ___dispatchVal, #_"IFn" ___method]
         (.lock (.writeLock (:rw this)))
         (try
-            (§ ass (:methodTable this) (.assoc (.getMethodTable this), ___dispatchVal, ___method))
+            (§ ass this (assoc this :methodTable (.assoc (.getMethodTable this), ___dispatchVal, ___method)))
             (.resetCache this)
             this
             (finally
@@ -24129,7 +24125,7 @@
     (§ defn #_"MultiFn" (§ method removeMethod) [#_"MultiFn" this, #_"Object" ___dispatchVal]
         (.lock (.writeLock (:rw this)))
         (try
-            (§ ass (:methodTable this) (.without (.getMethodTable this), ___dispatchVal))
+            (§ ass this (assoc this :methodTable (.without (.getMethodTable this), ___dispatchVal)))
             (.resetCache this)
             this
             (finally
@@ -24145,7 +24141,7 @@
             (when (.prefers this, ___dispatchValY, ___dispatchValX)
                 (throw (IllegalStateException. (String/format "Preference conflict in multimethod '%s': %s is already preferred to %s", (object-array [ (:name this), ___dispatchValY, ___dispatchValX ]))))
             )
-            (§ ass (:preferTable this) (.assoc (.getPreferTable this), ___dispatchValX, (RT'conj (cast' IPersistentCollection (RT'get-3 (.getPreferTable this), ___dispatchValX, PersistentHashSet'EMPTY)), ___dispatchValY)))
+            (§ ass this (assoc this :preferTable (.assoc (.getPreferTable this), ___dispatchValX, (RT'conj (cast' IPersistentCollection (RT'get-3 (.getPreferTable this), ___dispatchValX, PersistentHashSet'EMPTY)), ___dispatchValY))))
             (.resetCache this)
             this
             (finally
@@ -24188,8 +24184,8 @@
     (§ defn- #_"IPersistentMap" (§ method resetCache) [#_"MultiFn" this]
         (.lock (.writeLock (:rw this)))
         (try
-            (§ ass (:methodCache this) (.getMethodTable this))
-            (§ ass (:cachedHierarchy this) (.deref (:hierarchy this)))
+            (§ ass this (assoc this :methodCache (.getMethodTable this)))
+            (§ ass this (assoc this :cachedHierarchy (.deref (:hierarchy this))))
             (:methodCache this)
             (finally
                 (.unlock (.writeLock (:rw this)))
@@ -24264,7 +24260,7 @@
                             (if (and (= ___mt (:methodTable this)) (= ___pt (:preferTable this)) (= ___ch (:cachedHierarchy this)) (= (:cachedHierarchy this) (.deref (:hierarchy this))))
                                 (do
                                     ;; place in cache
-                                    (§ ass (:methodCache this) (.assoc (:methodCache this), ___dispatchVal, ___bestValue))
+                                    (§ ass this (assoc this :methodCache (.assoc (:methodCache this), ___dispatchVal, ___bestValue)))
                                     (cast' IFn ___bestValue)
                                 )
                                 (do
@@ -24833,7 +24829,7 @@
 
     (defn #_"Namespace" Namespace'new [#_"Symbol" ___name]
         (let [this (merge (AReference'new (.meta ___name)) (Namespace'init))]
-            (§ ass (:name this) ___name)
+            (§ ass this (assoc this :name ___name))
             (.set (:mappings this), RT'DEFAULT_IMPORTS)
             (.set (:aliases this), (RT'map))
             this
@@ -25342,7 +25338,7 @@
     #_method
     (§ defn #_"Number" (§ method negateP) [#_"LongOps" this, #_"Number" ___x]
         (let [#_"long" ___val (.longValue ___x)]
-            (when (> ___val Long/MIN_VALUE)
+            (when (< Long/MIN_VALUE ___val)
                 (§ return (Numbers'num-1l (- val)))
             )
             (BigInt'fromBigInteger (.negate (BigInteger/valueOf ___val)))
@@ -25376,7 +25372,7 @@
     #_method
     (§ defn #_"Number" (§ method decP) [#_"LongOps" this, #_"Number" ___x]
         (let [#_"long" ___val (.longValue ___x)]
-            (when (> ___val Long/MIN_VALUE)
+            (when (< Long/MIN_VALUE ___val)
                 (§ return (Numbers'num-1l (dec ___val)))
             )
             (.dec Numbers'BIGINT_OPS, ___x)
@@ -28023,14 +28019,14 @@
 
     (defn #_"Obj" Obj'new-1 [#_"IPersistentMap" ___meta]
         (let [this (Obj'init)]
-            (§ ass (:_meta this) ___meta)
+            (§ ass this (assoc this :_meta ___meta))
             this
         )
     )
 
     (defn #_"Obj" Obj'new-0 []
         (let [this (Obj'init)]
-            (§ ass (:_meta this) nil)
+            (§ ass this (assoc this :_meta nil))
             this
         )
     )
@@ -28062,16 +28058,16 @@
 
     (defn #_"MSeq" MSeq'new-2 [#_"Object[]" ___array, #_"int" ___i]
         (let [this (merge (ASeq'new) (MSeq'init))]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
 
     (defn #_"MSeq" MSeq'new-3 [#_"IPersistentMap" ___meta, #_"Object[]" ___array, #_"int" ___i]
         (let [this (merge (ASeq'new ___meta) (MSeq'init))]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -28117,9 +28113,9 @@
     ;; for entryAt
     (defn #_"MIter" MIter'new-3 [#_"Object[]" ___array, #_"int" ___i, #_"IFn" ___f]
         (let [this (MIter'init)]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
-            (§ ass (:f this) ___f)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
+            (§ ass this (assoc this :f ___f))
             this
         )
     )
@@ -28132,7 +28128,7 @@
     #_method
     (§ defn #_"Object" (§ method next) [#_"MIter" this]
         (try
-            (§ ass (:i this) (+ (:i this) 2))
+            (§ ass this (assoc this :i (+ (:i this) 2)))
             (.invoke (:f this), (§ aget (:array this) (:i this)), (§ aget (:array this) (inc (:i this))))
             (catch IndexOutOfBoundsException ___e
                 (throw (NoSuchElementException.))
@@ -28159,10 +28155,10 @@
 
     (defn #_"TransientArrayMap" TransientArrayMap'new [#_"Object[]" ___array]
         (let [this (merge (ATransientMap'new) (TransientArrayMap'init))]
-            (§ ass (:owner this) (Thread/currentThread))
-            (§ ass (:array this) (make-array Object (Math/max PersistentArrayMap'HASHTABLE_THRESHOLD, (§ alength ___array))))
+            (§ ass this (assoc this :owner (Thread/currentThread)))
+            (§ ass this (assoc this :array (make-array Object (Math/max PersistentArrayMap'HASHTABLE_THRESHOLD, (§ alength ___array)))))
             (System/arraycopy ___array, 0, (:array this), 0, (§ alength ___array))
-            (§ ass (:len this) (§ alength ___array))
+            (§ ass this (assoc this :len (§ alength ___array)))
             this
         )
     )
@@ -28180,7 +28176,7 @@
     #_method
     (§ defn #_"ITransientMap" (§ method doAssoc) [#_"TransientArrayMap" this, #_"Object" ___key, #_"Object" ___val]
         (let [#_"int" ___i (.indexOf this, ___key)]
-            (cond (>= ___i 0) ;; already have key,
+            (cond (<= 0 ___i) ;; already have key,
                 (do
                     (when-not (= (§ aget (:array this) (inc ___i)) ___val) ;; no change, no op
                         (§ ass (§ aget (:array this) (inc ___i)) ___val)
@@ -28192,9 +28188,9 @@
                         (§ return (-> (PersistentHashMap'create-1a (:array this)) (.asTransient) (.assoc ___key, ___val)))
                     )
                     (§ ass (§ aget (:array this) (:len this)) ___key)
-                    (§ ass (:len this) (+ (:len this) 1))
+                    (§ ass this (assoc this :len (+ (:len this) 1)))
                     (§ ass (§ aget (:array this) (:len this)) ___val)
-                    (§ ass (:len this) (+ (:len this) 1))
+                    (§ ass this (assoc this :len (+ (:len this) 1)))
                 )
             )
             this
@@ -28204,12 +28200,12 @@
     #_method
     (§ defn #_"ITransientMap" (§ method doWithout) [#_"TransientArrayMap" this, #_"Object" ___key]
         (let [#_"int" ___i (.indexOf this, ___key)]
-            (when (>= ___i 0) ;; have key, will remove
+            (when (<= 0 ___i) ;; have key, will remove
                 (when (>= (:len this) 2)
                     (§ ass (§ aget (:array this) ___i) (§ aget (:array this) (- (:len this) 2)))
                     (§ ass (§ aget (:array this) (inc ___i)) (§ aget (:array this) (- (:len this) 1)))
                 )
-                (§ ass (:len this) (- (:len this) 2))
+                (§ ass this (assoc this :len (- (:len this) 2)))
             )
             this
         )
@@ -28218,7 +28214,7 @@
     #_method
     (§ defn #_"Object" (§ method doValAt) [#_"TransientArrayMap" this, #_"Object" ___key, #_"Object" ___notFound]
         (let [#_"int" ___i (.indexOf this, ___key)]
-            (when (>= ___i 0)
+            (when (<= 0 ___i)
                 (§ return (§ aget (:array this) (inc ___i)))
             )
             ___notFound
@@ -28233,7 +28229,7 @@
     #_method
     (§ defn #_"IPersistentMap" (§ method doPersistent) [#_"TransientArrayMap" this]
         (.ensureEditable this)
-        (§ ass (:owner this) nil)
+        (§ ass this (assoc this :owner nil))
         (let [#_"Object[]" ___a (make-array Object (:len this))]
             (System/arraycopy (:array this), 0, ___a, 0, (:len this))
             (PersistentArrayMap'new-1 ___a)
@@ -28284,8 +28280,8 @@
     #_protected
     (defn #_"PersistentArrayMap" PersistentArrayMap'new-0 []
         (let [this (merge (APersistentMap'new) (PersistentArrayMap'init))]
-            (§ ass (:array this) (make-array Object 0))
-            (§ ass (:_meta this) nil)
+            (§ ass this (assoc this :array (make-array Object 0)))
+            (§ ass this (assoc this :_meta nil))
             this
         )
     )
@@ -28356,7 +28352,7 @@
                                 )
                                 (when (not ___duplicateKey)
                                     (§ let [#_"int" ___j]
-                                        (loop-when-recur [___j (- (§ alength ___init) 2)] (>= ___j ___i) [(- ___j 2)]
+                                        (loop-when-recur [___j (- (§ alength ___init) 2)] (<= ___i ___j) [(- ___j 2)]
                                             (when (PersistentArrayMap'equalKey (§ aget ___init ___i), (§ aget ___init ___j))
                                                 (§ break )
                                             )
@@ -28386,16 +28382,16 @@
      ;;
     (defn #_"PersistentArrayMap" PersistentArrayMap'new-1 [#_"Object[]" ___init]
         (let [this (merge (APersistentMap'new) (PersistentArrayMap'init))]
-            (§ ass (:array this) ___init)
-            (§ ass (:_meta this) nil)
+            (§ ass this (assoc this :array ___init))
+            (§ ass this (assoc this :_meta nil))
             this
         )
     )
 
     (defn #_"PersistentArrayMap" PersistentArrayMap'new-2 [#_"IPersistentMap" ___meta, #_"Object[]" ___init]
         (let [this (merge (APersistentMap'new) (PersistentArrayMap'init))]
-            (§ ass (:_meta this) ___meta)
-            (§ ass (:array this) ___init)
+            (§ ass this (assoc this :_meta ___meta))
+            (§ ass this (assoc this :array ___init))
             this
         )
     )
@@ -28413,7 +28409,7 @@
     #_method
     (§ defn #_"IMapEntry" (§ method entryAt) [#_"PersistentArrayMap" this, #_"Object" ___key]
         (let [#_"int" ___i (.indexOf this, ___key)]
-            (when (>= ___i 0)
+            (when (<= 0 ___i)
                 (§ return (cast' IMapEntry (MapEntry'create (§ aget (:array this) ___i), (§ aget (:array this) (inc ___i)))))
             )
             nil
@@ -28424,7 +28420,7 @@
     (§ defn #_"IPersistentMap" (§ method assocEx) [#_"PersistentArrayMap" this, #_"Object" ___key, #_"Object" ___val]
         (let [#_"int" ___i (.indexOf this, ___key)]
             (§ let [#_"Object[]" ___newArray]
-                (cond (>= ___i 0)
+                (cond (<= 0 ___i)
                     (do
                         (throw (Util'runtimeException-1 "Key already present"))
                     )
@@ -28450,7 +28446,7 @@
     (§ defn #_"IPersistentMap" (§ method assoc) [#_"PersistentArrayMap" this, #_"Object" ___key, #_"Object" ___val]
         (let [#_"int" ___i (.indexOf this, ___key)]
             (§ let [#_"Object[]" ___newArray]
-                (cond (>= ___i 0) ;; already have key, same-sized replacement
+                (cond (<= 0 ___i) ;; already have key, same-sized replacement
                     (do
                         (when (= (§ aget (:array this) (inc ___i)) ___val) ;; no change, no op
                             (§ return this)
@@ -28504,7 +28500,7 @@
     #_method
     (§ defn #_"Object" (§ method valAt) [#_"PersistentArrayMap" this, #_"Object" ___key, #_"Object" ___notFound]
         (let [#_"int" ___i (.indexOf this, ___key)]
-            (when (>= ___i 0)
+            (when (<= 0 ___i)
                 (§ return (§ aget (:array this) (inc ___i)))
             )
             ___notFound
@@ -28631,11 +28627,11 @@
 
     (defn #_"TransientHashMap" TransientHashMap'new-5 [#_"AtomicReference<Thread>" ___edit, #_"INode" ___root, #_"int" ___count, #_"boolean" ___hasNull, #_"Object" ___nullValue]
         (let [this (merge (ATransientMap'new) (TransientHashMap'init))]
-            (§ ass (:edit this) ___edit)
-            (§ ass (:root this) ___root)
-            (§ ass (:count this) ___count)
-            (§ ass (:hasNull this) ___hasNull)
-            (§ ass (:nullValue this) ___nullValue)
+            (§ ass this (assoc this :edit ___edit))
+            (§ ass this (assoc this :root ___root))
+            (§ ass this (assoc this :count ___count))
+            (§ ass this (assoc this :hasNull ___hasNull))
+            (§ ass this (assoc this :nullValue ___nullValue))
             this
         )
     )
@@ -28644,21 +28640,21 @@
     (§ defn #_"ITransientMap" (§ method doAssoc) [#_"TransientHashMap" this, #_"Object" ___key, #_"Object" ___val]
         (when (nil? ___key)
             (when-not (= (:nullValue this) ___val)
-                (§ ass (:nullValue this) ___val)
+                (§ ass this (assoc this :nullValue ___val))
             )
             (when (not (:hasNull this))
-                (§ ass (:count this) (inc (:count this)))
-                (§ ass (:hasNull this) true)
+                (§ ass this (assoc this :count (inc (:count this))))
+                (§ ass this (assoc this :hasNull true))
             )
             (§ return this)
         )
         (§ ass (:val (:leafFlag this)) nil)
         (let [#_"INode" ___n (.assoc (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (PersistentHashMap'hash ___key), ___key, ___val, (:leafFlag this))]
             (when (not= ___n (:root this))
-                (§ ass (:root this) ___n)
+                (§ ass this (assoc this :root ___n))
             )
             (when (some? (:val (:leafFlag this)))
-                (§ ass (:count this) (inc (:count this)))
+                (§ ass this (assoc this :count (inc (:count this))))
             )
             this
         )
@@ -28670,9 +28666,9 @@
             (when (not (:hasNull this))
                 (§ return this)
             )
-            (§ ass (:hasNull this) false)
-            (§ ass (:nullValue this) nil)
-            (§ ass (:count this) (dec (:count this)))
+            (§ ass this (assoc this :hasNull false))
+            (§ ass this (assoc this :nullValue nil))
+            (§ ass this (assoc this :count (dec (:count this))))
             (§ return this)
         )
         (when (nil? (:root this))
@@ -28681,10 +28677,10 @@
         (§ ass (:val (:leafFlag this)) nil)
         (let [#_"INode" ___n (.without (:root this), (:edit this), 0, (PersistentHashMap'hash ___key), ___key, (:leafFlag this))]
             (when (not= ___n (:root this))
-                (§ ass (:root this) ___n)
+                (§ ass this (assoc this :root ___n))
             )
             (when (some? (:val (:leafFlag this)))
-                (§ ass (:count this) (dec (:count this)))
+                (§ ass this (assoc this :count (dec (:count this))))
             )
             this
         )
@@ -28783,9 +28779,9 @@
 
     (defn- #_"HSeq" HSeq'new [#_"IPersistentMap" ___meta, #_"INode[]" ___nodes, #_"int" ___i, #_"ISeq" ___s]
         (let [this (merge (ASeq'new ___meta) (HSeq'init))]
-            (§ ass (:nodes this) ___nodes)
-            (§ ass (:i this) ___i)
-            (§ ass (:s this) ___s)
+            (§ ass this (assoc this :nodes ___nodes))
+            (§ ass this (assoc this :i ___i))
+            (§ ass this (assoc this :s ___s))
             this
         )
     )
@@ -28818,8 +28814,8 @@
 
     (defn- #_"HIter" HIter'new [#_"INode[]" ___array, #_"IFn" ___f]
         (let [this (HIter'init)]
-            (§ ass (:array this) ___array)
-            (§ ass (:f this) ___f)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :f ___f))
             this
         )
     )
@@ -28833,7 +28829,7 @@
                         (§ return true)
                     )
                     (do
-                        (§ ass (:nestedIter this) nil)
+                        (§ ass this (assoc this :nestedIter nil))
                     )
                 )
             )
@@ -28841,9 +28837,9 @@
             (if (< (:i this) (§ alength (:array this)))
                 (do
                     (let [#_"INode" ___node (§ aget (:array this) (:i this))]
-                        (§ ass (:i this) (+ (:i this) 1))
+                        (§ ass this (assoc this :i (+ (:i this) 1)))
                         (when (some? ___node)
-                            (§ ass (:nestedIter this) (.iterator ___node, (:f this)))
+                            (§ ass this (assoc this :nestedIter (.iterator ___node, (:f this))))
                         )
                     )
                 )
@@ -28883,9 +28879,9 @@
 
     (defn #_"ArrayNode" ArrayNode'new [#_"AtomicReference<Thread>" ___edit, #_"int" ___count, #_"INode[]" ___array]
         (let [this (ArrayNode'init)]
-            (§ ass (:array this) ___array)
-            (§ ass (:edit this) ___edit)
-            (§ ass (:count this) ___count)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :edit ___edit))
+            (§ ass this (assoc this :count ___count))
             this
         )
     )
@@ -29136,9 +29132,9 @@
 
     (defn #_"BitmapIndexedNode" BitmapIndexedNode'new [#_"AtomicReference<Thread>" ___edit, #_"int" ___bitmap, #_"Object[]" ___array]
         (let [this (BitmapIndexedNode'init)]
-            (§ ass (:bitmap this) ___bitmap)
-            (§ ass (:array this) ___array)
-            (§ ass (:edit this) ___edit)
+            (§ ass this (assoc this :bitmap ___bitmap))
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :edit ___edit))
             this
         )
     )
@@ -29177,7 +29173,7 @@
                     )
                     (do
                         (let [#_"int" ___n (Integer/bitCount (:bitmap this))]
-                            (if (>= ___n 16)
+                            (if (<= 16 ___n)
                                 (do
                                     (let [#_"INode[]" ___nodes (§ typeless make-array INode 32)]
                                         (let [#_"int" ___jdx (mask ___hash, ___shift)]
@@ -29400,7 +29396,7 @@
                                     (§ return ___editable)
                                 )
                             )
-                            (if (>= ___n 16)
+                            (if (<= 16 ___n)
                                 (do
                                     (let [#_"INode[]" ___nodes (§ typeless make-array INode 32)]
                                         (let [#_"int" ___jdx (mask ___hash, ___shift)]
@@ -29494,10 +29490,10 @@
 
     (defn #_"HashCollisionNode" HashCollisionNode'new [#_"AtomicReference<Thread>" ___edit, #_"int" ___hash, #_"int" ___count & #_"Object..." ___array]
         (let [this (HashCollisionNode'init)]
-            (§ ass (:edit this) ___edit)
-            (§ ass (:hash this) ___hash)
-            (§ ass (:count this) ___count)
-            (§ ass (:array this) ___array)
+            (§ ass this (assoc this :edit ___edit))
+            (§ ass this (assoc this :hash ___hash))
+            (§ ass this (assoc this :count ___count))
+            (§ ass this (assoc this :array ___array))
             this
         )
     )
@@ -29608,8 +29604,8 @@
     #_method
     (§ defn- #_"HashCollisionNode" (§ method ensureEditable) [#_"HashCollisionNode" this, #_"AtomicReference<Thread>" ___edit, #_"int" ___count, #_"Object[]" ___array]
         (when (= (:edit this) ___edit)
-            (§ ass (:array this) ___array)
-            (§ ass (:count this) ___count)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :count ___count))
             (§ return this)
         )
         (HashCollisionNode'new ___edit, (:hash this), ___count, ___array)
@@ -29699,8 +29695,8 @@
 
     (defn #_"NodeIter" NodeIter'new [#_"Object[]" ___array, #_"IFn" ___f]
         (let [this (NodeIter'init)]
-            (§ ass (:array this) ___array)
-            (§ ass (:f this) ___f)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :f ___f))
             this
         )
     )
@@ -29710,17 +29706,17 @@
         (while (< (:i this) (§ alength (:array this)))
             (let [#_"Object" ___key (§ aget (:array this) (:i this))]
                 (let [#_"Object" ___nodeOrVal (§ aget (:array this) (inc (:i this)))]
-                    (§ ass (:i this) (+ (:i this) 2))
+                    (§ ass this (assoc this :i (+ (:i this) 2)))
                     (cond (some? ___key)
                         (do
-                            (§ ass (:nextEntry this) (.invoke (:f this), ___key, ___nodeOrVal))
+                            (§ ass this (assoc this :nextEntry (.invoke (:f this), ___key, ___nodeOrVal)))
                             (§ return true)
                         )
                         (some? ___nodeOrVal)
                         (do
                             (let [#_"Iterator" ___iter (.iterator (cast' INode ___nodeOrVal), (:f this))]
                                 (when (and (some? ___iter) (.hasNext ___iter))
-                                    (§ ass (:nextIter this) ___iter)
+                                    (§ ass this (assoc this :nextIter ___iter))
                                     (§ return true)
                                 )
                             )
@@ -29745,14 +29741,14 @@
         (let [#_"Object" ___ret (:nextEntry this)]
             (cond (not= ___ret NodeIter'NULL)
                 (do
-                    (§ ass (:nextEntry this) NodeIter'NULL)
+                    (§ ass this (assoc this :nextEntry NodeIter'NULL))
                     (§ return ___ret)
                 )
                 (some? (:nextIter this))
                 (do
                     (§ ass ___ret (next (:nextIter this)))
                     (when (not (.hasNext (:nextIter this)))
-                        (§ ass (:nextIter this) nil)
+                        (§ ass this (assoc this :nextIter nil))
                     )
                     (§ return ___ret)
                 )
@@ -29832,9 +29828,9 @@
 
     (defn #_"NodeSeq" NodeSeq'new-4 [#_"IPersistentMap" ___meta, #_"Object[]" ___array, #_"int" ___i, #_"ISeq" ___s]
         (let [this (merge (ASeq'new ___meta) (NodeSeq'init))]
-            (§ ass (:array this) ___array)
-            (§ ass (:i this) ___i)
-            (§ ass (:s this) ___s)
+            (§ ass this (assoc this :array ___array))
+            (§ ass this (assoc this :i ___i))
+            (§ ass this (assoc this :s ___s))
             this
         )
     )
@@ -29955,22 +29951,22 @@
 
     (defn #_"PersistentHashMap" PersistentHashMap'new-4 [#_"int" ___count, #_"INode" ___root, #_"boolean" ___hasNull, #_"Object" ___nullValue]
         (let [this (merge (APersistentMap'new) (PersistentHashMap'init))]
-            (§ ass (:count this) ___count)
-            (§ ass (:root this) ___root)
-            (§ ass (:hasNull this) ___hasNull)
-            (§ ass (:nullValue this) ___nullValue)
-            (§ ass (:_meta this) nil)
+            (§ ass this (assoc this :count ___count))
+            (§ ass this (assoc this :root ___root))
+            (§ ass this (assoc this :hasNull ___hasNull))
+            (§ ass this (assoc this :nullValue ___nullValue))
+            (§ ass this (assoc this :_meta nil))
             this
         )
     )
 
     (defn #_"PersistentHashMap" PersistentHashMap'new-5 [#_"IPersistentMap" ___meta, #_"int" ___count, #_"INode" ___root, #_"boolean" ___hasNull, #_"Object" ___nullValue]
         (let [this (merge (APersistentMap'new) (PersistentHashMap'init))]
-            (§ ass (:_meta this) ___meta)
-            (§ ass (:count this) ___count)
-            (§ ass (:root this) ___root)
-            (§ ass (:hasNull this) ___hasNull)
-            (§ ass (:nullValue this) ___nullValue)
+            (§ ass this (assoc this :_meta ___meta))
+            (§ ass this (assoc this :count ___count))
+            (§ ass this (assoc this :root ___root))
+            (§ ass this (assoc this :hasNull ___hasNull))
+            (§ ass this (assoc this :nullValue ___nullValue))
             this
         )
     )
@@ -30097,7 +30093,7 @@
                         (§ defn #_"Object" (§ method next) [#_"Iterator" this]
                             (if (not (:seen this))
                                 (do
-                                    (§ ass (:seen this) true)
+                                    (§ ass this (assoc this :seen true))
                                     (.invoke ___f, nil, (:nullValue this))
                                 )
                                 (do
@@ -30361,7 +30357,7 @@
 
     (defn #_"PersistentHashSet" PersistentHashSet'new [#_"IPersistentMap" ___meta, #_"IPersistentMap" ___impl]
         (let [this (merge (APersistentSet'new ___impl) (PersistentHashSet'init))]
-            (§ ass (:_meta this) ___meta)
+            (§ ass this (assoc this :_meta ___meta))
             this
         )
     )
@@ -30443,7 +30439,7 @@
         (when (§ instance? ArraySeq ___args)
             (let [#_"Object[]" ___argsarray (:array (cast' ArraySeq ___args))]
                 (let [#_"IPersistentList" ___ret PersistentList'EMPTY]
-                    (loop-when-recur [#_"int" ___i (- (§ alength ___argsarray) 1)] (>= ___i 0) [(dec ___i)]
+                    (loop-when-recur [#_"int" ___i (- (§ alength ___argsarray) 1)] (<= 0 ___i) [(dec ___i)]
                         (§ ass ___ret (cast' IPersistentList (.cons ___ret, (§ aget ___argsarray ___i))))
                     )
                     (§ return ___ret)
@@ -30714,19 +30710,19 @@
 
     (defn #_"PersistentList" PersistentList'new-1 [#_"Object" ___first]
         (let [this (merge (ASeq'new) (PersistentList'init))]
-            (§ ass (:_first this) ___first)
-            (§ ass (:_rest this) nil)
+            (§ ass this (assoc this :_first ___first))
+            (§ ass this (assoc this :_rest nil))
 
-            (§ ass (:_count this) 1)
+            (§ ass this (assoc this :_count 1))
             this
         )
     )
 
     (defn #_"PersistentList" PersistentList'new-4 [#_"IPersistentMap" ___meta, #_"Object" ____first, #_"IPersistentList" ____rest, #_"int" ____count]
         (let [this (merge (ASeq'new ___meta) (PersistentList'init))]
-            (§ ass (:_first this) ____first)
-            (§ ass (:_rest this) ____rest)
-            (§ ass (:_count this) ____count)
+            (§ ass this (assoc this :_first ____first))
+            (§ ass this (assoc this :_rest ____rest))
+            (§ ass this (assoc this :_count ____count))
             this
         )
     )
@@ -30836,16 +30832,16 @@
 
     (defn #_"QSeq" QSeq'new-2 [#_"ISeq" ___f, #_"ISeq" ___rseq]
         (let [this (merge (ASeq'new) (QSeq'init))]
-            (§ ass (:f this) ___f)
-            (§ ass (:rseq this) ___rseq)
+            (§ ass this (assoc this :f ___f))
+            (§ ass this (assoc this :rseq ___rseq))
             this
         )
     )
 
     (defn #_"QSeq" QSeq'new-3 [#_"IPersistentMap" ___meta, #_"ISeq" ___f, #_"ISeq" ___rseq]
         (let [this (merge (ASeq'new ___meta) (QSeq'init))]
-            (§ ass (:f this) ___f)
-            (§ ass (:rseq this) ___rseq)
+            (§ ass this (assoc this :f ___f))
+            (§ ass this (assoc this :rseq ___rseq))
             this
         )
     )
@@ -30903,9 +30899,9 @@
 
     (defn #_"PersistentQueue" PersistentQueue'new [#_"IPersistentMap" ___meta, #_"int" ___cnt, #_"ISeq" ___f, #_"PersistentVector" ___r]
         (let [this (merge (Obj'new ___meta) (PersistentQueue'init))]
-            (§ ass (:cnt this) ___cnt)
-            (§ ass (:f this) ___f)
-            (§ ass (:r this) ___r)
+            (§ ass this (assoc this :cnt ___cnt))
+            (§ ass this (assoc this :f ___f))
+            (§ ass this (assoc this :r ___r))
             this
         )
     )
@@ -30948,7 +30944,7 @@
                 (loop-when-recur [#_"ISeq" ___s (.seq this)] (some? ___s) [(next ___s)]
                     (§ ass ___hash (+ (* 31 ___hash) (if (nil? (first ___s)) 0 (.hashCode (first ___s)))))
                 )
-                (§ ass (:_hash this) ___hash)
+                (§ ass this (assoc this :_hash ___hash))
             )
             ___hash
         )
@@ -30958,7 +30954,7 @@
     (§ defn #_"int" (§ method hasheq) [#_"PersistentQueue" this]
         (let [#_"int" ___cached (:_hasheq this)]
             (when (zero? ___cached)
-                (§ ass (:_hasheq this) (§ ass ___cached (Murmur3'hashOrdered this)))
+                (§ ass this (assoc this :_hasheq (§ ass ___cached (Murmur3'hashOrdered this))))
             )
             ___cached
         )
@@ -31110,7 +31106,7 @@
                 (cond (some? (:fseq this))
                     (do
                         (let [#_"Object" ___ret (first (:fseq this))]
-                            (§ ass (:fseq this) (next (:fseq this)))
+                            (§ ass this (assoc this :fseq (next (:fseq this))))
                             ___ret
                         )
                     )
@@ -31148,7 +31144,7 @@
 
     (defn #_"TNode" TNode'new [#_"Object" ___key]
         (let [this (merge (AMapEntry'new) (TNode'init))]
-            (§ ass (:key this) ___key)
+            (§ ass this (assoc this :key ___key))
             this
         )
     )
@@ -31280,7 +31276,7 @@
 
     (defn #_"BlackVal" BlackVal'new [#_"Object" ___key, #_"Object" ___val]
         (let [this (merge (Black'new ___key) (BlackVal'init))]
-            (§ ass (:val this) ___val)
+            (§ ass this (assoc this :val ___val))
             this
         )
     )
@@ -31306,8 +31302,8 @@
 
     (defn #_"BlackBranch" BlackBranch'new [#_"Object" ___key, #_"TNode" ___left, #_"TNode" ___right]
         (let [this (merge (Black'new ___key) (BlackBranch'init))]
-            (§ ass (:left this) ___left)
-            (§ ass (:right this) ___right)
+            (§ ass this (assoc this :left ___left))
+            (§ ass this (assoc this :right ___right))
             this
         )
     )
@@ -31337,7 +31333,7 @@
 
     (defn #_"BlackBranchVal" BlackBranchVal'new [#_"Object" ___key, #_"Object" ___val, #_"TNode" ___left, #_"TNode" ___right]
         (let [this (merge (BlackBranch'new ___key, ___left, ___right) (BlackBranchVal'init))]
-            (§ ass (:val this) ___val)
+            (§ ass this (assoc this :val ___val))
             this
         )
     )
@@ -31404,7 +31400,7 @@
 
     (defn #_"RedVal" RedVal'new [#_"Object" ___key, #_"Object" ___val]
         (let [this (merge (Red'new ___key) (RedVal'init))]
-            (§ ass (:val this) ___val)
+            (§ ass this (assoc this :val ___val))
             this
         )
     )
@@ -31430,8 +31426,8 @@
 
     (defn #_"RedBranch" RedBranch'new [#_"Object" ___key, #_"TNode" ___left, #_"TNode" ___right]
         (let [this (merge (Red'new ___key) (RedBranch'init))]
-            (§ ass (:left this) ___left)
-            (§ ass (:right this) ___right)
+            (§ ass this (assoc this :left ___left))
+            (§ ass this (assoc this :right ___right))
             this
         )
     )
@@ -31495,7 +31491,7 @@
 
     (defn #_"RedBranchVal" RedBranchVal'new [#_"Object" ___key, #_"Object" ___val, #_"TNode" ___left, #_"TNode" ___right]
         (let [this (merge (RedBranch'new ___key, ___left, ___right) (RedBranchVal'init))]
-            (§ ass (:val this) ___val)
+            (§ ass this (assoc this :val ___val))
             this
         )
     )
@@ -31522,27 +31518,27 @@
 
     (defn #_"TSeq" TSeq'new-2 [#_"ISeq" ___stack, #_"boolean" ___asc]
         (let [this (merge (ASeq'new) (TSeq'init))]
-            (§ ass (:stack this) ___stack)
-            (§ ass (:asc this) ___asc)
-            (§ ass (:cnt this) -1)
+            (§ ass this (assoc this :stack ___stack))
+            (§ ass this (assoc this :asc ___asc))
+            (§ ass this (assoc this :cnt -1))
             this
         )
     )
 
     (defn #_"TSeq" TSeq'new-3 [#_"ISeq" ___stack, #_"boolean" ___asc, #_"int" ___cnt]
         (let [this (merge (ASeq'new) (TSeq'init))]
-            (§ ass (:stack this) ___stack)
-            (§ ass (:asc this) ___asc)
-            (§ ass (:cnt this) ___cnt)
+            (§ ass this (assoc this :stack ___stack))
+            (§ ass this (assoc this :asc ___asc))
+            (§ ass this (assoc this :cnt ___cnt))
             this
         )
     )
 
     (defn #_"TSeq" TSeq'new-4 [#_"IPersistentMap" ___meta, #_"ISeq" ___stack, #_"boolean" ___asc, #_"int" ___cnt]
         (let [this (merge (ASeq'new ___meta) (TSeq'init))]
-            (§ ass (:stack this) ___stack)
-            (§ ass (:asc this) ___asc)
-            (§ ass (:cnt this) ___cnt)
+            (§ ass this (assoc this :stack ___stack))
+            (§ ass this (assoc this :asc ___asc))
+            (§ ass this (assoc this :cnt ___cnt))
             this
         )
     )
@@ -31600,7 +31596,7 @@
 
     (defn #_"NodeIterator" NodeIterator'new [#_"TNode" ___t, #_"boolean" ___asc]
         (let [this (NodeIterator'init)]
-            (§ ass (:asc this) ___asc)
+            (§ ass this (assoc this :asc ___asc))
             (.push this, ___t)
             this
         )
@@ -31648,7 +31644,7 @@
 
     (defn #_"KeyIterator" KeyIterator'new [#_"NodeIterator" ___it]
         (let [this (KeyIterator'init)]
-            (§ ass (:it this) ___it)
+            (§ ass this (assoc this :it ___it))
             this
         )
     )
@@ -31678,7 +31674,7 @@
 
     (defn #_"ValIterator" ValIterator'new [#_"NodeIterator" ___it]
         (let [this (ValIterator'init)]
-            (§ ass (:it this) ___it)
+            (§ ass this (assoc this :it ___it))
             this
         )
     )
@@ -31739,20 +31735,20 @@
 
     (defn #_"PersistentTreeMap" PersistentTreeMap'new-2 [#_"IPersistentMap" ___meta, #_"Comparator" ___comp]
         (let [this (merge (APersistentMap'new) (PersistentTreeMap'init))]
-            (§ ass (:comp this) ___comp)
-            (§ ass (:_meta this) ___meta)
-            (§ ass (:tree this) nil)
-            (§ ass (:_count this) 0)
+            (§ ass this (assoc this :comp ___comp))
+            (§ ass this (assoc this :_meta ___meta))
+            (§ ass this (assoc this :tree nil))
+            (§ ass this (assoc this :_count 0))
             this
         )
     )
 
     (defn #_"PersistentTreeMap" PersistentTreeMap'new-4m [#_"IPersistentMap" ___meta, #_"Comparator" ___comp, #_"TNode" ___tree, #_"int" ____count]
         (let [this (merge (APersistentMap'new) (PersistentTreeMap'init))]
-            (§ ass (:_meta this) ___meta)
-            (§ ass (:comp this) ___comp)
-            (§ ass (:tree this) ___tree)
-            (§ ass (:_count this) ____count)
+            (§ ass this (assoc this :_meta ___meta))
+            (§ ass this (assoc this :comp ___comp))
+            (§ ass this (assoc this :tree ___tree))
+            (§ ass this (assoc this :_count ____count))
             this
         )
     )
@@ -32273,10 +32269,10 @@
 
     (defn #_"PersistentTreeMap" PersistentTreeMap'new-4c [#_"Comparator" ___comp, #_"TNode" ___tree, #_"int" ___count, #_"IPersistentMap" ___meta]
         (let [this (merge (APersistentMap'new) (PersistentTreeMap'init))]
-            (§ ass (:_meta this) ___meta)
-            (§ ass (:comp this) ___comp)
-            (§ ass (:tree this) ___tree)
-            (§ ass (:_count this) ___count)
+            (§ ass this (assoc this :_meta ___meta))
+            (§ ass this (assoc this :comp ___comp))
+            (§ ass this (assoc this :tree ___tree))
+            (§ ass this (assoc this :_count ___count))
             this
         )
     )
@@ -32347,7 +32343,7 @@
 
     (defn #_"PersistentTreeSet" PersistentTreeSet'new [#_"IPersistentMap" ___meta, #_"IPersistentMap" ___impl]
         (let [this (merge (APersistentSet'new ___impl) (PersistentTreeSet'init))]
-            (§ ass (:_meta this) ___meta)
+            (§ ass this (assoc this :_meta ___meta))
             this
         )
     )
@@ -32453,16 +32449,16 @@
 
     (defn #_"VNode" VNode'new-2 [#_"AtomicReference<Thread>" ___edit, #_"Object[]" ___array]
         (let [this (VNode'init)]
-            (§ ass (:edit this) ___edit)
-            (§ ass (:array this) ___array)
+            (§ ass this (assoc this :edit ___edit))
+            (§ ass this (assoc this :array ___array))
             this
         )
     )
 
     (defn #_"VNode" VNode'new-1 [#_"AtomicReference<Thread>" ___edit]
         (let [this (VNode'init)]
-            (§ ass (:edit this) ___edit)
-            (§ ass (:array this) (make-array Object 32))
+            (§ ass this (assoc this :edit ___edit))
+            (§ ass this (assoc this :array (make-array Object 32)))
             this
         )
     )
@@ -32480,30 +32476,30 @@
 
     (defn #_"ChunkedSeq" ChunkedSeq'new-3 [#_"PersistentVector" ___vec, #_"int" ___i, #_"int" ___offset]
         (let [this (merge (ASeq'new) (ChunkedSeq'init))]
-            (§ ass (:vec this) ___vec)
-            (§ ass (:i this) ___i)
-            (§ ass (:offset this) ___offset)
-            (§ ass (:node this) (.arrayFor ___vec, ___i))
+            (§ ass this (assoc this :vec ___vec))
+            (§ ass this (assoc this :i ___i))
+            (§ ass this (assoc this :offset ___offset))
+            (§ ass this (assoc this :node (.arrayFor ___vec, ___i)))
             this
         )
     )
 
     (defn #_"ChunkedSeq" ChunkedSeq'new-5 [#_"IPersistentMap" ___meta, #_"PersistentVector" ___vec, #_"Object[]" ___node, #_"int" ___i, #_"int" ___offset]
         (let [this (merge (ASeq'new ___meta) (ChunkedSeq'init))]
-            (§ ass (:vec this) ___vec)
-            (§ ass (:node this) ___node)
-            (§ ass (:i this) ___i)
-            (§ ass (:offset this) ___offset)
+            (§ ass this (assoc this :vec ___vec))
+            (§ ass this (assoc this :node ___node))
+            (§ ass this (assoc this :i ___i))
+            (§ ass this (assoc this :offset ___offset))
             this
         )
     )
 
     (defn #_"ChunkedSeq" ChunkedSeq'new-4 [#_"PersistentVector" ___vec, #_"Object[]" ___node, #_"int" ___i, #_"int" ___offset]
         (let [this (merge (ASeq'new) (ChunkedSeq'init))]
-            (§ ass (:vec this) ___vec)
-            (§ ass (:node this) ___node)
-            (§ ass (:i this) ___i)
-            (§ ass (:offset this) ___offset)
+            (§ ass this (assoc this :vec ___vec))
+            (§ ass this (assoc this :node ___node))
+            (§ ass this (assoc this :i ___i))
+            (§ ass this (assoc this :offset ___offset))
             this
         )
     )
@@ -32574,10 +32570,10 @@
 
     (defn #_"TransientVector" TransientVector'new-4 [#_"int" ___cnt, #_"int" ___shift, #_"VNode" ___root, #_"Object[]" ___tail]
         (let [this (merge (AFn'new) (TransientVector'init))]
-            (§ ass (:cnt this) ___cnt)
-            (§ ass (:shift this) ___shift)
-            (§ ass (:root this) ___root)
-            (§ ass (:tail this) ___tail)
+            (§ ass this (assoc this :cnt ___cnt))
+            (§ ass this (assoc this :shift ___shift))
+            (§ ass this (assoc this :root ___root))
+            (§ ass this (assoc this :tail ___tail))
             this
         )
     )
@@ -32636,13 +32632,13 @@
             ;; room in tail?
             (when (< (- ___i (.tailoff this)) 32)
                 (§ ass (§ aget (:tail this) (& ___i 0x01f)) ___val)
-                (§ ass (:cnt this) (+ (:cnt this) 1))
+                (§ ass this (assoc this :cnt (+ (:cnt this) 1)))
                 (§ return this)
             )
             ;; full tail, push into tree
             (§ let [#_"VNode" ___newroot]
                 (let [#_"VNode" ___tailnode (VNode'new-2 (:edit (:root this)), (:tail this))]
-                    (§ ass (:tail this) (make-array Object 32))
+                    (§ ass this (assoc this :tail (make-array Object 32)))
                     (§ ass (§ aget (:tail this) 0) ___val)
                     (let [#_"int" ___newshift (:shift this)]
                         ;; overflow root?
@@ -32657,9 +32653,9 @@
                                 (§ ass ___newroot (.pushTail this, (:shift this), (:root this), ___tailnode))
                             )
                         )
-                        (§ ass (:root this) ___newroot)
-                        (§ ass (:shift this) ___newshift)
-                        (§ ass (:cnt this) (+ (:cnt this) 1))
+                        (§ ass this (assoc this :root ___newroot))
+                        (§ ass this (assoc this :shift ___newshift))
+                        (§ ass this (assoc this :cnt (+ (:cnt this) 1)))
                         this
                     )
                 )
@@ -32705,7 +32701,7 @@
     #_method
     (§ defn- #_"Object[]" (§ method arrayFor) [#_"TransientVector" this, #_"int" ___i]
         (when (and (<= 0 ___i) (< ___i (:cnt this)))
-            (when (>= ___i (.tailoff this))
+            (when (<= (.tailoff this) ___i)
                 (§ return (:tail this))
             )
             (let [#_"VNode" ___node (:root this)]
@@ -32721,7 +32717,7 @@
     #_method
     (§ defn- #_"Object[]" (§ method editableArrayFor) [#_"TransientVector" this, #_"int" ___i]
         (when (and (<= 0 ___i) (< ___i (:cnt this)))
-            (when (>= ___i (.tailoff this))
+            (when (<= (.tailoff this) ___i)
                 (§ return (:tail this))
             )
             (let [#_"VNode" ___node (:root this)]
@@ -32799,12 +32795,12 @@
     (§ defn #_"TransientVector" (§ method assocN) [#_"TransientVector" this, #_"int" ___i, #_"Object" ___val]
         (.ensureEditable this)
         (when (and (<= 0 ___i) (< ___i (:cnt this)))
-            (when (>= ___i (.tailoff this))
+            (when (<= (.tailoff this) ___i)
                 (§ ass (§ aget (:tail this) (& ___i 0x01f)) ___val)
                 (§ return this)
             )
 
-            (§ ass (:root this) (.doAssoc this, (:shift this), (:root this), ___i, ___val))
+            (§ ass this (assoc this :root (.doAssoc this, (:shift this), (:root this), ___i, ___val)))
             (§ return this)
         )
         (when (= ___i (:cnt this))
@@ -32849,13 +32845,13 @@
             (throw (IllegalStateException. "Can't pop empty vector"))
         )
         (when (= (:cnt this) 1)
-            (§ ass (:cnt this) 0)
+            (§ ass this (assoc this :cnt 0))
             (§ return this)
         )
         (let [#_"int" ___i (- (:cnt this) 1)]
             ;; pop in tail?
             (when (pos? (___i & 0x01f))
-                (§ ass (:cnt this) (- (:cnt this) 1))
+                (§ ass this (assoc this :cnt (- (:cnt this) 1)))
                 (§ return this)
             )
 
@@ -32869,10 +32865,10 @@
                             (§ ass ___newroot (.ensureEditable this, (cast' VNode (§ aget (:array ___newroot) 0))))
                             (§ ass ___newshift (- ___newshift 5))
                         )
-                        (§ ass (:root this) ___newroot)
-                        (§ ass (:shift this) ___newshift)
-                        (§ ass (:cnt this) (- (:cnt this) 1))
-                        (§ ass (:tail this) ___newtail)
+                        (§ ass this (assoc this :root ___newroot))
+                        (§ ass this (assoc this :shift ___newshift))
+                        (§ ass this (assoc this :cnt (- (:cnt this) 1)))
+                        (§ ass this (assoc this :tail ___newtail))
                         this
                     )
                 )
@@ -32884,7 +32880,7 @@
     (§ defn- #_"VNode" (§ method popTail) [#_"TransientVector" this, #_"int" ___level, #_"VNode" ___node]
         (§ ass ___node (.ensureEditable this, ___node))
         (let [#_"int" ___subidx (& (>>> (- (:cnt this) 2) ___level) 0x01f)]
-            (cond (> ___level 5)
+            (cond (< 5 ___level)
                 (do
                     (let [#_"VNode" ___newchild (.popTail this, (- ___level 5), (cast' VNode (§ aget (:array ___node) ___subidx)))]
                         (if (and (nil? ___newchild) (zero? ___subidx))
@@ -33033,22 +33029,22 @@
 
     (defn #_"PersistentVector" PersistentVector'new-4 [#_"int" ___cnt, #_"int" ___shift, #_"VNode" ___root, #_"Object[]" ___tail]
         (let [this (merge (APersistentVector'new) (PersistentVector'init))]
-            (§ ass (:_meta this) nil)
-            (§ ass (:cnt this) ___cnt)
-            (§ ass (:shift this) ___shift)
-            (§ ass (:root this) ___root)
-            (§ ass (:tail this) ___tail)
+            (§ ass this (assoc this :_meta nil))
+            (§ ass this (assoc this :cnt ___cnt))
+            (§ ass this (assoc this :shift ___shift))
+            (§ ass this (assoc this :root ___root))
+            (§ ass this (assoc this :tail ___tail))
             this
         )
     )
 
     (defn #_"PersistentVector" PersistentVector'new-5 [#_"IPersistentMap" ___meta, #_"int" ___cnt, #_"int" ___shift, #_"VNode" ___root, #_"Object[]" ___tail]
         (let [this (merge (APersistentVector'new) (PersistentVector'init))]
-            (§ ass (:_meta this) ___meta)
-            (§ ass (:cnt this) ___cnt)
-            (§ ass (:shift this) ___shift)
-            (§ ass (:root this) ___root)
-            (§ ass (:tail this) ___tail)
+            (§ ass this (assoc this :_meta ___meta))
+            (§ ass this (assoc this :cnt ___cnt))
+            (§ ass this (assoc this :shift ___shift))
+            (§ ass this (assoc this :root ___root))
+            (§ ass this (assoc this :tail ___tail))
             this
         )
     )
@@ -33069,11 +33065,11 @@
     #_method
     (§ defn #_"Object[]" (§ method arrayFor) [#_"PersistentVector" this, #_"int" ___i]
         (when (and (<= 0 ___i) (< ___i (:cnt this)))
-            (when (>= ___i (.tailoff this))
+            (when (<= (.tailoff this) ___i)
                 (§ return (:tail this))
             )
             (let [#_"VNode" ___node (:root this)]
-                (loop-when-recur [#_"int" ___level (:shift this)] (> ___level 0) [(- ___level 5)]
+                (loop-when-recur [#_"int" ___level (:shift this)] (< 0 ___level) [(- ___level 5)]
                     (§ ass ___node (cast' VNode (§ aget (:array ___node) (& (>>> ___i ___level) 0x01f))))
                 )
                 (§ return (:array ___node))
@@ -33100,7 +33096,7 @@
     #_method
     (§ defn #_"PersistentVector" (§ method assocN) [#_"PersistentVector" this, #_"int" ___i, #_"Object" ___val]
         (when (and (<= 0 ___i) (< ___i (:cnt this)))
-            (when (>= ___i (.tailoff this))
+            (when (<= (.tailoff this) ___i)
                 (let [#_"Object[]" ___newTail (make-array Object (§ alength (:tail this)))]
                     (System/arraycopy (:tail this), 0, ___newTail, 0, (§ alength (:tail this)))
                     (§ ass (§ aget ___newTail (& ___i 0x01f)) ___val)
@@ -33251,11 +33247,11 @@
                 (if (< (:i this) ___end)
                     (do
                         (when (= (- (:i this) (:base this)) 32)
-                            (§ ass (:array this) (.arrayFor this, (:i this)))
-                            (§ ass (:base this) (+ (:base this) 32))
+                            (§ ass this (assoc this :array (.arrayFor this, (:i this))))
+                            (§ ass this (assoc this :base (+ (:base this) 32)))
                         )
                         (let [_ (§ aget (:array this) (& (:i this) 0x01f))]
-                            (§ ass (:i this) (+ (:i this) 1))
+                            (§ ass this (assoc this :i (+ (:i this) 1)))
                             _
                         )
                     )
@@ -33379,7 +33375,7 @@
     #_method
     (§ defn- #_"VNode" (§ method popTail) [#_"PersistentVector" this, #_"int" ___level, #_"VNode" ___node]
         (let [#_"int" ___subidx (& (>>> (- (:cnt this) 2) ___level) 0x01f)]
-            (cond (> ___level 5)
+            (cond (< 5 ___level)
                 (do
                     (let [#_"VNode" ___newchild (.popTail this, (- ___level 5), (cast' VNode (§ aget (:array ___node) ___subidx)))]
                         (if (and (nil? ___newchild) (zero? ___subidx))
@@ -33427,7 +33423,7 @@
 
     (defn #_"ProxyHandler" ProxyHandler'new [#_"IPersistentMap" ___fns]
         (let [this (ProxyHandler'init)]
-            (§ ass (:fns this) ___fns)
+            (§ ass this (assoc this :fns ___fns))
             this
         )
     )
@@ -33527,7 +33523,7 @@
 
     (defn #_"RangeIterator" RangeIterator'new []
         (let [this (RangeIterator'init)]
-            (§ ass (:next this) (:start this))
+            (§ ass this (assoc this :next (:start this)))
             this
         )
     )
@@ -33542,7 +33538,7 @@
         (if (.hasNext this)
             (do
                 (let [#_"Object" ___ret (:next this)]
-                    (§ ass (:next this) (Numbers'addP-2oo (:next this), (:step this)))
+                    (§ ass this (assoc this :next (Numbers'addP-2oo (:next this), (:step this))))
                     ___ret
                 )
             )
@@ -33601,34 +33597,34 @@
 
     (defn- #_"Range" Range'new-4 [#_"Object" ___start, #_"Object" ___end, #_"Object" ___step, #_"RangeBoundsCheck" ___boundsCheck]
         (let [this (merge (ASeq'new) (Range'init))]
-            (§ ass (:end this) ___end)
-            (§ ass (:start this) ___start)
-            (§ ass (:step this) ___step)
-            (§ ass (:boundsCheck this) ___boundsCheck)
+            (§ ass this (assoc this :end ___end))
+            (§ ass this (assoc this :start ___start))
+            (§ ass this (assoc this :step ___step))
+            (§ ass this (assoc this :boundsCheck ___boundsCheck))
             this
         )
     )
 
     (defn- #_"Range" Range'new-6 [#_"Object" ___start, #_"Object" ___end, #_"Object" ___step, #_"RangeBoundsCheck" ___boundsCheck, #_"IChunk" ___chunk, #_"ISeq" ___chunkNext]
         (let [this (merge (ASeq'new) (Range'init))]
-            (§ ass (:end this) ___end)
-            (§ ass (:start this) ___start)
-            (§ ass (:step this) ___step)
-            (§ ass (:boundsCheck this) ___boundsCheck)
-            (§ ass (:_chunk this) ___chunk)
-            (§ ass (:_chunkNext this) ___chunkNext)
+            (§ ass this (assoc this :end ___end))
+            (§ ass this (assoc this :start ___start))
+            (§ ass this (assoc this :step ___step))
+            (§ ass this (assoc this :boundsCheck ___boundsCheck))
+            (§ ass this (assoc this :_chunk ___chunk))
+            (§ ass this (assoc this :_chunkNext ___chunkNext))
             this
         )
     )
 
     (defn- #_"Range" Range'new-7 [#_"IPersistentMap" ___meta, #_"Object" ___start, #_"Object" ___end, #_"Object" ___step, #_"RangeBoundsCheck" ___boundsCheck, #_"IChunk" ___chunk, #_"ISeq" ___chunkNext]
         (let [this (merge (ASeq'new ___meta) (Range'init))]
-            (§ ass (:end this) ___end)
-            (§ ass (:start this) ___start)
-            (§ ass (:step this) ___step)
-            (§ ass (:boundsCheck this) ___boundsCheck)
-            (§ ass (:_chunk this) ___chunk)
-            (§ ass (:_chunkNext this) ___chunkNext)
+            (§ ass this (assoc this :end ___end))
+            (§ ass this (assoc this :start ___start))
+            (§ ass this (assoc this :step ___step))
+            (§ ass this (assoc this :boundsCheck ___boundsCheck))
+            (§ ass this (assoc this :_chunk ___chunk))
+            (§ ass this (assoc this :_chunkNext ___chunkNext))
             this
         )
     )
@@ -33682,20 +33678,20 @@
                         (§ ass ___val (Numbers'addP-2oo ___val, (:step this)))
                         (when (.exceededBounds (:boundsCheck this), ___val)
                             ;; partial last chunk
-                            (§ ass (:_chunk this) (ArrayChunk'new-3 ___arr, 0, ___n))
+                            (§ ass this (assoc this :_chunk (ArrayChunk'new-3 ___arr, 0, ___n)))
                             (§ return nil)
                         )
                     )
 
                     ;; full last chunk
                     (when (.exceededBounds (:boundsCheck this), ___val)
-                        (§ ass (:_chunk this) (ArrayChunk'new-3 ___arr, 0, Range'CHUNK_SIZE))
+                        (§ ass this (assoc this :_chunk (ArrayChunk'new-3 ___arr, 0, Range'CHUNK_SIZE)))
                         (§ return nil)
                     )
 
                     ;; full intermediate chunk
-                    (§ ass (:_chunk this) (ArrayChunk'new-3 ___arr, 0, Range'CHUNK_SIZE))
-                    (§ ass (:_chunkNext this) (Range'new-4 ___val, (:end this), (:step this), (:boundsCheck this)))
+                    (§ ass this (assoc this :_chunk (ArrayChunk'new-3 ___arr, 0, Range'CHUNK_SIZE)))
+                    (§ ass this (assoc this :_chunkNext (Range'new-4 ___val, (:end this), (:step this), (:boundsCheck this))))
                     nil
                 )
             )
@@ -33711,7 +33707,7 @@
         (.forceChunk this)
         (when (< 1 (.count (:_chunk this)))
             (let [#_"IChunk" ___smallerChunk (.dropFirst (:_chunk this))]
-                (§ ass (:_next this) (Range'new-6 (.nth ___smallerChunk, 0), (:end this), (:step this), (:boundsCheck this), ___smallerChunk, (:_chunkNext this)))
+                (§ ass this (assoc this :_next (Range'new-6 (.nth ___smallerChunk, 0), (:end this), (:step this), (:boundsCheck this), ___smallerChunk, (:_chunkNext this))))
                 (§ return (:_next this))
             )
         )
@@ -33793,8 +33789,8 @@
 
     (defn #_"Ratio" Ratio'new [#_"BigInteger" ___numerator, #_"BigInteger" ___denominator]
         (let [this (merge (Number'new) (Ratio'init))]
-            (§ ass (:numerator this) ___numerator)
-            (§ ass (:denominator this) ___denominator)
+            (§ ass this (assoc this :numerator ___numerator))
+            (§ ass this (assoc this :denominator ___denominator))
             this
         )
     )
@@ -33881,8 +33877,8 @@
 
     (defn- #_"ReaderConditional" ReaderConditional'new [#_"Object" ___form, #_"boolean" ___splicing]
         (let [this (ReaderConditional'init)]
-            (§ ass (:form this) ___form)
-            (§ ass (:splicing this) ___splicing)
+            (§ ass this (assoc this :form ___form))
+            (§ ass this (assoc this :splicing ___splicing))
             this
         )
     )
@@ -33958,10 +33954,10 @@
 
     (defn #_"RecordIterator" RecordIterator'new [#_"ILookup" ___rec, #_"IPersistentVector" ___basefields, #_"Iterator" ___extmap]
         (let [this (RecordIterator'init)]
-            (§ ass (:rec this) ___rec)
-            (§ ass (:basefields this) ___basefields)
-            (§ ass (:basecnt this) (count ___basefields))
-            (§ ass (:extmap this) ___extmap)
+            (§ ass this (assoc this :rec ___rec))
+            (§ ass this (assoc this :basefields ___basefields))
+            (§ ass this (assoc this :basecnt (count ___basefields)))
+            (§ ass this (assoc this :extmap ___extmap))
             this
         )
     )
@@ -33983,7 +33979,7 @@
         (if (< (:i this) (:basecnt this))
             (do
                 (let [#_"Object" ___k (.nth (:basefields this), (:i this))]
-                    (§ ass (:i this) (+ (:i this) 1))
+                    (§ ass this (assoc this :i (+ (:i this) 1)))
                     (MapEntry'create ___k, (.valAt (:rec this), ___k))
                 )
             )
@@ -34011,7 +34007,7 @@
 
     (defn #_"Reduced" Reduced'new [#_"Object" ___val]
         (let [this (Reduced'init)]
-            (§ ass (:val this) ___val)
+            (§ ass this (assoc this :val ___val))
             this
         )
     )
@@ -34041,10 +34037,10 @@
 
     (defn #_"RefTVal" RefTVal'new-3 [#_"Object" ___val, #_"long" ___point, #_"RefTVal" ___prior]
         (let [this (RefTVal'init)]
-            (§ ass (:val this) ___val)
-            (§ ass (:point this) ___point)
-            (§ ass (:prior this) ___prior)
-            (§ ass (:next this) (:next ___prior))
+            (§ ass this (assoc this :val ___val))
+            (§ ass this (assoc this :point ___point))
+            (§ ass this (assoc this :prior ___prior))
+            (§ ass this (assoc this :next (:next ___prior)))
             (§ ass (:next (:prior this)) this)
             (§ ass (:prior (:next this)) this)
             this
@@ -34053,10 +34049,10 @@
 
     (defn #_"RefTVal" RefTVal'new-2 [#_"Object" ___val, #_"long" ___point]
         (let [this (RefTVal'init)]
-            (§ ass (:val this) ___val)
-            (§ ass (:point this) ___point)
-            (§ ass (:next this) this)
-            (§ ass (:prior this) this)
+            (§ ass this (assoc this :val ___val))
+            (§ ass this (assoc this :point ___point))
+            (§ ass this (assoc this :next this))
+            (§ ass this (assoc this :prior this))
             this
         )
     )
@@ -34086,10 +34082,10 @@
 
     (defn #_"Ref" Ref'new-2 [#_"Object" ___initVal, #_"IPersistentMap" ___meta]
         (let [this (merge (ARef'new-1 ___meta) (Ref'init))]
-            (§ ass (:id this) (.getAndIncrement Ref'ids))
-            (§ ass (:faults this) (AtomicInteger.))
-            (§ ass (:lock this) (ReentrantReadWriteLock.))
-            (§ ass (:tvals this) (RefTVal'new-2 ___initVal, 0))
+            (§ ass this (assoc this :id (.getAndIncrement Ref'ids)))
+            (§ ass this (assoc this :faults (AtomicInteger.)))
+            (§ ass this (assoc this :lock (ReentrantReadWriteLock.)))
+            (§ ass this (assoc this :tvals (RefTVal'new-2 ___initVal, 0)))
             this
         )
     )
@@ -34118,7 +34114,7 @@
 
     #_method
     (§ defn #_"Ref" (§ method setMinHistory) [#_"Ref" this, #_"int" ___minHistory]
-        (§ ass (:minHistory this) ___minHistory)
+        (§ ass this (assoc this :minHistory ___minHistory))
         this
     )
 
@@ -34129,7 +34125,7 @@
 
     #_method
     (§ defn #_"Ref" (§ method setMaxHistory) [#_"Ref" this, #_"int" ___maxHistory]
-        (§ ass (:maxHistory this) ___maxHistory)
+        (§ ass this (assoc this :maxHistory ___maxHistory))
         this
     )
 
@@ -34932,16 +34928,16 @@
 
     (defn- #_"Repeat" Repeat'new-2 [#_"long" ___count, #_"Object" ___val]
         (let [this (merge (ASeq'new) (Repeat'init))]
-            (§ ass (:count this) ___count)
-            (§ ass (:val this) ___val)
+            (§ ass this (assoc this :count ___count))
+            (§ ass this (assoc this :val ___val))
             this
         )
     )
 
     (defn- #_"Repeat" Repeat'new-3 [#_"IPersistentMap" ___meta, #_"long" ___count, #_"Object" ___val]
         (let [this (merge (ASeq'new ___meta) (Repeat'init))]
-            (§ ass (:count this) ___count)
-            (§ ass (:val this) ___val)
+            (§ ass this (assoc this :count ___count))
+            (§ ass this (assoc this :val ___val))
             this
         )
     )
@@ -34967,11 +34963,11 @@
         (when (nil? (:_next this))
             (cond (> (:count this) 1)
                 (do
-                    (§ ass (:_next this) (Repeat'new-2 (dec (:count this)), (:val this)))
+                    (§ ass this (assoc this :_next (Repeat'new-2 (dec (:count this)), (:val this))))
                 )
                 (= (:count this) Repeat'INFINITE)
                 (do
-                    (§ ass (:_next this) this)
+                    (§ ass this (assoc this :_next this))
                 )
             )
         )
@@ -35179,333 +35175,288 @@
         (when (<= (RT'boundedLength ___args, (.getRequiredArity this)) (.getRequiredArity this))
             (§ return (AFn'applyToHelper this, (Util'ret1 ___args, (§ ass ___args nil))))
         )
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
-                (§ return (.doInvoke this, (Util'ret1 ___args, (§ ass ___args nil))))
-            )
-            (§ case 1)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+        (case (.getRequiredArity this)
+            0
+                (.doInvoke this, (Util'ret1 ___args, (§ ass ___args nil)))
+            1
+                (.doInvoke this, (first ___args),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 2)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            2
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 3)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            3
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 4)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            4
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 5)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            5
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 6)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            6
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 7)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            7
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 8)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            8
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 9)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            9
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 10)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            10
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 11)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            11
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 12)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            12
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 13)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            13
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 14)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            14
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 15)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            15
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 16)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            16
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 17)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            17
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 18)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            18
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 19)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            19
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
-            (§ case 20)
-            (do
-                (§ return (.doInvoke this, (first ___args),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (.first (§ ass ___args (next ___args))),
-                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+            20
+                (.doInvoke this, (first ___args),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (.first (§ ass ___args (next ___args))),
+                    (Util'ret1 (next ___args), (§ ass ___args nil))
                 )
-            )
+            (.throwArity this, -1)
         )
-        (.throwArity this, -1)
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this, nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 0)
             )
@@ -35514,16 +35465,11 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this, (ArraySeq'create-1 (Util'ret1 ___arg1, (§ ass ___arg1 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this, (Util'ret1 ___arg1, (§ ass ___arg1 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 1)
             )
@@ -35532,28 +35478,21 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         (Util'ret1 ___arg2, (§ ass ___arg2 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (ArraySeq'create-1
                         (Util'ret1 ___arg2, (§ ass ___arg2 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 2)
             )
@@ -35562,39 +35501,30 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
                         (Util'ret1 ___arg3, (§ ass ___arg3 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (ArraySeq'create-1
                         (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
                         (Util'ret1 ___arg3, (§ ass ___arg3 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
                     (ArraySeq'create-1
                         (Util'ret1 ___arg3, (§ ass ___arg3 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
                     (Util'ret1 ___arg3, (§ ass ___arg3 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 3)
             )
@@ -35603,52 +35533,41 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
                         (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
                         (Util'ret1 ___arg4, (§ ass ___arg4 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (ArraySeq'create-1
                         (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
                         (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
                         (Util'ret1 ___arg4, (§ ass ___arg4 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
                     (ArraySeq'create-1
                         (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
                         (Util'ret1 ___arg4, (§ ass ___arg4 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
                     (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
                     (ArraySeq'create-1
                         (Util'ret1 ___arg4, (§ ass ___arg4 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
                     (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
                     (Util'ret1 ___arg4, (§ ass ___arg4 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 4)
             )
@@ -35657,9 +35576,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
@@ -35667,9 +35585,7 @@
                         (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
                         (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
                         (Util'ret1 ___arg5, (§ ass ___arg5 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         (ArraySeq'create-1
@@ -35677,9 +35593,7 @@
                             (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
                             (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
                             (Util'ret1 ___arg5, (§ ass ___arg5 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35687,9 +35601,7 @@
                             (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
                             (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
                             (Util'ret1 ___arg5, (§ ass ___arg5 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35697,9 +35609,7 @@
                         (ArraySeq'create-1
                             (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
                             (Util'ret1 ___arg5, (§ ass ___arg5 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35707,17 +35617,13 @@
                     (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
                         (ArraySeq'create-1
                             (Util'ret1 ___arg5, (§ ass ___arg5 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
                     (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
                     (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
                     (Util'ret1 ___arg5, (§ ass ___arg5 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 5)
             )
@@ -35726,9 +35632,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
@@ -35737,9 +35642,7 @@
                         (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
                         (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                         (Util'ret1 ___arg6, (§ ass ___arg6 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         (ArraySeq'create-1
@@ -35748,9 +35651,7 @@
                             (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
                             (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35759,9 +35660,7 @@
                             (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
                             (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35770,9 +35669,7 @@
                             (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
                             (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35781,9 +35678,7 @@
                         (ArraySeq'create-1
                             (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35792,9 +35687,7 @@
                     (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                         (ArraySeq'create-1
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil))))
-            )
-            (§ case 6)
-            (do
+            6
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35802,8 +35695,6 @@
                     (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
                     (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                     (Util'ret1 ___arg6, (§ ass ___arg6 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 6)
             )
@@ -35812,9 +35703,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
@@ -35824,9 +35714,7 @@
                             (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (ArraySeq'create-1
@@ -35836,9 +35724,7 @@
                         (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                         (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                         (Util'ret1 ___arg7, (§ ass ___arg7 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35848,9 +35734,7 @@
                             (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35860,9 +35744,7 @@
                             (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35872,9 +35754,7 @@
                             (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35884,9 +35764,7 @@
                         (ArraySeq'create-1
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil))))
-            )
-            (§ case 6)
-            (do
+            6
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35896,9 +35774,7 @@
                     (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                         (ArraySeq'create-1
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil))))
-            )
-            (§ case 7)
-            (do
+            7
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35907,8 +35783,6 @@
                     (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                     (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                     (Util'ret1 ___arg7, (§ ass ___arg7 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 7)
             )
@@ -35917,9 +35791,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
@@ -35930,9 +35803,7 @@
                         (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                         (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                         (Util'ret1 ___arg8, (§ ass ___arg8 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (ArraySeq'create-1
@@ -35943,9 +35814,7 @@
                         (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                         (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                         (Util'ret1 ___arg8, (§ ass ___arg8 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35956,9 +35825,7 @@
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35969,9 +35836,7 @@
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35982,9 +35847,7 @@
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -35995,9 +35858,7 @@
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil))))
-            )
-            (§ case 6)
-            (do
+            6
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36008,9 +35869,7 @@
                         (ArraySeq'create-1
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil))))
-            )
-            (§ case 7)
-            (do
+            7
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36021,9 +35880,7 @@
                     (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                         (ArraySeq'create-1
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil))))
-            )
-            (§ case 8)
-            (do
+            8
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36033,8 +35890,6 @@
                     (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                     (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                     (Util'ret1 ___arg8, (§ ass ___arg8 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 8)
             )
@@ -36043,9 +35898,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
@@ -36057,9 +35911,7 @@
                         (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                         (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                         (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (ArraySeq'create-1
@@ -36071,9 +35923,7 @@
                         (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                         (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                         (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36085,9 +35935,7 @@
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36099,9 +35947,7 @@
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36113,9 +35959,7 @@
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36127,9 +35971,7 @@
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
-            )
-            (§ case 6)
-            (do
+            6
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36141,9 +35983,7 @@
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
-            )
-            (§ case 7)
-            (do
+            7
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36155,9 +35995,7 @@
                         (ArraySeq'create-1
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
-            )
-            (§ case 8)
-            (do
+            8
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36169,9 +36007,7 @@
                     (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                         (ArraySeq'create-1
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
-            )
-            (§ case 9)
-            (do
+            9
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36182,8 +36018,6 @@
                     (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                     (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                     (Util'ret1 ___arg9, (§ ass ___arg9 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 9)
             )
@@ -36192,9 +36026,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
@@ -36207,9 +36040,7 @@
                         (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                         (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                         (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (ArraySeq'create-1
@@ -36222,9 +36053,7 @@
                         (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                         (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                         (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36237,9 +36066,7 @@
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36252,9 +36079,7 @@
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36267,9 +36092,7 @@
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36282,9 +36105,7 @@
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
-            )
-            (§ case 6)
-            (do
+            6
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36297,9 +36118,7 @@
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
-            )
-            (§ case 7)
-            (do
+            7
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36312,9 +36131,7 @@
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
-            )
-            (§ case 8)
-            (do
+            8
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36327,9 +36144,7 @@
                         (ArraySeq'create-1
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
-            )
-            (§ case 9)
-            (do
+            9
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36342,9 +36157,7 @@
                     (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                         (ArraySeq'create-1
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
-            )
-            (§ case 10)
-            (do
+            10
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36356,8 +36169,6 @@
                     (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                     (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                     (Util'ret1 ___arg10, (§ ass ___arg10 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 10)
             )
@@ -36366,9 +36177,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
@@ -36382,9 +36192,7 @@
                         (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                         (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                         (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         (ArraySeq'create-1
@@ -36398,9 +36206,7 @@
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36414,9 +36220,7 @@
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36430,9 +36234,7 @@
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36446,9 +36248,7 @@
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36462,9 +36262,7 @@
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
-            )
-            (§ case 6)
-            (do
+            6
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36478,9 +36276,7 @@
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
-            )
-            (§ case 7)
-            (do
+            7
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36494,9 +36290,7 @@
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
-            )
-            (§ case 8)
-            (do
+            8
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36510,9 +36304,7 @@
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
-            )
-            (§ case 9)
-            (do
+            9
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36526,9 +36318,7 @@
                         (ArraySeq'create-1
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
-            )
-            (§ case 10)
-            (do
+            10
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36542,9 +36332,7 @@
                     (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                         (ArraySeq'create-1
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
-            )
-            (§ case 11)
-            (do
+            11
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36557,8 +36345,6 @@
                     (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                     (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                     (Util'ret1 ___arg11, (§ ass ___arg11 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 11)
             )
@@ -36567,9 +36353,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
@@ -36584,9 +36369,7 @@
                         (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                         (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                         (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         (ArraySeq'create-1
@@ -36601,9 +36384,7 @@
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36618,9 +36399,7 @@
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36635,9 +36414,7 @@
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36652,9 +36429,7 @@
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36669,9 +36444,7 @@
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
-            )
-            (§ case 6)
-            (do
+            6
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36686,9 +36459,7 @@
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
-            )
-            (§ case 7)
-            (do
+            7
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36703,9 +36474,7 @@
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
-            )
-            (§ case 8)
-            (do
+            8
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36720,9 +36489,7 @@
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
-            )
-            (§ case 9)
-            (do
+            9
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36737,9 +36504,7 @@
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
-            )
-            (§ case 10)
-            (do
+            10
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36754,9 +36519,7 @@
                         (ArraySeq'create-1
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
-            )
-            (§ case 11)
-            (do
+            11
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36771,9 +36534,7 @@
                     (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                         (ArraySeq'create-1
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
-            )
-            (§ case 12)
-            (do
+            12
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36787,8 +36548,6 @@
                     (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                     (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                     (Util'ret1 ___arg12, (§ ass ___arg12 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 12)
             )
@@ -36797,9 +36556,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
@@ -36815,9 +36573,7 @@
                         (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                         (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                         (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         (ArraySeq'create-1
@@ -36833,9 +36589,7 @@
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36851,9 +36605,7 @@
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36869,9 +36621,7 @@
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36887,9 +36637,7 @@
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36905,9 +36653,7 @@
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
-            )
-            (§ case 6)
-            (do
+            6
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36923,9 +36669,7 @@
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
-            )
-            (§ case 7)
-            (do
+            7
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36941,9 +36685,7 @@
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
-            )
-            (§ case 8)
-            (do
+            8
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36959,9 +36701,7 @@
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
-            )
-            (§ case 9)
-            (do
+            9
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36977,9 +36717,7 @@
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
-            )
-            (§ case 10)
-            (do
+            10
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -36995,9 +36733,7 @@
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
-            )
-            (§ case 11)
-            (do
+            11
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37013,9 +36749,7 @@
                         (ArraySeq'create-1
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
-            )
-            (§ case 12)
-            (do
+            12
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37031,9 +36765,7 @@
                     (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                         (ArraySeq'create-1
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
-            )
-            (§ case 13)
-            (do
+            13
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37048,8 +36780,6 @@
                     (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                     (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                     (Util'ret1 ___arg13, (§ ass ___arg13 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 13)
             )
@@ -37058,9 +36788,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13, #_"Object" ___arg14]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
@@ -37077,9 +36806,7 @@
                         (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                         (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                         (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         (ArraySeq'create-1
@@ -37096,9 +36823,7 @@
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37115,9 +36840,7 @@
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37134,9 +36857,7 @@
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37153,9 +36874,7 @@
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37172,9 +36891,7 @@
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
-            )
-            (§ case 6)
-            (do
+            6
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37191,9 +36908,7 @@
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
-            )
-            (§ case 7)
-            (do
+            7
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37210,9 +36925,7 @@
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
-            )
-            (§ case 8)
-            (do
+            8
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37229,9 +36942,7 @@
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
-            )
-            (§ case 9)
-            (do
+            9
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37248,9 +36959,7 @@
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
-            )
-            (§ case 10)
-            (do
+            10
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37267,9 +36976,7 @@
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
-            )
-            (§ case 11)
-            (do
+            11
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37286,9 +36993,7 @@
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
-            )
-            (§ case 12)
-            (do
+            12
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37305,9 +37010,7 @@
                         (ArraySeq'create-1
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
-            )
-            (§ case 13)
-            (do
+            13
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37324,9 +37027,7 @@
                     (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                         (ArraySeq'create-1
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
-            )
-            (§ case 14)
-            (do
+            14
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37342,8 +37043,6 @@
                     (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                     (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                     (Util'ret1 ___arg14, (§ ass ___arg14 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 14)
             )
@@ -37352,9 +37051,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13, #_"Object" ___arg14, #_"Object" ___arg15]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
@@ -37372,9 +37070,7 @@
                         (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                         (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                         (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         (ArraySeq'create-1
@@ -37392,9 +37088,7 @@
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37412,9 +37106,7 @@
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37432,9 +37124,7 @@
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37452,9 +37142,7 @@
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37472,9 +37160,7 @@
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
-            )
-            (§ case 6)
-            (do
+            6
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37492,9 +37178,7 @@
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
-            )
-            (§ case 7)
-            (do
+            7
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37512,9 +37196,7 @@
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
-            )
-            (§ case 8)
-            (do
+            8
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37532,9 +37214,7 @@
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
-            )
-            (§ case 9)
-            (do
+            9
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37552,9 +37232,7 @@
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
-            )
-            (§ case 10)
-            (do
+            10
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37572,9 +37250,7 @@
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
-            )
-            (§ case 11)
-            (do
+            11
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37592,9 +37268,7 @@
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
-            )
-            (§ case 12)
-            (do
+            12
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37612,9 +37286,7 @@
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
-            )
-            (§ case 13)
-            (do
+            13
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37632,9 +37304,7 @@
                         (ArraySeq'create-1
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
-            )
-            (§ case 14)
-            (do
+            14
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37652,9 +37322,7 @@
                     (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                         (ArraySeq'create-1
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
-            )
-            (§ case 15)
-            (do
+            15
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37671,8 +37339,6 @@
                     (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                     (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                     (Util'ret1 ___arg15, (§ ass ___arg15 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 15)
             )
@@ -37681,9 +37347,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13, #_"Object" ___arg14, #_"Object" ___arg15, #_"Object" ___arg16]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
@@ -37702,9 +37367,7 @@
                         (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                         (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                         (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         (ArraySeq'create-1
@@ -37723,9 +37386,7 @@
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37744,9 +37405,7 @@
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37765,9 +37424,7 @@
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37786,9 +37443,7 @@
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37807,9 +37462,7 @@
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
-            )
-            (§ case 6)
-            (do
+            6
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37828,9 +37481,7 @@
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
-            )
-            (§ case 7)
-            (do
+            7
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37849,9 +37500,7 @@
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
-            )
-            (§ case 8)
-            (do
+            8
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37870,9 +37519,7 @@
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
-            )
-            (§ case 9)
-            (do
+            9
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37891,9 +37538,7 @@
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
-            )
-            (§ case 10)
-            (do
+            10
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37912,9 +37557,7 @@
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
-            )
-            (§ case 11)
-            (do
+            11
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37933,9 +37576,7 @@
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
-            )
-            (§ case 12)
-            (do
+            12
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37954,9 +37595,7 @@
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
-            )
-            (§ case 13)
-            (do
+            13
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37975,9 +37614,7 @@
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
-            )
-            (§ case 14)
-            (do
+            14
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -37996,9 +37633,7 @@
                         (ArraySeq'create-1
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
-            )
-            (§ case 15)
-            (do
+            15
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38017,9 +37652,7 @@
                     (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                         (ArraySeq'create-1
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
-            )
-            (§ case 16)
-            (do
+            16
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38037,8 +37670,6 @@
                     (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                     (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                     (Util'ret1 ___arg16, (§ ass ___arg16 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 16)
             )
@@ -38047,9 +37678,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13, #_"Object" ___arg14, #_"Object" ___arg15, #_"Object" ___arg16, #_"Object" ___arg17]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
@@ -38069,9 +37699,7 @@
                         (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                         (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                         (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         (ArraySeq'create-1
@@ -38091,9 +37719,7 @@
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38113,9 +37739,7 @@
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38135,9 +37759,7 @@
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38157,9 +37779,7 @@
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38179,9 +37799,7 @@
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 6)
-            (do
+            6
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38201,9 +37819,7 @@
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 7)
-            (do
+            7
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38223,9 +37839,7 @@
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 8)
-            (do
+            8
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38245,9 +37859,7 @@
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 9)
-            (do
+            9
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38267,9 +37879,7 @@
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 10)
-            (do
+            10
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38289,9 +37899,7 @@
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 11)
-            (do
+            11
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38311,9 +37919,7 @@
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 12)
-            (do
+            12
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38333,9 +37939,7 @@
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 13)
-            (do
+            13
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38355,9 +37959,7 @@
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 14)
-            (do
+            14
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38377,9 +37979,7 @@
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 15)
-            (do
+            15
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38399,9 +37999,7 @@
                         (ArraySeq'create-1
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 16)
-            (do
+            16
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38421,9 +38019,7 @@
                     (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                         (ArraySeq'create-1
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
-            )
-            (§ case 17)
-            (do
+            17
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38442,8 +38038,6 @@
                     (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                     (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                     (Util'ret1 ___arg17, (§ ass ___arg17 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 17)
             )
@@ -38452,9 +38046,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13, #_"Object" ___arg14, #_"Object" ___arg15, #_"Object" ___arg16, #_"Object" ___arg17, #_"Object" ___arg18]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
@@ -38475,9 +38068,7 @@
                         (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                         (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                         (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         (ArraySeq'create-1
@@ -38498,9 +38089,7 @@
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38521,9 +38110,7 @@
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38544,9 +38131,7 @@
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38567,9 +38152,7 @@
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38590,9 +38173,7 @@
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 6)
-            (do
+            6
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38613,9 +38194,7 @@
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 7)
-            (do
+            7
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38636,9 +38215,7 @@
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 8)
-            (do
+            8
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38659,9 +38236,7 @@
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 9)
-            (do
+            9
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38682,9 +38257,7 @@
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 10)
-            (do
+            10
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38705,9 +38278,7 @@
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 11)
-            (do
+            11
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38728,9 +38299,7 @@
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 12)
-            (do
+            12
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38751,9 +38320,7 @@
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 13)
-            (do
+            13
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38774,9 +38341,7 @@
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 14)
-            (do
+            14
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38797,9 +38362,7 @@
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 15)
-            (do
+            15
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38820,9 +38383,7 @@
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 16)
-            (do
+            16
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38843,9 +38404,7 @@
                         (ArraySeq'create-1
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 17)
-            (do
+            17
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38866,9 +38425,7 @@
                     (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                         (ArraySeq'create-1
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
-            )
-            (§ case 18)
-            (do
+            18
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38888,8 +38445,6 @@
                     (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                     (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                     (Util'ret1 ___arg18, (§ ass ___arg18 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 18)
             )
@@ -38898,9 +38453,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13, #_"Object" ___arg14, #_"Object" ___arg15, #_"Object" ___arg16, #_"Object" ___arg17, #_"Object" ___arg18, #_"Object" ___arg19]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
@@ -38922,9 +38476,7 @@
                         (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                         (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                         (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         (ArraySeq'create-1
@@ -38946,9 +38498,7 @@
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38970,9 +38520,7 @@
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -38994,9 +38542,7 @@
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39018,9 +38564,7 @@
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39042,9 +38586,7 @@
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 6)
-            (do
+            6
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39066,9 +38608,7 @@
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 7)
-            (do
+            7
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39090,9 +38630,7 @@
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 8)
-            (do
+            8
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39114,9 +38652,7 @@
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 9)
-            (do
+            9
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39138,9 +38674,7 @@
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 10)
-            (do
+            10
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39162,9 +38696,7 @@
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 11)
-            (do
+            11
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39186,9 +38718,7 @@
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 12)
-            (do
+            12
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39210,9 +38740,7 @@
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 13)
-            (do
+            13
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39234,9 +38762,7 @@
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 14)
-            (do
+            14
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39258,9 +38784,7 @@
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 15)
-            (do
+            15
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39282,9 +38806,7 @@
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 16)
-            (do
+            16
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39306,9 +38828,7 @@
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 17)
-            (do
+            17
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39330,9 +38850,7 @@
                         (ArraySeq'create-1
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 18)
-            (do
+            18
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39354,9 +38872,7 @@
                     (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                         (ArraySeq'create-1
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
-            )
-            (§ case 19)
-            (do
+            19
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39377,8 +38893,6 @@
                     (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                     (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                     (Util'ret1 ___arg19, (§ ass ___arg19 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 19)
             )
@@ -39387,9 +38901,8 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13, #_"Object" ___arg14, #_"Object" ___arg15, #_"Object" ___arg16, #_"Object" ___arg17, #_"Object" ___arg18, #_"Object" ___arg19, #_"Object" ___arg20]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
                     (ArraySeq'create-1
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
@@ -39412,9 +38925,7 @@
                         (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                         (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                         (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         (ArraySeq'create-1
@@ -39437,9 +38948,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39462,9 +38971,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39487,9 +38994,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39512,9 +39017,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39537,9 +39040,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 6)
-            (do
+            6
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39562,9 +39063,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 7)
-            (do
+            7
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39587,9 +39086,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 8)
-            (do
+            8
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39612,9 +39109,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 9)
-            (do
+            9
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39637,9 +39132,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 10)
-            (do
+            10
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39662,9 +39155,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 11)
-            (do
+            11
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39687,9 +39178,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 12)
-            (do
+            12
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39712,9 +39201,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 13)
-            (do
+            13
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39737,9 +39224,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 14)
-            (do
+            14
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39762,9 +39247,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 15)
-            (do
+            15
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39787,9 +39270,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 16)
-            (do
+            16
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39812,9 +39293,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 17)
-            (do
+            17
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39837,9 +39316,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 18)
-            (do
+            18
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39862,9 +39339,7 @@
                         (ArraySeq'create-1
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 19)
-            (do
+            19
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39887,9 +39362,7 @@
                     (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                         (ArraySeq'create-1
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 20)
-            (do
+            20
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -39911,8 +39384,6 @@
                     (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                     (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                     (Util'ret1 ___arg20, (§ ass ___arg20 nil)), nil)
-            )
-            (§ default )
             (do
                 (.throwArity this, 20)
             )
@@ -39921,11 +39392,10 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RestFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13, #_"Object" ___arg14, #_"Object" ___arg15, #_"Object" ___arg16, #_"Object" ___arg17, #_"Object" ___arg18, #_"Object" ___arg19, #_"Object" ___arg20 & #_"Object..." ___args]
-        (§ switch (.getRequiredArity this)
-            (§ case 0)
-            (do
+        (case (.getRequiredArity this)
+            0
                 (.doInvoke this,
-                    ontoArrayPrepend(___args,
+                    (RestFn'ontoArrayPrepend ___args,
                         (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
                         (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
@@ -39946,12 +39416,10 @@
                         (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                         (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                         (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 1)
-            (do
+            1
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
                             (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
                             (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
@@ -39971,13 +39439,11 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 2)
-            (do
+            2
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
                             (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
                             (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
@@ -39996,14 +39462,12 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 3)
-            (do
+            3
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
                     (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
                             (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
@@ -40021,15 +39485,13 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 4)
-            (do
+            4
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
                     (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
                     (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
@@ -40046,16 +39508,14 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 5)
-            (do
+            5
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
                     (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
                     (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
                     (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
@@ -40071,9 +39531,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 6)
-            (do
+            6
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -40081,7 +39539,7 @@
                     (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
                     (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                     (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
@@ -40096,9 +39554,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 7)
-            (do
+            7
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -40107,7 +39563,7 @@
                     (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                     (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                     (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
@@ -40121,9 +39577,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 8)
-            (do
+            8
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -40133,7 +39587,7 @@
                     (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                     (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                     (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
@@ -40146,9 +39600,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 9)
-            (do
+            9
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -40159,7 +39611,7 @@
                     (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                     (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                     (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
@@ -40171,9 +39623,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 10)
-            (do
+            10
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -40185,7 +39635,7 @@
                     (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                     (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                     (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
@@ -40196,9 +39646,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 11)
-            (do
+            11
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -40211,7 +39659,7 @@
                     (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                     (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                     (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
@@ -40221,9 +39669,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 12)
-            (do
+            12
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -40237,7 +39683,7 @@
                     (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                     (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                     (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
@@ -40246,9 +39692,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 13)
-            (do
+            13
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -40263,7 +39707,7 @@
                     (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                     (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                     (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
@@ -40271,9 +39715,7 @@
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 14)
-            (do
+            14
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -40289,16 +39731,14 @@
                     (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                     (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                     (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 15)
-            (do
+            15
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -40315,15 +39755,13 @@
                     (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                     (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                     (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 16)
-            (do
+            16
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -40341,14 +39779,12 @@
                     (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                     (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                     (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 17)
-            (do
+            17
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -40367,13 +39803,11 @@
                     (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                     (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                     (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 18)
-            (do
+            18
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -40393,12 +39827,10 @@
                     (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                     (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                     (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 19)
-            (do
+            19
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -40419,11 +39851,9 @@
                     (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                     (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                     (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
-                        ontoArrayPrepend(___args,
+                        (RestFn'ontoArrayPrepend ___args,
                             (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
-            )
-            (§ case 20)
-            (do
+            20
                 (.doInvoke this,
                     (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                     (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
@@ -40445,9 +39875,7 @@
                     (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                     (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                     (Util'ret1 ___arg20, (§ ass ___arg20 nil)),
-                        ArraySeq'create-1(___args))
-            )
-            (§ default )
+                        (ArraySeq'create-1 ___args))
             (do
                 (.throwArity this, 21)
             )
@@ -40457,7 +39885,7 @@
     #_protected
     (defn #_"ISeq" RestFn'ontoArrayPrepend [#_"Object[]" ___array & #_"Object..." ___args]
         (let [#_"ISeq" ___ret (ArraySeq'create-1 ___array)]
-            (loop-when-recur [#_"int" ___i (- (§ alength ___args) 1)] (>= ___i 0) [(dec ___i)]
+            (loop-when-recur [#_"int" ___i (- (§ alength ___args) 1)] (<= 0 ___i) [(dec ___i)]
                 (§ ass ___ret (RT'cons (§ aget ___args ___i), ___ret))
             )
             ___ret
@@ -40718,7 +40146,7 @@
     (defn #_"List<String>" RT'processCommandLine [#_"String[]" ___args]
         (let [#_"List<String>" ___arglist (Arrays/asList ___args)]
             (let [#_"int" ___split (.indexOf ___arglist, "--")]
-                (when (>= ___split 0)
+                (when (<= 0 ___split)
                     (.bindRoot RT'CMD_LINE_ARGS, (RT'seq (.subList ___arglist, (inc ___split), (§ alength ___args))))
                     (§ return (.subList ___arglist, 0, ___split))
                 )
@@ -42424,7 +41852,7 @@
 
     (defn #_"ISeq" RT'arrayToList [#_"Object[]" ___a]
         (let [#_"ISeq" ___ret nil]
-            (loop-when-recur [#_"int" ___i (- (§ alength ___a) 1)] (>= ___i 0) [(dec ___i)]
+            (loop-when-recur [#_"int" ___i (- (§ alength ___a) 1)] (<= 0 ___i) [(dec ___i)]
                 (§ ass ___ret (cast' ISeq (RT'cons (§ aget ___a ___i), ___ret)))
             )
             ___ret
@@ -42521,7 +41949,7 @@
     (defn #_"Object[]" RT'seqToPassedArray [#_"ISeq" ___seq, #_"Object[]" ___passed]
         (let [#_"Object[]" ___dest ___passed]
             (let [#_"int" ___len (RT'count ___seq)]
-                (when (> ___len (§ alength ___dest))
+                (when (< (§ alength ___dest) ___len)
                     (§ ass ___dest (§ cast Object[] (Array/newInstance (.getComponentType (.getClass ___passed)), ___len)))
                 )
                 (loop-when-recur [#_"int" ___i 0 ___seq ___seq] (some? ___seq) [(inc ___i) (next ___seq)]
@@ -42740,43 +42168,42 @@
                                         (.write ___w, \") ;; oops! "
                                         (loop-when-recur [#_"int" ___i 0] (< ___i (.length ___s)) [(inc ___i)]
                                             (let [#_"char" ___c (.charAt ___s, ___i)]
-                                                (§ switch ___c
-                                                    (§ case \newline)
+                                                (case ___c
+                                                    \newline
                                                     (do
                                                         (.write ___w, "\\n")
                                                         (§ break )
                                                     )
-                                                    (§ case \tab)
+                                                    \tab
                                                     (do
                                                         (.write ___w, "\\t")
                                                         (§ break )
                                                     )
-                                                    (§ case \return)
+                                                    \return
                                                     (do
                                                         (.write ___w, "\\r")
                                                         (§ break )
                                                     )
-                                                    (§ case \")
+                                                    \"
                                                     (do
                                                         (.write ___w, "\\\"")
                                                         (§ break )
                                                     )
-                                                    (§ case \\)
+                                                    \\
                                                     (do
                                                         (.write ___w, "\\\\")
                                                         (§ break )
                                                     )
-                                                    (§ case \formfeed)
+                                                    \formfeed
                                                     (do
                                                         (.write ___w, "\\f")
                                                         (§ break )
                                                     )
-                                                    (§ case \backspace)
+                                                    \backspace
                                                     (do
                                                         (.write ___w, "\\b")
                                                         (§ break )
                                                     )
-                                                    (§ default )
                                                     (do
                                                         (.write ___w, ___c)
                                                         (§ break )
@@ -42837,38 +42264,37 @@
                                     )
                                     (do
                                         (.write ___w, \\)
-                                        (§ switch ___c
-                                            (§ case \newline)
+                                        (case ___c
+                                            \newline
                                             (do
                                                 (.write ___w, "newline")
                                                 (§ break )
                                             )
-                                            (§ case \tab)
+                                            \tab
                                             (do
                                                 (.write ___w, "tab")
                                                 (§ break )
                                             )
-                                            (§ case \space)
+                                            \space
                                             (do
                                                 (.write ___w, "space")
                                                 (§ break )
                                             )
-                                            (§ case \backspace)
+                                            \backspace
                                             (do
                                                 (.write ___w, "backspace")
                                                 (§ break )
                                             )
-                                            (§ case \formfeed)
+                                            \formfeed
                                             (do
                                                 (.write ___w, "formfeed")
                                                 (§ break )
                                             )
-                                            (§ case \return)
+                                            \return
                                             (do
                                                 (.write ___w, "return")
                                                 (§ break )
                                             )
-                                            (§ default )
                                             (do
                                                 (.write ___w, ___c)
                                                 (§ break )
@@ -42958,33 +42384,32 @@
             (do
                 (.write ___w, \\)
                 (let [#_"char" ___c (.charValue (cast Character ___obj))]
-                    (§ switch ___c
-                        (§ case \newline)
+                    (case ___c
+                        \newline
                         (do
                             (.write ___w, "newline")
                             (§ break )
                         )
-                        (§ case \tab)
+                        \tab
                         (do
                             (.write ___w, "tab")
                             (§ break )
                         )
-                        (§ case \space)
+                        \space
                         (do
                             (.write ___w, "space")
                             (§ break )
                         )
-                        (§ case \backspace)
+                        \backspace
                         (do
                             (.write ___w, "backspace")
                             (§ break )
                         )
-                        (§ case \formfeed)
+                        \formfeed
                         (do
                             (.write ___w, "formfeed")
                             (§ break )
                         )
-                        (§ default )
                         (do
                             (.write ___w, ___c)
                             (§ break )
@@ -43027,23 +42452,23 @@
         (loop-when-recur [#_"int" ___i 0] (< ___i (.length ___s)) [___i]
             (let [#_"char" ___c (.charAt ___s, ___i)]
                 (§ ass ___i (inc ___i))
-                (§ switch (Character/toLowerCase ___c)
-                    (§ case \~)
+                (case (Character/toLowerCase ___c)
+                    \~
                     (do
                         (let [#_"char" ___d (.charAt ___s, ___i)]
                             (§ ass ___i (inc ___i))
-                            (§ switch (Character/toLowerCase ___d)
-                                (§ case \%)
+                            (case (Character/toLowerCase ___d)
+                                \%
                                 (do
                                     (.write ___w, \newline)
                                     (§ break )
                                 )
-                                (§ case \t)
+                                \t
                                 (do
                                     (.write ___w, \tab)
                                     (§ break )
                                 )
-                                (§ case \a)
+                                \a
                                 (do
                                     (when (nil? ___args)
                                         (throw (IllegalArgumentException. "Missing argument"))
@@ -43052,7 +42477,7 @@
                                     (§ ass ___args (RT'next ___args))
                                     (§ break )
                                 )
-                                (§ case \s)
+                                \s
                                 (do
                                     (when (nil? ___args)
                                         (throw (IllegalArgumentException. "Missing argument"))
@@ -43061,7 +42486,7 @@
                                     (§ ass ___args (RT'next ___args))
                                     (§ break )
                                 )
-                                (§ case \{)
+                                \{
                                 (do
                                     (let [#_"int" ___j (.indexOf ___s, "~}", ___i)] ;; note - does not nest
                                         (when (= ___j -1)
@@ -43077,19 +42502,18 @@
                                         )
                                     )
                                 )
-                                (§ case \^)
+                                \^
                                 (do
                                     (when (nil? ___args)
                                         (§ return nil)
                                     )
                                     (§ break )
                                 )
-                                (§ case \~)
+                                \~
                                 (do
                                     (.write ___w, \~)
                                     (§ break )
                                 )
-                                (§ default )
                                 (do
                                     (throw (IllegalArgumentException. (str "Unsupported ~ directive: " ___d)))
                                 )
@@ -43097,7 +42521,6 @@
                             (§ break )
                         )
                     )
-                    (§ default )
                     (do
                         (.write ___w, ___c)
                         (§ break )
@@ -43386,7 +42809,7 @@
 
     (defn #_"SeqEnumeration" SeqEnumeration'new [#_"ISeq" ___seq]
         (let [this (SeqEnumeration'init)]
-            (§ ass (:seq this) ___seq)
+            (§ ass this (assoc this :seq ___seq))
             this
         )
     )
@@ -43399,7 +42822,7 @@
     #_method
     (§ defn #_"Object" (§ method nextElement) [#_"SeqEnumeration" this]
         (let [#_"Object" ___ret (RT'first (:seq this))]
-            (§ ass (:seq this) (RT'next (:seq this)))
+            (§ ass this (assoc this :seq (RT'next (:seq this))))
             ___ret
         )
     )
@@ -43423,8 +42846,8 @@
 
     (defn #_"SeqIterator" SeqIterator'new [#_"Object" ___o]
         (let [this (SeqIterator'init)]
-            (§ ass (:seq this) SeqIterator'START)
-            (§ ass (:next this) ___o)
+            (§ ass this (assoc this :seq SeqIterator'START))
+            (§ ass this (assoc this :next ___o))
             this
         )
     )
@@ -43433,12 +42856,12 @@
     (§ defn #_"boolean" (§ method hasNext) [#_"SeqIterator" this]
         (cond (= (:seq this) SeqIterator'START)
             (do
-                (§ ass (:seq this) nil)
-                (§ ass (:next this) (RT'seq (:next this)))
+                (§ ass this (assoc this :seq nil))
+                (§ ass this (assoc this :next (RT'seq (:next this))))
             )
             (= (:seq this) (:next this))
             (do
-                (§ ass (:next this) (RT'next (:seq this)))
+                (§ ass this (assoc this :next (RT'next (:seq this))))
             )
         )
         (some? (:next this))
@@ -43449,7 +42872,7 @@
         (when (not (.hasNext this))
             (throw (NoSuchElementException.))
         )
-        (§ ass (:seq this) (:next this))
+        (§ ass this (assoc this :seq (:next this)))
         (RT'first (:next this))
     )
 
@@ -43511,8 +42934,8 @@
 
     (defn #_"StringSeq" StringSeq'new [#_"IPersistentMap" ___meta, #_"CharSequence" ___s, #_"int" ___i]
         (let [this (merge (ASeq'new ___meta) (StringSeq'init))]
-            (§ ass (:s this) ___s)
-            (§ ass (:i this) ___i)
+            (§ ass this (assoc this :s ___s))
+            (§ ass this (assoc this :i ___i))
             this
         )
     )
@@ -43593,9 +43016,9 @@
 
     (defn- #_"Symbol" Symbol'new-2 [#_"String" ___ns_interned, #_"String" ___name_interned]
         (let [this (merge (AFn'new) (Symbol'init))]
-            (§ ass (:name this) ___name_interned)
-            (§ ass (:ns this) ___ns_interned)
-            (§ ass (:_meta this) nil)
+            (§ ass this (assoc this :name ___name_interned))
+            (§ ass this (assoc this :ns ___ns_interned))
+            (§ ass this (assoc this :_meta nil))
             this
         )
     )
@@ -43605,10 +43028,10 @@
         (when (nil? (:_str this))
             (if (some? (:ns this))
                 (do
-                    (§ ass (:_str this) (str (:ns this) "/" (:name this)))
+                    (§ ass this (assoc this :_str (str (:ns this) "/" (:name this))))
                 )
                 (do
-                    (§ ass (:_str this) (:name this))
+                    (§ ass this (assoc this :_str (:name this)))
                 )
             )
         )
@@ -43647,7 +43070,7 @@
     #_method
     (§ defn #_"int" (§ method hasheq) [#_"Symbol" this]
         (when (zero? (:_hasheq this))
-            (§ ass (:_hasheq this) (Util'hashCombine (Murmur3'hashUnencodedChars (:name this)), (Util'hash (:ns this))))
+            (§ ass this (assoc this :_hasheq (Util'hashCombine (Murmur3'hashUnencodedChars (:name this)), (Util'hash (:ns this)))))
         )
         (:_hasheq this)
     )
@@ -43659,9 +43082,9 @@
 
     (defn- #_"Symbol" Symbol'new-3 [#_"IPersistentMap" ___meta, #_"String" ___ns, #_"String" ___name]
         (let [this (merge (AFn'new) (Symbol'init))]
-            (§ ass (:name this) ___name)
-            (§ ass (:ns this) ___ns)
-            (§ ass (:_meta this) ___meta)
+            (§ ass this (assoc this :name ___name))
+            (§ ass this (assoc this :ns ___ns))
+            (§ ass this (assoc this :_meta ___meta))
             this
         )
     )
@@ -43725,8 +43148,8 @@
 
     (defn- #_"TaggedLiteral" TaggedLiteral'new [#_"Symbol" ___tag, #_"Object" ___form]
         (let [this (TaggedLiteral'init)]
-            (§ ass (:tag this) ___tag)
-            (§ ass (:form this) ___form)
+            (§ ass this (assoc this :tag ___tag))
+            (§ ass this (assoc this :form ___form))
             this
         )
     )
@@ -43804,7 +43227,7 @@
 
     (defn #_"TransactionalHashMap" TransactionalHashMap'new-1i [#_"int" ___nBins]
         (let [this (merge (AbstractMap'new) (TransactionalHashMap'init))]
-            (§ ass (:bins this) (§ typeless make-array Ref ___nBins))
+            (§ ass this (assoc this :bins (§ typeless make-array Ref ___nBins)))
             (loop-when-recur [#_"int" ___i 0] (< ___i ___nBins) [(inc ___i)]
                 (§ ass (§ aget (:bins this) ___i) (Ref'new-1 PersistentHashMap'EMPTY))
             )
@@ -44063,7 +43486,7 @@
 
     (defn #_"SingleBuffer" SingleBuffer'new [#_"Object" ___o]
         (let [this (SingleBuffer'init)]
-            (§ ass (:val this) ___o)
+            (§ ass this (assoc this :val ___o))
             this
         )
     )
@@ -44072,7 +43495,7 @@
     (§ defn #_"Buffer" (§ method add) [#_"SingleBuffer" this, #_"Object" ___o]
         (if (= (:val this) TransformerIterator'NONE)
             (do
-                (§ ass (:val this) ___o)
+                (§ ass this (assoc this :val ___o))
                 this
             )
             (do
@@ -44087,7 +43510,7 @@
             (throw (IllegalStateException. "Removing object from empty buffer"))
         )
         (let [#_"Object" ___ret (:val this)]
-            (§ ass (:val this) TransformerIterator'NONE)
+            (§ ass this (assoc this :val TransformerIterator'NONE))
             ___ret
         )
     )
@@ -44151,7 +43574,7 @@
 
     (defn #_"MultiIterator" MultiIterator'new [#_"Iterator[]" ___iters]
         (let [this (MultiIterator'init)]
-            (§ ass (:iters this) ___iters)
+            (§ ass this (assoc this :iters ___iters))
             this
         )
     )
@@ -44205,8 +43628,8 @@
 
     (defn- #_"TransformerIterator" TransformerIterator'new [#_"IFn" ___xform, #_"Iterator" ___sourceIter, #_"boolean" ___multi]
         (let [this (TransformerIterator'init)]
-            (§ ass (:sourceIter this) ___sourceIter)
-            (§ ass (:xf this) (cast' IFn (.invoke ___xform,
+            (§ ass this (assoc this :sourceIter ___sourceIter))
+            (§ ass this (assoc this :xf (cast' IFn (.invoke ___xform,
                 (§ reify AFn()
                     #_method
                     (§ defn #_"Object" (§ method invoke) [#_"AFn" this]
@@ -44220,12 +43643,12 @@
 
                     #_method
                     (§ defn #_"Object" (§ method invoke) [#_"AFn" this, #_"Object" ___acc, #_"Object" ___o]
-                        (§ ass (:buffer this) (.add (:buffer this), ___o))
+                        (§ ass this (assoc this :buffer (.add (:buffer this), ___o)))
                         ___acc
                     )
                 )
-            )))
-            (§ ass (:multi this) ___multi)
+            ))))
+            (§ ass this (assoc this :multi ___multi))
             this
         )
     )
@@ -44270,19 +43693,19 @@
 
                                 (when (RT'isReduced ___iter)
                                     (.invoke (:xf this), nil)
-                                    (§ ass (:completed this) true)
+                                    (§ ass this (assoc this :completed true))
                                 )
                             )
                         )
                         :else
                         (do
                             (.invoke (:xf this), nil)
-                            (§ ass (:completed this) true)
+                            (§ ass this (assoc this :completed true))
                         )
                     )
                 )
                 (do
-                    (§ ass (:next this) (.remove (:buffer this)))
+                    (§ ass this (assoc this :next (.remove (:buffer this))))
                 )
             )
         )
@@ -44298,7 +43721,7 @@
     (§ defn #_"Object" (§ method next) [#_"TransformerIterator" this]
         (when (.hasNext this)
             (let [#_"Object" ___ret (:next this)]
-                (§ ass (:next this) TransformerIterator'NONE)
+                (§ ass this (assoc this :next TransformerIterator'NONE))
                 (§ return ___ret)
             )
         )
@@ -44650,8 +44073,8 @@
 
     (defn #_"TBox" TBox'new [#_"Thread" ___t, #_"Object" ___val]
         (let [this (TBox'init)]
-            (§ ass (:thread this) ___t)
-            (§ ass (:val this) ___val)
+            (§ ass this (assoc this :thread ___t))
+            (§ ass this (assoc this :val ___val))
             this
         )
     )
@@ -44666,7 +44089,7 @@
 
     (defn #_"Unbound" Unbound'new [#_"Var" ___v]
         (let [this (merge (AFn'new) (Unbound'init))]
-            (§ ass (:v this) ___v)
+            (§ ass this (assoc this :v ___v))
             this
         )
     )
@@ -44696,8 +44119,8 @@
 
     (defn #_"Frame" Frame'new [#_"Associative" ___bindings, #_"Frame" ___prev]
         (let [this (Frame'init)]
-            (§ ass (:bindings this) ___bindings)
-            (§ ass (:prev this) ___prev)
+            (§ ass this (assoc this :bindings ___bindings))
+            (§ ass this (assoc this :prev ___prev))
             this
         )
     )
@@ -44810,10 +44233,10 @@
 
     (defn #_"Var" Var'new-2 [#_"Namespace" ___ns, #_"Symbol" ___sym]
         (let [this (merge (ARef'new-0) (Var'init))]
-            (§ ass (:ns this) ___ns)
-            (§ ass (:sym this) ___sym)
-            (§ ass (:threadBound this) (AtomicBoolean. false))
-            (§ ass (:root this) (Unbound'new this))
+            (§ ass this (assoc this :ns ___ns))
+            (§ ass this (assoc this :sym ___sym))
+            (§ ass this (assoc this :threadBound (AtomicBoolean. false)))
+            (§ ass this (assoc this :root (Unbound'new this)))
             (.setMeta this, PersistentHashMap'EMPTY)
             this
         )
@@ -44821,7 +44244,7 @@
 
     (defn #_"Var" Var'new-3 [#_"Namespace" ___ns, #_"Symbol" ___sym, #_"Object" ___root]
         (let [this (Var'new-2 ___ns, ___sym)]
-            (§ ass (:root this) ___root)
+            (§ ass this (assoc this :root ___root))
             (§ ass rev (+ rev 1))
             this
         )
@@ -44829,13 +44252,13 @@
 
     #_method
     (§ defn #_"Var" (§ method setDynamic) [#_"Var" this]
-        (§ ass (:dynamic this) true)
+        (§ ass this (assoc this :dynamic true))
         this
     )
 
     #_method
     (§ defn #_"Var" (§ method setDynamic) [#_"Var" this, #_"boolean" ___b]
-        (§ ass (:dynamic this) ___b)
+        (§ ass this (assoc this :dynamic ___b))
         this
     )
 
@@ -44880,7 +44303,7 @@
         (when (.hasRoot this)
             (.validate this, ___vf, (:root this))
         )
-        (§ ass (:validator this) ___vf)
+        (§ ass this (assoc this :validator ___vf))
         nil
     )
 
@@ -44966,7 +44389,7 @@
         (§ sync this
             (.validate this, (.getValidator this), ___root)
             (let [#_"Object" ___oldroot (:root this)]
-                (§ ass (:root this) ___root)
+                (§ ass this (assoc this :root ___root))
                 (§ ass rev (+ rev 1))
                 (.alterMeta this, Var'dissoc, (RT'list-1 macroKey))
                 (.notifyWatches this, ___oldroot, (:root this))
@@ -44980,7 +44403,7 @@
         (§ sync this
             (.validate this, (.getValidator this), ___root)
             (let [#_"Object" ___oldroot (:root this)]
-                (§ ass (:root this) ___root)
+                (§ ass this (assoc this :root ___root))
                 (§ ass rev (+ rev 1))
                 (.notifyWatches this, ___oldroot, ___root)
             )
@@ -44991,7 +44414,7 @@
     #_method
     (§ defn #_"void" (§ method unbindRoot) [#_"Var" this]
         (§ sync this
-            (§ ass (:root this) (Unbound'new this))
+            (§ ass this (assoc this :root (Unbound'new this)))
             (§ ass rev (+ rev 1))
         )
         nil
@@ -45003,7 +44426,7 @@
             (let [#_"Object" ___newRoot (.invoke ___fn, (:root this))]
                 (.validate this, (.getValidator this), ___newRoot)
                 (let [#_"Object" ___oldroot (:root this)]
-                    (§ ass (:root this) ___newRoot)
+                    (§ ass this (assoc this :root ___newRoot))
                     (§ ass rev (+ rev 1))
                     (.notifyWatches this, ___oldroot, ___newRoot)
                 )
@@ -45018,7 +44441,7 @@
             (let [#_"Object" ___newRoot (.applyTo ___fn, (RT'cons (:root this), ___args))]
                 (.validate this, (.getValidator this), ___newRoot)
                 (let [#_"Object" ___oldroot (:root this)]
-                    (§ ass (:root this) ___newRoot)
+                    (§ ass this (assoc this :root ___newRoot))
                     (§ ass rev (+ rev 1))
                     (.notifyWatches this, ___oldroot, ___newRoot)
                     ___newRoot
@@ -45511,7 +44934,7 @@
 
     (defn #_"Volatile" Volatile'new [#_"Object" ___val]
         (let [this (Volatile'init)]
-            (§ ass (:val this) ___val)
+            (§ ass this (assoc this :val ___val))
             this
         )
     )
@@ -45523,7 +44946,8 @@
 
     #_method
     (§ defn #_"Object" (§ method reset) [#_"Volatile" this, #_"Object" ___newval]
-        (§ ass (:val this) ___newval)
+        (§ ass this (assoc this :val ___newval))
+        ___newval
     )
 )
 )
