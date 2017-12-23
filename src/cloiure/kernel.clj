@@ -1955,7 +1955,7 @@
 
     #_method
     (§ defn #_"ISeq" (§ method next) [#_"VSeq" this]
-        (when (ß (inc (:i this)) < (:v this).count())
+        (when (< (inc (:i this)) (.count (:v this)))
             (§ return (VSeq'new-2 (:v this), (inc (:i this))))
         )
         nil
@@ -5489,11 +5489,11 @@
                         (let [#_"boolean" ___warnOnReflection (.equals (System/getProperty Compile'REFLECTION_WARNING_PROP, "false"), "true")]
                             (let [#_"String" ___uncheckedMathProp (System/getProperty Compile'UNCHECKED_MATH_PROP)]
                                 (let [#_"Object" ___uncheckedMath Boolean/FALSE]
-                                    (cond (ß "true".equals(___uncheckedMathProp))
+                                    (cond (.equals "true", ___uncheckedMathProp)
                                         (do
                                             (§ ass ___uncheckedMath Boolean/TRUE)
                                         )
-                                        (ß "warn-on-boxed".equals(___uncheckedMathProp))
+                                        (.equals "warn-on-boxed", ___uncheckedMathProp)
                                         (do
                                             (§ ass ___uncheckedMath (Keyword'intern-1 "warn-on-boxed"))
                                         )
@@ -6603,8 +6603,8 @@
             (do
                 (.emit (:target this), :Context'EXPRESSION, ___objx, ___gen)
                 (.visitLineNumber ___gen, (:line this), (.mark ___gen))
-                (ß ___gen.checkCast(Compiler'getType((:targetClass this))))
-                (ß ___gen.getField(Compiler'getType((:targetClass this)), (:fieldName this), (Type/getType (:field this).getType())))
+                (.checkCast ___gen, (Compiler'getType (:targetClass this)))
+                (.getField ___gen, (Compiler'getType (:targetClass this)), (:fieldName this), (Type/getType (.getType (:field this))))
             )
             (do
                 (throw (UnsupportedOperationException. "Unboxed emit of unknown member"))
@@ -6619,8 +6619,8 @@
             (do
                 (.emit (:target this), :Context'EXPRESSION, ___objx, ___gen)
                 (.visitLineNumber ___gen, (:line this), (.mark ___gen))
-                (ß ___gen.checkCast(Compiler'getType((:targetClass this))))
-                (ß ___gen.getField(Compiler'getType((:targetClass this)), (:fieldName this), (Type/getType (:field this).getType())))
+                (.checkCast ___gen, (Compiler'getType (:targetClass this)))
+                (.getField ___gen, (Compiler'getType (:targetClass this)), (:fieldName this), (Type/getType (.getType (:field this))))
                 (HostExpr'emitBoxReturn ___objx, ___gen, (.getType (:field this)))
                 (when (= ___context :Context'STATEMENT)
                     (.pop ___gen)
@@ -6663,12 +6663,12 @@
         (if (and (some? (:targetClass this)) (some? (:field this)))
             (do
                 (.emit (:target this), :Context'EXPRESSION, ___objx, ___gen)
-                (ß ___gen.checkCast(Compiler'getType((:targetClass this))))
+                (.checkCast ___gen, (Compiler'getType (:targetClass this)))
                 (.emit ___val, :Context'EXPRESSION, ___objx, ___gen)
                 (.visitLineNumber ___gen, (:line this), (.mark ___gen))
                 (.dupX1 ___gen)
                 (HostExpr'emitUnboxArg ___objx, ___gen, (.getType (:field this)))
-                (ß ___gen.putField(Compiler'getType((:targetClass this)), (:fieldName this), (Type/getType (:field this).getType())))
+                (.putField ___gen, (Compiler'getType (:targetClass this)), (:fieldName this), (Type/getType (.getType (:field this))))
             )
             (do
                 (.emit (:target this), :Context'EXPRESSION, ___objx, ___gen)
@@ -6792,7 +6792,7 @@
         (loop-when-recur [#_"int" ___i 0] (< ___i (count ___args)) [(inc ___i)]
             (.dup ___gen)
             (.push ___gen, ___i)
-            (ß (cast' Expr (.nth ___args, ___i)).emit(:Context'EXPRESSION, ___objx, ___gen))
+            (.emit (cast' Expr (.nth ___args, ___i)), :Context'EXPRESSION, ___objx, ___gen)
             (.arrayStore ___gen, Compiler'OBJECT_TYPE)
         )
         nil
@@ -6822,10 +6822,10 @@
                                     (.emitUnboxed ___pe, :Context'EXPRESSION, ___objx, ___gen)
                                     (if (RT'booleanCast-1o (.deref RT'UNCHECKED_MATH))
                                         (do
-                                            (ß ___gen.invokeStatic(Compiler'RT_TYPE, (Method/getMethod "int uncheckedIntCast(long)")))
+                                            (.invokeStatic ___gen, Compiler'RT_TYPE, (Method/getMethod "int uncheckedIntCast(long)"))
                                         )
                                         (do
-                                            (ß ___gen.invokeStatic(Compiler'RT_TYPE, (Method/getMethod "int intCast(long)")))
+                                            (.invokeStatic ___gen, Compiler'RT_TYPE, (Method/getMethod "int intCast(long)"))
                                         )
                                     )
                                 )
@@ -6902,11 +6902,11 @@
                             )
                             (do
                                 (let [#_"int" ___methodidx 0]
-                                    (when (ß (.size ___methods) > 1)
+                                    (when (< 1 (.size ___methods))
                                         (let [#_"ArrayList<Class[]>" ___params (ArrayList.)]
                                             (let [#_"ArrayList<Class>" ___rets (ArrayList.)]
                                                 (loop-when-recur [#_"int" ___i 0] (< ___i (.size ___methods)) [(inc ___i)]
-                                                    (let [#_"java.lang.reflect.Method" ___m (ß (java.lang.reflect.Method) ___methods.get(___i))]
+                                                    (let [#_"java.lang.reflect.Method" ___m (cast java.lang.reflect.Method (.get ___methods, ___i))]
                                                         (.add ___params, (.getParameterTypes ___m))
                                                         (.add ___rets, (.getReturnType ___m))
                                                     )
@@ -7107,11 +7107,11 @@
                 )
 
                 (let [#_"int" ___methodidx 0]
-                    (when (ß (.size ___methods) > 1)
+                    (when (< 1 (.size ___methods))
                         (let [#_"ArrayList<Class[]>" ___params (ArrayList.)]
                             (let [#_"ArrayList<Class>" ___rets (ArrayList.)]
                                 (loop-when-recur [#_"int" ___i 0] (< ___i (.size ___methods)) [(inc ___i)]
-                                    (let [#_"java.lang.reflect.Method" ___m (ß (java.lang.reflect.Method) ___methods.get(___i))]
+                                    (let [#_"java.lang.reflect.Method" ___m (cast java.lang.reflect.Method (.get ___methods, ___i))]
                                         (.add ___params, (.getParameterTypes ___m))
                                         (.add ___rets, (.getReturnType ___m))
                                     )
@@ -7120,11 +7120,11 @@
                             )
                         )
                     )
-                    (§ ass (:method this) (cast java.lang.reflect.Method (when (>= ___methodidx 0) (.get ___methods, ___methodidx))))
+                    (§ ass (:method this) (cast java.lang.reflect.Method (when (<= 0 ___methodidx) (.get ___methods, ___methodidx))))
                     (when (and (nil? (:method this)) (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION)))
                         (.format (RT'errPrintWriter), "Reflection warning, %s:%d:%d - call to static method %s on %s can't be resolved (argument types: %s).\n", (object-array [ (.deref Compiler'SOURCE_PATH), ___line, ___column, ___methodName, (.getName ___c), (Compiler'getTypeStringForArgs ___args) ]))
                     )
-                    (when (and (some? (:method this)) (ß warnOnBoxedKeyword.equals(RT'UNCHECKED_MATH.deref())) (StaticMethodExpr'isBoxedMath (:method this)))
+                    (when (and (some? (:method this)) (.equals StaticMethodExpr'warnOnBoxedKeyword, (.deref RT'UNCHECKED_MATH)) (StaticMethodExpr'isBoxedMath (:method this)))
                         (.format (RT'errPrintWriter), "Boxed math warning, %s:%d:%d - call: %s.\n", (object-array [ (.deref Compiler'SOURCE_PATH), ___line, ___column, (.toString (:method this)) ]))
                     )
                     this
@@ -7197,7 +7197,7 @@
                         (.emitClearLocals ___method, ___gen)
                     )
                 )
-                (let [#_"Object[]" ___predOps (ß (Object[]) RT'get-2(Intrinsics'preds, (.toString (:method this))))]
+                (let [#_"Object[]" ___predOps (§ cast Object[] (RT'get-2 Intrinsics'preds, (.toString (:method this))))]
                     (loop-when-recur [#_"int" ___i 0] (< ___i (dec (§ alength ___predOps))) [(inc ___i)]
                         (.visitInsn ___gen, (cast Integer (§ aget ___predOps ___i)))
                     )
@@ -7222,12 +7222,12 @@
                         (.emitClearLocals ___method, ___gen)
                     )
                 )
-                (let [#_"Object" ___ops (ß RT'get-2(Intrinsics'ops, (.toString (:method this))))]
+                (let [#_"Object" ___ops (RT'get-2 Intrinsics'ops, (.toString (:method this)))]
                     (if (some? ___ops)
                         (do
                             (if (§ instance? Object[] ___ops)
                                 (do
-                                    (doseq [#_"Object" ___op (ß (Object[])___ops)]
+                                    (doseq [#_"Object" ___op (§ cast Object[] ___ops)]
                                         (.visitInsn ___gen, (cast Integer ___op))
                                     )
                                 )
@@ -7850,8 +7850,8 @@
                                                                                 (try
                                                                                     (Var'pushThreadBindings ___dynamicBindings)
                                                                                     (let [#_"LocalBinding" ___lb (Compiler'registerLocal ___sym, (cast' Symbol (when (§ instance? Symbol (RT'second ___f)) (RT'second ___f))), nil, false)]
-                                                                                        (let [#_"Expr" ___handler (ß (BodyParser'new()).parse(:Context'EXPRESSION, RT'next(RT'next(RT'next(___f)))))]
-                                                                                            (§ ass ___catches (ß ___catches.cons(CatchClause'new(___c, ___lb, ___handler))))
+                                                                                        (let [#_"Expr" ___handler (.parse (BodyParser'new), :Context'EXPRESSION, (RT'next (RT'next (RT'next ___f))))]
+                                                                                            (§ ass ___catches (.cons ___catches, (CatchClause'new ___c, ___lb, ___handler)))
                                                                                         )
                                                                                     )
                                                                                     (finally
@@ -7959,7 +7959,7 @@
                             (.mark ___gen, ___startTry)
                             (.emit (:tryExpr this), ___context, ___objx, ___gen)
                             (when (not= ___context :Context'STATEMENT)
-                                (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ISTORE), (:retLocal this)))
+                                (.visitVarInsn ___gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:retLocal this))
                             )
                             (.mark ___gen, ___endTry)
                             (when (some? (:finallyExpr this))
@@ -7972,10 +7972,10 @@
                                     (.mark ___gen, (:label ___clause))
                                     ;; exception should be on stack
                                     ;; put in clause local
-                                    (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ISTORE), (:idx (:lb ___clause))))
+                                    (.visitVarInsn ___gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:idx (:lb ___clause)))
                                     (.emit (:handler ___clause), ___context, ___objx, ___gen)
                                     (when (not= ___context :Context'STATEMENT)
-                                        (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ISTORE), (:retLocal this)))
+                                        (.visitVarInsn ___gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:retLocal this))
                                     )
                                     (.mark ___gen, (:endLabel ___clause))
 
@@ -7988,14 +7988,14 @@
                             (when (some? (:finallyExpr this))
                                 (.mark ___gen, ___finallyLabel)
                                 ;; exception should be on stack
-                                (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ISTORE), (:finallyLocal this)))
+                                (.visitVarInsn ___gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:finallyLocal this))
                                 (.emit (:finallyExpr this), :Context'STATEMENT, ___objx, ___gen)
-                                (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ILOAD), (:finallyLocal this)))
+                                (.visitVarInsn ___gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ILOAD), (:finallyLocal this))
                                 (.throwException ___gen)
                             )
                             (.mark ___gen, ___ret)
                             (when (not= ___context :Context'STATEMENT)
-                                (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ILOAD), (:retLocal this)))
+                                (.visitVarInsn ___gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ILOAD), (:retLocal this))
                             )
                             (.mark ___gen, ___end)
                             (loop-when-recur [#_"int" ___i 0] (< ___i (.count (:catchExprs this))) [(inc ___i)]
@@ -8100,7 +8100,7 @@
             (let [#_"int" ___column (Compiler'columnDeref)]
                 (let [#_"ISeq" ___form (cast' ISeq ___frm)]
                     ;; (new Classname args...)
-                    (when (ß (count ___form) < 2)
+                    (when (< (count ___form) 2)
                         (throw (Util'runtimeException-1 "wrong number of arguments, expecting: (new Classname args...)"))
                     )
                     (let [#_"Class" ___c (HostExpr'maybeClass (RT'second ___form), false)]
@@ -8154,7 +8154,7 @@
                             )
 
                             (let [#_"int" ___ctoridx 0]
-                                (when (ß (.size ___ctors) > 1)
+                                (when (< 1 (.size ___ctors))
                                     (§ ass ___ctoridx (Compiler'getMatchingParams (.getName ___c), ___params, ___args, ___rets))
                                 )
 
@@ -8177,7 +8177,7 @@
             (loop-when-recur [#_"int" ___i 0] (< ___i (.count (:args this))) [(inc ___i)]
                 (§ ass (§ aget ___argvals ___i) (.eval (cast' Expr (.nth (:args this), ___i))))
             )
-            (when (ß (some? (:ctor this)))
+            (when (some? (:ctor this))
                 (try
                     (§ return (.newInstance (:ctor this), (Reflector'boxArgs (.getParameterTypes (:ctor this)), ___argvals)))
                     (catch Exception ___e
@@ -8191,7 +8191,7 @@
 
     #_method
     (§ defn #_"void" (§ method emit) [#_"NewExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
-        (if (ß (some? (:ctor this)))
+        (if (some? (:ctor this))
             (do
                 (let [#_"Type" ___type (Compiler'getType (:c this))]
                     (.newInstance ___gen, ___type)
@@ -8201,7 +8201,7 @@
                 )
             )
             (do
-                (ß ___gen.push(Compiler'destubClassName((.getName (:c this)))))
+                (.push ___gen, (Compiler'destubClassName (.getName (:c this))))
                 (.invokeStatic ___gen, Compiler'RT_TYPE, NewExpr'forNameMethod)
                 (MethodExpr'emitArgsAsArray (:args this), ___objx, ___gen)
                 (.invokeStatic ___gen, Compiler'REFLECTOR_TYPE, invokeConstructorMethod)
@@ -8245,7 +8245,7 @@
 
     #_method
     (§ defn #_"Object" (§ method eval) [#_"MetaExpr" this]
-        (ß (cast' IObj (.eval (:expr this))).withMeta((cast' IPersistentMap (.eval (:meta this)))))
+        (.withMeta (cast' IObj (.eval (:expr this))), (cast' IPersistentMap (.eval (:meta this))))
     )
 
     #_method
@@ -8282,41 +8282,43 @@
     (§ defn #_"Expr" (§ method parse) [#_"IfParser" this, #_"Context" ___context, #_"Object" ___frm]
         (let [#_"ISeq" ___form (cast' ISeq ___frm)]
             ;; (if test then) or (if test then else)
-            (cond (ß (count ___form) > 4)
+            (cond (< 4 (count ___form))
                 (do
                     (throw (Util'runtimeException-1 "Too many arguments to if"))
                 )
-                (ß (count ___form) < 3)
+                (< (count ___form) 3)
                 (do
                     (throw (Util'runtimeException-1 "Too few arguments to if"))
                 )
             )
             (let [#_"PathNode" ___branch (PathNode'new :PathType'BRANCH, (cast' PathNode (.get Compiler'CLEAR_PATH)))]
                 (let [#_"Expr" ___testexpr (Compiler'analyze-2 (if (= ___context :Context'EVAL) ___context :Context'EXPRESSION), (RT'second ___form))]
-                    (let [(ß Expr thenexpr, elseexpr)]
-                        (try
-                            (Var'pushThreadBindings (RT'map
-                                (object-array [
-                                    Compiler'CLEAR_PATH (PathNode'new :PathType'PATH, ___branch)
-                                ])
-                            ))
-                            (§ ass thenexpr (Compiler'analyze-2 ___context, (RT'third ___form)))
-                            (finally
-                                (Var'popThreadBindings)
+                    (§ let [#_"Expr" ___thenexpr]
+                        (§ let [#_"Expr" ___elseexpr]
+                            (try
+                                (Var'pushThreadBindings (RT'map
+                                    (object-array [
+                                        Compiler'CLEAR_PATH (PathNode'new :PathType'PATH, ___branch)
+                                    ])
+                                ))
+                                (§ ass ___thenexpr (Compiler'analyze-2 ___context, (RT'third ___form)))
+                                (finally
+                                    (Var'popThreadBindings)
+                                )
                             )
-                        )
-                        (try
-                            (Var'pushThreadBindings (RT'map
-                                (object-array [
-                                    Compiler'CLEAR_PATH (PathNode'new :PathType'PATH, ___branch)
-                                ])
-                            ))
-                            (§ ass elseexpr (Compiler'analyze-2 ___context, (RT'fourth ___form)))
-                            (finally
-                                (Var'popThreadBindings)
+                            (try
+                                (Var'pushThreadBindings (RT'map
+                                    (object-array [
+                                        Compiler'CLEAR_PATH (PathNode'new :PathType'PATH, ___branch)
+                                    ])
+                                ))
+                                (§ ass ___elseexpr (Compiler'analyze-2 ___context, (RT'fourth ___form)))
+                                (finally
+                                    (Var'popThreadBindings)
+                                )
                             )
+                            (IfExpr'new (Compiler'lineDeref), (Compiler'columnDeref), ___testexpr, ___thenexpr, ___elseexpr)
                         )
-                        (IfExpr'new (Compiler'lineDeref), (Compiler'columnDeref), ___testexpr, thenexpr, elseexpr)
                     )
                 )
             )
@@ -8866,9 +8868,9 @@
         (if (<= (.count (:args this)) Tuple'MAX_SIZE)
             (do
                 (loop-when-recur [#_"int" ___i 0] (< ___i (.count (:args this))) [(inc ___i)]
-                    (ß (cast' Expr (.nth (:args this), ___i)).emit(:Context'EXPRESSION, ___objx, ___gen))
+                    (.emit (cast' Expr (.nth (:args this), ___i)), :Context'EXPRESSION, ___objx, ___gen)
                 )
-                (ß ___gen.invokeStatic(Compiler'TUPLE_TYPE, Compiler'createTupleMethods[(:args this).count()]))
+                (.invokeStatic ___gen, Compiler'TUPLE_TYPE, (§ aget Compiler'createTupleMethods (.count (:args this))))
             )
             (do
                 (MethodExpr'emitArgsAsArray (:args this), ___objx, ___gen)
@@ -8963,7 +8965,7 @@
     #_method
     (§ defn #_"Object" (§ method eval) [#_"KeywordInvokeExpr" this]
         (try
-            (ß (:k (:kw this)).invoke((.eval (:target this))))
+            (.invoke (:k (:kw this)), (.eval (:target this)))
             (catch Throwable ___e
                 (if (not (§ instance? CompilerException ___e))
                     (do
@@ -8987,7 +8989,7 @@
                 (.emit (:target this), :Context'EXPRESSION, ___objx, ___gen) ;; thunk, thunk, target
                 (.visitLineNumber ___gen, (:line this), (.mark ___gen))
                 (.dupX2 ___gen) ;; target, thunk, thunk, target
-                (ß ___gen.invokeInterface(ObjExpr'ILOOKUP_THUNK_TYPE, (Method/getMethod "Object get(Object)"))) ;; target, thunk, result
+                (.invokeInterface ___gen, ObjExpr'ILOOKUP_THUNK_TYPE, (Method/getMethod "Object get(Object)")) ;; target, thunk, result
                 (.dupX2 ___gen) ;; result, target, thunk, result
                 (.visitJumpInsn ___gen, Opcodes/IF_ACMPEQ, ___faultLabel) ;; result, target
                 (.pop ___gen) ;; result
@@ -9057,7 +9059,7 @@
     #_method
     (§ defn #_"void" (§ method emitUnboxed) [#_"InstanceOfExpr" this, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
         (.emit (:expr this), :Context'EXPRESSION, ___objx, ___gen)
-        (ß ___gen.instanceOf(Compiler'getType((:c this))))
+        (.instanceOf ___gen, (Compiler'getType (:c this)))
         nil
     )
 
@@ -9241,7 +9243,7 @@
                                             (let [#_"Type" ___target (§ unsure Type/getType ___c)]
                                                 (let [#_"PersistentVector" ___argv PersistentVector'EMPTY]
                                                     (loop-when-recur [#_"ISeq" ___s (RT'seq ___args)] (some? ___s) [(next ___s)]
-                                                        (§ ass ___argv (ß ___argv.cons(Compiler'analyze-2(:Context'EXPRESSION, (first ___s)))))
+                                                        (§ ass ___argv (.cons ___argv, (Compiler'analyze-2 :Context'EXPRESSION, (first ___s))))
                                                     )
 
                                                     (StaticInvokeExpr'new ___target, ___retClass, ___paramClasses, ___paramTypes, ___variadic, ___argv, ___tag, ___tailPosition)
@@ -9317,9 +9319,9 @@
                             (§ ass (:siteIndex this) (Compiler'registerProtocolCallsite (:var (cast' VarExpr ___fexpr))))
                             (let [#_"Object" ___pon (RT'get-2 (.get ___pvar), Compiler'onKey)]
                                 (§ ass (:protocolOn this) (HostExpr'maybeClass ___pon, false))
-                                (when (ß (some? (:protocolOn this)))
+                                (when (some? (:protocolOn this))
                                     (let [#_"IPersistentMap" ___mmap (cast' IPersistentMap (RT'get-2 (.get ___pvar), InvokeExpr'methodMapKey))]
-                                        (let [#_"Keyword" ___mmapVal (cast' Keyword (ß ___mmap.valAt(Keyword'intern((:sym ___fvar)))))]
+                                        (let [#_"Keyword" ___mmapVal (cast' Keyword (.valAt ___mmap, (Keyword'intern (:sym ___fvar))))]
                                             (when (nil? ___mmapVal)
                                                 (throw (IllegalArgumentException. (str "No method of interface: " (.getName (:protocolOn this)) " found for function: " (:sym ___fvar) " of protocol: " (:sym ___pvar) " (The protocol method may have been defined before and removed.)")))
                                             )
@@ -9328,7 +9330,7 @@
                                                     (when (not= (.size ___methods) 1)
                                                         (throw (IllegalArgumentException. (str "No single method: " ___mname " of interface: " (.getName (:protocolOn this)) " found for function: " (:sym ___fvar) " of protocol: " (:sym ___pvar))))
                                                     )
-                                                    (§ ass (:onMethod this) (ß (java.lang.reflect.Method) ___methods.get(0)))
+                                                    (§ ass (:onMethod this) (cast java.lang.reflect.Method (.get ___methods, 0)))
                                                 )
                                             )
                                         )
@@ -9371,7 +9373,7 @@
                     (loop-when-recur [#_"int" ___i 0] (< ___i (.count (:args this))) [(inc ___i)]
                         (§ ass ___argvs (.cons ___argvs, (.eval (cast' Expr (.nth (:args this), ___i)))))
                     )
-                    (ß ___fn.applyTo(RT'seq(Util'ret1(___argvs, (§ ass ___argvs nil)))))
+                    (.applyTo ___fn, (RT'seq (Util'ret1 ___argvs, (§ ass ___argvs nil))))
                 )
             )
             (catch Throwable ___e
@@ -9416,7 +9418,7 @@
                         (let [#_"Expr" ___e (cast' Expr (.nth (:args this), 0))]
                             (.emit ___e, :Context'EXPRESSION, ___objx, ___gen)
                             (.dup ___gen) ;; target, target
-                            (ß ___gen.invokeStatic(Compiler'UTIL_TYPE, (Method/getMethod "Class classOf(Object)"))) ;; target, class
+                            (.invokeStatic ___gen, Compiler'UTIL_TYPE, (Method/getMethod "Class classOf(Object)")) ;; target, class
                             (.getStatic ___gen, (:objtype ___objx), (.cachedClassName ___objx, (:siteIndex this)), Compiler'CLASS_TYPE) ;; target, class, cached-class
                             (.visitJumpInsn ___gen, Opcodes/IF_ACMPEQ, ___callLabel) ;; target
                             (when (some? (:protocolOn this))
@@ -9426,12 +9428,12 @@
                             )
 
                             (.dup ___gen) ;; target, target
-                            (ß ___gen.invokeStatic(Compiler'UTIL_TYPE, (Method/getMethod "Class classOf(Object)"))) ;; target, class
+                            (.invokeStatic ___gen, Compiler'UTIL_TYPE, (Method/getMethod "Class classOf(Object)")) ;; target, class
                             (.putStatic ___gen, (:objtype ___objx), (.cachedClassName ___objx, (:siteIndex this)), Compiler'CLASS_TYPE) ;; target
 
                             (.mark ___gen, ___callLabel) ;; target
                             (.emitVar ___objx, ___gen, ___v)
-                            (ß ___gen.invokeVirtual(Compiler'VAR_TYPE, (Method/getMethod "Object getRawRoot()"))) ;; target, proto-fn
+                            (.invokeVirtual ___gen, Compiler'VAR_TYPE, (Method/getMethod "Object getRawRoot()")) ;; target, proto-fn
                             (.swap ___gen)
                             (.emitArgsAndCall this, 1, ___context, ___objx, ___gen)
                             (.goTo ___gen, ___endLabel)
@@ -9461,7 +9463,7 @@
 
     #_method
     (§ defn #_"void" (§ method emitArgsAndCall) [#_"InvokeExpr" this, #_"int" ___firstArgToEmit, #_"Context" ___context, #_"ObjExpr" ___objx, #_"GeneratorAdapter" ___gen]
-        (loop-when-recur [#_"int" ___i ___firstArgToEmit] (ß ___i < Math/min(Compiler'MAX_POSITIONAL_ARITY, (.count (:args this)))) [(inc ___i)]
+        (loop-when-recur [#_"int" ___i ___firstArgToEmit] (< ___i (Math/min Compiler'MAX_POSITIONAL_ARITY, (.count (:args this)))) [(inc ___i)]
             (let [#_"Expr" ___e (cast' Expr (.nth (:args this), ___i))]
                 (.emit ___e, :Context'EXPRESSION, ___objx, ___gen)
             )
@@ -9501,8 +9503,8 @@
 
     (defn #_"Expr" InvokeExpr'parse [#_"Context" ___context, #_"ISeq" ___form]
         (let [#_"boolean" ___tailPosition (Compiler'inTailCall ___context)]
-            (when (not= ___context :Context'EVAL)
-                (§ ass ___context (ß :Context'EXPRESSION))
+            (when-not (= ___context :Context'EVAL)
+                (§ ass ___context :Context'EXPRESSION)
             )
             (let [#_"Expr" ___fexpr (Compiler'analyze-2 ___context, (first ___form))]
                 (when (and (§ instance? VarExpr ___fexpr) (.equals (:var (cast' VarExpr ___fexpr)), Compiler'INSTANCE) (= (RT'count ___form) 3))
@@ -9567,7 +9569,7 @@
                 )
                 (let [#_"PersistentVector" ___args PersistentVector'EMPTY]
                     (loop-when-recur [#_"ISeq" ___s (RT'seq (next ___form))] (some? ___s) [(next ___s)]
-                        (§ ass ___args (ß ___args.cons(Compiler'analyze-2(___context, (first ___s)))))
+                        (§ ass ___args (.cons ___args, (Compiler'analyze-2 ___context, (first ___s))))
                     )
 
                     (InvokeExpr'new (cast String (.deref Compiler'SOURCE)), (Compiler'lineDeref), (Compiler'columnDeref), (Compiler'tagOf ___form), ___fexpr, ___args, ___tailPosition)
@@ -9716,7 +9718,7 @@
                                                 )
                                                 (§ ass (:line ___fn) (Compiler'lineDeref))
                                                 (§ ass (:column ___fn) (Compiler'columnDeref))
-                                                (let [#_"FnMethod[]" ___methodArray (ß FnMethod'new[(inc Compiler'MAX_POSITIONAL_ARITY)])]
+                                                (let [#_"FnMethod[]" ___methodArray (§ typeless make-array FnMethod (inc Compiler'MAX_POSITIONAL_ARITY))]
                                                     (let [#_"FnMethod" ___variadicMethod nil]
                                                         (let [#_"boolean" ___usesThis false]
                                                             (loop-when-recur [#_"ISeq" ___s (RT'next ___form)] (some? ___s) [(RT'next ___s)]
@@ -9744,7 +9746,7 @@
                                                                             (throw (Util'runtimeException-1 "Can't have 2 overloads with same arity"))
                                                                         )
                                                                     )
-                                                                    (when (ß (some? (:prim ___f)))
+                                                                    (when (some? (:prim ___f))
                                                                         (.add ___prims, (:prim ___f))
                                                                     )
                                                                 )
@@ -9770,9 +9772,9 @@
                                                                 )
 
                                                                 (when (:canBeDirect ___fn)
-                                                                    (doseq [#_"FnMethod" ___fm (ß (Collection<FnMethod>)___methods)]
-                                                                        (when (ß (some? (:locals ___fm)))
-                                                                            (doseq [#_"LocalBinding" ___lb (ß (Collection<LocalBinding>)RT'keys((:locals ___fm)))]
+                                                                    (doseq [#_"FnMethod" ___fm (cast Collection #_"<FnMethod>" ___methods)]
+                                                                        (when (some? (:locals ___fm))
+                                                                            (doseq [#_"LocalBinding" ___lb (cast Collection #_"<LocalBinding>" (RT'keys (:locals ___fm)))]
                                                                                 (when (:isArg ___lb)
                                                                                     (§ ass (:idx ___lb) (dec (:idx ___lb)))
                                                                                 )
@@ -10111,7 +10113,7 @@
                                                     (.visitLineNumber ___ctorgen, (:line this), (.mark ___ctorgen))
                                                     (.visitLabel ___ctorgen, ___start)
                                                     (.loadThis ___ctorgen)
-                                                    (.invokeConstructor ___ctorgen, (Type/getObjectType ___superName), voidctor)
+                                                    (.invokeConstructor ___ctorgen, (Type/getObjectType ___superName), ObjExpr'voidctor)
 
                                                     (when (.supportsMeta this)
                                                         (.loadThis ___ctorgen)
@@ -10518,14 +10520,14 @@
                 (§ instance? IRecord ___value)
                 (do
                     (let [#_"Method" ___createMethod (Method/getMethod (str (.getName (.getClass ___value)) " create(cloiure.lang.IPersistentMap)"))]
-                        (ß this.emitValue(PersistentArrayMap'create((java.util.Map) ___value), ___gen))
-                        (ß ___gen.invokeStatic(Compiler'getType((.getClass ___value)), ___createMethod))
+                        (.emitValue this, (PersistentArrayMap'create (cast java.util.Map ___value)), ___gen)
+                        (.invokeStatic ___gen, (Compiler'getType (.getClass ___value)), ___createMethod)
                     )
                 )
                 (§ instance? IPersistentMap ___value)
                 (do
                     (let [#_"List" ___entries (ArrayList.)]
-                        (doseq [#_"Map$Entry" ___entry (ß (Set<Map$Entry>) (cast Map ___value).entrySet())]
+                        (doseq [#_"Map$Entry" ___entry (cast Set #_"<Map$Entry>" (.entrySet (cast Map ___value)))]
                             (.add ___entries, (.getKey ___entry))
                             (.add ___entries, (.getValue ___entry))
                         )
@@ -10536,12 +10538,12 @@
                 (§ instance? IPersistentVector ___value)
                 (do
                     (let [#_"IPersistentVector" ___args (cast' IPersistentVector ___value)]
-                        (if (ß (count ___args) <= Tuple'MAX_SIZE)
+                        (if (<= (count ___args) Tuple'MAX_SIZE)
                             (do
                                 (loop-when-recur [#_"int" ___i 0] (< ___i (count ___args)) [(inc ___i)]
                                     (.emitValue this, (.nth ___args, ___i), ___gen)
                                 )
-                                (ß ___gen.invokeStatic(Compiler'TUPLE_TYPE, Compiler'createTupleMethods[(count ___args)]))
+                                (.invokeStatic ___gen, Compiler'TUPLE_TYPE, (§ aget Compiler'createTupleMethods (count ___args)))
                             )
                             (do
                                 (.emitListAsObjectArray this, ___value, ___gen)
@@ -10603,7 +10605,7 @@
                 (when (and (§ instance? IObj ___value) (pos? (RT'count (.meta (cast' IObj ___value)))))
                     (.checkCast ___gen, Compiler'IOBJ_TYPE)
                     (let [#_"Object" ___m (.meta (cast' IObj ___value))]
-                        (ß this.emitValue(Compiler'elideMeta(___m), ___gen))
+                        (.emitValue this, (Compiler'elideMeta ___m), ___gen)
                         (.checkCast ___gen, Compiler'IPERSISTENTMAP_TYPE)
                         (.invokeInterface ___gen, Compiler'IOBJ_TYPE, (Method/getMethod "cloiure.lang.IObj withMeta(cloiure.lang.IPersistentMap)"))
                     )
@@ -10638,12 +10640,12 @@
 
     #_method
     (§ defn #_"boolean" (§ method isMutable) [#_"ObjExpr" this, #_"LocalBinding" ___lb]
-        (or (.isVolatile this, ___lb) (and (ß RT'booleanCast-1o(RT'contains((:fields this), (:sym ___lb)))) (ß RT'booleanCast-1o(RT'get-2((.meta (:sym ___lb)), Keyword'intern-1("unsynchronized-mutable"))))))
+        (or (.isVolatile this, ___lb) (and (RT'booleanCast-1o (RT'contains (:fields this), (:sym ___lb))) (RT'booleanCast-1o (RT'get-2 (.meta (:sym ___lb)), (Keyword'intern-1 "unsynchronized-mutable")))))
     )
 
     #_method
     (§ defn #_"boolean" (§ method isVolatile) [#_"ObjExpr" this, #_"LocalBinding" ___lb]
-        (and (ß RT'booleanCast-1o(RT'contains((:fields this), (:sym ___lb)))) (ß RT'booleanCast-1o(RT'get-2((.meta (:sym ___lb)), Keyword'intern-1("volatile-mutable")))))
+        (and (RT'booleanCast-1o (RT'contains (:fields this), (:sym ___lb))) (RT'booleanCast-1o (RT'get-2 (.meta (:sym ___lb)), (Keyword'intern-1 "volatile-mutable"))))
     )
 
     #_method
@@ -10835,10 +10837,10 @@
                                         (HostExpr'emitBoxReturn this, ___gen, ___primc)
                                     )
                                     (do
-                                        (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ILOAD), (:idx ___lb)))
+                                        (.visitVarInsn ___gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ILOAD), (:idx ___lb))
                                         (when (and ___clear (:canBeCleared ___lb))
                                             (.visitInsn ___gen, Opcodes/ACONST_NULL)
-                                            (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ISTORE), (:idx ___lb)))
+                                            (.visitVarInsn ___gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:idx ___lb))
                                         )
                                     )
                                 )
@@ -10960,7 +10962,7 @@
     #_method
     (§ defn #_"Type" (§ method constantType) [#_"ObjExpr" this, #_"int" ___id]
         (let [#_"Object" ___o (.nth (:constants this), ___id)]
-            (let [#_"Class" ___c (ß cloiure.lang.Util'classOf(___o))]
+            (let [#_"Class" ___c (Util'classOf ___o)]
                 (when (and (some? ___c) (Modifier/isPublic (.getModifiers ___c)))
                     ;; can't emit derived fn types due to visibility
                     (cond (.isAssignableFrom (§ class LazySeq), ___c)
@@ -11071,12 +11073,12 @@
     (defn #_"String" FnMethod'primInterface [#_"IPersistentVector" ___args]
         (let [#_"StringBuilder" ___sb (StringBuilder.)]
             (loop-when-recur [#_"int" ___i 0] (< ___i (count ___args)) [(inc ___i)]
-                (ß ___sb.append(classChar(Compiler'tagOf((.nth ___args, ___i)))))
+                (.append ___sb, (FnMethod'classChar (Compiler'tagOf (.nth ___args, ___i))))
             )
-            (ß ___sb.append(classChar(Compiler'tagOf(___args))))
+            (.append ___sb, (FnMethod'classChar (Compiler'tagOf ___args)))
             (let [#_"String" ___ret (.toString ___sb)]
                 (let [#_"boolean" ___prim (or (.contains ___ret, "L") (.contains ___ret, "D"))]
-                    (when (and ___prim (ß (count ___args) > 4))
+                    (when (and ___prim (> (count ___args) 4))
                         (throw (IllegalArgumentException. "fns taking primitives support only 4 or fewer args"))
                     )
                     (when ___prim
@@ -11115,7 +11117,7 @@
                             ))
 
                             (§ ass (:prim ___method) (primInterface ___parms))
-                            (when (ß (some? (:prim ___method)))
+                            (when (some? (:prim ___method))
                                 (§ ass (:prim ___method) (.replace (:prim ___method), \., \/))
                             )
 
@@ -11144,7 +11146,7 @@
                                 )
                             )
                             ;; register 'this' as local 0
-                            (if (ß (some? (:thisName ___objx)))
+                            (if (some? (:thisName ___objx))
                                 (do
                                     (Compiler'registerLocal (Symbol'intern-1 (:thisName ___objx)), nil, nil, false)
                                 )
@@ -11152,7 +11154,7 @@
                                     (Compiler'getAndIncLocalNum)
                                 )
                             )
-                            (let [#_"PState" ___state (ß :PState'REQ)]
+                            (let [#_"PState" ___state :PState'REQ]
                                 (let [#_"PersistentVector" ___argLocals PersistentVector'EMPTY]
                                     (let [#_"ArrayList<Type>" ___argtypes (ArrayList.)]
                                         (let [#_"ArrayList<Class>" ___argclasses (ArrayList.)]
@@ -11168,7 +11170,7 @@
                                                         (do
                                                             (if (= ___state :PState'REQ)
                                                                 (do
-                                                                    (§ ass ___state (ß :PState'REST))
+                                                                    (§ ass ___state :PState'REST)
                                                                 )
                                                                 (do
                                                                     (throw (Util'runtimeException-1 "Invalid parameter list"))
@@ -11204,7 +11206,7 @@
                                                                         (§ case :PState'REST)
                                                                         (do
                                                                             (§ ass (:restParm ___method) ___lb)
-                                                                            (§ ass ___state (ß :PState'DONE))
+                                                                            (§ ass ___state :PState'DONE)
                                                                             (§ break )
                                                                         )
                                                                         (§ default )
@@ -11225,7 +11227,7 @@
                                             (§ ass (:argLocals ___method) ___argLocals)
                                             (§ ass (:argtypes ___method) (.toArray ___argtypes, (make-array Type (.size ___argtypes))))
                                             (§ ass (:argclasses ___method) (.toArray ___argclasses, (make-array Class (.size ___argtypes))))
-                                            (when (ß (some? (:prim ___method)))
+                                            (when (some? (:prim ___method))
                                                 (loop-when-recur [#_"int" ___i 0] (< ___i (§ alength (:argclasses ___method))) [(inc ___i)]
                                                     (when (or (= (§ aget (:argclasses ___method) ___i) Long/TYPE) (= (§ aget (:argclasses ___method) ___i) Double/TYPE))
                                                         (Compiler'getAndIncLocalNum)
@@ -11501,7 +11503,7 @@
                 (§ return ___ret)
             )
         )
-        (ß Compiler'ARG_TYPES[(.numParams this)])
+        (§ aget Compiler'ARG_TYPES (.numParams this))
     )
 
     #_method
@@ -11599,7 +11601,7 @@
                             (and (= ___retClass Integer/TYPE) (= ___bc Long/TYPE))
                             (do
                                 (.emitUnboxed ___be, :Context'RETURN, ___objx, ___gen)
-                                (ß ___gen.invokeStatic(Compiler'RT_TYPE, (Method/getMethod "int intCast(long)")))
+                                (.invokeStatic ___gen, Compiler'RT_TYPE, (Method/getMethod "int intCast(long)"))
                             )
                             (and (= ___retClass Float/TYPE) (= ___bc Double/TYPE))
                             (do
@@ -11697,7 +11699,7 @@
                 (let [#_"LocalBinding" ___b (cast' LocalBinding (RT'get-2 (:indexlocals this), ___i))]
                     (when (or (nil? ___b) (nil? (Compiler'maybePrimitiveType (:init ___b))))
                         (.visitInsn ___gen, Opcodes/ACONST_NULL)
-                        (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ISTORE), ___i))
+                        (.visitVarInsn ___gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), ___i)
                     )
                 )
             )
@@ -11821,7 +11823,7 @@
                     (when (= (:clearRoot this) (:clearPathRoot ___b))
                         (§ ass (:shouldClear this) true)
                         (§ ass ___sites (RT'conj ___sites, this))
-                        (ß Compiler'CLEAR_SITES.set(RT'assoc(Compiler'CLEAR_SITES.get(), ___b, ___sites)))
+                        (.set Compiler'CLEAR_SITES, (RT'assoc (.get Compiler'CLEAR_SITES), ___b, ___sites))
                     )
                 )
                 this
@@ -12123,7 +12125,7 @@
         (loop-when-recur [#_"int" ___i 0] (< ___i (.count (:bindingInits this))) [(inc ___i)]
             (let [#_"BindingInit" ___bi (cast' BindingInit (.nth (:bindingInits this), ___i))]
                 (.visitInsn ___gen, Opcodes/ACONST_NULL)
-                (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ISTORE), (:idx (:binding ___bi))))
+                (.visitVarInsn ___gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:idx (:binding ___bi)))
             )
         )
 
@@ -12132,14 +12134,14 @@
                 (let [#_"BindingInit" ___bi (cast' BindingInit (.nth (:bindingInits this), ___i))]
                     (§ ass ___lbset (cast' IPersistentSet (.cons ___lbset, (:binding ___bi))))
                     (.emit (:init ___bi), :Context'EXPRESSION, ___objx, ___gen)
-                    (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ISTORE), (:idx (:binding ___bi))))
+                    (.visitVarInsn ___gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:idx (:binding ___bi)))
                 )
             )
 
             (loop-when-recur [#_"int" ___i 0] (< ___i (.count (:bindingInits this))) [(inc ___i)]
                 (let [#_"BindingInit" ___bi (cast' BindingInit (.nth (:bindingInits this), ___i))]
                     (let [#_"ObjExpr" ___fe (cast' ObjExpr (:init ___bi))]
-                        (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ILOAD), (:idx (:binding ___bi))))
+                        (.visitVarInsn ___gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ILOAD), (:idx (:binding ___bi)))
                         (.emitLetFnInits ___fe, ___gen, ___objx, ___lbset)
                     )
                 )
@@ -12153,15 +12155,15 @@
                         (let [#_"BindingInit" ___bi (cast' BindingInit (first ___bis))]
                             (let [#_"String" ___lname (:name (:binding ___bi))]
                                 (when (.endsWith ___lname, "__auto__")
-                                    (§ ass ___lname (ß ___lname + RT'nextID()))
+                                    (§ ass ___lname (+ ___lname (RT'nextID)))
                                 )
                                 (let [#_"Class" ___primc (Compiler'maybePrimitiveType (:init ___bi))]
                                     (if (some? ___primc)
                                         (do
-                                            (ß ___gen.visitLocalVariable(___lname, Type/getDescriptor(___primc), nil, ___loopLabel, ___end, (:idx (:binding ___bi))))
+                                            (.visitLocalVariable ___gen, ___lname, (Type/getDescriptor ___primc), nil, ___loopLabel, ___end, (:idx (:binding ___bi)))
                                         )
                                         (do
-                                            (ß ___gen.visitLocalVariable(___lname, "Ljava/lang/Object;", nil, ___loopLabel, ___end, (:idx (:binding ___bi))))
+                                            (.visitLocalVariable ___gen, ___lname, "Ljava/lang/Object;", nil, ___loopLabel, ___end, (:idx (:binding ___bi)))
                                         )
                                     )
                                 )
@@ -12410,7 +12412,7 @@
                                         (.pop ___gen)
                                     )
                                     (do
-                                        (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ISTORE), (:idx (:binding ___bi))))
+                                        (.visitVarInsn ___gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:idx (:binding ___bi)))
                                     )
                                 )
                             )
@@ -12453,15 +12455,15 @@
                         (let [#_"BindingInit" ___bi (cast' BindingInit (first ___bis))]
                             (let [#_"String" ___lname (:name (:binding ___bi))]
                                 (when (.endsWith ___lname, "__auto__")
-                                    (§ ass ___lname (ß ___lname + RT'nextID()))
+                                    (§ ass ___lname (+ ___lname (RT'nextID)))
                                 )
                                 (let [#_"Class" ___primc (Compiler'maybePrimitiveType (:init ___bi))]
                                     (if (some? ___primc)
                                         (do
-                                            (ß ___gen.visitLocalVariable(___lname, Type/getDescriptor(___primc), nil, (.get ___bindingLabels, ___bi), ___end, (:idx (:binding ___bi))))
+                                            (.visitLocalVariable ___gen, ___lname, (Type/getDescriptor ___primc), nil, (.get ___bindingLabels, ___bi), ___end, (:idx (:binding ___bi)))
                                         )
                                         (do
-                                            (ß ___gen.visitLocalVariable(___lname, "Ljava/lang/Object;", nil, (.get ___bindingLabels, ___bi), ___end, (:idx (:binding ___bi))))
+                                            (.visitLocalVariable ___gen, ___lname, "Ljava/lang/Object;", nil, (.get ___bindingLabels, ___bi), ___end, (:idx (:binding ___bi)))
                                         )
                                     )
                                 )
@@ -12511,7 +12513,7 @@
                             )
                             (let [#_"PersistentVector" ___args PersistentVector'EMPTY]
                                 (loop-when-recur [#_"ISeq" ___s (RT'seq (next ___form))] (some? ___s) [(next ___s)]
-                                    (§ ass ___args (ß ___args.cons(Compiler'analyze-2(:Context'EXPRESSION, (first ___s)))))
+                                    (§ ass ___args (.cons ___args, (Compiler'analyze-2 :Context'EXPRESSION, (first ___s))))
                                 )
                                 (when-not (= (count ___args) (count ___loopLocals))
                                     (throw (IllegalArgumentException. (String/format "Mismatched argument count to recur, expected: %d args, got: %d", (object-array [ (count ___loopLocals), (count ___args) ]))))
@@ -12651,7 +12653,7 @@
                                         (.visitVarInsn ___gen, (.getOpcode (Type/getType ___primc), Opcodes/ISTORE), (:idx ___lb))
                                     )
                                     (do
-                                        (ß ___gen.visitVarInsn(Compiler'OBJECT_TYPE.getOpcode(Opcodes/ISTORE), (:idx ___lb)))
+                                        (.visitVarInsn ___gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:idx ___lb))
                                     )
                                 )
                             )
@@ -12728,7 +12730,7 @@
                         (§ ass ___rform (next ___rform))
                         (let [#_"IPersistentMap" ___opts PersistentHashMap'EMPTY]
                             (while (and (some? ___rform) (§ instance? Keyword (first ___rform)))
-                                (§ ass ___opts (ß ___opts.assoc((first ___rform), RT'second(___rform))))
+                                (§ ass ___opts (.assoc ___opts, (first ___rform), (RT'second ___rform)))
                                 (§ ass ___rform (next (next ___rform)))
                             )
 
@@ -12758,7 +12760,7 @@
                     (let [#_"String" ___simpleName (str "reify__" (RT'nextID))]
                         (let [#_"String" ___classname (+ ___basename ___simpleName)]
                             (let [#_"ISeq" ___rform (RT'next ___form)]
-                                (let [#_"IPersistentVector" ___interfaces (ß (cast' IPersistentVector (RT'first ___rform)).cons(Symbol'intern-1("cloiure.lang.IObj")))]
+                                (let [#_"IPersistentVector" ___interfaces (.cons (cast' IPersistentVector (RT'first ___rform)), (Symbol'intern-1 "cloiure.lang.IObj"))]
                                     (§ ass ___rform (RT'next ___rform))
 
                                     (let [#_"ObjExpr" ___ret (build ___interfaces, nil, nil, ___classname, (Symbol'intern-1 ___classname), nil, ___rform, ___frm, nil)]
@@ -12810,7 +12812,7 @@
 
             (when (some? ___fieldSyms)
                 (let [#_"IPersistentMap" ___fmap PersistentHashMap'EMPTY]
-                    (let [#_"Object[]" ___closesvec (make-array Object (ß 2 * (count ___fieldSyms)))]
+                    (let [#_"Object[]" ___closesvec (make-array Object (* 2 (count ___fieldSyms)))]
                         (loop-when-recur [#_"int" ___i 0] (< ___i (count ___fieldSyms)) [(inc ___i)]
                             (let [#_"Symbol" ___sym (cast' Symbol (.nth ___fieldSyms, ___i))]
                                 (let [#_"LocalBinding" ___lb (LocalBinding'new -1, ___sym, nil, (MethodParamExpr'new (Compiler'tagClass (Compiler'tagOf ___sym))), false, nil)]
@@ -12905,7 +12907,7 @@
                                             )
 
                                             (try
-                                                (ß ___ret.compile(NewInstanceExpr'slashname(___superClass), ___inames, false))
+                                                (.compile ___ret, (NewInstanceExpr'slashname ___superClass), ___inames, false)
                                                 (catch IOException ___e
                                                     (throw (Util'sneakyThrow ___e))
                                                 )
@@ -12941,11 +12943,11 @@
                         (let [#_"int" ___access (+ Opcodes/ACC_PUBLIC (if (.isVolatile ___ret, ___lb) Opcodes/ACC_VOLATILE (if (.isMutable ___ret, ___lb) 0 Opcodes/ACC_FINAL)))]
                             (if (some? (.getPrimitiveType ___lb))
                                 (do
-                                    (ß ___cv.visitField(___access, (:name ___lb), (Type/getType (.getPrimitiveType ___lb)).getDescriptor(), nil, nil))
+                                    (.visitField ___cv, ___access, (:name ___lb), (.getDescriptor (Type/getType (.getPrimitiveType ___lb))), nil, nil)
                                 )
                                 (do
                                     ;; todo - when closed-overs are fields, use more specific types here and in ctor and emitLocal?
-                                    (ß ___cv.visitField(___access, (:name ___lb), Compiler'OBJECT_TYPE.getDescriptor(), nil, nil))
+                                    (.visitField ___cv, ___access, (:name ___lb), (.getDescriptor Compiler'OBJECT_TYPE), nil, nil)
                                 )
                             )
                         )
@@ -12957,7 +12959,7 @@
                     (let [#_"GeneratorAdapter" ___ctorgen (GeneratorAdapter. Opcodes/ACC_PUBLIC, ___m, nil, nil, ___cv)]
                         (.visitCode ___ctorgen)
                         (.loadThis ___ctorgen)
-                        (ß ___ctorgen.invokeConstructor(Type/getObjectType(___superName), voidctor))
+                        (.invokeConstructor ___ctorgen, (Type/getObjectType ___superName), ObjExpr'voidctor)
                         (.returnValue ___ctorgen)
                         (.endMethod ___ctorgen)
 
@@ -13063,7 +13065,7 @@
                                                     (.visitInsn ___mv, Opcodes/ACONST_NULL)
                                                     (.visitMethodInsn ___mv, Opcodes/INVOKEINTERFACE, "cloiure/lang/IPersistentMap", "valAt", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;")
                                                     (when (.isPrimitive ___k)
-                                                        (ß ___mv.visitTypeInsn(Opcodes/CHECKCAST, (Type/getType (Compiler'boxClass ___k)).getInternalName()))
+                                                        (.visitTypeInsn ___mv, Opcodes/CHECKCAST, (.getInternalName (Type/getType (Compiler'boxClass ___k))))
                                                     )
                                                     (.visitVarInsn ___mv, Opcodes/ASTORE, ___i)
                                                     (.visitVarInsn ___mv, Opcodes/ALOAD, 0)
@@ -13196,7 +13198,7 @@
                         (let [#_"Map$Entry" ___e (cast Map$Entry ___o)]
                             (let [#_"IPersistentVector" ___mk (cast' IPersistentVector (.getKey ___e))]
                                 (§ ass ___mk (cast' IPersistentVector (.pop ___mk)))
-                                (let [#_"java.lang.reflect.Method" ___m (ß (java.lang.reflect.Method) (.getValue ___e))]
+                                (let [#_"java.lang.reflect.Method" ___m (cast java.lang.reflect.Method (.getValue ___e))]
                                     (if (.containsKey ___mm, ___mk) ;; covariant return
                                         (do
                                             (let [#_"Set<Class>" ___cvs (.get ___covariants, ___mk)]
@@ -13225,7 +13227,7 @@
                             )
                         )
                     )
-                    (ß new Map[] (object-array [ ___mm, ___covariants ]))
+                    (§ new Map[] (object-array [ ___mm, ___covariants ]))
                 )
             )
         )
@@ -13280,7 +13282,7 @@
         ;; this-name might be nil
         (let [#_"NewInstanceMethod" ___method (NewInstanceMethod'new ___objx, (cast' ObjMethod (.deref Compiler'METHOD)))]
             (let [#_"Symbol" ___dotname (cast' Symbol (RT'first ___form))]
-                (let [#_"Symbol" ___name (cast' Symbol (ß Symbol'intern-2(nil, Compiler'munge((:name ___dotname))).withMeta(RT'meta(___dotname))))]
+                (let [#_"Symbol" ___name (cast' Symbol (.withMeta (Symbol'intern-2 nil, (Compiler'munge (:name ___dotname))), (RT'meta ___dotname)))]
                     (let [#_"IPersistentVector" ___parms (cast' IPersistentVector (RT'second ___form))]
                         (when (zero? (count ___parms))
                             (throw (IllegalArgumentException. (str "Must supply at least one argument for 'this' in: " ___dotname)))
@@ -13347,13 +13349,13 @@
                                                                     (if (pos? (.size ___matches))
                                                                         (do
                                                                             ;; multiple methods
-                                                                            (cond (ß (.size ___matches) > 1)
+                                                                            (cond (> (.size ___matches) 1)
                                                                                 (do
                                                                                     ;; must be hinted and match one method
                                                                                     (when (not ___hinted)
                                                                                         (throw (IllegalArgumentException. (str "Must hint overloaded method: " (:name ___name))))
                                                                                     )
-                                                                                    (§ ass ___m (ß (java.lang.reflect.Method) ___matches.get(___mk)))
+                                                                                    (§ ass ___m (cast java.lang.reflect.Method (.get ___matches, ___mk)))
                                                                                     (when (nil? ___m)
                                                                                         (throw (IllegalArgumentException. (str "Can't find matching overloaded method: " (:name ___name))))
                                                                                     )
@@ -13366,7 +13368,7 @@
                                                                                     ;; if hinted, validate match
                                                                                     (cond ___hinted
                                                                                         (do
-                                                                                            (§ ass ___m (ß (java.lang.reflect.Method) ___matches.get(___mk)))
+                                                                                            (§ ass ___m (cast java.lang.reflect.Method (.get ___matches, ___mk)))
                                                                                             (when (nil? ___m)
                                                                                                 (throw (IllegalArgumentException. (str "Can't find matching method: " (:name ___name) ", leave off hints for auto match.")))
                                                                                             )
@@ -13376,7 +13378,7 @@
                                                                                         )
                                                                                         :else ;; adopt found method sig
                                                                                         (do
-                                                                                            (§ ass ___m (ß (java.lang.reflect.Method) (.values ___matches).iterator().next()))
+                                                                                            (§ ass ___m (cast java.lang.reflect.Method (.next (.iterator (.values ___matches)))))
                                                                                             (§ ass (:retClass ___method) (.getReturnType ___m))
                                                                                             (§ ass ___pclasses (.getParameterTypes ___m))
                                                                                         )
@@ -13436,7 +13438,7 @@
         (let [#_"Map" ___ret (HashMap.)]
             (doseq [#_"Object" ___o (.entrySet ___mm)]
                 (let [#_"Map$Entry" ___e (cast Map$Entry ___o)]
-                    (let [#_"java.lang.reflect.Method" ___m (ß (java.lang.reflect.Method) (.getValue ___e))]
+                    (let [#_"java.lang.reflect.Method" ___m (cast java.lang.reflect.Method (.getValue ___e))]
                         (when (and (.equals ___name, (.getName ___m)) (= (§ alength (.getParameterTypes ___m)) ___arity))
                             (.put ___ret, (.getKey ___e), (.getValue ___e))
                         )
@@ -13451,7 +13453,7 @@
         (let [#_"Map" ___ret (HashMap.)]
             (doseq [#_"Object" ___o (.entrySet ___mm)]
                 (let [#_"Map$Entry" ___e (cast Map$Entry ___o)]
-                    (let [#_"java.lang.reflect.Method" ___m (ß (java.lang.reflect.Method) (.getValue ___e))]
+                    (let [#_"java.lang.reflect.Method" ___m (cast java.lang.reflect.Method (.getValue ___e))]
                         (when (.equals ___name, (.getName ___m))
                             (.put ___ret, (.getKey ___e), (.getValue ___e))
                         )
@@ -13577,12 +13579,12 @@
                         (let [#_"int" ___mask (.intValue (cast Number (.nth ___args, 2)))]
                             (let [#_"Object" ___defaultForm (.nth ___args, 3)]
                                 (let [#_"Map" ___caseMap (cast Map (.nth ___args, 4))]
-                                    (let [#_"Keyword" ___switchType (ß (cast' Keyword (.nth ___args, 5)))]
-                                        (let [#_"Keyword" ___testType (ß (cast' Keyword (.nth ___args, 6)))]
+                                    (let [#_"Keyword" ___switchType (cast' Keyword (.nth ___args, 5))]
+                                        (let [#_"Keyword" ___testType (cast' Keyword (.nth ___args, 6))]
                                             (let [#_"Set" ___skipCheck (if (< (RT'count ___args) 8) nil (cast Set (.nth ___args, 7)))]
                                                 (let [#_"ISeq" ___keys (RT'keys ___caseMap)]
                                                     (let [#_"int" ___low (.intValue (cast Number (RT'first ___keys)))]
-                                                        (let [#_"int" ___high (ß (cast Number (ß RT'nth-2(___keys, (dec (RT'count ___keys))))).intValue())]
+                                                        (let [#_"int" ___high (.intValue (cast Number (RT'nth-2 ___keys, (dec (RT'count ___keys)))))]
                                                             (let [#_"LocalBindingExpr" ___testexpr (cast' LocalBindingExpr (Compiler'analyze-2 :Context'EXPRESSION, ___exprForm))]
                                                                 (§ ass (:shouldClear ___testexpr) false)
 
@@ -13770,7 +13772,7 @@
                                 (do
                                     (let [#_"Label[]" ___la (make-array Label (.size ___labels))]
                                         (§ ass ___la (.toArray (.values ___labels), ___la))
-                                        (let [#_"int[]" ___ints (ß Numbers'int_array-1((.keySet (:tests this))))]
+                                        (let [#_"int[]" ___ints (Numbers'int_array-1 (.keySet (:tests this)))]
                                             (.visitLookupSwitchInsn ___gen, ___defaultLabel, ___ints, ___la)
                                         )
                                     )
@@ -13946,7 +13948,7 @@
     (§ def #_"Symbol" Compiler'LETFN (Symbol'intern-1 "letfn*"))
     (§ def #_"Symbol" Compiler'DO (Symbol'intern-1 "do"))
     (§ def #_"Symbol" Compiler'FN (Symbol'intern-1 "fn*"))
-    (§ def #_"Symbol" Compiler'FNONCE (cast' Symbol (ß Symbol'intern-1("fn*").withMeta(RT'map(Keyword'intern-2(nil, "once"), RT'T)))))
+    (§ def #_"Symbol" Compiler'FNONCE (cast' Symbol (.withMeta (Symbol'intern-1 "fn*"), (RT'map (Keyword'intern-2 nil, "once"), RT'T))))
     (§ def #_"Symbol" Compiler'QUOTE (Symbol'intern-1 "quote"))
     (§ def #_"Symbol" Compiler'THE_VAR (Symbol'intern-1 "var"))
     (§ def #_"Symbol" Compiler'DOT (Symbol'intern-1 "."))
@@ -14059,13 +14061,13 @@
     (def- #_"Type[]" Compiler'EXCEPTION_TYPES (object-array 0))
 
     (§ static
-        (§ ass Compiler'ARG_TYPES (ß new Type[Compiler'MAX_POSITIONAL_ARITY + 2][]))
+        (§ ass Compiler'ARG_TYPES (§ new Type[(+ Compiler'MAX_POSITIONAL_ARITY 2)][]))
         (loop-when-recur [#_"int" ___i 0] (<= ___i Compiler'MAX_POSITIONAL_ARITY) [(inc ___i)]
             (let [#_"Type[]" ___a (make-array Type ___i)]
                 (loop-when-recur [#_"int" ___j 0] (< ___j ___i) [(inc ___j)]
                     (§ ass (§ aget ___a ___j) Compiler'OBJECT_TYPE)
                 )
-                (§ ass (ß Compiler'ARG_TYPES[___i]) ___a)
+                (§ ass (§ aget Compiler'ARG_TYPES ___i) ___a)
             )
         )
         (let [#_"Type[]" ___a (make-array Type (inc Compiler'MAX_POSITIONAL_ARITY))]
@@ -14073,63 +14075,63 @@
                 (§ ass (§ aget ___a ___j) Compiler'OBJECT_TYPE)
             )
             (§ ass (§ aget ___a Compiler'MAX_POSITIONAL_ARITY) (Type/getType "[Ljava/lang/Object;"))
-            (§ ass (ß Compiler'ARG_TYPES[(inc Compiler'MAX_POSITIONAL_ARITY)]) ___a)
+            (§ ass (§ aget Compiler'ARG_TYPES (inc Compiler'MAX_POSITIONAL_ARITY)) ___a)
         )
     )
 
     ;; symbol->localbinding
-    (§ def #_"Var" Compiler'LOCAL_ENV (ß Var'create-1(nil).setDynamic()))
+    (§ def #_"Var" Compiler'LOCAL_ENV (.setDynamic (Var'create-1 nil)))
 
     ;; vector<localbinding>
-    (§ def #_"Var" Compiler'LOOP_LOCALS (ß Var'create-0().setDynamic()))
+    (§ def #_"Var" Compiler'LOOP_LOCALS (.setDynamic (Var'create-0)))
 
     ;; Label
-    (§ def #_"Var" Compiler'LOOP_LABEL (ß Var'create-0().setDynamic()))
+    (§ def #_"Var" Compiler'LOOP_LABEL (.setDynamic (Var'create-0)))
 
     ;; vector<object>
-    (§ def #_"Var" Compiler'CONSTANTS (ß Var'create-0().setDynamic()))
+    (§ def #_"Var" Compiler'CONSTANTS (.setDynamic (Var'create-0)))
 
     ;; IdentityHashMap
-    (§ def #_"Var" Compiler'CONSTANT_IDS (ß Var'create-0().setDynamic()))
+    (§ def #_"Var" Compiler'CONSTANT_IDS (.setDynamic (Var'create-0)))
 
     ;; vector<keyword>
-    (§ def #_"Var" Compiler'KEYWORD_CALLSITES (ß Var'create-0().setDynamic()))
+    (§ def #_"Var" Compiler'KEYWORD_CALLSITES (.setDynamic (Var'create-0)))
 
     ;; vector<var>
-    (§ def #_"Var" Compiler'PROTOCOL_CALLSITES (ß Var'create-0().setDynamic()))
+    (§ def #_"Var" Compiler'PROTOCOL_CALLSITES (.setDynamic (Var'create-0)))
 
     ;; set<var>
-    (§ def #_"Var" Compiler'VAR_CALLSITES (ß Var'create-0().setDynamic()))
+    (§ def #_"Var" Compiler'VAR_CALLSITES (.setDynamic (Var'create-0)))
 
     ;; keyword->constid
-    (§ def #_"Var" Compiler'KEYWORDS (ß Var'create-0().setDynamic()))
+    (§ def #_"Var" Compiler'KEYWORDS (.setDynamic (Var'create-0)))
 
     ;; var->constid
-    (§ def #_"Var" Compiler'VARS (ß Var'create-0().setDynamic()))
+    (§ def #_"Var" Compiler'VARS (.setDynamic (Var'create-0)))
 
     ;; FnFrame
-    (§ def #_"Var" Compiler'METHOD (ß Var'create-1(nil).setDynamic()))
+    (§ def #_"Var" Compiler'METHOD (.setDynamic (Var'create-1 nil)))
 
     ;; nil or not
-    (§ def #_"Var" Compiler'IN_CATCH_FINALLY (ß Var'create-1(nil).setDynamic()))
+    (§ def #_"Var" Compiler'IN_CATCH_FINALLY (.setDynamic (Var'create-1 nil)))
 
-    (§ def #_"Var" Compiler'METHOD_RETURN_CONTEXT (ß Var'create-1(nil).setDynamic()))
+    (§ def #_"Var" Compiler'METHOD_RETURN_CONTEXT (.setDynamic (Var'create-1 nil)))
 
-    (§ def #_"Var" Compiler'NO_RECUR (ß Var'create-1(nil).setDynamic()))
+    (§ def #_"Var" Compiler'NO_RECUR (.setDynamic (Var'create-1 nil)))
 
     ;; DynamicClassLoader
-    (§ def #_"Var" Compiler'LOADER (ß Var'create-0().setDynamic()))
+    (§ def #_"Var" Compiler'LOADER (.setDynamic (Var'create-0)))
 
     ;; String
-    (§ def #_"Var" Compiler'SOURCE (ß Var'intern-3(Namespace'findOrCreate(Symbol'intern-1("cloiure.core")), Symbol'intern-1("*source-path*"), "NO_SOURCE_FILE").setDynamic()))
+    (§ def #_"Var" Compiler'SOURCE (.setDynamic (Var'intern-3 (Namespace'findOrCreate (Symbol'intern-1 "cloiure.core")), (Symbol'intern-1 "*source-path*"), "NO_SOURCE_FILE")))
 
     ;; String
-    (§ def #_"Var" Compiler'SOURCE_PATH (ß Var'intern-3(Namespace'findOrCreate(Symbol'intern-1("cloiure.core")), Symbol'intern-1("*file*"), "NO_SOURCE_PATH").setDynamic()))
+    (§ def #_"Var" Compiler'SOURCE_PATH (.setDynamic (Var'intern-3 (Namespace'findOrCreate (Symbol'intern-1 "cloiure.core")), (Symbol'intern-1 "*file*"), "NO_SOURCE_PATH")))
 
     ;; String
-    (§ def #_"Var" Compiler'COMPILE_PATH (ß Var'intern-3(Namespace'findOrCreate(Symbol'intern-1("cloiure.core")), Symbol'intern-1("*compile-path*"), nil).setDynamic()))
+    (§ def #_"Var" Compiler'COMPILE_PATH (.setDynamic (Var'intern-3 (Namespace'findOrCreate (Symbol'intern-1 "cloiure.core")), (Symbol'intern-1 "*compile-path*"), nil)))
     ;; boolean
-    (§ def #_"Var" Compiler'COMPILE_FILES (ß Var'intern-3(Namespace'findOrCreate(Symbol'intern-1("cloiure.core")), Symbol'intern-1("*compile-files*"), Boolean/FALSE).setDynamic()))
+    (§ def #_"Var" Compiler'COMPILE_FILES (.setDynamic (Var'intern-3 (Namespace'findOrCreate (Symbol'intern-1 "cloiure.core")), (Symbol'intern-1 "*compile-files*"), Boolean/FALSE)))
 
     (§ def #_"Var" Compiler'INSTANCE (Var'intern-2n (Namespace'findOrCreate (Symbol'intern-1 "cloiure.core")), (Symbol'intern-1 "instance?")))
 
@@ -14157,12 +14159,12 @@
                 )
             )
 
-            (§ ass Compiler'COMPILER_OPTIONS (ß Var'intern-3(Namespace'findOrCreate(Symbol'intern-1("cloiure.core")), Symbol'intern-1("*compiler-options*"), ___compilerOptions).setDynamic()))
+            (§ ass Compiler'COMPILER_OPTIONS (.setDynamic (Var'intern-3 (Namespace'findOrCreate (Symbol'intern-1 "cloiure.core")), (Symbol'intern-1 "*compiler-options*"), ___compilerOptions)))
         )
     )
 
     (defn #_"Object" Compiler'elideMeta [#_"Object" ___m]
-        (let [#_"Collection<Object>" ___elides (ß (Collection<Object>) Compiler'getCompilerOption(Compiler'elideMetaKey))]
+        (let [#_"Collection<Object>" ___elides (cast Collection #_"<Object>" (Compiler'getCompilerOption Compiler'elideMetaKey))]
             (when (some? ___elides)
                 (doseq [#_"Object" ___k ___elides]
                     (§ ass ___m (RT'dissoc ___m, ___k))
@@ -14173,8 +14175,8 @@
     )
 
     ;; Integer
-    (§ def #_"Var" Compiler'LINE (ß Var'create-1(0).setDynamic()))
-    (§ def #_"Var" Compiler'COLUMN (ß Var'create-1(0).setDynamic()))
+    (§ def #_"Var" Compiler'LINE (.setDynamic (Var'create-1 0)))
+    (§ def #_"Var" Compiler'COLUMN (.setDynamic (Var'create-1 0)))
 
     (defn #_"int" Compiler'lineDeref []
         (.intValue (cast Number (.deref Compiler'LINE)))
@@ -14185,28 +14187,28 @@
     )
 
     ;; Integer
-    (§ def #_"Var" Compiler'LINE_BEFORE (ß Var'create-1(0).setDynamic()))
-    (§ def #_"Var" Compiler'COLUMN_BEFORE (ß Var'create-1(0).setDynamic()))
-    (§ def #_"Var" Compiler'LINE_AFTER (ß Var'create-1(0).setDynamic()))
-    (§ def #_"Var" Compiler'COLUMN_AFTER (ß Var'create-1(0).setDynamic()))
+    (§ def #_"Var" Compiler'LINE_BEFORE (.setDynamic (Var'create-1 0)))
+    (§ def #_"Var" Compiler'COLUMN_BEFORE (.setDynamic (Var'create-1 0)))
+    (§ def #_"Var" Compiler'LINE_AFTER (.setDynamic (Var'create-1 0)))
+    (§ def #_"Var" Compiler'COLUMN_AFTER (.setDynamic (Var'create-1 0)))
 
     ;; Integer
-    (§ def #_"Var" Compiler'NEXT_LOCAL_NUM (ß Var'create-1(0).setDynamic()))
+    (§ def #_"Var" Compiler'NEXT_LOCAL_NUM (.setDynamic (Var'create-1 0)))
 
     ;; Integer
-    (§ def #_"Var" Compiler'RET_LOCAL_NUM (ß Var'create-0().setDynamic()))
+    (§ def #_"Var" Compiler'RET_LOCAL_NUM (.setDynamic (Var'create-0)))
 
-    (§ def #_"Var" Compiler'COMPILE_STUB_SYM (ß Var'create-1(nil).setDynamic()))
-    (§ def #_"Var" Compiler'COMPILE_STUB_CLASS (ß Var'create-1(nil).setDynamic()))
+    (§ def #_"Var" Compiler'COMPILE_STUB_SYM (.setDynamic (Var'create-1 nil)))
+    (§ def #_"Var" Compiler'COMPILE_STUB_CLASS (.setDynamic (Var'create-1 nil)))
 
     ;; PathNode chain
-    (§ def #_"Var" Compiler'CLEAR_PATH (ß Var'create-1(nil).setDynamic()))
+    (§ def #_"Var" Compiler'CLEAR_PATH (.setDynamic (Var'create-1 nil)))
 
     ;; tail of PathNode chain
-    (§ def #_"Var" Compiler'CLEAR_ROOT (ß Var'create-1(nil).setDynamic()))
+    (§ def #_"Var" Compiler'CLEAR_ROOT (.setDynamic (Var'create-1 nil)))
 
     ;; LocalBinding -> Set<LocalBindingExpr>
-    (§ def #_"Var" Compiler'CLEAR_SITES (ß Var'create-1(nil).setDynamic()))
+    (§ def #_"Var" Compiler'CLEAR_SITES (.setDynamic (Var'create-1 nil)))
 
     (def #_"Class" Compiler'RECUR_CLASS (§ class Recur))
 
@@ -14223,7 +14225,7 @@
         (when (pos? (.indexOf (:name ___sym), \.))
             (§ return ___sym)
         )
-        (when (ß (some? (:ns ___sym)))
+        (when (some? (:ns ___sym))
             (let [#_"Namespace" ___ns (Compiler'namespaceFor-1 ___sym)]
                 (when (or (nil? ___ns) (if (nil? (:name (:name ___ns))) (nil? (:ns ___sym)) (.equals (:name (:name ___ns)), (:ns ___sym))))
                     (§ return ___sym)
@@ -14459,12 +14461,11 @@
             ;; shortest ensures correct matching behavior, even if some strings are
             ;; prefixes of others.
             (let [#_"Object[]" ___mungeStrs (RT'toArray (RT'keys ___m))]
-                (ß Arrays/sort(___mungeStrs,
-                        (§ reify Comparator()
-                            #_method
-                            (§ defn #_"int" (§ method compare) [#_"Comparator" this, #_"Object" ___s1, #_"Object" ___s2]
-                                (- (.length (cast String ___s2)) (.length (cast String ___s1)))
-                            )
+                (Arrays/sort ___mungeStrs,
+                    (§ reify Comparator()
+                        #_method
+                        (§ defn #_"int" (§ method compare) [#_"Comparator" this, #_"Object" ___s1, #_"Object" ___s2]
+                            (- (.length (cast String ___s2)) (.length (cast String ___s1)))
                         )
                     )
                 )
@@ -14539,7 +14540,7 @@
         (let [#_"int" ___num (Compiler'getAndIncLocalNum)]
             (let [#_"LocalBinding" ___b (LocalBinding'new ___num, ___sym, ___tag, ___init, ___isArg, (Compiler'clearPathRoot))]
                 (let [#_"IPersistentMap" ___localsMap (cast' IPersistentMap (.deref Compiler'LOCAL_ENV))]
-                    (ß Compiler'LOCAL_ENV.set(RT'assoc(___localsMap, (:sym ___b), ___b)))
+                    (.set Compiler'LOCAL_ENV, (RT'assoc ___localsMap, (:sym ___b), ___b))
                     (let [#_"ObjMethod" ___method (cast' ObjMethod (.deref Compiler'METHOD))]
                         (§ ass (:locals ___method) (cast' IPersistentMap (RT'assoc (:locals ___method), ___b, ___b)))
                         (§ ass (:indexlocals ___method) (cast' IPersistentMap (RT'assoc (:indexlocals ___method), ___num, ___b)))
@@ -14967,12 +14968,12 @@
             (§ return -1)
         )
         (let [#_"PersistentVector" ___v (cast' PersistentVector (.deref Compiler'CONSTANTS))]
-            (let [#_"IdentityHashMap<Object, Integer>" ___ids (ß (IdentityHashMap<Object, Integer>) Compiler'CONSTANT_IDS.deref())]
+            (let [#_"IdentityHashMap<Object, Integer>" ___ids (cast IdentityHashMap #_"<Object, Integer>" (.deref Compiler'CONSTANT_IDS))]
                 (let [#_"Integer" ___i (.get ___ids, ___o)]
                     (when (some? ___i)
                         (§ return ___i)
                     )
-                    (ß Compiler'CONSTANTS.set(RT'conj(___v, ___o)))
+                    (.set Compiler'CONSTANTS, (RT'conj ___v, ___o))
                     (.put ___ids, ___o, (count ___v))
                     (count ___v)
                 )
@@ -14988,7 +14989,7 @@
         (let [#_"IPersistentMap" ___keywordsMap (cast' IPersistentMap (.deref Compiler'KEYWORDS))]
             (let [#_"Object" ___id (RT'get-2 ___keywordsMap, ___keyword)]
                 (when (nil? ___id)
-                    (ß Compiler'KEYWORDS.set(RT'assoc(___keywordsMap, ___keyword, Compiler'registerConstant(___keyword))))
+                    (.set Compiler'KEYWORDS, (RT'assoc ___keywordsMap, ___keyword, (Compiler'registerConstant ___keyword)))
                 )
                 (KeywordExpr'new ___keyword)
             )
@@ -15071,7 +15072,7 @@
 
     (defn- #_"Expr" Compiler'analyzeSymbol [#_"Symbol" ___sym]
         (let [#_"Symbol" ___tag (Compiler'tagOf ___sym)]
-            (cond (ß (nil? (:ns ___sym))) ;; ns-qualified syms are always Vars
+            (cond (nil? (:ns ___sym)) ;; ns-qualified syms are always Vars
                 (do
                     (let [#_"LocalBinding" ___b (Compiler'referenceLocal ___sym)]
                         (when (some? ___b)
@@ -15167,14 +15168,14 @@
 
     (defn #_"Object" Compiler'resolveIn [#_"Namespace" ___n, #_"Symbol" ___sym, #_"boolean" ___allowPrivate]
         ;; note - ns-qualified vars must already exist
-        (cond (ß (some? (:ns ___sym)))
+        (cond (some? (:ns ___sym))
             (do
                 (let [#_"Namespace" ___ns (Compiler'namespaceFor-2 ___n, ___sym)]
                     (when (nil? ___ns)
                         (throw (Util'runtimeException-1 (str "No such namespace: " (:ns ___sym))))
                     )
 
-                    (let [#_"Var" ___v (ß ___ns.findInternedVar(Symbol'intern-1((:name ___sym))))]
+                    (let [#_"Var" ___v (.findInternedVar ___ns, (Symbol'intern-1 (:name ___sym)))]
                         (cond (nil? ___v)
                             (do
                                 (throw (Util'runtimeException-1 (str "No such var: " ___sym)))
@@ -15224,13 +15225,13 @@
 
     (defn #_"Object" Compiler'maybeResolveIn [#_"Namespace" ___n, #_"Symbol" ___sym]
         ;; note - ns-qualified vars must already exist
-        (cond (ß (some? (:ns ___sym)))
+        (cond (some? (:ns ___sym))
             (do
                 (let [#_"Namespace" ___ns (Compiler'namespaceFor-2 ___n, ___sym)]
                     (when (nil? ___ns)
                         (§ return nil)
                     )
-                    (let [#_"Var" ___v (ß ___ns.findInternedVar(Symbol'intern-1((:name ___sym))))]
+                    (let [#_"Var" ___v (.findInternedVar ___ns, (Symbol'intern-1 (:name ___sym)))]
                         (when (nil? ___v)
                             (§ return nil)
                         )
@@ -15262,7 +15263,7 @@
     (defn #_"Var" Compiler'lookupVar-3 [#_"Symbol" ___sym, #_"boolean" ___internNew, #_"boolean" ___registerMacro]
         (let [#_"Var" ___var nil]
             ;; note - ns-qualified vars in other namespaces must already exist
-            (cond (ß (some? (:ns ___sym)))
+            (cond (some? (:ns ___sym))
                 (do
                     (let [#_"Namespace" ___ns (Compiler'namespaceFor-1 ___sym)]
                         (when (nil? ___ns)
@@ -15329,7 +15330,7 @@
         (let [#_"IPersistentMap" ___varsMap (cast' IPersistentMap (.deref Compiler'VARS))]
             (let [#_"Object" ___id (RT'get-2 ___varsMap, ___var)]
                 (when (nil? ___id)
-                    (ß Compiler'VARS.set(RT'assoc(___varsMap, ___var, Compiler'registerConstant(___var))))
+                    (.set Compiler'VARS, (RT'assoc ___varsMap, ___var, (Compiler'registerConstant ___var)))
                 )
                 nil
             )
@@ -15651,7 +15652,7 @@
                                             ;; static fields for constants
                                             (loop-when-recur [#_"int" ___i 0] (< ___i (.count (:constants ___objx))) [(inc ___i)]
                                                 (when (.contains (:usedConstants ___objx), ___i)
-                                                    (ß ___cv.visitField((+ Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL Opcodes/ACC_STATIC), (.constantName ___objx, ___i), (.constantType ___objx, ___i).getDescriptor(), nil, nil))
+                                                    (.visitField ___cv, (+ Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL Opcodes/ACC_STATIC), (.constantName ___objx, ___i), (.getDescriptor (.constantType ___objx, ___i)), nil, nil)
                                                 )
                                             )
 
@@ -15695,18 +15696,18 @@
                                                                         )
 
                                                                         (.push ___clinitgen, (.replace (:internalName ___objx), \/, \.))
-                                                                        (ß ___clinitgen.invokeStatic(Compiler'RT_TYPE, (Method/getMethod "Class classForName(String)")))
-                                                                        (ß ___clinitgen.invokeVirtual(Compiler'CLASS_TYPE, (Method/getMethod "ClassLoader getClassLoader()")))
+                                                                        (.invokeStatic ___clinitgen, Compiler'RT_TYPE, (Method/getMethod "Class classForName(String)"))
+                                                                        (.invokeVirtual ___clinitgen, Compiler'CLASS_TYPE, (Method/getMethod "ClassLoader getClassLoader()"))
                                                                         (.invokeStatic ___clinitgen, (§ unsure Type/getType (§ class Compiler)), (Method/getMethod "void pushNSandLoader(ClassLoader)"))
                                                                         (.mark ___clinitgen, ___startTry)
                                                                         (.invokeStatic ___clinitgen, (:objtype ___objx), (Method/getMethod "void load()"))
                                                                         (.mark ___clinitgen, ___endTry)
-                                                                        (ß ___clinitgen.invokeStatic(Compiler'VAR_TYPE, (Method/getMethod "void popThreadBindings()")))
+                                                                        (.invokeStatic ___clinitgen, Compiler'VAR_TYPE, (Method/getMethod "void popThreadBindings()"))
                                                                         (.goTo ___clinitgen, ___end)
 
                                                                         (.mark ___clinitgen, ___finallyLabel)
                                                                         ;; exception should be on stack
-                                                                        (ß ___clinitgen.invokeStatic(Compiler'VAR_TYPE, (Method/getMethod "void popThreadBindings()")))
+                                                                        (.invokeStatic ___clinitgen, Compiler'VAR_TYPE, (Method/getMethod "void popThreadBindings()"))
                                                                         (.throwException ___clinitgen)
                                                                         (.mark ___clinitgen, ___end)
                                                                         (.visitTryCatchBlock ___clinitgen, ___startTry, ___endTry, ___finallyLabel, nil)
@@ -15925,7 +15926,7 @@
 
     #_method
     (§ defn #_"int" (§ method count) [#_"Cons" this]
-        (ß 1 + RT'count((:_more this)))
+        (inc (RT'count (:_more this)))
     )
 
     #_method
@@ -16820,24 +16821,24 @@
     (§ def #_"IFn" EdnReader'taggedReader (TaggedReader'new))
 
     (§ static
-        (§ ass (ß macros[\"]) (EdnStringReader'new)) ;; oops! "
-        (§ ass (ß macros[\;]) (EdnCommentReader'new))
-        (§ ass (ß macros[\^]) (EdnMetaReader'new))
-        (§ ass (ß macros[\(]) (EdnListReader'new))
-        (§ ass (ß macros[\)]) (EdnUnmatchedDelimiterReader'new))
-        (§ ass (ß macros[\[]) (EdnVectorReader'new))
-        (§ ass (ß macros[\]]) (EdnUnmatchedDelimiterReader'new))
-        (§ ass (ß macros[\{]) (EdnMapReader'new))
-        (§ ass (ß macros[\}]) (EdnUnmatchedDelimiterReader'new))
-        (§ ass (ß macros[\\]) (EdnCharacterReader'new))
-        (§ ass (ß macros[\#]) (EdnDispatchReader'new))
+        (§ ass (§ aget macros \") (EdnStringReader'new)) ;; oops! "
+        (§ ass (§ aget macros \;) (EdnCommentReader'new))
+        (§ ass (§ aget macros \^) (EdnMetaReader'new))
+        (§ ass (§ aget macros \() (EdnListReader'new))
+        (§ ass (§ aget macros \)) (EdnUnmatchedDelimiterReader'new))
+        (§ ass (§ aget macros \[) (EdnVectorReader'new))
+        (§ ass (§ aget macros \]) (EdnUnmatchedDelimiterReader'new))
+        (§ ass (§ aget macros \{) (EdnMapReader'new))
+        (§ ass (§ aget macros \}) (EdnUnmatchedDelimiterReader'new))
+        (§ ass (§ aget macros \\) (EdnCharacterReader'new))
+        (§ ass (§ aget macros \#) (EdnDispatchReader'new))
 
-        (§ ass (ß dispatchMacros[\#]) (EdnSymbolicValueReader'new))
-        (§ ass (ß dispatchMacros[\^]) (EdnMetaReader'new))
-        (§ ass (ß dispatchMacros[\{]) (EdnSetReader'new))
-        (§ ass (ß dispatchMacros[\<]) (EdnUnreadableReader'new))
-        (§ ass (ß dispatchMacros[\_]) (EdnDiscardReader'new))
-        (§ ass (ß dispatchMacros[\:]) (EdnNamespaceMapReader'new))
+        (§ ass (§ aget dispatchMacros \#) (EdnSymbolicValueReader'new))
+        (§ ass (§ aget dispatchMacros \^) (EdnMetaReader'new))
+        (§ ass (§ aget dispatchMacros \{) (EdnSetReader'new))
+        (§ ass (§ aget dispatchMacros \<) (EdnUnreadableReader'new))
+        (§ ass (§ aget dispatchMacros \_) (EdnDiscardReader'new))
+        (§ ass (§ aget dispatchMacros \:) (EdnNamespaceMapReader'new))
     )
 
     (defn #_"boolean" EdnReader'nonConstituent [#_"int" ___ch]
@@ -17010,12 +17011,12 @@
             (throw (IllegalArgumentException. (str "Invalid unicode character: \\" ___token)))
         )
         (let [#_"int" ___uc 0]
-            (loop-when-recur [#_"int" ___i ___offset] (ß ___i < ___offset + ___length) [(inc ___i)]
-                (let [#_"int" ___d (ß Character/digit((.charAt ___token, ___i), ___base))]
+            (loop-when-recur [#_"int" ___i ___offset] (< ___i (+ ___offset ___length)) [(inc ___i)]
+                (let [#_"int" ___d (Character/digit (.charAt ___token, ___i), ___base)]
                     (when (= ___d -1)
                         (throw (IllegalArgumentException. (str "Invalid digit: " (.charAt ___token, ___i))))
                     )
-                    (§ ass ___uc (ß ___uc * ___base + ___d))
+                    (§ ass ___uc (+ (* ___uc ___base) ___d))
                 )
             )
             (char ___uc)
@@ -17038,7 +17039,7 @@
                             (when (= ___d -1)
                                 (throw (IllegalArgumentException. (str "Invalid digit: " (char ___ch))))
                             )
-                            (§ ass ___uc (ß ___uc * ___base + ___d))
+                            (§ ass ___uc (+ (* ___uc ___base) ___d))
                         )
                     )
                 )
@@ -17426,7 +17427,7 @@
     (§ defn- #_"void" (§ method load) [#_"FnLoaderThunk" this]
         (when (nil? (:fn this))
             (try
-                (§ ass (:fn this) (cast' IFn (ß Class/forName((:fnClassName this), true, (:loader this)).newInstance())))
+                (§ ass (:fn this) (cast' IFn (.newInstance (Class/forName (:fnClassName this), true, (:loader this)))))
                 (catch Exception ___e
                     (throw (Util'sneakyThrow ___e))
                 )
@@ -20079,7 +20080,7 @@
                         (§ ass ___sym (cast' Symbol (.withMeta ___sym, nil)))
                     )
                     (§ ass ___k (Keyword'new ___sym))
-                    (§ ass ___existingRef (ß Keyword'TABLE.putIfAbsent(___sym, new WeakReference<Keyword>(___k, Keyword'RQ))))
+                    (§ ass ___existingRef (.putIfAbsent Keyword'TABLE, ___sym, (WeakReference. #_"<Keyword>" ___k, Keyword'RQ)))
                 )
                 (when (nil? ___existingRef)
                     (§ return ___k)
@@ -20116,7 +20117,7 @@
     (defn- #_"Keyword" Keyword'new [#_"Symbol" ___sym]
         (let [this (Keyword'init)]
             (§ ass (:sym this) ___sym)
-            (§ ass (:hasheq this) (ß (.hasheq ___sym) + 0x9e3779b9))
+            (§ ass (:hasheq this) (+ (.hasheq ___sym) 0x9e3779b9))
             this
         )
     )
@@ -21538,7 +21539,7 @@
                                         (let [#_"Symbol" ___gs (cast' Symbol (.valAt ___gmap, ___sym))]
                                             (when (nil? ___gs)
                                                 (§ ass ___gs (Symbol'intern-2 nil, (str (.substring (:name ___sym), 0, (dec (.length (:name ___sym)))) "__" (RT'nextID) "__auto__")))
-                                                (ß LispReader'GENSYM_ENV.set((.assoc ___gmap, ___sym, ___gs)))
+                                                (.set LispReader'GENSYM_ENV, (.assoc ___gmap, ___sym, ___gs))
                                             )
                                             (§ ass ___sym ___gs)
                                         )
@@ -21546,7 +21547,7 @@
                                 )
                                 (and (nil? (:ns ___sym)) (.endsWith (:name ___sym), "."))
                                 (do
-                                    (let [#_"Symbol" ___csym (ß Symbol'intern-2(nil, (.substring (:name ___sym), 0, (dec (.length (:name ___sym))))))]
+                                    (let [#_"Symbol" ___csym (Symbol'intern-2 nil, (.substring (:name ___sym), 0, (dec (.length (:name ___sym)))))]
                                         (if (some? ___resolver)
                                             (do
                                                 (let [#_"Symbol" ___rc (.resolveClass ___resolver, ___csym)]
@@ -21559,7 +21560,7 @@
                                                 (§ ass ___csym (Compiler'resolveSymbol ___csym))
                                             )
                                         )
-                                        (§ ass ___sym (ß Symbol'intern-2(nil, (.concat (:name ___csym), "."))))
+                                        (§ ass ___sym (Symbol'intern-2 nil, (.concat (:name ___csym), ".")))
                                     )
                                 )
                                 (and (nil? (:ns ___sym)) (.startsWith (:name ___sym), "."))
@@ -21569,7 +21570,7 @@
                                 (some? ___resolver)
                                 (do
                                     (let [#_"Symbol" ___nsym nil]
-                                        (when (ß (some? (:ns ___sym)))
+                                        (when (some? (:ns ___sym))
                                             (let [#_"Symbol" ___alias (Symbol'intern-2 nil, (:ns ___sym))]
                                                 (§ ass ___nsym (.resolveClass ___resolver, ___alias))
                                                 (when (nil? ___nsym)
@@ -21582,7 +21583,7 @@
                                                 ;; Classname/foo -> package.qualified.Classname/foo
                                                 (§ ass ___sym (Symbol'intern-2 (:name ___nsym), (:name ___sym)))
                                             )
-                                            (ß (nil? (:ns ___sym)))
+                                            (nil? (:ns ___sym))
                                             (do
                                                 (let [#_"Symbol" ___rsym (.resolveClass ___resolver, ___sym)]
                                                     (when (nil? ___rsym)
@@ -21605,13 +21606,13 @@
                                 :else
                                 (do
                                     (let [#_"Object" ___maybeClass nil]
-                                        (when (ß (some? (:ns ___sym)))
+                                        (when (some? (:ns ___sym))
                                             (§ ass ___maybeClass (.getMapping (Compiler'currentNS), (Symbol'intern-2 nil, (:ns ___sym))))
                                         )
                                         (if (instance? Class ___maybeClass)
                                             (do
                                                 ;; Classname/foo -> package.qualified.Classname/foo
-                                                (§ ass ___sym (ß Symbol'intern-2((.getName (cast Class ___maybeClass)), (:name ___sym))))
+                                                (§ ass ___sym (Symbol'intern-2 (.getName (cast Class ___maybeClass)), (:name ___sym)))
                                             )
                                             (do
                                                 (§ ass ___sym (Compiler'resolveSymbol ___sym))
@@ -21699,15 +21700,15 @@
                 (let [#_"Object" ___item (first ___seq)]
                     (cond (LispReader'isUnquote ___item)
                         (do
-                            (§ ass ___ret (ß ___ret.cons(RT'list-2(LispReader'LIST, RT'second(___item)))))
+                            (§ ass ___ret (.cons ___ret, (RT'list-2 LispReader'LIST, (RT'second ___item))))
                         )
                         (LispReader'isUnquoteSplicing ___item)
                         (do
-                            (§ ass ___ret (ß ___ret.cons(RT'second(___item))))
+                            (§ ass ___ret (.cons ___ret, (RT'second ___item)))
                         )
                         :else
                         (do
-                            (§ ass ___ret (ß ___ret.cons(RT'list-2(LispReader'LIST, SyntaxQuoteReader'syntaxQuote(___item)))))
+                            (§ ass ___ret (.cons ___ret, (RT'list-2 LispReader'LIST, (SyntaxQuoteReader'syntaxQuote ___item))))
                         )
                     )
                 )
@@ -22271,7 +22272,7 @@
 
     (defn- #_"void" ConditionalReader'checkConditionalAllowed [#_"Object" ___opts]
         (let [#_"IPersistentMap" ___mopts (cast' IPersistentMap ___opts)]
-            (when (not (and (some? ___opts) (or (ß LispReader'COND_ALLOW.equals((.valAt ___mopts, LispReader'OPT_READ_COND))) (ß LispReader'COND_PRESERVE.equals((.valAt ___mopts, LispReader'OPT_READ_COND))))))
+            (when (not (and (some? ___opts) (or (.equals LispReader'COND_ALLOW, (.valAt ___mopts, LispReader'OPT_READ_COND)) (.equals LispReader'COND_PRESERVE, (.valAt ___mopts, LispReader'OPT_READ_COND)))))
                 (throw (Util'runtimeException-1 "Conditional read not allowed"))
             )
             nil
@@ -22312,7 +22313,7 @@
                         (if (isPreserveReadCond ___opts)
                             (do
                                 (let [#_"IFn" ___listReader (LispReader'getMacro ___ch)] ;; should always be a list
-                                    (let [#_"Object" ___form (ß ___listReader.invoke(___r, ___ch, ___opts, LispReader'ensurePending(___pendingForms)))]
+                                    (let [#_"Object" ___form (.invoke ___listReader, ___r, ___ch, ___opts, (LispReader'ensurePending ___pendingForms))]
                                         (ReaderConditional'create ___form, ___splicing)
                                     )
                                 )
@@ -22361,44 +22362,44 @@
     (def #_"Pattern" LispReader'floatPat (Pattern/compile "([-+]?[0-9]+(\\.[0-9]*)?([eE][-+]?[0-9]+)?)(M)?"))
 
     ;; symbol->gensymbol
-    (§ def #_"Var" LispReader'GENSYM_ENV (ß Var'create-1(nil).setDynamic()))
+    (§ def #_"Var" LispReader'GENSYM_ENV (.setDynamic (Var'create-1 nil)))
     ;; sorted-map num->gensymbol
-    (§ def #_"Var" LispReader'ARG_ENV (ß Var'create-1(nil).setDynamic()))
+    (§ def #_"Var" LispReader'ARG_ENV (.setDynamic (Var'create-1 nil)))
     (§ def #_"IFn" LispReader'ctorReader (CtorReader'new))
 
     ;; Dynamic var set to true in a read-cond context
-    (§ def #_"Var" LispReader'READ_COND_ENV (ß Var'create-1(nil).setDynamic()))
+    (§ def #_"Var" LispReader'READ_COND_ENV (.setDynamic (Var'create-1 nil)))
 
     (§ static
-        (§ ass (ß macros[\"]) (LispStringReader'new)) ;; oops! "
-        (§ ass (ß macros[\;]) (LispCommentReader'new))
-        (§ ass (ß macros[\']) (WrappingReader'new LispReader'QUOTE))
-        (§ ass (ß macros[\@]) (WrappingReader'new LispReader'DEREF))
-        (§ ass (ß macros[\^]) (LispMetaReader'new))
-        (§ ass (ß macros[\`]) (SyntaxQuoteReader'new))
-        (§ ass (ß macros[\~]) (UnquoteReader'new))
-        (§ ass (ß macros[\(]) (LispListReader'new))
-        (§ ass (ß macros[\)]) (LispUnmatchedDelimiterReader'new))
-        (§ ass (ß macros[\[]) (LispVectorReader'new))
-        (§ ass (ß macros[\]]) (LispUnmatchedDelimiterReader'new))
-        (§ ass (ß macros[\{]) (LispMapReader'new))
-        (§ ass (ß macros[\}]) (LispUnmatchedDelimiterReader'new))
-        (§ ass (ß macros[\\]) (LispCharacterReader'new))
-        (§ ass (ß macros[\%]) (ArgReader'new))
-        (§ ass (ß macros[\#]) (LispDispatchReader'new))
+        (§ ass (§ aget macros \") (LispStringReader'new)) ;; oops! "
+        (§ ass (§ aget macros \;) (LispCommentReader'new))
+        (§ ass (§ aget macros \') (WrappingReader'new LispReader'QUOTE))
+        (§ ass (§ aget macros \@) (WrappingReader'new LispReader'DEREF))
+        (§ ass (§ aget macros \^) (LispMetaReader'new))
+        (§ ass (§ aget macros \`) (SyntaxQuoteReader'new))
+        (§ ass (§ aget macros \~) (UnquoteReader'new))
+        (§ ass (§ aget macros \() (LispListReader'new))
+        (§ ass (§ aget macros \)) (LispUnmatchedDelimiterReader'new))
+        (§ ass (§ aget macros \[) (LispVectorReader'new))
+        (§ ass (§ aget macros \]) (LispUnmatchedDelimiterReader'new))
+        (§ ass (§ aget macros \{) (LispMapReader'new))
+        (§ ass (§ aget macros \}) (LispUnmatchedDelimiterReader'new))
+        (§ ass (§ aget macros \\) (LispCharacterReader'new))
+        (§ ass (§ aget macros \%) (ArgReader'new))
+        (§ ass (§ aget macros \#) (LispDispatchReader'new))
 
-        (§ ass (ß dispatchMacros[\^]) (LispMetaReader'new))
-        (§ ass (ß dispatchMacros[\#]) (LispSymbolicValueReader'new))
-        (§ ass (ß dispatchMacros[\']) (VarReader'new))
-        (§ ass (ß dispatchMacros[\"]) (RegexReader'new)) ;; oops! "
-        (§ ass (ß dispatchMacros[\(]) (FnReader'new))
-        (§ ass (ß dispatchMacros[\{]) (LispSetReader'new))
-        (§ ass (ß dispatchMacros[\=]) (EvalReader'new))
-        (§ ass (ß dispatchMacros[\!]) (LispCommentReader'new))
-        (§ ass (ß dispatchMacros[\<]) (LispUnreadableReader'new))
-        (§ ass (ß dispatchMacros[\_]) (LispDiscardReader'new))
-        (§ ass (ß dispatchMacros[\?]) (ConditionalReader'new))
-        (§ ass (ß dispatchMacros[\:]) (LispNamespaceMapReader'new))
+        (§ ass (§ aget dispatchMacros \^) (LispMetaReader'new))
+        (§ ass (§ aget dispatchMacros \#) (LispSymbolicValueReader'new))
+        (§ ass (§ aget dispatchMacros \') (VarReader'new))
+        (§ ass (§ aget dispatchMacros \") (RegexReader'new)) ;; oops! "
+        (§ ass (§ aget dispatchMacros \() (FnReader'new))
+        (§ ass (§ aget dispatchMacros \{) (LispSetReader'new))
+        (§ ass (§ aget dispatchMacros \=) (EvalReader'new))
+        (§ ass (§ aget dispatchMacros \!) (LispCommentReader'new))
+        (§ ass (§ aget dispatchMacros \<) (LispUnreadableReader'new))
+        (§ ass (§ aget dispatchMacros \_) (LispDiscardReader'new))
+        (§ ass (§ aget dispatchMacros \?) (ConditionalReader'new))
+        (§ ass (§ aget dispatchMacros \:) (LispNamespaceMapReader'new))
     )
 
     (defn #_"boolean" LispReader'isWhitespace [#_"int" ___ch]
@@ -22495,7 +22496,7 @@
                                 (.assoc ___mopts, LispReader'OPT_FEATURES, LispReader'PLATFORM_FEATURES)
                             )
                             (do
-                                (ß ___mopts.assoc(LispReader'OPT_FEATURES, RT'conj((cast' IPersistentSet ___features), LispReader'PLATFORM_KEY)))
+                                (.assoc ___mopts, LispReader'OPT_FEATURES, (RT'conj (cast' IPersistentSet ___features), LispReader'PLATFORM_KEY))
                             )
                         )
                     )
@@ -22625,12 +22626,12 @@
             (throw (IllegalArgumentException. (str "Invalid unicode character: \\" ___token)))
         )
         (let [#_"int" ___uc 0]
-            (loop-when-recur [#_"int" ___i ___offset] (ß ___i < ___offset + ___length) [(inc ___i)]
-                (let [#_"int" ___d (ß Character/digit((.charAt ___token, ___i), ___base))]
+            (loop-when-recur [#_"int" ___i ___offset] (< ___i (+ ___offset ___length)) [(inc ___i)]
+                (let [#_"int" ___d (Character/digit (.charAt ___token, ___i), ___base)]
                     (when (= ___d -1)
                         (throw (IllegalArgumentException. (str "Invalid digit: " (.charAt ___token, ___i))))
                     )
-                    (§ ass ___uc (ß ___uc * ___base + ___d))
+                    (§ ass ___uc (+ (* ___uc ___base) ___d))
                 )
             )
             (char ___uc)
@@ -22653,7 +22654,7 @@
                             (when (= ___d -1)
                                 (throw (IllegalArgumentException. (str "Invalid digit: " (char ___ch))))
                             )
-                            (§ ass ___uc (ß ___uc * ___base + ___d))
+                            (§ ass ___uc (+ (* ___uc ___base) ___d))
                         )
                     )
                 )
@@ -22703,7 +22704,7 @@
                                     (if (some? ___resolver)
                                         (do
                                             (§ let [#_"Symbol" ___nsym]
-                                                (if (ß (some? (:ns ___ks)))
+                                                (if (some? (:ns ___ks))
                                                     (do
                                                         (§ ass ___nsym (.resolveAlias ___resolver, (Symbol'intern-1 (:ns ___ks))))
                                                     )
@@ -22724,7 +22725,7 @@
                                         )
                                         (do
                                             (§ let [#_"Namespace" ___kns]
-                                                (if (ß (some? (:ns ___ks)))
+                                                (if (some? (:ns ___ks))
                                                     (do
                                                         (§ ass ___kns (.lookupAlias (Compiler'currentNS), (Symbol'intern-1 (:ns ___ks))))
                                                     )
@@ -22854,7 +22855,7 @@
             (let [#_"Symbol" ___ret (cast' Symbol (.valAt ___argsyms, ___n))]
                 (when (nil? ___ret)
                     (§ ass ___ret (garg ___n))
-                    (ß LispReader'ARG_ENV.set((.assoc ___argsyms, ___n, ___ret)))
+                    (.set LispReader'ARG_ENV, (.assoc ___argsyms, ___n, ___ret))
                 )
                 ___ret
             )
@@ -23144,7 +23145,7 @@
 
     #_method
     (§ defn- #_"boolean" (§ method bargeTimeElapsed) [#_"LockingTransaction" this]
-        (ß (System/nanoTime() - (:startTime this) > LockingTransaction'BARGE_WAIT_NANOS))
+        (< LockingTransaction'BARGE_WAIT_NANOS (- (System/nanoTime) (:startTime this)))
     )
 
     #_method
@@ -23188,7 +23189,7 @@
             (§ let [#_"Object" ___ret]
                 (if (nil? ___t)
                     (do
-                        (ß LockingTransaction'transaction.set(§ ass ___t (LockingTransaction'new)))
+                        (.set LockingTransaction'transaction, (§ ass ___t (LockingTransaction'new)))
                         (try
                             (§ ass ___ret (.run ___t, ___fn))
                             (finally
@@ -23197,7 +23198,7 @@
                         )
                     )
                     (do
-                        (if (ß (some? (:info ___t)))
+                        (if (some? (:info ___t))
                             (do
                                 (§ ass ___ret (.call ___fn))
                             )
@@ -23281,7 +23282,7 @@
                                                 (let [#_"Object" ___oldval (when (some? (:tvals ___ref)) (:val (:tvals ___ref)))]
                                                     (let [#_"Object" ___newval (.getValue ___e)]
                                                         (let [#_"int" ___hcount (.histCount ___ref)]
-                                                            (cond (ß (nil? (:tvals ___ref)))
+                                                            (cond (nil? (:tvals ___ref))
                                                                 (do
                                                                     (§ ass (:tvals ___ref) (RefTVal'new-2 ___newval, ___commitPoint))
                                                                 )
@@ -23298,7 +23299,7 @@
                                                                 )
                                                             )
                                                             (when (pos? (.count (.getWatches ___ref)))
-                                                                (ß ___notify.add(Notify'new(___ref, ___oldval, ___newval)))
+                                                                (.add ___notify, (Notify'new ___ref, ___oldval, ___newval))
                                                             )
                                                         )
                                                     )
@@ -23315,7 +23316,7 @@
                                 )
                                 (finally
                                     (loop-when-recur [#_"int" ___k (dec (.size ___locked))] (>= ___k 0) [(dec ___k)]
-                                        (ß (:lock (.get ___locked, ___k)).writeLock().unlock())
+                                        (.unlock (.writeLock (:lock (.get ___locked, ___k))))
                                     )
                                     (.clear ___locked)
                                     (doseq [#_"Ref" ___r (:ensures this)]
@@ -23366,7 +23367,7 @@
         )
         (try
             (.lock (.readLock (:lock ___ref)))
-            (when (ß (nil? (:tvals ___ref)))
+            (when (nil? (:tvals ___ref))
                 (throw (IllegalStateException. (str (.toString ___ref) " is unbound.")))
             )
             (let [#_"RefTVal" ___ver (:tvals ___ref)]
@@ -23374,7 +23375,7 @@
                     (when (<= (:point ___ver) (:readPoint this))
                         (§ return (:val ___ver))
                     )
-                    (§ recur-if ((§ ass ___ver (:prior ___ver)) != (:tvals ___ref)))
+                    (§ recur-if (not= (§ ass ___ver (:prior ___ver)) (:tvals ___ref)))
                 )
             )
             (finally
@@ -23457,8 +23458,8 @@
             (when (nil? ___fns)
                 (.put (:commutes this), ___ref, (§ ass ___fns (ArrayList.)))
             )
-            (ß ___fns.add(CFn'new(___fn, ___args)))
-            (let [#_"Object" ___ret (ß ___fn.applyTo(RT'cons((.get (:vals this), ___ref), ___args)))]
+            (.add ___fns, (CFn'new ___fn, ___args))
+            (let [#_"Object" ___ret (.applyTo ___fn, (RT'cons (.get (:vals this), ___ref), ___args))]
                 (.put (:vals this), ___ref, ___ret)
                 ___ret
             )
@@ -23571,7 +23572,7 @@
 
     #_method
     (§ defn #_"LongChunk" (§ method dropFirst) [#_"LongChunk" this]
-        (when (ß (:count this) <= 1)
+        (when (<= (:count this) 1)
             (throw (IllegalStateException. "dropFirst of empty chunk"))
         )
         (LongChunk'new (+ (:start this) (:step this)), (:step this), (dec (:count this)))
@@ -23740,7 +23741,7 @@
 
             (cond (> ___count LongRange'CHUNK_SIZE) ;; not last chunk
                 (do
-                    (let [#_"long" ___nextStart (ß (:start this) + ((:step this) * LongRange'CHUNK_SIZE))] ;; cannot overflow, must be < end
+                    (let [#_"long" ___nextStart (+ (:start this) (* (:step this) LongRange'CHUNK_SIZE))] ;; cannot overflow, must be < end
                         (§ ass (:_chunkNext this) (LongRange'new-4 ___nextStart, (:end this), (:step this), (:boundsCheck this)))
                         (§ ass (:_chunk this) (LongChunk'new (:start this), (:step this), LongRange'CHUNK_SIZE))
                     )
@@ -24038,9 +24039,9 @@
                 )
             )
             (do
-                (let [#_"int" ___idx (ß ((Util'hash(___c) >> (:shift this)) & (:mask this)) << 1)]
+                (let [#_"int" ___idx (<< (& (>> (Util'hash ___c) (:shift this)) (:mask this)) 1)]
                     (when (and (< ___idx (§ alength (:table this))) (= (§ aget (:table this) ___idx) ___c))
-                        (let [#_"Entry" ___e (ß (cast' Entry (§ aget (:table this) (inc ___idx))))]
+                        (let [#_"Entry" ___e (cast' Entry (§ aget (:table this) (inc ___idx)))]
                             (§ ass (:mre this) ___e)
                             (§ return (when (some? ___e) (:fn ___e)))
                         )
@@ -24175,7 +24176,7 @@
 
     #_method
     (§ defn- #_"boolean" (§ method isA) [#_"MultiFn" this, #_"Object" ___x, #_"Object" ___y]
-        (ß RT'booleanCast-1o((.invoke isa, (.deref (:hierarchy this)), ___x, ___y)))
+        (RT'booleanCast-1o (.invoke isa, (.deref (:hierarchy this)), ___x, ___y))
     )
 
     #_method
@@ -24288,349 +24289,359 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1]
-        (ß this.getFn((:dispatchFn this).invoke(___arg1)).invoke(Util'ret1(___arg1, (§ ass ___arg1 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2]
-        (ß this.getFn((:dispatchFn this).invoke(___arg1, ___arg2)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)), Util'ret1(___arg2, (§ ass ___arg2 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3]
-        (ß this.getFn((:dispatchFn this).invoke(___arg1, ___arg2, ___arg3)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)), Util'ret1(___arg2, (§ ass ___arg2 nil)), Util'ret1(___arg3, (§ ass ___arg3 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4]
-        (ß this.getFn((:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5]
-        (ß this.getFn((:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6]
-        (ß this.getFn((:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+            (Util'ret1 ___arg6, (§ ass ___arg6 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7]
-        (ß this.getFn((:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+            (Util'ret1 ___arg7, (§ ass ___arg7 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8]
-        (ß this.getFn((:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+            (Util'ret1 ___arg8, (§ ass ___arg8 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9]
-        (ß this.getFn((:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+            (Util'ret1 ___arg9, (§ ass ___arg9 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10]
-        (ß this.getFn((:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+            (Util'ret1 ___arg10, (§ ass ___arg10 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11]
-        (ß this.getFn((:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+            (Util'ret1 ___arg11, (§ ass ___arg11 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12]
-        (ß this.getFn((:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+            (Util'ret1 ___arg12, (§ ass ___arg12 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13]
-        (ß this.getFn((:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+            (Util'ret1 ___arg13, (§ ass ___arg13 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13, #_"Object" ___arg14]
-        (ß this.getFn(
-                (:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13, ___arg14)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13, ___arg14)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+            (Util'ret1 ___arg14, (§ ass ___arg14 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13, #_"Object" ___arg14, #_"Object" ___arg15]
-        (ß this.getFn(
-                (:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13, ___arg14,
-                    ___arg15)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13, ___arg14, ___arg15)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+            (Util'ret1 ___arg15, (§ ass ___arg15 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13, #_"Object" ___arg14, #_"Object" ___arg15, #_"Object" ___arg16]
-        (ß this.getFn(
-                (:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13, ___arg14,
-                    ___arg15, ___arg16)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13, ___arg14, ___arg15, ___arg16)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+            (Util'ret1 ___arg16, (§ ass ___arg16 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13, #_"Object" ___arg14, #_"Object" ___arg15, #_"Object" ___arg16, #_"Object" ___arg17]
-        (ß this.getFn(
-                (:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13, ___arg14,
-                    ___arg15, ___arg16, ___arg17)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13, ___arg14, ___arg15, ___arg16, ___arg17)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+            (Util'ret1 ___arg17, (§ ass ___arg17 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13, #_"Object" ___arg14, #_"Object" ___arg15, #_"Object" ___arg16, #_"Object" ___arg17, #_"Object" ___arg18]
-        (ß this.getFn(
-                (:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13, ___arg14,
-                    ___arg15, ___arg16, ___arg17, ___arg18)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                    Util'ret1(___arg18, (§ ass ___arg18 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13, ___arg14, ___arg15, ___arg16, ___arg17, ___arg18)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+            (Util'ret1 ___arg18, (§ ass ___arg18 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13, #_"Object" ___arg14, #_"Object" ___arg15, #_"Object" ___arg16, #_"Object" ___arg17, #_"Object" ___arg18, #_"Object" ___arg19]
-        (ß this.getFn(
-                (:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13, ___arg14,
-                    ___arg15, ___arg16, ___arg17, ___arg18, ___arg19)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                    Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                    Util'ret1(___arg19, (§ ass ___arg19 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13, ___arg14, ___arg15, ___arg16, ___arg17, ___arg18, ___arg19)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+            (Util'ret1 ___arg19, (§ ass ___arg19 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13, #_"Object" ___arg14, #_"Object" ___arg15, #_"Object" ___arg16, #_"Object" ___arg17, #_"Object" ___arg18, #_"Object" ___arg19, #_"Object" ___arg20]
-        (ß this.getFn(
-                (:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13, ___arg14,
-                    ___arg15, ___arg16, ___arg17, ___arg18, ___arg19, ___arg20)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                    Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                    Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                    Util'ret1(___arg20, (§ ass ___arg20 nil))))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13, ___arg14, ___arg15, ___arg16, ___arg17, ___arg18, ___arg19, ___arg20)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+            (Util'ret1 ___arg20, (§ ass ___arg20 nil))
+        )
     )
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MultiFn" this, #_"Object" ___arg1, #_"Object" ___arg2, #_"Object" ___arg3, #_"Object" ___arg4, #_"Object" ___arg5, #_"Object" ___arg6, #_"Object" ___arg7, #_"Object" ___arg8, #_"Object" ___arg9, #_"Object" ___arg10, #_"Object" ___arg11, #_"Object" ___arg12, #_"Object" ___arg13, #_"Object" ___arg14, #_"Object" ___arg15, #_"Object" ___arg16, #_"Object" ___arg17, #_"Object" ___arg18, #_"Object" ___arg19, #_"Object" ___arg20 & #_"Object..." ___args]
-        (ß this.getFn(
-                (:dispatchFn this).invoke(___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13, ___arg14,
-                    ___arg15, ___arg16, ___arg17, ___arg18, ___arg19, ___arg20, ___args)).
-            this.invoke(Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                    Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                    Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                    Util'ret1(___arg20, (§ ass ___arg20 nil)),
-                    ___args))
+        (.invoke (.getFn this, (.invoke (:dispatchFn this), ___arg1, ___arg2, ___arg3, ___arg4, ___arg5, ___arg6, ___arg7, ___arg8, ___arg9, ___arg10, ___arg11, ___arg12, ___arg13, ___arg14, ___arg15, ___arg16, ___arg17, ___arg18, ___arg19, ___arg20, ___args)),
+            (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+            (Util'ret1 ___arg20, (§ ass ___arg20 nil)),
+            ___args
+        )
     )
 
     #_method
@@ -24742,7 +24753,7 @@
         (let [#_"int" ___n 0]
             (let [#_"int" ___hash 1]
                 (doseq [#_"Object" ___x ___xs]
-                    (§ ass ___hash (ß 31 * ___hash + Util'hasheq(___x)))
+                    (§ ass ___hash (+ (* 31 ___hash) (Util'hasheq ___x)))
                     (§ ass ___n (inc ___n))
                 )
 
@@ -24755,7 +24766,7 @@
         (let [#_"int" ___hash 0]
             (let [#_"int" ___n 0]
                 (doseq [#_"Object" ___x ___xs]
-                    (§ ass ___hash (ß ___hash + Util'hasheq(___x)))
+                    (§ ass ___hash (+ ___hash (Util'hasheq ___x)))
                     (§ ass ___n (inc ___n))
                 )
 
@@ -24774,18 +24785,18 @@
     (defn- #_"int" Murmur3'mixH1 [#_"int" ___h1, #_"int" ___k1]
         (§ ass ___h1 (:xor ___h1 ___k1))
         (§ ass ___h1 (Integer/rotateLeft ___h1, 13))
-        (§ ass ___h1 (ß ___h1 * 5 + 0xe6546b64))
+        (§ ass ___h1 (+ (* ___h1 5) 0xe6546b64))
         ___h1
     )
 
     ;; Finalization mix - force all bits of a hash block to avalanche
     (defn- #_"int" Murmur3'fmix [#_"int" ___h1, #_"int" ___length]
         (§ ass ___h1 (:xor ___h1 ___length))
-        (§ ass ___h1 (ß ___h1 :xor (___h1 >>> 16)))
+        (§ ass ___h1 (:xor ___h1 (>>> ___h1 16)))
         (§ ass ___h1 (* ___h1 0x85ebca6b))
-        (§ ass ___h1 (ß ___h1 :xor (___h1 >>> 13)))
+        (§ ass ___h1 (:xor ___h1 (>>> ___h1 13)))
         (§ ass ___h1 (* ___h1 0xc2b2ae35))
-        (§ ass ___h1 (ß ___h1 :xor (___h1 >>> 16)))
+        (§ ass ___h1 (:xor ___h1 (>>> ___h1 16)))
         ___h1
     )
 )
@@ -24850,7 +24861,7 @@
 
     #_method
     (§ defn #_"Var" (§ method intern) [#_"Namespace" this, #_"Symbol" ___sym]
-        (when (ß (some? (:ns ___sym)))
+        (when (some? (:ns ___sym))
             (throw (IllegalArgumentException. "Can't intern namespace-qualified symbol"))
         )
         (let [#_"IPersistentMap" ___map (.getMappings this)]
@@ -24935,7 +24946,7 @@
 
     #_method
     (§ defn #_"Class" (§ method referenceClass) [#_"Namespace" this, #_"Symbol" ___sym, #_"Class" ___val]
-        (when (ß (some? (:ns ___sym)))
+        (when (some? (:ns ___sym))
             (throw (IllegalArgumentException. "Can't intern namespace-qualified symbol"))
         )
         (let [#_"IPersistentMap" ___map (.getMappings this)]
@@ -24958,7 +24969,7 @@
 
     #_method
     (§ defn #_"void" (§ method unmap) [#_"Namespace" this, #_"Symbol" ___sym]
-        (when (ß (some? (:ns ___sym)))
+        (when (some? (:ns ___sym))
             (throw (IllegalArgumentException. "Can't unintern namespace-qualified symbol"))
         )
         (let [#_"IPersistentMap" ___map (.getMappings this)]
@@ -25258,7 +25269,7 @@
 
     (defn #_"long" LongOps'gcd [#_"long" ___u, #_"long" ___v]
         (while (not= ___v 0)
-            (let [#_"long" ___r (ß ___u % ___v)]
+            (let [#_"long" ___r (% ___u ___v)]
                 (§ ass ___u ___v)
                 (§ ass ___v ___r)
             )
@@ -25308,17 +25319,17 @@
 
     #_method
     (§ defn #_"boolean" (§ method lt) [#_"LongOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß ((.longValue ___x) < (.longValue ___y)))
+        (< (.longValue ___x) (.longValue ___y))
     )
 
     #_method
     (§ defn #_"boolean" (§ method lte) [#_"LongOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß ((.longValue ___x) <= (.longValue ___y)))
+        (<= (.longValue ___x) (.longValue ___y))
     )
 
     #_method
     (§ defn #_"boolean" (§ method gte) [#_"LongOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß ((.longValue ___x) >= (.longValue ___y)))
+        (>= (.longValue ___x) (.longValue ___y))
     )
 
     #_method
@@ -25425,17 +25436,17 @@
 
     #_method
     (§ defn #_"Number" (§ method add) [#_"DoubleOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß Double/valueOf((.doubleValue ___x) + (.doubleValue ___y)))
+        (Double/valueOf (+ (.doubleValue ___x) (.doubleValue ___y)))
     )
 
     #_method
     (§ defn #_"Number" (§ method multiply) [#_"DoubleOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß Double/valueOf((.doubleValue ___x) * (.doubleValue ___y)))
+        (Double/valueOf (* (.doubleValue ___x) (.doubleValue ___y)))
     )
 
     #_method
     (§ defn #_"Number" (§ method divide) [#_"DoubleOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß Double/valueOf((.doubleValue ___x) / (.doubleValue ___y)))
+        (Double/valueOf (/ (.doubleValue ___x) (.doubleValue ___y)))
     )
 
     #_method
@@ -25455,17 +25466,17 @@
 
     #_method
     (§ defn #_"boolean" (§ method lt) [#_"DoubleOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß ((.doubleValue ___x) < (.doubleValue ___y)))
+        (< (.doubleValue ___x) (.doubleValue ___y))
     )
 
     #_method
     (§ defn #_"boolean" (§ method lte) [#_"DoubleOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß ((.doubleValue ___x) <= (.doubleValue ___y)))
+        (<= (.doubleValue ___x) (.doubleValue ___y))
     )
 
     #_method
     (§ defn #_"boolean" (§ method gte) [#_"DoubleOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß ((.doubleValue ___x) >= (.doubleValue ___y)))
+        (>= (.doubleValue ___x) (.doubleValue ___y))
     )
 
     #_method
@@ -25687,7 +25698,7 @@
     #_method
     (§ defn #_"boolean" (§ method isZero) [#_"BigIntOps" this, #_"Number" ___x]
         (let [#_"BigInt" ___bx (Numbers'toBigInt ___x)]
-            (when (ß (nil? (:bipart ___bx)))
+            (when (nil? (:bipart ___bx))
                 (§ return (zero? (:lpart ___bx)))
             )
             (zero? (.signum (:bipart ___bx)))
@@ -25697,7 +25708,7 @@
     #_method
     (§ defn #_"boolean" (§ method isPos) [#_"BigIntOps" this, #_"Number" ___x]
         (let [#_"BigInt" ___bx (Numbers'toBigInt ___x)]
-            (when (ß (nil? (:bipart ___bx)))
+            (when (nil? (:bipart ___bx))
                 (§ return (pos? (:lpart ___bx)))
             )
             (pos? (.signum (:bipart ___bx)))
@@ -25707,7 +25718,7 @@
     #_method
     (§ defn #_"boolean" (§ method isNeg) [#_"BigIntOps" this, #_"Number" ___x]
         (let [#_"BigInt" ___bx (Numbers'toBigInt ___x)]
-            (when (ß (nil? (:bipart ___bx)))
+            (when (nil? (:bipart ___bx))
                 (§ return (neg? (:lpart ___bx)))
             )
             (neg? (.signum (:bipart ___bx)))
@@ -25716,12 +25727,12 @@
 
     #_method
     (§ defn #_"Number" (§ method add) [#_"BigIntOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß (Numbers'toBigInt ___x).add(Numbers'toBigInt(___y)))
+        (.add (Numbers'toBigInt ___x), (Numbers'toBigInt ___y))
     )
 
     #_method
     (§ defn #_"Number" (§ method multiply) [#_"BigIntOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß (Numbers'toBigInt ___x).multiply(Numbers'toBigInt(___y)))
+        (.multiply (Numbers'toBigInt ___x), (Numbers'toBigInt ___y))
     )
 
     #_method
@@ -25731,32 +25742,32 @@
 
     #_method
     (§ defn #_"Number" (§ method quotient) [#_"BigIntOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß (Numbers'toBigInt ___x).quotient(Numbers'toBigInt(___y)))
+        (.quotient (Numbers'toBigInt ___x), (Numbers'toBigInt ___y))
     )
 
     #_method
     (§ defn #_"Number" (§ method remainder) [#_"BigIntOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß (Numbers'toBigInt ___x).remainder(Numbers'toBigInt(___y)))
+        (.remainder (Numbers'toBigInt ___x), (Numbers'toBigInt ___y))
     )
 
     #_method
     (§ defn #_"boolean" (§ method equiv) [#_"BigIntOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß (Numbers'toBigInt ___x).equals(Numbers'toBigInt(___y)))
+        (.equals (Numbers'toBigInt ___x), (Numbers'toBigInt ___y))
     )
 
     #_method
     (§ defn #_"boolean" (§ method lt) [#_"BigIntOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß (Numbers'toBigInt ___x).lt(Numbers'toBigInt(___y)))
+        (.lt (Numbers'toBigInt ___x), (Numbers'toBigInt ___y))
     )
 
     #_method
     (§ defn #_"boolean" (§ method lte) [#_"BigIntOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß ((.toBigInteger this, ___x).compareTo((.toBigInteger this, ___y)) <= 0))
+        (<= (.compareTo (.toBigInteger this, ___x), (.toBigInteger this, ___y)) 0)
     )
 
     #_method
     (§ defn #_"boolean" (§ method gte) [#_"BigIntOps" this, #_"Number" ___x, #_"Number" ___y]
-        (ß ((.toBigInteger this, ___x).compareTo((.toBigInteger this, ___y)) >= 0))
+        (>= (.compareTo (.toBigInteger this, ___x), (.toBigInteger this, ___y)) 0)
     )
 
     #_method
@@ -26139,7 +26150,7 @@
             )
             :else
             (do
-                (ß BigInteger/valueOf((.longValue (cast Number ___x))))
+                (BigInteger/valueOf (.longValue (cast Number ___x)))
             )
         )
     )
@@ -26152,7 +26163,7 @@
             (§ instance? BigInt ___x)
             (do
                 (let [#_"BigInt" ___bi (cast' BigInt ___x)]
-                    (if (ß (nil? (:bipart ___bi)))
+                    (if (nil? (:bipart ___bi))
                         (do
                             (BigDecimal/valueOf (:lpart ___bi))
                         )
@@ -26240,7 +26251,7 @@
     )
 
     (defn #_"Number" Numbers'reduceBigInt [#_"BigInt" ___val]
-        (if (ß (nil? (:bipart ___val)))
+        (if (nil? (:bipart ___val))
             (do
                 (Numbers'num-1l (:lpart ___val))
             )
@@ -26264,7 +26275,7 @@
                 (do
                     (§ return (BigInt'fromBigInteger ___n))
                 )
-                (ß ___d.equals(BigInteger/ONE.negate()))
+                (.equals ___d, (.negate BigInteger/ONE))
                 (do
                     (§ return (BigInt'fromBigInteger (.negate ___n)))
                 )
@@ -26420,35 +26431,35 @@
         (let [#_"Class" ___xc (.getClass ___x)]
             (cond (= ___xc Integer)
                 (do
-                    (ß :Category'INTEGER)
+                    :Category'INTEGER
                 )
                 (= ___xc Double)
                 (do
-                    (ß :Category'FLOATING)
+                    :Category'FLOATING
                 )
                 (= ___xc Long)
                 (do
-                    (ß :Category'INTEGER)
+                    :Category'INTEGER
                 )
                 (= ___xc Float)
                 (do
-                    (ß :Category'FLOATING)
+                    :Category'FLOATING
                 )
                 (= ___xc (§ class BigInt))
                 (do
-                    (ß :Category'INTEGER)
+                    :Category'INTEGER
                 )
                 (= ___xc (§ class Ratio))
                 (do
-                    (ß :Category'RATIO)
+                    :Category'RATIO
                 )
                 (= ___xc BigDecimal)
                 (do
-                    (ß :Category'DECIMAL)
+                    :Category'DECIMAL
                 )
                 :else
                 (do
-                    (ß :Category'INTEGER)
+                    :Category'INTEGER
                 )
             )
         )
@@ -26961,7 +26972,7 @@
     )
 
     (defn #_"long" Numbers'not-1l [#_"long" ___x]
-        (ß ~___x)
+        (§ ~ ___x)
     )
 
     (defn #_"long" Numbers'and-2oo [#_"Object" ___x, #_"Object" ___y]
@@ -27025,7 +27036,7 @@
     )
 
     (defn #_"long" Numbers'andNot-2ll [#_"long" ___x, #_"long" ___y]
-        (ß ___x & ~___y)
+        (& ___x (§ ~ ___y))
     )
 
     (defn #_"long" Numbers'clearBit-2oo [#_"Object" ___x, #_"Object" ___y]
@@ -27041,7 +27052,7 @@
     )
 
     (defn #_"long" Numbers'clearBit-2ll [#_"long" ___x, #_"long" ___n]
-        (ß ___x & ~(1 << ___n))
+        (& ___x (§ ~ (<< 1 ___n)))
     )
 
     (defn #_"long" Numbers'setBit-2oo [#_"Object" ___x, #_"Object" ___y]
@@ -27057,7 +27068,7 @@
     )
 
     (defn #_"long" Numbers'setBit-2ll [#_"long" ___x, #_"long" ___n]
-        (ß ___x | (1 << ___n))
+        (| ___x (<< 1 ___n))
     )
 
     (defn #_"long" Numbers'flipBit-2oo [#_"Object" ___x, #_"Object" ___y]
@@ -27073,7 +27084,7 @@
     )
 
     (defn #_"long" Numbers'flipBit-2ll [#_"long" ___x, #_"long" ___n]
-        (ß ___x :xor (1 << ___n))
+        (:xor ___x (<< 1 ___n))
     )
 
     (defn #_"boolean" Numbers'testBit-2oo [#_"Object" ___x, #_"Object" ___y]
@@ -27097,7 +27108,7 @@
     )
 
     (defn #_"int" Numbers'unchecked_int_remainder [#_"int" ___x, #_"int" ___y]
-        (ß ___x % ___y)
+        (% ___x ___y)
     )
 
     (defn #_"Number" Numbers'num-1l [#_"long" ___x]
@@ -27316,7 +27327,7 @@
 
     (defn #_"long" Numbers'minus-2ll [#_"long" ___x, #_"long" ___y]
         (let [#_"long" ___ret (- ___x ___y)]
-            (when (and (neg? (:xor ___ret ___x)) (neg? (ß ___ret :xor (ß ~ ___y))))
+            (when (and (neg? (:xor ___ret ___x)) (neg? (:xor ___ret (§ ~ ___y))))
                 (§ return (throwIntOverflow))
             )
             ___ret
@@ -27325,7 +27336,7 @@
 
     (defn #_"Number" Numbers'minusP-2ll [#_"long" ___x, #_"long" ___y]
         (let [#_"long" ___ret (- ___x ___y)]
-            (when (and (neg? (:xor ___ret ___x)) (neg? (ß ___ret :xor (ß ~ ___y))))
+            (when (and (neg? (:xor ___ret ___x)) (neg? (:xor ___ret (§ ~ ___y))))
                 (§ return (minusP (cast Number ___x), (cast Number ___y)))
             )
             (Numbers'num-1l ___ret)
@@ -27621,11 +27632,11 @@
     )
 
     (defn #_"boolean" Numbers'lt-2do [#_"double" ___x, #_"Object" ___y]
-        (ß (___x < (cast Number ___y).doubleValue()))
+        (< ___x (.doubleValue (cast Number ___y)))
     )
 
     (defn #_"boolean" Numbers'lt-2od [#_"Object" ___x, #_"double" ___y]
-        (ß ((.doubleValue (cast Number ___x)) < ___y))
+        (< (.doubleValue (cast Number ___x)) ___y)
     )
 
     (defn #_"boolean" Numbers'lt-2dl [#_"double" ___x, #_"long" ___y]
@@ -27645,11 +27656,11 @@
     )
 
     (defn #_"boolean" Numbers'lte-2do [#_"double" ___x, #_"Object" ___y]
-        (ß (___x <= (cast Number ___y).doubleValue()))
+        (<= ___x (.doubleValue (cast Number ___y)))
     )
 
     (defn #_"boolean" Numbers'lte-2od [#_"Object" ___x, #_"double" ___y]
-        (ß ((.doubleValue (cast Number ___x)) <= ___y))
+        (<= (.doubleValue (cast Number ___x)) ___y)
     )
 
     (defn #_"boolean" Numbers'lte-2dl [#_"double" ___x, #_"long" ___y]
@@ -27669,11 +27680,11 @@
     )
 
     (defn #_"boolean" Numbers'gt-2do [#_"double" ___x, #_"Object" ___y]
-        (ß (___x > (cast Number ___y).doubleValue()))
+        (> ___x (.doubleValue (cast Number ___y)))
     )
 
     (defn #_"boolean" Numbers'gt-2od [#_"Object" ___x, #_"double" ___y]
-        (ß ((.doubleValue (cast Number ___x)) > ___y))
+        (> (.doubleValue (cast Number ___x)) ___y)
     )
 
     (defn #_"boolean" Numbers'gt-2dl [#_"double" ___x, #_"long" ___y]
@@ -27693,11 +27704,11 @@
     )
 
     (defn #_"boolean" Numbers'gte-2do [#_"double" ___x, #_"Object" ___y]
-        (ß (___x >= (cast Number ___y).doubleValue()))
+        (>= ___x (.doubleValue (cast Number ___y)))
     )
 
     (defn #_"boolean" Numbers'gte-2od [#_"Object" ___x, #_"double" ___y]
-        (ß ((.doubleValue (cast Number ___x)) >= ___y))
+        (>= (.doubleValue (cast Number ___x)) ___y)
     )
 
     (defn #_"boolean" Numbers'gte-2dl [#_"double" ___x, #_"long" ___y]
@@ -27764,7 +27775,7 @@
                 (§ return ___y)
             )
         )
-        (if (ß ___x > (cast Number ___y).doubleValue())
+        (if (> ___x (.doubleValue (cast Number ___y)))
             (do
                 ___x
             )
@@ -28072,7 +28083,7 @@
 
     #_method
     (§ defn #_"ISeq" (§ method next) [#_"MSeq" this]
-        (when (ß (:i this) + 2 < (§ alength (:array this)))
+        (when (< (+ (:i this) 2) (§ alength (:array this)))
             (§ return (MSeq'new-2 (:array this), (+ (:i this) 2)))
         )
         nil
@@ -28115,7 +28126,7 @@
 
     #_method
     (§ defn #_"boolean" (§ method hasNext) [#_"MIter" this]
-        (ß ((:i this) < (§ alength (:array this)) - 2))
+        (< (:i this) (- (§ alength (:array this)) 2))
     )
 
     #_method
@@ -28149,7 +28160,7 @@
     (defn #_"TransientArrayMap" TransientArrayMap'new [#_"Object[]" ___array]
         (let [this (merge (ATransientMap'new) (TransientArrayMap'init))]
             (§ ass (:owner this) (Thread/currentThread))
-            (§ ass (:array this) (make-array Object (ß Math/max(PersistentArrayMap'HASHTABLE_THRESHOLD, (§ alength ___array)))))
+            (§ ass (:array this) (make-array Object (Math/max PersistentArrayMap'HASHTABLE_THRESHOLD, (§ alength ___array))))
             (System/arraycopy ___array, 0, (:array this), 0, (§ alength ___array))
             (§ ass (:len this) (§ alength ___array))
             this
@@ -28177,8 +28188,8 @@
                 )
                 :else ;; didn't have key, grow
                 (do
-                    (when (ß (:len this) >= (§ alength (:array this)))
-                        (§ return (ß PersistentHashMap'create-1a((:array this)).asTransient().assoc(___key, ___val)))
+                    (when (>= (:len this) (§ alength (:array this)))
+                        (§ return (-> (PersistentHashMap'create-1a (:array this)) (.asTransient) (.assoc ___key, ___val)))
                     )
                     (§ ass (§ aget (:array this) (:len this)) ___key)
                     (§ ass (:len this) (+ (:len this) 1))
@@ -28194,7 +28205,7 @@
     (§ defn #_"ITransientMap" (§ method doWithout) [#_"TransientArrayMap" this, #_"Object" ___key]
         (let [#_"int" ___i (.indexOf this, ___key)]
             (when (>= ___i 0) ;; have key, will remove
-                (when (ß (:len this) >= 2)
+                (when (>= (:len this) 2)
                     (§ ass (§ aget (:array this) ___i) (§ aget (:array this) (- (:len this) 2)))
                     (§ ass (§ aget (:array this) (inc ___i)) (§ aget (:array this) (- (:len this) 1)))
                 )
@@ -28391,12 +28402,12 @@
 
     #_method
     (§ defn #_"int" (§ method count) [#_"PersistentArrayMap" this]
-        (ß (§ alength (:array this)) / 2)
+        (/ (§ alength (:array this)) 2)
     )
 
     #_method
     (§ defn #_"boolean" (§ method containsKey) [#_"PersistentArrayMap" this, #_"Object" ___key]
-        (ß ((.indexOf this, ___key) >= 0))
+        (>= (.indexOf this, ___key) 0)
     )
 
     #_method
@@ -28419,7 +28430,7 @@
                     )
                     :else ;; didn't have key, grow
                     (do
-                        (when (ß (§ alength (:array this)) > PersistentArrayMap'HASHTABLE_THRESHOLD)
+                        (when (> (§ alength (:array this)) PersistentArrayMap'HASHTABLE_THRESHOLD)
                             (§ return (.assocEx (.createHT this, (:array this)), ___key, ___val))
                         )
                         (§ ass ___newArray (make-array Object (+ (§ alength (:array this)) 2)))
@@ -28449,7 +28460,7 @@
                     )
                     :else ;; didn't have key, grow
                     (do
-                        (when (ß (§ alength (:array this)) > PersistentArrayMap'HASHTABLE_THRESHOLD)
+                        (when (> (§ alength (:array this)) PersistentArrayMap'HASHTABLE_THRESHOLD)
                             (§ return (.assoc (.createHT this, (:array this)), ___key, ___val))
                         )
                         (§ ass ___newArray (make-array Object (+ (§ alength (:array this)) 2)))
@@ -28791,7 +28802,7 @@
 
     #_method
     (§ defn #_"ISeq" (§ method next) [#_"HSeq" this]
-        (ß HSeq'create-4(nil, (:nodes this), (:i this), (.next (:s this))))
+        (HSeq'create-4 nil, (:nodes this), (:i this), (.next (:s this)))
     )
 )
 
@@ -28827,7 +28838,7 @@
                 )
             )
 
-            (if (ß (:i this) < (§ alength (:array this)))
+            (if (< (:i this) (§ alength (:array this)))
                 (do
                     (let [#_"INode" ___node (§ aget (:array this) (:i this))]
                         (§ ass (:i this) (+ (:i this) 1))
@@ -28909,7 +28920,7 @@
                     )
                     (if (nil? ___n)
                         (do
-                            (when (ß (:count this) <= 8) ;; shrink
+                            (when (<= (:count this) 8) ;; shrink
                                 (§ return (.pack this, nil, ___idx))
                             )
                             (ArrayNode'new nil, (dec (:count this)), (PersistentHashMap'cloneAndSet-3 (:array this), ___idx, ___n))
@@ -28975,12 +28986,11 @@
         (let [#_"List<Callable>" ___tasks (ArrayList.)]
             (doseq [#_"INode" ___node (:array this)]
                 (when (some? ___node)
-                    (ß ___tasks.add(
-                            (§ reify Callable()
-                                #_method
-                                (§ defn #_"Object" (§ method call) [#_"Callable" this] #_(§ throws Exception)
-                                    (.fold ___node, ___combinef, ___reducef, ___fjtask, ___fjfork, ___fjjoin)
-                                )
+                    (.add ___tasks,
+                        (§ reify Callable()
+                            #_method
+                            (§ defn #_"Object" (§ method call) [#_"Callable" this] #_(§ throws Exception)
+                                (.fold ___node, ___combinef, ___reducef, ___fjtask, ___fjfork, ___fjjoin)
                             )
                         )
                     )
@@ -29019,7 +29029,7 @@
                                 )
                             )
                         )]
-                    (ß ___combinef.invoke(ArrayNode'foldTasks(___t1, ___combinef, ___fjtask, ___fjfork, ___fjjoin), (.invoke ___fjjoin, ___forked)))
+                    (.invoke ___combinef, (ArrayNode'foldTasks ___t1, ___combinef, ___fjtask, ___fjfork, ___fjjoin), (.invoke ___fjjoin, ___forked))
                 )
             )
         )
@@ -29043,20 +29053,20 @@
 
     #_method
     (§ defn- #_"INode" (§ method pack) [#_"ArrayNode" this, #_"AtomicReference<Thread>" ___edit, #_"int" ___idx]
-        (let [#_"Object[]" ___newArray (make-array Object (ß 2 * (dec (:count this))))]
+        (let [#_"Object[]" ___newArray (make-array Object (* 2 (dec (:count this))))]
             (let [#_"int" ___j 1]
                 (let [#_"int" ___bitmap 0]
                     (loop-when-recur [#_"int" ___i 0] (< ___i ___idx) [(inc ___i)]
                         (when (some? (§ aget (:array this) ___i))
                             (§ ass (§ aget ___newArray ___j) (§ aget (:array this) ___i))
-                            (§ ass ___bitmap (ß ___bitmap | (1 << ___i)))
+                            (§ ass ___bitmap (| ___bitmap (<< 1 ___i)))
                             (§ ass ___j (+ ___j 2))
                         )
                     )
                     (loop-when-recur [#_"int" ___i (inc ___idx)] (< ___i (§ alength (:array this))) [(inc ___i)]
                         (when (some? (§ aget (:array this) ___i))
                             (§ ass (§ aget ___newArray ___j) (§ aget (:array this) ___i))
-                            (§ ass ___bitmap (ß ___bitmap | (1 << ___i)))
+                            (§ ass ___bitmap (| ___bitmap (<< 1 ___i)))
                             (§ ass ___j (+ ___j 2))
                         )
                     )
@@ -29098,7 +29108,7 @@
                         (§ return this)
                     )
                     (when (nil? ___n)
-                        (when (ß (:count this) <= 8) ;; shrink
+                        (when (<= (:count this) 8) ;; shrink
                             (§ return (.pack this, ___edit, ___idx))
                         )
                         (let [#_"ArrayNode" ___editable (.editAndSet this, ___edit, ___idx, ___n)]
@@ -29212,7 +29222,7 @@
     #_method
     (§ defn #_"INode" (§ method without) [#_"BitmapIndexedNode" this, #_"int" ___shift, #_"int" ___hash, #_"Object" ___key]
         (let [#_"int" ___bit (bitpos ___hash, ___shift)]
-            (when (zero? (ß (:bitmap this) & ___bit))
+            (when (zero? (& (:bitmap this) ___bit))
                 (§ return this)
             )
             (let [#_"int" ___idx (.index this, ___bit)]
@@ -29246,7 +29256,7 @@
     #_method
     (§ defn #_"IMapEntry" (§ method find) [#_"BitmapIndexedNode" this, #_"int" ___shift, #_"int" ___hash, #_"Object" ___key]
         (let [#_"int" ___bit (bitpos ___hash, ___shift)]
-            (when (zero? (ß (:bitmap this) & ___bit))
+            (when (zero? (& (:bitmap this) ___bit))
                 (§ return nil)
             )
             (let [#_"int" ___idx (.index this, ___bit)]
@@ -29268,7 +29278,7 @@
     #_method
     (§ defn #_"Object" (§ method find) [#_"BitmapIndexedNode" this, #_"int" ___shift, #_"int" ___hash, #_"Object" ___key, #_"Object" ___notFound]
         (let [#_"int" ___bit (bitpos ___hash, ___shift)]
-            (when (zero? (ß (:bitmap this) & ___bit))
+            (when (zero? (& (:bitmap this) ___bit))
                 (§ return ___notFound)
             )
             (let [#_"int" ___idx (.index this, ___bit)]
@@ -29343,7 +29353,7 @@
             (§ return nil)
         )
         (let [#_"BitmapIndexedNode" ___editable (.ensureEditable this, ___edit)]
-            (§ ass (:bitmap ___editable) (ß (:bitmap ___editable) :xor ___bit))
+            (§ ass (:bitmap ___editable) (:xor (:bitmap ___editable) ___bit))
             (System/arraycopy (:array ___editable), (* 2 (inc ___i)), (:array ___editable), (* 2 ___i), (- (§ alength (:array ___editable)) (* 2 (inc ___i))))
             (§ ass (§ aget (:array ___editable) (- (§ alength (:array ___editable)) 2)) nil)
             (§ ass (§ aget (:array ___editable) (- (§ alength (:array ___editable)) 1)) nil)
@@ -29380,13 +29390,13 @@
                     )
                     (do
                         (let [#_"int" ___n (Integer/bitCount (:bitmap this))]
-                            (when (ß ___n * 2 < (§ alength (:array this)))
+                            (when (< (* ___n 2) (§ alength (:array this)))
                                 (§ ass (:val ___addedLeaf) ___addedLeaf)
                                 (let [#_"BitmapIndexedNode" ___editable (.ensureEditable this, ___edit)]
                                     (System/arraycopy (:array ___editable), (* 2 ___idx), (:array ___editable), (* 2 (inc ___idx)), (* 2 (- ___n ___idx)))
                                     (§ ass (§ aget (:array ___editable) (* 2 ___idx)) ___key)
                                     (§ ass (§ aget (:array ___editable) (inc (* 2 ___idx))) ___val)
-                                    (§ ass (:bitmap ___editable) (ß (:bitmap ___editable) | ___bit))
+                                    (§ ass (:bitmap ___editable) (| (:bitmap ___editable) ___bit))
                                     (§ return ___editable)
                                 )
                             )
@@ -29423,7 +29433,7 @@
                                         (System/arraycopy (:array this), (* 2 ___idx), ___newArray, (* 2 (inc ___idx)), (* 2 (- ___n ___idx)))
                                         (let [#_"BitmapIndexedNode" ___editable (.ensureEditable this, ___edit)]
                                             (§ ass (:array ___editable) ___newArray)
-                                            (§ ass (:bitmap ___editable) (ß (:bitmap ___editable) | ___bit))
+                                            (§ ass (:bitmap ___editable) (| (:bitmap ___editable) ___bit))
                                             ___editable
                                         )
                                     )
@@ -29439,7 +29449,7 @@
     #_method
     (§ defn #_"INode" (§ method without) [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" ___edit, #_"int" ___shift, #_"int" ___hash, #_"Object" ___key, #_"Box" ___removedLeaf]
         (let [#_"int" ___bit (bitpos ___hash, ___shift)]
-            (when (zero? (ß (:bitmap this) & ___bit))
+            (when (zero? (& (:bitmap this) ___bit))
                 (§ return this)
             )
             (let [#_"int" ___idx (.index this, ___bit)]
@@ -29504,8 +29514,8 @@
                 )
                 (let [#_"Object[]" ___newArray (make-array Object (* 2 (inc (:count this))))]
                     (System/arraycopy (:array this), 0, ___newArray, 0, (* 2 (:count this)))
-                    (§ ass (§ aget ___newArray (ß 2 * (:count this))) ___key)
-                    (§ ass (§ aget ___newArray (inc (ß 2 * (:count this)))) ___val)
+                    (§ ass (§ aget ___newArray (* 2 (:count this))) ___key)
+                    (§ ass (§ aget ___newArray (inc (* 2 (:count this)))) ___val)
                     (§ ass (:val ___addedLeaf) ___addedLeaf)
                     (§ return (HashCollisionNode'new (:edit this), ___hash, (inc (:count this)), ___newArray))
                 )
@@ -29576,7 +29586,7 @@
 
     #_method
     (§ defn #_"int" (§ method findIndex) [#_"HashCollisionNode" this, #_"Object" ___key]
-        (loop-when-recur [#_"int" ___i 0] (ß ___i < 2 * (:count this)) [(+ ___i 2)]
+        (loop-when-recur [#_"int" ___i 0] (< ___i (* 2 (:count this))) [(+ ___i 2)]
             (when (Util'equiv-2oo ___key, (§ aget (:array this) ___i))
                 (§ return ___i)
             )
@@ -29632,16 +29642,16 @@
                     )
                     (§ return (.editAndSet this, ___edit, (inc ___idx), ___val))
                 )
-                (when (ß (§ alength (:array this)) > 2 * (:count this))
+                (when (> (§ alength (:array this)) (* 2 (:count this)))
                     (§ ass (:val ___addedLeaf) ___addedLeaf)
-                    (let [#_"HashCollisionNode" ___editable (ß this.editAndSet(___edit, (ß 2 * (:count this)), ___key, (inc (ß 2 * (:count this))), ___val))]
+                    (let [#_"HashCollisionNode" ___editable (.editAndSet this, ___edit, (* 2 (:count this)), ___key, (inc (* 2 (:count this))), ___val)]
                         (§ ass (:count ___editable) (inc (:count ___editable)))
                         (§ return ___editable)
                     )
                 )
-                (let [#_"Object[]" ___newArray (make-array Object (ß (§ alength (:array this)) + 2))]
+                (let [#_"Object[]" ___newArray (make-array Object (+ (§ alength (:array this)) 2))]
                     (System/arraycopy (:array this), 0, ___newArray, 0, (§ alength (:array this)))
-                    (§ ass (§ aget ___newArray (ß (§ alength (:array this)))) ___key)
+                    (§ ass (§ aget ___newArray (§ alength (:array this))) ___key)
                     (§ ass (§ aget ___newArray (inc (§ alength (:array this)))) ___val)
                     (§ ass (:val ___addedLeaf) ___addedLeaf)
                     (§ return (.ensureEditable this, ___edit, (inc (:count this)), ___newArray))
@@ -29663,10 +29673,10 @@
                 (§ return nil)
             )
             (let [#_"HashCollisionNode" ___editable (.ensureEditable this, ___edit)]
-                (§ ass (§ aget (:array ___editable) ___idx) (§ aget (:array ___editable) (- (ß 2 * (:count this)) 2)))
-                (§ ass (§ aget (:array ___editable) (inc ___idx)) (§ aget (:array ___editable) (- (ß 2 * (:count this)) 1)))
-                (§ ass (§ aget (:array ___editable) (- (ß 2 * (:count this)) 2)) nil)
-                (§ ass (§ aget (:array ___editable) (- (ß 2 * (:count this)) 1)) nil)
+                (§ ass (§ aget (:array ___editable) ___idx) (§ aget (:array ___editable) (- (* 2 (:count this)) 2)))
+                (§ ass (§ aget (:array ___editable) (inc ___idx)) (§ aget (:array ___editable) (- (* 2 (:count this)) 1)))
+                (§ ass (§ aget (:array ___editable) (- (* 2 (:count this)) 2)) nil)
+                (§ ass (§ aget (:array ___editable) (- (* 2 (:count this)) 1)) nil)
                 (§ ass (:count ___editable) (dec (:count ___editable)))
                 ___editable
             )
@@ -29697,7 +29707,7 @@
 
     #_method
     (§ defn- #_"boolean" (§ method advance) [#_"NodeIter" this]
-        (while (ß (:i this) < (§ alength (:array this)))
+        (while (< (:i this) (§ alength (:array this)))
             (let [#_"Object" ___key (§ aget (:array this) (:i this))]
                 (let [#_"Object" ___nodeOrVal (§ aget (:array this) (inc (:i this)))]
                     (§ ass (:i this) (+ (:i this) 2))
@@ -29845,7 +29855,7 @@
     #_method
     (§ defn #_"ISeq" (§ method next) [#_"NodeSeq" this]
         (when (some? (:s this))
-            (§ return (ß NodeSeq'create-3((:array this), (:i this), (.next (:s this)))))
+            (§ return (NodeSeq'create-3 (:array this), (:i this), (.next (:s this))))
         )
         (NodeSeq'create-3 (:array this), (+ (:i this) 2), nil)
     )
@@ -29905,7 +29915,7 @@
                 (when (nil? (next ___items))
                     (throw (IllegalArgumentException. (String/format "No value supplied for key: %s", (object-array [ (first ___items) ]))))
                 )
-                (§ ass ___ret (ß ___ret.assoc((first ___items), RT'second(___items))))
+                (§ ass ___ret (.assoc ___ret, (first ___items), (RT'second ___items)))
             )
             (cast' PersistentHashMap (.persistent ___ret))
         )
@@ -29917,7 +29927,7 @@
                 (when (nil? (next ___items))
                     (throw (IllegalArgumentException. (String/format "No value supplied for key: %s", (object-array [ (first ___items) ]))))
                 )
-                (§ ass ___ret (ß ___ret.assoc((first ___items), RT'second(___items))))
+                (§ ass ___ret (.assoc ___ret, (first ___items), (RT'second ___items)))
                 (when-not (= (count ___ret) (inc ___i))
                     (throw (IllegalArgumentException. (str "Duplicate key: " (first ___items))))
                 )
@@ -30155,7 +30165,7 @@
                             (when (some? (:root this))
                                 (§ ass ___ret (.invoke ___combinef, ___ret, (.fold (:root this), ___combinef, ___reducef, ___fjtask, ___fjfork, ___fjjoin)))
                             )
-                            (if (:hasNull this) (ß ___combinef.invoke(___ret, (.invoke ___reducef, (.invoke ___combinef), nil, (:nullValue this)))) ___ret)
+                            (if (:hasNull this) (.invoke ___combinef, ___ret, (.invoke ___reducef, (.invoke ___combinef), nil, (:nullValue this))) ___ret)
                         )
                     )
                 )]
@@ -30181,7 +30191,7 @@
     )
 
     (defn #_"int" PersistentHashMap'mask [#_"int" ___hash, #_"int" ___shift]
-        (ß (___hash >>> ___shift) & 0x01f)
+        (& (>>> ___hash ___shift) 0x01f)
     )
 
     #_method
@@ -30253,7 +30263,7 @@
     )
 
     (defn- #_"int" PersistentHashMap'bitpos [#_"int" ___hash, #_"int" ___shift]
-        (ß 1 << mask(___hash, ___shift))
+        (<< 1 (PersistentHashMap'mask ___hash, ___shift))
     )
 )
 )
@@ -30414,7 +30424,7 @@
         (when (§ instance? ArraySeq ___args)
             (let [#_"Object[]" ___argsarray (:array (cast' ArraySeq ___args))]
                 (let [#_"IPersistentList" ___ret PersistentList'EMPTY]
-                    (loop-when-recur [#_"int" ___i (- (§ alength ___argsarray) 1)] (ß ___i >= (:i (cast' ArraySeq ___args))) [(dec ___i)]
+                    (loop-when-recur [#_"int" ___i (- (§ alength ___argsarray) 1)] (<= (:i (cast' ArraySeq ___args)) ___i) [(dec ___i)]
                         (§ ass ___ret (cast' IPersistentList (.cons ___ret, (§ aget ___argsarray ___i))))
                     )
                     (§ return ___ret)
@@ -31758,7 +31768,7 @@
                 (when (nil? (next ___items))
                     (throw (IllegalArgumentException. (String/format "No value supplied for key: %s", (object-array [ (first ___items) ]))))
                 )
-                (§ ass ___ret (ß ___ret.assoc((first ___items), RT'second(___items))))
+                (§ ass ___ret (.assoc ___ret, (first ___items), (RT'second ___items)))
             )
             (cast' PersistentTreeMap ___ret)
         )
@@ -31770,7 +31780,7 @@
                 (when (nil? (next ___items))
                     (throw (IllegalArgumentException. (String/format "No value supplied for key: %s", (object-array [ (first ___items) ]))))
                 )
-                (§ ass ___ret (ß ___ret.assoc((first ___items), RT'second(___items))))
+                (§ ass ___ret (.assoc ___ret, (first ___items), (RT'second ___items)))
             )
             (cast' PersistentTreeMap ___ret)
         )
@@ -31835,7 +31845,7 @@
         (let [#_"Box" ___found (Box'new nil)]
             (let [#_"TNode" ___t (.remove this, (:tree this), ___key, ___found)]
                 (when (nil? ___t)
-                    (when (ß (nil? (:val ___found))) ;; nil == doesn't contain key
+                    (when (nil? (:val ___found)) ;; nil == doesn't contain key
                         (§ return this)
                     )
                     ;; empty
@@ -32022,7 +32032,7 @@
         (when (nil? ___t)
             (§ return 0)
         )
-        (ß 1 + Math/max((.depth this, (.left ___t)), (.depth this, (.right ___t))))
+        (inc (Math/max (.depth this, (.left ___t)), (.depth this, (.right ___t))))
     )
 
     #_method
@@ -32213,7 +32223,7 @@
             )
             (and (§ instance? Red ___left) (§ instance? Black (.right ___left)))
             (do
-                (PersistentTreeMap'red (:key (.right ___left)), (ß (.right ___left).val()), (PersistentTreeMap'leftBalance (:key ___left), (.val ___left), (ß (.left ___left).redden()), (ß (.right ___left).left())), (PersistentTreeMap'black ___key, ___val, (ß (.right ___left).right()), ___del))
+                (PersistentTreeMap'red (:key (.right ___left)), (.val (.right ___left)), (PersistentTreeMap'leftBalance (:key ___left), (.val ___left), (.redden (.left ___left)), (.left (.right ___left))), (PersistentTreeMap'black ___key, ___val, (.right (.right ___left)), ___del))
             )
             :else
             (do
@@ -32225,11 +32235,11 @@
     (defn #_"TNode" PersistentTreeMap'leftBalance [#_"Object" ___key, #_"Object" ___val, #_"TNode" ___ins, #_"TNode" ___right]
         (cond (and (§ instance? Red ___ins) (§ instance? Red (.left ___ins)))
             (do
-                (PersistentTreeMap'red (:key ___ins), (.val ___ins), (ß (.left ___ins).blacken()), (PersistentTreeMap'black ___key, ___val, (.right ___ins), ___right))
+                (PersistentTreeMap'red (:key ___ins), (.val ___ins), (.blacken (.left ___ins)), (PersistentTreeMap'black ___key, ___val, (.right ___ins), ___right))
             )
             (and (§ instance? Red ___ins) (§ instance? Red (.right ___ins)))
             (do
-                (PersistentTreeMap'red (:key (.right ___ins)), (ß (.right ___ins).val()), (PersistentTreeMap'black (:key ___ins), (.val ___ins), (.left ___ins), (ß (.right ___ins).left())), (PersistentTreeMap'black ___key, ___val, (ß (.right ___ins).right()), ___right))
+                (PersistentTreeMap'red (:key (.right ___ins)), (.val (.right ___ins)), (PersistentTreeMap'black (:key ___ins), (.val ___ins), (.left ___ins), (.left (.right ___ins))), (PersistentTreeMap'black ___key, ___val, (.right (.right ___ins)), ___right))
             )
             :else
             (do
@@ -32241,11 +32251,11 @@
     (defn #_"TNode" PersistentTreeMap'rightBalance [#_"Object" ___key, #_"Object" ___val, #_"TNode" ___left, #_"TNode" ___ins]
         (cond (and (§ instance? Red ___ins) (§ instance? Red (.right ___ins)))
             (do
-                (PersistentTreeMap'red (:key ___ins), (.val ___ins), (PersistentTreeMap'black ___key, ___val, ___left, (.left ___ins)), (ß (.right ___ins).blacken()))
+                (PersistentTreeMap'red (:key ___ins), (.val ___ins), (PersistentTreeMap'black ___key, ___val, ___left, (.left ___ins)), (.blacken (.right ___ins)))
             )
             (and (§ instance? Red ___ins) (§ instance? Red (.left ___ins)))
             (do
-                (PersistentTreeMap'red (:key (.left ___ins)), (ß (.left ___ins).val()), (PersistentTreeMap'black ___key, ___val, ___left, (ß (.left ___ins).left())), (PersistentTreeMap'black (:key ___ins), (.val ___ins), (ß (.left ___ins).right()), (.right ___ins)))
+                (PersistentTreeMap'red (:key (.left ___ins)), (.val (.left ___ins)), (PersistentTreeMap'black ___key, ___val, ___left, (.left (.left ___ins))), (PersistentTreeMap'black (:key ___ins), (.val ___ins), (.right (.left ___ins)), (.right ___ins)))
             )
             :else
             (do
@@ -32505,7 +32515,7 @@
 
     #_method
     (§ defn #_"ISeq" (§ method chunkedNext) [#_"ChunkedSeq" this]
-        (when (ß (:i this) + (§ alength (:node this)) < (:cnt (:vec this)))
+        (when (< (+ (:i this) (§ alength (:node this))) (:cnt (:vec this)))
             (§ return (ChunkedSeq'new-3 (:vec this), (+ (:i this) (§ alength (:node this))), 0))
         )
         nil
@@ -32536,7 +32546,7 @@
 
     #_method
     (§ defn #_"ISeq" (§ method next) [#_"ChunkedSeq" this]
-        (when (ß (inc (:offset this)) < (§ alength (:node this)))
+        (when (< (inc (:offset this)) (§ alength (:node this)))
             (§ return (ChunkedSeq'new-4 (:vec this), (:node this), (:i this), (inc (:offset this))))
         )
         (.chunkedNext this)
@@ -32544,7 +32554,7 @@
 
     #_method
     (§ defn #_"int" (§ method count) [#_"ChunkedSeq" this]
-        (ß (:cnt (:vec this)) - ((:i this) + (:offset this)))
+        (- (:cnt (:vec this)) (+ (:i this) (:offset this)))
     )
 )
 
@@ -32587,7 +32597,7 @@
         (when (= (:edit ___node) (:edit (:root this)))
             (§ return ___node)
         )
-        (ß VNode'new-2((:edit (:root this)), (.clone (:array ___node))))
+        (VNode'new-2 (:edit (:root this)), (.clone (:array ___node)))
     )
 
     #_method
@@ -32624,8 +32634,8 @@
         (.ensureEditable this)
         (let [#_"int" ___i (:cnt this)]
             ;; room in tail?
-            (when (ß ___i - (.tailoff this) < 32)
-                (§ ass (§ aget (:tail this) (ß ___i & 0x01f)) ___val)
+            (when (< (- ___i (.tailoff this)) 32)
+                (§ ass (§ aget (:tail this) (& ___i 0x01f)) ___val)
                 (§ ass (:cnt this) (+ (:cnt this) 1))
                 (§ return this)
             )
@@ -32636,7 +32646,7 @@
                     (§ ass (§ aget (:tail this) 0) ___val)
                     (let [#_"int" ___newshift (:shift this)]
                         ;; overflow root?
-                        (if (ß ((:cnt this) >>> 5) > (1 << (:shift this)))
+                        (if (> (>>> (:cnt this) 5) (<< 1 (:shift this)))
                             (do
                                 (§ ass ___newroot (VNode'new-1 (:edit (:root this))))
                                 (§ ass (§ aget (:array ___newroot) 0) (:root this))
@@ -32773,7 +32783,7 @@
     (§ defn #_"Object" (§ method nth) [#_"TransientVector" this, #_"int" ___i]
         (.ensureEditable this)
         (let [#_"Object[]" ___node (.arrayFor this, ___i)]
-            (§ aget ___node (ß ___i & 0x01f))
+            (§ aget ___node (& ___i 0x01f))
         )
     )
 
@@ -32790,7 +32800,7 @@
         (.ensureEditable this)
         (when (and (<= 0 ___i) (< ___i (:cnt this)))
             (when (>= ___i (.tailoff this))
-                (§ ass (§ aget (:tail this) (ß ___i & 0x01f)) ___val)
+                (§ ass (§ aget (:tail this) (& ___i 0x01f)) ___val)
                 (§ return this)
             )
 
@@ -32820,10 +32830,10 @@
         (let [#_"VNode" ___ret ___node]
             (if (zero? ___level)
                 (do
-                    (§ ass (§ aget (:array ___ret) (ß ___i & 0x01f)) ___val)
+                    (§ ass (§ aget (:array ___ret) (& ___i 0x01f)) ___val)
                 )
                 (do
-                    (let [#_"int" ___subidx (ß (___i >>> ___level) & 0x01f)]
+                    (let [#_"int" ___subidx (& (>>> ___i ___level) 0x01f)]
                         (§ ass (§ aget (:array ___ret) ___subidx) (.doAssoc this, (- ___level 5), (cast' VNode (§ aget (:array ___node) ___subidx)), ___i, ___val))
                     )
                 )
@@ -32873,7 +32883,7 @@
     #_method
     (§ defn- #_"VNode" (§ method popTail) [#_"TransientVector" this, #_"int" ___level, #_"VNode" ___node]
         (§ ass ___node (.ensureEditable this, ___node))
-        (let [#_"int" ___subidx (ß (((:cnt this) - 2) >>> ___level) & 0x01f)]
+        (let [#_"int" ___subidx (& (>>> (- (:cnt this) 2) ___level) 0x01f)]
             (cond (> ___level 5)
                 (do
                     (let [#_"VNode" ___newchild (.popTail this, (- ___level 5), (cast' VNode (§ aget (:array ___node) ___subidx)))]
@@ -33064,7 +33074,7 @@
             )
             (let [#_"VNode" ___node (:root this)]
                 (loop-when-recur [#_"int" ___level (:shift this)] (> ___level 0) [(- ___level 5)]
-                    (§ ass ___node (cast' VNode (§ aget (:array ___node) (ß (___i >>> ___level) & 0x01f))))
+                    (§ ass ___node (cast' VNode (§ aget (:array ___node) (& (>>> ___i ___level) 0x01f))))
                 )
                 (§ return (:array ___node))
             )
@@ -33075,7 +33085,7 @@
     #_method
     (§ defn #_"Object" (§ method nth) [#_"PersistentVector" this, #_"int" ___i]
         (let [#_"Object[]" ___node (.arrayFor this, ___i)]
-            (§ aget ___node (ß ___i & 0x01f))
+            (§ aget ___node (& ___i 0x01f))
         )
     )
 
@@ -33093,7 +33103,7 @@
             (when (>= ___i (.tailoff this))
                 (let [#_"Object[]" ___newTail (make-array Object (§ alength (:tail this)))]
                     (System/arraycopy (:tail this), 0, ___newTail, 0, (§ alength (:tail this)))
-                    (§ ass (§ aget ___newTail (ß ___i & 0x01f)) ___val)
+                    (§ ass (§ aget ___newTail (& ___i 0x01f)) ___val)
 
                     (§ return (PersistentVector'new-5 (.meta this), (:cnt this), (:shift this), (:root this), ___newTail))
                 )
@@ -33108,7 +33118,7 @@
     )
 
     (defn- #_"VNode" PersistentVector'doAssoc [#_"int" ___level, #_"VNode" ___node, #_"int" ___i, #_"Object" ___val]
-        (let [#_"VNode" ___ret (ß VNode'new-2((:edit ___node), (.clone (:array ___node))))]
+        (let [#_"VNode" ___ret (VNode'new-2 (:edit ___node), (.clone (:array ___node)))]
             (if (zero? ___level)
                 (do
                     (§ ass (§ aget (:array ___ret) (& ___i 0x01f)) ___val)
@@ -33141,10 +33151,10 @@
     #_method
     (§ defn #_"PersistentVector" (§ method cons) [#_"PersistentVector" this, #_"Object" ___val]
         ;; room in tail?
-        (when (ß (:cnt this) - (.tailoff this) < 32)
+        (when (< (- (:cnt this) (.tailoff this)) 32)
             (let [#_"Object[]" ___newTail (make-array Object (inc (§ alength (:tail this))))]
                 (System/arraycopy (:tail this), 0, ___newTail, 0, (§ alength (:tail this)))
-                (§ ass (§ aget ___newTail (ß (§ alength (:tail this)))) ___val)
+                (§ ass (§ aget ___newTail (§ alength (:tail this))) ___val)
                 (§ return (PersistentVector'new-5 (.meta this), (inc (:cnt this)), (:shift this), (:root this), ___newTail))
             )
         )
@@ -33153,7 +33163,7 @@
             (let [#_"VNode" ___tailnode (VNode'new-2 (:edit (:root this)), (:tail this))]
                 (let [#_"int" ___newshift (:shift this)]
                     ;; overflow root?
-                    (if (ß ((:cnt this) >>> 5) > (1 << (:shift this)))
+                    (if (> (>>> (:cnt this) 5) (<< 1 (:shift this)))
                         (do
                             (§ ass ___newroot (VNode'new-1 (:edit (:root this))))
                             (§ ass (§ aget (:array ___newroot) 0) (:root this))
@@ -33177,7 +33187,7 @@
         ;; else alloc new path
         ;; return nodeToInsert placed in copy of parent
         (let [#_"int" ___subidx (& (>>> (dec (:cnt this)) ___level) 0x01f)]
-            (let [#_"VNode" ___ret (ß VNode'new-2((:edit ___parent), (.clone (:array ___parent))))]
+            (let [#_"VNode" ___ret (VNode'new-2 (:edit ___parent), (.clone (:array ___parent)))]
                 (§ let [#_"VNode" ___nodeToInsert]
                     (if (= ___level 5)
                         (do
@@ -33233,7 +33243,7 @@
 
             #_method
             (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
-                (ß ((:i this) < ___end))
+                (< (:i this) ___end)
             )
 
             #_method
@@ -33244,7 +33254,7 @@
                             (§ ass (:array this) (.arrayFor this, (:i this)))
                             (§ ass (:base this) (+ (:base this) 32))
                         )
-                        (let [_ (§ aget (:array this) (ß (:i this) & 0x01f))]
+                        (let [_ (§ aget (:array this) (& (:i this) 0x01f))]
                             (§ ass (:i this) (+ (:i this) 1))
                             _
                         )
@@ -33344,7 +33354,7 @@
         (when (= (:cnt this) 1)
             (§ return (.withMeta PersistentVector'EMPTY, (.meta this)))
         )
-        (when (ß (:cnt this) - (.tailoff this) > 1)
+        (when (> (- (:cnt this) (.tailoff this)) 1)
             (let [#_"Object[]" ___newTail (make-array Object (dec (§ alength (:tail this))))]
                 (System/arraycopy (:tail this), 0, ___newTail, 0, (§ alength ___newTail))
                 (§ return (PersistentVector'new-5 (.meta this), (dec (:cnt this)), (:shift this), (:root this), ___newTail))
@@ -33368,7 +33378,7 @@
 
     #_method
     (§ defn- #_"VNode" (§ method popTail) [#_"PersistentVector" this, #_"int" ___level, #_"VNode" ___node]
-        (let [#_"int" ___subidx (ß (((:cnt this) - 2) >>> ___level) & 0x01f)]
+        (let [#_"int" ___subidx (& (>>> (- (:cnt this) 2) ___level) 0x01f)]
             (cond (> ___level 5)
                 (do
                     (let [#_"VNode" ___newchild (.popTail this, (- ___level 5), (cast' VNode (§ aget (:array ___node) ___subidx)))]
@@ -33391,7 +33401,7 @@
                 )
                 :else
                 (do
-                    (let [#_"VNode" ___ret (ß VNode'new-2((:edit (:root this)), (.clone (:array ___node))))]
+                    (let [#_"VNode" ___ret (VNode'new-2 (:edit (:root this)), (.clone (:array ___node)))]
                         (§ ass (§ aget (:array ___ret) ___subidx) nil)
                         ___ret
                     )
@@ -33924,7 +33934,7 @@
     #_method
     (§ defn #_"int" (§ method hashCode) [#_"ReaderConditional" this]
         (let [#_"int" ___result (Util'hash (:form this))]
-            (§ ass ___result (ß 31 * ___result + Util'hash((:splicing this))))
+            (§ ass ___result (+ (* 31 ___result) (Util'hash (:splicing this))))
             ___result
         )
     )
@@ -34163,7 +34173,7 @@
     #_method
     (§ defn #_"Object" (§ method alter) [#_"Ref" this, #_"IFn" ___fn, #_"ISeq" ___args]
         (let [#_"LockingTransaction" ___t (LockingTransaction'getEx)]
-            (ß ___t.doSet(this, (.applyTo ___fn, RT'cons((.doGet ___t, this), ___args))))
+            (.doSet ___t, this, (.applyTo ___fn, (RT'cons (.doGet ___t, this), ___args)))
         )
     )
 
@@ -34413,14 +34423,14 @@
                     )
                     (= (.size ___methods) 1)
                     (do
-                        (§ ass ___m (ß (java.lang.reflect.Method) ___methods.get(0)))
+                        (§ ass ___m (cast java.lang.reflect.Method (.get ___methods, 0)))
                         (§ ass ___boxedArgs (Reflector'boxArgs (.getParameterTypes ___m), ___args))
                     )
                     :else ;; overloaded w/same arity
                     (do
                         (let [#_"java.lang.reflect.Method" ___foundm nil]
                             (loop-when-recur [#_"Iterator" ___i (.iterator ___methods)] (.hasNext ___i) [___i]
-                                (§ ass ___m (ß (java.lang.reflect.Method) (next ___i)))
+                                (§ ass ___m (cast java.lang.reflect.Method (next ___i)))
 
                                 (let [#_"Class[]" ___params (.getParameterTypes ___m)]
                                     (when (Reflector'isCongruent ___params, ___args)
@@ -34521,7 +34531,7 @@
                         (= (.size ___ctors) 1)
                         (do
                             (let [#_"Constructor" ___ctor (cast Constructor (.get ___ctors, 0))]
-                                (ß ___ctor.newInstance(Reflector'boxArgs((.getParameterTypes ___ctor), ___args)))
+                                (.newInstance ___ctor, (Reflector'boxArgs (.getParameterTypes ___ctor), ___args))
                             )
                         )
                         :else ;; overloaded w/same arity
@@ -34597,7 +34607,7 @@
         (let [#_"Field" ___f (Reflector'getField ___c, ___fieldName, true)]
             (when (some? ___f)
                 (try
-                    (ß ___f.set(nil, Reflector'boxArg((.getType ___f), ___val)))
+                    (.set ___f, nil, (Reflector'boxArg (.getType ___f), ___val))
                     (catch IllegalAccessException ___e
                         (throw (Util'sneakyThrow ___e))
                     )
@@ -34629,7 +34639,7 @@
             (let [#_"Field" ___f (Reflector'getField ___c, ___fieldName, false)]
                 (when (some? ___f)
                     (try
-                        (ß ___f.set(___target, Reflector'boxArg((.getType ___f), ___val)))
+                        (.set ___f, ___target, (Reflector'boxArg (.getType ___f), ___val))
                         (catch IllegalAccessException ___e
                             (throw (Util'sneakyThrow ___e))
                         )
@@ -34700,7 +34710,7 @@
             (let [#_"Field" ___f (Reflector'getField ___c, ___name, false)]
                 (when (some? ___f) ;; field set
                     (try
-                        (ß ___f.set(___target, Reflector'boxArg((.getType ___f), ___arg1)))
+                        (.set ___f, ___target, (Reflector'boxArg (.getType ___f), ___arg1))
                         (catch IllegalAccessException ___e
                             (throw (Util'sneakyThrow ___e))
                         )
@@ -35172,297 +35182,317 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (§ return (ß this.doInvoke(Util'ret1(___args, (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (Util'ret1 ___args, (§ ass ___args nil))))
             )
             (§ case 1)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 2)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 3)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 4)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 5)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 6)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 7)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 8)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 9)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 10)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 11)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 12)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 13)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 14)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 15)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 16)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 17)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 18)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 19)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
             (§ case 20)
             (do
-                (§ return (ß this.doInvoke((first ___args),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        (§ ass ___args (next ___args)).first(),
-                        Util'ret1((next ___args), (§ ass ___args nil)))))
+                (§ return (.doInvoke this, (first ___args),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (.first (§ ass ___args (next ___args))),
+                        (Util'ret1 (next ___args), (§ ass ___args nil)))
+                )
             )
         )
         (.throwArity this, -1)
@@ -35487,11 +35517,11 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(ArraySeq'create-1(Util'ret1(___arg1, (§ ass ___arg1 nil)))))
+                (.doInvoke this, (ArraySeq'create-1 (Util'ret1 ___arg1, (§ ass ___arg1 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(Util'ret1(___arg1, (§ ass ___arg1 nil)), nil))
+                (.doInvoke this, (Util'ret1 ___arg1, (§ ass ___arg1 nil)), nil)
             )
             (§ default )
             (do
@@ -35505,23 +35535,23 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    ArraySeq'create-1(
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)), nil)
             )
             (§ default )
             (do
@@ -35535,34 +35565,34 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    ArraySeq'create-1(
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    ArraySeq'create-1(
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)), nil)
             )
             (§ default )
             (do
@@ -35576,47 +35606,47 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    ArraySeq'create-1(
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    ArraySeq'create-1(
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    ArraySeq'create-1(
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)), nil)
             )
             (§ default )
             (do
@@ -35630,62 +35660,62 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)), nil)
             )
             (§ default )
             (do
@@ -35699,79 +35729,79 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil))))
             )
             (§ case 6)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)), nil)
             )
             (§ default )
             (do
@@ -35785,98 +35815,98 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                            Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    ArraySeq'create-1(
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil))))
             )
             (§ case 6)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil))))
             )
             (§ case 7)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)), nil)
             )
             (§ default )
             (do
@@ -35890,119 +35920,119 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    ArraySeq'create-1(
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil))))
             )
             (§ case 6)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil))))
             )
             (§ case 7)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil))))
             )
             (§ case 8)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)), nil)
             )
             (§ default )
             (do
@@ -36016,142 +36046,142 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        Util'ret1(___arg9, (§ ass ___arg9 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    ArraySeq'create-1(
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        Util'ret1(___arg9, (§ ass ___arg9 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
             )
             (§ case 6)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
             )
             (§ case 7)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
             )
             (§ case 8)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil))))
             )
             (§ case 9)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)), nil)
             )
             (§ default )
             (do
@@ -36165,167 +36195,167 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        Util'ret1(___arg10, (§ ass ___arg10 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    ArraySeq'create-1(
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        Util'ret1(___arg10, (§ ass ___arg10 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
             )
             (§ case 6)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
             )
             (§ case 7)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
             )
             (§ case 8)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
             )
             (§ case 9)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil))))
             )
             (§ case 10)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)), nil)
             )
             (§ default )
             (do
@@ -36339,194 +36369,194 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        Util'ret1(___arg11, (§ ass ___arg11 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
             )
             (§ case 6)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
             )
             (§ case 7)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
             )
             (§ case 8)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
             )
             (§ case 9)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
             )
             (§ case 10)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil))))
             )
             (§ case 11)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)), nil)
             )
             (§ default )
             (do
@@ -36540,223 +36570,223 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        Util'ret1(___arg12, (§ ass ___arg12 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
             )
             (§ case 6)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
             )
             (§ case 7)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
             )
             (§ case 8)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
             )
             (§ case 9)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
             )
             (§ case 10)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
             )
             (§ case 11)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil))))
             )
             (§ case 12)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)), nil)
             )
             (§ default )
             (do
@@ -36770,254 +36800,254 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        Util'ret1(___arg13, (§ ass ___arg13 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
             )
             (§ case 6)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
             )
             (§ case 7)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
             )
             (§ case 8)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
             )
             (§ case 9)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
             )
             (§ case 10)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
             )
             (§ case 11)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
             )
             (§ case 12)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil))))
             )
             (§ case 13)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)), nil)
             )
             (§ default )
             (do
@@ -37031,287 +37061,287 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                        Util'ret1(___arg14, (§ ass ___arg14 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                        (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
             )
             (§ case 6)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
             )
             (§ case 7)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
             )
             (§ case 8)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
             )
             (§ case 9)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
             )
             (§ case 10)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
             )
             (§ case 11)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
             )
             (§ case 12)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
             )
             (§ case 13)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil))))
             )
             (§ case 14)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)), nil)
             )
             (§ default )
             (do
@@ -37325,322 +37355,322 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                        Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                        Util'ret1(___arg15, (§ ass ___arg15 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                        (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                        (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
             )
             (§ case 6)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
             )
             (§ case 7)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
             )
             (§ case 8)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
             )
             (§ case 9)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
             )
             (§ case 10)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
             )
             (§ case 11)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
             )
             (§ case 12)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
             )
             (§ case 13)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
             )
             (§ case 14)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil))))
             )
             (§ case 15)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)), nil)
             )
             (§ default )
             (do
@@ -37654,359 +37684,359 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                        Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                        Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                        Util'ret1(___arg16, (§ ass ___arg16 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                        (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                        (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                        (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
             )
             (§ case 6)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
             )
             (§ case 7)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
             )
             (§ case 8)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
             )
             (§ case 9)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
             )
             (§ case 10)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
             )
             (§ case 11)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
             )
             (§ case 12)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
             )
             (§ case 13)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
             )
             (§ case 14)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
             )
             (§ case 15)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil))))
             )
             (§ case 16)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)), nil)
             )
             (§ default )
             (do
@@ -38020,398 +38050,398 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                        Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                        Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                        Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                        Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                        (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                        (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                        (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                        (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 6)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 7)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 8)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 9)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 10)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 11)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 12)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 13)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 14)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 15)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 16)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil))))
             )
             (§ case 17)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                    (Util'ret1 ___arg17, (§ ass ___arg17 nil)), nil)
             )
             (§ default )
             (do
@@ -38425,439 +38455,439 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                        Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                        Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                        Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                        Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                        Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                        (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                        (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                        (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                        (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                        (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 6)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 7)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 8)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 9)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 10)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 11)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 12)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 13)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 14)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 15)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 16)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 17)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                    (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil))))
             )
             (§ case 18)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                    Util'ret1(___arg18, (§ ass ___arg18 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                    (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                    (Util'ret1 ___arg18, (§ ass ___arg18 nil)), nil)
             )
             (§ default )
             (do
@@ -38871,482 +38901,482 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                        Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                        Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                        Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                        Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                        Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                        Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                        (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                        (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                        (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                        (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                        (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                        (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 6)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 7)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 8)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 9)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 10)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 11)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 12)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 13)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 14)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 15)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 16)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 17)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                    (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 18)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                    Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                    (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                    (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil))))
             )
             (§ case 19)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                    Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                    Util'ret1(___arg19, (§ ass ___arg19 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                    (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                    (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                    (Util'ret1 ___arg19, (§ ass ___arg19 nil)), nil)
             )
             (§ default )
             (do
@@ -39360,527 +39390,527 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
-                    ArraySeq'create-1(
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                        Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                        Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                        Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                        Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                        Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                        Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                        Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (ArraySeq'create-1
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                        (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                        (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                        (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                        (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                        (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                        (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                        (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 6)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 7)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 8)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 9)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 10)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 11)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 12)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 13)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 14)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 15)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 16)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 17)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                    (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 18)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                    Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                    (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                    (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 19)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                    Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                    Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                        ArraySeq'create-1(
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                    (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                    (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                    (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                        (ArraySeq'create-1
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 20)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                    Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                    Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                    Util'ret1(___arg20, (§ ass ___arg20 nil)), nil))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                    (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                    (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                    (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                    (Util'ret1 ___arg20, (§ ass ___arg20 nil)), nil)
             )
             (§ default )
             (do
@@ -39894,528 +39924,528 @@
         (§ switch (.getRequiredArity this)
             (§ case 0)
             (do
-                (ß this.doInvoke(
+                (.doInvoke this,
                     ontoArrayPrepend(___args,
-                        Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                        Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                        Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                        Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                        Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                        Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                        Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                        Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                        Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                        Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                        Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                        Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                        Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                        Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                        Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                        Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                        Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                        Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                        Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                        Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                        (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                        (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                        (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                        (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                        (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                        (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                        (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                        (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                        (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                        (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                        (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                        (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                        (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                        (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                        (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                        (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                        (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                        (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                        (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                        (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 1)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 2)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 3)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 4)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 5)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 6)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 7)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 8)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 9)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 10)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 11)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 12)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 13)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 14)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 15)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 16)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 17)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                    (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 18)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                    Util'ret1(___arg18, (§ ass ___arg18 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                    (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                    (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 19)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                    Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                    Util'ret1(___arg19, (§ ass ___arg19 nil)),
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                    (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                    (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                    (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
                         ontoArrayPrepend(___args,
-                            Util'ret1(___arg20, (§ ass ___arg20 nil)))))
+                            (Util'ret1 ___arg20, (§ ass ___arg20 nil))))
             )
             (§ case 20)
             (do
-                (ß this.doInvoke(
-                    Util'ret1(___arg1, (§ ass ___arg1 nil)),
-                    Util'ret1(___arg2, (§ ass ___arg2 nil)),
-                    Util'ret1(___arg3, (§ ass ___arg3 nil)),
-                    Util'ret1(___arg4, (§ ass ___arg4 nil)),
-                    Util'ret1(___arg5, (§ ass ___arg5 nil)),
-                    Util'ret1(___arg6, (§ ass ___arg6 nil)),
-                    Util'ret1(___arg7, (§ ass ___arg7 nil)),
-                    Util'ret1(___arg8, (§ ass ___arg8 nil)),
-                    Util'ret1(___arg9, (§ ass ___arg9 nil)),
-                    Util'ret1(___arg10, (§ ass ___arg10 nil)),
-                    Util'ret1(___arg11, (§ ass ___arg11 nil)),
-                    Util'ret1(___arg12, (§ ass ___arg12 nil)),
-                    Util'ret1(___arg13, (§ ass ___arg13 nil)),
-                    Util'ret1(___arg14, (§ ass ___arg14 nil)),
-                    Util'ret1(___arg15, (§ ass ___arg15 nil)),
-                    Util'ret1(___arg16, (§ ass ___arg16 nil)),
-                    Util'ret1(___arg17, (§ ass ___arg17 nil)),
-                    Util'ret1(___arg18, (§ ass ___arg18 nil)),
-                    Util'ret1(___arg19, (§ ass ___arg19 nil)),
-                    Util'ret1(___arg20, (§ ass ___arg20 nil)),
-                        ArraySeq'create-1(___args)))
+                (.doInvoke this,
+                    (Util'ret1 ___arg1, (§ ass ___arg1 nil)),
+                    (Util'ret1 ___arg2, (§ ass ___arg2 nil)),
+                    (Util'ret1 ___arg3, (§ ass ___arg3 nil)),
+                    (Util'ret1 ___arg4, (§ ass ___arg4 nil)),
+                    (Util'ret1 ___arg5, (§ ass ___arg5 nil)),
+                    (Util'ret1 ___arg6, (§ ass ___arg6 nil)),
+                    (Util'ret1 ___arg7, (§ ass ___arg7 nil)),
+                    (Util'ret1 ___arg8, (§ ass ___arg8 nil)),
+                    (Util'ret1 ___arg9, (§ ass ___arg9 nil)),
+                    (Util'ret1 ___arg10, (§ ass ___arg10 nil)),
+                    (Util'ret1 ___arg11, (§ ass ___arg11 nil)),
+                    (Util'ret1 ___arg12, (§ ass ___arg12 nil)),
+                    (Util'ret1 ___arg13, (§ ass ___arg13 nil)),
+                    (Util'ret1 ___arg14, (§ ass ___arg14 nil)),
+                    (Util'ret1 ___arg15, (§ ass ___arg15 nil)),
+                    (Util'ret1 ___arg16, (§ ass ___arg16 nil)),
+                    (Util'ret1 ___arg17, (§ ass ___arg17 nil)),
+                    (Util'ret1 ___arg18, (§ ass ___arg18 nil)),
+                    (Util'ret1 ___arg19, (§ ass ___arg19 nil)),
+                    (Util'ret1 ___arg20, (§ ass ___arg20 nil)),
+                        ArraySeq'create-1(___args))
             )
             (§ default )
             (do
@@ -40495,7 +40525,7 @@
     (def #_"String" RT'LOADER_SUFFIX "__init")
 
     ;; simple-symbol->class
-    (§ def #_"IPersistentMap" RT'DEFAULT_IMPORTS (map
+    (§ def #_"IPersistentMap" RT'DEFAULT_IMPORTS (RT'map
         (object-array [
             (Symbol'intern-1 "Boolean")                         Boolean
             (Symbol'intern-1 "Byte")                            Byte
@@ -40612,17 +40642,17 @@
     (§ def #_"Keyword" RT'TAG_KEY (Keyword'intern-2 nil, "tag"))
     (§ def #_"Keyword" RT'CONST_KEY (Keyword'intern-2 nil, "const"))
 
-    (§ def #_"Var" RT'AGENT (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*agent*"), nil).setDynamic()))
+    (§ def #_"Var" RT'AGENT (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*agent*"), nil)))
 
     (def #_"Object" RT'readeval (RT'readTrueFalseUnknown (System/getProperty "cloiure.read.eval", "true")))
 
-    (§ def #_"Var" RT'READEVAL (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*read-eval*"), readeval).setDynamic()))
-    (§ def #_"Var" RT'DATA_READERS (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*data-readers*"), RT'map()).setDynamic()))
-    (§ def #_"Var" RT'DEFAULT_DATA_READER_FN (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*default-data-reader-fn*"), RT'map()).setDynamic()))
+    (§ def #_"Var" RT'READEVAL (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*read-eval*"), readeval)))
+    (§ def #_"Var" RT'DATA_READERS (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*data-readers*"), (RT'map))))
+    (§ def #_"Var" RT'DEFAULT_DATA_READER_FN (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*default-data-reader-fn*"), (RT'map))))
     (§ def #_"Var" RT'DEFAULT_DATA_READERS (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "default-data-readers"), (RT'map)))
-    (§ def #_"Var" RT'SUPPRESS_READ (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*suppress-read*"), nil).setDynamic()))
-    (§ def #_"Var" RT'ASSERT (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*assert*"), RT'T).setDynamic()))
-    (§ def #_"Var" RT'MATH_CONTEXT (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*math-context*"), nil).setDynamic()))
+    (§ def #_"Var" RT'SUPPRESS_READ (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*suppress-read*"), nil)))
+    (§ def #_"Var" RT'ASSERT (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*assert*"), RT'T)))
+    (§ def #_"Var" RT'MATH_CONTEXT (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*math-context*"), nil)))
 
     (§ def #_"Keyword" RT'LINE_KEY (Keyword'intern-2 nil, "line"))
     (§ def #_"Keyword" RT'COLUMN_KEY (Keyword'intern-2 nil, "column"))
@@ -40630,30 +40660,30 @@
     (§ def #_"Keyword" RT'DECLARED_KEY (Keyword'intern-2 nil, "declared"))
     (§ def #_"Keyword" RT'DOC_KEY (Keyword'intern-2 nil, "doc"))
 
-    (§ def #_"Var" RT'USE_CONTEXT_CLASSLOADER (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*use-context-classloader*"), RT'T).setDynamic()))
+    (§ def #_"Var" RT'USE_CONTEXT_CLASSLOADER (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*use-context-classloader*"), RT'T)))
     ;; boolean
-    (§ def #_"Var" RT'UNCHECKED_MATH (ß Var'intern-3(Namespace'findOrCreate(Symbol'intern-1("cloiure.core")), Symbol'intern-1("*unchecked-math*"), Boolean/FALSE).setDynamic()))
+    (§ def #_"Var" RT'UNCHECKED_MATH (.setDynamic (Var'intern-3 (Namespace'findOrCreate (Symbol'intern-1 "cloiure.core")), (Symbol'intern-1 "*unchecked-math*"), Boolean/FALSE)))
 
     (§ def #_"Symbol" RT'LOAD_FILE (Symbol'intern-1 "load-file"))
     (§ def #_"Symbol" RT'IN_NAMESPACE (Symbol'intern-1 "in-ns"))
     (§ def #_"Symbol" RT'NAMESPACE (Symbol'intern-1 "ns"))
     (§ def #_"Symbol" RT'IDENTICAL (Symbol'intern-1 "identical?"))
 
-    (§ def #_"Var" RT'CMD_LINE_ARGS (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*command-line-args*"), nil).setDynamic()))
+    (§ def #_"Var" RT'CMD_LINE_ARGS (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*command-line-args*"), nil)))
     ;; symbol
-    (§ def #_"Var" RT'CURRENT_NS (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*ns*"), RT'CLOIURE_NS).setDynamic()))
+    (§ def #_"Var" RT'CURRENT_NS (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*ns*"), RT'CLOIURE_NS)))
 
-    (§ def #_"Var" RT'FLUSH_ON_NEWLINE (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*flush-on-newline*"), RT'T).setDynamic()))
-    (§ def #_"Var" RT'PRINT_META (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*print-meta*"), RT'F).setDynamic()))
-    (§ def #_"Var" RT'PRINT_READABLY (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*print-readably*"), RT'T).setDynamic()))
-    (§ def #_"Var" RT'PRINT_DUP (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*print-dup*"), RT'F).setDynamic()))
-    (§ def #_"Var" RT'WARN_ON_REFLECTION (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*warn-on-reflection*"), RT'F).setDynamic()))
-    (§ def #_"Var" RT'ALLOW_UNRESOLVED_VARS (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*allow-unresolved-vars*"), RT'F).setDynamic()))
-    (§ def #_"Var" RT'READER_RESOLVER (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*reader-resolver*"), nil).setDynamic()))
+    (§ def #_"Var" RT'FLUSH_ON_NEWLINE (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*flush-on-newline*"), RT'T)))
+    (§ def #_"Var" RT'PRINT_META (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*print-meta*"), RT'F)))
+    (§ def #_"Var" RT'PRINT_READABLY (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*print-readably*"), RT'T)))
+    (§ def #_"Var" RT'PRINT_DUP (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*print-dup*"), RT'F)))
+    (§ def #_"Var" RT'WARN_ON_REFLECTION (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*warn-on-reflection*"), RT'F)))
+    (§ def #_"Var" RT'ALLOW_UNRESOLVED_VARS (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*allow-unresolved-vars*"), RT'F)))
+    (§ def #_"Var" RT'READER_RESOLVER (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*reader-resolver*"), nil)))
 
     (§ def #_"Var" RT'IN_NS_VAR (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "in-ns"), RT'F))
     (§ def #_"Var" RT'NS_VAR (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "ns"), RT'F))
-    (§ def #_"Var" RT'FN_LOADER_VAR (ß Var'intern-3(RT'CLOIURE_NS, Symbol'intern-1("*fn-loader*"), nil).setDynamic()))
+    (§ def #_"Var" RT'FN_LOADER_VAR (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*fn-loader*"), nil)))
     (§ def #_"Var" RT'PRINT_INITIALIZED (Var'intern-2n RT'CLOIURE_NS, (Symbol'intern-1 "print-initialized")))
     (§ def #_"Var" RT'PR_ON (Var'intern-2n RT'CLOIURE_NS, (Symbol'intern-1 "pr-on")))
 
@@ -40718,7 +40748,7 @@
 
     (defn #_"void" RT'addURL [#_"Object" ___url] #_(§ throws MalformedURLException)
         (let [#_"URL" ___u (if (instance? String ___url) (URL. (cast String ___url)) (cast URL ___url))]
-            (let [#_"ClassLoader" ___ccl (ß Thread/currentThread().getContextClassLoader())]
+            (let [#_"ClassLoader" ___ccl (.getContextClassLoader (Thread/currentThread))]
                 (if (§ instance? DynamicClassLoader ___ccl)
                     (do
                         (.addURL (cast' DynamicClassLoader ___ccl), ___u)
@@ -40740,16 +40770,16 @@
     (§ static
         (let [#_"Keyword" ___arglistskw (Keyword'intern-2 nil, "arglists")]
             (let [#_"Symbol" ___namesym (Symbol'intern-1 "name")]
-                (ß RT'OUT.setTag(Symbol'intern-1("java.io.Writer")))
-                (ß RT'CURRENT_NS.setTag(Symbol'intern-1("cloiure.lang.Namespace")))
-                (ß RT'AGENT.setMeta(map(RT'DOC_KEY, "The agent currently running an action on this thread, else nil")))
-                (ß RT'AGENT.setTag(Symbol'intern-1("cloiure.lang.Agent")))
-                (ß RT'MATH_CONTEXT.setTag(Symbol'intern-1("java.math.MathContext")))
+                (.setTag RT'OUT, (Symbol'intern-1 "java.io.Writer"))
+                (.setTag RT'CURRENT_NS, (Symbol'intern-1 "cloiure.lang.Namespace"))
+                (.setMeta RT'AGENT, (RT'map RT'DOC_KEY, "The agent currently running an action on this thread, else nil"))
+                (.setTag RT'AGENT, (Symbol'intern-1 "cloiure.lang.Agent"))
+                (.setTag RT'MATH_CONTEXT, (Symbol'intern-1 "java.math.MathContext"))
                 (let [#_"Var" ___nv (Var'intern-3 RT'CLOIURE_NS, RT'NAMESPACE, bootNamespace)]
                     (.setMacro ___nv)
                     (§ let [#_"Var" ___v]
                         (§ ass ___v (Var'intern-3 RT'CLOIURE_NS, RT'IN_NAMESPACE, inNamespace))
-                        (ß ___v.setMeta(map(RT'DOC_KEY, "Sets *ns* to the namespace named by the symbol, creating it if needed.", ___arglistskw, list(vector(___namesym)))))
+                        (.setMeta ___v, (RT'map RT'DOC_KEY, "Sets *ns* to the namespace named by the symbol, creating it if needed.", ___arglistskw, (RT'list-1 (RT'vector ___namesym))))
                         (§ ass ___v (Var'intern-3 RT'CLOIURE_NS, RT'LOAD_FILE,
                                 (§ reify AFn()
                                     #_method
@@ -40764,7 +40794,7 @@
                                 )
                             )
                         )
-                        (ß ___v.setMeta(map(RT'DOC_KEY, "Sequentially read and evaluate the set of forms contained in the file.", ___arglistskw, list(vector(___namesym)))))
+                        (.setMeta ___v, (RT'map RT'DOC_KEY, "Sequentially read and evaluate the set of forms contained in the file.", ___arglistskw, (RT'list-1 (RT'vector ___namesym))))
                         (try
                             (doInit)
                             (catch Exception ___e
@@ -40956,7 +40986,7 @@
                                 (let [#_"Symbol" ___SERVER (Symbol'intern-1 "cloiure.core.server")]
                                     (.invoke ___require, ___SERVER)
                                     (let [#_"Var" ___start_servers (RT'var-2 "cloiure.core.server", "start-servers")]
-                                        (ß ___start_servers.invoke(System/getProperties()))
+                                        (.invoke ___start_servers, (System/getProperties))
                                     )
                                 )
                             )
@@ -41100,7 +41130,7 @@
                         (let [#_"int" ___i 0]
                             #_method
                             (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
-                                (ß (___i < (.length ___s)))
+                                (< ___i (.length ___s))
                             )
 
                             #_method
@@ -41578,14 +41608,14 @@
             (do
                 (let [#_"CharSequence" ___s (cast CharSequence ___coll)]
                     (when (< ___n (.length ___s))
-                        (§ return (ß Character/valueOf((.charAt ___s, ___n))))
+                        (§ return (Character/valueOf (.charAt ___s, ___n)))
                     )
                     ___notFound
                 )
             )
             (.isArray (.getClass ___coll))
             (do
-                (when (ß ___n < Array/getLength(___coll))
+                (when (< ___n (Array/getLength ___coll))
                     (§ return (Reflector'prepRet (.getComponentType (.getClass ___coll)), (Array/get ___coll, ___n)))
                 )
                 ___notFound
@@ -41654,7 +41684,7 @@
             (§ instance? Object[] ___coll)
             (do
                 ;; hmm... this is not persistent
-                (let [#_"Object[]" ___array (ß ((Object[]) ___coll))]
+                (let [#_"Object[]" ___array (§ cast Object[] ___coll)]
                     (§ ass (§ aget ___array ___n) ___val)
                     ___array
                 )
@@ -41955,7 +41985,7 @@
             (§ instance? BigInt ___x)
             (do
                 (let [#_"BigInt" ___bi (cast' BigInt ___x)]
-                    (if (ß (nil? (:bipart ___bi)))
+                    (if (nil? (:bipart ___bi))
                         (do
                             (:lpart ___bi)
                         )
@@ -41968,7 +41998,7 @@
             (instance? BigInteger ___x)
             (do
                 (let [#_"BigInteger" ___bi (cast BigInteger ___x)]
-                    (if (ß (.bitLength ___bi) < 64)
+                    (if (< (.bitLength ___bi) 64)
                         (do
                             (.longValue ___bi)
                         )
@@ -41984,15 +42014,15 @@
             )
             (§ instance? Ratio ___x)
             (do
-                (ß RT'longCast-1o((.bigIntegerValue (cast' Ratio ___x))))
+                (RT'longCast-1o (.bigIntegerValue (cast' Ratio ___x)))
             )
             (instance? Character ___x)
             (do
-                (ß RT'longCast-1l((.charValue (cast Character ___x))))
+                (RT'longCast-1l (.charValue (cast Character ___x)))
             )
             :else
             (do
-                (ß RT'longCast-1d((.doubleValue (cast Number ___x))))
+                (RT'longCast-1d (.doubleValue (cast Number ___x)))
             )
         )
     )
@@ -42428,7 +42458,7 @@
             )
             (§ instance? Object[] ___coll)
             (do
-                (ß (Object[]) ___coll)
+                (§ cast Object[] ___coll)
             )
             (instance? Collection ___coll)
             (do
@@ -42492,7 +42522,7 @@
         (let [#_"Object[]" ___dest ___passed]
             (let [#_"int" ___len (RT'count ___seq)]
                 (when (> ___len (§ alength ___dest))
-                    (§ ass ___dest (ß (Object[]) Array/newInstance((.getClass ___passed).getComponentType(), ___len)))
+                    (§ ass ___dest (§ cast Object[] (Array/newInstance (.getComponentType (.getClass ___passed)), ___len)))
                 )
                 (loop-when-recur [#_"int" ___i 0 ___seq ___seq] (some? ___seq) [(inc ___i) (next ___seq)]
                     (§ ass (§ aget ___dest ___i) (first ___seq))
@@ -42512,41 +42542,41 @@
     )
 
     (defn #_"Object" RT'seqToTypedArray-2 [#_"Class" ___type, #_"ISeq" ___seq]
-        (let [#_"Object" ___ret (ß Array/newInstance(___type, RT'length(___seq)))]
+        (let [#_"Object" ___ret (Array/newInstance ___type, (RT'length ___seq))]
             (cond (= ___type Integer/TYPE)
                 (do
                     (loop-when-recur [#_"int" ___i 0 ___seq ___seq] (some? ___seq) [(inc ___i) (next ___seq)]
-                        (ß Array/set(___ret, ___i, intCast((first ___seq))))
+                        (Array/set ___ret, ___i, (RT'intCast-1o (first ___seq)))
                     )
                 )
                 (= ___type Byte/TYPE)
                 (do
                     (loop-when-recur [#_"int" ___i 0 ___seq ___seq] (some? ___seq) [(inc ___i) (next ___seq)]
-                        (ß Array/set(___ret, ___i, byteCast((first ___seq))))
+                        (Array/set ___ret, ___i, (RT'byteCast-1o (first ___seq)))
                     )
                 )
                 (= ___type Float/TYPE)
                 (do
                     (loop-when-recur [#_"int" ___i 0 ___seq ___seq] (some? ___seq) [(inc ___i) (next ___seq)]
-                        (ß Array/set(___ret, ___i, floatCast((first ___seq))))
+                        (Array/set ___ret, ___i, (RT'floatCast-1o (first ___seq)))
                     )
                 )
                 (= ___type Short/TYPE)
                 (do
                     (loop-when-recur [#_"int" ___i 0 ___seq ___seq] (some? ___seq) [(inc ___i) (next ___seq)]
-                        (ß Array/set(___ret, ___i, shortCast((first ___seq))))
+                        (Array/set ___ret, ___i, (RT'shortCast-1o (first ___seq)))
                     )
                 )
                 (= ___type Character/TYPE)
                 (do
                     (loop-when-recur [#_"int" ___i 0 ___seq ___seq] (some? ___seq) [(inc ___i) (next ___seq)]
-                        (ß Array/set(___ret, ___i, charCast((first ___seq))))
+                        (Array/set ___ret, ___i, (RT'charCast-1o (first ___seq)))
                     )
                 )
                 :else
                 (do
                     (loop-when-recur [#_"int" ___i 0 ___seq ___seq] (some? ___seq) [(inc ___i) (next ___seq)]
-                        (ß Array/set(___ret, ___i, (first ___seq)))
+                        (Array/set ___ret, ___i, (first ___seq))
                     )
                 )
             )
@@ -42695,7 +42725,7 @@
                         )
                         (or (§ instance? ISeq ___x) (§ instance? IPersistentList ___x))
                         (do
-                            (ß ___w.write(\())
+                            (.write ___w, \()
                             (RT'printInnerSeq (RT'seq ___x), ___w)
                             (.write ___w, \))
                         )
@@ -43110,7 +43140,7 @@
             )
             (RT'booleanCast-1o (.deref RT'USE_CONTEXT_CLASSLOADER))
             (do
-                (§ return (ß Thread/currentThread().getContextClassLoader()))
+                (§ return (.getContextClassLoader (Thread/currentThread)))
             )
         )
         (.getClassLoader (§ class Compiler))
@@ -43502,7 +43532,7 @@
 
     #_method
     (§ defn #_"ISeq" (§ method next) [#_"StringSeq" this]
-        (when (ß (inc (:i this)) < (:s this).length())
+        (when (< (inc (:i this)) (.length (:s this)))
             (§ return (StringSeq'new (:_meta this), (:s this), (inc (:i this))))
         )
         nil
@@ -43645,8 +43675,8 @@
             (when (and (nil? (:ns this)) (some? (:ns ___s)))
                 (§ return -1)
             )
-            (when (ß (some? (:ns this)))
-                (when (ß (nil? (:ns ___s)))
+            (when (some? (:ns this))
+                (when (nil? (:ns ___s))
                     (§ return 1)
                 )
                 (let [#_"int" ___nsc (.compareTo (:ns this), (:ns ___s))]
@@ -43749,7 +43779,7 @@
     #_method
     (§ defn #_"int" (§ method hashCode) [#_"TaggedLiteral" this]
         (let [#_"int" ___result (Util'hash (:tag this))]
-            (§ ass ___result (ß 31 * ___result + Util'hash((:form this))))
+            (§ ass ___result (+ (* 31 ___result) (Util'hash (:form this))))
             ___result
         )
     )
@@ -43798,22 +43828,22 @@
     (§ defn #_"int" (§ method binFor) [#_"TransactionalHashMap" this, #_"Object" ___k]
         ;; spread hashes, a la Cliff Click
         (let [#_"int" ___h (.hashCode ___k)]
-            (§ ass ___h (ß ___h :xor ((___h >>> 20) :xor (___h >>> 12))))
-            (§ ass ___h (ß ___h :xor ((___h >>> 7) :xor (___h >>> 4))))
-            (ß ___h % (§ alength (:bins this)))
+            (§ ass ___h (:xor ___h (:xor (>>> ___h 20) (>>> ___h 12))))
+            (§ ass ___h (:xor ___h (:xor (>>> ___h 7) (>>> ___h 4))))
+            (% ___h (§ alength (:bins this)))
         )
     )
 
     #_method
     (§ defn #_"Entry" (§ method entryAt) [#_"TransactionalHashMap" this, #_"Object" ___k]
-        (ß this.mapAt((.binFor this, ___k)).entryAt(___k))
+        (.entryAt (.mapAt this, (.binFor this, ___k)), ___k)
     )
 
     #_method
     (§ defn #_"int" (§ method size) [#_"TransactionalHashMap" this]
         (let [#_"int" ___n 0]
             (loop-when-recur [#_"int" ___i 0] (< ___i (§ alength (:bins this))) [(inc ___i)]
-                (§ ass ___n (ß ___n + this.mapAt(___i).count()))
+                (§ ass ___n (+ ___n (.count (.mapAt this, ___i))))
             )
             ___n
         )
@@ -43900,7 +43930,7 @@
             (§ reify AbstractSet<Entry<K, V>>()
                 #_method
                 (§ defn #_"Iterator" (§ method iterator) [#_"AbstractSet<Entry<K, V>>" this]
-                    (ß Collections/unmodifiableList(___entries).iterator())
+                    (.iterator (Collections/unmodifiableList ___entries))
                 )
 
                 #_method
@@ -44530,7 +44560,7 @@
 
     (defn #_"int" Util'hashCombine [#_"int" ___seed, #_"int" ___hash]
         ;; a la boost
-        (§ ass ___seed (ß ___seed :xor (___hash + 0x9e3779b9 + (___seed << 6) + (___seed >> 2))))
+        (§ ass ___seed (:xor ___seed (+ ___hash 0x9e3779b9 (<< ___seed 6) (>> ___seed 2))))
         ___seed
     )
 
@@ -44581,7 +44611,7 @@
         (when (nil? ___t)
             (throw (NullPointerException.))
         )
-        (ß Util'<RuntimeException>sneakyThrow0(___t))
+        (Util'sneakyThrow0 #_"<RuntimeException>" ___t)
         nil
     )
 
@@ -44596,7 +44626,7 @@
             ])
         ))
         (try
-            (ß RT'var-2("cloiure.core", "load").invoke(___scriptbase))
+            (.invoke (RT'var-2 "cloiure.core", "load"), ___scriptbase)
             (finally
                 (Var'popThreadBindings)
             )
@@ -44726,14 +44756,14 @@
     )
 
     (defn #_"Var" Var'find [#_"Symbol" ___nsQualifiedSym]
-        (when (ß (nil? (:ns ___nsQualifiedSym)))
+        (when (nil? (:ns ___nsQualifiedSym))
             (throw (IllegalArgumentException. "Symbol must be namespace-qualified"))
         )
         (let [#_"Namespace" ___ns (Namespace'find (Symbol'intern-1 (:ns ___nsQualifiedSym)))]
             (when (nil? ___ns)
                 (throw (IllegalArgumentException. (str "No such namespace: " (:ns ___nsQualifiedSym))))
             )
-            (ß ___ns.findInternedVar(Symbol'intern-1((:name ___nsQualifiedSym))))
+            (.findInternedVar ___ns, (Symbol'intern-1 (:name ___nsQualifiedSym)))
         )
     )
 
@@ -44856,7 +44886,7 @@
 
     #_method
     (§ defn #_"Object" (§ method alter) [#_"Var" this, #_"IFn" ___fn, #_"ISeq" ___args]
-        (ß this.set((.applyTo ___fn, RT'cons((.deref this), ___args))))
+        (.set this, (.applyTo ___fn, (RT'cons (.deref this), ___args)))
         this
     )
 
@@ -44889,19 +44919,19 @@
     #_method
     (§ defn #_"void" (§ method setMeta) [#_"Var" this, #_"IPersistentMap" ___m]
         ;; ensure these basis keys
-        (ß this.resetMeta((.assoc ___m, nameKey, (:sym this)).assoc(nsKey, (:ns this))))
+        (.resetMeta this, (-> ___m (.assoc nameKey, (:sym this)) (.assoc nsKey, (:ns this))))
         nil
     )
 
     #_method
     (§ defn #_"void" (§ method setMacro) [#_"Var" this]
-        (ß this.alterMeta(assoc, RT'list-2(macroKey, RT'T)))
+        (.alterMeta this, Var'assoc, (RT'list-2 macroKey, RT'T))
         nil
     )
 
     #_method
     (§ defn #_"boolean" (§ method isMacro) [#_"Var" this]
-        (ß RT'booleanCast-1o((.meta this).valAt(macroKey)))
+        (RT'booleanCast-1o (.valAt (.meta this), macroKey))
     )
 
     #_method
@@ -44921,7 +44951,7 @@
 
     #_method
     (§ defn #_"void" (§ method setTag) [#_"Var" this, #_"Symbol" ___tag]
-        (ß this.alterMeta(assoc, RT'list-2(RT'TAG_KEY, ___tag)))
+        (.alterMeta this, Var'assoc, (RT'list-2 RT'TAG_KEY, ___tag))
         nil
     )
 
@@ -44938,7 +44968,7 @@
             (let [#_"Object" ___oldroot (:root this)]
                 (§ ass (:root this) ___root)
                 (§ ass rev (+ rev 1))
-                (ß this.alterMeta(Var'dissoc, RT'list-1(macroKey)))
+                (.alterMeta this, Var'dissoc, (RT'list-1 macroKey))
                 (.notifyWatches this, ___oldroot, (:root this))
             )
         )
@@ -44985,7 +45015,7 @@
     #_method
     (§ defn #_"Object" (§ method alterRoot) [#_"Var" this, #_"IFn" ___fn, #_"ISeq" ___args]
         (§ sync this
-            (let [#_"Object" ___newRoot (ß ___fn.applyTo(RT'cons((:root this), ___args)))]
+            (let [#_"Object" ___newRoot (.applyTo ___fn, (RT'cons (:root this), ___args))]
                 (.validate this, (.getValidator this), ___newRoot)
                 (let [#_"Object" ___oldroot (:root this)]
                     (§ ass (:root this) ___newRoot)
@@ -45008,11 +45038,11 @@
                             )
                             (.validate ___v, (.getValidator ___v), (.val ___e))
                             (.set (:threadBound ___v), true)
-                            (§ ass ___bmap (ß ___bmap.assoc(___v, TBox'new(Thread/currentThread(), (.val ___e)))))
+                            (§ ass ___bmap (.assoc ___bmap, ___v, (TBox'new (Thread/currentThread), (.val ___e))))
                         )
                     )
                 )
-                (ß Var'dvals.set(Frame'new(___bmap, ___f)))
+                (.set Var'dvals, (Frame'new ___bmap, ___f))
                 nil
             )
         )
@@ -45512,7 +45542,7 @@
 
     (defn #_"void" -main [#_"String[]" ___args]
         (.invoke main'REQUIRE, main'CLOIURE_MAIN)
-        (ß main'MAIN.applyTo(RT'seq(___args)))
+        (.applyTo main'MAIN, (RT'seq ___args))
         nil
     )
 )
