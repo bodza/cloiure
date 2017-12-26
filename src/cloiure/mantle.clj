@@ -43,72 +43,50 @@
 (§ def unquote-splicing)
 
 (§ def
- ^{:arglists '([& items])
-   :doc "Creates a new list containing the items."
-   :added "1.0"}
+ ^{:doc "Creates a new list containing the items."}
   list (. cloiure.lang.PersistentList creator))
 
 (§ def
- ^{:arglists '([x seq])
-    :doc "Returns a new seq where x is the first element and seq is
-    the rest."
-   :added "1.0"
-   :static true}
-
- cons (fn* ^:static cons [x seq] (. cloiure.lang.RT (cons x seq))))
+ ^{:doc "Returns a new seq where x is the first element and seq is the rest."}
+ cons (fn* cons [x seq] (. cloiure.lang.RT (cons x seq))))
 
 ; during bootstrap we don't have destructuring let, loop or fn, will redefine later
 (§ def
-  ^{:macro true
-    :added "1.0"}
+  ^{:macro true}
   let (fn* let [&form &env & decl] (cons 'let* decl)))
 
 (§ def
- ^{:macro true
-   :added "1.0"}
+ ^{:macro true}
  loop (fn* loop [&form &env & decl] (cons 'loop* decl)))
 
 (§ def
- ^{:macro true
-   :added "1.0"}
+ ^{:macro true}
  fn (fn* fn [&form &env & decl]
          (.withMeta ^cloiure.lang.IObj (cons 'fn* decl)
                     (.meta ^cloiure.lang.IMeta &form))))
 
 (§ def
- ^{:arglists '([coll])
-   :doc "Returns the first item in the collection. Calls seq on its
-    argument. If coll is nil, returns nil."
-   :added "1.0"
-   :static true}
- first (fn ^:static first [coll] (. cloiure.lang.RT (first coll))))
+ ^{:doc "Returns the first item in the collection. Calls seq on its
+    argument. If coll is nil, returns nil."}
+ first (fn first [coll] (. cloiure.lang.RT (first coll))))
 
 (§ def
- ^{:arglists '([coll])
-   :tag cloiure.lang.ISeq
+ ^{:tag cloiure.lang.ISeq
    :doc "Returns a seq of the items after the first. Calls seq on its
-  argument.  If there are no more items, returns nil."
-   :added "1.0"
-   :static true}
- next (fn ^:static next [x] (. cloiure.lang.RT (next x))))
+  argument.  If there are no more items, returns nil."}
+ next (fn next [x] (. cloiure.lang.RT (next x))))
 
 (§ def
- ^{:arglists '([coll])
-   :tag cloiure.lang.ISeq
+ ^{:tag cloiure.lang.ISeq
    :doc "Returns a possibly empty seq of the items after the first. Calls seq on its
-  argument."
-   :added "1.0"
-   :static true}
- rest (fn ^:static rest [x] (. cloiure.lang.RT (more x))))
+  argument."}
+ rest (fn rest [x] (. cloiure.lang.RT (more x))))
 
 (§ def
- ^{:arglists '([coll x] [coll x & xs])
-   :doc "conj[oin]. Returns a new collection with the xs
+ ^{:doc "conj[oin]. Returns a new collection with the xs
     'added'. (conj nil item) returns (item).  The 'addition' may
-    happen at different 'places' depending on the concrete type."
-   :added "1.0"
-   :static true}
- conj (fn ^:static conj
+    happen at different 'places' depending on the concrete type."}
+ conj (fn conj
         ([] [])
         ([coll] coll)
         ([coll x] (cloiure.lang.RT/conj coll x))
@@ -118,105 +96,67 @@
            (cloiure.lang.RT/conj coll x)))))
 
 (§ def
- ^{:doc "Same as (first (next x))"
-   :arglists '([x])
-   :added "1.0"
-   :static true}
- second (fn ^:static second [x] (first (next x))))
+ ^{:doc "Same as (first (next x))"}
+ second (fn second [x] (first (next x))))
 
 (§ def
- ^{:doc "Same as (first (first x))"
-   :arglists '([x])
-   :added "1.0"
-   :static true}
- ffirst (fn ^:static ffirst [x] (first (first x))))
+ ^{:doc "Same as (first (first x))"}
+ ffirst (fn ffirst [x] (first (first x))))
 
 (§ def
- ^{:doc "Same as (next (first x))"
-   :arglists '([x])
-   :added "1.0"
-   :static true}
- nfirst (fn ^:static nfirst [x] (next (first x))))
+ ^{:doc "Same as (next (first x))"}
+ nfirst (fn nfirst [x] (next (first x))))
 
 (§ def
- ^{:doc "Same as (first (next x))"
-   :arglists '([x])
-   :added "1.0"
-   :static true}
- fnext (fn ^:static fnext [x] (first (next x))))
+ ^{:doc "Same as (first (next x))"}
+ fnext (fn fnext [x] (first (next x))))
 
 (§ def
- ^{:doc "Same as (next (next x))"
-   :arglists '([x])
-   :added "1.0"
-   :static true}
- nnext (fn ^:static nnext [x] (next (next x))))
+ ^{:doc "Same as (next (next x))"}
+ nnext (fn nnext [x] (next (next x))))
 
 (§ def
- ^{:arglists '(^cloiure.lang.ISeq [coll])
-   :doc "Returns a seq on the collection. If the collection is
+ ^{:doc "Returns a seq on the collection. If the collection is
     empty, returns nil.  (seq nil) returns nil. seq also works on
     Strings, native Java arrays (of reference types) and any objects
     that implement Iterable. Note that seqs cache values, thus seq
     should not be used on any Iterable whose iterator repeatedly
     returns the same mutable object."
-   :tag cloiure.lang.ISeq
-   :added "1.0"
-   :static true}
- seq (fn ^:static seq ^cloiure.lang.ISeq [coll] (. cloiure.lang.RT (seq coll))))
+   :tag cloiure.lang.ISeq}
+ seq (fn seq ^cloiure.lang.ISeq [coll] (. cloiure.lang.RT (seq coll))))
 
 (§ def
- ^{:arglists '([^Class c x])
-   :doc "Evaluates x and tests if it is an instance of the class
-    c. Returns true or false"
-   :added "1.0"}
+ ^{:doc "Evaluates x and tests if it is an instance of the class
+    c. Returns true or false"}
  instance? (fn instance? [^Class c x] (. c (isInstance x))))
 
 (§ def
- ^{:arglists '([x])
-   :doc "Return true if x implements ISeq"
-   :added "1.0"
-   :static true}
- seq? (fn ^:static seq? [x] (instance? cloiure.lang.ISeq x)))
+ ^{:doc "Return true if x implements ISeq"}
+ seq? (fn seq? [x] (instance? cloiure.lang.ISeq x)))
 
 (§ def
- ^{:arglists '([x])
-   :doc "Return true if x is a Character"
-   :added "1.0"
-   :static true}
- char? (fn ^:static char? [x] (instance? Character x)))
+ ^{:doc "Return true if x is a Character"}
+ char? (fn char? [x] (instance? Character x)))
 
 (§ def
- ^{:arglists '([x])
-   :doc "Return true if x is a String"
-   :added "1.0"
-   :static true}
- string? (fn ^:static string? [x] (instance? String x)))
+ ^{:doc "Return true if x is a String"}
+ string? (fn string? [x] (instance? String x)))
 
 (§ def
- ^{:arglists '([x])
-   :doc "Return true if x implements IPersistentMap"
-   :added "1.0"
-   :static true}
- map? (fn ^:static map? [x] (instance? cloiure.lang.IPersistentMap x)))
+ ^{:doc "Return true if x implements IPersistentMap"}
+ map? (fn map? [x] (instance? cloiure.lang.IPersistentMap x)))
 
 (§ def
- ^{:arglists '([x])
-   :doc "Return true if x implements IPersistentVector"
-   :added "1.0"
-   :static true}
- vector? (fn ^:static vector? [x] (instance? cloiure.lang.IPersistentVector x)))
+ ^{:doc "Return true if x implements IPersistentVector"}
+ vector? (fn vector? [x] (instance? cloiure.lang.IPersistentVector x)))
 
 (§ def
- ^{:arglists '([map key val] [map key val & kvs])
-   :doc "assoc[iate]. When applied to a map, returns a new map of the
+ ^{:doc "assoc[iate]. When applied to a map, returns a new map of the
     same (hashed/sorted) type, that contains the mapping of key(s) to
     val(s). When applied to a vector, returns a new vector that
-    contains val at index. Note - index must be <= (count vector)."
-   :added "1.0"
-   :static true}
+    contains val at index. Note - index must be <= (count vector)."}
  assoc
- (fn ^:static assoc
+ (fn assoc
    ([map key val] (cloiure.lang.RT/assoc map key val))
    ([map key val & kvs]
     (let [ret (cloiure.lang.RT/assoc map key val)]
@@ -229,21 +169,15 @@
 
 ;;;;;;;;;;;;;;;;; metadata ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (§ def
- ^{:arglists '([obj])
-   :doc "Returns the metadata of obj, returns nil if there is no metadata."
-   :added "1.0"
-   :static true}
- meta (fn ^:static meta [x]
+ ^{:doc "Returns the metadata of obj, returns nil if there is no metadata."}
+ meta (fn meta [x]
         (if (instance? cloiure.lang.IMeta x)
           (. ^cloiure.lang.IMeta x (meta)))))
 
 (§ def
- ^{:arglists '([^cloiure.lang.IObj obj m])
-   :doc "Returns an object of the same type and value as obj, with
-    map m as its metadata."
-   :added "1.0"
-   :static true}
- with-meta (fn ^:static with-meta [^cloiure.lang.IObj x m]
+ ^{:doc "Returns an object of the same type and value as obj, with
+    map m as its metadata."}
+ with-meta (fn with-meta [^cloiure.lang.IObj x m]
              (. x (withMeta m))))
 
 (§ def ^{:private true :dynamic true}
@@ -288,21 +222,15 @@
        (list (resolve-tag (asig fdecl)))))))
 
 (§ def
- ^{:arglists '([coll])
-   :doc "Return the last item in coll, in linear time"
-   :added "1.0"
-   :static true}
- last (fn ^:static last [s]
+ ^{:doc "Return the last item in coll, in linear time"}
+ last (fn last [s]
         (if (next s)
           (recur (next s))
           (first s))))
 
 (§ def
- ^{:arglists '([coll])
-   :doc "Return a seq of all but the last item in coll, in linear time"
-   :added "1.0"
-   :static true}
- butlast (fn ^:static butlast [s]
+ ^{:doc "Return a seq of all but the last item in coll, in linear time"}
+ butlast (fn butlast [s]
            (loop [ret [] s s]
              (if (next s)
                (recur (conj ret (first s)) (next s))
@@ -313,10 +241,7 @@
  ^{:doc "Same as (def name (fn [params* ] exprs*)) or (def
     name (fn ([params* ] exprs*)+)) with any doc-string or attrs added
     to the var metadata. prepost-map defines a map with optional keys
-    :pre and :post that contain collections of pre or post conditions."
-   :arglists '([name doc-string? attr-map? [params*] prepost-map? body]
-                [name doc-string? attr-map? ([params*] prepost-map? body)+ attr-map?])
-   :added "1.0"}
+    :pre and :post that contain collections of pre or post conditions."}
  defn (fn defn [&form &env name & fdecl]
         ;; Note: Cannot delegate this check to def because of the call to (with-meta name ..)
         (if (instance? cloiure.lang.Symbol name)
@@ -366,22 +291,16 @@
 (§ defn to-array
   "Returns an array of Objects containing the contents of coll, which
   can be any Collection.  Maps to java.util.Collection.toArray()."
-  {:tag "[Ljava.lang.Object;"
-   :added "1.0"
-   :static true}
+  {:tag "[Ljava.lang.Object;"}
   [coll] (. cloiure.lang.RT (toArray coll)))
 
 (§ defn cast
   "Throws a ClassCastException if x is not a c, else returns x."
-  {:added "1.0"
-   :static true}
   [^Class c x]
   (. c (cast x)))
 
 (§ defn vector
   "Creates a new vector containing the args."
-  {:added "1.0"
-   :static true}
   ([] [])
   ([a] [a])
   ([a b] [a b])
@@ -395,8 +314,6 @@
 (§ defn vec
   "Creates a new vector containing the contents of coll. Java arrays
   will be aliased and should not be modified."
-  {:added "1.0"
-   :static true}
   ([coll]
    (if (vector? coll)
      (if (instance? cloiure.lang.IObj coll)
@@ -408,8 +325,6 @@
   "keyval => key val
   Returns a new hash map with supplied mappings.  If any keys are
   equal, they are handled as if by repeated uses of assoc."
-  {:added "1.0"
-   :static true}
   ([] {})
   ([& keyvals]
    (. cloiure.lang.PersistentHashMap (create keyvals))))
@@ -417,8 +332,6 @@
 (§ defn hash-set
   "Returns a new hash set with supplied keys.  Any equal keys are
   handled as if by repeated uses of conj."
-  {:added "1.0"
-   :static true}
   ([] #{})
   ([& keys]
    (cloiure.lang.PersistentHashSet/create keys)))
@@ -427,8 +340,6 @@
   "keyval => key val
   Returns a new sorted map with supplied mappings.  If any keys are
   equal, they are handled as if by repeated uses of assoc."
-  {:added "1.0"
-   :static true}
   ([& keyvals]
    (cloiure.lang.PersistentTreeMap/create keyvals)))
 
@@ -437,16 +348,12 @@
   Returns a new sorted map with supplied mappings, using the supplied
   comparator.  If any keys are equal, they are handled as if by
   repeated uses of assoc."
-  {:added "1.0"
-   :static true}
   ([comparator & keyvals]
    (cloiure.lang.PersistentTreeMap/create comparator keyvals)))
 
 (§ defn sorted-set
   "Returns a new sorted set with supplied keys.  Any equal keys are
   handled as if by repeated uses of conj."
-  {:added "1.0"
-   :static true}
   ([& keys]
    (cloiure.lang.PersistentTreeSet/create keys)))
 
@@ -454,8 +361,6 @@
   "Returns a new sorted set with supplied keys, using the supplied
   comparator.  Any equal keys are handled as if by repeated uses of
   conj."
-  {:added "1.1"
-   :static true}
   ([comparator & keys]
    (cloiure.lang.PersistentTreeSet/create comparator keys)))
 
@@ -463,8 +368,6 @@
 (§ defn nil?
   "Returns true if x is nil, false otherwise."
   {:tag Boolean
-   :added "1.0"
-   :static true
    :inline (fn [x] (list 'cloiure.lang.Util/identical x nil))}
   [x] (cloiure.lang.Util/identical x nil))
 
@@ -472,10 +375,7 @@
 
  ^{:doc "Like defn, but the resulting function name is declared as a
   macro and will be used as a macro by the compiler when it is
-  called."
-   :arglists '([name doc-string? attr-map? [params*] body]
-                 [name doc-string? attr-map? ([params*] body)+ attr-map?])
-   :added "1.0"}
+  called."}
  defmacro (fn [&form &env
                 name & args]
              (let [prefix (loop [p (list name) args args]
@@ -518,62 +418,48 @@
 
 (§ defmacro when
   "Evaluates test. If logical true, evaluates body in an implicit do."
-  {:added "1.0"}
   [test & body]
   (list 'if test (cons 'do body)))
 
 (§ defmacro when-not
   "Evaluates test. If logical false, evaluates body in an implicit do."
-  {:added "1.0"}
   [test & body]
     (list 'if test nil (cons 'do body)))
 
 (§ defn false?
   "Returns true if x is the value false, false otherwise."
-  {:tag Boolean,
-   :added "1.0"
-   :static true}
+  {:tag Boolean}
   [x] (cloiure.lang.Util/identical x false))
 
 (§ defn true?
   "Returns true if x is the value true, false otherwise."
-  {:tag Boolean,
-   :added "1.0"
-   :static true}
+  {:tag Boolean}
   [x] (cloiure.lang.Util/identical x true))
 
 (§ defn boolean?
   "Return true if x is a Boolean"
-  {:added "1.9"}
   [x] (instance? Boolean x))
 
 (§ defn not
   "Returns true if x is logical false, false otherwise."
-  {:tag Boolean
-   :added "1.0"
-   :static true}
+  {:tag Boolean}
   [x] (if x false true))
 
 (§ defn some?
   "Returns true if x is not nil, false otherwise."
-  {:tag Boolean
-   :added "1.6"
-   :static true}
+  {:tag Boolean}
   [x] (not (nil? x)))
 
 (§ defn any?
   "Returns true given any argument."
-  {:tag Boolean
-   :added "1.9"}
+  {:tag Boolean}
   [x] true)
 
 (§ defn str
   "With no args, returns the empty string. With one arg x, returns
   x.toString().  (str nil) returns the empty string. With more than
   one arg, returns the concatenation of the str values of the args."
-  {:tag String
-   :added "1.0"
-   :static true}
+  {:tag String}
   (^String [] "")
   (^String [^Object x]
    (if (nil? x) "" (. x (toString))))
@@ -586,21 +472,15 @@
 
 (§ defn symbol?
   "Return true if x is a Symbol"
-  {:added "1.0"
-   :static true}
   [x] (instance? cloiure.lang.Symbol x))
 
 (§ defn keyword?
   "Return true if x is a Keyword"
-  {:added "1.0"
-   :static true}
   [x] (instance? cloiure.lang.Keyword x))
 
 (§ defn symbol
   "Returns a Symbol with the given namespace and name."
-  {:tag cloiure.lang.Symbol
-   :added "1.0"
-   :static true}
+  {:tag cloiure.lang.Symbol}
   ([name] (if (symbol? name) name (cloiure.lang.Symbol/intern name)))
   ([ns name] (cloiure.lang.Symbol/intern ns name)))
 
@@ -608,8 +488,6 @@
   "Returns a new symbol with a unique name. If a prefix string is
   supplied, the name is prefix# where # is some unique number. If
   prefix is not supplied, the prefix is 'G__'."
-  {:added "1.0"
-   :static true}
   ([] (gensym "G__"))
   ([prefix-string] (. cloiure.lang.Symbol (intern (str prefix-string (str (. cloiure.lang.RT (nextID))))))))
 
@@ -618,7 +496,6 @@
   time.  If a test returns logical true, cond evaluates and returns
   the value of the corresponding expr and doesn't evaluate any of the
   other tests or exprs. (cond) returns nil."
-  {:added "1.0"}
   [& clauses]
     (when clauses
       (list 'if (first clauses)
@@ -631,9 +508,7 @@
 (§ defn keyword
   "Returns a Keyword with the given namespace and name.  Do not use :
   in the keyword strings, it will be added automatically."
-  {:tag cloiure.lang.Keyword
-   :added "1.0"
-   :static true}
+  {:tag cloiure.lang.Keyword}
   ([name] (cond (keyword? name) name
                 (symbol? name) (cloiure.lang.Keyword/intern ^cloiure.lang.Symbol name)
                 (string? name) (cloiure.lang.Keyword/intern ^String name)))
@@ -644,17 +519,14 @@
   exists.  This function will not intern a new keyword. If the keyword
   has not already been interned, it will return nil.  Do not use :
   in the keyword strings, it will be added automatically."
-  {:tag cloiure.lang.Keyword
-   :added "1.3"
-   :static true}
+  {:tag cloiure.lang.Keyword}
   ([name] (cond (keyword? name) name
                 (symbol? name) (cloiure.lang.Keyword/find ^cloiure.lang.Symbol name)
                 (string? name) (cloiure.lang.Keyword/find ^String name)))
   ([ns name] (cloiure.lang.Keyword/find ns name)))
 
 (§ defn spread
-  {:private true
-   :static true}
+  {:private true}
   [arglist]
   (cond
    (nil? arglist) nil
@@ -664,8 +536,6 @@
 (§ defn list*
   "Creates a new seq containing the items prepended to the rest, the
   last of which will be treated as a sequence."
-  {:added "1.0"
-   :static true}
   ([args] (seq args))
   ([a args] (cons a args))
   ([a b args] (cons a (cons b args)))
@@ -675,8 +545,6 @@
 
 (§ defn apply
   "Applies fn f to the argument list formed by prepending intervening arguments to args."
-  {:added "1.0"
-   :static true}
   ([^cloiure.lang.IFn f args]
      (. f (applyTo (seq args))))
   ([^cloiure.lang.IFn f x args]
@@ -691,8 +559,6 @@
 (§ defn vary-meta
  "Returns an object of the same type and value as obj, with
   (apply f (meta obj) args) as its metadata."
- {:added "1.0"
-   :static true}
  [obj f & args]
   (with-meta obj (apply f (meta obj) args)))
 
@@ -701,40 +567,37 @@
   a Seqable object that will invoke the body only the first time seq
   is called, and will cache the result and return it on all subsequent
   seq calls. See also - realized?"
-  {:added "1.0"}
   [& body]
   (list 'new 'cloiure.lang.LazySeq (list* '^{:once true} fn* [] body)))
 
-(§ defn ^:static ^cloiure.lang.ChunkBuffer chunk-buffer ^cloiure.lang.ChunkBuffer [capacity]
+(§ defn ^cloiure.lang.ChunkBuffer chunk-buffer ^cloiure.lang.ChunkBuffer [capacity]
   (cloiure.lang.ChunkBuffer. capacity))
 
-(§ defn ^:static chunk-append [^cloiure.lang.ChunkBuffer b x]
+(§ defn chunk-append [^cloiure.lang.ChunkBuffer b x]
   (.add b x))
 
-(§ defn ^:static ^cloiure.lang.IChunk chunk [^cloiure.lang.ChunkBuffer b]
+(§ defn ^cloiure.lang.IChunk chunk [^cloiure.lang.ChunkBuffer b]
   (.chunk b))
 
-(§ defn ^:static  ^cloiure.lang.IChunk chunk-first ^cloiure.lang.IChunk [^cloiure.lang.IChunkedSeq s]
+(§ defn ^cloiure.lang.IChunk chunk-first ^cloiure.lang.IChunk [^cloiure.lang.IChunkedSeq s]
   (.chunkedFirst s))
 
-(§ defn ^:static ^cloiure.lang.ISeq chunk-rest ^cloiure.lang.ISeq [^cloiure.lang.IChunkedSeq s]
+(§ defn ^cloiure.lang.ISeq chunk-rest ^cloiure.lang.ISeq [^cloiure.lang.IChunkedSeq s]
   (.chunkedMore s))
 
-(§ defn ^:static ^cloiure.lang.ISeq chunk-next ^cloiure.lang.ISeq [^cloiure.lang.IChunkedSeq s]
+(§ defn ^cloiure.lang.ISeq chunk-next ^cloiure.lang.ISeq [^cloiure.lang.IChunkedSeq s]
   (.chunkedNext s))
 
-(§ defn ^:static chunk-cons [chunk rest]
+(§ defn chunk-cons [chunk rest]
   (if (cloiure.lang.Numbers/isZero (cloiure.lang.RT/count chunk))
     rest
     (cloiure.lang.ChunkedCons. chunk rest)))
 
-(§ defn ^:static chunked-seq? [s]
+(§ defn chunked-seq? [s]
   (instance? cloiure.lang.IChunkedSeq s))
 
 (§ defn concat
   "Returns a lazy seq representing the concatenation of the elements in the supplied colls."
-  {:added "1.0"
-   :static true}
   ([] (lazy-seq nil))
   ([x] (lazy-seq x))
   ([x y]
@@ -764,26 +627,20 @@
   invoke the body only the first time it is forced (with force or deref/@), and
   will cache the result and return it on all subsequent force
   calls. See also - realized?"
-  {:added "1.0"}
   [& body]
     (list 'new 'cloiure.lang.Delay (list* `^{:once true} fn* [] body)))
 
 (§ defn delay?
   "returns true if x is a Delay created with delay"
-  {:added "1.0"
-   :static true}
   [x] (instance? cloiure.lang.Delay x))
 
 (§ defn force
   "If x is a Delay, returns the (possibly cached) value of its expression, else returns x"
-  {:added "1.0"
-   :static true}
   [x] (. cloiure.lang.Delay (force x)))
 
 (§ defmacro if-not
   "Evaluates test. If logical false, evaluates and returns then expr,
   otherwise else expr, if supplied, else nil."
-  {:added "1.0"}
   ([test then] `(if-not ~test ~then nil))
   ([test then else]
    `(if (not ~test) ~then ~else)))
@@ -791,8 +648,7 @@
 (§ defn identical?
   "Tests if 2 arguments are the same object"
   {:inline (fn [x y] `(. cloiure.lang.Util identical ~x ~y))
-   :inline-arities #{2}
-   :added "1.0"}
+   :inline-arities #{2}}
   ([x y] (cloiure.lang.Util/identical x y)))
 
 ; equiv-based
@@ -803,8 +659,7 @@
   structures define equals() (and thus =) as a value, not an identity,
   comparison."
   {:inline (fn [x y] `(. cloiure.lang.Util equiv ~x ~y))
-   :inline-arities #{2}
-   :added "1.0"}
+   :inline-arities #{2}}
   ([x] true)
   ([x y] (cloiure.lang.Util/equiv x y))
   ([x y & more]
@@ -821,8 +676,7 @@
   same type. Cloiure's immutable data structures define equals() (and
   thus =) as a value, not an identity, comparison."
   {:inline (fn [x y] `(. cloiure.lang.Util equals ~x ~y))
-   :inline-arities #{2}
-   :added "1.0"}
+   :inline-arities #{2}}
   ([x] true)
   ([x y] (cloiure.lang.Util/equals x y))
   ([x y & more]
@@ -834,9 +688,7 @@
 
 (§ defn not=
   "Same as (not (= obj1 obj2))"
-  {:tag Boolean
-   :added "1.0"
-   :static true}
+  {:tag Boolean}
   ([x] false)
   ([x y] (not (= x y)))
   ([x y & more]
@@ -848,9 +700,7 @@
   y. Same as Java x.compareTo(y) except it also works for nil, and
   compares numbers and collections in a type-independent manner. x
   must implement Comparable"
-  {
-   :inline (fn [x y] `(. cloiure.lang.Util compare ~x ~y))
-   :added "1.0"}
+  {:inline (fn [x y] `(. cloiure.lang.Util compare ~x ~y))}
   [x y] (. cloiure.lang.Util (compare x y)))
 
 (§ defmacro and
@@ -858,7 +708,6 @@
   returns logical false (nil or false), and returns that value and
   doesn't evaluate any of the other expressions, otherwise it returns
   the value of the last expr. (and) returns true."
-  {:added "1.0"}
   ([] true)
   ([x] x)
   ([x & next]
@@ -870,7 +719,6 @@
   returns a logical true value, or returns that value and doesn't
   evaluate any of the other expressions, otherwise it returns the
   value of the last expression. (or) returns nil."
-  {:added "1.0"}
   ([] nil)
   ([x] x)
   ([x & next]
@@ -880,24 +728,18 @@
 ;;;;;;;;;;;;;;;;;;; sequence fns  ;;;;;;;;;;;;;;;;;;;;;;;
 (§ defn zero?
   "Returns true if num is zero, else false"
-  {
-   :inline (fn [num] `(. cloiure.lang.Numbers (isZero ~num)))
-   :added "1.0"}
+  {:inline (fn [num] `(. cloiure.lang.Numbers (isZero ~num)))}
   [num] (. cloiure.lang.Numbers (isZero num)))
 
 (§ defn count
   "Returns the number of items in the collection. (count nil) returns
   0.  Also works on strings, arrays, and Java Collections and Maps"
-  {
-   :inline (fn  [x] `(. cloiure.lang.RT (count ~x)))
-   :added "1.0"}
+  {:inline (fn  [x] `(. cloiure.lang.RT (count ~x)))}
   [coll] (cloiure.lang.RT/count coll))
 
 (§ defn int
   "Coerce to int"
-  {
-   :inline (fn  [x] `(. cloiure.lang.RT (~(if *unchecked-math* 'uncheckedIntCast 'intCast) ~x)))
-   :added "1.0"}
+  {:inline (fn  [x] `(. cloiure.lang.RT (~(if *unchecked-math* 'uncheckedIntCast 'intCast) ~x)))}
   [x] (. cloiure.lang.RT (intCast x)))
 
 (§ defn nth
@@ -906,8 +748,7 @@
   also works for strings, Java arrays, regex Matchers and Lists, and,
   in O(n) time, for sequences."
   {:inline (fn  [c i & nf] `(. cloiure.lang.RT (nth ~c ~i ~@nf)))
-   :inline-arities #{2 3}
-   :added "1.0"}
+   :inline-arities #{2 3}}
   ([coll index] (. cloiure.lang.RT (nth coll index)))
   ([coll index not-found] (. cloiure.lang.RT (nth coll index not-found))))
 
@@ -915,8 +756,7 @@
   "Returns non-nil if nums are in monotonically increasing order,
   otherwise false."
   {:inline (fn [x y] `(. cloiure.lang.Numbers (lt ~x ~y)))
-   :inline-arities #{2}
-   :added "1.0"}
+   :inline-arities #{2}}
   ([x] true)
   ([x y] (. cloiure.lang.Numbers (lt x y)))
   ([x y & more]
@@ -929,19 +769,17 @@
 (§ defn inc'
   "Returns a number one greater than num. Supports arbitrary precision.
   See also: inc"
-  {:inline (fn [x] `(. cloiure.lang.Numbers (incP ~x)))
-   :added "1.0"}
+  {:inline (fn [x] `(. cloiure.lang.Numbers (incP ~x)))}
   [x] (. cloiure.lang.Numbers (incP x)))
 
 (§ defn inc
   "Returns a number one greater than num. Does not auto-promote
   longs, will throw on overflow. See also: inc'"
-  {:inline (fn [x] `(. cloiure.lang.Numbers (~(if *unchecked-math* 'unchecked_inc 'inc) ~x)))
-   :added "1.2"}
+  {:inline (fn [x] `(. cloiure.lang.Numbers (~(if *unchecked-math* 'unchecked_inc 'inc) ~x)))}
   [x] (. cloiure.lang.Numbers (inc x)))
 
 ;; reduce is defined again later after InternalReduce loads
-(§ defn ^:private ^:static
+(§ defn ^:private
   reduce1
        ([f coll]
              (let [s (seq coll)]
@@ -960,8 +798,6 @@
 
 (§ defn reverse
   "Returns a seq of the items in coll in reverse order. Not lazy."
-  {:added "1.0"
-   :static true}
   [coll]
     (reduce1 conj () coll))
 
@@ -987,8 +823,7 @@
   "Returns the sum of nums. (+') returns 0. Supports arbitrary precision.
   See also: +"
   {:inline (nary-inline 'addP)
-   :inline-arities >1?
-   :added "1.0"}
+   :inline-arities >1?}
   ([] 0)
   ([x] (cast Number x))
   ([x y] (. cloiure.lang.Numbers (addP x y)))
@@ -999,8 +834,7 @@
   "Returns the sum of nums. (+) returns 0. Does not auto-promote
   longs, will throw on overflow. See also: +'"
   {:inline (nary-inline 'add 'unchecked_add)
-   :inline-arities >1?
-   :added "1.2"}
+   :inline-arities >1?}
   ([] 0)
   ([x] (cast Number x))
   ([x y] (. cloiure.lang.Numbers (add x y)))
@@ -1011,8 +845,7 @@
   "Returns the product of nums. (*') returns 1. Supports arbitrary precision.
   See also: *"
   {:inline (nary-inline 'multiplyP)
-   :inline-arities >1?
-   :added "1.0"}
+   :inline-arities >1?}
   ([] 1)
   ([x] (cast Number x))
   ([x y] (. cloiure.lang.Numbers (multiplyP x y)))
@@ -1023,8 +856,7 @@
   "Returns the product of nums. (*) returns 1. Does not auto-promote
   longs, will throw on overflow. See also: *'"
   {:inline (nary-inline 'multiply 'unchecked_multiply)
-   :inline-arities >1?
-   :added "1.2"}
+   :inline-arities >1?}
   ([] 1)
   ([x] (cast Number x))
   ([x y] (. cloiure.lang.Numbers (multiply x y)))
@@ -1035,8 +867,7 @@
   "If no denominators are supplied, returns 1/numerator,
   else returns numerator divided by all of the denominators."
   {:inline (nary-inline 'divide)
-   :inline-arities >1?
-   :added "1.0"}
+   :inline-arities >1?}
   ([x] (/ 1 x))
   ([x y] (. cloiure.lang.Numbers (divide x y)))
   ([x y & more]
@@ -1047,8 +878,7 @@
   the ys from x and returns the result. Supports arbitrary precision.
   See also: -"
   {:inline (nary-inline 'minusP)
-   :inline-arities >0?
-   :added "1.0"}
+   :inline-arities >0?}
   ([x] (. cloiure.lang.Numbers (minusP x)))
   ([x y] (. cloiure.lang.Numbers (minusP x y)))
   ([x y & more]
@@ -1059,8 +889,7 @@
   the ys from x and returns the result. Does not auto-promote
   longs, will throw on overflow. See also: -'"
   {:inline (nary-inline 'minus 'unchecked_minus)
-   :inline-arities >0?
-   :added "1.2"}
+   :inline-arities >0?}
   ([x] (. cloiure.lang.Numbers (minus x)))
   ([x y] (. cloiure.lang.Numbers (minus x y)))
   ([x y & more]
@@ -1070,8 +899,7 @@
   "Returns non-nil if nums are in monotonically non-decreasing order,
   otherwise false."
   {:inline (fn [x y] `(. cloiure.lang.Numbers (lte ~x ~y)))
-   :inline-arities #{2}
-   :added "1.0"}
+   :inline-arities #{2}}
   ([x] true)
   ([x y] (. cloiure.lang.Numbers (lte x y)))
   ([x y & more]
@@ -1085,8 +913,7 @@
   "Returns non-nil if nums are in monotonically decreasing order,
   otherwise false."
   {:inline (fn [x y] `(. cloiure.lang.Numbers (gt ~x ~y)))
-   :inline-arities #{2}
-   :added "1.0"}
+   :inline-arities #{2}}
   ([x] true)
   ([x y] (. cloiure.lang.Numbers (gt x y)))
   ([x y & more]
@@ -1100,8 +927,7 @@
   "Returns non-nil if nums are in monotonically non-increasing order,
   otherwise false."
   {:inline (fn [x y] `(. cloiure.lang.Numbers (gte ~x ~y)))
-   :inline-arities #{2}
-   :added "1.0"}
+   :inline-arities #{2}}
   ([x] true)
   ([x y] (. cloiure.lang.Numbers (gte x y)))
   ([x y & more]
@@ -1115,8 +941,7 @@
   "Returns non-nil if nums all have the equivalent
   value (type-independent), otherwise false"
   {:inline (fn [x y] `(. cloiure.lang.Numbers (equiv ~x ~y)))
-   :inline-arities #{2}
-   :added "1.0"}
+   :inline-arities #{2}}
   ([x] true)
   ([x y] (. cloiure.lang.Numbers (equiv x y)))
   ([x y & more]
@@ -1128,8 +953,7 @@
 
 (§ defn max
   "Returns the greatest of the nums."
-  {:added "1.0"
-   :inline-arities >1?
+  {:inline-arities >1?
    :inline (nary-inline 'max)}
   ([x] x)
   ([x y] (. cloiure.lang.Numbers (max x y)))
@@ -1138,8 +962,7 @@
 
 (§ defn min
   "Returns the least of the nums."
-  {:added "1.0"
-   :inline-arities >1?
+  {:inline-arities >1?
    :inline (nary-inline 'min)}
   ([x] x)
   ([x y] (. cloiure.lang.Numbers (min x y)))
@@ -1149,149 +972,123 @@
 (§ defn dec'
   "Returns a number one less than num. Supports arbitrary precision.
   See also: dec"
-  {:inline (fn [x] `(. cloiure.lang.Numbers (decP ~x)))
-   :added "1.0"}
+  {:inline (fn [x] `(. cloiure.lang.Numbers (decP ~x)))}
   [x] (. cloiure.lang.Numbers (decP x)))
 
 (§ defn dec
   "Returns a number one less than num. Does not auto-promote
   longs, will throw on overflow. See also: dec'"
-  {:inline (fn [x] `(. cloiure.lang.Numbers (~(if *unchecked-math* 'unchecked_dec 'dec) ~x)))
-   :added "1.2"}
+  {:inline (fn [x] `(. cloiure.lang.Numbers (~(if *unchecked-math* 'unchecked_dec 'dec) ~x)))}
   [x] (. cloiure.lang.Numbers (dec x)))
 
 (§ defn unchecked-inc-int
   "Returns a number one greater than x, an int.
   Note - uses a primitive operator subject to overflow."
-  {:inline (fn [x] `(. cloiure.lang.Numbers (unchecked_int_inc ~x)))
-   :added "1.0"}
+  {:inline (fn [x] `(. cloiure.lang.Numbers (unchecked_int_inc ~x)))}
   [x] (. cloiure.lang.Numbers (unchecked_int_inc x)))
 
 (§ defn unchecked-inc
   "Returns a number one greater than x, a long.
   Note - uses a primitive operator subject to overflow."
-  {:inline (fn [x] `(. cloiure.lang.Numbers (unchecked_inc ~x)))
-   :added "1.0"}
+  {:inline (fn [x] `(. cloiure.lang.Numbers (unchecked_inc ~x)))}
   [x] (. cloiure.lang.Numbers (unchecked_inc x)))
 
 (§ defn unchecked-dec-int
   "Returns a number one less than x, an int.
   Note - uses a primitive operator subject to overflow."
-  {:inline (fn [x] `(. cloiure.lang.Numbers (unchecked_int_dec ~x)))
-   :added "1.0"}
+  {:inline (fn [x] `(. cloiure.lang.Numbers (unchecked_int_dec ~x)))}
   [x] (. cloiure.lang.Numbers (unchecked_int_dec x)))
 
 (§ defn unchecked-dec
   "Returns a number one less than x, a long.
   Note - uses a primitive operator subject to overflow."
-  {:inline (fn [x] `(. cloiure.lang.Numbers (unchecked_dec ~x)))
-   :added "1.0"}
+  {:inline (fn [x] `(. cloiure.lang.Numbers (unchecked_dec ~x)))}
   [x] (. cloiure.lang.Numbers (unchecked_dec x)))
 
 (§ defn unchecked-negate-int
   "Returns the negation of x, an int.
   Note - uses a primitive operator subject to overflow."
-  {:inline (fn [x] `(. cloiure.lang.Numbers (unchecked_int_negate ~x)))
-   :added "1.0"}
+  {:inline (fn [x] `(. cloiure.lang.Numbers (unchecked_int_negate ~x)))}
   [x] (. cloiure.lang.Numbers (unchecked_int_negate x)))
 
 (§ defn unchecked-negate
   "Returns the negation of x, a long.
   Note - uses a primitive operator subject to overflow."
-  {:inline (fn [x] `(. cloiure.lang.Numbers (unchecked_minus ~x)))
-   :added "1.0"}
+  {:inline (fn [x] `(. cloiure.lang.Numbers (unchecked_minus ~x)))}
   [x] (. cloiure.lang.Numbers (unchecked_minus x)))
 
 (§ defn unchecked-add-int
   "Returns the sum of x and y, both int.
   Note - uses a primitive operator subject to overflow."
-  {:inline (fn [x y] `(. cloiure.lang.Numbers (unchecked_int_add ~x ~y)))
-   :added "1.0"}
+  {:inline (fn [x y] `(. cloiure.lang.Numbers (unchecked_int_add ~x ~y)))}
   [x y] (. cloiure.lang.Numbers (unchecked_int_add x y)))
 
 (§ defn unchecked-add
   "Returns the sum of x and y, both long.
   Note - uses a primitive operator subject to overflow."
-  {:inline (fn [x y] `(. cloiure.lang.Numbers (unchecked_add ~x ~y)))
-   :added "1.0"}
+  {:inline (fn [x y] `(. cloiure.lang.Numbers (unchecked_add ~x ~y)))}
   [x y] (. cloiure.lang.Numbers (unchecked_add x y)))
 
 (§ defn unchecked-subtract-int
   "Returns the difference of x and y, both int.
   Note - uses a primitive operator subject to overflow."
-  {:inline (fn [x y] `(. cloiure.lang.Numbers (unchecked_int_subtract ~x ~y)))
-   :added "1.0"}
+  {:inline (fn [x y] `(. cloiure.lang.Numbers (unchecked_int_subtract ~x ~y)))}
   [x y] (. cloiure.lang.Numbers (unchecked_int_subtract x y)))
 
 (§ defn unchecked-subtract
   "Returns the difference of x and y, both long.
   Note - uses a primitive operator subject to overflow."
-  {:inline (fn [x y] `(. cloiure.lang.Numbers (unchecked_minus ~x ~y)))
-   :added "1.0"}
+  {:inline (fn [x y] `(. cloiure.lang.Numbers (unchecked_minus ~x ~y)))}
   [x y] (. cloiure.lang.Numbers (unchecked_minus x y)))
 
 (§ defn unchecked-multiply-int
   "Returns the product of x and y, both int.
   Note - uses a primitive operator subject to overflow."
-  {:inline (fn [x y] `(. cloiure.lang.Numbers (unchecked_int_multiply ~x ~y)))
-   :added "1.0"}
+  {:inline (fn [x y] `(. cloiure.lang.Numbers (unchecked_int_multiply ~x ~y)))}
   [x y] (. cloiure.lang.Numbers (unchecked_int_multiply x y)))
 
 (§ defn unchecked-multiply
   "Returns the product of x and y, both long.
   Note - uses a primitive operator subject to overflow."
-  {:inline (fn [x y] `(. cloiure.lang.Numbers (unchecked_multiply ~x ~y)))
-   :added "1.0"}
+  {:inline (fn [x y] `(. cloiure.lang.Numbers (unchecked_multiply ~x ~y)))}
   [x y] (. cloiure.lang.Numbers (unchecked_multiply x y)))
 
 (§ defn unchecked-divide-int
   "Returns the division of x by y, both int.
   Note - uses a primitive operator subject to truncation."
-  {:inline (fn [x y] `(. cloiure.lang.Numbers (unchecked_int_divide ~x ~y)))
-   :added "1.0"}
+  {:inline (fn [x y] `(. cloiure.lang.Numbers (unchecked_int_divide ~x ~y)))}
   [x y] (. cloiure.lang.Numbers (unchecked_int_divide x y)))
 
 (§ defn unchecked-remainder-int
   "Returns the remainder of division of x by y, both int.
   Note - uses a primitive operator subject to truncation."
-  {:inline (fn [x y] `(. cloiure.lang.Numbers (unchecked_int_remainder ~x ~y)))
-   :added "1.0"}
+  {:inline (fn [x y] `(. cloiure.lang.Numbers (unchecked_int_remainder ~x ~y)))}
   [x y] (. cloiure.lang.Numbers (unchecked_int_remainder x y)))
 
 (§ defn pos?
   "Returns true if num is greater than zero, else false"
-  {
-   :inline (fn [num] `(. cloiure.lang.Numbers (isPos ~num)))
-   :added "1.0"}
+  {:inline (fn [num] `(. cloiure.lang.Numbers (isPos ~num)))}
   [num] (. cloiure.lang.Numbers (isPos num)))
 
 (§ defn neg?
   "Returns true if num is less than zero, else false"
-  {
-   :inline (fn [num] `(. cloiure.lang.Numbers (isNeg ~num)))
-   :added "1.0"}
+  {:inline (fn [num] `(. cloiure.lang.Numbers (isNeg ~num)))}
   [num] (. cloiure.lang.Numbers (isNeg num)))
 
 (§ defn quot
   "quot[ient] of dividing numerator by denominator."
-  {:added "1.0"
-   :static true
-   :inline (fn [x y] `(. cloiure.lang.Numbers (quotient ~x ~y)))}
+  {:inline (fn [x y] `(. cloiure.lang.Numbers (quotient ~x ~y)))}
   [num div]
     (. cloiure.lang.Numbers (quotient num div)))
 
 (§ defn rem
   "remainder of dividing numerator by denominator."
-  {:added "1.0"
-   :static true
-   :inline (fn [x y] `(. cloiure.lang.Numbers (remainder ~x ~y)))}
+  {:inline (fn [x y] `(. cloiure.lang.Numbers (remainder ~x ~y)))}
   [num div]
     (. cloiure.lang.Numbers (remainder num div)))
 
 (§ defn rationalize
   "returns the rational value of num"
-  {:added "1.0"
-   :static true}
   [num]
   (. cloiure.lang.Numbers (rationalize num)))
 
@@ -1299,15 +1096,13 @@
 
 (§ defn bit-not
   "Bitwise complement"
-  {:inline (fn [x] `(. cloiure.lang.Numbers (not ~x)))
-   :added "1.0"}
+  {:inline (fn [x] `(. cloiure.lang.Numbers (not ~x)))}
   [x] (. cloiure.lang.Numbers not x))
 
 (§ defn bit-and
   "Bitwise and"
    {:inline (nary-inline 'and)
-    :inline-arities >1?
-    :added "1.0"}
+    :inline-arities >1?}
    ([x y] (. cloiure.lang.Numbers and x y))
    ([x y & more]
       (reduce1 bit-and (bit-and x y) more)))
@@ -1315,8 +1110,7 @@
 (§ defn bit-or
   "Bitwise or"
   {:inline (nary-inline 'or)
-   :inline-arities >1?
-   :added "1.0"}
+   :inline-arities >1?}
   ([x y] (. cloiure.lang.Numbers or x y))
   ([x y & more]
     (reduce1 bit-or (bit-or x y) more)))
@@ -1324,8 +1118,7 @@
 (§ defn bit-xor
   "Bitwise exclusive or"
   {:inline (nary-inline 'xor)
-   :inline-arities >1?
-   :added "1.0"}
+   :inline-arities >1?}
   ([x y] (. cloiure.lang.Numbers xor x y))
   ([x y & more]
     (reduce1 bit-xor (bit-xor x y) more)))
@@ -1333,59 +1126,44 @@
 (§ defn bit-and-not
   "Bitwise and with complement"
   {:inline (nary-inline 'andNot)
-   :inline-arities >1?
-   :added "1.0"
-   :static true}
+   :inline-arities >1?}
   ([x y] (. cloiure.lang.Numbers andNot x y))
   ([x y & more]
     (reduce1 bit-and-not (bit-and-not x y) more)))
 
 (§ defn bit-clear
   "Clear bit at index n"
-  {:added "1.0"
-   :static true}
   [x n] (. cloiure.lang.Numbers clearBit x n))
 
 (§ defn bit-set
   "Set bit at index n"
-  {:added "1.0"
-   :static true}
   [x n] (. cloiure.lang.Numbers setBit x n))
 
 (§ defn bit-flip
   "Flip bit at index n"
-  {:added "1.0"
-   :static true}
   [x n] (. cloiure.lang.Numbers flipBit x n))
 
 (§ defn bit-test
   "Test bit at index n"
-  {:added "1.0"
-   :static true}
   [x n] (. cloiure.lang.Numbers testBit x n))
 
 (§ defn bit-shift-left
   "Bitwise shift left"
-  {:inline (fn [x n] `(. cloiure.lang.Numbers (shiftLeft ~x ~n)))
-   :added "1.0"}
+  {:inline (fn [x n] `(. cloiure.lang.Numbers (shiftLeft ~x ~n)))}
   [x n] (. cloiure.lang.Numbers shiftLeft x n))
 
 (§ defn bit-shift-right
   "Bitwise shift right"
-  {:inline (fn [x n] `(. cloiure.lang.Numbers (shiftRight ~x ~n)))
-   :added "1.0"}
+  {:inline (fn [x n] `(. cloiure.lang.Numbers (shiftRight ~x ~n)))}
   [x n] (. cloiure.lang.Numbers shiftRight x n))
 
 (§ defn unsigned-bit-shift-right
   "Bitwise shift right, without sign-extension."
-  {:inline (fn [x n] `(. cloiure.lang.Numbers (unsignedShiftRight ~x ~n)))
-   :added "1.6"}
+  {:inline (fn [x n] `(. cloiure.lang.Numbers (unsignedShiftRight ~x ~n)))}
   [x n] (. cloiure.lang.Numbers unsignedShiftRight x n))
 
 (§ defn integer?
   "Returns true if n is an integer"
-  {:added "1.0"
-   :static true}
   [n]
   (or (instance? Integer n)
       (instance? Long n)
@@ -1396,21 +1174,16 @@
 
 (§ defn even?
   "Returns true if n is even, throws an exception if n is not an integer"
-  {:added "1.0"
-   :static true}
    [n] (if (integer? n)
         (zero? (bit-and (cloiure.lang.RT/uncheckedLongCast n) 1))
         (throw (IllegalArgumentException. (str "Argument must be an integer: " n)))))
 
 (§ defn odd?
   "Returns true if n is odd, throws an exception if n is not an integer"
-  {:added "1.0"
-   :static true}
   [n] (not (even? n)))
 
 (§ defn int?
   "Return true if x is a fixed precision integer"
-  {:added "1.9"}
   [x] (or (instance? Long x)
           (instance? Integer x)
           (instance? Short x)
@@ -1418,25 +1191,21 @@
 
 (§ defn pos-int?
   "Return true if x is a positive fixed precision integer"
-  {:added "1.9"}
   [x] (and (int? x)
            (pos? x)))
 
 (§ defn neg-int?
   "Return true if x is a negative fixed precision integer"
-  {:added "1.9"}
   [x] (and (int? x)
            (neg? x)))
 
 (§ defn nat-int?
   "Return true if x is a non-negative fixed precision integer"
-  {:added "1.9"}
   [x] (and (int? x)
            (not (neg? x))))
 
 (§ defn double?
   "Return true if x is a Double"
-  {:added "1.9"}
   [x] (instance? Double x))
 
 ;;
@@ -1444,8 +1213,6 @@
 (§ defn complement
   "Takes a fn f and returns a fn that takes the same arguments as f,
   has the same effects, if any, and returns the opposite truth value."
-  {:added "1.0"
-   :static true}
   [f]
   (fn
     ([] (not (f)))
@@ -1455,14 +1222,10 @@
 
 (§ defn constantly
   "Returns a function that takes any number of arguments and returns x."
-  {:added "1.0"
-   :static true}
   [x] (fn [& args] x))
 
 (§ defn identity
   "Returns its argument."
-  {:added "1.0"
-   :static true}
   [x] x)
 
 ;; Collection stuff
@@ -1471,8 +1234,6 @@
 (§ defn peek
   "For a list or queue, same as first, for a vector, same as, but much
   more efficient than, last. If the collection is empty, returns nil."
-  {:added "1.0"
-   :static true}
   [coll] (. cloiure.lang.RT (peek coll)))
 
 (§ defn pop
@@ -1480,15 +1241,12 @@
   item, for a vector, returns a new vector without the last item. If
   the collection is empty, throws an exception.  Note - not the same
   as next/butlast."
-  {:added "1.0"
-   :static true}
   [coll] (. cloiure.lang.RT (pop coll)))
 
 ;; map stuff
 
 (§ defn map-entry?
   "Return true if x is a map entry"
-  {:added "1.8"}
   [x]
         (instance? java.util.Map$Entry x))
 
@@ -1498,15 +1256,12 @@
   vectors and Java arrays, this tests if the numeric key is within the
   range of indexes. 'contains?' operates constant or logarithmic time;
   it will not perform a linear search for a value.  See also 'some'."
-  {:added "1.0"
-   :static true}
   [coll key] (. cloiure.lang.RT (contains coll key)))
 
 (§ defn get
   "Returns the value mapped to key, not-found or nil if key not present."
   {:inline (fn  [m k & nf] `(. cloiure.lang.RT (get ~m ~k ~@nf)))
-   :inline-arities #{2 3}
-   :added "1.0"}
+   :inline-arities #{2 3}}
   ([map key]
    (. cloiure.lang.RT (get map key)))
   ([map key not-found]
@@ -1515,8 +1270,6 @@
 (§ defn dissoc
   "dissoc[iate]. Returns a new map of the same (hashed/sorted) type,
   that does not contain a mapping for key(s)."
-  {:added "1.0"
-   :static true}
   ([map] map)
   ([map key]
    (. cloiure.lang.RT (dissoc map key)))
@@ -1529,8 +1282,6 @@
 (§ defn disj
   "disj[oin]. Returns a new set of the same (hashed/sorted) type, that
   does not contain key(s)."
-  {:added "1.0"
-   :static true}
   ([set] set)
   ([^cloiure.lang.IPersistentSet set key]
    (when set
@@ -1544,14 +1295,10 @@
 
 (§ defn find
   "Returns the map entry for key, or nil if key not present."
-  {:added "1.0"
-   :static true}
   [map key] (. cloiure.lang.RT (find map key)))
 
 (§ defn select-keys
   "Returns a map containing only those entries in map whose key is in keys"
-  {:added "1.0"
-   :static true}
   [map keyseq]
     (loop [ret {} keys (seq keyseq)]
       (if keys
@@ -1565,100 +1312,76 @@
 
 (§ defn keys
   "Returns a sequence of the map's keys, in the same order as (seq map)."
-  {:added "1.0"
-   :static true}
   [map] (. cloiure.lang.RT (keys map)))
 
 (§ defn vals
   "Returns a sequence of the map's values, in the same order as (seq map)."
-  {:added "1.0"
-   :static true}
   [map] (. cloiure.lang.RT (vals map)))
 
 (§ defn key
   "Returns the key of the map entry."
-  {:added "1.0"
-   :static true}
   [^java.util.Map$Entry e]
     (. e (getKey)))
 
 (§ defn val
   "Returns the value in the map entry."
-  {:added "1.0"
-   :static true}
   [^java.util.Map$Entry e]
     (. e (getValue)))
 
 (§ defn rseq
   "Returns, in constant time, a seq of the items in rev (which
   can be a vector or sorted-map), in reverse order. If rev is empty returns nil"
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.Reversible rev]
     (. rev (rseq)))
 
 (§ defn name
   "Returns the name String of a string, symbol or keyword."
-  {:tag String
-   :added "1.0"
-   :static true}
+  {:tag String}
   [x]
   (if (string? x) x (. ^cloiure.lang.Named x (getName))))
 
 (§ defn namespace
   "Returns the namespace String of a symbol or keyword, or nil if not present."
-  {:tag String
-   :added "1.0"
-   :static true}
+  {:tag String}
   [^cloiure.lang.Named x]
     (. x (getNamespace)))
 
 (§ defn boolean
   "Coerce to boolean"
-  {
-   :inline (fn  [x] `(. cloiure.lang.RT (booleanCast ~x)))
-   :added "1.0"}
+  {:inline (fn  [x] `(. cloiure.lang.RT (booleanCast ~x)))}
   [x] (cloiure.lang.RT/booleanCast x))
 
 (§ defn ident?
   "Return true if x is a symbol or keyword"
-  {:added "1.9"}
   [x] (or (keyword? x) (symbol? x)))
 
 (§ defn simple-ident?
   "Return true if x is a symbol or keyword without a namespace"
-  {:added "1.9"}
   [x] (and (ident? x) (nil? (namespace x))))
 
 (§ defn qualified-ident?
   "Return true if x is a symbol or keyword with a namespace"
-  {:added "1.9"}
   [x] (boolean (and (ident? x) (namespace x) true)))
 
 (§ defn simple-symbol?
   "Return true if x is a symbol without a namespace"
-  {:added "1.9"}
   [x] (and (symbol? x) (nil? (namespace x))))
 
 (§ defn qualified-symbol?
   "Return true if x is a symbol with a namespace"
-  {:added "1.9"}
   [x] (boolean (and (symbol? x) (namespace x) true)))
 
 (§ defn simple-keyword?
   "Return true if x is a keyword without a namespace"
-  {:added "1.9"}
   [x] (and (keyword? x) (nil? (namespace x))))
 
 (§ defn qualified-keyword?
   "Return true if x is a keyword with a namespace"
-  {:added "1.9"}
   [x] (boolean (and (keyword? x) (namespace x) true)))
 
 (§ defmacro locking
   "Executes exprs in an implicit do, while holding the monitor of x.
   Will release the monitor of x in all circumstances."
-  {:added "1.0"}
   [x & body]
   `(let [lockee# ~x]
      (try
@@ -1681,7 +1404,6 @@
   (. (. System (getProperties)) (get \"os.name\"))
 
   but is easier to write, read, and understand."
-  {:added "1.0"}
   ([x form] `(. ~x ~form))
   ([x form & more] `(.. (. ~x ~form) ~@more)))
 
@@ -1690,7 +1412,6 @@
   second item in the first form, making a list of it if it is not a
   list already. If there are more forms, inserts the first form as the
   second item in second form, etc."
-  {:added "1.0"}
   [x & forms]
   (loop [x x, forms forms]
     (if forms
@@ -1706,7 +1427,6 @@
   last item in the first form, making a list of it if it is not a
   list already. If there are more forms, inserts the first form as the
   last item in second form, etc."
-  {:added "1.1"}
   [x & forms]
   (loop [x x, forms forms]
     (if forms
@@ -1756,8 +1476,6 @@
   Multimethods expect the value of the hierarchy option to be supplied as
   a reference type e.g. a var (i.e. via the Var-quote dispatch macro #'
   or the var special form)."
-  {:arglists '([name docstring? attr-map? dispatch-fn & options])
-   :added "1.0"}
   [mm-name & options]
   (let [docstring   (if (string? (first options))
                       (first options)
@@ -1793,49 +1511,36 @@
 
 (§ defmacro defmethod
   "Creates and installs a new method of multimethod associated with dispatch-value. "
-  {:added "1.0"}
   [multifn dispatch-val & fn-tail]
   `(. ~(with-meta multifn {:tag 'cloiure.lang.MultiFn}) addMethod ~dispatch-val (fn ~@fn-tail)))
 
 (§ defn remove-all-methods
   "Removes all of the methods of multimethod."
-  {:added "1.2"
-   :static true}
  [^cloiure.lang.MultiFn multifn]
  (.reset multifn))
 
 (§ defn remove-method
   "Removes the method of multimethod associated with dispatch-value."
-  {:added "1.0"
-   :static true}
  [^cloiure.lang.MultiFn multifn dispatch-val]
  (. multifn removeMethod dispatch-val))
 
 (§ defn prefer-method
   "Causes the multimethod to prefer matches of dispatch-val-x over dispatch-val-y
    when there is a conflict"
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.MultiFn multifn dispatch-val-x dispatch-val-y]
   (. multifn preferMethod dispatch-val-x dispatch-val-y))
 
 (§ defn methods
   "Given a multimethod, returns a map of dispatch values -> dispatch fns"
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.MultiFn multifn] (.getMethodTable multifn))
 
 (§ defn get-method
   "Given a multimethod and a dispatch value, returns the dispatch fn
   that would apply to that value, or nil if none apply and no default"
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.MultiFn multifn dispatch-val] (.getMethod multifn dispatch-val))
 
 (§ defn prefers
   "Given a multimethod, returns a map of preferred value -> set of other values"
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.MultiFn multifn] (.getPreferTable multifn))
 
 ;;;;;;;;; var stuff
@@ -1854,7 +1559,6 @@
 
   If test is true, evaluates then with binding-form bound to the value of
   test, if not, yields else"
-  {:added "1.0"}
   ([bindings then]
    `(if-let ~bindings ~then nil))
   ([bindings then else & oldform]
@@ -1873,7 +1577,6 @@
   "bindings => binding-form test
 
   When test is true, evaluates body with binding-form bound to the value of test"
-  {:added "1.0"}
   [bindings & body]
   (assert-args
      (vector? bindings) "a vector for its binding"
@@ -1889,7 +1592,6 @@
 
    If test is not nil, evaluates then with binding-form bound to the
    value of test, if not, yields else"
-  {:added "1.6"}
   ([bindings then]
    `(if-some ~bindings ~then nil))
   ([bindings then else & oldform]
@@ -1909,7 +1611,6 @@
 
    When test is not nil, evaluates body with binding-form bound to the
    value of test"
-  {:added "1.6"}
   [bindings & body]
   (assert-args
      (vector? bindings) "a vector for its binding"
@@ -1934,24 +1635,18 @@
         ...
         (finally
           (pop-thread-bindings)))"
-  {:added "1.1"
-   :static true}
   [bindings]
   (cloiure.lang.Var/pushThreadBindings bindings))
 
 (§ defn pop-thread-bindings
   "Pop one set of bindings pushed with push-binding before. It is an error to
   pop bindings without pushing before."
-  {:added "1.1"
-   :static true}
   []
   (cloiure.lang.Var/popThreadBindings))
 
 (§ defn get-thread-bindings
   "Get a map with the Var/value pairs which is currently in effect for the
   current thread."
-  {:added "1.1"
-   :static true}
   []
   (cloiure.lang.Var/getThreadBindings))
 
@@ -1963,7 +1658,6 @@
   re-establishes the bindings that existed before.  The new bindings
   are made in parallel (unlike let); all init-exprs are evaluated
   before the vars are bound to their new values."
-  {:added "1.0"}
   [bindings & body]
   (assert-args
     (vector? bindings) "a vector for its binding"
@@ -1985,8 +1679,6 @@
   "Takes a map of Var/value pairs. Installs for the given Vars the associated
   values as thread-local bindings. Then calls f with the supplied arguments.
   Pops the installed bindings after f returned. Returns whatever f returns."
-  {:added "1.1"
-   :static true}
   [binding-map f & args]
   (push-thread-bindings binding-map)
   (try
@@ -1998,7 +1690,6 @@
   "Takes a map of Var/value pairs. Installs for the given Vars the associated
   values as thread-local bindings. Then executes body. Pops the installed
   bindings after body was evaluated. Returns the value of body."
-  {:added "1.1"}
   [binding-map & body]
   `(with-bindings* ~binding-map (fn [] ~@body)))
 
@@ -2007,8 +1698,6 @@
   the thread at the time bound-fn* was called and then call f with any given
   arguments. This may be used to define a helper function which runs on a
   different thread, but needs the same bindings in place."
-  {:added "1.1"
-   :static true}
   [f]
   (let [bindings (get-thread-bindings)]
     (fn [& args]
@@ -2019,20 +1708,16 @@
   same bindings in effect as in the thread at the time bound-fn was called.
   This may be used to define a helper function which runs on a different
   thread, but needs the same bindings in place."
-  {:added "1.1"}
   [& fntail]
   `(bound-fn* (fn ~@fntail)))
 
 (§ defn find-var
   "Returns the global var named by the namespace-qualified symbol, or
   nil if no var with that name."
-  {:added "1.0"
-   :static true}
   [sym] (. cloiure.lang.Var (find sym)))
 
 (§ defn binding-conveyor-fn
-  {:private true
-   :added "1.3"}
+  {:private true}
   [f]
   (let [frame (cloiure.lang.Var/cloneThreadBindingFrame)]
     (fn
@@ -2084,9 +1769,6 @@
   :continue (the default if an error-handler is given) or :fail (the
   default if no error-handler is given) -- see set-error-mode! for
   details."
-  {:added "1.0"
-   :static true
-   }
   ([state & options]
      (let [a (new cloiure.lang.Agent state)
            opts (apply hash-map options)]
@@ -2099,13 +1781,11 @@
 
 (§ defn set-agent-send-executor!
   "Sets the ExecutorService to be used by send"
-  {:added "1.5"}
   [executor]
   (set! cloiure.lang.Agent/pooledExecutor executor))
 
 (§ defn set-agent-send-off-executor!
   "Sets the ExecutorService to be used by send-off"
-  {:added "1.5"}
   [executor]
   (set! cloiure.lang.Agent/soloExecutor executor))
 
@@ -2115,7 +1795,6 @@
   will be set to the value of:
 
   (apply action-fn state-of-agent args)"
-  {:added "1.5"}
   [executor ^cloiure.lang.Agent a f & args]
   (.dispatch a (binding [*agent* a] (binding-conveyor-fn f)) args executor))
 
@@ -2125,8 +1804,6 @@
   will be set to the value of:
 
   (apply action-fn state-of-agent args)"
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.Agent a f & args]
   (apply send-via cloiure.lang.Agent/pooledExecutor a f args))
 
@@ -2136,8 +1813,6 @@
   the agent will be set to the value of:
 
   (apply action-fn state-of-agent args)"
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.Agent a f & args]
   (apply send-via cloiure.lang.Agent/soloExecutor a f args))
 
@@ -2148,8 +1823,6 @@
   actions immediately. This has no impact on actions sent during a
   transaction, which are still held until commit. If no action is
   occurring, does nothing. Returns the number of actions dispatched."
-  {:added "1.0"
-   :static true}
   [] (cloiure.lang.Agent/releasePendingSends))
 
 (§ defn add-watch
@@ -2166,14 +1839,10 @@
   set!s. Keys must be unique per reference, and can be used to remove
   the watch with remove-watch, but are otherwise considered opaque by
   the watch mechanism."
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.IRef reference key fn] (.addWatch reference key fn))
 
 (§ defn remove-watch
   "Removes a watch (set by add-watch) from a reference"
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.IRef reference key]
   (.removeWatch reference key))
 
@@ -2181,8 +1850,6 @@
   "Returns the exception thrown during an asynchronous action of the
   agent if the agent is failed.  Returns nil if the agent is not
   failed."
-  {:added "1.2"
-   :static true}
   [^cloiure.lang.Agent a] (.getError a))
 
 (§ defn restart-agent
@@ -2195,9 +1862,6 @@
   agent will remain failed with its old state and error.  Watchers, if
   any, will NOT be notified of the new state.  Throws an exception if
   the agent is not failed."
-  {:added "1.2"
-   :static true
-   }
   [^cloiure.lang.Agent a, new-state & options]
   (let [opts (apply hash-map options)]
     (.restart a new-state (if (:clear-actions opts) true false))))
@@ -2207,16 +1871,12 @@
   being run by the agent throws an exception or doesn't pass the
   validator fn, handler-fn will be called with two arguments: the
   agent and the exception."
-  {:added "1.2"
-   :static true}
   [^cloiure.lang.Agent a, handler-fn]
   (.setErrorHandler a handler-fn))
 
 (§ defn error-handler
   "Returns the error-handler of agent a, or nil if there is none.
   See set-error-handler!"
-  {:added "1.2"
-   :static true}
   [^cloiure.lang.Agent a]
   (.getErrorHandler a))
 
@@ -2232,15 +1892,11 @@
   accepting new 'send' and 'send-off' actions, and any previously
   queued actions will be held until a 'restart-agent'.  Deref will
   still work, returning the state of the agent before the error."
-  {:added "1.2"
-   :static true}
   [^cloiure.lang.Agent a, mode-keyword]
   (.setErrorMode a mode-keyword))
 
 (§ defn error-mode
   "Returns the error-mode of agent a.  See set-error-mode!"
-  {:added "1.2"
-   :static true}
   [^cloiure.lang.Agent a]
   (.getErrorMode a))
 
@@ -2248,8 +1904,7 @@
   "DEPRECATED: Use 'agent-error' instead.
   Returns a sequence of the exceptions thrown during asynchronous
   actions of the agent."
-  {:added "1.0"
-   :deprecated "1.2"}
+  {:deprecated "1.2"}
   [a]
   (when-let [e (agent-error a)]
     (list e)))
@@ -2258,16 +1913,13 @@
   "DEPRECATED: Use 'restart-agent' instead.
   Clears any exceptions thrown during asynchronous actions of the
   agent, allowing subsequent actions to occur."
-  {:added "1.0"
-   :deprecated "1.2"}
+  {:deprecated "1.2"}
   [^cloiure.lang.Agent a] (restart-agent a (.deref a)))
 
 (§ defn shutdown-agents
   "Initiates a shutdown of the thread pools that back the agent
   system. Running actions will complete, but no new actions will be
   accepted"
-  {:added "1.0"
-   :static true}
   [] (. cloiure.lang.Agent shutdown))
 
 (§ defn ref
@@ -2293,9 +1945,6 @@
   set :min-history to ensure it will be available when first needed (instead
   of after a read fault). History is limited, and the limit can be set
   with :max-history."
-  {:added "1.0"
-   :static true
-   }
   ([x] (new cloiure.lang.Ref x))
   ([x & options]
    (let [r  ^cloiure.lang.Ref (setup-reference (ref x) options)
@@ -2325,8 +1974,6 @@
   used for blocking references (futures and promises), and will return
   timeout-val if the timeout (in milliseconds) is reached before a
   value is available. See also - realized?."
-  {:added "1.0"
-   :static true}
   ([ref] (if (instance? cloiure.lang.IDeref ref)
            (.deref ^cloiure.lang.IDeref ref)
            (deref-future ref)))
@@ -2348,8 +1995,6 @@
   argument, which will be passed the intended new state on any state
   change. If the new state is unacceptable, the validate-fn should
   return false or throw an exception."
-  {:added "1.0"
-   :static true}
   ([x] (new cloiure.lang.Atom x))
   ([x & options] (setup-reference (atom x) options)))
 
@@ -2358,8 +2003,6 @@
   (apply f current-value-of-atom args). Note that f may be called
   multiple times, and thus should be free of side effects.  Returns
   the value that was swapped in."
-  {:added "1.0"
-   :static true}
   ([^cloiure.lang.IAtom atom f] (.swap atom f))
   ([^cloiure.lang.IAtom atom f x] (.swap atom f x))
   ([^cloiure.lang.IAtom atom f x y] (.swap atom f x y))
@@ -2370,7 +2013,6 @@
   (apply f current-value-of-atom args). Note that f may be called
   multiple times, and thus should be free of side effects.
   Returns [old new], the value of the atom before and after the swap."
-  {:added "1.9"}
   (^cloiure.lang.IPersistentVector [^cloiure.lang.IAtom2 atom f] (.swapVals atom f))
   (^cloiure.lang.IPersistentVector [^cloiure.lang.IAtom2 atom f x] (.swapVals atom f x))
   (^cloiure.lang.IPersistentVector [^cloiure.lang.IAtom2 atom f x y] (.swapVals atom f x y))
@@ -2380,21 +2022,16 @@
   "Atomically sets the value of atom to newval if and only if the
   current value of the atom is identical to oldval. Returns true if
   set happened, else false"
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.IAtom atom oldval newval] (.compareAndSet atom oldval newval))
 
 (§ defn reset!
   "Sets the value of atom to newval without regard for the
   current value. Returns newval."
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.IAtom atom newval] (.reset atom newval))
 
 (§ defn reset-vals!
   "Sets the value of atom to newval. Returns [old new], the value of the
    atom before and after the reset."
-  {:added "1.9"}
   ^cloiure.lang.IPersistentVector [^cloiure.lang.IAtom2 atom newval] (.resetVals atom newval))
 
 (§ defn set-validator!
@@ -2404,14 +2041,10 @@
   validator-fn should return false or throw an exception. If the current state (root
   value if var) is not acceptable to the new validator, an exception
   will be thrown and the validator will not be changed."
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.IRef iref validator-fn] (. iref (setValidator validator-fn)))
 
 (§ defn get-validator
   "Gets the validator-fn for a var/ref/agent/atom."
-  {:added "1.0"
-   :static true}
  [^cloiure.lang.IRef iref] (. iref (getValidator)))
 
 (§ defn alter-meta!
@@ -2420,14 +2053,10 @@
   (apply f its-current-meta args)
 
   f must be free of side-effects"
-  {:added "1.0"
-   :static true}
  [^cloiure.lang.IReference iref f & args] (.alterMeta iref f args))
 
 (§ defn reset-meta!
   "Atomically resets the metadata for a namespace/var/ref/agent/atom"
-  {:added "1.0"
-   :static true}
  [^cloiure.lang.IReference iref metadata-map] (.resetMeta iref metadata-map))
 
 (§ defn commute
@@ -2445,8 +2074,6 @@
   Thus fun should be commutative, or, failing that, you must accept
   last-one-in-wins behavior.  commute allows for more concurrency than
   ref-set."
-  {:added "1.0"
-   :static true}
 
   [^cloiure.lang.Ref ref fun & args]
     (. ref (commute fun args)))
@@ -2458,30 +2085,22 @@
   (apply fun in-transaction-value-of-ref args)
 
   and returns the in-transaction-value of ref."
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.Ref ref fun & args]
     (. ref (alter fun args)))
 
 (§ defn ref-set
   "Must be called in a transaction. Sets the value of ref.
   Returns val."
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.Ref ref val]
     (. ref (set val)))
 
 (§ defn ref-history-count
   "Returns the history count of a ref"
-  {:added "1.1"
-   :static true}
   [^cloiure.lang.Ref ref]
     (.getHistoryCount ref))
 
 (§ defn ref-min-history
   "Gets the min-history of a ref, or sets it and returns the ref"
-  {:added "1.1"
-   :static true}
   ([^cloiure.lang.Ref ref]
     (.getMinHistory ref))
   ([^cloiure.lang.Ref ref n]
@@ -2489,8 +2108,6 @@
 
 (§ defn ref-max-history
   "Gets the max-history of a ref, or sets it and returns the ref"
-  {:added "1.1"
-   :static true}
   ([^cloiure.lang.Ref ref]
     (.getMaxHistory ref))
   ([^cloiure.lang.Ref ref n]
@@ -2500,8 +2117,6 @@
   "Must be called in a transaction. Protects the ref from modification
   by other transactions.  Returns the in-transaction-value of
   ref. Allows for more concurrency than (ref-set ref @ref)"
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.Ref ref]
     (. ref (touch))
     (. ref (deref)))
@@ -2514,7 +2129,6 @@
   running on this thread. Any uncaught exception will abort the
   transaction and flow out of sync. The exprs may be run more than
   once, but any effects on Refs will be atomic."
-  {:added "1.0"}
   [flags-ignored-for-now & body]
   `(. cloiure.lang.LockingTransaction
       (runInTransaction (fn [] ~@body))))
@@ -2524,7 +2138,6 @@
   IllegalStateException, else runs body in an implicit do. If the
   first expression in body is a literal string, will use that as the
   exception message."
-  {:added "1.0"}
   [& body]
   (let [message (when (string? (first body)) (first body))
         body (if message (next body) body)]
@@ -2534,15 +2147,13 @@
 
 (§ defn volatile!
   "Creates and returns a Volatile with an initial value of val."
-  {:added "1.7"
-   :tag cloiure.lang.Volatile}
+  {:tag cloiure.lang.Volatile}
   [val]
   (cloiure.lang.Volatile. val))
 
 (§ defn vreset!
   "Sets the value of volatile to newval without regard for the
    current value. Returns newval."
-  {:added "1.7"}
   [^cloiure.lang.Volatile vol newval]
   (.reset vol newval))
 
@@ -2550,14 +2161,12 @@
   "Non-atomically swaps the value of the volatile as if:
    (apply f current-value-of-vol args). Returns the value that
    was swapped in."
-  {:added "1.7"}
   [vol f & args]
   (let [v (with-meta vol {:tag 'cloiure.lang.Volatile})]
     `(.reset ~v (~f (.deref ~v) ~@args))))
 
 (§ defn volatile?
   "Returns true if x is a volatile."
-  {:added "1.7"}
   [x]
   (instance? cloiure.lang.Volatile x))
 
@@ -2568,8 +2177,6 @@
   of those fns.  The returned fn takes a variable number of args,
   applies the rightmost of fns to the args, the next
   fn (right-to-left) to the result, etc."
-  {:added "1.0"
-   :static true}
   ([] identity)
   ([f] f)
   ([f g]
@@ -2588,8 +2195,6 @@
   returns a vector containing the result of applying each fn to the
   args (left-to-right).
   ((juxt a b c) x) => [(a x) (b x) (c x)]"
-  {:added "1.1"
-   :static true}
   ([f]
      (fn
        ([] [(f)])
@@ -2624,8 +2229,6 @@
   "Takes a function f and fewer than the normal arguments to f, and
   returns a fn that takes a variable number of additional args. When
   called, the returned function calls f with args + additional args."
-  {:added "1.0"
-   :static true}
   ([f] f)
   ([f arg1]
    (fn
@@ -2662,8 +2265,6 @@
   items in each coll, until any one of the colls is exhausted.  Any
   remaining items in other colls are ignored. The transform should accept
   number-of-colls arguments"
-  {:added "1.0"
-   :static true}
   ([coll]
      (if (seq? coll) coll
          (or (seq coll) ())))
@@ -2681,9 +2282,7 @@
 (§ defn every?
   "Returns true if (pred x) is logical true for every x in coll, else
   false."
-  {:tag Boolean
-   :added "1.0"
-   :static true}
+  {:tag Boolean}
   [pred coll]
   (cond
    (nil? (seq coll)) true
@@ -2693,9 +2292,7 @@
 (§ def
  ^{:tag Boolean
    :doc "Returns false if (pred x) is logical true for every x in
-  coll, else true."
-   :arglists '([pred coll])
-   :added "1.0"}
+  coll, else true."}
  not-every? (comp not every?))
 
 (§ defn some
@@ -2703,8 +2300,6 @@
   else nil.  One common idiom is to use a set as pred, for example
   this will return :fred if :fred is in the sequence, otherwise nil:
   (some #{:fred} coll)"
-  {:added "1.0"
-   :static true}
   [pred coll]
     (when (seq coll)
       (or (pred (first coll)) (recur pred (next coll)))))
@@ -2712,9 +2307,7 @@
 (§ def
  ^{:tag Boolean
    :doc "Returns false if (pred x) is logical true for any x in coll,
-  else true."
-   :arglists '([pred coll])
-   :added "1.0"}
+  else true."}
  not-any? (comp not some))
 
 ; will be redefed later with arg checks
@@ -2723,7 +2316,6 @@
 
   Repeatedly executes body (presumably for side-effects) with name
   bound to integers from 0 through n-1."
-  {:added "1.0"}
   [bindings & body]
   (let [i (first bindings)
         n (second bindings)]
@@ -2740,8 +2332,6 @@
   exhausted.  Any remaining items in other colls are ignored. Function
   f should accept number-of-colls arguments. Returns a transducer when
   no collection is provided."
-  {:added "1.0"
-   :static true}
   ([f]
     (fn [rf]
       (fn
@@ -2784,7 +2374,6 @@
 
 (§ defmacro declare
   "defs the supplied var names with no bindings, useful for making forward declarations."
-  {:added "1.0"}
   [& names] `(do ~@(map #(list 'def (vary-meta % assoc :declared true)) names)))
 
 (§ declare cat)
@@ -2793,8 +2382,6 @@
   "Returns the result of applying concat to the result of applying map
   to f and colls.  Thus function f should return a collection. Returns
   a transducer when no collections are provided"
-  {:added "1.0"
-   :static true}
   ([f] (comp (map f) cat))
   ([f & colls]
      (apply concat (apply map f colls))))
@@ -2803,8 +2390,6 @@
   "Returns a lazy sequence of the items in coll for which
   (pred item) returns logical true. pred must be free of side-effects.
   Returns a transducer when no collection is provided."
-  {:added "1.0"
-   :static true}
   ([pred]
     (fn [rf]
       (fn
@@ -2835,34 +2420,28 @@
   "Returns a lazy sequence of the items in coll for which
   (pred item) returns logical false. pred must be free of side-effects.
   Returns a transducer when no collection is provided."
-  {:added "1.0"
-   :static true}
   ([pred] (filter (complement pred)))
   ([pred coll]
      (filter (complement pred) coll)))
 
 (§ defn reduced
   "Wraps x in a way such that a reduce will terminate with the value x"
-  {:added "1.5"}
   [x]
   (cloiure.lang.Reduced. x))
 
 (§ defn reduced?
   "Returns true if x is the result of a call to reduced"
   {:inline (fn [x] `(cloiure.lang.RT/isReduced ~x ))
-   :inline-arities #{1}
-   :added "1.5"}
+   :inline-arities #{1}}
   ([x] (cloiure.lang.RT/isReduced x)))
 
 (§ defn ensure-reduced
   "If x is already reduced?, returns it, else returns (reduced x)"
-  {:added "1.7"}
   [x]
   (if (reduced? x) x (reduced x)))
 
 (§ defn unreduced
   "If x is reduced?, returns (deref x), else returns x"
-  {:added "1.7"}
   [x]
   (if (reduced? x) (deref x) x))
 
@@ -2870,8 +2449,6 @@
   "Returns a lazy sequence of the first n items in coll, or all items if
   there are fewer than n.  Returns a stateful transducer when
   no collection is provided."
-  {:added "1.0"
-   :static true}
   ([n]
      (fn [rf]
        (let [nv (volatile! n)]
@@ -2897,8 +2474,6 @@
   "Returns a lazy sequence of successive items from coll while
   (pred item) returns logical true. pred must be free of side-effects.
   Returns a transducer when no collection is provided."
-  {:added "1.0"
-   :static true}
   ([pred]
      (fn [rf]
        (fn
@@ -2917,8 +2492,6 @@
 (§ defn drop
   "Returns a lazy sequence of all but the first n items in coll.
   Returns a stateful transducer when no collection is provided."
-  {:added "1.0"
-   :static true}
   ([n]
      (fn [rf]
        (let [nv (volatile! n)]
@@ -2941,16 +2514,12 @@
 
 (§ defn drop-last
   "Return a lazy sequence of all but the last n (default 1) items in coll"
-  {:added "1.0"
-   :static true}
   ([coll] (drop-last 1 coll))
   ([n coll] (map (fn [x _] x) coll (drop n coll))))
 
 (§ defn take-last
   "Returns a seq of the last n items in coll.  Depending on the type
   of coll may be no better than linear time.  For vectors, see also subvec."
-  {:added "1.1"
-   :static true}
   [n coll]
   (loop [s (seq coll), lead (seq (drop n coll))]
     (if lead
@@ -2961,8 +2530,6 @@
   "Returns a lazy sequence of the items in coll starting from the
   first item for which (pred item) returns logical false.  Returns a
   stateful transducer when no collection is provided."
-  {:added "1.0"
-   :static true}
   ([pred]
      (fn [rf]
        (let [dv (volatile! true)]
@@ -2986,42 +2553,31 @@
 
 (§ defn cycle
   "Returns a lazy (infinite!) sequence of repetitions of the items in coll."
-  {:added "1.0"
-   :static true}
   [coll] (cloiure.lang.Cycle/create (seq coll)))
 
 (§ defn split-at
   "Returns a vector of [(take n coll) (drop n coll)]"
-  {:added "1.0"
-   :static true}
   [n coll]
     [(take n coll) (drop n coll)])
 
 (§ defn split-with
   "Returns a vector of [(take-while pred coll) (drop-while pred coll)]"
-  {:added "1.0"
-   :static true}
   [pred coll]
     [(take-while pred coll) (drop-while pred coll)])
 
 (§ defn repeat
   "Returns a lazy (infinite!, or length n if supplied) sequence of xs."
-  {:added "1.0"
-   :static true}
   ([x] (cloiure.lang.Repeat/create x))
   ([n x] (cloiure.lang.Repeat/create n x)))
 
 (§ defn replicate
   "DEPRECATED: Use 'repeat' instead.
    Returns a lazy seq of n xs."
-  {:added "1.0"
-   :deprecated "1.3"}
+  {:deprecated "1.3"}
   [n x] (take n (repeat x)))
 
 (§ defn iterate
   "Returns a lazy sequence of x, (f x), (f (f x)) etc. f must be free of side-effects"
-  {:added "1.0"
-   :static true}
   [f x] (cloiure.lang.Iterate/create f x))
 
 (§ defn range
@@ -3029,8 +2585,6 @@
   (exclusive), by step, where start defaults to 0, step to 1, and end to
   infinity. When step is equal to 0, returns an infinite sequence of
   start. When start is equal to end, returns empty list."
-  {:added "1.0"
-   :static true}
   ([]
    (iterate inc' 0))
   ([end]
@@ -3050,8 +2604,6 @@
   "Returns a map that consists of the rest of the maps conj-ed onto
   the first.  If a key occurs in more than one map, the mapping from
   the latter (left-to-right) will be the mapping in the result."
-  {:added "1.0"
-   :static true}
   [& maps]
   (when (some identity maps)
     (reduce1 #(conj (or %1 {}) %2) maps)))
@@ -3061,8 +2613,6 @@
   the first.  If a key occurs in more than one map, the mapping(s)
   from the latter (left-to-right) will be combined with the mapping in
   the result by calling (f val-in-result val-in-latter)."
-  {:added "1.0"
-   :static true}
   [f & maps]
   (when (some identity maps)
     (let [merge-entry (fn [m e]
@@ -3076,8 +2626,6 @@
 
 (§ defn zipmap
   "Returns a map with the keys mapped to the corresponding vals."
-  {:added "1.0"
-   :static true}
   [keys vals]
     (loop [map {}
            ks (seq keys)
@@ -3091,16 +2639,12 @@
 (§ defn line-seq
   "Returns the lines of text from rdr as a lazy sequence of strings.
   rdr must implement java.io.BufferedReader."
-  {:added "1.0"
-   :static true}
   [^java.io.BufferedReader rdr]
   (when-let [line (.readLine rdr)]
     (cons line (lazy-seq (line-seq rdr)))))
 
 (§ defn comparator
   "Returns an implementation of java.util.Comparator based upon pred."
-  {:added "1.0"
-   :static true}
   [pred]
     (fn [x y]
       (cond (pred x y) -1 (pred y x) 1 :else 0)))
@@ -3111,8 +2655,6 @@
   java.util.Comparator.  Guaranteed to be stable: equal elements will
   not be reordered.  If coll is a Java array, it will be modified.  To
   avoid this, sort a copy of the array."
-  {:added "1.0"
-   :static true}
   ([coll]
    (sort compare coll))
   ([^java.util.Comparator comp coll]
@@ -3129,8 +2671,6 @@
   java.util.Comparator.  Guaranteed to be stable: equal elements will
   not be reordered.  If coll is a Java array, it will be modified.  To
   avoid this, sort a copy of the array."
-  {:added "1.0"
-   :static true}
   ([keyfn coll]
    (sort-by keyfn compare coll))
   ([keyfn ^java.util.Comparator comp coll]
@@ -3142,8 +2682,6 @@
   element in the seq do not occur until the seq is consumed. dorun can
   be used to force any effects. Walks through the successive nexts of
   the seq, does not retain the head and returns nil."
-  {:added "1.0"
-   :static true}
   ([coll]
    (when-let [s (seq coll)]
      (recur (next s))))
@@ -3158,8 +2696,6 @@
   be used to force any effects. Walks through the successive nexts of
   the seq, retains the head and returns it, thus causing the entire
   seq to reside in memory at one time."
-  {:added "1.0"
-   :static true}
   ([coll]
    (dorun coll)
    coll)
@@ -3169,8 +2705,6 @@
 
 (§ defn nthnext
   "Returns the nth next of coll, (seq coll) when n is 0."
-  {:added "1.0"
-   :static true}
   [coll n]
     (loop [n n xs (seq coll)]
       (if (and xs (pos? n))
@@ -3179,8 +2713,6 @@
 
 (§ defn nthrest
   "Returns the nth rest of coll, coll when n is 0."
-  {:added "1.3"
-   :static true}
   [coll n]
     (loop [n n xs coll]
       (if-let [xs (and (pos? n) (seq xs))]
@@ -3193,8 +2725,6 @@
   do not overlap. If a pad collection is supplied, use its elements as
   necessary to complete last partition upto n items. In case there are
   not enough padding elements, return a partition with less than n items."
-  {:added "1.0"
-   :static true}
   ([n coll]
      (partition n n coll))
   ([n step coll]
@@ -3215,15 +2745,12 @@
 
 (§ defn eval
   "Evaluates the form data structure (not text!) and returns the result."
-  {:added "1.0"
-   :static true}
   [form] (. cloiure.lang.Compiler (eval form)))
 
 (§ defmacro doseq
   "Repeatedly executes body (presumably for side-effects) with
   bindings and filtering as provided by \"for\".  Does not retain
   the head of the sequence. Returns nil."
-  {:added "1.0"}
   [seq-exprs & body]
   (assert-args
      (vector? seq-exprs) "a vector for its binding"
@@ -3282,8 +2809,6 @@
   dispatched thus far, from this thread or agent, to the agent(s) have
   occurred.  Will block on failed agents.  Will never return if
   a failed agent is restarted with :clear-actions true or shutdown-agents was called."
-  {:added "1.0"
-   :static true}
   [& agents]
   (io! "await in transaction"
     (when *agent*
@@ -3294,7 +2819,7 @@
         (send agent count-down))
       (. latch (await)))))
 
-(§ defn ^:static await1 [^cloiure.lang.Agent a]
+(§ defn await1 [^cloiure.lang.Agent a]
   (when (pos? (.getQueueCount a))
     (await a))
     a)
@@ -3304,8 +2829,6 @@
   far (from this thread or agent) to the agents have occurred, or the
   timeout (in milliseconds) has elapsed. Returns logical false if
   returning due to timeout, logical true otherwise."
-  {:added "1.0"
-   :static true}
   [timeout-ms & agents]
     (io! "await-for in transaction"
      (when *agent*
@@ -3321,7 +2844,6 @@
 
   Repeatedly executes body (presumably for side-effects) with name
   bound to integers from 0 through n-1."
-  {:added "1.0"}
   [bindings & body]
   (assert-args
      (vector? bindings) "a vector for its binding"
@@ -3337,7 +2859,6 @@
 #_(defn into
   "Returns a new coll consisting of to-coll with all of the items of
   from-coll conjoined."
-  {:added "1.0"}
   [to from]
     (let [ret to items (seq from)]
       (if items
@@ -3347,8 +2868,6 @@
 ;;;;;;;;;;;;;;;;;;;;; editable collections ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (§ defn transient
   "Returns a new, transient version of the collection, in constant time."
-  {:added "1.1"
-   :static true}
   [^cloiure.lang.IEditableCollection coll]
   (.asTransient coll))
 
@@ -3356,16 +2875,12 @@
   "Returns a new, persistent version of the transient collection, in
   constant time. The transient collection cannot be used after this
   call, any such use will throw an exception."
-  {:added "1.1"
-   :static true}
   [^cloiure.lang.ITransientCollection coll]
   (.persistent coll))
 
 (§ defn conj!
   "Adds x to the transient collection, and return coll. The 'addition'
   may happen at different 'places' depending on the concrete type."
-  {:added "1.1"
-   :static true}
   ([] (transient []))
   ([coll] coll)
   ([^cloiure.lang.ITransientCollection coll x]
@@ -3375,8 +2890,6 @@
   "When applied to a transient map, adds mapping of key(s) to
   val(s). When applied to a transient vector, sets the val at index.
   Note - index must be <= (count vector). Returns coll."
-  {:added "1.1"
-   :static true}
   ([^cloiure.lang.ITransientAssociative coll key val] (.assoc coll key val))
   ([^cloiure.lang.ITransientAssociative coll key val & kvs]
    (let [ret (.assoc coll key val)]
@@ -3386,8 +2899,6 @@
 
 (§ defn dissoc!
   "Returns a transient map that doesn't contain a mapping for key(s)."
-  {:added "1.1"
-   :static true}
   ([^cloiure.lang.ITransientMap map key] (.without map key))
   ([^cloiure.lang.ITransientMap map key & ks]
    (let [ret (.without map key)]
@@ -3398,16 +2909,12 @@
 (§ defn pop!
   "Removes the last item from a transient vector. If
   the collection is empty, throws an exception. Returns coll"
-  {:added "1.1"
-   :static true}
   [^cloiure.lang.ITransientVector coll]
   (.pop coll))
 
 (§ defn disj!
   "disj[oin]. Returns a transient set of the same (hashed/sorted) type, that
   does not contain key(s)."
-  {:added "1.1"
-   :static true}
   ([set] set)
   ([^cloiure.lang.ITransientSet set key]
    (. set (disjoin key)))
@@ -3421,8 +2928,6 @@
 (§ defn ^:private into1
   "Returns a new coll consisting of to-coll with all of the items of
   from-coll conjoined."
-  {:added "1.0"
-   :static true}
   [to from]
   (if (instance? cloiure.lang.IEditableCollection to)
     (persistent! (reduce1 conj! (transient to) from))
@@ -3434,7 +2939,6 @@
   For each name in class-name-symbols, adds a mapping from name to the
   class named by package.name to the current namespace. Use :import in the ns
   macro in preference to calling this directly."
-  {:added "1.0"}
   [& import-symbols-or-lists]
   (let [specs (map #(if (and (seq? %) (= 'quote (first %))) (second %) %)
                    import-symbols-or-lists)]
@@ -3452,8 +2956,6 @@
   aseq if present, or Object. All values in aseq must be compatible with
   the component type. Class objects for the primitive types can be obtained
   using, e.g., Integer/TYPE."
-  {:added "1.0"
-   :static true}
   ([aseq]
      (cloiure.lang.RT/seqToTypedArray (seq aseq)))
   ([type aseq]
@@ -3465,113 +2967,91 @@
 
 (§ defn class
   "Returns the Class of x"
-  {:added "1.0"
-   :static true}
   ^Class [^Object x] (if (nil? x) x (. x (getClass))))
 
 (§ defn type
   "Returns the :type metadata of x, or its Class if none"
-  {:added "1.0"
-   :static true}
   [x]
   (or (get (meta x) :type) (class x)))
 
 (§ defn num
   "Coerce to Number"
   {:tag Number
-   :inline (fn  [x] `(. cloiure.lang.Numbers (num ~x)))
-   :added "1.0"}
+   :inline (fn  [x] `(. cloiure.lang.Numbers (num ~x)))}
   [x] (. cloiure.lang.Numbers (num x)))
 
 (§ defn long
   "Coerce to long"
-  {:inline (fn  [x] `(. cloiure.lang.RT (longCast ~x)))
-   :added "1.0"}
+  {:inline (fn  [x] `(. cloiure.lang.RT (longCast ~x)))}
   [^Number x] (cloiure.lang.RT/longCast x))
 
 (§ defn float
   "Coerce to float"
-  {:inline (fn  [x] `(. cloiure.lang.RT (~(if *unchecked-math* 'uncheckedFloatCast 'floatCast) ~x)))
-   :added "1.0"}
+  {:inline (fn  [x] `(. cloiure.lang.RT (~(if *unchecked-math* 'uncheckedFloatCast 'floatCast) ~x)))}
   [^Number x] (cloiure.lang.RT/floatCast x))
 
 (§ defn double
   "Coerce to double"
-  {:inline (fn  [x] `(. cloiure.lang.RT (doubleCast ~x)))
-   :added "1.0"}
+  {:inline (fn  [x] `(. cloiure.lang.RT (doubleCast ~x)))}
   [^Number x] (cloiure.lang.RT/doubleCast x))
 
 (§ defn short
   "Coerce to short"
-  {:inline (fn  [x] `(. cloiure.lang.RT (~(if *unchecked-math* 'uncheckedShortCast 'shortCast) ~x)))
-   :added "1.0"}
+  {:inline (fn  [x] `(. cloiure.lang.RT (~(if *unchecked-math* 'uncheckedShortCast 'shortCast) ~x)))}
   [^Number x] (cloiure.lang.RT/shortCast x))
 
 (§ defn byte
   "Coerce to byte"
-  {:inline (fn  [x] `(. cloiure.lang.RT (~(if *unchecked-math* 'uncheckedByteCast 'byteCast) ~x)))
-   :added "1.0"}
+  {:inline (fn  [x] `(. cloiure.lang.RT (~(if *unchecked-math* 'uncheckedByteCast 'byteCast) ~x)))}
   [^Number x] (cloiure.lang.RT/byteCast x))
 
 (§ defn char
   "Coerce to char"
-  {:inline (fn  [x] `(. cloiure.lang.RT (~(if *unchecked-math* 'uncheckedCharCast 'charCast) ~x)))
-   :added "1.1"}
+  {:inline (fn  [x] `(. cloiure.lang.RT (~(if *unchecked-math* 'uncheckedCharCast 'charCast) ~x)))}
   [x] (. cloiure.lang.RT (charCast x)))
 
 (§ defn unchecked-byte
   "Coerce to byte. Subject to rounding or truncation."
-  {:inline (fn  [x] `(. cloiure.lang.RT (uncheckedByteCast ~x)))
-   :added "1.3"}
+  {:inline (fn  [x] `(. cloiure.lang.RT (uncheckedByteCast ~x)))}
   [^Number x] (cloiure.lang.RT/uncheckedByteCast x))
 
 (§ defn unchecked-short
   "Coerce to short. Subject to rounding or truncation."
-  {:inline (fn  [x] `(. cloiure.lang.RT (uncheckedShortCast ~x)))
-   :added "1.3"}
+  {:inline (fn  [x] `(. cloiure.lang.RT (uncheckedShortCast ~x)))}
   [^Number x] (cloiure.lang.RT/uncheckedShortCast x))
 
 (§ defn unchecked-char
   "Coerce to char. Subject to rounding or truncation."
-  {:inline (fn  [x] `(. cloiure.lang.RT (uncheckedCharCast ~x)))
-   :added "1.3"}
+  {:inline (fn  [x] `(. cloiure.lang.RT (uncheckedCharCast ~x)))}
   [x] (. cloiure.lang.RT (uncheckedCharCast x)))
 
 (§ defn unchecked-int
   "Coerce to int. Subject to rounding or truncation."
-  {:inline (fn  [x] `(. cloiure.lang.RT (uncheckedIntCast ~x)))
-   :added "1.3"}
+  {:inline (fn  [x] `(. cloiure.lang.RT (uncheckedIntCast ~x)))}
   [^Number x] (cloiure.lang.RT/uncheckedIntCast x))
 
 (§ defn unchecked-long
   "Coerce to long. Subject to rounding or truncation."
-  {:inline (fn  [x] `(. cloiure.lang.RT (uncheckedLongCast ~x)))
-   :added "1.3"}
+  {:inline (fn  [x] `(. cloiure.lang.RT (uncheckedLongCast ~x)))}
   [^Number x] (cloiure.lang.RT/uncheckedLongCast x))
 
 (§ defn unchecked-float
   "Coerce to float. Subject to rounding."
-  {:inline (fn  [x] `(. cloiure.lang.RT (uncheckedFloatCast ~x)))
-   :added "1.3"}
+  {:inline (fn  [x] `(. cloiure.lang.RT (uncheckedFloatCast ~x)))}
   [^Number x] (cloiure.lang.RT/uncheckedFloatCast x))
 
 (§ defn unchecked-double
   "Coerce to double. Subject to rounding."
-  {:inline (fn  [x] `(. cloiure.lang.RT (uncheckedDoubleCast ~x)))
-   :added "1.3"}
+  {:inline (fn  [x] `(. cloiure.lang.RT (uncheckedDoubleCast ~x)))}
   [^Number x] (cloiure.lang.RT/uncheckedDoubleCast x))
 
 (§ defn number?
   "Returns true if x is a Number"
-  {:added "1.0"
-   :static true}
   [x]
   (instance? Number x))
 
 (§ defn mod
   "Modulus of num and div. Truncates toward negative infinity."
-  {:added "1.0"
-   :static true}
   [num div]
   (let [m (rem num div)]
     (if (or (zero? m) (= (pos? num) (pos? div)))
@@ -3580,52 +3060,38 @@
 
 (§ defn ratio?
   "Returns true if n is a Ratio"
-  {:added "1.0"
-   :static true}
   [n] (instance? cloiure.lang.Ratio n))
 
 (§ defn numerator
   "Returns the numerator part of a Ratio."
-  {:tag BigInteger
-   :added "1.2"
-   :static true}
+  {:tag BigInteger}
   [r]
   (.numerator ^cloiure.lang.Ratio r))
 
 (§ defn denominator
   "Returns the denominator part of a Ratio."
-  {:tag BigInteger
-   :added "1.2"
-   :static true}
+  {:tag BigInteger}
   [r]
   (.denominator ^cloiure.lang.Ratio r))
 
 (§ defn decimal?
   "Returns true if n is a BigDecimal"
-  {:added "1.0"
-   :static true}
   [n] (instance? BigDecimal n))
 
 (§ defn float?
   "Returns true if n is a floating point number"
-  {:added "1.0"
-   :static true}
   [n]
   (or (instance? Double n)
       (instance? Float n)))
 
 (§ defn rational?
   "Returns true if n is a rational number"
-  {:added "1.0"
-   :static true}
   [n]
   (or (integer? n) (ratio? n) (decimal? n)))
 
 (§ defn bigint
   "Coerce to BigInt"
-  {:tag cloiure.lang.BigInt
-   :static true
-   :added "1.3"}
+  {:tag cloiure.lang.BigInt}
   [x] (cond
        (instance? cloiure.lang.BigInt x) x
        (instance? BigInteger x) (cloiure.lang.BigInt/fromBigInteger x)
@@ -3637,9 +3103,7 @@
 
 (§ defn biginteger
   "Coerce to BigInteger"
-  {:tag BigInteger
-   :added "1.0"
-   :static true}
+  {:tag BigInteger}
   [x] (cond
        (instance? BigInteger x) x
        (instance? cloiure.lang.BigInt x) (.toBigInteger ^cloiure.lang.BigInt x)
@@ -3651,9 +3115,7 @@
 
 (§ defn bigdec
   "Coerce to BigDecimal"
-  {:tag BigDecimal
-   :added "1.0"
-   :static true}
+  {:tag BigDecimal}
   [x] (cond
        (decimal? x) x
        (float? x) (. BigDecimal valueOf (double x))
@@ -3671,8 +3133,7 @@
 (§ defmulti print-dup (fn [x writer] (class x)))
 
 (§ defn pr-on
-  {:private true
-   :static true}
+  {:private true}
   [x w]
   (if *print-dup*
     (print-dup x w)
@@ -3684,8 +3145,7 @@
   of *out*.  Prints the object(s), separated by spaces if there is
   more than one.  By default, pr and prn print in a way that objects
   can be read by the reader"
-  {:dynamic true
-   :added "1.0"}
+  {:dynamic true}
   ([] nil)
   ([x]
      (pr-on x *out*))
@@ -3701,8 +3161,6 @@
 
 (§ defn newline
   "Writes a platform-specific newline to *out*"
-  {:added "1.0"
-   :static true}
   []
     (. *out* (append system-newline))
     nil)
@@ -3710,16 +3168,12 @@
 (§ defn flush
   "Flushes the output stream that is the current value of
   *out*"
-  {:added "1.0"
-   :static true}
   []
     (. *out* (flush))
     nil)
 
 (§ defn prn
   "Same as pr followed by (newline). Observes *flush-on-newline*"
-  {:added "1.0"
-   :static true}
   [& more]
     (apply pr more)
     (newline)
@@ -3729,16 +3183,12 @@
 (§ defn print
   "Prints the object(s) to the output stream that is the current value
   of *out*.  print and println produce output for human consumption."
-  {:added "1.0"
-   :static true}
   [& more]
     (binding [*print-readably* nil]
       (apply pr more)))
 
 (§ defn println
   "Same as print followed by (newline)"
-  {:added "1.0"
-   :static true}
   [& more]
     (binding [*print-readably* nil]
       (apply prn more)))
@@ -3759,8 +3209,6 @@
   and as such should be used only with trusted sources.
 
   For data structure interop use cloiure.edn/read"
-  {:added "1.0"
-   :static true}
   ([]
    (read *in*))
   ([stream]
@@ -3774,8 +3222,6 @@
 
 (§ defn read-line
   "Reads the next line from stream that is the current value of *in* ."
-  {:added "1.0"
-   :static true}
   []
   (if (instance? cloiure.lang.LineNumberingPushbackReader *in*)
     (.readLine ^cloiure.lang.LineNumberingPushbackReader *in*)
@@ -3789,8 +3235,6 @@
   and as such should be used only with trusted sources.
 
   For data structure interop use cloiure.edn/read-string"
-  {:added "1.0"
-   :static true}
   ([s] (cloiure.lang.RT/readString s))
   ([opts s] (cloiure.lang.RT/readString s opts)))
 
@@ -3800,8 +3244,6 @@
   defaults to (count vector). This operation is O(1) and very fast, as
   the resulting vector shares structure with the original and no
   trimming is done."
-  {:added "1.0"
-   :static true}
   ([v start]
    (subvec v start (count v)))
   ([v start end]
@@ -3813,7 +3255,6 @@
   Evaluates body in a try expression with names bound to the values
   of the inits, and a finally clause that calls (.close name) on each
   name in reverse order."
-  {:added "1.0"}
   [bindings & body]
   (assert-args
      (vector? bindings) "a vector for its binding"
@@ -3834,7 +3275,6 @@
   are evaluated in order.  Returns x.
 
   (doto (new java.util.HashMap) (.put \"a\" 1) (.put \"b\" 2))"
-  {:added "1.0"}
   [x & forms]
     (let [gx (gensym)]
       `(let [~gx ~x]
@@ -3853,7 +3293,6 @@
   object passing the args. Use when you want to treat a Java method as
   a first-class fn. name may be type-hinted with the method receiver's
   type in order to avoid reflective calls."
-  {:added "1.0"}
   [name & args]
   (let [t (with-meta (gensym "target")
             (meta name))]
@@ -3863,7 +3302,6 @@
 (§ defmacro time
   "Evaluates expr and prints the time it took.  Returns the value of
  expr."
-  {:added "1.0"}
   [expr]
   `(let [start# (. System (nanoTime))
          ret# ~expr]
@@ -3875,23 +3313,20 @@
 (§ defn alength
   "Returns the length of the Java array. Works on arrays of all
   types."
-  {:inline (fn [a] `(. cloiure.lang.RT (alength ~a)))
-   :added "1.0"}
+  {:inline (fn [a] `(. cloiure.lang.RT (alength ~a)))}
   [array] (. cloiure.lang.RT (alength array)))
 
 (§ defn aclone
   "Returns a clone of the Java array. Works on arrays of known
   types."
-  {:inline (fn [a] `(. cloiure.lang.RT (aclone ~a)))
-   :added "1.0"}
+  {:inline (fn [a] `(. cloiure.lang.RT (aclone ~a)))}
   [array] (. cloiure.lang.RT (aclone array)))
 
 (§ defn aget
   "Returns the value at the index/indices. Works on Java arrays of all
   types."
   {:inline (fn [a i] `(. cloiure.lang.RT (aget ~a (int ~i))))
-   :inline-arities #{2}
-   :added "1.0"}
+   :inline-arities #{2}}
   ([array idx]
    (cloiure.lang.Reflector/prepRet (.getComponentType (class array)) (. Array (get array idx))))
   ([array idx & idxs]
@@ -3901,8 +3336,7 @@
   "Sets the value at the index/indices. Works on Java arrays of
   reference types. Returns val."
   {:inline (fn [a i v] `(. cloiure.lang.RT (aset ~a (int ~i) ~v)))
-   :inline-arities #{3}
-   :added "1.0"}
+   :inline-arities #{3}}
   ([array idx val]
    (. Array (set array idx val))
    val)
@@ -3913,7 +3347,6 @@
   ^{:private true}
   def-aset [name method coerce]
     `(defn ~name
-       {:arglists '([~'array ~'idx ~'val] [~'array ~'idx ~'idx2 & ~'idxv])}
        ([array# idx# val#]
         (. Array (~method array# idx# (~coerce val#)))
         val#)
@@ -3921,43 +3354,35 @@
         (apply ~name (aget array# idx#) idx2# idxv#))))
 
 (§ def-aset
-  ^{:doc "Sets the value at the index/indices. Works on arrays of int. Returns val."
-    :added "1.0"}
+  ^{:doc "Sets the value at the index/indices. Works on arrays of int. Returns val."}
   aset-int setInt int)
 
 (§ def-aset
-  ^{:doc "Sets the value at the index/indices. Works on arrays of long. Returns val."
-    :added "1.0"}
+  ^{:doc "Sets the value at the index/indices. Works on arrays of long. Returns val."}
   aset-long setLong long)
 
 (§ def-aset
-  ^{:doc "Sets the value at the index/indices. Works on arrays of boolean. Returns val."
-    :added "1.0"}
+  ^{:doc "Sets the value at the index/indices. Works on arrays of boolean. Returns val."}
   aset-boolean setBoolean boolean)
 
 (§ def-aset
-  ^{:doc "Sets the value at the index/indices. Works on arrays of float. Returns val."
-    :added "1.0"}
+  ^{:doc "Sets the value at the index/indices. Works on arrays of float. Returns val."}
   aset-float setFloat float)
 
 (§ def-aset
-  ^{:doc "Sets the value at the index/indices. Works on arrays of double. Returns val."
-    :added "1.0"}
+  ^{:doc "Sets the value at the index/indices. Works on arrays of double. Returns val."}
   aset-double setDouble double)
 
 (§ def-aset
-  ^{:doc "Sets the value at the index/indices. Works on arrays of short. Returns val."
-    :added "1.0"}
+  ^{:doc "Sets the value at the index/indices. Works on arrays of short. Returns val."}
   aset-short setShort short)
 
 (§ def-aset
-  ^{:doc "Sets the value at the index/indices. Works on arrays of byte. Returns val."
-    :added "1.0"}
+  ^{:doc "Sets the value at the index/indices. Works on arrays of byte. Returns val."}
   aset-byte setByte byte)
 
 (§ def-aset
-  ^{:doc "Sets the value at the index/indices. Works on arrays of char. Returns val."
-    :added "1.0"}
+  ^{:doc "Sets the value at the index/indices. Works on arrays of char. Returns val."}
   aset-char setChar char)
 
 (§ defn make-array
@@ -3966,8 +3391,6 @@
   Class objects can be obtained by using their imported or
   fully-qualified name.  Class objects for the primitive types can be
   obtained using, e.g., Integer/TYPE."
-  {:added "1.0"
-   :static true}
   ([^Class type len]
    (. Array (newInstance type (int len))))
   ([^Class type dim & more-dims]
@@ -3981,9 +3404,7 @@
   "Returns a (potentially-ragged) 2-dimensional array of Objects
   containing the contents of coll, which can be any Collection of any
   Collection."
-  {:tag "[[Ljava.lang.Object;"
-   :added "1.0"
-   :static true}
+  {:tag "[[Ljava.lang.Object;"}
   [^java.util.Collection coll]
     (let [ret (make-array (. Class (forName "[Ljava.lang.Object;")) (. coll (size)))]
       (loop [i 0 xs (seq coll)]
@@ -3995,8 +3416,6 @@
 (§ defn macroexpand-1
   "If form represents a macro form, returns its expansion,
   else returns form."
-  {:added "1.0"
-   :static true}
   [form]
     (. cloiure.lang.Compiler (macroexpand1 form)))
 
@@ -4004,8 +3423,6 @@
   "Repeatedly calls macroexpand-1 on form until it no longer
   represents a macro form, then returns it.  Note neither
   macroexpand-1 nor macroexpand expand macros in subforms."
-  {:added "1.0"
-   :static true}
   [form]
     (let [ex (macroexpand-1 form)]
       (if (identical? ex form)
@@ -4015,15 +3432,11 @@
 (§ defn load-reader
   "Sequentially read and evaluate the set of forms contained in the
   stream/file"
-  {:added "1.0"
-   :static true}
   [rdr] (. cloiure.lang.Compiler (load rdr)))
 
 (§ defn load-string
   "Sequentially read and evaluate the set of forms contained in the
   string"
-  {:added "1.0"
-   :static true}
   [s]
   (let [rdr (-> (java.io.StringReader. s)
                 (cloiure.lang.LineNumberingPushbackReader.))]
@@ -4031,14 +3444,10 @@
 
 (§ defn set?
   "Returns true if x implements IPersistentSet"
-  {:added "1.0"
-   :static true}
   [x] (instance? cloiure.lang.IPersistentSet x))
 
 (§ defn set
   "Returns a set of the distinct elements of coll."
-  {:added "1.0"
-   :static true}
   [coll]
   (if (set? coll)
     (with-meta coll nil)
@@ -4046,8 +3455,7 @@
       (persistent! (.reduce ^cloiure.lang.IReduceInit coll conj! (transient #{})))
       (persistent! (reduce1 conj! (transient #{}) coll)))))
 
-(§ defn ^{:private true
-   :static true}
+(§ defn ^{:private true}
   filter-key [keyfn pred amap]
     (loop [ret {} es (seq amap)]
       (if es
@@ -4058,37 +3466,27 @@
 
 (§ defn find-ns
   "Returns the namespace named by the symbol or nil if it doesn't exist."
-  {:added "1.0"
-   :static true}
   [sym] (cloiure.lang.Namespace/find sym))
 
 (§ defn create-ns
   "Create a new namespace named by the symbol if one doesn't already
   exist, returns it or the already-existing namespace of the same
   name."
-  {:added "1.0"
-   :static true}
   [sym] (cloiure.lang.Namespace/findOrCreate sym))
 
 (§ defn remove-ns
   "Removes the namespace named by the symbol. Use with caution.
   Cannot be used to remove the cloiure namespace."
-  {:added "1.0"
-   :static true}
   [sym] (cloiure.lang.Namespace/remove sym))
 
 (§ defn all-ns
   "Returns a sequence of all namespaces."
-  {:added "1.0"
-   :static true}
   [] (cloiure.lang.Namespace/all))
 
 (§ defn the-ns
   "If passed a namespace, returns it. Else, when passed a symbol,
   returns the namespace named by it, throwing an exception if not
   found."
-  {:added "1.0"
-   :static true}
   ^cloiure.lang.Namespace [x]
   (if (instance? cloiure.lang.Namespace x)
     x
@@ -4096,22 +3494,16 @@
 
 (§ defn ns-name
   "Returns the name of the namespace, a symbol."
-  {:added "1.0"
-   :static true}
   [ns]
   (.getName (the-ns ns)))
 
 (§ defn ns-map
   "Returns a map of all the mappings for the namespace."
-  {:added "1.0"
-   :static true}
   [ns]
   (.getMappings (the-ns ns)))
 
 (§ defn ns-unmap
   "Removes the mappings for the symbol from the namespace."
-  {:added "1.0"
-   :static true}
   [ns sym]
   (.unmap (the-ns ns) sym))
 
@@ -4121,8 +3513,6 @@
 
 (§ defn ns-publics
   "Returns a map of the public intern mappings for the namespace."
-  {:added "1.0"
-   :static true}
   [ns]
   (let [ns (the-ns ns)]
     (filter-key val (fn [^cloiure.lang.Var v] (and (instance? cloiure.lang.Var v)
@@ -4132,15 +3522,11 @@
 
 (§ defn ns-imports
   "Returns a map of the import mappings for the namespace."
-  {:added "1.0"
-   :static true}
   [ns]
   (filter-key val (partial instance? Class) (ns-map ns)))
 
 (§ defn ns-interns
   "Returns a map of the intern mappings for the namespace."
-  {:added "1.0"
-   :static true}
   [ns]
   (let [ns (the-ns ns)]
     (filter-key val (fn [^cloiure.lang.Var v] (and (instance? cloiure.lang.Var v)
@@ -4162,7 +3548,6 @@
   select a subset, via inclusion or exclusion, or to provide a mapping
   to a symbol different from the var's name, in order to prevent
   clashes. Use :use in the ns macro in preference to calling this directly."
-  {:added "1.0"}
   [ns-sym & filters]
     (let [ns (or (find-ns ns-sym) (throw (new Exception (str "No namespace: " ns-sym))))
           fs (apply hash-map filters)
@@ -4186,8 +3571,6 @@
 
 (§ defn ns-refers
   "Returns a map of the refer mappings for the namespace."
-  {:added "1.0"
-   :static true}
   [ns]
   (let [ns (the-ns ns)]
     (filter-key val (fn [^cloiure.lang.Var v] (and (instance? cloiure.lang.Var v)
@@ -4199,30 +3582,22 @@
   namespace. Arguments are two symbols: the alias to be used, and
   the symbolic name of the target namespace. Use :as in the ns macro in preference
   to calling this directly."
-  {:added "1.0"
-   :static true}
   [alias namespace-sym]
   (.addAlias *ns* alias (the-ns namespace-sym)))
 
 (§ defn ns-aliases
   "Returns a map of the aliases for the namespace."
-  {:added "1.0"
-   :static true}
   [ns]
   (.getAliases (the-ns ns)))
 
 (§ defn ns-unalias
   "Removes the alias for the symbol from the namespace."
-  {:added "1.0"
-   :static true}
   [ns sym]
   (.removeAlias (the-ns ns) sym))
 
 (§ defn take-nth
   "Returns a lazy seq of every nth item in coll.  Returns a stateful
   transducer when no collection is provided."
-  {:added "1.0"
-   :static true}
   ([n]
      (fn [rf]
        (let [iv (volatile! -1)]
@@ -4241,8 +3616,6 @@
 
 (§ defn interleave
   "Returns a lazy seq of the first item in each coll, then the second etc."
-  {:added "1.0"
-   :static true}
   ([] ())
   ([c1] (lazy-seq c1))
   ([c1 c2]
@@ -4259,15 +3632,11 @@
 
 (§ defn var-get
   "Gets the value in the var object"
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.Var x] (. x (get)))
 
 (§ defn var-set
   "Sets the value in the var object to val. The var must be
  thread-locally bound."
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.Var x val] (. x (set val)))
 
 (§ defmacro with-local-vars
@@ -4277,7 +3646,6 @@
   vars with per-thread bindings to the init-exprs.  The symbols refer
   to the var objects themselves, and must be accessed with var-get and
   var-set"
-  {:added "1.0"}
   [name-vals-vec & body]
   (assert-args
      (vector? name-vals-vec) "a vector for its binding"
@@ -4294,8 +3662,6 @@
   namespace (unless found in the environment), else nil.  Note that
   if the symbol is fully qualified, the var/Class to which it resolves
   need not be present in the namespace."
-  {:added "1.0"
-   :static true}
   ([ns sym]
     (ns-resolve ns nil sym))
   ([ns env sym]
@@ -4304,16 +3670,12 @@
 
 (§ defn resolve
   "same as (ns-resolve *ns* symbol) or (ns-resolve *ns* &env symbol)"
-  {:added "1.0"
-   :static true}
   ([sym] (ns-resolve *ns* sym))
   ([env sym] (ns-resolve *ns* env sym)))
 
 (§ defn array-map
   "Constructs an array-map. If any keys are equal, they are handled as
   if by repeated uses of assoc."
-  {:added "1.0"
-   :static true}
   ([] (. cloiure.lang.PersistentArrayMap EMPTY))
   ([& keyvals]
      (cloiure.lang.PersistentArrayMap/createAsIfByAssoc (to-array keyvals))))
@@ -4417,7 +3779,7 @@
   Evaluates the exprs in a lexical context in which the symbols in
   the binding-forms are bound to their respective init-exprs or parts
   therein."
-  {:added "1.0", :special-form true, :forms '[(let [bindings*] exprs*)]}
+  {:special-form true, :forms '[(let [bindings*] exprs*)]}
   [bindings & body]
   (assert-args
      (vector? bindings) "a vector for its binding"
@@ -4450,7 +3812,7 @@
   name => symbol
 
   Defines a function"
-  {:added "1.0", :special-form true,
+  {:special-form true,
    :forms '[(fn name? [params* ] exprs*) (fn name? ([params* ] exprs*)+)]}
   [& sigs]
     (let [name (if (symbol? (first sigs)) (first sigs) nil)
@@ -4509,7 +3871,7 @@
   "Evaluates the exprs in a lexical context in which the symbols in
   the binding-forms are bound to their respective init-exprs or parts
   therein. Acts as a recur target."
-  {:added "1.0", :special-form true, :forms '[(loop [bindings*] exprs*)]}
+  {:special-form true, :forms '[(loop [bindings*] exprs*)]}
   [bindings & body]
     (assert-args
       (vector? bindings) "a vector for its binding"
@@ -4534,7 +3896,6 @@
   "bindings => x xs
 
   Roughly the same as (when (seq xs) (let [x (first xs)] body)) but xs is evaluated only once"
-  {:added "1.0"}
   [bindings & body]
   (assert-args
      (vector? bindings) "a vector for its binding"
@@ -4550,7 +3911,6 @@
   needed.
 
   (lazy-cat xs ys zs) === (concat (lazy-seq xs) (lazy-seq ys) (lazy-seq zs))"
-  {:added "1.0"}
   [& colls]
   `(concat ~@(map #(list `lazy-seq %) colls)))
 
@@ -4564,7 +3924,6 @@
    :while test, :when test.
 
   (take 100 (for [x (range 100000000) y (range 1000000) :while (< y x)] [x y]))"
-  {:added "1.0"}
   [seq-exprs body-expr]
   (assert-args
      (vector? seq-exprs) "a vector for its binding"
@@ -4643,14 +4002,12 @@
 
 (§ defmacro comment
   "Ignores body, yields nil"
-  {:added "1.0"}
   [& body])
 
 (§ defmacro with-out-str
   "Evaluates exprs in a context in which *out* is bound to a fresh
   StringWriter.  Returns the string created by any nested printing
   calls."
-  {:added "1.0"}
   [& body]
   `(let [s# (new java.io.StringWriter)]
      (binding [*out* s#]
@@ -4660,7 +4017,6 @@
 (§ defmacro with-in-str
   "Evaluates body in a context in which *in* is bound to a fresh
   StringReader initialized with the string s."
-  {:added "1.0"}
   [s & body]
   `(with-open [s# (-> (java.io.StringReader. ~s) cloiure.lang.LineNumberingPushbackReader.)]
      (binding [*in* s#]
@@ -4668,36 +4024,28 @@
 
 (§ defn pr-str
   "pr to a string, returning it"
-  {:tag String
-   :added "1.0"
-   :static true}
+  {:tag String}
   [& xs]
     (with-out-str
      (apply pr xs)))
 
 (§ defn prn-str
   "prn to a string, returning it"
-  {:tag String
-   :added "1.0"
-   :static true}
+  {:tag String}
   [& xs]
   (with-out-str
    (apply prn xs)))
 
 (§ defn print-str
   "print to a string, returning it"
-  {:tag String
-   :added "1.0"
-   :static true}
+  {:tag String}
   [& xs]
     (with-out-str
      (apply print xs)))
 
 (§ defn println-str
   "println to a string, returning it"
-  {:tag String
-   :added "1.0"
-   :static true}
+  {:tag String}
   [& xs]
     (with-out-str
      (apply println xs)))
@@ -4706,7 +4054,6 @@
 (§ defn ex-info
   "Create an instance of ExceptionInfo, a RuntimeException subclass
    that carries a map of additional data."
-  {:added "1.4"}
   ([msg map]
      (ExceptionInfo. msg map))
   ([msg map cause]
@@ -4715,7 +4062,6 @@
 (§ defn ex-data
   "Returns exception data (a map) if ex is an IExceptionInfo.
    Otherwise returns nil."
-  {:added "1.4"}
   [ex]
   (when (instance? IExceptionInfo ex)
     (.getData ^IExceptionInfo ex)))
@@ -4723,7 +4069,6 @@
 (§ defmacro assert
   "Evaluates expr and throws an exception if it does not evaluate to
   logical true."
-  {:added "1.0"}
   ([x]
      (when *assert*
        `(when-not ~x
@@ -4736,7 +4081,6 @@
 (§ defn test
   "test [v] finds fn at key :test in var metadata and calls it,
   presuming failure will throw exception"
-  {:added "1.0"}
   [v]
     (let [f (:test (meta v))]
       (if f
@@ -4746,9 +4090,7 @@
 (§ defn re-pattern
   "Returns an instance of java.util.regex.Pattern, for use, e.g. in
   re-matcher."
-  {:tag java.util.regex.Pattern
-   :added "1.0"
-   :static true}
+  {:tag java.util.regex.Pattern}
   [s] (if (instance? java.util.regex.Pattern s)
         s
         (. java.util.regex.Pattern (compile s))))
@@ -4756,9 +4098,7 @@
 (§ defn re-matcher
   "Returns an instance of java.util.regex.Matcher, for use, e.g. in
   re-find."
-  {:tag java.util.regex.Matcher
-   :added "1.0"
-   :static true}
+  {:tag java.util.regex.Matcher}
   [^java.util.regex.Pattern re s]
     (. re (matcher s)))
 
@@ -4767,8 +4107,6 @@
   nested groups, returns a string of the entire match. If there are
   nested groups, returns a vector of the groups, the first element
   being the entire match."
-  {:added "1.0"
-   :static true}
   [^java.util.regex.Matcher m]
     (let [gc  (. m (groupCount))]
       (if (zero? gc)
@@ -4782,8 +4120,6 @@
   "Returns a lazy sequence of successive matches of pattern in string,
   using java.util.regex.Matcher.find(), each such match processed with
   re-groups."
-  {:added "1.0"
-   :static true}
   [^java.util.regex.Pattern re s]
   (let [m (re-matcher re s)]
     ((fn step []
@@ -4794,8 +4130,6 @@
   "Returns the match, if any, of string to pattern, using
   java.util.regex.Matcher.matches().  Uses re-groups to return the
   groups."
-  {:added "1.0"
-   :static true}
   [^java.util.regex.Pattern re s]
     (let [m (re-matcher re s)]
       (when (. m (matches))
@@ -4805,8 +4139,6 @@
   "Returns the next regex match, if any, of string to pattern, using
   java.util.regex.Matcher.find().  Uses re-groups to return the
   groups."
-  {:added "1.0"
-   :static true}
   ([^java.util.regex.Matcher m]
    (when (. m (find))
      (re-groups m)))
@@ -4817,20 +4149,15 @@
 (§ defn rand
   "Returns a random floating point number between 0 (inclusive) and
   n (default 1) (exclusive)."
-  {:added "1.0"
-   :static true}
   ([] (. Math (random)))
   ([n] (* n (rand))))
 
 (§ defn rand-int
   "Returns a random integer between 0 (inclusive) and n (exclusive)."
-  {:added "1.0"
-   :static true}
   [n] (int (rand n)))
 
 (§ defmacro defn-
   "same as defn, yielding non-public def"
-  {:added "1.0"}
   [name & decls]
     (list* `defn (with-meta name (assoc (meta name) :private true)) decls))
 
@@ -4841,8 +4168,6 @@
    arg that returns a sequence of the children. Will only be called on
    nodes for which branch? returns true. Root is the root node of the
   tree."
-  {:added "1.0"
-   :static true}
    [branch? children root]
    (let [walk (fn walk [node]
                 (lazy-seq
@@ -4853,22 +4178,16 @@
 
 (§ defn special-symbol?
   "Returns true if s names a special form"
-  {:added "1.0"
-   :static true}
   [s]
     (contains? (. cloiure.lang.Compiler specials) s))
 
 (§ defn var?
   "Returns true if v is of type cloiure.lang.Var"
-  {:added "1.0"
-   :static true}
   [v] (instance? cloiure.lang.Var v))
 
 (§ defn subs
   "Returns the substring of s beginning at start inclusive, and ending
   at end (defaults to length of string), exclusive."
-  {:added "1.0"
-   :static true}
   (^String [^String s start] (. s (substring start)))
   (^String [^String s start end] (. s (substring start end))))
 
@@ -4876,8 +4195,6 @@
   "Returns the x for which (k x), a number, is greatest.
 
   If there are multiple such xs, the last one is returned."
-  {:added "1.0"
-   :static true}
   ([k x] x)
   ([k x y] (if (> (k x) (k y)) x y))
   ([k x y & more]
@@ -4896,8 +4213,6 @@
   "Returns the x for which (k x), a number, is least.
 
   If there are multiple such xs, the last one is returned."
-  {:added "1.0"
-   :static true}
   ([k x] x)
   ([k x y] (if (< (k x) (k y)) x y))
   ([k x y & more]
@@ -4915,8 +4230,6 @@
 (§ defn distinct
   "Returns a lazy sequence of the elements of coll with duplicates removed.
   Returns a stateful transducer when no collection is provided."
-  {:added "1.0"
-   :static true}
   ([]
    (fn [rf]
      (let [seen (volatile! #{})]
@@ -4944,8 +4257,6 @@
   vector/seq with any elements = a key in smap replaced with the
   corresponding val in smap.  Returns a transducer when no collection
   is provided."
-  {:added "1.0"
-   :static true}
   ([smap]
      (map #(if-let [e (find smap %)] (val e) %)))
   ([smap coll]
@@ -4963,7 +4274,6 @@
   running on this thread. Any uncaught exception will abort the
   transaction and flow out of dosync. The exprs may be run more than
   once, but any effects on Refs will be atomic."
-  {:added "1.0"}
   [& exprs]
   `(sync nil ~@exprs))
 
@@ -4975,7 +4285,6 @@
 
   The rounding mode is one of CEILING, FLOOR, HALF_UP, HALF_DOWN,
   HALF_EVEN, UP, DOWN and UNNECESSARY; it defaults to HALF_UP."
-  {:added "1.0"}
   [precision & exprs]
     (let [[body rm] (if (= (first exprs) :rounding)
                       [(next (next exprs))
@@ -4994,8 +4303,6 @@
   "sc must be a sorted collection, test(s) one of <, <=, > or
   >=. Returns a seq of those entries with keys ek for
   which (test (.. sc comparator (compare ek key)) 0) is true"
-  {:added "1.0"
-   :static true}
   ([^cloiure.lang.Sorted sc test key]
    (let [include (mk-bound-fn sc test key)]
      (if (#{> >=} test)
@@ -5011,8 +4318,6 @@
   "sc must be a sorted collection, test(s) one of <, <=, > or
   >=. Returns a reverse seq of those entries with keys ek for
   which (test (.. sc comparator (compare ek key)) 0) is true"
-  {:added "1.0"
-   :static true}
   ([^cloiure.lang.Sorted sc test key]
    (let [include (mk-bound-fn sc test key)]
      (if (#{< <=} test)
@@ -5028,8 +4333,6 @@
   "Takes a function of no args, presumably with side effects, and
   returns an infinite (or length n if supplied) lazy sequence of calls
   to it"
-  {:added "1.0"
-   :static true}
   ([f] (lazy-seq (cons (f) (repeatedly f))))
   ([n f] (take n (repeatedly f))))
 
@@ -5038,8 +4341,7 @@
 
   Adds the url (String or URL object) to the classpath per
   URLClassLoader.addURL"
-  {:added "1.0"
-   :deprecated "1.1"}
+  {:deprecated "1.1"}
   [url]
   (println "WARNING: add-classpath is deprecated")
   (cloiure.lang.RT/addURL url))
@@ -5049,8 +4351,6 @@
   consistent with =, and thus is different than .hashCode for Integer,
   Short, Byte and Cloiure collections."
 
-  {:added "1.0"
-   :static true}
   [x] (. cloiure.lang.Util (hasheq x)))
 
 (§ defn mix-collection-hash
@@ -5059,8 +4359,6 @@
    of elements included in the basis. Note this is the hash code
    consistent with =, different from .hashCode.
    See http://clojure.org/data_structures#hash for full algorithms."
-  {:added "1.6"
-   :static true}
   ^long
   [^long hash-basis ^long count] (cloiure.lang.Murmur3/mixCollHash hash-basis count))
 
@@ -5068,8 +4366,6 @@
   "Returns the hash code, consistent with =, for an external ordered
    collection implementing Iterable.
    See http://clojure.org/data_structures#hash for full algorithms."
-  {:added "1.6"
-   :static true}
   ^long
   [coll] (cloiure.lang.Murmur3/hashOrdered coll))
 
@@ -5079,16 +4375,12 @@
    return map entries whose hash is computed as
      (hash-ordered-coll [k v]).
    See http://clojure.org/data_structures#hash for full algorithms."
-  {:added "1.6"
-   :static true}
   ^long
   [coll] (cloiure.lang.Murmur3/hashUnordered coll))
 
 (§ defn interpose
   "Returns a lazy seq of the elements of coll separated by sep.
   Returns a stateful transducer when no collection is provided."
-  {:added "1.0"
-   :static true}
   ([sep]
    (fn [rf]
      (let [started (volatile! false)]
@@ -5111,7 +4403,6 @@
   "Experimental - like defmacro, except defines a named function whose
   body is the expansion, calls to which may be expanded inline as if
   it were a macro. Cannot be used with variadic (&) args."
-  {:added "1.0"}
   [name & decl]
   (let [[pre-args [args expr]] (split-with (comp not vector?) decl)]
     `(do
@@ -5121,8 +4412,6 @@
 
 (§ defn empty
   "Returns an empty collection of the same category as coll, or nil"
-  {:added "1.0"
-   :static true}
   [coll]
   (when (instance? cloiure.lang.IPersistentCollection coll)
     (.empty ^cloiure.lang.IPersistentCollection coll)))
@@ -5132,7 +4421,6 @@
   return value named ret, initialized to a clone of a, then setting
   each element of ret to the evaluation of expr, returning the new
   array ret."
-  {:added "1.0"}
   [a idx ret expr]
   `(let [a# ~a l# (alength a#)
          ~ret (aclone a#)]
@@ -5147,7 +4435,6 @@
   "Reduces an expression across an array a, using an index named idx,
   and return value named ret, initialized to init, setting ret to the
   evaluation of expr at each step, returning ret."
-  {:added "1.0"}
   [a idx ret init expr]
   `(let [a# ~a l# (alength a#)]
      (loop  [~idx 0 ~ret ~init]
@@ -5158,117 +4445,99 @@
 (§ defn float-array
   "Creates an array of floats"
   {:inline (fn [& args] `(. cloiure.lang.Numbers float_array ~@args))
-   :inline-arities #{1 2}
-   :added "1.0"}
+   :inline-arities #{1 2}}
   ([size-or-seq] (. cloiure.lang.Numbers float_array size-or-seq))
   ([size init-val-or-seq] (. cloiure.lang.Numbers float_array size init-val-or-seq)))
 
 (§ defn boolean-array
   "Creates an array of booleans"
   {:inline (fn [& args] `(. cloiure.lang.Numbers boolean_array ~@args))
-   :inline-arities #{1 2}
-   :added "1.1"}
+   :inline-arities #{1 2}}
   ([size-or-seq] (. cloiure.lang.Numbers boolean_array size-or-seq))
   ([size init-val-or-seq] (. cloiure.lang.Numbers boolean_array size init-val-or-seq)))
 
 (§ defn byte-array
   "Creates an array of bytes"
   {:inline (fn [& args] `(. cloiure.lang.Numbers byte_array ~@args))
-   :inline-arities #{1 2}
-   :added "1.1"}
+   :inline-arities #{1 2}}
   ([size-or-seq] (. cloiure.lang.Numbers byte_array size-or-seq))
   ([size init-val-or-seq] (. cloiure.lang.Numbers byte_array size init-val-or-seq)))
 
 (§ defn char-array
   "Creates an array of chars"
   {:inline (fn [& args] `(. cloiure.lang.Numbers char_array ~@args))
-   :inline-arities #{1 2}
-   :added "1.1"}
+   :inline-arities #{1 2}}
   ([size-or-seq] (. cloiure.lang.Numbers char_array size-or-seq))
   ([size init-val-or-seq] (. cloiure.lang.Numbers char_array size init-val-or-seq)))
 
 (§ defn short-array
   "Creates an array of shorts"
   {:inline (fn [& args] `(. cloiure.lang.Numbers short_array ~@args))
-   :inline-arities #{1 2}
-   :added "1.1"}
+   :inline-arities #{1 2}}
   ([size-or-seq] (. cloiure.lang.Numbers short_array size-or-seq))
   ([size init-val-or-seq] (. cloiure.lang.Numbers short_array size init-val-or-seq)))
 
 (§ defn double-array
   "Creates an array of doubles"
   {:inline (fn [& args] `(. cloiure.lang.Numbers double_array ~@args))
-   :inline-arities #{1 2}
-   :added "1.0"}
+   :inline-arities #{1 2}}
   ([size-or-seq] (. cloiure.lang.Numbers double_array size-or-seq))
   ([size init-val-or-seq] (. cloiure.lang.Numbers double_array size init-val-or-seq)))
 
 (§ defn object-array
   "Creates an array of objects"
   {:inline (fn [arg] `(. cloiure.lang.RT object_array ~arg))
-   :inline-arities #{1}
-   :added "1.2"}
+   :inline-arities #{1}}
   ([size-or-seq] (. cloiure.lang.RT object_array size-or-seq)))
 
 (§ defn int-array
   "Creates an array of ints"
   {:inline (fn [& args] `(. cloiure.lang.Numbers int_array ~@args))
-   :inline-arities #{1 2}
-   :added "1.0"}
+   :inline-arities #{1 2}}
   ([size-or-seq] (. cloiure.lang.Numbers int_array size-or-seq))
   ([size init-val-or-seq] (. cloiure.lang.Numbers int_array size init-val-or-seq)))
 
 (§ defn long-array
   "Creates an array of longs"
   {:inline (fn [& args] `(. cloiure.lang.Numbers long_array ~@args))
-   :inline-arities #{1 2}
-   :added "1.0"}
+   :inline-arities #{1 2}}
   ([size-or-seq] (. cloiure.lang.Numbers long_array size-or-seq))
   ([size init-val-or-seq] (. cloiure.lang.Numbers long_array size init-val-or-seq)))
 
 (§ definline booleans
   "Casts to boolean[]"
-  {:added "1.1"}
   [xs] `(. cloiure.lang.Numbers booleans ~xs))
 
 (§ definline bytes
   "Casts to bytes[]"
-  {:added "1.1"}
   [xs] `(. cloiure.lang.Numbers bytes ~xs))
 
 (§ definline chars
   "Casts to chars[]"
-  {:added "1.1"}
   [xs] `(. cloiure.lang.Numbers chars ~xs))
 
 (§ definline shorts
   "Casts to shorts[]"
-  {:added "1.1"}
   [xs] `(. cloiure.lang.Numbers shorts ~xs))
 
 (§ definline floats
   "Casts to float[]"
-  {:added "1.0"}
   [xs] `(. cloiure.lang.Numbers floats ~xs))
 
 (§ definline ints
   "Casts to int[]"
-  {:added "1.0"}
   [xs] `(. cloiure.lang.Numbers ints ~xs))
 
 (§ definline doubles
   "Casts to double[]"
-  {:added "1.0"}
   [xs] `(. cloiure.lang.Numbers doubles ~xs))
 
 (§ definline longs
   "Casts to long[]"
-  {:added "1.0"}
   [xs] `(. cloiure.lang.Numbers longs ~xs))
 
 (§ defn bytes?
   "Return true if x is a byte array"
-  {:added "1.9"}
   [x] (if (nil? x)
         false
         (-> x class .getComponentType (= Byte/TYPE))))
@@ -5282,8 +4551,6 @@
   size, or an instance of java.util.concurrent BlockingQueue. Note
   that reading from a seque can block if the reader gets ahead of the
   producer."
-  {:added "1.0"
-   :static true}
   ([s] (seque 100 s))
   ([n-or-q s]
    (let [^BlockingQueue q (if (instance? BlockingQueue n-or-q)
@@ -5323,8 +4590,6 @@
 
 (§ defn class?
   "Returns true if x is an instance of Class"
-  {:added "1.0"
-   :static true}
   [x] (instance? Class x))
 
 (§ defn- is-annotation? [c]
@@ -5386,30 +4651,22 @@
 (§ defn alter-var-root
   "Atomically alters the root binding of var v by applying f to its
   current value plus any args"
-  {:added "1.0"
-   :static true}
   [^cloiure.lang.Var v f & args] (.alterRoot v f args))
 
 (§ defn bound?
   "Returns true if all of the vars provided as arguments have any bound value, root or thread-local.
    Implies that deref'ing the provided vars will succeed. Returns true if no vars are provided."
-  {:added "1.2"
-   :static true}
   [& vars]
   (every? #(.isBound ^cloiure.lang.Var %) vars))
 
 (§ defn thread-bound?
   "Returns true if all of the vars provided as arguments have thread-local bindings.
    Implies that set!'ing the provided vars will succeed.  Returns true if no vars are provided."
-  {:added "1.2"
-   :static true}
   [& vars]
   (every? #(.getThreadBinding ^cloiure.lang.Var %) vars))
 
 (§ defn make-hierarchy
   "Creates a hierarchy object for use with derive, isa? etc."
-  {:added "1.0"
-   :static true}
   [] {:parents {} :descendants {} :ancestors {}})
 
 (§ def ^{:private true}
@@ -5417,14 +4674,10 @@
 
 (§ defn not-empty
   "If coll is empty, returns nil, else coll"
-  {:added "1.0"
-   :static true}
   [coll] (when (seq coll) coll))
 
 (§ defn bases
   "Returns the immediate superclass and direct interfaces of c, if any"
-  {:added "1.0"
-   :static true}
   [^Class c]
   (when c
     (let [i (seq (.getInterfaces c))
@@ -5433,8 +4686,6 @@
 
 (§ defn supers
   "Returns the immediate and indirect superclasses and interfaces of c, if any"
-  {:added "1.0"
-   :static true}
   [^Class class]
   (loop [ret (set (bases class)) cs ret]
     (if (seq cs)
@@ -5448,7 +4699,6 @@
   relationship established via derive. h must be a hierarchy obtained
   from make-hierarchy, if not supplied defaults to the global
   hierarchy"
-  {:added "1.0"}
   ([child parent] (isa? global-hierarchy child parent))
   ([h child parent]
    (or (= child parent)
@@ -5468,7 +4718,6 @@
   inheritance relationship or a relationship established via derive. h
   must be a hierarchy obtained from make-hierarchy, if not supplied
   defaults to the global hierarchy"
-  {:added "1.0"}
   ([tag] (parents global-hierarchy tag))
   ([h tag] (not-empty
             (let [tp (get (:parents h) tag)]
@@ -5481,7 +4730,6 @@
   inheritance relationship or a relationship established via derive. h
   must be a hierarchy obtained from make-hierarchy, if not supplied
   defaults to the global hierarchy"
-  {:added "1.0"}
   ([tag] (ancestors global-hierarchy tag))
   ([h tag] (not-empty
             (let [ta (get (:ancestors h) tag)]
@@ -5498,7 +4746,6 @@
   from make-hierarchy, if not supplied defaults to the global
   hierarchy. Note: does not work on Java type inheritance
   relationships."
-  {:added "1.0"}
   ([tag] (descendants global-hierarchy tag))
   ([h tag] (if (class? tag)
              (throw (java.lang.UnsupportedOperationException. "Can't get descendants of classes"))
@@ -5510,7 +4757,6 @@
   child can be either a namespace-qualified symbol or keyword or a
   class. h must be a hierarchy obtained from make-hierarchy, if not
   supplied defaults to, and modifies, the global hierarchy."
-  {:added "1.0"}
   ([tag parent]
    (assert (namespace parent))
    (assert (or (class? tag) (and (instance? cloiure.lang.Named tag) (namespace tag))))
@@ -5546,7 +4792,6 @@
   "Removes a parent/child relationship between parent and
   tag. h must be a hierarchy obtained from make-hierarchy, if not
   supplied defaults to, and modifies, the global hierarchy."
-  {:added "1.0"}
   ([tag parent] (alter-var-root #'global-hierarchy underive tag parent) nil)
   ([h tag parent]
     (let [parentMap (:parents h)
@@ -5564,9 +4809,7 @@
 
 (§ defn distinct?
   "Returns true if no two of the arguments are ="
-  {:tag Boolean
-   :added "1.0"
-   :static true}
+  {:tag Boolean}
   ([x] true)
   ([x y] (not (= x y)))
   ([x y & more]
@@ -5584,30 +4827,17 @@
   providing iterators implement Iterable and thus support seq directly.
   Seqs cache values, thus iterator-seq should not be used on any
   iterator that repeatedly returns the same mutable object."
-  {:added "1.0"
-   :static true}
   [iter]
   (cloiure.lang.RT/chunkIteratorSeq iter))
-
-(§ defn enumeration-seq
-  "Returns a seq on a java.util.Enumeration"
-  {:added "1.0"
-   :static true}
-  [e]
-  (cloiure.lang.EnumerationSeq/create e))
 
 (§ defn format
   "Formats a string using java.lang.String.format, see java.util.Formatter for format
   string syntax"
-  {:added "1.0"
-   :static true}
   ^String [fmt & args]
   (String/format fmt (to-array args)))
 
 (§ defn printf
   "Prints formatted output, as per format"
-  {:added "1.0"
-   :static true}
   [fmt & args]
   (print (apply format fmt args)))
 
@@ -5643,8 +4873,6 @@
     (:use (my.lib this that))
     (:import (java.util Date Timer Random)
              (java.sql Connection Statement)))"
-  {:arglists '([name docstring? attr-map? references*])
-   :added "1.0"}
   [name & references]
   (let [process-reference
         (fn [[kname & args]]
@@ -5682,14 +4910,12 @@
 
 (§ defmacro refer-cloiure
   "Same as (refer 'cloiure.core <filters>)"
-  {:added "1.0"}
   [& filters]
   `(cloiure.core/refer '~'cloiure.core ~@filters))
 
 (§ defmacro defonce
   "defs name to have the root value of the expr iff the named var has no root value,
   else expr is unevaluated"
-  {:added "1.0"}
   [name expr]
   `(let [v# (def ~name)]
      (when-not (.hasRoot v#)
@@ -5926,7 +5152,6 @@
   abbreviated as 's'.
 
   (require '(cloiure zip [set :as s]))"
-  {:added "1.0"}
 
   [& args]
   (apply load-libs :require args))
@@ -5939,20 +5164,17 @@
   'use accepts additional options in libspecs: :exclude, :only, :rename.
   The arguments and semantics for :exclude, :only, and :rename are the same
   as those documented for cloiure.core/refer."
-  {:added "1.0"}
   [& args] (apply load-libs :require :use args))
 
 (§ defn loaded-libs
   "Returns a sorted set of symbols naming the currently loaded libs"
-  {:added "1.0"}
   [] @*loaded-libs*)
 
 (§ defn load
   "Loads Cloiure code from resources in classpath. A path is interpreted as
   classpath-relative if it begins with a slash or relative to the root
   directory for the current namespace otherwise."
-  {:redef true
-   :added "1.0"}
+  {:redef true}
   [& paths]
   (doseq [^String path paths]
     (let [^String path (if (.startsWith path "/")
@@ -5972,7 +5194,6 @@
   classpath-relative directory. The output files will go into the
   directory specified by *compile-path*, and that directory too must
   be in the classpath."
-  {:added "1.0"}
   [lib]
   (binding [*compile-files* true]
     (load-one lib true true))
@@ -5984,8 +5205,6 @@
   "Returns the value in a nested associative structure,
   where ks is a sequence of keys. Returns nil if the key
   is not present, or the not-found value if supplied."
-  {:added "1.2"
-   :static true}
   ([m ks]
      (reduce1 get m ks))
   ([m ks not-found]
@@ -6003,8 +5222,6 @@
   "Associates a value in a nested associative structure, where ks is a
   sequence of keys and v is the new value and returns a new nested structure.
   If any levels do not exist, hash-maps will be created."
-  {:added "1.0"
-   :static true}
   [m [k & ks] v]
   (if ks
     (assoc m k (assoc-in (get m k) ks v))
@@ -6016,8 +5233,6 @@
   and any supplied args and return the new value, and returns a new
   nested structure.  If any levels do not exist, hash-maps will be
   created."
-  {:added "1.0"
-   :static true}
   ([m ks f & args]
      (let [up (fn up [m ks f args]
                 (let [[k & ks] ks]
@@ -6031,8 +5246,6 @@
   key and f is a function that will take the old value
   and any supplied args and return the new value, and returns a new
   structure.  If the key does not exist, nil is passed as the old value."
-  {:added "1.7"
-   :static true}
   ([m k f]
    (assoc m k (f (get m k))))
   ([m k f x]
@@ -6047,93 +5260,67 @@
 (§ defn empty?
   "Returns true if coll has no items - same as (not (seq coll)).
   Please use the idiom (seq x) rather than (not (empty? x))"
-  {:added "1.0"
-   :static true}
   [coll] (not (seq coll)))
 
 (§ defn coll?
   "Returns true if x implements IPersistentCollection"
-  {:added "1.0"
-   :static true}
   [x] (instance? cloiure.lang.IPersistentCollection x))
 
 (§ defn list?
   "Returns true if x implements IPersistentList"
-  {:added "1.0"
-   :static true}
   [x] (instance? cloiure.lang.IPersistentList x))
 
 (§ defn seqable?
   "Return true if the seq function is supported for x"
-  {:added "1.9"}
   [x] (cloiure.lang.RT/canSeq x))
 
 (§ defn ifn?
   "Returns true if x implements IFn. Note that many data structures
   (e.g. sets and maps) implement IFn"
-  {:added "1.0"
-   :static true}
   [x] (instance? cloiure.lang.IFn x))
 
 (§ defn fn?
   "Returns true if x implements Fn, i.e. is an object created via fn."
-  {:added "1.0"
-   :static true}
   [x] (instance? cloiure.lang.Fn x))
 
 (§ defn associative?
  "Returns true if coll implements Associative"
- {:added "1.0"
-  :static true}
   [coll] (instance? cloiure.lang.Associative coll))
 
 (§ defn sequential?
  "Returns true if coll implements Sequential"
- {:added "1.0"
-  :static true}
   [coll] (instance? cloiure.lang.Sequential coll))
 
 (§ defn sorted?
  "Returns true if coll implements Sorted"
- {:added "1.0"
-   :static true}
   [coll] (instance? cloiure.lang.Sorted coll))
 
 (§ defn counted?
  "Returns true if coll implements count in constant time"
- {:added "1.0"
-   :static true}
   [coll] (instance? cloiure.lang.Counted coll))
 
 (§ defn reversible?
  "Returns true if coll implements Reversible"
- {:added "1.0"
-   :static true}
   [coll] (instance? cloiure.lang.Reversible coll))
 
 (§ defn indexed?
   "Return true if coll implements Indexed, indicating efficient lookup by index"
-  {:added "1.9"}
   [coll] (instance? cloiure.lang.Indexed coll))
 
 (§ def ^:dynamic
- ^{:doc "bound in a repl thread to the most recent value printed"
-   :added "1.0"}
+ ^{:doc "bound in a repl thread to the most recent value printed"}
  *1)
 
 (§ def ^:dynamic
- ^{:doc "bound in a repl thread to the second most recent value printed"
-   :added "1.0"}
+ ^{:doc "bound in a repl thread to the second most recent value printed"}
  *2)
 
 (§ def ^:dynamic
- ^{:doc "bound in a repl thread to the third most recent value printed"
-   :added "1.0"}
+ ^{:doc "bound in a repl thread to the third most recent value printed"}
  *3)
 
 (§ def ^:dynamic
- ^{:doc "bound in a repl thread to the most recent exception caught by the repl"
-   :added "1.0"}
+ ^{:doc "bound in a repl thread to the most recent exception caught by the repl"}
  *e)
 
 (§ defn trampoline
@@ -6144,8 +5331,6 @@
   returns that non-fn value. Note that if you want to return a fn as a
   final value, you must wrap it in some data structure and unpack it
   after trampoline returns."
-  {:added "1.0"
-   :static true}
   ([f]
      (let [ret (f)]
        (if (fn? ret)
@@ -6159,8 +5344,6 @@
   ns (which can be a symbol or a namespace), setting its root binding
   to val if supplied. The namespace must exist. The var will adopt any
   metadata from the name symbol.  Returns the var."
-  {:added "1.0"
-   :static true}
   ([ns ^cloiure.lang.Symbol name]
      (let [v (cloiure.lang.Var/intern (the-ns ns) name)]
        (when (meta name) (.setMeta v (meta name)))
@@ -6173,7 +5356,6 @@
 (§ defmacro while
   "Repeatedly executes body while test expression is true. Presumes
   some side-effect will cause test to become false/nil. Returns nil"
-  {:added "1.0"}
   [test & body]
   `(loop []
      (when ~test
@@ -6185,8 +5367,6 @@
   memoized version of the function keeps a cache of the mapping from arguments
   to results and, when calls with the same arguments are repeated often, has
   higher performance at the expense of higher memory use."
-  {:added "1.0"
-   :static true}
   [f]
   (let [mem (atom {})]
     (fn [& args]
@@ -6215,7 +5395,6 @@
   and its value will be returned if no clause matches. If no default
   expression is provided and no clause matches, an
   IllegalArgumentException is thrown."
-  {:added "1.0"}
 
   [pred expr & clauses]
   (let [gpred (gensym "pred__")
@@ -6239,49 +5418,39 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; var documentation ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(§ alter-meta! #'*agent* assoc :added "1.0")
-(§ alter-meta! #'in-ns assoc :added "1.0")
-(§ alter-meta! #'load-file assoc :added "1.0")
-
 (§ defmacro add-doc-and-meta {:private true} [name docstring meta]
   `(alter-meta! (var ~name) merge (assoc ~meta :doc ~docstring)))
 
 (§ add-doc-and-meta *file*
   "The path of the file being evaluated, as a String.
 
-  When there is no file, e.g. in the REPL, the value is not defined."
-  {:added "1.0"})
+  When there is no file, e.g. in the REPL, the value is not defined.")
 
 (§ add-doc-and-meta *command-line-args*
   "A sequence of the supplied command line arguments, or nil if
-  none were supplied"
-  {:added "1.0"})
+  none were supplied")
 
 (§ add-doc-and-meta *warn-on-reflection*
   "When set to true, the compiler will emit warnings when reflection is
   needed to resolve Java method calls or field accesses.
 
-  Defaults to false."
-  {:added "1.0"})
+  Defaults to false.")
 
 (§ add-doc-and-meta *compile-path*
   "Specifies the directory where 'compile' will write out .class
   files. This directory must be in the classpath for 'compile' to
   work.
 
-  Defaults to \"classes\""
-  {:added "1.0"})
+  Defaults to \"classes\"")
 
 (§ add-doc-and-meta *compile-files*
-  "Set to true when compiling files, false otherwise."
-  {:added "1.0"})
+  "Set to true when compiling files, false otherwise.")
 
 (§ add-doc-and-meta *unchecked-math*
   "While bound to true, compilations of +, -, *, inc, dec and the
   coercions will be done without overflow checks. While bound
   to :warn-on-boxed, same behavior as true, and a warning is emitted
-  when compilation uses boxed math. Default: false."
-  {:added "1.3"})
+  when compilation uses boxed math. Default: false.")
 
 (§ add-doc-and-meta *compiler-options*
   "A map of keys to options.
@@ -6289,57 +5458,48 @@
   Supported options:
   :elide-meta - a collection of metadata keys to elide during compilation.
   :disable-locals-clearing - set to true to disable clearing, useful for using a debugger
-  Alpha, subject to change."
-  {:added "1.4"})
+  Alpha, subject to change.")
 
 (§ add-doc-and-meta *ns*
-  "A cloiure.lang.Namespace object representing the current namespace."
-  {:added "1.0"})
+  "A cloiure.lang.Namespace object representing the current namespace.")
 
 (§ add-doc-and-meta *in*
   "A java.io.Reader object representing standard input for read operations.
 
-  Defaults to System/in, wrapped in a LineNumberingPushbackReader"
-  {:added "1.0"})
+  Defaults to System/in, wrapped in a LineNumberingPushbackReader")
 
 (§ add-doc-and-meta *out*
   "A java.io.Writer object representing standard output for print operations.
 
-  Defaults to System/out, wrapped in an OutputStreamWriter"
-  {:added "1.0"})
+  Defaults to System/out, wrapped in an OutputStreamWriter")
 
 (§ add-doc-and-meta *err*
   "A java.io.Writer object representing standard error for print operations.
 
-  Defaults to System/err, wrapped in a PrintWriter"
-  {:added "1.0"})
+  Defaults to System/err, wrapped in a PrintWriter")
 
 (§ add-doc-and-meta *flush-on-newline*
   "When set to true, output will be flushed whenever a newline is printed.
 
-  Defaults to true."
-  {:added "1.0"})
+  Defaults to true.")
 
 (§ add-doc-and-meta *print-meta*
   "If set to logical true, when printing an object, its metadata will also
   be printed in a form that can be read back by the reader.
 
-  Defaults to false."
-  {:added "1.0"})
+  Defaults to false.")
 
 (§ add-doc-and-meta *print-dup*
   "When set to logical true, objects will be printed in a way that preserves
   their type when read in later.
 
-  Defaults to false."
-  {:added "1.0"})
+  Defaults to false.")
 
 (§ add-doc-and-meta *print-readably*
   "When set to logical false, strings and characters will be printed with
   non-alphanumeric characters converted to the appropriate escape sequences.
 
-  Defaults to true"
-  {:added "1.0"})
+  Defaults to true")
 
 (§ add-doc-and-meta *read-eval*
  "Defaults to true (or value specified by system property, see below)
@@ -6364,19 +5524,14 @@
   can be a useful diagnostic tool to ensure that all of your reads
   occur in considered contexts. You can also accomplish this in a
   particular scope by binding *read-eval* to :unknown
-  "
-  {:added "1.0"})
+  ")
 
 (§ defn future?
   "Returns true if x is a future"
-  {:added "1.1"
-   :static true}
   [x] (instance? java.util.concurrent.Future x))
 
 (§ defn future-done?
   "Returns true if future f is done"
-  {:added "1.1"
-   :static true}
   [^java.util.concurrent.Future f] (.isDone f))
 
 (§ defmacro letfn
@@ -6385,7 +5540,7 @@
   Takes a vector of function specs and a body, and generates a set of
   bindings of functions to their names. All of the names are available
   in all of the definitions of the functions, as well as the body."
-  {:added "1.0", :forms '[(letfn [fnspecs*] exprs*)],
+  {:forms '[(letfn [fnspecs*] exprs*)],
    :special-form true, :url nil}
   [fnspecs & body]
   `(letfn* ~(vec (interleave (map first fnspecs)
@@ -6398,8 +5553,6 @@
   versions can replace arguments in the second and third
   positions (y, z). Note that the function f can take any number of
   arguments, not just the one(s) being nil-patched."
-  {:added "1.2"
-   :static true}
   ([f x]
    (fn
      ([a] (f (if (nil? a) x a)))
@@ -6554,7 +5707,6 @@
   lists are used to group multiple constants that map to the same
   expression, a vector can be used to match a list if needed. The
   test-constants need not be all of the same type."
-  {:added "1.2"}
 
   [e & clauses]
   (let [ge (with-meta (gensym) {:tag Object})
@@ -6626,13 +5778,11 @@
 
 (§ defn inst-ms
   "Return the number of milliseconds since January 1, 1970, 00:00:00 GMT"
-  {:added "1.9"}
   [inst]
   (inst-ms* inst))
 
 (§ defn inst?
   "Return true if x satisfies Inst"
-  {:added "1.9"}
   [x]
   (satisfies? Inst x))
 
@@ -6640,7 +5790,6 @@
 
 (§ defn uuid?
   "Return true if x is a java.util.UUID"
-  {:added "1.9"}
   [x] (instance? java.util.UUID x))
 
 (§ defn reduce
@@ -6653,7 +5802,6 @@
   result of applying f to val and the first item in coll, then
   applying f to that result and the 2nd item, etc. If coll contains no
   items, returns val and f is not called."
-  {:added "1.0"}
   ([f coll]
      (if (instance? cloiure.lang.IReduce coll)
        (.reduce ^cloiure.lang.IReduce coll f)
@@ -6687,7 +5835,6 @@
   2nd key and value, etc. If coll contains no entries, returns init
   and f is not called. Note that reduce-kv is supported on vectors,
   where the keys will be the ordinals."
-  {:added "1.4"}
   ([f init coll]
      (cloiure.core.protocols/kv-reduce coll f init)))
 
@@ -6695,7 +5842,6 @@
   "Takes a reducing function f of 2 args and returns a fn suitable for
   transduce by adding an arity-1 signature that calls cf (default -
   identity) on the result argument."
-  {:added "1.7"}
   ([f] (completing f identity))
   ([f cf]
      (fn
@@ -6711,7 +5857,7 @@
   of applying (the transformed) xf to init and the first item in coll,
   then applying xf to that result and the 2nd item, etc. If coll
   contains no items, returns init and f is not called. Note that
-  certain transforms may inject or skip items."  {:added "1.7"}
+  certain transforms may inject or skip items."
   ([xform f coll] (transduce xform f (f) coll))
   ([xform f init coll]
      (let [f (xform f)
@@ -6723,8 +5869,6 @@
 (§ defn into
   "Returns a new coll consisting of to-coll with all of the items of
   from-coll conjoined. A transducer may be supplied."
-  {:added "1.0"
-   :static true}
   ([] [])
   ([to] to)
   ([to from]
@@ -6742,8 +5886,6 @@
   of second items in each coll, until any one of the colls is
   exhausted.  Any remaining items in other colls are ignored. Function
   f should accept number-of-colls arguments."
-  {:added "1.4"
-   :static true}
   ([f coll]
      (-> (reduce (fn [v o] (conj! v (f o))) (transient []) coll)
          persistent!))
@@ -6757,8 +5899,6 @@
 (§ defn filterv
   "Returns a vector of the items in coll for which
   (pred item) returns logical true. pred must be free of side-effects."
-  {:added "1.4"
-   :static true}
   [pred coll]
   (-> (reduce (fn [v o] (if (pred o) (conj! v o) v))
               (transient [])
@@ -6773,8 +5913,6 @@
   return it on all subsequent calls to deref/@. If the computation has
   not yet finished, calls to deref/@ will block, unless the variant
   of deref with timeout is used. See also - realized?."
-  {:added "1.1"
-   :static true}
   [f]
   (let [f (binding-conveyor-fn f)
         fut (.submit cloiure.lang.Agent/soloExecutor ^Callable f)]
@@ -6800,19 +5938,14 @@
   return it on all subsequent calls to deref/@. If the computation has
   not yet finished, calls to deref/@ will block, unless the variant of
   deref with timeout is used. See also - realized?."
-  {:added "1.1"}
   [& body] `(future-call (^{:once true} fn* [] ~@body)))
 
 (§ defn future-cancel
   "Cancels the future, if possible."
-  {:added "1.1"
-   :static true}
   [^java.util.concurrent.Future f] (.cancel f true))
 
 (§ defn future-cancelled?
   "Returns true if future f is cancelled"
-  {:added "1.1"
-   :static true}
   [^java.util.concurrent.Future f] (.isCancelled f))
 
 (§ defn pmap
@@ -6821,8 +5954,6 @@
   realize the entire result unless required. Only useful for
   computationally intensive functions where the time of f dominates
   the coordination overhead."
-  {:added "1.0"
-   :static true}
   ([f coll]
    (let [n (+ 2 (.. Runtime getRuntime availableProcessors))
          rets (map #(future (f %)) coll)
@@ -6843,15 +5974,11 @@
 (§ defn pcalls
   "Executes the no-arg fns in parallel, returning a lazy sequence of
   their values"
-  {:added "1.0"
-   :static true}
   [& fns] (pmap #(%) fns))
 
 (§ defmacro pvalues
   "Returns a lazy sequence of the values of the exprs, which are
   evaluated in parallel"
-  {:added "1.0"
-   :static true}
   [& exprs]
   `(pcalls ~@(map #(list `fn [] %) exprs)))
 
@@ -6875,13 +6002,11 @@
   "The version info for Cloiure core, as a map containing :major :minor
   :incremental and :qualifier keys. Feature releases may increment
   :minor and/or :major, bugfix releases will increment :incremental.
-  Possible values of :qualifier include \"GA\", \"SNAPSHOT\", \"RC-x\" \"BETA-x\""
-  {:added "1.0"})
+  Possible values of :qualifier include \"GA\", \"SNAPSHOT\", \"RC-x\" \"BETA-x\"")
 
 (§ defn
   cloiure-version
   "Returns cloiure version as a printable string."
-  {:added "1.0"}
   []
   (str (:major *cloiure-version*)
        "."
@@ -6899,8 +6024,6 @@
   block, unless the variant of deref with timeout is used. All
   subsequent derefs will return the same delivered value without
   blocking. See also - realized?."
-  {:added "1.1"
-   :static true}
   []
   (let [d (java.util.concurrent.CountDownLatch. 1)
         v (atom d)]
@@ -6927,16 +6050,12 @@
 (§ defn deliver
   "Delivers the supplied value to the promise, releasing any pending
   derefs. A subsequent call to deliver on a promise will have no effect."
-  {:added "1.1"
-   :static true}
   [promise val] (promise val))
 
 (§ defn flatten
   "Takes any nested combination of sequential things (lists, vectors,
   etc.) and returns their contents as a single, flat sequence.
   (flatten nil) returns an empty sequence."
-  {:added "1.2"
-   :static true}
   [x]
   (filter (complement sequential?)
           (rest (tree-seq sequential? seq x))))
@@ -6945,8 +6064,6 @@
   "Returns a map of the elements of coll keyed by the result of
   f on each element. The value at each key will be a vector of the
   corresponding elements, in the order they appeared in coll."
-  {:added "1.2"
-   :static true}
   [f coll]
   (persistent!
    (reduce
@@ -6959,8 +6076,6 @@
   "Applies f to each value in coll, splitting it each time f returns a
    new value.  Returns a lazy seq of partitions.  Returns a stateful
    transducer when no collection is provided."
-  {:added "1.2"
-   :static true}
   ([f]
   (fn [rf]
     (let [a (java.util.ArrayList.)
@@ -7001,8 +6116,6 @@
 (§ defn frequencies
   "Returns a map from distinct items in coll to the number of times
   they appear."
-  {:added "1.2"
-   :static true}
   [coll]
   (persistent!
    (reduce (fn [counts x]
@@ -7012,7 +6125,6 @@
 (§ defn reductions
   "Returns a lazy seq of the intermediate values of the reduction (as
   per reduce) of coll by f, starting with init."
-  {:added "1.2"}
   ([f coll]
      (lazy-seq
       (if-let [s (seq coll)]
@@ -7030,8 +6142,6 @@
   "Return a random element of the (sequential) collection. Will have
   the same performance characteristics as nth for the given
   collection."
-  {:added "1.2"
-   :static true}
   [coll]
   (nth coll (rand-int (count coll))))
 
@@ -7039,8 +6149,6 @@
   "Returns a lazy sequence of lists like partition, but may include
   partitions with fewer than n items at the end.  Returns a stateful
   transducer when no collection is provided."
-  {:added "1.2"
-   :static true}
   ([^long n]
    (fn [rf]
      (let [a (java.util.ArrayList. n)]
@@ -7071,8 +6179,6 @@
 
 (§ defn shuffle
   "Return a random permutation of coll"
-  {:added "1.2"
-   :static true}
   [^java.util.Collection coll]
   (let [al (java.util.ArrayList. coll)]
     (java.util.Collections/shuffle al)
@@ -7084,8 +6190,6 @@
   item in coll, etc, until coll is exhausted. Thus function f should
   accept 2 arguments, index and item. Returns a stateful transducer when
   no collection is provided."
-  {:added "1.2"
-   :static true}
   ([f]
    (fn [rf]
      (let [i (volatile! -1)]
@@ -7112,8 +6216,6 @@
   "Returns a lazy sequence of the non-nil results of (f item). Note,
   this means false return values will be included.  f must be free of
   side-effects.  Returns a transducer when no collection is provided."
-  {:added "1.2"
-   :static true}
   ([f]
    (fn [rf]
      (fn
@@ -7146,8 +6248,6 @@
   this means false return values will be included.  f must be free of
   side-effects.  Returns a stateful transducer when no collection is
   provided."
-  {:added "1.2"
-   :static true}
   ([f]
    (fn [rf]
      (let [iv (volatile! -1)]
@@ -7182,7 +6282,6 @@
 (§ defn bounded-count
   "If coll is counted? returns its count, else will count at most the first n
   elements of coll using its seq"
-  {:added "1.9"}
   [n coll]
   (if (counted? coll)
     (count coll)
@@ -7196,7 +6295,6 @@
   composing predicates return a logical true value against all of its arguments, else it returns
   false. Note that f is short-circuiting in that it will stop execution on the first
   argument that triggers a logical false result against the original predicates."
-  {:added "1.3"}
   ([p]
      (fn ep1
        ([] true)
@@ -7236,7 +6334,6 @@
   returned by one of its composing predicates against any of its arguments, else it returns
   logical false. Note that f is short-circuiting in that it will stop execution on the first
   argument that triggers a logical true result against the original predicates."
-  {:added "1.3"}
   ([p]
      (fn sp1
        ([] nil)
@@ -7300,7 +6397,6 @@
   the Vars will be set back to their old values.  These temporary
   changes will be visible in all threads.  Useful for mocking out
   functions during testing."
-  {:added "1.3"}
   [binding-map func]
   (let [root-bind (fn [m]
                     (doseq [[a-var a-val] m]
@@ -7322,7 +6418,6 @@
   executed, the root values of all the Vars will be set back to their
   old values.  These temporary changes will be visible in all threads.
   Useful for mocking out functions during testing."
-  {:added "1.3"}
   [bindings & body]
   `(with-redefs-fn ~(zipmap (map #(list `var %) (take-nth 2 bindings))
                             (take-nth 2 (next bindings)))
@@ -7330,7 +6425,6 @@
 
 (§ defn realized?
   "Returns true if a value has been produced for a promise, delay, future or lazy sequence."
-  {:added "1.3"}
   [^cloiure.lang.IPending x] (.isRealized x))
 
 (§ defmacro cond->
@@ -7338,7 +6432,6 @@
   through each form for which the corresponding test
   expression is true. Note that, unlike cond branching, cond-> threading does
   not short circuit after the first true test expression."
-  {:added "1.5"}
   [expr & clauses]
   (assert (even? (count clauses)))
   (let [g (gensym)
@@ -7355,7 +6448,6 @@
   through each form for which the corresponding test expression
   is true.  Note that, unlike cond branching, cond->> threading does not short circuit
   after the first true test expression."
-  {:added "1.5"}
   [expr & clauses]
   (assert (even? (count clauses)))
   (let [g (gensym)
@@ -7371,7 +6463,6 @@
   "Binds name to expr, evaluates the first form in the lexical context
   of that binding, then binds name to that result, repeating for each
   successive form, returning the result of the last form."
-  {:added "1.5"}
   [expr name & forms]
   `(let [~name ~expr
          ~@(interleave (repeat name) (butlast forms))]
@@ -7382,7 +6473,6 @@
 (§ defmacro some->
   "When expr is not nil, threads it into the first form (via ->),
   and when that result is not nil, through the next etc"
-  {:added "1.5"}
   [expr & forms]
   (let [g (gensym)
         steps (map (fn [step] `(if (nil? ~g) nil (-> ~g ~step)))
@@ -7396,7 +6486,6 @@
 (§ defmacro some->>
   "When expr is not nil, threads it into the first form (via ->>),
   and when that result is not nil, through the next etc"
-  {:added "1.5"}
   [expr & forms]
   (let [g (gensym)
         steps (map (fn [step] `(if (nil? ~g) nil (->> ~g ~step)))
@@ -7417,7 +6506,6 @@
 (§ defn cat
   "A transducer which concatenates the contents of each input, which must be a
   collection, into the reduction."
-  {:added "1.7"}
   [rf]
   (let [rrf (preserving-reduced rf)]
     (fn
@@ -7435,7 +6523,6 @@
   is not supplied, the input that triggered the predicate will be
   returned. If the predicate never returns true the transduction is
   unaffected."
-  {:added "1.9"}
   ([pred] (halt-when pred nil))
   ([pred retf]
      (fn [rf]
@@ -7453,7 +6540,6 @@
 (§ defn dedupe
   "Returns a lazy sequence removing consecutive duplicates in coll.
   Returns a transducer when no collection is provided."
-  {:added "1.7"}
   ([]
    (fn [rf]
      (let [pv (volatile! ::none)]
@@ -7471,7 +6557,6 @@
 (§ defn random-sample
   "Returns items from coll with random probability of prob (0.0 -
   1.0).  Returns a transducer when no collection is provided."
-  {:added "1.7"}
   ([prob]
      (filter (fn [_] (< (rand) prob))))
   ([prob coll]
@@ -7494,8 +6579,6 @@
   to the items in coll. Transducers are applied in order as if
   combined with comp. Note that these applications will be
   performed every time reduce/iterator is called."
-  {:arglists '([xform* coll])
-   :added "1.7"}
   [& xforms]
   (Eduction. (apply comp (butlast xforms)) (last xforms)))
 
@@ -7508,145 +6591,42 @@
 (§ defn run!
   "Runs the supplied procedure (via reduce), for purposes of side
   effects, on successive items in the collection. Returns nil"
-  {:added "1.7"}
   [proc coll]
   (reduce #(proc %2) nil coll)
   nil)
 
 (§ defn tagged-literal?
   "Return true if the value is the data representation of a tagged literal"
-  {:added "1.7"}
   [value]
   (instance? cloiure.lang.TaggedLiteral value))
 
 (§ defn tagged-literal
   "Construct a data representation of a tagged literal from a
   tag symbol and a form."
-  {:added "1.7"}
   [^cloiure.lang.Symbol tag form]
   (cloiure.lang.TaggedLiteral/create tag form))
 
 (§ defn reader-conditional?
   "Return true if the value is the data representation of a reader conditional"
-  {:added "1.7"}
   [value]
   (instance? cloiure.lang.ReaderConditional value))
 
 (§ defn reader-conditional
   "Construct a data representation of a reader conditional.
   If true, splicing? indicates read-cond-splicing."
-  {:added "1.7"}
   [form ^Boolean splicing?]
   (cloiure.lang.ReaderConditional/create form splicing?))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; data readers ;;;;;;;;;;;;;;;;;;
-
-(§ def ^{:added "1.4"} default-data-readers
-  "Default map of data reader functions provided by Cloiure. May be
-  overridden by binding *data-readers*."
-  (merge
-    {'uuid #'cloiure.uuid/default-uuid-reader}
-    (when-class "java.sql.Timestamp"
-      {'inst #'cloiure.instant/read-instant-date})))
-
-(§ def ^{:added "1.4" :dynamic true} *data-readers*
-  "Map from reader tag symbols to data reader Vars.
-
-  When Cloiure starts, it searches for files named 'data_readers.cli'
-  and 'data_readers.clic' at the root of the classpath. Each such file
-  must contain a literal map of symbols, like this:
-
-      {foo/bar my.project.foo/bar
-       foo/baz my.project/baz}
-
-  The first symbol in each pair is a tag that will be recognized by
-  the Cloiure reader. The second symbol in the pair is the
-  fully-qualified name of a Var which will be invoked by the reader to
-  parse the form following the tag. For example, given the
-  data_readers.cli file above, the Cloiure reader would parse this
-  form:
-
-      #foo/bar [1 2 3]
-
-  by invoking the Var #'my.project.foo/bar on the vector [1 2 3]. The
-  data reader function is invoked on the form AFTER it has been read
-  as a normal Cloiure data structure by the reader.
-
-  Reader tags without namespace qualifiers are reserved for
-  Cloiure. Default reader tags are defined in
-  cloiure.core/default-data-readers but may be overridden in
-  data_readers.cli, data_readers.clic, or by rebinding this Var."
-  {})
-
-(§ def ^{:added "1.5" :dynamic true} *default-data-reader-fn*
-  "When no data reader is found for a tag and *default-data-reader-fn*
-  is non-nil, it will be called with two arguments,
-  the tag and the value.  If *default-data-reader-fn* is nil (the
-  default), an exception will be thrown for the unknown tag."
-  nil)
-
-(§ defn- data-reader-urls []
-  (let [cl (.. Thread currentThread getContextClassLoader)]
-    (concat
-      (enumeration-seq (.getResources cl "data_readers.cli"))
-      (enumeration-seq (.getResources cl "data_readers.clic")))))
-
-(§ defn- data-reader-var [sym]
-  (intern (create-ns (symbol (namespace sym)))
-          (symbol (name sym))))
-
-(§ defn- load-data-reader-file [mappings ^java.net.URL url]
-  (with-open [rdr (cloiure.lang.LineNumberingPushbackReader.
-                   (java.io.InputStreamReader.
-                    (.openStream url) "UTF-8"))]
-    (binding [*file* (.getFile url)]
-      (let [read-opts (if (.endsWith (.getPath url) "clic")
-                        {:eof nil :read-cond :allow}
-                        {:eof nil})
-            new-mappings (read read-opts rdr)]
-        (when (not (map? new-mappings))
-          (throw (ex-info (str "Not a valid data-reader map")
-                          {:url url})))
-        (reduce
-         (fn [m [k v]]
-           (when (not (symbol? k))
-             (throw (ex-info (str "Invalid form in data-reader file")
-                             {:url url
-                              :form k})))
-           (let [v-var (data-reader-var v)]
-             (when (and (contains? mappings k)
-                        (not= (mappings k) v-var))
-               (throw (ex-info "Conflicting data-reader mapping"
-                               {:url url
-                                :conflict k
-                                :mappings m})))
-             (assoc m k v-var)))
-         mappings
-         new-mappings)))))
-
-(§ defn- load-data-readers []
-  (alter-var-root #'*data-readers*
-                  (fn [mappings]
-                    (reduce load-data-reader-file
-                            mappings (data-reader-urls)))))
-
-(§ try
- (load-data-readers)
- (catch Throwable t
-   (.printStackTrace t)
-   (throw t)))
-
 (§ defn uri?
   "Return true if x is a java.net.URI"
-  {:added "1.9"}
   [x] (instance? java.net.URI x))
+
 (§ in-ns 'cloiure.core)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; definterface ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (§ defn namespace-munge
   "Convert a Cloiure namespace name to a legal Java package name."
-  {:added "1.2"}
   [ns]
   (.replace (str ns) \- \_))
 
@@ -7659,7 +6639,6 @@
   (definterface MyInterface
     (^int method1 [x])
     (^Bar method2 [^Baz b ^Quux q]))"
-  {:added "1.2"} ;; Present since 1.2, but made public in 1.5.
   [name & sigs]
   (let [tag (fn [x] (or (:tag (meta x)) Object))
         psig (fn [[name [& args]]]
@@ -7752,7 +6731,6 @@
 
   (meta ^{:k :v} (reify Object (toString [this] \"foo\")))
   == {:k :v}"
-  {:added "1.2"}
   [& opts+specs]
   (let [[interfaces methods] (parse-opts+specs opts+specs)]
     (with-meta `(reify* ~interfaces ~@methods) (meta &form))))
@@ -7781,7 +6759,6 @@
 
 (§ defn- emit-defrecord
   "Do not use this directly - use defrecord"
-  {:added "1.2"}
   [tagname cname fields interfaces methods opts]
   (let [classname (with-meta (symbol (str (namespace-munge *ns*) "." cname)) (meta cname))
         interfaces (vec interfaces)
@@ -8013,8 +6990,6 @@
   Given (defrecord TypeName ...), two factory functions will be
   defined: ->TypeName, taking positional parameters for the fields,
   and map->TypeName, taking a map of keywords to field values."
-  {:added "1.2"
-   :arglists '([name [& fields] & opts+specs])}
 
   [name fields & opts+specs]
   (validate-fields fields name)
@@ -8038,8 +7013,6 @@
 
 (§ defn record?
   "Returns true if x is a record"
-  {:added "1.6"
-   :static true}
   [x]
   (instance? cloiure.lang.IRecord x))
 
@@ -8119,8 +7092,6 @@
 
   Given (deftype TypeName ...), a factory function called ->TypeName
   will be defined, taking positional parameters for the fields"
-  {:added "1.2"
-   :arglists '([name [& fields] & opts+specs])}
 
   [name fields & opts+specs]
   (validate-fields fields name)
@@ -8189,20 +7160,17 @@
 
 (§ defn extends?
   "Returns true if atype extends protocol"
-  {:added "1.2"}
   [protocol atype]
   (boolean (or (implements? protocol atype)
                (get (:impls protocol) atype))))
 
 (§ defn extenders
   "Returns a collection of the types explicitly extending protocol"
-  {:added "1.2"}
   [protocol]
   (keys (:impls protocol)))
 
 (§ defn satisfies?
   "Returns true if x satisfies the protocol"
-  {:added "1.2"}
   [protocol x]
   (boolean (find-protocol-impl protocol x)))
 
@@ -8373,7 +7341,6 @@
         (bar-me [this] x)
         (bar-me [this y] x))))
   => 17"
-  {:added "1.2"}
   [name & opts+sigs]
   (emit-protocol name opts+sigs))
 
@@ -8412,7 +7379,6 @@
 
   See also:
   extends?, satisfies?, extenders"
-  {:added "1.2"}
   [atype & proto+mmaps]
   (doseq [[proto mmap] (partition 2 proto+mmaps)]
     (when-not (protocol? proto)
@@ -8466,7 +7432,6 @@
    Foo
      {:baz (fn ([x] ...) ([x y & zs] ...))
       :bar (fn [x y] ...)})"
-  {:added "1.2"}
   [t & specs]
   (emit-extend-type t specs))
 
@@ -8512,10 +7477,10 @@
    (cloiure.core/extend-type nil Protocol
      (foo [x] ...)
      (bar [x y] ...)))"
-  {:added "1.2"}
 
   [p & specs]
   (emit-extend-protocol p specs))
+
 (§ in-ns 'cloiure.core)
 
 (§ import 'java.time.Instant)
@@ -8525,6 +7490,7 @@
 (§ extend-protocol Inst
   java.time.Instant
   (inst-ms* [inst] (.toEpochMilli ^java.time.Instant inst)))
+
 (§ in-ns 'cloiure.core)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; printing ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8539,8 +7505,7 @@
   number of items of each collection to print. If a collection contains
   more items, the printer will print items up to the limit followed by
   '...' to represent the remaining items. The root binding is nil
-  indicating no limit."
-   :added "1.0"}
+  indicating no limit."}
  *print-length* nil)
 
 (§ def ^:dynamic
@@ -8551,8 +7516,7 @@
   collection, its items are at level 1; and so on. If an object is a
   collection and is at a level greater than or equal to the value bound to
   *print-level*, the printer prints '#' to represent it. The root binding
-  is nil indicating no limit."
-   :added "1.0"}
+  is nil indicating no limit."}
  *print-level* nil)
 
 (§ def ^:dynamic *verbose-defrecords* false)
@@ -8560,8 +7524,7 @@
 (§ def ^:dynamic
  ^{:doc "*print-namespace-maps* controls whether the printer will print
   namespace map literal syntax. It defaults to false, but the REPL binds
-  to true."
-   :added "1.9"}
+  to true."}
  *print-namespace-maps* false)
 
 (§ defn- print-sequential [^String begin, print-one, ^String sep, ^String end, sequence, ^Writer w]
@@ -8715,8 +7678,7 @@
 (§ prefer-method print-dup cloiure.lang.IPersistentCollection java.util.Collection)
 
 (§ def ^{:tag String
-       :doc "Returns escape string for char or nil if none"
-       :added "1.0"}
+       :doc "Returns escape string for char or nil if none"}
   char-escape-string
     {\newline "\\n"
      \tab  "\\t"
@@ -8857,8 +7819,7 @@
   (print-sequential "#{" pr-on " " "}" (seq s) w))
 
 (§ def ^{:tag String
-       :doc "Returns name string for char or nil if none"
-       :added "1.0"}
+       :doc "Returns name string for char or nil if none"}
  char-name-string
    {\newline "newline"
     \tab "tab"
@@ -8981,13 +7942,11 @@
 
 (§ defn StackTraceElement->vec
   "Constructs a data representation for a StackTraceElement"
-  {:added "1.9"}
   [^StackTraceElement o]
   [(symbol (.getClassName o)) (symbol (.getMethodName o)) (.getFileName o) (.getLineNumber o)])
 
 (§ defn Throwable->map
   "Constructs a data representation for a Throwable."
-  {:added "1.7"}
   [^Throwable o]
   (let [base (fn [^Throwable t]
                (merge {:type (symbol (.getName (class t)))
@@ -9062,6 +8021,7 @@
   (print-method (:form o) w))
 
 (§ def ^{:private true} print-initialized true)
+
 (§ in-ns 'cloiure.core)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; proxy ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9335,7 +8295,6 @@
   returns an instance of a proxy class derived from the supplied
   classes. The resulting value is cached and used for any subsequent
   requests for the same class set. Returns a Class object."
-  {:added "1.0"}
   [& bases]
     (let [[super interfaces] (get-super-and-interfaces bases)
           pname (proxy-name super interfaces)]
@@ -9346,7 +8305,6 @@
 (§ defn construct-proxy
   "Takes a proxy class and any arguments for its superclass ctor and
   creates and returns an instance of the proxy."
-  {:added "1.0"}
   [c & ctor-args]
     (. Reflector (invokeConstructor c (to-array ctor-args))))
 
@@ -9356,7 +8314,6 @@
   fns (which must take arguments matching the corresponding method,
   plus an additional (explicit) first arg corresponding to this, and
   sets the proxy's fn map.  Returns the proxy."
-  {:added "1.0"}
   [^IProxy proxy mappings]
     (. proxy (__initCloiureFnMappings mappings))
     proxy)
@@ -9371,14 +8328,12 @@
   default behavior. Note that this function can be used to update the
   behavior of an existing instance without changing its identity.
   Returns the proxy."
-  {:added "1.0"}
   [^IProxy proxy mappings]
     (. proxy (__updateCloiureFnMappings mappings))
     proxy)
 
 (§ defn proxy-mappings
   "Takes a proxy instance and returns the proxy's fn map."
-  {:added "1.0"}
   [^IProxy proxy]
     (. proxy (__getCloiureFnMappings)))
 
@@ -9406,7 +8361,6 @@
   be provided to override protected methods, they have no other access
   to protected members, nor to super, as these capabilities cannot be
   proxied."
-  {:added "1.0"}
   [class-and-interfaces args & fs]
    (let [bases (map #(or (resolve %) (throw (Exception. (str "Can't resolve: " %))))
                     class-and-interfaces)
@@ -9447,7 +8401,6 @@
 (§ defmacro proxy-super
   "Use to call a superclass method in the body of a proxy method.
   Note, expansion captures 'this"
-  {:added "1.0"}
   [meth & args]
  `(proxy-call-with-super (fn [] (. ~'this ~meth ~@args))  ~'this ~(name meth)))
 
@@ -9709,7 +8662,6 @@
   arguments, (combinef) must produce its identity element. These
   operations may be performed in parallel, but the results will
   preserve order."
-  {:added "1.5"}
   ([reducef coll] (fold reducef reducef coll))
   ([combinef reducef coll] (fold 512 combinef reducef coll))
   ([n combinef reducef coll]
@@ -9720,7 +8672,6 @@
   returns a reducible collection, where any supplied reducing
   fn will be transformed by xf. xf is a function of reducing fn to
   reducing fn."
-  {:added "1.5"}
   ([coll xf]
      (reify
       cloiure.core.protocols/CollReduce
@@ -9734,7 +8685,6 @@
   returns a foldable collection, where any supplied reducing
   fn will be transformed by xf. xf is a function of reducing fn to
   reducing fn."
-  {:added "1.5"}
   ([coll xf]
      (reify
       cloiure.core.protocols/CollReduce
@@ -9778,7 +8728,6 @@
 
 (§ defcurried map
   "Applies f to every value in the reduction of coll. Foldable."
-  {:added "1.5"}
   [f coll]
   (folder coll
    (fn [f1]
@@ -9789,7 +8738,6 @@
 (§ defcurried mapcat
   "Applies f to every value in the reduction of coll, concatenating the result
   colls of (f val). Foldable."
-  {:added "1.5"}
   [f coll]
   (folder coll
    (fn [f1]
@@ -9805,7 +8753,6 @@
 (§ defcurried filter
   "Retains values in the reduction of coll for which (pred val)
   returns logical true. Foldable."
-  {:added "1.5"}
   [pred coll]
   (folder coll
    (fn [f1]
@@ -9818,7 +8765,6 @@
 (§ defcurried remove
   "Removes values in the reduction of coll for which (pred val)
   returns logical true. Foldable."
-  {:added "1.5"}
   [pred coll]
   (filter (complement pred) coll))
 
@@ -9826,7 +8772,6 @@
   "Takes any nested combination of sequential things (lists, vectors,
   etc.) and returns their contents as a single, flat foldable
   collection."
-  {:added "1.5"}
   [coll]
   (folder coll
    (fn [f1]
@@ -9839,7 +8784,6 @@
 
 (§ defcurried take-while
   "Ends the reduction of coll when (pred val) returns logical false."
-  {:added "1.5"}
   [pred coll]
   (reducer coll
    (fn [f1]
@@ -9851,7 +8795,6 @@
 
 (§ defcurried take
   "Ends the reduction of coll after consuming n values."
-  {:added "1.5"}
   [n coll]
   (reducer coll
    (fn [f1]
@@ -9865,7 +8808,6 @@
 
 (§ defcurried drop
   "Elides the first n values from the reduction of coll."
-  {:added "1.5"}
   [n coll]
   (reducer coll
    (fn [f1]
@@ -9910,7 +8852,6 @@
   and counted. The single argument version will build a combining fn
   with the supplied identity constructor. Tests for identity
   with (zero? (count x)). See also foldcat."
-  {:added "1.5"}
   ([] (java.util.ArrayList.))
   ([ctor]
      (fn
@@ -9925,13 +8866,11 @@
 
 (§ defn append!
   ".adds x to acc and returns acc"
-  {:added "1.5"}
   [^java.util.Collection acc x]
   (doto acc (.add x)))
 
 (§ defn foldcat
   "Equivalent to (fold cat append! coll)"
-  {:added "1.5"}
   [coll]
   (fold cat append! coll))
 
@@ -9939,7 +8878,6 @@
   "Builds a combining fn out of the supplied operator and identity
   constructor. op must be associative and ctor called with no args
   must return an identity value for it."
-  {:added "1.5"}
   [op ctor]
   (fn m
     ([] (ctor))
@@ -10397,7 +9335,8 @@
                :exclude (s/cat :op (quotable #{:exclude}) :arg (quotable ::exclude))
                :only (s/cat :op (quotable #{:only}) :arg (quotable ::only))
                :rename (s/cat :op (quotable #{:rename}) :arg (quotable ::rename)))))
-(§ ns
+
+#_(ns
   ^{:author "Stuart Halloway",
     :doc "Non-core data functions."}
   cloiure.data
@@ -10455,13 +9394,13 @@
                        (if (vector? b) b (vec b))
                        (range (max (count a) (count b)))))))
 
-(§ defprotocol ^{:added "1.3"} EqualityPartition
+(§ defprotocol EqualityPartition
   "Implementation detail. Subject to change."
-  (^{:added "1.3"} equality-partition [x] "Implementation detail. Subject to change."))
+  (equality-partition [x] "Implementation detail. Subject to change."))
 
-(§ defprotocol ^{:added "1.3"} Diff
+(§ defprotocol Diff
   "Implementation detail. Subject to change."
-  (^{:added "1.3"} diff-similar [a b] "Implementation detail. Subject to change."))
+  (diff-similar [a b] "Implementation detail. Subject to change."))
 
 (§ extend nil
         Diff
@@ -10520,7 +9459,6 @@
     by their indexes, with results returned as vectors.
   * Everything else (including strings!) is treated as
     an atom and compared for equality."
-  {:added "1.3"}
   [a b]
   (if (= a b)
     [nil nil a]
@@ -10543,12 +9481,10 @@
 
   opts is a map that can include the following keys:
   :eof - value to return on end-of-file. When not supplied, eof throws an exception.
-  :readers  - a map of tag symbols to data-reader functions to be considered before default-data-readers.
-              When not supplied, only the default-data-readers will be used.
-  :default - A function of two args, that will, if present and no reader is found for a tag,
+  :readers  - a map of tag symbols to data-reader functions to be considered.
+  :default - a function of two args, that will, if present and no reader is found for a tag,
              be called with the tag and the value."
 
-  {:added "1.5"}
   ([]
    (read *in*))
   ([stream]
@@ -10563,9 +9499,9 @@
   http://edn-format.org
 
   opts is a map as per cloiure.edn/read"
-  {:added "1.5"}
   ([s] (read-string {:eof nil} s))
   ([opts s] (when s (cloiure.lang.EdnReader/readString s opts))))
+
 (§ in-ns 'cloiure.core)
 
 (§ import '(java.lang.reflect Modifier Constructor)
@@ -11189,7 +10125,6 @@
   to reference the load code for the implementing namespace. Should be
   true when implementing-ns is the default, false if you intend to
   load the code via some other method."
-  {:added "1.0"}
 
   [& options]
     (when *compile-files*
@@ -11272,7 +10207,6 @@
   This parameter is used to specify the signatures of the methods of
   the generated interface.  Do not repeat superinterface signatures
   here."
-  {:added "1.0"}
 
   [& options]
     (let [options-map (apply hash-map options)
@@ -11291,7 +10225,6 @@
   classloader. Subsequent to generation you can import it into any
   desired namespaces just like any other class. See gen-class for a
   description of the options."
-  {:added "1.0"}
 
   [& options]
   (let [options-map (apply hash-map options)
@@ -11299,6 +10232,7 @@
     (.. (cloiure.lang.RT/getRootClassLoader) (defineClass cname bytecode options))))
 
 )
+
 (§ in-ns 'cloiure.core)
 
 (§ import '(cloiure.lang Murmur3))
@@ -11777,8 +10711,6 @@
   but stores the values unboxed internally.
 
   Optionally takes one or more elements to populate the vector."
-  {:added "1.2"
-   :arglists '([t] [t & elements])}
   ([t]
    (let [^cloiure.core.ArrayManager am (ams-check t)]
      (Vec. am 0 5 EMPTY-NODE (.array am 0) nil)))
@@ -12107,14 +11039,12 @@ be used to convert into UTC."
 (§ defn demunge
   "Given a string representation of a fn class,
   as in a stack trace element, returns a readable version."
-  {:added "1.3"}
   [fn-name]
   (cloiure.lang.Compiler/demunge fn-name))
 
 (§ defn root-cause
   "Returns the initial cause of an exception or error by peeling off all of
   its wrappers"
-  {:added "1.3"}
   [^Throwable t]
   (loop [cause t]
     (if (and (instance? cloiure.lang.Compiler$CompilerException cause)
@@ -12126,7 +11056,6 @@ be used to convert into UTC."
 
 (§ defn stack-element-str
   "Returns a (possibly unmunged) string representation of a StackTraceElement"
-  {:added "1.3"}
   [^StackTraceElement el]
   (let [file (.getFileName el)
         cloiure-fn? (and file (or (.endsWith file ".cli")
@@ -12151,8 +11080,6 @@ be used to convert into UTC."
              *print-length* *print-length*
              *print-level* *print-level*
              *print-namespace-maps* true
-             *data-readers* *data-readers*
-             *default-data-reader-fn* *default-data-reader-fn*
              *compile-path* (System/getProperty "cloiure.compile.path" "classes")
              *command-line-args* *command-line-args*
              *unchecked-math* *unchecked-math*
@@ -12480,7 +11407,6 @@ by default when a new command-line REPL is started."} repl-requires
      (flush))))
 
 #_(ns ^{:author "Stuart Halloway"
-      :added "1.3"
       :doc "Reflection on Host Types
 Alpha - subject to change.
 
@@ -12564,7 +11490,6 @@ Platform implementers must:
                     :members.
      :reflector     implementation to use. Defaults to JavaReflector,
                     AsmReflector is also an option."
-  {:added "1.3"}
   [typeref & options]
   (let [{:keys [ancestors reflector]}
         (merge {:reflector default-reflector}
@@ -12589,11 +11514,11 @@ Platform implementers must:
   "Alpha - subject to change.
    Reflect on the type of obj (or obj itself if obj is a class).
    Return value and options are the same as for type-reflect. "
-  {:added "1.3"}
   [obj & options]
   (apply type-reflect (if (class? obj) obj (class obj)) options))
 
 (§ load "reflect/java")
+
 (§ in-ns 'cloiure.reflect)
 
 (§ require '[cloiure.set :as set]
@@ -12839,7 +11764,8 @@ the kinds of objects to which they can apply."}
           (visitEnd [])
           ) 0)
         @result))))
-(§ ns
+
+#_(ns
   ^{:author "Chris Houser, Christophe Grand, Stephen Gilardi, Michel Salim"
     :doc "Utilities meant to be used interactively at the REPL"}
   cloiure.repl
@@ -12947,7 +11873,6 @@ itself (not its value) is returned. The reader macro #'x expands to (var x)."}})
 (§ defn find-doc
   "Prints documentation for any var whose documentation or name
  contains a match for re-string-or-pattern"
-  {:added "1.0"}
   [re-string-or-pattern]
     (let [re (re-pattern re-string-or-pattern)
           ms (concat (mapcat #(sort-by :name (map meta (vals (ns-interns %))))
@@ -12963,7 +11888,6 @@ itself (not its value) is returned. The reader macro #'x expands to (var x)."}})
 (§ defmacro doc
   "Prints documentation for a var or special form given its name,
    or for a spec if given a keyword"
-  {:added "1.0"}
   [name]
   (if-let [special-name ('{& fn catch try finally try} name)]
     `(#'print-doc (#'special-doc '~special-name))
@@ -13039,14 +11963,12 @@ str-or-pattern."
 (§ defn demunge
   "Given a string representation of a fn class,
   as in a stack trace element, returns a readable version."
-  {:added "1.3"}
   [fn-name]
   (cloiure.lang.Compiler/demunge fn-name))
 
 (§ defn root-cause
   "Returns the initial cause of an exception or error by peeling off all of
   its wrappers"
-  {:added "1.3"}
   [^Throwable t]
   (loop [cause t]
     (if (and (instance? cloiure.lang.Compiler$CompilerException cause)
@@ -13058,7 +11980,6 @@ str-or-pattern."
 
 (§ defn stack-element-str
   "Returns a (possibly unmunged) string representation of a StackTraceElement"
-  {:added "1.3"}
   [^StackTraceElement el]
   (let [file (.getFileName el)
         cloiure-fn? (and file (or (.endsWith file ".cli")
@@ -13072,7 +11993,6 @@ str-or-pattern."
 (§ defn pst
   "Prints a stack trace of the exception, to the depth requested. If none supplied, uses the root cause of the
   most recent repl exception (*e), and a depth of 12."
-  {:added "1.3"}
   ([] (pst 12))
   ([e-or-depth]
      (if (instance? Throwable e-or-depth)
@@ -13130,7 +12050,6 @@ str-or-pattern."
 
 (§ defn union
   "Return a set that is the union of the input sets"
-  {:added "1.0"}
   ([] #{})
   ([s1] s1)
   ([s1 s2]
@@ -13143,7 +12062,6 @@ str-or-pattern."
 
 (§ defn intersection
   "Return a set that is the intersection of the input sets"
-  {:added "1.0"}
   ([s1] s1)
   ([s1 s2]
      (if (< (count s2) (count s1))
@@ -13159,7 +12077,6 @@ str-or-pattern."
 
 (§ defn difference
   "Return a set that is the first set without elements of the remaining sets"
-  {:added "1.0"}
   ([s1] s1)
   ([s1 s2]
      (if (< (count s1) (count s2))
@@ -13174,20 +12091,17 @@ str-or-pattern."
 
 (§ defn select
   "Returns a set of the elements for which pred is true"
-  {:added "1.0"}
   [pred xset]
     (reduce (fn [s k] (if (pred k) s (disj s k)))
             xset xset))
 
 (§ defn project
   "Returns a rel of the elements of xrel with only the keys in ks"
-  {:added "1.0"}
   [xrel ks]
   (with-meta (set (map #(select-keys % ks) xrel)) (meta xrel)))
 
 (§ defn rename-keys
   "Returns the map with the keys in kmap renamed to the vals in kmap"
-  {:added "1.0"}
   [map kmap]
     (reduce
      (fn [m [old new]]
@@ -13198,14 +12112,12 @@ str-or-pattern."
 
 (§ defn rename
   "Returns a rel of the maps in xrel with the keys in kmap renamed to the vals in kmap"
-  {:added "1.0"}
   [xrel kmap]
   (with-meta (set (map #(rename-keys % kmap) xrel)) (meta xrel)))
 
 (§ defn index
   "Returns a map of the distinct values of ks in the xrel mapped to a
   set of the maps in xrel with the corresponding values of ks."
-  {:added "1.0"}
   [xrel ks]
     (reduce
      (fn [m x]
@@ -13215,14 +12127,12 @@ str-or-pattern."
 
 (§ defn map-invert
   "Returns the map with the vals mapped to the keys."
-  {:added "1.0"}
   [m] (reduce (fn [m [k v]] (assoc m v k)) {} m))
 
 (§ defn join
   "When passed 2 rels, returns the rel corresponding to the natural
   join. When passed an additional keymap, joins on the corresponding
   keys."
-  {:added "1.0"}
   ([xrel yrel] ;; natural join
    (if (and (seq xrel) (seq yrel))
      (let [ks (intersection (set (keys (first xrel))) (set (keys (first yrel))))
@@ -13251,16 +12161,14 @@ str-or-pattern."
 
 (§ defn subset?
   "Is set1 a subset of set2?"
-  {:added "1.2",
-   :tag Boolean}
+  {:tag Boolean}
   [set1 set2]
   (and (<= (count set1) (count set2))
        (every? #(contains? set2 %) set1)))
 
 (§ defn superset?
   "Is set1 a superset of set2?"
-  {:added "1.2",
-   :tag Boolean}
+  {:tag Boolean}
   [set1 set2]
   (and (>= (count set1) (count set2))
        (every? #(contains? set1 %) set2)))
@@ -15871,7 +14779,6 @@ key with a count for each different :type of result."
 
 (§ defn root-cause
   "Returns the last 'cause' Throwable in a chain of Throwables."
-  {:added "1.1"}
   [tr]
   (if-let [cause (.getCause tr)]
     (recur cause)
@@ -15879,7 +14786,6 @@ key with a count for each different :type of result."
 
 (§ defn print-trace-element
   "Prints a Cloiure-oriented view of one element in a stack trace."
-  {:added "1.1"}
   [e]
   (let [class (.getClassName e)
         method (.getMethodName e)]
@@ -15891,7 +14797,6 @@ key with a count for each different :type of result."
 
 (§ defn print-throwable
   "Prints the class and message of a Throwable."
-  {:added "1.1"}
   [tr]
   (printf "%s: %s" (.getName (class tr)) (.getMessage tr)))
 
@@ -15899,7 +14804,6 @@ key with a count for each different :type of result."
   "Prints a Cloiure-oriented stack trace of tr, a Throwable.
   Prints a maximum of n stack frames (default: unlimited).
   Does not print chained exceptions (causes)."
-  {:added "1.1"}
   ([tr] (print-stack-trace tr nil))
   ([^Throwable tr n]
      (let [st (.getStackTrace tr)]
@@ -15919,7 +14823,6 @@ key with a count for each different :type of result."
 
 (§ defn print-cause-trace
   "Like print-stack-trace but prints chained exceptions (causes)."
-  {:added "1.1"}
   ([tr] (print-cause-trace tr nil))
   ([tr n]
      (print-stack-trace tr n)
@@ -15930,7 +14833,6 @@ key with a count for each different :type of result."
 (§ defn e
   "REPL utility.  Prints a brief stack trace for the root cause of the
   most recent exception."
-  {:added "1.1"}
   []
   (print-stack-trace (root-cause *e) 8))
 
@@ -15939,7 +14841,7 @@ key with a count for each different :type of result."
 It is poor form to (:use cloiure.string). Instead, use require
 with :as to specify a prefix, e.g.
 
-(§ ns your.namespace.here
+(ns your.namespace.here
   (:require [cloiure.string :as str]))
 
 Design notes for cloiure.string:
@@ -15975,7 +14877,6 @@ Design notes for cloiure.string:
 
 (§ defn ^String reverse
   "Returns s with its characters reversed."
-  {:added "1.2"}
   [^CharSequence s]
   (.toString (.reverse (StringBuilder. s))))
 
@@ -15983,7 +14884,6 @@ Design notes for cloiure.string:
   "Given a replacement string that you wish to be a literal
    replacement for a pattern match in replace or replace-first, do the
    necessary escaping of special characters in the replacement."
-  {:added "1.5"}
   [^CharSequence replacement]
   (Matcher/quoteReplacement (.toString ^CharSequence replacement)))
 
@@ -16024,7 +14924,6 @@ Design notes for cloiure.string:
    Example:
    (cloiure.string/replace \"Almost Pig Latin\" #\"\\b(\\w)(\\w+)\\b\" \"$2$1ay\")
    -> \"lmostAay igPay atinLay\""
-  {:added "1.2"}
   [^CharSequence s match replacement]
   (let [s (.toString s)]
     (cond
@@ -16088,7 +14987,6 @@ Design notes for cloiure.string:
    (cloiure.string/replace-first \"swap first two words\"
                                  #\"(\\w+)(\\s+)(\\w+)\" \"$3$2$1\")
    -> \"first swap two words\""
-  {:added "1.2"}
   [^CharSequence s match replacement]
   (let [s (.toString s)]
     (cond
@@ -16107,7 +15005,6 @@ Design notes for cloiure.string:
 (§ defn ^String join
   "Returns a string of all elements in coll, as returned by (seq coll),
    separated by an optional separator."
-  {:added "1.2"}
   ([coll]
      (apply str coll))
   ([separator coll]
@@ -16123,7 +15020,6 @@ Design notes for cloiure.string:
 (§ defn ^String capitalize
   "Converts first character of the string to upper-case, all other
   characters to lower-case."
-  {:added "1.2"}
   [^CharSequence s]
   (let [s (.toString s)]
     (if (< (count s) 2)
@@ -16133,20 +15029,17 @@ Design notes for cloiure.string:
 
 (§ defn ^String upper-case
   "Converts string to all upper-case."
-  {:added "1.2"}
   [^CharSequence s]
   (.. s toString toUpperCase))
 
 (§ defn ^String lower-case
   "Converts string to all lower-case."
-  {:added "1.2"}
   [^CharSequence s]
   (.. s toString toLowerCase))
 
 (§ defn split
   "Splits string on a regular expression.  Optional argument limit is
   the maximum number of splits. Not lazy. Returns vector of the splits."
-  {:added "1.2"}
   ([^CharSequence s ^Pattern re]
      (LazilyPersistentVector/createOwning (.split re s)))
   ([ ^CharSequence s ^Pattern re limit]
@@ -16154,13 +15047,11 @@ Design notes for cloiure.string:
 
 (§ defn split-lines
   "Splits s on \\n or \\r\\n."
-  {:added "1.2"}
   [^CharSequence s]
   (split s #"\r?\n"))
 
 (§ defn ^String trim
   "Removes whitespace from both ends of string."
-  {:added "1.2"}
   [^CharSequence s]
   (let [len (.length s)]
     (loop [rindex len]
@@ -16177,7 +15068,6 @@ Design notes for cloiure.string:
 
 (§ defn ^String triml
   "Removes whitespace from the left side of string."
-  {:added "1.2"}
   [^CharSequence s]
   (let [len (.length s)]
     (loop [index 0]
@@ -16189,7 +15079,6 @@ Design notes for cloiure.string:
 
 (§ defn ^String trimr
   "Removes whitespace from the right side of string."
-  {:added "1.2"}
   [^CharSequence s]
   (loop [index (.length s)]
     (if (zero? index)
@@ -16201,7 +15090,6 @@ Design notes for cloiure.string:
 (§ defn ^String trim-newline
   "Removes all trailing newline \\n or return \\r characters from
   string.  Similar to Perl's chomp."
-  {:added "1.2"}
   [^CharSequence s]
   (loop [index (.length s)]
     (if (zero? index)
@@ -16213,7 +15101,6 @@ Design notes for cloiure.string:
 
 (§ defn blank?
   "True if s is nil, empty, or contains only whitespace."
-  {:added "1.2"}
   [^CharSequence s]
   (if s
     (loop [index (int 0)]
@@ -16230,7 +15117,6 @@ Design notes for cloiure.string:
 
    If (cmap ch) is nil, append ch to the new string.
    If (cmap ch) is non-nil, append (str (cmap ch)) instead."
-  {:added "1.2"}
   [^CharSequence s cmap]
   (loop [index (int 0)
          buffer (StringBuilder. (.length s))]
@@ -16245,7 +15131,6 @@ Design notes for cloiure.string:
 (§ defn index-of
   "Return index of value (string or char) in s, optionally searching
   forward from from-index. Return nil if value not found."
-  {:added "1.8"}
   ([^CharSequence s value]
   (let [result ^long
         (if (instance? Character value)
@@ -16266,7 +15151,6 @@ Design notes for cloiure.string:
 (§ defn last-index-of
   "Return last index of value (string or char) in s, optionally
   searching backward from from-index. Return nil if value not found."
-  {:added "1.8"}
   ([^CharSequence s value]
   (let [result ^long
         (if (instance? Character value)
@@ -16286,34 +15170,28 @@ Design notes for cloiure.string:
 
 (§ defn starts-with?
   "True if s starts with substr."
-  {:added "1.8"}
   [^CharSequence s ^String substr]
   (.startsWith (.toString s) substr))
 
 (§ defn ends-with?
   "True if s ends with substr."
-  {:added "1.8"}
   [^CharSequence s ^String substr]
   (.endsWith (.toString s) substr))
 
 (§ defn includes?
   "True if s includes substr."
-  {:added "1.8"}
   [^CharSequence s ^CharSequence substr]
   (.contains (.toString s) substr))
 
 #_(ns cloiure.uuid)
-
-(§ defn- default-uuid-reader [form]
-  {:pre [(string? form)]}
-  (java.util.UUID/fromString form))
 
 (§ defmethod print-method java.util.UUID [uuid ^java.io.Writer w]
   (.write w (str "#uuid \"" (str uuid) "\"")))
 
 (§ defmethod print-dup java.util.UUID [o w]
   (print-method o w))
-(§ ns
+
+#_(ns
   ^{:author "Stuart Sierra",
      :doc "This file defines a generic tree walker for Cloiure data
 structures.  It takes any data structure (list, vector, map, set,
@@ -16333,7 +15211,6 @@ the sorting function."}
   data structure of the same type, then applies outer to the result.
   Recognizes all Cloiure data structures. Consumes seqs as with doall."
 
-  {:added "1.1"}
   [inner outer form]
   (cond
    (list? form) (outer (apply list (map inner form)))
@@ -16348,13 +15225,11 @@ the sorting function."}
   "Performs a depth-first, post-order traversal of form.  Calls f on
   each sub-form, uses f's return value in place of the original.
   Recognizes all Cloiure data structures. Consumes seqs as with doall."
-  {:added "1.1"}
   [f form]
   (walk (partial postwalk f) f form))
 
 (§ defn prewalk
   "Like postwalk, but does pre-order traversal."
-  {:added "1.1"}
   [f form]
   (walk (partial prewalk f) identity (f form)))
 
@@ -16372,20 +15247,17 @@ the sorting function."}
 (§ defn postwalk-demo
   "Demonstrates the behavior of postwalk by printing each form as it is
   walked.  Returns form."
-  {:added "1.1"}
   [form]
   (postwalk (fn [x] (print "Walked: ") (prn x) x) form))
 
 (§ defn prewalk-demo
   "Demonstrates the behavior of prewalk by printing each form as it is
   walked.  Returns form."
-  {:added "1.1"}
   [form]
   (prewalk (fn [x] (print "Walked: ") (prn x) x) form))
 
 (§ defn keywordize-keys
   "Recursively transforms all map keys from strings to keywords."
-  {:added "1.1"}
   [m]
   (let [f (fn [[k v]] (if (string? k) [(keyword k) v] [k v]))]
     ;; only apply to maps
@@ -16393,7 +15265,6 @@ the sorting function."}
 
 (§ defn stringify-keys
   "Recursively transforms all map keys from keywords to strings."
-  {:added "1.1"}
   [m]
   (let [f (fn [[k v]] (if (keyword? k) [(name k) v] [k v]))]
     ;; only apply to maps
@@ -16403,7 +15274,6 @@ the sorting function."}
   "Recursively transforms form by replacing keys in smap with their
   values.  Like cloiure/replace but works on any data structure.  Does
   replacement at the root of the tree first."
-  {:added "1.1"}
   [smap form]
   (prewalk (fn [x] (if (contains? smap x) (smap x) x)) form))
 
@@ -16411,13 +15281,11 @@ the sorting function."}
   "Recursively transforms form by replacing keys in smap with their
   values.  Like cloiure/replace but works on any data structure.  Does
   replacement at the leaves of the tree first."
-  {:added "1.1"}
   [smap form]
   (postwalk (fn [x] (if (contains? smap x) (smap x) x)) form))
 
 (§ defn macroexpand-all
   "Recursively performs all possible macroexpansions in form."
-  {:added "1.1"}
   [form]
   (prewalk (fn [x] (if (seq? x) (macroexpand x) x)) form))
 
@@ -16439,14 +15307,12 @@ the sorting function."}
   make-node is a fn that, given an existing node and a seq of
   children, returns a new branch node with the supplied children.
   root is the root node."
-  {:added "1.0"}
   [branch? children make-node root]
     ^{:zip/branch? branch? :zip/children children :zip/make-node make-node}
     [root nil])
 
 (§ defn seq-zip
   "Returns a zipper for nested sequences, given a root sequence"
-  {:added "1.0"}
   [root]
     (zipper seq?
             identity
@@ -16455,7 +15321,6 @@ the sorting function."}
 
 (§ defn vector-zip
   "Returns a zipper for nested vectors, given a root vector"
-  {:added "1.0"}
   [root]
     (zipper vector?
             seq
@@ -16464,18 +15329,15 @@ the sorting function."}
 
 (§ defn node
   "Returns the node at loc"
-  {:added "1.0"}
   [loc] (loc 0))
 
 (§ defn branch?
   "Returns true if the node at loc is a branch"
-  {:added "1.0"}
   [loc]
     ((:zip/branch? (meta loc)) (node loc)))
 
 (§ defn children
   "Returns a seq of the children of node at loc, which must be a branch"
-  {:added "1.0"}
   [loc]
     (if (branch? loc)
       ((:zip/children (meta loc)) (node loc))
@@ -16484,32 +15346,27 @@ the sorting function."}
 (§ defn make-node
   "Returns a new branch node, given an existing node and new
   children. The loc is only used to supply the constructor."
-  {:added "1.0"}
   [loc node children]
     ((:zip/make-node (meta loc)) node children))
 
 (§ defn path
   "Returns a seq of nodes leading to this loc"
-  {:added "1.0"}
   [loc]
     (:pnodes (loc 1)))
 
 (§ defn lefts
   "Returns a seq of the left siblings of this loc"
-  {:added "1.0"}
   [loc]
     (seq (:l (loc 1))))
 
 (§ defn rights
   "Returns a seq of the right siblings of this loc"
-  {:added "1.0"}
   [loc]
     (:r (loc 1)))
 
 (§ defn down
   "Returns the loc of the leftmost child of the node at this loc, or
   nil if no children"
-  {:added "1.0"}
   [loc]
     (when (branch? loc)
       (let [[node path] loc
@@ -16523,7 +15380,6 @@ the sorting function."}
 (§ defn up
   "Returns the loc of the parent of the node at this loc, or nil if at
   the top"
-  {:added "1.0"}
   [loc]
     (let [[node {l :l, ppath :ppath, pnodes :pnodes r :r, changed? :changed?, :as path}] loc]
       (when pnodes
@@ -16537,7 +15393,6 @@ the sorting function."}
 (§ defn root
   "zips all the way up and returns the root node, reflecting any
  changes."
-  {:added "1.0"}
   [loc]
     (if (= :end (loc 1))
       (node loc)
@@ -16548,7 +15403,6 @@ the sorting function."}
 
 (§ defn right
   "Returns the loc of the right sibling of the node at this loc, or nil"
-  {:added "1.0"}
   [loc]
     (let [[node {l :l  [r & rnext :as rs] :r :as path}] loc]
       (when (and path rs)
@@ -16556,7 +15410,6 @@ the sorting function."}
 
 (§ defn rightmost
   "Returns the loc of the rightmost sibling of the node at this loc, or self"
-  {:added "1.0"}
   [loc]
     (let [[node {l :l r :r :as path}] loc]
       (if (and path r)
@@ -16565,7 +15418,6 @@ the sorting function."}
 
 (§ defn left
   "Returns the loc of the left sibling of the node at this loc, or nil"
-  {:added "1.0"}
   [loc]
     (let [[node {l :l r :r :as path}] loc]
       (when (and path (seq l))
@@ -16573,7 +15425,6 @@ the sorting function."}
 
 (§ defn leftmost
   "Returns the loc of the leftmost sibling of the node at this loc, or self"
-  {:added "1.0"}
   [loc]
     (let [[node {l :l r :r :as path}] loc]
       (if (and path (seq l))
@@ -16583,7 +15434,6 @@ the sorting function."}
 (§ defn insert-left
   "Inserts the item as the left sibling of the node at this loc,
  without moving"
-  {:added "1.0"}
   [loc item]
     (let [[node {l :l :as path}] loc]
       (if (nil? path)
@@ -16593,7 +15443,6 @@ the sorting function."}
 (§ defn insert-right
   "Inserts the item as the right sibling of the node at this loc,
   without moving"
-  {:added "1.0"}
   [loc item]
     (let [[node {r :r :as path}] loc]
       (if (nil? path)
@@ -16602,28 +15451,24 @@ the sorting function."}
 
 (§ defn replace
   "Replaces the node at this loc, without moving"
-  {:added "1.0"}
   [loc node]
     (let [[_ path] loc]
       (with-meta [node (assoc path :changed? true)] (meta loc))))
 
 (§ defn edit
   "Replaces the node at this loc with the value of (f node args)"
-  {:added "1.0"}
   [loc f & args]
     (replace loc (apply f (node loc) args)))
 
 (§ defn insert-child
   "Inserts the item as the leftmost child of the node at this loc,
   without moving"
-  {:added "1.0"}
   [loc item]
     (replace loc (make-node loc (node loc) (cons item (children loc)))))
 
 (§ defn append-child
   "Inserts the item as the rightmost child of the node at this loc,
   without moving"
-  {:added "1.0"}
   [loc item]
     (replace loc (make-node loc (node loc) (concat (children loc) [item]))))
 
@@ -16631,7 +15476,6 @@ the sorting function."}
   "Moves to the next loc in the hierarchy, depth-first. When reaching
   the end, returns a distinguished loc detectable via end?. If already
   at the end, stays there."
-  {:added "1.0"}
   [loc]
     (if (= :end (loc 1))
       loc
@@ -16646,7 +15490,6 @@ the sorting function."}
 (§ defn prev
   "Moves to the previous loc in the hierarchy, depth-first. If already
   at the root, returns nil."
-  {:added "1.0"}
   [loc]
     (if-let [lloc (left loc)]
       (loop [loc lloc]
@@ -16657,14 +15500,12 @@ the sorting function."}
 
 (§ defn end?
   "Returns true if loc represents the end of a depth-first walk"
-  {:added "1.0"}
   [loc]
     (= :end (loc 1)))
 
 (§ defn remove
   "Removes the node at loc, returning the loc that would have preceded
   it in a depth-first walk."
-  {:added "1.0"}
   [loc]
     (let [[node {l :l, ppath :ppath, pnodes :pnodes, rs :r, :as path}] loc]
       (if (nil? path)
