@@ -94,7 +94,7 @@
 (declare Box'new)
 (declare ChunkBuffer'new)
 (declare ChunkedCons'new-3 ChunkedCons'new-2)
-(declare Compile'PATH_PROP Compile'REFLECTION_WARNING_PROP Compile'UNCHECKED_MATH_PROP Compile'compile_path Compile'compile Compile'warn_on_reflection Compile'unchecked_math Compile'main)
+(declare Compile'PATH_PROP Compile'REFLECTION_WARNING_PROP Compile'compile_path Compile'compile Compile'warn_on_reflection Compile'main)
 (declare DefExpr'bindRootMethod DefExpr'setTagMethod DefExpr'setMetaMethod DefExpr'setDynamicMethod DefExpr'symintern DefExpr'internVar DefExpr'new)
 (declare AssignExpr'new)
 (declare VarExpr'getMethod VarExpr'setMethod VarExpr'new)
@@ -106,7 +106,7 @@
 (declare StaticFieldExpr'new)
 (declare MethodExpr'emitArgsAsArray MethodExpr'emitTypedArgs)
 (declare InstanceMethodExpr'invokeInstanceMethodMethod InstanceMethodExpr'new)
-(declare StaticMethodExpr'forNameMethod StaticMethodExpr'invokeStaticMethodMethod StaticMethodExpr'warnOnBoxedKeyword StaticMethodExpr'new StaticMethodExpr'isBoxedMath)
+(declare StaticMethodExpr'forNameMethod StaticMethodExpr'invokeStaticMethodMethod StaticMethodExpr'new)
 (declare UnresolvedVarExpr'new)
 (declare NumberExpr'new NumberExpr'parse)
 (declare ConstantParser'formKey)
@@ -244,7 +244,7 @@
 (declare Reflector'invokeInstanceMethod Reflector'getCauseOrElse Reflector'throwCauseOrElseException Reflector'noMethodReport Reflector'invokeMatchingMethod Reflector'getAsMethodOfPublicBase Reflector'isMatch Reflector'invokeConstructor Reflector'invokeStaticMethodVariadic Reflector'invokeStaticMethod-3s Reflector'invokeStaticMethod-3c Reflector'getStaticField-2s Reflector'getStaticField-2c Reflector'setStaticField-3s Reflector'setStaticField-3c Reflector'getInstanceField Reflector'setInstanceField Reflector'invokeNoArgInstanceMember-2 Reflector'invokeNoArgInstanceMember-3 Reflector'invokeInstanceMember-2 Reflector'invokeInstanceMember-3o Reflector'invokeInstanceMember-3a Reflector'getField Reflector'getMethods Reflector'boxArg Reflector'boxArgs Reflector'paramArgTypeMatch Reflector'isCongruent Reflector'prepRet)
 (declare Repeat'INFINITE Repeat'new-2 Repeat'new-3 Repeat'create-1 Repeat'create-2)
 (declare RestFn'ontoArrayPrepend RestFn'findKey)
-(declare RT'T RT'F RT'LOADER_SUFFIX RT'DEFAULT_IMPORTS RT'UTF8 RT'readTrueFalseUnknown RT'CLOIURE_NS RT'OUT RT'IN RT'ERR RT'TAG_KEY RT'CONST_KEY RT'AGENT RT'readeval RT'READEVAL RT'SUPPRESS_READ RT'ASSERT RT'MATH_CONTEXT RT'LINE_KEY RT'COLUMN_KEY RT'FILE_KEY RT'DECLARED_KEY RT'DOC_KEY RT'USE_CONTEXT_CLASSLOADER RT'UNCHECKED_MATH RT'LOAD_FILE RT'IN_NAMESPACE RT'NAMESPACE RT'IDENTICAL RT'CMD_LINE_ARGS RT'CURRENT_NS RT'FLUSH_ON_NEWLINE RT'PRINT_META RT'PRINT_READABLY RT'PRINT_DUP RT'WARN_ON_REFLECTION RT'ALLOW_UNRESOLVED_VARS RT'READER_RESOLVER RT'IN_NS_VAR RT'NS_VAR RT'FN_LOADER_VAR RT'PRINT_INITIALIZED RT'PR_ON RT'inNamespace RT'bootNamespace RT'processCommandLine RT'errPrintWriter RT'EMPTY_ARRAY RT'DEFAULT_COMPARATOR RT'ID RT'addURL RT'CHECK_SPEC_ASSERTS RT'INSTRUMENT_MACROS RT'CHECK_SPECS RT'keyword RT'var-2 RT'var-3 RT'loadResourceScript-1 RT'maybeLoadResourceScript RT'loadResourceScript-2s RT'loadResourceScript-2c RT'loadResourceScript-3 RT'lastModified RT'compile RT'load-1 RT'load-2 RT'doInit RT'nextID RT'loadLibrary RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'countFrom RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nthFrom-2 RT'nth-3 RT'nthFrom-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1c RT'intCast-1b RT'intCast-1s RT'intCast-1i RT'intCast-1f RT'intCast-1l RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1f RT'longCast-1l RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1f RT'floatCast-1l RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1f RT'doubleCast-1l RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'resolveClassNameInContext RT'suppressRead RT'printString RT'readString-1 RT'readString-2 RT'print RT'printInnerSeq RT'formatAesthetic RT'formatStandard RT'format RT'doFormat RT'setValues RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget-2f RT'aset-3f RT'alength-1f RT'aclone-1f RT'aget-2d RT'aset-3d RT'alength-1d RT'aclone-1d RT'aget-2i RT'aset-3i RT'alength-1i RT'aclone-1i RT'aget-2l RT'aset-3l RT'alength-1l RT'aclone-1l RT'aget-2c RT'aset-3c RT'alength-1c RT'aclone-1c RT'aget-2b RT'aset-3b RT'alength-1b RT'aclone-1b RT'aget-2s RT'aset-3s RT'alength-1s RT'aclone-1s RT'aget-2z RT'aset-3z RT'alength-1z RT'aclone-1z RT'aget-2o RT'aset-3o RT'alength-1o RT'aclone-1o)
+(declare RT'T RT'F RT'LOADER_SUFFIX RT'DEFAULT_IMPORTS RT'UTF8 RT'readTrueFalseUnknown RT'CLOIURE_NS RT'OUT RT'IN RT'ERR RT'TAG_KEY RT'CONST_KEY RT'AGENT RT'readeval RT'READEVAL RT'SUPPRESS_READ RT'ASSERT RT'MATH_CONTEXT RT'LINE_KEY RT'COLUMN_KEY RT'FILE_KEY RT'DECLARED_KEY RT'DOC_KEY RT'USE_CONTEXT_CLASSLOADER RT'LOAD_FILE RT'IN_NAMESPACE RT'NAMESPACE RT'IDENTICAL RT'CMD_LINE_ARGS RT'CURRENT_NS RT'FLUSH_ON_NEWLINE RT'PRINT_META RT'PRINT_READABLY RT'WARN_ON_REFLECTION RT'ALLOW_UNRESOLVED_VARS RT'READER_RESOLVER RT'IN_NS_VAR RT'NS_VAR RT'FN_LOADER_VAR RT'PRINT_INITIALIZED RT'PR_ON RT'inNamespace RT'bootNamespace RT'processCommandLine RT'errPrintWriter RT'EMPTY_ARRAY RT'DEFAULT_COMPARATOR RT'ID RT'addURL RT'CHECK_SPEC_ASSERTS RT'INSTRUMENT_MACROS RT'CHECK_SPECS RT'keyword RT'var-2 RT'var-3 RT'loadResourceScript-1 RT'maybeLoadResourceScript RT'loadResourceScript-2s RT'loadResourceScript-2c RT'loadResourceScript-3 RT'lastModified RT'compile RT'load-1 RT'load-2 RT'doInit RT'nextID RT'loadLibrary RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'countFrom RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nthFrom-2 RT'nth-3 RT'nthFrom-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1c RT'intCast-1b RT'intCast-1s RT'intCast-1i RT'intCast-1f RT'intCast-1l RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1f RT'longCast-1l RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1f RT'floatCast-1l RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1f RT'doubleCast-1l RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'resolveClassNameInContext RT'suppressRead RT'printString RT'readString-1 RT'readString-2 RT'print RT'printInnerSeq RT'formatAesthetic RT'formatStandard RT'format RT'doFormat RT'setValues RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget-2f RT'aset-3f RT'alength-1f RT'aclone-1f RT'aget-2d RT'aset-3d RT'alength-1d RT'aclone-1d RT'aget-2i RT'aset-3i RT'alength-1i RT'aclone-1i RT'aget-2l RT'aset-3l RT'alength-1l RT'aclone-1l RT'aget-2c RT'aset-3c RT'alength-1c RT'aclone-1c RT'aget-2b RT'aset-3b RT'alength-1b RT'aclone-1b RT'aget-2s RT'aset-3s RT'alength-1s RT'aclone-1s RT'aget-2z RT'aset-3z RT'alength-1z RT'aclone-1z RT'aget-2o RT'aset-3o RT'alength-1o RT'aclone-1o)
 (declare SeqIterator'START SeqIterator'new)
 (declare StringSeq'create StringSeq'new)
 (declare Symbol'create-2 Symbol'create-1 Symbol'intern-2 Symbol'intern-1 Symbol'new-2 Symbol'new-3)
@@ -5468,12 +5468,10 @@
 (class-ns Compile
     (def- #_"String" Compile'PATH_PROP "cloiure.compile.path")
     (def- #_"String" Compile'REFLECTION_WARNING_PROP "cloiure.compile.warn-on-reflection")
-    (def- #_"String" Compile'UNCHECKED_MATH_PROP "cloiure.compile.unchecked-math")
 
     (§ def- #_"Var" Compile'compile_path (RT'var-2 "cloiure.core", "*compile-path*"))
     (§ def- #_"Var" Compile'compile (RT'var-2 "cloiure.core", "compile"))
     (§ def- #_"Var" Compile'warn_on_reflection (RT'var-2 "cloiure.core", "*warn-on-reflection*"))
-    (§ def- #_"Var" Compile'unchecked_math (RT'var-2 "cloiure.core", "*unchecked-math*"))
 
     (defn #_"void" Compile'main [#_"String[]" args] #_(§ throws IOException, ClassNotFoundException)
         (let [#_"OutputStreamWriter" out (cast OutputStreamWriter (.deref RT'OUT))]
@@ -5486,48 +5484,33 @@
                         )
 
                         (let [#_"boolean" warnOnReflection (.equals (System/getProperty Compile'REFLECTION_WARNING_PROP, "false"), "true")]
-                            (let [#_"String" uncheckedMathProp (System/getProperty Compile'UNCHECKED_MATH_PROP)]
-                                (let [#_"Object" uncheckedMath Boolean/FALSE]
-                                    (cond (.equals "true", uncheckedMathProp)
-                                        (do
-                                            (§ ass uncheckedMath Boolean/TRUE)
-                                        )
-                                        (.equals "warn-on-boxed", uncheckedMathProp)
-                                        (do
-                                            (§ ass uncheckedMath (Keyword'intern-1 "warn-on-boxed"))
-                                        )
-                                    )
+                            ;; force load to avoid transitive compilation during lazy load
+                            (RT'load-1 "cloiure/core/specs/alpha")
 
-                                    ;; force load to avoid transitive compilation during lazy load
-                                    (RT'load-1 "cloiure/core/specs/alpha")
+                            (try
+                                (Var'pushThreadBindings (RT'map
+                                    (object-array [
+                                        Compile'compile_path       path
+                                        Compile'warn_on_reflection warnOnReflection
+                                    ])
+                                ))
 
+                                (doseq [#_"String" lib args]
+                                    (.write out, (str "Compiling " lib " to " path "\n"))
+                                    (.flush out)
+                                    (.invoke Compile'compile, (Symbol'intern-1 lib))
+                                )
+                                (finally
+                                    (Var'popThreadBindings)
                                     (try
-                                        (Var'pushThreadBindings (RT'map
-                                            (object-array [
-                                                Compile'compile_path       path
-                                                Compile'warn_on_reflection warnOnReflection
-                                                Compile'unchecked_math     uncheckedMath
-                                            ])
-                                        ))
-
-                                        (doseq [#_"String" lib args]
-                                            (.write out, (str "Compiling " lib " to " path "\n"))
-                                            (.flush out)
-                                            (.invoke Compile'compile, (Symbol'intern-1 lib))
-                                        )
-                                        (finally
-                                            (Var'popThreadBindings)
-                                            (try
-                                                (.flush out)
-                                                (catch IOException e
-                                                    (.printStackTrace e, err)
-                                                )
-                                            )
+                                        (.flush out)
+                                        (catch IOException e
+                                            (.printStackTrace e, err)
                                         )
                                     )
-                                    nil
                                 )
                             )
+                            nil
                         )
                     )
                 )
@@ -6338,60 +6321,29 @@
                     (do
                         (let [#_"Method" m nil]
                             (.checkCast gen, HostExpr'NUMBER_TYPE)
-                            (if (RT'booleanCast-1o (.deref RT'UNCHECKED_MATH))
+                            (cond (= paramType Integer/TYPE)
                                 (do
-                                    (cond (= paramType Integer/TYPE)
-                                        (do
-                                            (§ ass m (Method/getMethod "int uncheckedIntCast(Object)"))
-                                        )
-                                        (= paramType Float/TYPE)
-                                        (do
-                                            (§ ass m (Method/getMethod "float uncheckedFloatCast(Object)"))
-                                        )
-                                        (= paramType Double/TYPE)
-                                        (do
-                                            (§ ass m (Method/getMethod "double uncheckedDoubleCast(Object)"))
-                                        )
-                                        (= paramType Long/TYPE)
-                                        (do
-                                            (§ ass m (Method/getMethod "long uncheckedLongCast(Object)"))
-                                        )
-                                        (= paramType Byte/TYPE)
-                                        (do
-                                            (§ ass m (Method/getMethod "byte uncheckedByteCast(Object)"))
-                                        )
-                                        (= paramType Short/TYPE)
-                                        (do
-                                            (§ ass m (Method/getMethod "short uncheckedShortCast(Object)"))
-                                        )
-                                    )
+                                    (§ ass m (Method/getMethod "int intCast(Object)"))
                                 )
+                                (= paramType Float/TYPE)
                                 (do
-                                    (cond (= paramType Integer/TYPE)
-                                        (do
-                                            (§ ass m (Method/getMethod "int intCast(Object)"))
-                                        )
-                                        (= paramType Float/TYPE)
-                                        (do
-                                            (§ ass m (Method/getMethod "float floatCast(Object)"))
-                                        )
-                                        (= paramType Double/TYPE)
-                                        (do
-                                            (§ ass m (Method/getMethod "double doubleCast(Object)"))
-                                        )
-                                        (= paramType Long/TYPE)
-                                        (do
-                                            (§ ass m (Method/getMethod "long longCast(Object)"))
-                                        )
-                                        (= paramType Byte/TYPE)
-                                        (do
-                                            (§ ass m (Method/getMethod "byte byteCast(Object)"))
-                                        )
-                                        (= paramType Short/TYPE)
-                                        (do
-                                            (§ ass m (Method/getMethod "short shortCast(Object)"))
-                                        )
-                                    )
+                                    (§ ass m (Method/getMethod "float floatCast(Object)"))
+                                )
+                                (= paramType Double/TYPE)
+                                (do
+                                    (§ ass m (Method/getMethod "double doubleCast(Object)"))
+                                )
+                                (= paramType Long/TYPE)
+                                (do
+                                    (§ ass m (Method/getMethod "long longCast(Object)"))
+                                )
+                                (= paramType Byte/TYPE)
+                                (do
+                                    (§ ass m (Method/getMethod "byte byteCast(Object)"))
+                                )
+                                (= paramType Short/TYPE)
+                                (do
+                                    (§ ass m (Method/getMethod "short shortCast(Object)"))
                                 )
                             )
                             (.invokeStatic gen, Compiler'RT_TYPE, m)
@@ -6812,14 +6764,7 @@
                             (do
                                 (let [#_"MaybePrimitiveExpr" pe (cast' MaybePrimitiveExpr e)]
                                     (.emitUnboxed pe, :Context'EXPRESSION, objx, gen)
-                                    (if (RT'booleanCast-1o (.deref RT'UNCHECKED_MATH))
-                                        (do
-                                            (.invokeStatic gen, Compiler'RT_TYPE, (Method/getMethod "int uncheckedIntCast(long)"))
-                                        )
-                                        (do
-                                            (.invokeStatic gen, Compiler'RT_TYPE, (Method/getMethod "int intCast(long)"))
-                                        )
-                                    )
+                                    (.invokeStatic gen, Compiler'RT_TYPE, (Method/getMethod "int intCast(long)"))
                                 )
                             )
                             (and (= primc Float/TYPE) (= (§ aget parameterTypes i) Double/TYPE))
@@ -7064,7 +7009,6 @@
 (class-ns StaticMethodExpr (§ extends MethodExpr)
     (def #_"Method" StaticMethodExpr'forNameMethod (Method/getMethod "Class classForName(String)"))
     (def #_"Method" StaticMethodExpr'invokeStaticMethodMethod (Method/getMethod "Object invokeStaticMethod(Class, String, Object[])"))
-    (§ def #_"Keyword" StaticMethodExpr'warnOnBoxedKeyword (Keyword'intern-1 "warn-on-boxed"))
 
     (defn- #_"StaticMethodExpr" StaticMethodExpr'init []
         (hash-map
@@ -7116,27 +7060,9 @@
                     (when (and (nil? (:method this)) (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION)))
                         (.format (RT'errPrintWriter), "Reflection warning, %s:%d:%d - call to static method %s on %s can't be resolved (argument types: %s).\n", (object-array [ (.deref Compiler'SOURCE_PATH), line, column, methodName, (.getName c), (Compiler'getTypeStringForArgs args) ]))
                     )
-                    (when (and (some? (:method this)) (.equals StaticMethodExpr'warnOnBoxedKeyword, (.deref RT'UNCHECKED_MATH)) (StaticMethodExpr'isBoxedMath (:method this)))
-                        (.format (RT'errPrintWriter), "Boxed math warning, %s:%d:%d - call: %s.\n", (object-array [ (.deref Compiler'SOURCE_PATH), line, column, (.toString (:method this)) ]))
-                    )
                     this
                 )
             )
-        )
-    )
-
-    (defn #_"boolean" StaticMethodExpr'isBoxedMath [#_"java.lang.reflect.Method" m]
-        (let [#_"Class" c (.getDeclaringClass m)]
-            (when (.equals c, (§ class Numbers))
-                (let [#_"Class[]" argTypes (.getParameterTypes m)]
-                    (doseq [#_"Class" argType argTypes]
-                        (when (or (.equals argType, Object) (.equals argType, Number))
-                            (§ return true)
-                        )
-                    )
-                )
-            )
-            false
         )
     )
 
@@ -10530,7 +10456,7 @@
                         (try
                             (§ ass cs (RT'printString value))
                             (catch Exception e
-                                (throw (Util'runtimeException-1 (str "Can't embed object in code, maybe print-dup not defined: " value)))
+                                (throw (Util'runtimeException-1 (str "Can't embed object in code: " value)))
                             )
                         )
                         (when (zero? (.length cs))
@@ -10564,22 +10490,11 @@
 
     #_method
     (§ defn #_"void" (§ method emitConstants) [#_"ObjExpr" this, #_"GeneratorAdapter" clinitgen]
-        (try
-            (Var'pushThreadBindings (RT'map
-                (object-array [
-                    RT'PRINT_DUP RT'T
-                ])
-            ))
-
-            (loop-when-recur [#_"int" i 0] (< i (.count (:constants this))) [(inc i)]
-                (when (.contains (:usedConstants this), i)
-                    (.emitValue this, (.nth (:constants this), i), clinitgen)
-                    (.checkCast clinitgen, (.constantType this, i))
-                    (.putStatic clinitgen, (:objtype this), (.constantName this, i), (.constantType this, i))
-                )
-            )
-            (finally
-                (Var'popThreadBindings)
+        (loop-when-recur [#_"int" i 0] (< i (.count (:constants this))) [(inc i)]
+            (when (.contains (:usedConstants this), i)
+                (.emitValue this, (.nth (:constants this), i), clinitgen)
+                (.checkCast clinitgen, (.constantType this, i))
+                (.putStatic clinitgen, (:objtype this), (.constantName this, i), (.constantType this, i))
             )
         )
         nil
@@ -15396,7 +15311,6 @@
                             Compiler'COLUMN_BEFORE  (.getColumnNumber pushbackReader)
                             Compiler'LINE_AFTER     (.getLineNumber pushbackReader)
                             Compiler'COLUMN_AFTER   (.getColumnNumber pushbackReader)
-                            RT'UNCHECKED_MATH       (.deref RT'UNCHECKED_MATH)
                             RT'WARN_ON_REFLECTION   (.deref RT'WARN_ON_REFLECTION)
                         ])
                     ))
@@ -15559,7 +15473,6 @@
                             Compiler'CONSTANT_IDS   (IdentityHashMap.)
                             Compiler'KEYWORDS       PersistentHashMap'EMPTY
                             Compiler'VARS           PersistentHashMap'EMPTY
-                            RT'UNCHECKED_MATH       (.deref RT'UNCHECKED_MATH)
                             RT'WARN_ON_REFLECTION   (.deref RT'WARN_ON_REFLECTION)
                         ])
                     ))
@@ -15606,18 +15519,11 @@
                                                     (loop-when-recur [#_"int" n 0] (< n numInits) [(inc n)]
                                                         (let [#_"GeneratorAdapter" clinitgen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), (Method/getMethod (str "void __init" n"()")), nil, nil, cv)]
                                                             (.visitCode clinitgen)
-                                                            (try
-                                                                (Var'pushThreadBindings (RT'map RT'PRINT_DUP, RT'T))
-
-                                                                (loop-when-recur [#_"int" i (* n INITS_PER)] (and (< i (.count (:constants objx))) (< i (* (inc n) INITS_PER))) [(inc i)]
-                                                                    (when (.contains (:usedConstants objx), i)
-                                                                        (.emitValue objx, (.nth (:constants objx), i), clinitgen)
-                                                                        (.checkCast clinitgen, (.constantType objx, i))
-                                                                        (.putStatic clinitgen, (:objtype objx), (.constantName objx, i), (.constantType objx, i))
-                                                                    )
-                                                                )
-                                                                (finally
-                                                                    (Var'popThreadBindings)
+                                                            (loop-when-recur [#_"int" i (* n INITS_PER)] (and (< i (.count (:constants objx))) (< i (* (inc n) INITS_PER))) [(inc i)]
+                                                                (when (.contains (:usedConstants objx), i)
+                                                                    (.emitValue objx, (.nth (:constants objx), i), clinitgen)
+                                                                    (.checkCast clinitgen, (.constantType objx, i))
+                                                                    (.putStatic clinitgen, (:objtype objx), (.constantName objx, i), (.constantType objx, i))
                                                                 )
                                                             )
                                                             (.returnValue clinitgen)
@@ -39920,8 +39826,6 @@
     (§ def #_"Keyword" RT'DOC_KEY (Keyword'intern-2 nil, "doc"))
 
     (§ def #_"Var" RT'USE_CONTEXT_CLASSLOADER (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*use-context-classloader*"), RT'T)))
-    ;; boolean
-    (§ def #_"Var" RT'UNCHECKED_MATH (.setDynamic (Var'intern-3 (Namespace'findOrCreate (Symbol'intern-1 "cloiure.core")), (Symbol'intern-1 "*unchecked-math*"), Boolean/FALSE)))
 
     (§ def #_"Symbol" RT'LOAD_FILE (Symbol'intern-1 "load-file"))
     (§ def #_"Symbol" RT'IN_NAMESPACE (Symbol'intern-1 "in-ns"))
@@ -39935,7 +39839,6 @@
     (§ def #_"Var" RT'FLUSH_ON_NEWLINE (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*flush-on-newline*"), RT'T)))
     (§ def #_"Var" RT'PRINT_META (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*print-meta*"), RT'F)))
     (§ def #_"Var" RT'PRINT_READABLY (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*print-readably*"), RT'T)))
-    (§ def #_"Var" RT'PRINT_DUP (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*print-dup*"), RT'F)))
     (§ def #_"Var" RT'WARN_ON_REFLECTION (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*warn-on-reflection*"), RT'F)))
     (§ def #_"Var" RT'ALLOW_UNRESOLVED_VARS (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*allow-unresolved-vars*"), RT'F)))
     (§ def #_"Var" RT'READER_RESOLVER (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*reader-resolver*"), nil)))
@@ -40185,7 +40088,6 @@
                                             (object-array [
                                                 RT'CURRENT_NS         (.deref RT'CURRENT_NS)
                                                 RT'WARN_ON_REFLECTION (.deref RT'WARN_ON_REFLECTION)
-                                                RT'UNCHECKED_MATH     (.deref RT'UNCHECKED_MATH)
                                             ])
                                         ))
                                         (§ ass loaded (some? (RT'loadClassForName (str (.replace scriptbase, \/, \.) RT'LOADER_SUFFIX))))
@@ -40226,7 +40128,6 @@
             (object-array [
                 RT'CURRENT_NS         (.deref RT'CURRENT_NS)
                 RT'WARN_ON_REFLECTION (.deref RT'WARN_ON_REFLECTION)
-                RT'UNCHECKED_MATH     (.deref RT'UNCHECKED_MATH)
             ])
         ))
         (try
@@ -41960,7 +41861,7 @@
                 (let [#_"boolean" readably (RT'booleanCast-1o (.deref RT'PRINT_READABLY))]
                     (when (§ instance? Obj x)
                         (let [#_"Obj" o (cast' Obj x)]
-                            (when (and (pos? (RT'count (.meta o))) (or (and readably (RT'booleanCast-1o (.deref RT'PRINT_META))) (RT'booleanCast-1o (.deref RT'PRINT_DUP))))
+                            (when (and (pos? (RT'count (.meta o))) (and readably (RT'booleanCast-1o (.deref RT'PRINT_META))))
                                 (let [#_"IPersistentMap" meta (.meta o)]
                                     (.write w, "#^")
                                     (if (and (= (.count meta) 1) (.containsKey meta, RT'TAG_KEY))
