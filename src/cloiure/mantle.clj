@@ -256,7 +256,7 @@
  ; Returns an array of Objects containing the contents of coll, which
  ; can be any Collection. Maps to java.util.Collection.toArray().
  ;;
-(§ defn to-array {:tag "[Ljava.lang.Object;"} [coll] (cloiure.lang.RT/toArray coll))
+(§ defn ^"[Ljava.lang.Object;" to-array [coll] (cloiure.lang.RT/toArray coll))
 
 ;;;
  ; Throws a ClassCastException if x is not a c, else returns x.
@@ -1656,7 +1656,7 @@
  ; in second form, etc.
  ;;
 (§ defmacro -> [x & forms]
-    (loop [x x, forms forms]
+    (loop [x x forms forms]
         (if forms
             (let [form (first forms)
                   threaded
@@ -1678,7 +1678,7 @@
  ; in second form, etc.
  ;;
 (§ defmacro ->> [x & forms]
-    (loop [x x, forms forms]
+    (loop [x x forms forms]
         (if forms
             (let [form (first forms)
                   threaded
@@ -3879,37 +3879,44 @@
  ; current value of *in*.
  ;
  ; Opts is a persistent map with valid keys:
+ ;
  ; :read-cond - :allow to process reader conditionals, or
- ; :preserve to keep all branches
- ; :features - persistent set of feature keywords for reader conditionals
+ ;              :preserve to keep all branches.
+ ; :features - persistent set of feature keywords for reader conditionals.
  ; :eof - on eof, return value unless :eofthrow, then throw.
- ; if not specified, will throw
+ ;        if not specified, will throw.
  ;
  ; Note that read can execute code (controlled by *read-eval*),
  ; and as such should be used only with trusted sources.
  ;
- ; For data structure interop use cloiure.edn/read
+ ; For data structure interop use cloiure.edn/read.
  ;;
 (§ defn read
     ([]
-        (read *in*))
+        (read *in*)
+    )
     ([stream]
-        (read stream true nil))
+        (read stream true nil)
+    )
     ([stream eof-error? eof-value]
-        (read stream eof-error? eof-value false))
+        (read stream eof-error? eof-value false)
+    )
     ([stream eof-error? eof-value recursive?]
-        (cloiure.lang.LispReader/read stream (boolean eof-error?) eof-value recursive?))
+        (cloiure.lang.LispReader/read stream (boolean eof-error?) eof-value recursive?)
+    )
     ([opts stream]
-        (cloiure.lang.LispReader/read stream opts))
+        (cloiure.lang.LispReader/read stream opts)
+    )
 )
 
 ;;;
- ; Reads the next line from stream that is the current value of *in* .
+ ; Reads the next line from stream that is the current value of *in*.
  ;;
 (§ defn read-line []
     (if (instance? cloiure.lang.LineNumberingPushbackReader *in*)
-            (.readLine ^cloiure.lang.LineNumberingPushbackReader *in*)
-            (.readLine ^java.io.BufferedReader *in*))
+        (.readLine ^cloiure.lang.LineNumberingPushbackReader *in*)
+        (.readLine ^java.io.BufferedReader *in*)
+    )
 )
 
 ;;;
@@ -3919,50 +3926,51 @@
  ; Note that read-string can execute code (controlled by *read-eval*),
  ; and as such should be used only with trusted sources.
  ;
- ; For data structure interop use cloiure.edn/read-string
+ ; For data structure interop use cloiure.edn/read-string.
  ;;
 (§ defn read-string
-    ([s] (cloiure.lang.RT/readString s))
+    ([s]      (cloiure.lang.RT/readString s     ))
     ([opts s] (cloiure.lang.RT/readString s opts))
 )
 
 ;;;
- ; Returns a persistent vector of the items in vector from
- ; start (inclusive) to end (exclusive). If end is not supplied,
- ; defaults to (count vector). This operation is O(1) and very fast, as
- ; the resulting vector shares structure with the original and no
- ; trimming is done.
+ ; Returns a persistent vector of the items in vector from start (inclusive) to end (exclusive).
+ ; If end is not supplied, defaults to (count vector). This operation is O(1) and very fast, as
+ ; the resulting vector shares structure with the original and no trimming is done.
  ;;
 (§ defn subvec
-    ([v start]
-        (subvec v start (count v)))
-    ([v start end]
-        (cloiure.lang.RT/subvec v start end))
+    ([v start] (subvec v start (count v)))
+    ([v start end] (cloiure.lang.RT/subvec v start end))
 )
 
 ;;;
  ; bindings => [name init ...]
  ;
- ; Evaluates body in a try expression with names bound to the values
- ; of the inits, and a finally clause that calls (.close name) on each
- ; name in reverse order.
+ ; Evaluates body in a try expression with names bound to the values of the inits,
+ ; and a finally clause that calls (.close name) on each name in reverse order.
  ;;
 (§ defmacro with-open [bindings & body]
     (assert-args
-            (vector? bindings) "a vector for its binding"
-            (even? (count bindings)) "an even number of forms in binding vector")
+        (vector? bindings) "a vector for its binding"
+        (even? (count bindings)) "an even number of forms in binding vector"
+    )
     (cond
-            (= (count bindings) 0) `(do ~@body)
-            (symbol? (bindings 0)) `(let ~(subvec bindings 0 2)
-                                    (try
-                                        (with-open ~(subvec bindings 2) ~@body)
-                                        (finally
-                                        (.close ~(bindings 0)))))
-            :else (throw (IllegalArgumentException. "with-open only allows Symbols in bindings")))
+        (= (count bindings) 0) `(do ~@body)
+        (symbol? (bindings 0))
+            `(let ~(subvec bindings 0 2)
+                (try
+                    (with-open ~(subvec bindings 2) ~@body)
+                    (finally
+                        (.close ~(bindings 0))
+                    )
+                )
+            )
+        :else (throw (IllegalArgumentException. "with-open only allows Symbols in bindings"))
+    )
 )
 
 ;;;
- ; Evaluates x then calls all of the methods and functions with the
+ ; Evaluates x, then calls all of the methods and functions with the
  ; value of x supplied at the front of the given arguments. The forms
  ; are evaluated in order. Returns x.
  ;
@@ -3970,15 +3978,11 @@
  ;;
 (§ defmacro doto [x & forms]
     (let [gx (gensym)]
-      `(let [~gx ~x]
-         ~@(map (fn [f]
-                    (with-meta
-                        (if (seq? f)
-                        `(~(first f) ~gx ~@(next f))
-                        `(~f ~gx))
-                        (meta f)))
-                forms)
-         ~gx))
+        `(let [~gx ~x]
+            ~@(map (fn [f] (with-meta (if (seq? f) `(~(first f) ~gx ~@(next f)) `(~f ~gx)) (meta f))) forms)
+            ~gx
+        )
+    )
 )
 
 ;;;
@@ -3989,28 +3993,25 @@
  ; type in order to avoid reflective calls.
  ;;
 (§ defmacro memfn [name & args]
-    (let [t (with-meta (gensym "target")
-                    (meta name))]
-            `(fn [~t ~@args]
-            (. ~t (~name ~@args))))
+    (let [t (with-meta (gensym "target") (meta name))]
+        `(fn [~t ~@args] (. ~t (~name ~@args)))
+    )
 )
 
 ;;;
- ; Evaluates expr and prints the time it took. Returns the value of
- ; expr.
+ ; Evaluates expr and prints the time it took. Returns the value of expr.
  ;;
 (§ defmacro time [expr]
-    `(let [start# (System/nanoTime)
-            ret# ~expr]
+    `(let [start# (System/nanoTime) ret# ~expr]
         (prn (str "Elapsed time: " (/ (double (- (System/nanoTime) start#)) 1000000.0) " msecs"))
-        ret#)
+        ret#
+    )
 )
 
-(§ import '(java.lang.reflect Array))
+(§ import [java.lang.reflect Array])
 
 ;;;
- ; Returns the length of the Java array. Works on arrays of all
- ; types.
+ ; Returns the length of the Java array. Works on arrays of all types.
  ;;
 (§ defn alength
     {:inline (fn [a] `(cloiure.lang.RT/alength ~a))}
@@ -4018,8 +4019,7 @@
 )
 
 ;;;
- ; Returns a clone of the Java array. Works on arrays of known
- ; types.
+ ; Returns a clone of the Java array. Works on arrays of known types.
  ;;
 (§ defn aclone
     {:inline (fn [a] `(cloiure.lang.RT/aclone ~a))}
@@ -4027,134 +4027,123 @@
 )
 
 ;;;
- ; Returns the value at the index/indices. Works on Java arrays of all
- ; types.
+ ; Returns the value at the index/indices. Works on Java arrays of all types.
  ;;
 (§ defn aget
     {:inline (fn [a i] `(cloiure.lang.RT/aget ~a (int ~i))) :inline-arities #{2}}
     ([array idx]
-        (cloiure.lang.Reflector/prepRet (.getComponentType (class array)) (Array/get array idx)))
+        (cloiure.lang.Reflector/prepRet (.getComponentType (class array)) (Array/get array idx))
+    )
     ([array idx & idxs]
-        (apply aget (aget array idx) idxs))
+        (apply aget (aget array idx) idxs)
+    )
 )
 
 ;;;
- ; Sets the value at the index/indices. Works on Java arrays of
- ; reference types. Returns val.
+ ; Sets the value at the index/indices.
+ ; Works on Java arrays of reference types. Returns val.
  ;;
 (§ defn aset
     {:inline (fn [a i v] `(cloiure.lang.RT/aset ~a (int ~i) ~v)) :inline-arities #{3}}
     ([array idx val]
         (Array/set array idx val)
-        val)
+        val
+    )
     ([array idx idx2 & idxv]
-        (apply aset (aget array idx) idx2 idxv))
+        (apply aset (aget array idx) idx2 idxv)
+    )
 )
 
 (§ defmacro ^:private def-aset [name method coerce]
     `(defn ~name
         ([array# idx# val#]
             (. Array (~method array# idx# (~coerce val#)))
-            val#)
+            val#
+        )
         ([array# idx# idx2# & idxv#]
-            (apply ~name (aget array# idx#) idx2# idxv#)))
+            (apply ~name (aget array# idx#) idx2# idxv#)
+        )
+    )
 )
 
 ;;;
  ; Sets the value at the index/indices. Works on arrays of int. Returns val.
  ;;
-(§ def-aset
-    aset-int setInt int
-)
+(§ def-aset aset-int setInt int)
 
 ;;;
  ; Sets the value at the index/indices. Works on arrays of long. Returns val.
  ;;
-(§ def-aset
-    aset-long setLong long
-)
+(§ def-aset aset-long setLong long)
 
 ;;;
  ; Sets the value at the index/indices. Works on arrays of boolean. Returns val.
  ;;
-(§ def-aset
-    aset-boolean setBoolean boolean
-)
+(§ def-aset aset-boolean setBoolean boolean)
 
 ;;;
  ; Sets the value at the index/indices. Works on arrays of float. Returns val.
  ;;
-(§ def-aset
-    aset-float setFloat float
-)
+(§ def-aset aset-float setFloat float)
 
 ;;;
  ; Sets the value at the index/indices. Works on arrays of double. Returns val.
  ;;
-(§ def-aset
-    aset-double setDouble double
-)
+(§ def-aset aset-double setDouble double)
 
 ;;;
  ; Sets the value at the index/indices. Works on arrays of short. Returns val.
  ;;
-(§ def-aset
-    aset-short setShort short
-)
+(§ def-aset aset-short setShort short)
 
 ;;;
  ; Sets the value at the index/indices. Works on arrays of byte. Returns val.
  ;;
-(§ def-aset
-    aset-byte setByte byte
-)
+(§ def-aset aset-byte setByte byte)
 
 ;;;
  ; Sets the value at the index/indices. Works on arrays of char. Returns val.
  ;;
-(§ def-aset
-    aset-char setChar char
-)
+(§ def-aset aset-char setChar char)
 
 ;;;
- ; Creates and returns an array of instances of the specified class of
- ; the specified dimension(s). Note that a class object is required.
- ; Class objects can be obtained by using their imported or
- ; fully-qualified name. Class objects for the primitive types can be
- ; obtained using, e.g., Integer/TYPE.
+ ; Creates and returns an array of instances of the specified class of the specified dimension(s).
+ ; Note that a class object is required.
+ ; Class objects can be obtained by using their imported or fully-qualified name.
+ ; Class objects for the primitive types can be obtained using, e.g., Integer/TYPE.
  ;;
 (§ defn make-array
-    ([^Class type len]
-        (Array/newInstance type (int len)))
+    ([^Class type len] (Array/newInstance type (int len)))
     ([^Class type dim & more-dims]
-        (let [dims (cons dim more-dims)
-                ^"[I" dimarray (make-array Integer/TYPE (count dims))]
+        (let [dims (cons dim more-dims) ^"[I" dimarray (make-array Integer/TYPE (count dims))]
             (dotimes [i (alength dimarray)]
-            (aset-int dimarray i (nth dims i)))
-            (Array/newInstance type dimarray)))
+                (aset-int dimarray i (nth dims i))
+            )
+            (Array/newInstance type dimarray)
+        )
+    )
 )
 
 ;;;
- ; Returns a (potentially-ragged) 2-dimensional array of Objects
- ; containing the contents of coll, which can be any Collection of any
- ; Collection.
+ ; Returns a (potentially-ragged) 2-dimensional array of Objects containing
+ ; the contents of coll, which can be any Collection of any Collection.
  ;;
-(§ defn to-array-2d {:tag "[[Ljava.lang.Object;"} [^java.util.Collection coll]
+(§ defn ^"[[Ljava.lang.Object;" to-array-2d [^java.util.Collection coll]
     (let [ret (make-array (Class/forName "[Ljava.lang.Object;") (.size coll))]
         (loop [i 0 xs (seq coll)]
             (when xs
-            (aset ret i (to-array (first xs)))
-            (recur (inc i) (next xs))))
-      ret)
+                (aset ret i (to-array (first xs)))
+                (recur (inc i) (next xs))
+            )
+        )
+        ret
+    )
 )
 
 ;;;
- ; If form represents a macro form, returns its expansion,
- ; else returns form.
+ ; If form represents a macro form, returns its expansion, else returns form.
  ;;
-(§ defn macroexpand-1 [form]
-    (cloiure.lang.Compiler/macroexpand1 form)
-)
+(§ defn macroexpand-1 [form] (cloiure.lang.Compiler/macroexpand1 form))
 
 ;;;
  ; Repeatedly calls macroexpand-1 on form until it no longer
@@ -4165,27 +4154,27 @@
     (let [ex (macroexpand-1 form)]
         (if (identical? ex form)
             form
-            (macroexpand ex)))
+            (macroexpand ex)
+        )
+    )
 )
 
 ;;;
- ; Sequentially read and evaluate the set of forms contained in the
- ; stream/file
+ ; Sequentially read and evaluate the set of forms contained in the stream/file.
  ;;
 (§ defn load-reader [rdr] (cloiure.lang.Compiler/load rdr))
 
 ;;;
- ; Sequentially read and evaluate the set of forms contained in the
- ; string
+ ; Sequentially read and evaluate the set of forms contained in the string.
  ;;
 (§ defn load-string [s]
-    (let [rdr (-> (java.io.StringReader. s)
-                        (cloiure.lang.LineNumberingPushbackReader.))]
-            (load-reader rdr))
+    (let [rdr (-> s (java.io.StringReader.) (cloiure.lang.LineNumberingPushbackReader.))]
+        (load-reader rdr)
+    )
 )
 
 ;;;
- ; Returns true if x implements IPersistentSet
+ ; Returns true if x implements IPersistentSet.
  ;;
 (§ defn set? [x] (instance? cloiure.lang.IPersistentSet x))
 
@@ -4194,19 +4183,24 @@
  ;;
 (§ defn set [coll]
     (if (set? coll)
-            (with-meta coll nil)
-            (if (instance? cloiure.lang.IReduceInit coll)
+        (with-meta coll nil)
+        (if (instance? cloiure.lang.IReduceInit coll)
             (persistent! (.reduce ^cloiure.lang.IReduceInit coll conj! (transient #{})))
-            (persistent! (reduce1 conj! (transient #{}) coll))))
+            (persistent! (reduce1 conj! (transient #{}) coll))
+        )
+    )
 )
 
 (§ defn ^:private filter-key [keyfn pred amap]
     (loop [ret {} es (seq amap)]
         (if es
             (if (pred (keyfn (first es)))
-            (recur (assoc ret (key (first es)) (val (first es))) (next es))
-            (recur ret (next es)))
-            ret))
+                (recur (assoc ret (key (first es)) (val (first es))) (next es))
+                (recur ret (next es))
+            )
+            ret
+        )
+    )
 )
 
 ;;;
@@ -4215,9 +4209,8 @@
 (§ defn find-ns [sym] (cloiure.lang.Namespace/find sym))
 
 ;;;
- ; Create a new namespace named by the symbol if one doesn't already
- ; exist, returns it or the already-existing namespace of the same
- ; name.
+ ; Create a new namespace named by the symbol if one doesn't already exist,
+ ; returns it or the already-existing namespace of the same name.
  ;;
 (§ defn create-ns [sym] (cloiure.lang.Namespace/findOrCreate sym))
 
@@ -4234,13 +4227,13 @@
 
 ;;;
  ; If passed a namespace, returns it. Else, when passed a symbol,
- ; returns the namespace named by it, throwing an exception if not
- ; found.
+ ; returns the namespace named by it, throwing an exception if not found.
  ;;
 (§ defn ^cloiure.lang.Namespace the-ns [x]
     (if (instance? cloiure.lang.Namespace x)
-            x
-            (or (find-ns x) (throw (Exception. (str "No namespace: " x " found")))))
+        x
+        (or (find-ns x) (throw (Exception. (str "No namespace: " x " found"))))
+    )
 )
 
 ;;;
@@ -4269,10 +4262,13 @@
  ;;
 (§ defn ns-publics [ns]
     (let [ns (the-ns ns)]
-            (filter-key val (fn [^cloiure.lang.Var v] (and (instance? cloiure.lang.Var v)
-                                        (= ns (.ns v))
-                                        (.isPublic v)))
-                        (ns-map ns)))
+        (filter-key val
+            (fn [^cloiure.lang.Var v]
+                (and (instance? cloiure.lang.Var v) (= ns (.ns v)) (.isPublic v))
+            )
+            (ns-map ns)
+        )
+    )
 )
 
 ;;;
@@ -4287,9 +4283,13 @@
  ;;
 (§ defn ns-interns [ns]
     (let [ns (the-ns ns)]
-            (filter-key val (fn [^cloiure.lang.Var v] (and (instance? cloiure.lang.Var v)
-                                        (= ns (.ns v))))
-                        (ns-map ns)))
+        (filter-key val
+            (fn [^cloiure.lang.Var v]
+                (and (instance? cloiure.lang.Var v) (= ns (.ns v)))
+            )
+            (ns-map ns)
+        )
+    )
 )
 
 ;;;
@@ -4297,16 +4297,15 @@
  ; filters can include at most one each of:
  ;
  ; :exclude list-of-symbols
- ; :only list-of-symbols
- ; :rename map-of-fromsymbol-tosymbol
+ ; :only    list-of-symbols
+ ; :rename  map-of-fromsymbol-tosymbol
  ;
- ; For each public interned var in the namespace named by the symbol,
- ; adds a mapping from the name of the var to the var to the current
- ; namespace. Throws an exception if name is already mapped to
- ; something else in the current namespace. Filters can be used to
- ; select a subset, via inclusion or exclusion, or to provide a mapping
- ; to a symbol different from the var's name, in order to prevent
- ; clashes. Use :use in the ns macro in preference to calling this directly.
+ ; For each public interned var in the namespace named by the symbol, adds a mapping
+ ; from the name of the var to the var to the current namespace. Throws an exception
+ ; if name is already mapped to something else in the current namespace. Filters can
+ ; be used to select a subset, via inclusion or exclusion, or to provide a mapping
+ ; to a symbol different from the var's name, in order to prevent clashes.
+ ; Use :use in the ns macro in preference to calling this directly.
  ;;
 (§ defn refer [ns-sym & filters]
     (let [ns (or (find-ns ns-sym) (throw (Exception. (str "No namespace: " ns-sym))))
@@ -4314,20 +4313,30 @@
           nspublics (ns-publics ns)
           rename (or (:rename fs) {})
           exclude (set (:exclude fs))
-          to-do (if (= :all (:refer fs))
-                    (keys nspublics)
-                    (or (:refer fs) (:only fs) (keys nspublics)))]
+          to-do
+            (if (= :all (:refer fs))
+                (keys nspublics)
+                (or (:refer fs) (:only fs) (keys nspublics))
+            )]
         (when (and to-do (not (instance? cloiure.lang.Sequential to-do)))
-            (throw (Exception. ":only/:refer value must be a sequential collection of symbols")))
+            (throw (Exception. ":only/:refer value must be a sequential collection of symbols"))
+        )
         (doseq [sym to-do]
             (when-not (exclude sym)
-            (let [v (nspublics sym)]
-                (when-not v
-                (throw (java.lang.IllegalAccessError.
+                (let [v (nspublics sym)]
+                    (when-not v
+                        (throw (java.lang.IllegalAccessError.
                             (if (get (ns-interns ns) sym)
                                 (str sym " is not public")
-                                (str sym " does not exist")))))
-                (.refer *ns* (or (rename sym) sym) v)))))
+                                (str sym " does not exist")
+                            )
+                        ))
+                    )
+                    (.refer *ns* (or (rename sym) sym) v)
+                )
+            )
+        )
+    )
 )
 
 ;;;
@@ -4335,260 +4344,280 @@
  ;;
 (§ defn ns-refers [ns]
     (let [ns (the-ns ns)]
-            (filter-key val (fn [^cloiure.lang.Var v] (and (instance? cloiure.lang.Var v)
-                                        (not= ns (.ns v))))
-                        (ns-map ns)))
+        (filter-key val
+            (fn [^cloiure.lang.Var v]
+                (and (instance? cloiure.lang.Var v) (not= ns (.ns v)))
+            )
+            (ns-map ns)
+        )
+    )
 )
 
 ;;;
- ; Add an alias in the current namespace to another
- ; namespace. Arguments are two symbols: the alias to be used, and
- ; the symbolic name of the target namespace. Use :as in the ns macro in preference
- ; to calling this directly.
+ ; Add an alias in the current namespace to another namespace.
+ ; Arguments are two symbols: the alias to be used, and the symbolic name of the target namespace.
+ ; Use :as in the ns macro in preference to calling this directly.
  ;;
-(§ defn alias [alias namespace-sym] (.addAlias *ns* alias (the-ns namespace-sym)))
+(§ defn alias [alias namespace-sym]
+    (.addAlias *ns* alias (the-ns namespace-sym))
+)
 
 ;;;
  ; Returns a map of the aliases for the namespace.
  ;;
-(§ defn ns-aliases [ns] (.getAliases (the-ns ns)))
+(§ defn ns-aliases [ns]
+    (.getAliases (the-ns ns))
+)
 
 ;;;
  ; Removes the alias for the symbol from the namespace.
  ;;
-(§ defn ns-unalias [ns sym] (.removeAlias (the-ns ns) sym))
-
-;;;
- ; Returns a lazy seq of every nth item in coll. Returns a stateful
- ; transducer when no collection is provided.
- ;;
-(§ defn take-nth
-    ([n]
-            (fn [rf]
-            (let [iv (volatile! -1)]
-                (fn
-                ([] (rf))
-                ([result] (rf result))
-                ([result input]
-                    (let [i (vswap! iv inc)]
-                        (if (zero? (rem i n))
-                        (rf result input)
-                        result)))))))
-    ([n coll]
-            (lazy-seq
-            (when-let [s (seq coll)]
-                (cons (first s) (take-nth n (drop n s))))))
+(§ defn ns-unalias [ns sym]
+    (.removeAlias (the-ns ns) sym)
 )
 
 ;;;
- ; Returns a lazy seq of the first item in each coll, then the second etc.
+ ; Returns a lazy seq of every nth item in coll.
+ ; Returns a stateful transducer when no collection is provided.
+ ;;
+(§ defn take-nth
+    ([n]
+        (fn [rf]
+            (let [iv (volatile! -1)]
+                (fn
+                    ([] (rf))
+                    ([result] (rf result))
+                    ([result input]
+                        (let [i (vswap! iv inc)]
+                            (if (zero? (rem i n))
+                                (rf result input)
+                                result
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+    ([n coll]
+        (lazy-seq
+            (when-let [s (seq coll)]
+                (cons (first s) (take-nth n (drop n s)))
+            )
+        )
+    )
+)
+
+;;;
+ ; Returns a lazy seq of the first item in each coll, then the second, etc.
  ;;
 (§ defn interleave
     ([] ())
     ([c1] (lazy-seq c1))
     ([c1 c2]
-            (lazy-seq
+        (lazy-seq
             (let [s1 (seq c1) s2 (seq c2)]
                 (when (and s1 s2)
-                (cons (first s1) (cons (first s2)
-                                        (interleave (rest s1) (rest s2))))))))
+                    (cons (first s1) (cons (first s2) (interleave (rest s1) (rest s2))))
+                )
+            )
+        )
+    )
     ([c1 c2 & colls]
-            (lazy-seq
+        (lazy-seq
             (let [ss (map seq (conj colls c2 c1))]
                 (when (every? identity ss)
-                (concat (map first ss) (apply interleave (map rest ss)))))))
+                    (concat (map first ss) (apply interleave (map rest ss)))
+                )
+            )
+        )
+    )
 )
 
 ;;;
- ; Gets the value in the var object
+ ; Gets the value in the var object.
  ;;
 (§ defn var-get [^cloiure.lang.Var x] (.get x))
 
 ;;;
- ; Sets the value in the var object to val. The var must be
- ; thread-locally bound.
+ ; Sets the value in the var object to val.
+ ; The var must be thread-locally bound.
  ;;
 (§ defn var-set [^cloiure.lang.Var x val] (.set x val))
 
 ;;;
- ; varbinding=> symbol init-expr
+ ; varbinding => symbol init-expr
  ;
  ; Executes the exprs in a context in which the symbols are bound to
  ; vars with per-thread bindings to the init-exprs. The symbols refer
  ; to the var objects themselves, and must be accessed with var-get and
- ; var-set
+ ; var-set.
  ;;
 (§ defmacro with-local-vars [name-vals-vec & body]
     (assert-args
-            (vector? name-vals-vec) "a vector for its binding"
-            (even? (count name-vals-vec)) "an even number of forms in binding vector")
-    `(let [~@(interleave (take-nth 2 name-vals-vec)
-                        (repeat '(.. cloiure.lang.Var create setDynamic)))]
+        (vector? name-vals-vec) "a vector for its binding"
+        (even? (count name-vals-vec)) "an even number of forms in binding vector"
+    )
+    `(let [~@(interleave (take-nth 2 name-vals-vec) (repeat '(.. cloiure.lang.Var create setDynamic)))]
         (cloiure.lang.Var/pushThreadBindings (hash-map ~@name-vals-vec))
         (try
-        ~@body
-        (finally (cloiure.lang.Var/popThreadBindings))))
+            ~@body
+            (finally
+                (cloiure.lang.Var/popThreadBindings)
+            )
+        )
+    )
 )
 
 ;;;
- ; Returns the var or Class to which a symbol will be resolved in the
- ; namespace (unless found in the environment), else nil. Note that
- ; if the symbol is fully qualified, the var/Class to which it resolves
- ; need not be present in the namespace.
+ ; Returns the var or Class to which a symbol will be resolved in the namespace
+ ; (unless found in the environment), else nil. Note that if the symbol is fully qualified,
+ ; the var/Class to which it resolves need not be present in the namespace.
  ;;
 (§ defn ns-resolve
-    ([ns sym]
-            (ns-resolve ns nil sym))
+    ([ns sym] (ns-resolve ns nil sym))
     ([ns env sym]
-            (when-not (contains? env sym)
-            (cloiure.lang.Compiler/maybeResolveIn (the-ns ns) sym)))
+        (when-not (contains? env sym)
+            (cloiure.lang.Compiler/maybeResolveIn (the-ns ns) sym)
+        )
+    )
 )
 
-;;;
- ; same as (ns-resolve *ns* symbol) or (ns-resolve *ns* &env symbol)
- ;;
 (§ defn resolve
-    ([sym] (ns-resolve *ns* sym))
+    ([    sym] (ns-resolve *ns*     sym))
     ([env sym] (ns-resolve *ns* env sym))
 )
 
 ;;;
- ; Constructs an array-map. If any keys are equal, they are handled as
- ; if by repeated uses of assoc.
+ ; Constructs an array-map.
+ ; If any keys are equal, they are handled as if by repeated uses of assoc.
  ;;
 (§ defn array-map
     ([] cloiure.lang.PersistentArrayMap/EMPTY)
-    ([& keyvals]
-            (cloiure.lang.PersistentArrayMap/createAsIfByAssoc (to-array keyvals)))
+    ([& keyvals] (cloiure.lang.PersistentArrayMap/createAsIfByAssoc (to-array keyvals)))
 )
 
 ;; redefine let and loop with destructuring
 
 (§ defn destructure [bindings]
     (let [bents (partition 2 bindings)
-                pb (fn pb [bvec b v]
-                    (let [pvec
+          pb (fn pb [bvec b v]
+                (let [pvec
                         (fn [bvec b val]
-                            (let [gvec (gensym "vec__")
-                                gseq (gensym "seq__")
-                                gfirst (gensym "first__")
-                                has-rest (some #{'&} b)]
-                            (loop [ret (let [ret (conj bvec gvec val)]
-                                            (if has-rest
-                                            (conj ret gseq (list `seq gvec))
-                                            ret))
-                                    n 0
-                                    bs b
-                                    seen-rest? false]
-                                (if (seq bs)
-                                (let [firstb (first bs)]
-                                    (cond
-                                    (= firstb '&) (recur (pb ret (second bs) gseq)
-                                                        n
-                                                        (nnext bs)
-                                                        true)
-                                    (= firstb :as) (pb ret (second bs) gvec)
-                                    :else (if seen-rest?
-                                            (throw (Exception. "Unsupported binding form, only :as can follow & parameter"))
-                                            (recur (pb (if has-rest
-                                                        (conj ret
-                                                                gfirst `(first ~gseq)
-                                                                gseq `(next ~gseq))
-                                                        ret)
-                                                        firstb
-                                                        (if has-rest
-                                                        gfirst
-                                                        (list `nth gvec n nil)))
-                                                    (inc n)
-                                                    (next bs)
-                                                    seen-rest?))))
-                                ret))))
-                        pmap
+                            (let [gvec (gensym "vec__") gseq (gensym "seq__") gfirst (gensym "first__") has-rest (some #{'&} b)]
+                                (loop [ret (let [ret (conj bvec gvec val)] (if has-rest (conj ret gseq (list `seq gvec)) ret)) n 0 bs b seen-rest? false]
+                                    (if (seq bs)
+                                        (let [firstb (first bs)]
+                                            (cond
+                                                (= firstb '&)   (recur (pb ret (second bs) gseq) n (nnext bs) true)
+                                                (= firstb :as)  (pb ret (second bs) gvec)
+                                                :else           (if seen-rest?
+                                                                    (throw (Exception. "Unsupported binding form, only :as can follow & parameter"))
+                                                                    (recur
+                                                                        (pb (if has-rest (conj ret gfirst `(first ~gseq) gseq `(next ~gseq)) ret)
+                                                                            firstb
+                                                                            (if has-rest gfirst (list `nth gvec n nil))
+                                                                        )
+                                                                        (inc n) (next bs) seen-rest?
+                                                                    )
+                                                                )
+                                            )
+                                        )
+                                        ret
+                                    )
+                                )
+                            )
+                        )
+                      pmap
                         (fn [bvec b v]
-                            (let [gmap (gensym "map__")
-                                gmapseq (with-meta gmap {:tag 'cloiure.lang.ISeq})
-                                defaults (:or b)]
-                            (loop [ret (-> bvec (conj gmap) (conj v)
-                                            (conj gmap) (conj `(if (seq? ~gmap) (cloiure.lang.PersistentHashMap/create (seq ~gmapseq)) ~gmap))
-                                            ((fn [ret]
-                                                (if (:as b)
-                                                (conj ret (:as b) gmap)
-                                                ret))))
-                                    bes (let [transforms
-                                                (reduce1
-                                                    (fn [transforms mk]
-                                                    (if (keyword? mk)
-                                                        (let [mkns (namespace mk)
-                                                            mkn (name mk)]
-                                                        (cond (= mkn "keys") (assoc transforms mk #(keyword (or mkns (namespace %)) (name %)))
-                                                                (= mkn "syms") (assoc transforms mk #(list `quote (symbol (or mkns (namespace %)) (name %))))
-                                                                (= mkn "strs") (assoc transforms mk str)
-                                                                :else transforms))
-                                                        transforms))
-                                                    {}
-                                                    (keys b))]
+                            (let [gmap (gensym "map__") gmapseq (with-meta gmap {:tag 'cloiure.lang.ISeq}) defaults (:or b)]
+                                (loop [ret (-> (conj bvec gmap v gmap)
+                                            (conj `(if (seq? ~gmap) (cloiure.lang.PersistentHashMap/create (seq ~gmapseq)) ~gmap))
+                                            ((fn [ret] (if (:as b) (conj ret (:as b) gmap) ret)))
+                                        )
+                                       bes (let [trafos (reduce1
+                                                    (fn [trafos mk]
+                                                        (if (keyword? mk)
+                                                            (let [mkns (namespace mk) mkn (name mk)]
+                                                                (cond
+                                                                    (= mkn "keys") (assoc trafos mk #(keyword (or mkns (namespace %)) (name %)))
+                                                                    (= mkn "syms") (assoc trafos mk #(list `quote (symbol (or mkns (namespace %)) (name %))))
+                                                                    (= mkn "strs") (assoc trafos mk str)
+                                                                    :else trafos
+                                                                )
+                                                            )
+                                                            trafos
+                                                        )
+                                                    )
+                                                    {} (keys b)
+                                                )]
                                             (reduce1
-                                                (fn [bes entry]
-                                                (reduce1 #(assoc %1 %2 ((val entry) %2))
-                                                        (dissoc bes (key entry))
-                                                        ((key entry) bes)))
-                                                (dissoc b :as :or)
-                                                transforms))]
-                                (if (seq bes)
-                                (let [bb (key (first bes))
-                                        bk (val (first bes))
-                                        local (if (instance? cloiure.lang.Named bb) (with-meta (symbol nil (name bb)) (meta bb)) bb)
-                                        bv (if (contains? defaults local)
-                                            (list `get gmap bk (defaults local))
-                                            (list `get gmap bk))]
-                                    (recur (if (ident? bb)
-                                            (-> ret (conj local bv))
-                                            (pb ret bb bv))
-                                            (next bes)))
-                                ret))))]
+                                                (fn [bes entry] (reduce1 #(assoc %1 %2 ((val entry) %2)) (dissoc bes (key entry)) ((key entry) bes)))
+                                                (dissoc b :as :or) trafos
+                                            )
+                                        )]
+                                    (if (seq bes)
+                                        (let [bb (key (first bes)) bk (val (first bes))
+                                              local (if (instance? cloiure.lang.Named bb) (with-meta (symbol nil (name bb)) (meta bb)) bb)
+                                              bv (if (contains? defaults local)
+                                                    (list `get gmap bk (defaults local))
+                                                    (list `get gmap bk)
+                                                )]
+                                            (recur (if (ident? bb) (conj ret local bv) (pb ret bb bv)) (next bes))
+                                        )
+                                        ret
+                                    )
+                                )
+                            )
+                        )]
                     (cond
-                        (symbol? b) (-> bvec (conj b) (conj v))
+                        (symbol? b) (conj bvec b v)
                         (vector? b) (pvec bvec b v)
                         (map? b) (pmap bvec b v)
-                        :else (throw (Exception. (str "Unsupported binding form: " b))))))
-                process-entry (fn [bvec b] (pb bvec (first b) (second b)))]
-            (if (every? symbol? (map first bents))
+                        :else (throw (Exception. (str "Unsupported binding form: " b)))
+                    )
+                )
+            )
+          process-entry (fn [bvec b] (pb bvec (first b) (second b)))]
+        (if (every? symbol? (map first bents))
             bindings
-            (reduce1 process-entry [] bents)))
+            (reduce1 process-entry [] bents)
+        )
+    )
 )
 
 ;;;
  ; binding => binding-form init-expr
  ;
- ; Evaluates the exprs in a lexical context in which the symbols in
- ; the binding-forms are bound to their respective init-exprs or parts
- ; therein.
+ ; Evaluates the exprs in a lexical context in which the symbols in the
+ ; binding-forms are bound to their respective init-exprs or parts therein.
  ;;
 (§ defmacro let {:special-form true, :forms '[(let [bindings*] exprs*)]} [bindings & body]
     (assert-args
-            (vector? bindings) "a vector for its binding"
-            (even? (count bindings)) "an even number of forms in binding vector")
+        (vector? bindings) "a vector for its binding"
+        (even? (count bindings)) "an even number of forms in binding vector"
+    )
     `(let* ~(destructure bindings) ~@body)
 )
 
 (§ defn ^:private maybe-destructured [params body]
     (if (every? symbol? params)
-            (cons params body)
-            (loop [params params
-                new-params (with-meta [] (meta params))
-                lets []]
+        (cons params body)
+        (loop [params params new-params (with-meta [] (meta params)) lets []]
             (if params
                 (if (symbol? (first params))
-                (recur (next params) (conj new-params (first params)) lets)
-                (let [gparam (gensym "p__")]
-                    (recur (next params) (conj new-params gparam)
-                        (-> lets (conj (first params)) (conj gparam)))))
-                `(~new-params
-                (let ~lets
-                    ~@body)))))
+                    (recur (next params) (conj new-params (first params)) lets)
+                    (let [gparam (gensym "p__")]
+                        (recur (next params) (conj new-params gparam) (conj lets (first params) gparam))
+                    )
+                )
+                `(~new-params (let ~lets ~@body))
+            )
+        )
+    )
 )
 
-;; redefine fn with destructuring and pre/post conditions
+;; redefine fn with destructuring
 
 ;;;
  ; params => positional-params*, or positional-params* & next-param
@@ -4596,42 +4625,50 @@
  ; next-param => binding-form
  ; name => symbol
  ;
- ; Defines a function
+ ; Defines a function.
  ;;
 (§ defmacro fn {:special-form true, :forms '[(fn name? [params* ] exprs*) (fn name? ([params* ] exprs*)+)]} [& sigs]
-    (let [name (if (symbol? (first sigs)) (first sigs) nil)
+    (let [name (when (symbol? (first sigs)) (first sigs))
           sigs (if name (next sigs) sigs)
-          sigs (if (vector? (first sigs))
-                    (list sigs)
-                    (if (seq? (first sigs))
+          sigs
+            (if (vector? (first sigs))
+                (list sigs)
+                (if (seq? (first sigs))
                     sigs
-                    ;; Assume single arity syntax
+                    ;; assume single arity syntax
                     (throw (IllegalArgumentException.
-                                (if (seq sigs)
-                                (str "Parameter declaration " (first sigs) " should be a vector")
-                                (str "Parameter declaration missing"))))))
-          psig (fn* [sig]
-                 ;; Ensure correct type before destructuring sig
-                    (when (not (seq? sig))
-                    (throw (IllegalArgumentException.
-                                (str "Invalid signature " sig " should be a list"))))
-                    (let [[params & body] sig
-                        _ (when (not (vector? params))
+                        (if (seq sigs)
+                            (str "Parameter declaration " (first sigs) " should be a vector")
+                            (str "Parameter declaration missing")
+                        )
+                    ))
+                )
+            )
+          psig
+            (fn* [sig]
+                ;; ensure correct type before destructuring sig
+                (when (not (seq? sig))
+                    (throw (IllegalArgumentException. (str "Invalid signature " sig " should be a list")))
+                )
+                (let [[params & body] sig
+                      _ (when (not (vector? params))
                             (throw (IllegalArgumentException.
-                                        (if (seq? (first sigs))
-                                        (str "Parameter declaration " params " should be a vector")
-                                        (str "Invalid signature " sig " should be a list")))))
-                        conds (when (and (next body) (map? (first body)))
-                                            (first body))
-                        body (if conds (next body) body)
-                        conds (or conds (meta params))]
-                    (maybe-destructured params body)))
+                                (if (seq? (first sigs))
+                                    (str "Parameter declaration " params " should be a vector")
+                                    (str "Invalid signature " sig " should be a list")
+                                )
+                            ))
+                        )
+                      conds (when (and (next body) (map? (first body))) (first body))
+                      body (if conds (next body) body)
+                      conds (or conds (meta params))
+                ]
+                    (maybe-destructured params body)
+                )
+            )
           new-sigs (map psig sigs)]
-        (with-meta
-            (if name
-            (list* 'fn* name new-sigs)
-            (cons 'fn* new-sigs))
-            (meta &form)))
+        (with-meta (if name (list* 'fn* name new-sigs) (cons 'fn* new-sigs)) (meta &form))
+    )
 )
 
 ;;;
@@ -4642,37 +4679,52 @@
 (§ defmacro loop {:special-form true, :forms '[(loop [bindings*] exprs*)]} [bindings & body]
     (assert-args
         (vector? bindings) "a vector for its binding"
-        (even? (count bindings)) "an even number of forms in binding vector")
+        (even? (count bindings)) "an even number of forms in binding vector"
+    )
     (let [db (destructure bindings)]
         (if (= db bindings)
             `(loop* ~bindings ~@body)
             (let [vs (take-nth 2 (drop 1 bindings))
-                bs (take-nth 2 bindings)
-                gs (map (fn [b] (if (symbol? b) b (gensym))) bs)
-                bfs (reduce1 (fn [ret [b v g]]
-                                (if (symbol? b)
+                  bs (take-nth 2 bindings)
+                  gs (map (fn [b] (if (symbol? b) b (gensym))) bs)
+                  bfs (reduce1
+                        (fn [ret [b v g]]
+                            (if (symbol? b)
                                 (conj ret g v)
-                                (conj ret g v b g)))
-                            [] (map vector bs vs gs))]
-            `(let ~bfs
-                (loop* ~(vec (interleave gs gs))
-                (let ~(vec (interleave bs gs))
-                    ~@body))))))
+                                (conj ret g v b g)
+                            )
+                        )
+                        [] (map vector bs vs gs)
+                    )]
+                `(let ~bfs
+                    (loop* ~(vec (interleave gs gs))
+                        (let ~(vec (interleave bs gs))
+                            ~@body
+                        )
+                    )
+                )
+            )
+        )
+    )
 )
 
 ;;;
  ; bindings => x xs
  ;
- ; Roughly the same as (when (seq xs) (let [x (first xs)] body)) but xs is evaluated only once
+ ; Roughly the same as (when (seq xs) (let [x (first xs)] body)) but xs is evaluated only once.
  ;;
 (§ defmacro when-first [bindings & body]
     (assert-args
-            (vector? bindings) "a vector for its binding"
-            (= 2 (count bindings)) "exactly 2 forms in binding vector")
+        (vector? bindings) "a vector for its binding"
+        (= 2 (count bindings)) "exactly 2 forms in binding vector"
+    )
     (let [[x xs] bindings]
-            `(when-let [xs# (seq ~xs)]
+        `(when-let [xs# (seq ~xs)]
             (let [~x (first xs#)]
-                ~@body)))
+                ~@body
+            )
+        )
+    )
 )
 
 ;;;
@@ -4687,163 +4739,159 @@
 )
 
 ;;;
- ; List comprehension. Takes a vector of one or more
- ; binding-form/collection-expr pairs, each followed by zero or more
- ; modifiers, and yields a lazy sequence of evaluations of expr.
- ; Collections are iterated in a nested fashion, rightmost fastest,
- ; and nested coll-exprs can refer to bindings created in prior
- ; binding-forms. Supported modifiers are: :let [binding-form expr ...],
- ; :while test, :when test.
+ ; List comprehension.
+ ; Takes a vector of one or more binding-form/collection-expr pairs, each followed
+ ; by zero or more modifiers, and yields a lazy sequence of evaluations of expr.
+ ; Collections are iterated in a nested fashion, rightmost fastest, and nested
+ ; coll-exprs can refer to bindings created in prior binding-forms.
+ ; Supported modifiers are: :let [binding-form expr ...], :while test, :when test.
  ;
  ; (take 100 (for [x (range 100000000) y (range 1000000) :while (< y x)] [x y]))
  ;;
 (§ defmacro for [seq-exprs body-expr]
     (assert-args
-            (vector? seq-exprs) "a vector for its binding"
-            (even? (count seq-exprs)) "an even number of forms in binding vector")
-    (let [to-groups (fn [seq-exprs]
-                            (reduce1 (fn [groups [k v]]
-                                    (if (keyword? k)
-                                        (conj (pop groups) (conj (peek groups) [k v]))
-                                        (conj groups [k v])))
-                                    [] (partition 2 seq-exprs)))
-                err (fn [& msg] (throw (IllegalArgumentException. ^String (apply str msg))))
-                emit-bind (fn emit-bind [[[bind expr & mod-pairs]
-                                        & [[_ next-expr] :as next-groups]]]
-                            (let [giter (gensym "iter__")
-                                gxs (gensym "s__")
-                                do-mod (fn do-mod [[[k v :as pair] & etc]]
-                                        (cond
-                                            (= k :let) `(let ~v ~(do-mod etc))
-                                            (= k :while) `(when ~v ~(do-mod etc))
-                                            (= k :when) `(if ~v
-                                                            ~(do-mod etc)
-                                                            (recur (rest ~gxs)))
-                                            (keyword? k) (err "Invalid 'for' keyword " k)
-                                            next-groups
-                                            `(let [iterys# ~(emit-bind next-groups)
-                                                    fs# (seq (iterys# ~next-expr))]
-                                                (if fs#
-                                                (concat fs# (~giter (rest ~gxs)))
-                                                (recur (rest ~gxs))))
-                                            :else `(cons ~body-expr
-                                                        (~giter (rest ~gxs)))))]
-                            (if next-groups
-                                #_"not the inner-most loop"
-                                `(fn ~giter [~gxs]
+        (vector? seq-exprs) "a vector for its binding"
+        (even? (count seq-exprs)) "an even number of forms in binding vector"
+    )
+    (let [to-groups
+            (fn [seq-exprs]
+                (reduce1
+                    (fn [groups [k v]]
+                        (if (keyword? k)
+                            (conj (pop groups) (conj (peek groups) [k v]))
+                            (conj groups [k v])
+                        )
+                    )
+                    [] (partition 2 seq-exprs)
+                )
+            )
+          err (fn [& msg] (throw (IllegalArgumentException. ^String (apply str msg))))
+          emit-bind
+            (fn emit-bind [[[bind expr & mod-pairs] & [[_ next-expr] :as next-groups]]]
+                (let [giter (gensym "iter__") gxs (gensym "s__")
+                      do-mod
+                        (fn do-mod [[[k v :as pair] & etc]]
+                            (cond
+                                (= k :let) `(let ~v ~(do-mod etc))
+                                (= k :while) `(when ~v ~(do-mod etc))
+                                (= k :when) `(if ~v ~(do-mod etc) (recur (rest ~gxs)))
+                                (keyword? k) (err "Invalid 'for' keyword " k)
+                                next-groups
+                                    `(let [iterys# ~(emit-bind next-groups) fs# (seq (iterys# ~next-expr))]
+                                        (if fs#
+                                            (concat fs# (~giter (rest ~gxs)))
+                                            (recur (rest ~gxs))
+                                        )
+                                    )
+                                :else `(cons ~body-expr (~giter (rest ~gxs)))
+                            )
+                        )]
+                    (if next-groups
+                        #_"not the inner-most loop"
+                        `(fn ~giter [~gxs]
+                            (lazy-seq
+                                (loop [~gxs ~gxs]
+                                    (when-first [~bind ~gxs]
+                                        ~(do-mod mod-pairs)
+                                    )
+                                )
+                            )
+                        )
+                        #_"inner-most loop"
+                        (let [gi (gensym "i__") gb (gensym "b__")
+                              do-cmod
+                                (fn do-cmod [[[k v :as pair] & etc]]
+                                    (cond
+                                        (= k :let) `(let ~v ~(do-cmod etc))
+                                        (= k :while) `(when ~v ~(do-cmod etc))
+                                        (= k :when) `(if ~v ~(do-cmod etc) (recur (unchecked-inc ~gi)))
+                                        (keyword? k) (err "Invalid 'for' keyword " k)
+                                        :else `(do (chunk-append ~gb ~body-expr) (recur (unchecked-inc ~gi)))
+                                    )
+                                )]
+                            `(fn ~giter [~gxs]
                                 (lazy-seq
                                     (loop [~gxs ~gxs]
-                                    (when-first [~bind ~gxs]
-                                        ~(do-mod mod-pairs)))))
-                                #_"inner-most loop"
-                                (let [gi (gensym "i__")
-                                    gb (gensym "b__")
-                                    do-cmod (fn do-cmod [[[k v :as pair] & etc]]
-                                                (cond
-                                                (= k :let) `(let ~v ~(do-cmod etc))
-                                                (= k :while) `(when ~v ~(do-cmod etc))
-                                                (= k :when) `(if ~v
-                                                                ~(do-cmod etc)
-                                                                (recur
-                                                                (unchecked-inc ~gi)))
-                                                (keyword? k)
-                                                    (err "Invalid 'for' keyword " k)
-                                                :else
-                                                    `(do (chunk-append ~gb ~body-expr)
-                                                        (recur (unchecked-inc ~gi)))))]
-                                `(fn ~giter [~gxs]
-                                    (lazy-seq
-                                    (loop [~gxs ~gxs]
                                         (when-let [~gxs (seq ~gxs)]
-                                        (if (chunked-seq? ~gxs)
-                                            (let [c# (chunk-first ~gxs)
-                                                size# (int (count c#))
-                                                ~gb (chunk-buffer size#)]
-                                            (if (loop [~gi (int 0)]
-                                                    (if (< ~gi size#)
-                                                    (let [~bind (.nth c# ~gi)]
-                                                        ~(do-cmod mod-pairs))
-                                                    true))
-                                                (chunk-cons
-                                                (chunk ~gb)
-                                                (~giter (chunk-rest ~gxs)))
-                                                (chunk-cons (chunk ~gb) nil)))
-                                            (let [~bind (first ~gxs)]
-                                            ~(do-mod mod-pairs)))))))))))]
-            `(let [iter# ~(emit-bind (to-groups seq-exprs))]
-                (iter# ~(second seq-exprs))))
+                                            (if (chunked-seq? ~gxs)
+                                                (let [c# (chunk-first ~gxs) size# (int (count c#)) ~gb (chunk-buffer size#)]
+                                                    (if (loop [~gi (int 0)]
+                                                            (if (< ~gi size#)
+                                                                (let [~bind (.nth c# ~gi)]
+                                                                    ~(do-cmod mod-pairs)
+                                                                )
+                                                                true
+                                                            )
+                                                        )
+                                                        (chunk-cons (chunk ~gb) (~giter (chunk-rest ~gxs)))
+                                                        (chunk-cons (chunk ~gb) nil)
+                                                    )
+                                                )
+                                                (let [~bind (first ~gxs)]
+                                                    ~(do-mod mod-pairs)
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )]
+        `(let [iter# ~(emit-bind (to-groups seq-exprs))]
+            (iter# ~(second seq-exprs))
+        )
+    )
 )
 
 ;;;
- ; Ignores body, yields nil
+ ; Ignores body, yields nil.
  ;;
 (§ defmacro comment [& body])
 
 ;;;
- ; Evaluates exprs in a context in which *out* is bound to a fresh
- ; StringWriter. Returns the string created by any nested printing
- ; calls.
+ ; Evaluates exprs in a context in which *out* is bound to a fresh StringWriter.
+ ; Returns the string created by any nested printing calls.
  ;;
 (§ defmacro with-out-str [& body]
     `(let [s# (java.io.StringWriter.)]
         (binding [*out* s#]
-        ~@body
-        (str s#)))
+            ~@body
+            (str s#)
+        )
+    )
 )
 
 ;;;
- ; Evaluates body in a context in which *in* is bound to a fresh
- ; StringReader initialized with the string s.
+ ; Evaluates body in a context in which *in* is bound to a fresh StringReader
+ ; initialized with the string s.
  ;;
 (§ defmacro with-in-str [s & body]
-    `(with-open [s# (-> (java.io.StringReader. ~s) cloiure.lang.LineNumberingPushbackReader.)]
+    `(with-open [s# (-> ~s (java.io.StringReader.) (cloiure.lang.LineNumberingPushbackReader.))]
         (binding [*in* s#]
-        ~@body))
+            ~@body
+        )
+    )
 )
 
 ;;;
- ; pr to a string, returning it
+ ; pr/prn/print/println to a string, returning it.
  ;;
-(§ defn ^String pr-str [& xs]
-    (with-out-str
-        (apply pr xs))
-)
+(§ defn ^String pr-str      [& xs] (with-out-str (apply pr      xs)))
+(§ defn ^String prn-str     [& xs] (with-out-str (apply prn     xs)))
+(§ defn ^String print-str   [& xs] (with-out-str (apply print   xs)))
+(§ defn ^String println-str [& xs] (with-out-str (apply println xs)))
 
-;;;
- ; prn to a string, returning it
- ;;
-(§ defn ^String prn-str [& xs]
-    (with-out-str
-        (apply prn xs))
-)
-
-;;;
- ; print to a string, returning it
- ;;
-(§ defn ^String print-str [& xs]
-    (with-out-str
-        (apply print xs))
-)
-
-;;;
- ; println to a string, returning it
- ;;
-(§ defn ^String println-str [& xs]
-    (with-out-str
-        (apply println xs))
-)
-
-(§ import cloiure.lang.ExceptionInfo cloiure.lang.IExceptionInfo)
+(§ import [cloiure.lang ExceptionInfo IExceptionInfo])
 
 ;;;
  ; Create an instance of ExceptionInfo, a RuntimeException subclass
  ; that carries a map of additional data.
  ;;
 (§ defn ex-info
-    ([msg map]
-            (ExceptionInfo. msg map))
-    ([msg map cause]
-            (ExceptionInfo. msg map cause))
+    ([msg map      ] (ExceptionInfo. msg map      ))
+    ([msg map cause] (ExceptionInfo. msg map cause))
 )
 
 ;;;
@@ -4852,48 +4900,42 @@
  ;;
 (§ defn ex-data [ex]
     (when (instance? IExceptionInfo ex)
-            (.getData ^IExceptionInfo ex))
+        (.getData ^IExceptionInfo ex)
+    )
 )
 
 ;;;
- ; Evaluates expr and throws an exception if it does not evaluate to
- ; logical true.
+ ; Evaluates expr and throws an exception if it does not evaluate to logical true.
  ;;
 (§ defmacro assert
     ([x]
-            (when *assert*
+        (when *assert*
             `(when-not ~x
-                (throw (AssertionError. (str "Assert failed: " (pr-str '~x)))))))
+                (throw (AssertionError. (str "Assert failed: " (pr-str '~x))))
+            )
+        )
+    )
     ([x message]
-            (when *assert*
+        (when *assert*
             `(when-not ~x
-                (throw (AssertionError. (str "Assert failed: " ~message "\n" (pr-str '~x)))))))
+                (throw (AssertionError. (str "Assert failed: " ~message "\n" (pr-str '~x))))
+            )
+        )
+    )
 )
 
 ;;;
- ; test [v] finds fn at key :test in var metadata and calls it,
- ; presuming failure will throw exception
- ;;
-(§ defn test [v]
-    (let [f (:test (meta v))]
-        (if f
-            (do (f) :ok)
-            :no-test))
-)
-
-;;;
- ; Returns an instance of java.util.regex.Pattern, for use, e.g. in
- ; re-matcher.
+ ; Returns an instance of java.util.regex.Pattern, for use, e.g. in re-matcher.
  ;;
 (§ defn ^java.util.regex.Pattern re-pattern [s]
     (if (instance? java.util.regex.Pattern s)
         s
-        (java.util.regex.Pattern/compile s))
+        (java.util.regex.Pattern/compile s)
+    )
 )
 
 ;;;
- ; Returns an instance of java.util.regex.Matcher, for use, e.g. in
- ; re-find.
+ ; Returns an instance of java.util.regex.Matcher, for use, e.g. in re-find.
  ;;
 (§ defn ^java.util.regex.Matcher re-matcher [^java.util.regex.Pattern re s]
     (.matcher re s)
@@ -4910,9 +4952,13 @@
         (if (zero? gc)
             (.group m)
             (loop [ret [] c 0]
-            (if (<= c gc)
-                (recur (conj ret (.group m c)) (inc c))
-                ret))))
+                (if (<= c gc)
+                    (recur (conj ret (.group m c)) (inc c))
+                    ret
+                )
+            )
+        )
+    )
 )
 
 ;;;
@@ -4922,34 +4968,43 @@
  ;;
 (§ defn re-seq [^java.util.regex.Pattern re s]
     (let [m (re-matcher re s)]
-            ((fn step []
+        ((fn step []
             (when (.find m)
-                (cons (re-groups m) (lazy-seq (step)))))))
+                (cons (re-groups m) (lazy-seq (step)))
+            )
+        ))
+    )
 )
 
 ;;;
  ; Returns the match, if any, of string to pattern, using
- ; java.util.regex.Matcher.matches(). Uses re-groups to return the
- ; groups.
+ ; java.util.regex.Matcher.matches(). Uses re-groups to return
+ ; the groups.
  ;;
 (§ defn re-matches [^java.util.regex.Pattern re s]
     (let [m (re-matcher re s)]
         (when (.matches m)
-            (re-groups m)))
+            (re-groups m)
+        )
+    )
 )
 
 ;;;
  ; Returns the next regex match, if any, of string to pattern, using
- ; java.util.regex.Matcher.find(). Uses re-groups to return the
- ; groups.
+ ; java.util.regex.Matcher.find(). Uses re-groups to return
+ ; the groups.
  ;;
 (§ defn re-find
     ([^java.util.regex.Matcher m]
         (when (.find m)
-            (re-groups m)))
+            (re-groups m)
+        )
+    )
     ([^java.util.regex.Pattern re s]
         (let [m (re-matcher re s)]
-            (re-find m)))
+            (re-find m)
+        )
+    )
 )
 
 ;;;
@@ -4967,7 +5022,7 @@
 (§ defn rand-int [n] (int (rand n)))
 
 ;;;
- ; same as defn, yielding non-public def
+ ; Same as defn, yielding non-public def.
  ;;
 (§ defmacro defn- [name & decls]
     (list* `defn (with-meta name (assoc (meta name) :private true)) decls)
@@ -4982,73 +5037,81 @@
  ; tree.
  ;;
 (§ defn tree-seq [branch? children root]
-    (let [walk (fn walk [node]
-                    (lazy-seq
-                    (cons node
-                    (when (branch? node)
-                        (mapcat walk (children node))))))]
-        (walk root))
+    (let [walk
+            (fn walk [node]
+                (lazy-seq
+                    (cons node (when (branch? node) (mapcat walk (children node))))
+                )
+            )]
+        (walk root)
+    )
 )
 
 ;;;
- ; Returns true if s names a special form
+ ; Returns true if s names a special form.
  ;;
-(§ defn special-symbol? [s] (contains? (cloiure.lang.Compiler/specials) s))
+(§ defn special-symbol? [s] (contains? cloiure.lang.Compiler/specials s))
 
 ;;;
- ; Returns true if v is of type cloiure.lang.Var
+ ; Returns true if v is of type cloiure.lang.Var.
  ;;
 (§ defn var? [v] (instance? cloiure.lang.Var v))
 
 ;;;
- ; Returns the substring of s beginning at start inclusive, and ending
- ; at end (defaults to length of string), exclusive.
+ ; Returns the substring of s beginning at start inclusive,
+ ; and ending at end (defaults to length of string), exclusive.
  ;;
 (§ defn ^String subs
-    ([^String s start] (.substring s start))
+    ([^String s start    ] (.substring s start    ))
     ([^String s start end] (.substring s start end))
 )
 
 ;;;
  ; Returns the x for which (k x), a number, is greatest.
- ;
  ; If there are multiple such xs, the last one is returned.
  ;;
 (§ defn max-key
     ([k x] x)
     ([k x y] (if (> (k x) (k y)) x y))
     ([k x y & more]
-        (let [kx (k x) ky (k y)
-                [v kv] (if (> kx ky) [x kx] [y ky])]
+        (let [kx (k x) ky (k y) [v kv] (if (> kx ky) [x kx] [y ky])]
             (loop [v v kv kv more more]
-            (if more
-                (let [w (first more)
-                    kw (k w)]
-                (if (>= kw kv)
-                    (recur w kw (next more))
-                    (recur v kv (next more))))
-                v))))
+                (if more
+                    (let [w (first more) kw (k w)]
+                        (if (>= kw kv)
+                            (recur w kw (next more))
+                            (recur v kv (next more))
+                        )
+                    )
+                    v
+                )
+            )
+        )
+    )
 )
 
 ;;;
  ; Returns the x for which (k x), a number, is least.
- ;
  ; If there are multiple such xs, the last one is returned.
  ;;
 (§ defn min-key
     ([k x] x)
     ([k x y] (if (< (k x) (k y)) x y))
     ([k x y & more]
-        (let [kx (k x) ky (k y)
-                [v kv] (if (< kx ky) [x kx] [y ky])]
+        (let [kx (k x) ky (k y) [v kv] (if (< kx ky) [x kx] [y ky])]
             (loop [v v kv kv more more]
-            (if more
-                (let [w (first more)
-                    kw (k w)]
-                (if (<= kw kv)
-                    (recur w kw (next more))
-                    (recur v kv (next more))))
-                v))))
+                (if more
+                    (let [w (first more) kw (k w)]
+                        (if (<= kw kv)
+                            (recur w kw (next more))
+                            (recur v kv (next more))
+                        )
+                    )
+                    v
+                )
+            )
+        )
+    )
 )
 
 ;;;
@@ -5059,43 +5122,63 @@
     ([]
         (fn [rf]
             (let [seen (volatile! #{})]
-            (fn
-                ([] (rf))
-                ([result] (rf result))
-                ([result input]
-                (if (contains? @seen input)
-                    result
-                    (do (vswap! seen conj input)
-                        (rf result input))))))))
+                (fn
+                    ([] (rf))
+                    ([result] (rf result))
+                    ([result input]
+                        (if (contains? @seen input)
+                            result
+                            (do (vswap! seen conj input) (rf result input))
+                        )
+                    )
+                )
+            )
+        )
+    )
     ([coll]
-        (let [step (fn step [xs seen]
-                        (lazy-seq
+        (let [step
+                (fn step [xs seen]
+                    (lazy-seq
                         ((fn [[f :as xs] seen]
                             (when-let [s (seq xs)]
-                            (if (contains? seen f)
-                                (recur (rest s) seen)
-                                (cons f (step (rest s) (conj seen f))))))
-                        xs seen)))]
-            (step coll #{})))
+                                (if (contains? seen f)
+                                    (recur (rest s) seen)
+                                    (cons f (step (rest s) (conj seen f)))
+                                )
+                            ))
+                            xs seen
+                        )
+                    )
+                )]
+            (step coll #{})
+        )
+    )
 )
 
 ;;;
- ; Given a map of replacement pairs and a vector/collection, returns a
- ; vector/seq with any elements = a key in smap replaced with the
+ ; Given a map of replacement pairs and a vector/collection, returns
+ ; a vector/seq with any elements = a key in smap replaced with the
  ; corresponding val in smap. Returns a transducer when no collection
  ; is provided.
  ;;
 (§ defn replace
     ([smap]
-            (map #(if-let [e (find smap %)] (val e) %)))
+        (map #(if-let [e (find smap %)] (val e) %))
+    )
     ([smap coll]
-            (if (vector? coll)
-            (reduce1 (fn [v i]
-                        (if-let [e (find smap (nth v i))]
-                            (assoc v i (val e))
-                            v))
-                        coll (range (count coll)))
-            (map #(if-let [e (find smap %)] (val e) %) coll)))
+        (if (vector? coll)
+            (reduce1
+                (fn [v i]
+                    (if-let [e (find smap (nth v i))]
+                        (assoc v i (val e))
+                        v
+                    )
+                )
+                coll (range (count coll))
+            )
+            (map #(if-let [e (find smap %)] (val e) %) coll)
+        )
+    )
 )
 
 ;;;
@@ -5117,74 +5200,78 @@
  ; HALF_EVEN, UP, DOWN and UNNECESSARY; it defaults to HALF_UP.
  ;;
 (§ defmacro with-precision [precision & exprs]
-    (let [[body rm] (if (= (first exprs) :rounding)
-                      [(next (next exprs))
-                       `((. java.math.RoundingMode ~(second exprs)))]
-                      [exprs nil])]
-      `(binding [*math-context* (java.math.MathContext. ~precision ~@rm)]
-         ~@body))
+    (let [[body rm]
+            (if (= (first exprs) :rounding)
+                [(next (next exprs)) `((. java.math.RoundingMode ~(second exprs)))]
+                [exprs nil]
+            )]
+        `(binding [*math-context* (java.math.MathContext. ~precision ~@rm)]
+            ~@body
+        )
+    )
 )
 
 (§ defn ^:private mk-bound-fn [^cloiure.lang.Sorted sc test key]
-    (fn [e]
-            (test (.. sc comparator (compare (.entryKey sc e) key)) 0))
+    (fn [e] (test (.compare (.comparator sc) (.entryKey sc e) key) 0))
 )
 
 ;;;
- ; sc must be a sorted collection, test(s) one of <, <=, > or
- ; >=. Returns a seq of those entries with keys ek for
- ; which (test (.. sc comparator (compare ek key)) 0) is true
+ ; sc must be a sorted collection, test(s) one of <, <=, > or >=.
+ ; Returns a seq of those entries with keys ek for which
+ ; (test (.. sc comparator (compare ek key)) 0) is true.
  ;;
 (§ defn subseq
     ([^cloiure.lang.Sorted sc test key]
         (let [include (mk-bound-fn sc test key)]
             (if (#{> >=} test)
-            (when-let [[e :as s] (.seqFrom sc key true)]
-                (if (include e) s (next s)))
-            (take-while include (.seq sc true)))))
+                (when-let [[e :as s] (.seqFrom sc key true)]
+                    (if (include e) s (next s))
+                )
+                (take-while include (.seq sc true))
+            )
+        )
+    )
     ([^cloiure.lang.Sorted sc start-test start-key end-test end-key]
         (when-let [[e :as s] (.seqFrom sc start-key true)]
             (take-while (mk-bound-fn sc end-test end-key)
-                        (if ((mk-bound-fn sc start-test start-key) e) s (next s)))))
+                (if ((mk-bound-fn sc start-test start-key) e) s (next s))
+            )
+        )
+    )
 )
 
 ;;;
- ; sc must be a sorted collection, test(s) one of <, <=, > or
- ; >=. Returns a reverse seq of those entries with keys ek for
- ; which (test (.. sc comparator (compare ek key)) 0) is true
+ ; sc must be a sorted collection, test(s) one of <, <=, > or >=.
+ ; Returns a reverse seq of those entries with keys ek for which
+ ; (test (.. sc comparator (compare ek key)) 0) is true.
  ;;
 (§ defn rsubseq
     ([^cloiure.lang.Sorted sc test key]
         (let [include (mk-bound-fn sc test key)]
             (if (#{< <=} test)
-            (when-let [[e :as s] (.seqFrom sc key false)]
-                (if (include e) s (next s)))
-            (take-while include (.seq sc false)))))
+                (when-let [[e :as s] (.seqFrom sc key false)]
+                    (if (include e) s (next s))
+                )
+                (take-while include (.seq sc false))
+            )
+        )
+    )
     ([^cloiure.lang.Sorted sc start-test start-key end-test end-key]
         (when-let [[e :as s] (.seqFrom sc end-key false)]
             (take-while (mk-bound-fn sc start-test start-key)
-                        (if ((mk-bound-fn sc end-test end-key) e) s (next s)))))
+                (if ((mk-bound-fn sc end-test end-key) e) s (next s))
+            )
+        )
+    )
 )
 
 ;;;
- ; Takes a function of no args, presumably with side effects, and
- ; returns an infinite (or length n if supplied) lazy sequence of calls
- ; to it
+ ; Takes a function of no args, presumably with side effects, and returns
+ ; an infinite (or length n if supplied) lazy sequence of calls to it.
  ;;
 (§ defn repeatedly
     ([f] (lazy-seq (cons (f) (repeatedly f))))
     ([n f] (take n (repeatedly f)))
-)
-
-;;;
- ; DEPRECATED
- ;
- ; Adds the url (String or URL object) to the classpath per
- ; URLClassLoader.addURL
- ;;
-(§ defn add-classpath {:deprecated "1.1"} [url]
-    (println "WARNING: add-classpath is deprecated")
-    (cloiure.lang.RT/addURL url)
 )
 
 ;;;
@@ -5417,9 +5504,9 @@
 ;;;
  ; Return true if x is a byte array
  ;;
-(§ defn bytes? [x] (if (nil? x) false (-> x class .getComponentType (= Byte/TYPE))))
+(§ defn bytes? [x] (if (nil? x) false (= (.getComponentType (class x)) Byte/TYPE)))
 
-(§ import '(java.util.concurrent BlockingQueue LinkedBlockingQueue))
+(§ import [java.util.concurrent BlockingQueue LinkedBlockingQueue])
 
 ;;;
  ; Creates a queued seq on another (presumably lazy) seq s. The queued
@@ -6509,7 +6596,7 @@
 (§ defn future-done? [^java.util.concurrent.Future f] (.isDone f))
 
 ;;;
- ; fnspec ==> (fname [params*] exprs) or (fname ([params*] exprs)+)
+ ; fnspec => (fname [params*] exprs) or (fname ([params*] exprs)+)
  ;
  ; Takes a vector of function specs and a body, and generates a set of
  ; bindings of functions to their names. All of the names are available
@@ -6733,949 +6820,1610 @@
                     `(let [~ge ~e] (case* ~ge ~shift ~mask ~default ~imap ~switch-type :hash-identity ~skip-check)))))))
 )
 
-;; redefine reduce with internal-reduce
+(§ in-ns 'cloiure.core)
 
-(§ load "core_proxy")
-(§ load "core_print")
-(§ load "genclass")
-(§ load "core_deftype")
-(§ load "core/protocols")
-(§ load "gvec")
-
-(§ defmacro ^:private when-class [class-name & body]
-    `(try
-        (Class/forName ^String ~class-name)
-        ~@body
-        (catch ClassNotFoundException _#))
+(§ import
+    [java.io NotSerializableException Serializable]
+    [java.lang.reflect Constructor Modifier]
+    [cloiure.asm ClassVisitor ClassWriter Opcodes Type]
+    [cloiure.asm.commons GeneratorAdapter Method]
+    [cloiure.lang DynamicClassLoader IPersistentMap IProxy PersistentHashMap Reflector RT]
 )
 
-(§ when-class "java.sql.Timestamp"
-    (load "instant")
+(§ defn method-sig [^java.lang.reflect.Method meth]
+    [(.getName meth) (seq (.getParameterTypes meth)) (.getReturnType meth)]
 )
 
-(§ defprotocol Inst
-    (inst-ms* [inst])
-)
-
-(§ extend-protocol Inst
-    java.util.Date
-    (inst-ms* [inst] (.getTime ^java.util.Date inst))
-)
-
-;; conditionally extend to Instant on Java 8+
-
-(§ when-class "java.time.Instant"
-    (load "core_instant18")
+(§ defn- most-specific [rtypes]
+    (or (some (fn [t] (when (every? #(isa? t %) rtypes) t)) rtypes)
+            (throw (Exception. "Incompatible return types")))
 )
 
 ;;;
- ; Return the number of milliseconds since January 1, 1970, 00:00:00 GMT
+ ; Takes a collection of [msig meth] and returns a seq of maps from
+ ; return-types to meths.
  ;;
-(§ defn inst-ms [inst] (inst-ms* inst))
+(§ defn- group-by-sig [coll]
+    (vals (reduce1 (fn [m [msig meth]]
+                        (let [rtype (peek msig)
+                                argsig (pop msig)]
+                            (assoc m argsig (assoc (m argsig {}) rtype meth))))
+                {} coll))
+)
 
-;;;
- ; Return true if x satisfies Inst
- ;;
-(§ defn inst? [x] (satisfies? Inst x))
+(§ defn ^String proxy-name [^Class super interfaces]
+    (let [inames (into1 (sorted-set) (map #(.getName ^Class %) interfaces))]
+            (apply str (.replace (str *ns*) \- \_) ".proxy"
+            (interleave (repeat "$")
+                (concat
+                [(.getName super)]
+                (map #(subs % (inc (.lastIndexOf ^String % "."))) inames)
+                [(Integer/toHexString (hash inames))]))))
+)
 
-(§ defmethod print-method java.util.UUID [uuid ^java.io.Writer w]
-    (.write w (str "#uuid \"" uuid "\""))
+(§ defn- generate-proxy [^Class super interfaces]
+    (let [cv (ClassWriter. ClassWriter/COMPUTE_MAXS)
+                pname (proxy-name super interfaces)
+                cname (.replace pname \. \/) ;; (str "cloiure/lang/" (gensym "Proxy__"))
+                ctype (Type/getObjectType cname)
+                iname (fn [^Class c] (.getInternalName (Type/getType c)))
+                fmap "__cloiureFnMap"
+                totype (fn [^Class c] (Type/getType c))
+                to-types (fn [cs] (if (pos? (count cs))
+                                    (into-array (map totype cs))
+                                    (make-array Type 0)))
+                super-type ^Type (totype super)
+                imap-type ^Type (totype IPersistentMap)
+                ifn-type (totype cloiure.lang.IFn)
+                obj-type (totype Object)
+                sym-type (totype cloiure.lang.Symbol)
+                rt-type  (totype cloiure.lang.RT)
+                ex-type  (totype java.lang.UnsupportedOperationException)
+                gen-bridge
+                (fn [^java.lang.reflect.Method meth ^java.lang.reflect.Method dest]
+                    (let [pclasses (.getParameterTypes meth)
+                        ptypes (to-types pclasses)
+                        rtype ^Type (totype (.getReturnType meth))
+                        m (Method. (.getName meth) rtype ptypes)
+                        dtype (totype (.getDeclaringClass dest))
+                        dm (Method. (.getName dest) (totype (.getReturnType dest)) (to-types (.getParameterTypes dest)))
+                        gen (GeneratorAdapter. (bit-or Opcodes/ACC_PUBLIC Opcodes/ACC_BRIDGE) m nil nil cv)]
+                    (.visitCode gen)
+                    (.loadThis gen)
+                    (dotimes [i (count ptypes)]
+                        (.loadArg gen i))
+                    (if (-> dest .getDeclaringClass .isInterface)
+                        (.invokeInterface gen dtype dm)
+                        (.invokeVirtual gen dtype dm))
+                    (.returnValue gen)
+                    (.endMethod gen)))
+                gen-method
+                (fn [^java.lang.reflect.Method meth else-gen]
+                    (let [pclasses (.getParameterTypes meth)
+                        ptypes (to-types pclasses)
+                        rtype ^Type (totype (.getReturnType meth))
+                        m (Method. (.getName meth) rtype ptypes)
+                        gen (GeneratorAdapter. Opcodes/ACC_PUBLIC m nil nil cv)
+                        else-label (.newLabel gen)
+                        end-label (.newLabel gen)
+                        decl-type (Type/getType (.getDeclaringClass meth))]
+                    (.visitCode gen)
+                    (if (> (count pclasses) 18)
+                        (else-gen gen m)
+                        (do
+                        (.loadThis gen)
+                        (.getField gen ctype fmap imap-type)
+
+                        (.push gen (.getName meth))
+                                                ;; lookup fn in map
+                        (.invokeStatic gen rt-type (Method/getMethod "Object get(Object, Object)"))
+                        (.dup gen)
+                        (.ifNull gen else-label)
+                                                ;; if found
+                        (.checkCast gen ifn-type)
+                        (.loadThis gen)
+                                                ;; box args
+                        (dotimes [i (count ptypes)]
+                            (.loadArg gen i)
+                            (cloiure.lang.Compiler$HostExpr/emitBoxReturn nil gen (nth pclasses i)))
+                                                ;; call fn
+                        (.invokeInterface gen ifn-type (Method. "invoke" obj-type (into-array (cons obj-type (repeat (count ptypes) obj-type)))))
+                                                ;; unbox return
+                        (.unbox gen rtype)
+                        (when (= (.getSort rtype) Type/VOID)
+                            (.pop gen))
+                        (.goTo gen end-label)
+
+                                                ;; else call supplied alternative generator
+                        (.mark gen else-label)
+                        (.pop gen)
+
+                        (else-gen gen m)
+
+                        (.mark gen end-label)))
+                    (.returnValue gen)
+                    (.endMethod gen)))]
+
+                                                ;; start class definition
+            (.visit cv Opcodes/V1_5 (+ Opcodes/ACC_PUBLIC Opcodes/ACC_SUPER)
+                        cname nil (iname super)
+                        (into-array (map iname (cons IProxy interfaces))))
+                                                ;; add field for fn mappings
+            (.visitField cv (+ Opcodes/ACC_PRIVATE Opcodes/ACC_VOLATILE)
+                            fmap (.getDescriptor imap-type) nil nil)
+                                                ;; add ctors matching/calling super's
+            (doseq [^Constructor ctor (.getDeclaredConstructors super)]
+                (when-not (Modifier/isPrivate (.getModifiers ctor))
+                (let [ptypes (to-types (.getParameterTypes ctor))
+                        m (Method. "<init>" Type/VOID_TYPE ptypes)
+                        gen (GeneratorAdapter. Opcodes/ACC_PUBLIC m nil nil cv)]
+                    (.visitCode gen)
+                                                ;; call super ctor
+                    (.loadThis gen)
+                    (.dup gen)
+                    (.loadArgs gen)
+                    (.invokeConstructor gen super-type m)
+
+                    (.returnValue gen)
+                    (.endMethod gen))))
+                                                ;; disable serialization
+            (when (some #(isa? % Serializable) (cons super interfaces))
+            (let [m (Method/getMethod "void writeObject(java.io.ObjectOutputStream)")
+                    gen (GeneratorAdapter. Opcodes/ACC_PRIVATE m nil nil cv)]
+                (.visitCode gen)
+                (.loadThis gen)
+                (.loadArgs gen)
+                (.throwException gen (totype NotSerializableException) pname)
+                (.endMethod gen))
+            (let [m (Method/getMethod "void readObject(java.io.ObjectInputStream)")
+                    gen (GeneratorAdapter. Opcodes/ACC_PRIVATE m nil nil cv)]
+                (.visitCode gen)
+                (.loadThis gen)
+                (.loadArgs gen)
+                (.throwException gen (totype NotSerializableException) pname)
+                (.endMethod gen)))
+                                                ;; add IProxy methods
+            (let [m (Method/getMethod "void __initCloiureFnMappings(cloiure.lang.IPersistentMap)")
+                gen (GeneratorAdapter. Opcodes/ACC_PUBLIC m nil nil cv)]
+            (.visitCode gen)
+            (.loadThis gen)
+            (.loadArgs gen)
+            (.putField gen ctype fmap imap-type)
+
+            (.returnValue gen)
+            (.endMethod gen))
+            (let [m (Method/getMethod "void __updateCloiureFnMappings(cloiure.lang.IPersistentMap)")
+                gen (GeneratorAdapter. Opcodes/ACC_PUBLIC m nil nil cv)]
+            (.visitCode gen)
+            (.loadThis gen)
+            (.dup gen)
+            (.getField gen ctype fmap imap-type)
+            (.checkCast gen (totype cloiure.lang.IPersistentCollection))
+            (.loadArgs gen)
+            (.invokeInterface gen (totype cloiure.lang.IPersistentCollection)
+                                    (Method/getMethod "cloiure.lang.IPersistentCollection cons(Object)"))
+            (.checkCast gen imap-type)
+            (.putField gen ctype fmap imap-type)
+
+            (.returnValue gen)
+            (.endMethod gen))
+            (let [m (Method/getMethod "cloiure.lang.IPersistentMap __getCloiureFnMappings()")
+                gen (GeneratorAdapter. Opcodes/ACC_PUBLIC m nil nil cv)]
+            (.visitCode gen)
+            (.loadThis gen)
+            (.getField gen ctype fmap imap-type)
+            (.returnValue gen)
+            (.endMethod gen))
+
+                                                ;; calc set of supers' non-private instance methods
+            (let [[mm considered]
+                    (loop [mm {} considered #{} c super]
+                    (if c
+                        (let [[mm considered]
+                            (loop [mm mm
+                                    considered considered
+                                    meths (concat
+                                            (seq (.getDeclaredMethods c))
+                                            (seq (.getMethods c)))]
+                                (if (seq meths)
+                                (let [^java.lang.reflect.Method meth (first meths)
+                                        mods (.getModifiers meth)
+                                        mk (method-sig meth)]
+                                    (if (or (considered mk)
+                                            (not (or (Modifier/isPublic mods) (Modifier/isProtected mods)))
+                                            ;; (Modifier/isPrivate mods)
+                                            (Modifier/isStatic mods)
+                                            (Modifier/isFinal mods)
+                                            (= "finalize" (.getName meth)))
+                                    (recur mm (conj considered mk) (next meths))
+                                    (recur (assoc mm mk meth) (conj considered mk) (next meths))))
+                                [mm considered]))]
+                        (recur mm considered (.getSuperclass c)))
+                        [mm considered]))
+                ifaces-meths (into1 {}
+                                (for [^Class iface interfaces meth (.getMethods iface)
+                                    :let [msig (method-sig meth)] :when (not (considered msig))]
+                                {msig meth}))
+                ;; Treat abstract methods as interface methods
+                [mm ifaces-meths] (let [abstract? (fn [[_ ^Method meth]]
+                                                    (Modifier/isAbstract (.getModifiers meth)))
+                                        mm-no-abstract (remove abstract? mm)
+                                        abstract-meths (filter abstract? mm)]
+                                    [mm-no-abstract (concat ifaces-meths abstract-meths)])
+                mgroups (group-by-sig (concat mm ifaces-meths))
+                rtypes (map #(most-specific (keys %)) mgroups)
+                mb (map #(vector (%1 %2) (vals (dissoc %1 %2))) mgroups rtypes)
+                bridge? (reduce1 into1 #{} (map second mb))
+                ifaces-meths (remove bridge? (vals ifaces-meths))
+                mm (remove bridge? (vals mm))]
+                                                ;; add methods matching supers', if no mapping -> call super
+            (doseq [[^java.lang.reflect.Method dest bridges] mb
+                    ^java.lang.reflect.Method meth bridges]
+                (gen-bridge meth dest))
+            (doseq [^java.lang.reflect.Method meth mm]
+                (gen-method meth
+                            (fn [^GeneratorAdapter gen ^Method m]
+                                (.loadThis gen)
+                                                ;; push args
+                                (.loadArgs gen)
+                                                ;; call super
+                                (.visitMethodInsn gen Opcodes/INVOKESPECIAL
+                                                        (.getInternalName super-type)
+                                                        (.getName m)
+                                                        (.getDescriptor m)))))
+
+                                                ;; add methods matching interfaces', if no mapping -> throw
+            (doseq [^java.lang.reflect.Method meth ifaces-meths]
+                        (gen-method meth
+                                    (fn [^GeneratorAdapter gen ^Method m]
+                                        (.throwException gen ex-type (.getName m))))))
+
+                                                ;; finish class def
+            (.visitEnd cv)
+            [cname (.toByteArray cv)])
+)
+
+(§ defn- get-super-and-interfaces [bases]
+    (if (.isInterface ^Class (first bases))
+            [Object bases]
+            [(first bases) (next bases)])
 )
 
 ;;;
- ; Return true if x is a java.util.UUID
+ ; Takes an optional single class followed by zero or more
+ ; interfaces. If not supplied class defaults to Object. Creates an
+ ; returns an instance of a proxy class derived from the supplied
+ ; classes. The resulting value is cached and used for any subsequent
+ ; requests for the same class set. Returns a Class object.
  ;;
-(§ defn uuid? [x] (instance? java.util.UUID x))
-
-;;;
- ; f should be a function of 2 arguments. If val is not supplied,
- ; returns the result of applying f to the first 2 items in coll, then
- ; applying f to that result and the 3rd item, etc. If coll contains no
- ; items, f must accept no arguments as well, and reduce returns the
- ; result of calling f with no arguments. If coll has only 1 item, it
- ; is returned and f is not called. If val is supplied, returns the
- ; result of applying f to val and the first item in coll, then
- ; applying f to that result and the 2nd item, etc. If coll contains no
- ; items, returns val and f is not called.
- ;;
-(§ defn reduce
-    ([f coll]
-            (if (instance? cloiure.lang.IReduce coll)
-            (.reduce ^cloiure.lang.IReduce coll f)
-            (cloiure.core.protocols/coll-reduce coll f)))
-    ([f val coll]
-            (if (instance? cloiure.lang.IReduceInit coll)
-            (.reduce ^cloiure.lang.IReduceInit coll f val)
-            (cloiure.core.protocols/coll-reduce coll f val)))
-)
-
-(§ extend-protocol cloiure.core.protocols/IKVReduce
-    nil
-    (kv-reduce [_ f init] init)
-
-    ;; slow path default
-    cloiure.lang.IPersistentMap
-    (kv-reduce [amap f init] (reduce (fn [ret [k v]] (f ret k v)) init amap))
-
-    cloiure.lang.IKVReduce
-    (kv-reduce [amap f init] (.kvreduce amap f init))
+(§ defn get-proxy-class [& bases]
+    (let [[super interfaces] (get-super-and-interfaces bases)
+          pname (proxy-name super interfaces)]
+        (or (RT/loadClassForName pname)
+            (let [[cname bytecode] (generate-proxy super interfaces)]
+                (.defineClass ^DynamicClassLoader (deref cloiure.lang.Compiler/LOADER) pname bytecode [super interfaces]))))
 )
 
 ;;;
- ; Reduces an associative collection. f should be a function of 3
- ; arguments. Returns the result of applying f to init, the first key
- ; and the first value in coll, then applying f to that result and the
- ; 2nd key and value, etc. If coll contains no entries, returns init
- ; and f is not called. Note that reduce-kv is supported on vectors,
- ; where the keys will be the ordinals.
+ ; Takes a proxy class and any arguments for its superclass ctor and
+ ; creates and returns an instance of the proxy.
  ;;
-(§ defn reduce-kv
-    ([f init coll]
-            (cloiure.core.protocols/kv-reduce coll f init))
+(§ defn construct-proxy [c & ctor-args]
+    (Reflector/invokeConstructor c (to-array ctor-args))
 )
 
 ;;;
- ; Takes a reducing function f of 2 args and returns a fn suitable for
- ; transduce by adding an arity-1 signature that calls cf (default -
- ; identity) on the result argument.
+ ; Takes a proxy instance and a map of strings (which must
+ ; correspond to methods of the proxy superclass/superinterfaces) to
+ ; fns (which must take arguments matching the corresponding method,
+ ; plus an additional (explicit) first arg corresponding to this, and
+ ; sets the proxy's fn map. Returns the proxy.
  ;;
-(§ defn completing
-    ([f] (completing f identity))
-    ([f cf]
-            (fn
-            ([] (f))
-            ([x] (cf x))
-            ([x y] (f x y))))
-)
+(§ defn init-proxy [^IProxy proxy mappings]
+    (.__initCloiureFnMappings proxy mappings)
+    proxy)
 
 ;;;
- ; reduce with a transformation of f (xf). If init is not
- ; supplied, (f) will be called to produce it. f should be a reducing
- ; step function that accepts both 1 and 2 arguments, if it accepts
- ; only 2 you can add the arity-1 with 'completing'. Returns the result
- ; of applying (the transformed) xf to init and the first item in coll,
- ; then applying xf to that result and the 2nd item, etc. If coll
- ; contains no items, returns init and f is not called. Note that
- ; certain transforms may inject or skip items.
+ ; Takes a proxy instance and a map of strings (which must
+ ; correspond to methods of the proxy superclass/superinterfaces) to
+ ; fns (which must take arguments matching the corresponding method,
+ ; plus an additional (explicit) first arg corresponding to this, and
+ ; updates (via assoc) the proxy's fn map. nil can be passed instead of
+ ; a fn, in which case the corresponding method will revert to the
+ ; default behavior. Note that this function can be used to update the
+ ; behavior of an existing instance without changing its identity.
+ ; Returns the proxy.
  ;;
-(§ defn transduce
-    ([xform f coll] (transduce xform f (f) coll))
-    ([xform f init coll]
-            (let [f (xform f)
-                ret (if (instance? cloiure.lang.IReduceInit coll)
-                        (.reduce ^cloiure.lang.IReduceInit coll f init)
-                        (cloiure.core.protocols/coll-reduce coll f init))]
-            (f ret)))
-)
+(§ defn update-proxy [^IProxy proxy mappings]
+    (.__updateCloiureFnMappings proxy mappings)
+    proxy)
 
 ;;;
- ; Returns a new coll consisting of to-coll with all of the items of
- ; from-coll conjoined. A transducer may be supplied.
+ ; Takes a proxy instance and returns the proxy's fn map.
  ;;
-(§ defn into
-    ([] [])
-    ([to] to)
-    ([to from]
-            (if (instance? cloiure.lang.IEditableCollection to)
-            (with-meta (persistent! (reduce conj! (transient to) from)) (meta to))
-            (reduce conj to from)))
-    ([to xform from]
-            (if (instance? cloiure.lang.IEditableCollection to)
-            (with-meta (persistent! (transduce xform conj! (transient to) from)) (meta to))
-            (transduce xform conj to from)))
-)
+(§ defn proxy-mappings [^IProxy proxy] (.__getCloiureFnMappings proxy))
 
 ;;;
- ; Returns a vector consisting of the result of applying f to the
- ; set of first items of each coll, followed by applying f to the set
- ; of second items in each coll, until any one of the colls is
- ; exhausted. Any remaining items in other colls are ignored. Function
- ; f should accept number-of-colls arguments.
- ;;
-(§ defn mapv
-    ([f coll]
-            (-> (reduce (fn [v o] (conj! v (f o))) (transient []) coll)
-                persistent!))
-    ([f c1 c2]
-            (into [] (map f c1 c2)))
-    ([f c1 c2 c3]
-            (into [] (map f c1 c2 c3)))
-    ([f c1 c2 c3 & colls]
-            (into [] (apply map f c1 c2 c3 colls)))
-)
-
-;;;
- ; Returns a vector of the items in coll for which
- ; (pred item) returns logical true. pred must be free of side-effects.
- ;;
-(§ defn filterv [pred coll]
-    (-> (reduce (fn [v o] (if (pred o) (conj! v o) v)) (transient []) coll) persistent!)
-)
-
-;; futures (needs proxy)
-
-;;;
- ; Takes a function of no args and yields a future object that will
- ; invoke the function in another thread, and will cache the result and
- ; return it on all subsequent calls to deref/@. If the computation has
- ; not yet finished, calls to deref/@ will block, unless the variant
- ; of deref with timeout is used. See also - realized?.
- ;;
-(§ defn future-call [f]
-    (let [f (binding-conveyor-fn f)
-                fut (.submit cloiure.lang.Agent/soloExecutor ^Callable f)]
-            (reify
-            cloiure.lang.IDeref
-            (deref [_] (deref-future fut))
-            cloiure.lang.IBlockingDeref
-            (deref
-            [_ timeout-ms timeout-val]
-            (deref-future fut timeout-ms timeout-val))
-            cloiure.lang.IPending
-            (isRealized [_] (.isDone fut))
-            java.util.concurrent.Future
-            (get [_] (.get fut))
-            (get [_ timeout unit] (.get fut timeout unit))
-            (isCancelled [_] (.isCancelled fut))
-            (isDone [_] (.isDone fut))
-            (cancel [_ interrupt?] (.cancel fut interrupt?))))
-)
-
-;;;
- ; Takes a body of expressions and yields a future object that will
- ; invoke the body in another thread, and will cache the result and
- ; return it on all subsequent calls to deref/@. If the computation has
- ; not yet finished, calls to deref/@ will block, unless the variant of
- ; deref with timeout is used. See also - realized?.
- ;;
-(§ defmacro future [& body] `(future-call (^{:once true} fn* [] ~@body)))
-
-;;;
- ; Cancels the future, if possible.
- ;;
-(§ defn future-cancel [^java.util.concurrent.Future f] (.cancel f true))
-
-;;;
- ; Returns true if future f is cancelled
- ;;
-(§ defn future-cancelled? [^java.util.concurrent.Future f] (.isCancelled f))
-
-;;;
- ; Like map, except f is applied in parallel. Semi-lazy in that the
- ; parallel computation stays ahead of the consumption, but doesn't
- ; realize the entire result unless required. Only useful for
- ; computationally intensive functions where the time of f dominates
- ; the coordination overhead.
- ;;
-(§ defn pmap
-    ([f coll]
-        (let [n (+ 2 (.availableProcessors (Runtime/getRuntime)))
-                rets (map #(future (f %)) coll)
-                step (fn step [[x & xs :as vs] fs]
-                        (lazy-seq
-                        (if-let [s (seq fs)]
-                        (cons (deref x) (step xs (rest s)))
-                        (map deref vs))))]
-            (step rets (drop n rets))))
-    ([f coll & colls]
-        (let [step (fn step [cs]
-                        (lazy-seq
-                        (let [ss (map seq cs)]
-                        (when (every? identity ss)
-                            (cons (map first ss) (step (map rest ss)))))))]
-            (pmap #(apply f %) (step (cons coll colls)))))
-)
-
-;;;
- ; Executes the no-arg fns in parallel, returning a lazy sequence of
- ; their values
- ;;
-(§ defn pcalls [& fns] (pmap #(%) fns))
-
-;;;
- ; Returns a lazy sequence of the values of the exprs, which are
- ; evaluated in parallel
- ;;
-(§ defmacro pvalues [& exprs] `(pcalls ~@(map #(list `fn [] %) exprs)))
-
-;;;
- ; Returns a promise object that can be read with deref/@, and set,
- ; once only, with deliver. Calls to deref/@ prior to delivery will
- ; block, unless the variant of deref with timeout is used. All
- ; subsequent derefs will return the same delivered value without
- ; blocking. See also - realized?.
- ;;
-(§ defn promise []
-    (let [d (java.util.concurrent.CountDownLatch. 1)
-                v (atom d)]
-            (reify
-            cloiure.lang.IDeref
-            (deref [_] (.await d) @v)
-            cloiure.lang.IBlockingDeref
-            (deref
-                [_ timeout-ms timeout-val]
-                (if (.await d timeout-ms java.util.concurrent.TimeUnit/MILLISECONDS)
-                @v
-                timeout-val))
-            cloiure.lang.IPending
-            (isRealized [this]
-            (zero? (.getCount d)))
-            cloiure.lang.IFn
-            (invoke
-            [this x]
-            (when (and (pos? (.getCount d))
-                        (compare-and-set! v d x))
-                (.countDown d)
-                this))))
-)
-
-;;;
- ; Delivers the supplied value to the promise, releasing any pending
- ; derefs. A subsequent call to deliver on a promise will have no effect.
- ;;
-(§ defn deliver [promise val] (promise val))
-
-;;;
- ; Takes any nested combination of sequential things (lists, vectors,
- ; etc.) and returns their contents as a single, flat sequence.
- ; (flatten nil) returns an empty sequence.
- ;;
-(§ defn flatten [x]
-    (filter (complement sequential?)
-                (rest (tree-seq sequential? seq x)))
-)
-
-;;;
- ; Returns a map of the elements of coll keyed by the result of
- ; f on each element. The value at each key will be a vector of the
- ; corresponding elements, in the order they appeared in coll.
- ;;
-(§ defn group-by [f coll]
-    (persistent!
-        (reduce
-            (fn [ret x]
-            (let [k (f x)]
-                (assoc! ret k (conj (get ret k []) x))))
-            (transient {}) coll))
-)
-
-;;;
- ; Applies f to each value in coll, splitting it each time f returns a
- ; new value. Returns a lazy seq of partitions. Returns a stateful
- ; transducer when no collection is provided.
- ;;
-(§ defn partition-by
-    ([f]
-        (fn [rf]
-            (let [a (java.util.ArrayList.)
-                pv (volatile! ::none)]
-            (fn
-                ([] (rf))
-                ([result]
-                (let [result (if (.isEmpty a)
-                                result
-                                (let [v (vec (.toArray a))]
-                                    ;; clear first!
-                                    (.clear a)
-                                    (unreduced (rf result v))))]
-                    (rf result)))
-                ([result input]
-                (let [pval @pv
-                        val (f input)]
-                    (vreset! pv val)
-                    (if (or (identical? pval ::none)
-                            (= val pval))
-                    (do
-                        (.add a input)
-                        result)
-                    (let [v (vec (.toArray a))]
-                        (.clear a)
-                        (let [ret (rf result v)]
-                        (when-not (reduced? ret)
-                            (.add a input))
-                        ret)))))))))
-    ([f coll]
-            (lazy-seq
-            (when-let [s (seq coll)]
-                (let [fst (first s)
-                    fv (f fst)
-                    run (cons fst (take-while #(= fv (f %)) (next s)))]
-                (cons run (partition-by f (seq (drop (count run) s))))))))
-)
-
-;;;
- ; Returns a map from distinct items in coll to the number of times
- ; they appear.
- ;;
-(§ defn frequencies [coll]
-    (persistent!
-        (reduce (fn [counts x]
-                    (assoc! counts x (inc (get counts x 0))))
-                (transient {}) coll))
-)
-
-;;;
- ; Returns a lazy seq of the intermediate values of the reduction (as
- ; per reduce) of coll by f, starting with init.
- ;;
-(§ defn reductions
-    ([f coll]
-            (lazy-seq
-            (if-let [s (seq coll)]
-                (reductions f (first s) (rest s))
-                (list (f)))))
-    ([f init coll]
-            (if (reduced? init)
-            (list @init)
-            (cons init
-                    (lazy-seq
-                    (when-let [s (seq coll)]
-                        (reductions f (f init (first s)) (rest s)))))))
-)
-
-;;;
- ; Return a random element of the (sequential) collection. Will have
- ; the same performance characteristics as nth for the given
- ; collection.
- ;;
-(§ defn rand-nth [coll]
-    (nth coll (rand-int (count coll)))
-)
-
-;;;
- ; Returns a lazy sequence of lists like partition, but may include
- ; partitions with fewer than n items at the end. Returns a stateful
- ; transducer when no collection is provided.
- ;;
-(§ defn partition-all
-    ([^long n]
-        (fn [rf]
-            (let [a (java.util.ArrayList. n)]
-            (fn
-                ([] (rf))
-                ([result]
-                    (let [result (if (.isEmpty a)
-                                result
-                                (let [v (vec (.toArray a))]
-                                    ;; clear first!
-                                    (.clear a)
-                                    (unreduced (rf result v))))]
-                    (rf result)))
-                ([result input]
-                    (.add a input)
-                    (if (= n (.size a))
-                    (let [v (vec (.toArray a))]
-                        (.clear a)
-                        (rf result v))
-                    result))))))
-    ([n coll]
-            (partition-all n n coll))
-    ([n step coll]
-            (lazy-seq
-            (when-let [s (seq coll)]
-                (let [seg (doall (take n s))]
-                (cons seg (partition-all n step (nthrest s step)))))))
-)
-
-;;;
- ; Return a random permutation of coll
- ;;
-(§ defn shuffle [^java.util.Collection coll]
-    (let [al (java.util.ArrayList. coll)]
-            (java.util.Collections/shuffle al)
-            (cloiure.lang.RT/vector (.toArray al)))
-)
-
-;;;
- ; Returns a lazy sequence consisting of the result of applying f to 0
- ; and the first item of coll, followed by applying f to 1 and the second
- ; item in coll, etc, until coll is exhausted. Thus function f should
- ; accept 2 arguments, index and item. Returns a stateful transducer when
- ; no collection is provided.
- ;;
-(§ defn map-indexed
-    ([f]
-        (fn [rf]
-            (let [i (volatile! -1)]
-            (fn
-                ([] (rf))
-                ([result] (rf result))
-                ([result input]
-                (rf result (f (vswap! i inc) input)))))))
-    ([f coll]
-        (letfn [(mapi [idx coll]
-                        (lazy-seq
-                        (when-let [s (seq coll)]
-                            (if (chunked-seq? s)
-                            (let [c (chunk-first s)
-                                    size (int (count c))
-                                    b (chunk-buffer size)]
-                                (dotimes [i size]
-                                (chunk-append b (f (+ idx i) (.nth c i))))
-                                (chunk-cons (chunk b) (mapi (+ idx size) (chunk-rest s))))
-                            (cons (f idx (first s)) (mapi (inc idx) (rest s)))))))]
-            (mapi 0 coll)))
-)
-
-;;;
- ; Returns a lazy sequence of the non-nil results of (f item). Note,
- ; this means false return values will be included. f must be free of
- ; side-effects. Returns a transducer when no collection is provided.
- ;;
-(§ defn keep
-    ([f]
-        (fn [rf]
-            (fn
-            ([] (rf))
-            ([result] (rf result))
-            ([result input]
-                (let [v (f input)]
-                    (if (nil? v)
-                    result
-                    (rf result v)))))))
-    ([f coll]
-        (lazy-seq
-            (when-let [s (seq coll)]
-            (if (chunked-seq? s)
-                (let [c (chunk-first s)
-                    size (count c)
-                    b (chunk-buffer size)]
-                (dotimes [i size]
-                    (let [x (f (.nth c i))]
-                    (when-not (nil? x)
-                        (chunk-append b x))))
-                (chunk-cons (chunk b) (keep f (chunk-rest s))))
-                (let [x (f (first s))]
-                (if (nil? x)
-                    (keep f (rest s))
-                    (cons x (keep f (rest s)))))))))
-)
-
-;;;
- ; Returns a lazy sequence of the non-nil results of (f index item). Note,
- ; this means false return values will be included. f must be free of
- ; side-effects. Returns a stateful transducer when no collection is
- ; provided.
- ;;
-(§ defn keep-indexed
-    ([f]
-        (fn [rf]
-            (let [iv (volatile! -1)]
-            (fn
-                ([] (rf))
-                ([result] (rf result))
-                ([result input]
-                    (let [i (vswap! iv inc)
-                        v (f i input)]
-                    (if (nil? v)
-                        result
-                        (rf result v))))))))
-    ([f coll]
-            (letfn [(keepi [idx coll]
-                    (lazy-seq
-                        (when-let [s (seq coll)]
-                        (if (chunked-seq? s)
-                            (let [c (chunk-first s)
-                                size (count c)
-                                b (chunk-buffer size)]
-                            (dotimes [i size]
-                                (let [x (f (+ idx i) (.nth c i))]
-                                (when-not (nil? x)
-                                    (chunk-append b x))))
-                            (chunk-cons (chunk b) (keepi (+ idx size) (chunk-rest s))))
-                            (let [x (f idx (first s))]
-                            (if (nil? x)
-                                (keepi (inc idx) (rest s))
-                                (cons x (keepi (inc idx) (rest s)))))))))]
-            (keepi 0 coll)))
-)
-
-;;;
- ; If coll is counted? returns its count, else will count at most the first n
- ; elements of coll using its seq
- ;;
-(§ defn bounded-count [n coll]
-    (if (counted? coll)
-            (count coll)
-            (loop [i 0 s (seq coll)]
-            (if (and s (< i n))
-                (recur (inc i) (next s))
-                i)))
-)
-
-;;;
- ; Takes a set of predicates and returns a function f that returns true if all of its
- ; composing predicates return a logical true value against all of its arguments, else it returns
- ; false. Note that f is short-circuiting in that it will stop execution on the first
- ; argument that triggers a logical false result against the original predicates.
- ;;
-(§ defn every-pred
-    ([p]
-            (fn ep1
-            ([] true)
-            ([x] (boolean (p x)))
-            ([x y] (boolean (and (p x) (p y))))
-            ([x y z] (boolean (and (p x) (p y) (p z))))
-            ([x y z & args] (boolean (and (ep1 x y z)
-                                            (every? p args))))))
-    ([p1 p2]
-            (fn ep2
-            ([] true)
-            ([x] (boolean (and (p1 x) (p2 x))))
-            ([x y] (boolean (and (p1 x) (p1 y) (p2 x) (p2 y))))
-            ([x y z] (boolean (and (p1 x) (p1 y) (p1 z) (p2 x) (p2 y) (p2 z))))
-            ([x y z & args] (boolean (and (ep2 x y z)
-                                            (every? #(and (p1 %) (p2 %)) args))))))
-    ([p1 p2 p3]
-            (fn ep3
-            ([] true)
-            ([x] (boolean (and (p1 x) (p2 x) (p3 x))))
-            ([x y] (boolean (and (p1 x) (p2 x) (p3 x) (p1 y) (p2 y) (p3 y))))
-            ([x y z] (boolean (and (p1 x) (p2 x) (p3 x) (p1 y) (p2 y) (p3 y) (p1 z) (p2 z) (p3 z))))
-            ([x y z & args] (boolean (and (ep3 x y z)
-                                            (every? #(and (p1 %) (p2 %) (p3 %)) args))))))
-    ([p1 p2 p3 & ps]
-            (let [ps (list* p1 p2 p3 ps)]
-            (fn epn
-                ([] true)
-                ([x] (every? #(% x) ps))
-                ([x y] (every? #(and (% x) (% y)) ps))
-                ([x y z] (every? #(and (% x) (% y) (% z)) ps))
-                ([x y z & args] (boolean (and (epn x y z)
-                                            (every? #(every? % args) ps)))))))
-)
-
-;;;
- ; Takes a set of predicates and returns a function f that returns the first logical true value
- ; returned by one of its composing predicates against any of its arguments, else it returns
- ; logical false. Note that f is short-circuiting in that it will stop execution on the first
- ; argument that triggers a logical true result against the original predicates.
- ;;
-(§ defn some-fn
-    ([p]
-            (fn sp1
-            ([] nil)
-            ([x] (p x))
-            ([x y] (or (p x) (p y)))
-            ([x y z] (or (p x) (p y) (p z)))
-            ([x y z & args] (or (sp1 x y z)
-                                (some p args)))))
-    ([p1 p2]
-            (fn sp2
-            ([] nil)
-            ([x] (or (p1 x) (p2 x)))
-            ([x y] (or (p1 x) (p1 y) (p2 x) (p2 y)))
-            ([x y z] (or (p1 x) (p1 y) (p1 z) (p2 x) (p2 y) (p2 z)))
-            ([x y z & args] (or (sp2 x y z)
-                                (some #(or (p1 %) (p2 %)) args)))))
-    ([p1 p2 p3]
-            (fn sp3
-            ([] nil)
-            ([x] (or (p1 x) (p2 x) (p3 x)))
-            ([x y] (or (p1 x) (p2 x) (p3 x) (p1 y) (p2 y) (p3 y)))
-            ([x y z] (or (p1 x) (p2 x) (p3 x) (p1 y) (p2 y) (p3 y) (p1 z) (p2 z) (p3 z)))
-            ([x y z & args] (or (sp3 x y z)
-                                (some #(or (p1 %) (p2 %) (p3 %)) args)))))
-    ([p1 p2 p3 & ps]
-            (let [ps (list* p1 p2 p3 ps)]
-            (fn spn
-                ([] nil)
-                ([x] (some #(% x) ps))
-                ([x y] (some #(or (% x) (% y)) ps))
-                ([x y z] (some #(or (% x) (% y) (% z)) ps))
-                ([x y z & args] (or (spn x y z)
-                                    (some #(some % args) ps))))))
-)
-
-;;;
- ; A good fdecl looks like (([a] ...) ([a b] ...)) near the end of defn.
- ;;
-(§ defn- ^:dynamic assert-valid-fdecl [fdecl]
-    (when (empty? fdecl) (throw (IllegalArgumentException. "Parameter declaration missing")))
-    (let [argdecls (map
-                        #(if (seq? %)
-                            (first %)
-                            (throw (IllegalArgumentException.
-                                (if (seq? (first fdecl))
-                                (str "Invalid signature \"" % "\" should be a list")
-                                (str "Parameter declaration \"" % "\" should be a vector")))))
-                        fdecl)
-                bad-args (seq (remove #(vector? %) argdecls))]
-            (when bad-args
-            (throw (IllegalArgumentException. (str "Parameter declaration \"" (first bad-args) "\" should be a vector")))))
-)
-
-;;;
- ; Temporarily redefines Vars during a call to func. Each val of
- ; binding-map will replace the root value of its key which must be
- ; a Var. After func is called with no args, the root values of all
- ; the Vars will be set back to their old values. These temporary
- ; changes will be visible in all threads. Useful for mocking out
- ; functions during testing.
- ;;
-(§ defn with-redefs-fn [binding-map func]
-    (let [root-bind (fn [m]
-                            (doseq [[a-var a-val] m]
-                            (.bindRoot ^cloiure.lang.Var a-var a-val)))
-                old-vals (zipmap (keys binding-map)
-                                (map #(.getRawRoot ^cloiure.lang.Var %) (keys binding-map)))]
-            (try
-            (root-bind binding-map)
-            (func)
-            (finally
-                (root-bind old-vals))))
-)
-
-;;;
- ; binding => var-symbol temp-value-expr
+ ; class-and-interfaces - a vector of class names
  ;
- ; Temporarily redefines Vars while executing the body. The
- ; temp-value-exprs will be evaluated and each resulting value will
- ; replace in parallel the root value of its Var. After the body is
- ; executed, the root values of all the Vars will be set back to their
- ; old values. These temporary changes will be visible in all threads.
- ; Useful for mocking out functions during testing.
+ ; args - a (possibly empty) vector of arguments to the superclass
+ ; constructor.
+ ;
+ ; f => (name [params*] body) or
+ ; (name ([params*] body) ([params+] body) ...)
+ ;
+ ; Expands to code which creates a instance of a proxy class that
+ ; implements the named class/interface(s) by calling the supplied
+ ; fns. A single class, if provided, must be first. If not provided it
+ ; defaults to Object.
+ ;
+ ; The interfaces names must be valid interface types. If a method fn
+ ; is not provided for a class method, the superclass methd will be
+ ; called. If a method fn is not provided for an interface method, an
+ ; UnsupportedOperationException will be thrown should it be
+ ; called. Method fns are closures and can capture the environment in
+ ; which proxy is called. Each method fn takes an additional implicit
+ ; first arg, which is bound to 'this. Note that while method fns can
+ ; be provided to override protected methods, they have no other access
+ ; to protected members, nor to super, as these capabilities cannot be
+ ; proxied.
  ;;
-(§ defmacro with-redefs [bindings & body]
-    `(with-redefs-fn ~(zipmap (map #(list `var %) (take-nth 2 bindings))
-                                (take-nth 2 (next bindings)))
-                        (fn [] ~@body))
+(§ defmacro proxy [class-and-interfaces args & fs]
+    (let [bases (map #(or (resolve %) (throw (Exception. (str "Can't resolve: " %))))
+                        class-and-interfaces)
+            [super interfaces] (get-super-and-interfaces bases)
+            compile-effect (when *compile-files*
+                            (let [[cname bytecode] (generate-proxy super interfaces)]
+                                (cloiure.lang.Compiler/writeClassFile cname bytecode)))
+            pc-effect (apply get-proxy-class bases)
+            pname (proxy-name super interfaces)]
+        ;; remember the class to prevent it from disappearing before use
+        (intern *ns* (symbol pname) pc-effect)
+        `(let [ ;; pc# (get-proxy-class ~@class-and-interfaces)
+                p# (new ~(symbol pname) ~@args)] ;; (construct-proxy pc# ~@args)]
+            (init-proxy p#
+            ~(loop [fmap {} fs fs]
+                (if fs
+                (let [[sym & meths] (first fs)
+                        meths (if (vector? (first meths))
+                                (list meths)
+                                meths)
+                        meths (map (fn [[params & body]]
+                                    (cons (apply vector 'this params) body))
+                                meths)]
+                    (if-not (contains? fmap (name sym))
+                    (recur (assoc fmap (name sym) (cons `fn meths)) (next fs))
+                            (throw (IllegalArgumentException.
+                                        (str "Method '" (name sym) "' redefined")))))
+                fmap)))
+            p#))
+)
+
+(§ defn proxy-call-with-super [call this meth]
+    (let [m (proxy-mappings this)]
+        (update-proxy this (assoc m meth nil))
+        (try
+            (call)
+            (finally (update-proxy this m))
+        )
+    )
 )
 
 ;;;
- ; Returns true if a value has been produced for a promise, delay, future or lazy sequence.
+ ; Use to call a superclass method in the body of a proxy method.
+ ; Note, expansion captures 'this
  ;;
-(§ defn realized? [^cloiure.lang.IPending x] (.isRealized x))
+(§ defmacro proxy-super [meth & args]
+    `(proxy-call-with-super (fn [] (. ~'this ~meth ~@args)) ~'this ~(name meth))
+)
+
+(§ in-ns 'cloiure.core)
+
+(§ import [java.io Writer])
 
 ;;;
- ; Takes an expression and a set of test/form pairs. Threads expr (via ->)
- ; through each form for which the corresponding test
- ; expression is true. Note that, unlike cond branching, cond-> threading does
- ; not short circuit after the first true test expression.
+ ; *print-length* controls how many items of each collection the
+ ; printer will print. If it is bound to logical false, there is no
+ ; limit. Otherwise, it must be bound to an integer indicating the maximum
+ ; number of items of each collection to print. If a collection contains
+ ; more items, the printer will print items up to the limit followed by
+ ; '...' to represent the remaining items. The root binding is nil
+ ; indicating no limit.
  ;;
-(§ defmacro cond-> [expr & clauses]
-    (assert (even? (count clauses)))
-    (let [g (gensym)
-                steps (map (fn [[test step]] `(if ~test (-> ~g ~step) ~g))
-                        (partition 2 clauses))]
-            `(let [~g ~expr
-                ~@(interleave (repeat g) (butlast steps))]
-            ~(if (empty? steps)
-                g
-                (last steps))))
+(§ def ^:dynamic *print-length* nil)
+
+;;;
+ ; *print-level* controls how many levels deep the printer will
+ ; print nested objects. If it is bound to logical false, there is no
+ ; limit. Otherwise, it must be bound to an integer indicating the maximum
+ ; level to print. Each argument to print is at level 0; if an argument is a
+ ; collection, its items are at level 1; and so on. If an object is a
+ ; collection and is at a level greater than or equal to the value bound to
+ ; *print-level*, the printer prints '#' to represent it. The root binding
+ ; is nil indicating no limit.
+ ;;
+(§ def ^:dynamic *print-level* nil)
+
+(§ def ^:dynamic *verbose-defrecords* false)
+
+;;;
+ ; *print-namespace-maps* controls whether the printer will print
+ ; namespace map literal syntax. It defaults to false, but the REPL binds
+ ; to true.
+ ;;
+(§ def ^:dynamic *print-namespace-maps* false)
+
+(§ defn- print-sequential [^String begin, print-one, ^String sep, ^String end, sequence, ^Writer w]
+    (binding [*print-level* (and *print-level* (dec *print-level*))]
+            (if (and *print-level* (neg? *print-level*))
+            (.write w "#")
+            (do
+                (.write w begin)
+                (when-let [xs (seq sequence)]
+                (if *print-length*
+                    (loop [[x & xs] xs
+                        print-length *print-length*]
+                    (if (zero? print-length)
+                        (.write w "...")
+                        (do
+                        (print-one x w)
+                        (when xs
+                            (.write w sep)
+                            (recur xs (dec print-length))))))
+                    (loop [[x & xs] xs]
+                    (print-one x w)
+                    (when xs
+                        (.write w sep)
+                        (recur xs)))))
+                (.write w end))))
+)
+
+(§ defn- print-meta [o, ^Writer w]
+    (when-let [m (meta o)]
+            (when (and (pos? (count m)) *print-meta* *print-readably*)
+            (.write w "^")
+            (if (and (= (count m) 1) (:tag m))
+                (pr-on (:tag m) w)
+                (pr-on m w))
+            (.write w " ")))
+)
+
+(§ defn print-simple [o, ^Writer w]
+    (print-meta o w)
+    (.write w (str o))
+)
+
+(§ defmethod print-method :default [o, ^Writer w]
+    (if (instance? cloiure.lang.IObj o)
+            (print-method (vary-meta o #(dissoc % :type)) w)
+            (print-simple o w))
+)
+
+(§ defmethod print-method nil [o, ^Writer w]
+    (.write w "nil")
+)
+
+(§ defn print-ctor [o print-args ^Writer w]
+    (.write w "#=(")
+    (.write w (.getName ^Class (class o)))
+    (.write w ". ")
+    (print-args o w)
+    (.write w ")")
+)
+
+(§ defn- print-tagged-object [o rep ^Writer w]
+    (when (instance? cloiure.lang.IMeta o)
+            (print-meta o w))
+    (.write w "#object[")
+    (let [c (class o)]
+            (if (.isArray c)
+            (print-method (.getName c) w)
+            (.write w (.getName c))))
+    (.write w " ")
+    (.write w (format "0x%x " (System/identityHashCode o)))
+    (print-method rep w)
+    (.write w "]")
+)
+
+(§ defn- print-object [o, ^Writer w]
+    (print-tagged-object o (str o) w)
+)
+
+(§ defmethod print-method Object [o, ^Writer w]
+    (print-object o w)
+)
+
+(§ defmethod print-method cloiure.lang.Keyword [o, ^Writer w]
+    (.write w (str o))
+)
+
+(§ defmethod print-method Number [o, ^Writer w]
+    (.write w (str o))
+)
+
+(§ defmethod print-method Double [o, ^Writer w]
+    (cond
+            (= Double/POSITIVE_INFINITY o) (.write w "##Inf")
+            (= Double/NEGATIVE_INFINITY o) (.write w "##-Inf")
+            (.isNaN ^Double o) (.write w "##NaN")
+            :else (.write w (str o)))
+)
+
+(§ defmethod print-method Float [o, ^Writer w]
+    (cond
+            (= Float/POSITIVE_INFINITY o) (.write w "##Inf")
+            (= Float/NEGATIVE_INFINITY o) (.write w "##-Inf")
+            (.isNaN ^Float o) (.write w "##NaN")
+            :else (.write w (str o)))
+)
+
+(§ defmethod print-method Boolean [o, ^Writer w]
+    (.write w (str o))
+)
+
+(§ defmethod print-method cloiure.lang.Symbol [o, ^Writer w]
+    (print-simple o w)
+)
+
+(§ defmethod print-method cloiure.lang.Var [o, ^Writer w]
+    (print-simple o w)
+)
+
+(§ defmethod print-method cloiure.lang.ISeq [o, ^Writer w]
+    (print-meta o w)
+    (print-sequential "(" pr-on " " ")" o w)
+)
+
+(§ prefer-method print-method cloiure.lang.ISeq cloiure.lang.IPersistentCollection)
+(§ prefer-method print-method cloiure.lang.ISeq java.util.Collection)
+
+;;;
+ ; Returns escape string for char or nil if none
+ ;;
+(§ def ^String char-escape-string
+    {
+        \newline "\\n"
+        \tab "\\t"
+        \return "\\r"
+        \" "\\\""
+        \\ "\\\\"
+        \formfeed "\\f"
+        \backspace "\\b"
+    }
+)
+
+(§ defmethod print-method String [^String s, ^Writer w]
+    (if *print-readably*
+            (do (.append w \") ;; oops! "
+            (dotimes [n (count s)]
+                (let [c (.charAt s n)
+                    e (char-escape-string c)]
+                (if e (.write w e) (.append w c))))
+            (.append w \")) ;; oops! "
+            (.write w s))
+    nil
+)
+
+(§ defmethod print-method cloiure.lang.IPersistentVector [v, ^Writer w]
+    (print-meta v w)
+    (print-sequential "[" pr-on " " "]" v w)
+)
+
+(§ defn- print-prefix-map [prefix m print-one w]
+    (print-sequential
+            (str prefix "{")
+            (fn [e ^Writer w]
+            (do (print-one (key e) w) (.append w \space) (print-one (val e) w)))
+            ", "
+            "}"
+            (seq m) w)
+)
+
+(§ defn- print-map [m print-one w]
+    (print-prefix-map nil m print-one w)
+)
+
+(§ defn- strip-ns [named]
+    (if (symbol? named)
+            (symbol nil (name named))
+            (keyword nil (name named)))
 )
 
 ;;;
- ; Takes an expression and a set of test/form pairs. Threads expr (via ->>)
- ; through each form for which the corresponding test expression
- ; is true. Note that, unlike cond branching, cond->> threading does not short circuit
- ; after the first true test expression.
+ ; Returns [lifted-ns lifted-map] or nil if m can't be lifted.
  ;;
-(§ defmacro cond->> [expr & clauses]
-    (assert (even? (count clauses)))
-    (let [g (gensym)
-                steps (map (fn [[test step]] `(if ~test (->> ~g ~step) ~g))
-                        (partition 2 clauses))]
-            `(let [~g ~expr
-                ~@(interleave (repeat g) (butlast steps))]
-            ~(if (empty? steps)
-                g
-                (last steps))))
+(§ defn- lift-ns [m]
+    (when *print-namespace-maps*
+            (loop [ns nil
+                [[k v :as entry] & entries] (seq m)
+                lm {}]
+            (if entry
+                (when (or (keyword? k) (symbol? k))
+                (if ns
+                    (when (= ns (namespace k))
+                    (recur ns entries (assoc lm (strip-ns k) v)))
+                    (when-let [new-ns (namespace k)]
+                    (recur new-ns entries (assoc lm (strip-ns k) v)))))
+                [ns (apply conj (empty m) lm)])))
 )
 
-;;;
- ; Binds name to expr, evaluates the first form in the lexical context
- ; of that binding, then binds name to that result, repeating for each
- ; successive form, returning the result of the last form.
- ;;
-(§ defmacro as-> [expr name & forms]
-    `(let [~name ~expr
-            ~@(interleave (repeat name) (butlast forms))]
-        ~(if (empty? forms)
-            name
-            (last forms)))
+(§ defmethod print-method cloiure.lang.IPersistentMap [m, ^Writer w]
+    (print-meta m w)
+    (let [[ns lift-map] (lift-ns m)]
+            (if ns
+            (print-prefix-map (str "#:" ns) lift-map pr-on w)
+            (print-map m pr-on w)))
 )
 
-;;;
- ; When expr is not nil, threads it into the first form (via ->),
- ; and when that result is not nil, through the next etc
- ;;
-(§ defmacro some-> [expr & forms]
-    (let [g (gensym)
-                steps (map (fn [step] `(if (nil? ~g) nil (-> ~g ~step)))
-                        forms)]
-            `(let [~g ~expr
-                ~@(interleave (repeat g) (butlast steps))]
-            ~(if (empty? steps)
-                g
-                (last steps))))
-)
+(§ prefer-method print-method cloiure.lang.IPersistentCollection java.util.Collection)
+(§ prefer-method print-method cloiure.lang.IPersistentCollection java.util.RandomAccess)
+(§ prefer-method print-method java.util.RandomAccess java.util.List)
+(§ prefer-method print-method cloiure.lang.IPersistentCollection java.util.Map)
 
-;;;
- ; When expr is not nil, threads it into the first form (via ->>),
- ; and when that result is not nil, through the next etc
- ;;
-(§ defmacro some->> [expr & forms]
-    (let [g (gensym)
-                steps (map (fn [step] `(if (nil? ~g) nil (->> ~g ~step)))
-                        forms)]
-            `(let [~g ~expr
-                ~@(interleave (repeat g) (butlast steps))]
-            ~(if (empty? steps)
-                g
-                (last steps))))
-)
-
-(§ defn ^:private preserving-reduced [rf]
-    #(let [ret (rf %1 %2)]
-        (if (reduced? ret)
-        (reduced ret)
-        ret))
-)
-
-;;;
- ; A transducer which concatenates the contents of each input, which must be a
- ; collection, into the reduction.
- ;;
-(§ defn cat [rf]
-    (let [rrf (preserving-reduced rf)]
-            (fn
-            ([] (rf))
-            ([result] (rf result))
-            ([result input]
-                (reduce rrf result input))))
-)
-
-;;;
- ; Returns a transducer that ends transduction when pred returns true
- ; for an input. When retf is supplied it must be a fn of 2 arguments -
- ; it will be passed the (completed) result so far and the input that
- ; triggered the predicate, and its return value (if it does not throw
- ; an exception) will be the return value of the transducer. If retf
- ; is not supplied, the input that triggered the predicate will be
- ; returned. If the predicate never returns true the transduction is
- ; unaffected.
- ;;
-(§ defn halt-when
-    ([pred] (halt-when pred nil))
-    ([pred retf]
-            (fn [rf]
-            (fn
-                ([] (rf))
-                ([result]
-                    (if (and (map? result) (contains? result ::halt))
-                    (::halt result)
-                    (rf result)))
-                ([result input]
-                    (if (pred input)
-                    (reduced {::halt (if retf (retf (rf result) input) input)})
-                    (rf result input))))))
-)
-
-;;;
- ; Returns a lazy sequence removing consecutive duplicates in coll.
- ; Returns a transducer when no collection is provided.
- ;;
-(§ defn dedupe
-    ([]
-        (fn [rf]
-            (let [pv (volatile! ::none)]
-            (fn
-                ([] (rf))
-                ([result] (rf result))
-                ([result input]
-                    (let [prior @pv]
-                    (vreset! pv input)
-                    (if (= prior input)
-                        result
-                        (rf result input))))))))
-    ([coll] (sequence (dedupe) coll))
-)
-
-;;;
- ; Returns items from coll with random probability of prob (0.0 -
- ; 1.0). Returns a transducer when no collection is provided.
- ;;
-(§ defn random-sample
-    ([prob]
-            (filter (fn [_] (< (rand) prob))))
-    ([prob coll]
-            (filter (fn [_] (< (rand) prob)) coll))
-)
-
-(§ deftype Eduction [xform coll]
-    Iterable
-    (iterator [_]
-        (cloiure.lang.TransformerIterator/create xform (cloiure.lang.RT/iter coll)))
-
-    cloiure.lang.IReduceInit
-    (reduce [_ f init]
-        ;; NB (completing f) isolates completion of inner rf from outer rf
-        (transduce xform (completing f) init coll))
-
-    cloiure.lang.Sequential
-)
-
-;;;
- ; Returns a reducible/iterable application of the transducers
- ; to the items in coll. Transducers are applied in order as if
- ; combined with comp. Note that these applications will be
- ; performed every time reduce/iterator is called.
- ;;
-(§ defn eduction [& xforms]
-    (Eduction. (apply comp (butlast xforms)) (last xforms))
-)
-
-(§ defmethod print-method Eduction [c, ^Writer w]
+(§ defmethod print-method java.util.List [c, ^Writer w]
     (if *print-readably*
             (do
+            (print-meta c w)
             (print-sequential "(" pr-on " " ")" c w))
             (print-object c w))
 )
 
+(§ defmethod print-method java.util.RandomAccess [v, ^Writer w]
+    (if *print-readably*
+            (do
+            (print-meta v w)
+            (print-sequential "[" pr-on " " "]" v w))
+            (print-object v w))
+)
+
+(§ defmethod print-method java.util.Map [m, ^Writer w]
+    (if *print-readably*
+            (do
+            (print-meta m w)
+            (print-map m pr-on w))
+            (print-object m w))
+)
+
+(§ defmethod print-method java.util.Set [s, ^Writer w]
+    (if *print-readably*
+            (do
+            (print-meta s w)
+            (print-sequential "#{" pr-on " " "}" (seq s) w))
+            (print-object s w))
+)
+
+(§ defmethod print-method cloiure.lang.IRecord [r, ^Writer w]
+    (print-meta r w)
+    (.write w "#")
+    (.write w (.getName (class r)))
+    (print-map r pr-on w)
+)
+
+(§ prefer-method print-method cloiure.lang.IRecord java.util.Map)
+(§ prefer-method print-method cloiure.lang.IRecord cloiure.lang.IPersistentMap)
+
+(§ defmethod print-method cloiure.lang.IPersistentSet [s, ^Writer w]
+    (print-meta s w)
+    (print-sequential "#{" pr-on " " "}" (seq s) w)
+)
+
 ;;;
- ; Runs the supplied procedure (via reduce), for purposes of side
- ; effects, on successive items in the collection. Returns nil
+ ; Returns name string for char or nil if none
  ;;
-(§ defn run! [proc coll]
-    (reduce #(proc %2) nil coll)
+(§ def ^String char-name-string
+    {
+        \newline "newline"
+        \tab "tab"
+        \space "space"
+        \backspace "backspace"
+        \formfeed "formfeed"
+        \return "return"
+    }
+)
+
+(§ defmethod print-method java.lang.Character [^Character c, ^Writer w]
+    (if *print-readably*
+            (do (.append w \\)
+                (let [n (char-name-string c)]
+                (if n (.write w n) (.append w c))))
+            (.append w c))
     nil
 )
 
-;;;
- ; Return true if the value is the data representation of a tagged literal
- ;;
-(§ defn tagged-literal? [value]
-    (instance? cloiure.lang.TaggedLiteral value)
+(§ def primitives-classnames
+    {
+        Float/TYPE "Float/TYPE"
+        Integer/TYPE "Integer/TYPE"
+        Long/TYPE "Long/TYPE"
+        Boolean/TYPE "Boolean/TYPE"
+        Character/TYPE "Character/TYPE"
+        Double/TYPE "Double/TYPE"
+        Byte/TYPE "Byte/TYPE"
+        Short/TYPE "Short/TYPE"
+    }
+)
+
+(§ defmethod print-method Class [^Class c, ^Writer w]
+    (.write w (.getName c))
+)
+
+(§ defmethod print-method java.math.BigDecimal [b, ^Writer w]
+    (.write w (str b))
+    (.write w "M")
+)
+
+(§ defmethod print-method cloiure.lang.BigInt [b, ^Writer w]
+    (.write w (str b))
+    (.write w "N")
+)
+
+(§ defmethod print-method java.util.regex.Pattern [p ^Writer w]
+    (.write w "#\"")
+    (loop [[^Character c & r :as s] (seq (.pattern ^java.util.regex.Pattern p))
+                qmode false]
+            (when s
+            (condp = c
+                \\
+                    (let [[^Character c2 & r2] r]
+                        (.append w \\)
+                        (.append w c2)
+                        (if qmode
+                            (recur r2 (not= c2 \E))
+                            (recur r2 (= c2 \Q))))
+                \" ;; oops! "
+                    (do
+                        (if qmode
+                            (.write w "\\E\\\"\\Q")
+                            (.write w "\\\""))
+                        (recur r qmode))
+                (do
+                    (.append w c)
+                    (recur r qmode)))))
+    (.append w \") ;; oops! "
+)
+
+(§ defn- deref-as-map [^cloiure.lang.IDeref o]
+    (let [pending (and (instance? cloiure.lang.IPending o)
+                            (not (.isRealized ^cloiure.lang.IPending o)))
+                [ex val]
+                (when-not pending
+                (try [false (deref o)]
+                    (catch Throwable e
+                        [true e])))]
+            {:status
+            (cond
+            (or ex
+                (and (instance? cloiure.lang.Agent o)
+                    (agent-error o)))
+            :failed
+
+            pending
+            :pending
+
+            :else
+            :ready)
+
+            :val val})
+)
+
+(§ defmethod print-method cloiure.lang.IDeref [o ^Writer w]
+    (print-tagged-object o (deref-as-map o) w)
+)
+
+(§ defmethod print-method StackTraceElement [^StackTraceElement o ^Writer w]
+    (print-method [(symbol (.getClassName o)) (symbol (.getMethodName o)) (.getFileName o) (.getLineNumber o)] w)
 )
 
 ;;;
- ; Construct a data representation of a tagged literal from a
- ; tag symbol and a form.
+ ; Constructs a data representation for a StackTraceElement
  ;;
-(§ defn tagged-literal [^cloiure.lang.Symbol tag form]
-    (cloiure.lang.TaggedLiteral/create tag form)
+(§ defn StackTraceElement->vec [^StackTraceElement o]
+    [(symbol (.getClassName o)) (symbol (.getMethodName o)) (.getFileName o) (.getLineNumber o)]
 )
 
 ;;;
- ; Return true if the value is the data representation of a reader conditional
+ ; Constructs a data representation for a Throwable.
  ;;
-(§ defn reader-conditional? [value]
-    (instance? cloiure.lang.ReaderConditional value)
+(§ defn Throwable->map [^Throwable o]
+    (let [base (fn [^Throwable t]
+                    (merge {:type (symbol (.getName (class t)))
+                            :message (.getLocalizedMessage t)}
+                        (when-let [ed (ex-data t)]
+                        {:data ed})
+                        (let [st (.getStackTrace t)]
+                        (when (pos? (alength st))
+                            {:at (StackTraceElement->vec (aget st 0))}))))
+                via (loop [via [], ^Throwable t o]
+                    (if t
+                        (recur (conj via t) (.getCause t))
+                        via))
+                ^Throwable root (peek via)
+                m {:cause (.getLocalizedMessage root)
+                :via (vec (map base via))
+                :trace (vec (map StackTraceElement->vec
+                                    (.getStackTrace ^Throwable (or root o))))}
+                data (ex-data root)]
+            (if data
+            (assoc m :data data)
+            m))
+)
+
+(§ defn- print-throwable [^Throwable o ^Writer w]
+    (.write w "#error {\n :cause ")
+    (let [{:keys [cause data via trace]} (Throwable->map o)
+                print-via #(do (.write w "{:type ")
+                                    (print-method (:type %) w)
+                                                (.write w "\n   :message ")
+                                                (print-method (:message %) w)
+                    (when-let [data (:data %)]
+                    (.write w "\n   :data ")
+                    (print-method data w))
+                    (when-let [at (:at %)]
+                    (.write w "\n   :at ")
+                    (print-method (:at %) w))
+                    (.write w "}"))]
+            (print-method cause w)
+            (when data
+            (.write w "\n :data ")
+            (print-method data w))
+            (when via
+            (.write w "\n :via\n [")
+            (when-let [fv (first via)]
+                    (print-via fv)
+                (doseq [v (rest via)]
+                (.write w "\n  ")
+                        (print-via v)))
+            (.write w "]"))
+            (when trace
+            (.write w "\n :trace\n [")
+            (when-let [ft (first trace)]
+                (print-method ft w)
+                (doseq [t (rest trace)]
+                (.write w "\n  ")
+                (print-method t w)))
+            (.write w "]")))
+    (.write w "}")
+)
+
+(§ defmethod print-method Throwable [^Throwable o ^Writer w]
+    (print-throwable o w)
+)
+
+(§ defmethod print-method cloiure.lang.TaggedLiteral [o ^Writer w]
+    (.write w "#")
+    (print-method (:tag o) w)
+    (.write w " ")
+    (print-method (:form o) w)
+)
+
+(§ defmethod print-method cloiure.lang.ReaderConditional [o ^Writer w]
+    (.write w "#?")
+    (when (:splicing? o) (.write w "@"))
+    (print-method (:form o) w)
+)
+
+(§ def ^:private print-initialized true)
+
+(§ in-ns 'cloiure.core)
+
+(§ import
+    [java.lang.reflect Constructor Modifier]
+    [cloiure.asm ClassVisitor ClassWriter Opcodes Type]
+    [cloiure.asm.commons GeneratorAdapter Method]
+    [cloiure.lang IPersistentMap]
+)
+
+(§ defn- filter-methods [^Class c invalid-method?]
+    (loop [mm {}
+                considered #{}
+                c c]
+            (if c
+            (let [[mm considered]
+                    (loop [mm mm
+                        considered considered
+                        meths (seq (concat
+                                        (seq (.getDeclaredMethods c))
+                                        (seq (.getMethods c))))]
+                    (if meths
+                        (let [^java.lang.reflect.Method meth (first meths)
+                            mods (.getModifiers meth)
+                            mk (method-sig meth)]
+                        (if (or (considered mk)
+                                (invalid-method? meth))
+                            (recur mm (conj considered mk) (next meths))
+                            (recur (assoc mm mk meth) (conj considered mk) (next meths))))
+                        [mm considered]))]
+                (recur mm considered (.getSuperclass c)))
+            mm))
+)
+
+(§ defn- non-private-methods [^Class c]
+    (let [not-overridable? (fn [^java.lang.reflect.Method meth]
+                                (let [mods (.getModifiers meth)]
+                                    (or (not (or (Modifier/isPublic mods) (Modifier/isProtected mods)))
+                                        (Modifier/isStatic mods)
+                                        (Modifier/isFinal mods)
+                                        (= "finalize" (.getName meth)))))]
+            (filter-methods c not-overridable?))
+)
+
+(§ defn- protected-final-methods [^Class c]
+    (let [not-exposable? (fn [^java.lang.reflect.Method meth]
+                                (let [mods (.getModifiers meth)]
+                                (not (and (Modifier/isProtected mods)
+                                            (Modifier/isFinal mods)
+                                            (not (Modifier/isStatic mods))))))]
+            (filter-methods c not-exposable?))
+)
+
+(§ defn- ctor-sigs [^Class super]
+    (for [^Constructor ctor (.getDeclaredConstructors super)
+                :when (not (Modifier/isPrivate (.getModifiers ctor)))]
+            (apply vector (.getParameterTypes ctor)))
+)
+
+(§ defn- escape-class-name [^Class c]
+    (.. (.getSimpleName c) (replace "[]" "<>"))
+)
+
+(§ defn- overload-name [mname pclasses]
+    (if (seq pclasses)
+            (apply str mname (interleave (repeat \-)
+                                        (map escape-class-name pclasses)))
+            (str mname "-void"))
+)
+
+(§ defn- ^java.lang.reflect.Field find-field [^Class c f]
+    (let [start-class c]
+            (loop [c c]
+            (if (= c Object)
+                (throw (Exception. (str "field, " f ", not defined in class, " start-class ", or its ancestors")))
+                (let [dflds (.getDeclaredFields c)
+                    rfld (first (filter #(= f (.getName ^java.lang.reflect.Field %)) dflds))]
+                (or rfld (recur (.getSuperclass c)))))))
+)
+
+;; (distinct (map first(keys (mapcat non-private-methods [Object IPersistentMap]))))
+
+(§ def ^:private prim->class
+     {
+        'int      Integer/TYPE   'ints     (Class/forName "[I")
+        'long     Long/TYPE      'longs    (Class/forName "[J")
+        'float    Float/TYPE     'floats   (Class/forName "[F")
+        'double   Double/TYPE    'doubles  (Class/forName "[D")
+        'void     Void/TYPE
+        'short    Short/TYPE     'shorts   (Class/forName "[S")
+        'boolean  Boolean/TYPE   'booleans (Class/forName "[Z")
+        'byte     Byte/TYPE      'bytes    (Class/forName "[B")
+        'char     Character/TYPE 'chars    (Class/forName "[C")
+    }
+)
+
+(§ defn- ^Class the-class [x]
+    (cond
+        (class? x) x
+        (contains? prim->class x) (prim->class x)
+        :else (let [strx (str x)]
+                (cloiure.lang.RT/classForName
+                    (if (some #{\. \[} strx)
+                    strx
+                    (str "java.lang." strx)))))
+)
+
+;; someday this can be made codepoint aware
+
+(§ defn- valid-java-method-name [^String s] (= s (cloiure.lang.Compiler/munge s)))
+
+(§ defn- validate-generate-class-options [{:keys [methods]}]
+    (let [[mname] (remove valid-java-method-name (map (comp str first) methods))]
+            (when mname (throw (IllegalArgumentException. (str "Not a valid method name: " mname)))))
+)
+
+(§ defn- generate-class [options-map]
+    (validate-generate-class-options options-map)
+    (let [default-options {:prefix "-" :load-impl-ns true :impl-ns (ns-name *ns*)}
+                {:keys [name extends implements constructors methods main factory state init exposes
+                        exposes-methods prefix load-impl-ns impl-ns post-init]}
+                (merge default-options options-map)
+                name-meta (meta name)
+                name (str name)
+                super (if extends (the-class extends) Object)
+                interfaces (map the-class implements)
+                supers (cons super interfaces)
+                ctor-sig-map (or constructors (zipmap (ctor-sigs super) (ctor-sigs super)))
+                cv (ClassWriter. ClassWriter/COMPUTE_MAXS)
+                cname (.replace name "." "/")
+                pkg-name name
+                impl-pkg-name (str impl-ns)
+                impl-cname (.. impl-pkg-name (replace "." "/") (replace \- \_))
+                ctype (Type/getObjectType cname)
+                iname (fn [^Class c] (.getInternalName (Type/getType c)))
+                totype (fn [^Class c] (Type/getType c))
+                to-types (fn [cs] (if (pos? (count cs))
+                                    (into-array (map totype cs))
+                                    (make-array Type 0)))
+                obj-type ^Type (totype Object)
+                arg-types (fn [n] (if (pos? n)
+                                    (into-array (repeat n obj-type))
+                                    (make-array Type 0)))
+                super-type ^Type (totype super)
+                init-name (str init)
+                post-init-name (str post-init)
+                factory-name (str factory)
+                state-name (str state)
+                main-name "main"
+                var-name (fn [s] (cloiure.lang.Compiler/munge (str s "__var")))
+                class-type (totype Class)
+                rt-type (totype cloiure.lang.RT)
+                var-type ^Type (totype cloiure.lang.Var)
+                ifn-type (totype cloiure.lang.IFn)
+                iseq-type (totype cloiure.lang.ISeq)
+                ex-type (totype java.lang.UnsupportedOperationException)
+                util-type (totype cloiure.lang.Util)
+                all-sigs (distinct (concat (map #(let[[m p] (key %)] {m [p]}) (mapcat non-private-methods supers))
+                                        (map (fn [[m p]] {(str m) [p]}) methods)))
+                sigs-by-name (apply merge-with concat {} all-sigs)
+                overloads (into1 {} (filter (fn [[m s]] (next s)) sigs-by-name))
+                var-fields (concat (when init [init-name])
+                                (when post-init [post-init-name])
+                                (when main [main-name])
+                                ;; (when exposes-methods (map str (vals exposes-methods)))
+                                (distinct (concat (keys sigs-by-name)
+                                                    (mapcat (fn [[m s]] (map #(overload-name m (map the-class %)) s)) overloads)
+                                                    (mapcat (comp (partial map str) vals val) exposes))))
+                emit-get-var (fn [^GeneratorAdapter gen v]
+                            (let [false-label (.newLabel gen)
+                                    end-label (.newLabel gen)]
+                                (.getStatic gen ctype (var-name v) var-type)
+                                (.dup gen)
+                                (.invokeVirtual gen var-type (Method/getMethod "boolean isBound()"))
+                                (.ifZCmp gen GeneratorAdapter/EQ false-label)
+                                (.invokeVirtual gen var-type (Method/getMethod "Object get()"))
+                                (.goTo gen end-label)
+                                (.mark gen false-label)
+                                (.pop gen)
+                                (.visitInsn gen Opcodes/ACONST_NULL)
+                                (.mark gen end-label)))
+                emit-unsupported (fn [^GeneratorAdapter gen ^Method m]
+                                (.throwException gen ex-type (str (.getName m) " (" impl-pkg-name "/" prefix (.getName m) " not defined?)")))
+                emit-forwarding-method
+                (fn [name pclasses rclass as-static else-gen]
+                (let [mname (str name)
+                        pmetas (map meta pclasses)
+                        pclasses (map the-class pclasses)
+                        rclass (the-class rclass)
+                        ptypes (to-types pclasses)
+                        rtype ^Type (totype rclass)
+                        m (Method. mname rtype ptypes)
+                        is-overload (seq (overloads mname))
+                        gen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC (if as-static Opcodes/ACC_STATIC 0))
+                                m nil nil cv)
+                        found-label (.newLabel gen)
+                        else-label (.newLabel gen)
+                        end-label (.newLabel gen)]
+                    (add-annotations gen (meta name))
+                    (dotimes [i (count pmetas)]
+                    (add-annotations gen (nth pmetas i) i))
+                    (.visitCode gen)
+                    (if (> (count pclasses) 18)
+                    (else-gen gen m)
+                    (do
+                        (when is-overload
+                        (emit-get-var gen (overload-name mname pclasses))
+                        (.dup gen)
+                        (.ifNonNull gen found-label)
+                        (.pop gen))
+                        (emit-get-var gen mname)
+                        (.dup gen)
+                        (.ifNull gen else-label)
+                        (when is-overload
+                        (.mark gen found-label))
+                                                ;; if found
+                        (.checkCast gen ifn-type)
+                        (when-not as-static
+                        (.loadThis gen))
+                                                ;; box args
+                        (dotimes [i (count ptypes)]
+                        (.loadArg gen i)
+                        (cloiure.lang.Compiler$HostExpr/emitBoxReturn nil gen (nth pclasses i)))
+                                                ;; call fn
+                        (.invokeInterface gen ifn-type (Method. "invoke" obj-type (to-types (repeat (+ (count ptypes) (if as-static 0 1)) Object))))
+                                                ;; unbox return
+                        (.unbox gen rtype)
+                        (when (= (.getSort rtype) Type/VOID)
+                            (.pop gen))
+                        (.goTo gen end-label)
+
+                                                ;; else call supplied alternative generator
+                        (.mark gen else-label)
+                        (.pop gen)
+
+                        (else-gen gen m)
+
+                        (.mark gen end-label)))
+                    (.returnValue gen)
+                    (.endMethod gen)))
+                ]
+                                                ;; start class definition
+            (.visit cv Opcodes/V1_5 (+ Opcodes/ACC_PUBLIC Opcodes/ACC_SUPER)
+                        cname nil (iname super)
+                        (when-let [ifc (seq interfaces)]
+                        (into-array (map iname ifc))))
+
+                                                ;; class annotations
+            (add-annotations cv name-meta)
+
+                                                ;; static fields for vars
+            (doseq [v var-fields]
+            (.visitField cv (+ Opcodes/ACC_PRIVATE Opcodes/ACC_FINAL Opcodes/ACC_STATIC)
+                                (var-name v)
+                                (.getDescriptor var-type)
+                                nil nil))
+
+                                                ;; instance field for state
+            (when state
+            (.visitField cv (+ Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL)
+                                state-name
+                                (.getDescriptor obj-type)
+                                nil nil))
+
+                                                ;; static init to set up var fields and load init
+            (let [gen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC)
+                        (Method/getMethod "void <clinit> ()")
+                        nil nil cv)]
+            (.visitCode gen)
+            (doseq [v var-fields]
+                (.push gen impl-pkg-name)
+                (.push gen (str prefix v))
+                (.invokeStatic gen var-type (Method/getMethod "cloiure.lang.Var internPrivate(String,String)"))
+                (.putStatic gen ctype (var-name v) var-type))
+
+            (when load-impl-ns
+                (.push gen (str "/" impl-cname))
+                (.push gen ctype)
+                (.invokeStatic gen util-type (Method/getMethod "Object loadWithClass(String,Class)"))
+        ;;      (.push gen (str (.replace impl-pkg-name \- \_) "__init"))
+        ;;      (.invokeStatic gen class-type (Method/getMethod "Class forName(String)"))
+                (.pop gen))
+
+            (.returnValue gen)
+            (.endMethod gen))
+
+                                                ;; ctors
+            (doseq [[pclasses super-pclasses] ctor-sig-map]
+            (let [constructor-annotations (meta pclasses)
+                    pclasses (map the-class pclasses)
+                    super-pclasses (map the-class super-pclasses)
+                    ptypes (to-types pclasses)
+                    super-ptypes (to-types super-pclasses)
+                    m (Method. "<init>" Type/VOID_TYPE ptypes)
+                    super-m (Method. "<init>" Type/VOID_TYPE super-ptypes)
+                    gen (GeneratorAdapter. Opcodes/ACC_PUBLIC m nil nil cv)
+                    _ (add-annotations gen constructor-annotations)
+                    no-init-label (.newLabel gen)
+                    end-label (.newLabel gen)
+                    no-post-init-label (.newLabel gen)
+                    end-post-init-label (.newLabel gen)
+                    nth-method (Method/getMethod "Object nth(Object,int)")
+                    local (.newLocal gen obj-type)]
+                (.visitCode gen)
+
+                (if init
+                (do
+                    (emit-get-var gen init-name)
+                    (.dup gen)
+                    (.ifNull gen no-init-label)
+                    (.checkCast gen ifn-type)
+                                                ;; box init args
+                    (dotimes [i (count pclasses)]
+                    (.loadArg gen i)
+                    (cloiure.lang.Compiler$HostExpr/emitBoxReturn nil gen (nth pclasses i)))
+                                                ;; call init fn
+                    (.invokeInterface gen ifn-type (Method. "invoke" obj-type
+                                                        (arg-types (count ptypes))))
+                                                ;; expecting [[super-ctor-args] state] returned
+                    (.dup gen)
+                    (.push gen (int 0))
+                    (.invokeStatic gen rt-type nth-method)
+                    (.storeLocal gen local)
+
+                    (.loadThis gen)
+                    (.dupX1 gen)
+                    (dotimes [i (count super-pclasses)]
+                    (.loadLocal gen local)
+                    (.push gen (int i))
+                    (.invokeStatic gen rt-type nth-method)
+                    (cloiure.lang.Compiler$HostExpr/emitUnboxArg nil gen (nth super-pclasses i)))
+                    (.invokeConstructor gen super-type super-m)
+
+                    (if state
+                    (do
+                        (.push gen (int 1))
+                        (.invokeStatic gen rt-type nth-method)
+                        (.putField gen ctype state-name obj-type))
+                    (.pop gen))
+
+                    (.goTo gen end-label)
+                                                ;; no init found
+                    (.mark gen no-init-label)
+                    (.throwException gen ex-type (str impl-pkg-name "/" prefix init-name " not defined"))
+                    (.mark gen end-label))
+                (if (= pclasses super-pclasses)
+                    (do
+                    (.loadThis gen)
+                    (.loadArgs gen)
+                    (.invokeConstructor gen super-type super-m))
+                    (throw (Exception. ":init not specified, but ctor and super ctor args differ"))))
+
+                (when post-init
+                (emit-get-var gen post-init-name)
+                (.dup gen)
+                (.ifNull gen no-post-init-label)
+                (.checkCast gen ifn-type)
+                (.loadThis gen)
+                                            ;; box init args
+                (dotimes [i (count pclasses)]
+                    (.loadArg gen i)
+                    (cloiure.lang.Compiler$HostExpr/emitBoxReturn nil gen (nth pclasses i)))
+                                            ;; call init fn
+                (.invokeInterface gen ifn-type (Method. "invoke" obj-type
+                                                        (arg-types (inc (count ptypes)))))
+                (.pop gen)
+                (.goTo gen end-post-init-label)
+                                            ;; no init found
+                (.mark gen no-post-init-label)
+                (.throwException gen ex-type (str impl-pkg-name "/" prefix post-init-name " not defined"))
+                (.mark gen end-post-init-label))
+
+                (.returnValue gen)
+                (.endMethod gen)
+                                                ;; factory
+                (when factory
+                (let [fm (Method. factory-name ctype ptypes)
+                        gen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC)
+                                fm nil nil cv)]
+                    (.visitCode gen)
+                    (.newInstance gen ctype)
+                    (.dup gen)
+                    (.loadArgs gen)
+                    (.invokeConstructor gen ctype m)
+                    (.returnValue gen)
+                    (.endMethod gen)))))
+
+                                                ;; add methods matching supers', if no fn -> call super
+            (let [mm (non-private-methods super)]
+            (doseq [^java.lang.reflect.Method meth (vals mm)]
+                    (emit-forwarding-method (.getName meth) (.getParameterTypes meth) (.getReturnType meth) false
+                                            (fn [^GeneratorAdapter gen ^Method m]
+                                            (.loadThis gen)
+                                                ;; push args
+                                            (.loadArgs gen)
+                                                ;; call super
+                                            (.visitMethodInsn gen Opcodes/INVOKESPECIAL
+                                                                    (.getInternalName super-type)
+                                                                    (.getName m)
+                                                                    (.getDescriptor m)))))
+                                                ;; add methods matching interfaces', if no fn -> throw
+            (reduce1 (fn [mm ^java.lang.reflect.Method meth]
+                        (if (contains? mm (method-sig meth))
+                        mm
+                        (do
+                            (emit-forwarding-method (.getName meth) (.getParameterTypes meth) (.getReturnType meth) false
+                                                    emit-unsupported)
+                            (assoc mm (method-sig meth) meth))))
+                    mm (mapcat #(.getMethods ^Class %) interfaces))
+                                                ;; extra methods
+            (doseq [[mname pclasses rclass :as msig] methods]
+                (emit-forwarding-method mname pclasses rclass (:static (meta msig))
+                                        emit-unsupported))
+                                                ;; expose specified overridden superclass methods
+            (doseq [[local-mname ^java.lang.reflect.Method m] (reduce1 (fn [ms [[name _ _] m]]
+                                    (if (contains? exposes-methods (symbol name))
+                                        (conj ms [((symbol name) exposes-methods) m])
+                                        ms)) [] (concat (seq mm)
+                                                        (seq (protected-final-methods super))))]
+                (let [ptypes (to-types (.getParameterTypes m))
+                    rtype (totype (.getReturnType m))
+                    exposer-m (Method. (str local-mname) rtype ptypes)
+                    target-m (Method. (.getName m) rtype ptypes)
+                    gen (GeneratorAdapter. Opcodes/ACC_PUBLIC exposer-m nil nil cv)]
+                (.loadThis gen)
+                (.loadArgs gen)
+                (.visitMethodInsn gen Opcodes/INVOKESPECIAL
+                                        (.getInternalName super-type)
+                                        (.getName target-m)
+                                        (.getDescriptor target-m))
+                (.returnValue gen)
+                (.endMethod gen))))
+                                                ;; main
+            (when main
+            (let [m (Method/getMethod "void main (String[])")
+                    gen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC)
+                            m nil nil cv)
+                    no-main-label (.newLabel gen)
+                    end-label (.newLabel gen)]
+                (.visitCode gen)
+
+                (emit-get-var gen main-name)
+                (.dup gen)
+                (.ifNull gen no-main-label)
+                (.checkCast gen ifn-type)
+                (.loadArgs gen)
+                (.invokeStatic gen rt-type (Method/getMethod "cloiure.lang.ISeq seq(Object)"))
+                (.invokeInterface gen ifn-type (Method. "applyTo" obj-type (into-array [iseq-type])))
+                (.pop gen)
+                (.goTo gen end-label)
+                                                ;; no main found
+                (.mark gen no-main-label)
+                (.throwException gen ex-type (str impl-pkg-name "/" prefix main-name " not defined"))
+                (.mark gen end-label)
+                (.returnValue gen)
+                (.endMethod gen)))
+                                                ;; field exposers
+            (doseq [[f {getter :get setter :set}] exposes]
+            (let [fld (find-field super (str f))
+                    ftype (totype (.getType fld))
+                    static? (Modifier/isStatic (.getModifiers fld))
+                    acc (+ Opcodes/ACC_PUBLIC (if static? Opcodes/ACC_STATIC 0))]
+                (when getter
+                (let [m (Method. (str getter) ftype (to-types []))
+                        gen (GeneratorAdapter. acc m nil nil cv)]
+                    (.visitCode gen)
+                    (if static?
+                    (.getStatic gen ctype (str f) ftype)
+                    (do
+                        (.loadThis gen)
+                        (.getField gen ctype (str f) ftype)))
+                    (.returnValue gen)
+                    (.endMethod gen)))
+                (when setter
+                (let [m (Method. (str setter) Type/VOID_TYPE (into-array [ftype]))
+                        gen (GeneratorAdapter. acc m nil nil cv)]
+                    (.visitCode gen)
+                    (if static?
+                    (do
+                        (.loadArgs gen)
+                        (.putStatic gen ctype (str f) ftype))
+                    (do
+                        (.loadThis gen)
+                        (.loadArgs gen)
+                        (.putField gen ctype (str f) ftype)))
+                    (.returnValue gen)
+                    (.endMethod gen)))))
+                                                ;; finish class def
+            (.visitEnd cv)
+            [cname (.toByteArray cv)])
 )
 
 ;;;
- ; Construct a data representation of a reader conditional.
- ; If true, splicing? indicates read-cond-splicing.
+ ; When compiling, generates compiled bytecode for a class with the
+ ; given package-qualified :name (which, as all names in these
+ ; parameters, can be a string or symbol), and writes the .class file
+ ; to the *compile-path* directory. When not compiling, does
+ ; nothing. The gen-class construct contains no implementation, as the
+ ; implementation will be dynamically sought by the generated class in
+ ; functions in an implementing Cloiure namespace. Given a generated
+ ; class org.mydomain.MyClass with a method named mymethod, gen-class
+ ; will generate an implementation that looks for a function named by
+ ; (str prefix mymethod) (default prefix: "-") in a
+ ; Cloiure namespace specified by :impl-ns
+ ; (defaults to the current namespace). All inherited methods,
+ ; generated methods, and init and main functions (see :methods, :init,
+ ; and :main below) will be found similarly prefixed. By default, the
+ ; static initializer for the generated class will attempt to load the
+ ; Cloiure support code for the class as a resource from the classpath,
+ ; e.g. in the example case, ``org/mydomain/MyClass__init.class``. This
+ ; behavior can be controlled by :load-impl-ns
+ ;
+ ; Note that methods with a maximum of 18 parameters are supported.
+ ;
+ ; In all subsequent sections taking types, the primitive types can be
+ ; referred to by their Java names (int, float etc), and classes in the
+ ; java.lang package can be used without a package qualifier. All other
+ ; classes must be fully qualified.
+ ;
+ ; Options should be a set of key/value pairs, all except for :name are optional:
+ ;
+ ; :name aname
+ ;
+ ; The package-qualified name of the class to be generated
+ ;
+ ; :extends aclass
+ ;
+ ; Specifies the superclass, the non-private methods of which will be
+ ; overridden by the class. If not provided, defaults to Object.
+ ;
+ ; :implements [interface ...]
+ ;
+ ; One or more interfaces, the methods of which will be implemented by the class.
+ ;
+ ; :init name
+ ;
+ ; If supplied, names a function that will be called with the arguments
+ ; to the constructor. Must return [ [superclass-constructor-args] state]
+ ; If not supplied, the constructor args are passed directly to
+ ; the superclass constructor and the state will be nil
+ ;
+ ; :constructors {[param-types] [super-param-types], ...}
+ ;
+ ; By default, constructors are created for the generated class which
+ ; match the signature(s) of the constructors for the superclass. This
+ ; parameter may be used to explicitly specify constructors, each entry
+ ; providing a mapping from a constructor signature to a superclass
+ ; constructor signature. When you supply this, you must supply an :init
+ ; specifier.
+ ;
+ ; :post-init name
+ ;
+ ; If supplied, names a function that will be called with the object as
+ ; the first argument, followed by the arguments to the constructor.
+ ; It will be called every time an object of this class is created,
+ ; immediately after all the inherited constructors have completed.
+ ; Its return value is ignored.
+ ;
+ ; :methods [ [name [param-types] return-type], ...]
+ ;
+ ; The generated class automatically defines all of the non-private
+ ; methods of its superclasses/interfaces. This parameter can be used
+ ; to specify the signatures of additional methods of the generated
+ ; class. Static methods can be specified with ^{:static true} in the
+ ; signature's metadata. Do not repeat superclass/interface signatures
+ ; here.
+ ;
+ ; :main boolean
+ ;
+ ; If supplied and true, a static public main function will be generated. It will
+ ; pass each string of the String[] argument as a separate argument to
+ ; a function called (str prefix main).
+ ;
+ ; :factory name
+ ;
+ ; If supplied, a (set of) public static factory function(s) will be
+ ; created with the given name, and the same signature(s) as the
+ ; constructor(s).
+ ;
+ ; :state name
+ ;
+ ; If supplied, a public final instance field with the given name will be
+ ; created. You must supply an :init function in order to provide a
+ ; value for the state. Note that, though final, the state can be a ref
+ ; or agent, supporting the creation of Java objects with transactional
+ ; or asynchronous mutation semantics.
+ ;
+ ; :exposes {protected-field-name {:get name :set name}, ...}
+ ;
+ ; Since the implementations of the methods of the generated class
+ ; occur in Cloiure functions, they have no access to the inherited
+ ; protected fields of the superclass. This parameter can be used to
+ ; generate public getter/setter methods exposing the protected field(s)
+ ; for use in the implementation.
+ ;
+ ; :exposes-methods {super-method-name exposed-name, ...}
+ ;
+ ; It is sometimes necessary to call the superclass' implementation of an
+ ; overridden method. Those methods may be exposed and referred in
+ ; the new method implementation by a local name.
+ ;
+ ; :prefix string
+ ;
+ ; Default: "-" Methods called e.g. Foo will be looked up in vars called
+ ; prefixFoo in the implementing ns.
+ ;
+ ; :impl-ns name
+ ;
+ ; Default: the name of the current ns. Implementations of methods will be
+ ; looked up in this namespace.
+ ;
+ ; :load-impl-ns boolean
+ ;
+ ; Default: true. Causes the static initializer for the generated class
+ ; to reference the load code for the implementing namespace. Should be
+ ; true when implementing-ns is the default, false if you intend to
+ ; load the code via some other method.
  ;;
-(§ defn reader-conditional [form ^Boolean splicing?]
-    (cloiure.lang.ReaderConditional/create form splicing?)
+(§ defmacro gen-class [& options]
+    (when *compile-files*
+        (let [options-map (into1 {} (map vec (partition 2 options)))
+                [cname bytecode] (generate-class options-map)]
+            (cloiure.lang.Compiler/writeClassFile cname bytecode)))
 )
 
 ;;;
- ; Return true if x is a java.net.URI
+ ; Returns an asm Type object for c, which may be a primitive class
+ ; (such as Integer/TYPE), any other class (such as Double), or a
+ ; fully-qualified class name given as a string or symbol
+ ; (such as 'java.lang.String)
  ;;
-(§ defn uri? [x] (instance? java.net.URI x))
+(§ defn- ^Type asm-type [c]
+    (if (or (instance? Class c) (prim->class c))
+            (Type/getType (the-class c))
+            (let [strx (str c)]
+            (Type/getObjectType
+            (.replace (if (some #{\. \[} strx) strx (str "java.lang." strx)) "." "/"))))
+)
+
+(§ defn- generate-interface [{:keys [name extends methods]}]
+    (when (some #(-> % first cloiure.core/name (.contains "-")) methods)
+            (throw
+            (IllegalArgumentException. "Interface methods must not contain '-'")))
+    (let [iname (.replace (str name) "." "/")
+                cv (ClassWriter. ClassWriter/COMPUTE_MAXS)]
+            (.visit cv Opcodes/V1_5 (+ Opcodes/ACC_PUBLIC Opcodes/ACC_ABSTRACT Opcodes/ACC_INTERFACE)
+            iname nil "java/lang/Object"
+            (when (seq extends)
+                (into-array (map #(.getInternalName (asm-type %)) extends))))
+            (when (not= "NO_SOURCE_FILE" *source-path*) (.visitSource cv *source-path* nil))
+            (add-annotations cv (meta name))
+            (doseq [[mname pclasses rclass pmetas] methods]
+            (let [mv (.visitMethod cv (+ Opcodes/ACC_PUBLIC Opcodes/ACC_ABSTRACT)
+                        (str mname)
+                        (Type/getMethodDescriptor (asm-type rclass)
+                                                    (if pclasses
+                                                    (into-array Type (map asm-type pclasses))
+                                                    (make-array Type 0)))
+                        nil nil)]
+                (add-annotations mv (meta mname))
+                (dotimes [i (count pmetas)]
+                (add-annotations mv (nth pmetas i) i))
+                (.visitEnd mv)))
+            (.visitEnd cv)
+            [iname (.toByteArray cv)])
+)
+
+;;;
+ ; When compiling, generates compiled bytecode for an interface with
+ ; the given package-qualified :name (which, as all names in these
+ ; parameters, can be a string or symbol), and writes the .class file
+ ; to the *compile-path* directory. When not compiling, does nothing.
+ ;
+ ; In all subsequent sections taking types, the primitive types can be
+ ; referred to by their Java names (int, float etc), and classes in the
+ ; java.lang package can be used without a package qualifier. All other
+ ; classes must be fully qualified.
+ ;
+ ; Options should be a set of key/value pairs, all except for :name are
+ ; optional:
+ ;
+ ; :name aname
+ ;
+ ; The package-qualified name of the class to be generated
+ ;
+ ; :extends [interface ...]
+ ;
+ ; One or more interfaces, which will be extended by this interface.
+ ;
+ ; :methods [ [name [param-types] return-type], ...]
+ ;
+ ; This parameter is used to specify the signatures of the methods of
+ ; the generated interface. Do not repeat superinterface signatures
+ ; here.
+ ;;
+(§ defmacro gen-interface [& options]
+    (let [options-map (apply hash-map options)
+          [cname bytecode] (generate-interface options-map)]
+        (when *compile-files*
+            (cloiure.lang.Compiler/writeClassFile cname bytecode))
+        (.defineClass ^DynamicClassLoader (deref cloiure.lang.Compiler/LOADER)
+                        (str (:name options-map)) bytecode options))
+)
+
+(§ comment
+
+;;;
+ ; Generates and immediately loads the bytecode for the specified
+ ; class. Note that a class generated this way can be loaded only once
+ ; - the JVM supports only one class with a given name per
+ ; classloader. Subsequent to generation you can import it into any
+ ; desired namespaces just like any other class. See gen-class for a
+ ; description of the options.
+ ;;
+(§ defn gen-and-load-class [& options]
+    (let [options-map (apply hash-map options)
+                [cname bytecode] (generate-class options-map)]
+            (.. (cloiure.lang.RT/getRootClassLoader) (defineClass cname bytecode options)))
+)
+
+)
 
 (§ in-ns 'cloiure.core)
 
@@ -8569,897 +9317,6 @@
     (emit-extend-protocol p specs)
 )
 
-(§ in-ns 'cloiure.core)
-
-(§ import 'java.time.Instant)
-
-(§ extend-protocol Inst
-    java.time.Instant
-    (inst-ms* [inst] (.toEpochMilli ^java.time.Instant inst))
-)
-
-(§ in-ns 'cloiure.core)
-
-(§ import [java.io Writer])
-
-;;;
- ; *print-length* controls how many items of each collection the
- ; printer will print. If it is bound to logical false, there is no
- ; limit. Otherwise, it must be bound to an integer indicating the maximum
- ; number of items of each collection to print. If a collection contains
- ; more items, the printer will print items up to the limit followed by
- ; '...' to represent the remaining items. The root binding is nil
- ; indicating no limit.
- ;;
-(§ def ^:dynamic *print-length* nil)
-
-;;;
- ; *print-level* controls how many levels deep the printer will
- ; print nested objects. If it is bound to logical false, there is no
- ; limit. Otherwise, it must be bound to an integer indicating the maximum
- ; level to print. Each argument to print is at level 0; if an argument is a
- ; collection, its items are at level 1; and so on. If an object is a
- ; collection and is at a level greater than or equal to the value bound to
- ; *print-level*, the printer prints '#' to represent it. The root binding
- ; is nil indicating no limit.
- ;;
-(§ def ^:dynamic *print-level* nil)
-
-(§ def ^:dynamic *verbose-defrecords* false)
-
-;;;
- ; *print-namespace-maps* controls whether the printer will print
- ; namespace map literal syntax. It defaults to false, but the REPL binds
- ; to true.
- ;;
-(§ def ^:dynamic *print-namespace-maps* false)
-
-(§ defn- print-sequential [^String begin, print-one, ^String sep, ^String end, sequence, ^Writer w]
-    (binding [*print-level* (and *print-level* (dec *print-level*))]
-            (if (and *print-level* (neg? *print-level*))
-            (.write w "#")
-            (do
-                (.write w begin)
-                (when-let [xs (seq sequence)]
-                (if *print-length*
-                    (loop [[x & xs] xs
-                        print-length *print-length*]
-                    (if (zero? print-length)
-                        (.write w "...")
-                        (do
-                        (print-one x w)
-                        (when xs
-                            (.write w sep)
-                            (recur xs (dec print-length))))))
-                    (loop [[x & xs] xs]
-                    (print-one x w)
-                    (when xs
-                        (.write w sep)
-                        (recur xs)))))
-                (.write w end))))
-)
-
-(§ defn- print-meta [o, ^Writer w]
-    (when-let [m (meta o)]
-            (when (and (pos? (count m)) *print-meta* *print-readably*)
-            (.write w "^")
-            (if (and (= (count m) 1) (:tag m))
-                (pr-on (:tag m) w)
-                (pr-on m w))
-            (.write w " ")))
-)
-
-(§ defn print-simple [o, ^Writer w]
-    (print-meta o w)
-    (.write w (str o))
-)
-
-(§ defmethod print-method :default [o, ^Writer w]
-    (if (instance? cloiure.lang.IObj o)
-            (print-method (vary-meta o #(dissoc % :type)) w)
-            (print-simple o w))
-)
-
-(§ defmethod print-method nil [o, ^Writer w]
-    (.write w "nil")
-)
-
-(§ defn print-ctor [o print-args ^Writer w]
-    (.write w "#=(")
-    (.write w (.getName ^Class (class o)))
-    (.write w ". ")
-    (print-args o w)
-    (.write w ")")
-)
-
-(§ defn- print-tagged-object [o rep ^Writer w]
-    (when (instance? cloiure.lang.IMeta o)
-            (print-meta o w))
-    (.write w "#object[")
-    (let [c (class o)]
-            (if (.isArray c)
-            (print-method (.getName c) w)
-            (.write w (.getName c))))
-    (.write w " ")
-    (.write w (format "0x%x " (System/identityHashCode o)))
-    (print-method rep w)
-    (.write w "]")
-)
-
-(§ defn- print-object [o, ^Writer w]
-    (print-tagged-object o (str o) w)
-)
-
-(§ defmethod print-method Object [o, ^Writer w]
-    (print-object o w)
-)
-
-(§ defmethod print-method cloiure.lang.Keyword [o, ^Writer w]
-    (.write w (str o))
-)
-
-(§ defmethod print-method Number [o, ^Writer w]
-    (.write w (str o))
-)
-
-(§ defmethod print-method Double [o, ^Writer w]
-    (cond
-            (= Double/POSITIVE_INFINITY o) (.write w "##Inf")
-            (= Double/NEGATIVE_INFINITY o) (.write w "##-Inf")
-            (.isNaN ^Double o) (.write w "##NaN")
-            :else (.write w (str o)))
-)
-
-(§ defmethod print-method Float [o, ^Writer w]
-    (cond
-            (= Float/POSITIVE_INFINITY o) (.write w "##Inf")
-            (= Float/NEGATIVE_INFINITY o) (.write w "##-Inf")
-            (.isNaN ^Float o) (.write w "##NaN")
-            :else (.write w (str o)))
-)
-
-(§ defmethod print-method Boolean [o, ^Writer w]
-    (.write w (str o))
-)
-
-(§ defmethod print-method cloiure.lang.Symbol [o, ^Writer w]
-    (print-simple o w)
-)
-
-(§ defmethod print-method cloiure.lang.Var [o, ^Writer w]
-    (print-simple o w)
-)
-
-(§ defmethod print-method cloiure.lang.ISeq [o, ^Writer w]
-    (print-meta o w)
-    (print-sequential "(" pr-on " " ")" o w)
-)
-
-(§ prefer-method print-method cloiure.lang.ISeq cloiure.lang.IPersistentCollection)
-(§ prefer-method print-method cloiure.lang.ISeq java.util.Collection)
-
-;;;
- ; Returns escape string for char or nil if none
- ;;
-(§ def ^String char-escape-string
-    {
-        \newline "\\n"
-        \tab "\\t"
-        \return "\\r"
-        \" "\\\""
-        \\ "\\\\"
-        \formfeed "\\f"
-        \backspace "\\b"
-    }
-)
-
-(§ defmethod print-method String [^String s, ^Writer w]
-    (if *print-readably*
-            (do (.append w \")
-            (dotimes [n (count s)]
-                (let [c (.charAt s n)
-                    e (char-escape-string c)]
-                (if e (.write w e) (.append w c))))
-            (.append w \"))
-            (.write w s))
-    nil
-)
-
-(§ defmethod print-method cloiure.lang.IPersistentVector [v, ^Writer w]
-    (print-meta v w)
-    (print-sequential "[" pr-on " " "]" v w)
-)
-
-(§ defn- print-prefix-map [prefix m print-one w]
-    (print-sequential
-            (str prefix "{")
-            (fn [e ^Writer w]
-            (do (print-one (key e) w) (.append w \space) (print-one (val e) w)))
-            ", "
-            "}"
-            (seq m) w)
-)
-
-(§ defn- print-map [m print-one w]
-    (print-prefix-map nil m print-one w)
-)
-
-(§ defn- strip-ns [named]
-    (if (symbol? named)
-            (symbol nil (name named))
-            (keyword nil (name named)))
-)
-
-;;;
- ; Returns [lifted-ns lifted-map] or nil if m can't be lifted.
- ;;
-(§ defn- lift-ns [m]
-    (when *print-namespace-maps*
-            (loop [ns nil
-                [[k v :as entry] & entries] (seq m)
-                lm {}]
-            (if entry
-                (when (or (keyword? k) (symbol? k))
-                (if ns
-                    (when (= ns (namespace k))
-                    (recur ns entries (assoc lm (strip-ns k) v)))
-                    (when-let [new-ns (namespace k)]
-                    (recur new-ns entries (assoc lm (strip-ns k) v)))))
-                [ns (apply conj (empty m) lm)])))
-)
-
-(§ defmethod print-method cloiure.lang.IPersistentMap [m, ^Writer w]
-    (print-meta m w)
-    (let [[ns lift-map] (lift-ns m)]
-            (if ns
-            (print-prefix-map (str "#:" ns) lift-map pr-on w)
-            (print-map m pr-on w)))
-)
-
-(§ prefer-method print-method cloiure.lang.IPersistentCollection java.util.Collection)
-(§ prefer-method print-method cloiure.lang.IPersistentCollection java.util.RandomAccess)
-(§ prefer-method print-method java.util.RandomAccess java.util.List)
-(§ prefer-method print-method cloiure.lang.IPersistentCollection java.util.Map)
-
-(§ defmethod print-method java.util.List [c, ^Writer w]
-    (if *print-readably*
-            (do
-            (print-meta c w)
-            (print-sequential "(" pr-on " " ")" c w))
-            (print-object c w))
-)
-
-(§ defmethod print-method java.util.RandomAccess [v, ^Writer w]
-    (if *print-readably*
-            (do
-            (print-meta v w)
-            (print-sequential "[" pr-on " " "]" v w))
-            (print-object v w))
-)
-
-(§ defmethod print-method java.util.Map [m, ^Writer w]
-    (if *print-readably*
-            (do
-            (print-meta m w)
-            (print-map m pr-on w))
-            (print-object m w))
-)
-
-(§ defmethod print-method java.util.Set [s, ^Writer w]
-    (if *print-readably*
-            (do
-            (print-meta s w)
-            (print-sequential "#{" pr-on " " "}" (seq s) w))
-            (print-object s w))
-)
-
-(§ defmethod print-method cloiure.lang.IRecord [r, ^Writer w]
-    (print-meta r w)
-    (.write w "#")
-    (.write w (.getName (class r)))
-    (print-map r pr-on w)
-)
-
-(§ prefer-method print-method cloiure.lang.IRecord java.util.Map)
-(§ prefer-method print-method cloiure.lang.IRecord cloiure.lang.IPersistentMap)
-
-(§ defmethod print-method cloiure.lang.IPersistentSet [s, ^Writer w]
-    (print-meta s w)
-    (print-sequential "#{" pr-on " " "}" (seq s) w)
-)
-
-;;;
- ; Returns name string for char or nil if none
- ;;
-(§ def ^String char-name-string
-    {
-        \newline "newline"
-        \tab "tab"
-        \space "space"
-        \backspace "backspace"
-        \formfeed "formfeed"
-        \return "return"
-    }
-)
-
-(§ defmethod print-method java.lang.Character [^Character c, ^Writer w]
-    (if *print-readably*
-            (do (.append w \\)
-                (let [n (char-name-string c)]
-                (if n (.write w n) (.append w c))))
-            (.append w c))
-    nil
-)
-
-(§ def primitives-classnames
-    {
-        Float/TYPE "Float/TYPE"
-        Integer/TYPE "Integer/TYPE"
-        Long/TYPE "Long/TYPE"
-        Boolean/TYPE "Boolean/TYPE"
-        Character/TYPE "Character/TYPE"
-        Double/TYPE "Double/TYPE"
-        Byte/TYPE "Byte/TYPE"
-        Short/TYPE "Short/TYPE"
-    }
-)
-
-(§ defmethod print-method Class [^Class c, ^Writer w]
-    (.write w (.getName c))
-)
-
-(§ defmethod print-method java.math.BigDecimal [b, ^Writer w]
-    (.write w (str b))
-    (.write w "M")
-)
-
-(§ defmethod print-method cloiure.lang.BigInt [b, ^Writer w]
-    (.write w (str b))
-    (.write w "N")
-)
-
-(§ defmethod print-method java.util.regex.Pattern [p ^Writer w]
-    (.write w "#\"")
-    (loop [[^Character c & r :as s] (seq (.pattern ^java.util.regex.Pattern p))
-                qmode false]
-            (when s
-            (cond
-                (= c \\) (let [[^Character c2 & r2] r]
-                        (.append w \\)
-                        (.append w c2)
-                        (if qmode
-                            (recur r2 (not= c2 \E))
-                            (recur r2 (= c2 \Q))))
-                (= c \") (do
-                        (if qmode
-                            (.write w "\\E\\\"\\Q")
-                            (.write w "\\\""))
-                        (recur r qmode))
-                :else    (do
-                        (.append w c)
-                        (recur r qmode)))))
-    (.append w \")
-)
-
-(§ defn- deref-as-map [^cloiure.lang.IDeref o]
-    (let [pending (and (instance? cloiure.lang.IPending o)
-                            (not (.isRealized ^cloiure.lang.IPending o)))
-                [ex val]
-                (when-not pending
-                (try [false (deref o)]
-                    (catch Throwable e
-                        [true e])))]
-            {:status
-            (cond
-            (or ex
-                (and (instance? cloiure.lang.Agent o)
-                    (agent-error o)))
-            :failed
-
-            pending
-            :pending
-
-            :else
-            :ready)
-
-            :val val})
-)
-
-(§ defmethod print-method cloiure.lang.IDeref [o ^Writer w]
-    (print-tagged-object o (deref-as-map o) w)
-)
-
-(§ defmethod print-method StackTraceElement [^StackTraceElement o ^Writer w]
-    (print-method [(symbol (.getClassName o)) (symbol (.getMethodName o)) (.getFileName o) (.getLineNumber o)] w)
-)
-
-;;;
- ; Constructs a data representation for a StackTraceElement
- ;;
-(§ defn StackTraceElement->vec [^StackTraceElement o]
-    [(symbol (.getClassName o)) (symbol (.getMethodName o)) (.getFileName o) (.getLineNumber o)]
-)
-
-;;;
- ; Constructs a data representation for a Throwable.
- ;;
-(§ defn Throwable->map [^Throwable o]
-    (let [base (fn [^Throwable t]
-                    (merge {:type (symbol (.getName (class t)))
-                            :message (.getLocalizedMessage t)}
-                        (when-let [ed (ex-data t)]
-                        {:data ed})
-                        (let [st (.getStackTrace t)]
-                        (when (pos? (alength st))
-                            {:at (StackTraceElement->vec (aget st 0))}))))
-                via (loop [via [], ^Throwable t o]
-                    (if t
-                        (recur (conj via t) (.getCause t))
-                        via))
-                ^Throwable root (peek via)
-                m {:cause (.getLocalizedMessage root)
-                :via (vec (map base via))
-                :trace (vec (map StackTraceElement->vec
-                                    (.getStackTrace ^Throwable (or root o))))}
-                data (ex-data root)]
-            (if data
-            (assoc m :data data)
-            m))
-)
-
-(§ defn- print-throwable [^Throwable o ^Writer w]
-    (.write w "#error {\n :cause ")
-    (let [{:keys [cause data via trace]} (Throwable->map o)
-                print-via #(do (.write w "{:type ")
-                                    (print-method (:type %) w)
-                                                (.write w "\n   :message ")
-                                                (print-method (:message %) w)
-                    (when-let [data (:data %)]
-                    (.write w "\n   :data ")
-                    (print-method data w))
-                    (when-let [at (:at %)]
-                    (.write w "\n   :at ")
-                    (print-method (:at %) w))
-                    (.write w "}"))]
-            (print-method cause w)
-            (when data
-            (.write w "\n :data ")
-            (print-method data w))
-            (when via
-            (.write w "\n :via\n [")
-            (when-let [fv (first via)]
-                    (print-via fv)
-                (doseq [v (rest via)]
-                (.write w "\n  ")
-                        (print-via v)))
-            (.write w "]"))
-            (when trace
-            (.write w "\n :trace\n [")
-            (when-let [ft (first trace)]
-                (print-method ft w)
-                (doseq [t (rest trace)]
-                (.write w "\n  ")
-                (print-method t w)))
-            (.write w "]")))
-    (.write w "}")
-)
-
-(§ defmethod print-method Throwable [^Throwable o ^Writer w]
-    (print-throwable o w)
-)
-
-(§ defmethod print-method cloiure.lang.TaggedLiteral [o ^Writer w]
-    (.write w "#")
-    (print-method (:tag o) w)
-    (.write w " ")
-    (print-method (:form o) w)
-)
-
-(§ defmethod print-method cloiure.lang.ReaderConditional [o ^Writer w]
-    (.write w "#?")
-    (when (:splicing? o) (.write w "@"))
-    (print-method (:form o) w)
-)
-
-(§ def ^:private print-initialized true)
-
-(§ in-ns 'cloiure.core)
-
-(§ import
-    [cloiure.asm ClassWriter ClassVisitor Opcodes Type]
-    [java.lang.reflect Modifier Constructor]
-    [java.io Serializable NotSerializableException]
-    [cloiure.asm.commons Method GeneratorAdapter]
-    [cloiure.lang IProxy Reflector DynamicClassLoader IPersistentMap PersistentHashMap RT]
-)
-
-(§ defn method-sig [^java.lang.reflect.Method meth]
-    [(.getName meth) (seq (.getParameterTypes meth)) (.getReturnType meth)]
-)
-
-(§ defn- most-specific [rtypes]
-    (or (some (fn [t] (when (every? #(isa? t %) rtypes) t)) rtypes)
-            (throw (Exception. "Incompatible return types")))
-)
-
-;;;
- ; Takes a collection of [msig meth] and returns a seq of maps from
- ; return-types to meths.
- ;;
-(§ defn- group-by-sig [coll]
-    (vals (reduce1 (fn [m [msig meth]]
-                        (let [rtype (peek msig)
-                                argsig (pop msig)]
-                            (assoc m argsig (assoc (m argsig {}) rtype meth))))
-                {} coll))
-)
-
-(§ defn ^String proxy-name [^Class super interfaces]
-    (let [inames (into1 (sorted-set) (map #(.getName ^Class %) interfaces))]
-            (apply str (.replace (str *ns*) \- \_) ".proxy"
-            (interleave (repeat "$")
-                (concat
-                [(.getName super)]
-                (map #(subs % (inc (.lastIndexOf ^String % "."))) inames)
-                [(Integer/toHexString (hash inames))]))))
-)
-
-(§ defn- generate-proxy [^Class super interfaces]
-    (let [cv (ClassWriter. ClassWriter/COMPUTE_MAXS)
-                pname (proxy-name super interfaces)
-                cname (.replace pname \. \/) ;; (str "cloiure/lang/" (gensym "Proxy__"))
-                ctype (Type/getObjectType cname)
-                iname (fn [^Class c] (.getInternalName (Type/getType c)))
-                fmap "__cloiureFnMap"
-                totype (fn [^Class c] (Type/getType c))
-                to-types (fn [cs] (if (pos? (count cs))
-                                    (into-array (map totype cs))
-                                    (make-array Type 0)))
-                super-type ^Type (totype super)
-                imap-type ^Type (totype IPersistentMap)
-                ifn-type (totype cloiure.lang.IFn)
-                obj-type (totype Object)
-                sym-type (totype cloiure.lang.Symbol)
-                rt-type  (totype cloiure.lang.RT)
-                ex-type  (totype java.lang.UnsupportedOperationException)
-                gen-bridge
-                (fn [^java.lang.reflect.Method meth ^java.lang.reflect.Method dest]
-                    (let [pclasses (.getParameterTypes meth)
-                        ptypes (to-types pclasses)
-                        rtype ^Type (totype (.getReturnType meth))
-                        m (Method. (.getName meth) rtype ptypes)
-                        dtype (totype (.getDeclaringClass dest))
-                        dm (Method. (.getName dest) (totype (.getReturnType dest)) (to-types (.getParameterTypes dest)))
-                        gen (GeneratorAdapter. (bit-or Opcodes/ACC_PUBLIC Opcodes/ACC_BRIDGE) m nil nil cv)]
-                    (.visitCode gen)
-                    (.loadThis gen)
-                    (dotimes [i (count ptypes)]
-                        (.loadArg gen i))
-                    (if (-> dest .getDeclaringClass .isInterface)
-                        (.invokeInterface gen dtype dm)
-                        (.invokeVirtual gen dtype dm))
-                    (.returnValue gen)
-                    (.endMethod gen)))
-                gen-method
-                (fn [^java.lang.reflect.Method meth else-gen]
-                    (let [pclasses (.getParameterTypes meth)
-                        ptypes (to-types pclasses)
-                        rtype ^Type (totype (.getReturnType meth))
-                        m (Method. (.getName meth) rtype ptypes)
-                        gen (GeneratorAdapter. Opcodes/ACC_PUBLIC m nil nil cv)
-                        else-label (.newLabel gen)
-                        end-label (.newLabel gen)
-                        decl-type (Type/getType (.getDeclaringClass meth))]
-                    (.visitCode gen)
-                    (if (> (count pclasses) 18)
-                        (else-gen gen m)
-                        (do
-                        (.loadThis gen)
-                        (.getField gen ctype fmap imap-type)
-
-                        (.push gen (.getName meth))
-                                                ;; lookup fn in map
-                        (.invokeStatic gen rt-type (Method/getMethod "Object get(Object, Object)"))
-                        (.dup gen)
-                        (.ifNull gen else-label)
-                                                ;; if found
-                        (.checkCast gen ifn-type)
-                        (.loadThis gen)
-                                                ;; box args
-                        (dotimes [i (count ptypes)]
-                            (.loadArg gen i)
-                            (cloiure.lang.Compiler$HostExpr/emitBoxReturn nil gen (nth pclasses i)))
-                                                ;; call fn
-                        (.invokeInterface gen ifn-type (Method. "invoke" obj-type (into-array (cons obj-type (repeat (count ptypes) obj-type)))))
-                                                ;; unbox return
-                        (.unbox gen rtype)
-                        (when (= (.getSort rtype) Type/VOID)
-                            (.pop gen))
-                        (.goTo gen end-label)
-
-                                                ;; else call supplied alternative generator
-                        (.mark gen else-label)
-                        (.pop gen)
-
-                        (else-gen gen m)
-
-                        (.mark gen end-label)))
-                    (.returnValue gen)
-                    (.endMethod gen)))]
-
-                                                ;; start class definition
-            (.visit cv Opcodes/V1_5 (+ Opcodes/ACC_PUBLIC Opcodes/ACC_SUPER)
-                        cname nil (iname super)
-                        (into-array (map iname (cons IProxy interfaces))))
-                                                ;; add field for fn mappings
-            (.visitField cv (+ Opcodes/ACC_PRIVATE Opcodes/ACC_VOLATILE)
-                            fmap (.getDescriptor imap-type) nil nil)
-                                                ;; add ctors matching/calling super's
-            (doseq [^Constructor ctor (.getDeclaredConstructors super)]
-                (when-not (Modifier/isPrivate (.getModifiers ctor))
-                (let [ptypes (to-types (.getParameterTypes ctor))
-                        m (Method. "<init>" Type/VOID_TYPE ptypes)
-                        gen (GeneratorAdapter. Opcodes/ACC_PUBLIC m nil nil cv)]
-                    (.visitCode gen)
-                                                ;; call super ctor
-                    (.loadThis gen)
-                    (.dup gen)
-                    (.loadArgs gen)
-                    (.invokeConstructor gen super-type m)
-
-                    (.returnValue gen)
-                    (.endMethod gen))))
-                                                ;; disable serialization
-            (when (some #(isa? % Serializable) (cons super interfaces))
-            (let [m (Method/getMethod "void writeObject(java.io.ObjectOutputStream)")
-                    gen (GeneratorAdapter. Opcodes/ACC_PRIVATE m nil nil cv)]
-                (.visitCode gen)
-                (.loadThis gen)
-                (.loadArgs gen)
-                (.throwException gen (totype NotSerializableException) pname)
-                (.endMethod gen))
-            (let [m (Method/getMethod "void readObject(java.io.ObjectInputStream)")
-                    gen (GeneratorAdapter. Opcodes/ACC_PRIVATE m nil nil cv)]
-                (.visitCode gen)
-                (.loadThis gen)
-                (.loadArgs gen)
-                (.throwException gen (totype NotSerializableException) pname)
-                (.endMethod gen)))
-                                                ;; add IProxy methods
-            (let [m (Method/getMethod "void __initCloiureFnMappings(cloiure.lang.IPersistentMap)")
-                gen (GeneratorAdapter. Opcodes/ACC_PUBLIC m nil nil cv)]
-            (.visitCode gen)
-            (.loadThis gen)
-            (.loadArgs gen)
-            (.putField gen ctype fmap imap-type)
-
-            (.returnValue gen)
-            (.endMethod gen))
-            (let [m (Method/getMethod "void __updateCloiureFnMappings(cloiure.lang.IPersistentMap)")
-                gen (GeneratorAdapter. Opcodes/ACC_PUBLIC m nil nil cv)]
-            (.visitCode gen)
-            (.loadThis gen)
-            (.dup gen)
-            (.getField gen ctype fmap imap-type)
-            (.checkCast gen (totype cloiure.lang.IPersistentCollection))
-            (.loadArgs gen)
-            (.invokeInterface gen (totype cloiure.lang.IPersistentCollection)
-                                    (Method/getMethod "cloiure.lang.IPersistentCollection cons(Object)"))
-            (.checkCast gen imap-type)
-            (.putField gen ctype fmap imap-type)
-
-            (.returnValue gen)
-            (.endMethod gen))
-            (let [m (Method/getMethod "cloiure.lang.IPersistentMap __getCloiureFnMappings()")
-                gen (GeneratorAdapter. Opcodes/ACC_PUBLIC m nil nil cv)]
-            (.visitCode gen)
-            (.loadThis gen)
-            (.getField gen ctype fmap imap-type)
-            (.returnValue gen)
-            (.endMethod gen))
-
-                                                ;; calc set of supers' non-private instance methods
-            (let [[mm considered]
-                    (loop [mm {} considered #{} c super]
-                    (if c
-                        (let [[mm considered]
-                            (loop [mm mm
-                                    considered considered
-                                    meths (concat
-                                            (seq (.getDeclaredMethods c))
-                                            (seq (.getMethods c)))]
-                                (if (seq meths)
-                                (let [^java.lang.reflect.Method meth (first meths)
-                                        mods (.getModifiers meth)
-                                        mk (method-sig meth)]
-                                    (if (or (considered mk)
-                                            (not (or (Modifier/isPublic mods) (Modifier/isProtected mods)))
-                                            ;; (Modifier/isPrivate mods)
-                                            (Modifier/isStatic mods)
-                                            (Modifier/isFinal mods)
-                                            (= "finalize" (.getName meth)))
-                                    (recur mm (conj considered mk) (next meths))
-                                    (recur (assoc mm mk meth) (conj considered mk) (next meths))))
-                                [mm considered]))]
-                        (recur mm considered (.getSuperclass c)))
-                        [mm considered]))
-                ifaces-meths (into1 {}
-                                (for [^Class iface interfaces meth (.getMethods iface)
-                                    :let [msig (method-sig meth)] :when (not (considered msig))]
-                                {msig meth}))
-                ;; Treat abstract methods as interface methods
-                [mm ifaces-meths] (let [abstract? (fn [[_ ^Method meth]]
-                                                    (Modifier/isAbstract (.getModifiers meth)))
-                                        mm-no-abstract (remove abstract? mm)
-                                        abstract-meths (filter abstract? mm)]
-                                    [mm-no-abstract (concat ifaces-meths abstract-meths)])
-                mgroups (group-by-sig (concat mm ifaces-meths))
-                rtypes (map #(most-specific (keys %)) mgroups)
-                mb (map #(vector (%1 %2) (vals (dissoc %1 %2))) mgroups rtypes)
-                bridge? (reduce1 into1 #{} (map second mb))
-                ifaces-meths (remove bridge? (vals ifaces-meths))
-                mm (remove bridge? (vals mm))]
-                                                ;; add methods matching supers', if no mapping -> call super
-            (doseq [[^java.lang.reflect.Method dest bridges] mb
-                    ^java.lang.reflect.Method meth bridges]
-                (gen-bridge meth dest))
-            (doseq [^java.lang.reflect.Method meth mm]
-                (gen-method meth
-                            (fn [^GeneratorAdapter gen ^Method m]
-                                (.loadThis gen)
-                                                ;; push args
-                                (.loadArgs gen)
-                                                ;; call super
-                                (.visitMethodInsn gen Opcodes/INVOKESPECIAL
-                                                        (.getInternalName super-type)
-                                                        (.getName m)
-                                                        (.getDescriptor m)))))
-
-                                                ;; add methods matching interfaces', if no mapping -> throw
-            (doseq [^java.lang.reflect.Method meth ifaces-meths]
-                        (gen-method meth
-                                    (fn [^GeneratorAdapter gen ^Method m]
-                                        (.throwException gen ex-type (.getName m))))))
-
-                                                ;; finish class def
-            (.visitEnd cv)
-            [cname (.toByteArray cv)])
-)
-
-(§ defn- get-super-and-interfaces [bases]
-    (if (.isInterface ^Class (first bases))
-            [Object bases]
-            [(first bases) (next bases)])
-)
-
-;;;
- ; Takes an optional single class followed by zero or more
- ; interfaces. If not supplied class defaults to Object. Creates an
- ; returns an instance of a proxy class derived from the supplied
- ; classes. The resulting value is cached and used for any subsequent
- ; requests for the same class set. Returns a Class object.
- ;;
-(§ defn get-proxy-class [& bases]
-    (let [[super interfaces] (get-super-and-interfaces bases)
-          pname (proxy-name super interfaces)]
-        (or (RT/loadClassForName pname)
-            (let [[cname bytecode] (generate-proxy super interfaces)]
-                (.defineClass ^DynamicClassLoader (deref cloiure.lang.Compiler/LOADER) pname bytecode [super interfaces]))))
-)
-
-;;;
- ; Takes a proxy class and any arguments for its superclass ctor and
- ; creates and returns an instance of the proxy.
- ;;
-(§ defn construct-proxy [c & ctor-args]
-    (Reflector/invokeConstructor c (to-array ctor-args))
-)
-
-;;;
- ; Takes a proxy instance and a map of strings (which must
- ; correspond to methods of the proxy superclass/superinterfaces) to
- ; fns (which must take arguments matching the corresponding method,
- ; plus an additional (explicit) first arg corresponding to this, and
- ; sets the proxy's fn map. Returns the proxy.
- ;;
-(§ defn init-proxy [^IProxy proxy mappings]
-    (.__initCloiureFnMappings proxy mappings)
-    proxy)
-
-;;;
- ; Takes a proxy instance and a map of strings (which must
- ; correspond to methods of the proxy superclass/superinterfaces) to
- ; fns (which must take arguments matching the corresponding method,
- ; plus an additional (explicit) first arg corresponding to this, and
- ; updates (via assoc) the proxy's fn map. nil can be passed instead of
- ; a fn, in which case the corresponding method will revert to the
- ; default behavior. Note that this function can be used to update the
- ; behavior of an existing instance without changing its identity.
- ; Returns the proxy.
- ;;
-(§ defn update-proxy [^IProxy proxy mappings]
-    (.__updateCloiureFnMappings proxy mappings)
-    proxy)
-
-;;;
- ; Takes a proxy instance and returns the proxy's fn map.
- ;;
-(§ defn proxy-mappings [^IProxy proxy] (.__getCloiureFnMappings proxy))
-
-;;;
- ; class-and-interfaces - a vector of class names
- ;
- ; args - a (possibly empty) vector of arguments to the superclass
- ; constructor.
- ;
- ; f => (name [params*] body) or
- ; (name ([params*] body) ([params+] body) ...)
- ;
- ; Expands to code which creates a instance of a proxy class that
- ; implements the named class/interface(s) by calling the supplied
- ; fns. A single class, if provided, must be first. If not provided it
- ; defaults to Object.
- ;
- ; The interfaces names must be valid interface types. If a method fn
- ; is not provided for a class method, the superclass methd will be
- ; called. If a method fn is not provided for an interface method, an
- ; UnsupportedOperationException will be thrown should it be
- ; called. Method fns are closures and can capture the environment in
- ; which proxy is called. Each method fn takes an additional implicit
- ; first arg, which is bound to 'this. Note that while method fns can
- ; be provided to override protected methods, they have no other access
- ; to protected members, nor to super, as these capabilities cannot be
- ; proxied.
- ;;
-(§ defmacro proxy [class-and-interfaces args & fs]
-    (let [bases (map #(or (resolve %) (throw (Exception. (str "Can't resolve: " %))))
-                        class-and-interfaces)
-            [super interfaces] (get-super-and-interfaces bases)
-            compile-effect (when *compile-files*
-                            (let [[cname bytecode] (generate-proxy super interfaces)]
-                                (cloiure.lang.Compiler/writeClassFile cname bytecode)))
-            pc-effect (apply get-proxy-class bases)
-            pname (proxy-name super interfaces)]
-        ;; remember the class to prevent it from disappearing before use
-        (intern *ns* (symbol pname) pc-effect)
-        `(let [ ;; pc# (get-proxy-class ~@class-and-interfaces)
-                p# (new ~(symbol pname) ~@args)] ;; (construct-proxy pc# ~@args)]
-            (init-proxy p#
-            ~(loop [fmap {} fs fs]
-                (if fs
-                (let [[sym & meths] (first fs)
-                        meths (if (vector? (first meths))
-                                (list meths)
-                                meths)
-                        meths (map (fn [[params & body]]
-                                    (cons (apply vector 'this params) body))
-                                meths)]
-                    (if-not (contains? fmap (name sym))
-                    (recur (assoc fmap (name sym) (cons `fn meths)) (next fs))
-                            (throw (IllegalArgumentException.
-                                        (str "Method '" (name sym) "' redefined")))))
-                fmap)))
-            p#))
-)
-
-(§ defn proxy-call-with-super [call this meth]
-    (let [m (proxy-mappings this)]
-        (update-proxy this (assoc m meth nil))
-        (try
-            (call)
-            (finally (update-proxy this m))
-        )
-    )
-)
-
-;;;
- ; Use to call a superclass method in the body of a proxy method.
- ; Note, expansion captures 'this
- ;;
-(§ defmacro proxy-super [meth & args]
-    `(proxy-call-with-super (fn [] (. ~'this ~meth ~@args)) ~'this ~(name meth))
-)
-
 #_(ns cloiure.core.protocols)
 
 ;;;
@@ -9647,6 +9504,1718 @@
 (§ defprotocol IKVReduce
     (kv-reduce [amap f init])
 )
+
+(§ in-ns 'cloiure.core)
+
+(§ import [cloiure.lang Murmur3])
+
+(§ deftype VecNode [edit arr])
+
+(§ def EMPTY-NODE (VecNode. nil (object-array 32)))
+
+(§ definterface IVecImpl
+    (^int tailoff [])
+    (arrayFor [^int i])
+    (pushTail [^int level ^cloiure.core.VecNode parent ^cloiure.core.VecNode tailnode])
+    (popTail [^int level node])
+    (newPath [edit ^int level node])
+    (doAssoc [^int level node ^int i val])
+)
+
+(§ definterface ArrayManager
+    (array [^int size])
+    (^int alength [arr])
+    (aclone [arr])
+    (aget [arr ^int i])
+    (aset [arr ^int i val])
+)
+
+(§ deftype ArrayChunk [^cloiure.core.ArrayManager am arr ^int off ^int end]
+    cloiure.lang.Indexed
+    (nth [_ i] (.aget am arr (+ off i)))
+
+    (count [_] (- end off))
+
+    cloiure.lang.IChunk
+    (dropFirst [_]
+            (if (= off end)
+            (throw (IllegalStateException. "dropFirst of empty chunk"))
+            (ArrayChunk. am arr (inc off) end)))
+
+    (reduce [_ f init]
+            (loop [ret init i off]
+            (if (< i end)
+                (let [ret (f ret (.aget am arr i))]
+                (if (reduced? ret)
+                    ret
+                    (recur ret (inc i))))
+                ret)))
+)
+
+(§ deftype VecSeq [^cloiure.core.ArrayManager am ^cloiure.core.IVecImpl vec anode ^int i ^int offset]
+    :no-print true
+
+    cloiure.core.protocols.InternalReduce
+    (internal-reduce
+        [_ f val]
+        (loop [result val
+                aidx (+ i offset)]
+            (if (< aidx (count vec))
+            (let [node (.arrayFor vec aidx)
+                    result (loop [result result
+                                node-idx (bit-and 0x1f aidx)]
+                            (if (< node-idx (.alength am node))
+                                (let [result (f result (.aget am node node-idx))]
+                                (if (reduced? result)
+                                    result
+                                    (recur result (inc node-idx))))
+                                result))]
+                (if (reduced? result)
+                @result
+                (recur result (bit-and 0xffe0 (+ aidx 32)))))
+            result)))
+
+    cloiure.lang.ISeq
+    (first [_] (.aget am anode offset))
+    (next [this]
+            (if (< (inc offset) (.alength am anode))
+            (VecSeq. am vec anode i (inc offset))
+            (.chunkedNext this)))
+    (more [this]
+            (let [s (.next this)]
+            (or s cloiure.lang.PersistentList/EMPTY)))
+    (cons [this o]
+            (cloiure.lang.Cons. o this))
+    (count [this]
+            (loop [i 1
+                s (next this)]
+            (if s
+                (if (instance? cloiure.lang.Counted s)
+                (+ i (.count s))
+                (recur (inc i) (next s)))
+                i)))
+    (equiv [this o]
+            (cond
+            (identical? this o) true
+            (or (instance? cloiure.lang.Sequential o) (instance? java.util.List o))
+            (loop [me this
+                    you (seq o)]
+            (if (nil? me)
+                (nil? you)
+                (and (cloiure.lang.Util/equiv (first me) (first you))
+                    (recur (next me) (next you)))))
+            :else false))
+    (empty [_]
+            cloiure.lang.PersistentList/EMPTY)
+
+    cloiure.lang.Seqable
+    (seq [this] this)
+
+    cloiure.lang.IChunkedSeq
+    (chunkedFirst [_] (ArrayChunk. am anode offset (.alength am anode)))
+    (chunkedNext [_]
+        (let [nexti (+ i (.alength am anode))]
+            (when (< nexti (count vec))
+            (VecSeq. am vec (.arrayFor vec nexti) nexti 0))))
+    (chunkedMore [this]
+            (let [s (.chunkedNext this)]
+            (or s cloiure.lang.PersistentList/EMPTY)))
+)
+
+(§ defmethod print-method ::VecSeq [v w]
+    ((get (methods print-method) cloiure.lang.ISeq) v w)
+)
+
+(§ deftype Vec [^cloiure.core.ArrayManager am ^int cnt ^int shift ^cloiure.core.VecNode root tail _meta]
+    Object
+    (equals [this o]
+            (cond
+            (identical? this o) true
+            (or (instance? cloiure.lang.IPersistentVector o) (instance? java.util.RandomAccess o))
+            (and (= cnt (count o))
+                    (loop [i (int 0)]
+                    (cond
+                    (= i cnt) true
+                    (.equals (.nth this i) (nth o i)) (recur (inc i))
+                    :else false)))
+            (or (instance? cloiure.lang.Sequential o) (instance? java.util.List o))
+            (if-let [st (seq this)]
+                (.equals st (seq o))
+                (nil? (seq o)))
+            :else false))
+
+    ;; todo - cache
+    (hashCode [this]
+            (loop [hash (int 1) i (int 0)]
+            (if (= i cnt)
+                hash
+                (let [val (.nth this i)]
+                (recur (unchecked-add-int (unchecked-multiply-int 31 hash)
+                                        (cloiure.lang.Util/hash val))
+                        (inc i))))))
+
+    ;; todo - cache
+    cloiure.lang.IHashEq
+    (hasheq [this]
+            (Murmur3/hashOrdered this))
+
+    cloiure.lang.Counted
+    (count [_] cnt)
+
+    cloiure.lang.IMeta
+    (meta [_] _meta)
+
+    cloiure.lang.IObj
+    (withMeta [_ m] (Vec. am cnt shift root tail m))
+
+    cloiure.lang.Indexed
+    (nth [this i]
+            (let [a (.arrayFor this i)]
+            (.aget am a (bit-and i (int 0x1f)))))
+    (nth [this i not-found]
+            (let [z (int 0)]
+                (if (and (>= i z) (< i (.count this)))
+                (.nth this i)
+                not-found)))
+
+    cloiure.lang.IPersistentCollection
+    (cons [this val]
+            (if (< (- cnt (.tailoff this)) (int 32))
+            (let [new-tail (.array am (inc (.alength am tail)))]
+                (System/arraycopy tail 0 new-tail 0 (.alength am tail))
+                (.aset am new-tail (.alength am tail) val)
+                (Vec. am (inc cnt) shift root new-tail (meta this)))
+            (let [tail-node (VecNode. (.edit root) tail)]
+                (if (> (bit-shift-right cnt (int 5)) (bit-shift-left (int 1) shift)) ;; overflow root?
+                (let [new-root (VecNode. (.edit root) (object-array 32))]
+                    (doto ^objects (.arr new-root)
+                    (aset 0 root)
+                    (aset 1 (.newPath this (.edit root) shift tail-node)))
+                    (Vec. am (inc cnt) (+ shift (int 5)) new-root (let [tl (.array am 1)] (.aset am tl 0 val) tl) (meta this)))
+                (Vec. am (inc cnt) shift (.pushTail this shift root tail-node)
+                        (let [tl (.array am 1)] (.aset am tl 0 val) tl) (meta this))))))
+
+    (empty [_] (Vec. am 0 5 EMPTY-NODE (.array am 0) nil))
+    (equiv [this o]
+            (cond
+            (or (instance? cloiure.lang.IPersistentVector o) (instance? java.util.RandomAccess o))
+            (and (= cnt (count o))
+                    (loop [i (int 0)]
+                    (cond
+                    (= i cnt) true
+                    (= (.nth this i) (nth o i)) (recur (inc i))
+                    :else false)))
+            (or (instance? cloiure.lang.Sequential o) (instance? java.util.List o))
+            (cloiure.lang.Util/equiv (seq this) (seq o))
+            :else false))
+
+    cloiure.lang.IPersistentStack
+    (peek [this]
+            (when (> cnt (int 0))
+            (.nth this (dec cnt))))
+
+    (pop [this]
+        (cond
+            (zero? cnt)
+            (throw (IllegalStateException. "Can't pop empty vector"))
+            (= 1 cnt)
+            (Vec. am 0 5 EMPTY-NODE (.array am 0) (meta this))
+            (> (- cnt (.tailoff this)) 1)
+            (let [new-tail (.array am (dec (.alength am tail)))]
+                (System/arraycopy tail 0 new-tail 0 (.alength am new-tail))
+                (Vec. am (dec cnt) shift root new-tail (meta this)))
+            :else
+            (let [new-tail (.arrayFor this (- cnt 2))
+                    new-root ^cloiure.core.VecNode (.popTail this shift root)]
+                (cond
+                (nil? new-root)
+                (Vec. am (dec cnt) shift EMPTY-NODE new-tail (meta this))
+                (and (> shift 5) (nil? (aget ^objects (.arr new-root) 1)))
+                (Vec. am (dec cnt) (- shift 5) (aget ^objects (.arr new-root) 0) new-tail (meta this))
+                :else
+                (Vec. am (dec cnt) shift new-root new-tail (meta this))))))
+
+    cloiure.lang.IPersistentVector
+    (assocN [this i val]
+            (cond
+            (and (<= (int 0) i) (< i cnt))
+            (if (>= i (.tailoff this))
+                (let [new-tail (.array am (.alength am tail))]
+                (System/arraycopy tail 0 new-tail 0 (.alength am tail))
+                (.aset am new-tail (bit-and i (int 0x1f)) val)
+                (Vec. am cnt shift root new-tail (meta this)))
+                (Vec. am cnt shift (.doAssoc this shift root i val) tail (meta this)))
+            (= i cnt) (.cons this val)
+            :else (throw (IndexOutOfBoundsException.))))
+    (length [_] cnt)
+
+    cloiure.lang.Reversible
+    (rseq [this]
+                (if (> (.count this) 0)
+                (cloiure.lang.APersistentVector$RSeq. this (dec (.count this)))
+                nil))
+
+    cloiure.lang.Associative
+    (assoc [this k v]
+            (if (cloiure.lang.Util/isInteger k)
+            (.assocN this k v)
+            (throw (IllegalArgumentException. "Key must be integer"))))
+    (containsKey [this k]
+            (and (cloiure.lang.Util/isInteger k)
+                (<= 0 (int k))
+                (< (int k) cnt)))
+    (entryAt [this k]
+            (if (.containsKey this k)
+            (cloiure.lang.MapEntry/create k (.nth this (int k)))
+            nil))
+
+    cloiure.lang.ILookup
+    (valAt [this k not-found]
+            (if (cloiure.lang.Util/isInteger k)
+            (let [i (int k)]
+                (if (and (>= i 0) (< i cnt))
+                (.nth this i)
+                not-found))
+            not-found))
+
+    (valAt [this k] (.valAt this k nil))
+
+    cloiure.lang.IFn
+    (invoke [this k]
+            (if (cloiure.lang.Util/isInteger k)
+            (let [i (int k)]
+                (if (and (>= i 0) (< i cnt))
+                (.nth this i)
+                (throw (IndexOutOfBoundsException.))))
+            (throw (IllegalArgumentException. "Key must be integer"))))
+
+    cloiure.lang.Seqable
+    (seq [this]
+            (if (zero? cnt)
+            nil
+            (VecSeq. am this (.arrayFor this 0) 0 0)))
+
+    cloiure.lang.Sequential ;; marker, no methods
+
+    cloiure.core.IVecImpl
+    (tailoff [_]
+            (- cnt (.alength am tail)))
+
+    (arrayFor [this i]
+            (if (and (<= (int 0) i) (< i cnt))
+            (if (>= i (.tailoff this))
+                tail
+                (loop [node root level shift]
+                (if (zero? level)
+                    (.arr node)
+                    (recur (aget ^objects (.arr node) (bit-and (bit-shift-right i level) (int 0x1f)))
+                        (- level (int 5))))))
+            (throw (IndexOutOfBoundsException.))))
+
+    (pushTail [this level parent tailnode]
+            (let [subidx (bit-and (bit-shift-right (dec cnt) level) (int 0x1f))
+                parent ^cloiure.core.VecNode parent
+                ret (VecNode. (.edit parent) (aclone ^objects (.arr parent)))
+                node-to-insert (if (= level (int 5))
+                                tailnode
+                                (let [child (aget ^objects (.arr parent) subidx)]
+                                    (if child
+                                    (.pushTail this (- level (int 5)) child tailnode)
+                                    (.newPath this (.edit root) (- level (int 5)) tailnode))))]
+            (aset ^objects (.arr ret) subidx node-to-insert)
+            ret))
+
+    (popTail [this level node]
+            (let [node ^cloiure.core.VecNode node
+                subidx (bit-and (bit-shift-right (- cnt (int 2)) level) (int 0x1f))]
+            (cond
+            (> level 5)
+                (let [new-child (.popTail this (- level 5) (aget ^objects (.arr node) subidx))]
+                (if (and (nil? new-child) (zero? subidx))
+                    nil
+                    (let [arr (aclone ^objects (.arr node))]
+                    (aset arr subidx new-child)
+                    (VecNode. (.edit root) arr))))
+            (zero? subidx) nil
+            :else (let [arr (aclone ^objects (.arr node))]
+                    (aset arr subidx nil)
+                    (VecNode. (.edit root) arr)))))
+
+    (newPath [this edit ^int level node]
+            (if (zero? level)
+            node
+            (let [ret (VecNode. edit (object-array 32))]
+                (aset ^objects (.arr ret) 0 (.newPath this edit (- level (int 5)) node))
+                ret)))
+
+    (doAssoc [this level node i val]
+            (let [node ^cloiure.core.VecNode node]
+            (if (zero? level)
+                ;; on this branch, array will need val type
+                (let [arr (.aclone am (.arr node))]
+                (.aset am arr (bit-and i (int 0x1f)) val)
+                (VecNode. (.edit node) arr))
+                (let [arr (aclone ^objects (.arr node))
+                    subidx (bit-and (bit-shift-right i level) (int 0x1f))]
+                (aset arr subidx (.doAssoc this (- level (int 5)) (aget arr subidx) i val))
+                (VecNode. (.edit node) arr)))))
+
+    java.lang.Comparable
+    (compareTo [this o]
+            (if (identical? this o)
+            0
+            (let [^cloiure.lang.IPersistentVector v (cast cloiure.lang.IPersistentVector o)
+                    vcnt (.count v)]
+                (cond
+                (< cnt vcnt) -1
+                (> cnt vcnt) 1
+                :else
+                    (loop [i (int 0)]
+                    (if (= i cnt)
+                        0
+                        (let [comp (cloiure.lang.Util/compare (.nth this i) (.nth v i))]
+                        (if (= 0 comp)
+                            (recur (inc i))
+                            comp))))))))
+
+    java.lang.Iterable
+    (iterator [this]
+            (let [i (java.util.concurrent.atomic.AtomicInteger. 0)]
+            (reify java.util.Iterator
+                (hasNext [_] (< (.get i) cnt))
+                (next [_] (try
+                            (.nth this (dec (.incrementAndGet i)))
+                            (catch IndexOutOfBoundsException _
+                            (throw (java.util.NoSuchElementException.)))))
+                (remove [_] (throw (UnsupportedOperationException.))))))
+
+    java.util.Collection
+    (contains [this o] (boolean (some #(= % o) this)))
+    (containsAll [this c] (every? #(.contains this %) c))
+    (isEmpty [_] (zero? cnt))
+    (toArray [this] (into-array Object this))
+    (toArray [this arr]
+            (if (>= (count arr) cnt)
+            (do
+                (dotimes [i cnt]
+                (aset arr i (.nth this i)))
+                arr)
+            (into-array Object this)))
+    (size [_] cnt)
+    (add [_ o] (throw (UnsupportedOperationException.)))
+    (addAll [_ c] (throw (UnsupportedOperationException.)))
+    (clear [_] (throw (UnsupportedOperationException.)))
+    (^boolean remove [_ o] (throw (UnsupportedOperationException.)))
+    (removeAll [_ c] (throw (UnsupportedOperationException.)))
+    (retainAll [_ c] (throw (UnsupportedOperationException.)))
+
+    java.util.List
+    (get [this i] (.nth this i))
+    (indexOf [this o]
+            (loop [i (int 0)]
+            (cond
+                (== i cnt) -1
+                (= o (.nth this i)) i
+                :else (recur (inc i)))))
+    (lastIndexOf [this o]
+            (loop [i (dec cnt)]
+            (cond
+                (< i 0) -1
+                (= o (.nth this i)) i
+                :else (recur (dec i)))))
+    (listIterator [this] (.listIterator this 0))
+    (listIterator [this i]
+            (let [i (java.util.concurrent.atomic.AtomicInteger. i)]
+            (reify java.util.ListIterator
+                (hasNext [_] (< (.get i) cnt))
+                (hasPrevious [_] (pos? i))
+                (next [_] (try
+                            (.nth this (dec (.incrementAndGet i)))
+                            (catch IndexOutOfBoundsException _
+                            (throw (java.util.NoSuchElementException.)))))
+                (nextIndex [_] (.get i))
+                (previous [_] (try
+                                (.nth this (.decrementAndGet i))
+                                (catch IndexOutOfBoundsException _
+                                (throw (java.util.NoSuchElementException.)))))
+                (previousIndex [_] (dec (.get i)))
+                (add [_ e] (throw (UnsupportedOperationException.)))
+                (remove [_] (throw (UnsupportedOperationException.)))
+                (set [_ e] (throw (UnsupportedOperationException.))))))
+    (subList [this a z] (subvec this a z))
+    (add [_ i o] (throw (UnsupportedOperationException.)))
+    (addAll [_ i c] (throw (UnsupportedOperationException.)))
+    (^Object remove [_ ^int i] (throw (UnsupportedOperationException.)))
+    (set [_ i e] (throw (UnsupportedOperationException.)))
+)
+
+(§ defmethod print-method ::Vec [v w]
+    ((get (methods print-method) cloiure.lang.IPersistentVector) v w)
+)
+
+(§ defmacro ^:private mk-am [t]
+    (let [garr (gensym)
+                tgarr (with-meta garr {:tag (symbol (str t "s"))})]
+            `(reify cloiure.core.ArrayManager
+                    (array [_ size#] (~(symbol (str t "-array")) size#))
+                    (alength [_ ~garr] (alength ~tgarr))
+                    (aclone [_ ~garr] (aclone ~tgarr))
+                    (aget [_ ~garr i#] (aget ~tgarr i#))
+                    (aset [_ ~garr i# val#] (aset ~tgarr i# (~t val#)))))
+)
+
+(§ def ^:private ams
+    {
+        :int     (mk-am int)
+        :long    (mk-am long)
+        :float   (mk-am float)
+        :double  (mk-am double)
+        :byte    (mk-am byte)
+        :short   (mk-am short)
+        :char    (mk-am char)
+        :boolean (mk-am boolean)
+    }
+)
+
+(§ defmacro ^:private ams-check [t]
+    `(let [am# (ams ~t)]
+        (if am#
+        am#
+        (throw (IllegalArgumentException. (str "Unrecognized type " ~t)))))
+)
+
+;;;
+ ; Creates a new vector of a single primitive type t, where t is one
+ ; of :int :long :float :double :byte :short :char or :boolean. The
+ ; resulting vector complies with the interface of vectors in general,
+ ; but stores the values unboxed internally.
+ ;
+ ; Optionally takes one or more elements to populate the vector.
+ ;;
+(§ defn vector-of
+    ([t]
+        (let [^cloiure.core.ArrayManager am (ams-check t)]
+            (Vec. am 0 5 EMPTY-NODE (.array am 0) nil)))
+    ([t x1]
+        (let [^cloiure.core.ArrayManager am (ams-check t)
+                arr (.array am 1)]
+            (.aset am arr 0 x1)
+            (Vec. am 1 5 EMPTY-NODE arr nil)))
+    ([t x1 x2]
+        (let [^cloiure.core.ArrayManager am (ams-check t)
+                arr (.array am 2)]
+            (.aset am arr 0 x1)
+            (.aset am arr 1 x2)
+            (Vec. am 2 5 EMPTY-NODE arr nil)))
+    ([t x1 x2 x3]
+        (let [^cloiure.core.ArrayManager am (ams-check t)
+                arr (.array am 3)]
+            (.aset am arr 0 x1)
+            (.aset am arr 1 x2)
+            (.aset am arr 2 x3)
+            (Vec. am 3 5 EMPTY-NODE arr nil)))
+    ([t x1 x2 x3 x4]
+        (let [^cloiure.core.ArrayManager am (ams-check t)
+                arr (.array am 4)]
+            (.aset am arr 0 x1)
+            (.aset am arr 1 x2)
+            (.aset am arr 2 x3)
+            (.aset am arr 3 x4)
+            (Vec. am 4 5 EMPTY-NODE arr nil)))
+    ([t x1 x2 x3 x4 & xn]
+        (loop [v (vector-of t x1 x2 x3 x4)
+                xn xn]
+            (if xn
+            (recur (conj v (first xn)) (next xn))
+            v)))
+)
+
+(§ defmacro ^:private when-class [class-name & body]
+    `(try
+        (Class/forName ^String ~class-name)
+        ~@body
+        (catch ClassNotFoundException _#))
+)
+
+#_(ns cloiure.instant
+    (:import [java.util Calendar Date GregorianCalendar TimeZone]
+             [java.sql Timestamp]))
+
+(§ defmacro ^:private fail [msg] `(throw (RuntimeException. ~msg)))
+
+(§ defmacro ^:private verify
+    ([test msg] `(when-not ~test (fail ~msg)))
+    ([test] `(verify ~test ~(str "failed: " (pr-str test))))
+)
+
+(§ defn- divisible? [num div] (zero? (mod num div)))
+
+(§ defn- indivisible? [num div] (not (divisible? num div)))
+
+(§ defn- parse-int [^String s]
+    (Long/parseLong s)
+)
+
+(§ defn- zero-fill-right [^String s width]
+    (cond (= width (count s)) s
+                (< width (count s)) (.substring s 0 width)
+                :else (loop [b (StringBuilder. s)]
+                        (if (< (.length b) width)
+                        (recur (.append b \0))
+                        (.toString b))))
+)
+
+;;;
+ ; Parse a string containing an RFC3339-like like timestamp.
+ ;
+ ; The function new-instant is called with the following arguments.
+ ;
+ ; min  max           default
+ ; ---  ------------  -------
+ ; years          0           9999      N/A (s must provide years)
+ ; months         1             12        1
+ ; days           1             31        1 (actual max days depends
+ ; hours          0             23        0  on month and year)
+ ; minutes        0             59        0
+ ; seconds        0             60        0 (though 60 is only valid
+ ; nanoseconds    0      999999999        0  when minutes is 59)
+ ; offset-sign   -1              1        0
+ ; offset-hours   0             23        0
+ ; offset-minutes 0             59        0
+ ;
+ ; These are all integers and will be non-nil. (The listed defaults
+ ; will be passed if the corresponding field is not present in s.)
+ ;
+ ; Grammar (of s):
+ ;
+ ; date-fullyear   = 4DIGIT
+ ; date-month      = 2DIGIT  ; 01-12
+ ; date-mday       = 2DIGIT  ; 01-28, 01-29, 01-30, 01-31 based on month/year
+ ; time-hour       = 2DIGIT  ; 00-23
+ ; time-minute     = 2DIGIT  ; 00-59
+ ; time-second     = 2DIGIT  ; 00-58, 00-59, 00-60 based on leap second rules
+ ; time-secfrac    = '.' 1*DIGIT
+ ; time-numoffset  = ('+' / '-') time-hour ':' time-minute
+ ; time-offset     = 'Z' / time-numoffset
+ ; time-part       = time-hour [ ':' time-minute [ ':' time-second [time-secfrac] [time-offset] ] ]
+ ; timestamp       = date-year [ '-' date-month [ '-' date-mday [ 'T' time-part ] ] ]
+ ;
+ ; Unlike RFC3339:
+ ;
+ ; - we only parse the timestamp format
+ ; - timestamp can elide trailing components
+ ; - time-offset is optional (defaults to +00:00)
+ ;
+ ; Though time-offset is syntactically optional, a missing time-offset
+ ; will be treated as if the time-offset zero (+00:00) had been
+ ; specified.
+ ;;
+(§ def parse-timestamp
+    (let [timestamp #"(\d\d\d\d)(?:-(\d\d)(?:-(\d\d)(?:[T](\d\d)(?::(\d\d)(?::(\d\d)(?:[.](\d+))?)?)?)?)?)?(?:[Z]|([-+])(\d\d):(\d\d))?"]
+
+        (fn [new-instant ^CharSequence cs]
+            (if-let [[_ years months days hours minutes seconds fraction
+                    offset-sign offset-hours offset-minutes]
+                    (re-matches timestamp cs)]
+            (new-instant
+            (parse-int years)
+            (if-not months   1 (parse-int months))
+            (if-not days     1 (parse-int days))
+            (if-not hours    0 (parse-int hours))
+            (if-not minutes  0 (parse-int minutes))
+            (if-not seconds  0 (parse-int seconds))
+            (if-not fraction 0 (parse-int (zero-fill-right fraction 9)))
+            (cond (= "-" offset-sign) -1
+                    (= "+" offset-sign)  1
+                    :else                0)
+            (if-not offset-hours   0 (parse-int offset-hours))
+            (if-not offset-minutes 0 (parse-int offset-minutes)))
+            (fail (str "Unrecognized date/time syntax: " cs)))))
+)
+
+(§ defn- leap-year? [year] (and (divisible? year 4) (or (indivisible? year 100) (divisible? year 400))))
+
+(§ def ^:private days-in-month
+    (let [dim-norm [nil 31 28 31 30 31 30 31 31 30 31 30 31]
+          dim-leap [nil 31 29 31 30 31 30 31 31 30 31 30 31]]
+        (fn [month leap-year?]
+            ((if leap-year? dim-leap dim-norm) month)))
+)
+
+;;;
+ ; Return a function which constructs an instant by calling constructor
+ ; after first validating that those arguments are in range and otherwise
+ ; plausible. The resulting function will throw an exception if called
+ ; with invalid arguments.
+ ;;
+(§ defn validated [new-instance]
+    (fn [years months days hours minutes seconds nanoseconds
+            offset-sign offset-hours offset-minutes]
+            (verify (<= 1 months 12))
+            (verify (<= 1 days (days-in-month months (leap-year? years))))
+            (verify (<= 0 hours 23))
+            (verify (<= 0 minutes 59))
+            (verify (<= 0 seconds (if (= minutes 59) 60 59)))
+            (verify (<= 0 nanoseconds 999999999))
+            (verify (<= -1 offset-sign 1))
+            (verify (<= 0 offset-hours 23))
+            (verify (<= 0 offset-minutes 59))
+            (new-instance years months days hours minutes seconds nanoseconds
+                        offset-sign offset-hours offset-minutes))
+)
+
+(§ def ^:private ^ThreadLocal thread-local-utc-date-format
+    ;; SimpleDateFormat is not thread-safe, so we use a ThreadLocal proxy for access.
+    ;; http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4228335
+    (proxy [ThreadLocal] []
+            (initialValue []
+            (doto (java.text.SimpleDateFormat. "yyyy-MM-dd'T'HH:mm:ss.SSS-00:00")
+                ;; RFC3339 says to use -00:00 when the timezone is unknown (+00:00 implies a known GMT)
+                (.setTimeZone (java.util.TimeZone/getTimeZone "GMT")))))
+)
+
+;;;
+ ; Print a java.util.Date as RFC3339 timestamp, always in UTC.
+ ;;
+(§ defn- print-date [^java.util.Date d, ^java.io.Writer w]
+    (let [^java.text.DateFormat utc-format (.get thread-local-utc-date-format)]
+            (.write w "#inst \"")
+            (.write w (.format utc-format d))
+            (.write w "\""))
+)
+
+(§ defmethod print-method java.util.Date [^java.util.Date d, ^java.io.Writer w]
+    (print-date d w)
+)
+
+;;;
+ ; Print a java.util.Calendar as RFC3339 timestamp, preserving timezone.
+ ;;
+(§ defn- print-calendar [^java.util.Calendar c, ^java.io.Writer w]
+    (let [calstr (format "%1$tFT%1$tT.%1$tL%1$tz" c)
+                offset-minutes (- (.length calstr) 2)]
+            ;; calstr is almost right, but is missing the colon in the offset
+            (.write w "#inst \"")
+            (.write w calstr 0 offset-minutes)
+            (.write w ":")
+            (.write w calstr offset-minutes 2)
+            (.write w "\""))
+)
+
+(§ defmethod print-method java.util.Calendar [^java.util.Calendar c, ^java.io.Writer w]
+    (print-calendar c w)
+)
+
+(§ def ^:private ^ThreadLocal thread-local-utc-timestamp-format
+    ;; SimpleDateFormat is not thread-safe, so we use a ThreadLocal proxy for access.
+    ;; http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4228335
+    (proxy [ThreadLocal] []
+            (initialValue []
+            (doto (java.text.SimpleDateFormat. "yyyy-MM-dd'T'HH:mm:ss")
+                (.setTimeZone (java.util.TimeZone/getTimeZone "GMT")))))
+)
+
+;;;
+ ; Print a java.sql.Timestamp as RFC3339 timestamp, always in UTC.
+ ;;
+(§ defn- print-timestamp [^java.sql.Timestamp ts, ^java.io.Writer w]
+    (let [^java.text.DateFormat utc-format (.get thread-local-utc-timestamp-format)]
+            (.write w "#inst \"")
+            (.write w (.format utc-format ts))
+            ;; add on nanos and offset
+            ;; RFC3339 says to use -00:00 when the timezone is unknown (+00:00 implies a known GMT)
+            (.write w (format ".%09d-00:00" (.getNanos ts)))
+            (.write w "\""))
+)
+
+(§ defmethod print-method java.sql.Timestamp [^java.sql.Timestamp ts, ^java.io.Writer w]
+    (print-timestamp ts w)
+)
+
+;;;
+ ; Construct a java.util.Calendar, preserving the timezone
+ ; offset, but truncating the subsecond fraction to milliseconds.
+ ;;
+(§ defn- ^GregorianCalendar construct-calendar [years months days hours minutes seconds nanoseconds offset-sign offset-hours offset-minutes]
+    (doto (GregorianCalendar. years (dec months) days hours minutes seconds)
+        (.set Calendar/MILLISECOND (quot nanoseconds 1000000))
+        (.setTimeZone (TimeZone/getTimeZone (format "GMT%s%02d:%02d" (if (neg? offset-sign) "-" "+") offset-hours offset-minutes))))
+)
+
+;;;
+ ; Construct a java.util.Date, which expresses the original instant as
+ ; milliseconds since the epoch, UTC.
+ ;;
+(§ defn- construct-date [years months days hours minutes seconds nanoseconds offset-sign offset-hours offset-minutes]
+    (.getTime (construct-calendar years months days hours minutes seconds nanoseconds offset-sign offset-hours offset-minutes))
+)
+
+;;;
+ ; Construct a java.sql.Timestamp, which has nanosecond precision.
+ ;;
+(§ defn- construct-timestamp [years months days hours minutes seconds nanoseconds offset-sign offset-hours offset-minutes]
+    (doto (Timestamp. (.getTimeInMillis (construct-calendar years months days hours minutes seconds 0 offset-sign offset-hours offset-minutes)))
+        ;; nanos must be set separately, pass 0 above for the base calendar
+        (.setNanos nanoseconds))
+)
+
+;;;
+ ; To read an instant as a java.util.Date, bind *data-readers* to a map with
+ ; this var as the value for the 'inst key. The timezone offset will be used
+ ; to convert into UTC.
+ ;;
+(§ def read-instant-date
+    (partial parse-timestamp (validated construct-date))
+)
+
+;;;
+ ; To read an instant as a java.util.Calendar, bind *data-readers* to a map with
+ ; this var as the value for the 'inst key. Calendar preserves the timezone
+ ; offset.
+ ;;
+(§ def read-instant-calendar
+    (partial parse-timestamp (validated construct-calendar))
+)
+
+;;;
+ ; To read an instant as a java.sql.Timestamp, bind *data-readers* to a
+ ; map with this var as the value for the 'inst key. Timestamp preserves
+ ; fractional seconds with nanosecond precision. The timezone offset will
+ ; be used to convert into UTC.
+ ;;
+(§ def read-instant-timestamp
+    (partial parse-timestamp (validated construct-timestamp))
+)
+
+(§ defprotocol Inst
+    (inst-ms* [inst])
+)
+
+(§ extend-protocol Inst
+    java.util.Date
+    (inst-ms* [inst] (.getTime ^java.util.Date inst))
+)
+
+;; conditionally extend to Instant on Java 8+
+
+(§ in-ns 'cloiure.core)
+
+(§ import [java.time Instant])
+
+(§ extend-protocol Inst
+    java.time.Instant
+    (inst-ms* [inst] (.toEpochMilli ^java.time.Instant inst))
+)
+
+;;;
+ ; Return the number of milliseconds since January 1, 1970, 00:00:00 GMT
+ ;;
+(§ defn inst-ms [inst] (inst-ms* inst))
+
+;;;
+ ; Return true if x satisfies Inst
+ ;;
+(§ defn inst? [x] (satisfies? Inst x))
+
+(§ defmethod print-method java.util.UUID [uuid ^java.io.Writer w]
+    (.write w (str "#uuid \"" uuid "\""))
+)
+
+;;;
+ ; Return true if x is a java.util.UUID
+ ;;
+(§ defn uuid? [x] (instance? java.util.UUID x))
+
+;; redefine reduce with internal-reduce
+
+;;;
+ ; f should be a function of 2 arguments. If val is not supplied,
+ ; returns the result of applying f to the first 2 items in coll, then
+ ; applying f to that result and the 3rd item, etc. If coll contains no
+ ; items, f must accept no arguments as well, and reduce returns the
+ ; result of calling f with no arguments. If coll has only 1 item, it
+ ; is returned and f is not called. If val is supplied, returns the
+ ; result of applying f to val and the first item in coll, then
+ ; applying f to that result and the 2nd item, etc. If coll contains no
+ ; items, returns val and f is not called.
+ ;;
+(§ defn reduce
+    ([f coll]
+            (if (instance? cloiure.lang.IReduce coll)
+            (.reduce ^cloiure.lang.IReduce coll f)
+            (cloiure.core.protocols/coll-reduce coll f)))
+    ([f val coll]
+            (if (instance? cloiure.lang.IReduceInit coll)
+            (.reduce ^cloiure.lang.IReduceInit coll f val)
+            (cloiure.core.protocols/coll-reduce coll f val)))
+)
+
+(§ extend-protocol cloiure.core.protocols/IKVReduce
+    nil
+    (kv-reduce [_ f init] init)
+
+    ;; slow path default
+    cloiure.lang.IPersistentMap
+    (kv-reduce [amap f init] (reduce (fn [ret [k v]] (f ret k v)) init amap))
+
+    cloiure.lang.IKVReduce
+    (kv-reduce [amap f init] (.kvreduce amap f init))
+)
+
+;;;
+ ; Reduces an associative collection. f should be a function of 3
+ ; arguments. Returns the result of applying f to init, the first key
+ ; and the first value in coll, then applying f to that result and the
+ ; 2nd key and value, etc. If coll contains no entries, returns init
+ ; and f is not called. Note that reduce-kv is supported on vectors,
+ ; where the keys will be the ordinals.
+ ;;
+(§ defn reduce-kv
+    ([f init coll]
+            (cloiure.core.protocols/kv-reduce coll f init))
+)
+
+;;;
+ ; Takes a reducing function f of 2 args and returns a fn suitable for
+ ; transduce by adding an arity-1 signature that calls cf (default -
+ ; identity) on the result argument.
+ ;;
+(§ defn completing
+    ([f] (completing f identity))
+    ([f cf]
+            (fn
+            ([] (f))
+            ([x] (cf x))
+            ([x y] (f x y))))
+)
+
+;;;
+ ; reduce with a transformation of f (xf). If init is not
+ ; supplied, (f) will be called to produce it. f should be a reducing
+ ; step function that accepts both 1 and 2 arguments, if it accepts
+ ; only 2 you can add the arity-1 with 'completing'. Returns the result
+ ; of applying (the transformed) xf to init and the first item in coll,
+ ; then applying xf to that result and the 2nd item, etc. If coll
+ ; contains no items, returns init and f is not called. Note that
+ ; certain transforms may inject or skip items.
+ ;;
+(§ defn transduce
+    ([xform f coll] (transduce xform f (f) coll))
+    ([xform f init coll]
+            (let [f (xform f)
+                ret (if (instance? cloiure.lang.IReduceInit coll)
+                        (.reduce ^cloiure.lang.IReduceInit coll f init)
+                        (cloiure.core.protocols/coll-reduce coll f init))]
+            (f ret)))
+)
+
+;;;
+ ; Returns a new coll consisting of to-coll with all of the items of
+ ; from-coll conjoined. A transducer may be supplied.
+ ;;
+(§ defn into
+    ([] [])
+    ([to] to)
+    ([to from]
+            (if (instance? cloiure.lang.IEditableCollection to)
+            (with-meta (persistent! (reduce conj! (transient to) from)) (meta to))
+            (reduce conj to from)))
+    ([to xform from]
+            (if (instance? cloiure.lang.IEditableCollection to)
+            (with-meta (persistent! (transduce xform conj! (transient to) from)) (meta to))
+            (transduce xform conj to from)))
+)
+
+;;;
+ ; Returns a vector consisting of the result of applying f to the
+ ; set of first items of each coll, followed by applying f to the set
+ ; of second items in each coll, until any one of the colls is
+ ; exhausted. Any remaining items in other colls are ignored. Function
+ ; f should accept number-of-colls arguments.
+ ;;
+(§ defn mapv
+    ([f coll]
+            (-> (reduce (fn [v o] (conj! v (f o))) (transient []) coll) persistent!))
+    ([f c1 c2]
+            (into [] (map f c1 c2)))
+    ([f c1 c2 c3]
+            (into [] (map f c1 c2 c3)))
+    ([f c1 c2 c3 & colls]
+            (into [] (apply map f c1 c2 c3 colls)))
+)
+
+;;;
+ ; Returns a vector of the items in coll for which
+ ; (pred item) returns logical true. pred must be free of side-effects.
+ ;;
+(§ defn filterv [pred coll]
+    (-> (reduce (fn [v o] (if (pred o) (conj! v o) v)) (transient []) coll) persistent!)
+)
+
+;; futures (needs proxy)
+
+;;;
+ ; Takes a function of no args and yields a future object that will
+ ; invoke the function in another thread, and will cache the result and
+ ; return it on all subsequent calls to deref/@. If the computation has
+ ; not yet finished, calls to deref/@ will block, unless the variant
+ ; of deref with timeout is used. See also - realized?.
+ ;;
+(§ defn future-call [f]
+    (let [f (binding-conveyor-fn f)
+                fut (.submit cloiure.lang.Agent/soloExecutor ^Callable f)]
+            (reify
+            cloiure.lang.IDeref
+            (deref [_] (deref-future fut))
+            cloiure.lang.IBlockingDeref
+            (deref
+            [_ timeout-ms timeout-val]
+            (deref-future fut timeout-ms timeout-val))
+            cloiure.lang.IPending
+            (isRealized [_] (.isDone fut))
+            java.util.concurrent.Future
+            (get [_] (.get fut))
+            (get [_ timeout unit] (.get fut timeout unit))
+            (isCancelled [_] (.isCancelled fut))
+            (isDone [_] (.isDone fut))
+            (cancel [_ interrupt?] (.cancel fut interrupt?))))
+)
+
+;;;
+ ; Takes a body of expressions and yields a future object that will
+ ; invoke the body in another thread, and will cache the result and
+ ; return it on all subsequent calls to deref/@. If the computation has
+ ; not yet finished, calls to deref/@ will block, unless the variant of
+ ; deref with timeout is used. See also - realized?.
+ ;;
+(§ defmacro future [& body] `(future-call (^{:once true} fn* [] ~@body)))
+
+;;;
+ ; Cancels the future, if possible.
+ ;;
+(§ defn future-cancel [^java.util.concurrent.Future f] (.cancel f true))
+
+;;;
+ ; Returns true if future f is cancelled
+ ;;
+(§ defn future-cancelled? [^java.util.concurrent.Future f] (.isCancelled f))
+
+;;;
+ ; Like map, except f is applied in parallel. Semi-lazy in that the
+ ; parallel computation stays ahead of the consumption, but doesn't
+ ; realize the entire result unless required. Only useful for
+ ; computationally intensive functions where the time of f dominates
+ ; the coordination overhead.
+ ;;
+(§ defn pmap
+    ([f coll]
+        (let [n (+ 2 (.availableProcessors (Runtime/getRuntime)))
+                rets (map #(future (f %)) coll)
+                step (fn step [[x & xs :as vs] fs]
+                        (lazy-seq
+                        (if-let [s (seq fs)]
+                        (cons (deref x) (step xs (rest s)))
+                        (map deref vs))))]
+            (step rets (drop n rets))))
+    ([f coll & colls]
+        (let [step (fn step [cs]
+                        (lazy-seq
+                        (let [ss (map seq cs)]
+                        (when (every? identity ss)
+                            (cons (map first ss) (step (map rest ss)))))))]
+            (pmap #(apply f %) (step (cons coll colls)))))
+)
+
+;;;
+ ; Executes the no-arg fns in parallel, returning a lazy sequence of
+ ; their values
+ ;;
+(§ defn pcalls [& fns] (pmap #(%) fns))
+
+;;;
+ ; Returns a lazy sequence of the values of the exprs, which are
+ ; evaluated in parallel
+ ;;
+(§ defmacro pvalues [& exprs] `(pcalls ~@(map #(list `fn [] %) exprs)))
+
+;;;
+ ; Returns a promise object that can be read with deref/@, and set,
+ ; once only, with deliver. Calls to deref/@ prior to delivery will
+ ; block, unless the variant of deref with timeout is used. All
+ ; subsequent derefs will return the same delivered value without
+ ; blocking. See also - realized?.
+ ;;
+(§ defn promise []
+    (let [d (java.util.concurrent.CountDownLatch. 1)
+                v (atom d)]
+            (reify
+            cloiure.lang.IDeref
+            (deref [_] (.await d) @v)
+            cloiure.lang.IBlockingDeref
+            (deref
+                [_ timeout-ms timeout-val]
+                (if (.await d timeout-ms java.util.concurrent.TimeUnit/MILLISECONDS)
+                @v
+                timeout-val))
+            cloiure.lang.IPending
+            (isRealized [this]
+            (zero? (.getCount d)))
+            cloiure.lang.IFn
+            (invoke
+            [this x]
+            (when (and (pos? (.getCount d))
+                        (compare-and-set! v d x))
+                (.countDown d)
+                this))))
+)
+
+;;;
+ ; Delivers the supplied value to the promise, releasing any pending
+ ; derefs. A subsequent call to deliver on a promise will have no effect.
+ ;;
+(§ defn deliver [promise val] (promise val))
+
+;;;
+ ; Takes any nested combination of sequential things (lists, vectors,
+ ; etc.) and returns their contents as a single, flat sequence.
+ ; (flatten nil) returns an empty sequence.
+ ;;
+(§ defn flatten [x]
+    (filter (complement sequential?)
+                (rest (tree-seq sequential? seq x)))
+)
+
+;;;
+ ; Returns a map of the elements of coll keyed by the result of
+ ; f on each element. The value at each key will be a vector of the
+ ; corresponding elements, in the order they appeared in coll.
+ ;;
+(§ defn group-by [f coll]
+    (persistent!
+        (reduce
+            (fn [ret x]
+            (let [k (f x)]
+                (assoc! ret k (conj (get ret k []) x))))
+            (transient {}) coll))
+)
+
+;;;
+ ; Applies f to each value in coll, splitting it each time f returns a
+ ; new value. Returns a lazy seq of partitions. Returns a stateful
+ ; transducer when no collection is provided.
+ ;;
+(§ defn partition-by
+    ([f]
+        (fn [rf]
+            (let [a (java.util.ArrayList.)
+                pv (volatile! ::none)]
+            (fn
+                ([] (rf))
+                ([result]
+                (let [result (if (.isEmpty a)
+                                result
+                                (let [v (vec (.toArray a))]
+                                    ;; clear first!
+                                    (.clear a)
+                                    (unreduced (rf result v))))]
+                    (rf result)))
+                ([result input]
+                (let [pval @pv
+                        val (f input)]
+                    (vreset! pv val)
+                    (if (or (identical? pval ::none)
+                            (= val pval))
+                    (do
+                        (.add a input)
+                        result)
+                    (let [v (vec (.toArray a))]
+                        (.clear a)
+                        (let [ret (rf result v)]
+                        (when-not (reduced? ret)
+                            (.add a input))
+                        ret)))))))))
+    ([f coll]
+            (lazy-seq
+            (when-let [s (seq coll)]
+                (let [fst (first s)
+                    fv (f fst)
+                    run (cons fst (take-while #(= fv (f %)) (next s)))]
+                (cons run (partition-by f (seq (drop (count run) s))))))))
+)
+
+;;;
+ ; Returns a map from distinct items in coll to the number of times
+ ; they appear.
+ ;;
+(§ defn frequencies [coll]
+    (persistent!
+        (reduce (fn [counts x]
+                    (assoc! counts x (inc (get counts x 0))))
+                (transient {}) coll))
+)
+
+;;;
+ ; Returns a lazy seq of the intermediate values of the reduction (as
+ ; per reduce) of coll by f, starting with init.
+ ;;
+(§ defn reductions
+    ([f coll]
+            (lazy-seq
+            (if-let [s (seq coll)]
+                (reductions f (first s) (rest s))
+                (list (f)))))
+    ([f init coll]
+            (if (reduced? init)
+            (list @init)
+            (cons init
+                    (lazy-seq
+                    (when-let [s (seq coll)]
+                        (reductions f (f init (first s)) (rest s)))))))
+)
+
+;;;
+ ; Return a random element of the (sequential) collection. Will have
+ ; the same performance characteristics as nth for the given
+ ; collection.
+ ;;
+(§ defn rand-nth [coll]
+    (nth coll (rand-int (count coll)))
+)
+
+;;;
+ ; Returns a lazy sequence of lists like partition, but may include
+ ; partitions with fewer than n items at the end. Returns a stateful
+ ; transducer when no collection is provided.
+ ;;
+(§ defn partition-all
+    ([^long n]
+        (fn [rf]
+            (let [a (java.util.ArrayList. n)]
+            (fn
+                ([] (rf))
+                ([result]
+                    (let [result (if (.isEmpty a)
+                                result
+                                (let [v (vec (.toArray a))]
+                                    ;; clear first!
+                                    (.clear a)
+                                    (unreduced (rf result v))))]
+                    (rf result)))
+                ([result input]
+                    (.add a input)
+                    (if (= n (.size a))
+                    (let [v (vec (.toArray a))]
+                        (.clear a)
+                        (rf result v))
+                    result))))))
+    ([n coll]
+            (partition-all n n coll))
+    ([n step coll]
+            (lazy-seq
+            (when-let [s (seq coll)]
+                (let [seg (doall (take n s))]
+                (cons seg (partition-all n step (nthrest s step)))))))
+)
+
+;;;
+ ; Return a random permutation of coll
+ ;;
+(§ defn shuffle [^java.util.Collection coll]
+    (let [al (java.util.ArrayList. coll)]
+            (java.util.Collections/shuffle al)
+            (cloiure.lang.RT/vector (.toArray al)))
+)
+
+;;;
+ ; Returns a lazy sequence consisting of the result of applying f to 0
+ ; and the first item of coll, followed by applying f to 1 and the second
+ ; item in coll, etc, until coll is exhausted. Thus function f should
+ ; accept 2 arguments, index and item. Returns a stateful transducer when
+ ; no collection is provided.
+ ;;
+(§ defn map-indexed
+    ([f]
+        (fn [rf]
+            (let [i (volatile! -1)]
+            (fn
+                ([] (rf))
+                ([result] (rf result))
+                ([result input]
+                (rf result (f (vswap! i inc) input)))))))
+    ([f coll]
+        (letfn [(mapi [idx coll]
+                        (lazy-seq
+                        (when-let [s (seq coll)]
+                            (if (chunked-seq? s)
+                            (let [c (chunk-first s)
+                                    size (int (count c))
+                                    b (chunk-buffer size)]
+                                (dotimes [i size]
+                                (chunk-append b (f (+ idx i) (.nth c i))))
+                                (chunk-cons (chunk b) (mapi (+ idx size) (chunk-rest s))))
+                            (cons (f idx (first s)) (mapi (inc idx) (rest s)))))))]
+            (mapi 0 coll)))
+)
+
+;;;
+ ; Returns a lazy sequence of the non-nil results of (f item). Note,
+ ; this means false return values will be included. f must be free of
+ ; side-effects. Returns a transducer when no collection is provided.
+ ;;
+(§ defn keep
+    ([f]
+        (fn [rf]
+            (fn
+            ([] (rf))
+            ([result] (rf result))
+            ([result input]
+                (let [v (f input)]
+                    (if (nil? v)
+                    result
+                    (rf result v)))))))
+    ([f coll]
+        (lazy-seq
+            (when-let [s (seq coll)]
+            (if (chunked-seq? s)
+                (let [c (chunk-first s)
+                    size (count c)
+                    b (chunk-buffer size)]
+                (dotimes [i size]
+                    (let [x (f (.nth c i))]
+                    (when-not (nil? x)
+                        (chunk-append b x))))
+                (chunk-cons (chunk b) (keep f (chunk-rest s))))
+                (let [x (f (first s))]
+                (if (nil? x)
+                    (keep f (rest s))
+                    (cons x (keep f (rest s)))))))))
+)
+
+;;;
+ ; Returns a lazy sequence of the non-nil results of (f index item). Note,
+ ; this means false return values will be included. f must be free of
+ ; side-effects. Returns a stateful transducer when no collection is
+ ; provided.
+ ;;
+(§ defn keep-indexed
+    ([f]
+        (fn [rf]
+            (let [iv (volatile! -1)]
+            (fn
+                ([] (rf))
+                ([result] (rf result))
+                ([result input]
+                    (let [i (vswap! iv inc)
+                        v (f i input)]
+                    (if (nil? v)
+                        result
+                        (rf result v))))))))
+    ([f coll]
+            (letfn [(keepi [idx coll]
+                    (lazy-seq
+                        (when-let [s (seq coll)]
+                        (if (chunked-seq? s)
+                            (let [c (chunk-first s)
+                                size (count c)
+                                b (chunk-buffer size)]
+                            (dotimes [i size]
+                                (let [x (f (+ idx i) (.nth c i))]
+                                (when-not (nil? x)
+                                    (chunk-append b x))))
+                            (chunk-cons (chunk b) (keepi (+ idx size) (chunk-rest s))))
+                            (let [x (f idx (first s))]
+                            (if (nil? x)
+                                (keepi (inc idx) (rest s))
+                                (cons x (keepi (inc idx) (rest s)))))))))]
+            (keepi 0 coll)))
+)
+
+;;;
+ ; If coll is counted? returns its count, else will count at most the first n
+ ; elements of coll using its seq
+ ;;
+(§ defn bounded-count [n coll]
+    (if (counted? coll)
+            (count coll)
+            (loop [i 0 s (seq coll)]
+            (if (and s (< i n))
+                (recur (inc i) (next s))
+                i)))
+)
+
+;;;
+ ; Takes a set of predicates and returns a function f that returns true if all of its
+ ; composing predicates return a logical true value against all of its arguments, else it returns
+ ; false. Note that f is short-circuiting in that it will stop execution on the first
+ ; argument that triggers a logical false result against the original predicates.
+ ;;
+(§ defn every-pred
+    ([p]
+            (fn ep1
+            ([] true)
+            ([x] (boolean (p x)))
+            ([x y] (boolean (and (p x) (p y))))
+            ([x y z] (boolean (and (p x) (p y) (p z))))
+            ([x y z & args] (boolean (and (ep1 x y z)
+                                            (every? p args))))))
+    ([p1 p2]
+            (fn ep2
+            ([] true)
+            ([x] (boolean (and (p1 x) (p2 x))))
+            ([x y] (boolean (and (p1 x) (p1 y) (p2 x) (p2 y))))
+            ([x y z] (boolean (and (p1 x) (p1 y) (p1 z) (p2 x) (p2 y) (p2 z))))
+            ([x y z & args] (boolean (and (ep2 x y z)
+                                            (every? #(and (p1 %) (p2 %)) args))))))
+    ([p1 p2 p3]
+            (fn ep3
+            ([] true)
+            ([x] (boolean (and (p1 x) (p2 x) (p3 x))))
+            ([x y] (boolean (and (p1 x) (p2 x) (p3 x) (p1 y) (p2 y) (p3 y))))
+            ([x y z] (boolean (and (p1 x) (p2 x) (p3 x) (p1 y) (p2 y) (p3 y) (p1 z) (p2 z) (p3 z))))
+            ([x y z & args] (boolean (and (ep3 x y z)
+                                            (every? #(and (p1 %) (p2 %) (p3 %)) args))))))
+    ([p1 p2 p3 & ps]
+            (let [ps (list* p1 p2 p3 ps)]
+            (fn epn
+                ([] true)
+                ([x] (every? #(% x) ps))
+                ([x y] (every? #(and (% x) (% y)) ps))
+                ([x y z] (every? #(and (% x) (% y) (% z)) ps))
+                ([x y z & args] (boolean (and (epn x y z)
+                                            (every? #(every? % args) ps)))))))
+)
+
+;;;
+ ; Takes a set of predicates and returns a function f that returns the first logical true value
+ ; returned by one of its composing predicates against any of its arguments, else it returns
+ ; logical false. Note that f is short-circuiting in that it will stop execution on the first
+ ; argument that triggers a logical true result against the original predicates.
+ ;;
+(§ defn some-fn
+    ([p]
+            (fn sp1
+            ([] nil)
+            ([x] (p x))
+            ([x y] (or (p x) (p y)))
+            ([x y z] (or (p x) (p y) (p z)))
+            ([x y z & args] (or (sp1 x y z)
+                                (some p args)))))
+    ([p1 p2]
+            (fn sp2
+            ([] nil)
+            ([x] (or (p1 x) (p2 x)))
+            ([x y] (or (p1 x) (p1 y) (p2 x) (p2 y)))
+            ([x y z] (or (p1 x) (p1 y) (p1 z) (p2 x) (p2 y) (p2 z)))
+            ([x y z & args] (or (sp2 x y z)
+                                (some #(or (p1 %) (p2 %)) args)))))
+    ([p1 p2 p3]
+            (fn sp3
+            ([] nil)
+            ([x] (or (p1 x) (p2 x) (p3 x)))
+            ([x y] (or (p1 x) (p2 x) (p3 x) (p1 y) (p2 y) (p3 y)))
+            ([x y z] (or (p1 x) (p2 x) (p3 x) (p1 y) (p2 y) (p3 y) (p1 z) (p2 z) (p3 z)))
+            ([x y z & args] (or (sp3 x y z)
+                                (some #(or (p1 %) (p2 %) (p3 %)) args)))))
+    ([p1 p2 p3 & ps]
+            (let [ps (list* p1 p2 p3 ps)]
+            (fn spn
+                ([] nil)
+                ([x] (some #(% x) ps))
+                ([x y] (some #(or (% x) (% y)) ps))
+                ([x y z] (some #(or (% x) (% y) (% z)) ps))
+                ([x y z & args] (or (spn x y z)
+                                    (some #(some % args) ps))))))
+)
+
+;;;
+ ; A good fdecl looks like (([a] ...) ([a b] ...)) near the end of defn.
+ ;;
+(§ defn- ^:dynamic assert-valid-fdecl [fdecl]
+    (when (empty? fdecl) (throw (IllegalArgumentException. "Parameter declaration missing")))
+    (let [argdecls (map
+                        #(if (seq? %)
+                            (first %)
+                            (throw (IllegalArgumentException.
+                                (if (seq? (first fdecl))
+                                (str "Invalid signature \"" % "\" should be a list")
+                                (str "Parameter declaration \"" % "\" should be a vector")))))
+                        fdecl)
+                bad-args (seq (remove #(vector? %) argdecls))]
+            (when bad-args
+            (throw (IllegalArgumentException. (str "Parameter declaration \"" (first bad-args) "\" should be a vector")))))
+)
+
+;;;
+ ; Temporarily redefines Vars during a call to func. Each val of
+ ; binding-map will replace the root value of its key which must be
+ ; a Var. After func is called with no args, the root values of all
+ ; the Vars will be set back to their old values. These temporary
+ ; changes will be visible in all threads. Useful for mocking out
+ ; functions during testing.
+ ;;
+(§ defn with-redefs-fn [binding-map func]
+    (let [root-bind (fn [m]
+                            (doseq [[a-var a-val] m]
+                            (.bindRoot ^cloiure.lang.Var a-var a-val)))
+                old-vals (zipmap (keys binding-map)
+                                (map #(.getRawRoot ^cloiure.lang.Var %) (keys binding-map)))]
+            (try
+            (root-bind binding-map)
+            (func)
+            (finally
+                (root-bind old-vals))))
+)
+
+;;;
+ ; binding => var-symbol temp-value-expr
+ ;
+ ; Temporarily redefines Vars while executing the body. The
+ ; temp-value-exprs will be evaluated and each resulting value will
+ ; replace in parallel the root value of its Var. After the body is
+ ; executed, the root values of all the Vars will be set back to their
+ ; old values. These temporary changes will be visible in all threads.
+ ; Useful for mocking out functions during testing.
+ ;;
+(§ defmacro with-redefs [bindings & body]
+    `(with-redefs-fn ~(zipmap (map #(list `var %) (take-nth 2 bindings))
+                                (take-nth 2 (next bindings)))
+                        (fn [] ~@body))
+)
+
+;;;
+ ; Returns true if a value has been produced for a promise, delay, future or lazy sequence.
+ ;;
+(§ defn realized? [^cloiure.lang.IPending x] (.isRealized x))
+
+;;;
+ ; Takes an expression and a set of test/form pairs. Threads expr (via ->)
+ ; through each form for which the corresponding test
+ ; expression is true. Note that, unlike cond branching, cond-> threading does
+ ; not short circuit after the first true test expression.
+ ;;
+(§ defmacro cond-> [expr & clauses]
+    (assert (even? (count clauses)))
+    (let [g (gensym)
+                steps (map (fn [[test step]] `(if ~test (-> ~g ~step) ~g))
+                        (partition 2 clauses))]
+            `(let [~g ~expr
+                ~@(interleave (repeat g) (butlast steps))]
+            ~(if (empty? steps)
+                g
+                (last steps))))
+)
+
+;;;
+ ; Takes an expression and a set of test/form pairs. Threads expr (via ->>)
+ ; through each form for which the corresponding test expression
+ ; is true. Note that, unlike cond branching, cond->> threading does not short circuit
+ ; after the first true test expression.
+ ;;
+(§ defmacro cond->> [expr & clauses]
+    (assert (even? (count clauses)))
+    (let [g (gensym)
+                steps (map (fn [[test step]] `(if ~test (->> ~g ~step) ~g))
+                        (partition 2 clauses))]
+            `(let [~g ~expr
+                ~@(interleave (repeat g) (butlast steps))]
+            ~(if (empty? steps)
+                g
+                (last steps))))
+)
+
+;;;
+ ; Binds name to expr, evaluates the first form in the lexical context
+ ; of that binding, then binds name to that result, repeating for each
+ ; successive form, returning the result of the last form.
+ ;;
+(§ defmacro as-> [expr name & forms]
+    `(let [~name ~expr
+            ~@(interleave (repeat name) (butlast forms))]
+        ~(if (empty? forms)
+            name
+            (last forms)))
+)
+
+;;;
+ ; When expr is not nil, threads it into the first form (via ->),
+ ; and when that result is not nil, through the next etc
+ ;;
+(§ defmacro some-> [expr & forms]
+    (let [g (gensym)
+                steps (map (fn [step] `(if (nil? ~g) nil (-> ~g ~step)))
+                        forms)]
+            `(let [~g ~expr
+                ~@(interleave (repeat g) (butlast steps))]
+            ~(if (empty? steps)
+                g
+                (last steps))))
+)
+
+;;;
+ ; When expr is not nil, threads it into the first form (via ->>),
+ ; and when that result is not nil, through the next etc
+ ;;
+(§ defmacro some->> [expr & forms]
+    (let [g (gensym)
+                steps (map (fn [step] `(if (nil? ~g) nil (->> ~g ~step)))
+                        forms)]
+            `(let [~g ~expr
+                ~@(interleave (repeat g) (butlast steps))]
+            ~(if (empty? steps)
+                g
+                (last steps))))
+)
+
+(§ defn ^:private preserving-reduced [rf]
+    #(let [ret (rf %1 %2)]
+        (if (reduced? ret)
+        (reduced ret)
+        ret))
+)
+
+;;;
+ ; A transducer which concatenates the contents of each input, which must be a
+ ; collection, into the reduction.
+ ;;
+(§ defn cat [rf]
+    (let [rrf (preserving-reduced rf)]
+            (fn
+            ([] (rf))
+            ([result] (rf result))
+            ([result input]
+                (reduce rrf result input))))
+)
+
+;;;
+ ; Returns a transducer that ends transduction when pred returns true
+ ; for an input. When retf is supplied it must be a fn of 2 arguments -
+ ; it will be passed the (completed) result so far and the input that
+ ; triggered the predicate, and its return value (if it does not throw
+ ; an exception) will be the return value of the transducer. If retf
+ ; is not supplied, the input that triggered the predicate will be
+ ; returned. If the predicate never returns true the transduction is
+ ; unaffected.
+ ;;
+(§ defn halt-when
+    ([pred] (halt-when pred nil))
+    ([pred retf]
+            (fn [rf]
+            (fn
+                ([] (rf))
+                ([result]
+                    (if (and (map? result) (contains? result ::halt))
+                    (::halt result)
+                    (rf result)))
+                ([result input]
+                    (if (pred input)
+                    (reduced {::halt (if retf (retf (rf result) input) input)})
+                    (rf result input))))))
+)
+
+;;;
+ ; Returns a lazy sequence removing consecutive duplicates in coll.
+ ; Returns a transducer when no collection is provided.
+ ;;
+(§ defn dedupe
+    ([]
+        (fn [rf]
+            (let [pv (volatile! ::none)]
+            (fn
+                ([] (rf))
+                ([result] (rf result))
+                ([result input]
+                    (let [prior @pv]
+                    (vreset! pv input)
+                    (if (= prior input)
+                        result
+                        (rf result input))))))))
+    ([coll] (sequence (dedupe) coll))
+)
+
+;;;
+ ; Returns items from coll with random probability of prob (0.0 -
+ ; 1.0). Returns a transducer when no collection is provided.
+ ;;
+(§ defn random-sample
+    ([prob]
+            (filter (fn [_] (< (rand) prob))))
+    ([prob coll]
+            (filter (fn [_] (< (rand) prob)) coll))
+)
+
+(§ deftype Eduction [xform coll]
+    Iterable
+    (iterator [_]
+        (cloiure.lang.TransformerIterator/create xform (cloiure.lang.RT/iter coll)))
+
+    cloiure.lang.IReduceInit
+    (reduce [_ f init]
+        ;; NB (completing f) isolates completion of inner rf from outer rf
+        (transduce xform (completing f) init coll))
+
+    cloiure.lang.Sequential
+)
+
+;;;
+ ; Returns a reducible/iterable application of the transducers
+ ; to the items in coll. Transducers are applied in order as if
+ ; combined with comp. Note that these applications will be
+ ; performed every time reduce/iterator is called.
+ ;;
+(§ defn eduction [& xforms]
+    (Eduction. (apply comp (butlast xforms)) (last xforms))
+)
+
+(§ defmethod print-method Eduction [c, ^Writer w]
+    (if *print-readably*
+            (do
+            (print-sequential "(" pr-on " " ")" c w))
+            (print-object c w))
+)
+
+;;;
+ ; Runs the supplied procedure (via reduce), for purposes of side
+ ; effects, on successive items in the collection. Returns nil
+ ;;
+(§ defn run! [proc coll]
+    (reduce #(proc %2) nil coll)
+    nil
+)
+
+;;;
+ ; Return true if the value is the data representation of a tagged literal
+ ;;
+(§ defn tagged-literal? [value]
+    (instance? cloiure.lang.TaggedLiteral value)
+)
+
+;;;
+ ; Construct a data representation of a tagged literal from a
+ ; tag symbol and a form.
+ ;;
+(§ defn tagged-literal [^cloiure.lang.Symbol tag form]
+    (cloiure.lang.TaggedLiteral/create tag form)
+)
+
+;;;
+ ; Return true if the value is the data representation of a reader conditional
+ ;;
+(§ defn reader-conditional? [value]
+    (instance? cloiure.lang.ReaderConditional value)
+)
+
+;;;
+ ; Construct a data representation of a reader conditional.
+ ; If true, splicing? indicates read-cond-splicing.
+ ;;
+(§ defn reader-conditional [form ^Boolean splicing?]
+    (cloiure.lang.ReaderConditional/create form splicing?)
+)
+
+;;;
+ ; Return true if x is a java.net.URI
+ ;;
+(§ defn uri? [x] (instance? java.net.URI x))
 
 #_(ns cloiure.core.reducers
     (:refer-cloiure :exclude [reduce map mapcat filter remove take take-while drop flatten cat])
@@ -10671,1930 +12240,6 @@
     ([opts s] (when s (cloiure.lang.EdnReader/readString s opts)))
 )
 
-(§ in-ns 'cloiure.core)
-
-(§ import '(java.lang.reflect Modifier Constructor)
-        '(cloiure.asm ClassWriter ClassVisitor Opcodes Type)
-        '(cloiure.asm.commons Method GeneratorAdapter)
-        '(cloiure.lang IPersistentMap)
-)
-
-(§ defn- filter-methods [^Class c invalid-method?]
-    (loop [mm {}
-                considered #{}
-                c c]
-            (if c
-            (let [[mm considered]
-                    (loop [mm mm
-                        considered considered
-                        meths (seq (concat
-                                        (seq (.getDeclaredMethods c))
-                                        (seq (.getMethods c))))]
-                    (if meths
-                        (let [^java.lang.reflect.Method meth (first meths)
-                            mods (.getModifiers meth)
-                            mk (method-sig meth)]
-                        (if (or (considered mk)
-                                (invalid-method? meth))
-                            (recur mm (conj considered mk) (next meths))
-                            (recur (assoc mm mk meth) (conj considered mk) (next meths))))
-                        [mm considered]))]
-                (recur mm considered (.getSuperclass c)))
-            mm))
-)
-
-(§ defn- non-private-methods [^Class c]
-    (let [not-overridable? (fn [^java.lang.reflect.Method meth]
-                                (let [mods (.getModifiers meth)]
-                                    (or (not (or (Modifier/isPublic mods) (Modifier/isProtected mods)))
-                                        (Modifier/isStatic mods)
-                                        (Modifier/isFinal mods)
-                                        (= "finalize" (.getName meth)))))]
-            (filter-methods c not-overridable?))
-)
-
-(§ defn- protected-final-methods [^Class c]
-    (let [not-exposable? (fn [^java.lang.reflect.Method meth]
-                                (let [mods (.getModifiers meth)]
-                                (not (and (Modifier/isProtected mods)
-                                            (Modifier/isFinal mods)
-                                            (not (Modifier/isStatic mods))))))]
-            (filter-methods c not-exposable?))
-)
-
-(§ defn- ctor-sigs [^Class super]
-    (for [^Constructor ctor (.getDeclaredConstructors super)
-                :when (not (Modifier/isPrivate (.getModifiers ctor)))]
-            (apply vector (.getParameterTypes ctor)))
-)
-
-(§ defn- escape-class-name [^Class c]
-    (.. (.getSimpleName c) (replace "[]" "<>"))
-)
-
-(§ defn- overload-name [mname pclasses]
-    (if (seq pclasses)
-            (apply str mname (interleave (repeat \-)
-                                        (map escape-class-name pclasses)))
-            (str mname "-void"))
-)
-
-(§ defn- ^java.lang.reflect.Field find-field [^Class c f]
-    (let [start-class c]
-            (loop [c c]
-            (if (= c Object)
-                (throw (Exception. (str "field, " f ", not defined in class, " start-class ", or its ancestors")))
-                (let [dflds (.getDeclaredFields c)
-                    rfld (first (filter #(= f (.getName ^java.lang.reflect.Field %)) dflds))]
-                (or rfld (recur (.getSuperclass c)))))))
-)
-
-;; (distinct (map first(keys (mapcat non-private-methods [Object IPersistentMap]))))
-
-(§ def ^:private prim->class
-     {
-        'int      Integer/TYPE   'ints     (Class/forName "[I")
-        'long     Long/TYPE      'longs    (Class/forName "[J")
-        'float    Float/TYPE     'floats   (Class/forName "[F")
-        'double   Double/TYPE    'doubles  (Class/forName "[D")
-        'void     Void/TYPE
-        'short    Short/TYPE     'shorts   (Class/forName "[S")
-        'boolean  Boolean/TYPE   'booleans (Class/forName "[Z")
-        'byte     Byte/TYPE      'bytes    (Class/forName "[B")
-        'char     Character/TYPE 'chars    (Class/forName "[C")
-    }
-)
-
-(§ defn- ^Class the-class [x]
-    (cond
-        (class? x) x
-        (contains? prim->class x) (prim->class x)
-        :else (let [strx (str x)]
-                (cloiure.lang.RT/classForName
-                    (if (some #{\. \[} strx)
-                    strx
-                    (str "java.lang." strx)))))
-)
-
-;; someday this can be made codepoint aware
-
-(§ defn- valid-java-method-name [^String s] (= s (cloiure.lang.Compiler/munge s)))
-
-(§ defn- validate-generate-class-options [{:keys [methods]}]
-    (let [[mname] (remove valid-java-method-name (map (comp str first) methods))]
-            (when mname (throw (IllegalArgumentException. (str "Not a valid method name: " mname)))))
-)
-
-(§ defn- generate-class [options-map]
-    (validate-generate-class-options options-map)
-    (let [default-options {:prefix "-" :load-impl-ns true :impl-ns (ns-name *ns*)}
-                {:keys [name extends implements constructors methods main factory state init exposes
-                        exposes-methods prefix load-impl-ns impl-ns post-init]}
-                (merge default-options options-map)
-                name-meta (meta name)
-                name (str name)
-                super (if extends (the-class extends) Object)
-                interfaces (map the-class implements)
-                supers (cons super interfaces)
-                ctor-sig-map (or constructors (zipmap (ctor-sigs super) (ctor-sigs super)))
-                cv (ClassWriter. ClassWriter/COMPUTE_MAXS)
-                cname (.replace name "." "/")
-                pkg-name name
-                impl-pkg-name (str impl-ns)
-                impl-cname (.. impl-pkg-name (replace "." "/") (replace \- \_))
-                ctype (Type/getObjectType cname)
-                iname (fn [^Class c] (.getInternalName (Type/getType c)))
-                totype (fn [^Class c] (Type/getType c))
-                to-types (fn [cs] (if (pos? (count cs))
-                                    (into-array (map totype cs))
-                                    (make-array Type 0)))
-                obj-type ^Type (totype Object)
-                arg-types (fn [n] (if (pos? n)
-                                    (into-array (repeat n obj-type))
-                                    (make-array Type 0)))
-                super-type ^Type (totype super)
-                init-name (str init)
-                post-init-name (str post-init)
-                factory-name (str factory)
-                state-name (str state)
-                main-name "main"
-                var-name (fn [s] (cloiure.lang.Compiler/munge (str s "__var")))
-                class-type (totype Class)
-                rt-type (totype cloiure.lang.RT)
-                var-type ^Type (totype cloiure.lang.Var)
-                ifn-type (totype cloiure.lang.IFn)
-                iseq-type (totype cloiure.lang.ISeq)
-                ex-type (totype java.lang.UnsupportedOperationException)
-                util-type (totype cloiure.lang.Util)
-                all-sigs (distinct (concat (map #(let[[m p] (key %)] {m [p]}) (mapcat non-private-methods supers))
-                                        (map (fn [[m p]] {(str m) [p]}) methods)))
-                sigs-by-name (apply merge-with concat {} all-sigs)
-                overloads (into1 {} (filter (fn [[m s]] (next s)) sigs-by-name))
-                var-fields (concat (when init [init-name])
-                                (when post-init [post-init-name])
-                                (when main [main-name])
-                                ;; (when exposes-methods (map str (vals exposes-methods)))
-                                (distinct (concat (keys sigs-by-name)
-                                                    (mapcat (fn [[m s]] (map #(overload-name m (map the-class %)) s)) overloads)
-                                                    (mapcat (comp (partial map str) vals val) exposes))))
-                emit-get-var (fn [^GeneratorAdapter gen v]
-                            (let [false-label (.newLabel gen)
-                                    end-label (.newLabel gen)]
-                                (.getStatic gen ctype (var-name v) var-type)
-                                (.dup gen)
-                                (.invokeVirtual gen var-type (Method/getMethod "boolean isBound()"))
-                                (.ifZCmp gen GeneratorAdapter/EQ false-label)
-                                (.invokeVirtual gen var-type (Method/getMethod "Object get()"))
-                                (.goTo gen end-label)
-                                (.mark gen false-label)
-                                (.pop gen)
-                                (.visitInsn gen Opcodes/ACONST_NULL)
-                                (.mark gen end-label)))
-                emit-unsupported (fn [^GeneratorAdapter gen ^Method m]
-                                (.throwException gen ex-type (str (.getName m) " (" impl-pkg-name "/" prefix (.getName m) " not defined?)")))
-                emit-forwarding-method
-                (fn [name pclasses rclass as-static else-gen]
-                (let [mname (str name)
-                        pmetas (map meta pclasses)
-                        pclasses (map the-class pclasses)
-                        rclass (the-class rclass)
-                        ptypes (to-types pclasses)
-                        rtype ^Type (totype rclass)
-                        m (Method. mname rtype ptypes)
-                        is-overload (seq (overloads mname))
-                        gen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC (if as-static Opcodes/ACC_STATIC 0))
-                                m nil nil cv)
-                        found-label (.newLabel gen)
-                        else-label (.newLabel gen)
-                        end-label (.newLabel gen)]
-                    (add-annotations gen (meta name))
-                    (dotimes [i (count pmetas)]
-                    (add-annotations gen (nth pmetas i) i))
-                    (.visitCode gen)
-                    (if (> (count pclasses) 18)
-                    (else-gen gen m)
-                    (do
-                        (when is-overload
-                        (emit-get-var gen (overload-name mname pclasses))
-                        (.dup gen)
-                        (.ifNonNull gen found-label)
-                        (.pop gen))
-                        (emit-get-var gen mname)
-                        (.dup gen)
-                        (.ifNull gen else-label)
-                        (when is-overload
-                        (.mark gen found-label))
-                                                ;; if found
-                        (.checkCast gen ifn-type)
-                        (when-not as-static
-                        (.loadThis gen))
-                                                ;; box args
-                        (dotimes [i (count ptypes)]
-                        (.loadArg gen i)
-                        (cloiure.lang.Compiler$HostExpr/emitBoxReturn nil gen (nth pclasses i)))
-                                                ;; call fn
-                        (.invokeInterface gen ifn-type (Method. "invoke" obj-type (to-types (repeat (+ (count ptypes) (if as-static 0 1)) Object))))
-                                                ;; unbox return
-                        (.unbox gen rtype)
-                        (when (= (.getSort rtype) Type/VOID)
-                            (.pop gen))
-                        (.goTo gen end-label)
-
-                                                ;; else call supplied alternative generator
-                        (.mark gen else-label)
-                        (.pop gen)
-
-                        (else-gen gen m)
-
-                        (.mark gen end-label)))
-                    (.returnValue gen)
-                    (.endMethod gen)))
-                ]
-                                                ;; start class definition
-            (.visit cv Opcodes/V1_5 (+ Opcodes/ACC_PUBLIC Opcodes/ACC_SUPER)
-                        cname nil (iname super)
-                        (when-let [ifc (seq interfaces)]
-                        (into-array (map iname ifc))))
-
-                                                ;; class annotations
-            (add-annotations cv name-meta)
-
-                                                ;; static fields for vars
-            (doseq [v var-fields]
-            (.visitField cv (+ Opcodes/ACC_PRIVATE Opcodes/ACC_FINAL Opcodes/ACC_STATIC)
-                                (var-name v)
-                                (.getDescriptor var-type)
-                                nil nil))
-
-                                                ;; instance field for state
-            (when state
-            (.visitField cv (+ Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL)
-                                state-name
-                                (.getDescriptor obj-type)
-                                nil nil))
-
-                                                ;; static init to set up var fields and load init
-            (let [gen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC)
-                        (Method/getMethod "void <clinit> ()")
-                        nil nil cv)]
-            (.visitCode gen)
-            (doseq [v var-fields]
-                (.push gen impl-pkg-name)
-                (.push gen (str prefix v))
-                (.invokeStatic gen var-type (Method/getMethod "cloiure.lang.Var internPrivate(String,String)"))
-                (.putStatic gen ctype (var-name v) var-type))
-
-            (when load-impl-ns
-                (.push gen (str "/" impl-cname))
-                (.push gen ctype)
-                (.invokeStatic gen util-type (Method/getMethod "Object loadWithClass(String,Class)"))
-        ;;      (.push gen (str (.replace impl-pkg-name \- \_) "__init"))
-        ;;      (.invokeStatic gen class-type (Method/getMethod "Class forName(String)"))
-                (.pop gen))
-
-            (.returnValue gen)
-            (.endMethod gen))
-
-                                                ;; ctors
-            (doseq [[pclasses super-pclasses] ctor-sig-map]
-            (let [constructor-annotations (meta pclasses)
-                    pclasses (map the-class pclasses)
-                    super-pclasses (map the-class super-pclasses)
-                    ptypes (to-types pclasses)
-                    super-ptypes (to-types super-pclasses)
-                    m (Method. "<init>" Type/VOID_TYPE ptypes)
-                    super-m (Method. "<init>" Type/VOID_TYPE super-ptypes)
-                    gen (GeneratorAdapter. Opcodes/ACC_PUBLIC m nil nil cv)
-                    _ (add-annotations gen constructor-annotations)
-                    no-init-label (.newLabel gen)
-                    end-label (.newLabel gen)
-                    no-post-init-label (.newLabel gen)
-                    end-post-init-label (.newLabel gen)
-                    nth-method (Method/getMethod "Object nth(Object,int)")
-                    local (.newLocal gen obj-type)]
-                (.visitCode gen)
-
-                (if init
-                (do
-                    (emit-get-var gen init-name)
-                    (.dup gen)
-                    (.ifNull gen no-init-label)
-                    (.checkCast gen ifn-type)
-                                                ;; box init args
-                    (dotimes [i (count pclasses)]
-                    (.loadArg gen i)
-                    (cloiure.lang.Compiler$HostExpr/emitBoxReturn nil gen (nth pclasses i)))
-                                                ;; call init fn
-                    (.invokeInterface gen ifn-type (Method. "invoke" obj-type
-                                                        (arg-types (count ptypes))))
-                                                ;; expecting [[super-ctor-args] state] returned
-                    (.dup gen)
-                    (.push gen (int 0))
-                    (.invokeStatic gen rt-type nth-method)
-                    (.storeLocal gen local)
-
-                    (.loadThis gen)
-                    (.dupX1 gen)
-                    (dotimes [i (count super-pclasses)]
-                    (.loadLocal gen local)
-                    (.push gen (int i))
-                    (.invokeStatic gen rt-type nth-method)
-                    (cloiure.lang.Compiler$HostExpr/emitUnboxArg nil gen (nth super-pclasses i)))
-                    (.invokeConstructor gen super-type super-m)
-
-                    (if state
-                    (do
-                        (.push gen (int 1))
-                        (.invokeStatic gen rt-type nth-method)
-                        (.putField gen ctype state-name obj-type))
-                    (.pop gen))
-
-                    (.goTo gen end-label)
-                                                ;; no init found
-                    (.mark gen no-init-label)
-                    (.throwException gen ex-type (str impl-pkg-name "/" prefix init-name " not defined"))
-                    (.mark gen end-label))
-                (if (= pclasses super-pclasses)
-                    (do
-                    (.loadThis gen)
-                    (.loadArgs gen)
-                    (.invokeConstructor gen super-type super-m))
-                    (throw (Exception. ":init not specified, but ctor and super ctor args differ"))))
-
-                (when post-init
-                (emit-get-var gen post-init-name)
-                (.dup gen)
-                (.ifNull gen no-post-init-label)
-                (.checkCast gen ifn-type)
-                (.loadThis gen)
-                                            ;; box init args
-                (dotimes [i (count pclasses)]
-                    (.loadArg gen i)
-                    (cloiure.lang.Compiler$HostExpr/emitBoxReturn nil gen (nth pclasses i)))
-                                            ;; call init fn
-                (.invokeInterface gen ifn-type (Method. "invoke" obj-type
-                                                        (arg-types (inc (count ptypes)))))
-                (.pop gen)
-                (.goTo gen end-post-init-label)
-                                            ;; no init found
-                (.mark gen no-post-init-label)
-                (.throwException gen ex-type (str impl-pkg-name "/" prefix post-init-name " not defined"))
-                (.mark gen end-post-init-label))
-
-                (.returnValue gen)
-                (.endMethod gen)
-                                                ;; factory
-                (when factory
-                (let [fm (Method. factory-name ctype ptypes)
-                        gen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC)
-                                fm nil nil cv)]
-                    (.visitCode gen)
-                    (.newInstance gen ctype)
-                    (.dup gen)
-                    (.loadArgs gen)
-                    (.invokeConstructor gen ctype m)
-                    (.returnValue gen)
-                    (.endMethod gen)))))
-
-                                                ;; add methods matching supers', if no fn -> call super
-            (let [mm (non-private-methods super)]
-            (doseq [^java.lang.reflect.Method meth (vals mm)]
-                    (emit-forwarding-method (.getName meth) (.getParameterTypes meth) (.getReturnType meth) false
-                                            (fn [^GeneratorAdapter gen ^Method m]
-                                            (.loadThis gen)
-                                                ;; push args
-                                            (.loadArgs gen)
-                                                ;; call super
-                                            (.visitMethodInsn gen Opcodes/INVOKESPECIAL
-                                                                    (.getInternalName super-type)
-                                                                    (.getName m)
-                                                                    (.getDescriptor m)))))
-                                                ;; add methods matching interfaces', if no fn -> throw
-            (reduce1 (fn [mm ^java.lang.reflect.Method meth]
-                        (if (contains? mm (method-sig meth))
-                        mm
-                        (do
-                            (emit-forwarding-method (.getName meth) (.getParameterTypes meth) (.getReturnType meth) false
-                                                    emit-unsupported)
-                            (assoc mm (method-sig meth) meth))))
-                    mm (mapcat #(.getMethods ^Class %) interfaces))
-                                                ;; extra methods
-            (doseq [[mname pclasses rclass :as msig] methods]
-                (emit-forwarding-method mname pclasses rclass (:static (meta msig))
-                                        emit-unsupported))
-                                                ;; expose specified overridden superclass methods
-            (doseq [[local-mname ^java.lang.reflect.Method m] (reduce1 (fn [ms [[name _ _] m]]
-                                    (if (contains? exposes-methods (symbol name))
-                                        (conj ms [((symbol name) exposes-methods) m])
-                                        ms)) [] (concat (seq mm)
-                                                        (seq (protected-final-methods super))))]
-                (let [ptypes (to-types (.getParameterTypes m))
-                    rtype (totype (.getReturnType m))
-                    exposer-m (Method. (str local-mname) rtype ptypes)
-                    target-m (Method. (.getName m) rtype ptypes)
-                    gen (GeneratorAdapter. Opcodes/ACC_PUBLIC exposer-m nil nil cv)]
-                (.loadThis gen)
-                (.loadArgs gen)
-                (.visitMethodInsn gen Opcodes/INVOKESPECIAL
-                                        (.getInternalName super-type)
-                                        (.getName target-m)
-                                        (.getDescriptor target-m))
-                (.returnValue gen)
-                (.endMethod gen))))
-                                                ;; main
-            (when main
-            (let [m (Method/getMethod "void main (String[])")
-                    gen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC)
-                            m nil nil cv)
-                    no-main-label (.newLabel gen)
-                    end-label (.newLabel gen)]
-                (.visitCode gen)
-
-                (emit-get-var gen main-name)
-                (.dup gen)
-                (.ifNull gen no-main-label)
-                (.checkCast gen ifn-type)
-                (.loadArgs gen)
-                (.invokeStatic gen rt-type (Method/getMethod "cloiure.lang.ISeq seq(Object)"))
-                (.invokeInterface gen ifn-type (Method. "applyTo" obj-type (into-array [iseq-type])))
-                (.pop gen)
-                (.goTo gen end-label)
-                                                ;; no main found
-                (.mark gen no-main-label)
-                (.throwException gen ex-type (str impl-pkg-name "/" prefix main-name " not defined"))
-                (.mark gen end-label)
-                (.returnValue gen)
-                (.endMethod gen)))
-                                                ;; field exposers
-            (doseq [[f {getter :get setter :set}] exposes]
-            (let [fld (find-field super (str f))
-                    ftype (totype (.getType fld))
-                    static? (Modifier/isStatic (.getModifiers fld))
-                    acc (+ Opcodes/ACC_PUBLIC (if static? Opcodes/ACC_STATIC 0))]
-                (when getter
-                (let [m (Method. (str getter) ftype (to-types []))
-                        gen (GeneratorAdapter. acc m nil nil cv)]
-                    (.visitCode gen)
-                    (if static?
-                    (.getStatic gen ctype (str f) ftype)
-                    (do
-                        (.loadThis gen)
-                        (.getField gen ctype (str f) ftype)))
-                    (.returnValue gen)
-                    (.endMethod gen)))
-                (when setter
-                (let [m (Method. (str setter) Type/VOID_TYPE (into-array [ftype]))
-                        gen (GeneratorAdapter. acc m nil nil cv)]
-                    (.visitCode gen)
-                    (if static?
-                    (do
-                        (.loadArgs gen)
-                        (.putStatic gen ctype (str f) ftype))
-                    (do
-                        (.loadThis gen)
-                        (.loadArgs gen)
-                        (.putField gen ctype (str f) ftype)))
-                    (.returnValue gen)
-                    (.endMethod gen)))))
-                                                ;; finish class def
-            (.visitEnd cv)
-            [cname (.toByteArray cv)])
-)
-
-;;;
- ; When compiling, generates compiled bytecode for a class with the
- ; given package-qualified :name (which, as all names in these
- ; parameters, can be a string or symbol), and writes the .class file
- ; to the *compile-path* directory. When not compiling, does
- ; nothing. The gen-class construct contains no implementation, as the
- ; implementation will be dynamically sought by the generated class in
- ; functions in an implementing Cloiure namespace. Given a generated
- ; class org.mydomain.MyClass with a method named mymethod, gen-class
- ; will generate an implementation that looks for a function named by
- ; (str prefix mymethod) (default prefix: "-") in a
- ; Cloiure namespace specified by :impl-ns
- ; (defaults to the current namespace). All inherited methods,
- ; generated methods, and init and main functions (see :methods, :init,
- ; and :main below) will be found similarly prefixed. By default, the
- ; static initializer for the generated class will attempt to load the
- ; Cloiure support code for the class as a resource from the classpath,
- ; e.g. in the example case, ``org/mydomain/MyClass__init.class``. This
- ; behavior can be controlled by :load-impl-ns
- ;
- ; Note that methods with a maximum of 18 parameters are supported.
- ;
- ; In all subsequent sections taking types, the primitive types can be
- ; referred to by their Java names (int, float etc), and classes in the
- ; java.lang package can be used without a package qualifier. All other
- ; classes must be fully qualified.
- ;
- ; Options should be a set of key/value pairs, all except for :name are optional:
- ;
- ; :name aname
- ;
- ; The package-qualified name of the class to be generated
- ;
- ; :extends aclass
- ;
- ; Specifies the superclass, the non-private methods of which will be
- ; overridden by the class. If not provided, defaults to Object.
- ;
- ; :implements [interface ...]
- ;
- ; One or more interfaces, the methods of which will be implemented by the class.
- ;
- ; :init name
- ;
- ; If supplied, names a function that will be called with the arguments
- ; to the constructor. Must return [ [superclass-constructor-args] state]
- ; If not supplied, the constructor args are passed directly to
- ; the superclass constructor and the state will be nil
- ;
- ; :constructors {[param-types] [super-param-types], ...}
- ;
- ; By default, constructors are created for the generated class which
- ; match the signature(s) of the constructors for the superclass. This
- ; parameter may be used to explicitly specify constructors, each entry
- ; providing a mapping from a constructor signature to a superclass
- ; constructor signature. When you supply this, you must supply an :init
- ; specifier.
- ;
- ; :post-init name
- ;
- ; If supplied, names a function that will be called with the object as
- ; the first argument, followed by the arguments to the constructor.
- ; It will be called every time an object of this class is created,
- ; immediately after all the inherited constructors have completed.
- ; Its return value is ignored.
- ;
- ; :methods [ [name [param-types] return-type], ...]
- ;
- ; The generated class automatically defines all of the non-private
- ; methods of its superclasses/interfaces. This parameter can be used
- ; to specify the signatures of additional methods of the generated
- ; class. Static methods can be specified with ^{:static true} in the
- ; signature's metadata. Do not repeat superclass/interface signatures
- ; here.
- ;
- ; :main boolean
- ;
- ; If supplied and true, a static public main function will be generated. It will
- ; pass each string of the String[] argument as a separate argument to
- ; a function called (str prefix main).
- ;
- ; :factory name
- ;
- ; If supplied, a (set of) public static factory function(s) will be
- ; created with the given name, and the same signature(s) as the
- ; constructor(s).
- ;
- ; :state name
- ;
- ; If supplied, a public final instance field with the given name will be
- ; created. You must supply an :init function in order to provide a
- ; value for the state. Note that, though final, the state can be a ref
- ; or agent, supporting the creation of Java objects with transactional
- ; or asynchronous mutation semantics.
- ;
- ; :exposes {protected-field-name {:get name :set name}, ...}
- ;
- ; Since the implementations of the methods of the generated class
- ; occur in Cloiure functions, they have no access to the inherited
- ; protected fields of the superclass. This parameter can be used to
- ; generate public getter/setter methods exposing the protected field(s)
- ; for use in the implementation.
- ;
- ; :exposes-methods {super-method-name exposed-name, ...}
- ;
- ; It is sometimes necessary to call the superclass' implementation of an
- ; overridden method. Those methods may be exposed and referred in
- ; the new method implementation by a local name.
- ;
- ; :prefix string
- ;
- ; Default: "-" Methods called e.g. Foo will be looked up in vars called
- ; prefixFoo in the implementing ns.
- ;
- ; :impl-ns name
- ;
- ; Default: the name of the current ns. Implementations of methods will be
- ; looked up in this namespace.
- ;
- ; :load-impl-ns boolean
- ;
- ; Default: true. Causes the static initializer for the generated class
- ; to reference the load code for the implementing namespace. Should be
- ; true when implementing-ns is the default, false if you intend to
- ; load the code via some other method.
- ;;
-(§ defmacro gen-class [& options]
-    (when *compile-files*
-        (let [options-map (into1 {} (map vec (partition 2 options)))
-                [cname bytecode] (generate-class options-map)]
-            (cloiure.lang.Compiler/writeClassFile cname bytecode)))
-)
-
-;;;
- ; Returns an asm Type object for c, which may be a primitive class
- ; (such as Integer/TYPE), any other class (such as Double), or a
- ; fully-qualified class name given as a string or symbol
- ; (such as 'java.lang.String)
- ;;
-(§ defn- ^Type asm-type [c]
-    (if (or (instance? Class c) (prim->class c))
-            (Type/getType (the-class c))
-            (let [strx (str c)]
-            (Type/getObjectType
-            (.replace (if (some #{\. \[} strx) strx (str "java.lang." strx)) "." "/"))))
-)
-
-(§ defn- generate-interface [{:keys [name extends methods]}]
-    (when (some #(-> % first cloiure.core/name (.contains "-")) methods)
-            (throw
-            (IllegalArgumentException. "Interface methods must not contain '-'")))
-    (let [iname (.replace (str name) "." "/")
-                cv (ClassWriter. ClassWriter/COMPUTE_MAXS)]
-            (.visit cv Opcodes/V1_5 (+ Opcodes/ACC_PUBLIC Opcodes/ACC_ABSTRACT Opcodes/ACC_INTERFACE)
-            iname nil "java/lang/Object"
-            (when (seq extends)
-                (into-array (map #(.getInternalName (asm-type %)) extends))))
-            (when (not= "NO_SOURCE_FILE" *source-path*) (.visitSource cv *source-path* nil))
-            (add-annotations cv (meta name))
-            (doseq [[mname pclasses rclass pmetas] methods]
-            (let [mv (.visitMethod cv (+ Opcodes/ACC_PUBLIC Opcodes/ACC_ABSTRACT)
-                        (str mname)
-                        (Type/getMethodDescriptor (asm-type rclass)
-                                                    (if pclasses
-                                                    (into-array Type (map asm-type pclasses))
-                                                    (make-array Type 0)))
-                        nil nil)]
-                (add-annotations mv (meta mname))
-                (dotimes [i (count pmetas)]
-                (add-annotations mv (nth pmetas i) i))
-                (.visitEnd mv)))
-            (.visitEnd cv)
-            [iname (.toByteArray cv)])
-)
-
-;;;
- ; When compiling, generates compiled bytecode for an interface with
- ; the given package-qualified :name (which, as all names in these
- ; parameters, can be a string or symbol), and writes the .class file
- ; to the *compile-path* directory. When not compiling, does nothing.
- ;
- ; In all subsequent sections taking types, the primitive types can be
- ; referred to by their Java names (int, float etc), and classes in the
- ; java.lang package can be used without a package qualifier. All other
- ; classes must be fully qualified.
- ;
- ; Options should be a set of key/value pairs, all except for :name are
- ; optional:
- ;
- ; :name aname
- ;
- ; The package-qualified name of the class to be generated
- ;
- ; :extends [interface ...]
- ;
- ; One or more interfaces, which will be extended by this interface.
- ;
- ; :methods [ [name [param-types] return-type], ...]
- ;
- ; This parameter is used to specify the signatures of the methods of
- ; the generated interface. Do not repeat superinterface signatures
- ; here.
- ;;
-(§ defmacro gen-interface [& options]
-    (let [options-map (apply hash-map options)
-          [cname bytecode] (generate-interface options-map)]
-        (when *compile-files*
-            (cloiure.lang.Compiler/writeClassFile cname bytecode))
-        (.defineClass ^DynamicClassLoader (deref cloiure.lang.Compiler/LOADER)
-                        (str (:name options-map)) bytecode options))
-)
-
-(§ comment
-
-;;;
- ; Generates and immediately loads the bytecode for the specified
- ; class. Note that a class generated this way can be loaded only once
- ; - the JVM supports only one class with a given name per
- ; classloader. Subsequent to generation you can import it into any
- ; desired namespaces just like any other class. See gen-class for a
- ; description of the options.
- ;;
-(§ defn gen-and-load-class [& options]
-    (let [options-map (apply hash-map options)
-                [cname bytecode] (generate-class options-map)]
-            (.. (cloiure.lang.RT/getRootClassLoader) (defineClass cname bytecode options)))
-)
-
-)
-
-(§ in-ns 'cloiure.core)
-
-(§ import '(cloiure.lang Murmur3))
-
-(§ deftype VecNode [edit arr])
-
-(§ def EMPTY-NODE (VecNode. nil (object-array 32)))
-
-(§ definterface IVecImpl
-    (^int tailoff [])
-    (arrayFor [^int i])
-    (pushTail [^int level ^cloiure.core.VecNode parent ^cloiure.core.VecNode tailnode])
-    (popTail [^int level node])
-    (newPath [edit ^int level node])
-    (doAssoc [^int level node ^int i val])
-)
-
-(§ definterface ArrayManager
-    (array [^int size])
-    (^int alength [arr])
-    (aclone [arr])
-    (aget [arr ^int i])
-    (aset [arr ^int i val])
-)
-
-(§ deftype ArrayChunk [^cloiure.core.ArrayManager am arr ^int off ^int end]
-    cloiure.lang.Indexed
-    (nth [_ i] (.aget am arr (+ off i)))
-
-    (count [_] (- end off))
-
-    cloiure.lang.IChunk
-    (dropFirst [_]
-            (if (= off end)
-            (throw (IllegalStateException. "dropFirst of empty chunk"))
-            (ArrayChunk. am arr (inc off) end)))
-
-    (reduce [_ f init]
-            (loop [ret init i off]
-            (if (< i end)
-                (let [ret (f ret (.aget am arr i))]
-                (if (reduced? ret)
-                    ret
-                    (recur ret (inc i))))
-                ret)))
-)
-
-(§ deftype VecSeq [^cloiure.core.ArrayManager am ^cloiure.core.IVecImpl vec anode ^int i ^int offset]
-    :no-print true
-
-    cloiure.core.protocols.InternalReduce
-    (internal-reduce
-        [_ f val]
-        (loop [result val
-                aidx (+ i offset)]
-            (if (< aidx (count vec))
-            (let [node (.arrayFor vec aidx)
-                    result (loop [result result
-                                node-idx (bit-and 0x1f aidx)]
-                            (if (< node-idx (.alength am node))
-                                (let [result (f result (.aget am node node-idx))]
-                                (if (reduced? result)
-                                    result
-                                    (recur result (inc node-idx))))
-                                result))]
-                (if (reduced? result)
-                @result
-                (recur result (bit-and 0xffe0 (+ aidx 32)))))
-            result)))
-
-    cloiure.lang.ISeq
-    (first [_] (.aget am anode offset))
-    (next [this]
-            (if (< (inc offset) (.alength am anode))
-            (VecSeq. am vec anode i (inc offset))
-            (.chunkedNext this)))
-    (more [this]
-            (let [s (.next this)]
-            (or s cloiure.lang.PersistentList/EMPTY)))
-    (cons [this o]
-            (cloiure.lang.Cons. o this))
-    (count [this]
-            (loop [i 1
-                s (next this)]
-            (if s
-                (if (instance? cloiure.lang.Counted s)
-                (+ i (.count s))
-                (recur (inc i) (next s)))
-                i)))
-    (equiv [this o]
-            (cond
-            (identical? this o) true
-            (or (instance? cloiure.lang.Sequential o) (instance? java.util.List o))
-            (loop [me this
-                    you (seq o)]
-            (if (nil? me)
-                (nil? you)
-                (and (cloiure.lang.Util/equiv (first me) (first you))
-                    (recur (next me) (next you)))))
-            :else false))
-    (empty [_]
-            cloiure.lang.PersistentList/EMPTY)
-
-    cloiure.lang.Seqable
-    (seq [this] this)
-
-    cloiure.lang.IChunkedSeq
-    (chunkedFirst [_] (ArrayChunk. am anode offset (.alength am anode)))
-    (chunkedNext [_]
-        (let [nexti (+ i (.alength am anode))]
-            (when (< nexti (count vec))
-            (VecSeq. am vec (.arrayFor vec nexti) nexti 0))))
-    (chunkedMore [this]
-            (let [s (.chunkedNext this)]
-            (or s cloiure.lang.PersistentList/EMPTY)))
-)
-
-(§ defmethod print-method ::VecSeq [v w]
-    ((get (methods print-method) cloiure.lang.ISeq) v w)
-)
-
-(§ deftype Vec [^cloiure.core.ArrayManager am ^int cnt ^int shift ^cloiure.core.VecNode root tail _meta]
-    Object
-    (equals [this o]
-            (cond
-            (identical? this o) true
-            (or (instance? cloiure.lang.IPersistentVector o) (instance? java.util.RandomAccess o))
-            (and (= cnt (count o))
-                    (loop [i (int 0)]
-                    (cond
-                    (= i cnt) true
-                    (.equals (.nth this i) (nth o i)) (recur (inc i))
-                    :else false)))
-            (or (instance? cloiure.lang.Sequential o) (instance? java.util.List o))
-            (if-let [st (seq this)]
-                (.equals st (seq o))
-                (nil? (seq o)))
-            :else false))
-
-    ;; todo - cache
-    (hashCode [this]
-            (loop [hash (int 1) i (int 0)]
-            (if (= i cnt)
-                hash
-                (let [val (.nth this i)]
-                (recur (unchecked-add-int (unchecked-multiply-int 31 hash)
-                                        (cloiure.lang.Util/hash val))
-                        (inc i))))))
-
-    ;; todo - cache
-    cloiure.lang.IHashEq
-    (hasheq [this]
-            (Murmur3/hashOrdered this))
-
-    cloiure.lang.Counted
-    (count [_] cnt)
-
-    cloiure.lang.IMeta
-    (meta [_] _meta)
-
-    cloiure.lang.IObj
-    (withMeta [_ m] (Vec. am cnt shift root tail m))
-
-    cloiure.lang.Indexed
-    (nth [this i]
-            (let [a (.arrayFor this i)]
-            (.aget am a (bit-and i (int 0x1f)))))
-    (nth [this i not-found]
-            (let [z (int 0)]
-                (if (and (>= i z) (< i (.count this)))
-                (.nth this i)
-                not-found)))
-
-    cloiure.lang.IPersistentCollection
-    (cons [this val]
-            (if (< (- cnt (.tailoff this)) (int 32))
-            (let [new-tail (.array am (inc (.alength am tail)))]
-                (System/arraycopy tail 0 new-tail 0 (.alength am tail))
-                (.aset am new-tail (.alength am tail) val)
-                (Vec. am (inc cnt) shift root new-tail (meta this)))
-            (let [tail-node (VecNode. (.edit root) tail)]
-                (if (> (bit-shift-right cnt (int 5)) (bit-shift-left (int 1) shift)) ;; overflow root?
-                (let [new-root (VecNode. (.edit root) (object-array 32))]
-                    (doto ^objects (.arr new-root)
-                    (aset 0 root)
-                    (aset 1 (.newPath this (.edit root) shift tail-node)))
-                    (Vec. am (inc cnt) (+ shift (int 5)) new-root (let [tl (.array am 1)] (.aset am tl 0 val) tl) (meta this)))
-                (Vec. am (inc cnt) shift (.pushTail this shift root tail-node)
-                        (let [tl (.array am 1)] (.aset am tl 0 val) tl) (meta this))))))
-
-    (empty [_] (Vec. am 0 5 EMPTY-NODE (.array am 0) nil))
-    (equiv [this o]
-            (cond
-            (or (instance? cloiure.lang.IPersistentVector o) (instance? java.util.RandomAccess o))
-            (and (= cnt (count o))
-                    (loop [i (int 0)]
-                    (cond
-                    (= i cnt) true
-                    (= (.nth this i) (nth o i)) (recur (inc i))
-                    :else false)))
-            (or (instance? cloiure.lang.Sequential o) (instance? java.util.List o))
-            (cloiure.lang.Util/equiv (seq this) (seq o))
-            :else false))
-
-    cloiure.lang.IPersistentStack
-    (peek [this]
-            (when (> cnt (int 0))
-            (.nth this (dec cnt))))
-
-    (pop [this]
-        (cond
-            (zero? cnt)
-            (throw (IllegalStateException. "Can't pop empty vector"))
-            (= 1 cnt)
-            (Vec. am 0 5 EMPTY-NODE (.array am 0) (meta this))
-            (> (- cnt (.tailoff this)) 1)
-            (let [new-tail (.array am (dec (.alength am tail)))]
-                (System/arraycopy tail 0 new-tail 0 (.alength am new-tail))
-                (Vec. am (dec cnt) shift root new-tail (meta this)))
-            :else
-            (let [new-tail (.arrayFor this (- cnt 2))
-                    new-root ^cloiure.core.VecNode (.popTail this shift root)]
-                (cond
-                (nil? new-root)
-                (Vec. am (dec cnt) shift EMPTY-NODE new-tail (meta this))
-                (and (> shift 5) (nil? (aget ^objects (.arr new-root) 1)))
-                (Vec. am (dec cnt) (- shift 5) (aget ^objects (.arr new-root) 0) new-tail (meta this))
-                :else
-                (Vec. am (dec cnt) shift new-root new-tail (meta this))))))
-
-    cloiure.lang.IPersistentVector
-    (assocN [this i val]
-            (cond
-            (and (<= (int 0) i) (< i cnt))
-            (if (>= i (.tailoff this))
-                (let [new-tail (.array am (.alength am tail))]
-                (System/arraycopy tail 0 new-tail 0 (.alength am tail))
-                (.aset am new-tail (bit-and i (int 0x1f)) val)
-                (Vec. am cnt shift root new-tail (meta this)))
-                (Vec. am cnt shift (.doAssoc this shift root i val) tail (meta this)))
-            (= i cnt) (.cons this val)
-            :else (throw (IndexOutOfBoundsException.))))
-    (length [_] cnt)
-
-    cloiure.lang.Reversible
-    (rseq [this]
-                (if (> (.count this) 0)
-                (cloiure.lang.APersistentVector$RSeq. this (dec (.count this)))
-                nil))
-
-    cloiure.lang.Associative
-    (assoc [this k v]
-            (if (cloiure.lang.Util/isInteger k)
-            (.assocN this k v)
-            (throw (IllegalArgumentException. "Key must be integer"))))
-    (containsKey [this k]
-            (and (cloiure.lang.Util/isInteger k)
-                (<= 0 (int k))
-                (< (int k) cnt)))
-    (entryAt [this k]
-            (if (.containsKey this k)
-            (cloiure.lang.MapEntry/create k (.nth this (int k)))
-            nil))
-
-    cloiure.lang.ILookup
-    (valAt [this k not-found]
-            (if (cloiure.lang.Util/isInteger k)
-            (let [i (int k)]
-                (if (and (>= i 0) (< i cnt))
-                (.nth this i)
-                not-found))
-            not-found))
-
-    (valAt [this k] (.valAt this k nil))
-
-    cloiure.lang.IFn
-    (invoke [this k]
-            (if (cloiure.lang.Util/isInteger k)
-            (let [i (int k)]
-                (if (and (>= i 0) (< i cnt))
-                (.nth this i)
-                (throw (IndexOutOfBoundsException.))))
-            (throw (IllegalArgumentException. "Key must be integer"))))
-
-    cloiure.lang.Seqable
-    (seq [this]
-            (if (zero? cnt)
-            nil
-            (VecSeq. am this (.arrayFor this 0) 0 0)))
-
-    cloiure.lang.Sequential ;; marker, no methods
-
-    cloiure.core.IVecImpl
-    (tailoff [_]
-            (- cnt (.alength am tail)))
-
-    (arrayFor [this i]
-            (if (and (<= (int 0) i) (< i cnt))
-            (if (>= i (.tailoff this))
-                tail
-                (loop [node root level shift]
-                (if (zero? level)
-                    (.arr node)
-                    (recur (aget ^objects (.arr node) (bit-and (bit-shift-right i level) (int 0x1f)))
-                        (- level (int 5))))))
-            (throw (IndexOutOfBoundsException.))))
-
-    (pushTail [this level parent tailnode]
-            (let [subidx (bit-and (bit-shift-right (dec cnt) level) (int 0x1f))
-                parent ^cloiure.core.VecNode parent
-                ret (VecNode. (.edit parent) (aclone ^objects (.arr parent)))
-                node-to-insert (if (= level (int 5))
-                                tailnode
-                                (let [child (aget ^objects (.arr parent) subidx)]
-                                    (if child
-                                    (.pushTail this (- level (int 5)) child tailnode)
-                                    (.newPath this (.edit root) (- level (int 5)) tailnode))))]
-            (aset ^objects (.arr ret) subidx node-to-insert)
-            ret))
-
-    (popTail [this level node]
-            (let [node ^cloiure.core.VecNode node
-                subidx (bit-and (bit-shift-right (- cnt (int 2)) level) (int 0x1f))]
-            (cond
-            (> level 5)
-                (let [new-child (.popTail this (- level 5) (aget ^objects (.arr node) subidx))]
-                (if (and (nil? new-child) (zero? subidx))
-                    nil
-                    (let [arr (aclone ^objects (.arr node))]
-                    (aset arr subidx new-child)
-                    (VecNode. (.edit root) arr))))
-            (zero? subidx) nil
-            :else (let [arr (aclone ^objects (.arr node))]
-                    (aset arr subidx nil)
-                    (VecNode. (.edit root) arr)))))
-
-    (newPath [this edit ^int level node]
-            (if (zero? level)
-            node
-            (let [ret (VecNode. edit (object-array 32))]
-                (aset ^objects (.arr ret) 0 (.newPath this edit (- level (int 5)) node))
-                ret)))
-
-    (doAssoc [this level node i val]
-            (let [node ^cloiure.core.VecNode node]
-            (if (zero? level)
-                ;; on this branch, array will need val type
-                (let [arr (.aclone am (.arr node))]
-                (.aset am arr (bit-and i (int 0x1f)) val)
-                (VecNode. (.edit node) arr))
-                (let [arr (aclone ^objects (.arr node))
-                    subidx (bit-and (bit-shift-right i level) (int 0x1f))]
-                (aset arr subidx (.doAssoc this (- level (int 5)) (aget arr subidx) i val))
-                (VecNode. (.edit node) arr)))))
-
-    java.lang.Comparable
-    (compareTo [this o]
-            (if (identical? this o)
-            0
-            (let [^cloiure.lang.IPersistentVector v (cast cloiure.lang.IPersistentVector o)
-                    vcnt (.count v)]
-                (cond
-                (< cnt vcnt) -1
-                (> cnt vcnt) 1
-                :else
-                    (loop [i (int 0)]
-                    (if (= i cnt)
-                        0
-                        (let [comp (cloiure.lang.Util/compare (.nth this i) (.nth v i))]
-                        (if (= 0 comp)
-                            (recur (inc i))
-                            comp))))))))
-
-    java.lang.Iterable
-    (iterator [this]
-            (let [i (java.util.concurrent.atomic.AtomicInteger. 0)]
-            (reify java.util.Iterator
-                (hasNext [_] (< (.get i) cnt))
-                (next [_] (try
-                            (.nth this (dec (.incrementAndGet i)))
-                            (catch IndexOutOfBoundsException _
-                            (throw (java.util.NoSuchElementException.)))))
-                (remove [_] (throw (UnsupportedOperationException.))))))
-
-    java.util.Collection
-    (contains [this o] (boolean (some #(= % o) this)))
-    (containsAll [this c] (every? #(.contains this %) c))
-    (isEmpty [_] (zero? cnt))
-    (toArray [this] (into-array Object this))
-    (toArray [this arr]
-            (if (>= (count arr) cnt)
-            (do
-                (dotimes [i cnt]
-                (aset arr i (.nth this i)))
-                arr)
-            (into-array Object this)))
-    (size [_] cnt)
-    (add [_ o] (throw (UnsupportedOperationException.)))
-    (addAll [_ c] (throw (UnsupportedOperationException.)))
-    (clear [_] (throw (UnsupportedOperationException.)))
-    (^boolean remove [_ o] (throw (UnsupportedOperationException.)))
-    (removeAll [_ c] (throw (UnsupportedOperationException.)))
-    (retainAll [_ c] (throw (UnsupportedOperationException.)))
-
-    java.util.List
-    (get [this i] (.nth this i))
-    (indexOf [this o]
-            (loop [i (int 0)]
-            (cond
-                (== i cnt) -1
-                (= o (.nth this i)) i
-                :else (recur (inc i)))))
-    (lastIndexOf [this o]
-            (loop [i (dec cnt)]
-            (cond
-                (< i 0) -1
-                (= o (.nth this i)) i
-                :else (recur (dec i)))))
-    (listIterator [this] (.listIterator this 0))
-    (listIterator [this i]
-            (let [i (java.util.concurrent.atomic.AtomicInteger. i)]
-            (reify java.util.ListIterator
-                (hasNext [_] (< (.get i) cnt))
-                (hasPrevious [_] (pos? i))
-                (next [_] (try
-                            (.nth this (dec (.incrementAndGet i)))
-                            (catch IndexOutOfBoundsException _
-                            (throw (java.util.NoSuchElementException.)))))
-                (nextIndex [_] (.get i))
-                (previous [_] (try
-                                (.nth this (.decrementAndGet i))
-                                (catch IndexOutOfBoundsException _
-                                (throw (java.util.NoSuchElementException.)))))
-                (previousIndex [_] (dec (.get i)))
-                (add [_ e] (throw (UnsupportedOperationException.)))
-                (remove [_] (throw (UnsupportedOperationException.)))
-                (set [_ e] (throw (UnsupportedOperationException.))))))
-    (subList [this a z] (subvec this a z))
-    (add [_ i o] (throw (UnsupportedOperationException.)))
-    (addAll [_ i c] (throw (UnsupportedOperationException.)))
-    (^Object remove [_ ^int i] (throw (UnsupportedOperationException.)))
-    (set [_ i e] (throw (UnsupportedOperationException.)))
-)
-
-(§ defmethod print-method ::Vec [v w]
-    ((get (methods print-method) cloiure.lang.IPersistentVector) v w)
-)
-
-(§ defmacro ^:private mk-am [t]
-    (let [garr (gensym)
-                tgarr (with-meta garr {:tag (symbol (str t "s"))})]
-            `(reify cloiure.core.ArrayManager
-                    (array [_ size#] (~(symbol (str t "-array")) size#))
-                    (alength [_ ~garr] (alength ~tgarr))
-                    (aclone [_ ~garr] (aclone ~tgarr))
-                    (aget [_ ~garr i#] (aget ~tgarr i#))
-                    (aset [_ ~garr i# val#] (aset ~tgarr i# (~t val#)))))
-)
-
-(§ def ^:private ams
-    {
-        :int     (mk-am int)
-        :long    (mk-am long)
-        :float   (mk-am float)
-        :double  (mk-am double)
-        :byte    (mk-am byte)
-        :short   (mk-am short)
-        :char    (mk-am char)
-        :boolean (mk-am boolean)
-    }
-)
-
-(§ defmacro ^:private ams-check [t]
-    `(let [am# (ams ~t)]
-        (if am#
-        am#
-        (throw (IllegalArgumentException. (str "Unrecognized type " ~t)))))
-)
-
-;;;
- ; Creates a new vector of a single primitive type t, where t is one
- ; of :int :long :float :double :byte :short :char or :boolean. The
- ; resulting vector complies with the interface of vectors in general,
- ; but stores the values unboxed internally.
- ;
- ; Optionally takes one or more elements to populate the vector.
- ;;
-(§ defn vector-of
-    ([t]
-        (let [^cloiure.core.ArrayManager am (ams-check t)]
-            (Vec. am 0 5 EMPTY-NODE (.array am 0) nil)))
-    ([t x1]
-        (let [^cloiure.core.ArrayManager am (ams-check t)
-                arr (.array am 1)]
-            (.aset am arr 0 x1)
-            (Vec. am 1 5 EMPTY-NODE arr nil)))
-    ([t x1 x2]
-        (let [^cloiure.core.ArrayManager am (ams-check t)
-                arr (.array am 2)]
-            (.aset am arr 0 x1)
-            (.aset am arr 1 x2)
-            (Vec. am 2 5 EMPTY-NODE arr nil)))
-    ([t x1 x2 x3]
-        (let [^cloiure.core.ArrayManager am (ams-check t)
-                arr (.array am 3)]
-            (.aset am arr 0 x1)
-            (.aset am arr 1 x2)
-            (.aset am arr 2 x3)
-            (Vec. am 3 5 EMPTY-NODE arr nil)))
-    ([t x1 x2 x3 x4]
-        (let [^cloiure.core.ArrayManager am (ams-check t)
-                arr (.array am 4)]
-            (.aset am arr 0 x1)
-            (.aset am arr 1 x2)
-            (.aset am arr 2 x3)
-            (.aset am arr 3 x4)
-            (Vec. am 4 5 EMPTY-NODE arr nil)))
-    ([t x1 x2 x3 x4 & xn]
-        (loop [v (vector-of t x1 x2 x3 x4)
-                xn xn]
-            (if xn
-            (recur (conj v (first xn)) (next xn))
-            v)))
-)
-
-#_(ns cloiure.instant
-    (:import [java.util Calendar Date GregorianCalendar TimeZone]
-             [java.sql Timestamp]))
-
-(§ defmacro ^:private fail [msg] `(throw (RuntimeException. ~msg)))
-
-(§ defmacro ^:private verify
-    ([test msg] `(when-not ~test (fail ~msg)))
-    ([test] `(verify ~test ~(str "failed: " (pr-str test))))
-)
-
-(§ defn- divisible? [num div] (zero? (mod num div)))
-
-(§ defn- indivisible? [num div] (not (divisible? num div)))
-
-(§ defn- parse-int [^String s]
-    (Long/parseLong s)
-)
-
-(§ defn- zero-fill-right [^String s width]
-    (cond (= width (count s)) s
-                (< width (count s)) (.substring s 0 width)
-                :else (loop [b (StringBuilder. s)]
-                        (if (< (.length b) width)
-                        (recur (.append b \0))
-                        (.toString b))))
-)
-
-;;;
- ; Parse a string containing an RFC3339-like like timestamp.
- ;
- ; The function new-instant is called with the following arguments.
- ;
- ; min  max           default
- ; ---  ------------  -------
- ; years          0           9999      N/A (s must provide years)
- ; months         1             12        1
- ; days           1             31        1 (actual max days depends
- ; hours          0             23        0  on month and year)
- ; minutes        0             59        0
- ; seconds        0             60        0 (though 60 is only valid
- ; nanoseconds    0      999999999        0  when minutes is 59)
- ; offset-sign   -1              1        0
- ; offset-hours   0             23        0
- ; offset-minutes 0             59        0
- ;
- ; These are all integers and will be non-nil. (The listed defaults
- ; will be passed if the corresponding field is not present in s.)
- ;
- ; Grammar (of s):
- ;
- ; date-fullyear   = 4DIGIT
- ; date-month      = 2DIGIT  ; 01-12
- ; date-mday       = 2DIGIT  ; 01-28, 01-29, 01-30, 01-31 based on month/year
- ; time-hour       = 2DIGIT  ; 00-23
- ; time-minute     = 2DIGIT  ; 00-59
- ; time-second     = 2DIGIT  ; 00-58, 00-59, 00-60 based on leap second rules
- ; time-secfrac    = '.' 1*DIGIT
- ; time-numoffset  = ('+' / '-') time-hour ':' time-minute
- ; time-offset     = 'Z' / time-numoffset
- ; time-part       = time-hour [ ':' time-minute [ ':' time-second [time-secfrac] [time-offset] ] ]
- ; timestamp       = date-year [ '-' date-month [ '-' date-mday [ 'T' time-part ] ] ]
- ;
- ; Unlike RFC3339:
- ;
- ; - we only parse the timestamp format
- ; - timestamp can elide trailing components
- ; - time-offset is optional (defaults to +00:00)
- ;
- ; Though time-offset is syntactically optional, a missing time-offset
- ; will be treated as if the time-offset zero (+00:00) had been
- ; specified.
- ;;
-(§ def parse-timestamp
-    (let [timestamp #"(\d\d\d\d)(?:-(\d\d)(?:-(\d\d)(?:[T](\d\d)(?::(\d\d)(?::(\d\d)(?:[.](\d+))?)?)?)?)?)?(?:[Z]|([-+])(\d\d):(\d\d))?"]
-
-        (fn [new-instant ^CharSequence cs]
-            (if-let [[_ years months days hours minutes seconds fraction
-                    offset-sign offset-hours offset-minutes]
-                    (re-matches timestamp cs)]
-            (new-instant
-            (parse-int years)
-            (if-not months   1 (parse-int months))
-            (if-not days     1 (parse-int days))
-            (if-not hours    0 (parse-int hours))
-            (if-not minutes  0 (parse-int minutes))
-            (if-not seconds  0 (parse-int seconds))
-            (if-not fraction 0 (parse-int (zero-fill-right fraction 9)))
-            (cond (= "-" offset-sign) -1
-                    (= "+" offset-sign)  1
-                    :else                0)
-            (if-not offset-hours   0 (parse-int offset-hours))
-            (if-not offset-minutes 0 (parse-int offset-minutes)))
-            (fail (str "Unrecognized date/time syntax: " cs)))))
-)
-
-(§ defn- leap-year? [year] (and (divisible? year 4) (or (indivisible? year 100) (divisible? year 400))))
-
-(§ def ^:private days-in-month
-    (let [dim-norm [nil 31 28 31 30 31 30 31 31 30 31 30 31]
-          dim-leap [nil 31 29 31 30 31 30 31 31 30 31 30 31]]
-        (fn [month leap-year?]
-            ((if leap-year? dim-leap dim-norm) month)))
-)
-
-;;;
- ; Return a function which constructs an instant by calling constructor
- ; after first validating that those arguments are in range and otherwise
- ; plausible. The resulting function will throw an exception if called
- ; with invalid arguments.
- ;;
-(§ defn validated [new-instance]
-    (fn [years months days hours minutes seconds nanoseconds
-            offset-sign offset-hours offset-minutes]
-            (verify (<= 1 months 12))
-            (verify (<= 1 days (days-in-month months (leap-year? years))))
-            (verify (<= 0 hours 23))
-            (verify (<= 0 minutes 59))
-            (verify (<= 0 seconds (if (= minutes 59) 60 59)))
-            (verify (<= 0 nanoseconds 999999999))
-            (verify (<= -1 offset-sign 1))
-            (verify (<= 0 offset-hours 23))
-            (verify (<= 0 offset-minutes 59))
-            (new-instance years months days hours minutes seconds nanoseconds
-                        offset-sign offset-hours offset-minutes))
-)
-
-(§ def ^:private ^ThreadLocal thread-local-utc-date-format
-    ;; SimpleDateFormat is not thread-safe, so we use a ThreadLocal proxy for access.
-    ;; http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4228335
-    (proxy [ThreadLocal] []
-            (initialValue []
-            (doto (java.text.SimpleDateFormat. "yyyy-MM-dd'T'HH:mm:ss.SSS-00:00")
-                ;; RFC3339 says to use -00:00 when the timezone is unknown (+00:00 implies a known GMT)
-                (.setTimeZone (java.util.TimeZone/getTimeZone "GMT")))))
-)
-
-;;;
- ; Print a java.util.Date as RFC3339 timestamp, always in UTC.
- ;;
-(§ defn- print-date [^java.util.Date d, ^java.io.Writer w]
-    (let [^java.text.DateFormat utc-format (.get thread-local-utc-date-format)]
-            (.write w "#inst \"")
-            (.write w (.format utc-format d))
-            (.write w "\""))
-)
-
-(§ defmethod print-method java.util.Date [^java.util.Date d, ^java.io.Writer w]
-    (print-date d w)
-)
-
-;;;
- ; Print a java.util.Calendar as RFC3339 timestamp, preserving timezone.
- ;;
-(§ defn- print-calendar [^java.util.Calendar c, ^java.io.Writer w]
-    (let [calstr (format "%1$tFT%1$tT.%1$tL%1$tz" c)
-                offset-minutes (- (.length calstr) 2)]
-            ;; calstr is almost right, but is missing the colon in the offset
-            (.write w "#inst \"")
-            (.write w calstr 0 offset-minutes)
-            (.write w ":")
-            (.write w calstr offset-minutes 2)
-            (.write w "\""))
-)
-
-(§ defmethod print-method java.util.Calendar [^java.util.Calendar c, ^java.io.Writer w]
-    (print-calendar c w)
-)
-
-(§ def ^:private ^ThreadLocal thread-local-utc-timestamp-format
-    ;; SimpleDateFormat is not thread-safe, so we use a ThreadLocal proxy for access.
-    ;; http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4228335
-    (proxy [ThreadLocal] []
-            (initialValue []
-            (doto (java.text.SimpleDateFormat. "yyyy-MM-dd'T'HH:mm:ss")
-                (.setTimeZone (java.util.TimeZone/getTimeZone "GMT")))))
-)
-
-;;;
- ; Print a java.sql.Timestamp as RFC3339 timestamp, always in UTC.
- ;;
-(§ defn- print-timestamp [^java.sql.Timestamp ts, ^java.io.Writer w]
-    (let [^java.text.DateFormat utc-format (.get thread-local-utc-timestamp-format)]
-            (.write w "#inst \"")
-            (.write w (.format utc-format ts))
-            ;; add on nanos and offset
-            ;; RFC3339 says to use -00:00 when the timezone is unknown (+00:00 implies a known GMT)
-            (.write w (format ".%09d-00:00" (.getNanos ts)))
-            (.write w "\""))
-)
-
-(§ defmethod print-method java.sql.Timestamp [^java.sql.Timestamp ts, ^java.io.Writer w]
-    (print-timestamp ts w)
-)
-
-;;;
- ; Construct a java.util.Calendar, preserving the timezone
- ; offset, but truncating the subsecond fraction to milliseconds.
- ;;
-(§ defn- ^GregorianCalendar construct-calendar [years months days hours minutes seconds nanoseconds offset-sign offset-hours offset-minutes]
-    (doto (GregorianCalendar. years (dec months) days hours minutes seconds)
-        (.set Calendar/MILLISECOND (quot nanoseconds 1000000))
-        (.setTimeZone (TimeZone/getTimeZone (format "GMT%s%02d:%02d" (if (neg? offset-sign) "-" "+") offset-hours offset-minutes))))
-)
-
-;;;
- ; Construct a java.util.Date, which expresses the original instant as
- ; milliseconds since the epoch, UTC.
- ;;
-(§ defn- construct-date [years months days hours minutes seconds nanoseconds offset-sign offset-hours offset-minutes]
-    (.getTime (construct-calendar years months days hours minutes seconds nanoseconds offset-sign offset-hours offset-minutes))
-)
-
-;;;
- ; Construct a java.sql.Timestamp, which has nanosecond precision.
- ;;
-(§ defn- construct-timestamp [years months days hours minutes seconds nanoseconds offset-sign offset-hours offset-minutes]
-    (doto (Timestamp. (.getTimeInMillis (construct-calendar years months days hours minutes seconds 0 offset-sign offset-hours offset-minutes)))
-        ;; nanos must be set separately, pass 0 above for the base calendar
-        (.setNanos nanoseconds))
-)
-
-;;;
- ; To read an instant as a java.util.Date, bind *data-readers* to a map with
- ; this var as the value for the 'inst key. The timezone offset will be used
- ; to convert into UTC.
- ;;
-(§ def read-instant-date
-    (partial parse-timestamp (validated construct-date))
-)
-
-;;;
- ; To read an instant as a java.util.Calendar, bind *data-readers* to a map with
- ; this var as the value for the 'inst key. Calendar preserves the timezone
- ; offset.
- ;;
-(§ def read-instant-calendar
-    (partial parse-timestamp (validated construct-calendar))
-)
-
-;;;
- ; To read an instant as a java.sql.Timestamp, bind *data-readers* to a
- ; map with this var as the value for the 'inst key. Timestamp preserves
- ; fractional seconds with nanosecond precision. The timezone offset will
- ; be used to convert into UTC.
- ;;
-(§ def read-instant-timestamp
-    (partial parse-timestamp (validated construct-timestamp))
-)
-
-#_(ns cloiure.main
-    (:refer-cloiure :exclude [with-bindings])
-    (:require [cloiure.spec.alpha])
-    (:import [cloiure.lang Compiler Compiler$CompilerException LineNumberingPushbackReader RT])
-;;  (:use [cloiure.repl :only [demunge root-cause stack-element-str]])
-)
-
-(§ declare main)
-
-;; redundantly copied from cloiure.repl to avoid dep
-
-;;;
- ; Given a string representation of a fn class,
- ; as in a stack trace element, returns a readable version.
- ;;
-(§ defn demunge [fn-name]
-    (cloiure.lang.Compiler/demunge fn-name)
-)
-
-;;;
- ; Returns the initial cause of an exception or error by peeling off all of
- ; its wrappers
- ;;
-(§ defn root-cause [^Throwable t]
-    (loop [cause t]
-            (if (and (instance? cloiure.lang.Compiler$CompilerException cause)
-                    (not= (.source ^cloiure.lang.Compiler$CompilerException cause) "NO_SOURCE_FILE"))
-            cause
-            (if-let [cause (.getCause cause)]
-                (recur cause)
-                cause)))
-)
-
-;;;
- ; Returns a (possibly unmunged) string representation of a StackTraceElement
- ;;
-(§ defn stack-element-str [^StackTraceElement el]
-    (let [file (.getFileName el)
-                cloiure-fn? (and file (or (.endsWith file ".cli")
-                                        (.endsWith file ".clic")
-                                        (= file "NO_SOURCE_FILE")))]
-            (str (if cloiure-fn?
-                (demunge (.getClassName el))
-                (str (.getClassName el) "." (.getMethodName el)))
-                " (" (.getFileName el) ":" (.getLineNumber el) ")"))
-)
-;; end of redundantly copied from cloiure.repl to avoid dep
-
-;;;
- ; Executes body in the context of thread-local bindings for several vars
- ; that often need to be set!: *ns* *warn-on-reflection* *math-context*
- ; *print-meta* *print-length* *print-level* *compile-path*
- ; *command-line-args* *1 *2 *3 *e
- ;;
-(§ defmacro with-bindings [& body]
-    `(binding [*ns* *ns*
-                *warn-on-reflection* *warn-on-reflection*
-                *math-context* *math-context*
-                *print-meta* *print-meta*
-                *print-length* *print-length*
-                *print-level* *print-level*
-                *print-namespace-maps* true
-                *compile-path* (System/getProperty "cloiure.compile.path" "classes")
-                *command-line-args* *command-line-args*
-                *assert* *assert*
-                cloiure.spec.alpha/*explain-out* cloiure.spec.alpha/*explain-out*
-                *1 nil
-                *2 nil
-                *3 nil
-                *e nil]
-        ~@body)
-)
-
-;;;
- ; Default :prompt hook for repl
- ;;
-(§ defn repl-prompt []
-    (printf "%s=> " (ns-name *ns*))
-)
-
-;;;
- ; If the next character on stream s is a newline, skips it, otherwise
- ; leaves the stream untouched. Returns :line-start, :stream-end, or :body
- ; to indicate the relative location of the next character on s. The stream
- ; must either be an instance of LineNumberingPushbackReader or duplicate
- ; its behavior of both supporting .unread and collapsing all of CR, LF, and
- ; CRLF to a single \\newline.
- ;;
-(§ defn skip-if-eol [s]
-    (let [c (.read s)]
-            (cond
-            (= c (int \newline)) :line-start
-            (= c -1) :stream-end
-            :else (do (.unread s c) :body)))
-)
-
-;;;
- ; Skips whitespace characters on stream s. Returns :line-start, :stream-end,
- ; or :body to indicate the relative location of the next character on s.
- ; Interprets comma as whitespace and semicolon as comment to end of line.
- ; Does not interpret #! as comment to end of line because only one
- ; character of lookahead is available. The stream must either be an
- ; instance of LineNumberingPushbackReader or duplicate its behavior of both
- ; supporting .unread and collapsing all of CR, LF, and CRLF to a single
- ; \\newline.
- ;;
-(§ defn skip-whitespace [s]
-    (loop [c (.read s)]
-            (cond
-            (= c (int \newline)) :line-start
-            (= c -1) :stream-end
-            (= c (int \;)) (do (.readLine s) :line-start)
-            (or (Character/isWhitespace (char c)) (= c (int \,))) (recur (.read s))
-            :else (do (.unread s c) :body)))
-)
-
-;;;
- ; Default :read hook for repl. Reads from *in* which must either be an
- ; instance of LineNumberingPushbackReader or duplicate its behavior of both
- ; supporting .unread and collapsing all of CR, LF, and CRLF into a single
- ; \\newline. repl-read:
- ; - skips whitespace, then
- ; - returns request-prompt on start of line, or
- ; - returns request-exit on end of stream, or
- ; - reads an object from the input stream, then
- ; - skips the next input character if it's end of line, then
- ; - returns the object.
- ;;
-(§ defn repl-read [request-prompt request-exit]
-    (or ({:line-start request-prompt :stream-end request-exit}
-            (skip-whitespace *in*))
-            (let [input (read {:read-cond :allow} *in*)]
-                (skip-if-eol *in*)
-                input))
-)
-
-;;;
- ; Returns the root cause of throwables
- ;;
-(§ defn repl-exception [throwable]
-    (root-cause throwable)
-)
-
-;;;
- ; Default :caught hook for repl
- ;;
-(§ defn repl-caught [e]
-    (let [ex (repl-exception e)
-                tr (.getStackTrace ex)
-                el (when-not (zero? (count tr)) (aget tr 0))]
-            (binding [*out* *err*]
-            (println (str (-> ex class .getSimpleName) " " (.getMessage ex) " "
-                            (when-not (instance? cloiure.lang.Compiler$CompilerException ex)
-                            (str " " (if el (stack-element-str el) "[trace missing]")))))))
-)
-
-;;;
- ; A sequence of lib specs that are applied to `require` by default when a new command-line REPL is started.
- ;;
-(§ def repl-requires '[[cloiure.repl :refer (source apropos dir pst doc find-doc)]])
-
-;;;
- ; Evaluates body with *read-eval* set to a "known" value,
- ; i.e. substituting true for :unknown if necessary.
- ;;
-(§ defmacro with-read-known [& body]
-    `(binding [*read-eval* (if (= :unknown *read-eval*) true *read-eval*)] ~@body)
-)
-
-;;;
- ; Generic, reusable, read-eval-print loop. By default, reads from *in*,
- ; writes to *out*, and prints exception summaries to *err*. If you use the
- ; default :read hook, *in* must either be an instance of
- ; LineNumberingPushbackReader or duplicate its behavior of both supporting
- ; .unread and collapsing CR, LF, and CRLF into a single \\newline. Options
- ; are sequential keyword-value pairs. Available options and their defaults:
- ;
- ; - :init, function of no arguments, initialization hook called with
- ; bindings for set!-able vars in place.
- ; default: #()
- ;
- ; - :need-prompt, function of no arguments, called before each
- ; read-eval-print except the first, the user will be prompted if it
- ; returns true.
- ; default: (if (instance? LineNumberingPushbackReader *in*)
- ; #(.atLineStart *in*)
- ; #(identity true))
- ;
- ; - :prompt, function of no arguments, prompts for more input.
- ; default: repl-prompt
- ;
- ; - :flush, function of no arguments, flushes output
- ; default: flush
- ;
- ; - :read, function of two arguments, reads from *in*:
- ; - returns its first argument to request a fresh prompt
- ; - depending on need-prompt, this may cause the repl to prompt
- ; before reading again
- ; - returns its second argument to request an exit from the repl
- ; - else returns the next object read from the input stream
- ; default: repl-read
- ;
- ; - :eval, function of one argument, returns the evaluation of its
- ; argument
- ; default: eval
- ;
- ; - :print, function of one argument, prints its argument to the output
- ; default: prn
- ;
- ; - :caught, function of one argument, a throwable, called when
- ; read, eval, or print throws an exception or error
- ; default: repl-caught
- ;;
-(§ defn repl [& options]
-    (let [cl (.getContextClassLoader (Thread/currentThread))]
-            (.setContextClassLoader (Thread/currentThread) (cloiure.lang.DynamicClassLoader. cl)))
-    (let [{:keys [init need-prompt prompt flush read eval print caught]
-                :or {init        #()
-                    need-prompt (if (instance? LineNumberingPushbackReader *in*)
-                                    #(.atLineStart ^LineNumberingPushbackReader *in*)
-                                    #(identity true))
-                    prompt      repl-prompt
-                    flush       flush
-                    read        repl-read
-                    eval        eval
-                    print       prn
-                    caught      repl-caught}}
-                (apply hash-map options)
-                request-prompt (Object.)
-                request-exit (Object.)
-                read-eval-print
-                (fn []
-                (try
-                    (let [read-eval *read-eval*
-                        input (with-read-known (read request-prompt request-exit))]
-                    (or (#{request-prompt request-exit} input)
-                        (let [value (binding [*read-eval* read-eval] (eval input))]
-                        (print value)
-                        (set! *3 *2)
-                        (set! *2 *1)
-                        (set! *1 value))))
-                (catch Throwable e
-                    (caught e)
-                    (set! *e e))))]
-            (with-bindings
-            (try
-            (init)
-            (catch Throwable e
-                (caught e)
-                (set! *e e)))
-            (prompt)
-            (flush)
-            (loop []
-            (when-not
-                (try (identical? (read-eval-print) request-exit)
-                (catch Throwable e
-                (caught e)
-                (set! *e e)
-                nil))
-                (when (need-prompt)
-                (prompt)
-                (flush))
-                (recur)))))
-)
-
-;;;
- ; Loads Cloiure source from a file or resource given its path. Paths
- ; beginning with @ or @/ are considered relative to classpath.
- ;;
-(§ defn load-script [^String path]
-    (if (.startsWith path "@")
-            (RT/loadResourceScript
-            (.substring path (if (.startsWith path "@/") 2 1)))
-            (Compiler/loadFile path))
-)
-
-;;;
- ; Load a script
- ;;
-(§ defn- init-opt [path] (load-script path))
-
-;;;
- ; Evals expressions in str, prints each non-nil result using prn
- ;;
-(§ defn- eval-opt [str]
-    (let [eof (Object.)
-                reader (LineNumberingPushbackReader. (java.io.StringReader. str))]
-            (loop [input (with-read-known (read reader false eof))]
-                (when-not (= input eof)
-                (let [value (eval input)]
-                    (when-not (nil? value)
-                    (prn value))
-                    (recur (with-read-known (read reader false eof)))))))
-)
-
-;;;
- ; Returns the handler associated with an init opt
- ;;
-(§ defn- init-dispatch [opt]
-    ({"-i"     init-opt
-            "--init" init-opt
-            "-e"     eval-opt
-            "--eval" eval-opt} opt)
-)
-
-;;;
- ; Common initialize routine for repl, script, and null opts
- ;;
-(§ defn- initialize [args inits]
-    (in-ns 'user)
-    (set! *command-line-args* args)
-    (doseq [[opt arg] inits]
-            ((init-dispatch opt) arg))
-)
-
-;;;
- ; Call the -main function from a namespace with string arguments from
- ; the command line.
- ;;
-(§ defn- main-opt [[_ main-ns & args] inits]
-    (with-bindings
-            (initialize args inits)
-            (apply (ns-resolve (doto (symbol main-ns) require) '-main) args))
-)
-
-;;;
- ; Returns cloiure version as a printable string.
- ;;
-(§ defn cloiure-version [] "x.y.z")
-
-;;;
- ; Start a repl with args and inits. Print greeting if no eval options were
- ; present
- ;;
-(§ defn- repl-opt [[_ & args] inits]
-    (when-not (some #(= eval-opt (init-dispatch (first %))) inits)
-            (println "Cloiure" (cloiure-version)))
-    (repl :init (fn []
-                        (initialize args inits)
-                        (apply require repl-requires)))
-    (prn)
-    (System/exit 0)
-)
-
-;;;
- ; Run a script from a file, resource, or standard in with args and inits
- ;;
-(§ defn- script-opt [[path & args] inits]
-    (with-bindings
-            (initialize args inits)
-            (if (= path "-")
-            (load-reader *in*)
-            (load-script path)))
-)
-
-;;;
- ; No repl or script opt present, just bind args and run inits
- ;;
-(§ defn- null-opt [args inits]
-    (with-bindings (initialize args inits))
-)
-
-;;;
- ; Print help text for main
- ;;
-(§ defn- help-opt [_ _]
-    (println (:doc (meta (var main))))
-)
-
-;;;
- ; Returns the handler associated with a main option
- ;;
-(§ defn- main-dispatch [opt]
-    (or
-        ({"-r"     repl-opt
-            "--repl" repl-opt
-            "-m"     main-opt
-            "--main" main-opt
-            nil      null-opt
-            "-h"     help-opt
-            "--help" help-opt
-            "-?"     help-opt} opt)
-        script-opt)
-)
-
-;;;
- ; Usage: java -cp cloiure.jar cloiure.main [init-opt*] [main-opt] [arg*]
- ;
- ; With no options or args, runs an interactive Read-Eval-Print Loop
- ;
- ; init options:
- ; -i, --init path     Load a file or resource
- ; -e, --eval string   Evaluate expressions in string; print non-nil values
- ;
- ; main options:
- ; -m, --main ns-name  Call the -main function from a namespace with args
- ; -r, --repl          Run a repl
- ; path                Run a script from a file or resource
- ; -                   Run a script from standard input
- ; -h, -?, --help      Print this help message and exit
- ;
- ; operation:
- ;
- ; - Establishes thread-local bindings for commonly set!-able vars
- ; - Enters the user namespace
- ; - Binds *command-line-args* to a seq of strings containing command line
- ; args that appear after any main option
- ; - Runs all init options in order
- ; - Calls a -main function or runs a repl or script if requested
- ;
- ; The init options may be repeated and mixed freely, but must appear before
- ; any main option. The appearance of any eval option before running a repl
- ; suppresses the usual repl greeting message: "Cloiure ~(cloiure-version)".
- ;
- ; Paths may be absolute or relative in the filesystem or relative to
- ; classpath. Classpath-relative paths have prefix of @ or @/
- ;;
-(§ defn main [& args]
-    (try
-        (if args
-            (loop [[opt arg & more :as args] args inits []]
-            (if (init-dispatch opt)
-                (recur more (conj inits [opt arg]))
-                ((main-dispatch opt) args inits)))
-            (repl-opt nil nil))
-        (finally
-            (flush)))
-)
-
 ;;;
  ; Reflection on Host Types
  ;
@@ -12718,15 +12363,17 @@
     (apply type-reflect (if (class? obj) obj (class obj)) options)
 )
 
-(§ load "reflect/java")
-
 (§ in-ns 'cloiure.reflect)
 
-(§ require '[cloiure.set :as set]
-         '[cloiure.string :as str])
-(§ import '[cloiure.asm ClassReader ClassVisitor Type Opcodes]
-         '[java.lang.reflect Modifier]
-         java.io.InputStream)
+(§ require
+    [cloiure.set :as set]
+    [cloiure.string :as str]
+)
+(§ import
+    [java.io InputStream]
+    [java.lang.reflect Modifier]
+    [cloiure.asm ClassReader ClassVisitor Opcodes Type]
+)
 
 (§ extend-protocol TypeReference
     cloiure.lang.Symbol
@@ -16774,4 +16421,433 @@
  ;;
 (§ defn macroexpand-all [form]
     (prewalk (fn [x] (if (seq? x) (macroexpand x) x)) form)
+)
+
+#_(ns cloiure.main
+    (:refer-cloiure :exclude [with-bindings])
+    (:require [cloiure.spec.alpha])
+    (:import [cloiure.lang Compiler Compiler$CompilerException LineNumberingPushbackReader RT])
+;;  (:use [cloiure.repl :only [demunge root-cause stack-element-str]])
+)
+
+(§ declare main)
+
+;; redundantly copied from cloiure.repl to avoid dep
+
+;;;
+ ; Given a string representation of a fn class,
+ ; as in a stack trace element, returns a readable version.
+ ;;
+(§ defn demunge [fn-name]
+    (cloiure.lang.Compiler/demunge fn-name)
+)
+
+;;;
+ ; Returns the initial cause of an exception or error by peeling off all of
+ ; its wrappers
+ ;;
+(§ defn root-cause [^Throwable t]
+    (loop [cause t]
+            (if (and (instance? cloiure.lang.Compiler$CompilerException cause)
+                    (not= (.source ^cloiure.lang.Compiler$CompilerException cause) "NO_SOURCE_FILE"))
+            cause
+            (if-let [cause (.getCause cause)]
+                (recur cause)
+                cause)))
+)
+
+;;;
+ ; Returns a (possibly unmunged) string representation of a StackTraceElement
+ ;;
+(§ defn stack-element-str [^StackTraceElement el]
+    (let [file (.getFileName el)
+                cloiure-fn? (and file (or (.endsWith file ".cli")
+                                        (.endsWith file ".clic")
+                                        (= file "NO_SOURCE_FILE")))]
+            (str (if cloiure-fn?
+                (demunge (.getClassName el))
+                (str (.getClassName el) "." (.getMethodName el)))
+                " (" (.getFileName el) ":" (.getLineNumber el) ")"))
+)
+;; end of redundantly copied from cloiure.repl to avoid dep
+
+;;;
+ ; Executes body in the context of thread-local bindings for several vars
+ ; that often need to be set!: *ns* *warn-on-reflection* *math-context*
+ ; *print-meta* *print-length* *print-level* *compile-path*
+ ; *command-line-args* *1 *2 *3 *e
+ ;;
+(§ defmacro with-bindings [& body]
+    `(binding [*ns* *ns*
+                *warn-on-reflection* *warn-on-reflection*
+                *math-context* *math-context*
+                *print-meta* *print-meta*
+                *print-length* *print-length*
+                *print-level* *print-level*
+                *print-namespace-maps* true
+                *compile-path* (System/getProperty "cloiure.compile.path" "classes")
+                *command-line-args* *command-line-args*
+                *assert* *assert*
+                cloiure.spec.alpha/*explain-out* cloiure.spec.alpha/*explain-out*
+                *1 nil
+                *2 nil
+                *3 nil
+                *e nil]
+        ~@body)
+)
+
+;;;
+ ; Default :prompt hook for repl
+ ;;
+(§ defn repl-prompt []
+    (printf "%s=> " (ns-name *ns*))
+)
+
+;;;
+ ; If the next character on stream s is a newline, skips it, otherwise
+ ; leaves the stream untouched. Returns :line-start, :stream-end, or :body
+ ; to indicate the relative location of the next character on s. The stream
+ ; must either be an instance of LineNumberingPushbackReader or duplicate
+ ; its behavior of both supporting .unread and collapsing all of CR, LF, and
+ ; CRLF to a single \\newline.
+ ;;
+(§ defn skip-if-eol [s]
+    (let [c (.read s)]
+            (cond
+            (= c (int \newline)) :line-start
+            (= c -1) :stream-end
+            :else (do (.unread s c) :body)))
+)
+
+;;;
+ ; Skips whitespace characters on stream s. Returns :line-start, :stream-end,
+ ; or :body to indicate the relative location of the next character on s.
+ ; Interprets comma as whitespace and semicolon as comment to end of line.
+ ; Does not interpret #! as comment to end of line because only one
+ ; character of lookahead is available. The stream must either be an
+ ; instance of LineNumberingPushbackReader or duplicate its behavior of both
+ ; supporting .unread and collapsing all of CR, LF, and CRLF to a single
+ ; \\newline.
+ ;;
+(§ defn skip-whitespace [s]
+    (loop [c (.read s)]
+            (cond
+            (= c (int \newline)) :line-start
+            (= c -1) :stream-end
+            (= c (int \;)) (do (.readLine s) :line-start)
+            (or (Character/isWhitespace (char c)) (= c (int \,))) (recur (.read s))
+            :else (do (.unread s c) :body)))
+)
+
+;;;
+ ; Default :read hook for repl. Reads from *in* which must either be an
+ ; instance of LineNumberingPushbackReader or duplicate its behavior of both
+ ; supporting .unread and collapsing all of CR, LF, and CRLF into a single
+ ; \\newline. repl-read:
+ ; - skips whitespace, then
+ ; - returns request-prompt on start of line, or
+ ; - returns request-exit on end of stream, or
+ ; - reads an object from the input stream, then
+ ; - skips the next input character if it's end of line, then
+ ; - returns the object.
+ ;;
+(§ defn repl-read [request-prompt request-exit]
+    (or ({:line-start request-prompt :stream-end request-exit}
+            (skip-whitespace *in*))
+            (let [input (read {:read-cond :allow} *in*)]
+                (skip-if-eol *in*)
+                input))
+)
+
+;;;
+ ; Returns the root cause of throwables
+ ;;
+(§ defn repl-exception [throwable]
+    (root-cause throwable)
+)
+
+;;;
+ ; Default :caught hook for repl
+ ;;
+(§ defn repl-caught [e]
+    (let [ex (repl-exception e)
+                tr (.getStackTrace ex)
+                el (when-not (zero? (count tr)) (aget tr 0))]
+            (binding [*out* *err*]
+            (println (str (-> ex class .getSimpleName) " " (.getMessage ex) " "
+                            (when-not (instance? cloiure.lang.Compiler$CompilerException ex)
+                            (str " " (if el (stack-element-str el) "[trace missing]")))))))
+)
+
+;;;
+ ; A sequence of lib specs that are applied to `require` by default when a new command-line REPL is started.
+ ;;
+(§ def repl-requires '[[cloiure.repl :refer (source apropos dir pst doc find-doc)]])
+
+;;;
+ ; Evaluates body with *read-eval* set to a "known" value,
+ ; i.e. substituting true for :unknown if necessary.
+ ;;
+(§ defmacro with-read-known [& body]
+    `(binding [*read-eval* (if (= :unknown *read-eval*) true *read-eval*)] ~@body)
+)
+
+;;;
+ ; Generic, reusable, read-eval-print loop. By default, reads from *in*,
+ ; writes to *out*, and prints exception summaries to *err*. If you use the
+ ; default :read hook, *in* must either be an instance of
+ ; LineNumberingPushbackReader or duplicate its behavior of both supporting
+ ; .unread and collapsing CR, LF, and CRLF into a single \\newline. Options
+ ; are sequential keyword-value pairs. Available options and their defaults:
+ ;
+ ; - :init, function of no arguments, initialization hook called with
+ ; bindings for set!-able vars in place.
+ ; default: #()
+ ;
+ ; - :need-prompt, function of no arguments, called before each
+ ; read-eval-print except the first, the user will be prompted if it
+ ; returns true.
+ ; default: (if (instance? LineNumberingPushbackReader *in*)
+ ; #(.atLineStart *in*)
+ ; #(identity true))
+ ;
+ ; - :prompt, function of no arguments, prompts for more input.
+ ; default: repl-prompt
+ ;
+ ; - :flush, function of no arguments, flushes output
+ ; default: flush
+ ;
+ ; - :read, function of two arguments, reads from *in*:
+ ; - returns its first argument to request a fresh prompt
+ ; - depending on need-prompt, this may cause the repl to prompt
+ ; before reading again
+ ; - returns its second argument to request an exit from the repl
+ ; - else returns the next object read from the input stream
+ ; default: repl-read
+ ;
+ ; - :eval, function of one argument, returns the evaluation of its
+ ; argument
+ ; default: eval
+ ;
+ ; - :print, function of one argument, prints its argument to the output
+ ; default: prn
+ ;
+ ; - :caught, function of one argument, a throwable, called when
+ ; read, eval, or print throws an exception or error
+ ; default: repl-caught
+ ;;
+(§ defn repl [& options]
+    (let [cl (.getContextClassLoader (Thread/currentThread))]
+            (.setContextClassLoader (Thread/currentThread) (cloiure.lang.DynamicClassLoader. cl)))
+    (let [{:keys [init need-prompt prompt flush read eval print caught]
+                :or {init        #()
+                    need-prompt (if (instance? LineNumberingPushbackReader *in*)
+                                    #(.atLineStart ^LineNumberingPushbackReader *in*)
+                                    #(identity true))
+                    prompt      repl-prompt
+                    flush       flush
+                    read        repl-read
+                    eval        eval
+                    print       prn
+                    caught      repl-caught}}
+                (apply hash-map options)
+                request-prompt (Object.)
+                request-exit (Object.)
+                read-eval-print
+                (fn []
+                (try
+                    (let [read-eval *read-eval*
+                        input (with-read-known (read request-prompt request-exit))]
+                    (or (#{request-prompt request-exit} input)
+                        (let [value (binding [*read-eval* read-eval] (eval input))]
+                        (print value)
+                        (set! *3 *2)
+                        (set! *2 *1)
+                        (set! *1 value))))
+                (catch Throwable e
+                    (caught e)
+                    (set! *e e))))]
+            (with-bindings
+            (try
+            (init)
+            (catch Throwable e
+                (caught e)
+                (set! *e e)))
+            (prompt)
+            (flush)
+            (loop []
+            (when-not
+                (try (identical? (read-eval-print) request-exit)
+                (catch Throwable e
+                (caught e)
+                (set! *e e)
+                nil))
+                (when (need-prompt)
+                (prompt)
+                (flush))
+                (recur)))))
+)
+
+;;;
+ ; Loads Cloiure source from a file or resource given its path. Paths
+ ; beginning with @ or @/ are considered relative to classpath.
+ ;;
+(§ defn load-script [^String path]
+    (if (.startsWith path "@")
+            (RT/loadResourceScript
+            (.substring path (if (.startsWith path "@/") 2 1)))
+            (Compiler/loadFile path))
+)
+
+;;;
+ ; Load a script
+ ;;
+(§ defn- init-opt [path] (load-script path))
+
+;;;
+ ; Evals expressions in str, prints each non-nil result using prn
+ ;;
+(§ defn- eval-opt [str]
+    (let [eof (Object.)
+                reader (LineNumberingPushbackReader. (java.io.StringReader. str))]
+            (loop [input (with-read-known (read reader false eof))]
+                (when-not (= input eof)
+                (let [value (eval input)]
+                    (when-not (nil? value)
+                    (prn value))
+                    (recur (with-read-known (read reader false eof)))))))
+)
+
+;;;
+ ; Returns the handler associated with an init opt
+ ;;
+(§ defn- init-dispatch [opt]
+    ({"-i"     init-opt
+      "--init" init-opt
+      "-e"     eval-opt
+      "--eval" eval-opt} opt)
+)
+
+;;;
+ ; Common initialize routine for repl, script, and null opts
+ ;;
+(§ defn- initialize [args inits]
+    (in-ns 'user)
+    (set! *command-line-args* args)
+    (doseq [[opt arg] inits]
+            ((init-dispatch opt) arg))
+)
+
+;;;
+ ; Call the -main function from a namespace with string arguments from
+ ; the command line.
+ ;;
+(§ defn- main-opt [[_ main-ns & args] inits]
+    (with-bindings
+            (initialize args inits)
+            (apply (ns-resolve (doto (symbol main-ns) require) '-main) args))
+)
+
+;;;
+ ; Returns cloiure version as a printable string.
+ ;;
+(§ defn cloiure-version [] "x.y.z")
+
+;;;
+ ; Start a repl with args and inits. Print greeting if no eval options were
+ ; present
+ ;;
+(§ defn- repl-opt [[_ & args] inits]
+    (when-not (some #(= eval-opt (init-dispatch (first %))) inits)
+            (println "Cloiure" (cloiure-version)))
+    (repl :init (fn []
+                        (initialize args inits)
+                        (apply require repl-requires)))
+    (prn)
+    (System/exit 0)
+)
+
+;;;
+ ; Run a script from a file, resource, or standard in with args and inits
+ ;;
+(§ defn- script-opt [[path & args] inits]
+    (with-bindings
+            (initialize args inits)
+            (if (= path "-")
+            (load-reader *in*)
+            (load-script path)))
+)
+
+;;;
+ ; No repl or script opt present, just bind args and run inits
+ ;;
+(§ defn- null-opt [args inits]
+    (with-bindings (initialize args inits))
+)
+
+;;;
+ ; Print help text for main
+ ;;
+(§ defn- help-opt [_ _]
+    (println (:doc (meta (var main))))
+)
+
+;;;
+ ; Returns the handler associated with a main option
+ ;;
+(§ defn- main-dispatch [opt]
+    (or
+        ({"-r"     repl-opt
+            "--repl" repl-opt
+            "-m"     main-opt
+            "--main" main-opt
+            nil      null-opt
+            "-h"     help-opt
+            "--help" help-opt
+            "-?"     help-opt} opt)
+        script-opt)
+)
+
+;;;
+ ; Usage: java -cp cloiure.jar cloiure.main [init-opt*] [main-opt] [arg*]
+ ;
+ ; With no options or args, runs an interactive Read-Eval-Print Loop
+ ;
+ ; init options:
+ ; -i, --init path     Load a file or resource
+ ; -e, --eval string   Evaluate expressions in string; print non-nil values
+ ;
+ ; main options:
+ ; -m, --main ns-name  Call the -main function from a namespace with args
+ ; -r, --repl          Run a repl
+ ; path                Run a script from a file or resource
+ ; -                   Run a script from standard input
+ ; -h, -?, --help      Print this help message and exit
+ ;
+ ; operation:
+ ;
+ ; - Establishes thread-local bindings for commonly set!-able vars
+ ; - Enters the user namespace
+ ; - Binds *command-line-args* to a seq of strings containing command line
+ ; args that appear after any main option
+ ; - Runs all init options in order
+ ; - Calls a -main function or runs a repl or script if requested
+ ;
+ ; The init options may be repeated and mixed freely, but must appear before
+ ; any main option. The appearance of any eval option before running a repl
+ ; suppresses the usual repl greeting message: "Cloiure ~(cloiure-version)".
+ ;
+ ; Paths may be absolute or relative in the filesystem or relative to
+ ; classpath. Classpath-relative paths have prefix of @ or @/
+ ;;
+(§ defn main [& args]
+    (try
+        (if args
+            (loop [[opt arg & more :as args] args inits []]
+            (if (init-dispatch opt)
+                (recur more (conj inits [opt arg]))
+                ((main-dispatch opt) args inits)))
+            (repl-opt nil nil))
+        (finally
+            (flush)))
 )

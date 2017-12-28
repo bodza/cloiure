@@ -53,7 +53,7 @@
     [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
     [java.lang.reflect Array Constructor Field InvocationHandler #_Method Modifier]
     [java.math BigDecimal BigInteger MathContext]
-    [java.net JarURLConnection MalformedURLException URL URLClassLoader URLConnection]
+    [java.net JarURLConnection URL URLClassLoader URLConnection]
     [java.nio ByteBuffer]
     [java.nio.charset Charset]
     [java.security AccessController PrivilegedAction]
@@ -171,7 +171,6 @@
 (declare RegexReader'stringrdr)
 (declare LispSymbolicValueReader'specials)
 (declare WrappingReader'new)
-(declare DeprecatedWrappingReader'new)
 (declare SyntaxQuoteReader'syntaxQuote SyntaxQuoteReader'sqExpandList SyntaxQuoteReader'flattenMap)
 (declare ConditionalReader'READ_STARTED ConditionalReader'DEFAULT_FEATURE ConditionalReader'RESERVED_FEATURES ConditionalReader'hasFeature ConditionalReader'readCondDelimited ConditionalReader'checkConditionalAllowed)
 (declare LispReader'QUOTE LispReader'THE_VAR LispReader'UNQUOTE LispReader'UNQUOTE_SPLICING LispReader'CONCAT LispReader'SEQ LispReader'LIST LispReader'APPLY LispReader'HASHMAP LispReader'HASHSET LispReader'VECTOR LispReader'WITH_META LispReader'META LispReader'DEREF LispReader'READ_COND LispReader'READ_COND_SPLICING LispReader'UNKNOWN LispReader'macros LispReader'dispatchMacros LispReader'symbolPat LispReader'intPat LispReader'ratioPat LispReader'floatPat LispReader'GENSYM_ENV LispReader'ARG_ENV LispReader'ctorReader LispReader'READ_COND_ENV LispReader'isWhitespace LispReader'unread LispReader'read1 LispReader'OPT_EOF LispReader'OPT_FEATURES LispReader'OPT_READ_COND LispReader'EOFTHROW LispReader'PLATFORM_KEY LispReader'PLATFORM_FEATURES LispReader'COND_ALLOW LispReader'COND_PRESERVE LispReader'read-2 LispReader'read-4 LispReader'read-5 LispReader'read-6 LispReader'ensurePending LispReader'installPlatformFeature LispReader'read-9 LispReader'readToken LispReader'readNumber LispReader'readUnicodeChar-4 LispReader'readUnicodeChar-5 LispReader'interpretToken LispReader'matchSymbol LispReader'matchNumber LispReader'getMacro LispReader'isMacro LispReader'isTerminatingMacro LispReader'garg LispReader'registerArg LispReader'isUnquoteSplicing LispReader'isUnquote LispReader'READ_EOF LispReader'READ_FINISHED LispReader'readDelimitedList LispReader'isPreserveReadCond)
@@ -244,7 +243,7 @@
 (declare Reflector'invokeInstanceMethod Reflector'getCauseOrElse Reflector'throwCauseOrElseException Reflector'noMethodReport Reflector'invokeMatchingMethod Reflector'getAsMethodOfPublicBase Reflector'isMatch Reflector'invokeConstructor Reflector'invokeStaticMethodVariadic Reflector'invokeStaticMethod-3s Reflector'invokeStaticMethod-3c Reflector'getStaticField-2s Reflector'getStaticField-2c Reflector'setStaticField-3s Reflector'setStaticField-3c Reflector'getInstanceField Reflector'setInstanceField Reflector'invokeNoArgInstanceMember-2 Reflector'invokeNoArgInstanceMember-3 Reflector'invokeInstanceMember-2 Reflector'invokeInstanceMember-3o Reflector'invokeInstanceMember-3a Reflector'getField Reflector'getMethods Reflector'boxArg Reflector'boxArgs Reflector'paramArgTypeMatch Reflector'isCongruent Reflector'prepRet)
 (declare Repeat'INFINITE Repeat'new-2 Repeat'new-3 Repeat'create-1 Repeat'create-2)
 (declare RestFn'ontoArrayPrepend RestFn'findKey)
-(declare RT'T RT'F RT'LOADER_SUFFIX RT'DEFAULT_IMPORTS RT'UTF8 RT'readTrueFalseUnknown RT'CLOIURE_NS RT'OUT RT'IN RT'ERR RT'TAG_KEY RT'CONST_KEY RT'AGENT RT'readeval RT'READEVAL RT'SUPPRESS_READ RT'ASSERT RT'MATH_CONTEXT RT'LINE_KEY RT'COLUMN_KEY RT'FILE_KEY RT'DECLARED_KEY RT'DOC_KEY RT'USE_CONTEXT_CLASSLOADER RT'LOAD_FILE RT'IN_NAMESPACE RT'NAMESPACE RT'IDENTICAL RT'CMD_LINE_ARGS RT'CURRENT_NS RT'FLUSH_ON_NEWLINE RT'PRINT_META RT'PRINT_READABLY RT'WARN_ON_REFLECTION RT'ALLOW_UNRESOLVED_VARS RT'READER_RESOLVER RT'IN_NS_VAR RT'NS_VAR RT'FN_LOADER_VAR RT'PRINT_INITIALIZED RT'PR_ON RT'inNamespace RT'bootNamespace RT'processCommandLine RT'errPrintWriter RT'EMPTY_ARRAY RT'DEFAULT_COMPARATOR RT'ID RT'addURL RT'CHECK_SPEC_ASSERTS RT'INSTRUMENT_MACROS RT'CHECK_SPECS RT'keyword RT'var-2 RT'var-3 RT'loadResourceScript-1 RT'maybeLoadResourceScript RT'loadResourceScript-2s RT'loadResourceScript-2c RT'loadResourceScript-3 RT'lastModified RT'compile RT'load-1 RT'load-2 RT'doInit RT'nextID RT'loadLibrary RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'countFrom RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nthFrom-2 RT'nth-3 RT'nthFrom-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1c RT'intCast-1b RT'intCast-1s RT'intCast-1i RT'intCast-1f RT'intCast-1l RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1f RT'longCast-1l RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1f RT'floatCast-1l RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1f RT'doubleCast-1l RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'resolveClassNameInContext RT'suppressRead RT'printString RT'readString-1 RT'readString-2 RT'print RT'printInnerSeq RT'formatAesthetic RT'formatStandard RT'format RT'doFormat RT'setValues RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget-2f RT'aset-3f RT'alength-1f RT'aclone-1f RT'aget-2d RT'aset-3d RT'alength-1d RT'aclone-1d RT'aget-2i RT'aset-3i RT'alength-1i RT'aclone-1i RT'aget-2l RT'aset-3l RT'alength-1l RT'aclone-1l RT'aget-2c RT'aset-3c RT'alength-1c RT'aclone-1c RT'aget-2b RT'aset-3b RT'alength-1b RT'aclone-1b RT'aget-2s RT'aset-3s RT'alength-1s RT'aclone-1s RT'aget-2z RT'aset-3z RT'alength-1z RT'aclone-1z RT'aget-2o RT'aset-3o RT'alength-1o RT'aclone-1o)
+(declare RT'T RT'F RT'LOADER_SUFFIX RT'DEFAULT_IMPORTS RT'UTF8 RT'readTrueFalseUnknown RT'CLOIURE_NS RT'OUT RT'IN RT'ERR RT'TAG_KEY RT'CONST_KEY RT'AGENT RT'readeval RT'READEVAL RT'SUPPRESS_READ RT'ASSERT RT'MATH_CONTEXT RT'LINE_KEY RT'COLUMN_KEY RT'FILE_KEY RT'DECLARED_KEY RT'DOC_KEY RT'USE_CONTEXT_CLASSLOADER RT'LOAD_FILE RT'IN_NAMESPACE RT'NAMESPACE RT'IDENTICAL RT'CMD_LINE_ARGS RT'CURRENT_NS RT'FLUSH_ON_NEWLINE RT'PRINT_META RT'PRINT_READABLY RT'WARN_ON_REFLECTION RT'ALLOW_UNRESOLVED_VARS RT'READER_RESOLVER RT'IN_NS_VAR RT'NS_VAR RT'FN_LOADER_VAR RT'PRINT_INITIALIZED RT'PR_ON RT'inNamespace RT'bootNamespace RT'processCommandLine RT'errPrintWriter RT'EMPTY_ARRAY RT'DEFAULT_COMPARATOR RT'ID RT'CHECK_SPEC_ASSERTS RT'INSTRUMENT_MACROS RT'CHECK_SPECS RT'keyword RT'var-2 RT'var-3 RT'loadResourceScript-1 RT'maybeLoadResourceScript RT'loadResourceScript-2s RT'loadResourceScript-2c RT'loadResourceScript-3 RT'lastModified RT'compile RT'load-1 RT'load-2 RT'doInit RT'nextID RT'loadLibrary RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'countFrom RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nthFrom-2 RT'nth-3 RT'nthFrom-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1c RT'intCast-1b RT'intCast-1s RT'intCast-1i RT'intCast-1f RT'intCast-1l RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1f RT'longCast-1l RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1f RT'floatCast-1l RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1f RT'doubleCast-1l RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'resolveClassNameInContext RT'suppressRead RT'printString RT'readString-1 RT'readString-2 RT'print RT'printInnerSeq RT'formatAesthetic RT'formatStandard RT'format RT'doFormat RT'setValues RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget-2f RT'aset-3f RT'alength-1f RT'aclone-1f RT'aget-2d RT'aset-3d RT'alength-1d RT'aclone-1d RT'aget-2i RT'aset-3i RT'alength-1i RT'aclone-1i RT'aget-2l RT'aset-3l RT'alength-1l RT'aclone-1l RT'aget-2c RT'aset-3c RT'alength-1c RT'aclone-1c RT'aget-2b RT'aset-3b RT'alength-1b RT'aclone-1b RT'aget-2s RT'aset-3s RT'alength-1s RT'aclone-1s RT'aget-2z RT'aset-3z RT'alength-1z RT'aclone-1z RT'aget-2o RT'aset-3o RT'alength-1o RT'aclone-1o)
 (declare SeqIterator'START SeqIterator'new)
 (declare StringSeq'create StringSeq'new)
 (declare Symbol'create-2 Symbol'create-1 Symbol'intern-2 Symbol'intern-1 Symbol'new-2 Symbol'new-3)
@@ -16069,12 +16068,6 @@
     (§ defn #_"Object[]" (§ method getConstants) [#_"DynamicClassLoader" this, #_"int" id]
         (.get (:constantVals this), id)
     )
-
-    #_method
-    (§ defn #_"void" (§ method addURL) [#_"DynamicClassLoader" this, #_"URL" url]
-        (.addURL super, url)
-        nil
-    )
 )
 )
 
@@ -21024,33 +21017,6 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"WrappingReader" this, #_"Object" reader, #_"Object" quote, #_"Object" opts, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (let [#_"Object" o (LispReader'read-6 r, true, nil, true, opts, (LispReader'ensurePending pendingForms))]
-                (RT'list-2 (:sym this), o)
-            )
-        )
-    )
-)
-
-(class-ns DeprecatedWrappingReader (§ extends AFn)
-    (defn- #_"DeprecatedWrappingReader" DeprecatedWrappingReader'init []
-        (hash-map
-            #_"Symbol" :sym nil
-            #_"String" :macro nil
-        )
-    )
-
-    (defn #_"DeprecatedWrappingReader" DeprecatedWrappingReader'new [#_"Symbol" sym, #_"String" macro]
-        (let [this (merge (AFn'new) (DeprecatedWrappingReader'init))]
-            (§ ass this (assoc this :sym sym))
-            (§ ass this (assoc this :macro macro))
-            this
-        )
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"DeprecatedWrappingReader" this, #_"Object" reader, #_"Object" quote, #_"Object" opts, #_"Object" pendingForms]
-        (System/out.println (str "WARNING: reader macro " (:macro this) " is deprecated; use " (.getName (:sym this)) " instead"))
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (let [#_"Object" o (LispReader'read-6 r, true, nil, true, opts, (LispReader'ensurePending pendingForms))]
                 (RT'list-2 (:sym this), o)
@@ -39656,7 +39622,6 @@
 
 (java-ns cloiure.lang.RT
 
-(§ import java.net.MalformedURLException)
 (§ import java.util.concurrent.atomic.AtomicInteger)
 (§ import java.util.concurrent.Callable)
 (§ import java.util.*)
@@ -39907,22 +39872,6 @@
     (§ def #_"Comparator" RT'DEFAULT_COMPARATOR (DefaultComparator'new))
 
     (def #_"AtomicInteger" RT'ID (AtomicInteger. 1))
-
-    (defn #_"void" RT'addURL [#_"Object" url] #_(§ throws MalformedURLException)
-        (let [#_"URL" u (if (instance? String url) (URL. (cast String url)) (cast URL url))]
-            (let [#_"ClassLoader" ccl (.getContextClassLoader (Thread/currentThread))]
-                (if (§ instance? DynamicClassLoader ccl)
-                    (do
-                        (.addURL (cast' DynamicClassLoader ccl), u)
-                    )
-                    (do
-                        (throw (IllegalAccessError. "Context classloader is not a DynamicClassLoader"))
-                    )
-                )
-                nil
-            )
-        )
-    )
 
     (def #_"boolean" RT'CHECK_SPEC_ASSERTS false #_"cloiure.spec.check-asserts")
     (def #_"boolean" RT'INSTRUMENT_MACROS true #_"cloiure.spec.skip-macros")
