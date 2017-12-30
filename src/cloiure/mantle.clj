@@ -8713,7 +8713,7 @@
  ; (seq (let [f "foo"]
  ;  (reify cloiure.lang.Seqable
  ;   (seq [this] (seq f)))))
- ; == (\\f \\o \\o)
+ ; == (\f \o \o)
  ;
  ; reify always implements cloiure.lang.IObj and transfers meta
  ; data of the form to the created object.
@@ -11870,73 +11870,578 @@
  ;;
 (§ defn uri? [x] (instance? java.net.URI x))
 
+;;;
+ ; Cloiure String utilities
+ ;
+ ; It is poor form to (:use cloiure.string). Instead, use require with :as
+ ; to specify a prefix, e.g.
+ ;
+ ; (ns your.namespace.here
+ ;  (:require [cloiure.string :as str]))
+ ;
+ ; Design notes for cloiure.string:
+ ;
+ ; 1. Strings are objects (as opposed to sequences). As such, the string being
+ ; manipulated is the first argument to a function; passing nil will result in
+ ; a NullPointerException unless documented otherwise. If you want sequence-y
+ ; behavior instead, use a sequence.
+ ;
+ ; 2. Functions are generally not lazy, and call straight to host methods where
+ ; those are available and efficient.
+ ;
+ ; 3. Functions take advantage of String implementation details to write
+ ; high-performing loop/recurs instead of using higher-order functions.
+ ; (This is not idiomatic in general-purpose application code.)
+ ;
+ ; 4. When a function is documented to accept a string argument, it will take
+ ; any implementation of the correct *interface* on the host platform. In Java,
+ ; this is CharSequence, which is more general than String. In ordinary usage
+ ; you will almost always pass concrete strings. If you are doing something
+ ; unusual, e.g. passing a mutable implementation of CharSequence, then
+ ; thread-safety is your responsibility.
+ ;;
+#_(ns cloiure.string
+    (:refer-cloiure :exclude [replace reverse])
+    (:import [java.util.regex Pattern Matcher]
+             [cloiure.lang LazilyPersistentVector]))
+
+;;;
+ ; Returns s with its characters reversed.
+ ;;
+(§ defn ^String reverse [^CharSequence s]
+    (.toString (.reverse (StringBuilder. s)))
+)
+
+;;;
+ ; Given a replacement string that you wish to be a literal replacement
+ ; for a pattern match in replace or replace-first, do the necessary
+ ; escaping of special characters in the replacement.
+ ;;
+(§ defn ^String re-quote-replacement [^CharSequence replacement]
+    (Matcher/quoteReplacement (.toString ^CharSequence replacement))
+)
+
+(§ defn- replace-by [^CharSequence s re f]
+    (let [m (re-matcher re s)]
+        (if (.find m)
+            (let [buffer (StringBuffer. (.length s))]
+                (loop [found true]
+                    (if found
+                        (do
+                            (.appendReplacement m buffer (Matcher/quoteReplacement (f (re-groups m))))
+                            (recur (.find m))
+                        )
+                        (do
+                            (.appendTail m buffer)
+                            (.toString buffer)
+                        )
+                    )
+                )
+            )
+            s
+        )
+    )
+)
+
+;;;
+ ; Replaces all instance of match with replacement in s.
+ ;
+ ; match/replacement can be:
+ ;
+ ;  string / string
+ ;  char / char
+ ;  pattern / (string or function of match).
+ ;
+ ; See also replace-first.
+ ;
+ ; The replacement is literal (i.e. none of its characters are treated
+ ; specially) for all cases above except pattern / string.
+ ;
+ ; For pattern / string, $1, $2, etc. in the replacement string are
+ ; substituted with the string that matched the corresponding
+ ; parenthesized group in the pattern. If you wish your replacement
+ ; string r to be used literally, use (re-quote-replacement r) as
+ ; the replacement argument. See also documentation for
+ ; java.util.regex.Matcher's appendReplacement method.
+ ;
+ ; Example:
+ ;
+ ; (cloiure.string/replace "Almost Pig Latin" #"\b(\w)(\w+)\b" "$2$1ay")
+ ; -> "lmostAay igPay atinLay"
+ ;;
+(§ defn ^String replace [^CharSequence s match replacement]
+    (let [s (.toString s)]
+        (cond
+            (instance? Character match)
+                (.replace s ^Character match ^Character replacement)
+            (instance? CharSequence match)
+                (.replace s ^CharSequence match ^CharSequence replacement)
+            (instance? Pattern match)
+                (if (instance? CharSequence replacement)
+                    (.replaceAll (re-matcher ^Pattern match s) (.toString ^CharSequence replacement))
+                    (replace-by s match replacement)
+                )
+            :else
+                (throw (IllegalArgumentException. (str "Invalid match arg: " match)))
+        )
+    )
+)
+
+(§ defn- replace-first-by [^CharSequence s ^Pattern re f]
+    (let [m (re-matcher re s)]
+        (if (.find m)
+            (let [buffer (StringBuffer. (.length s)) rep (Matcher/quoteReplacement (f (re-groups m)))]
+                (.appendReplacement m buffer rep)
+                (.appendTail m buffer)
+                (str buffer)
+            )
+            s
+        )
+    )
+)
+
+(§ defn- replace-first-char [^CharSequence s ^Character match replace]
+    (let [s (.toString s) i (.indexOf s (int match))]
+        (if (= -1 i)
+            s
+            (str (subs s 0 i) replace (subs s (inc i)))
+        )
+    )
+)
+
+(§ defn- replace-first-str [^CharSequence s ^String match ^String replace]
+    (let [^String s (.toString s) i (.indexOf s match)]
+        (if (= -1 i)
+            s
+            (str (subs s 0 i) replace (subs s (+ i (.length match))))
+        )
+    )
+)
+
+;;;
+ ; Replaces the first instance of match with replacement in s.
+ ;
+ ; match/replacement can be:
+ ;
+ ;  char / char
+ ;  string / string
+ ;  pattern / (string or function of match).
+ ;
+ ; See also replace.
+ ;
+ ; The replacement is literal (i.e. none of its characters are treated
+ ; specially) for all cases above except pattern / string.
+ ;
+ ; For pattern / string, $1, $2, etc. in the replacement string are
+ ; substituted with the string that matched the corresponding
+ ; parenthesized group in the pattern. If you wish your replacement
+ ; string r to be used literally, use (re-quote-replacement r) as
+ ; the replacement argument. See also documentation for
+ ; java.util.regex.Matcher's appendReplacement method.
+ ;
+ ; Example:
+ ;
+ ; (cloiure.string/replace-first "swap first two words"
+ ; #"(\w+)(\s+)(\w+)" "$3$2$1")
+ ; -> "first swap two words"
+ ;;
+(§ defn ^String replace-first [^CharSequence s match replacement]
+    (let [s (.toString s)]
+        (cond
+            (instance? Character match)
+                (replace-first-char s match replacement)
+            (instance? CharSequence match)
+                (replace-first-str s (.toString ^CharSequence match) (.toString ^CharSequence replacement))
+            (instance? Pattern match)
+                (if (instance? CharSequence replacement)
+                    (.replaceFirst (re-matcher ^Pattern match s) (.toString ^CharSequence replacement))
+                    (replace-first-by s match replacement)
+                )
+            :else
+                (throw (IllegalArgumentException. (str "Invalid match arg: " match)))
+        )
+    )
+)
+
+;;;
+ ; Returns a string of all elements in coll, as returned by (seq coll),
+ ; separated by an optional separator.
+ ;;
+(§ defn ^String join
+    ([coll] (apply str coll))
+    ([separator coll]
+        (loop [sb (StringBuilder. (str (first coll))) more (next coll) sep (str separator)]
+            (if more
+                (recur (-> sb (.append sep) (.append (str (first more)))) (next more) sep)
+                (str sb)
+            )
+        )
+    )
+)
+
+;;;
+ ; Converts first character of the string to upper-case, all other characters to lower-case.
+ ;;
+(§ defn ^String capitalize [^CharSequence s]
+    (let [s (.toString s)]
+        (if (< (count s) 2)
+            (.toUpperCase s)
+            (str (.toUpperCase (subs s 0 1)) (.toLowerCase (subs s 1)))
+        )
+    )
+)
+
+;;;
+ ; Converts string to all upper-case.
+ ;;
+(§ defn ^String upper-case [^CharSequence s] (-> s (.toString) (.toUpperCase)))
+
+;;;
+ ; Converts string to all lower-case.
+ ;;
+(§ defn ^String lower-case [^CharSequence s] (-> s (.toString) (.toLowerCase)))
+
+;;;
+ ; Splits string on a regular expression. Optional argument limit is
+ ; the maximum number of splits. Not lazy. Returns vector of the splits.
+ ;;
+(§ defn split
+    ([^CharSequence s ^Pattern re      ] (LazilyPersistentVector/createOwning (.split re s      )))
+    ([^CharSequence s ^Pattern re limit] (LazilyPersistentVector/createOwning (.split re s limit)))
+)
+
+;;;
+ ; Splits s on \n or \r\n.
+ ;;
+(§ defn split-lines [^CharSequence s] (split s #"\r?\n"))
+
+;;;
+ ; Removes whitespace from both ends of string.
+ ;;
+(§ defn ^String trim [^CharSequence s]
+    (let [len (.length s)]
+        (loop [rindex len]
+            (if (zero? rindex)
+                ""
+                (if (Character/isWhitespace (.charAt s (dec rindex)))
+                    (recur (dec rindex))
+                    ;; There is at least one non-whitespace char in the string,
+                    ;; so no need to check for lindex reaching len.
+                    (loop [lindex 0]
+                        (if (Character/isWhitespace (.charAt s lindex))
+                            (recur (inc lindex))
+                            (-> s (.subSequence lindex rindex) (.toString))
+                        )
+                    )
+                )
+            )
+        )
+    )
+)
+
+;;;
+ ; Removes whitespace from the left side of string.
+ ;;
+(§ defn ^String triml [^CharSequence s]
+    (let [len (.length s)]
+        (loop [index 0]
+            (if (= len index)
+                ""
+                (if (Character/isWhitespace (.charAt s index))
+                    (recur (unchecked-inc index))
+                    (-> s (.subSequence index len) (.toString))
+                )
+            )
+        )
+    )
+)
+
+;;;
+ ; Removes whitespace from the right side of string.
+ ;;
+(§ defn ^String trimr [^CharSequence s]
+    (loop [index (.length s)]
+        (if (zero? index)
+            ""
+            (if (Character/isWhitespace (.charAt s (unchecked-dec index)))
+                (recur (unchecked-dec index))
+                (-> s (.subSequence 0 index) (.toString))
+            )
+        )
+    )
+)
+
+;;;
+ ; Removes all trailing newline \n or return \r characters from string.
+ ; Similar to Perl's chomp.
+ ;;
+(§ defn ^String trim-newline [^CharSequence s]
+    (loop [index (.length s)]
+        (if (zero? index)
+            ""
+            (let [ch (.charAt s (dec index))]
+                (if (or (= ch \newline) (= ch \return))
+                    (recur (dec index))
+                    (-> s (.subSequence 0 index) (.toString))
+                )
+            )
+        )
+    )
+)
+
+;;;
+ ; True if s is nil, empty, or contains only whitespace.
+ ;;
+(§ defn blank? [^CharSequence s]
+    (if s
+        (loop [index (int 0)]
+            (if (= (.length s) index)
+                true
+                (if (Character/isWhitespace (.charAt s index))
+                    (recur (inc index))
+                    false
+                )
+            )
+        )
+        true
+    )
+)
+
+;;;
+ ; Return a new string, using cmap to escape each character ch
+ ; from s as follows:
+ ;
+ ; If (cmap ch) is nil, append ch to the new string.
+ ; If (cmap ch) is non-nil, append (str (cmap ch)) instead.
+ ;;
+(§ defn ^String escape [^CharSequence s cmap]
+    (loop [index (int 0) buffer (StringBuilder. (.length s))]
+        (if (= (.length s) index)
+            (.toString buffer)
+            (let [ch (.charAt s index)]
+                (if-let [replacement (cmap ch)]
+                    (.append buffer replacement)
+                    (.append buffer ch)
+                )
+                (recur (inc index) buffer)
+            )
+        )
+    )
+)
+
+;;;
+ ; Return index of value (string or char) in s, optionally searching
+ ; forward from from-index. Return nil if value not found.
+ ;;
+(§ defn index-of
+    ([^CharSequence s value]
+        (let [result ^long
+                (if (instance? Character value)
+                    (.indexOf (.toString s) ^int (.charValue ^Character value))
+                    (.indexOf (.toString s) ^String value)
+                )]
+            (if (= result -1) nil result)
+        )
+    )
+    ([^CharSequence s value ^long from-index]
+        (let [result ^long
+                (if (instance? Character value)
+                    (.indexOf (.toString s) ^int (.charValue ^Character value) (unchecked-int from-index))
+                    (.indexOf (.toString s) ^String value (unchecked-int from-index))
+                )]
+            (if (= result -1) nil result)
+        )
+    )
+)
+
+;;;
+ ; Return last index of value (string or char) in s, optionally
+ ; searching backward from from-index. Return nil if value not found.
+ ;;
+(§ defn last-index-of
+    ([^CharSequence s value]
+        (let [result ^long
+                (if (instance? Character value)
+                    (.lastIndexOf (.toString s) ^int (.charValue ^Character value))
+                    (.lastIndexOf (.toString s) ^String value)
+                )]
+            (if (= result -1) nil result)
+        )
+    )
+    ([^CharSequence s value ^long from-index]
+        (let [result ^long
+                (if (instance? Character value)
+                    (.lastIndexOf (.toString s) ^int (.charValue ^Character value) (unchecked-int from-index))
+                    (.lastIndexOf (.toString s) ^String value (unchecked-int from-index))
+                )]
+            (if (= result -1) nil result)
+        )
+    )
+)
+
+;;;
+ ; True if s starts with substr.
+ ;;
+(§ defn starts-with? [^CharSequence s ^String substr] (.startsWith (.toString s) substr))
+
+;;;
+ ; True if s ends with substr.
+ ;;
+(§ defn ends-with? [^CharSequence s ^String substr] (.endsWith (.toString s) substr))
+
+;;;
+ ; True if s includes substr.
+ ;;
+(§ defn includes? [^CharSequence s ^CharSequence substr] (.contains (.toString s) substr))
+
+;;;
+ ; This namespace defines a generic tree walker for Cloiure data structures.
+ ; It takes any data structure (list, vector, map, set, seq), calls a function
+ ; on every element, and uses the return value of the function in place of the
+ ; original. This makes it fairly easy to write recursive search-and-replace
+ ; functions, as shown in the examples.
+ ;
+ ; Note: "walk" supports all Cloiure data structures EXCEPT maps created with
+ ; sorted-map-by. There is no (obvious) way to retrieve the sorting function.
+ ;;
+#_(ns cloiure.walk)
+
+;;;
+ ; Traverses form, an arbitrary data structure. inner and outer are functions.
+ ; Applies inner to each element of form, building up a data structure of the
+ ; same type, then applies outer to the result. Recognizes all Cloiure data
+ ; structures. Consumes seqs as with doall.
+ ;;
+(§ defn walk [inner outer form]
+    (cond
+        (list? form)                            (outer (apply list (map inner form)))
+        (instance? cloiure.lang.IMapEntry form) (outer (vec (map inner form)))
+        (seq? form)                             (outer (doall (map inner form)))
+        (instance? cloiure.lang.IRecord form)   (outer (reduce (fn [r x] (conj r (inner x))) form form))
+        (coll? form)                            (outer (into (empty form) (map inner form)))
+        :else                                   (outer form)
+    )
+)
+
+;;;
+ ; Performs a depth-first, post-order traversal of form. Calls f on
+ ; each sub-form, uses f's return value in place of the original.
+ ; Recognizes all Cloiure data structures. Consumes seqs as with doall.
+ ;;
+(§ defn postwalk [f form] (walk (partial postwalk f) f form))
+
+;;;
+ ; Like postwalk, but does pre-order traversal.
+ ;;
+(§ defn prewalk [f form] (walk (partial prewalk f) identity (f form)))
+
+;; Note: I wanted to write:
+;;
+;; (defn walk [f form]
+;;  (let [pf (partial walk f)]
+;;   (if (coll? form)
+;;    (f (into (empty form) (map pf form)))
+;;    (f form))))
+;;
+;; but this throws a ClassCastException when applied to a map.
+
+;;;
+ ; Demonstrates the behavior of postwalk by printing each form as it is
+ ; walked. Returns form.
+ ;;
+(§ defn postwalk-demo [form]
+    (postwalk (fn [x] (print "Walked: ") (prn x) x) form)
+)
+
+;;;
+ ; Demonstrates the behavior of prewalk by printing each form as it is
+ ; walked. Returns form.
+ ;;
+(§ defn prewalk-demo [form]
+    (prewalk (fn [x] (print "Walked: ") (prn x) x) form)
+)
+
+;;;
+ ; Recursively transforms all map keys from strings to keywords.
+ ;;
+(§ defn keywordize-keys [m]
+    (let [f (fn [[k v]] (if (string? k) [(keyword k) v] [k v]))]
+        ;; only apply to maps
+        (postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m)
+    )
+)
+
+;;;
+ ; Recursively transforms all map keys from keywords to strings.
+ ;;
+(§ defn stringify-keys [m]
+    (let [f (fn [[k v]] (if (keyword? k) [(name k) v] [k v]))]
+        ;; only apply to maps
+        (postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m)
+    )
+)
+
+;;;
+ ; Recursively transforms form by replacing keys in smap with their
+ ; values. Like cloiure/replace but works on any data structure. Does
+ ; replacement at the root of the tree first.
+ ;;
+(§ defn prewalk-replace [smap form]
+    (prewalk (fn [x] (if (contains? smap x) (smap x) x)) form)
+)
+
+;;;
+ ; Recursively transforms form by replacing keys in smap with their
+ ; values. Like cloiure/replace but works on any data structure. Does
+ ; replacement at the leaves of the tree first.
+ ;;
+(§ defn postwalk-replace [smap form]
+    (postwalk (fn [x] (if (contains? smap x) (smap x) x)) form)
+)
+
+;;;
+ ; Recursively performs all possible macroexpansions in form.
+ ;;
+(§ defn macroexpand-all [form]
+    (prewalk (fn [x] (if (seq? x) (macroexpand x) x)) form)
+)
+
 #_(ns cloiure.core.reducers
     (:refer-cloiure :exclude [reduce map mapcat filter remove take take-while drop flatten cat])
     (:require [cloiure.walk :as walk]))
 
 (§ alias 'core 'cloiure.core)
 
-;;;
- ; Evaluate `exp` and if it returns logical true and doesn't error, expand to
- ; `then`. Else expand to `else`.
- ;
- ; (compile-if (Class/forName "java.util.concurrent.ForkJoinTask")
- ; (do-cool-stuff-with-fork-join)
- ; (fall-back-to-executor-services))
- ;;
-(§ defmacro ^:private compile-if [exp then else]
-    (if (try (eval exp)
-                (catch Throwable _ false))
-            `(do ~then)
-            `(do ~else))
+(§ def pool (delay (java.util.concurrent.ForkJoinPool.)))
+
+(§ defn fjtask [^Callable f]
+    (java.util.concurrent.ForkJoinTask/adapt f)
 )
 
-(§ compile-if (Class/forName "java.util.concurrent.ForkJoinTask")
-    ;; We're running a JDK 7+
-    (do
-        (def pool (delay (java.util.concurrent.ForkJoinPool.)))
-
-        (defn fjtask [^Callable f]
-            (java.util.concurrent.ForkJoinTask/adapt f))
-
-        (defn- fjinvoke [f]
-            (if (java.util.concurrent.ForkJoinTask/inForkJoinPool)
-            (f)
-            (.invoke ^java.util.concurrent.ForkJoinPool @pool ^java.util.concurrent.ForkJoinTask (fjtask f))))
-
-        (defn- fjfork [task] (.fork ^java.util.concurrent.ForkJoinTask task))
-
-        (defn- fjjoin [task] (.join ^java.util.concurrent.ForkJoinTask task))
-    )
-    ;; We're running a JDK <7
-    (do
-        (def pool (delay (jsr166y.ForkJoinPool.)))
-
-        (defn fjtask [^Callable f]
-            (jsr166y.ForkJoinTask/adapt f))
-
-        (defn- fjinvoke [f]
-            (if (jsr166y.ForkJoinTask/inForkJoinPool)
-            (f)
-            (.invoke ^jsr166y.ForkJoinPool @pool ^jsr166y.ForkJoinTask (fjtask f))))
-
-        (defn- fjfork [task] (.fork ^jsr166y.ForkJoinTask task))
-
-        (defn- fjjoin [task] (.join ^jsr166y.ForkJoinTask task))
+(§ defn- fjinvoke [f]
+    (if (java.util.concurrent.ForkJoinTask/inForkJoinPool)
+        (f)
+        (.invoke ^java.util.concurrent.ForkJoinPool @pool ^java.util.concurrent.ForkJoinTask (fjtask f))
     )
 )
+
+(§ defn- fjfork [task] (.fork ^java.util.concurrent.ForkJoinTask task))
+
+(§ defn- fjjoin [task] (.join ^java.util.concurrent.ForkJoinTask task))
 
 ;;;
  ; Like core/reduce except:
- ; When init is not provided, (f) is used.
- ; Maps are reduced with reduce-kv
+ ; - when init is not provided, (f) is used;
+ ; - maps are reduced with reduce-kv.
  ;;
 (§ defn reduce
     ([f coll] (reduce f (f) coll))
     ([f init coll]
-            (if (instance? java.util.Map coll)
+        (if (instance? java.util.Map coll)
             (cloiure.core.protocols/kv-reduce coll f init)
-            (cloiure.core.protocols/coll-reduce coll f init)))
+            (cloiure.core.protocols/coll-reduce coll f init)
+        )
+    )
 )
 
 (§ defprotocol CollFold
@@ -11948,65 +12453,61 @@
  ; strategy. The collection is partitioned into groups of approximately
  ; n (default 512), each of which is reduced with reducef (with a seed
  ; value obtained by calling (combinef) with no arguments). The results
- ; of these reductions are then reduced with combinef (default
- ; reducef). combinef must be associative, and, when called with no
- ; arguments, (combinef) must produce its identity element. These
- ; operations may be performed in parallel, but the results will
- ; preserve order.
+ ; of these reductions are then reduced with combinef (default reducef).
+ ; combinef must be associative, and, when called with no arguments,
+ ; (combinef) must produce its identity element. These operations may
+ ; be performed in parallel, but the results will preserve order.
  ;;
 (§ defn fold
     ([reducef coll] (fold reducef reducef coll))
     ([combinef reducef coll] (fold 512 combinef reducef coll))
-    ([n combinef reducef coll]
-            (coll-fold coll n combinef reducef))
+    ([n combinef reducef coll] (coll-fold coll n combinef reducef))
 )
 
 ;;;
  ; Given a reducible collection, and a transformation function xf,
- ; returns a reducible collection, where any supplied reducing
- ; fn will be transformed by xf. xf is a function of reducing fn to
- ; reducing fn.
+ ; returns a reducible collection, where any supplied reducing fn will
+ ; be transformed by xf. xf is a function of reducing fn to reducing fn.
  ;;
 (§ defn reducer
     ([coll xf]
-            (reify
+        (reify
             cloiure.core.protocols/CollReduce
-            (coll-reduce [this f1]
-                        (cloiure.core.protocols/coll-reduce this f1 (f1)))
-            (coll-reduce [_ f1 init]
-                        (cloiure.core.protocols/coll-reduce coll (xf f1) init))))
+            (coll-reduce [this f1] (cloiure.core.protocols/coll-reduce this f1 (f1)))
+            (coll-reduce [_ f1 init] (cloiure.core.protocols/coll-reduce coll (xf f1) init))
+        )
+    )
 )
 
 ;;;
  ; Given a foldable collection, and a transformation function xf,
- ; returns a foldable collection, where any supplied reducing
- ; fn will be transformed by xf. xf is a function of reducing fn to
- ; reducing fn.
+ ; returns a foldable collection, where any supplied reducing fn will
+ ; be transformed by xf. xf is a function of reducing fn to reducing fn.
  ;;
 (§ defn folder
     ([coll xf]
-            (reify
+        (reify
             cloiure.core.protocols/CollReduce
-            (coll-reduce [_ f1]
-                        (cloiure.core.protocols/coll-reduce coll (xf f1) (f1)))
-            (coll-reduce [_ f1 init]
-                        (cloiure.core.protocols/coll-reduce coll (xf f1) init))
+            (coll-reduce [_ f1] (cloiure.core.protocols/coll-reduce coll (xf f1) (f1)))
+            (coll-reduce [_ f1 init] (cloiure.core.protocols/coll-reduce coll (xf f1) init))
 
             CollFold
-            (coll-fold [_ n combinef reducef]
-                        (coll-fold coll n combinef (xf reducef)))))
+            (coll-fold [_ n combinef reducef] (coll-fold coll n combinef (xf reducef)))
+        )
+    )
 )
 
 (§ defn- do-curried [name doc meta args body]
     (let [cargs (vec (butlast args))]
-            `(defn ~name ~doc ~meta
+        `(defn ~name ~doc ~meta
             (~cargs (fn [x#] (~name ~@cargs x#)))
-            (~args ~@body)))
+            (~args ~@body)
+        )
+    )
 )
 
 ;;;
- ; Builds another arity of the fn that returns a fn awaiting the last
- ; param
+ ; Builds another arity of the fn that returns a fn awaiting the last param.
  ;;
 (§ defmacro ^:private defcurried [name doc meta args & body]
     (do-curried name doc meta args body)
@@ -12016,12 +12517,14 @@
     `(fn
         ([] (~f1))
         ~(cloiure.walk/postwalk
-        #(if (sequential? %)
-            ((if (vector? %) vec identity)
-            (core/remove #{k} %))
-            %)
-        fkv)
-        ~fkv)
+            #(if (sequential? %)
+                ((if (vector? %) vec identity) (core/remove #{k} %))
+                %
+            )
+            fkv
+        )
+        ~fkv
+    )
 )
 
 ;;;
@@ -12039,24 +12542,33 @@
         (fn [f1]
             (rfn [f1 k]
                 ([ret k v]
-                    (f1 ret (f k v))))))
+                    (f1 ret (f k v))
+                )
+            )
+        )
+    )
 )
 
 ;;;
- ; Applies f to every value in the reduction of coll, concatenating the result
- ; colls of (f val). Foldable.
+ ; Applies f to every value in the reduction of coll, concatenating
+ ; the result colls of (f val). Foldable.
  ;;
 (§ defcurried mapcat [f coll]
     (folder coll
         (fn [f1]
-            (let [f1 (fn
-                        ([ret v]
-                        (let [x (f1 ret v)] (if (reduced? x) (reduced x) x)))
-                        ([ret k v]
-                        (let [x (f1 ret k v)] (if (reduced? x) (reduced x) x))))]
-            (rfn [f1 k]
+            (let [f1
+                    (fn
+                        ([ret   v] (let [x (f1 ret   v)] (if (reduced? x) (reduced x) x)))
+                        ([ret k v] (let [x (f1 ret k v)] (if (reduced? x) (reduced x) x)))
+                    )]
+                (rfn [f1 k]
                     ([ret k v]
-                    (reduce f1 ret (f k v)))))))
+                        (reduce f1 ret (f k v))
+                    )
+                )
+            )
+        )
+    )
 )
 
 ;;;
@@ -12069,8 +12581,13 @@
             (rfn [f1 k]
                 ([ret k v]
                     (if (pred k v)
-                    (f1 ret k v)
-                    ret)))))
+                        (f1 ret k v)
+                        ret
+                    )
+                )
+            )
+        )
+    )
 )
 
 ;;;
@@ -12082,19 +12599,23 @@
 )
 
 ;;;
- ; Takes any nested combination of sequential things (lists, vectors,
- ; etc.) and returns their contents as a single, flat foldable
- ; collection.
+ ; Takes any nested combination of sequential things (lists, vectors, etc.)
+ ; and returns their contents as a single, flat foldable collection.
  ;;
 (§ defcurried flatten [coll]
     (folder coll
         (fn [f1]
             (fn
-            ([] (f1))
-            ([ret v]
-                (if (sequential? v)
-                    (cloiure.core.protocols/coll-reduce (flatten v) f1 ret)
-                    (f1 ret v))))))
+                ([] (f1))
+                ([ret v]
+                    (if (sequential? v)
+                        (cloiure.core.protocols/coll-reduce (flatten v) f1 ret)
+                        (f1 ret v)
+                    )
+                )
+            )
+        )
+    )
 )
 
 ;;;
@@ -12106,8 +12627,13 @@
             (rfn [f1 k]
                 ([ret k v]
                     (if (pred k v)
-                    (f1 ret k v)
-                    (reduced ret))))))
+                        (f1 ret k v)
+                        (reduced ret)
+                    )
+                )
+            )
+        )
+    )
 )
 
 ;;;
@@ -12117,12 +12643,18 @@
     (reducer coll
         (fn [f1]
             (let [cnt (atom n)]
-            (rfn [f1 k]
-                ([ret k v]
-                    (swap! cnt dec)
-                    (if (neg? @cnt)
-                    (reduced ret)
-                    (f1 ret k v)))))))
+                (rfn [f1 k]
+                    ([ret k v]
+                        (swap! cnt dec)
+                        (if (neg? @cnt)
+                            (reduced ret)
+                            (f1 ret k v)
+                        )
+                    )
+                )
+            )
+        )
+    )
 )
 
 ;;;
@@ -12132,12 +12664,18 @@
     (reducer coll
         (fn [f1]
             (let [cnt (atom n)]
-            (rfn [f1 k]
-                ([ret k v]
-                    (swap! cnt dec)
-                    (if (neg? @cnt)
-                    (f1 ret k v)
-                    ret))))))
+                (rfn [f1 k]
+                    ([ret k v]
+                        (swap! cnt dec)
+                        (if (neg? @cnt)
+                            (f1 ret k v)
+                            ret
+                        )
+                    )
+                )
+            )
+        )
+    )
 )
 
 ;; do not construct this directly, use cat
@@ -12150,53 +12688,59 @@
     (seq [_] (concat (seq left) (seq right)))
 
     cloiure.core.protocols/CollReduce
-    (coll-reduce [this f1] (cloiure.core.protocols/coll-reduce this f1 (f1)))
-    (coll-reduce
-        [_ f1 init]
-        (cloiure.core.protocols/coll-reduce
-            right f1
-            (cloiure.core.protocols/coll-reduce left f1 init)))
+    (coll-reduce [this f1]
+        (cloiure.core.protocols/coll-reduce this f1 (f1))
+    )
+    (coll-reduce [_ f1 init]
+        (cloiure.core.protocols/coll-reduce right f1 (cloiure.core.protocols/coll-reduce left f1 init))
+    )
 
     CollFold
-    (coll-fold
-        [_ n combinef reducef]
+    (coll-fold [_ n combinef reducef]
         (fjinvoke
             (fn []
-            (let [rt (fjfork (fjtask #(coll-fold right n combinef reducef)))]
-                (combinef
-                (coll-fold left n combinef reducef)
-                (fjjoin rt))))))
+                (let [rt (fjfork (fjtask #(coll-fold right n combinef reducef)))]
+                    (combinef
+                        (coll-fold left n combinef reducef)
+                        (fjjoin rt)
+                    )
+                )
+            )
+        )
+    )
 )
 
 ;;;
- ; A high-performance combining fn that yields the catenation of the
- ; reduced values. The result is reducible, foldable, seqable and
- ; counted, providing the identity collections are reducible, seqable
- ; and counted. The single argument version will build a combining fn
- ; with the supplied identity constructor. Tests for identity
+ ; A high-performance combining fn that yields the catenation of the reduced values.
+ ; The result is reducible, foldable, seqable and counted, providing the identity
+ ; collections are reducible, seqable and counted. The single argument version will
+ ; build a combining fn with the supplied identity constructor. Tests for identity
  ; with (zero? (count x)). See also foldcat.
  ;;
 (§ defn cat
     ([] (java.util.ArrayList.))
     ([ctor]
-            (fn
+        (fn
             ([] (ctor))
-            ([left right] (cat left right))))
+            ([left right] (cat left right))
+        )
+    )
     ([left right]
-            (cond
+        (cond
             (zero? (count left)) right
             (zero? (count right)) left
-            :else
-            (Cat. (+ (count left) (count right)) left right)))
+            :else (Cat. (+ (count left) (count right)) left right)
+        )
+    )
 )
 
 ;;;
- ; .adds x to acc and returns acc
+ ; .adds x to acc and returns acc.
  ;;
 (§ defn append! [^java.util.Collection acc x] (doto acc (.add x)))
 
 ;;;
- ; Equivalent to (fold cat append! coll)
+ ; Equivalent to (fold cat append! coll).
  ;;
 (§ defn foldcat [coll] (fold cat append! coll))
 
@@ -12209,18 +12753,21 @@
 
 (§ defn- foldvec [v n combinef reducef]
     (cond
-        (empty? v) (combinef)
-        (<= (count v) n) (reduce reducef (combinef) v)
+        (empty? v)
+            (combinef)
+        (<= (count v) n)
+            (reduce reducef (combinef) v)
         :else
-        (let [split (quot (count v) 2)
-                v1 (subvec v 0 split)
-                v2 (subvec v split (count v))
-                fc (fn [child] #(foldvec child n combinef reducef))]
-            (fjinvoke
-            #(let [f1 (fc v1)
-                    t2 (fjtask (fc v2))]
-                (fjfork t2)
-                (combinef (f1) (fjjoin t2))))))
+            (let [split (quot (count v) 2) v1 (subvec v 0 split) v2 (subvec v split (count v))
+                  fc (fn [child] #(foldvec child n combinef reducef))]
+                (fjinvoke
+                    #(let [f1 (fc v1) t2 (fjtask (fc v2))]
+                        (fjfork t2)
+                        (combinef (f1) (fjjoin t2))
+                    )
+                )
+            )
+    )
 )
 
 (§ extend-protocol CollFold
@@ -12235,6 +12782,508 @@
 
     cloiure.lang.PersistentHashMap
     (coll-fold [m n combinef reducef] (.fold m n combinef reducef fjinvoke fjtask fjfork fjjoin))
+)
+
+#_(ns cloiure.stacktrace)
+
+;;;
+ ; Returns the last 'cause' Throwable in a chain of Throwables.
+ ;;
+(§ defn root-cause [tr] (if-let [cause (.getCause tr)] (recur cause) tr))
+
+;;;
+ ; Prints a Cloiure-oriented view of one element in a stack trace.
+ ;;
+(§ defn print-trace-element [e]
+    (let [class (.getClassName e) method (.getMethodName e)
+          match (re-matches #"^([A-Za-z0-9_.-]+)\$(\w+)__\d+$" (str class))]
+        (if (and match (= "invoke" method))
+            (apply printf "%s/%s" (rest match))
+            (printf "%s.%s" class method)
+        )
+    )
+    (printf " (%s:%d)" (or (.getFileName e) "") (.getLineNumber e))
+)
+
+;;;
+ ; Prints the class and message of a Throwable.
+ ;;
+(§ defn print-throwable [tr] (printf "%s: %s" (.getName (class tr)) (.getMessage tr)))
+
+;;;
+ ; Prints a Cloiure-oriented stack trace of tr, a Throwable.
+ ; Prints a maximum of n stack frames (default: unlimited).
+ ; Does not print chained exceptions (causes).
+ ;;
+(§ defn print-stack-trace
+    ([tr] (print-stack-trace tr nil))
+    ([^Throwable tr n]
+        (let [st (.getStackTrace tr)]
+            (print-throwable tr)
+            (newline)
+            (print " at ")
+            (if-let [e (first st)]
+                (print-trace-element e)
+                (print "[empty stack trace]")
+            )
+            (newline)
+            (doseq [e (if (nil? n) (rest st) (take (dec n) (rest st)))]
+                (print "    ")
+                (print-trace-element e)
+                (newline)
+            )
+        )
+    )
+)
+
+;;;
+ ; Like print-stack-trace but prints chained exceptions (causes).
+ ;;
+(§ defn print-cause-trace
+    ([tr] (print-cause-trace tr nil))
+    ([tr n]
+        (print-stack-trace tr n)
+        (when-let [cause (.getCause tr)]
+            (print "Caused by: " )
+            (recur cause n)
+        )
+    )
+)
+
+;;;
+ ; REPL utility. Prints a brief stack trace for the root cause of the
+ ; most recent exception.
+ ;;
+(§ defn e []
+    (print-stack-trace (root-cause *e) 8)
+)
+
+#_(ns cloiure.main
+    (:refer-cloiure :exclude [with-bindings])
+    (:require [cloiure.spec.alpha])
+    (:import [cloiure.lang Compiler Compiler$CompilerException LineNumberingPushbackReader RT])
+;;  (:use [cloiure.repl :only [demunge root-cause stack-element-str]])
+)
+
+(§ declare main)
+
+;; redundantly copied from cloiure.repl to avoid dep
+
+;;;
+ ; Given a string representation of a fn class,
+ ; as in a stack trace element, returns a readable version.
+ ;;
+(§ defn demunge [fn-name] (cloiure.lang.Compiler/demunge fn-name))
+
+;;;
+ ; Returns the initial cause of an exception or error by peeling off all of its wrappers.
+ ;;
+(§ defn root-cause [^Throwable t]
+    (loop [cause t]
+        (if (and (instance? cloiure.lang.Compiler$CompilerException cause) (not= (.source ^cloiure.lang.Compiler$CompilerException cause) "NO_SOURCE_FILE"))
+            cause
+            (if-let [cause (.getCause cause)]
+                (recur cause)
+                cause
+            )
+        )
+    )
+)
+
+;;;
+ ; Returns a (possibly unmunged) string representation of a StackTraceElement.
+ ;;
+(§ defn stack-element-str [^StackTraceElement el]
+    (let [file (.getFileName el)
+          cloiure-fn? (and file (or (.endsWith file ".cli") (.endsWith file ".clic") (= file "NO_SOURCE_FILE")))]
+        (str
+            (if cloiure-fn?
+                (demunge (.getClassName el))
+                (str (.getClassName el) "." (.getMethodName el))
+            )
+            " (" (.getFileName el) ":" (.getLineNumber el) ")"
+        )
+    )
+)
+
+;; end of redundantly copied from cloiure.repl to avoid dep
+
+;;;
+ ; Executes body in the context of thread-local bindings for several vars that often need to be set!.
+ ;;
+(§ defmacro with-bindings [& body]
+    `(binding [*ns* *ns*
+               *warn-on-reflection* *warn-on-reflection*
+               *math-context* *math-context*
+               *print-meta* *print-meta*
+               *print-length* *print-length*
+               *print-level* *print-level*
+               *print-namespace-maps* true
+               *compile-path* (System/getProperty "cloiure.compile.path" "classes")
+               *command-line-args* *command-line-args*
+               *assert* *assert*
+               cloiure.spec.alpha/*explain-out* cloiure.spec.alpha/*explain-out*
+               *1 nil
+               *2 nil
+               *3 nil
+               *e nil]
+        ~@body
+    )
+)
+
+;;;
+ ; Default :prompt hook for repl.
+ ;;
+(§ defn repl-prompt [] (printf "%s=> " (ns-name *ns*)))
+
+;;;
+ ; If the next character on stream s is a newline, skips it, otherwise leaves
+ ; the stream untouched. Returns :line-start, :stream-end, or :body to indicate
+ ; the relative location of the next character on s. The stream must either be
+ ; an instance of LineNumberingPushbackReader or duplicate its behavior of both
+ ; supporting .unread and collapsing all of CR, LF, and CRLF to a single \newline.
+ ;;
+(§ defn skip-if-eol [s]
+    (let [c (.read s)]
+        (cond
+            (= c (int \newline)) :line-start
+            (= c -1) :stream-end
+            :else (do (.unread s c) :body)
+        )
+    )
+)
+
+;;;
+ ; Skips whitespace characters on stream s. Returns :line-start, :stream-end,
+ ; or :body to indicate the relative location of the next character on s.
+ ; Interprets comma as whitespace and semicolon as comment to end of line.
+ ; Does not interpret #! as comment to end of line because only one character
+ ; of lookahead is available. The stream must either be an instance of
+ ; LineNumberingPushbackReader or duplicate its behavior of both supporting
+ ; .unread and collapsing all of CR, LF, and CRLF to a single \newline.
+ ;;
+(§ defn skip-whitespace [s]
+    (loop [c (.read s)]
+        (cond
+            (= c (int \newline)) :line-start
+            (= c -1) :stream-end
+            (= c (int \;)) (do (.readLine s) :line-start)
+            (or (Character/isWhitespace (char c)) (= c (int \,))) (recur (.read s))
+            :else (do (.unread s c) :body)
+        )
+    )
+)
+
+;;;
+ ; Default :read hook for repl. Reads from *in* which must either be an instance
+ ; of LineNumberingPushbackReader or duplicate its behavior of both supporting
+ ; .unread and collapsing all of CR, LF, and CRLF into a single \newline.
+ ; repl-read:
+ ; - skips whitespace, then
+ ; - returns request-prompt on start of line, or
+ ; - returns request-exit on end of stream, or
+ ; - reads an object from the input stream, then
+ ; - skips the next input character if it's end of line, then
+ ; - returns the object.
+ ;;
+(§ defn repl-read [request-prompt request-exit]
+    (or ({:line-start request-prompt :stream-end request-exit} (skip-whitespace *in*))
+        (let [input (read {:read-cond :allow} *in*)]
+            (skip-if-eol *in*)
+            input
+        )
+    )
+)
+
+;;;
+ ; Returns the root cause of throwables.
+ ;;
+(§ defn repl-exception [throwable] (root-cause throwable))
+
+;;;
+ ; Default :caught hook for repl.
+ ;;
+(§ defn repl-caught [e]
+    (let [ex (repl-exception e) tr (.getStackTrace ex) el (when-not (zero? (count tr)) (aget tr 0))]
+        (binding [*out* *err*]
+            (println
+                (str (-> ex class .getSimpleName) " " (.getMessage ex) " "
+                    (when-not (instance? cloiure.lang.Compiler$CompilerException ex)
+                        (str " " (if el (stack-element-str el) "[trace missing]"))
+                    )
+                )
+            )
+        )
+    )
+)
+
+;;;
+ ; A sequence of lib specs that are applied to `require` by default when a new command-line REPL is started.
+ ;;
+(§ def repl-requires '[[cloiure.repl :refer (source apropos dir pst doc find-doc)]])
+
+;;;
+ ; Evaluates body with *read-eval* set to a "known" value, i.e. substituting true for :unknown if necessary.
+ ;;
+(§ defmacro with-read-known [& body]
+    `(binding [*read-eval* (if (= :unknown *read-eval*) true *read-eval*)] ~@body)
+)
+
+;;;
+ ; Generic, reusable, read-eval-print loop. By default, reads from *in*, writes
+ ; to *out*, and prints exception summaries to *err*. If you use the default
+ ; :read hook, *in* must either be an instance of LineNumberingPushbackReader or
+ ; duplicate its behavior of both supporting .unread and collapsing CR, LF, and
+ ; CRLF into a single \newline. Options are sequential keyword-value pairs.
+ ;
+ ; Available options and their defaults:
+ ;
+ ; - :init, function of no arguments, initialization hook called with bindings
+ ;          for set!-able vars in place.
+ ;          default: #()
+ ;
+ ; - :need-prompt, function of no arguments, called before each read-eval-print
+ ;                 except the first, the user will be prompted if it returns true.
+ ;                 default: (if (instance? LineNumberingPushbackReader *in*)
+ ;                           #(.atLineStart *in*)
+ ;                           #(identity true))
+ ;
+ ; - :prompt, function of no arguments, prompts for more input.
+ ;            default: repl-prompt
+ ;
+ ; - :flush, function of no arguments, flushes output.
+ ;           default: flush
+ ;
+ ; - :read, function of two arguments, reads from *in*:
+ ;          - returns its first argument to request a fresh prompt
+ ;          - depending on need-prompt, this may cause the repl to prompt before reading again
+ ;          - returns its second argument to request an exit from the repl
+ ;          - else returns the next object read from the input stream
+ ;          default: repl-read
+ ;
+ ; - :eval, function of one argument, returns the evaluation of its argument.
+ ;          default: eval
+ ;
+ ; - :print, function of one argument, prints its argument to the output.
+ ;           default: prn
+ ;
+ ; - :caught, function of one argument, a throwable, called when read, eval, or
+ ;            print throws an exception or error.
+ ;            default: repl-caught
+ ;;
+(§ defn repl [& options]
+    (let [cl (.getContextClassLoader (Thread/currentThread))]
+        (.setContextClassLoader (Thread/currentThread) (cloiure.lang.DynamicClassLoader. cl))
+    )
+    (let [{:keys [init need-prompt prompt flush read eval print caught]
+           :or {init        #()
+                need-prompt (if (instance? LineNumberingPushbackReader *in*) #(.atLineStart ^LineNumberingPushbackReader *in*) #(identity true))
+                prompt      repl-prompt
+                flush       flush
+                read        repl-read
+                eval        eval
+                print       prn
+                caught      repl-caught}
+            } (apply hash-map options)
+          request-prompt (Object.)
+          request-exit (Object.)
+          read-eval-print
+            (fn []
+                (try
+                    (let [read-eval *read-eval* input (with-read-known (read request-prompt request-exit))]
+                        (or (#{request-prompt request-exit} input)
+                            (let [value (binding [*read-eval* read-eval] (eval input))]
+                                (print value)
+                                (set! *3 *2)
+                                (set! *2 *1)
+                                (set! *1 value)
+                            )
+                        )
+                    )
+                    (catch Throwable e
+                        (caught e)
+                        (set! *e e)
+                    )
+                )
+            )]
+        (with-bindings (try (init) (catch Throwable e (caught e) (set! *e e)))
+            (prompt)
+            (flush)
+            (loop []
+                (when-not (try (identical? (read-eval-print) request-exit) (catch Throwable e (caught e) (set! *e e) nil))
+                    (when (need-prompt)
+                        (prompt)
+                        (flush)
+                    )
+                    (recur)
+                )
+            )
+        )
+    )
+)
+
+;;;
+ ; Loads Cloiure source from a file or resource given its path.
+ ; Paths beginning with @ or @/ are considered relative to classpath.
+ ;;
+(§ defn load-script [^String path]
+    (if (.startsWith path "@")
+        (RT/loadResourceScript (.substring path (if (.startsWith path "@/") 2 1)))
+        (Compiler/loadFile path)
+    )
+)
+
+;;;
+ ; Load a script.
+ ;;
+(§ defn- init-opt [path] (load-script path))
+
+;;;
+ ; Evals expressions in str, prints each non-nil result using prn.
+ ;;
+(§ defn- eval-opt [str]
+    (let [eof (Object.) reader (LineNumberingPushbackReader. (java.io.StringReader. str))]
+        (loop [input (with-read-known (read reader false eof))]
+            (when-not (= input eof)
+                (let [value (eval input)]
+                    (when-not (nil? value)
+                        (prn value)
+                    )
+                    (recur (with-read-known (read reader false eof)))
+                )
+            )
+        )
+    )
+)
+
+;;;
+ ; Returns the handler associated with an init opt.
+ ;;
+(§ defn- init-dispatch [opt] ({"-i" init-opt "--init" init-opt "-e" eval-opt "--eval" eval-opt} opt))
+
+;;;
+ ; Common initialize routine for repl, script, and null opts.
+ ;;
+(§ defn- initialize [args inits]
+    (in-ns 'user)
+    (set! *command-line-args* args)
+    (doseq [[opt arg] inits]
+        ((init-dispatch opt) arg)
+    )
+)
+
+;;;
+ ; Call the -main function from a namespace with string arguments from the command line.
+ ;;
+(§ defn- main-opt [[_ main-ns & args] inits]
+    (with-bindings (initialize args inits)
+        (apply (ns-resolve (doto (symbol main-ns) require) '-main) args)
+    )
+)
+
+;;;
+ ; Returns cloiure version as a printable string.
+ ;;
+(§ defn cloiure-version [] "x.y.z")
+
+;;;
+ ; Start a repl with args and inits. Print greeting if no eval options were present.
+ ;;
+(§ defn- repl-opt [[_ & args] inits]
+    (when-not (some #(= eval-opt (init-dispatch (first %))) inits)
+        (println "Cloiure" (cloiure-version))
+    )
+    (repl :init (fn [] (initialize args inits) (apply require repl-requires)))
+    (prn)
+    (System/exit 0)
+)
+
+;;;
+ ; Run a script from a file, resource, or standard in with args and inits.
+ ;;
+(§ defn- script-opt [[path & args] inits]
+    (with-bindings (initialize args inits)
+        (if (= path "-")
+            (load-reader *in*)
+            (load-script path)
+        )
+    )
+)
+
+;;;
+ ; No repl or script opt present, just bind args and run inits.
+ ;;
+(§ defn- null-opt [args inits] (with-bindings (initialize args inits)))
+
+;;;
+ ; Print help text for main.
+ ;;
+(§ defn- help-opt [_ _] (println (:doc (meta (var main)))))
+
+;;;
+ ; Returns the handler associated with a main option.
+ ;;
+(§ defn- main-dispatch [opt]
+    (or
+        ({"-r" repl-opt "--repl" repl-opt
+          "-m" main-opt "--main" main-opt
+          nil  null-opt
+          "-h" help-opt "--help" help-opt "-?" help-opt}
+            opt
+        )
+        script-opt
+    )
+)
+
+;;;
+ ; Usage: java -cp cloiure.jar cloiure.main [init-opt*] [main-opt] [arg*]
+ ;
+ ; With no options or args, runs an interactive Read-Eval-Print Loop.
+ ;
+ ; init options:
+ ;
+ ; -i, --init path     Load a file or resource.
+ ; -e, --eval string   Evaluate expressions in string; print non-nil values.
+ ;
+ ; main options:
+ ;
+ ; -m, --main ns-name  Call the -main function from a namespace with args.
+ ; -r, --repl          Run a repl.
+ ; path                Run a script from a file or resource.
+ ; -                   Run a script from standard input.
+ ; -h, -?, --help      Print this help message and exit.
+ ;
+ ; operation:
+ ;
+ ; - Establishes thread-local bindings for commonly set!-able vars
+ ; - Enters the user namespace
+ ; - Binds *command-line-args* to a seq of strings containing command line
+ ;   args that appear after any main option
+ ; - Runs all init options in order
+ ; - Calls a -main function or runs a repl or script if requested
+ ;
+ ; The init options may be repeated and mixed freely, but must appear before
+ ; any main option. The appearance of any eval option before running a repl
+ ; suppresses the usual repl greeting message: "Cloiure ~(cloiure-version)".
+ ;
+ ; Paths may be absolute or relative in the filesystem or relative to
+ ; classpath. Classpath-relative paths have prefix of @ or @/.
+ ;;
+(§ defn main [& args]
+    (try
+        (if args
+            (loop [[opt arg & more :as args] args inits []]
+                (if (init-dispatch opt)
+                    (recur more (conj inits [opt arg]))
+                    ((main-dispatch opt) args inits)
+                )
+            )
+            (repl-opt nil nil)
+        )
+        (finally
+            (flush)
+        )
+    )
 )
 
 #_(ns cloiure.core.server
@@ -12255,15 +13304,19 @@
     `(let [lockee# ~(with-meta lock-expr {:tag 'java.util.concurrent.locks.ReentrantLock})]
         (.lock lockee#)
         (try
-        ~@body
-        (finally
-            (.unlock lockee#))))
+            ~@body
+            (finally
+                (.unlock lockee#)
+            )
+        )
+    )
 )
 
 (§ defmacro ^:private thread [^String name daemon & body]
     `(doto (Thread. (fn [] ~@body) ~name)
         (.setDaemon ~daemon)
-        (.start))
+        (.start)
+    )
 )
 
 ;;;
@@ -12271,88 +13324,105 @@
  ;;
 (§ defn- required [opts prop]
     (when (nil? (get opts prop))
-            (throw (ex-info (str "Missing required socket server property " prop) opts)))
+        (throw (ex-info (str "Missing required socket server property " prop) opts))
+    )
 )
 
 ;;;
- ; Validate server config options
+ ; Validate server config options.
  ;;
 (§ defn- validate-opts [{:keys [name port accept] :as opts}]
-    (doseq [prop [:name :port :accept]] (required opts prop))
+    (doseq [prop [:name :port :accept]]
+        (required opts prop)
+    )
     (when (or (not (integer? port)) (not (< -1 port 65535)))
-            (throw (ex-info (str "Invalid socket server port: " port) opts)))
+        (throw (ex-info (str "Invalid socket server port: " port) opts))
+    )
 )
 
 ;;;
- ; Start accept function, to be invoked on a client thread, given:
- ; conn - client socket
- ; name - server name
- ; client-id - client identifier
- ; in - in stream
- ; out - out stream
- ; err - err stream
- ; accept - accept fn symbol to invoke
- ; args - to pass to accept-fn
+ ; Accept function, to be invoked on a client thread, given:
+ ;
+ ;  conn - client socket
+ ;  name - server name
+ ;  client-id - client identifier
+ ;  in - in stream
+ ;  out - out stream
+ ;  err - err stream
+ ;  accept - accept fn symbol to invoke
+ ;  args - to pass to accept-fn
  ;;
 (§ defn- accept-connection [^Socket conn name client-id in out err accept args]
     (try
-            (binding [*in* in
-                    *out* out
-                    *err* err
-                    *session* {:server name :client client-id}]
+        (binding [*in* in *out* out *err* err *session* {:server name :client client-id}]
             (with-lock lock
-                (alter-var-root #'servers assoc-in [name :sessions client-id] {}))
+                (alter-var-root #'servers assoc-in [name :sessions client-id] {})
+            )
             (require (symbol (namespace accept)))
             (let [accept-fn (resolve accept)]
-                (apply accept-fn args)))
-            (catch SocketException _disconnect)
-            (finally
+                (apply accept-fn args)
+            )
+        )
+        (catch SocketException _disconnect)
+        (finally
             (with-lock lock
-                (alter-var-root #'servers update-in [name :sessions] dissoc client-id))
-            (.close conn)))
+                (alter-var-root #'servers update-in [name :sessions] dissoc client-id)
+            )
+            (.close conn)
+        )
+    )
 )
 
 ;;;
  ; Start a socket server given the specified opts:
- ; :address Host or address, string, defaults to loopback address
- ; :port Port, integer, required
- ; :name Name, required
- ; :accept Namespaced symbol of the accept function to invoke, required
- ; :args Vector of args to pass to accept function
- ; :bind-err Bind *err* to socket out stream?, defaults to true
- ; :server-daemon Is server thread a daemon?, defaults to true
- ; :client-daemon Are client threads daemons?, defaults to true
+ ;
+ ; :address       Host or address, string, defaults to loopback address.
+ ; :port          Port, integer, required.
+ ; :name          Name, required.
+ ; :accept        Namespaced symbol of the accept function to invoke, required.
+ ; :args          Vector of args to pass to accept function.
+ ; :bind-err      Bind *err* to socket out stream?, defaults to true.
+ ; :server-daemon Is server thread a daemon?, defaults to true.
+ ; :client-daemon Are client threads daemons?, defaults to true.
+ ;
  ; Returns server socket.
  ;;
 (§ defn start-server [opts]
     (validate-opts opts)
     (let [{:keys [address port name accept args bind-err server-daemon client-daemon]
-                :or {bind-err true
-                    server-daemon true
-                    client-daemon true}} opts
-                address (InetAddress/getByName address) ;; nil returns loopback
-                socket (ServerSocket. port 0 address)]
-            (with-lock lock
-            (alter-var-root #'servers assoc name {:name name, :socket socket, :sessions {}}))
-            (thread
-            (str "Cloiure Server " name) server-daemon
+           :or {bind-err true server-daemon true client-daemon true}} opts
+          address (InetAddress/getByName address) ;; nil returns loopback
+          socket (ServerSocket. port 0 address)]
+        (with-lock lock
+            (alter-var-root #'servers assoc name {:name name, :socket socket, :sessions {}})
+        )
+        (thread (str "Cloiure Server " name) server-daemon
             (try
                 (loop [client-counter 1]
-                (when (not (.isClosed socket))
-                    (try
-                    (let [conn (.accept socket)
-                            in (cloiure.lang.LineNumberingPushbackReader. (java.io.InputStreamReader. (.getInputStream conn)))
-                            out (java.io.BufferedWriter. (java.io.OutputStreamWriter. (.getOutputStream conn)))
-                            client-id (str client-counter)]
-                        (thread
-                        (str "Cloiure Connection " name " " client-id) client-daemon
-                        (accept-connection conn name client-id in out (if bind-err out *err*) accept args)))
-                    (catch SocketException _disconnect))
-                    (recur (inc client-counter))))
+                    (when (not (.isClosed socket))
+                        (try
+                            (let [conn (.accept socket)
+                                  in (cloiure.lang.LineNumberingPushbackReader. (java.io.InputStreamReader. (.getInputStream conn)))
+                                  out (java.io.BufferedWriter. (java.io.OutputStreamWriter. (.getOutputStream conn)))
+                                  client-id (str client-counter)]
+                                (thread (str "Cloiure Connection " name " " client-id) client-daemon
+                                    (accept-connection conn name client-id in out (if bind-err out *err*) accept args)
+                                )
+                            )
+                            (catch SocketException _disconnect)
+                        )
+                        (recur (inc client-counter))
+                    )
+                )
                 (finally
-                (with-lock lock
-                    (alter-var-root #'servers dissoc name)))))
-            socket)
+                    (with-lock lock
+                        (alter-var-root #'servers dissoc name)
+                    )
+                )
+            )
+        )
+        socket
+    )
 )
 
 ;;;
@@ -12361,15 +13431,18 @@
  ; there is an error closing the socket.
  ;;
 (§ defn stop-server
-    ([]
-        (stop-server (:server *session*)))
+    ([] (stop-server (:server *session*)))
     ([name]
         (with-lock lock
             (let [server-socket ^ServerSocket (get-in servers [name :socket])]
-            (when server-socket
-                (alter-var-root #'servers dissoc name)
-                (.close server-socket)
-                true))))
+                (when server-socket
+                    (alter-var-root #'servers dissoc name)
+                    (.close server-socket)
+                    true
+                )
+            )
+        )
+    )
 )
 
 ;;;
@@ -12377,8 +13450,10 @@
  ;;
 (§ defn stop-servers []
     (with-lock lock
-            (doseq [name (keys servers)]
-            (future (stop-server name))))
+        (doseq [name (keys servers)]
+            (future (stop-server name))
+        )
+    )
 )
 
 ;;;
@@ -12386,12 +13461,16 @@
  ;;
 (§ defn- parse-props [props]
     (reduce
-            (fn [acc [^String k ^String v]]
+        (fn [acc [^String k ^String v]]
             (let [[k1 k2 k3] (str/split k #"\.")]
                 (if (and (= k1 "cloiure") (= k2 "server"))
-                (conj acc (merge {:name k3} (edn/read-string v)))
-                acc)))
-            [] props)
+                    (conj acc (merge {:name k3} (edn/read-string v)))
+                    acc
+                )
+            )
+        )
+        [] props
+    )
 )
 
 ;;;
@@ -12399,7 +13478,8 @@
  ;;
 (§ defn start-servers [system-props]
     (doseq [server (parse-props system-props)]
-            (start-server server))
+        (start-server server)
+    )
 )
 
 ;;;
@@ -12414,22 +13494,19 @@
  ; Enhanced :read hook for repl supporting :repl/quit.
  ;;
 (§ defn repl-read [request-prompt request-exit]
-    (or ({:line-start request-prompt :stream-end request-exit}
-                (m/skip-whitespace *in*))
-            (let [input (read {:read-cond :allow} *in*)]
-                (m/skip-if-eol *in*)
-                (case input
-                :repl/quit request-exit
-                input)))
+    (or ({:line-start request-prompt :stream-end request-exit} (m/skip-whitespace *in*))
+        (let [input (read {:read-cond :allow} *in*)]
+            (m/skip-if-eol *in*)
+            (case input :repl/quit request-exit input)
+        )
+    )
 )
 
 ;;;
  ; REPL with predefined hooks for attachable socket server.
  ;;
 (§ defn repl []
-    (m/repl
-            :init repl-init
-            :read repl-read)
+    (m/repl :init repl-init :read repl-read)
 )
 
 #_(ns cloiure.core.specs.alpha
@@ -16496,1011 +17573,4 @@
                     (update (result-type result) (fnil inc 0))))
             {:total 0}
             check-results))
-)
-
-#_(ns cloiure.stacktrace)
-
-;;;
- ; Returns the last 'cause' Throwable in a chain of Throwables.
- ;;
-(§ defn root-cause [tr]
-    (if-let [cause (.getCause tr)]
-            (recur cause)
-            tr)
-)
-
-;;;
- ; Prints a Cloiure-oriented view of one element in a stack trace.
- ;;
-(§ defn print-trace-element [e]
-    (let [class (.getClassName e)
-                method (.getMethodName e)]
-            (let [match (re-matches #"^([A-Za-z0-9_.-]+)\$(\w+)__\d+$" (str class))]
-            (if (and match (= "invoke" method))
-                (apply printf "%s/%s" (rest match))
-                (printf "%s.%s" class method))))
-    (printf " (%s:%d)" (or (.getFileName e) "") (.getLineNumber e))
-)
-
-;;;
- ; Prints the class and message of a Throwable.
- ;;
-(§ defn print-throwable [tr]
-    (printf "%s: %s" (.getName (class tr)) (.getMessage tr))
-)
-
-;;;
- ; Prints a Cloiure-oriented stack trace of tr, a Throwable.
- ; Prints a maximum of n stack frames (default: unlimited).
- ; Does not print chained exceptions (causes).
- ;;
-(§ defn print-stack-trace
-    ([tr] (print-stack-trace tr nil))
-    ([^Throwable tr n]
-            (let [st (.getStackTrace tr)]
-            (print-throwable tr)
-            (newline)
-            (print " at ")
-            (if-let [e (first st)]
-                (print-trace-element e)
-                (print "[empty stack trace]"))
-            (newline)
-            (doseq [e (if (nil? n)
-                        (rest st)
-                        (take (dec n) (rest st)))]
-                (print "    ")
-                (print-trace-element e)
-                (newline))))
-)
-
-;;;
- ; Like print-stack-trace but prints chained exceptions (causes).
- ;;
-(§ defn print-cause-trace
-    ([tr] (print-cause-trace tr nil))
-    ([tr n]
-            (print-stack-trace tr n)
-            (when-let [cause (.getCause tr)]
-            (print "Caused by: " )
-            (recur cause n)))
-)
-
-;;;
- ; REPL utility. Prints a brief stack trace for the root cause of the
- ; most recent exception.
- ;;
-(§ defn e []
-    (print-stack-trace (root-cause *e) 8)
-)
-
-;;;
- ; Cloiure String utilities
- ;
- ; It is poor form to (:use cloiure.string). Instead, use require
- ; with :as to specify a prefix, e.g.
- ;
- ; (ns your.namespace.here
- ; (:require [cloiure.string :as str]))
- ;
- ; Design notes for cloiure.string:
- ;
- ; 1. Strings are objects (as opposed to sequences). As such, the
- ; string being manipulated is the first argument to a function;
- ; passing nil will result in a NullPointerException unless
- ; documented otherwise. If you want sequence-y behavior instead,
- ; use a sequence.
- ;
- ; 2. Functions are generally not lazy, and call straight to host
- ; methods where those are available and efficient.
- ;
- ; 3. Functions take advantage of String implementation details to
- ; write high-performing loop/recurs instead of using higher-order
- ; functions. (This is not idiomatic in general-purpose application
- ; code.)
- ;
- ; 4. When a function is documented to accept a string argument, it
- ; will take any implementation of the correct *interface* on the
- ; host platform. In Java, this is CharSequence, which is more
- ; general than String. In ordinary usage you will almost always
- ; pass concrete strings. If you are doing something unusual,
- ; e.g. passing a mutable implementation of CharSequence, then
- ; thread-safety is your responsibility.
- ;;
-#_(ns cloiure.string
-    (:refer-cloiure :exclude [replace reverse])
-    (:import [java.util.regex Pattern Matcher]
-             [cloiure.lang LazilyPersistentVector]))
-
-;;;
- ; Returns s with its characters reversed.
- ;;
-(§ defn ^String reverse [^CharSequence s]
-    (.toString (.reverse (StringBuilder. s)))
-)
-
-;;;
- ; Given a replacement string that you wish to be a literal
- ; replacement for a pattern match in replace or replace-first, do the
- ; necessary escaping of special characters in the replacement.
- ;;
-(§ defn ^String re-quote-replacement [^CharSequence replacement]
-    (Matcher/quoteReplacement (.toString ^CharSequence replacement))
-)
-
-(§ defn- replace-by [^CharSequence s re f]
-    (let [m (re-matcher re s)]
-            (if (.find m)
-            (let [buffer (StringBuffer. (.length s))]
-                (loop [found true]
-                (if found
-                    (do (.appendReplacement m buffer (Matcher/quoteReplacement (f (re-groups m))))
-                        (recur (.find m)))
-                    (do (.appendTail m buffer)
-                        (.toString buffer)))))
-            s))
-)
-
-;;;
- ; Replaces all instance of match with replacement in s.
- ;
- ; match/replacement can be:
- ;
- ; string / string
- ; char / char
- ; pattern / (string or function of match).
- ;
- ; See also replace-first.
- ;
- ; The replacement is literal (i.e. none of its characters are treated
- ; specially) for all cases above except pattern / string.
- ;
- ; For pattern / string, $1, $2, etc. in the replacement string are
- ; substituted with the string that matched the corresponding
- ; parenthesized group in the pattern. If you wish your replacement
- ; string r to be used literally, use (re-quote-replacement r) as the
- ; replacement argument. See also documentation for
- ; java.util.regex.Matcher's appendReplacement method.
- ;
- ; Example:
- ; (cloiure.string/replace "Almost Pig Latin" #"\\b(\\w)(\\w+)\\b" "$2$1ay")
- ; -> "lmostAay igPay atinLay"
- ;;
-(§ defn ^String replace [^CharSequence s match replacement]
-    (let [s (.toString s)]
-            (cond
-            (instance? Character match) (.replace s ^Character match ^Character replacement)
-            (instance? CharSequence match) (.replace s ^CharSequence match ^CharSequence replacement)
-            (instance? Pattern match) (if (instance? CharSequence replacement)
-                                        (.replaceAll (re-matcher ^Pattern match s)
-                                                    (.toString ^CharSequence replacement))
-                                        (replace-by s match replacement))
-            :else (throw (IllegalArgumentException. (str "Invalid match arg: " match)))))
-)
-
-(§ defn- replace-first-by [^CharSequence s ^Pattern re f]
-    (let [m (re-matcher re s)]
-            (if (.find m)
-            (let [buffer (StringBuffer. (.length s))
-                    rep (Matcher/quoteReplacement (f (re-groups m)))]
-                (.appendReplacement m buffer rep)
-                (.appendTail m buffer)
-                (str buffer))
-            s))
-)
-
-(§ defn- replace-first-char [^CharSequence s ^Character match replace]
-    (let [s (.toString s)
-                i (.indexOf s (int match))]
-            (if (= -1 i)
-            s
-            (str (subs s 0 i) replace (subs s (inc i)))))
-)
-
-(§ defn- replace-first-str [^CharSequence s ^String match ^String replace]
-    (let [^String s (.toString s)
-                i (.indexOf s match)]
-            (if (= -1 i)
-            s
-            (str (subs s 0 i) replace (subs s (+ i (.length match))))))
-)
-
-;;;
- ; Replaces the first instance of match with replacement in s.
- ;
- ; match/replacement can be:
- ;
- ; char / char
- ; string / string
- ; pattern / (string or function of match).
- ;
- ; See also replace.
- ;
- ; The replacement is literal (i.e. none of its characters are treated
- ; specially) for all cases above except pattern / string.
- ;
- ; For pattern / string, $1, $2, etc. in the replacement string are
- ; substituted with the string that matched the corresponding
- ; parenthesized group in the pattern. If you wish your replacement
- ; string r to be used literally, use (re-quote-replacement r) as the
- ; replacement argument. See also documentation for
- ; java.util.regex.Matcher's appendReplacement method.
- ;
- ; Example:
- ; (cloiure.string/replace-first "swap first two words"
- ; #"(\\w+)(\\s+)(\\w+)" "$3$2$1")
- ; -> "first swap two words"
- ;;
-(§ defn ^String replace-first [^CharSequence s match replacement]
-    (let [s (.toString s)]
-            (cond
-            (instance? Character match)
-            (replace-first-char s match replacement)
-            (instance? CharSequence match)
-            (replace-first-str s (.toString ^CharSequence match)
-                                (.toString ^CharSequence replacement))
-            (instance? Pattern match)
-            (if (instance? CharSequence replacement)
-            (.replaceFirst (re-matcher ^Pattern match s)
-                            (.toString ^CharSequence replacement))
-            (replace-first-by s match replacement))
-            :else (throw (IllegalArgumentException. (str "Invalid match arg: " match)))))
-)
-
-;;;
- ; Returns a string of all elements in coll, as returned by (seq coll),
- ; separated by an optional separator.
- ;;
-(§ defn ^String join
-    ([coll]
-            (apply str coll))
-    ([separator coll]
-            (loop [sb (StringBuilder. (str (first coll)))
-                    more (next coll)
-                    sep (str separator)]
-            (if more
-                (recur (-> sb (.append sep) (.append (str (first more))))
-                        (next more)
-                        sep)
-                (str sb))))
-)
-
-;;;
- ; Converts first character of the string to upper-case, all other
- ; characters to lower-case.
- ;;
-(§ defn ^String capitalize [^CharSequence s]
-    (let [s (.toString s)]
-            (if (< (count s) 2)
-            (.toUpperCase s)
-            (str (.toUpperCase (subs s 0 1))
-                (.toLowerCase (subs s 1)))))
-)
-
-;;;
- ; Converts string to all upper-case.
- ;;
-(§ defn ^String upper-case [^CharSequence s] (.. s toString toUpperCase))
-
-;;;
- ; Converts string to all lower-case.
- ;;
-(§ defn ^String lower-case [^CharSequence s] (.. s toString toLowerCase))
-
-;;;
- ; Splits string on a regular expression. Optional argument limit is
- ; the maximum number of splits. Not lazy. Returns vector of the splits.
- ;;
-(§ defn split
-    ([^CharSequence s ^Pattern re]
-            (LazilyPersistentVector/createOwning (.split re s)))
-    ([ ^CharSequence s ^Pattern re limit]
-            (LazilyPersistentVector/createOwning (.split re s limit)))
-)
-
-;;;
- ; Splits s on \\n or \\r\\n.
- ;;
-(§ defn split-lines [^CharSequence s] (split s #"\r?\n"))
-
-;;;
- ; Removes whitespace from both ends of string.
- ;;
-(§ defn ^String trim [^CharSequence s]
-    (let [len (.length s)]
-            (loop [rindex len]
-            (if (zero? rindex)
-                ""
-                (if (Character/isWhitespace (.charAt s (dec rindex)))
-                (recur (dec rindex))
-                ;; there is at least one non-whitespace char in the string,
-                ;; so no need to check for lindex reaching len.
-                (loop [lindex 0]
-                    (if (Character/isWhitespace (.charAt s lindex))
-                    (recur (inc lindex))
-                    (.. s (subSequence lindex rindex) toString)))))))
-)
-
-;;;
- ; Removes whitespace from the left side of string.
- ;;
-(§ defn ^String triml [^CharSequence s]
-    (let [len (.length s)]
-            (loop [index 0]
-            (if (= len index)
-                ""
-                (if (Character/isWhitespace (.charAt s index))
-                (recur (unchecked-inc index))
-                (.. s (subSequence index len) toString)))))
-)
-
-;;;
- ; Removes whitespace from the right side of string.
- ;;
-(§ defn ^String trimr [^CharSequence s]
-    (loop [index (.length s)]
-            (if (zero? index)
-            ""
-            (if (Character/isWhitespace (.charAt s (unchecked-dec index)))
-                (recur (unchecked-dec index))
-                (.. s (subSequence 0 index) toString))))
-)
-
-;;;
- ; Removes all trailing newline \\n or return \\r characters from
- ; string. Similar to Perl's chomp.
- ;;
-(§ defn ^String trim-newline [^CharSequence s]
-    (loop [index (.length s)]
-            (if (zero? index)
-            ""
-            (let [ch (.charAt s (dec index))]
-                (if (or (= ch \newline) (= ch \return))
-                (recur (dec index))
-                (.. s (subSequence 0 index) toString)))))
-)
-
-;;;
- ; True if s is nil, empty, or contains only whitespace.
- ;;
-(§ defn blank? [^CharSequence s]
-    (if s
-            (loop [index (int 0)]
-            (if (= (.length s) index)
-                true
-                (if (Character/isWhitespace (.charAt s index))
-                (recur (inc index))
-                false)))
-            true)
-)
-
-;;;
- ; Return a new string, using cmap to escape each character ch
- ; from s as follows:
- ;
- ; If (cmap ch) is nil, append ch to the new string.
- ; If (cmap ch) is non-nil, append (str (cmap ch)) instead.
- ;;
-(§ defn ^String escape [^CharSequence s cmap]
-    (loop [index (int 0)
-                buffer (StringBuilder. (.length s))]
-            (if (= (.length s) index)
-            (.toString buffer)
-            (let [ch (.charAt s index)]
-                (if-let [replacement (cmap ch)]
-                (.append buffer replacement)
-                (.append buffer ch))
-                (recur (inc index) buffer))))
-)
-
-;;;
- ; Return index of value (string or char) in s, optionally searching
- ; forward from from-index. Return nil if value not found.
- ;;
-(§ defn index-of
-    ([^CharSequence s value]
-        (let [result ^long
-                (if (instance? Character value)
-                (.indexOf (.toString s) ^int (.charValue ^Character value))
-                (.indexOf (.toString s) ^String value))]
-            (if (= result -1)
-            nil
-            result)))
-    ([^CharSequence s value ^long from-index]
-        (let [result ^long
-                (if (instance? Character value)
-                (.indexOf (.toString s) ^int (.charValue ^Character value) (unchecked-int from-index))
-                (.indexOf (.toString s) ^String value (unchecked-int from-index)))]
-            (if (= result -1)
-            nil
-            result)))
-)
-
-;;;
- ; Return last index of value (string or char) in s, optionally
- ; searching backward from from-index. Return nil if value not found.
- ;;
-(§ defn last-index-of
-    ([^CharSequence s value]
-        (let [result ^long
-                (if (instance? Character value)
-                (.lastIndexOf (.toString s) ^int (.charValue ^Character value))
-                (.lastIndexOf (.toString s) ^String value))]
-            (if (= result -1)
-            nil
-            result)))
-    ([^CharSequence s value ^long from-index]
-        (let [result ^long
-                (if (instance? Character value)
-                (.lastIndexOf (.toString s) ^int (.charValue ^Character value) (unchecked-int from-index))
-                (.lastIndexOf (.toString s) ^String value (unchecked-int from-index)))]
-            (if (= result -1)
-            nil
-            result)))
-)
-
-;;;
- ; True if s starts with substr.
- ;;
-(§ defn starts-with? [^CharSequence s ^String substr]
-    (.startsWith (.toString s) substr)
-)
-
-;;;
- ; True if s ends with substr.
- ;;
-(§ defn ends-with? [^CharSequence s ^String substr]
-    (.endsWith (.toString s) substr)
-)
-
-;;;
- ; True if s includes substr.
- ;;
-(§ defn includes? [^CharSequence s ^CharSequence substr]
-    (.contains (.toString s) substr)
-)
-
-;;;
- ; This file defines a generic tree walker for Cloiure data
- ; structures. It takes any data structure (list, vector, map, set,
- ; seq), calls a function on every element, and uses the return value
- ; of the function in place of the original. This makes it fairly
- ; easy to write recursive search-and-replace functions, as shown in
- ; the examples.
- ;
- ; Note: "walk" supports all Cloiure data structures EXCEPT maps
- ; created with sorted-map-by. There is no (obvious) way to retrieve
- ; the sorting function.
- ;;
-#_(ns cloiure.walk)
-
-;;;
- ; Traverses form, an arbitrary data structure. inner and outer are
- ; functions. Applies inner to each element of form, building up a
- ; data structure of the same type, then applies outer to the result.
- ; Recognizes all Cloiure data structures. Consumes seqs as with doall.
- ;;
-(§ defn walk [inner outer form]
-    (cond
-        (list? form) (outer (apply list (map inner form)))
-        (instance? cloiure.lang.IMapEntry form) (outer (vec (map inner form)))
-        (seq? form) (outer (doall (map inner form)))
-        (instance? cloiure.lang.IRecord form)
-            (outer (reduce (fn [r x] (conj r (inner x))) form form))
-        (coll? form) (outer (into (empty form) (map inner form)))
-        :else (outer form))
-)
-
-;;;
- ; Performs a depth-first, post-order traversal of form. Calls f on
- ; each sub-form, uses f's return value in place of the original.
- ; Recognizes all Cloiure data structures. Consumes seqs as with doall.
- ;;
-(§ defn postwalk [f form]
-    (walk (partial postwalk f) f form)
-)
-
-;;;
- ; Like postwalk, but does pre-order traversal.
- ;;
-(§ defn prewalk [f form]
-    (walk (partial prewalk f) identity (f form))
-)
-
-;; Note: I wanted to write:
-;;
-;; (defn walk
-;;   [f form]
-;;   (let [pf (partial walk f)]
-;;     (if (coll? form)
-;;       (f (into (empty form) (map pf form)))
-;;       (f form))))
-;;
-;; but this throws a ClassCastException when applied to a map.
-
-;;;
- ; Demonstrates the behavior of postwalk by printing each form as it is
- ; walked. Returns form.
- ;;
-(§ defn postwalk-demo [form]
-    (postwalk (fn [x] (print "Walked: ") (prn x) x) form)
-)
-
-;;;
- ; Demonstrates the behavior of prewalk by printing each form as it is
- ; walked. Returns form.
- ;;
-(§ defn prewalk-demo [form]
-    (prewalk (fn [x] (print "Walked: ") (prn x) x) form)
-)
-
-;;;
- ; Recursively transforms all map keys from strings to keywords.
- ;;
-(§ defn keywordize-keys [m]
-    (let [f (fn [[k v]] (if (string? k) [(keyword k) v] [k v]))]
-            ;; only apply to maps
-            (postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m))
-)
-
-;;;
- ; Recursively transforms all map keys from keywords to strings.
- ;;
-(§ defn stringify-keys [m]
-    (let [f (fn [[k v]] (if (keyword? k) [(name k) v] [k v]))]
-            ;; only apply to maps
-            (postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m))
-)
-
-;;;
- ; Recursively transforms form by replacing keys in smap with their
- ; values. Like cloiure/replace but works on any data structure. Does
- ; replacement at the root of the tree first.
- ;;
-(§ defn prewalk-replace [smap form]
-    (prewalk (fn [x] (if (contains? smap x) (smap x) x)) form)
-)
-
-;;;
- ; Recursively transforms form by replacing keys in smap with their
- ; values. Like cloiure/replace but works on any data structure. Does
- ; replacement at the leaves of the tree first.
- ;;
-(§ defn postwalk-replace [smap form]
-    (postwalk (fn [x] (if (contains? smap x) (smap x) x)) form)
-)
-
-;;;
- ; Recursively performs all possible macroexpansions in form.
- ;;
-(§ defn macroexpand-all [form]
-    (prewalk (fn [x] (if (seq? x) (macroexpand x) x)) form)
-)
-
-#_(ns cloiure.main
-    (:refer-cloiure :exclude [with-bindings])
-    (:require [cloiure.spec.alpha])
-    (:import [cloiure.lang Compiler Compiler$CompilerException LineNumberingPushbackReader RT])
-;;  (:use [cloiure.repl :only [demunge root-cause stack-element-str]])
-)
-
-(§ declare main)
-
-;; redundantly copied from cloiure.repl to avoid dep
-
-;;;
- ; Given a string representation of a fn class,
- ; as in a stack trace element, returns a readable version.
- ;;
-(§ defn demunge [fn-name]
-    (cloiure.lang.Compiler/demunge fn-name)
-)
-
-;;;
- ; Returns the initial cause of an exception or error by peeling off all of
- ; its wrappers
- ;;
-(§ defn root-cause [^Throwable t]
-    (loop [cause t]
-            (if (and (instance? cloiure.lang.Compiler$CompilerException cause)
-                    (not= (.source ^cloiure.lang.Compiler$CompilerException cause) "NO_SOURCE_FILE"))
-            cause
-            (if-let [cause (.getCause cause)]
-                (recur cause)
-                cause)))
-)
-
-;;;
- ; Returns a (possibly unmunged) string representation of a StackTraceElement
- ;;
-(§ defn stack-element-str [^StackTraceElement el]
-    (let [file (.getFileName el)
-                cloiure-fn? (and file (or (.endsWith file ".cli")
-                                        (.endsWith file ".clic")
-                                        (= file "NO_SOURCE_FILE")))]
-            (str (if cloiure-fn?
-                (demunge (.getClassName el))
-                (str (.getClassName el) "." (.getMethodName el)))
-                " (" (.getFileName el) ":" (.getLineNumber el) ")"))
-)
-;; end of redundantly copied from cloiure.repl to avoid dep
-
-;;;
- ; Executes body in the context of thread-local bindings for several vars
- ; that often need to be set!: *ns* *warn-on-reflection* *math-context*
- ; *print-meta* *print-length* *print-level* *compile-path*
- ; *command-line-args* *1 *2 *3 *e
- ;;
-(§ defmacro with-bindings [& body]
-    `(binding [*ns* *ns*
-                *warn-on-reflection* *warn-on-reflection*
-                *math-context* *math-context*
-                *print-meta* *print-meta*
-                *print-length* *print-length*
-                *print-level* *print-level*
-                *print-namespace-maps* true
-                *compile-path* (System/getProperty "cloiure.compile.path" "classes")
-                *command-line-args* *command-line-args*
-                *assert* *assert*
-                cloiure.spec.alpha/*explain-out* cloiure.spec.alpha/*explain-out*
-                *1 nil
-                *2 nil
-                *3 nil
-                *e nil]
-        ~@body)
-)
-
-;;;
- ; Default :prompt hook for repl
- ;;
-(§ defn repl-prompt []
-    (printf "%s=> " (ns-name *ns*))
-)
-
-;;;
- ; If the next character on stream s is a newline, skips it, otherwise
- ; leaves the stream untouched. Returns :line-start, :stream-end, or :body
- ; to indicate the relative location of the next character on s. The stream
- ; must either be an instance of LineNumberingPushbackReader or duplicate
- ; its behavior of both supporting .unread and collapsing all of CR, LF, and
- ; CRLF to a single \\newline.
- ;;
-(§ defn skip-if-eol [s]
-    (let [c (.read s)]
-            (cond
-            (= c (int \newline)) :line-start
-            (= c -1) :stream-end
-            :else (do (.unread s c) :body)))
-)
-
-;;;
- ; Skips whitespace characters on stream s. Returns :line-start, :stream-end,
- ; or :body to indicate the relative location of the next character on s.
- ; Interprets comma as whitespace and semicolon as comment to end of line.
- ; Does not interpret #! as comment to end of line because only one
- ; character of lookahead is available. The stream must either be an
- ; instance of LineNumberingPushbackReader or duplicate its behavior of both
- ; supporting .unread and collapsing all of CR, LF, and CRLF to a single
- ; \\newline.
- ;;
-(§ defn skip-whitespace [s]
-    (loop [c (.read s)]
-            (cond
-            (= c (int \newline)) :line-start
-            (= c -1) :stream-end
-            (= c (int \;)) (do (.readLine s) :line-start)
-            (or (Character/isWhitespace (char c)) (= c (int \,))) (recur (.read s))
-            :else (do (.unread s c) :body)))
-)
-
-;;;
- ; Default :read hook for repl. Reads from *in* which must either be an
- ; instance of LineNumberingPushbackReader or duplicate its behavior of both
- ; supporting .unread and collapsing all of CR, LF, and CRLF into a single
- ; \\newline. repl-read:
- ; - skips whitespace, then
- ; - returns request-prompt on start of line, or
- ; - returns request-exit on end of stream, or
- ; - reads an object from the input stream, then
- ; - skips the next input character if it's end of line, then
- ; - returns the object.
- ;;
-(§ defn repl-read [request-prompt request-exit]
-    (or ({:line-start request-prompt :stream-end request-exit}
-            (skip-whitespace *in*))
-            (let [input (read {:read-cond :allow} *in*)]
-                (skip-if-eol *in*)
-                input))
-)
-
-;;;
- ; Returns the root cause of throwables
- ;;
-(§ defn repl-exception [throwable]
-    (root-cause throwable)
-)
-
-;;;
- ; Default :caught hook for repl
- ;;
-(§ defn repl-caught [e]
-    (let [ex (repl-exception e)
-                tr (.getStackTrace ex)
-                el (when-not (zero? (count tr)) (aget tr 0))]
-            (binding [*out* *err*]
-            (println (str (-> ex class .getSimpleName) " " (.getMessage ex) " "
-                            (when-not (instance? cloiure.lang.Compiler$CompilerException ex)
-                            (str " " (if el (stack-element-str el) "[trace missing]")))))))
-)
-
-;;;
- ; A sequence of lib specs that are applied to `require` by default when a new command-line REPL is started.
- ;;
-(§ def repl-requires '[[cloiure.repl :refer (source apropos dir pst doc find-doc)]])
-
-;;;
- ; Evaluates body with *read-eval* set to a "known" value,
- ; i.e. substituting true for :unknown if necessary.
- ;;
-(§ defmacro with-read-known [& body]
-    `(binding [*read-eval* (if (= :unknown *read-eval*) true *read-eval*)] ~@body)
-)
-
-;;;
- ; Generic, reusable, read-eval-print loop. By default, reads from *in*,
- ; writes to *out*, and prints exception summaries to *err*. If you use the
- ; default :read hook, *in* must either be an instance of
- ; LineNumberingPushbackReader or duplicate its behavior of both supporting
- ; .unread and collapsing CR, LF, and CRLF into a single \\newline. Options
- ; are sequential keyword-value pairs. Available options and their defaults:
- ;
- ; - :init, function of no arguments, initialization hook called with
- ; bindings for set!-able vars in place.
- ; default: #()
- ;
- ; - :need-prompt, function of no arguments, called before each
- ; read-eval-print except the first, the user will be prompted if it
- ; returns true.
- ; default: (if (instance? LineNumberingPushbackReader *in*)
- ; #(.atLineStart *in*)
- ; #(identity true))
- ;
- ; - :prompt, function of no arguments, prompts for more input.
- ; default: repl-prompt
- ;
- ; - :flush, function of no arguments, flushes output
- ; default: flush
- ;
- ; - :read, function of two arguments, reads from *in*:
- ; - returns its first argument to request a fresh prompt
- ; - depending on need-prompt, this may cause the repl to prompt
- ; before reading again
- ; - returns its second argument to request an exit from the repl
- ; - else returns the next object read from the input stream
- ; default: repl-read
- ;
- ; - :eval, function of one argument, returns the evaluation of its
- ; argument
- ; default: eval
- ;
- ; - :print, function of one argument, prints its argument to the output
- ; default: prn
- ;
- ; - :caught, function of one argument, a throwable, called when
- ; read, eval, or print throws an exception or error
- ; default: repl-caught
- ;;
-(§ defn repl [& options]
-    (let [cl (.getContextClassLoader (Thread/currentThread))]
-            (.setContextClassLoader (Thread/currentThread) (cloiure.lang.DynamicClassLoader. cl)))
-    (let [{:keys [init need-prompt prompt flush read eval print caught]
-                :or {init        #()
-                    need-prompt (if (instance? LineNumberingPushbackReader *in*)
-                                    #(.atLineStart ^LineNumberingPushbackReader *in*)
-                                    #(identity true))
-                    prompt      repl-prompt
-                    flush       flush
-                    read        repl-read
-                    eval        eval
-                    print       prn
-                    caught      repl-caught}}
-                (apply hash-map options)
-                request-prompt (Object.)
-                request-exit (Object.)
-                read-eval-print
-                (fn []
-                (try
-                    (let [read-eval *read-eval*
-                        input (with-read-known (read request-prompt request-exit))]
-                    (or (#{request-prompt request-exit} input)
-                        (let [value (binding [*read-eval* read-eval] (eval input))]
-                        (print value)
-                        (set! *3 *2)
-                        (set! *2 *1)
-                        (set! *1 value))))
-                (catch Throwable e
-                    (caught e)
-                    (set! *e e))))]
-            (with-bindings
-            (try
-            (init)
-            (catch Throwable e
-                (caught e)
-                (set! *e e)))
-            (prompt)
-            (flush)
-            (loop []
-            (when-not
-                (try (identical? (read-eval-print) request-exit)
-                (catch Throwable e
-                (caught e)
-                (set! *e e)
-                nil))
-                (when (need-prompt)
-                (prompt)
-                (flush))
-                (recur)))))
-)
-
-;;;
- ; Loads Cloiure source from a file or resource given its path. Paths
- ; beginning with @ or @/ are considered relative to classpath.
- ;;
-(§ defn load-script [^String path]
-    (if (.startsWith path "@")
-            (RT/loadResourceScript
-            (.substring path (if (.startsWith path "@/") 2 1)))
-            (Compiler/loadFile path))
-)
-
-;;;
- ; Load a script
- ;;
-(§ defn- init-opt [path] (load-script path))
-
-;;;
- ; Evals expressions in str, prints each non-nil result using prn
- ;;
-(§ defn- eval-opt [str]
-    (let [eof (Object.)
-                reader (LineNumberingPushbackReader. (java.io.StringReader. str))]
-            (loop [input (with-read-known (read reader false eof))]
-                (when-not (= input eof)
-                (let [value (eval input)]
-                    (when-not (nil? value)
-                    (prn value))
-                    (recur (with-read-known (read reader false eof)))))))
-)
-
-;;;
- ; Returns the handler associated with an init opt
- ;;
-(§ defn- init-dispatch [opt]
-    ({"-i"     init-opt
-      "--init" init-opt
-      "-e"     eval-opt
-      "--eval" eval-opt} opt)
-)
-
-;;;
- ; Common initialize routine for repl, script, and null opts
- ;;
-(§ defn- initialize [args inits]
-    (in-ns 'user)
-    (set! *command-line-args* args)
-    (doseq [[opt arg] inits]
-            ((init-dispatch opt) arg))
-)
-
-;;;
- ; Call the -main function from a namespace with string arguments from
- ; the command line.
- ;;
-(§ defn- main-opt [[_ main-ns & args] inits]
-    (with-bindings
-            (initialize args inits)
-            (apply (ns-resolve (doto (symbol main-ns) require) '-main) args))
-)
-
-;;;
- ; Returns cloiure version as a printable string.
- ;;
-(§ defn cloiure-version [] "x.y.z")
-
-;;;
- ; Start a repl with args and inits. Print greeting if no eval options were
- ; present
- ;;
-(§ defn- repl-opt [[_ & args] inits]
-    (when-not (some #(= eval-opt (init-dispatch (first %))) inits)
-            (println "Cloiure" (cloiure-version)))
-    (repl :init (fn []
-                        (initialize args inits)
-                        (apply require repl-requires)))
-    (prn)
-    (System/exit 0)
-)
-
-;;;
- ; Run a script from a file, resource, or standard in with args and inits
- ;;
-(§ defn- script-opt [[path & args] inits]
-    (with-bindings
-            (initialize args inits)
-            (if (= path "-")
-            (load-reader *in*)
-            (load-script path)))
-)
-
-;;;
- ; No repl or script opt present, just bind args and run inits
- ;;
-(§ defn- null-opt [args inits]
-    (with-bindings (initialize args inits))
-)
-
-;;;
- ; Print help text for main
- ;;
-(§ defn- help-opt [_ _]
-    (println (:doc (meta (var main))))
-)
-
-;;;
- ; Returns the handler associated with a main option
- ;;
-(§ defn- main-dispatch [opt]
-    (or
-        ({"-r"     repl-opt
-            "--repl" repl-opt
-            "-m"     main-opt
-            "--main" main-opt
-            nil      null-opt
-            "-h"     help-opt
-            "--help" help-opt
-            "-?"     help-opt} opt)
-        script-opt)
-)
-
-;;;
- ; Usage: java -cp cloiure.jar cloiure.main [init-opt*] [main-opt] [arg*]
- ;
- ; With no options or args, runs an interactive Read-Eval-Print Loop
- ;
- ; init options:
- ; -i, --init path     Load a file or resource
- ; -e, --eval string   Evaluate expressions in string; print non-nil values
- ;
- ; main options:
- ; -m, --main ns-name  Call the -main function from a namespace with args
- ; -r, --repl          Run a repl
- ; path                Run a script from a file or resource
- ; -                   Run a script from standard input
- ; -h, -?, --help      Print this help message and exit
- ;
- ; operation:
- ;
- ; - Establishes thread-local bindings for commonly set!-able vars
- ; - Enters the user namespace
- ; - Binds *command-line-args* to a seq of strings containing command line
- ; args that appear after any main option
- ; - Runs all init options in order
- ; - Calls a -main function or runs a repl or script if requested
- ;
- ; The init options may be repeated and mixed freely, but must appear before
- ; any main option. The appearance of any eval option before running a repl
- ; suppresses the usual repl greeting message: "Cloiure ~(cloiure-version)".
- ;
- ; Paths may be absolute or relative in the filesystem or relative to
- ; classpath. Classpath-relative paths have prefix of @ or @/
- ;;
-(§ defn main [& args]
-    (try
-        (if args
-            (loop [[opt arg & more :as args] args inits []]
-            (if (init-dispatch opt)
-                (recur more (conj inits [opt arg]))
-                ((main-dispatch opt) args inits)))
-            (repl-opt nil nil))
-        (finally
-            (flush)))
 )
