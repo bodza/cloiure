@@ -48,7 +48,7 @@
     (:use [cloiure slang]))
 
 (import
-    [java.io File FileInputStream FileNotFoundException FileOutputStream InputStreamReader IOException LineNumberReader OutputStreamWriter PrintWriter PushbackReader Reader StringReader StringWriter Writer]
+    [java.io File FileInputStream FileNotFoundException FileOutputStream InputStreamReader IOException LineNumberReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
   #_[java.lang Character Class Exception IllegalArgumentException IllegalStateException Integer Number NumberFormatException Object RuntimeException String StringBuilder Throwable UnsupportedOperationException]
     [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
     [java.lang.reflect Array Constructor Field InvocationHandler #_Method Modifier]
@@ -66,7 +66,7 @@
     [cloiure.asm.commons GeneratorAdapter Method]
 )
 
-(declare AFn'new AFunction'new AMapEntry'new APersistentMap'new APersistentVector'new AReference'new ASeq'new ATransientMap'new AbortException'new AbstractMap'new ArgReader'new AssignParser'new Attribute'new BigDecimalOps'new BigIntOps'new BodyParser'new CaseParser'new ConditionalReader'new ConstantParser'new CtorReader'new DefParser'new DefaultComparator'new DeftypeParser'new DoubleOps'new EdnCharacterReader'new EdnCommentReader'new EdnDiscardReader'new EdnDispatchReader'new EdnListReader'new EdnMapReader'new EdnMetaReader'new EdnNamespaceMapReader'new EdnSetReader'new EdnStringReader'new EdnSymbolicValueReader'new EdnUnmatchedDelimiterReader'new EdnUnreadableReader'new EdnVectorReader'new EmptyBuffer'new Error'new EvalReader'new Exception'new FieldExpr'new FnReader'new HostExpr'new HostParser'new IfParser'new IllegalArgumentException'new ImportParser'new IteratorSeqState'new LetFnParser'new LetParser'new LispCharacterReader'new LispCommentReader'new LispDiscardReader'new LispDispatchReader'new LispListReader'new LispMapReader'new LispMetaReader'new LispNamespaceMapReader'new LispSetReader'new LispStringReader'new LispSymbolicValueReader'new LispUnmatchedDelimiterReader'new LispUnreadableReader'new LispVectorReader'new LiteralExpr'new LockingTransaction'new LongOps'new MethodExpr'new MonitorEnterParser'new MonitorExitParser'new NewParser'new NilExpr'new Number'new Obj'new OpsP'new Primordial'new PushbackReader'new RatioOps'new RecurParser'new RegexReader'new ReifyParser'new RestFn'new RetryEx'new RuntimeException'new SyntaxQuoteReader'new TaggedReader'new TheVarParser'new ThrowParser'new TryParser'new URLClassLoader'new UnquoteReader'new UntypedExpr'new VarReader'new)
+(declare AFn'new AFunction'new AMapEntry'new APersistentMap'new APersistentVector'new AReference'new ASeq'new ATransientMap'new AbortException'new AbstractMap'new ArgReader'new AssignParser'new Attribute'new BigDecimalOps'new BigIntOps'new BodyParser'new CaseParser'new ConditionalReader'new ConstantParser'new CtorReader'new DefParser'new DefaultComparator'new DeftypeParser'new DoubleOps'new EmptyBuffer'new Error'new EvalReader'new Exception'new FieldExpr'new FnReader'new HostExpr'new HostParser'new IfParser'new IllegalArgumentException'new ImportParser'new IteratorSeqState'new LetFnParser'new LetParser'new CharacterReader'new CommentReader'new DiscardReader'new DispatchReader'new ListReader'new MapReader'new MetaReader'new NamespaceMapReader'new SetReader'new StringReader'new SymbolicValueReader'new UnmatchedDelimiterReader'new UnreadableReader'new VectorReader'new LiteralExpr'new LockingTransaction'new LongOps'new MethodExpr'new MonitorEnterParser'new MonitorExitParser'new NewParser'new NilExpr'new Number'new Obj'new OpsP'new Primordial'new PushbackReader'new RatioOps'new RecurParser'new RegexReader'new ReifyParser'new RestFn'new RetryEx'new RuntimeException'new SyntaxQuoteReader'new TheVarParser'new ThrowParser'new TryParser'new URLClassLoader'new UnquoteReader'new UntypedExpr'new VarReader'new)
 (declare AFn'applyToHelper)
 (declare ActionQueue'EMPTY ActionQueue'new)
 (declare AgentAction'new AgentAction'doRun)
@@ -153,10 +153,6 @@
 (declare Cycle'new-3 Cycle'new-5 Cycle'create)
 (declare Delay'new Delay'force)
 (declare DynamicClassLoader'classCache DynamicClassLoader'EMPTY_URLS DynamicClassLoader'RQ DynamicClassLoader'new-0 DynamicClassLoader'new-1 DynamicClassLoader'findInMemoryClass)
-(declare EdnReaderException'new)
-(declare EdnSymbolicValueReader'specials)
-(declare TaggedReader'READERS TaggedReader'DEFAULT)
-(declare EdnReader'macros EdnReader'dispatchMacros EdnReader'symbolPat EdnReader'intPat EdnReader'ratioPat EdnReader'floatPat EdnReader'taggedReader EdnReader'nonConstituent EdnReader'readString EdnReader'isWhitespace EdnReader'unread EdnReader'read1 EdnReader'EOF EdnReader'read-2 EdnReader'read-5 EdnReader'readToken EdnReader'readNumber EdnReader'readUnicodeChar-4 EdnReader'readUnicodeChar-5 EdnReader'interpretToken EdnReader'matchSymbol EdnReader'matchNumber EdnReader'getMacro EdnReader'isMacro EdnReader'isTerminatingMacro EdnReader'readDelimitedList)
 (declare ExceptionInfo'new-2 ExceptionInfo'new-3)
 (declare FnLoaderThunk'new)
 (declare Intrinsics'oa Intrinsics'ops Intrinsics'preds)
@@ -169,7 +165,7 @@
 (declare LineNumberingPushbackReader'newline LineNumberingPushbackReader'new-1 LineNumberingPushbackReader'new-2)
 (declare LispReaderException'new)
 (declare RegexReader'stringrdr)
-(declare LispSymbolicValueReader'specials)
+(declare SymbolicValueReader'specials)
 (declare WrappingReader'new)
 (declare SyntaxQuoteReader'syntaxQuote SyntaxQuoteReader'sqExpandList SyntaxQuoteReader'flattenMap)
 (declare ConditionalReader'READ_STARTED ConditionalReader'DEFAULT_FEATURE ConditionalReader'RESERVED_FEATURES ConditionalReader'hasFeature ConditionalReader'readCondDelimited ConditionalReader'checkConditionalAllowed)
@@ -16071,1012 +16067,6 @@
 )
 )
 
-(java-ns cloiure.lang.EdnReader
-
-(§ import java.io.IOException)
-(§ import java.io.PushbackReader)
-(§ import java.io.Reader)
-(§ import java.io.StringReader)
-(§ import java.math.BigDecimal)
-(§ import java.math.BigInteger)
-(§ import java.util.ArrayList)
-(§ import java.util.Iterator)
-(§ import java.util.List)
-(§ import java.util.regex.Matcher)
-(§ import java.util.regex.Pattern)
-
-(class-ns EdnReaderException (§ extends RuntimeException)
-    (defn- #_"EdnReaderException" EdnReaderException'init []
-        (hash-map
-            #_"int" :line 0
-            #_"int" :column 0
-        )
-    )
-
-    (defn #_"EdnReaderException" EdnReaderException'new [#_"int" line, #_"int" column, #_"Throwable" cause]
-        (let [this (merge (§ foreign RuntimeException'new cause) (EdnReaderException'init))]
-            (§ ass this (assoc this :line line))
-            (§ ass this (assoc this :column column))
-            this
-        )
-    )
-)
-
-#_closure
-(class-ns EdnStringReader (§ extends AFn)
-    (defn #_"EdnStringReader" EdnStringReader'new []
-        (AFn'new)
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"EdnStringReader" this, #_"Object" reader, #_"Object" doublequote, #_"Object" opts]
-        (let [#_"StringBuilder" sb (StringBuilder.)]
-            (let [#_"Reader" r (cast Reader reader)]
-                (loop-when-recur [#_"int" ch (EdnReader'read1 r)] (not= ch \") [(EdnReader'read1 r)] ;; oops! "
-                    (when (= ch -1)
-                        (throw (Util'runtimeException-1 "EOF while reading string"))
-                    )
-                    (when (= ch \\) ;; escape
-                        (§ ass ch (EdnReader'read1 r))
-                        (when (= ch -1)
-                            (throw (Util'runtimeException-1 "EOF while reading string"))
-                        )
-                        (case ch
-                            \t
-                            (do
-                                (§ ass ch \tab)
-                                (§ break )
-                            )
-                            \r
-                            (do
-                                (§ ass ch \return)
-                                (§ break )
-                            )
-                            \n
-                            (do
-                                (§ ass ch \newline)
-                                (§ break )
-                            )
-                            \\
-                            (do
-                                (§ break )
-                            )
-                            \" ;; oops! "
-                            (do
-                                (§ break )
-                            )
-                            \b
-                            (do
-                                (§ ass ch \backspace)
-                                (§ break )
-                            )
-                            \f
-                            (do
-                                (§ ass ch \formfeed)
-                                (§ break )
-                            )
-                            \u
-                            (do
-                                (§ ass ch (EdnReader'read1 r))
-                                (when (= (Character/digit ch, 16) -1)
-                                    (throw (Util'runtimeException-1 (str "Invalid unicode escape: \\u" (char ch))))
-                                )
-                                (§ ass ch (EdnReader'readUnicodeChar-5 (cast PushbackReader r), ch, 16, 4, true))
-                                (§ break )
-                            )
-                            (do
-                                (if (Character/isDigit ch)
-                                    (do
-                                        (§ ass ch (EdnReader'readUnicodeChar-5 (cast PushbackReader r), ch, 8, 3, false))
-                                        (when (< 0377 ch)
-                                            (throw (Util'runtimeException-1 "Octal escape sequence must be in range [0, 377]."))
-                                        )
-                                    )
-                                    (do
-                                        (throw (Util'runtimeException-1 (str "Unsupported escape character: \\" (char ch))))
-                                    )
-                                )
-                                (§ break )
-                            )
-                        )
-                    )
-                    (.append sb, (char ch))
-                )
-                (.toString sb)
-            )
-        )
-    )
-)
-
-#_closure
-(class-ns EdnCommentReader (§ extends AFn)
-    (defn #_"EdnCommentReader" EdnCommentReader'new []
-        (AFn'new)
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"EdnCommentReader" this, #_"Object" reader, #_"Object" semicolon, #_"Object" opts]
-        (let [#_"Reader" r (cast Reader reader)]
-            (§ let [#_"int" ch]
-                (§ loop
-                    (§ ass ch (EdnReader'read1 r))
-                    (§ recur-if (not (or (= ch -1) (= ch \newline) (= ch \return))))
-                )
-                r
-            )
-        )
-    )
-)
-
-#_closure
-(class-ns EdnDiscardReader (§ extends AFn)
-    (defn #_"EdnDiscardReader" EdnDiscardReader'new []
-        (AFn'new)
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"EdnDiscardReader" this, #_"Object" reader, #_"Object" underscore, #_"Object" opts]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (EdnReader'read-5 r, true, nil, true, opts)
-            r
-        )
-    )
-)
-
-#_closure
-(class-ns EdnNamespaceMapReader (§ extends AFn)
-    (defn #_"EdnNamespaceMapReader" EdnNamespaceMapReader'new []
-        (AFn'new)
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"EdnNamespaceMapReader" this, #_"Object" reader, #_"Object" colon, #_"Object" opts]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            ;; Read ns symbol
-            (let [#_"Object" sym (EdnReader'read-5 r, true, nil, false, opts)]
-                (when (or (not (§ instance? Symbol sym)) (some? (.getNamespace (cast' Symbol sym))))
-                    (throw (RuntimeException. (str "Namespaced map must specify a valid namespace: " sym)))
-                )
-                (let [#_"String" ns (.getName (cast' Symbol sym))]
-                    ;; Read map
-                    (let [#_"int" nextChar (EdnReader'read1 r)]
-                        (while (EdnReader'isWhitespace nextChar)
-                            (§ ass nextChar (EdnReader'read1 r))
-                        )
-                        (when-not (= \{ nextChar)
-                            (throw (RuntimeException. "Namespaced map must specify a map"))
-                        )
-                        (let [#_"List" kvs (EdnReader'readDelimitedList \}, r, true, opts)]
-                            (when (= (& (.size kvs) 1) 1)
-                                (throw (Util'runtimeException-1 "Namespaced map literal must contain an even number of forms"))
-                            )
-
-                            ;; Construct output map
-                            (let [#_"Object[]" a (make-array Object (.size kvs))]
-                                (let [#_"Iterator" iter (.iterator kvs)]
-                                    (loop-when-recur [#_"int" i 0] (.hasNext iter) [(+ i 2)]
-                                        (let [#_"Object" key (.next iter)]
-                                            (let [#_"Object" val (.next iter)]
-                                                (cond (§ instance? Keyword key)
-                                                    (do
-                                                        (let [#_"Keyword" kw (cast' Keyword key)]
-                                                            (cond (nil? (.getNamespace kw))
-                                                                (do
-                                                                    (§ ass key (Keyword'intern-2 ns, (.getName kw)))
-                                                                )
-                                                                (.equals (.getNamespace kw), "_")
-                                                                (do
-                                                                    (§ ass key (Keyword'intern-2 nil, (.getName kw)))
-                                                                )
-                                                            )
-                                                        )
-                                                    )
-                                                    (§ instance? Symbol key)
-                                                    (do
-                                                        (let [#_"Symbol" s (cast' Symbol key)]
-                                                            (cond (nil? (.getNamespace s))
-                                                                (do
-                                                                    (§ ass key (Symbol'intern-2 ns, (.getName s)))
-                                                                )
-                                                                (.equals (.getNamespace s), "_")
-                                                                (do
-                                                                    (§ ass key (Symbol'intern-2 nil, (.getName s)))
-                                                                )
-                                                            )
-                                                        )
-                                                    )
-                                                )
-                                                (§ ass (§ aget a i) key)
-                                                (§ ass (§ aget a (inc i)) val)
-                                            )
-                                        )
-                                    )
-                                    (RT'map a)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-)
-
-#_closure
-(class-ns EdnDispatchReader (§ extends AFn)
-    (defn #_"EdnDispatchReader" EdnDispatchReader'new []
-        (AFn'new)
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"EdnDispatchReader" this, #_"Object" reader, #_"Object" hash, #_"Object" opts]
-        (let [#_"int" ch (EdnReader'read1 (cast Reader reader))]
-            (when (= ch -1)
-                (throw (Util'runtimeException-1 "EOF while reading character"))
-            )
-            (let [#_"IFn" fn (§ aget dispatchMacros ch)]
-                (when (nil? fn)
-                    ;; try tagged reader
-                    (when (Character/isLetter ch)
-                        (EdnReader'unread (cast PushbackReader reader), ch)
-                        (§ return (.invoke taggedReader, reader, ch, opts))
-                    )
-
-                    (throw (Util'runtimeException-1 (String/format "No dispatch macro for: %c", (object-array [ (char ch) ]))))
-                )
-                (.invoke fn, reader, ch, opts)
-            )
-        )
-    )
-)
-
-#_closure
-(class-ns EdnMetaReader (§ extends AFn)
-    (defn #_"EdnMetaReader" EdnMetaReader'new []
-        (AFn'new)
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"EdnMetaReader" this, #_"Object" reader, #_"Object" caret, #_"Object" opts]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (let [#_"int" line -1]
-                (let [#_"int" column -1]
-                    (when (§ instance? LineNumberingPushbackReader r)
-                        (§ ass line (.getLineNumber (cast' LineNumberingPushbackReader r)))
-                        (§ ass column (dec (.getColumnNumber (cast' LineNumberingPushbackReader r))))
-                    )
-                    (let [#_"Object" meta (EdnReader'read-5 r, true, nil, true, opts)]
-                        (cond (or (§ instance? Symbol meta) (instance? String meta))
-                            (do
-                                (§ ass meta (RT'map RT'TAG_KEY, meta))
-                            )
-                            (§ instance? Keyword meta)
-                            (do
-                                (§ ass meta (RT'map meta, RT'T))
-                            )
-                            (not (§ instance? IPersistentMap meta))
-                            (do
-                                (throw (IllegalArgumentException. "Metadata must be Symbol, Keyword, String or Map"))
-                            )
-                        )
-
-                        (let [#_"Object" o (EdnReader'read-5 r, true, nil, true, opts)]
-                            (if (§ instance? IMeta o)
-                                (do
-                                    (when (and (not= line -1) (§ instance? ISeq o))
-                                        (§ ass meta (-> (cast' IPersistentMap meta) (.assoc RT'LINE_KEY, line) (.assoc RT'COLUMN_KEY, column)))
-                                    )
-                                    (when (§ instance? IReference o)
-                                        (.resetMeta (cast' IReference o), (cast' IPersistentMap meta))
-                                        (§ return o)
-                                    )
-                                    (let [#_"Object" ometa (RT'meta o)]
-                                        (loop-when-recur [#_"ISeq" s (RT'seq meta)] (some? s) [(.next s)]
-                                            (let [#_"IMapEntry" kv (cast' IMapEntry (.first s))]
-                                                (§ ass ometa (RT'assoc ometa, (.getKey kv), (.getValue kv)))
-                                            )
-                                        )
-                                        (.withMeta (cast' IObj o), (cast' IPersistentMap ometa))
-                                    )
-                                )
-                                (do
-                                    (throw (IllegalArgumentException. "Metadata can only be applied to IMetas"))
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-)
-
-#_closure
-(class-ns EdnCharacterReader (§ extends AFn)
-    (defn #_"EdnCharacterReader" EdnCharacterReader'new []
-        (AFn'new)
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"EdnCharacterReader" this, #_"Object" reader, #_"Object" backslash, #_"Object" opts]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (let [#_"int" ch (EdnReader'read1 r)]
-                (when (= ch -1)
-                    (throw (Util'runtimeException-1 "EOF while reading character"))
-                )
-                (let [#_"String" token (EdnReader'readToken r, (char ch), false)]
-                    (cond (= (.length token) 1)
-                        (do
-                            (§ return (Character/valueOf (.charAt token, 0)))
-                        )
-                        (.equals token, "newline")
-                        (do
-                            (§ return \newline)
-                        )
-                        (.equals token, "space")
-                        (do
-                            (§ return \space)
-                        )
-                        (.equals token, "tab")
-                        (do
-                            (§ return \tab)
-                        )
-                        (.equals token, "backspace")
-                        (do
-                            (§ return \backspace)
-                        )
-                        (.equals token, "formfeed")
-                        (do
-                            (§ return \formfeed)
-                        )
-                        (.equals token, "return")
-                        (do
-                            (§ return \return)
-                        )
-                        (.startsWith token, "u")
-                        (do
-                            (let [#_"char" c (char (EdnReader'readUnicodeChar-4 token, 1, 4, 16))]
-                                (when (<= (§ char "\ud800") c (§ char "\udfff")) ;; surrogate code unit?
-                                    (throw (Util'runtimeException-1 (str "Invalid character constant: \\u" (Integer/toString c, 16))))
-                                )
-                                (§ return c)
-                            )
-                        )
-                        (.startsWith token, "o")
-                        (do
-                            (let [#_"int" len (dec (.length token))]
-                                (when (< 3 len)
-                                    (throw (Util'runtimeException-1 (str "Invalid octal escape sequence length: " len)))
-                                )
-                                (let [#_"int" uc (EdnReader'readUnicodeChar-4 token, 1, len, 8)]
-                                    (when (< 0377 uc)
-                                        (throw (Util'runtimeException-1 "Octal escape sequence must be in range [0, 377]."))
-                                    )
-                                    (§ return (char uc))
-                                )
-                            )
-                        )
-                    )
-                    (throw (Util'runtimeException-1 (str "Unsupported character: \\" token)))
-                )
-            )
-        )
-    )
-)
-
-#_closure
-(class-ns EdnListReader (§ extends AFn)
-    (defn #_"EdnListReader" EdnListReader'new []
-        (AFn'new)
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"EdnListReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (let [#_"int" line -1]
-                (let [#_"int" column -1]
-                    (when (§ instance? LineNumberingPushbackReader r)
-                        (§ ass line (.getLineNumber (cast' LineNumberingPushbackReader r)))
-                        (§ ass column (dec (.getColumnNumber (cast' LineNumberingPushbackReader r))))
-                    )
-                    (let [#_"List" list (EdnReader'readDelimitedList \), r, true, opts)]
-                        (when (.isEmpty list)
-                            (§ return PersistentList'EMPTY)
-                        )
-                        (let [#_"IObj" s (cast' IObj (PersistentList'create list))]
-                            s
-                        )
-                    )
-                )
-            )
-        )
-    )
-)
-
-#_closure
-(class-ns EdnVectorReader (§ extends AFn)
-    (defn #_"EdnVectorReader" EdnVectorReader'new []
-        (AFn'new)
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"EdnVectorReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (LazilyPersistentVector'create (EdnReader'readDelimitedList \], r, true, opts))
-        )
-    )
-)
-
-#_closure
-(class-ns EdnMapReader (§ extends AFn)
-    (defn #_"EdnMapReader" EdnMapReader'new []
-        (AFn'new)
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"EdnMapReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (let [#_"Object[]" a (.toArray (EdnReader'readDelimitedList \}, r, true, opts))]
-                (when (= (& (§ alength a) 1) 1)
-                    (throw (Util'runtimeException-1 "Map literal must contain an even number of forms"))
-                )
-                (RT'map a)
-            )
-        )
-    )
-)
-
-#_closure
-(class-ns EdnSetReader (§ extends AFn)
-    (defn #_"EdnSetReader" EdnSetReader'new []
-        (AFn'new)
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"EdnSetReader" this, #_"Object" reader, #_"Object" leftbracket, #_"Object" opts]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (PersistentHashSet'createWithCheck-1l (EdnReader'readDelimitedList \}, r, true, opts))
-        )
-    )
-)
-
-#_closure
-(class-ns EdnUnmatchedDelimiterReader (§ extends AFn)
-    (defn #_"EdnUnmatchedDelimiterReader" EdnUnmatchedDelimiterReader'new []
-        (AFn'new)
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"EdnUnmatchedDelimiterReader" this, #_"Object" reader, #_"Object" rightdelim, #_"Object" opts]
-        (throw (Util'runtimeException-1 (str "Unmatched delimiter: " rightdelim)))
-    )
-)
-
-#_closure
-(class-ns EdnUnreadableReader (§ extends AFn)
-    (defn #_"EdnUnreadableReader" EdnUnreadableReader'new []
-        (AFn'new)
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"EdnUnreadableReader" this, #_"Object" reader, #_"Object" leftangle, #_"Object" opts]
-        (throw (Util'runtimeException-1 "Unreadable form"))
-    )
-)
-
-#_closure
-(class-ns EdnSymbolicValueReader (§ extends AFn)
-    (defn #_"EdnSymbolicValueReader" EdnSymbolicValueReader'new []
-        (AFn'new)
-    )
-
-    (§ def #_"IPersistentMap" EdnSymbolicValueReader'specials (PersistentHashMap'create-1a
-        (object-array [
-            (Symbol'intern-1 "Inf")  Double/POSITIVE_INFINITY
-            (Symbol'intern-1 "-Inf") Double/NEGATIVE_INFINITY
-            (Symbol'intern-1 "NaN")  Double/NaN
-        ])
-    ))
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"EdnSymbolicValueReader" this, #_"Object" reader, #_"Object" quote, #_"Object" opts]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (let [#_"Object" o (EdnReader'read-5 r, true, nil, true, opts)]
-                (when (not (§ instance? Symbol o))
-                    (throw (Util'runtimeException-1 (str "Invalid token: ##" o)))
-                )
-                (when (not (.containsKey EdnSymbolicValueReader'specials, o))
-                    (throw (Util'runtimeException-1 (str "Unknown symbolic value: ##" o)))
-                )
-
-                (.valAt EdnSymbolicValueReader'specials, o)
-            )
-        )
-    )
-)
-
-#_closure
-(class-ns TaggedReader (§ extends AFn)
-    (defn #_"TaggedReader" TaggedReader'new []
-        (AFn'new)
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"TaggedReader" this, #_"Object" reader, #_"Object" firstChar, #_"Object" opts]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (let [#_"Object" name (EdnReader'read-5 r, true, nil, false, opts)]
-                (when (not (§ instance? Symbol name))
-                    (throw (RuntimeException. "Reader tag must be a symbol"))
-                )
-                (let [#_"Symbol" sym (cast' Symbol name)]
-                    (.readTagged this, r, sym, (cast' IPersistentMap opts))
-                )
-            )
-        )
-    )
-
-    (§ def #_"Keyword" TaggedReader'READERS (Keyword'intern-2 nil, "readers"))
-    (§ def #_"Keyword" TaggedReader'DEFAULT (Keyword'intern-2 nil, "default"))
-
-    #_method
-    (§ defn- #_"Object" (§ method readTagged) [#_"TaggedReader" this, #_"PushbackReader" reader, #_"Symbol" tag, #_"IPersistentMap" opts]
-        (let [#_"Object" o (EdnReader'read-5 reader, true, nil, true, opts)]
-            (let [#_"ILookup" readers (cast' ILookup (RT'get-2 opts, TaggedReader'READERS))]
-                (let [#_"IFn" dataReader (cast' IFn (RT'get-2 readers, tag))]
-                    (if (nil? dataReader)
-                        (do
-                            (let [#_"IFn" defaultReader (cast' IFn (RT'get-2 opts, TaggedReader'DEFAULT))]
-                                (if (some? defaultReader)
-                                    (do
-                                        (.invoke defaultReader, tag, o)
-                                    )
-                                    (do
-                                        (throw (RuntimeException. (str "No reader function for tag " (.toString tag))))
-                                    )
-                                )
-                            )
-                        )
-                        (do
-                            (.invoke dataReader, o)
-                        )
-                    )
-                )
-            )
-        )
-    )
-)
-
-#_stateless
-(class-ns EdnReader
-    (def #_"IFn[]" EdnReader'macros (§ typeless make-array IFn 256))
-    (def #_"IFn[]" EdnReader'dispatchMacros (§ typeless make-array IFn 256))
-    (def #_"Pattern" EdnReader'symbolPat (Pattern/compile "[:]?([\\D&&[^/]].*/)?(/|[\\D&&[^/]][^/]*)"))
-    (def #_"Pattern" EdnReader'intPat (Pattern/compile "([-+]?)(?:(0)|([1-9][0-9]*)|0[xX]([0-9A-Fa-f]+)|0([0-7]+)|([1-9][0-9]?)[rR]([0-9A-Za-z]+)|0[0-9]+)(N)?"))
-    (def #_"Pattern" EdnReader'ratioPat (Pattern/compile "([-+]?[0-9]+)/([0-9]+)"))
-    (def #_"Pattern" EdnReader'floatPat (Pattern/compile "([-+]?[0-9]+(\\.[0-9]*)?([eE][-+]?[0-9]+)?)(M)?"))
-
-    (§ def #_"IFn" EdnReader'taggedReader (TaggedReader'new))
-
-    (§ static
-        (§ ass (§ aget macros \") (EdnStringReader'new)) ;; oops! "
-        (§ ass (§ aget macros \;) (EdnCommentReader'new))
-        (§ ass (§ aget macros \^) (EdnMetaReader'new))
-        (§ ass (§ aget macros \() (EdnListReader'new))
-        (§ ass (§ aget macros \)) (EdnUnmatchedDelimiterReader'new))
-        (§ ass (§ aget macros \[) (EdnVectorReader'new))
-        (§ ass (§ aget macros \]) (EdnUnmatchedDelimiterReader'new))
-        (§ ass (§ aget macros \{) (EdnMapReader'new))
-        (§ ass (§ aget macros \}) (EdnUnmatchedDelimiterReader'new))
-        (§ ass (§ aget macros \\) (EdnCharacterReader'new))
-        (§ ass (§ aget macros \#) (EdnDispatchReader'new))
-
-        (§ ass (§ aget dispatchMacros \#) (EdnSymbolicValueReader'new))
-        (§ ass (§ aget dispatchMacros \^) (EdnMetaReader'new))
-        (§ ass (§ aget dispatchMacros \{) (EdnSetReader'new))
-        (§ ass (§ aget dispatchMacros \<) (EdnUnreadableReader'new))
-        (§ ass (§ aget dispatchMacros \_) (EdnDiscardReader'new))
-        (§ ass (§ aget dispatchMacros \:) (EdnNamespaceMapReader'new))
-    )
-
-    (defn #_"boolean" EdnReader'nonConstituent [#_"int" ch]
-        (or (= ch \@) (= ch \`) (= ch \~))
-    )
-
-    (defn #_"Object" EdnReader'readString [#_"String" s, #_"IPersistentMap" opts]
-        (let [#_"PushbackReader" r (PushbackReader. (StringReader. s))]
-            (EdnReader'read-2 r, opts)
-        )
-    )
-
-    (defn #_"boolean" EdnReader'isWhitespace [#_"int" ch]
-        (or (Character/isWhitespace ch) (= ch \,))
-    )
-
-    (defn #_"void" EdnReader'unread [#_"PushbackReader" r, #_"int" ch]
-        (when-not (= ch -1)
-            (try
-                (.unread r, ch)
-                (catch IOException e
-                    (throw (Util'sneakyThrow e))
-                )
-            )
-        )
-        nil
-    )
-
-    (defn #_"int" EdnReader'read1 [#_"Reader" r]
-        (try
-            (.read r)
-            (catch IOException e
-                (throw (Util'sneakyThrow e))
-            )
-        )
-    )
-
-    (§ def #_"Keyword" EdnReader'EOF (Keyword'intern-2 nil, "eof"))
-
-    (defn #_"Object" EdnReader'read-2 [#_"PushbackReader" r, #_"IPersistentMap" opts]
-        (EdnReader'read-5 r, (not (.containsKey opts, EdnReader'EOF)), (.valAt opts, EdnReader'EOF), false, opts)
-    )
-
-    (defn #_"Object" EdnReader'read-5 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"boolean" isRecursive, #_"Object" opts]
-        (try
-            (while true
-                (let [#_"int" ch (EdnReader'read1 r)]
-                    (while (EdnReader'isWhitespace ch)
-                        (§ ass ch (EdnReader'read1 r))
-                    )
-
-                    (when (= ch -1)
-                        (when eofIsError
-                            (throw (Util'runtimeException-1 "EOF while reading"))
-                        )
-                        (§ return eofValue)
-                    )
-
-                    (when (Character/isDigit ch)
-                        (let [#_"Object" n (EdnReader'readNumber r, (char ch))]
-                            (when (RT'suppressRead)
-                                (§ return nil)
-                            )
-                            (§ return n)
-                        )
-                    )
-
-                    (let [#_"IFn" macroFn (EdnReader'getMacro ch)]
-                        (when (some? macroFn)
-                            (let [#_"Object" ret (.invoke macroFn, r, (char ch), opts)]
-                                (when (RT'suppressRead)
-                                    (§ return nil)
-                                )
-                                ;; no op macros return the reader
-                                (when (= ret r)
-                                    (§ continue )
-                                )
-                                (§ return ret)
-                            )
-                        )
-
-                        (when (or (= ch \+) (= ch \-))
-                            (let [#_"int" ch2 (EdnReader'read1 r)]
-                                (when (Character/isDigit ch2)
-                                    (EdnReader'unread r, ch2)
-                                    (let [#_"Object" n (EdnReader'readNumber r, (char ch))]
-                                        (when (RT'suppressRead)
-                                            (§ return nil)
-                                        )
-                                        (§ return n)
-                                    )
-                                )
-                                (EdnReader'unread r, ch2)
-                            )
-                        )
-
-                        (let [#_"String" token (EdnReader'readToken r, (char ch), true)]
-                            (when (RT'suppressRead)
-                                (§ return nil)
-                            )
-                            (§ return (EdnReader'interpretToken token))
-                        )
-                    )
-                )
-            )
-            (catch Exception e
-                (when (or isRecursive (not (§ instance? LineNumberingPushbackReader r)))
-                    (throw (Util'sneakyThrow e))
-                )
-                (let [#_"LineNumberingPushbackReader" rdr (cast' LineNumberingPushbackReader r)]
-                    (throw (EdnReaderException'new (.getLineNumber rdr), (.getColumnNumber rdr), e))
-                )
-            )
-        )
-    )
-
-    (defn- #_"String" EdnReader'readToken [#_"PushbackReader" r, #_"char" initch, #_"boolean" leadConstituent]
-        (let [#_"StringBuilder" sb (StringBuilder.)]
-            (when (and leadConstituent (EdnReader'nonConstituent initch))
-                (throw (Util'runtimeException-1 (str "Invalid leading character: " (char initch))))
-            )
-
-            (.append sb, initch)
-
-            (while true
-                (let [#_"int" ch (EdnReader'read1 r)]
-                    (cond (or (= ch -1) (EdnReader'isWhitespace ch) (EdnReader'isTerminatingMacro ch))
-                        (do
-                            (EdnReader'unread r, ch)
-                            (§ return (.toString sb))
-                        )
-                        (EdnReader'nonConstituent ch)
-                        (do
-                            (throw (Util'runtimeException-1 (str "Invalid constituent character: " (char ch))))
-                        )
-                    )
-                    (.append sb, (char ch))
-                )
-            )
-        )
-    )
-
-    (defn- #_"Object" EdnReader'readNumber [#_"PushbackReader" r, #_"char" initch]
-        (let [#_"StringBuilder" sb (StringBuilder.)]
-            (.append sb, initch)
-
-            (while true
-                (let [#_"int" ch (EdnReader'read1 r)]
-                    (when (or (= ch -1) (EdnReader'isWhitespace ch) (EdnReader'isMacro ch))
-                        (EdnReader'unread r, ch)
-                        (§ break )
-                    )
-                    (.append sb, (char ch))
-                )
-            )
-
-            (let [#_"String" s (.toString sb)]
-                (let [#_"Object" n (EdnReader'matchNumber s)]
-                    (when (nil? n)
-                        (throw (NumberFormatException. (str "Invalid number: " s)))
-                    )
-                    n
-                )
-            )
-        )
-    )
-
-    (defn- #_"int" EdnReader'readUnicodeChar-4 [#_"String" token, #_"int" offset, #_"int" length, #_"int" base]
-        (when-not (= (.length token) (+ offset length))
-            (throw (IllegalArgumentException. (str "Invalid unicode character: \\" token)))
-        )
-        (let [#_"int" uc 0]
-            (loop-when-recur [#_"int" i offset] (< i (+ offset length)) [(inc i)]
-                (let [#_"int" d (Character/digit (.charAt token, i), base)]
-                    (when (= d -1)
-                        (throw (IllegalArgumentException. (str "Invalid digit: " (.charAt token, i))))
-                    )
-                    (§ ass uc (+ (* uc base) d))
-                )
-            )
-            (char uc)
-        )
-    )
-
-    (defn- #_"int" EdnReader'readUnicodeChar-5 [#_"PushbackReader" r, #_"int" initch, #_"int" base, #_"int" length, #_"boolean" exact]
-        (let [#_"int" uc (Character/digit initch, base)]
-            (when (= uc -1)
-                (throw (IllegalArgumentException. (str "Invalid digit: " (char initch))))
-            )
-            (let [#_"int" i 1]
-                (loop-when-recur [i i] (< i length) [(inc i)]
-                    (let [#_"int" ch (EdnReader'read1 r)]
-                        (when (or (= ch -1) (EdnReader'isWhitespace ch) (EdnReader'isMacro ch))
-                            (EdnReader'unread r, ch)
-                            (§ break )
-                        )
-                        (let [#_"int" d (Character/digit ch, base)]
-                            (when (= d -1)
-                                (throw (IllegalArgumentException. (str "Invalid digit: " (char ch))))
-                            )
-                            (§ ass uc (+ (* uc base) d))
-                        )
-                    )
-                )
-                (when (and (not= i length) exact)
-                    (throw (IllegalArgumentException. (str "Invalid character length: " i ", should be: " length)))
-                )
-                uc
-            )
-        )
-    )
-
-    (defn- #_"Object" EdnReader'interpretToken [#_"String" s]
-        (cond (.equals s, "nil")
-            (do
-                (§ return nil)
-            )
-            (.equals s, "true")
-            (do
-                (§ return RT'T)
-            )
-            (.equals s, "false")
-            (do
-                (§ return RT'F)
-            )
-        )
-
-        (let [#_"Object" ret nil]
-            (§ ass ret (EdnReader'matchSymbol s))
-            (when (some? ret)
-                (§ return ret)
-            )
-
-            (throw (Util'runtimeException-1 (str "Invalid token: " s)))
-        )
-    )
-
-    (defn- #_"Object" EdnReader'matchSymbol [#_"String" s]
-        (let [#_"Matcher" m (.matcher EdnReader'symbolPat, s)]
-            (when (.matches m)
-                (let [#_"int" gc (.groupCount m)]
-                    (let [#_"String" ns (.group m, 1)]
-                        (let [#_"String" name (.group m, 2)]
-                            (when (or (and (some? ns) (.endsWith ns, ":/")) (.endsWith name, ":") (not= (.indexOf s, "::", 1) -1))
-                                (§ return nil)
-                            )
-                            (when (.startsWith s, "::")
-                                (§ return nil)
-                            )
-                            (let [#_"boolean" isKeyword (= (.charAt s, 0) \:)]
-                                (let [#_"Symbol" sym (Symbol'intern-1 (.substring s, (if isKeyword 1 0)))]
-                                    (when isKeyword
-                                        (§ return (Keyword'intern sym))
-                                    )
-                                    (§ return sym)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-            nil
-        )
-    )
-
-    (defn- #_"Object" EdnReader'matchNumber [#_"String" s]
-        (let [#_"Matcher" m (.matcher EdnReader'intPat, s)]
-            (when (.matches m)
-                (when (some? (.group m, 2))
-                    (when (some? (.group m, 8))
-                        (§ return BigInt'ZERO)
-                    )
-                    (§ return (Numbers'num-1l 0))
-                )
-                (let [#_"boolean" negate (.equals (.group m, 1), "-")]
-                    (§ let [#_"String" n]
-                        (let [#_"int" radix 10]
-                            (cond (some? (§ ass n (.group m, 3)))
-                                (do
-                                    (§ ass radix 10)
-                                )
-                                (some? (§ ass n (.group m, 4)))
-                                (do
-                                    (§ ass radix 16)
-                                )
-                                (some? (§ ass n (.group m, 5)))
-                                (do
-                                    (§ ass radix 8)
-                                )
-                                (some? (§ ass n (.group m, 7)))
-                                (do
-                                    (§ ass radix (Integer/parseInt (.group m, 6)))
-                                )
-                            )
-                            (when (nil? n)
-                                (§ return nil)
-                            )
-                            (let [#_"BigInteger" bn (BigInteger. n, radix)]
-                                (when negate
-                                    (§ ass bn (.negate bn))
-                                )
-                                (when (some? (.group m, 8))
-                                    (§ return (BigInt'fromBigInteger bn))
-                                )
-                                (§ return (if (< (.bitLength bn) 64) (Numbers'num-1l (.longValue bn)) (BigInt'fromBigInteger bn)))
-                            )
-                        )
-                    )
-                )
-            )
-            (§ ass m (.matcher EdnReader'floatPat, s))
-            (when (.matches m)
-                (when (some? (.group m, 4))
-                    (§ return (§ unsure BigDecimal. (.group m, 1)))
-                )
-                (§ return (Double/parseDouble s))
-            )
-            (§ ass m (.matcher EdnReader'ratioPat, s))
-            (when (.matches m)
-                (let [#_"String" numerator (.group m, 1)]
-                    (when (.startsWith numerator, "+")
-                        (§ ass numerator (.substring numerator, 1))
-                    )
-
-                    (§ return (Numbers'divide-2oo (Numbers'reduceBigInt (BigInt'fromBigInteger (BigInteger. numerator))), (Numbers'reduceBigInt (BigInt'fromBigInteger (BigInteger. (.group m, 2))))))
-                )
-            )
-            nil
-        )
-    )
-
-    (defn- #_"IFn" EdnReader'getMacro [#_"int" ch]
-        (when (< ch (§ alength macros))
-            (§ return (§ aget macros ch))
-        )
-        nil
-    )
-
-    (defn- #_"boolean" EdnReader'isMacro [#_"int" ch]
-        (and (< ch (§ alength macros)) (some? (§ aget macros ch)))
-    )
-
-    (defn- #_"boolean" EdnReader'isTerminatingMacro [#_"int" ch]
-        (and (not= ch \#) (not= ch \') (EdnReader'isMacro ch))
-    )
-
-    (defn #_"List" EdnReader'readDelimitedList [#_"char" delim, #_"PushbackReader" r, #_"boolean" isRecursive, #_"Object" opts]
-        (let [#_"int" firstline (if (§ instance? LineNumberingPushbackReader r) (.getLineNumber (cast' LineNumberingPushbackReader r)) -1)]
-            (let [#_"ArrayList" a (ArrayList.)]
-                (while true
-                    (let [#_"int" ch (EdnReader'read1 r)]
-                        (while (EdnReader'isWhitespace ch)
-                            (§ ass ch (EdnReader'read1 r))
-                        )
-
-                        (when (= ch -1)
-                            (if (< firstline 0)
-                                (do
-                                    (throw (Util'runtimeException-1 "EOF while reading"))
-                                )
-                                (do
-                                    (throw (Util'runtimeException-1 (str "EOF while reading, starting at line " firstline)))
-                                )
-                            )
-                        )
-
-                        (when (= ch delim)
-                            (§ break )
-                        )
-
-                        (let [#_"IFn" macroFn (EdnReader'getMacro ch)]
-                            (if (some? macroFn)
-                                (do
-                                    (let [#_"Object" mret (.invoke macroFn, r, (char ch), opts)]
-                                        ;; no op macros return the reader
-                                        (when-not (= mret r)
-                                            (.add a, mret)
-                                        )
-                                    )
-                                )
-                                (do
-                                    (EdnReader'unread r, ch)
-
-                                    (let [#_"Object" o (EdnReader'read-5 r, true, nil, isRecursive, opts)]
-                                        (when-not (= o r)
-                                            (.add a, o)
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-
-                a
-            )
-        )
-    )
-)
-)
-
 (java-ns cloiure.lang.ExceptionInfo
 
 ;;;
@@ -20651,7 +19641,7 @@
         (AFn'new)
     )
 
-    (§ def #_"LispStringReader" RegexReader'stringrdr (LispStringReader'new))
+    (§ def #_"StringReader" RegexReader'stringrdr (StringReader'new))
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RegexReader" this, #_"Object" reader, #_"Object" doublequote, #_"Object" opts, #_"Object" pendingForms]
@@ -20677,13 +19667,13 @@
 )
 
 #_closure
-(class-ns LispStringReader (§ extends AFn)
-    (defn #_"LispStringReader" LispStringReader'new []
+(class-ns StringReader (§ extends AFn)
+    (defn #_"StringReader" StringReader'new []
         (AFn'new)
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"LispStringReader" this, #_"Object" reader, #_"Object" doublequote, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"StringReader" this, #_"Object" reader, #_"Object" doublequote, #_"Object" opts, #_"Object" pendingForms]
         (let [#_"StringBuilder" sb (StringBuilder.)]
             (let [#_"Reader" r (cast Reader reader)]
                 (loop-when-recur [#_"int" ch (LispReader'read1 r)] (not= ch \") [(LispReader'read1 r)] ;; oops! "
@@ -20763,13 +19753,13 @@
 )
 
 #_closure
-(class-ns LispCommentReader (§ extends AFn)
-    (defn #_"LispCommentReader" LispCommentReader'new []
+(class-ns CommentReader (§ extends AFn)
+    (defn #_"CommentReader" CommentReader'new []
         (AFn'new)
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"LispCommentReader" this, #_"Object" reader, #_"Object" semicolon, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"CommentReader" this, #_"Object" reader, #_"Object" semicolon, #_"Object" opts, #_"Object" pendingForms]
         (let [#_"Reader" r (cast Reader reader)]
             (§ let [#_"int" ch]
                 (§ loop
@@ -20783,13 +19773,13 @@
 )
 
 #_closure
-(class-ns LispDiscardReader (§ extends AFn)
-    (defn #_"LispDiscardReader" LispDiscardReader'new []
+(class-ns DiscardReader (§ extends AFn)
+    (defn #_"DiscardReader" DiscardReader'new []
         (AFn'new)
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"LispDiscardReader" this, #_"Object" reader, #_"Object" underscore, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"DiscardReader" this, #_"Object" reader, #_"Object" underscore, #_"Object" opts, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (LispReader'read-6 r, true, nil, true, opts, (LispReader'ensurePending pendingForms))
             r
@@ -20801,13 +19791,13 @@
 ;; ::{:c 1}   => {:a.b/c 1}  (where *ns* = a.b)
 ;; ::a{:c 1}  => {:a.b/c 1}  (where a is aliased to a.b)
 #_closure
-(class-ns LispNamespaceMapReader (§ extends AFn)
-    (defn #_"LispNamespaceMapReader" LispNamespaceMapReader'new []
+(class-ns NamespaceMapReader (§ extends AFn)
+    (defn #_"NamespaceMapReader" NamespaceMapReader'new []
         (AFn'new)
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"LispNamespaceMapReader" this, #_"Object" reader, #_"Object" colon, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"NamespaceMapReader" this, #_"Object" reader, #_"Object" colon, #_"Object" opts, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (let [#_"boolean" auto false]
                 (let [#_"int" autoChar (LispReader'read1 r)]
@@ -20971,12 +19961,12 @@
 )
 
 #_closure
-(class-ns LispSymbolicValueReader (§ extends AFn)
-    (defn #_"LispSymbolicValueReader" LispSymbolicValueReader'new []
+(class-ns SymbolicValueReader (§ extends AFn)
+    (defn #_"SymbolicValueReader" SymbolicValueReader'new []
         (AFn'new)
     )
 
-    (§ def #_"IPersistentMap" LispSymbolicValueReader'specials (PersistentHashMap'create-1a
+    (§ def #_"IPersistentMap" SymbolicValueReader'specials (PersistentHashMap'create-1a
         (object-array [
             (Symbol'intern-1 "Inf")  Double/POSITIVE_INFINITY
             (Symbol'intern-1 "-Inf") Double/NEGATIVE_INFINITY
@@ -20985,17 +19975,17 @@
     ))
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"LispSymbolicValueReader" this, #_"Object" reader, #_"Object" quote, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"SymbolicValueReader" this, #_"Object" reader, #_"Object" quote, #_"Object" opts, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (let [#_"Object" o (LispReader'read-6 r, true, nil, true, opts, (LispReader'ensurePending pendingForms))]
                 (when (not (§ instance? Symbol o))
                     (throw (Util'runtimeException-1 (str "Invalid token: ##" o)))
                 )
-                (when (not (.containsKey LispSymbolicValueReader'specials, o))
+                (when (not (.containsKey SymbolicValueReader'specials, o))
                     (throw (Util'runtimeException-1 (str "Unknown symbolic value: ##" o)))
                 )
 
-                (.valAt LispSymbolicValueReader'specials, o)
+                (.valAt SymbolicValueReader'specials, o)
             )
         )
     )
@@ -21042,13 +20032,13 @@
 )
 
 #_closure
-(class-ns LispDispatchReader (§ extends AFn)
-    (defn #_"LispDispatchReader" LispDispatchReader'new []
+(class-ns DispatchReader (§ extends AFn)
+    (defn #_"DispatchReader" DispatchReader'new []
         (AFn'new)
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"LispDispatchReader" this, #_"Object" reader, #_"Object" hash, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"DispatchReader" this, #_"Object" reader, #_"Object" hash, #_"Object" opts, #_"Object" pendingForms]
         (let [#_"int" ch (LispReader'read1 (cast Reader reader))]
             (when (= ch -1)
                 (throw (Util'runtimeException-1 "EOF while reading character"))
@@ -21160,13 +20150,13 @@
 )
 
 #_closure
-(class-ns LispMetaReader (§ extends AFn)
-    (defn #_"LispMetaReader" LispMetaReader'new []
+(class-ns MetaReader (§ extends AFn)
+    (defn #_"MetaReader" MetaReader'new []
         (AFn'new)
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"LispMetaReader" this, #_"Object" reader, #_"Object" caret, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"MetaReader" this, #_"Object" reader, #_"Object" caret, #_"Object" opts, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (let [#_"int" line -1]
                 (let [#_"int" column -1]
@@ -21486,13 +20476,13 @@
 )
 
 #_closure
-(class-ns LispCharacterReader (§ extends AFn)
-    (defn #_"LispCharacterReader" LispCharacterReader'new []
+(class-ns CharacterReader (§ extends AFn)
+    (defn #_"CharacterReader" CharacterReader'new []
         (AFn'new)
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"LispCharacterReader" this, #_"Object" reader, #_"Object" backslash, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"CharacterReader" this, #_"Object" reader, #_"Object" backslash, #_"Object" opts, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (let [#_"int" ch (LispReader'read1 r)]
                 (when (= ch -1)
@@ -21559,13 +20549,13 @@
 )
 
 #_closure
-(class-ns LispListReader (§ extends AFn)
-    (defn #_"LispListReader" LispListReader'new []
+(class-ns ListReader (§ extends AFn)
+    (defn #_"ListReader" ListReader'new []
         (AFn'new)
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"LispListReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"ListReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (let [#_"int" line -1]
                 (let [#_"int" column -1]
@@ -21654,13 +20644,13 @@
 )
 
 #_closure
-(class-ns LispVectorReader (§ extends AFn)
-    (defn #_"LispVectorReader" LispVectorReader'new []
+(class-ns VectorReader (§ extends AFn)
+    (defn #_"VectorReader" VectorReader'new []
         (AFn'new)
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"LispVectorReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"VectorReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (LazilyPersistentVector'create (LispReader'readDelimitedList \], r, true, opts, (LispReader'ensurePending pendingForms)))
         )
@@ -21668,13 +20658,13 @@
 )
 
 #_closure
-(class-ns LispMapReader (§ extends AFn)
-    (defn #_"LispMapReader" LispMapReader'new []
+(class-ns MapReader (§ extends AFn)
+    (defn #_"MapReader" MapReader'new []
         (AFn'new)
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"LispMapReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"MapReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (let [#_"Object[]" a (.toArray (LispReader'readDelimitedList \}, r, true, opts, (LispReader'ensurePending pendingForms)))]
                 (when (= (& (§ alength a) 1) 1)
@@ -21687,13 +20677,13 @@
 )
 
 #_closure
-(class-ns LispSetReader (§ extends AFn)
-    (defn #_"LispSetReader" LispSetReader'new []
+(class-ns SetReader (§ extends AFn)
+    (defn #_"SetReader" SetReader'new []
         (AFn'new)
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"LispSetReader" this, #_"Object" reader, #_"Object" leftbracket, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"SetReader" this, #_"Object" reader, #_"Object" leftbracket, #_"Object" opts, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (PersistentHashSet'createWithCheck-1l (LispReader'readDelimitedList \}, r, true, opts, (LispReader'ensurePending pendingForms)))
         )
@@ -21701,25 +20691,25 @@
 )
 
 #_closure
-(class-ns LispUnmatchedDelimiterReader (§ extends AFn)
-    (defn #_"LispUnmatchedDelimiterReader" LispUnmatchedDelimiterReader'new []
+(class-ns UnmatchedDelimiterReader (§ extends AFn)
+    (defn #_"UnmatchedDelimiterReader" UnmatchedDelimiterReader'new []
         (AFn'new)
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"LispUnmatchedDelimiterReader" this, #_"Object" reader, #_"Object" rightdelim, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"UnmatchedDelimiterReader" this, #_"Object" reader, #_"Object" rightdelim, #_"Object" opts, #_"Object" pendingForms]
         (throw (Util'runtimeException-1 (str "Unmatched delimiter: " rightdelim)))
     )
 )
 
 #_closure
-(class-ns LispUnreadableReader (§ extends AFn)
-    (defn #_"LispUnreadableReader" LispUnreadableReader'new []
+(class-ns UnreadableReader (§ extends AFn)
+    (defn #_"UnreadableReader" UnreadableReader'new []
         (AFn'new)
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"LispUnreadableReader" this, #_"Object" reader, #_"Object" leftangle, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"UnreadableReader" this, #_"Object" reader, #_"Object" leftangle, #_"Object" opts, #_"Object" pendingForms]
         (throw (Util'runtimeException-1 "Unreadable form"))
     )
 )
@@ -22073,35 +21063,35 @@
     (§ def #_"Var" LispReader'READ_COND_ENV (.setDynamic (Var'create-1 nil)))
 
     (§ static
-        (§ ass (§ aget macros \") (LispStringReader'new)) ;; oops! "
-        (§ ass (§ aget macros \;) (LispCommentReader'new))
+        (§ ass (§ aget macros \") (StringReader'new)) ;; oops! "
+        (§ ass (§ aget macros \;) (CommentReader'new))
         (§ ass (§ aget macros \') (WrappingReader'new LispReader'QUOTE))
         (§ ass (§ aget macros \@) (WrappingReader'new LispReader'DEREF))
-        (§ ass (§ aget macros \^) (LispMetaReader'new))
+        (§ ass (§ aget macros \^) (MetaReader'new))
         (§ ass (§ aget macros \`) (SyntaxQuoteReader'new))
         (§ ass (§ aget macros \~) (UnquoteReader'new))
-        (§ ass (§ aget macros \() (LispListReader'new))
-        (§ ass (§ aget macros \)) (LispUnmatchedDelimiterReader'new))
-        (§ ass (§ aget macros \[) (LispVectorReader'new))
-        (§ ass (§ aget macros \]) (LispUnmatchedDelimiterReader'new))
-        (§ ass (§ aget macros \{) (LispMapReader'new))
-        (§ ass (§ aget macros \}) (LispUnmatchedDelimiterReader'new))
-        (§ ass (§ aget macros \\) (LispCharacterReader'new))
+        (§ ass (§ aget macros \() (ListReader'new))
+        (§ ass (§ aget macros \)) (UnmatchedDelimiterReader'new))
+        (§ ass (§ aget macros \[) (VectorReader'new))
+        (§ ass (§ aget macros \]) (UnmatchedDelimiterReader'new))
+        (§ ass (§ aget macros \{) (MapReader'new))
+        (§ ass (§ aget macros \}) (UnmatchedDelimiterReader'new))
+        (§ ass (§ aget macros \\) (CharacterReader'new))
         (§ ass (§ aget macros \%) (ArgReader'new))
-        (§ ass (§ aget macros \#) (LispDispatchReader'new))
+        (§ ass (§ aget macros \#) (DispatchReader'new))
 
-        (§ ass (§ aget dispatchMacros \^) (LispMetaReader'new))
-        (§ ass (§ aget dispatchMacros \#) (LispSymbolicValueReader'new))
+        (§ ass (§ aget dispatchMacros \^) (MetaReader'new))
+        (§ ass (§ aget dispatchMacros \#) (SymbolicValueReader'new))
         (§ ass (§ aget dispatchMacros \') (VarReader'new))
         (§ ass (§ aget dispatchMacros \") (RegexReader'new)) ;; oops! "
         (§ ass (§ aget dispatchMacros \() (FnReader'new))
-        (§ ass (§ aget dispatchMacros \{) (LispSetReader'new))
+        (§ ass (§ aget dispatchMacros \{) (SetReader'new))
         (§ ass (§ aget dispatchMacros \=) (EvalReader'new))
-        (§ ass (§ aget dispatchMacros \!) (LispCommentReader'new))
-        (§ ass (§ aget dispatchMacros \<) (LispUnreadableReader'new))
-        (§ ass (§ aget dispatchMacros \_) (LispDiscardReader'new))
+        (§ ass (§ aget dispatchMacros \!) (CommentReader'new))
+        (§ ass (§ aget dispatchMacros \<) (UnreadableReader'new))
+        (§ ass (§ aget dispatchMacros \_) (DiscardReader'new))
         (§ ass (§ aget dispatchMacros \?) (ConditionalReader'new))
-        (§ ass (§ aget dispatchMacros \:) (LispNamespaceMapReader'new))
+        (§ ass (§ aget dispatchMacros \:) (NamespaceMapReader'new))
     )
 
     (defn #_"boolean" LispReader'isWhitespace [#_"int" ch]
@@ -41795,7 +40785,7 @@
     )
 
     (defn #_"Object" RT'readString-2 [#_"String" s, #_"Object" opts]
-        (let [#_"PushbackReader" r (PushbackReader. (StringReader. s))]
+        (let [#_"PushbackReader" r (PushbackReader. (java.io.StringReader. s))]
             (LispReader'read-2 r, opts)
         )
     )

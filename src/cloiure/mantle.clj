@@ -3888,8 +3888,6 @@
  ;
  ; Note that read can execute code (controlled by *read-eval*),
  ; and as such should be used only with trusted sources.
- ;
- ; For data structure interop use cloiure.edn/read.
  ;;
 (§ defn read
     ([]
@@ -3925,8 +3923,6 @@
  ;
  ; Note that read-string can execute code (controlled by *read-eval*),
  ; and as such should be used only with trusted sources.
- ;
- ; For data structure interop use cloiure.edn/read-string.
  ;;
 (§ defn read-string
     ([s]      (cloiure.lang.RT/readString s     ))
@@ -6606,7 +6602,7 @@
     "Defaults to true (or value specified by system property, see below)
     ***This setting implies that the full power of the reader is in play,
     including syntax that can cause code to execute. It should never be
-    used with untrusted sources. See also: cloiure.edn/read.***
+    used with untrusted sources.***
 
     When set to logical false in the thread-local binding,
     the eval reader (#=) and record/type literal syntax are disabled in read/load.
@@ -11870,41 +11866,6 @@
  ;;
 (§ defn uri? [x] (instance? java.net.URI x))
 
-#_(ns cloiure.edn
-    (:refer-cloiure :exclude [read read-string]))
-
-;;;
- ; Reads the next object from stream, which must be an instance of java.io.PushbackReader
- ; or some derivee. stream defaults to the current value of *in*.
- ;
- ; Reads data in the edn format (subset of Cloiure data):
- ; http://edn-format.org
- ;
- ; opts is a map that can include the following keys:
- ;
- ; :eof - value to return on end-of-file. When not supplied, eof throws an exception.
- ; :readers - a map of tag symbols to data-reader functions to be considered.
- ; :default - a function of two args, that will, if present and no reader is found for a tag, be called with the tag and the value.
- ;;
-(§ defn read
-    ([] (read *in*))
-    ([stream] (read {} stream))
-    ([opts stream] (cloiure.lang.EdnReader/read stream opts))
-)
-
-;;;
- ; Reads one object from the string s. Returns nil when s is nil or empty.
- ;
- ; Reads data in the edn format (subset of Cloiure data):
- ; http://edn-format.org
- ;
- ; opts is a map as per cloiure.edn/read.
- ;;
-(§ defn read-string
-    ([s] (read-string {:eof nil} s))
-    ([opts s] (when s (cloiure.lang.EdnReader/readString s opts)))
-)
-
 #_(ns cloiure.set)
 
 ;;;
@@ -14366,229 +14327,6 @@
             (flush)
         )
     )
-)
-
-#_(ns cloiure.core.server
-    (:require [cloiure.string :as str]
-              [cloiure.edn :as edn]
-              [cloiure.main :as m])
-    (:import [java.net InetAddress Socket ServerSocket SocketException]
-             [java.util.concurrent.locks ReentrantLock]))
-
-(§ def ^:dynamic *session* nil)
-
-;; lock protects servers
-
-(§ defonce ^:private lock (ReentrantLock.))
-(§ defonce ^:private servers {})
-
-(§ defmacro ^:private with-lock [lock-expr & body]
-    `(let [lockee# ~(with-meta lock-expr {:tag 'java.util.concurrent.locks.ReentrantLock})]
-        (.lock lockee#)
-        (try
-            ~@body
-            (finally
-                (.unlock lockee#)
-            )
-        )
-    )
-)
-
-(§ defmacro ^:private thread [^String name daemon & body]
-    `(doto (Thread. (fn [] ~@body) ~name)
-        (.setDaemon ~daemon)
-        (.start)
-    )
-)
-
-;;;
- ; Throw if opts does not contain prop.
- ;;
-(§ defn- required [opts prop]
-    (when (nil? (get opts prop))
-        (throw (ex-info (str "Missing required socket server property " prop) opts))
-    )
-)
-
-;;;
- ; Validate server config options.
- ;;
-(§ defn- validate-opts [{:keys [name port accept] :as opts}]
-    (doseq [prop [:name :port :accept]]
-        (required opts prop)
-    )
-    (when (or (not (integer? port)) (not (< -1 port 65535)))
-        (throw (ex-info (str "Invalid socket server port: " port) opts))
-    )
-)
-
-;;;
- ; Accept function, to be invoked on a client thread, given:
- ;
- ;  conn - client socket
- ;  name - server name
- ;  client-id - client identifier
- ;  in - in stream
- ;  out - out stream
- ;  err - err stream
- ;  accept - accept fn symbol to invoke
- ;  args - to pass to accept-fn
- ;;
-(§ defn- accept-connection [^Socket conn name client-id in out err accept args]
-    (try
-        (binding [*in* in *out* out *err* err *session* {:server name :client client-id}]
-            (with-lock lock
-                (alter-var-root #'servers assoc-in [name :sessions client-id] {})
-            )
-            (require (symbol (namespace accept)))
-            (let [accept-fn (resolve accept)]
-                (apply accept-fn args)
-            )
-        )
-        (catch SocketException _disconnect)
-        (finally
-            (with-lock lock
-                (alter-var-root #'servers update-in [name :sessions] dissoc client-id)
-            )
-            (.close conn)
-        )
-    )
-)
-
-;;;
- ; Start a socket server given the specified opts:
- ;
- ; :address       Host or address, string, defaults to loopback address.
- ; :port          Port, integer, required.
- ; :name          Name, required.
- ; :accept        Namespaced symbol of the accept function to invoke, required.
- ; :args          Vector of args to pass to accept function.
- ; :bind-err      Bind *err* to socket out stream?, defaults to true.
- ; :server-daemon Is server thread a daemon?, defaults to true.
- ; :client-daemon Are client threads daemons?, defaults to true.
- ;
- ; Returns server socket.
- ;;
-(§ defn start-server [opts]
-    (validate-opts opts)
-    (let [{:keys [address port name accept args bind-err server-daemon client-daemon]
-           :or {bind-err true server-daemon true client-daemon true}} opts
-          address (InetAddress/getByName address) ;; nil returns loopback
-          socket (ServerSocket. port 0 address)]
-        (with-lock lock
-            (alter-var-root #'servers assoc name {:name name, :socket socket, :sessions {}})
-        )
-        (thread (str "Cloiure Server " name) server-daemon
-            (try
-                (loop [client-counter 1]
-                    (when (not (.isClosed socket))
-                        (try
-                            (let [conn (.accept socket)
-                                  in (cloiure.lang.LineNumberingPushbackReader. (java.io.InputStreamReader. (.getInputStream conn)))
-                                  out (java.io.BufferedWriter. (java.io.OutputStreamWriter. (.getOutputStream conn)))
-                                  client-id (str client-counter)]
-                                (thread (str "Cloiure Connection " name " " client-id) client-daemon
-                                    (accept-connection conn name client-id in out (if bind-err out *err*) accept args)
-                                )
-                            )
-                            (catch SocketException _disconnect)
-                        )
-                        (recur (inc client-counter))
-                    )
-                )
-                (finally
-                    (with-lock lock
-                        (alter-var-root #'servers dissoc name)
-                    )
-                )
-            )
-        )
-        socket
-    )
-)
-
-;;;
- ; Stop server with name or use the server-name from *session* if none supplied.
- ; Returns true if server stopped successfully, nil if not found, or throws if
- ; there is an error closing the socket.
- ;;
-(§ defn stop-server
-    ([] (stop-server (:server *session*)))
-    ([name]
-        (with-lock lock
-            (let [server-socket ^ServerSocket (get-in servers [name :socket])]
-                (when server-socket
-                    (alter-var-root #'servers dissoc name)
-                    (.close server-socket)
-                    true
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; Stop all servers ignores all errors, and returns nil.
- ;;
-(§ defn stop-servers []
-    (with-lock lock
-        (doseq [name (keys servers)]
-            (future (stop-server name))
-        )
-    )
-)
-
-;;;
- ; Parse cloiure.server.* from properties to produce a map of server configs.
- ;;
-(§ defn- parse-props [props]
-    (reduce
-        (fn [acc [^String k ^String v]]
-            (let [[k1 k2 k3] (str/split k #"\.")]
-                (if (and (= k1 "cloiure") (= k2 "server"))
-                    (conj acc (merge {:name k3} (edn/read-string v)))
-                    acc
-                )
-            )
-        )
-        [] props
-    )
-)
-
-;;;
- ; Start all servers specified in the system properties.
- ;;
-(§ defn start-servers [system-props]
-    (doseq [server (parse-props system-props)]
-        (start-server server)
-    )
-)
-
-;;;
- ; Initialize repl in user namespace and make standard repl requires.
- ;;
-(§ defn repl-init []
-    (in-ns 'user)
-    (apply require cloiure.main/repl-requires)
-)
-
-;;;
- ; Enhanced :read hook for repl supporting :repl/quit.
- ;;
-(§ defn repl-read [request-prompt request-exit]
-    (or ({:line-start request-prompt :stream-end request-exit} (m/skip-whitespace *in*))
-        (let [input (read {:read-cond :allow} *in*)]
-            (m/skip-if-eol *in*)
-            (case input :repl/quit request-exit input)
-        )
-    )
-)
-
-;;;
- ; REPL with predefined hooks for attachable socket server.
- ;;
-(§ defn repl []
-    (m/repl :init repl-init :read repl-read)
 )
 
 #_(ns cloiure.spec.gen.alpha
