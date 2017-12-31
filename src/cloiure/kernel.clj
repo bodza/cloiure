@@ -66,7 +66,7 @@
     [cloiure.asm.commons GeneratorAdapter Method]
 )
 
-(declare AFn'new AFunction'new AMapEntry'new APersistentMap'new APersistentVector'new AReference'new ASeq'new ATransientMap'new AbortException'new AbstractMap'new ArgReader'new AssignParser'new Attribute'new BigDecimalOps'new BigIntOps'new BodyParser'new CaseParser'new ConditionalReader'new ConstantParser'new CtorReader'new DefParser'new DefaultComparator'new DeftypeParser'new DoubleOps'new EmptyBuffer'new Error'new EvalReader'new Exception'new FieldExpr'new FnReader'new HostExpr'new HostParser'new IfParser'new IllegalArgumentException'new ImportParser'new IteratorSeqState'new LetFnParser'new LetParser'new CharacterReader'new CommentReader'new DiscardReader'new DispatchReader'new ListReader'new MapReader'new MetaReader'new NamespaceMapReader'new SetReader'new StringReader'new SymbolicValueReader'new UnmatchedDelimiterReader'new UnreadableReader'new VectorReader'new LiteralExpr'new LockingTransaction'new LongOps'new MethodExpr'new MonitorEnterParser'new MonitorExitParser'new NewParser'new NilExpr'new Number'new Obj'new OpsP'new Primordial'new PushbackReader'new RatioOps'new RecurParser'new RegexReader'new ReifyParser'new RestFn'new RetryEx'new RuntimeException'new SyntaxQuoteReader'new TheVarParser'new ThrowParser'new TryParser'new URLClassLoader'new UnquoteReader'new UntypedExpr'new VarReader'new)
+(declare AFn'new AFunction'new AMapEntry'new APersistentMap'new APersistentVector'new AReference'new ASeq'new ATransientMap'new AbortException'new AbstractMap'new ArgReader'new AssignParser'new Attribute'new BigDecimalOps'new BigIntOps'new BodyParser'new CaseParser'new ConstantParser'new CtorReader'new DefParser'new DefaultComparator'new DeftypeParser'new DoubleOps'new EmptyBuffer'new Error'new EvalReader'new Exception'new FieldExpr'new FnReader'new HostExpr'new HostParser'new IfParser'new IllegalArgumentException'new ImportParser'new IteratorSeqState'new LetFnParser'new LetParser'new CharacterReader'new CommentReader'new DiscardReader'new DispatchReader'new ListReader'new MapReader'new MetaReader'new NamespaceMapReader'new SetReader'new StringReader'new SymbolicValueReader'new UnmatchedDelimiterReader'new UnreadableReader'new VectorReader'new LiteralExpr'new LockingTransaction'new LongOps'new MethodExpr'new MonitorEnterParser'new MonitorExitParser'new NewParser'new NilExpr'new Number'new Obj'new OpsP'new Primordial'new PushbackReader'new RatioOps'new RecurParser'new RegexReader'new ReifyParser'new RestFn'new RetryEx'new RuntimeException'new SyntaxQuoteReader'new TheVarParser'new ThrowParser'new TryParser'new URLClassLoader'new UnquoteReader'new UntypedExpr'new VarReader'new)
 (declare AFn'applyToHelper)
 (declare ActionQueue'EMPTY ActionQueue'new)
 (declare AgentAction'new AgentAction'doRun)
@@ -94,7 +94,6 @@
 (declare Box'new)
 (declare ChunkBuffer'new)
 (declare ChunkedCons'new-3 ChunkedCons'new-2)
-(declare Compile'PATH_PROP Compile'REFLECTION_WARNING_PROP Compile'compile_path Compile'compile Compile'warn_on_reflection Compile'main)
 (declare DefExpr'bindRootMethod DefExpr'setTagMethod DefExpr'setMetaMethod DefExpr'setDynamicMethod DefExpr'symintern DefExpr'internVar DefExpr'new)
 (declare AssignExpr'new)
 (declare VarExpr'getMethod VarExpr'setMethod VarExpr'new)
@@ -148,7 +147,7 @@
 (declare NewInstanceMethod'dummyThis NewInstanceMethod'new NewInstanceMethod'msig NewInstanceMethod'parse NewInstanceMethod'findMethodsWithNameAndArity NewInstanceMethod'findMethodsWithName)
 (declare MethodParamExpr'new)
 (declare CaseExpr'NUMBER_TYPE CaseExpr'intValueMethod CaseExpr'hashMethod CaseExpr'hashCodeMethod CaseExpr'equivMethod CaseExpr'compactKey CaseExpr'sparseKey CaseExpr'hashIdentityKey CaseExpr'hashEquivKey CaseExpr'intKey CaseExpr'new CaseExpr'emitExpr)
-(declare Compiler'DEF Compiler'LOOP Compiler'RECUR Compiler'IF Compiler'LET Compiler'LETFN Compiler'DO Compiler'FN Compiler'FNONCE Compiler'QUOTE Compiler'THE_VAR Compiler'DOT Compiler'ASSIGN Compiler'TRY Compiler'CATCH Compiler'FINALLY Compiler'THROW Compiler'MONITOR_ENTER Compiler'MONITOR_EXIT Compiler'IMPORT Compiler'DEFTYPE Compiler'CASE Compiler'CLASS Compiler'NEW Compiler'THIS Compiler'REIFY Compiler'LIST Compiler'HASHMAP Compiler'VECTOR Compiler'IDENTITY Compiler'_AMP_ Compiler'ISEQ Compiler'loadNs Compiler'inlineKey Compiler'inlineAritiesKey Compiler'volatileKey Compiler'implementsKey Compiler'COMPILE_STUB_PREFIX Compiler'protocolKey Compiler'onKey Compiler'dynamicKey Compiler'redefKey Compiler'NS Compiler'IN_NS Compiler'specials Compiler'MAX_POSITIONAL_ARITY Compiler'OBJECT_TYPE Compiler'KEYWORD_TYPE Compiler'VAR_TYPE Compiler'SYMBOL_TYPE Compiler'IFN_TYPE Compiler'AFUNCTION_TYPE Compiler'RT_TYPE Compiler'NUMBERS_TYPE Compiler'CLASS_TYPE Compiler'NS_TYPE Compiler'UTIL_TYPE Compiler'REFLECTOR_TYPE Compiler'THROWABLE_TYPE Compiler'BOOLEAN_OBJECT_TYPE Compiler'IPERSISTENTMAP_TYPE Compiler'IOBJ_TYPE Compiler'TUPLE_TYPE Compiler'createTupleMethods Compiler'ARG_TYPES Compiler'EXCEPTION_TYPES Compiler'LOCAL_ENV Compiler'LOOP_LOCALS Compiler'LOOP_LABEL Compiler'CONSTANTS Compiler'CONSTANT_IDS Compiler'KEYWORD_CALLSITES Compiler'PROTOCOL_CALLSITES Compiler'VAR_CALLSITES Compiler'KEYWORDS Compiler'VARS Compiler'METHOD Compiler'IN_CATCH_FINALLY Compiler'METHOD_RETURN_CONTEXT Compiler'NO_RECUR Compiler'LOADER Compiler'SOURCE Compiler'SOURCE_PATH Compiler'COMPILE_PATH Compiler'COMPILE_FILES Compiler'INSTANCE Compiler'ADD_ANNOTATIONS Compiler'disableLocalsClearingKey Compiler'directLinkingKey Compiler'elideMetaKey Compiler'COMPILER_OPTIONS Compiler'getCompilerOption Compiler'elideMeta Compiler'LINE Compiler'COLUMN Compiler'lineDeref Compiler'columnDeref Compiler'LINE_BEFORE Compiler'COLUMN_BEFORE Compiler'LINE_AFTER Compiler'COLUMN_AFTER Compiler'NEXT_LOCAL_NUM Compiler'RET_LOCAL_NUM Compiler'COMPILE_STUB_SYM Compiler'COMPILE_STUB_CLASS Compiler'CLEAR_PATH Compiler'CLEAR_ROOT Compiler'CLEAR_SITES Compiler'RECUR_CLASS Compiler'isSpecial Compiler'inTailCall Compiler'resolveSymbol Compiler'maybePrimitiveType Compiler'maybeJavaClass Compiler'NIL_EXPR Compiler'TRUE_EXPR Compiler'FALSE_EXPR Compiler'subsumes Compiler'getTypeStringForArgs Compiler'getMatchingParams Compiler'CHAR_MAP Compiler'DEMUNGE_MAP Compiler'DEMUNGE_PATTERN Compiler'munge Compiler'demunge Compiler'clearPathRoot Compiler'registerLocal Compiler'getAndIncLocalNum Compiler'analyze-2 Compiler'analyze-3 Compiler'isMacro Compiler'isInline Compiler'namesStaticMember Compiler'preserveTag Compiler'MACRO_CHECK Compiler'MACRO_CHECK_LOADING Compiler'MACRO_CHECK_LOCK Compiler'ensureMacroCheck Compiler'checkSpecs Compiler'macroexpand1 Compiler'macroexpand Compiler'analyzeSeq Compiler'errorMsg Compiler'eval-1 Compiler'eval-2 Compiler'registerConstant Compiler'registerKeyword Compiler'registerKeywordCallsite Compiler'registerProtocolCallsite Compiler'registerVarCallsite Compiler'fwdPath Compiler'commonPath Compiler'addAnnotation Compiler'addParameterAnnotation Compiler'analyzeSymbol Compiler'destubClassName Compiler'getType Compiler'resolve-2 Compiler'resolve-1 Compiler'namespaceFor-1 Compiler'namespaceFor-2 Compiler'resolveIn Compiler'maybeResolveIn Compiler'lookupVar-3 Compiler'lookupVar-2 Compiler'registerVar Compiler'currentNS Compiler'closeOver Compiler'referenceLocal Compiler'tagOf Compiler'loadFile Compiler'load-1 Compiler'consumeWhitespaces Compiler'OPTS_COND_ALLOWED Compiler'readerOpts Compiler'load-3 Compiler'writeClassFile Compiler'pushNS Compiler'pushNSandLoader Compiler'getLookupThunk Compiler'compile1 Compiler'compile Compiler'inty Compiler'retType Compiler'primClass-1s Compiler'tagClass Compiler'primClass-1c Compiler'boxClass Compiler'emptyVarCallSites)
+(declare Compiler'DEF Compiler'LOOP Compiler'RECUR Compiler'IF Compiler'LET Compiler'LETFN Compiler'DO Compiler'FN Compiler'FNONCE Compiler'QUOTE Compiler'THE_VAR Compiler'DOT Compiler'ASSIGN Compiler'TRY Compiler'CATCH Compiler'FINALLY Compiler'THROW Compiler'MONITOR_ENTER Compiler'MONITOR_EXIT Compiler'IMPORT Compiler'DEFTYPE Compiler'CASE Compiler'CLASS Compiler'NEW Compiler'THIS Compiler'REIFY Compiler'LIST Compiler'HASHMAP Compiler'VECTOR Compiler'IDENTITY Compiler'_AMP_ Compiler'ISEQ Compiler'loadNs Compiler'inlineKey Compiler'inlineAritiesKey Compiler'volatileKey Compiler'implementsKey Compiler'COMPILE_STUB_PREFIX Compiler'protocolKey Compiler'onKey Compiler'dynamicKey Compiler'redefKey Compiler'NS Compiler'IN_NS Compiler'specials Compiler'MAX_POSITIONAL_ARITY Compiler'OBJECT_TYPE Compiler'KEYWORD_TYPE Compiler'VAR_TYPE Compiler'SYMBOL_TYPE Compiler'IFN_TYPE Compiler'AFUNCTION_TYPE Compiler'RT_TYPE Compiler'NUMBERS_TYPE Compiler'CLASS_TYPE Compiler'NS_TYPE Compiler'UTIL_TYPE Compiler'REFLECTOR_TYPE Compiler'THROWABLE_TYPE Compiler'BOOLEAN_OBJECT_TYPE Compiler'IPERSISTENTMAP_TYPE Compiler'IOBJ_TYPE Compiler'TUPLE_TYPE Compiler'createTupleMethods Compiler'ARG_TYPES Compiler'EXCEPTION_TYPES Compiler'LOCAL_ENV Compiler'LOOP_LOCALS Compiler'LOOP_LABEL Compiler'CONSTANTS Compiler'CONSTANT_IDS Compiler'KEYWORD_CALLSITES Compiler'PROTOCOL_CALLSITES Compiler'VAR_CALLSITES Compiler'KEYWORDS Compiler'VARS Compiler'METHOD Compiler'IN_CATCH_FINALLY Compiler'METHOD_RETURN_CONTEXT Compiler'NO_RECUR Compiler'LOADER Compiler'SOURCE Compiler'SOURCE_PATH Compiler'COMPILE_PATH Compiler'COMPILE_FILES Compiler'INSTANCE Compiler'ADD_ANNOTATIONS Compiler'disableLocalsClearingKey Compiler'directLinkingKey Compiler'elideMetaKey Compiler'COMPILER_OPTIONS Compiler'getCompilerOption Compiler'elideMeta Compiler'LINE Compiler'COLUMN Compiler'lineDeref Compiler'columnDeref Compiler'LINE_BEFORE Compiler'COLUMN_BEFORE Compiler'LINE_AFTER Compiler'COLUMN_AFTER Compiler'NEXT_LOCAL_NUM Compiler'RET_LOCAL_NUM Compiler'COMPILE_STUB_SYM Compiler'COMPILE_STUB_CLASS Compiler'CLEAR_PATH Compiler'CLEAR_ROOT Compiler'CLEAR_SITES Compiler'RECUR_CLASS Compiler'isSpecial Compiler'inTailCall Compiler'resolveSymbol Compiler'maybePrimitiveType Compiler'maybeJavaClass Compiler'NIL_EXPR Compiler'TRUE_EXPR Compiler'FALSE_EXPR Compiler'subsumes Compiler'getTypeStringForArgs Compiler'getMatchingParams Compiler'CHAR_MAP Compiler'DEMUNGE_MAP Compiler'DEMUNGE_PATTERN Compiler'munge Compiler'demunge Compiler'clearPathRoot Compiler'registerLocal Compiler'getAndIncLocalNum Compiler'analyze-2 Compiler'analyze-3 Compiler'isMacro Compiler'isInline Compiler'namesStaticMember Compiler'preserveTag Compiler'MACRO_CHECK Compiler'MACRO_CHECK_LOADING Compiler'MACRO_CHECK_LOCK Compiler'ensureMacroCheck Compiler'checkSpecs Compiler'macroexpand1 Compiler'macroexpand Compiler'analyzeSeq Compiler'errorMsg Compiler'eval-1 Compiler'eval-2 Compiler'registerConstant Compiler'registerKeyword Compiler'registerKeywordCallsite Compiler'registerProtocolCallsite Compiler'registerVarCallsite Compiler'fwdPath Compiler'commonPath Compiler'addAnnotation Compiler'addParameterAnnotation Compiler'analyzeSymbol Compiler'destubClassName Compiler'getType Compiler'resolve-2 Compiler'resolve-1 Compiler'namespaceFor-1 Compiler'namespaceFor-2 Compiler'resolveIn Compiler'maybeResolveIn Compiler'lookupVar-3 Compiler'lookupVar-2 Compiler'registerVar Compiler'currentNS Compiler'closeOver Compiler'referenceLocal Compiler'tagOf Compiler'loadFile Compiler'load-1 Compiler'consumeWhitespaces Compiler'load-3 Compiler'writeClassFile Compiler'pushNS Compiler'pushNSandLoader Compiler'getLookupThunk Compiler'compile1 Compiler'compile Compiler'inty Compiler'retType Compiler'primClass-1s Compiler'tagClass Compiler'primClass-1c Compiler'boxClass Compiler'emptyVarCallSites)
 (declare Cons'new-2 Cons'new-3)
 (declare Cycle'new-3 Cycle'new-5 Cycle'create)
 (declare Delay'new Delay'force)
@@ -168,8 +167,7 @@
 (declare SymbolicValueReader'specials)
 (declare WrappingReader'new)
 (declare SyntaxQuoteReader'syntaxQuote SyntaxQuoteReader'sqExpandList SyntaxQuoteReader'flattenMap)
-(declare ConditionalReader'READ_STARTED ConditionalReader'DEFAULT_FEATURE ConditionalReader'RESERVED_FEATURES ConditionalReader'hasFeature ConditionalReader'readCondDelimited ConditionalReader'checkConditionalAllowed)
-(declare LispReader'QUOTE LispReader'THE_VAR LispReader'UNQUOTE LispReader'UNQUOTE_SPLICING LispReader'CONCAT LispReader'SEQ LispReader'LIST LispReader'APPLY LispReader'HASHMAP LispReader'HASHSET LispReader'VECTOR LispReader'WITH_META LispReader'META LispReader'DEREF LispReader'READ_COND LispReader'READ_COND_SPLICING LispReader'UNKNOWN LispReader'macros LispReader'dispatchMacros LispReader'symbolPat LispReader'intPat LispReader'ratioPat LispReader'floatPat LispReader'GENSYM_ENV LispReader'ARG_ENV LispReader'ctorReader LispReader'READ_COND_ENV LispReader'isWhitespace LispReader'unread LispReader'read1 LispReader'OPT_EOF LispReader'OPT_FEATURES LispReader'OPT_READ_COND LispReader'EOFTHROW LispReader'PLATFORM_KEY LispReader'PLATFORM_FEATURES LispReader'COND_ALLOW LispReader'COND_PRESERVE LispReader'read-2 LispReader'read-4 LispReader'read-5 LispReader'read-6 LispReader'ensurePending LispReader'installPlatformFeature LispReader'read-9 LispReader'readToken LispReader'readNumber LispReader'readUnicodeChar-4 LispReader'readUnicodeChar-5 LispReader'interpretToken LispReader'matchSymbol LispReader'matchNumber LispReader'getMacro LispReader'isMacro LispReader'isTerminatingMacro LispReader'garg LispReader'registerArg LispReader'isUnquoteSplicing LispReader'isUnquote LispReader'READ_EOF LispReader'READ_FINISHED LispReader'readDelimitedList LispReader'isPreserveReadCond)
+(declare LispReader'QUOTE LispReader'THE_VAR LispReader'UNQUOTE LispReader'UNQUOTE_SPLICING LispReader'CONCAT LispReader'SEQ LispReader'LIST LispReader'APPLY LispReader'HASHMAP LispReader'HASHSET LispReader'VECTOR LispReader'WITH_META LispReader'META LispReader'DEREF LispReader'UNKNOWN LispReader'macros LispReader'dispatchMacros LispReader'symbolPat LispReader'intPat LispReader'ratioPat LispReader'floatPat LispReader'GENSYM_ENV LispReader'ARG_ENV LispReader'ctorReader LispReader'isWhitespace LispReader'unread LispReader'read1 LispReader'OPT_EOF LispReader'EOFTHROW LispReader'read-1 LispReader'read-4 LispReader'read-5 LispReader'ensurePending LispReader'read-8 LispReader'readToken LispReader'readNumber LispReader'readUnicodeChar-4 LispReader'readUnicodeChar-5 LispReader'interpretToken LispReader'matchSymbol LispReader'matchNumber LispReader'getMacro LispReader'isMacro LispReader'isTerminatingMacro LispReader'garg LispReader'registerArg LispReader'isUnquoteSplicing LispReader'isUnquote LispReader'READ_EOF LispReader'READ_FINISHED LispReader'readDelimitedList)
 (declare LockingTransactionInfo'new)
 (declare CFn'new)
 (declare Notify'new)
@@ -231,7 +229,6 @@
 (declare RangeIterator'new)
 (declare Range'CHUNK_SIZE Range'positiveStep Range'negativeStep Range'new-4 Range'new-6 Range'new-7 Range'create-1 Range'create-2 Range'create-3)
 (declare Ratio'new)
-(declare ReaderConditional'FORM_KW ReaderConditional'SPLICING_KW ReaderConditional'create ReaderConditional'new)
 (declare RecordIterator'new)
 (declare Reduced'new)
 (declare RefTVal'new-3 RefTVal'new-2)
@@ -239,11 +236,10 @@
 (declare Reflector'invokeInstanceMethod Reflector'getCauseOrElse Reflector'throwCauseOrElseException Reflector'noMethodReport Reflector'invokeMatchingMethod Reflector'getAsMethodOfPublicBase Reflector'isMatch Reflector'invokeConstructor Reflector'invokeStaticMethodVariadic Reflector'invokeStaticMethod-3s Reflector'invokeStaticMethod-3c Reflector'getStaticField-2s Reflector'getStaticField-2c Reflector'setStaticField-3s Reflector'setStaticField-3c Reflector'getInstanceField Reflector'setInstanceField Reflector'invokeNoArgInstanceMember-2 Reflector'invokeNoArgInstanceMember-3 Reflector'invokeInstanceMember-2 Reflector'invokeInstanceMember-3o Reflector'invokeInstanceMember-3a Reflector'getField Reflector'getMethods Reflector'boxArg Reflector'boxArgs Reflector'paramArgTypeMatch Reflector'isCongruent Reflector'prepRet)
 (declare Repeat'INFINITE Repeat'new-2 Repeat'new-3 Repeat'create-1 Repeat'create-2)
 (declare RestFn'ontoArrayPrepend RestFn'findKey)
-(declare RT'T RT'F RT'LOADER_SUFFIX RT'DEFAULT_IMPORTS RT'UTF8 RT'readTrueFalseUnknown RT'CLOIURE_NS RT'OUT RT'IN RT'ERR RT'TAG_KEY RT'CONST_KEY RT'AGENT RT'readeval RT'READEVAL RT'SUPPRESS_READ RT'ASSERT RT'MATH_CONTEXT RT'LINE_KEY RT'COLUMN_KEY RT'FILE_KEY RT'DECLARED_KEY RT'DOC_KEY RT'USE_CONTEXT_CLASSLOADER RT'LOAD_FILE RT'IN_NAMESPACE RT'NAMESPACE RT'IDENTICAL RT'CMD_LINE_ARGS RT'CURRENT_NS RT'FLUSH_ON_NEWLINE RT'PRINT_META RT'PRINT_READABLY RT'WARN_ON_REFLECTION RT'ALLOW_UNRESOLVED_VARS RT'READER_RESOLVER RT'IN_NS_VAR RT'NS_VAR RT'FN_LOADER_VAR RT'PRINT_INITIALIZED RT'PR_ON RT'inNamespace RT'bootNamespace RT'processCommandLine RT'errPrintWriter RT'EMPTY_ARRAY RT'DEFAULT_COMPARATOR RT'ID RT'CHECK_SPEC_ASSERTS RT'INSTRUMENT_MACROS RT'CHECK_SPECS RT'keyword RT'var-2 RT'var-3 RT'loadResourceScript-1 RT'maybeLoadResourceScript RT'loadResourceScript-2s RT'loadResourceScript-2c RT'loadResourceScript-3 RT'lastModified RT'compile RT'load-1 RT'load-2 RT'doInit RT'nextID RT'loadLibrary RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'countFrom RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nthFrom-2 RT'nth-3 RT'nthFrom-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1c RT'intCast-1b RT'intCast-1s RT'intCast-1i RT'intCast-1f RT'intCast-1l RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1f RT'longCast-1l RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1f RT'floatCast-1l RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1f RT'doubleCast-1l RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'resolveClassNameInContext RT'suppressRead RT'printString RT'readString-1 RT'readString-2 RT'print RT'printInnerSeq RT'formatAesthetic RT'formatStandard RT'format RT'doFormat RT'setValues RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget-2f RT'aset-3f RT'alength-1f RT'aclone-1f RT'aget-2d RT'aset-3d RT'alength-1d RT'aclone-1d RT'aget-2i RT'aset-3i RT'alength-1i RT'aclone-1i RT'aget-2l RT'aset-3l RT'alength-1l RT'aclone-1l RT'aget-2c RT'aset-3c RT'alength-1c RT'aclone-1c RT'aget-2b RT'aset-3b RT'alength-1b RT'aclone-1b RT'aget-2s RT'aset-3s RT'alength-1s RT'aclone-1s RT'aget-2z RT'aset-3z RT'alength-1z RT'aclone-1z RT'aget-2o RT'aset-3o RT'alength-1o RT'aclone-1o)
+(declare RT'T RT'F RT'LOADER_SUFFIX RT'DEFAULT_IMPORTS RT'UTF8 RT'CLOIURE_NS RT'OUT RT'IN RT'ERR RT'TAG_KEY RT'CONST_KEY RT'AGENT RT'READEVAL RT'ASSERT RT'MATH_CONTEXT RT'LINE_KEY RT'COLUMN_KEY RT'FILE_KEY RT'DECLARED_KEY RT'DOC_KEY RT'USE_CONTEXT_CLASSLOADER RT'LOAD_FILE RT'IN_NAMESPACE RT'NAMESPACE RT'IDENTICAL RT'CMD_LINE_ARGS RT'CURRENT_NS RT'FLUSH_ON_NEWLINE RT'PRINT_READABLY RT'WARN_ON_REFLECTION RT'ALLOW_UNRESOLVED_VARS RT'READER_RESOLVER RT'IN_NS_VAR RT'NS_VAR RT'FN_LOADER_VAR RT'PRINT_INITIALIZED RT'PR_ON RT'inNamespace RT'bootNamespace RT'processCommandLine RT'errPrintWriter RT'EMPTY_ARRAY RT'DEFAULT_COMPARATOR RT'ID RT'CHECK_SPEC_ASSERTS RT'INSTRUMENT_MACROS RT'CHECK_SPECS RT'keyword RT'var-2 RT'var-3 RT'loadResourceScript-1 RT'maybeLoadResourceScript RT'loadResourceScript-2s RT'loadResourceScript-2c RT'loadResourceScript-3 RT'lastModified RT'compile RT'load-1 RT'load-2 RT'doInit RT'nextID RT'loadLibrary RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'countFrom RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nthFrom-2 RT'nth-3 RT'nthFrom-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1c RT'intCast-1b RT'intCast-1s RT'intCast-1i RT'intCast-1f RT'intCast-1l RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1f RT'longCast-1l RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1f RT'floatCast-1l RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1f RT'doubleCast-1l RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'resolveClassNameInContext RT'printString RT'readString RT'print RT'printInnerSeq RT'formatAesthetic RT'formatStandard RT'format RT'doFormat RT'setValues RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget-2f RT'aset-3f RT'alength-1f RT'aclone-1f RT'aget-2d RT'aset-3d RT'alength-1d RT'aclone-1d RT'aget-2i RT'aset-3i RT'alength-1i RT'aclone-1i RT'aget-2l RT'aset-3l RT'alength-1l RT'aclone-1l RT'aget-2c RT'aset-3c RT'alength-1c RT'aclone-1c RT'aget-2b RT'aset-3b RT'alength-1b RT'aclone-1b RT'aget-2s RT'aset-3s RT'alength-1s RT'aclone-1s RT'aget-2z RT'aset-3z RT'alength-1z RT'aclone-1z RT'aget-2o RT'aset-3o RT'alength-1o RT'aclone-1o)
 (declare SeqIterator'START SeqIterator'new)
 (declare StringSeq'create StringSeq'new)
 (declare Symbol'create-2 Symbol'create-1 Symbol'intern-2 Symbol'intern-1 Symbol'new-2 Symbol'new-3)
-(declare TaggedLiteral'TAG_KW TaggedLiteral'FORM_KW TaggedLiteral'create TaggedLiteral'new)
 (declare TransactionalHashMap'new-0 TransactionalHashMap'new-1i TransactionalHashMap'new-1m)
 (declare SingleBuffer'new)
 (declare ManyBuffer'new)
@@ -5444,73 +5440,6 @@
             (§ return PersistentList'EMPTY)
         )
         (:_more this)
-    )
-)
-)
-
-(java-ns cloiure.lang.Compile
-
-(§ import java.io.OutputStreamWriter)
-(§ import java.io.PrintWriter)
-(§ import java.io.IOException)
-
-;; Compiles libs and generates class files stored within the directory
-;; named by the Java System property "cloiure.compile.path". Arguments are
-;; strings naming the libs to be compiled. The libs and compile-path must
-;; all be within CLASSPATH.
-
-#_stateless
-(class-ns Compile
-    (def- #_"String" Compile'PATH_PROP "cloiure.compile.path")
-    (def- #_"String" Compile'REFLECTION_WARNING_PROP "cloiure.compile.warn-on-reflection")
-
-    (§ def- #_"Var" Compile'compile_path (RT'var-2 "cloiure.core", "*compile-path*"))
-    (§ def- #_"Var" Compile'compile (RT'var-2 "cloiure.core", "compile"))
-    (§ def- #_"Var" Compile'warn_on_reflection (RT'var-2 "cloiure.core", "*warn-on-reflection*"))
-
-    (defn #_"void" Compile'main [#_"String[]" args] #_(§ throws IOException, ClassNotFoundException)
-        (let [#_"OutputStreamWriter" out (cast OutputStreamWriter (.deref RT'OUT))]
-            (let [#_"PrintWriter" err (RT'errPrintWriter)]
-                (let [#_"String" path (System/getProperty Compile'PATH_PROP)]
-                    (let [#_"int" count (§ alength args)]
-                        (when (nil? path)
-                            (.println err, (str "ERROR: Must set system property " Compile'PATH_PROP "\nto the location for compiled .class files." "\nThis directory must also be on your CLASSPATH."))
-                            (System/exit 1)
-                        )
-
-                        (let [#_"boolean" warnOnReflection (.equals (System/getProperty Compile'REFLECTION_WARNING_PROP, "false"), "true")]
-                            ;; force load to avoid transitive compilation during lazy load
-                            (RT'load-1 "cloiure/core/specs/alpha")
-
-                            (try
-                                (Var'pushThreadBindings (RT'map
-                                    (object-array [
-                                        Compile'compile_path       path
-                                        Compile'warn_on_reflection warnOnReflection
-                                    ])
-                                ))
-
-                                (doseq [#_"String" lib args]
-                                    (.write out, (str "Compiling " lib " to " path "\n"))
-                                    (.flush out)
-                                    (.invoke Compile'compile, (Symbol'intern-1 lib))
-                                )
-                                (finally
-                                    (Var'popThreadBindings)
-                                    (try
-                                        (.flush out)
-                                        (catch IOException e
-                                            (.printStackTrace e, err)
-                                        )
-                                    )
-                                )
-                            )
-                            nil
-                        )
-                    )
-                )
-            )
-        )
     )
 )
 )
@@ -14006,7 +13935,7 @@
                 (let [#_"String" name (cast String (.getKey e))]
                     (let [#_"String" v (cast String (.getValue e))]
                         (when (.startsWith name, "cloiure.compiler.")
-                            (§ ass compilerOptions (RT'assoc compilerOptions, (RT'keyword nil, (.substring name, (inc (.lastIndexOf name, \.)))), (RT'readString-1 v)))
+                            (§ ass compilerOptions (RT'assoc compilerOptions, (RT'keyword nil, (.substring name, (inc (.lastIndexOf name, \.)))), (RT'readString v)))
                         )
                     )
                 )
@@ -15273,19 +15202,6 @@
         )
     )
 
-    (§ def- #_"Object" Compiler'OPTS_COND_ALLOWED (RT'mapUniqueKeys LispReader'OPT_READ_COND, LispReader'COND_ALLOW))
-
-    (defn- #_"Object" Compiler'readerOpts [#_"String" sourceName]
-        (if (and (some? sourceName) (.endsWith sourceName, ".clic"))
-            (do
-                Compiler'OPTS_COND_ALLOWED
-            )
-            (do
-                nil
-            )
-        )
-    )
-
     (defn #_"Object" Compiler'load-3 [#_"Reader" rdr, #_"String" sourcePath, #_"String" sourceName]
         (let [#_"Object" EOF (Object.)]
             (let [#_"Object" ret nil]
@@ -15310,35 +15226,33 @@
                         ])
                     ))
 
-                    (let [#_"Object" readerOpts (Compiler'readerOpts sourceName)]
-                        (try
-                            (loop-when-recur [#_"Object" r (LispReader'read-5 pushbackReader, false, EOF, false, readerOpts)] (not= r EOF) [(LispReader'read-5 pushbackReader, false, EOF, false, readerOpts)]
-                                (Compiler'consumeWhitespaces pushbackReader)
-                                (.set Compiler'LINE_AFTER, (.getLineNumber pushbackReader))
-                                (.set Compiler'COLUMN_AFTER, (.getColumnNumber pushbackReader))
-                                (§ ass ret (Compiler'eval-2 r, false))
-                                (.set Compiler'LINE_BEFORE, (.getLineNumber pushbackReader))
-                                (.set Compiler'COLUMN_BEFORE, (.getColumnNumber pushbackReader))
-                            )
-                            (§ catch LispReaderException e
-                                (throw (CompilerException'new sourcePath, (:line e), (:column e), (.getCause e)))
-                            )
-                            (catch Throwable e
-                                (if (not (§ instance? CompilerException e))
-                                    (do
-                                        (throw (CompilerException'new sourcePath, (cast Integer (.deref Compiler'LINE_BEFORE)), (cast Integer (.deref Compiler'COLUMN_BEFORE)), e))
-                                    )
-                                    (do
-                                        (throw (cast' CompilerException e))
-                                    )
+                    (try
+                        (loop-when-recur [#_"Object" r (LispReader'read-4 pushbackReader, false, EOF, false)] (not= r EOF) [(LispReader'read-4 pushbackReader, false, EOF, false)]
+                            (Compiler'consumeWhitespaces pushbackReader)
+                            (.set Compiler'LINE_AFTER, (.getLineNumber pushbackReader))
+                            (.set Compiler'COLUMN_AFTER, (.getColumnNumber pushbackReader))
+                            (§ ass ret (Compiler'eval-2 r, false))
+                            (.set Compiler'LINE_BEFORE, (.getLineNumber pushbackReader))
+                            (.set Compiler'COLUMN_BEFORE, (.getColumnNumber pushbackReader))
+                        )
+                        (§ catch LispReaderException e
+                            (throw (CompilerException'new sourcePath, (:line e), (:column e), (.getCause e)))
+                        )
+                        (catch Throwable e
+                            (if (not (§ instance? CompilerException e))
+                                (do
+                                    (throw (CompilerException'new sourcePath, (cast Integer (.deref Compiler'LINE_BEFORE)), (cast Integer (.deref Compiler'COLUMN_BEFORE)), e))
+                                )
+                                (do
+                                    (throw (cast' CompilerException e))
                                 )
                             )
-                            (finally
-                                (Var'popThreadBindings)
-                            )
                         )
-                        ret
+                        (finally
+                            (Var'popThreadBindings)
+                        )
                     )
+                    ret
                 )
             )
         )
@@ -15486,83 +15400,81 @@
                                     (let [#_"GeneratorAdapter" gen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), (Method/getMethod "void load ()"), nil, nil, cv)]
                                         (.visitCode gen)
 
-                                        (let [#_"Object" readerOpts (Compiler'readerOpts sourceName)]
-                                            (loop-when-recur [#_"Object" r (LispReader'read-5 pushbackReader, false, EOF, false, readerOpts)] (not= r EOF) [(LispReader'read-5 pushbackReader, false, EOF, false, readerOpts)]
-                                                (.set Compiler'LINE_AFTER, (.getLineNumber pushbackReader))
-                                                (.set Compiler'COLUMN_AFTER, (.getColumnNumber pushbackReader))
-                                                (Compiler'compile1 gen, objx, r)
-                                                (.set Compiler'LINE_BEFORE, (.getLineNumber pushbackReader))
-                                                (.set Compiler'COLUMN_BEFORE, (.getColumnNumber pushbackReader))
-                                            )
-                                            ;; end of load
-                                            (.returnValue gen)
-                                            (.endMethod gen)
+                                        (loop-when-recur [#_"Object" r (LispReader'read-4 pushbackReader, false, EOF, false)] (not= r EOF) [(LispReader'read-4 pushbackReader, false, EOF, false)]
+                                            (.set Compiler'LINE_AFTER, (.getLineNumber pushbackReader))
+                                            (.set Compiler'COLUMN_AFTER, (.getColumnNumber pushbackReader))
+                                            (Compiler'compile1 gen, objx, r)
+                                            (.set Compiler'LINE_BEFORE, (.getLineNumber pushbackReader))
+                                            (.set Compiler'COLUMN_BEFORE, (.getColumnNumber pushbackReader))
+                                        )
+                                        ;; end of load
+                                        (.returnValue gen)
+                                        (.endMethod gen)
 
-                                            ;; static fields for constants
-                                            (loop-when-recur [#_"int" i 0] (< i (.count (:constants objx))) [(inc i)]
-                                                (when (.contains (:usedConstants objx), i)
-                                                    (.visitField cv, (+ Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL Opcodes/ACC_STATIC), (.constantName objx, i), (.getDescriptor (.constantType objx, i)), nil, nil)
+                                        ;; static fields for constants
+                                        (loop-when-recur [#_"int" i 0] (< i (.count (:constants objx))) [(inc i)]
+                                            (when (.contains (:usedConstants objx), i)
+                                                (.visitField cv, (+ Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL Opcodes/ACC_STATIC), (.constantName objx, i), (.getDescriptor (.constantType objx, i)), nil, nil)
+                                            )
+                                        )
+
+                                        (let [#_"int" INITS_PER 100]
+                                            (let [#_"int" numInits (/ (.count (:constants objx)) INITS_PER)]
+                                                (when-not (zero? (% (.count (:constants objx)) INITS_PER))
+                                                    (§ ass numInits (inc numInits))
                                                 )
-                                            )
 
-                                            (let [#_"int" INITS_PER 100]
-                                                (let [#_"int" numInits (/ (.count (:constants objx)) INITS_PER)]
-                                                    (when-not (zero? (% (.count (:constants objx)) INITS_PER))
-                                                        (§ ass numInits (inc numInits))
-                                                    )
-
-                                                    (loop-when-recur [#_"int" n 0] (< n numInits) [(inc n)]
-                                                        (let [#_"GeneratorAdapter" clinitgen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), (Method/getMethod (str "void __init" n"()")), nil, nil, cv)]
-                                                            (.visitCode clinitgen)
-                                                            (loop-when-recur [#_"int" i (* n INITS_PER)] (and (< i (.count (:constants objx))) (< i (* (inc n) INITS_PER))) [(inc i)]
-                                                                (when (.contains (:usedConstants objx), i)
-                                                                    (.emitValue objx, (.nth (:constants objx), i), clinitgen)
-                                                                    (.checkCast clinitgen, (.constantType objx, i))
-                                                                    (.putStatic clinitgen, (:objtype objx), (.constantName objx, i), (.constantType objx, i))
-                                                                )
-                                                            )
-                                                            (.returnValue clinitgen)
-                                                            (.endMethod clinitgen)
-                                                        )
-                                                    )
-
-                                                    ;; static init for constants, keywords and vars
-                                                    (let [#_"GeneratorAdapter" clinitgen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), (Method/getMethod "void <clinit> ()"), nil, nil, cv)]
+                                                (loop-when-recur [#_"int" n 0] (< n numInits) [(inc n)]
+                                                    (let [#_"GeneratorAdapter" clinitgen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), (Method/getMethod (str "void __init" n"()")), nil, nil, cv)]
                                                         (.visitCode clinitgen)
-                                                        (let [#_"Label" startTry (.newLabel clinitgen)]
-                                                            (let [#_"Label" endTry (.newLabel clinitgen)]
-                                                                (let [#_"Label" end (.newLabel clinitgen)]
-                                                                    (let [#_"Label" finallyLabel (.newLabel clinitgen)]
-                                                                        (loop-when-recur [#_"int" n 0] (< n numInits) [(inc n)]
-                                                                            (.invokeStatic clinitgen, (:objtype objx), (Method/getMethod (str "void __init" n "()")))
-                                                                        )
+                                                        (loop-when-recur [#_"int" i (* n INITS_PER)] (and (< i (.count (:constants objx))) (< i (* (inc n) INITS_PER))) [(inc i)]
+                                                            (when (.contains (:usedConstants objx), i)
+                                                                (.emitValue objx, (.nth (:constants objx), i), clinitgen)
+                                                                (.checkCast clinitgen, (.constantType objx, i))
+                                                                (.putStatic clinitgen, (:objtype objx), (.constantName objx, i), (.constantType objx, i))
+                                                            )
+                                                        )
+                                                        (.returnValue clinitgen)
+                                                        (.endMethod clinitgen)
+                                                    )
+                                                )
 
-                                                                        (.push clinitgen, (.replace (:internalName objx), \/, \.))
-                                                                        (.invokeStatic clinitgen, Compiler'RT_TYPE, (Method/getMethod "Class classForName(String)"))
-                                                                        (.invokeVirtual clinitgen, Compiler'CLASS_TYPE, (Method/getMethod "ClassLoader getClassLoader()"))
-                                                                        (.invokeStatic clinitgen, (§ unsure Type/getType (§ class Compiler)), (Method/getMethod "void pushNSandLoader(ClassLoader)"))
-                                                                        (.mark clinitgen, startTry)
-                                                                        (.invokeStatic clinitgen, (:objtype objx), (Method/getMethod "void load()"))
-                                                                        (.mark clinitgen, endTry)
-                                                                        (.invokeStatic clinitgen, Compiler'VAR_TYPE, (Method/getMethod "void popThreadBindings()"))
-                                                                        (.goTo clinitgen, end)
-
-                                                                        (.mark clinitgen, finallyLabel)
-                                                                        ;; exception should be on stack
-                                                                        (.invokeStatic clinitgen, Compiler'VAR_TYPE, (Method/getMethod "void popThreadBindings()"))
-                                                                        (.throwException clinitgen)
-                                                                        (.mark clinitgen, end)
-                                                                        (.visitTryCatchBlock clinitgen, startTry, endTry, finallyLabel, nil)
-
-                                                                        ;; end of static init
-                                                                        (.returnValue clinitgen)
-                                                                        (.endMethod clinitgen)
-
-                                                                        ;; end of class
-                                                                        (.visitEnd cv)
-
-                                                                        (Compiler'writeClassFile (:internalName objx), (.toByteArray cw))
+                                                ;; static init for constants, keywords and vars
+                                                (let [#_"GeneratorAdapter" clinitgen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), (Method/getMethod "void <clinit> ()"), nil, nil, cv)]
+                                                    (.visitCode clinitgen)
+                                                    (let [#_"Label" startTry (.newLabel clinitgen)]
+                                                        (let [#_"Label" endTry (.newLabel clinitgen)]
+                                                            (let [#_"Label" end (.newLabel clinitgen)]
+                                                                (let [#_"Label" finallyLabel (.newLabel clinitgen)]
+                                                                    (loop-when-recur [#_"int" n 0] (< n numInits) [(inc n)]
+                                                                        (.invokeStatic clinitgen, (:objtype objx), (Method/getMethod (str "void __init" n "()")))
                                                                     )
+
+                                                                    (.push clinitgen, (.replace (:internalName objx), \/, \.))
+                                                                    (.invokeStatic clinitgen, Compiler'RT_TYPE, (Method/getMethod "Class classForName(String)"))
+                                                                    (.invokeVirtual clinitgen, Compiler'CLASS_TYPE, (Method/getMethod "ClassLoader getClassLoader()"))
+                                                                    (.invokeStatic clinitgen, (§ unsure Type/getType (§ class Compiler)), (Method/getMethod "void pushNSandLoader(ClassLoader)"))
+                                                                    (.mark clinitgen, startTry)
+                                                                    (.invokeStatic clinitgen, (:objtype objx), (Method/getMethod "void load()"))
+                                                                    (.mark clinitgen, endTry)
+                                                                    (.invokeStatic clinitgen, Compiler'VAR_TYPE, (Method/getMethod "void popThreadBindings()"))
+                                                                    (.goTo clinitgen, end)
+
+                                                                    (.mark clinitgen, finallyLabel)
+                                                                    ;; exception should be on stack
+                                                                    (.invokeStatic clinitgen, Compiler'VAR_TYPE, (Method/getMethod "void popThreadBindings()"))
+                                                                    (.throwException clinitgen)
+                                                                    (.mark clinitgen, end)
+                                                                    (.visitTryCatchBlock clinitgen, startTry, endTry, finallyLabel, nil)
+
+                                                                    ;; end of static init
+                                                                    (.returnValue clinitgen)
+                                                                    (.endMethod clinitgen)
+
+                                                                    ;; end of class
+                                                                    (.visitEnd cv)
+
+                                                                    (Compiler'writeClassFile (:internalName objx), (.toByteArray cw))
                                                                 )
                                                             )
                                                         )
@@ -19644,7 +19556,7 @@
     (§ def #_"StringReader" RegexReader'stringrdr (StringReader'new))
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"RegexReader" this, #_"Object" reader, #_"Object" doublequote, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"RegexReader" this, #_"Object" reader, #_"Object" doublequote, #_"Object" pendingForms]
         (let [#_"StringBuilder" sb (StringBuilder.)]
             (let [#_"Reader" r (cast Reader reader)]
                 (loop-when-recur [#_"int" ch (LispReader'read1 r)] (not= ch \") [(LispReader'read1 r)] ;; oops! "
@@ -19673,7 +19585,7 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"StringReader" this, #_"Object" reader, #_"Object" doublequote, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"StringReader" this, #_"Object" reader, #_"Object" doublequote, #_"Object" pendingForms]
         (let [#_"StringBuilder" sb (StringBuilder.)]
             (let [#_"Reader" r (cast Reader reader)]
                 (loop-when-recur [#_"int" ch (LispReader'read1 r)] (not= ch \") [(LispReader'read1 r)] ;; oops! "
@@ -19759,7 +19671,7 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"CommentReader" this, #_"Object" reader, #_"Object" semicolon, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"CommentReader" this, #_"Object" reader, #_"Object" semicolon, #_"Object" pendingForms]
         (let [#_"Reader" r (cast Reader reader)]
             (§ let [#_"int" ch]
                 (§ loop
@@ -19779,9 +19691,9 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"DiscardReader" this, #_"Object" reader, #_"Object" underscore, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"DiscardReader" this, #_"Object" reader, #_"Object" underscore, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (LispReader'read-6 r, true, nil, true, opts, (LispReader'ensurePending pendingForms))
+            (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))
             r
         )
     )
@@ -19797,7 +19709,7 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"NamespaceMapReader" this, #_"Object" reader, #_"Object" colon, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"NamespaceMapReader" this, #_"Object" reader, #_"Object" colon, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (let [#_"boolean" auto false]
                 (let [#_"int" autoChar (LispReader'read1 r)]
@@ -19833,7 +19745,7 @@
                                 (not= nextChar \{) ;; #:foo { } or #::foo { }
                                 (do
                                     (LispReader'unread r, nextChar)
-                                    (§ ass sym (LispReader'read-6 r, true, nil, false, opts, pendingForms))
+                                    (§ ass sym (LispReader'read-5 r, true, nil, false, pendingForms))
                                     (§ ass nextChar (LispReader'read1 r))
                                     (while (LispReader'isWhitespace nextChar)
                                         (§ ass nextChar (LispReader'read1 r))
@@ -19902,7 +19814,7 @@
                                 )
 
                                 ;; Read map
-                                (let [#_"List" kvs (LispReader'readDelimitedList \}, r, true, opts, (LispReader'ensurePending pendingForms))]
+                                (let [#_"List" kvs (LispReader'readDelimitedList \}, r, true, (LispReader'ensurePending pendingForms))]
                                     (when (= (& (.size kvs) 1) 1)
                                         (throw (Util'runtimeException-1 "Namespaced map literal must contain an even number of forms"))
                                     )
@@ -19975,9 +19887,9 @@
     ))
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"SymbolicValueReader" this, #_"Object" reader, #_"Object" quote, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"SymbolicValueReader" this, #_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (let [#_"Object" o (LispReader'read-6 r, true, nil, true, opts, (LispReader'ensurePending pendingForms))]
+            (let [#_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
                 (when (not (§ instance? Symbol o))
                     (throw (Util'runtimeException-1 (str "Invalid token: ##" o)))
                 )
@@ -20006,9 +19918,9 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"WrappingReader" this, #_"Object" reader, #_"Object" quote, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"WrappingReader" this, #_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (let [#_"Object" o (LispReader'read-6 r, true, nil, true, opts, (LispReader'ensurePending pendingForms))]
+            (let [#_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
                 (RT'list-2 (:sym this), o)
             )
         )
@@ -20022,9 +19934,9 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"VarReader" this, #_"Object" reader, #_"Object" quote, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"VarReader" this, #_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (let [#_"Object" o (LispReader'read-6 r, true, nil, true, opts, (LispReader'ensurePending pendingForms))]
+            (let [#_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
                 (RT'list-2 LispReader'THE_VAR, o)
             )
         )
@@ -20038,7 +19950,7 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"DispatchReader" this, #_"Object" reader, #_"Object" hash, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"DispatchReader" this, #_"Object" reader, #_"Object" hash, #_"Object" pendingForms]
         (let [#_"int" ch (LispReader'read1 (cast Reader reader))]
             (when (= ch -1)
                 (throw (Util'runtimeException-1 "EOF while reading character"))
@@ -20048,7 +19960,7 @@
                 (when (nil? fn)
                     (LispReader'unread (cast PushbackReader reader), ch)
                     (§ ass pendingForms (LispReader'ensurePending pendingForms))
-                    (let [#_"Object" result (.invoke ctorReader, reader, ch, opts, pendingForms)]
+                    (let [#_"Object" result (.invoke ctorReader, reader, ch, pendingForms)]
                         (if (some? result)
                             (do
                                 (§ return result)
@@ -20059,7 +19971,7 @@
                         )
                     )
                 )
-                (.invoke fn, reader, ch, opts, pendingForms)
+                (.invoke fn, reader, ch, pendingForms)
             )
         )
     )
@@ -20072,7 +19984,7 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"FnReader" this, #_"Object" reader, #_"Object" lparen, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"FnReader" this, #_"Object" reader, #_"Object" lparen, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (when (some? (.deref LispReader'ARG_ENV))
                 (throw (IllegalStateException. "Nested #()s are not allowed"))
@@ -20080,7 +19992,7 @@
             (try
                 (Var'pushThreadBindings (RT'map LispReader'ARG_ENV, PersistentTreeMap'EMPTY))
                 (LispReader'unread r, \()
-                (let [#_"Object" form (LispReader'read-6 r, true, nil, true, opts, (LispReader'ensurePending pendingForms))]
+                (let [#_"Object" form (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
                     (let [#_"PersistentVector" args PersistentVector'EMPTY]
                         (let [#_"PersistentTreeMap" argsyms (cast' PersistentTreeMap (.deref LispReader'ARG_ENV))]
                             (let [#_"ISeq" rargs (.rseq argsyms)]
@@ -20124,7 +20036,7 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"ArgReader" this, #_"Object" reader, #_"Object" pct, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"ArgReader" this, #_"Object" reader, #_"Object" pct, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (when (nil? (.deref LispReader'ARG_ENV))
                 (§ return (LispReader'interpretToken (LispReader'readToken r, \%), nil))
@@ -20135,7 +20047,7 @@
                 (when (or (= ch -1) (LispReader'isWhitespace ch) (LispReader'isTerminatingMacro ch))
                     (§ return (LispReader'registerArg 1))
                 )
-                (let [#_"Object" n (LispReader'read-6 r, true, nil, true, opts, (LispReader'ensurePending pendingForms))]
+                (let [#_"Object" n (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
                     (when (.equals n, Compiler'_AMP_)
                         (§ return (LispReader'registerArg -1))
                     )
@@ -20156,7 +20068,7 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"MetaReader" this, #_"Object" reader, #_"Object" caret, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"MetaReader" this, #_"Object" reader, #_"Object" caret, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (let [#_"int" line -1]
                 (let [#_"int" column -1]
@@ -20165,7 +20077,7 @@
                         (§ ass column (dec (.getColumnNumber (cast' LineNumberingPushbackReader r))))
                     )
                     (§ ass pendingForms (LispReader'ensurePending pendingForms))
-                    (let [#_"Object" meta (LispReader'read-6 r, true, nil, true, opts, pendingForms)]
+                    (let [#_"Object" meta (LispReader'read-5 r, true, nil, true, pendingForms)]
                         (cond (or (§ instance? Symbol meta) (instance? String meta))
                             (do
                                 (§ ass meta (RT'map RT'TAG_KEY, meta))
@@ -20180,7 +20092,7 @@
                             )
                         )
 
-                        (let [#_"Object" o (LispReader'read-6 r, true, nil, true, opts, pendingForms)]
+                        (let [#_"Object" o (LispReader'read-5 r, true, nil, true, pendingForms)]
                             (if (§ instance? IMeta o)
                                 (do
                                     (when (and (not= line -1) (§ instance? ISeq o))
@@ -20218,12 +20130,12 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"SyntaxQuoteReader" this, #_"Object" reader, #_"Object" backquote, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"SyntaxQuoteReader" this, #_"Object" reader, #_"Object" backquote, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (try
                 (Var'pushThreadBindings (RT'map LispReader'GENSYM_ENV, PersistentHashMap'EMPTY))
 
-                (let [#_"Object" form (LispReader'read-6 r, true, nil, true, opts, (LispReader'ensurePending pendingForms))]
+                (let [#_"Object" form (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
                     (SyntaxQuoteReader'syntaxQuote form)
                 )
                 (finally
@@ -20450,7 +20362,7 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"UnquoteReader" this, #_"Object" reader, #_"Object" comma, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"UnquoteReader" this, #_"Object" reader, #_"Object" comma, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (let [#_"int" ch (LispReader'read1 r)]
                 (when (= ch -1)
@@ -20459,13 +20371,13 @@
                 (§ ass pendingForms (LispReader'ensurePending pendingForms))
                 (if (= ch \@)
                     (do
-                        (let [#_"Object" o (LispReader'read-6 r, true, nil, true, opts, pendingForms)]
+                        (let [#_"Object" o (LispReader'read-5 r, true, nil, true, pendingForms)]
                             (RT'list-2 LispReader'UNQUOTE_SPLICING, o)
                         )
                     )
                     (do
                         (LispReader'unread r, ch)
-                        (let [#_"Object" o (LispReader'read-6 r, true, nil, true, opts, pendingForms)]
+                        (let [#_"Object" o (LispReader'read-5 r, true, nil, true, pendingForms)]
                             (RT'list-2 LispReader'UNQUOTE, o)
                         )
                     )
@@ -20482,7 +20394,7 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"CharacterReader" this, #_"Object" reader, #_"Object" backslash, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"CharacterReader" this, #_"Object" reader, #_"Object" backslash, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (let [#_"int" ch (LispReader'read1 r)]
                 (when (= ch -1)
@@ -20555,7 +20467,7 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"ListReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"ListReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (let [#_"int" line -1]
                 (let [#_"int" column -1]
@@ -20563,7 +20475,7 @@
                         (§ ass line (.getLineNumber (cast' LineNumberingPushbackReader r)))
                         (§ ass column (dec (.getColumnNumber (cast' LineNumberingPushbackReader r))))
                     )
-                    (let [#_"List" list (LispReader'readDelimitedList \), r, true, opts, (LispReader'ensurePending pendingForms))]
+                    (let [#_"List" list (LispReader'readDelimitedList \), r, true, (LispReader'ensurePending pendingForms))]
                         (when (.isEmpty list)
                             (§ return PersistentList'EMPTY)
                         )
@@ -20596,13 +20508,13 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"EvalReader" this, #_"Object" reader, #_"Object" eq, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"EvalReader" this, #_"Object" reader, #_"Object" eq, #_"Object" pendingForms]
         (when (not (RT'booleanCast-1o (.deref RT'READEVAL)))
             (throw (Util'runtimeException-1 "EvalReader not allowed when *read-eval* is false."))
         )
 
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (let [#_"Object" o (LispReader'read-6 r, true, nil, true, opts, (LispReader'ensurePending pendingForms))]
+            (let [#_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
                 (cond (§ instance? Symbol o)
                     (do
                         (RT'classForName-1 (.toString o))
@@ -20650,9 +20562,9 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"VectorReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"VectorReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (LazilyPersistentVector'create (LispReader'readDelimitedList \], r, true, opts, (LispReader'ensurePending pendingForms)))
+            (LazilyPersistentVector'create (LispReader'readDelimitedList \], r, true, (LispReader'ensurePending pendingForms)))
         )
     )
 )
@@ -20664,9 +20576,9 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"MapReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"MapReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (let [#_"Object[]" a (.toArray (LispReader'readDelimitedList \}, r, true, opts, (LispReader'ensurePending pendingForms)))]
+            (let [#_"Object[]" a (.toArray (LispReader'readDelimitedList \}, r, true, (LispReader'ensurePending pendingForms)))]
                 (when (= (& (§ alength a) 1) 1)
                     (throw (Util'runtimeException-1 "Map literal must contain an even number of forms"))
                 )
@@ -20683,9 +20595,9 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"SetReader" this, #_"Object" reader, #_"Object" leftbracket, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"SetReader" this, #_"Object" reader, #_"Object" leftbracket, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (PersistentHashSet'createWithCheck-1l (LispReader'readDelimitedList \}, r, true, opts, (LispReader'ensurePending pendingForms)))
+            (PersistentHashSet'createWithCheck-1l (LispReader'readDelimitedList \}, r, true, (LispReader'ensurePending pendingForms)))
         )
     )
 )
@@ -20697,7 +20609,7 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"UnmatchedDelimiterReader" this, #_"Object" reader, #_"Object" rightdelim, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"UnmatchedDelimiterReader" this, #_"Object" reader, #_"Object" rightdelim, #_"Object" pendingForms]
         (throw (Util'runtimeException-1 (str "Unmatched delimiter: " rightdelim)))
     )
 )
@@ -20709,7 +20621,7 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"UnreadableReader" this, #_"Object" reader, #_"Object" leftangle, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"UnreadableReader" this, #_"Object" reader, #_"Object" leftangle, #_"Object" pendingForms]
         (throw (Util'runtimeException-1 "Unreadable form"))
     )
 )
@@ -20721,25 +20633,18 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method invoke) [#_"CtorReader" this, #_"Object" reader, #_"Object" firstChar, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn #_"Object" (§ method invoke) [#_"CtorReader" this, #_"Object" reader, #_"Object" firstChar, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (§ ass pendingForms (LispReader'ensurePending pendingForms))
-            (let [#_"Object" name (LispReader'read-6 r, true, nil, false, opts, pendingForms)]
+            (let [#_"Object" name (LispReader'read-5 r, true, nil, false, pendingForms)]
                 (when (not (§ instance? Symbol name))
                     (throw (RuntimeException. "Reader tag must be a symbol"))
                 )
                 (let [#_"Symbol" sym (cast' Symbol name)]
-                    (let [#_"Object" form (LispReader'read-6 r, true, nil, true, opts, pendingForms)]
-                        (if (or (LispReader'isPreserveReadCond opts) (RT'suppressRead))
-                            (do
-                                (TaggedLiteral'create sym, form)
-                            )
-                            (do
-                                (if (.contains (.getName sym), ".")
-                                    (.readRecord this, form, sym, opts, pendingForms)
-                                    (.readTagged this, form, sym, opts, pendingForms)
-                                )
-                            )
+                    (let [#_"Object" form (LispReader'read-5 r, true, nil, true, pendingForms)]
+                        (if (.contains (.getName sym), ".")
+                            (.readRecord this, form, sym, pendingForms)
+                            (.readTagged this, form, sym, pendingForms)
                         )
                     )
                 )
@@ -20748,275 +20653,65 @@
     )
 
     #_method
-    (§ defn- #_"Object" (§ method readTagged) [#_"CtorReader" this, #_"Object" o, #_"Symbol" tag, #_"Object" opts, #_"Object" pendingForms]
+    (§ defn- #_"Object" (§ method readTagged) [#_"CtorReader" this, #_"Object" o, #_"Symbol" tag, #_"Object" pendingForms]
         (throw (RuntimeException. (str "No reader function for tag " (.toString tag))))
     )
 
     #_method
-    (§ defn- #_"Object" (§ method readRecord) [#_"CtorReader" this, #_"Object" form, #_"Symbol" recordName, #_"Object" opts, #_"Object" pendingForms]
-        (let [#_"boolean" readeval (RT'booleanCast-1o (.deref RT'READEVAL))]
-            (when (not readeval)
-                (throw (Util'runtimeException-1 "Record construction syntax can only be used when *read-eval* == true"))
-            )
+    (§ defn- #_"Object" (§ method readRecord) [#_"CtorReader" this, #_"Object" form, #_"Symbol" recordName, #_"Object" pendingForms]
+        (when-not (RT'booleanCast-1o (.deref RT'READEVAL))
+            (throw (Util'runtimeException-1 "Record construction syntax can only be used when *read-eval* == true"))
+        )
 
-            (let [#_"Class" recordClass (RT'classForNameNonLoading (.toString recordName))]
-                (let [#_"boolean" shortForm true]
-                    (cond (§ instance? IPersistentMap form)
-                        (do
-                            (§ ass shortForm false)
-                        )
-                        (§ instance? IPersistentVector form)
-                        (do
-                            (§ ass shortForm true)
-                        )
-                        :else
-                        (do
-                            (throw (Util'runtimeException-1 (str "Unreadable constructor form starting with \"#" recordName "\"")))
-                        )
+        (let [#_"Class" recordClass (RT'classForNameNonLoading (.toString recordName))]
+            (let [#_"boolean" shortForm true]
+                (cond (§ instance? IPersistentMap form)
+                    (do
+                        (§ ass shortForm false)
                     )
-
-                    (let [#_"Object" ret nil]
-                        (let [#_"Constructor[]" allctors (.getConstructors (cast Class recordClass))]
-                            (if shortForm
-                                (do
-                                    (let [#_"IPersistentVector" recordEntries (cast' IPersistentVector form)]
-                                        (let [#_"boolean" ctorFound false]
-                                            (doseq [#_"Constructor" ctor allctors]
-                                                (when (= (§ alength (.getParameterTypes ctor)) (.count recordEntries))
-                                                    (§ ass ctorFound true)
-                                                )
-                                            )
-
-                                            (when (not ctorFound)
-                                                (throw (Util'runtimeException-1 (str "Unexpected number of constructor arguments to " (.toString recordClass) ": got " (.count recordEntries))))
-                                            )
-
-                                            (§ ass ret (Reflector'invokeConstructor recordClass, (RT'toArray recordEntries)))
-                                        )
-                                    )
-                                )
-                                (do
-                                    (let [#_"IPersistentMap" vals (cast' IPersistentMap form)]
-                                        (loop-when-recur [#_"ISeq" s (RT'keys vals)] (some? s) [(.next s)]
-                                            (when (not (§ instance? Keyword (.first s)))
-                                                (throw (Util'runtimeException-1 (str "Unreadable defrecord form: key must be of type cloiure.lang.Keyword, got " (.toString (.first s)))))
-                                            )
-                                        )
-                                        (§ ass ret (Reflector'invokeStaticMethod-3c recordClass, "create", (object-array [ vals ])))
-                                    )
-                                )
-                            )
-
-                            ret
-                        )
+                    (§ instance? IPersistentVector form)
+                    (do
+                        (§ ass shortForm true)
+                    )
+                    :else
+                    (do
+                        (throw (Util'runtimeException-1 (str "Unreadable constructor form starting with \"#" recordName "\"")))
                     )
                 )
-            )
-        )
-    )
-)
 
-#_closure
-(class-ns ConditionalReader (§ extends AFn)
-    (defn #_"ConditionalReader" ConditionalReader'new []
-        (AFn'new)
-    )
-
-    (def- #_"Object" ConditionalReader'READ_STARTED (Object.))
-    (§ def #_"Keyword" ConditionalReader'DEFAULT_FEATURE (Keyword'intern-2 nil, "default"))
-    (§ def #_"IPersistentSet" ConditionalReader'RESERVED_FEATURES (RT'set (Keyword'intern-2 nil, "else"), (Keyword'intern-2 nil, "none")))
-
-    (defn #_"boolean" ConditionalReader'hasFeature [#_"Object" feature, #_"Object" opts]
-        (when (not (§ instance? Keyword feature))
-            (throw (Util'runtimeException-1 (str "Feature should be a keyword: " feature)))
-        )
-
-        (when (.equals ConditionalReader'DEFAULT_FEATURE, feature)
-            (§ return true)
-        )
-
-        (let [#_"IPersistentSet" custom (cast' IPersistentSet (.valAt (cast' IPersistentMap opts), LispReader'OPT_FEATURES))]
-            (and (some? custom) (.contains custom, feature))
-        )
-    )
-
-    (defn #_"Object" ConditionalReader'readCondDelimited [#_"PushbackReader" r, #_"boolean" splicing, #_"Object" opts, #_"Object" pendingForms]
-        (let [#_"Object" result ConditionalReader'READ_STARTED]
-            (§ let [#_"Object" form] ;; The most recently ready form
-                (let [#_"boolean" toplevel (nil? pendingForms)]
-                    (§ ass pendingForms (LispReader'ensurePending pendingForms))
-
-                    (let [#_"int" firstline (if (§ instance? LineNumberingPushbackReader r) (.getLineNumber (cast' LineNumberingPushbackReader r)) -1)]
-                        (while true
-                            (when (= result ConditionalReader'READ_STARTED)
-                                ;; Read the next feature
-                                (§ ass form (LispReader'read-9 r, false, LispReader'READ_EOF, \), LispReader'READ_FINISHED, true, opts, pendingForms, nil))
-
-                                (cond (= form LispReader'READ_EOF)
-                                    (do
-                                        (if (< firstline 0)
-                                            (do
-                                                (throw (Util'runtimeException-1 "EOF while reading"))
-                                            )
-                                            (do
-                                                (throw (Util'runtimeException-1 (str "EOF while reading, starting at line " firstline)))
-                                            )
-                                        )
-                                    )
-                                    (= form LispReader'READ_FINISHED)
-                                    (do
-                                        (§ break ) ;; read-cond form is done
-                                    )
-                                )
-
-                                (when (.contains ConditionalReader'RESERVED_FEATURES, form)
-                                    (throw (Util'runtimeException-1 (str "Feature name " form " is reserved.")))
-                                )
-
-                                (when (ConditionalReader'hasFeature form, opts)
-                                    ;; Read the form corresponding to the feature, and assign it to result if everything is kosher
-                                    (§ ass form (LispReader'read-9 r, false, LispReader'READ_EOF, \), LispReader'READ_FINISHED, true, opts, pendingForms, (cast' Resolver (.deref RT'READER_RESOLVER))))
-
-                                    (cond (= form LispReader'READ_EOF)
-                                        (do
-                                            (if (< firstline 0)
-                                                (do
-                                                    (throw (Util'runtimeException-1 "EOF while reading"))
-                                                )
-                                                (do
-                                                    (throw (Util'runtimeException-1 (str "EOF while reading, starting at line " firstline)))
-                                                )
-                                            )
-                                        )
-                                        (= form LispReader'READ_FINISHED)
-                                        (do
-                                            (if (< firstline 0)
-                                                (do
-                                                    (throw (Util'runtimeException-1 "read-cond requires an even number of forms."))
-                                                )
-                                                (do
-                                                    (throw (Util'runtimeException-1 (str "read-cond starting on line " firstline " requires an even number of forms")))
-                                                )
-                                            )
-                                        )
-                                        :else
-                                        (do
-                                            (§ ass result form)
-                                        )
-                                    )
-                                )
-                            )
-
-                            ;; When we already have a result, or when the feature didn't match, discard the next form in the reader
-                            (try
-                                (Var'pushThreadBindings (RT'map RT'SUPPRESS_READ, RT'T))
-                                (§ ass form (LispReader'read-9 r, false, LispReader'READ_EOF, \), LispReader'READ_FINISHED, true, opts, pendingForms, (cast' Resolver (.deref RT'READER_RESOLVER))))
-
-                                (cond (= form LispReader'READ_EOF)
-                                    (do
-                                        (if (< firstline 0)
-                                            (do
-                                                (throw (Util'runtimeException-1 "EOF while reading"))
-                                            )
-                                            (do
-                                                (throw (Util'runtimeException-1 (str "EOF while reading, starting at line " firstline)))
-                                            )
-                                        )
-                                    )
-                                    (= form LispReader'READ_FINISHED)
-                                    (do
-                                        (§ break )
-                                    )
-                                )
-                                (finally
-                                    (Var'popThreadBindings)
-                                )
-                            )
-                        )
-
-                        (when (= result ConditionalReader'READ_STARTED) ;; no features matched
-                            (§ return r)
-                        )
-
-                        (if splicing
+                (let [#_"Object" ret nil]
+                    (let [#_"Constructor[]" allctors (.getConstructors (cast Class recordClass))]
+                        (if shortForm
                             (do
-                                (when (not (instance? List result))
-                                    (throw (Util'runtimeException-1 "Spliced form list in read-cond-splicing must implement java.util.List"))
-                                )
+                                (let [#_"IPersistentVector" recordEntries (cast' IPersistentVector form)]
+                                    (let [#_"boolean" ctorFound false]
+                                        (doseq [#_"Constructor" ctor allctors]
+                                            (when (= (§ alength (.getParameterTypes ctor)) (.count recordEntries))
+                                                (§ ass ctorFound true)
+                                            )
+                                        )
 
-                                (when toplevel
-                                    (throw (Util'runtimeException-1 "Reader conditional splicing not allowed at the top level."))
-                                )
+                                        (when (not ctorFound)
+                                            (throw (Util'runtimeException-1 (str "Unexpected number of constructor arguments to " (.toString recordClass) ": got " (.count recordEntries))))
+                                        )
 
-                                (.addAll (cast List pendingForms), 0, (cast List result))
-
-                                r
-                            )
-                            (do
-                                result
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn- #_"void" ConditionalReader'checkConditionalAllowed [#_"Object" opts]
-        (let [#_"IPersistentMap" mopts (cast' IPersistentMap opts)]
-            (when (not (and (some? opts) (or (.equals LispReader'COND_ALLOW, (.valAt mopts, LispReader'OPT_READ_COND)) (.equals LispReader'COND_PRESERVE, (.valAt mopts, LispReader'OPT_READ_COND)))))
-                (throw (Util'runtimeException-1 "Conditional read not allowed"))
-            )
-            nil
-        )
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method invoke) [#_"ConditionalReader" this, #_"Object" reader, #_"Object" mode, #_"Object" opts, #_"Object" pendingForms]
-        (ConditionalReader'checkConditionalAllowed opts)
-
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (let [#_"int" ch (LispReader'read1 r)]
-                (when (= ch -1)
-                    (throw (Util'runtimeException-1 "EOF while reading character"))
-                )
-
-                (let [#_"boolean" splicing false]
-                    (when (= ch \@)
-                        (§ ass splicing true)
-                        (§ ass ch (LispReader'read1 r))
-                    )
-
-                    (while (LispReader'isWhitespace ch)
-                        (§ ass ch (LispReader'read1 r))
-                    )
-
-                    (when (= ch -1)
-                        (throw (Util'runtimeException-1 "EOF while reading character"))
-                    )
-
-                    (when (not= ch \()
-                        (throw (Util'runtimeException-1 "read-cond body must be a list"))
-                    )
-
-                    (try
-                        (Var'pushThreadBindings (RT'map LispReader'READ_COND_ENV, RT'T))
-
-                        (if (LispReader'isPreserveReadCond opts)
-                            (do
-                                (let [#_"IFn" listReader (LispReader'getMacro ch)] ;; should always be a list
-                                    (let [#_"Object" form (.invoke listReader, r, ch, opts, (LispReader'ensurePending pendingForms))]
-                                        (ReaderConditional'create form, splicing)
+                                        (§ ass ret (Reflector'invokeConstructor recordClass, (RT'toArray recordEntries)))
                                     )
                                 )
                             )
                             (do
-                                (ConditionalReader'readCondDelimited r, splicing, opts, pendingForms)
+                                (let [#_"IPersistentMap" vals (cast' IPersistentMap form)]
+                                    (loop-when-recur [#_"ISeq" s (RT'keys vals)] (some? s) [(.next s)]
+                                        (when (not (§ instance? Keyword (.first s)))
+                                            (throw (Util'runtimeException-1 (str "Unreadable defrecord form: key must be of type cloiure.lang.Keyword, got " (.toString (.first s)))))
+                                        )
+                                    )
+                                    (§ ass ret (Reflector'invokeStaticMethod-3c recordClass, "create", (object-array [ vals ])))
+                                )
                             )
                         )
-                        (finally
-                            (Var'popThreadBindings)
-                        )
+
+                        ret
                     )
                 )
             )
@@ -21041,8 +20736,6 @@
     (§ def #_"Symbol" LispReader'WITH_META (Symbol'intern-2 "cloiure.core", "with-meta"))
     (§ def #_"Symbol" LispReader'META (Symbol'intern-2 "cloiure.core", "meta"))
     (§ def #_"Symbol" LispReader'DEREF (Symbol'intern-2 "cloiure.core", "deref"))
-    (§ def #_"Symbol" LispReader'READ_COND (Symbol'intern-2 "cloiure.core", "read-cond"))
-    (§ def #_"Symbol" LispReader'READ_COND_SPLICING (Symbol'intern-2 "cloiure.core", "read-cond-splicing"))
     (§ def #_"Keyword" LispReader'UNKNOWN (Keyword'intern-2 nil, "unknown"))
 
     (def #_"IFn[]" LispReader'macros (§ typeless make-array IFn 256))
@@ -21058,9 +20751,6 @@
     ;; sorted-map num->gensymbol
     (§ def #_"Var" LispReader'ARG_ENV (.setDynamic (Var'create-1 nil)))
     (§ def #_"IFn" LispReader'ctorReader (CtorReader'new))
-
-    ;; Dynamic var set to true in a read-cond context
-    (§ def #_"Var" LispReader'READ_COND_ENV (.setDynamic (Var'create-1 nil)))
 
     (§ static
         (§ ass (§ aget macros \") (StringReader'new)) ;; oops! "
@@ -21090,7 +20780,6 @@
         (§ ass (§ aget dispatchMacros \!) (CommentReader'new))
         (§ ass (§ aget dispatchMacros \<) (UnreadableReader'new))
         (§ ass (§ aget dispatchMacros \_) (DiscardReader'new))
-        (§ ass (§ aget dispatchMacros \?) (ConditionalReader'new))
         (§ ass (§ aget dispatchMacros \:) (NamespaceMapReader'new))
     )
 
@@ -21121,47 +20810,21 @@
 
     ;; Reader opts
     (§ def #_"Keyword" LispReader'OPT_EOF (Keyword'intern-2 nil, "eof"))
-    (§ def #_"Keyword" LispReader'OPT_FEATURES (Keyword'intern-2 nil, "features"))
-    (§ def #_"Keyword" LispReader'OPT_READ_COND (Keyword'intern-2 nil, "read-cond"))
 
     ;; EOF special value to throw on eof
     (§ def #_"Keyword" LispReader'EOFTHROW (Keyword'intern-2 nil, "eofthrow"))
 
-    ;; Platform features - always installed
-    (§ def- #_"Keyword" LispReader'PLATFORM_KEY (Keyword'intern-2 nil, "cli"))
-    (§ def- #_"Object" LispReader'PLATFORM_FEATURES (PersistentHashSet'create-1a LispReader'PLATFORM_KEY))
-
-    ;; Reader conditional options - use with :read-cond
-    (§ def #_"Keyword" LispReader'COND_ALLOW (Keyword'intern-2 nil, "allow"))
-    (§ def #_"Keyword" LispReader'COND_PRESERVE (Keyword'intern-2 nil, "preserve"))
-
-    (defn #_"Object" LispReader'read-2 [#_"PushbackReader" r, #_"Object" opts]
-        (let [#_"boolean" eofIsError true]
-            (let [#_"Object" eofValue nil]
-                (when (and (some? opts) (§ instance? IPersistentMap opts))
-                    (let [#_"Object" eof (.valAt (cast' IPersistentMap opts), LispReader'OPT_EOF, LispReader'EOFTHROW)]
-                        (when (not (.equals LispReader'EOFTHROW, eof))
-                            (§ ass eofIsError false)
-                            (§ ass eofValue eof)
-                        )
-                    )
-                )
-                (LispReader'read-5 r, eofIsError, eofValue, false, opts)
-            )
-        )
+    (defn #_"Object" LispReader'read-1 [#_"PushbackReader" r]
+        (LispReader'read-4 r, true, nil, false)
     )
 
     (defn #_"Object" LispReader'read-4 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"boolean" isRecursive]
-        (LispReader'read-5 r, eofIsError, eofValue, isRecursive, PersistentHashMap'EMPTY)
-    )
-
-    (defn #_"Object" LispReader'read-5 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"boolean" isRecursive, #_"Object" opts]
         ;; start with pendingForms nil as reader conditional splicing is not allowed at top level
-        (LispReader'read-9 r, eofIsError, eofValue, nil, nil, isRecursive, opts, nil, (cast' Resolver (.deref RT'READER_RESOLVER)))
+        (LispReader'read-8 r, eofIsError, eofValue, nil, nil, isRecursive, nil, (cast' Resolver (.deref RT'READER_RESOLVER)))
     )
 
-    (defn- #_"Object" LispReader'read-6 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"boolean" isRecursive, #_"Object" opts, #_"Object" pendingForms]
-        (LispReader'read-9 r, eofIsError, eofValue, nil, nil, isRecursive, opts, (LispReader'ensurePending pendingForms), (cast' Resolver (.deref RT'READER_RESOLVER)))
+    (defn- #_"Object" LispReader'read-5 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"boolean" isRecursive, #_"Object" pendingForms]
+        (LispReader'read-8 r, eofIsError, eofValue, nil, nil, isRecursive, (LispReader'ensurePending pendingForms), (cast' Resolver (.deref RT'READER_RESOLVER)))
     )
 
     (defn- #_"Object" LispReader'ensurePending [#_"Object" pendingForms]
@@ -21175,34 +20838,10 @@
         )
     )
 
-    (defn- #_"Object" LispReader'installPlatformFeature [#_"Object" opts]
-        (if (nil? opts)
-            (do
-                (RT'mapUniqueKeys LispReader'OPT_FEATURES, LispReader'PLATFORM_FEATURES)
-            )
-            (do
-                (let [#_"IPersistentMap" mopts (cast' IPersistentMap opts)]
-                    (let [#_"Object" features (.valAt mopts, LispReader'OPT_FEATURES)]
-                        (if (nil? features)
-                            (do
-                                (.assoc mopts, LispReader'OPT_FEATURES, LispReader'PLATFORM_FEATURES)
-                            )
-                            (do
-                                (.assoc mopts, LispReader'OPT_FEATURES, (RT'conj (cast' IPersistentSet features), LispReader'PLATFORM_KEY))
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn- #_"Object" LispReader'read-9 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"Character" returnOn, #_"Object" returnOnValue, #_"boolean" isRecursive, #_"Object" opts, #_"Object" pendingForms, #_"Resolver" resolver]
+    (defn- #_"Object" LispReader'read-8 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"Character" returnOn, #_"Object" returnOnValue, #_"boolean" isRecursive, #_"Object" pendingForms, #_"Resolver" resolver]
         (when (= (.deref RT'READEVAL) LispReader'UNKNOWN)
             (throw (Util'runtimeException-1 "Reading disallowed - *read-eval* bound to :unknown"))
         )
-
-        (§ ass opts (LispReader'installPlatformFeature opts))
 
         (try
             (while true
@@ -21234,7 +20873,7 @@
 
                     (let [#_"IFn" macroFn (LispReader'getMacro ch)]
                         (when (some? macroFn)
-                            (let [#_"Object" ret (.invoke macroFn, r, (char ch), opts, pendingForms)]
+                            (let [#_"Object" ret (.invoke macroFn, r, (char ch), pendingForms)]
                                 ;; no op macros return the reader
                                 (when (= ret r)
                                     (§ continue )
@@ -21566,12 +21205,12 @@
     (def- #_"Object" LispReader'READ_EOF (Object.))
     (def- #_"Object" LispReader'READ_FINISHED (Object.))
 
-    (defn #_"List" LispReader'readDelimitedList [#_"char" delim, #_"PushbackReader" r, #_"boolean" isRecursive, #_"Object" opts, #_"Object" pendingForms]
+    (defn #_"List" LispReader'readDelimitedList [#_"char" delim, #_"PushbackReader" r, #_"boolean" isRecursive, #_"Object" pendingForms]
         (let [#_"int" firstline (if (§ instance? LineNumberingPushbackReader r) (.getLineNumber (cast' LineNumberingPushbackReader r)) -1)]
             (let [#_"ArrayList" a (ArrayList.)]
                 (let [#_"Resolver" resolver (cast' Resolver (.deref RT'READER_RESOLVER))]
                     (while true
-                        (let [#_"Object" form (LispReader'read-9 r, false, LispReader'READ_EOF, delim, LispReader'READ_FINISHED, isRecursive, opts, pendingForms, resolver)]
+                        (let [#_"Object" form (LispReader'read-8 r, false, LispReader'READ_EOF, delim, LispReader'READ_FINISHED, isRecursive, pendingForms, resolver)]
                             (cond (= form LispReader'READ_EOF)
                                 (do
                                     (if (< firstline 0)
@@ -21593,19 +21232,6 @@
                         )
                     )
                 )
-            )
-        )
-    )
-
-    (defn #_"boolean" LispReader'isPreserveReadCond [#_"Object" opts]
-        (if (and (RT'booleanCast-1o (.deref LispReader'READ_COND_ENV)) (§ instance? IPersistentMap opts))
-            (do
-                (let [#_"Object" readCond (.valAt (cast' IPersistentMap opts), LispReader'OPT_READ_COND)]
-                    (.equals LispReader'COND_PRESERVE, readCond)
-                )
-            )
-            (do
-                false
             )
         )
     )
@@ -32554,85 +32180,6 @@
 )
 )
 
-(java-ns cloiure.lang.ReaderConditional
-
-(class-ns ReaderConditional (§ implements ILookup)
-    (§ def #_"Keyword" ReaderConditional'FORM_KW (Keyword'intern-1 "form"))
-    (§ def #_"Keyword" ReaderConditional'SPLICING_KW (Keyword'intern-1 "splicing?"))
-
-    (defn #_"ReaderConditional" ReaderConditional'create [#_"Object" form, #_"boolean" splicing]
-        (ReaderConditional'new form, splicing)
-    )
-
-    (defn- #_"ReaderConditional" ReaderConditional'init []
-        (hash-map
-            #_"Object" :form nil
-            #_"Boolean" :splicing nil
-        )
-    )
-
-    (defn- #_"ReaderConditional" ReaderConditional'new [#_"Object" form, #_"boolean" splicing]
-        (let [this (ReaderConditional'init)]
-            (§ ass this (assoc this :form form))
-            (§ ass this (assoc this :splicing splicing))
-            this
-        )
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method valAt) [#_"ReaderConditional" this, #_"Object" key]
-        (.valAt this, key, nil)
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method valAt) [#_"ReaderConditional" this, #_"Object" key, #_"Object" notFound]
-        (cond (.equals ReaderConditional'FORM_KW, key)
-            (do
-                (:form this)
-            )
-            (.equals ReaderConditional'SPLICING_KW, key)
-            (do
-                (:splicing this)
-            )
-            :else
-            (do
-                notFound
-            )
-        )
-    )
-
-    #_override
-    #_method
-    (§ defn #_"boolean" (§ method equals) [#_"ReaderConditional" this, #_"Object" o]
-        (when (= this o)
-            (§ return true)
-        )
-        (when (or (nil? o) (not= (.getClass this) (.getClass o)))
-            (§ return false)
-        )
-
-        (let [#_"ReaderConditional" that (cast' ReaderConditional o)]
-            (when (if (some? (:form this)) (not (.equals (:form this), (:form that))) (some? (:form that)))
-                (§ return false)
-            )
-            (when (if (some? (:splicing this)) (not (.equals (:splicing this), (:splicing that))) (some? (:splicing that)))
-                (§ return false)
-            )
-            true
-        )
-    )
-
-    #_override
-    #_method
-    (§ defn #_"int" (§ method hashCode) [#_"ReaderConditional" this]
-        (let [#_"int" result (Util'hash (:form this))]
-            (§ ass result (+ (* 31 result) (Util'hash (:splicing this))))
-            result
-        )
-    )
-)
-)
-
 (java-ns cloiure.lang.RecordIterator
 
 (§ import java.util.Iterator)
@@ -38752,10 +38299,6 @@
     ;; single instance of UTF-8 Charset, so as to avoid catching UnsupportedCharsetExceptions everywhere
     (def #_"Charset" RT'UTF8 (Charset/forName "UTF-8"))
 
-    (defn #_"Object" RT'readTrueFalseUnknown [#_"String" s]
-        (cond (.equals s, "true") Boolean/TRUE (.equals s, "false") Boolean/FALSE :else (Keyword'intern-2 nil, "unknown"))
-    )
-
     (§ def #_"Namespace" RT'CLOIURE_NS (Namespace'findOrCreate (Symbol'intern-1 "cloiure.core")))
 
     (§ def #_"Var" RT'IN (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*in*"), (LineNumberingPushbackReader'new-1 (InputStreamReader. System/in)))))
@@ -38767,10 +38310,7 @@
 
     (§ def #_"Var" RT'AGENT (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*agent*"), nil)))
 
-    (def #_"Object" RT'readeval (RT'readTrueFalseUnknown (System/getProperty "cloiure.read.eval", "true")))
-
-    (§ def #_"Var" RT'READEVAL (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*read-eval*"), readeval)))
-    (§ def #_"Var" RT'SUPPRESS_READ (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*suppress-read*"), nil)))
+    (§ def #_"Var" RT'READEVAL (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*read-eval*"), RT'T)))
     (§ def #_"Var" RT'ASSERT (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*assert*"), RT'T)))
     (§ def #_"Var" RT'MATH_CONTEXT (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*math-context*"), nil)))
 
@@ -38792,7 +38332,6 @@
     (§ def #_"Var" RT'CURRENT_NS (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*ns*"), RT'CLOIURE_NS)))
 
     (§ def #_"Var" RT'FLUSH_ON_NEWLINE (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*flush-on-newline*"), RT'T)))
-    (§ def #_"Var" RT'PRINT_META (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*print-meta*"), RT'F)))
     (§ def #_"Var" RT'PRINT_READABLY (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*print-readably*"), RT'T)))
     (§ def #_"Var" RT'WARN_ON_REFLECTION (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*warn-on-reflection*"), RT'F)))
     (§ def #_"Var" RT'ALLOW_UNRESOLVED_VARS (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*allow-unresolved-vars*"), RT'F)))
@@ -39016,10 +38555,6 @@
                 (let [#_"String" scriptfile cljfile]
                     (let [#_"URL" classURL (RT'getResource (RT'baseLoader), classfile)]
                         (let [#_"URL" cljURL (RT'getResource (RT'baseLoader), scriptfile)]
-                            (when (nil? cljURL)
-                                (§ ass scriptfile (str scriptbase ".clic"))
-                                (§ ass cljURL (RT'getResource (RT'baseLoader), scriptfile))
-                            )
                             (let [#_"boolean" loaded false]
                                 (when (or (and (some? classURL) (or (nil? cljURL) (< (RT'lastModified cljURL, scriptfile) (RT'lastModified classURL, classfile)))) (nil? classURL))
                                     (try
@@ -40764,10 +40299,6 @@
         className
     )
 
-    (defn #_"boolean" RT'suppressRead []
-        (RT'booleanCast-1o (.deref RT'SUPPRESS_READ))
-    )
-
     (defn #_"String" RT'printString [#_"Object" x]
         (try
             (let [#_"StringWriter" sw (StringWriter.)]
@@ -40780,13 +40311,9 @@
         )
     )
 
-    (defn #_"Object" RT'readString-1 [#_"String" s]
-        (RT'readString-2 s, nil)
-    )
-
-    (defn #_"Object" RT'readString-2 [#_"String" s, #_"Object" opts]
+    (defn #_"Object" RT'readString [#_"String" s]
         (let [#_"PushbackReader" r (PushbackReader. (java.io.StringReader. s))]
-            (LispReader'read-2 r, opts)
+            (LispReader'read-1 r)
         )
     )
 
@@ -40798,24 +40325,6 @@
             )
             (do
                 (let [#_"boolean" readably (RT'booleanCast-1o (.deref RT'PRINT_READABLY))]
-                    (when (§ instance? Obj x)
-                        (let [#_"Obj" o (cast' Obj x)]
-                            (when (and (pos? (RT'count (.meta o))) (and readably (RT'booleanCast-1o (.deref RT'PRINT_META))))
-                                (let [#_"IPersistentMap" meta (.meta o)]
-                                    (.write w, "#^")
-                                    (if (and (= (.count meta) 1) (.containsKey meta, RT'TAG_KEY))
-                                        (do
-                                            (RT'print (.valAt meta, RT'TAG_KEY), w)
-                                        )
-                                        (do
-                                            (RT'print meta, w)
-                                        )
-                                    )
-                                    (.write w, \space)
-                                )
-                            )
-                        )
-                    )
                     (cond (nil? x)
                         (do
                             (.write w, "nil")
@@ -41761,86 +41270,6 @@
     #_method
     (§ defn #_"IPersistentMap" (§ method meta) [#_"Symbol" this]
         (:_meta this)
-    )
-)
-)
-
-(java-ns cloiure.lang.TaggedLiteral
-
-(class-ns TaggedLiteral (§ implements ILookup)
-    (§ def #_"Keyword" TaggedLiteral'TAG_KW (Keyword'intern-1 "tag"))
-    (§ def #_"Keyword" TaggedLiteral'FORM_KW (Keyword'intern-1 "form"))
-
-    (defn #_"TaggedLiteral" TaggedLiteral'create [#_"Symbol" tag, #_"Object" form]
-        (TaggedLiteral'new tag, form)
-    )
-
-    (defn- #_"TaggedLiteral" TaggedLiteral'init []
-        (hash-map
-            #_"Symbol" :tag nil
-            #_"Object" :form nil
-        )
-    )
-
-    (defn- #_"TaggedLiteral" TaggedLiteral'new [#_"Symbol" tag, #_"Object" form]
-        (let [this (TaggedLiteral'init)]
-            (§ ass this (assoc this :tag tag))
-            (§ ass this (assoc this :form form))
-            this
-        )
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method valAt) [#_"TaggedLiteral" this, #_"Object" key]
-        (.valAt this, key, nil)
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method valAt) [#_"TaggedLiteral" this, #_"Object" key, #_"Object" notFound]
-        (cond (.equals TaggedLiteral'FORM_KW, key)
-            (do
-                (:form this)
-            )
-            (.equals TaggedLiteral'TAG_KW, key)
-            (do
-                (:tag this)
-            )
-            :else
-            (do
-                notFound
-            )
-        )
-    )
-
-    #_override
-    #_method
-    (§ defn #_"boolean" (§ method equals) [#_"TaggedLiteral" this, #_"Object" o]
-        (when (= this o)
-            (§ return true)
-        )
-        (when (or (nil? o) (not= (.getClass this) (.getClass o)))
-            (§ return false)
-        )
-
-        (let [#_"TaggedLiteral" that (cast' TaggedLiteral o)]
-            (when (if (some? (:form this)) (not (.equals (:form this), (:form that))) (some? (:form that)))
-                (§ return false)
-            )
-            (when (if (some? (:tag this)) (not (.equals (:tag this), (:tag that))) (some? (:tag that)))
-                (§ return false)
-            )
-
-            true
-        )
-    )
-
-    #_override
-    #_method
-    (§ defn #_"int" (§ method hashCode) [#_"TaggedLiteral" this]
-        (let [#_"int" result (Util'hash (:tag this))]
-            (§ ass result (+ (* 31 result) (Util'hash (:form this))))
-            result
-        )
     )
 )
 )

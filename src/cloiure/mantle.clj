@@ -3880,9 +3880,6 @@
  ;
  ; Opts is a persistent map with valid keys:
  ;
- ; :read-cond - :allow to process reader conditionals, or
- ;              :preserve to keep all branches.
- ; :features - persistent set of feature keywords for reader conditionals.
  ; :eof - on eof, return value unless :eofthrow, then throw.
  ;        if not specified, will throw.
  ;
@@ -3902,9 +3899,6 @@
     ([stream eof-error? eof-value recursive?]
         (cloiure.lang.LispReader/read stream (boolean eof-error?) eof-value recursive?)
     )
-    ([opts stream]
-        (cloiure.lang.LispReader/read stream opts)
-    )
 )
 
 ;;;
@@ -3918,16 +3912,12 @@
 )
 
 ;;;
- ; Reads one object from the string s. Optionally include reader
- ; options, as specified in read.
+ ; Reads one object from the string s.
  ;
  ; Note that read-string can execute code (controlled by *read-eval*),
  ; and as such should be used only with trusted sources.
  ;;
-(§ defn read-string
-    ([s]      (cloiure.lang.RT/readString s     ))
-    ([opts s] (cloiure.lang.RT/readString s opts))
-)
+(§ defn read-string [s] (cloiure.lang.RT/readString s))
 
 ;;;
  ; Returns a persistent vector of the items in vector from start (inclusive) to end (exclusive).
@@ -6586,12 +6576,6 @@
     Defaults to true."
 )
 
-(§ add-doc-and-meta *print-meta*
-    "If set to logical true, when printing an object, its metadata will also
-    be printed in a form that can be read back by the reader.
-    Defaults to false."
-)
-
 (§ add-doc-and-meta *print-readably*
     "When set to logical false, strings and characters will be printed with
     non-alphanumeric characters converted to the appropriate escape sequences.
@@ -6638,7 +6622,7 @@
  ; bindings of functions to their names. All of the names are available
  ; in all of the definitions of the functions, as well as the body.
  ;;
-(§ defmacro letfn {:special-form true, :forms '[(letfn [fnspecs*] exprs*)], :url nil} [fnspecs & body]
+(§ defmacro letfn {:special-form true, :forms '[(letfn [fnspecs*] exprs*)]} [fnspecs & body]
     `(letfn* ~(vec (interleave (map first fnspecs) (map #(cons `fn %) fnspecs))) ~@body)
 )
 
@@ -7380,21 +7364,7 @@
     )
 )
 
-(§ defn- print-meta [o, ^Writer w]
-    (when-let [m (meta o)]
-        (when (and (pos? (count m)) *print-meta* *print-readably*)
-            (.write w "^")
-            (if (and (= (count m) 1) (:tag m))
-                (pr-on (:tag m) w)
-                (pr-on m w)
-            )
-            (.write w " ")
-        )
-    )
-)
-
 (§ defn print-simple [o, ^Writer w]
-    (print-meta o w)
     (.write w (str o))
 )
 
@@ -7418,9 +7388,6 @@
 )
 
 (§ defn- print-tagged-object [o rep ^Writer w]
-    (when (instance? cloiure.lang.IMeta o)
-        (print-meta o w)
-    )
     (.write w "#object[")
     (let [c (class o)]
         (if (.isArray c)
@@ -7481,7 +7448,6 @@
 )
 
 (§ defmethod print-method cloiure.lang.ISeq [o, ^Writer w]
-    (print-meta o w)
     (print-sequential "(" pr-on " " ")" o w)
 )
 
@@ -7520,7 +7486,6 @@
 )
 
 (§ defmethod print-method cloiure.lang.IPersistentVector [v, ^Writer w]
-    (print-meta v w)
     (print-sequential "[" pr-on " " "]" v w)
 )
 
@@ -7569,7 +7534,6 @@
 )
 
 (§ defmethod print-method cloiure.lang.IPersistentMap [m, ^Writer w]
-    (print-meta m w)
     (let [[ns lift-map] (lift-ns m)]
         (if ns
             (print-prefix-map (str "#:" ns) lift-map pr-on w)
@@ -7585,46 +7549,33 @@
 
 (§ defmethod print-method java.util.List [c, ^Writer w]
     (if *print-readably*
-        (do
-            (print-meta c w)
-            (print-sequential "(" pr-on " " ")" c w)
-        )
+        (print-sequential "(" pr-on " " ")" c w)
         (print-object c w)
     )
 )
 
 (§ defmethod print-method java.util.RandomAccess [v, ^Writer w]
     (if *print-readably*
-        (do
-            (print-meta v w)
-            (print-sequential "[" pr-on " " "]" v w)
-        )
+        (print-sequential "[" pr-on " " "]" v w)
         (print-object v w)
     )
 )
 
 (§ defmethod print-method java.util.Map [m, ^Writer w]
     (if *print-readably*
-        (do
-            (print-meta m w)
-            (print-map m pr-on w)
-        )
+        (print-map m pr-on w)
         (print-object m w)
     )
 )
 
 (§ defmethod print-method java.util.Set [s, ^Writer w]
     (if *print-readably*
-        (do
-            (print-meta s w)
-            (print-sequential "#{" pr-on " " "}" (seq s) w)
-        )
+        (print-sequential "#{" pr-on " " "}" (seq s) w)
         (print-object s w)
     )
 )
 
 (§ defmethod print-method cloiure.lang.IRecord [r, ^Writer w]
-    (print-meta r w)
     (.write w "#")
     (.write w (.getName (class r)))
     (print-map r pr-on w)
@@ -7634,7 +7585,6 @@
 (§ prefer-method print-method cloiure.lang.IRecord cloiure.lang.IPersistentMap)
 
 (§ defmethod print-method cloiure.lang.IPersistentSet [s, ^Writer w]
-    (print-meta s w)
     (print-sequential "#{" pr-on " " "}" (seq s) w)
 )
 
@@ -7846,21 +7796,6 @@
 
 (§ defmethod print-method Throwable [^Throwable o ^Writer w]
     (print-throwable o w)
-)
-
-(§ defmethod print-method cloiure.lang.TaggedLiteral [o ^Writer w]
-    (.write w "#")
-    (print-method (:tag o) w)
-    (.write w " ")
-    (print-method (:form o) w)
-)
-
-(§ defmethod print-method cloiure.lang.ReaderConditional [o ^Writer w]
-    (.write w "#?")
-    (when (:splicing? o)
-        (.write w "@")
-    )
-    (print-method (:form o) w)
 )
 
 (§ def ^:private print-initialized true)
@@ -10063,9 +9998,10 @@
             (let [tail-node (VecNode. (.edit root) tail)]
                 (if (> (bit-shift-right cnt (int 5)) (bit-shift-left (int 1) shift)) ;; overflow root?
                     (let [new-root (VecNode. (.edit root) (object-array 32))]
-                        (doto ^objects (.arr new-root)
-                        (aset 0 root)
-                        (aset 1 (.newPath this (.edit root) shift tail-node)))
+                        (-> ^objects (.arr new-root)
+                            (.aset 0 root)
+                            (.aset 1 (.newPath this (.edit root) shift tail-node))
+                        )
                         (Vec. am (inc cnt) (+ shift (int 5)) new-root (let [tl (.array am 1)] (.aset am tl 0 val) tl) (meta this))
                     )
                     (Vec. am (inc cnt) shift (.pushTail this shift root tail-node) (let [tl (.array am 1)] (.aset am tl 0 val) tl) (meta this))
@@ -10512,309 +10448,7 @@
     )
 )
 
-#_(ns cloiure.instant
-    (:import [java.util Calendar Date GregorianCalendar TimeZone]
-             [java.sql Timestamp]))
-
-(§ defmacro ^:private fail [msg] `(throw (RuntimeException. ~msg)))
-
-(§ defmacro ^:private verify
-    ([test msg] `(when-not ~test (fail ~msg)))
-    ([test] `(verify ~test ~(str "failed: " (pr-str test))))
-)
-
-(§ defn- divisible? [num div] (zero? (mod num div)))
-
-(§ defn- indivisible? [num div] (not (divisible? num div)))
-
-(§ defn- parse-int [^String s] (Long/parseLong s))
-
-(§ defn- zero-fill-right [^String s width]
-    (cond
-        (= width (count s)) s
-        (< width (count s)) (.substring s 0 width)
-        :else
-            (loop [b (StringBuilder. s)]
-                (if (< (.length b) width)
-                    (recur (.append b \0))
-                    (.toString b)
-                )
-            )
-    )
-)
-
-;;;
- ; Parse a string containing an RFC3339-like like timestamp.
- ;
- ; The function new-instant is called with the following arguments.
- ;
- ;  min  max           default
- ;  ---  ------------  -------
- ;  years          0           9999      N/A (s must provide years)
- ;  months         1             12        1
- ;  days           1             31        1 (actual max days depends
- ;  hours          0             23        0  on month and year)
- ;  minutes        0             59        0
- ;  seconds        0             60        0 (though 60 is only valid
- ;  nanoseconds    0      999999999        0  when minutes is 59)
- ;  offset-sign   -1              1        0
- ;  offset-hours   0             23        0
- ;  offset-minutes 0             59        0
- ;
- ; These are all integers and will be non-nil. (The listed defaults
- ; will be passed if the corresponding field is not present in s.)
- ;
- ; Grammar (of s):
- ;
- ;  date-fullyear   = 4DIGIT
- ;  date-month      = 2DIGIT  ; 01-12
- ;  date-mday       = 2DIGIT  ; 01-28, 01-29, 01-30, 01-31 based on month/year
- ;  time-hour       = 2DIGIT  ; 00-23
- ;  time-minute     = 2DIGIT  ; 00-59
- ;  time-second     = 2DIGIT  ; 00-58, 00-59, 00-60 based on leap second rules
- ;  time-secfrac    = '.' 1*DIGIT
- ;  time-numoffset  = ('+' / '-') time-hour ':' time-minute
- ;  time-offset     = 'Z' / time-numoffset
- ;  time-part       = time-hour [ ':' time-minute [ ':' time-second [time-secfrac] [time-offset] ] ]
- ;  timestamp       = date-year [ '-' date-month [ '-' date-mday [ 'T' time-part ] ] ]
- ;
- ; Unlike RFC3339:
- ;
- ; - we only parse the timestamp format
- ; - timestamp can elide trailing components
- ; - time-offset is optional (defaults to +00:00)
- ;
- ; Though time-offset is syntactically optional, a missing time-offset
- ; will be treated as if the time-offset zero (+00:00) had been specified.
- ;;
-(§ def parse-timestamp
-    (let [timestamp #"(\d\d\d\d)(?:-(\d\d)(?:-(\d\d)(?:[T](\d\d)(?::(\d\d)(?::(\d\d)(?:[.](\d+))?)?)?)?)?)?(?:[Z]|([-+])(\d\d):(\d\d))?"]
-        (fn [new-instant ^CharSequence cs]
-            (if-let [[_ years months days hours minutes seconds fraction offset-sign offset-hours offset-minutes] (re-matches timestamp cs)]
-                (new-instant
-                    (parse-int years)
-                    (if-not months   1 (parse-int months))
-                    (if-not days     1 (parse-int days))
-                    (if-not hours    0 (parse-int hours))
-                    (if-not minutes  0 (parse-int minutes))
-                    (if-not seconds  0 (parse-int seconds))
-                    (if-not fraction 0 (parse-int (zero-fill-right fraction 9)))
-                    (cond
-                        (= "-" offset-sign) -1
-                        (= "+" offset-sign)  1
-                        :else                0
-                    )
-                    (if-not offset-hours   0 (parse-int offset-hours))
-                    (if-not offset-minutes 0 (parse-int offset-minutes))
-                )
-                (fail (str "Unrecognized date/time syntax: " cs))
-            )
-        )
-    )
-)
-
-(§ defn- leap-year? [year] (and (divisible? year 4) (or (indivisible? year 100) (divisible? year 400))))
-
-(§ def ^:private days-in-month
-    (let [dim-norm [nil 31 28 31 30 31 30 31 31 30 31 30 31]
-          dim-leap [nil 31 29 31 30 31 30 31 31 30 31 30 31]]
-        (fn [month leap-year?]
-            ((if leap-year? dim-leap dim-norm) month)
-        )
-    )
-)
-
-;;;
- ; Return a function which constructs an instant by calling constructor
- ; after first validating that those arguments are in range and otherwise
- ; plausible. The resulting function will throw an exception if called
- ; with invalid arguments.
- ;;
-(§ defn validated [new-instance]
-    (fn [years months days hours minutes seconds nanoseconds offset-sign offset-hours offset-minutes]
-        (verify (<= 1 months 12))
-        (verify (<= 1 days (days-in-month months (leap-year? years))))
-        (verify (<= 0 hours 23))
-        (verify (<= 0 minutes 59))
-        (verify (<= 0 seconds (if (= minutes 59) 60 59)))
-        (verify (<= 0 nanoseconds 999999999))
-        (verify (<= -1 offset-sign 1))
-        (verify (<= 0 offset-hours 23))
-        (verify (<= 0 offset-minutes 59))
-        (new-instance years months days hours minutes seconds nanoseconds offset-sign offset-hours offset-minutes)
-    )
-)
-
-(§ def ^:private ^ThreadLocal thread-local-utc-date-format
-    ;; SimpleDateFormat is not thread-safe, so we use a ThreadLocal proxy for access.
-    ;; http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4228335
-    (proxy [ThreadLocal] []
-        (initialValue []
-            (doto (java.text.SimpleDateFormat. "yyyy-MM-dd'T'HH:mm:ss.SSS-00:00")
-                ;; RFC3339 says to use -00:00 when the timezone is unknown (+00:00 implies a known GMT)
-                (.setTimeZone (java.util.TimeZone/getTimeZone "GMT"))
-            )
-        )
-    )
-)
-
-;;;
- ; Print a java.util.Date as RFC3339 timestamp, always in UTC.
- ;;
-(§ defn- print-date [^java.util.Date d, ^java.io.Writer w]
-    (let [^java.text.DateFormat utc-format (.get thread-local-utc-date-format)]
-        (.write w "#inst \"")
-        (.write w (.format utc-format d))
-        (.write w "\"")
-    )
-)
-
-(§ defmethod print-method java.util.Date [^java.util.Date d, ^java.io.Writer w]
-    (print-date d w)
-)
-
-;;;
- ; Print a java.util.Calendar as RFC3339 timestamp, preserving timezone.
- ;;
-(§ defn- print-calendar [^java.util.Calendar c, ^java.io.Writer w]
-    (let [calstr (format "%1$tFT%1$tT.%1$tL%1$tz" c) offset-minutes (- (.length calstr) 2)]
-        ;; calstr is almost right, but is missing the colon in the offset
-        (.write w "#inst \"")
-        (.write w calstr 0 offset-minutes)
-        (.write w ":")
-        (.write w calstr offset-minutes 2)
-        (.write w "\"")
-    )
-)
-
-(§ defmethod print-method java.util.Calendar [^java.util.Calendar c, ^java.io.Writer w]
-    (print-calendar c w)
-)
-
-(§ def ^:private ^ThreadLocal thread-local-utc-timestamp-format
-    ;; SimpleDateFormat is not thread-safe, so we use a ThreadLocal proxy for access.
-    ;; http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4228335
-    (proxy [ThreadLocal] []
-        (initialValue []
-            (doto (java.text.SimpleDateFormat. "yyyy-MM-dd'T'HH:mm:ss")
-                (.setTimeZone (java.util.TimeZone/getTimeZone "GMT"))
-            )
-        )
-    )
-)
-
-;;;
- ; Print a java.sql.Timestamp as RFC3339 timestamp, always in UTC.
- ;;
-(§ defn- print-timestamp [^java.sql.Timestamp ts, ^java.io.Writer w]
-    (let [^java.text.DateFormat utc-format (.get thread-local-utc-timestamp-format)]
-        (.write w "#inst \"")
-        (.write w (.format utc-format ts))
-        ;; add on nanos and offset
-        ;; RFC3339 says to use -00:00 when the timezone is unknown (+00:00 implies a known GMT)
-        (.write w (format ".%09d-00:00" (.getNanos ts)))
-        (.write w "\"")
-    )
-)
-
-(§ defmethod print-method java.sql.Timestamp [^java.sql.Timestamp ts, ^java.io.Writer w]
-    (print-timestamp ts w)
-)
-
-;;;
- ; Construct a java.util.Calendar, preserving the timezone offset,
- ; but truncating the subsecond fraction to milliseconds.
- ;;
-(§ defn- ^GregorianCalendar construct-calendar [years months days hours minutes seconds nanoseconds offset-sign offset-hours offset-minutes]
-    (doto (GregorianCalendar. years (dec months) days hours minutes seconds)
-        (.set Calendar/MILLISECOND (quot nanoseconds 1000000))
-        (.setTimeZone (TimeZone/getTimeZone (format "GMT%s%02d:%02d" (if (neg? offset-sign) "-" "+") offset-hours offset-minutes)))
-    )
-)
-
-;;;
- ; Construct a java.util.Date, which expresses the original instant
- ; as milliseconds since the epoch, UTC.
- ;;
-(§ defn- construct-date [years months days hours minutes seconds nanoseconds offset-sign offset-hours offset-minutes]
-    (.getTime (construct-calendar years months days hours minutes seconds nanoseconds offset-sign offset-hours offset-minutes))
-)
-
-;;;
- ; Construct a java.sql.Timestamp, which has nanosecond precision.
- ;;
-(§ defn- construct-timestamp [years months days hours minutes seconds nanoseconds offset-sign offset-hours offset-minutes]
-    (doto (Timestamp. (.getTimeInMillis (construct-calendar years months days hours minutes seconds 0 offset-sign offset-hours offset-minutes)))
-        ;; nanos must be set separately, pass 0 above for the base calendar
-        (.setNanos nanoseconds)
-    )
-)
-
-;;;
- ; To read an instant as a java.util.Date, bind *data-readers* to a map with
- ; this var as the value for the 'inst key. The timezone offset will be used
- ; to convert into UTC.
- ;;
-(§ def read-instant-date
-    (partial parse-timestamp (validated construct-date))
-)
-
-;;;
- ; To read an instant as a java.util.Calendar, bind *data-readers* to a map with
- ; this var as the value for the 'inst key. Calendar preserves the timezone offset.
- ;;
-(§ def read-instant-calendar
-    (partial parse-timestamp (validated construct-calendar))
-)
-
-;;;
- ; To read an instant as a java.sql.Timestamp, bind *data-readers* to a
- ; map with this var as the value for the 'inst key. Timestamp preserves
- ; fractional seconds with nanosecond precision. The timezone offset will
- ; be used to convert into UTC.
- ;;
-(§ def read-instant-timestamp
-    (partial parse-timestamp (validated construct-timestamp))
-)
-
-(§ defprotocol Inst
-    (inst-ms* [inst])
-)
-
-(§ extend-protocol Inst
-    java.util.Date
-    (inst-ms* [inst] (.getTime ^java.util.Date inst))
-)
-
-;; conditionally extend to Instant on Java 8+
-
 (§ in-ns 'cloiure.core)
-
-(§ import [java.time Instant])
-
-(§ extend-protocol Inst
-    java.time.Instant
-    (inst-ms* [inst] (.toEpochMilli ^java.time.Instant inst))
-)
-
-;;;
- ; Return the number of milliseconds since January 1, 1970, 00:00:00 GMT.
- ;;
-(§ defn inst-ms [inst] (inst-ms* inst))
-
-;;;
- ; Return true if x satisfies Inst
- ;;
-(§ defn inst? [x] (satisfies? Inst x))
-
-(§ defmethod print-method java.util.UUID [uuid ^java.io.Writer w]
-    (.write w (str "#uuid \"" uuid "\""))
-)
-
-;;;
- ; Return true if x is a java.util.UUID.
- ;;
-(§ defn uuid? [x] (instance? java.util.UUID x))
 
 ;; redefine reduce with internal-reduce
 
@@ -11831,40 +11465,6 @@
     (reduce #(proc %2) nil coll)
     nil
 )
-
-;;;
- ; Return true if the value is the data representation of a tagged literal.
- ;;
-(§ defn tagged-literal? [value]
-    (instance? cloiure.lang.TaggedLiteral value)
-)
-
-;;;
- ; Construct a data representation of a tagged literal from a tag symbol and a form.
- ;;
-(§ defn tagged-literal [^cloiure.lang.Symbol tag form]
-    (cloiure.lang.TaggedLiteral/create tag form)
-)
-
-;;;
- ; Return true if the value is the data representation of a reader conditional.
- ;;
-(§ defn reader-conditional? [value]
-    (instance? cloiure.lang.ReaderConditional value)
-)
-
-;;;
- ; Construct a data representation of a reader conditional.
- ; If true, splicing? indicates read-cond-splicing.
- ;;
-(§ defn reader-conditional [form ^Boolean splicing?]
-    (cloiure.lang.ReaderConditional/create form splicing?)
-)
-
-;;;
- ; Return true if x is a java.net.URI.
- ;;
-(§ defn uri? [x] (instance? java.net.URI x))
 
 #_(ns cloiure.set)
 
@@ -13599,8 +13199,7 @@
 
 (§ def ^:private special-doc-map
     (hash-map
-        '.              {:url "java_interop#dot"
-                         :forms ['(.instanceMember instance args*) '(.instanceMember Classname args*) '(Classname/staticMethod args*) 'Classname/staticField]
+        '.              {:forms ['(.instanceMember instance args*) '(.instanceMember Classname args*) '(Classname/staticMethod args*) 'Classname/staticField]
                          :doc "The instance member form works for both fields and methods.
                                They all expand into calls to the dot operator at macroexpansion time."}
         'def            {:forms ['(def symbol doc-string? init?)]
@@ -13618,7 +13217,6 @@
         'monitor-exit   {:forms ['(monitor-exit x)]
                          :doc "Synchronization primitive that should be avoided in user code. Use the 'locking' macro."}
         'new            {:forms ['(Classname. args*) '(new Classname args*)]
-                         :url "java_interop#new"
                          :doc "The args, if any, are evaluated from left to right, and passed to the constructor of the class named by Classname.
                                The constructed object is returned."}
         'quote          {:forms ['(quote form)]
@@ -13627,7 +13225,6 @@
                          :doc "Evaluates the exprs in order, then, in parallel, rebinds the bindings of the recursion point to the values of the exprs.
                                Execution then jumps back to the recursion point, a loop or fn method."}
         'set!           {:forms ['(set! var-symbol expr) '(set! (. instance-expr instanceFieldName-symbol) expr) '(set! (. Classname-symbol staticFieldName-symbol) expr)]
-                         :url "vars#set"
                          :doc "Used to set thread-local-bound vars, Java object instance fields, and Java class static fields."}
         'throw          {:forms ['(throw expr)]
                          :doc "The expr is evaluated and thrown, therefore it should yield an instance of some derivee of Throwable."}
@@ -13649,7 +13246,7 @@
     (assoc (meta nspace) :name (ns-name nspace))
 )
 
-(§ defn- print-doc [{n :ns nm :name :keys [forms arglists special-form doc url macro spec] :as m}]
+(§ defn- print-doc [{n :ns nm :name :keys [forms arglists special-form doc macro spec] :as m}]
     (println "-------------------------")
     (println (or spec (str (when n (str (ns-name n) "/")) nm)))
     (when forms
@@ -13662,21 +13259,9 @@
         (prn arglists)
     )
     (cond
-        special-form
-            (do
-                (println "Special Form")
-                (println " " doc)
-                (if (contains? m :url)
-                    (when url
-                        (println (str "\n  Please see http://clojure.org/" url))
-                    )
-                    (println (str "\n  Please see http://clojure.org/special_forms#" nm))
-                )
-            )
-        macro
-            (println "Macro")
-        spec
-            (println "Spec")
+        special-form (println "Special Form")
+        macro        (println "Macro")
+        spec         (println "Spec")
     )
     (when doc
         (println " " doc)
@@ -13746,11 +13331,10 @@
                           pbr
                             (proxy [PushbackReader] [rdr]
                                 (read [] (let [i (proxy-super read)] (.append text (char i)) i))
-                            )
-                          read-opts (if (.endsWith ^String filepath "clic") {:read-cond :allow} {})]
+                            )]
                         (if (= :unknown *read-eval*)
                             (throw (IllegalStateException. "Unable to read source while *read-eval* is :unknown."))
-                            (read read-opts (PushbackReader. pbr))
+                            (read (PushbackReader. pbr))
                         )
                         (str text)
                     )
@@ -13834,7 +13418,7 @@
  ;;
 (§ defn stack-element-str [^StackTraceElement el]
     (let [file (.getFileName el)
-          cloiure-fn? (and file (or (.endsWith file ".cli") (.endsWith file ".clic") (= file "NO_SOURCE_FILE")))]
+          cloiure-fn? (and file (or (.endsWith file ".cli") (= file "NO_SOURCE_FILE")))]
         (str
             (if cloiure-fn?
                 (demunge (.getClassName el))
@@ -13938,7 +13522,7 @@
  ;;
 (§ defn stack-element-str [^StackTraceElement el]
     (let [file (.getFileName el)
-          cloiure-fn? (and file (or (.endsWith file ".cli") (.endsWith file ".clic") (= file "NO_SOURCE_FILE")))]
+          cloiure-fn? (and file (or (.endsWith file ".cli") (= file "NO_SOURCE_FILE")))]
         (str
             (if cloiure-fn?
                 (demunge (.getClassName el))
@@ -13958,11 +13542,10 @@
     `(binding [*ns* *ns*
                *warn-on-reflection* *warn-on-reflection*
                *math-context* *math-context*
-               *print-meta* *print-meta*
                *print-length* *print-length*
                *print-level* *print-level*
                *print-namespace-maps* true
-               *compile-path* (System/getProperty "cloiure.compile.path" "classes")
+               *compile-path* "classes"
                *command-line-args* *command-line-args*
                *assert* *assert*
                cloiure.spec.alpha/*explain-out* cloiure.spec.alpha/*explain-out*
@@ -14031,7 +13614,7 @@
  ;;
 (§ defn repl-read [request-prompt request-exit]
     (or ({:line-start request-prompt :stream-end request-exit} (skip-whitespace *in*))
-        (let [input (read {:read-cond :allow} *in*)]
+        (let [input (read *in*)]
             (skip-if-eol *in*)
             input
         )
@@ -14330,7 +13913,7 @@
 )
 
 #_(ns cloiure.spec.gen.alpha
-    (:refer-cloiure :exclude [boolean bytes cat hash-map list map not-empty set vector char double int keyword symbol string uuid delay]))
+    (:refer-cloiure :exclude [boolean bytes cat hash-map list map not-empty set vector char double int keyword symbol string delay]))
 
 (§ alias 'c 'cloiure.core)
 
@@ -14453,7 +14036,7 @@
 (§ lazy-prims
     any any-printable boolean bytes char char-alpha char-alphanumeric char-ascii double
     int keyword keyword-ns large-integer ratio simple-type simple-type-printable string
-    string-ascii string-alphanumeric symbol symbol-ns uuid
+    string-ascii string-alphanumeric symbol symbol-ns
 )
 
 ;;;
@@ -14489,10 +14072,7 @@
                 symbol?            (symbol-ns)
                 simple-symbol?     (symbol)
                 qualified-symbol?  (such-that qualified? (symbol-ns))
-                uuid?              (uuid)
-                uri?               (fmap #(java.net.URI/create (str "http://" % ".com")) (uuid))
                 decimal?           (fmap #(BigDecimal/valueOf %) (double* {:infinite? false :NaN? false}))
-                inst?              (fmap #(java.util.Date. %) (large-integer))
                 seqable?           (one-of [(return nil) (list simple) (vector simple) (map simple simple) (set simple) (string-alphanumeric)])
                 indexed?           (vector simple)
                 map?               (map simple simple)
@@ -17342,28 +16922,6 @@
 )
 
 ;;;
- ; Return true if inst at or after start and before end.
- ;;
-(§ defn inst-in-range? [start end inst]
-    (c/and (inst? inst)
-        (let [t (inst-ms inst)]
-            (c/and (<= (inst-ms start) t) (< t (inst-ms end)))
-        )
-    )
-)
-
-;;;
- ; Returns a spec that validates insts in the range from start (inclusive) to end (exclusive).
- ;;
-(§ defmacro inst-in [start end]
-    `(let [st# (inst-ms ~start) et# (inst-ms ~end) mkdate# (fn [d#] (java.util.Date. ^{:tag ~'long} d#))]
-        (spec (and inst? #(inst-in-range? ~start ~end %))
-            :gen (fn [] (gen/fmap mkdate# (gen/large-integer* {:min st# :max et#})))
-        )
-    )
-)
-
-;;;
  ; Return true if start <= val, val < end and val is a fixed precision integer.
  ;;
 (§ defn int-in-range? [start end val]
@@ -17407,9 +16965,7 @@
  ; Initially set to boolean value of cloiure.spec.compile-asserts
  ; system property. Defaults to true.
  ;;
-(§ defonce ^:dynamic *compile-asserts*
-    (not= "false" (System/getProperty "cloiure.spec.compile-asserts"))
-)
+(§ defonce ^:dynamic *compile-asserts* true)
 
 ;;;
  ; Returns the value set by check-asserts.
