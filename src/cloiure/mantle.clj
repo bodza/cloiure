@@ -11870,6 +11870,376 @@
  ;;
 (§ defn uri? [x] (instance? java.net.URI x))
 
+#_(ns cloiure.edn
+    (:refer-cloiure :exclude [read read-string]))
+
+;;;
+ ; Reads the next object from stream, which must be an instance of java.io.PushbackReader
+ ; or some derivee. stream defaults to the current value of *in*.
+ ;
+ ; Reads data in the edn format (subset of Cloiure data):
+ ; http://edn-format.org
+ ;
+ ; opts is a map that can include the following keys:
+ ;
+ ; :eof - value to return on end-of-file. When not supplied, eof throws an exception.
+ ; :readers - a map of tag symbols to data-reader functions to be considered.
+ ; :default - a function of two args, that will, if present and no reader is found for a tag, be called with the tag and the value.
+ ;;
+(§ defn read
+    ([] (read *in*))
+    ([stream] (read {} stream))
+    ([opts stream] (cloiure.lang.EdnReader/read stream opts))
+)
+
+;;;
+ ; Reads one object from the string s. Returns nil when s is nil or empty.
+ ;
+ ; Reads data in the edn format (subset of Cloiure data):
+ ; http://edn-format.org
+ ;
+ ; opts is a map as per cloiure.edn/read.
+ ;;
+(§ defn read-string
+    ([s] (read-string {:eof nil} s))
+    ([opts s] (when s (cloiure.lang.EdnReader/readString s opts)))
+)
+
+#_(ns cloiure.set)
+
+;;;
+ ; Move a maximal element of coll according to fn k (which returns a number) to the front of coll.
+ ;;
+(§ defn- bubble-max-key [k coll]
+    (let [max (apply max-key k coll)]
+        (cons max (remove #(identical? max %) coll))
+    )
+)
+
+;;;
+ ; Return a set that is the union of the input sets.
+ ;;
+(§ defn union
+    ([] #{})
+    ([s1] s1)
+    ([s1 s2]
+        (if (< (count s1) (count s2))
+            (reduce conj s2 s1)
+            (reduce conj s1 s2)
+        )
+    )
+    ([s1 s2 & sets]
+        (let [bubbled-sets (bubble-max-key count (conj sets s2 s1))]
+            (reduce into (first bubbled-sets) (rest bubbled-sets))
+        )
+    )
+)
+
+;;;
+ ; Return a set that is the intersection of the input sets.
+ ;;
+(§ defn intersection
+    ([s1] s1)
+    ([s1 s2]
+        (if (< (count s2) (count s1))
+            (recur s2 s1)
+            (reduce
+                (fn [result item]
+                    (if (contains? s2 item)
+                        result
+                        (disj result item)
+                    )
+                )
+                s1 s1
+            )
+        )
+    )
+    ([s1 s2 & sets]
+        (let [bubbled-sets (bubble-max-key #(- (count %)) (conj sets s2 s1))]
+            (reduce intersection (first bubbled-sets) (rest bubbled-sets))
+        )
+    )
+)
+
+;;;
+ ; Return a set that is the first set without elements of the remaining sets.
+ ;;
+(§ defn difference
+    ([s1] s1)
+    ([s1 s2]
+        (if (< (count s1) (count s2))
+            (reduce
+                (fn [result item]
+                    (if (contains? s2 item)
+                        (disj result item)
+                        result
+                    )
+                )
+                s1 s1
+            )
+            (reduce disj s1 s2)
+        )
+    )
+    ([s1 s2 & sets] (reduce difference s1 (conj sets s2)))
+)
+
+;;;
+ ; Returns a set of the elements for which pred is true.
+ ;;
+(§ defn select [pred xset]
+    (reduce (fn [s k] (if (pred k) s (disj s k))) xset xset)
+)
+
+;;;
+ ; Returns a rel of the elements of xrel with only the keys in ks.
+ ;;
+(§ defn project [xrel ks]
+    (with-meta (set (map #(select-keys % ks) xrel)) (meta xrel))
+)
+
+;;;
+ ; Returns the map with the keys in kmap renamed to the vals in kmap.
+ ;;
+(§ defn rename-keys [map kmap]
+    (reduce
+        (fn [m [old new]]
+            (if (contains? map old)
+                (assoc m new (get map old))
+                m
+            )
+        )
+        (apply dissoc map (keys kmap)) kmap
+    )
+)
+
+;;;
+ ; Returns a rel of the maps in xrel with the keys in kmap renamed to the vals in kmap.
+ ;;
+(§ defn rename [xrel kmap]
+    (with-meta (set (map #(rename-keys % kmap) xrel)) (meta xrel))
+)
+
+;;;
+ ; Returns a map of the distinct values of ks in the xrel mapped to
+ ; a set of the maps in xrel with the corresponding values of ks.
+ ;;
+(§ defn index [xrel ks]
+    (reduce
+        (fn [m x]
+            (let [ik (select-keys x ks)]
+                (assoc m ik (conj (get m ik #{}) x))
+            )
+        )
+        {} xrel
+    )
+)
+
+;;;
+ ; Returns the map with the vals mapped to the keys.
+ ;;
+(§ defn map-invert [m] (reduce (fn [m [k v]] (assoc m v k)) {} m))
+
+;;;
+ ; When passed 2 rels, returns the rel corresponding to the natural join.
+ ; When passed an additional keymap, joins on the corresponding keys.
+ ;;
+(§ defn join
+    ([xrel yrel] ;; natural join
+        (if (and (seq xrel) (seq yrel))
+            (let [ks (intersection (set (keys (first xrel))) (set (keys (first yrel))))
+                  [r s] (if (<= (count xrel) (count yrel)) [xrel yrel] [yrel xrel])
+                  idx (index r ks)]
+                (reduce
+                    (fn [ret x]
+                        (let [found (idx (select-keys x ks))]
+                            (if found
+                                (reduce #(conj %1 (merge %2 x)) ret found)
+                                ret
+                            )
+                        )
+                    )
+                    #{} s
+                )
+            )
+            #{}
+        )
+    )
+    ([xrel yrel km] ;; arbitrary key mapping
+        (let [[r s k] (if (<= (count xrel) (count yrel)) [xrel yrel (map-invert km)] [yrel xrel km])
+              idx (index r (vals k))]
+            (reduce
+                (fn [ret x]
+                    (let [found (idx (rename-keys (select-keys x (keys k)) k))]
+                        (if found
+                            (reduce #(conj %1 (merge %2 x)) ret found)
+                            ret
+                        )
+                    )
+                )
+                #{} s
+            )
+        )
+    )
+)
+
+;;;
+ ; Is set1 a subset of set2?
+ ;;
+(§ defn ^Boolean subset? [set1 set2]
+    (and (<= (count set1) (count set2)) (every? #(contains? set2 %) set1))
+)
+
+;;;
+ ; Is set1 a superset of set2?
+ ;;
+(§ defn ^Boolean superset? [set1 set2]
+    (and (>= (count set1) (count set2)) (every? #(contains? set1 %) set2))
+)
+
+#_(ns cloiure.data
+    (:require [cloiure.set :as set]))
+
+(§ declare diff)
+
+;;;
+ ; Internal helper for diff.
+ ;;
+(§ defn- atom-diff [a b] (if (= a b) [nil nil a] [a b nil]))
+
+;; for big things a sparse vector class would be better
+
+;;;
+ ; Convert an associative-by-numeric-index collection into
+ ; an equivalent vector, with nil for any missing keys.
+ ;;
+(§ defn- vectorize [m]
+    (when (seq m)
+        (reduce
+            (fn [result [k v]] (assoc result k v))
+            (vec (repeat (apply max (keys m)) nil))
+            m
+        )
+    )
+)
+
+;;;
+ ; Diff associative things a and b, comparing only the key k.
+ ;;
+(§ defn- diff-associative-key [a b k]
+    (let [va (get a k) vb (get b k) [a* b* ab] (diff va vb) in-a (contains? a k) in-b (contains? b k)
+          same (and in-a in-b (or (not (nil? ab)) (and (nil? va) (nil? vb))))]
+        [
+            (when (and in-a (or (not (nil? a*)) (not same))) {k a*})
+            (when (and in-b (or (not (nil? b*)) (not same))) {k b*})
+            (when same {k ab})
+        ]
+    )
+)
+
+;;;
+ ; Diff associative things a and b, comparing only keys in ks.
+ ;;
+(§ defn- diff-associative [a b ks]
+    (reduce
+        (fn [diff1 diff2] (doall (map merge diff1 diff2)))
+        [nil nil nil]
+        (map (partial diff-associative-key a b) ks)
+    )
+)
+
+(§ defn- diff-sequential [a b]
+    (vec (map vectorize
+        (diff-associative
+            (if (vector? a) a (vec a))
+            (if (vector? b) b (vec b))
+            (range (max (count a) (count b)))
+        )
+    ))
+)
+
+;;;
+ ; Implementation detail. Subject to change.
+ ;;
+(§ defprotocol EqualityPartition
+    (equality-partition [x] "Implementation detail. Subject to change.")
+)
+
+;;;
+ ; Implementation detail. Subject to change.
+ ;;
+(§ defprotocol Diff
+    (diff-similar [a b] "Implementation detail. Subject to change.")
+)
+
+(§ extend nil
+    Diff
+    {:diff-similar atom-diff}
+)
+
+(§ extend Object
+    Diff
+    {:diff-similar (fn [a b] ((if (.. a getClass isArray) diff-sequential atom-diff) a b))}
+
+    EqualityPartition
+    {:equality-partition (fn [x] (if (.. x getClass isArray) :sequential :atom))}
+)
+
+(§ extend-protocol EqualityPartition
+    nil
+    (equality-partition [x] :atom)
+
+    java.util.Set
+    (equality-partition [x] :set)
+
+    java.util.List
+    (equality-partition [x] :sequential)
+
+    java.util.Map
+    (equality-partition [x] :map)
+)
+
+(§ defn- as-set-value [s] (if (set? s) s (into #{} s)))
+
+(§ extend-protocol Diff
+    java.util.Set
+    (diff-similar [a b]
+        (let [aval (as-set-value a) bval (as-set-value b)]
+            [
+                (not-empty (set/difference aval bval))
+                (not-empty (set/difference bval aval))
+                (not-empty (set/intersection aval bval))
+            ]
+        )
+    )
+
+    java.util.List
+    (diff-similar [a b] (diff-sequential a b))
+
+    java.util.Map
+    (diff-similar [a b] (diff-associative a b (set/union (keys a) (keys b))))
+)
+
+;;;
+ ; Recursively compares a and b, returning a tuple of
+ ; [things-only-in-a things-only-in-b things-in-both].
+ ; Comparison rules:
+ ;
+ ; * For equal a and b, return [nil nil a].
+ ; * Maps are subdiffed where keys match and values differ.
+ ; * Sets are never subdiffed.
+ ; * All sequential things are treated as associative collections by their indexes, with results returned as vectors.
+ ; * Everything else (including strings!) is treated as an atom and compared for equality.
+ ;;
+(§ defn diff [a b]
+    (if (= a b)
+        [nil nil a]
+        (if (= (equality-partition a) (equality-partition b))
+            (diff-similar a b)
+            (atom-diff a b)
+        )
+    )
+)
+
 ;;;
  ; Cloiure String utilities
  ;
@@ -12784,6 +13154,409 @@
     (coll-fold [m n combinef reducef] (.fold m n combinef reducef fjinvoke fjtask fjfork fjjoin))
 )
 
+;;;
+ ; Reflection on Host Types
+ ;
+ ; Alpha - subject to change.
+ ;
+ ; Two main entry points:
+ ;
+ ; * Type-reflect reflects on something that implements TypeReference.
+ ;
+ ; * Reflect (for REPL use) reflects on the class of an instance, or
+ ;   on a class if passed a class.
+ ;
+ ; Key features:
+ ;
+ ; * Exposes the read side of reflection as pure data. Reflecting on
+ ;   a type returns a map with keys :bases, :flags, and :members.
+ ;
+ ; * Canonicalizes class names as Cloiure symbols. Types can extend
+ ;   to the TypeReference protocol to indicate that they can be
+ ;   unambiguously resolved as a type name. The canonical format
+ ;   requires one non-Java-ish convention: array brackets are <>
+ ;   instead of [] so they can be part of a Cloiure symbol.
+ ;
+ ; * Pluggable Reflectors for different implementations. The default
+ ;   JavaReflector is good when you have a class in hand, or use
+ ;   the AsmReflector for "hands off" reflection without forcing
+ ;   classes to load.
+ ;
+ ; Platform implementers must:
+ ;
+ ; * Create an implementation of Reflector.
+ ; * Create one or more implementations of TypeReference.
+ ; * def default-reflector to be an instance that satisfies Reflector.
+ ;;
+#_(ns cloiure.reflect
+    (:require [cloiure.set :as set]))
+
+;;;
+ ; Protocol for reflection implementers.
+ ;;
+(§ defprotocol Reflector
+    (do-reflect [reflector typeref])
+)
+
+;;;
+ ; A TypeReference can be unambiguously converted to a type name on the host platform.
+ ;
+ ; All typerefs are normalized into symbols.
+ ; If you need to normalize a typeref yourself, call typesym.
+ ;;
+(§ defprotocol TypeReference
+    (typename [o] "Returns Java name as returned by ASM getClassName, e.g. byte[], java.lang.String[]")
+)
+
+(§ declare default-reflector)
+
+;;;
+ ; Alpha - subject to change.
+ ;
+ ; Reflect on a typeref, returning a map with :bases, :flags, and :members.
+ ; In the discussion below, names are always Cloiure symbols.
+ ;
+ ; :bases            a set of names of the type's bases.
+ ; :flags            a set of keywords naming the boolean attributes of the type.
+ ; :members          a set of the type's members. Each member is a map and can be
+ ;                   a constructor, method, or field.
+ ;
+ ; Keys common to all members:
+ ;
+ ; :name             name of the type.
+ ; :declaring-class  name of the declarer.
+ ; :flags            keyword naming boolean attributes of the member.
+ ;
+ ; Keys specific to constructors:
+ ;
+ ; :parameter-types  vector of parameter type names.
+ ; :exception-types  vector of exception type names.
+ ;
+ ; Keys specific to methods:
+ ;
+ ; :parameter-types  vector of parameter type names.
+ ; :exception-types  vector of exception type names.
+ ; :return-type      return type name.
+ ;
+ ; Key specific to fields:
+ ;
+ ; :type             type name.
+ ;
+ ; Options:
+ ;
+ ; :ancestors        in addition to the keys described above, also include
+ ;                   an :ancestors key with the entire set of ancestors,
+ ;                   and add all ancestor members to :members.
+ ; :reflector        implementation to use. Defaults to JavaReflector,
+ ;                   AsmReflector is also an option.
+ ;;
+(§ defn type-reflect [typeref & options]
+    (let [{:keys [ancestors reflector]} (merge {:reflector default-reflector} (apply hash-map options))
+          refl (partial do-reflect reflector)
+          result (refl typeref)]
+        ;; could make simpler loop of two args: names an
+        (if ancestors
+            (let [make-ancestor-map (fn [names] (zipmap names (map refl names)))]
+                (loop [reflections (make-ancestor-map (:bases result))]
+                    (let [ancestors-visited (set (keys reflections))
+                          ancestors-to-visit (set/difference (set (mapcat :bases (vals reflections))) ancestors-visited)]
+                        (if (seq ancestors-to-visit)
+                            (recur (merge reflections (make-ancestor-map ancestors-to-visit)))
+                            (apply merge-with into result {:ancestors ancestors-visited} (map #(select-keys % [:members]) (vals reflections)))
+                        )
+                    )
+                )
+            )
+            result
+        )
+    )
+)
+
+;;;
+ ; Alpha - subject to change.
+ ; Reflect on the type of obj (or obj itself if obj is a class).
+ ; Return value and options are the same as for type-reflect.
+ ;;
+(§ defn reflect [obj & options]
+    (apply type-reflect (if (class? obj) obj (class obj)) options)
+)
+
+(§ in-ns 'cloiure.reflect)
+
+(§ require
+    [cloiure.set :as set]
+    [cloiure.string :as str]
+)
+(§ import
+    [java.io InputStream]
+    [java.lang.reflect Modifier]
+    [cloiure.asm ClassReader ClassVisitor Opcodes Type]
+)
+
+(§ extend-protocol TypeReference
+    cloiure.lang.Symbol
+    (typename [s] (str/replace (str s) "<>" "[]"))
+
+    Class
+    ;; neither .getName not .getSimpleName returns the right thing, so best to delegate to Type
+    (typename [c] (typename (Type/getType c)))
+
+    Type
+    (typename [t] (.getClassName t))
+)
+
+;;;
+ ; Given a typeref, create a legal Cloiure symbol version of the type's name.
+ ;;
+(§ defn- typesym [t]
+    (-> (typename t) (str/replace "[]" "<>") (symbol))
+)
+
+;;;
+ ; Given a typeref, return implied resource name. Used by Reflectors
+ ; such as ASM that need to find and read classbytes from files.
+ ;;
+(§ defn- resource-name [typeref]
+    (-> (typename typeref) (str/replace "." "/") (str ".class"))
+)
+
+(§ defn- access-flag [[name flag & contexts]]
+    {:name name :flag flag :contexts (set (map keyword contexts))}
+)
+
+;;;
+ ; Convert a Java field descriptor to a Cloiure class symbol.
+ ; Field descriptors are described in section 4.3.2 of the JVM spec, 2nd ed.:
+ ; http://java.sun.com/docs/books/jvms/second_edition/html/ClassFile.doc.html#14152
+ ;;
+(§ defn- field-descriptor->class-symbol [^String d]
+    (typesym (Type/getType d))
+)
+
+;;;
+ ; Convert a Java internal name to a Cloiure class symbol.
+ ; Internal names uses slashes instead of dots, e.g. java/lang/String.
+ ; See Section 4.2 of the JVM spec, 2nd ed.:
+ ; http://java.sun.com/docs/books/jvms/second_edition/html/ClassFile.doc.html#14757
+ ;;
+(§ defn- internal-name->class-symbol [d]
+    (typesym (Type/getObjectType d))
+)
+
+;;;
+ ; The Java access bitflags, along with their friendly names and
+ ; the kinds of objects to which they can apply.
+ ;;
+(§ def flag-descriptors
+    (vec
+        (map access-flag
+            [
+                [:public       0x0001 :class :field :method       ]
+                [:private      0x0002 :class :field :method       ]
+                [:protected    0x0004 :class :field :method       ]
+                [:static       0x0008        :field :method       ]
+                [:final        0x0010 :class :field :method       ]
+              #_[:super        0x0020 :class                      ] ;; :super is ancient history and is unfindable (?) by reflection. skip it
+                [:synchronized 0x0020               :method       ]
+                [:volatile     0x0040        :field               ]
+                [:bridge       0x0040               :method       ]
+                [:varargs      0x0080               :method       ]
+                [:transient    0x0080        :field               ]
+                [:native       0x0100               :method       ]
+                [:interface    0x0200 :class                      ]
+                [:abstract     0x0400 :class        :method       ]
+                [:strict       0x0800               :method       ]
+                [:synthetic    0x1000 :class :field :method       ]
+                [:annotation   0x2000 :class                      ]
+                [:enum         0x4000 :class :field         :inner]
+            ]
+        )
+    )
+)
+
+;;;
+ ; Convert reflection bitflags into a set of keywords.
+ ;;
+(§ defn- parse-flags [flags context]
+    (reduce
+        (fn [result fd]
+            (if (and (get (:contexts fd) context) (not (zero? (bit-and flags (:flag fd)))))
+                (conj result (:name fd))
+                result
+            )
+        )
+        #{} flag-descriptors
+    )
+)
+
+(§ defrecord Constructor [name declaring-class parameter-types exception-types flags])
+
+(§ defn- constructor->map [^java.lang.reflect.Constructor constructor]
+    (Constructor.
+        (symbol (.getName constructor))
+        (typesym (.getDeclaringClass constructor))
+        (vec (map typesym (.getParameterTypes constructor)))
+        (vec (map typesym (.getExceptionTypes constructor)))
+        (parse-flags (.getModifiers constructor) :method)
+    )
+)
+
+;;;
+ ; Return a set of the declared constructors of class as a Cloiure map.
+ ;;
+(§ defn- declared-constructors [^Class cls]
+    (set (map constructor->map (.getDeclaredConstructors cls)))
+)
+
+(§ defrecord Method [name return-type declaring-class parameter-types exception-types flags])
+
+(§ defn- method->map [^java.lang.reflect.Method method]
+    (Method.
+        (symbol (.getName method))
+        (typesym (.getReturnType method))
+        (typesym (.getDeclaringClass method))
+        (vec (map typesym (.getParameterTypes method)))
+        (vec (map typesym (.getExceptionTypes method)))
+        (parse-flags (.getModifiers method) :method)
+    )
+)
+
+;;;
+ ; Return a set of the declared constructors of class as a Cloiure map.
+ ;;
+(§ defn- declared-methods [^Class cls]
+    (set (map method->map (.getDeclaredMethods cls)))
+)
+
+(§ defrecord Field [name type declaring-class flags])
+
+(§ defn- field->map [^java.lang.reflect.Field field]
+    (Field.
+        (symbol (.getName field))
+        (typesym (.getType field))
+        (typesym (.getDeclaringClass field))
+        (parse-flags (.getModifiers field) :field)
+    )
+)
+
+;;;
+ ; Return a set of the declared fields of class as a Cloiure map.
+ ;;
+(§ defn- declared-fields [^Class cls]
+    (set (map field->map (.getDeclaredFields cls)))
+)
+
+(§ deftype JavaReflector [classloader]
+    Reflector
+    (do-reflect [_ typeref]
+        (let [cls (cloiure.lang.RT/classForName (typename typeref) false classloader)]
+            {
+                :bases   (not-empty (set (map typesym (bases cls))))
+                :flags   (parse-flags (.getModifiers cls) :class)
+                :members (set/union (declared-fields cls) (declared-methods cls) (declared-constructors cls))
+            }
+        )
+    )
+)
+
+(§ def ^:private default-reflector
+    (JavaReflector. (.getContextClassLoader (Thread/currentThread)))
+)
+
+(§ defn- parse-method-descriptor [^String md]
+    {
+        :parameter-types (vec (map typesym (Type/getArgumentTypes md)))
+        :return-type (typesym (Type/getReturnType md))
+    }
+)
+
+(§ defprotocol ClassResolver
+    (^InputStream resolve-class [this name] "Given a class name, return that typeref's class bytes as an InputStream.")
+)
+
+(§ extend-protocol ClassResolver
+    cloiure.lang.Fn
+    (resolve-class [this typeref] (this typeref))
+
+    ClassLoader
+    (resolve-class [this typeref] (.getResourceAsStream this (resource-name typeref)))
+)
+
+(§ deftype AsmReflector [class-resolver]
+    Reflector
+    (do-reflect [_ typeref]
+        (with-open [is (resolve-class class-resolver typeref)]
+            (let [class-symbol (typesym typeref) r (ClassReader. is) result (atom {:bases #{} :flags #{} :members #{}})]
+                (.accept r
+                    (proxy [ClassVisitor] [Opcodes/ASM4]
+                        (visit [version access name signature superName interfaces]
+                            (let [flags (parse-flags access :class)
+                                  ;; ignore java.lang.Object on interfaces to match reflection
+                                  superName (if (and (flags :interface) (= superName "java/lang/Object")) nil superName)
+                                  bases
+                                    (->> (cons superName interfaces)
+                                        (remove nil?)
+                                        (map internal-name->class-symbol)
+                                        (map symbol)
+                                        (set)
+                                        (not-empty)
+                                    )]
+                                (swap! result merge {:bases bases :flags flags})
+                            )
+                        )
+                        (visitAnnotation [desc visible])
+                        (visitSource [name debug])
+                        (visitInnerClass [name outerName innerName access])
+                        (visitField [access name desc signature value]
+                            (swap! result update :members (fnil conj #{})
+                                (Field.
+                                    (symbol name)
+                                    (field-descriptor->class-symbol desc)
+                                    class-symbol
+                                    (parse-flags access :field)
+                                )
+                            )
+                            nil
+                        )
+                        (visitMethod [access name desc signature exceptions]
+                            (when-not (= name "<clinit>")
+                                (let [constructor? (= name "<init>")]
+                                    (swap! result update :members (fnil conj #{})
+                                        (let [{:keys [parameter-types return-type]} (parse-method-descriptor desc)
+                                              flags (parse-flags access :method)]
+                                            (if constructor?
+                                                (Constructor.
+                                                    class-symbol
+                                                    class-symbol
+                                                    parameter-types
+                                                    (vec (map internal-name->class-symbol exceptions))
+                                                    flags
+                                                )
+                                                (Method.
+                                                    (symbol name)
+                                                    return-type
+                                                    class-symbol
+                                                    parameter-types
+                                                    (vec (map internal-name->class-symbol exceptions))
+                                                    flags
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                            nil
+                        )
+                        (visitEnd [])
+                    )
+                    0
+                )
+                @result
+            )
+        )
+    )
+)
+
 #_(ns cloiure.stacktrace)
 
 ;;;
@@ -12856,6 +13629,315 @@
  ;;
 (§ defn e []
     (print-stack-trace (root-cause *e) 8)
+)
+
+#_(ns cloiure.repl
+    (:require [cloiure.spec.alpha :as spec])
+    (:import [java.io LineNumberReader InputStreamReader PushbackReader]
+             [cloiure.lang RT Reflector]))
+
+(§ def ^:private special-doc-map
+    (hash-map
+        '.              {:url "java_interop#dot"
+                         :forms ['(.instanceMember instance args*) '(.instanceMember Classname args*) '(Classname/staticMethod args*) 'Classname/staticField]
+                         :doc "The instance member form works for both fields and methods.
+                               They all expand into calls to the dot operator at macroexpansion time."}
+        'def            {:forms ['(def symbol doc-string? init?)]
+                         :doc "Creates and interns a global var with the name of symbol in the current namespace (*ns*) or locates such a var if
+                               it already exists. If init is supplied, it is evaluated, and the root binding of the var is set to the resulting value.
+                               If init is not supplied, the root binding of the var is unaffected."}
+        'do             {:forms ['(do exprs*)]
+                         :doc "Evaluates the expressions in order and returns the value of the last. If no expressions are supplied, returns nil."}
+        'if             {:forms ['(if test then else?)]
+                         :doc "Evaluates test. If not the singular values nil or false,
+                               evaluates and yields then, otherwise, evaluates and yields else.
+                               If else is not supplied it defaults to nil."}
+        'monitor-enter  {:forms ['(monitor-enter x)]
+                         :doc "Synchronization primitive that should be avoided in user code. Use the 'locking' macro."}
+        'monitor-exit   {:forms ['(monitor-exit x)]
+                         :doc "Synchronization primitive that should be avoided in user code. Use the 'locking' macro."}
+        'new            {:forms ['(Classname. args*) '(new Classname args*)]
+                         :url "java_interop#new"
+                         :doc "The args, if any, are evaluated from left to right, and passed to the constructor of the class named by Classname.
+                               The constructed object is returned."}
+        'quote          {:forms ['(quote form)]
+                         :doc "Yields the unevaluated form."}
+        'recur          {:forms ['(recur exprs*)]
+                         :doc "Evaluates the exprs in order, then, in parallel, rebinds the bindings of the recursion point to the values of the exprs.
+                               Execution then jumps back to the recursion point, a loop or fn method."}
+        'set!           {:forms ['(set! var-symbol expr) '(set! (. instance-expr instanceFieldName-symbol) expr) '(set! (. Classname-symbol staticFieldName-symbol) expr)]
+                         :url "vars#set"
+                         :doc "Used to set thread-local-bound vars, Java object instance fields, and Java class static fields."}
+        'throw          {:forms ['(throw expr)]
+                         :doc "The expr is evaluated and thrown, therefore it should yield an instance of some derivee of Throwable."}
+        'try            {:forms ['(try expr* catch-clause* finally-clause?)]
+                         :doc "catch-clause => (catch classname name expr*)
+                               finally-clause => (finally expr*)
+                               Catches and handles Java exceptions."}
+        'var            {:forms ['(var symbol)]
+                         :doc "The symbol must resolve to a var, and the Var object itself (not its value) is returned.
+                               The reader macro #'x expands to (var x)."}
+    )
+)
+
+(§ defn- special-doc [name-symbol]
+    (assoc (or (special-doc-map name-symbol) (meta (resolve name-symbol))) :name name-symbol :special-form true)
+)
+
+(§ defn- namespace-doc [nspace]
+    (assoc (meta nspace) :name (ns-name nspace))
+)
+
+(§ defn- print-doc [{n :ns nm :name :keys [forms arglists special-form doc url macro spec] :as m}]
+    (println "-------------------------")
+    (println (or spec (str (when n (str (ns-name n) "/")) nm)))
+    (when forms
+        (doseq [f forms]
+            (print "  ")
+            (prn f)
+        )
+    )
+    (when arglists
+        (prn arglists)
+    )
+    (cond
+        special-form
+            (do
+                (println "Special Form")
+                (println " " doc)
+                (if (contains? m :url)
+                    (when url
+                        (println (str "\n  Please see http://clojure.org/" url))
+                    )
+                    (println (str "\n  Please see http://clojure.org/special_forms#" nm))
+                )
+            )
+        macro
+            (println "Macro")
+        spec
+            (println "Spec")
+    )
+    (when doc
+        (println " " doc)
+    )
+    (when n
+        (when-let [fnspec (spec/get-spec (symbol (str (ns-name n)) (name nm)))]
+            (println "Spec")
+            (doseq [role [:args :ret :fn]]
+                (when-let [spec (get fnspec role)]
+                    (println " " (str (name role) ":") (spec/describe spec))
+                )
+            )
+        )
+    )
+)
+
+;;;
+ ; Prints documentation for any var whose documentation or name
+ ; contains a match for re-string-or-pattern.
+ ;;
+(§ defn find-doc [re-string-or-pattern]
+    (let [re (re-pattern re-string-or-pattern)
+          ms (concat
+                (mapcat #(sort-by :name (map meta (vals (ns-interns %)))) (all-ns))
+                (map namespace-doc (all-ns))
+                (map special-doc (keys special-doc-map))
+            )]
+        (doseq [m ms :when (and (:doc m) (or (re-find (re-matcher re (:doc m))) (re-find (re-matcher re (str (:name m))))))]
+            (print-doc m)
+        )
+    )
+)
+
+;;;
+ ; Prints documentation for a var or special form given its name,
+ ; or for a spec if given a keyword.
+ ;;
+(§ defmacro doc [name]
+    (if-let [special-name ('{& fn catch try finally try} name)]
+        `(#'print-doc (#'special-doc '~special-name))
+        (cond
+            (special-doc-map name) `(#'print-doc (#'special-doc '~name))
+            (keyword? name)        `(#'print-doc {:spec '~name :doc '~(spec/describe name)})
+            (find-ns name)         `(#'print-doc (#'namespace-doc (find-ns '~name)))
+            (resolve name)         `(#'print-doc (meta (var ~name)))
+        )
+    )
+)
+
+;;;
+ ; Returns a string of the source code for the given symbol, if it can find it.
+ ; This requires that the symbol resolve to a Var defined in a namespace for which
+ ; the .cli is in the classpath. Returns nil if it can't find the source. For most
+ ; REPL usage, 'source' is more convenient.
+ ;
+ ; Example: (source-fn 'filter)
+ ;;
+(§ defn source-fn [x]
+    (when-let [v (resolve x)]
+        (when-let [filepath (:file (meta v))]
+            (when-let [strm (.getResourceAsStream (RT/baseLoader) filepath)]
+                (with-open [rdr (LineNumberReader. (InputStreamReader. strm))]
+                    (dotimes [_ (dec (:line (meta v)))]
+                        (.readLine rdr)
+                    )
+                    (let [text (StringBuilder.)
+                          pbr
+                            (proxy [PushbackReader] [rdr]
+                                (read [] (let [i (proxy-super read)] (.append text (char i)) i))
+                            )
+                          read-opts (if (.endsWith ^String filepath "clic") {:read-cond :allow} {})]
+                        (if (= :unknown *read-eval*)
+                            (throw (IllegalStateException. "Unable to read source while *read-eval* is :unknown."))
+                            (read read-opts (PushbackReader. pbr))
+                        )
+                        (str text)
+                    )
+                )
+            )
+        )
+    )
+)
+
+;;;
+ ; Prints the source code for the given symbol, if it can find it.
+ ; This requires that the symbol resolve to a Var defined in a
+ ; namespace for which the .cli is in the classpath.
+ ;
+ ; Example: (source filter)
+ ;;
+(§ defmacro source [n]
+    `(println (or (source-fn '~n) (str "Source not found")))
+)
+
+;;;
+ ; Given a regular expression or stringable thing, return a seq of all
+ ; public definitions in all currently-loaded namespaces that match the
+ ; str-or-pattern.
+ ;;
+(§ defn apropos [str-or-pattern]
+    (let [matches?
+            (if (instance? java.util.regex.Pattern str-or-pattern)
+                #(re-find str-or-pattern (str %))
+                #(.contains (str %) (str str-or-pattern))
+            )]
+        (sort
+            (mapcat
+                (fn [ns] (let [ns-name (str ns)] (map #(symbol ns-name (str %)) (filter matches? (keys (ns-publics ns))))))
+                (all-ns)
+            )
+        )
+    )
+)
+
+;;;
+ ; Returns a sorted seq of symbols naming public vars in
+ ; a namespace or namespace alias. Looks for aliases in *ns*.
+ ;;
+(§ defn dir-fn [ns]
+    (sort (map first (ns-publics (the-ns (get (ns-aliases *ns*) ns ns)))))
+)
+
+;;;
+ ; Prints a sorted directory of public vars in a namespace.
+ ;;
+(§ defmacro dir [nsname]
+    `(doseq [v# (dir-fn '~nsname)]
+        (println v#)
+    )
+)
+
+;;;
+ ; Given a string representation of a fn class,
+ ; as in a stack trace element, returns a readable version.
+ ;;
+(§ defn demunge [fn-name] (cloiure.lang.Compiler/demunge fn-name))
+
+;;;
+ ; Returns the initial cause of an exception or error by peeling off all of its wrappers.
+ ;;
+(§ defn root-cause [^Throwable t]
+    (loop [cause t]
+        (if (and (instance? cloiure.lang.Compiler$CompilerException cause) (not= (.source ^cloiure.lang.Compiler$CompilerException cause) "NO_SOURCE_FILE"))
+            cause
+            (if-let [cause (.getCause cause)]
+                (recur cause)
+                cause
+            )
+        )
+    )
+)
+
+;;;
+ ; Returns a (possibly unmunged) string representation of a StackTraceElement.
+ ;;
+(§ defn stack-element-str [^StackTraceElement el]
+    (let [file (.getFileName el)
+          cloiure-fn? (and file (or (.endsWith file ".cli") (.endsWith file ".clic") (= file "NO_SOURCE_FILE")))]
+        (str
+            (if cloiure-fn?
+                (demunge (.getClassName el))
+                (str (.getClassName el) "." (.getMethodName el))
+            )
+            " (" (.getFileName el) ":" (.getLineNumber el) ")"
+        )
+    )
+)
+
+;;;
+ ; Prints a stack trace of the exception, to the depth requested. If none supplied,
+ ; uses the root cause of the most recent repl exception (*e), and a depth of 12.
+ ;;
+(§ defn pst
+    ([] (pst 12))
+    ([e-or-depth]
+        (if (instance? Throwable e-or-depth)
+            (pst e-or-depth 12)
+            (when-let [e *e]
+                (pst (root-cause e) e-or-depth)
+            )
+        )
+    )
+    ([^Throwable e depth]
+        (binding [*out* *err*]
+            (println (str (-> e class .getSimpleName) " " (.getMessage e) (when-let [info (ex-data e)] (str " " (pr-str info)))))
+            (let [st (.getStackTrace e) cause (.getCause e)]
+                (doseq [el (take depth (remove #(#{"cloiure.lang.RestFn" "cloiure.lang.AFn"} (.getClassName %)) st))]
+                    (println (str \tab (stack-element-str el)))
+                )
+                (when cause
+                    (println "Caused by:")
+                    (pst cause (min depth (+ 2 (- (count (.getStackTrace cause)) (count st)))))
+                )
+            )
+        )
+    )
+)
+
+;;;
+ ; Returns a function that takes one arg and uses that as an exception message
+ ; to stop the given thread. Defaults to the current thread.
+ ;;
+(§ defn thread-stopper
+    ([] (thread-stopper (Thread/currentThread)))
+    ([thread] (fn [msg] (.stop thread (Error. msg))))
+)
+
+;;;
+ ; Register INT signal handler. After calling this, Ctrl-C will cause
+ ; the given function f to be called with a single argument, the signal.
+ ; Uses thread-stopper if no function given.
+ ;;
+(§ defn set-break-handler!
+    ([] (set-break-handler! (thread-stopper)))
+    ([f]
+        (sun.misc.Signal/handle
+            (sun.misc.Signal. "INT")
+            (proxy [sun.misc.SignalHandler] []
+                (handle [signal] (f (str "-- caught signal " signal)))
+            )
+        )
+    )
 )
 
 #_(ns cloiure.main
@@ -13509,1290 +14591,750 @@
     (m/repl :init repl-init :read repl-read)
 )
 
-#_(ns cloiure.core.specs.alpha
-    (:require [cloiure.spec.alpha :as s]))
+#_(ns cloiure.spec.gen.alpha
+    (:refer-cloiure :exclude [boolean bytes cat hash-map list map not-empty set vector char double int keyword symbol string uuid delay]))
 
-;; destructure
+(§ alias 'c 'cloiure.core)
 
-(§ s/def ::local-name (s/and simple-symbol? #(not= '& %)))
-
-(§ s/def ::binding-form
-    (s/or :sym ::local-name
-                :seq ::seq-binding-form
-                :map ::map-binding-form)
+(§ defn- dynaload [s]
+    (let [ns (namespace s)]
+        (assert ns)
+        (require (c/symbol ns))
+        (let [v (resolve s)]
+            (if v
+                @v
+                (throw (RuntimeException. (str "Var " s " is not on the classpath")))
+            )
+        )
+    )
 )
 
-;; sequential destructuring
-
-(§ s/def ::seq-binding-form
-    (s/and vector?
-                (s/cat :elems (s/* ::binding-form)
-                        :rest (s/? (s/cat :amp #{'&} :form ::binding-form))
-                        :as (s/? (s/cat :as #{:as} :sym ::local-name))))
+(§ def ^:private quick-check-ref
+    (c/delay (dynaload 'cloiure.test.check/quick-check))
 )
 
-;; map destructuring
+(§ defn quick-check [& args] (apply @quick-check-ref args))
 
-(§ s/def ::keys (s/coll-of ident? :kind vector?))
-(§ s/def ::syms (s/coll-of symbol? :kind vector?))
-(§ s/def ::strs (s/coll-of simple-symbol? :kind vector?))
-(§ s/def ::or (s/map-of simple-symbol? any?))
-(§ s/def ::as ::local-name)
-
-(§ s/def ::map-special-binding
-    (s/keys :opt-un [::as ::or ::keys ::syms ::strs])
-)
-
-(§ s/def ::map-binding (s/tuple ::binding-form any?))
-
-(§ s/def ::ns-keys
-    (s/tuple
-            (s/and qualified-keyword? #(-> % name #{"keys" "syms"}))
-            (s/coll-of simple-symbol? :kind vector?))
-)
-
-(§ s/def ::map-bindings
-    (s/every (s/or :mb ::map-binding
-                        :nsk ::ns-keys
-                        :msb (s/tuple #{:as :or :keys :syms :strs} any?)) :into {})
-)
-
-(§ s/def ::map-binding-form (s/merge ::map-bindings ::map-special-binding))
-
-;; bindings
-
-(§ s/def ::binding (s/cat :binding ::binding-form :init-expr any?))
-(§ s/def ::bindings (s/and vector? (s/* ::binding)))
-
-;; let, if-let, when-let
-
-(§ s/fdef cloiure.core/let
-    :args (s/cat :bindings ::bindings
-               :body (s/* any?))
-)
-
-(§ s/fdef cloiure.core/if-let
-    :args (s/cat :bindings (s/and vector? ::binding)
-               :then any?
-               :else (s/? any?))
-)
-
-(§ s/fdef cloiure.core/when-let
-    :args (s/cat :bindings (s/and vector? ::binding)
-               :body (s/* any?))
-)
-
-;; defn, defn-, fn
-
-(§ s/def ::arg-list
-    (s/and
-            vector?
-            (s/cat :args (s/* ::binding-form)
-                :varargs (s/? (s/cat :amp #{'&} :form ::binding-form))))
-)
-
-(§ s/def ::args+body
-    (s/cat :args ::arg-list
-                :body (s/alt :prepost+body (s/cat :prepost map?
-                                                :body (s/+ any?))
-                            :body (s/* any?)))
-)
-
-(§ s/def ::defn-args
-    (s/cat :name simple-symbol?
-                :docstring (s/? string?)
-                :meta (s/? map?)
-                :bs (s/alt :arity-1 ::args+body
-                            :arity-n (s/cat :bodies (s/+ (s/spec ::args+body))
-                                            :attr (s/? map?))))
-)
-
-(§ s/fdef cloiure.core/defn
-    :args ::defn-args
-    :ret any?
-)
-
-(§ s/fdef cloiure.core/defn-
-    :args ::defn-args
-    :ret any?
-)
-
-(§ s/fdef cloiure.core/fn
-    :args (s/cat :name (s/? simple-symbol?)
-               :bs (s/alt :arity-1 ::args+body
-                          :arity-n (s/+ (s/spec ::args+body))))
-    :ret any?
-)
-
-;; ns
-
-(§ s/def ::exclude (s/coll-of simple-symbol?))
-(§ s/def ::only (s/coll-of simple-symbol?))
-(§ s/def ::rename (s/map-of simple-symbol? simple-symbol?))
-(§ s/def ::filters (s/keys* :opt-un [::exclude ::only ::rename]))
-
-(§ s/def ::ns-refer-cloiure
-    (s/spec (s/cat :clause #{:refer-cloiure}
-                        :filters ::filters))
-)
-
-(§ s/def ::refer (s/or :all #{:all}
-                     :syms (s/coll-of simple-symbol?))
-)
-
-(§ s/def ::prefix-list
-    (s/spec
-            (s/cat :prefix simple-symbol?
-                :libspecs (s/+ ::libspec)))
-)
-
-(§ s/def ::libspec
-    (s/alt :lib simple-symbol?
-                :lib+opts (s/spec (s/cat :lib simple-symbol?
-                                        :options (s/keys* :opt-un [::as ::refer]))))
-)
-
-(§ s/def ::ns-require
-    (s/spec (s/cat :clause #{:require}
-                        :body (s/+ (s/alt :libspec ::libspec
-                                        :prefix-list ::prefix-list
-                                        :flag #{:reload :reload-all :verbose}))))
-)
-
-(§ s/def ::package-list
-    (s/spec
-            (s/cat :package simple-symbol?
-                :classes (s/* simple-symbol?)))
-)
-
-(§ s/def ::import-list
-    (s/* (s/alt :class simple-symbol?
-                    :package-list ::package-list))
-)
-
-(§ s/def ::ns-import
-    (s/spec
-            (s/cat :clause #{:import}
-                :classes ::import-list))
-)
-
-(§ s/def ::ns-refer
-    (s/spec (s/cat :clause #{:refer}
-                        :lib simple-symbol?
-                        :filters ::filters))
-)
-
-;; same as ::prefix-list, but with ::use-libspec instead
-
-(§ s/def ::use-prefix-list
-    (s/spec
-            (s/cat :prefix simple-symbol?
-                :libspecs (s/+ ::use-libspec)))
-)
-
-;; same as ::libspec, but also supports the ::filters options in the libspec
-
-(§ s/def ::use-libspec
-    (s/alt :lib simple-symbol?
-                :lib+opts (s/spec (s/cat :lib simple-symbol?
-                                        :options (s/keys* :opt-un [::as ::refer ::exclude ::only ::rename]))))
-)
-
-(§ s/def ::ns-use
-    (s/spec (s/cat :clause #{:use}
-                        :libs (s/+ (s/alt :libspec ::use-libspec
-                                        :prefix-list ::use-prefix-list
-                                        :flag #{:reload :reload-all :verbose}))))
-)
-
-(§ s/def ::ns-load
-    (s/spec (s/cat :clause #{:load}
-                        :libs (s/* string?)))
-)
-
-(§ s/def ::name simple-symbol?)
-(§ s/def ::extends simple-symbol?)
-(§ s/def ::implements (s/coll-of simple-symbol? :kind vector?))
-(§ s/def ::init symbol?)
-(§ s/def ::class-ident (s/or :class simple-symbol? :class-name string?))
-(§ s/def ::signature (s/coll-of ::class-ident :kind vector?))
-(§ s/def ::constructors (s/map-of ::signature ::signature))
-(§ s/def ::post-init symbol?)
-(§ s/def ::method (s/and vector?
-                    (s/cat :name simple-symbol?
-                            :param-types ::signature
-                            :return-type simple-symbol?))
-)
-(§ s/def ::methods (s/coll-of ::method :kind vector?))
-(§ s/def ::main boolean?)
-(§ s/def ::factory simple-symbol?)
-(§ s/def ::state simple-symbol?)
-(§ s/def ::get simple-symbol?)
-(§ s/def ::set simple-symbol?)
-(§ s/def ::expose (s/keys :opt-un [::get ::set]))
-(§ s/def ::exposes (s/map-of simple-symbol? ::expose))
-(§ s/def ::prefix string?)
-(§ s/def ::impl-ns simple-symbol?)
-(§ s/def ::load-impl-ns boolean?)
-
-(§ s/def ::ns-gen-class
-    (s/spec (s/cat :clause #{:gen-class}
-                        :options (s/keys* :opt-un [::name ::extends ::implements
-                                                    ::init ::constructors ::post-init
-                                                    ::methods ::main ::factory ::state
-                                                    ::exposes ::prefix ::impl-ns ::load-impl-ns])))
-)
-
-(§ s/def ::ns-clauses
-    (s/* (s/alt :refer-cloiure ::ns-refer-cloiure
-                    :require ::ns-require
-                    :import ::ns-import
-                    :use ::ns-use
-                    :refer ::ns-refer
-                    :load ::ns-load
-                    :gen-class ::ns-gen-class))
-)
-
-(§ s/def ::ns-form
-    (s/cat :name simple-symbol?
-                :docstring (s/? string?)
-                :attr-map (s/? map?)
-                :clauses ::ns-clauses)
-)
-
-(§ s/fdef cloiure.core/ns
-    :args ::ns-form
+(§ def ^:private for-all*-ref
+    (c/delay (dynaload 'cloiure.test.check.properties/for-all*))
 )
 
 ;;;
- ; Returns a spec that accepts both the spec and a (quote ...) form of the spec
+ ; Dynamically loaded cloiure.test.check.properties/for-all*.
  ;;
-(§ defmacro ^:private quotable [spec]
-    `(s/or :spec ~spec :quoted-spec (s/cat :quote #{'quote} :spec ~spec))
+(§ defn for-all* [& args] (apply @for-all*-ref args))
+
+(§ let [g? (c/delay (dynaload 'cloiure.test.check.generators/generator?))
+      g (c/delay (dynaload 'cloiure.test.check.generators/generate))
+      mkg (c/delay (dynaload 'cloiure.test.check.generators/->Generator))]
+
+    (defn- generator? [x]
+        (@g? x)
+    )
+
+    (defn- generator [gfn]
+        (@mkg gfn)
+    )
+
+    ;;;
+     ; Generate a single value using generator.
+     ;;
+    (defn generate [generator]
+        (@g generator)
+    )
 )
 
-(§ s/def ::quotable-import-list
-    (s/* (s/alt :class (quotable simple-symbol?)
-                    :package-list (quotable ::package-list)))
-)
-
-(§ s/fdef cloiure.core/import
-    :args ::quotable-import-list
-)
-
-(§ s/fdef cloiure.core/refer-cloiure
-    :args (s/* (s/alt
-               :exclude (s/cat :op (quotable #{:exclude}) :arg (quotable ::exclude))
-               :only (s/cat :op (quotable #{:only}) :arg (quotable ::only))
-               :rename (s/cat :op (quotable #{:rename}) :arg (quotable ::rename))))
-)
-
-#_(ns cloiure.data
-    (:require [cloiure.set :as set]))
-
-(§ declare diff)
-
-;;;
- ; Internal helper for diff.
- ;;
-(§ defn- atom-diff [a b] (if (= a b) [nil nil a] [a b nil]))
-
-;; for big things a sparse vector class would be better
-
-;;;
- ; Convert an associative-by-numeric-index collection into
- ; an equivalent vector, with nil for any missing keys
- ;;
-(§ defn- vectorize [m]
-    (when (seq m)
-            (reduce
-            (fn [result [k v]] (assoc result k v))
-            (vec (repeat (apply max (keys m)) nil))
-            m))
+(§ defn delay-impl [gfnd]
+    ;; note that, depends on test.check impl details
+    (generator (fn [rnd size] ((:gen @gfnd) rnd size)))
 )
 
 ;;;
- ; Diff associative things a and b, comparing only the key k.
+ ; Given body that returns a generator, returns a generator
+ ; that delegates to that, but delays creation until used.
  ;;
-(§ defn- diff-associative-key [a b k]
-    (let [va (get a k)
-                vb (get b k)
-                [a* b* ab] (diff va vb)
-                in-a (contains? a k)
-                in-b (contains? b k)
-                same (and in-a in-b
-                        (or (not (nil? ab))
-                            (and (nil? va) (nil? vb))))]
-            [(when (and in-a (or (not (nil? a*)) (not same))) {k a*})
-            (when (and in-b (or (not (nil? b*)) (not same))) {k b*})
-            (when same {k ab})
-            ])
+(§ defmacro delay [& body] `(delay-impl (c/delay ~@body)))
+
+;;;
+ ; Dynamically loads test.check generator named s.
+ ;;
+(§ defn gen-for-name [s]
+    (let [g (dynaload s)]
+        (if (generator? g)
+            g
+            (throw (RuntimeException. (str "Var " s " is not a generator")))
+        )
+    )
 )
 
 ;;;
- ; Diff associative things a and b, comparing only keys in ks.
+ ; Implementation macro, do not call directly.
  ;;
-(§ defn- diff-associative [a b ks]
-    (reduce
-        (fn [diff1 diff2]
-            (doall (map merge diff1 diff2)))
-        [nil nil nil]
-        (map
-            (partial diff-associative-key a b)
-            ks))
-)
-
-(§ defn- diff-sequential [a b]
-    (vec (map vectorize (diff-associative
-                            (if (vector? a) a (vec a))
-                            (if (vector? b) b (vec b))
-                            (range (max (count a) (count b))))))
+(§ defmacro lazy-combinator [s]
+    (let [fqn (c/symbol "cloiure.test.check.generators" (name s)) doc (str "Lazy loaded version of " fqn)]
+        `(let [g# (c/delay (dynaload '~fqn))]
+            (defn ~s
+                ~doc
+                [& ~'args]
+                (apply @g# ~'args)
+            )
+        )
+    )
 )
 
 ;;;
- ; Implementation detail. Subject to change.
+ ; Implementation macro, do not call directly.
  ;;
-(§ defprotocol EqualityPartition
-    (equality-partition [x] "Implementation detail. Subject to change.")
+(§ defmacro lazy-combinators [& syms] `(do ~@(c/map (fn [s] (c/list 'lazy-combinator s)) syms)))
+
+(§ lazy-combinators
+    hash-map list map not-empty set vector vector-distinct fmap elements bind choose
+    fmap one-of such-that tuple sample return large-integer* double* frequency
 )
 
 ;;;
- ; Implementation detail. Subject to change.
+ ; Implementation macro, do not call directly.
  ;;
-(§ defprotocol Diff
-    (diff-similar [a b] "Implementation detail. Subject to change.")
-)
-
-(§ extend nil
-        Diff
-        {:diff-similar atom-diff}
-)
-
-(§ extend Object
-        Diff
-        {:diff-similar (fn [a b] ((if (.. a getClass isArray) diff-sequential atom-diff) a b))}
-        EqualityPartition
-        {:equality-partition (fn [x] (if (.. x getClass isArray) :sequential :atom))}
-)
-
-(§ extend-protocol EqualityPartition
-    nil
-    (equality-partition [x] :atom)
-
-    java.util.Set
-    (equality-partition [x] :set)
-
-    java.util.List
-    (equality-partition [x] :sequential)
-
-    java.util.Map
-    (equality-partition [x] :map)
-)
-
-(§ defn- as-set-value [s] (if (set? s) s (into #{} s)))
-
-(§ extend-protocol Diff
-    java.util.Set
-    (diff-similar
-        [a b]
-        (let [aval (as-set-value a)
-                bval (as-set-value b)]
-            [(not-empty (set/difference aval bval))
-            (not-empty (set/difference bval aval))
-            (not-empty (set/intersection aval bval))]))
-
-    java.util.List
-    (diff-similar [a b]
-            (diff-sequential a b))
-
-    java.util.Map
-    (diff-similar [a b]
-            (diff-associative a b (set/union (keys a) (keys b))))
+(§ defmacro lazy-prim [s]
+    (let [fqn (c/symbol "cloiure.test.check.generators" (name s)) doc (str "Fn returning " fqn)]
+        `(let [g# (c/delay (dynaload '~fqn))]
+            (defn ~s
+                ~doc
+                [& ~'args]
+                @g#
+            )
+        )
+    )
 )
 
 ;;;
- ; Recursively compares a and b, returning a tuple of
- ; [things-only-in-a things-only-in-b things-in-both].
- ; Comparison rules:
- ;
- ; * For equal a and b, return [nil nil a].
- ; * Maps are subdiffed where keys match and values differ.
- ; * Sets are never subdiffed.
- ; * All sequential things are treated as associative collections
- ; by their indexes, with results returned as vectors.
- ; * Everything else (including strings!) is treated as
- ; an atom and compared for equality.
+ ; Implementation macro, do not call directly.
  ;;
-(§ defn diff [a b]
-    (if (= a b)
-            [nil nil a]
-            (if (= (equality-partition a) (equality-partition b))
-            (diff-similar a b)
-            (atom-diff a b)))
-)
+(§ defmacro lazy-prims [& syms] `(do ~@(c/map (fn [s] (c/list 'lazy-prim s)) syms)))
 
-#_(ns cloiure.edn
-    (:refer-cloiure :exclude [read read-string]))
-
-;;;
- ; Reads the next object from stream, which must be an instance of
- ; java.io.PushbackReader or some derivee. stream defaults to the
- ; current value of *in*.
- ;
- ; Reads data in the edn format (subset of Cloiure data):
- ; http://edn-format.org
- ;
- ; opts is a map that can include the following keys:
- ; :eof - value to return on end-of-file. When not supplied, eof throws an exception.
- ; :readers - a map of tag symbols to data-reader functions to be considered.
- ; :default - a function of two args, that will, if present and no reader is found for a tag,
- ; be called with the tag and the value.
- ;;
-(§ defn read
-    ([]
-        (read *in*))
-    ([stream]
-        (read {} stream))
-    ([opts stream]
-            (cloiure.lang.EdnReader/read stream opts))
+(§ lazy-prims
+    any any-printable boolean bytes char char-alpha char-alphanumeric char-ascii double
+    int keyword keyword-ns large-integer ratio simple-type simple-type-printable string
+    string-ascii string-alphanumeric symbol symbol-ns uuid
 )
 
 ;;;
- ; Reads one object from the string s. Returns nil when s is nil or empty.
- ;
- ; Reads data in the edn format (subset of Cloiure data):
- ; http://edn-format.org
- ;
- ; opts is a map as per cloiure.edn/read
+ ; Returns a generator of a sequence catenated from results of gens,
+ ; each of which should generate something sequential.
  ;;
-(§ defn read-string
-    ([s] (read-string {:eof nil} s))
-    ([opts s] (when s (cloiure.lang.EdnReader/readString s opts)))
+(§ defn cat [& gens] (fmap #(apply concat %) (apply tuple gens)))
+
+(§ defn- qualified? [ident] (not (nil? (namespace ident))))
+
+(§ def ^:private gen-builtins
+    (c/delay
+        (let [simple (simple-type-printable)]
+            {
+                any?               (one-of [(return nil) (any-printable)])
+                some?              (such-that some? (any-printable))
+                number?            (one-of [(large-integer) (double)])
+                integer?           (large-integer)
+                int?               (large-integer)
+                pos-int?           (large-integer* {:min 1})
+                neg-int?           (large-integer* {:max -1})
+                nat-int?           (large-integer* {:min 0})
+                float?             (double)
+                double?            (double)
+                boolean?           (boolean)
+                string?            (string-alphanumeric)
+                ident?             (one-of [(keyword-ns) (symbol-ns)])
+                simple-ident?      (one-of [(keyword) (symbol)])
+                qualified-ident?   (such-that qualified? (one-of [(keyword-ns) (symbol-ns)]))
+                keyword?           (keyword-ns)
+                simple-keyword?    (keyword)
+                qualified-keyword? (such-that qualified? (keyword-ns))
+                symbol?            (symbol-ns)
+                simple-symbol?     (symbol)
+                qualified-symbol?  (such-that qualified? (symbol-ns))
+                uuid?              (uuid)
+                uri?               (fmap #(java.net.URI/create (str "http://" % ".com")) (uuid))
+                decimal?           (fmap #(BigDecimal/valueOf %) (double* {:infinite? false :NaN? false}))
+                inst?              (fmap #(java.util.Date. %) (large-integer))
+                seqable?           (one-of [(return nil) (list simple) (vector simple) (map simple simple) (set simple) (string-alphanumeric)])
+                indexed?           (vector simple)
+                map?               (map simple simple)
+                vector?            (vector simple)
+                list?              (list simple)
+                seq?               (list simple)
+                char?              (char)
+                set?               (set simple)
+                nil?               (return nil)
+                false?             (return false)
+                true?              (return true)
+                zero?              (return 0)
+                rational?          (one-of [(large-integer) (ratio)])
+                coll?              (one-of [(map simple simple) (list simple) (vector simple) (set simple)])
+                empty?             (elements [nil '() [] {} #{}])
+                associative?       (one-of [(map simple simple) (vector simple)])
+                sequential?        (one-of [(list simple) (vector simple)])
+                ratio?             (such-that ratio? (ratio))
+                bytes?             (bytes)
+            }
+        )
+    )
 )
 
 ;;;
- ; Reflection on Host Types
- ;
- ; Alpha - subject to change.
- ;
- ; Two main entry points:
- ;
- ; * type-reflect reflects on something that implements TypeReference.
- ; * reflect (for REPL use) reflects on the class of an instance, or
- ; on a class if passed a class
- ;
- ; Key features:
- ;
- ; * Exposes the read side of reflection as pure data. Reflecting
- ; on a type returns a map with keys :bases, :flags, and :members.
- ;
- ; * Canonicalizes class names as Cloiure symbols. Types can extend
- ; to the TypeReference protocol to indicate that they can be
- ; unambiguously resolved as a type name. The canonical format
- ; requires one non-Java-ish convention: array brackets are <>
- ; instead of [] so they can be part of a Cloiure symbol.
- ;
- ; * Pluggable Reflectors for different implementations. The default
- ; JavaReflector is good when you have a class in hand, or use
- ; the AsmReflector for "hands off" reflection without forcing
- ; classes to load.
- ;
- ; Platform implementers must:
- ;
- ; * Create an implementation of Reflector.
- ; * Create one or more implementations of TypeReference.
- ; * def default-reflector to be an instance that satisfies Reflector.
+ ; Given a predicate, returns a built-in generator if one exists.
  ;;
-#_(ns cloiure.reflect
-    (:require [cloiure.set :as set]))
+(§ defn gen-for-pred [pred] (if (set? pred) (elements pred) (get @gen-builtins pred)))
+
+(§ comment
+    (require :reload 'cloiure.spec.gen.alpha)
+    (in-ns 'cloiure.spec.gen.alpha)
+
+    ;; combinators, see call to lazy-combinators above for complete list
+    (generate (one-of [(gen-for-pred integer?) (gen-for-pred string?)]))
+    (generate (such-that #(< 10000 %) (gen-for-pred integer?)))
+    (let [reqs {:a (gen-for-pred number?) :b (gen-for-pred ratio?)}
+          opts {:c (gen-for-pred string?)}]
+        (generate
+            (bind (choose 0 (count opts))
+                #(let [args (concat (seq reqs) (shuffle (seq opts)))]
+                    (->> args
+                        (take (+ % (count reqs)))
+                        (mapcat identity)
+                        (apply hash-map)
+                    )
+                )
+            )
+        )
+    )
+    (generate (cat (list (gen-for-pred string?)) (list (gen-for-pred ratio?))))
+
+    ;; load your own generator
+    (gen-for-name 'cloiure.test.check.generators/int)
+
+    ;; failure modes
+    (gen-for-name 'unqualified)
+    (gen-for-name 'cloiure.core/+)
+    (gen-for-name 'cloiure.core/name-does-not-exist)
+    (gen-for-name 'ns.does.not.exist/f)
+)
+
+#_(ns cloiure.spec.test.alpha
+    (:refer-cloiure :exclude [test])
+    (:require
+            #_[cloiure.pprint :as pp]
+              [cloiure.spec.alpha :as s]
+              [cloiure.spec.gen.alpha :as gen]
+              [cloiure.string :as str]))
+
+(§ in-ns 'cloiure.spec.test.check)
+(§ in-ns 'cloiure.spec.test.alpha)
+(§ alias 'stc 'cloiure.spec.test.check)
+
+(§ defn- throwable? [x] (instance? Throwable x))
+
+(§ defn ->sym [x] (@#'s/->sym x))
+
+(§ defn- ->var [s-or-v]
+    (if (var? s-or-v)
+        s-or-v
+        (let [v (and (symbol? s-or-v) (resolve s-or-v))]
+            (if (var? v)
+                v
+                (throw (IllegalArgumentException. (str (pr-str s-or-v) " does not name a var")))
+            )
+        )
+    )
+)
+
+(§ defn- collectionize [x] (if (symbol? x) (list x) x))
 
 ;;;
- ; Protocol for reflection implementers.
+ ; Given a symbol naming an ns, or a collection of such symbols,
+ ; returns the set of all symbols naming vars in those nses.
  ;;
-(§ defprotocol Reflector
-    (do-reflect [reflector typeref])
-)
-
-;;;
- ; A TypeReference can be unambiguously converted to a type name on
- ; the host platform.
- ;
- ; All typerefs are normalized into symbols. If you need to
- ; normalize a typeref yourself, call typesym.
- ;;
-(§ defprotocol TypeReference
-    (typename [o] "Returns Java name as returned by ASM getClassName, e.g. byte[], java.lang.String[]")
-)
-
-(§ declare default-reflector)
-
-;;;
- ; Alpha - subject to change.
- ; Reflect on a typeref, returning a map with :bases, :flags, and
- ; :members. In the discussion below, names are always Cloiure symbols.
- ;
- ; :bases            a set of names of the type's bases
- ; :flags            a set of keywords naming the boolean attributes
- ; of the type.
- ; :members          a set of the type's members. Each member is a map
- ; and can be a constructor, method, or field.
- ;
- ; Keys common to all members:
- ; :name             name of the type
- ; :declaring-class  name of the declarer
- ; :flags            keyword naming boolean attributes of the member
- ;
- ; Keys specific to constructors:
- ; :parameter-types  vector of parameter type names
- ; :exception-types  vector of exception type names
- ;
- ; Key specific to methods:
- ; :parameter-types  vector of parameter type names
- ; :exception-types  vector of exception type names
- ; :return-type      return type name
- ;
- ; Keys specific to fields:
- ; :type             type name
- ;
- ; Options:
- ;
- ; :ancestors     in addition to the keys described above, also
- ; include an :ancestors key with the entire set of
- ; ancestors, and add all ancestor members to
- ; :members.
- ; :reflector     implementation to use. Defaults to JavaReflector,
- ; AsmReflector is also an option.
- ;;
-(§ defn type-reflect [typeref & options]
-    (let [{:keys [ancestors reflector]}
-                (merge {:reflector default-reflector}
-                    (apply hash-map options))
-                refl (partial do-reflect reflector)
-                result (refl typeref)]
-            ;; could make simpler loop of two args: names an
-            (if ancestors
-            (let [make-ancestor-map (fn [names]
-                                    (zipmap names (map refl names)))]
-                (loop [reflections (make-ancestor-map (:bases result))]
-                (let [ancestors-visited (set (keys reflections))
-                        ancestors-to-visit (set/difference (set (mapcat :bases (vals reflections)))
-                                                    ancestors-visited)]
-                    (if (seq ancestors-to-visit)
-                    (recur (merge reflections (make-ancestor-map ancestors-to-visit)))
-                    (apply merge-with into result {:ancestors ancestors-visited}
-                            (map #(select-keys % [:members]) (vals reflections)))))))
-            result))
-)
-
-;;;
- ; Alpha - subject to change.
- ; Reflect on the type of obj (or obj itself if obj is a class).
- ; Return value and options are the same as for type-reflect.
- ;;
-(§ defn reflect [obj & options]
-    (apply type-reflect (if (class? obj) obj (class obj)) options)
-)
-
-(§ in-ns 'cloiure.reflect)
-
-(§ require
-    [cloiure.set :as set]
-    [cloiure.string :as str]
-)
-(§ import
-    [java.io InputStream]
-    [java.lang.reflect Modifier]
-    [cloiure.asm ClassReader ClassVisitor Opcodes Type]
-)
-
-(§ extend-protocol TypeReference
-    cloiure.lang.Symbol
-    (typename [s] (str/replace (str s) "<>" "[]"))
-
-    Class
-    ;; neither .getName not .getSimpleName returns the right thing, so best to delegate to Type
-    (typename [c] (typename (Type/getType c)))
-
-    Type
-    (typename [t] (-> (.getClassName t)))
-)
-
-;;;
- ; Given a typeref, create a legal Cloiure symbol version of the
- ; type's name.
- ;;
-(§ defn- typesym [t]
-    (-> (typename t)
-            (str/replace "[]" "<>")
-            (symbol))
-)
-
-;;;
- ; Given a typeref, return implied resource name. Used by Reflectors
- ; such as ASM that need to find and read classbytes from files.
- ;;
-(§ defn- resource-name [typeref]
-    (-> (typename typeref)
-            (str/replace "." "/")
-            (str ".class"))
-)
-
-(§ defn- access-flag [[name flag & contexts]]
-    {:name name :flag flag :contexts (set (map keyword contexts))}
-)
-
-;;;
- ; Convert a Java field descriptor to a Cloiure class symbol. Field
- ; descriptors are described in section 4.3.2 of the JVM spec, 2nd ed.:
- ; http://java.sun.com/docs/books/jvms/second_edition/html/ClassFile.doc.html#14152
- ;;
-(§ defn- field-descriptor->class-symbol [^String d]
-    (typesym (Type/getType d))
-)
-
-;;;
- ; Convert a Java internal name to a Cloiure class symbol. Internal
- ; names uses slashes instead of dots, e.g. java/lang/String. See
- ; Section 4.2 of the JVM spec, 2nd ed.:
- ;
- ; http://java.sun.com/docs/books/jvms/second_edition/html/ClassFile.doc.html#14757
- ;;
-(§ defn- internal-name->class-symbol [d]
-    (typesym (Type/getObjectType d))
-)
-
-;;;
- ; The Java access bitflags, along with their friendly names and
- ; the kinds of objects to which they can apply.
- ;;
-(§ def flag-descriptors
-    (vec
-        (map access-flag
-                [[:public 0x0001 :class :field :method]
-                [:private 0x002 :class :field :method]
-                [:protected 0x0004 :class :field :method]
-                [:static 0x0008 :field :method]
-                [:final 0x0010 :class :field :method]
-            #_[:super 0x0020 :class] ;; :super is ancient history and is unfindable (?) by reflection. skip it
-                [:synchronized 0x0020 :method]
-                [:volatile 0x0040 :field]
-                [:bridge 0x0040 :method]
-                [:varargs 0x0080 :method]
-                [:transient 0x0080 :field]
-                [:native 0x0100 :method]
-                [:interface 0x0200 :class]
-                [:abstract 0x0400 :class :method]
-                [:strict 0x0800 :method]
-                [:synthetic 0x1000 :class :field :method]
-                [:annotation 0x2000 :class]
-                [:enum 0x4000 :class :field :inner]]))
-)
-
-;;;
- ; Convert reflection bitflags into a set of keywords.
- ;;
-(§ defn- parse-flags [flags context]
-    (reduce
-        (fn [result fd]
-            (if (and (get (:contexts fd) context)
-                    (not (zero? (bit-and flags (:flag fd)))))
-            (conj result (:name fd))
-            result))
+(§ defn enumerate-namespace [ns-sym-or-syms]
+    (into
         #{}
-        flag-descriptors)
-)
-
-(§ defrecord Constructor [name declaring-class parameter-types exception-types flags])
-
-(§ defn- constructor->map [^java.lang.reflect.Constructor constructor]
-    (Constructor.
-        (symbol (.getName constructor))
-        (typesym (.getDeclaringClass constructor))
-        (vec (map typesym (.getParameterTypes constructor)))
-        (vec (map typesym (.getExceptionTypes constructor)))
-        (parse-flags (.getModifiers constructor) :method))
+        (mapcat (fn [ns-sym] (map (fn [name-sym] (symbol (name ns-sym) (name name-sym))) (keys (ns-interns ns-sym)))))
+        (collectionize ns-sym-or-syms)
+    )
 )
 
 ;;;
- ; Return a set of the declared constructors of class as a Cloiure map.
+ ; If false, instrumented fns call straight through.
  ;;
-(§ defn- declared-constructors [^Class cls]
-    (set (map
-                constructor->map
-                (.getDeclaredConstructors cls)))
-)
+(§ def ^:private ^:dynamic *instrument-enabled* true)
 
-(§ defrecord Method [name return-type declaring-class parameter-types exception-types flags])
+;;;
+ ; Fn-spec must include at least :args or :ret specs.
+ ;;
+(§ defn- fn-spec? [m] (or (:args m) (:ret m)))
 
-(§ defn- method->map [^java.lang.reflect.Method method]
-    (Method.
-        (symbol (.getName method))
-        (typesym (.getReturnType method))
-        (typesym (.getDeclaringClass method))
-        (vec (map typesym (.getParameterTypes method)))
-        (vec (map typesym (.getExceptionTypes method)))
-        (parse-flags (.getModifiers method) :method))
+;;;
+ ; Disables instrument's checking of calls, within a scope.
+ ;;
+(§ defmacro with-instrument-disabled [& body] `(binding [*instrument-enabled* nil] ~@body))
+
+;;;
+ ; Given the vector-of-syms form of a stacktrace element produced
+ ; by e.g. Throwable->map, returns a map form that adds some keys
+ ; guessing the original Cloiure names. Returns a map with
+ ;
+ ; :class     class name symbol from stack trace
+ ; :method    method symbol from stack trace
+ ; :file      filename from stack trace
+ ; :line      line number from stack trace
+ ; :var-scope optional Cloiure var symbol scoping fn def
+ ; :local-fn  optional local Cloiure symbol scoping fn def
+ ;
+ ; For non-Cloiure fns, :scope and :local-fn will be absent.
+ ;;
+(§ defn- interpret-stack-trace-element [[cls method file line]]
+    (let [cloiure? (contains? '#{invoke invokeStatic} method)
+          demunge #(cloiure.lang.Compiler/demunge %)
+          degensym #(str/replace % #"--.*" "")
+          [ns-sym name-sym local] (when cloiure? (->> (str/split (str cls) #"\$" 3) (map demunge)))]
+        (merge {:file file :line line :method method :class cls}
+            (when (and ns-sym name-sym)
+                {:var-scope (symbol ns-sym name-sym)}
+            )
+            (when local
+                {:local-fn (symbol (degensym local))}
+            )
+        )
+    )
 )
 
 ;;;
- ; Return a set of the declared constructors of class as a Cloiure map.
+ ; Takes a coll of stack trace elements (as returned by StackTraceElement->vec)
+ ; and returns a coll of maps as per interpret-stack-trace-element that are relevant
+ ; to a failure in instrument.
  ;;
-(§ defn- declared-methods [^Class cls]
-    (set (map
-                method->map
-                (.getDeclaredMethods cls)))
+(§ defn- stacktrace-relevant-to-instrument [elems]
+    (let [plumbing? (fn [{:keys [var-scope]}] (contains? '#{cloiure.spec.test.alpha/spec-checking-fn} var-scope))]
+        (sequence
+            (comp
+                (map StackTraceElement->vec)
+                (map interpret-stack-trace-element)
+                (filter :var-scope)
+                (drop-while plumbing?)
+            )
+            elems
+        )
+    )
 )
 
-(§ defrecord Field [name type declaring-class flags])
+(§ defn- spec-checking-fn [v f fn-spec]
+    (let [fn-spec (@#'s/maybe-spec fn-spec)
+          conform!
+            (fn [v role spec data args]
+                (let [conformed (s/conform spec data)]
+                    (if (= (§ :spec :s/invalid) conformed)
+                        (let [caller (->> (.getStackTrace (Thread/currentThread)) stacktrace-relevant-to-instrument first)
+                              ed (merge
+                                    (assoc (s/explain-data* spec [role] [] [] data)
+                                        (§ :spec :s/args) args
+                                        (§ :spec :s/failure) :instrument
+                                    )
+                                    (when caller
+                                        {::caller (dissoc caller :class :method)}
+                                    )
+                                )]
+                            (throw (ex-info (str "Call to " v " did not conform to spec:\n" (with-out-str (s/explain-out ed))) ed))
+                        )
+                        conformed
+                    )
+                )
+            )]
+        (fn [& args]
+            (if *instrument-enabled*
+                (with-instrument-disabled
+                    (when (:args fn-spec)
+                        (conform! v :args (:args fn-spec) args args)
+                    )
+                    (binding [*instrument-enabled* true]
+                        (.applyTo ^cloiure.lang.IFn f args)
+                    )
+                )
+                (.applyTo ^cloiure.lang.IFn f args)
+            )
+        )
+    )
+)
 
-(§ defn- field->map [^java.lang.reflect.Field field]
-    (Field.
-        (symbol (.getName field))
-        (typesym (.getType field))
-        (typesym (.getDeclaringClass field))
-        (parse-flags (.getModifiers field) :field))
+(§ defn- no-fspec [v spec]
+    (ex-info (str "Fn at " v " is not spec'ed.") {:var v :spec spec (§ :spec :s/failure) :no-fspec})
+)
+
+(§ defonce ^:private instrumented-vars (atom {}))
+
+;;;
+ ; Helper for instrument.
+ ;;
+(§ defn- instrument-choose-fn [f spec sym {over :gen :keys [stub replace]}]
+    (if (some #{sym} stub)
+        (-> spec (s/gen over) gen/generate)
+        (get replace sym f)
+    )
 )
 
 ;;;
- ; Return a set of the declared fields of class as a Cloiure map.
+ ; Helper for instrument.
  ;;
-(§ defn- declared-fields [^Class cls]
-    (set (map
-                field->map
-                (.getDeclaredFields cls)))
+(§ defn- instrument-choose-spec [spec sym {overrides :spec}] (get overrides sym spec))
+
+(§ defn- instrument-1 [s opts]
+    (when-let [v (resolve s)]
+        (when-not (-> v meta :macro)
+            (let [spec (s/get-spec v)
+                  {:keys [raw wrapped]} (get @instrumented-vars v)
+                  current @v
+                  to-wrap (if (= wrapped current) raw current)
+                  ospec (or (instrument-choose-spec spec s opts) (throw (no-fspec v spec)))
+                  ofn (instrument-choose-fn to-wrap ospec s opts)
+                  checked (spec-checking-fn v ofn ospec)]
+                (alter-var-root v (constantly checked))
+                (swap! instrumented-vars assoc v {:raw to-wrap :wrapped checked})
+                (->sym v)
+            )
+        )
+    )
 )
 
-(§ deftype JavaReflector [classloader]
-    Reflector
-    (do-reflect [_ typeref]
-                (let [cls (cloiure.lang.RT/classForName (typename typeref) false classloader)]
-                    {:bases (not-empty (set (map typesym (bases cls))))
-                    :flags (parse-flags (.getModifiers cls) :class)
-                    :members (set/union (declared-fields cls)
-                                        (declared-methods cls)
-                                        (declared-constructors cls))}))
-)
-
-(§ def ^:private default-reflector
-    (JavaReflector. (.getContextClassLoader (Thread/currentThread)))
-)
-
-(§ defn- parse-method-descriptor [^String md]
-    {:parameter-types (vec (map typesym (Type/getArgumentTypes md))), :return-type (typesym (Type/getReturnType md))}
-)
-
-(§ defprotocol ClassResolver
-    (^InputStream resolve-class [this name] "Given a class name, return that typeref's class bytes as an InputStream.")
-)
-
-(§ extend-protocol ClassResolver
-    cloiure.lang.Fn
-    (resolve-class [this typeref] (this typeref))
-
-    ClassLoader
-    (resolve-class [this typeref] (.getResourceAsStream this (resource-name typeref)))
-)
-
-(§ deftype AsmReflector [class-resolver]
-    Reflector
-    (do-reflect [_ typeref]
-            (with-open [is (resolve-class class-resolver typeref)]
-            (let [class-symbol (typesym typeref)
-                    r (ClassReader. is)
-                    result (atom {:bases #{} :flags #{} :members #{}})]
-                (.accept
-                r
-                (proxy
-                [ClassVisitor]
-                [Opcodes/ASM4]
-                (visit [version access name signature superName interfaces]
-                        (let [flags (parse-flags access :class)
-                            ;; ignore java.lang.Object on interfaces to match reflection
-                            superName (if (and (flags :interface)
-                                                (= superName "java/lang/Object"))
-                                        nil
-                                        superName)
-                            bases (->> (cons superName interfaces)
-                                        (remove nil?)
-                                        (map internal-name->class-symbol)
-                                        (map symbol)
-                                        (set)
-                                        (not-empty))]
-                        (swap! result merge {:bases bases
-                                                :flags flags})))
-                (visitAnnotation [desc visible])
-                (visitSource [name debug])
-                (visitInnerClass [name outerName innerName access])
-                (visitField [access name desc signature value]
-                            (swap! result update :members (fnil conj #{})
-                                    (Field. (symbol name)
-                                            (field-descriptor->class-symbol desc)
-                                            class-symbol
-                                            (parse-flags access :field)))
-                            nil)
-                (visitMethod [access name desc signature exceptions]
-                            (when-not (= name "<clinit>")
-                                (let [constructor? (= name "<init>")]
-                                (swap! result update :members (fnil conj #{})
-                                        (let [{:keys [parameter-types return-type]} (parse-method-descriptor desc)
-                                                flags (parse-flags access :method)]
-                                            (if constructor?
-                                            (Constructor. class-symbol
-                                                            class-symbol
-                                                            parameter-types
-                                                            (vec (map internal-name->class-symbol exceptions))
-                                                            flags)
-                                            (Method. (symbol name)
-                                                    return-type
-                                                    class-symbol
-                                                    parameter-types
-                                                    (vec (map internal-name->class-symbol exceptions))
-                                                    flags))))))
-                            nil)
-                (visitEnd [])
-                ) 0)
-                @result)))
-)
-
-#_(ns cloiure.repl
-    (:require [cloiure.spec.alpha :as spec])
-    (:import [java.io LineNumberReader InputStreamReader PushbackReader]
-             [cloiure.lang RT Reflector]))
-
-(§ def ^:private special-doc-map
-    {
-        '.              {:url "java_interop#dot"
-                         :forms ['(.instanceMember instance args*) '(.instanceMember Classname args*) '(Classname/staticMethod args*) 'Classname/staticField]
-                         :doc "The instance member form works for both fields and methods.
-                               They all expand into calls to the dot operator at macroexpansion time."}
-        'def            {:forms ['(def symbol doc-string? init?)]
-                         :doc "Creates and interns a global var with the name of symbol in the current namespace (*ns*) or locates such a var if
-                               it already exists. If init is supplied, it is evaluated, and the root binding of the var is set to the resulting value.
-                               If init is not supplied, the root binding of the var is unaffected."}
-        'do             {:forms ['(do exprs*)]
-                         :doc "Evaluates the expressions in order and returns the value of the last. If no expressions are supplied, returns nil."}
-        'if             {:forms ['(if test then else?)]
-                         :doc "Evaluates test. If not the singular values nil or false,
-                               evaluates and yields then, otherwise, evaluates and yields else.
-                               If else is not supplied it defaults to nil."}
-        'monitor-enter  {:forms ['(monitor-enter x)]
-                         :doc "Synchronization primitive that should be avoided in user code. Use the 'locking' macro."}
-        'monitor-exit   {:forms ['(monitor-exit x)]
-                         :doc "Synchronization primitive that should be avoided in user code. Use the 'locking' macro."}
-        'new            {:forms ['(Classname. args*) '(new Classname args*)]
-                         :url "java_interop#new"
-                         :doc "The args, if any, are evaluated from left to right, and passed to the constructor of the class named by Classname.
-                               The constructed object is returned."}
-        'quote          {:forms ['(quote form)]
-                         :doc "Yields the unevaluated form."}
-        'recur          {:forms ['(recur exprs*)]
-                         :doc "Evaluates the exprs in order, then, in parallel, rebinds the bindings of the recursion point to the values of the exprs.
-                               Execution then jumps back to the recursion point, a loop or fn method."}
-        'set!           {:forms ['(set! var-symbol expr) '(set! (. instance-expr instanceFieldName-symbol) expr) '(set! (. Classname-symbol staticFieldName-symbol) expr)]
-                         :url "vars#set"
-                         :doc "Used to set thread-local-bound vars, Java object instance fields, and Java class static fields."}
-        'throw          {:forms ['(throw expr)]
-                         :doc "The expr is evaluated and thrown, therefore it should yield an instance of some derivee of Throwable."}
-        'try            {:forms ['(try expr* catch-clause* finally-clause?)]
-                         :doc "catch-clause => (catch classname name expr*)
-                               finally-clause => (finally expr*)
-                               Catches and handles Java exceptions."}
-        'var            {:forms ['(var symbol)]
-                         :doc "The symbol must resolve to a var, and the Var object itself (not its value) is returned.
-                               The reader macro #'x expands to (var x)."}
-    }
-)
-
-(§ defn- special-doc [name-symbol]
-    (assoc (or (special-doc-map name-symbol) (meta (resolve name-symbol)))
-                :name name-symbol
-                :special-form true)
-)
-
-(§ defn- namespace-doc [nspace]
-    (assoc (meta nspace) :name (ns-name nspace))
-)
-
-(§ defn- print-doc [{n :ns
-                   nm :name
-                   :keys [forms arglists special-form doc url macro spec]
-                   :as m}]
-    (println "-------------------------")
-    (println (or spec (str (when n (str (ns-name n) "/")) nm)))
-    (when forms
-            (doseq [f forms]
-            (print "  ")
-            (prn f)))
-    (when arglists
-            (prn arglists))
-    (cond
-            special-form
-            (do
-            (println "Special Form")
-            (println " " doc)
-            (if (contains? m :url)
-                (when url
-                (println (str "\n  Please see http://clojure.org/" url)))
-                (println (str "\n  Please see http://clojure.org/special_forms#" nm))))
-            macro
-            (println "Macro")
-            spec
-            (println "Spec"))
-    (when doc (println " " doc))
-    (when n
-            (when-let [fnspec (spec/get-spec (symbol (str (ns-name n)) (name nm)))]
-            (println "Spec")
-            (doseq [role [:args :ret :fn]]
-                (when-let [spec (get fnspec role)]
-                (println " " (str (name role) ":") (spec/describe spec))))))
+(§ defn- unstrument-1 [s]
+    (when-let [v (resolve s)]
+        (when-let [{:keys [raw wrapped]} (get @instrumented-vars v)]
+            (swap! instrumented-vars dissoc v)
+            (let [current @v]
+                (when (= wrapped current)
+                    (alter-var-root v (constantly raw))
+                    (->sym v)
+                )
+            )
+        )
+    )
 )
 
 ;;;
- ; Prints documentation for any var whose documentation or name
- ; contains a match for re-string-or-pattern
+ ; Returns set of symbols referenced by 'instrument' opts map.
  ;;
-(§ defn find-doc [re-string-or-pattern]
-    (let [re (re-pattern re-string-or-pattern)
-          ms (concat (mapcat #(sort-by :name (map meta (vals (ns-interns %))))
-                                (all-ns))
-                        (map namespace-doc (all-ns))
-                        (map special-doc (keys special-doc-map)))]
-        (doseq [m ms
-                :when (and (:doc m)
-                            (or (re-find (re-matcher re (:doc m)))
-                                (re-find (re-matcher re (str (:name m))))))]
-                (print-doc m)))
+(§ defn- opt-syms [opts] (reduce into #{} [(:stub opts) (keys (:replace opts)) (keys (:spec opts))]))
+
+(§ defn- fn-spec-name? [s] (and (symbol? s) (not (some-> (resolve s) meta :macro))))
+
+;;;
+ ; Given an opts map as per instrument, returns the set of syms that can be instrumented.
+ ;;
+(§ defn instrumentable-syms
+    ([] (instrumentable-syms nil))
+    ([opts]
+        (assert (every? ident? (keys (:gen opts))) "instrument :gen expects ident keys")
+        (reduce into #{}
+            [
+                (filter fn-spec-name? (keys (s/registry)))
+                (keys (:spec opts))
+                (:stub opts)
+                (keys (:replace opts))
+            ]
+        )
+    )
 )
 
 ;;;
- ; Prints documentation for a var or special form given its name,
- ; or for a spec if given a keyword
+ ; Instruments the vars named by sym-or-syms, a symbol or collection
+ ; of symbols, or all instrumentable vars if sym-or-syms is not
+ ; specified.
+ ;
+ ; If a var has an :args fn-spec, sets the var's root binding to a
+ ; fn that checks arg conformance (throwing an exception on failure)
+ ; before delegating to the original fn.
+ ;
+ ; The opts map can be used to override registered specs, and/or to
+ ; replace fn implementations entirely. Opts for symbols not included
+ ; in sym-or-syms are ignored. This facilitates sharing a common
+ ; options map across many different calls to instrument.
+ ;
+ ; The opts map may have the following keys:
+ ;
+ ; :spec    a map from var-name symbols to override specs
+ ; :stub    a set of var-name symbols to be replaced by stubs
+ ; :gen     a map from spec names to generator overrides
+ ; :replace a map from var-name symbols to replacement fns
+ ;
+ ; :spec overrides registered fn-specs with specs your provide. Use
+ ; :spec overrides to provide specs for libraries that do not have
+ ; them, or to constrain your own use of a fn to a subset of its
+ ; spec'ed contract.
+ ;
+ ; :stub replaces a fn with a stub that checks :args, then uses the
+ ; :ret spec to generate a return value.
+ ;
+ ; :gen overrides are used only for :stub generation.
+ ;
+ ; :replace replaces a fn with a fn that checks args conformance, then
+ ; invokes the fn you provide, enabling arbitrary stubbing and mocking.
+ ;
+ ; :spec can be used in combination with :stub or :replace.
+ ;
+ ; Returns a collection of syms naming the vars instrumented.
  ;;
-(§ defmacro doc [name]
-    (if-let [special-name ('{& fn catch try finally try} name)]
-            `(#'print-doc (#'special-doc '~special-name))
+(§ defn instrument
+    ([] (instrument (instrumentable-syms)))
+    ([sym-or-syms] (instrument sym-or-syms nil))
+    ([sym-or-syms opts]
+        (locking instrumented-vars
+            (into []
+                (comp
+                    (filter (instrumentable-syms opts))
+                    (distinct)
+                    (map #(instrument-1 % opts))
+                    (remove nil?)
+                )
+                (collectionize sym-or-syms)
+            )
+        )
+    )
+)
+
+;;;
+ ; Undoes instrument on the vars named by sym-or-syms, specified
+ ; as in instrument. With no args, unstruments all instrumented vars.
+ ; Returns a collection of syms naming the vars unstrumented.
+ ;;
+(§ defn unstrument
+    ([] (unstrument (map ->sym (keys @instrumented-vars))))
+    ([sym-or-syms]
+        (locking instrumented-vars
+            (into []
+                (comp
+                    (filter symbol?)
+                    (map unstrument-1)
+                    (remove nil?)
+                )
+                (collectionize sym-or-syms)
+            )
+        )
+    )
+)
+
+(§ defn- explain-check [args spec v role]
+    (ex-info "Specification-based check failed"
+        (when-not (s/valid? spec v nil)
+            (assoc (s/explain-data* spec [role] [] [] v)
+                ::args args
+                ::val v
+                (§ :spec :s/failure) :check-failed
+            )
+        )
+    )
+)
+
+;;;
+ ; Returns true if call passes specs, otherwise *returns* an exception
+ ; with explain-data + ::s/failure.
+ ;;
+(§ defn- check-call [f specs args]
+    (let [cargs (when (:args specs) (s/conform (:args specs) args))]
+        (if (= cargs (§ :spec :s/invalid))
+            (explain-check args (:args specs) args :args)
+            (let [ret (apply f args) cret (when (:ret specs) (s/conform (:ret specs) ret))]
+                (if (= cret (§ :spec :s/invalid))
+                    (explain-check args (:ret specs) ret :ret)
+                    (if (and (:args specs) (:ret specs) (:fn specs))
+                        (if (s/valid? (:fn specs) {:args cargs :ret cret})
+                            true
+                            (explain-check args (:fn specs) {:args cargs :ret cret} :fn)
+                        )
+                        true
+                    )
+                )
+            )
+        )
+    )
+)
+
+(§ defn- quick-check [f specs {gen :gen opts (§ :spec :stc/opts)}]
+    (let [{:keys [num-tests] :or {num-tests 1000}} opts g (try (s/gen (:args specs) gen) (catch Throwable t t))]
+        (if (throwable? g)
+            {:result g}
+            (let [prop (gen/for-all* [g] #(check-call f specs %))]
+                (apply gen/quick-check num-tests prop (mapcat identity opts))
+            )
+        )
+    )
+)
+
+;;;
+ ; Builds spec result map.
+ ;;
+(§ defn- make-check-result [check-sym spec test-check-ret]
+    (merge {:spec spec (§ :spec :stc/ret) test-check-ret}
+        (when check-sym
+            {:sym check-sym}
+        )
+        (when-let [result (-> test-check-ret :result)]
+            (when-not (true? result)
+                {:failure result}
+            )
+        )
+        (when-let [shrunk (-> test-check-ret :shrunk)]
+            {:failure (:result shrunk)}
+        )
+    )
+)
+
+(§ defn- check-1 [{:keys [s f v spec]} opts]
+    (let [re-inst? (and v (seq (unstrument s)) true) f (or f (when v @v)) specd (s/spec spec)]
+        (try
             (cond
-            (special-doc-map name) `(#'print-doc (#'special-doc '~name))
-            (keyword? name) `(#'print-doc {:spec '~name :doc '~(spec/describe name)})
-            (find-ns name) `(#'print-doc (#'namespace-doc (find-ns '~name)))
-            (resolve name) `(#'print-doc (meta (var ~name)))))
+                (or (nil? f) (some-> v meta :macro))
+                    {:failure (ex-info "No fn to spec" {(§ :spec :s/failure) :no-fn}) :sym s :spec spec}
+                (:args specd)
+                    (let [tcret (quick-check f specd opts)]
+                        (make-check-result s spec tcret)
+                    )
+                :default
+                    {:failure (ex-info "No :args spec" {(§ :spec :s/failure) :no-args-spec}) :sym s :spec spec}
+            )
+            (finally
+                (when re-inst?
+                    (instrument s)
+                )
+            )
+        )
+    )
+)
+
+(§ defn- sym->check-map [s]
+    (let [v (resolve s)]
+        {:s s :v v :spec (when v (s/get-spec v))}
+    )
+)
+
+(§ defn- validate-check-opts [opts]
+    (assert (every? ident? (keys (:gen opts))) "check :gen expects ident keys")
 )
 
 ;;;
- ; Returns a string of the source code for the given symbol, if it can
- ; find it. This requires that the symbol resolve to a Var defined in
- ; a namespace for which the .cli is in the classpath. Returns nil if
- ; it can't find the source. For most REPL usage, 'source' is more
- ; convenient.
+ ; Runs generative tests for fn f using spec and opts.
+ ; See 'check' for options and return.
+ ;;
+(§ defn check-fn
+    ([f spec] (check-fn f spec nil))
+    ([f spec opts]
+        (validate-check-opts opts)
+        (check-1 {:f f :spec spec} opts)
+    )
+)
+
+;;;
+ ; Given an opts map as per check, returns the set of syms that can be checked.
+ ;;
+(§ defn checkable-syms
+    ([] (checkable-syms nil))
+    ([opts]
+        (validate-check-opts opts)
+        (reduce into #{} [(filter fn-spec-name? (keys (s/registry))) (keys (:spec opts))])
+    )
+)
+
+;;;
+ ; Run generative tests for spec conformance on vars named by
+ ; sym-or-syms, a symbol or collection of symbols. If sym-or-syms
+ ; is not specified, check all checkable vars.
  ;
- ; Example: (source-fn 'filter)
- ;;
-(§ defn source-fn [x]
-    (when-let [v (resolve x)]
-            (when-let [filepath (:file (meta v))]
-            (when-let [strm (.getResourceAsStream (RT/baseLoader) filepath)]
-                (with-open [rdr (LineNumberReader. (InputStreamReader. strm))]
-                (dotimes [_ (dec (:line (meta v)))] (.readLine rdr))
-                (let [text (StringBuilder.)
-                        pbr (proxy [PushbackReader] [rdr]
-                            (read [] (let [i (proxy-super read)]
-                                        (.append text (char i))
-                                        i)))
-                        read-opts (if (.endsWith ^String filepath "clic") {:read-cond :allow} {})]
-                    (if (= :unknown *read-eval*)
-                    (throw (IllegalStateException. "Unable to read source while *read-eval* is :unknown."))
-                    (read read-opts (PushbackReader. pbr)))
-                    (str text))))))
-)
-
-;;;
- ; Prints the source code for the given symbol, if it can find it.
- ; This requires that the symbol resolve to a Var defined in a
- ; namespace for which the .cli is in the classpath.
+ ; The opts map includes the following optional keys, where stc
+ ; aliases cloiure.spec.test.check:
  ;
- ; Example: (source filter)
+ ; ::stc/opts opts to flow through test.check/quick-check
+ ; :gen       map from spec names to generator overrides
+ ;
+ ; The ::stc/opts include :num-tests in addition to the keys
+ ; documented by test.check. Generator overrides are passed to
+ ; spec/gen when generating function args.
+ ;
+ ; Returns a lazy sequence of check result maps with the following keys:
+ ;
+ ; :spec     the spec tested
+ ; :sym      optional symbol naming the var tested
+ ; :failure  optional test failure
+ ; ::stc/ret optional value returned by test.check/quick-check
+ ;
+ ; The value for :failure can be any exception. Exceptions thrown by
+ ; spec itself will have an ::s/failure value in ex-data:
+ ;
+ ; :check-failed at least one checked return did not conform
+ ; :no-args-spec no :args spec provided
+ ; :no-fn        no fn provided
+ ; :no-fspec     no fspec provided
+ ; :no-gen       unable to generate :args
+ ; :instrument   invalid args detected by instrument
  ;;
-(§ defmacro source [n]
-    `(println (or (source-fn '~n) (str "Source not found")))
+(§ defn check
+    ([] (check (checkable-syms)))
+    ([sym-or-syms] (check sym-or-syms nil))
+    ([sym-or-syms opts]
+        (->> (collectionize sym-or-syms)
+            (filter (checkable-syms opts))
+            (pmap #(check-1 (sym->check-map %) opts))
+        )
+    )
+)
+
+(§ defn- failure-type [x] ((§ :spec :s/failure) (ex-data x)))
+
+(§ defn- unwrap-failure [x] (if (failure-type x) (ex-data x) x))
+
+;;;
+ ; Returns the type of the check result. This can be any of the
+ ; ::s/failure keywords documented in 'check', or:
+ ;
+ ; :check-passed all checked fn returns conformed
+ ; :check-threw  checked fn threw an exception
+ ;;
+(§ defn- result-type [ret]
+    (let [failure (:failure ret)]
+        (cond
+            (nil? failure) :check-passed
+            (failure-type failure) (failure-type failure)
+            :default :check-threw
+        )
+    )
 )
 
 ;;;
- ; Given a regular expression or stringable thing, return a seq of all
- ; public definitions in all currently-loaded namespaces that match the
- ; str-or-pattern.
+ ; Given a check result, returns an abbreviated version suitable for summary use.
  ;;
-(§ defn apropos [str-or-pattern]
-    (let [matches? (if (instance? java.util.regex.Pattern str-or-pattern)
-                        #(re-find str-or-pattern (str %))
-                        #(.contains (str %) (str str-or-pattern)))]
-            (sort (mapcat (fn [ns]
-                            (let [ns-name (str ns)]
-                            (map #(symbol ns-name (str %))
-                                (filter matches? (keys (ns-publics ns))))))
-                        (all-ns))))
+(§ defn abbrev-result [x]
+    (if (:failure x)
+        (-> (dissoc x (§ :spec :stc/ret))
+            (update :spec s/describe)
+            (update :failure unwrap-failure)
+        )
+        (dissoc x :spec (§ :spec :stc/ret))
+    )
 )
 
 ;;;
- ; Returns a sorted seq of symbols naming public vars in
- ; a namespace or namespace alias. Looks for aliases in *ns*
+ ; Given a collection of check-results, e.g. from 'check', pretty
+ ; prints the summary-result (default abbrev-result) of each.
+ ;
+ ; Returns a map with :total, the total number of results, plus a
+ ; key with a count for each different :type of result.
  ;;
-(§ defn dir-fn [ns]
-    (sort (map first (ns-publics (the-ns (get (ns-aliases *ns*) ns ns)))))
-)
-
-;;;
- ; Prints a sorted directory of public vars in a namespace
- ;;
-(§ defmacro dir [nsname]
-    `(doseq [v# (dir-fn '~nsname)]
-        (println v#))
-)
-
-;;;
- ; Given a string representation of a fn class,
- ; as in a stack trace element, returns a readable version.
- ;;
-(§ defn demunge [fn-name]
-    (cloiure.lang.Compiler/demunge fn-name)
-)
-
-;;;
- ; Returns the initial cause of an exception or error by peeling off all of
- ; its wrappers
- ;;
-(§ defn root-cause [^Throwable t]
-    (loop [cause t]
-            (if (and (instance? cloiure.lang.Compiler$CompilerException cause)
-                    (not= (.source ^cloiure.lang.Compiler$CompilerException cause) "NO_SOURCE_FILE"))
-            cause
-            (if-let [cause (.getCause cause)]
-                (recur cause)
-                cause)))
-)
-
-;;;
- ; Returns a (possibly unmunged) string representation of a StackTraceElement
- ;;
-(§ defn stack-element-str [^StackTraceElement el]
-    (let [file (.getFileName el)
-                cloiure-fn? (and file (or (.endsWith file ".cli")
-                                        (.endsWith file ".clic")
-                                        (= file "NO_SOURCE_FILE")))]
-            (str (if cloiure-fn?
-                (demunge (.getClassName el))
-                (str (.getClassName el) "." (.getMethodName el)))
-                " (" (.getFileName el) ":" (.getLineNumber el) ")"))
-)
-
-;;;
- ; Prints a stack trace of the exception, to the depth requested. If none supplied, uses the root cause of the
- ; most recent repl exception (*e), and a depth of 12.
- ;;
-(§ defn pst
-    ([] (pst 12))
-    ([e-or-depth]
-            (if (instance? Throwable e-or-depth)
-            (pst e-or-depth 12)
-            (when-let [e *e]
-                (pst (root-cause e) e-or-depth))))
-    ([^Throwable e depth]
-            (binding [*out* *err*]
-            (println (str (-> e class .getSimpleName) " "
-                            (.getMessage e)
-                            (when-let [info (ex-data e)] (str " " (pr-str info)))))
-            (let [st (.getStackTrace e)
-                    cause (.getCause e)]
-                (doseq [el (take depth
-                                (remove #(#{"cloiure.lang.RestFn" "cloiure.lang.AFn"} (.getClassName %))
-                                        st))]
-                (println (str \tab (stack-element-str el))))
-                (when cause
-                (println "Caused by:")
-                (pst cause (min depth
-                                (+ 2 (- (count (.getStackTrace cause))
-                                        (count st)))))))))
-)
-
-;;;
- ; Returns a function that takes one arg and uses that as an exception message
- ; to stop the given thread. Defaults to the current thread
- ;;
-(§ defn thread-stopper
-    ([] (thread-stopper (Thread/currentThread)))
-    ([thread] (fn [msg] (.stop thread (Error. msg))))
-)
-
-;;;
- ; Register INT signal handler. After calling this, Ctrl-C will cause
- ; the given function f to be called with a single argument, the signal.
- ; Uses thread-stopper if no function given.
- ;;
-(§ defn set-break-handler!
-    ([] (set-break-handler! (thread-stopper)))
-    ([f]
-        (sun.misc.Signal/handle
-            (sun.misc.Signal. "INT")
-            (proxy [sun.misc.SignalHandler] []
-            (handle [signal]
-                (f (str "-- caught signal " signal))))))
-)
-
-#_(ns cloiure.set)
-
-;;;
- ; Move a maximal element of coll according to fn k (which returns a
- ; number) to the front of coll.
- ;;
-(§ defn- bubble-max-key [k coll]
-    (let [max (apply max-key k coll)]
-            (cons max (remove #(identical? max %) coll)))
-)
-
-;;;
- ; Return a set that is the union of the input sets
- ;;
-(§ defn union
-    ([] #{})
-    ([s1] s1)
-    ([s1 s2]
-            (if (< (count s1) (count s2))
-            (reduce conj s2 s1)
-            (reduce conj s1 s2)))
-    ([s1 s2 & sets]
-            (let [bubbled-sets (bubble-max-key count (conj sets s2 s1))]
-            (reduce into (first bubbled-sets) (rest bubbled-sets))))
-)
-
-;;;
- ; Return a set that is the intersection of the input sets
- ;;
-(§ defn intersection
-    ([s1] s1)
-    ([s1 s2]
-            (if (< (count s2) (count s1))
-            (recur s2 s1)
-            (reduce (fn [result item]
-                        (if (contains? s2 item)
-                            result
-                            (disj result item)))
-                    s1 s1)))
-    ([s1 s2 & sets]
-            (let [bubbled-sets (bubble-max-key #(- (count %)) (conj sets s2 s1))]
-            (reduce intersection (first bubbled-sets) (rest bubbled-sets))))
-)
-
-;;;
- ; Return a set that is the first set without elements of the remaining sets
- ;;
-(§ defn difference
-    ([s1] s1)
-    ([s1 s2]
-            (if (< (count s1) (count s2))
-            (reduce (fn [result item]
-                        (if (contains? s2 item)
-                            (disj result item)
-                            result))
-                    s1 s1)
-            (reduce disj s1 s2)))
-    ([s1 s2 & sets]
-            (reduce difference s1 (conj sets s2)))
-)
-
-;;;
- ; Returns a set of the elements for which pred is true
- ;;
-(§ defn select [pred xset]
-    (reduce (fn [s k] (if (pred k) s (disj s k))) xset xset)
-)
-
-;;;
- ; Returns a rel of the elements of xrel with only the keys in ks
- ;;
-(§ defn project [xrel ks]
-    (with-meta (set (map #(select-keys % ks) xrel)) (meta xrel))
-)
-
-;;;
- ; Returns the map with the keys in kmap renamed to the vals in kmap
- ;;
-(§ defn rename-keys [map kmap]
-    (reduce
-        (fn [m [old new]]
-        (if (contains? map old)
-            (assoc m new (get map old))
-            m))
-        (apply dissoc map (keys kmap)) kmap)
-)
-
-;;;
- ; Returns a rel of the maps in xrel with the keys in kmap renamed to the vals in kmap
- ;;
-(§ defn rename [xrel kmap]
-    (with-meta (set (map #(rename-keys % kmap) xrel)) (meta xrel))
-)
-
-;;;
- ; Returns a map of the distinct values of ks in the xrel mapped to a
- ; set of the maps in xrel with the corresponding values of ks.
- ;;
-(§ defn index [xrel ks]
-    (reduce
-        (fn [m x]
-        (let [ik (select-keys x ks)]
-            (assoc m ik (conj (get m ik #{}) x))))
-        {} xrel)
-)
-
-;;;
- ; Returns the map with the vals mapped to the keys.
- ;;
-(§ defn map-invert [m] (reduce (fn [m [k v]] (assoc m v k)) {} m))
-
-;;;
- ; When passed 2 rels, returns the rel corresponding to the natural
- ; join. When passed an additional keymap, joins on the corresponding
- ; keys.
- ;;
-(§ defn join
-    ([xrel yrel] ;; natural join
-        (if (and (seq xrel) (seq yrel))
-            (let [ks (intersection (set (keys (first xrel))) (set (keys (first yrel))))
-                [r s] (if (<= (count xrel) (count yrel))
-                        [xrel yrel]
-                        [yrel xrel])
-                idx (index r ks)]
-            (reduce (fn [ret x]
-                        (let [found (idx (select-keys x ks))]
-                        (if found
-                            (reduce #(conj %1 (merge %2 x)) ret found)
-                            ret)))
-                    #{} s))
-            #{}))
-    ([xrel yrel km] ;; arbitrary key mapping
-        (let [[r s k] (if (<= (count xrel) (count yrel))
-                        [xrel yrel (map-invert km)]
-                        [yrel xrel km])
-                idx (index r (vals k))]
-            (reduce (fn [ret x]
-                    (let [found (idx (rename-keys (select-keys x (keys k)) k))]
-                        (if found
-                        (reduce #(conj %1 (merge %2 x)) ret found)
-                        ret)))
-                    #{} s)))
-)
-
-;;;
- ; Is set1 a subset of set2?
- ;;
-(§ defn ^Boolean subset? [set1 set2]
-    (and (<= (count set1) (count set2)) (every? #(contains? set2 %) set1))
-)
-
-;;;
- ; Is set1 a superset of set2?
- ;;
-(§ defn ^Boolean superset? [set1 set2]
-    (and (>= (count set1) (count set2)) (every? #(contains? set1 %) set2))
+(§ defn summarize-results
+    ([check-results] (summarize-results check-results abbrev-result))
+    ([check-results summary-result]
+        (reduce
+            (fn [summary result]
+              #_(pp/pprint (summary-result result))
+                (-> summary
+                    (update :total inc)
+                    (update (result-type result) (fnil inc 0))
+                )
+            )
+            {:total 0} check-results
+        )
+    )
 )
 
 #_(ns cloiure.spec.alpha
@@ -14804,24 +15346,23 @@
 (§ alias 'c 'cloiure.core)
 
 ;;;
- ; A soft limit on how many times a branching spec (or/alt/*/opt-keys/multi-spec)
- ; can be recursed through during generation. After this a
- ; non-recursive branch will be chosen.
+ ; A soft limit on how many times a branching spec (or/alt/*/opt-keys/multi-spec) can be
+ ; recursed through during generation. After this a non-recursive branch will be chosen.
  ;;
 (§ def ^:dynamic *recursion-limit* 4)
 
 ;;;
- ; The number of times an anonymous fn specified by fspec will be (generatively) tested during conform
+ ; The number of times an anonymous fn specified by fspec will be (generatively) tested during conform.
  ;;
 (§ def ^:dynamic *fspec-iterations* 21)
 
 ;;;
- ; The number of elements validated in a collection spec'ed with 'every'
+ ; The number of elements validated in a collection spec'ed with 'every'.
  ;;
 (§ def ^:dynamic *coll-check-limit* 101)
 
 ;;;
- ; The number of errors reported by explain in a collection spec'ed with 'every'
+ ; The number of errors reported by explain in a collection spec'ed with 'every'.
  ;;
 (§ def ^:dynamic *coll-error-limit* 20)
 
@@ -14838,41 +15379,45 @@
 
 (§ defn- deep-resolve [reg k]
     (loop [spec k]
-            (if (ident? spec)
+        (if (ident? spec)
             (recur (get reg spec))
-            spec))
+            spec
+        )
+    )
 )
 
 ;;;
- ; returns the spec/regex at end of alias chain starting with k, nil if not found, k if k not ident
+ ; Returns the spec/regex at end of alias chain starting with k, nil if not found, k if k not ident.
  ;;
 (§ defn- reg-resolve [k]
     (if (ident? k)
-            (let [reg @registry-ref
-                spec (get reg k)]
+        (let [reg @registry-ref spec (get reg k)]
             (if-not (ident? spec)
                 spec
-                (deep-resolve reg spec)))
-            k)
+                (deep-resolve reg spec)
+            )
+        )
+        k
+    )
 )
 
 ;;;
- ; returns the spec/regex at end of alias chain starting with k, throws if not found, k if k not ident
+ ; Returns the spec/regex at end of alias chain starting with k, throws if not found, k if k not ident.
  ;;
 (§ defn- reg-resolve! [k]
     (if (ident? k)
-            (c/or (reg-resolve k)
-                (throw (Exception. (str "Unable to resolve spec: " k))))
-            k)
+        (c/or (reg-resolve k) (throw (Exception. (str "Unable to resolve spec: " k))))
+        k
+    )
 )
 
 ;;;
- ; returns x if x is a spec object, else logical false
+ ; Returns x if x is a spec object, else logical false.
  ;;
 (§ defn spec? [x] (when (instance? cloiure.spec.alpha.Spec x) x))
 
 ;;;
- ; returns x if x is a (cloiure.spec) regex op, else logical false
+ ; Returns x if x is a (cloiure.spec) regex op, else logical false.
  ;;
 (§ defn regex? [x] (c/and (::op x) x))
 
@@ -14880,19 +15425,16 @@
     (cond
         (ident? spec) spec
         (regex? spec) (assoc spec ::name name)
-
-        (instance? cloiure.lang.IObj spec)
-        (with-meta spec (assoc (meta spec) ::name name)))
+        (instance? cloiure.lang.IObj spec) (with-meta spec (assoc (meta spec) ::name name))
+    )
 )
 
 (§ defn- spec-name [spec]
     (cond
         (ident? spec) spec
-
         (regex? spec) (::name spec)
-
-        (instance? cloiure.lang.IObj spec)
-        (-> (meta spec) ::name))
+        (instance? cloiure.lang.IObj spec) (-> (meta spec) ::name)
+    )
 )
 
 (§ declare spec-impl)
@@ -14903,21 +15445,26 @@
  ;;
 (§ defn- maybe-spec [spec-or-k]
     (let [s (c/or (c/and (ident? spec-or-k) (reg-resolve spec-or-k))
-                        (spec? spec-or-k)
-                        (regex? spec-or-k)
-                        nil)]
-            (if (regex? s)
+                (spec? spec-or-k)
+                (regex? spec-or-k)
+                nil
+            )]
+        (if (regex? s)
             (with-name (regex-spec-impl s nil) (spec-name s))
-            s))
+            s
+        )
+    )
 )
 
 ;;;
- ; spec-or-k must be a spec, regex or kw/sym, else returns nil. Throws if unresolvable kw/sym
+ ; spec-or-k must be a spec, regex or kw/sym, else returns nil. Throws if unresolvable kw/sym.
  ;;
 (§ defn- the-spec [spec-or-k]
     (c/or (maybe-spec spec-or-k)
-                (when (ident? spec-or-k)
-                (throw (Exception. (str "Unable to resolve spec: " spec-or-k)))))
+        (when (ident? spec-or-k)
+            (throw (Exception. (str "Unable to resolve spec: " spec-or-k)))
+        )
+    )
 )
 
 (§ defprotocol Specize
@@ -14926,106 +15473,91 @@
 
 (§ extend-protocol Specize
     cloiure.lang.Keyword
-    (specize* ([k] (specize* (reg-resolve! k)))
-                    ([k _] (specize* (reg-resolve! k))))
+    (specize* ([k] (specize* (reg-resolve! k))) ([k _] (specize* (reg-resolve! k))))
 
     cloiure.lang.Symbol
-    (specize* ([s] (specize* (reg-resolve! s)))
-                    ([s _] (specize* (reg-resolve! s))))
+    (specize* ([s] (specize* (reg-resolve! s))) ([s _] (specize* (reg-resolve! s))))
 
     Object
-    (specize* ([o] (spec-impl ::unknown o nil nil))
-                    ([o form] (spec-impl form o nil nil)))
+    (specize* ([o] (spec-impl ::unknown o nil nil)) ([o form] (spec-impl form o nil nil)))
 )
 
 (§ defn- specize
-    ([s] (c/or (spec? s) (specize* s)))
+    ([s     ] (c/or (spec? s) (specize* s     )))
     ([s form] (c/or (spec? s) (specize* s form)))
 )
 
 ;;;
- ; tests the validity of a conform return value
+ ; Tests the validity of a conform return value.
  ;;
-(§ defn invalid? [ret]
-    (identical? ::invalid ret)
-)
+(§ defn invalid? [ret] (identical? ::invalid ret))
 
 ;;;
- ; Given a spec and a value, returns :cloiure.spec.alpha/invalid
- ; if value does not match spec, else the (possibly destructured) value.
+ ; Given a spec and a value, returns :cloiure.spec.alpha/invalid if
+ ; value does not match spec, else the (possibly destructured) value.
  ;;
-(§ defn conform [spec x]
-    (conform* (specize spec) x)
-)
+(§ defn conform [spec x] (conform* (specize spec) x))
 
 ;;;
  ; Given a spec and a value created by or compliant with a call to
  ; 'conform' with the same spec, returns a value with all conform
  ; destructuring undone.
  ;;
-(§ defn unform [spec x]
-    (unform* (specize spec) x)
-)
+(§ defn unform [spec x] (unform* (specize spec) x))
 
 ;;;
- ; returns the spec as data
+ ; Returns the spec as data.
  ;;
-(§ defn form [spec]
-    ;;TODO - incorporate gens
-    (describe* (specize spec))
-)
+(§ defn form [spec] (describe* (specize spec))) ;;TODO - incorporate gens
 
 (§ defn abbrev [form]
     (cond
         (seq? form)
-        (walk/postwalk (fn [form]
-                            (cond
-                            (c/and (symbol? form) (namespace form))
-                            (-> form name symbol)
-
-                            (c/and (seq? form) (= 'fn (first form)) (= '[%] (second form)))
-                            (last form)
-
-                            :else form))
-                        form)
-
-        (c/and (symbol? form) (namespace form))
-        (-> form name symbol)
-
-        :else form)
+            (walk/postwalk
+                (fn [form]
+                    (cond
+                        (c/and (symbol? form) (namespace form)) (-> form name symbol)
+                        (c/and (seq? form) (= 'fn (first form)) (= '[%] (second form))) (last form)
+                        :else form
+                    )
+                )
+                form
+            )
+        (c/and (symbol? form) (namespace form)) (-> form name symbol)
+        :else form
+    )
 )
 
 ;;;
- ; returns an abbreviated description of the spec as data
+ ; Returns an abbreviated description of the spec as data.
  ;;
-(§ defn describe [spec]
-    (abbrev (form spec))
-)
+(§ defn describe [spec] (abbrev (form spec)))
 
 ;;;
- ; Takes a spec and a no-arg, generator-returning fn and returns a version of that spec that uses that generator
+ ; Takes a spec and a no-arg, generator-returning fn and returns a version of that spec that uses that generator.
  ;;
 (§ defn with-gen [spec gen-fn]
     (let [spec (reg-resolve spec)]
-            (if (regex? spec)
+        (if (regex? spec)
             (assoc spec ::gfn gen-fn)
-            (with-gen* (specize spec) gen-fn)))
+            (with-gen* (specize spec) gen-fn)
+        )
+    )
 )
 
 (§ defn explain-data* [spec path via in x]
     (let [probs (explain* (specize spec) path via in x)]
-            (when-not (empty? probs)
-            {::problems probs
-            ::spec spec
-            ::value x}))
+        (when-not (empty? probs)
+            {::problems probs ::spec spec ::value x}
+        )
+    )
 )
 
 ;;;
- ; Given a spec and a value x which ought to conform, returns nil if x
- ; conforms, else a map with at least the key ::problems whose value is
- ; a collection of problem-maps, where problem-map has at least :path :pred and :val
- ; keys describing the predicate and the value that failed at that
- ; path.
+ ; Given a spec and a value x which ought to conform, returns nil if x conforms,
+ ; else a map with at least the key ::problems whose value is a collection of
+ ; problem-maps, where problem-map has at least :path :pred and :val keys
+ ; describing the predicate and the value that failed at that path.
  ;;
 (§ defn explain-data [spec x]
     (explain-data* spec [] (if-let [name (spec-name spec)] [name] []) [] x)
@@ -15036,27 +15568,37 @@
  ;;
 (§ defn explain-printer [ed]
     (if ed
-            (let [problems (sort-by #(- (count (:path %))) (::problems ed))]
+        (let [problems (sort-by #(- (count (:path %))) (::problems ed))]
             ;;(prn {:ed ed})
             (doseq [{:keys [path pred val reason via in] :as prob} problems]
                 (when-not (empty? in)
-                (print "In:" (pr-str in) ""))
+                    (print "In:" (pr-str in) "")
+                )
                 (print "val: ")
                 (pr val)
                 (print " fails")
                 (when-not (empty? via)
-                (print " spec:" (pr-str (last via))))
+                    (print " spec:" (pr-str (last via)))
+                )
                 (when-not (empty? path)
-                (print " at:" (pr-str path)))
+                    (print " at:" (pr-str path))
+                )
                 (print " predicate: ")
                 (pr (abbrev pred))
-                (when reason (print ", " reason))
+                (when reason
+                    (print ", " reason)
+                )
                 (doseq [[k v] prob]
-                (when-not (#{:path :pred :val :reason :via :in} k)
-                    (print "\n\t" (pr-str k) " ")
-                    (pr v)))
-                (newline)))
-            (println "Success!"))
+                    (when-not (#{:path :pred :val :reason :via :in} k)
+                        (print "\n\t" (pr-str k) " ")
+                        (pr v)
+                    )
+                )
+                (newline)
+            )
+        )
+        (println "Success!")
+    )
 )
 
 (§ def ^:dynamic *explain-out* explain-printer)
@@ -15065,49 +15607,45 @@
  ; Prints explanation data (per 'explain-data') to *out* using the printer in *explain-out*,
  ; by default explain-printer.
  ;;
-(§ defn explain-out [ed]
-    (*explain-out* ed)
-)
+(§ defn explain-out [ed] (*explain-out* ed))
 
 ;;;
  ; Given a spec and a value that fails to conform, prints an explanation to *out*.
  ;;
-(§ defn explain [spec x]
-    (explain-out (explain-data spec x))
-)
+(§ defn explain [spec x] (explain-out (explain-data spec x)))
 
 ;;;
  ; Given a spec and a value that fails to conform, returns an explanation as a string.
  ;;
-(§ defn explain-str [spec x]
-    (with-out-str (explain spec x))
-)
+(§ defn explain-str [spec x] (with-out-str (explain spec x)))
 
 (§ declare valid?)
 
 (§ defn- gensub [spec overrides path rmap form]
     ;;(prn {:spec spec :over overrides :path path :form form})
     (let [spec (specize spec)]
-            (if-let [g (c/or (when-let [gfn (c/or (get overrides (c/or (spec-name spec) spec))
-                                                (get overrides path))]
-                            (gfn))
-                            (gen* spec overrides path rmap))]
+        (if-let [g (c/or
+                        (when-let [gfn (c/or (get overrides (c/or (spec-name spec) spec)) (get overrides path))]
+                            (gfn)
+                        )
+                        (gen* spec overrides path rmap)
+                    )]
             (gen/such-that #(valid? spec %) g 100)
             (let [abbr (abbrev form)]
-                (throw (ex-info (str "Unable to construct gen at: " path " for: " abbr)
-                                {::path path ::form form ::failure :no-gen})))))
+                (throw (ex-info (str "Unable to construct gen at: " path " for: " abbr) {::path path ::form form ::failure :no-gen}))
+            )
+        )
+    )
 )
 
 ;;;
- ; Given a spec, returns the generator for it, or throws if none can
- ; be constructed. Optionally an overrides map can be provided which
- ; should map spec names or paths (vectors of keywords) to no-arg
- ; generator-creating fns. These will be used instead of the generators at those
- ; names/paths. Note that parent generator (in the spec or overrides
- ; map) will supersede those of any subtrees. A generator for a regex
- ; op must always return a sequential collection (i.e. a generator for
- ; s/? should return either an empty sequence/vector or a
- ; sequence/vector with one item in it)
+ ; Given a spec, returns the generator for it, or throws if none can be constructed.
+ ; Optionally an overrides map can be provided which should map spec names or paths
+ ; (vectors of keywords) to no-arg generator-creating fns. These will be used
+ ; instead of the generators at those names/paths. Note that parent generator (in the
+ ; spec or overrides map) will supersede those of any subtrees. A generator for a regex
+ ; op must always return a sequential collection (i.e. a generator for s/? should
+ ; return either an empty sequence/vector or a sequence/vector with one item in it).
  ;;
 (§ defn gen
     ([spec] (gen spec nil))
@@ -15115,23 +15653,24 @@
 )
 
 ;;;
- ; Returns a symbol from a symbol or var
+ ; Returns a symbol from a symbol or var.
  ;;
 (§ defn- ->sym [x]
     (if (var? x)
-            (let [^cloiure.lang.Var v x]
-            (symbol (str (.name (.ns v)))
-                    (str (.sym v))))
-            x)
+        (let [^cloiure.lang.Var v x]
+            (symbol (str (.name (.ns v))) (str (.sym v)))
+        )
+        x
+    )
 )
 
 (§ defn- unfn [expr]
-    (if (c/and (seq? expr)
-                    (symbol? (first expr))
-                    (= "fn*" (name (first expr))))
-            (let [[[s] & form] (rest expr)]
-            (conj (walk/postwalk-replace {s '%} form) '[%] 'fn))
-            expr)
+    (if (c/and (seq? expr) (symbol? (first expr)) (= "fn*" (name (first expr))))
+        (let [[[s] & form] (rest expr)]
+            (conj (walk/postwalk-replace {s '%} form) '[%] 'fn)
+        )
+        expr
+    )
 )
 
 (§ defn- res [form]
@@ -15139,19 +15678,19 @@
         (keyword? form) form
         (symbol? form) (c/or (-> form resolve ->sym) form)
         (sequential? form) (walk/postwalk #(if (symbol? %) (res %) %) (unfn form))
-        :else form)
+        :else form
+    )
 )
 
 ;;;
- ; Do not call this directly, use 'def'
+ ; Do not call this directly, use 'def'.
  ;;
 (§ defn def-impl [k form spec]
     (c/assert (c/and (ident? k) (namespace k)) "k must be namespaced keyword or resolvable symbol")
-    (let [spec (if (c/or (spec? spec) (regex? spec) (get @registry-ref spec))
-                    spec
-                    (spec-impl form spec nil nil))]
-            (swap! registry-ref assoc k (with-name spec k))
-            k)
+    (let [spec (if (c/or (spec? spec) (regex? spec) (get @registry-ref spec)) spec (spec-impl form spec nil nil))]
+        (swap! registry-ref assoc k (with-name spec k))
+        k
+    )
 )
 
 ;;;
@@ -15159,23 +15698,23 @@
  ;;
 (§ defn- ns-qualify [s]
     (if-let [ns-sym (some-> s namespace symbol)]
-            (c/or (some-> (get (ns-aliases *ns*) ns-sym) str (symbol (name s)))
-                s)
-            (symbol (str (.name *ns*)) (str s)))
+        (c/or (some-> (get (ns-aliases *ns*) ns-sym) str (symbol (name s))) s)
+        (symbol (str (.name *ns*)) (str s))
+    )
 )
 
 ;;;
- ; Given a namespace-qualified keyword or resolvable symbol k, and a
- ; spec, spec-name, predicate or regex-op makes an entry in the
- ; registry mapping k to the spec
+ ; Given a namespace-qualified keyword or resolvable symbol k, and a spec, spec-name,
+ ; predicate or regex-op, it makes an entry in the registry mapping k to the spec.
  ;;
 (§ defmacro def [k spec-form]
     (let [k (if (symbol? k) (ns-qualify k) k)]
-            `(def-impl '~k '~(res spec-form) ~spec-form))
+        `(def-impl '~k '~(res spec-form) ~spec-form)
+    )
 )
 
 ;;;
- ; returns the registry map, prefer 'get-spec' to lookup a spec by name
+ ; Returns the registry map, prefer 'get-spec' to lookup a spec by name.
  ;;
 (§ defn registry [] @registry-ref)
 
@@ -15190,21 +15729,21 @@
  ; Takes a single predicate form, e.g. can be the name of a predicate,
  ; like even?, or a fn literal like #(< % 42). Note that it is not
  ; generally necessary to wrap predicates in spec when using the rest
- ; of the spec macros, only to attach a unique generator
+ ; of the spec macros, only to attach a unique generator.
  ;
  ; Can also be passed the result of one of the regex ops -
  ; cat, alt, *, +, ?, in which case it will return a regex-conforming
  ; spec, useful when nesting an independent regex.
- ; ---
  ;
- ; Optionally takes :gen generator-fn, which must be a fn of no args that
- ; returns a test.check generator.
+ ; Optionally takes :gen generator-fn, which must be a fn of no args
+ ; that returns a test.check generator.
  ;
  ; Returns a spec.
  ;;
 (§ defmacro spec [form & {:keys [gen]}]
     (when form
-            `(spec-impl '~(res form) ~form ~gen nil))
+        `(spec-impl '~(res form) ~form ~gen nil)
+    )
 )
 
 ;;;
@@ -15247,24 +15786,22 @@
  ;
  ; (s/keys :req [::x ::y (or ::secret (and ::user ::pwd))] :opt [::z])
  ;
- ; There are also -un versions of :req and :opt. These allow
- ; you to connect unqualified keys to specs. In each case, fully
- ; qualfied keywords are passed, which name the specs, but unqualified
- ; keys (with the same name component) are expected and checked at
- ; conform-time, and generated during gen:
+ ; There are also -un versions of :req and :opt. These allow you to connect
+ ; unqualified keys to specs. In each case, fully qualfied keywords are passed,
+ ; which name the specs, but unqualified keys (with the same name component)
+ ; are expected and checked at conform-time, and generated during gen:
  ;
  ; (s/keys :req-un [:my.ns/x :my.ns/y])
  ;
- ; The above says keys :x and :y are required, and will be validated
- ; and generated by specs (if they exist) named :my.ns/x :my.ns/y
- ; respectively.
+ ; The above says keys :x and :y are required, and will be validated and
+ ; generated by specs (if they exist) named :my.ns/x :my.ns/y respectively.
  ;
  ; In addition, the values of *all* namespace-qualified keys will be validated
  ; (and possibly destructured) by any registered specs. Note: there is
  ; no support for inline value specification, by design.
  ;
- ; Optionally takes :gen generator-fn, which must be a fn of no args that
- ; returns a test.check generator.
+ ; Optionally takes :gen generator-fn, which must be a fn of no args
+ ; that returns a test.check generator.
  ;;
 (§ defmacro keys [& {:keys [req req-un opt opt-un gen]}]
     (let [unk #(-> % name keyword)
@@ -15289,15 +15826,20 @@
                 pred-exprs (into pred-exprs (parse-req req-un unk))
                 keys-pred `(fn* [~gx] (c/and ~@pred-exprs))
                 pred-exprs (mapv (fn [e] `(fn* [~gx] ~e)) pred-exprs)
-                pred-forms (walk/postwalk res pred-exprs)]
-            ;; `(map-spec-impl ~req-keys '~req ~opt '~pred-forms ~pred-exprs ~gen)
-            `(map-spec-impl {:req '~req :opt '~opt :req-un '~req-un :opt-un '~opt-un
-                            :req-keys '~req-keys :req-specs '~req-specs
-                            :opt-keys '~opt-keys :opt-specs '~opt-specs
-                            :pred-forms '~pred-forms
-                            :pred-exprs ~pred-exprs
-                            :keys-pred ~keys-pred
-                            :gfn ~gen}))
+                pred-forms (walk/postwalk res pred-exprs)
+    ]
+     ;; `(map-spec-impl ~req-keys '~req ~opt '~pred-forms ~pred-exprs ~gen)
+        `(map-spec-impl
+            {
+                :req '~req :req-un '~req-un :req-keys '~req-keys :req-specs '~req-specs
+                :opt '~opt :opt-un '~opt-un :opt-keys '~opt-keys :opt-specs '~opt-specs
+                :pred-forms '~pred-forms
+                :pred-exprs ~pred-exprs
+                :keys-pred ~keys-pred
+                :gfn ~gen
+            }
+        )
+    )
 )
 
 ;;;
@@ -15312,11 +15854,12 @@
  ;;
 (§ defmacro or [& key-pred-forms]
     (let [pairs (partition 2 key-pred-forms)
-                keys (mapv first pairs)
-                pred-forms (mapv second pairs)
-                pf (mapv res pred-forms)]
-            (c/assert (c/and (even? (count key-pred-forms)) (every? keyword? keys)) "spec/or expects k1 p1 k2 p2..., where ks are keywords")
-            `(or-spec-impl ~keys '~pf ~pred-forms nil))
+          keys (mapv first pairs)
+          pred-forms (mapv second pairs)
+          pf (mapv res pred-forms)]
+        (c/assert (c/and (even? (count key-pred-forms)) (every? keyword? keys)) "spec/or expects k1 p1 k2 p2..., where ks are keywords")
+        `(or-spec-impl ~keys '~pf ~pred-forms nil)
+    )
 )
 
 ;;;
@@ -15332,10 +15875,9 @@
 )
 
 ;;;
- ; Takes map-validating specs (e.g. 'keys' specs) and
- ; returns a spec that returns a conformed map satisfying all of the
- ; specs. Unlike 'and', merge can generate maps satisfying the
- ; union of the predicates.
+ ; Takes map-validating specs (e.g. 'keys' specs) and returns a spec
+ ; that returns a conformed map satisfying all of the specs. Unlike 'and',
+ ; merge can generate maps satisfying the union of the predicates.
  ;;
 (§ defmacro merge [& pred-forms]
     `(merge-spec-impl '~(mapv res pred-forms) ~(vec pred-forms) nil)
@@ -15343,124 +15885,123 @@
 
 (§ defn- res-kind [opts]
     (let [{kind :kind :as mopts} opts]
-            (->>
-            (if kind
-                (assoc mopts :kind `~(res kind))
-                mopts)
-            (mapcat identity)))
+        (->> (if kind (assoc mopts :kind `~(res kind)) mopts) (mapcat identity))
+    )
 )
 
 ;;;
- ; takes a pred and validates collection elements against that pred.
+ ; Takes a pred and validates collection elements against that pred.
  ;
  ; Note that 'every' does not do exhaustive checking, rather it samples
- ; *coll-check-limit* elements. Nor (as a result) does it do any
- ; conforming of elements. 'explain' will report at most *coll-error-limit*
- ; problems. Thus 'every' should be suitable for potentially large
- ; collections.
+ ; *coll-check-limit* elements. Nor (as a result) does it do any conforming
+ ; of elements. 'explain' will report at most *coll-error-limit* problems.
+ ; Thus 'every' should be suitable for potentially large collections.
  ;
  ; Takes several kwargs options that further constrain the collection:
  ;
  ; :kind - a pred/spec that the collection type must satisfy, e.g. vector?
- ; (default nil) Note that if :kind is specified and :into is
- ; not, this pred must generate in order for every to generate.
+ ;         (default nil) Note that if :kind is specified and :into is not,
+ ;         this pred must generate in order for every to generate.
  ; :count - specifies coll has exactly this count (default nil)
  ; :min-count, :max-count - coll has count (<= min-count count max-count) (defaults nil)
  ; :distinct - all the elements are distinct (default nil)
  ;
- ; And additional args that control gen
+ ; And additional args that control gen:
  ;
  ; :gen-max - the maximum coll size to generate (default 20)
  ; :into - one of [], (), {}, #{} - the default collection to generate into
- ; (default: empty coll as generated by :kind pred if supplied, else [])
+ ;         (default: empty coll as generated by :kind pred if supplied, else [])
  ;
  ; Optionally takes :gen generator-fn, which must be a fn of no args that
- ; returns a test.check generator
+ ; returns a test.check generator.
  ;
- ; See also - coll-of, every-kv
+ ; See also: coll-of, every-kv.
  ;;
 (§ defmacro every [pred & {:keys [into kind count max-count min-count distinct gen-max gen] :as opts}]
     (let [desc (::describe opts)
-                nopts (-> opts
-                        (dissoc :gen ::describe)
-                        (assoc ::kind-form `'~(res (:kind opts))
-                            ::describe (c/or desc `'(every ~(res pred) ~@(res-kind opts)))))
-                gx (gensym)
-                cpreds (cond-> [(list (c/or kind `coll?) gx)]
-                            count (conj `(= ~count (bounded-count ~count ~gx)))
-
-                            (c/or min-count max-count)
-                            (conj `(<= (c/or ~min-count 0)
-                                        (bounded-count (if ~max-count (inc ~max-count) ~min-count) ~gx)
-                                        (c/or ~max-count Integer/MAX_VALUE)))
-
-                            distinct
-                            (conj `(c/or (empty? ~gx) (apply distinct? ~gx))))]
-            `(every-impl '~pred ~pred ~(assoc nopts ::cpred `(fn* [~gx] (c/and ~@cpreds))) ~gen))
+          nopts
+            (-> opts
+                (dissoc :gen ::describe)
+                (assoc ::kind-form `'~(res (:kind opts)) ::describe (c/or desc `'(every ~(res pred) ~@(res-kind opts))))
+            )
+          gx (gensym)
+          cpreds
+            (cond->
+                [(list (c/or kind `coll?) gx)]
+                count
+                (conj `(= ~count (bounded-count ~count ~gx)))
+                (c/or min-count max-count)
+                (conj `(<= (c/or ~min-count 0) (bounded-count (if ~max-count (inc ~max-count) ~min-count) ~gx) (c/or ~max-count Integer/MAX_VALUE)))
+                distinct
+                (conj `(c/or (empty? ~gx) (apply distinct? ~gx)))
+            )]
+        `(every-impl '~pred ~pred ~(assoc nopts ::cpred `(fn* [~gx] (c/and ~@cpreds))) ~gen)
+    )
 )
 
 ;;;
- ; like 'every' but takes separate key and val preds and works on associative collections.
+ ; Like 'every' but takes separate key and val preds and works on associative collections.
  ;
- ; Same options as 'every', :into defaults to {}
+ ; Same options as 'every', :into defaults to {}.
  ;
- ; See also - map-of
+ ; See also: map-of.
  ;;
 (§ defmacro every-kv [kpred vpred & opts]
     (let [desc `(every-kv ~(res kpred) ~(res vpred) ~@(res-kind opts))]
-            `(every (tuple ~kpred ~vpred) ::kfn (fn [i# v#] (nth v# 0)) :into {} ::describe '~desc ~@opts))
+        `(every (tuple ~kpred ~vpred) ::kfn (fn [i# v#] (nth v# 0)) :into {} ::describe '~desc ~@opts)
+    )
 )
 
 ;;;
- ; Returns a spec for a collection of items satisfying pred. Unlike
- ; 'every', coll-of will exhaustively conform every value.
+ ; Returns a spec for a collection of items satisfying pred.
+ ; Unlike 'every', coll-of will exhaustively conform every value.
  ;
- ; Same options as 'every'. conform will produce a collection
- ; corresponding to :into if supplied, else will match the input collection,
- ; avoiding rebuilding when possible.
+ ; Same options as 'every'. conform will produce a collection corresponding to :into
+ ; if supplied, else will match the input collection, avoiding rebuilding when possible.
  ;
- ; See also - every, map-of
+ ; See also: every, map-of.
  ;;
 (§ defmacro coll-of [pred & opts]
     (let [desc `(coll-of ~(res pred) ~@(res-kind opts))]
-            `(every ~pred ::conform-all true ::describe '~desc ~@opts))
+        `(every ~pred ::conform-all true ::describe '~desc ~@opts)
+    )
 )
 
 ;;;
- ; Returns a spec for a map whose keys satisfy kpred and vals satisfy
- ; vpred. Unlike 'every-kv', map-of will exhaustively conform every
- ; value.
+ ; Returns a spec for a map whose keys satisfy kpred and vals satisfy vpred.
+ ; Unlike 'every-kv', map-of will exhaustively conform every value.
  ;
  ; Same options as 'every', :kind defaults to map?, with the addition of:
  ;
  ; :conform-keys - conform keys as well as values (default false)
  ;
- ; See also - every-kv
+ ; See also: every-kv.
  ;;
 (§ defmacro map-of [kpred vpred & opts]
     (let [desc `(map-of ~(res kpred) ~(res vpred) ~@(res-kind opts))]
-            `(every-kv ~kpred ~vpred ::conform-all true :kind map? ::describe '~desc ~@opts))
+        `(every-kv ~kpred ~vpred ::conform-all true :kind map? ::describe '~desc ~@opts)
+    )
 )
 
 ;;;
- ; Returns a regex op that matches zero or more values matching
- ; pred. Produces a vector of matches iff there is at least one match
+ ; Returns a regex op that matches zero or more values matching pred.
+ ; Produces a vector of matches iff there is at least one match.
  ;;
 (§ defmacro * [pred-form]
     `(rep-impl '~(res pred-form) ~pred-form)
 )
 
 ;;;
- ; Returns a regex op that matches one or more values matching
- ; pred. Produces a vector of matches
+ ; Returns a regex op that matches one or more values matching pred.
+ ; Produces a vector of matches.
  ;;
 (§ defmacro + [pred-form]
     `(rep+impl '~(res pred-form) ~pred-form)
 )
 
 ;;;
- ; Returns a regex op that matches zero or one value matching
- ; pred. Produces a single value (not a collection) if matched.
+ ; Returns a regex op that matches zero or one value matching pred.
+ ; Produces a single value (not a collection) if matched.
  ;;
 (§ defmacro ? [pred-form]
     `(maybe-impl ~pred-form '~(res pred-form))
@@ -15471,18 +16012,18 @@
  ;
  ; (s/alt :even even? :small #(< % 42))
  ;
- ; Returns a regex op that returns a map entry containing the key of the
- ; first matching pred and the corresponding value. Thus the
- ; 'key' and 'val' functions can be used to refer generically to the
- ; components of the tagged return
+ ; Returns a regex op that returns a map entry containing the key of the first
+ ; matching pred and the corresponding value. Thus the 'key' and 'val' functions
+ ; can be used to refer generically to the components of the tagged return.
  ;;
 (§ defmacro alt [& key-pred-forms]
     (let [pairs (partition 2 key-pred-forms)
-                keys (mapv first pairs)
-                pred-forms (mapv second pairs)
-                pf (mapv res pred-forms)]
-            (c/assert (c/and (even? (count key-pred-forms)) (every? keyword? keys)) "alt expects k1 p1 k2 p2..., where ks are keywords")
-            `(alt-impl ~keys ~pred-forms '~pf))
+          keys (mapv first pairs)
+          pred-forms (mapv second pairs)
+          pf (mapv res pred-forms)]
+        (c/assert (c/and (even? (count key-pred-forms)) (every? keyword? keys)) "alt expects k1 p1 k2 p2..., where ks are keywords")
+        `(alt-impl ~keys ~pred-forms '~pf)
+    )
 )
 
 ;;;
@@ -15495,39 +16036,40 @@
  ;;
 (§ defmacro cat [& key-pred-forms]
     (let [pairs (partition 2 key-pred-forms)
-                keys (mapv first pairs)
-                pred-forms (mapv second pairs)
-                pf (mapv res pred-forms)]
-            ;;(prn key-pred-forms)
-            (c/assert (c/and (even? (count key-pred-forms)) (every? keyword? keys)) "cat expects k1 p1 k2 p2..., where ks are keywords")
-            `(cat-impl ~keys ~pred-forms '~pf))
+          keys (mapv first pairs)
+          pred-forms (mapv second pairs)
+          pf (mapv res pred-forms)]
+        ;;(prn key-pred-forms)
+        (c/assert (c/and (even? (count key-pred-forms)) (every? keyword? keys)) "cat expects k1 p1 k2 p2..., where ks are keywords")
+        `(cat-impl ~keys ~pred-forms '~pf)
+    )
 )
 
 ;;;
- ; takes a regex op re, and predicates. Returns a regex-op that consumes
- ; input as per re but subjects the resulting value to the
- ; conjunction of the predicates, and any conforming they might perform.
+ ; Takes a regex op re, and predicates. Returns a regex-op that consumes
+ ; input as per re but subjects the resulting value to the conjunction
+ ; of the predicates, and any conforming they might perform.
  ;;
 (§ defmacro & [re & preds] (let [pv (vec preds)] `(amp-impl ~re ~pv '~(mapv res pv))))
 
 ;;;
- ; takes a predicate function with the semantics of conform i.e. it should return either a
- ; (possibly converted) value or :cloiure.spec.alpha/invalid, and returns a
- ; spec that uses it as a predicate/conformer. Optionally takes a
- ; second fn that does unform of result of first
+ ; Takes a predicate function with the semantics of conform i.e. it should
+ ; return either a (possibly converted) value or :cloiure.spec.alpha/invalid,
+ ; and returns a spec that uses it as a predicate/conformer. Optionally
+ ; takes a second fn that does unform of result of first.
  ;;
 (§ defmacro conformer
-    ([f] `(spec-impl '(conformer ~(res f)) ~f nil true))
+    ([f    ] `(spec-impl '(conformer ~(res f))            ~f nil true     ))
     ([f unf] `(spec-impl '(conformer ~(res f) ~(res unf)) ~f nil true ~unf))
 )
 
 ;;;
- ; takes :args :ret and (optional) :fn kwargs whose values are preds
+ ; Takes :args :ret and (optional) :fn kwargs whose values are preds
  ; and returns a spec whose conform/explain take a fn and validates it
  ; using generative testing. The conformed value is always the fn itself.
  ;
  ; See 'fdef' for a single operation that creates an fspec and
- ; registers it, as well as a full description of :args, :ret and :fn
+ ; registers it, as well as a full description of :args, :ret and :fn.
  ;
  ; fspecs can generate functions that validate the arguments and
  ; fabricate a return value compliant with the :ret spec, ignoring
@@ -15537,15 +16079,18 @@
  ; that returns a test.check generator.
  ;;
 (§ defmacro fspec [& {:keys [args ret fn gen] :or {ret `any?}}]
-    `(fspec-impl (spec ~args) '~(res args)
-                (spec ~ret) '~(res ret)
-                (spec ~fn) '~(res fn) ~gen)
+    `(fspec-impl
+        (spec ~args) '~(res args)
+        (spec ~ret)  '~(res ret)
+        (spec ~fn)   '~(res fn)
+        ~gen
+    )
 )
 
 ;;;
- ; takes one or more preds and returns a spec for a tuple, a vector
- ; where each element conforms to the corresponding pred. Each element
- ; will be referred to in paths using its ordinal.
+ ; Takes one or more preds and returns a spec for a tuple, a vector
+ ; where each element conforms to the corresponding pred.
+ ; Each element will be referred to in paths using its ordinal.
  ;;
 (§ defmacro tuple [& preds]
     (c/assert (not (empty? preds)))
@@ -15554,56 +16099,53 @@
 
 (§ defn- macroexpand-check [v args]
     (let [fn-spec (get-spec v)]
-            (when-let [arg-spec (:args fn-spec)]
+        (when-let [arg-spec (:args fn-spec)]
             (when (invalid? (conform arg-spec args))
-                (let [ed (assoc (explain-data* arg-spec [:args]
-                                            (if-let [name (spec-name arg-spec)] [name] []) [] args)
-                        ::args args)]
-                (throw (ex-info
-                        (str "Call to " (->sym v) " did not conform to spec:\n" (with-out-str (explain-out ed)))
-                        ed))))))
+                (let [ed (assoc (explain-data* arg-spec [:args] (if-let [name (spec-name arg-spec)] [name] []) [] args) ::args args)]
+                    (throw (ex-info (str "Call to " (->sym v) " did not conform to spec:\n" (with-out-str (explain-out ed))) ed))
+                )
+            )
+        )
+    )
 )
 
 ;;;
  ; Takes a symbol naming a function, and one or more of the following:
  ;
- ; :args A regex spec for the function arguments as they were a list to be
- ; passed to apply - in this way, a single spec can handle functions with
- ; multiple arities
- ; :ret A spec for the function's return value
- ; :fn A spec of the relationship between args and ret - the
- ; value passed is {:args conformed-args :ret conformed-ret} and is
- ; expected to contain predicates that relate those values
+ ; :args - a regex spec for the function arguments as they were a list to be passed to
+ ;         apply - in this way, a single spec can handle functions with multiple arities.
+ ;
+ ; :ret - a spec for the function's return value.
+ ;
+ ; :fn - a spec of the relationship between args and ret - the value passed is
+ ;       {:args conformed-args :ret conformed-ret} and is expected to contain
+ ;       predicates that relate those values.
  ;
  ; Qualifies fn-sym with resolve, or using *ns* if no resolution found.
  ; Registers an fspec in the global registry, where it can be retrieved
  ; by calling get-spec with the var or fully-qualified symbol.
  ;
- ; Once registered, function specs are included in doc, checked by
- ; instrument, tested by the runner cloiure.spec.test.alpha/check, and (if
- ; a macro) used to explain errors during macroexpansion.
+ ; Once registered, function specs are included in doc, checked by instrument,
+ ; tested by the runner cloiure.spec.test.alpha/check, and (if a macro)
+ ; used to explain errors during macroexpansion.
  ;
- ; Note that :fn specs require the presence of :args and :ret specs to
- ; conform values, and so :fn specs will be ignored if :args or :ret
- ; are missing.
+ ; Note that :fn specs require the presence of :args and :ret specs to conform
+ ; values, and so :fn specs will be ignored if :args or :ret are missing.
  ;
  ; Returns the qualified fn-sym.
  ;
  ; For example, to register function specs for the symbol function:
  ;
  ; (s/fdef cloiure.core/symbol
- ; :args (s/alt :separate (s/cat :ns string? :n string?)
- ; :str string?
- ; :sym symbol?)
- ; :ret symbol?)
+ ;  :args (s/alt :separate (s/cat :ns string? :n string?) :str string? :sym symbol?)
+ ;  :ret symbol?)
  ;;
 (§ defmacro fdef [fn-sym & specs]
     `(cloiure.spec.alpha/def ~fn-sym (cloiure.spec.alpha/fspec ~@specs))
 )
 
 (§ defn- recur-limit? [rmap id path k]
-    (c/and (> (get rmap id) (::recursion-limit rmap))
-                (contains? (set path) k))
+    (c/and (> (get rmap id) (::recursion-limit rmap)) (contains? (set path) k))
 )
 
 (§ defn- inck [m k]
@@ -15613,228 +16155,219 @@
 (§ defn- dt
     ([pred x form] (dt pred x form nil))
     ([pred x form cpred?]
-            (if pred
+        (if pred
             (if-let [spec (the-spec pred)]
                 (conform spec x)
                 (if (ifn? pred)
-                (if cpred?
-                    (pred x)
-                    (if (pred x) x ::invalid))
-                (throw (Exception. (str (pr-str form) " is not a fn, expected predicate fn")))))
-            x))
+                    (cond cpred? (pred x) (pred x) x :else ::invalid)
+                    (throw (Exception. (str (pr-str form) " is not a fn, expected predicate fn")))
+                )
+            )
+            x
+        )
+    )
 )
 
 ;;;
  ; Helper function that returns true when x is valid for spec.
  ;;
 (§ defn valid?
-    ([spec x]
-            (let [spec (specize spec)]
-            (not (invalid? (conform* spec x)))))
-    ([spec x form]
-            (let [spec (specize spec form)]
-            (not (invalid? (conform* spec x)))))
+    ([spec x     ] (not (invalid? (conform* (specize spec     ) x))))
+    ([spec x form] (not (invalid? (conform* (specize spec form) x))))
 )
 
 ;;;
- ; internal helper function that returns true when x is valid for spec.
+ ; Internal helper function that returns true when x is valid for spec.
  ;;
 (§ defn- pvalid?
-    ([pred x]
-            (not (invalid? (dt pred x ::unknown))))
-    ([pred x form]
-            (not (invalid? (dt pred x form))))
+    ([pred x     ] (not (invalid? (dt pred x ::unknown))))
+    ([pred x form] (not (invalid? (dt pred x form     ))))
 )
 
 (§ defn- explain-1 [form pred path via in v]
     ;;(prn {:form form :pred pred :path path :in in :v v})
     (let [pred (maybe-spec pred)]
-            (if (spec? pred)
+        (if (spec? pred)
             (explain* pred path (if-let [name (spec-name pred)] (conj via name) via) in v)
-            [{:path path :pred form :val v :via via :in in}]))
+            [{:path path :pred form :val v :via via :in in}]
+        )
+    )
 )
 
 ;;;
- ; Do not call this directly, use 'spec' with a map argument
+ ; Do not call this directly, use 'spec' with a map argument.
  ;;
 (§ defn map-spec-impl [{:keys [req-un opt-un keys-pred pred-exprs opt-keys req-specs req req-keys opt-specs pred-forms opt gfn] :as argm}]
     (let [k->s (zipmap (concat req-keys opt-keys) (concat req-specs opt-specs))
-                keys->specnames #(c/or (k->s %) %)
-                id (java.util.UUID/randomUUID)]
-            (reify
+          keys->specnames #(c/or (k->s %) %)
+          id (java.util.UUID/randomUUID)]
+        (reify
             Specize
             (specize* [s] s)
             (specize* [s _] s)
 
             Spec
             (conform* [_ m]
-                    (if (keys-pred m)
-                        (let [reg (registry)]
+                (if (keys-pred m)
+                    (let [reg (registry)]
                         (loop [ret m, [[k v] & ks :as keys] m]
                             (if keys
-                            (let [sname (keys->specnames k)]
-                                (if-let [s (get reg sname)]
-                                (let [cv (conform s v)]
-                                    (if (invalid? cv)
-                                    ::invalid
-                                    (recur (if (identical? cv v) ret (assoc ret k cv))
-                                            ks)))
-                                (recur ret ks)))
-                            ret)))
-                        ::invalid))
+                                (let [sname (keys->specnames k)]
+                                    (if-let [s (get reg sname)]
+                                        (let [cv (conform s v)]
+                                            (if (invalid? cv)
+                                                ::invalid
+                                                (recur (if (identical? cv v) ret (assoc ret k cv)) ks)
+                                            )
+                                        )
+                                        (recur ret ks)
+                                    )
+                                )
+                                ret
+                            )
+                        )
+                    )
+                    ::invalid
+                )
+            )
             (unform* [_ m]
-                    (let [reg (registry)]
-                        (loop [ret m, [k & ks :as keys] (c/keys m)]
+                (let [reg (registry)]
+                    (loop [ret m, [k & ks :as keys] (c/keys m)]
                         (if keys
                             (if (contains? reg (keys->specnames k))
-                            (let [cv (get m k)
-                                    v (unform (keys->specnames k) cv)]
-                                (recur (if (identical? cv v) ret (assoc ret k v))
-                                    ks))
-                            (recur ret ks))
-                            ret))))
+                                (let [cv (get m k) v (unform (keys->specnames k) cv)]
+                                    (recur (if (identical? cv v) ret (assoc ret k v)) ks)
+                                )
+                                (recur ret ks)
+                            )
+                            ret
+                        )
+                    )
+                )
+            )
             (explain* [_ path via in x]
-                    (if-not (map? x)
-                        [{:path path :pred 'map? :val x :via via :in in}]
-                        (let [reg (registry)]
+                (if-not (map? x)
+                    [{:path path :pred 'map? :val x :via via :in in}]
+                    (let [reg (registry)]
                         (apply concat
-                                (when-let [probs (->> (map (fn [pred form] (when-not (pred x) form))
-                                                            pred-exprs pred-forms)
-                                                        (keep identity)
-                                                        seq)]
-                                    (map
-                                    #(identity {:path path :pred % :val x :via via :in in})
-                                    probs))
-                                (map (fn [[k v]]
-                                        (when-not (c/or (not (contains? reg (keys->specnames k)))
-                                                        (pvalid? (keys->specnames k) v k))
-                                        (explain-1 (keys->specnames k) (keys->specnames k) (conj path k) via (conj in k) v)))
-                                    (seq x))))))
+                            (when-let [probs
+                                        (->> (map (fn [pred form] (when-not (pred x) form)) pred-exprs pred-forms)
+                                             (keep identity)
+                                             seq
+                                        )]
+                                (map #(identity {:path path :pred % :val x :via via :in in}) probs)
+                            )
+                            (map
+                                (fn [[k v]]
+                                    (when-not (c/or (not (contains? reg (keys->specnames k))) (pvalid? (keys->specnames k) v k))
+                                        (explain-1 (keys->specnames k) (keys->specnames k) (conj path k) via (conj in k) v)
+                                    )
+                                )
+                                (seq x)
+                            )
+                        )
+                    )
+                )
+            )
             (gen* [_ overrides path rmap]
                 (if gfn
                     (gfn)
                     (let [rmap (inck rmap id)
-                        gen (fn [k s] (gensub s overrides (conj path k) rmap k))
-                        ogen (fn [k s]
+                          gen (fn [k s] (gensub s overrides (conj path k) rmap k))
+                          ogen
+                            (fn [k s]
                                 (when-not (recur-limit? rmap id path k)
-                                    [k (gen/delay (gensub s overrides (conj path k) rmap k))]))
-                        req-gens (map gen req-keys req-specs)
-                        opt-gens (remove nil? (map ogen opt-keys opt-specs))]
-                    (when (every? identity (concat req-gens opt-gens))
-                        (let [reqs (zipmap req-keys req-gens)
-                            opts (into {} opt-gens)]
-                        (gen/bind (gen/choose 0 (count opts))
+                                    [k (gen/delay (gensub s overrides (conj path k) rmap k))]
+                                )
+                            )
+                          req-gens (map gen req-keys req-specs)
+                          opt-gens (remove nil? (map ogen opt-keys opt-specs))]
+                        (when (every? identity (concat req-gens opt-gens))
+                            (let [reqs (zipmap req-keys req-gens) opts (into {} opt-gens)]
+                                (gen/bind (gen/choose 0 (count opts))
                                     #(let [args (concat (seq reqs) (when (seq opts) (shuffle (seq opts))))]
                                         (->> args
                                             (take (c/+ % (count reqs)))
                                             (apply concat)
-                                            (apply gen/hash-map)))))))))
+                                            (apply gen/hash-map)
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
             (with-gen* [_ gfn] (map-spec-impl (assoc argm :gfn gfn)))
-            (describe* [_] (cons `keys
-                                (cond-> []
-                                        req (conj :req req)
-                                        opt (conj :opt opt)
-                                        req-un (conj :req-un req-un)
-                                        opt-un (conj :opt-un opt-un))))))
+            (describe* [_]
+                (cons `keys
+                    (cond-> []
+                        req (conj :req req)
+                        opt (conj :opt opt)
+                        req-un (conj :req-un req-un)
+                        opt-un (conj :opt-un opt-un)
+                    )
+                )
+            )
+        )
+    )
 )
 
 ;;;
- ; Do not call this directly, use 'spec'
+ ; Do not call this directly, use 'spec'.
  ;;
 (§ defn spec-impl
     ([form pred gfn cpred?] (spec-impl form pred gfn cpred? nil))
     ([form pred gfn cpred? unc]
-            (cond
-            (spec? pred) (cond-> pred gfn (with-gen gfn))
+        (cond
+            (spec? pred)  (cond-> pred gfn (with-gen gfn))
             (regex? pred) (regex-spec-impl pred gfn)
             (ident? pred) (cond-> (the-spec pred) gfn (with-gen gfn))
             :else
-            (reify
-            Specize
-            (specize* [s] s)
-            (specize* [s _] s)
+                (reify
+                    Specize
+                    (specize* [s] s)
+                    (specize* [s _] s)
 
-            Spec
-            (conform* [_ x] (let [ret (pred x)]
-                                (if cpred?
-                                ret
-                                (if ret x ::invalid))))
-            (unform* [_ x] (if cpred?
-                                (if unc
-                                (unc x)
-                                (throw (IllegalStateException. "no unform fn for conformer")))
-                                x))
-            (explain* [_ path via in x]
+                    Spec
+                    (conform* [_ x]
+                        (cond cpred? (pred x) (pred x) x :else ::invalid)
+                    )
+                    (unform* [_ x]
+                        (if cpred?
+                            (if unc (unc x) (throw (IllegalStateException. "no unform fn for conformer")))
+                            x
+                        )
+                    )
+                    (explain* [_ path via in x]
                         (when (invalid? (dt pred x form cpred?))
-                        [{:path path :pred form :val x :via via :in in}]))
-            (gen* [_ _ _ _] (if gfn
-                                (gfn)
-                                (gen/gen-for-pred pred)))
-            (with-gen* [_ gfn] (spec-impl form pred gfn cpred? unc))
-            (describe* [_] form))))
+                            [{:path path :pred form :val x :via via :in in}]
+                        )
+                    )
+                    (gen* [_ _ _ _]
+                        (if gfn (gfn) (gen/gen-for-pred pred))
+                    )
+                    (with-gen* [_ gfn]
+                        (spec-impl form pred gfn cpred? unc)
+                    )
+                    (describe* [_]
+                        form
+                    )
+                )
+        )
+    )
 )
 
 ;;;
- ; Do not call this directly, use 'multi-spec'
+ ; Do not call this directly, use 'multi-spec'.
  ;;
 (§ defn multi-spec-impl
     ([form mmvar retag] (multi-spec-impl form mmvar retag nil))
     ([form mmvar retag gfn]
-            (let [id (java.util.UUID/randomUUID)
-                predx #(let [^cloiure.lang.MultiFn mm @mmvar]
-                            (c/and (.getMethod mm ((.dispatchFn mm) %))
-                                (mm %)))
-                dval #((.dispatchFn ^cloiure.lang.MultiFn @mmvar) %)
-                tag (if (keyword? retag)
-                        #(assoc %1 retag %2)
-                        retag)]
-            (reify
-                Specize
-                (specize* [s] s)
-                (specize* [s _] s)
-
-                Spec
-                (conform* [_ x] (if-let [pred (predx x)]
-                                (dt pred x form)
-                                ::invalid))
-                (unform* [_ x] (if-let [pred (predx x)]
-                                (unform pred x)
-                                (throw (IllegalStateException. (str "No method of: " form " for dispatch value: " (dval x))))))
-                (explain* [_ path via in x]
-                        (let [dv (dval x)
-                                path (conj path dv)]
-                            (if-let [pred (predx x)]
-                            (explain-1 form pred path via in x)
-                            [{:path path :pred form :val x :reason "no method" :via via :in in}])))
-                (gen* [_ overrides path rmap]
-                    (if gfn
-                        (gfn)
-                        (let [gen (fn [[k f]]
-                                    (let [p (f nil)]
-                                    (let [rmap (inck rmap id)]
-                                        (when-not (recur-limit? rmap id path k)
-                                        (gen/delay
-                                        (gen/fmap
-                                            #(tag % k)
-                                            (gensub p overrides (conj path k) rmap (list 'method form k))))))))
-                            gs (->> (methods @mmvar)
-                                    (remove (fn [[k]] (invalid? k)))
-                                    (map gen)
-                                    (remove nil?))]
-                        (when (every? identity gs)
-                            (gen/one-of gs)))))
-                (with-gen* [_ gfn] (multi-spec-impl form mmvar retag gfn))
-                (describe* [_] `(multi-spec ~form ~retag)))))
-)
-
-;;;
- ; Do not call this directly, use 'tuple'
- ;;
-(§ defn tuple-impl
-    ([forms preds] (tuple-impl forms preds nil))
-    ([forms preds gfn]
-            (let [specs (delay (mapv specize preds forms))
-                cnt (count preds)]
+        (let [id (java.util.UUID/randomUUID)
+              predx #(let [^cloiure.lang.MultiFn mm @mmvar] (c/and (.getMethod mm ((.dispatchFn mm) %)) (mm %)))
+              dval #((.dispatchFn ^cloiure.lang.MultiFn @mmvar) %)
+              tag (if (keyword? retag) #(assoc %1 retag %2) retag)]
             (reify
                 Specize
                 (specize* [s] s)
@@ -15842,186 +16375,331 @@
 
                 Spec
                 (conform* [_ x]
-                        (let [specs @specs]
-                            (if-not (c/and (vector? x)
-                                        (= (count x) cnt))
-                            ::invalid
-                            (loop [ret x, i 0]
-                                (if (= i cnt)
-                                ret
-                                (let [v (x i)
-                                        cv (conform* (specs i) v)]
-                                    (if (invalid? cv)
-                                    ::invalid
-                                    (recur (if (identical? cv v) ret (assoc ret i cv))
-                                            (inc i)))))))))
+                    (if-let [pred (predx x)] (dt pred x form) ::invalid)
+                )
                 (unform* [_ x]
-                        (c/assert (c/and (vector? x)
-                                        (= (count x) (count preds))))
-                        (loop [ret x, i 0]
-                        (if (= i (count x))
-                            ret
-                            (let [cv (x i)
-                                v (unform (preds i) cv)]
-                            (recur (if (identical? cv v) ret (assoc ret i v))
-                                    (inc i))))))
+                    (if-let [pred (predx x)] (unform pred x) (throw (IllegalStateException. (str "No method of: " form " for dispatch value: " (dval x)))))
+                )
                 (explain* [_ path via in x]
-                        (cond
-                        (not (vector? x))
-                        [{:path path :pred 'vector? :val x :via via :in in}]
-
-                        (not= (count x) (count preds))
-                        [{:path path :pred `(= (count ~'%) ~(count preds)) :val x :via via :in in}]
-
-                        :else
-                        (apply concat
-                                (map (fn [i form pred]
-                                        (let [v (x i)]
-                                        (when-not (pvalid? pred v)
-                                            (explain-1 form pred (conj path i) via (conj in i) v))))
-                                    (range (count preds)) forms preds))))
+                    (let [dv (dval x) path (conj path dv)]
+                        (if-let [pred (predx x)]
+                            (explain-1 form pred path via in x)
+                            [{:path path :pred form :val x :reason "no method" :via via :in in}]
+                        )
+                    )
+                )
                 (gen* [_ overrides path rmap]
                     (if gfn
                         (gfn)
-                        (let [gen (fn [i p f]
-                                    (gensub p overrides (conj path i) rmap f))
-                            gs (map gen (range (count preds)) preds forms)]
-                        (when (every? identity gs)
-                            (apply gen/tuple gs)))))
-                (with-gen* [_ gfn] (tuple-impl forms preds gfn))
-                (describe* [_] `(tuple ~@forms)))))
-)
-
-(§ defn- tagged-ret [tag ret]
-    (cloiure.lang.MapEntry. tag ret)
+                        (let [gen
+                                (fn [[k f]]
+                                    (let [p (f nil)]
+                                        (let [rmap (inck rmap id)]
+                                            (when-not (recur-limit? rmap id path k)
+                                                (gen/delay
+                                                    (gen/fmap
+                                                        #(tag % k)
+                                                        (gensub p overrides (conj path k) rmap (list 'method form k))
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                              gs (->> (methods @mmvar)
+                                    (remove (fn [[k]] (invalid? k)))
+                                    (map gen)
+                                    (remove nil?)
+                                )]
+                            (when (every? identity gs)
+                                (gen/one-of gs)
+                            )
+                        )
+                    )
+                )
+                (with-gen* [_ gfn]
+                    (multi-spec-impl form mmvar retag gfn)
+                )
+                (describe* [_]
+                    `(multi-spec ~form ~retag)
+                )
+            )
+        )
+    )
 )
 
 ;;;
- ; Do not call this directly, use 'or'
+ ; Do not call this directly, use 'tuple'.
+ ;;
+(§ defn tuple-impl
+    ([forms preds] (tuple-impl forms preds nil))
+    ([forms preds gfn]
+        (let [specs (delay (mapv specize preds forms)) cnt (count preds)]
+            (reify
+                Specize
+                (specize* [s] s)
+                (specize* [s _] s)
+
+                Spec
+                (conform* [_ x]
+                    (let [specs @specs]
+                        (if-not (c/and (vector? x) (= (count x) cnt))
+                            ::invalid
+                            (loop [ret x, i 0]
+                                (if (= i cnt)
+                                    ret
+                                    (let [v (x i) cv (conform* (specs i) v)]
+                                        (if (invalid? cv)
+                                            ::invalid
+                                            (recur (if (identical? cv v) ret (assoc ret i cv)) (inc i))
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+                (unform* [_ x]
+                    (c/assert (c/and (vector? x) (= (count x) (count preds))))
+                    (loop [ret x, i 0]
+                        (if (= i (count x))
+                            ret
+                            (let [cv (x i) v (unform (preds i) cv)]
+                                (recur (if (identical? cv v) ret (assoc ret i v)) (inc i))
+                            )
+                        )
+                    )
+                )
+                (explain* [_ path via in x]
+                    (cond
+                        (not (vector? x))
+                            [{:path path :pred 'vector? :val x :via via :in in}]
+                        (not= (count x) (count preds))
+                            [{:path path :pred `(= (count ~'%) ~(count preds)) :val x :via via :in in}]
+                        :else
+                            (apply concat
+                                (map
+                                    (fn [i form pred]
+                                        (let [v (x i)]
+                                            (when-not (pvalid? pred v)
+                                                (explain-1 form pred (conj path i) via (conj in i) v)
+                                            )
+                                        )
+                                    )
+                                    (range (count preds)) forms preds
+                                )
+                            )
+                    )
+                )
+                (gen* [_ overrides path rmap]
+                    (if gfn
+                        (gfn)
+                        (let [gen (fn [i p f] (gensub p overrides (conj path i) rmap f))
+                              gs (map gen (range (count preds)) preds forms)]
+                            (when (every? identity gs)
+                                (apply gen/tuple gs)
+                            )
+                        )
+                    )
+                )
+                (with-gen* [_ gfn]
+                    (tuple-impl forms preds gfn)
+                )
+                (describe* [_]
+                    `(tuple ~@forms)
+                )
+            )
+        )
+    )
+)
+
+(§ defn- tagged-ret [tag ret] (cloiure.lang.MapEntry. tag ret))
+
+;;;
+ ; Do not call this directly, use 'or'.
  ;;
 (§ defn or-spec-impl [keys forms preds gfn]
     (let [id (java.util.UUID/randomUUID)
-                kps (zipmap keys preds)
-                specs (delay (mapv specize preds forms))
-                cform (case (count preds)
-                            2 (fn [x]
-                                (let [specs @specs
-                                    ret (conform* (specs 0) x)]
+          kps (zipmap keys preds)
+          specs (delay (mapv specize preds forms))
+          cform
+            (case (count preds)
+                2 (fn [x]
+                    (let [specs @specs ret (conform* (specs 0) x)]
+                        (if (invalid? ret)
+                            (let [ret (conform* (specs 1) x)]
                                 (if (invalid? ret)
-                                    (let [ret (conform* (specs 1) x)]
-                                    (if (invalid? ret)
-                                        ::invalid
-                                        (tagged-ret (keys 1) ret)))
-                                    (tagged-ret (keys 0) ret))))
-                            3 (fn [x]
-                                (let [specs @specs
-                                    ret (conform* (specs 0) x)]
+                                    ::invalid
+                                    (tagged-ret (keys 1) ret)
+                                )
+                            )
+                            (tagged-ret (keys 0) ret)
+                        )
+                    )
+                )
+                3 (fn [x]
+                    (let [specs @specs ret (conform* (specs 0) x)]
+                        (if (invalid? ret)
+                            (let [ret (conform* (specs 1) x)]
                                 (if (invalid? ret)
-                                    (let [ret (conform* (specs 1) x)]
-                                    (if (invalid? ret)
-                                        (let [ret (conform* (specs 2) x)]
+                                    (let [ret (conform* (specs 2) x)]
                                         (if (invalid? ret)
                                             ::invalid
-                                            (tagged-ret (keys 2) ret)))
-                                        (tagged-ret (keys 1) ret)))
-                                    (tagged-ret (keys 0) ret))))
-                            (fn [x]
-                            (let [specs @specs]
-                                (loop [i 0]
-                                (if (< i (count specs))
-                                    (let [spec (specs i)]
-                                    (let [ret (conform* spec x)]
-                                        (if (invalid? ret)
+                                            (tagged-ret (keys 2) ret)
+                                        )
+                                    )
+                                    (tagged-ret (keys 1) ret)
+                                )
+                            )
+                            (tagged-ret (keys 0) ret)
+                        )
+                    )
+                )
+                (fn [x]
+                    (let [specs @specs]
+                        (loop [i 0]
+                            (if (< i (count specs))
+                                (let [ret (conform* (specs i) x)]
+                                    (if (invalid? ret)
                                         (recur (inc i))
-                                        (tagged-ret (keys i) ret))))
-                                    ::invalid)))))]
-            (reify
+                                        (tagged-ret (keys i) ret)
+                                    )
+                                )
+                                ::invalid
+                            )
+                        )
+                    )
+                )
+            )]
+        (reify
             Specize
             (specize* [s] s)
             (specize* [s _] s)
 
             Spec
-            (conform* [_ x] (cform x))
-            (unform* [_ [k x]] (unform (kps k) x))
+            (conform* [_ x]
+                (cform x)
+            )
+            (unform* [_ [k x]]
+                (unform (kps k) x)
+            )
             (explain* [this path via in x]
-                    (when-not (pvalid? this x)
-                        (apply concat
-                                (map (fn [k form pred]
-                                    (when-not (pvalid? pred x)
-                                        (explain-1 form pred (conj path k) via in x)))
-                                    keys forms preds))))
+                (when-not (pvalid? this x)
+                    (apply concat
+                        (map
+                            (fn [k form pred]
+                                (when-not (pvalid? pred x)
+                                    (explain-1 form pred (conj path k) via in x)
+                                )
+                            )
+                            keys forms preds
+                        )
+                    )
+                )
+            )
             (gen* [_ overrides path rmap]
                 (if gfn
                     (gfn)
-                    (let [gen (fn [k p f]
+                    (let [gen
+                            (fn [k p f]
                                 (let [rmap (inck rmap id)]
-                                (when-not (recur-limit? rmap id path k)
-                                    (gen/delay
-                                    (gensub p overrides (conj path k) rmap f)))))
-                        gs (remove nil? (map gen keys preds forms))]
-                    (when-not (empty? gs)
-                        (gen/one-of gs)))))
-            (with-gen* [_ gfn] (or-spec-impl keys forms preds gfn))
-            (describe* [_] `(or ~@(mapcat vector keys forms)))))
+                                    (when-not (recur-limit? rmap id path k)
+                                        (gen/delay
+                                        (gensub p overrides (conj path k) rmap f))
+                                    )
+                                )
+                            )
+                          gs (remove nil? (map gen keys preds forms))]
+                        (when-not (empty? gs)
+                            (gen/one-of gs)
+                        )
+                    )
+                )
+            )
+            (with-gen* [_ gfn]
+                (or-spec-impl keys forms preds gfn)
+            )
+            (describe* [_]
+                `(or ~@(mapcat vector keys forms))
+            )
+        )
+    )
 )
 
 (§ defn- and-preds [x preds forms]
-    (loop [ret x
-                [pred & preds] preds
-                [form & forms] forms]
-            (if pred
+    (loop [ret x [pred & preds] preds [form & forms] forms]
+        (if pred
             (let [nret (dt pred ret form)]
                 (if (invalid? nret)
-                ::invalid
-                ;;propagate conformed values
-                (recur nret preds forms)))
-            ret))
+                    ::invalid
+                    ;;propagate conformed values
+                    (recur nret preds forms)
+                )
+            )
+            ret
+        )
+    )
 )
 
 (§ defn- explain-pred-list [forms preds path via in x]
-    (loop [ret x
-                [form & forms] forms
-                [pred & preds] preds]
-            (when pred
+    (loop [ret x [form & forms] forms [pred & preds] preds]
+        (when pred
             (let [nret (dt pred ret form)]
                 (if (invalid? nret)
-                (explain-1 form pred path via in ret)
-                (recur nret forms preds)))))
+                    (explain-1 form pred path via in ret)
+                    (recur nret forms preds)
+                )
+            )
+        )
+    )
 )
 
 ;;;
- ; Do not call this directly, use 'and'
+ ; Do not call this directly, use 'and'.
  ;;
 (§ defn and-spec-impl [forms preds gfn]
     (let [specs (delay (mapv specize preds forms))
-                cform
-                (case (count preds)
-                    2 (fn [x]
-                        (let [specs @specs
-                                ret (conform* (specs 0) x)]
-                            (if (invalid? ret)
+          cform
+            (case (count preds)
+                2 (fn [x]
+                    (let [specs @specs ret (conform* (specs 0) x)]
+                        (if (invalid? ret)
                             ::invalid
-                            (conform* (specs 1) ret))))
-                    3 (fn [x]
-                        (let [specs @specs
-                                ret (conform* (specs 0) x)]
-                            (if (invalid? ret)
+                            (conform* (specs 1) ret)
+                        )
+                    )
+                )
+                3 (fn [x]
+                    (let [specs @specs ret (conform* (specs 0) x)]
+                        (if (invalid? ret)
                             ::invalid
                             (let [ret (conform* (specs 1) ret)]
                                 (if (invalid? ret)
-                                ::invalid
-                                (conform* (specs 2) ret))))))
-                    (fn [x]
-                        (let [specs @specs]
+                                    ::invalid
+                                    (conform* (specs 2) ret)
+                                )
+                            )
+                        )
+                    )
+                )
+                (fn [x]
+                    (let [specs @specs]
                         (loop [ret x i 0]
                             (if (< i (count specs))
-                            (let [nret (conform* (specs i) ret)]
-                                (if (invalid? nret)
-                                ::invalid
-                                ;;propagate conformed values
-                                (recur nret (inc i))))
-                            ret)))))]
-            (reify
+                                (let [nret (conform* (specs i) ret)]
+                                    (if (invalid? nret)
+                                        ::invalid
+                                        ;;propagate conformed values
+                                        (recur nret (inc i))
+                                    )
+                                )
+                                ret
+                            )
+                        )
+                    )
+                )
+            )]
+        (reify
             Specize
             (specize* [s] s)
             (specize* [s _] s)
@@ -16032,11 +16710,13 @@
             (explain* [_ path via in x] (explain-pred-list forms preds path via in x))
             (gen* [_ overrides path rmap] (if gfn (gfn) (gensub (first preds) overrides path rmap (first forms))))
             (with-gen* [_ gfn] (and-spec-impl forms preds gfn))
-            (describe* [_] `(and ~@forms))))
+            (describe* [_] `(and ~@forms))
+        )
+    )
 )
 
 ;;;
- ; Do not call this directly, use 'merge'
+ ; Do not call this directly, use 'merge'.
  ;;
 (§ defn merge-spec-impl [forms preds gfn]
     (reify
@@ -16045,89 +16725,100 @@
         (specize* [s _] s)
 
         Spec
-        (conform* [_ x] (let [ms (map #(dt %1 x %2) preds forms)]
-                            (if (some invalid? ms)
-                            ::invalid
-                            (apply c/merge ms))))
-        (unform* [_ x] (apply c/merge (map #(unform % x) (reverse preds))))
+        (conform* [_ x]
+            (let [ms (map #(dt %1 x %2) preds forms)]
+                (if (some invalid? ms)
+                    ::invalid
+                    (apply c/merge ms)
+                )
+            )
+        )
+        (unform* [_ x]
+            (apply c/merge (map #(unform % x) (reverse preds)))
+        )
         (explain* [_ path via in x]
-                    (apply concat
-                            (map #(explain-1 %1 %2 path via in x)
-                                forms preds)))
+            (apply concat
+                (map #(explain-1 %1 %2 path via in x) forms preds)
+            )
+        )
         (gen* [_ overrides path rmap]
-                (if gfn
+            (if gfn
                 (gfn)
                 (gen/fmap
                     #(apply c/merge %)
-                    (apply gen/tuple (map #(gensub %1 overrides path rmap %2)
-                                        preds forms)))))
-        (with-gen* [_ gfn] (merge-spec-impl forms preds gfn))
-        (describe* [_] `(merge ~@forms)))
+                    (apply gen/tuple (map #(gensub %1 overrides path rmap %2) preds forms))
+                )
+            )
+        )
+        (with-gen* [_ gfn]
+            (merge-spec-impl forms preds gfn)
+        )
+        (describe* [_]
+            `(merge ~@forms)
+        ))
 )
 
-(§ defn- coll-prob [x kfn kform distinct count min-count max-count
-                  path via in]
-    (let [pred (c/or kfn coll?)
-                kform (c/or kform `coll?)]
-            (cond
+(§ defn- coll-prob [x kfn kform distinct count min-count max-count path via in]
+    (let [pred (c/or kfn coll?) kform (c/or kform `coll?)]
+        (cond
             (not (pvalid? pred x))
-            (explain-1 kform pred path via in x)
-
+                (explain-1 kform pred path via in x)
             (c/and count (not= count (bounded-count count x)))
-            [{:path path :pred `(= ~count (c/count ~'%)) :val x :via via :in in}]
-
+                [{:path path :pred `(= ~count (c/count ~'%)) :val x :via via :in in}]
             (c/and (c/or min-count max-count)
-                    (not (<= (c/or min-count 0)
-                            (bounded-count (if max-count (inc max-count) min-count) x)
-                            (c/or max-count Integer/MAX_VALUE))))
-            [{:path path :pred `(<= ~(c/or min-count 0) (c/count ~'%) ~(c/or max-count 'Integer/MAX_VALUE)) :val x :via via :in in}]
-
+                (not (<= (c/or min-count 0) (bounded-count (if max-count (inc max-count) min-count) x) (c/or max-count Integer/MAX_VALUE)))
+            )
+                [{:path path :pred `(<= ~(c/or min-count 0) (c/count ~'%) ~(c/or max-count 'Integer/MAX_VALUE)) :val x :via via :in in}]
             (c/and distinct (not (empty? x)) (not (apply distinct? x)))
-            [{:path path :pred 'distinct? :val x :via via :in in}]))
+                [{:path path :pred 'distinct? :val x :via via :in in}]
+        )
+    )
 )
 
 (§ def ^:private empty-coll {`vector? [], `set? #{}, `list? (), `map? {}})
 
 ;;;
- ; Do not call this directly, use 'every', 'every-kv', 'coll-of' or 'map-of'
+ ; Do not call this directly, use 'every', 'every-kv', 'coll-of' or 'map-of'.
  ;;
 (§ defn every-impl
     ([form pred opts] (every-impl form pred opts nil))
-    ([form pred {conform-into :into
-                    describe-form ::describe
-                    :keys [kind ::kind-form count max-count min-count distinct gen-max ::kfn ::cpred
-                            conform-keys ::conform-all]
-                    :or {gen-max 20}
-                    :as opts}
-            gfn]
-            (let [gen-into (if conform-into (empty conform-into) (get empty-coll kind-form))
-                spec (delay (specize pred))
-                check? #(valid? @spec %)
-                kfn (c/or kfn (fn [i v] i))
-                addcv (fn [ret i v cv] (conj ret cv))
-                cfns (fn [x]
-                        ;;returns a tuple of [init add complete] fns
-                        (cond
+    ([form pred {conform-into :into describe-form ::describe :keys [kind ::kind-form count max-count min-count distinct gen-max ::kfn ::cpred conform-keys ::conform-all] :or {gen-max 20} :as opts} gfn]
+        (let [gen-into (if conform-into (empty conform-into) (get empty-coll kind-form))
+              spec     (delay (specize pred))
+              check?   #(valid? @spec %)
+              kfn      (c/or kfn (fn [i v] i))
+              addcv    (fn [ret i v cv] (conj ret cv))
+              cfns
+                (fn [x] ;; returns a tuple of [init add complete] fns
+                    (cond
                         (c/and (vector? x) (c/or (not conform-into) (vector? conform-into)))
-                        [identity
+                        [
+                            identity
                             (fn [ret i v cv]
-                            (if (identical? v cv)
-                                ret
-                                (assoc ret i cv)))
-                            identity]
-
+                                (if (identical? v cv)
+                                    ret
+                                    (assoc ret i cv)
+                                )
+                            )
+                            identity
+                        ]
                         (c/and (map? x) (c/or (c/and kind (not conform-into)) (map? conform-into)))
-                        [(if conform-keys empty identity)
+                        [
+                            (if conform-keys empty identity)
                             (fn [ret i v cv]
-                            (if (c/and (identical? v cv) (not conform-keys))
-                                ret
-                                (assoc ret (nth (if conform-keys cv v) 0) (nth cv 1))))
-                            identity]
-
+                                (if (c/and (identical? v cv) (not conform-keys))
+                                    ret
+                                    (assoc ret (nth (if conform-keys cv v) 0) (nth cv 1))
+                                )
+                            )
+                            identity
+                        ]
                         (c/or (list? conform-into) (seq? conform-into) (c/and (not conform-into) (c/or (list? x) (seq? x))))
-                        [(constantly ()) addcv reverse]
-
-                        :else [#(empty (c/or conform-into %)) addcv identity]))]
+                            [(constantly ()) addcv reverse]
+                        :else
+                            [#(empty (c/or conform-into %)) addcv identity]
+                    )
+                )]
             (reify
                 Specize
                 (specize* [s] s)
@@ -16135,88 +16826,120 @@
 
                 Spec
                 (conform* [_ x]
-                        (let [spec @spec]
-                            (cond
-                            (not (cpred x)) ::invalid
-
+                    (let [spec @spec]
+                        (cond
+                            (not (cpred x))
+                                ::invalid
                             conform-all
-                            (let [[init add complete] (cfns x)]
-                            (loop [ret (init x), i 0, [v & vs :as vseq] (seq x)]
-                                (if vseq
-                                (let [cv (conform* spec v)]
-                                    (if (invalid? cv)
-                                    ::invalid
-                                    (recur (add ret i v cv) (inc i) vs)))
-                                (complete ret))))
-
+                                (let [[init add complete] (cfns x)]
+                                    (loop [ret (init x), i 0, [v & vs :as vseq] (seq x)]
+                                        (if vseq
+                                            (let [cv (conform* spec v)]
+                                                (if (invalid? cv)
+                                                    ::invalid
+                                                    (recur (add ret i v cv) (inc i) vs)
+                                                )
+                                            )
+                                            (complete ret)
+                                        )
+                                    )
+                                )
                             :else
-                            (if (indexed? x)
-                            (let [step (max 1 (long (/ (c/count x) *coll-check-limit*)))]
-                                (loop [i 0]
-                                (if (>= i (c/count x))
-                                    x
-                                    (if (valid? spec (nth x i))
-                                    (recur (c/+ i step))
-                                    ::invalid))))
-                            (let [limit *coll-check-limit*]
-                                (loop [i 0 [v & vs :as vseq] (seq x)]
-                                (cond
-                                    (c/or (nil? vseq) (= i limit)) x
-                                    (valid? spec v) (recur (inc i) vs)
-                                    :else ::invalid)))))))
+                                (if (indexed? x)
+                                    (let [step (max 1 (long (/ (c/count x) *coll-check-limit*)))]
+                                        (loop [i 0]
+                                            (cond (<= (c/count x) i) x (valid? spec (nth x i)) (recur (c/+ i step)) :else ::invalid)
+                                        )
+                                    )
+                                    (let [limit *coll-check-limit*]
+                                        (loop [i 0 [v & vs :as vseq] (seq x)]
+                                            (cond
+                                                (c/or (nil? vseq) (= i limit)) x
+                                                (valid? spec v) (recur (inc i) vs)
+                                                :else ::invalid
+                                            )
+                                        )
+                                    )
+                                )
+                        )
+                    )
+                )
                 (unform* [_ x]
-                        (if conform-all
-                        (let [spec @spec
-                                [init add complete] (cfns x)]
+                    (if conform-all
+                        (let [spec @spec [init add complete] (cfns x)]
                             (loop [ret (init x), i 0, [v & vs :as vseq] (seq x)]
-                            (if (>= i (c/count x))
-                                (complete ret)
-                                (recur (add ret i v (unform* spec v)) (inc i) vs))))
-                        x))
+                                (if (<= (c/count x) i)
+                                    (complete ret)
+                                    (recur (add ret i v (unform* spec v)) (inc i) vs)
+                                )
+                            )
+                        )
+                        x
+                    )
+                )
                 (explain* [_ path via in x]
-                        (c/or (coll-prob x kind kind-form distinct count min-count max-count
-                                        path via in)
-                                (apply concat
-                                    ((if conform-all identity (partial take *coll-error-limit*))
-                                        (keep identity
-                                            (map (fn [i v]
-                                                    (let [k (kfn i v)]
-                                                    (when-not (check? v)
-                                                        (let [prob (explain-1 form pred path via (conj in k) v)]
-                                                        prob))))
-                                                (range) x))))))
+                    (c/or (coll-prob x kind kind-form distinct count min-count max-count path via in)
+                        (apply concat
+                            ((if conform-all identity (partial take *coll-error-limit*))
+                                (keep identity
+                                    (map
+                                        (fn [i v]
+                                            (let [k (kfn i v)]
+                                                (when-not (check? v)
+                                                    (explain-1 form pred path via (conj in k) v)
+                                                )
+                                            )
+                                        )
+                                        (range) x
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
                 (gen* [_ overrides path rmap]
                     (if gfn
                         (gfn)
                         (let [pgen (gensub pred overrides path rmap form)]
-                        (gen/bind
-                        (cond
-                            gen-into (gen/return gen-into)
-                            kind (gen/fmap #(if (empty? %) % (empty %))
-                                        (gensub kind overrides path rmap form))
-                            :else (gen/return []))
-                        (fn [init]
-                            (gen/fmap
-                            #(if (vector? init) % (into init %))
-                            (cond
-                            distinct
-                            (if count
-                                (gen/vector-distinct pgen {:num-elements count :max-tries 100})
-                                (gen/vector-distinct pgen {:min-elements (c/or min-count 0)
+                            (gen/bind
+                                (cond
+                                    gen-into (gen/return gen-into)
+                                    kind (gen/fmap #(if (empty? %) % (empty %)) (gensub kind overrides path rmap form))
+                                    :else (gen/return [])
+                                )
+                                (fn [init]
+                                    (gen/fmap
+                                        #(if (vector? init) % (into init %))
+                                        (cond
+                                            distinct
+                                                (if count
+                                                    (gen/vector-distinct pgen {:num-elements count :max-tries 100})
+                                                    (gen/vector-distinct pgen
+                                                        {
+                                                            :min-elements (c/or min-count 0)
                                                             :max-elements (c/or max-count (max gen-max (c/* 2 (c/or min-count 0))))
-                                                            :max-tries 100}))
-
-                            count
-                            (gen/vector pgen count)
-
-                            (c/or min-count max-count)
-                            (gen/vector pgen (c/or min-count 0) (c/or max-count (max gen-max (c/* 2 (c/or min-count 0)))))
-
-                            :else
-                            (gen/vector pgen 0 gen-max))))))))
-
+                                                            :max-tries 100
+                                                        }
+                                                    )
+                                                )
+                                            count
+                                                (gen/vector pgen count)
+                                            (c/or min-count max-count)
+                                                (gen/vector pgen (c/or min-count 0) (c/or max-count (max gen-max (c/* 2 (c/or min-count 0)))))
+                                            :else
+                                                (gen/vector pgen 0 gen-max)
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
                 (with-gen* [_ gfn] (every-impl form pred opts gfn))
-                (describe* [_] (c/or describe-form `(every ~(res form) ~@(mapcat identity opts)))))))
+                (describe* [_] (c/or describe-form `(every ~(res form) ~@(mapcat identity opts))))
+            )
+        )
+    )
 )
 
 ;; http://matt.might.net/articles/implementation-of-regular-expression-matching-in-scheme-with-derivatives/
@@ -16224,344 +16947,413 @@
 
 (§ defn- accept [x] {::op ::accept :ret x})
 
-(§ defn- accept? [{:keys [::op]}]
-    (= ::accept op)
-)
+(§ defn- accept? [{:keys [::op]}] (= ::accept op))
 
 (§ defn- pcat* [{[p1 & pr :as ps] :ps, [k1 & kr :as ks] :ks, [f1 & fr :as forms] :forms, ret :ret, rep+ :rep+}]
     (when (every? identity ps)
-            (if (accept? p1)
-            (let [rp (:ret p1)
-                    ret (conj ret (if ks {k1 rp} rp))]
+        (if (accept? p1)
+            (let [rp (:ret p1) ret (conj ret (if ks {k1 rp} rp))]
                 (if pr
-                (pcat* {:ps pr :ks kr :forms fr :ret ret})
-                (accept ret)))
-            {::op ::pcat, :ps ps, :ret ret, :ks ks, :forms forms :rep+ rep+}))
+                    (pcat* {:ps pr :ks kr :forms fr :ret ret})
+                    (accept ret)
+                )
+            )
+            {::op ::pcat, :ps ps, :ret ret, :ks ks, :forms forms :rep+ rep+}
+        )
+    )
 )
 
 (§ defn- pcat [& ps] (pcat* {:ps ps :ret []}))
 
 ;;;
- ; Do not call this directly, use 'cat'
+ ; Do not call this directly, use 'cat'.
  ;;
 (§ defn cat-impl [ks ps forms] (pcat* {:ks ks, :ps ps, :forms forms, :ret {}}))
 
 (§ defn- rep* [p1 p2 ret splice form]
     (when p1
-            (let [r {::op ::rep, :p2 p2, :splice splice, :forms form :id (java.util.UUID/randomUUID)}]
+        (let [r {::op ::rep, :p2 p2, :splice splice, :forms form :id (java.util.UUID/randomUUID)}]
             (if (accept? p1)
                 (assoc r :p1 p2 :ret (conj ret (:ret p1)))
-                (assoc r :p1 p1, :ret ret))))
+                (assoc r :p1 p1, :ret ret)
+            )
+        )
+    )
 )
 
 ;;;
- ; Do not call this directly, use '*'
+ ; Do not call this directly, use '*'.
  ;;
 (§ defn rep-impl [form p] (rep* p p [] false form))
 
 ;;;
- ; Do not call this directly, use '+'
+ ; Do not call this directly, use '+'.
  ;;
 (§ defn rep+impl [form p] (pcat* {:ps [p (rep* p p [] true form)] :forms `[~form (* ~form)] :ret [] :rep+ form}))
 
 ;;;
- ; Do not call this directly, use '&'
+ ; Do not call this directly, use '&'.
  ;;
-(§ defn amp-impl [re preds pred-forms]
-    {::op ::amp :p1 re :ps preds :forms pred-forms}
-)
+(§ defn amp-impl [re preds pred-forms] {::op ::amp :p1 re :ps preds :forms pred-forms})
 
 (§ defn- filter-alt [ps ks forms f]
     (if (c/or ks forms)
-            (let [pks (->> (map vector ps
-                                (c/or (seq ks) (repeat nil))
-                                (c/or (seq forms) (repeat nil)))
-                        (filter #(-> % first f)))]
-            [(seq (map first pks)) (when ks (seq (map second pks))) (when forms (seq (map #(nth % 2) pks)))])
-            [(seq (filter f ps)) ks forms])
+        (let [pks (->> (map vector ps (c/or (seq ks) (repeat nil)) (c/or (seq forms) (repeat nil))) (filter #(-> % first f)))]
+            [(seq (map first pks)) (when ks (seq (map second pks))) (when forms (seq (map #(nth % 2) pks)))]
+        )
+        [(seq (filter f ps)) ks forms]
+    )
 )
 
 (§ defn- alt* [ps ks forms]
     (let [[[p1 & pr :as ps] [k1 :as ks] forms] (filter-alt ps ks forms identity)]
-            (when ps
+        (when ps
             (let [ret {::op ::alt, :ps ps, :ks ks :forms forms}]
                 (if (nil? pr)
-                (if k1
-                    (if (accept? p1)
-                    (accept (tagged-ret k1 (:ret p1)))
-                    ret)
-                    p1)
-                ret))))
+                    (if k1
+                        (if (accept? p1)
+                            (accept (tagged-ret k1 (:ret p1)))
+                            ret
+                        )
+                        p1
+                    )
+                    ret
+                )
+            )
+        )
+    )
 )
 
 (§ defn- alts [& ps] (alt* ps nil nil))
 (§ defn- alt2 [p1 p2] (if (c/and p1 p2) (alts p1 p2) (c/or p1 p2)))
 
 ;;;
- ; Do not call this directly, use 'alt'
+ ; Do not call this directly, use 'alt'.
  ;;
 (§ defn alt-impl [ks ps forms] (assoc (alt* ps ks forms) :id (java.util.UUID/randomUUID)))
 
 ;;;
- ; Do not call this directly, use '?'
+ ; Do not call this directly, use '?'.
  ;;
 (§ defn maybe-impl [p form] (assoc (alt* [p (accept ::nil)] nil [form ::nil]) :maybe form))
 
 (§ defn- noret? [p1 pret]
     (c/or (= pret ::nil)
-                (c/and (#{::rep ::pcat} (::op (reg-resolve! p1))) ;;hrm, shouldn't know these
-                    (empty? pret))
-                nil)
+        (c/and (#{::rep ::pcat} (::op (reg-resolve! p1))) ;; hrm, shouldn't know these
+            (empty? pret)
+        )
+        nil
+    )
 )
 
 (§ declare preturn)
 
 (§ defn- accept-nil? [p]
     (let [{:keys [::op ps p1 p2 forms] :as p} (reg-resolve! p)]
-            (case op
-                ::accept true
-                nil nil
-                ::amp (c/and (accept-nil? p1)
-                            (c/or (noret? p1 (preturn p1))
-                                    (let [ret (-> (preturn p1) (and-preds ps (next forms)))]
-                                    (not (invalid? ret)))))
-                ::rep (c/or (identical? p1 p2) (accept-nil? p1))
-                ::pcat (every? accept-nil? ps)
-                ::alt (c/some accept-nil? ps)))
+        (case op
+            ::accept true
+            nil nil
+            ::amp
+                (c/and (accept-nil? p1)
+                    (c/or (noret? p1 (preturn p1))
+                        (let [ret (-> (preturn p1) (and-preds ps (next forms)))]
+                            (not (invalid? ret))
+                        )
+                    )
+                )
+            ::rep (c/or (identical? p1 p2) (accept-nil? p1))
+            ::pcat (every? accept-nil? ps)
+            ::alt (c/some accept-nil? ps)
+        )
+    )
 )
 
 (§ declare add-ret)
 
 (§ defn- preturn [p]
     (let [{[p0 & pr :as ps] :ps, [k :as ks] :ks, :keys [::op p1 ret forms] :as p} (reg-resolve! p)]
-            (case op
-                ::accept ret
-                nil nil
-                ::amp (let [pret (preturn p1)]
-                        (if (noret? p1 pret)
-                            ::nil
-                            (and-preds pret ps forms)))
-                ::rep (add-ret p1 ret k)
-                ::pcat (add-ret p0 ret k)
-                ::alt (let [[[p0] [k0]] (filter-alt ps ks forms accept-nil?)
-                            r (if (nil? p0) ::nil (preturn p0))]
-                        (if k0 (tagged-ret k0 r) r))))
+        (case op
+            ::accept ret
+            nil nil
+            ::amp
+                (let [pret (preturn p1)]
+                    (if (noret? p1 pret)
+                        ::nil
+                        (and-preds pret ps forms)
+                    )
+                )
+            ::rep (add-ret p1 ret k)
+            ::pcat (add-ret p0 ret k)
+            ::alt
+                (let [[[p0] [k0]] (filter-alt ps ks forms accept-nil?) r (if (nil? p0) ::nil (preturn p0))]
+                    (if k0 (tagged-ret k0 r) r)
+                )
+        )
+    )
 )
 
 (§ defn- op-unform [p x]
     ;;(prn {:p p :x x})
-    (let [{[p0 & pr :as ps] :ps, [k :as ks] :ks, :keys [::op p1 ret forms rep+ maybe] :as p} (reg-resolve! p)
-                kps (zipmap ks ps)]
-            (case op
-                ::accept [ret]
-                nil [(unform p x)]
-                ::amp (let [px (reduce #(unform %2 %1) x (reverse ps))]
-                        (op-unform p1 px))
-                ::rep (mapcat #(op-unform p1 %) x)
-                ::pcat (if rep+
-                        (mapcat #(op-unform p0 %) x)
-                        (mapcat (fn [k]
-                                    (when (contains? x k)
-                                    (op-unform (kps k) (get x k))))
-                                ks))
-                ::alt (if maybe
-                        [(unform p0 x)]
-                        (let [[k v] x]
-                            (op-unform (kps k) v)))))
+    (let [{[p0 & pr :as ps] :ps, [k :as ks] :ks, :keys [::op p1 ret forms rep+ maybe] :as p} (reg-resolve! p) kps (zipmap ks ps)]
+        (case op
+            ::accept [ret]
+            nil [(unform p x)]
+            ::amp
+                (let [px (reduce #(unform %2 %1) x (reverse ps))]
+                    (op-unform p1 px)
+                )
+            ::rep (mapcat #(op-unform p1 %) x)
+            ::pcat
+                (if rep+
+                    (mapcat #(op-unform p0 %) x)
+                    (mapcat
+                        (fn [k]
+                            (when (contains? x k)
+                                (op-unform (kps k) (get x k))
+                            )
+                        )
+                        ks
+                    )
+                )
+            ::alt
+                (if maybe
+                    [(unform p0 x)]
+                    (let [[k v] x]
+                        (op-unform (kps k) v)
+                    )
+                )
+        )
+    )
 )
 
 (§ defn- add-ret [p r k]
     (let [{:keys [::op ps splice] :as p} (reg-resolve! p)
-                prop #(let [ret (preturn p)]
-                        (if (empty? ret) r ((if splice into conj) r (if k {k ret} ret))))]
-            (case op
-                nil r
-                (::alt ::accept ::amp)
+          prop #(let [ret (preturn p)] (if (empty? ret) r ((if splice into conj) r (if k {k ret} ret))))]
+        (case op
+            nil r
+            (::alt ::accept ::amp)
                 (let [ret (preturn p)]
                     ;;(prn {:ret ret})
-                    (if (= ret ::nil) r (conj r (if k {k ret} ret))))
-
-                (::rep ::pcat) (prop)))
+                    (if (= ret ::nil) r (conj r (if k {k ret} ret)))
+                )
+            (::rep ::pcat) (prop)
+        )
+    )
 )
 
 (§ defn- deriv [p x]
     (let [{[p0 & pr :as ps] :ps, [k0 & kr :as ks] :ks, :keys [::op p1 p2 ret splice forms] :as p} (reg-resolve! p)]
-            (when p
+        (when p
             (case op
-                    ::accept nil
-                    nil (let [ret (dt p x p)]
-                        (when-not (invalid? ret) (accept ret)))
-                    ::amp (when-let [p1 (deriv p1 x)]
-                            (if (= ::accept (::op p1))
+                ::accept nil
+                nil (let [ret (dt p x p)] (when-not (invalid? ret) (accept ret)))
+                ::amp
+                    (when-let [p1 (deriv p1 x)]
+                        (if (= ::accept (::op p1))
                             (let [ret (-> (preturn p1) (and-preds ps (next forms)))]
                                 (when-not (invalid? ret)
-                                (accept ret)))
-                            (amp-impl p1 ps forms)))
-                    ::pcat (alt2 (pcat* {:ps (cons (deriv p0 x) pr), :ks ks, :forms forms, :ret ret})
-                                (when (accept-nil? p0) (deriv (pcat* {:ps pr, :ks kr, :forms (next forms), :ret (add-ret p0 ret k0)}) x)))
-                    ::alt (alt* (map #(deriv % x) ps) ks forms)
-                    ::rep (alt2 (rep* (deriv p1 x) p2 ret splice forms)
-                                (when (accept-nil? p1) (deriv (rep* p2 p2 (add-ret p1 ret nil) splice forms) x))))))
+                                    (accept ret)
+                                )
+                            )
+                            (amp-impl p1 ps forms)
+                        )
+                    )
+                ::pcat
+                    (alt2 (pcat* {:ps (cons (deriv p0 x) pr), :ks ks, :forms forms, :ret ret})
+                        (when (accept-nil? p0)
+                            (deriv (pcat* {:ps pr, :ks kr, :forms (next forms), :ret (add-ret p0 ret k0)}) x)
+                        )
+                    )
+                ::alt (alt* (map #(deriv % x) ps) ks forms)
+                ::rep
+                    (alt2 (rep* (deriv p1 x) p2 ret splice forms)
+                        (when (accept-nil? p1)
+                            (deriv (rep* p2 p2 (add-ret p1 ret nil) splice forms) x)
+                        )
+                    )
+            )
+        )
+    )
 )
 
 (§ defn- op-describe [p]
     (let [{:keys [::op ps ks forms splice p1 rep+ maybe] :as p} (reg-resolve! p)]
-            ;;(prn {:op op :ks ks :forms forms :p p})
-            (when p
+        ;;(prn {:op op :ks ks :forms forms :p p})
+        (when p
             (case op
-                    ::accept nil
-                    nil p
-                    ::amp (list* 'cloiure.spec.alpha/& (op-describe p1) forms)
-                    ::pcat (if rep+
-                            (list `+ rep+)
-                            (cons `cat (mapcat vector (c/or (seq ks) (repeat :_)) forms)))
-                    ::alt (if maybe
-                            (list `? maybe)
-                            (cons `alt (mapcat vector ks forms)))
-                    ::rep (list (if splice `+ `*) forms))))
+                ::accept nil
+                nil p
+                ::amp (list* 'cloiure.spec.alpha/& (op-describe p1) forms)
+                ::pcat
+                    (if rep+
+                        (list `+ rep+)
+                        (cons `cat (mapcat vector (c/or (seq ks) (repeat :_)) forms))
+                    )
+                ::alt
+                    (if maybe
+                        (list `? maybe)
+                        (cons `alt (mapcat vector ks forms))
+                    )
+                ::rep (list (if splice `+ `*) forms)
+            )
+        )
+    )
 )
 
 (§ defn- op-explain [form p path via in input]
     ;;(prn {:form form :p p :path path :input input})
     (let [[x :as input] input
-                {:keys [::op ps ks forms splice p1 p2] :as p} (reg-resolve! p)
-                via (if-let [name (spec-name p)] (conj via name) via)
-                insufficient (fn [path form]
-                            [{:path path
-                                :reason "Insufficient input"
-                                :pred form
-                                :val ()
-                                :via via
-                                :in in}])]
-            (when p
+          {:keys [::op ps ks forms splice p1 p2] :as p} (reg-resolve! p)
+          via (if-let [name (spec-name p)] (conj via name) via)
+          insufficient (fn [path form] [{:path path :reason "Insufficient input" :pred form :val () :via via :in in}])]
+        (when p
             (case op
-                    ::accept nil
-                    nil (if (empty? input)
-                        (insufficient path form)
-                        (explain-1 form p path via in x))
-                    ::amp (if (empty? input)
-                            (if (accept-nil? p1)
+                ::accept nil
+                nil (if (empty? input) (insufficient path form) (explain-1 form p path via in x))
+                ::amp
+                    (if (empty? input)
+                        (if (accept-nil? p1)
                             (explain-pred-list forms ps path via in (preturn p1))
-                            (insufficient path (op-describe p1)))
-                            (if-let [p1 (deriv p1 x)]
+                            (insufficient path (op-describe p1))
+                        )
+                        (if-let [p1 (deriv p1 x)]
                             (explain-pred-list forms ps path via in (preturn p1))
-                            (op-explain (op-describe p1) p1 path via in input)))
-                    ::pcat (let [pkfs (map vector
-                                        ps
-                                        (c/or (seq ks) (repeat nil))
-                                        (c/or (seq forms) (repeat nil)))
-                                [pred k form] (if (= 1 (count pkfs))
-                                                (first pkfs)
-                                                (first (remove (fn [[p]] (accept-nil? p)) pkfs)))
-                                path (if k (conj path k) path)
-                                form (c/or form (op-describe pred))]
-                            (if (c/and (empty? input) (not pred))
+                            (op-explain (op-describe p1) p1 path via in input)
+                        )
+                    )
+                ::pcat
+                    (let [pkfs (map vector ps (c/or (seq ks) (repeat nil)) (c/or (seq forms) (repeat nil)))
+                          [pred k form]
+                            (if (= 1 (count pkfs))
+                                (first pkfs)
+                                (first (remove (fn [[p]] (accept-nil? p)) pkfs))
+                            )
+                          path (if k (conj path k) path)
+                          form (c/or form (op-describe pred))]
+                        (if (c/and (empty? input) (not pred))
                             (insufficient path form)
-                            (op-explain form pred path via in input)))
-                    ::alt (if (empty? input)
-                            (insufficient path (op-describe p))
-                            (apply concat
-                                (map (fn [k form pred]
-                                        (op-explain (c/or form (op-describe pred))
-                                                    pred
-                                                    (if k (conj path k) path)
-                                                    via
-                                                    in
-                                                    input))
-                                        (c/or (seq ks) (repeat nil))
-                                        (c/or (seq forms) (repeat nil))
-                                        ps)))
-                    ::rep (op-explain (if (identical? p1 p2)
-                                        forms
-                                        (op-describe p1))
-                                    p1 path via in input))))
+                            (op-explain form pred path via in input)
+                        )
+                    )
+                ::alt
+                    (if (empty? input)
+                        (insufficient path (op-describe p))
+                        (apply concat
+                            (map
+                                (fn [k form pred]
+                                    (op-explain (c/or form (op-describe pred)) pred (if k (conj path k) path) via in input)
+                                )
+                                (c/or (seq ks) (repeat nil))
+                                (c/or (seq forms) (repeat nil))
+                                ps
+                            )
+                        )
+                    )
+                ::rep (op-explain (if (identical? p1 p2) forms (op-describe p1)) p1 path via in input)
+            )
+        )
+    )
 )
 
 (§ defn- re-gen [p overrides path rmap f]
     ;;(prn {:op op :ks ks :forms forms})
     (let [origp p
-                {:keys [::op ps ks p1 p2 forms splice ret id ::gfn] :as p} (reg-resolve! p)
-                rmap (if id (inck rmap id) rmap)
-                ggens (fn [ps ks forms]
-                        (let [gen (fn [p k f]
-                                    ;;(prn {:k k :path path :rmap rmap :op op :id id})
-                                    (when-not (c/and rmap id k (recur-limit? rmap id path k))
-                                    (if id
-                                        (gen/delay (re-gen p overrides (if k (conj path k) path) rmap (c/or f p)))
-                                        (re-gen p overrides (if k (conj path k) path) rmap (c/or f p)))))]
-                        (map gen ps (c/or (seq ks) (repeat nil)) (c/or (seq forms) (repeat nil)))))]
-            (c/or (when-let [gfn (c/or (get overrides (spec-name origp))
-                                    (get overrides (spec-name p) )
-                                    (get overrides path))]
-                    (case op
-                        (:accept nil) (gen/fmap vector (gfn))
-                        (gfn)))
-                (when gfn
-                    (gfn))
-                (when p
-                    (case op
-                        ::accept (if (= ret ::nil)
-                                    (gen/return [])
-                                    (gen/return [ret]))
-                        nil (when-let [g (gensub p overrides path rmap f)]
-                                (gen/fmap vector g))
-                        ::amp (re-gen p1 overrides path rmap (op-describe p1))
-                        ::pcat (let [gens (ggens ps ks forms)]
-                                (when (every? identity gens)
-                                    (apply gen/cat gens)))
-                        ::alt (let [gens (remove nil? (ggens ps ks forms))]
-                                (when-not (empty? gens)
-                                    (gen/one-of gens)))
-                        ::rep (if (recur-limit? rmap id [id] id)
-                                (gen/return [])
-                                (when-let [g (re-gen p2 overrides path rmap forms)]
-                                    (gen/fmap #(apply concat %)
-                                            (gen/vector g))))))))
+          {:keys [::op ps ks p1 p2 forms splice ret id ::gfn] :as p} (reg-resolve! p)
+          rmap (if id (inck rmap id) rmap)
+          ggens
+            (fn [ps ks forms]
+                (let [gen
+                        (fn [p k f]
+                            ;;(prn {:k k :path path :rmap rmap :op op :id id})
+                            (when-not (c/and rmap id k (recur-limit? rmap id path k))
+                                (if id
+                                    (gen/delay (re-gen p overrides (if k (conj path k) path) rmap (c/or f p)))
+                                    (re-gen p overrides (if k (conj path k) path) rmap (c/or f p))
+                                )
+                            )
+                        )]
+                    (map gen ps (c/or (seq ks) (repeat nil)) (c/or (seq forms) (repeat nil)))
+                )
+            )]
+        (c/or
+            (when-let [gfn (c/or (get overrides (spec-name origp)) (get overrides (spec-name p) ) (get overrides path))]
+                (case op (:accept nil) (gen/fmap vector (gfn)) (gfn))
+            )
+            (when gfn
+                (gfn)
+            )
+            (when p
+                (case op
+                    ::accept (if (= ret ::nil) (gen/return []) (gen/return [ret]))
+                    nil (when-let [g (gensub p overrides path rmap f)] (gen/fmap vector g))
+                    ::amp (re-gen p1 overrides path rmap (op-describe p1))
+                    ::pcat
+                        (let [gens (ggens ps ks forms)]
+                            (when (every? identity gens)
+                                (apply gen/cat gens)
+                            )
+                        )
+                    ::alt
+                        (let [gens (remove nil? (ggens ps ks forms))]
+                            (when-not (empty? gens)
+                                (gen/one-of gens)
+                            )
+                        )
+                    ::rep
+                        (if (recur-limit? rmap id [id] id)
+                            (gen/return [])
+                            (when-let [g (re-gen p2 overrides path rmap forms)]
+                                (gen/fmap #(apply concat %) (gen/vector g))
+                            )
+                        )
+                )
+            )
+        )
+    )
 )
 
 (§ defn- re-conform [p [x & xs :as data]]
     ;;(prn {:p p :x x :xs xs})
     (if (empty? data)
-            (if (accept-nil? p)
+        (if (accept-nil? p)
             (let [ret (preturn p)]
-                (if (= ret ::nil)
-                nil
-                ret))
-            ::invalid)
-            (if-let [dp (deriv p x)]
+                (if (= ret ::nil) nil ret)
+            )
+            ::invalid
+        )
+        (if-let [dp (deriv p x)]
             (recur dp xs)
-            ::invalid))
+            ::invalid
+        )
+    )
 )
 
 (§ defn- re-explain [path via in re input]
     (loop [p re [x & xs :as data] input i 0]
-            ;;(prn {:p p :x x :xs xs :re re}) (prn)
-            (if (empty? data)
+        ;;(prn {:p p :x x :xs xs :re re}) (prn)
+        (if (empty? data)
             (if (accept-nil? p)
                 nil ;;success
-                (op-explain (op-describe p) p path via in nil))
+                (op-explain (op-describe p) p path via in nil)
+            )
             (if-let [dp (deriv p x)]
                 (recur dp xs (inc i))
                 (if (accept? p)
-                (if (= (::op p) ::pcat)
-                    (op-explain (op-describe p) p path via (conj in i) (seq data))
-                    [{:path path
-                    :reason "Extra input"
-                    :pred (op-describe re)
-                    :val data
-                    :via via
-                    :in (conj in i)}])
-                (c/or (op-explain (op-describe p) p path via (conj in i) (seq data))
-                        [{:path path
-                        :reason "Extra input"
-                        :pred (op-describe p)
-                        :val data
-                        :via via
-                        :in (conj in i)}])))))
+                    (if (= (::op p) ::pcat)
+                        (op-explain (op-describe p) p path via (conj in i) (seq data))
+                        [{:path path :reason "Extra input" :pred (op-describe re) :val data :via via :in (conj in i)}]
+                    )
+                    (c/or (op-explain (op-describe p) p path via (conj in i) (seq data))
+                        [{:path path :reason "Extra input" :pred (op-describe p) :val data :via via :in (conj in i)}]
+                    )
+                )
+            )
+        )
+    )
 )
 
 ;;;
- ; Do not call this directly, use 'spec' with a regex op argument
+ ; Do not call this directly, use 'spec' with a regex op argument.
  ;;
 (§ defn regex-spec-impl [re gfn]
     (reify
@@ -16571,51 +17363,64 @@
 
         Spec
         (conform* [_ x]
-                    (if (c/or (nil? x) (coll? x))
-                    (re-conform re (seq x))
-                    ::invalid))
+            (if (c/or (nil? x) (coll? x))
+                (re-conform re (seq x))
+                ::invalid
+            )
+        )
         (unform* [_ x] (op-unform re x))
         (explain* [_ path via in x]
-                    (if (c/or (nil? x) (coll? x))
-                    (re-explain path via in re (seq x))
-                    [{:path path :pred (op-describe re) :val x :via via :in in}]))
+            (if (c/or (nil? x) (coll? x))
+                (re-explain path via in re (seq x))
+                [{:path path :pred (op-describe re) :val x :via via :in in}]
+            )
+        )
         (gen* [_ overrides path rmap]
-                (if gfn
+            (if gfn
                 (gfn)
-                (re-gen re overrides path rmap (op-describe re))))
+                (re-gen re overrides path rmap (op-describe re))
+            )
+        )
         (with-gen* [_ gfn] (regex-spec-impl re gfn))
-        (describe* [_] (op-describe re)))
+        (describe* [_] (op-describe re))
+    )
 )
 
 (§ defn- call-valid? [f specs args]
     (let [cargs (conform (:args specs) args)]
-            (when-not (invalid? cargs)
-            (let [ret (apply f args)
-                    cret (conform (:ret specs) ret)]
+        (when-not (invalid? cargs)
+            (let [ret (apply f args) cret (conform (:ret specs) ret)]
                 (c/and (not (invalid? cret))
                     (if (:fn specs)
                         (pvalid? (:fn specs) {:args cargs :ret cret})
-                        true)))))
+                        true
+                    )
+                )
+            )
+        )
+    )
 )
 
 ;;;
- ; returns f if valid, else smallest
+ ; Returns f if valid, else smallest.
  ;;
 (§ defn- validate-fn [f specs iters]
-    (let [g (gen (:args specs))
-                prop (gen/for-all* [g] #(call-valid? f specs %))]
-            (let [ret (gen/quick-check iters prop)]
+    (let [g (gen (:args specs)) prop (gen/for-all* [g] #(call-valid? f specs %))]
+        (let [ret (gen/quick-check iters prop)]
             (if-let [[smallest] (-> ret :shrunk :smallest)]
                 smallest
-                f)))
+                f
+            )
+        )
+    )
 )
 
 ;;;
- ; Do not call this directly, use 'fspec'
+ ; Do not call this directly, use 'fspec'.
  ;;
 (§ defn fspec-impl [argspec aform retspec rform fnspec fform gfn]
     (let [specs {:args argspec :ret retspec :fn fnspec}]
-            (reify
+        (reify
             cloiure.lang.ILookup
             (valAt [this k] (get specs k))
             (valAt [_ k not-found] (get specs k not-found))
@@ -16625,45 +17430,63 @@
             (specize* [s _] s)
 
             Spec
-            (conform* [this f] (if argspec
-                                (if (ifn? f)
-                                    (if (identical? f (validate-fn f specs *fspec-iterations*)) f ::invalid)
-                                    ::invalid)
-                                (throw (Exception. (str "Can't conform fspec without args spec: " (pr-str (describe this)))))))
+            (conform* [this f]
+                (if argspec
+                    (if (ifn? f)
+                        (if (identical? f (validate-fn f specs *fspec-iterations*)) f ::invalid)
+                        ::invalid
+                    )
+                    (throw (Exception. (str "Can't conform fspec without args spec: " (pr-str (describe this)))))
+                )
+            )
             (unform* [_ f] f)
             (explain* [_ path via in f]
-                    (if (ifn? f)
-                        (let [args (validate-fn f specs 100)]
-                        (if (identical? f args) ;;hrm, we might not be able to reproduce
+                (if (ifn? f)
+                    (let [args (validate-fn f specs 100)]
+                        (if (identical? f args) ;; hrm, we might not be able to reproduce
                             nil
                             (let [ret (try (apply f args) (catch Throwable t t))]
-                            (if (instance? Throwable ret)
-                                ;;TODO add exception data
-                                [{:path path :pred '(apply fn) :val args :reason (.getMessage ^Throwable ret) :via via :in in}]
-
-                                (let [cret (dt retspec ret rform)]
-                                (if (invalid? cret)
-                                    (explain-1 rform retspec (conj path :ret) via in ret)
-                                    (when fnspec
-                                    (let [cargs (conform argspec args)]
-                                        (explain-1 fform fnspec (conj path :fn) via in {:args cargs :ret cret})))))))))
-                        [{:path path :pred 'ifn? :val f :via via :in in}]))
-            (gen* [_ overrides _ _] (if gfn
+                                (if (instance? Throwable ret)
+                                    [{:path path :pred '(apply fn) :val args :reason (.getMessage ^Throwable ret) :via via :in in}] ;; TODO add exception data
+                                    (let [cret (dt retspec ret rform)]
+                                        (if (invalid? cret)
+                                            (explain-1 rform retspec (conj path :ret) via in ret)
+                                            (when fnspec
+                                                (let [cargs (conform argspec args)]
+                                                    (explain-1 fform fnspec (conj path :fn) via in {:args cargs :ret cret})
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                    [{:path path :pred 'ifn? :val f :via via :in in}]
+                )
+            )
+            (gen* [_ overrides _ _]
+                (if gfn
                     (gfn)
                     (gen/return
-                    (fn [& args]
-                        (c/assert (pvalid? argspec args) (with-out-str (explain argspec args)))
-                        (gen/generate (gen retspec overrides))))))
+                        (fn [& args]
+                            (c/assert (pvalid? argspec args) (with-out-str (explain argspec args)))
+                            (gen/generate (gen retspec overrides))
+                        )
+                    )
+                )
+            )
             (with-gen* [_ gfn] (fspec-impl argspec aform retspec rform fnspec fform gfn))
-            (describe* [_] `(fspec :args ~aform :ret ~rform :fn ~fform))))
+            (describe* [_] `(fspec :args ~aform :ret ~rform :fn ~fform))
+        )
+    )
 )
 
 (§ cloiure.spec.alpha/def ::kvs->map (conformer #(zipmap (map ::k %) (map ::v %)) #(map (fn [[k v]] {::k k ::v v}) %)))
 
 ;;;
- ; takes the same arguments as spec/keys and returns a regex op that matches sequences of key/values,
- ; converts them into a map, and conforms that map with a corresponding
- ; spec/keys call:
+ ; Takes the same arguments as spec/keys and returns a regex op that matches sequences of key/values,
+ ; converts them into a map, and conforms that map with a corresponding spec/keys call:
  ;
  ; user=> (s/conform (s/keys :req-un [::a ::c]) {:a 1 :c 2})
  ; {:a 1, :c 2}
@@ -16678,38 +17501,39 @@
 (§ defmacro keys* [& kspecs]
     `(let [mspec# (keys ~@kspecs)]
         (with-gen (cloiure.spec.alpha/& (* (cat ::k keyword? ::v any?)) ::kvs->map mspec#)
-        (fn [] (gen/fmap (fn [m#] (apply concat m#)) (gen mspec#)))))
+            (fn [] (gen/fmap (fn [m#] (apply concat m#)) (gen mspec#)))
+        )
+    )
 )
 
 ;;;
- ; takes a spec and returns a spec that has the same properties except
- ; 'conform' returns the original (not the conformed) value. Note, will specize regex ops.
+ ; Takes a spec and returns a spec that has the same properties except 'conform'
+ ; returns the original (not the conformed) value. Note, will specize regex ops.
  ;;
 (§ defn nonconforming [spec]
     (let [spec (delay (specize spec))]
-            (reify
+        (reify
             Specize
             (specize* [s] s)
             (specize* [s _] s)
 
             Spec
-            (conform* [_ x] (let [ret (conform* @spec x)]
-                            (if (invalid? ret)
-                                ::invalid
-                                x)))
+            (conform* [_ x] (let [ret (conform* @spec x)] (if (invalid? ret) ::invalid x)))
             (unform* [_ x] x)
             (explain* [_ path via in x] (explain* @spec path via in x))
             (gen* [_ overrides path rmap] (gen* @spec overrides path rmap))
             (with-gen* [_ gfn] (nonconforming (with-gen* @spec gfn)))
-            (describe* [_] `(nonconforming ~(describe* @spec)))))
+            (describe* [_] `(nonconforming ~(describe* @spec)))
+        )
+    )
 )
 
 ;;;
- ; Do not call this directly, use 'nilable'
+ ; Do not call this directly, use 'nilable'.
  ;;
 (§ defn nilable-impl [form pred gfn]
     (let [spec (delay (specize pred form))]
-            (reify
+        (reify
             Specize
             (specize* [s] s)
             (specize* [s _] s)
@@ -16718,95 +17542,103 @@
             (conform* [_ x] (if (nil? x) nil (conform* @spec x)))
             (unform* [_ x] (if (nil? x) nil (unform* @spec x)))
             (explain* [_ path via in x]
-                    (when-not (c/or (pvalid? @spec x) (nil? x))
-                        (conj
+                (when-not (c/or (pvalid? @spec x) (nil? x))
+                    (conj
                         (explain-1 form pred (conj path ::pred) via in x)
-                        {:path (conj path ::nil) :pred 'nil? :val x :via via :in in})))
+                        {:path (conj path ::nil) :pred 'nil? :val x :via via :in in}
+                    )
+                )
+            )
             (gen* [_ overrides path rmap]
                 (if gfn
                     (gfn)
                     (gen/frequency
-                    [[1 (gen/delay (gen/return nil))]
-                        [9 (gen/delay (gensub pred overrides (conj path ::pred) rmap form))]])))
+                        [[1 (gen/delay (gen/return nil))] [9 (gen/delay (gensub pred overrides (conj path ::pred) rmap form))]]
+                    )
+                )
+            )
             (with-gen* [_ gfn] (nilable-impl form pred gfn))
-            (describe* [_] `(nilable ~(res form)))))
+            (describe* [_] `(nilable ~(res form)))
+        )
+    )
 )
 
 ;;;
- ; returns a spec that accepts nil and values satisfying pred
+ ; Returns a spec that accepts nil and values satisfying pred.
  ;;
 (§ defmacro nilable [pred]
     (let [pf (res pred)]
-            `(nilable-impl '~pf ~pred nil))
+        `(nilable-impl '~pf ~pred nil)
+    )
 )
 
 ;;;
- ; generates a number (default 10) of values compatible with spec and maps conform over them,
- ; returning a sequence of [val conformed-val] tuples. Optionally takes
- ; a generator overrides map as per gen
+ ; Generates a number (default 10) of values compatible with spec and maps
+ ; conform over them, returning a sequence of [val conformed-val] tuples.
+ ; Optionally takes a generator overrides map as per gen.
  ;;
 (§ defn exercise
     ([spec] (exercise spec 10))
     ([spec n] (exercise spec n nil))
-    ([spec n overrides]
-            (map #(vector % (conform spec %)) (gen/sample (gen spec overrides) n)))
+    ([spec n overrides] (map #(vector % (conform spec %)) (gen/sample (gen spec overrides) n)))
 )
 
 ;;;
- ; exercises the fn named by sym (a symbol) by applying it to
- ; n (default 10) generated samples of its args spec. When fspec is
- ; supplied its arg spec is used, and sym-or-f can be a fn. Returns a
- ; sequence of tuples of [args ret].
+ ; Exercises the fn named by sym (a symbol) by applying it to n (default 10)
+ ; generated samples of its args spec. When fspec is supplied its arg spec is
+ ; used, and sym-or-f can be a fn. Returns a sequence of tuples of [args ret].
  ;;
 (§ defn exercise-fn
     ([sym] (exercise-fn sym 10))
     ([sym n] (exercise-fn sym n (get-spec sym)))
     ([sym-or-f n fspec]
-            (let [f (if (symbol? sym-or-f) (resolve sym-or-f) sym-or-f)]
+        (let [f (if (symbol? sym-or-f) (resolve sym-or-f) sym-or-f)]
             (if-let [arg-spec (c/and fspec (:args fspec))]
                 (for [args (gen/sample (gen arg-spec) n)]
-                [args (apply f args)])
-                (throw (Exception. "No :args spec found, can't generate")))))
+                    [args (apply f args)]
+                )
+                (throw (Exception. "No :args spec found, can't generate"))
+            )
+        )
+    )
 )
 
 ;;;
- ; Return true if inst at or after start and before end
+ ; Return true if inst at or after start and before end.
  ;;
 (§ defn inst-in-range? [start end inst]
     (c/and (inst? inst)
-                (let [t (inst-ms inst)]
-                (c/and (<= (inst-ms start) t) (< t (inst-ms end)))))
+        (let [t (inst-ms inst)]
+            (c/and (<= (inst-ms start) t) (< t (inst-ms end)))
+        )
+    )
 )
 
 ;;;
- ; Returns a spec that validates insts in the range from start
- ; (inclusive) to end (exclusive).
+ ; Returns a spec that validates insts in the range from start (inclusive) to end (exclusive).
  ;;
 (§ defmacro inst-in [start end]
-    `(let [st# (inst-ms ~start)
-            et# (inst-ms ~end)
-            mkdate# (fn [d#] (java.util.Date. ^{:tag ~'long} d#))]
+    `(let [st# (inst-ms ~start) et# (inst-ms ~end) mkdate# (fn [d#] (java.util.Date. ^{:tag ~'long} d#))]
         (spec (and inst? #(inst-in-range? ~start ~end %))
-        :gen (fn []
-                (gen/fmap mkdate#
-                    (gen/large-integer* {:min st# :max et#})))))
+            :gen (fn [] (gen/fmap mkdate# (gen/large-integer* {:min st# :max et#})))
+        )
+    )
 )
 
 ;;;
- ; Return true if start <= val, val < end and val is a fixed
- ; precision integer.
+ ; Return true if start <= val, val < end and val is a fixed precision integer.
  ;;
 (§ defn int-in-range? [start end val]
     (c/and int? (<= start val) (< val end))
 )
 
 ;;;
- ; Returns a spec that validates fixed precision integers in the
- ; range from start (inclusive) to end (exclusive).
+ ; Returns a spec that validates fixed precision integers in the range from start (inclusive) to end (exclusive).
  ;;
 (§ defmacro int-in [start end]
     `(spec (and int? #(int-in-range? ~start ~end %))
-        :gen #(gen/large-integer* {:min ~start :max (dec ~end)}))
+        :gen #(gen/large-integer* {:min ~start :max (dec ~end)})
+    )
 )
 
 ;;;
@@ -16818,12 +17650,15 @@
  ; :max       - maximum value (inclusive, default none)
  ;;
 (§ defmacro double-in [& {:keys [infinite? NaN? min max] :or {infinite? true NaN? true} :as m}]
-    `(spec (and c/double?
-                ~@(when-not infinite? '[#(not (Double/isInfinite %))])
-                ~@(when-not NaN? '[#(not (Double/isNaN %))])
-                ~@(when max `[#(<= % ~max)])
-                ~@(when min `[#(<= ~min %)]))
-            :gen #(gen/double* ~m))
+    `(spec
+        (and c/double?
+            ~@(when-not infinite? '[#(not (Double/isInfinite %))])
+            ~@(when-not NaN? '[#(not (Double/isNaN %))])
+            ~@(when max `[#(<= % ~max)])
+            ~@(when min `[#(<= ~min %)])
+        )
+        :gen #(gen/double* ~m)
+    )
 )
 
 ;;;
@@ -16859,12 +17694,11 @@
  ;;
 (§ defn assert* [spec x]
     (if (valid? spec x)
-            x
-            (let [ed (c/merge (assoc (explain-data* spec [] [] [] x)
-                                ::failure :assertion-failed))]
-            (throw (ex-info
-                    (str "Spec assertion failed\n" (with-out-str (explain-out ed)))
-                    ed))))
+        x
+        (let [ed (c/merge (assoc (explain-data* spec [] [] [] x) ::failure :assertion-failed))]
+            (throw (ex-info (str "Spec assertion failed\n" (with-out-str (explain-out ed))) ed))
+        )
+    )
 )
 
 ;;;
@@ -16884,693 +17718,307 @@
  ;;
 (§ defmacro assert [spec x]
     (if *compile-asserts*
-            `(if cloiure.lang.RT/checkSpecAsserts
+        `(if cloiure.lang.RT/checkSpecAsserts
             (assert* ~spec ~x)
-            ~x)
-            x)
+            ~x
+        )
+        x
+    )
 )
 
-#_(ns cloiure.spec.gen.alpha
-    (:refer-cloiure :exclude [boolean bytes cat hash-map list map not-empty set vector char double int keyword symbol string uuid delay]))
+#_(ns cloiure.core.specs.alpha
+    (:require [cloiure.spec.alpha :as s]))
 
-(§ alias 'c 'cloiure.core)
+;; destructure
 
-(§ defn- dynaload [s]
-    (let [ns (namespace s)]
-            (assert ns)
-            (require (c/symbol ns))
-            (let [v (resolve s)]
-            (if v
-                @v
-                (throw (RuntimeException. (str "Var " s " is not on the classpath"))))))
+(§ s/def ::local-name (s/and simple-symbol? #(not= '& %)))
+
+(§ s/def ::binding-form
+    (s/or :sym ::local-name
+          :seq ::seq-binding-form
+          :map ::map-binding-form
+    )
 )
 
-(§ def ^:private quick-check-ref
-    (c/delay (dynaload 'cloiure.test.check/quick-check))
+;; sequential destructuring
+
+(§ s/def ::seq-binding-form
+    (s/and vector?
+        (s/cat :elems (s/* ::binding-form)
+               :rest (s/? (s/cat :amp #{'&} :form ::binding-form))
+               :as (s/? (s/cat :as #{:as} :sym ::local-name))
+        )
+    )
 )
 
-(§ defn quick-check [& args] (apply @quick-check-ref args))
+;; map destructuring
 
-(§ def ^:private for-all*-ref
-    (c/delay (dynaload 'cloiure.test.check.properties/for-all*))
+(§ s/def ::keys (s/coll-of ident? :kind vector?))
+(§ s/def ::syms (s/coll-of symbol? :kind vector?))
+(§ s/def ::strs (s/coll-of simple-symbol? :kind vector?))
+(§ s/def ::or (s/map-of simple-symbol? any?))
+(§ s/def ::as ::local-name)
+
+(§ s/def ::map-special-binding
+    (s/keys :opt-un [::as ::or ::keys ::syms ::strs])
+)
+
+(§ s/def ::map-binding (s/tuple ::binding-form any?))
+
+(§ s/def ::ns-keys
+    (s/tuple
+        (s/and qualified-keyword? #(-> % name #{"keys" "syms"}))
+        (s/coll-of simple-symbol? :kind vector?)
+    )
+)
+
+(§ s/def ::map-bindings
+    (s/every
+        (s/or :mb ::map-binding
+              :nsk ::ns-keys
+              :msb (s/tuple #{:as :or :keys :syms :strs} any?)
+        )
+        :into {}
+    )
+)
+
+(§ s/def ::map-binding-form (s/merge ::map-bindings ::map-special-binding))
+
+;; bindings
+
+(§ s/def ::binding (s/cat :binding ::binding-form :init-expr any?))
+(§ s/def ::bindings (s/and vector? (s/* ::binding)))
+
+;; let, if-let, when-let
+
+(§ s/fdef cloiure.core/let
+    :args (s/cat :bindings ::bindings :body (s/* any?))
+)
+
+(§ s/fdef cloiure.core/if-let
+    :args (s/cat :bindings (s/and vector? ::binding) :then any? :else (s/? any?))
+)
+
+(§ s/fdef cloiure.core/when-let
+    :args (s/cat :bindings (s/and vector? ::binding) :body (s/* any?))
+)
+
+;; defn, defn-, fn
+
+(§ s/def ::arg-list
+    (s/and
+        vector?
+        (s/cat
+            :args (s/* ::binding-form)
+            :varargs (s/? (s/cat :amp #{'&} :form ::binding-form))
+        )
+    )
+)
+
+(§ s/def ::args+body
+    (s/cat
+        :args ::arg-list
+        :body
+            (s/alt
+                :prepost+body (s/cat :prepost map? :body (s/+ any?))
+                :body (s/* any?)
+            )
+    )
+)
+
+(§ s/def ::defn-args
+    (s/cat
+        :name simple-symbol?
+        :docstring (s/? string?)
+        :meta (s/? map?)
+        :bs
+            (s/alt
+                :arity-1 ::args+body
+                :arity-n (s/cat :bodies (s/+ (s/spec ::args+body)) :attr (s/? map?))
+            )
+    )
+)
+
+(§ s/fdef cloiure.core/defn
+    :args ::defn-args
+    :ret any?
+)
+
+(§ s/fdef cloiure.core/defn-
+    :args ::defn-args
+    :ret any?
+)
+
+(§ s/fdef cloiure.core/fn
+    :args
+        (s/cat
+            :name (s/? simple-symbol?)
+            :bs
+                (s/alt
+                    :arity-1 ::args+body
+                    :arity-n (s/+ (s/spec ::args+body))
+                )
+        )
+    :ret any?
+)
+
+;; ns
+
+(§ s/def ::exclude (s/coll-of simple-symbol?))
+(§ s/def ::only (s/coll-of simple-symbol?))
+(§ s/def ::rename (s/map-of simple-symbol? simple-symbol?))
+(§ s/def ::filters (s/keys* :opt-un [::exclude ::only ::rename]))
+
+(§ s/def ::ns-refer-cloiure
+    (s/spec (s/cat :clause #{:refer-cloiure} :filters ::filters))
+)
+
+(§ s/def ::refer
+    (s/or :all #{:all} :syms (s/coll-of simple-symbol?))
+)
+
+(§ s/def ::prefix-list
+    (s/spec (s/cat :prefix simple-symbol? :libspecs (s/+ ::libspec)))
+)
+
+(§ s/def ::libspec
+    (s/alt
+        :lib simple-symbol?
+        :lib+opts (s/spec (s/cat :lib simple-symbol? :options (s/keys* :opt-un [::as ::refer])))
+    )
+)
+
+(§ s/def ::ns-require
+    (s/spec
+        (s/cat
+            :clause #{:require}
+            :body (s/+ (s/alt :libspec ::libspec :prefix-list ::prefix-list :flag #{:reload :reload-all :verbose}))
+        )
+    )
+)
+
+(§ s/def ::package-list
+    (s/spec (s/cat :package simple-symbol? :classes (s/* simple-symbol?)))
+)
+
+(§ s/def ::import-list
+    (s/* (s/alt :class simple-symbol? :package-list ::package-list))
+)
+
+(§ s/def ::ns-import
+    (s/spec (s/cat :clause #{:import} :classes ::import-list))
+)
+
+(§ s/def ::ns-refer
+    (s/spec (s/cat :clause #{:refer} :lib simple-symbol? :filters ::filters))
+)
+
+;; Same as ::prefix-list, but with ::use-libspec instead.
+
+(§ s/def ::use-prefix-list
+    (s/spec (s/cat :prefix simple-symbol? :libspecs (s/+ ::use-libspec)))
+)
+
+;; Same as ::libspec, but also supports the ::filters options in the libspec.
+
+(§ s/def ::use-libspec
+    (s/alt
+        :lib simple-symbol?
+        :lib+opts (s/spec (s/cat :lib simple-symbol? :options (s/keys* :opt-un [::as ::refer ::exclude ::only ::rename])))
+    )
+)
+
+(§ s/def ::ns-use
+    (s/spec
+        (s/cat
+            :clause #{:use}
+            :libs (s/+ (s/alt :libspec ::use-libspec :prefix-list ::use-prefix-list :flag #{:reload :reload-all :verbose}))
+        )
+    )
+)
+
+(§ s/def ::ns-load
+    (s/spec (s/cat :clause #{:load} :libs (s/* string?)))
+)
+
+(§ s/def ::name simple-symbol?)
+(§ s/def ::extends simple-symbol?)
+(§ s/def ::implements (s/coll-of simple-symbol? :kind vector?))
+(§ s/def ::init symbol?)
+(§ s/def ::class-ident (s/or :class simple-symbol? :class-name string?))
+(§ s/def ::signature (s/coll-of ::class-ident :kind vector?))
+(§ s/def ::constructors (s/map-of ::signature ::signature))
+(§ s/def ::post-init symbol?)
+(§ s/def ::method (s/and vector? (s/cat :name simple-symbol? :param-types ::signature :return-type simple-symbol?)))
+(§ s/def ::methods (s/coll-of ::method :kind vector?))
+(§ s/def ::main boolean?)
+(§ s/def ::factory simple-symbol?)
+(§ s/def ::state simple-symbol?)
+(§ s/def ::get simple-symbol?)
+(§ s/def ::set simple-symbol?)
+(§ s/def ::expose (s/keys :opt-un [::get ::set]))
+(§ s/def ::exposes (s/map-of simple-symbol? ::expose))
+(§ s/def ::prefix string?)
+(§ s/def ::impl-ns simple-symbol?)
+(§ s/def ::load-impl-ns boolean?)
+
+(§ s/def ::ns-gen-class
+    (s/spec
+        (s/cat
+            :clause #{:gen-class}
+            :options
+                (s/keys*
+                    :opt-un [::name ::extends ::implements ::init ::constructors ::post-init ::methods
+                             ::main ::factory ::state ::exposes ::prefix ::impl-ns ::load-impl-ns]
+                )
+        )
+    )
+)
+
+(§ s/def ::ns-clauses
+    (s/*
+        (s/alt
+            :refer-cloiure ::ns-refer-cloiure :require ::ns-require :import ::ns-import
+            :use ::ns-use :refer ::ns-refer :load ::ns-load :gen-class ::ns-gen-class
+        )
+    )
+)
+
+(§ s/def ::ns-form
+    (s/cat
+        :name simple-symbol?
+        :docstring (s/? string?)
+        :attr-map (s/? map?)
+        :clauses ::ns-clauses
+    )
+)
+
+(§ s/fdef cloiure.core/ns
+    :args ::ns-form
 )
 
 ;;;
- ; Dynamically loaded cloiure.test.check.properties/for-all*.
+ ; Returns a spec that accepts both the spec and a (quote ...) form of the spec.
  ;;
-(§ defn for-all* [& args] (apply @for-all*-ref args))
-
-(§ let [g? (c/delay (dynaload 'cloiure.test.check.generators/generator?))
-      g (c/delay (dynaload 'cloiure.test.check.generators/generate))
-      mkg (c/delay (dynaload 'cloiure.test.check.generators/->Generator))]
-    (defn- generator?
-            [x]
-            (@g? x))
-    (defn- generator
-            [gfn]
-            (@mkg gfn))
-;;;
- ; Generate a single value using generator."
- ; (defn generate
- ; [generator]
- ; (@g generator))
+(§ defmacro ^:private quotable [spec]
+    `(s/or :spec ~spec :quoted-spec (s/cat :quote #{'quote} :spec ~spec))
 )
 
-(§ defn delay-impl [gfnd]
-    ;; N.B. depends on test.check impl details
-    (generator (fn [rnd size] ((:gen @gfnd) rnd size)))
+(§ s/def ::quotable-import-list
+    (s/* (s/alt :class (quotable simple-symbol?) :package-list (quotable ::package-list)))
 )
 
-;;;
- ; given body that returns a generator, returns a
- ; generator that delegates to that, but delays
- ; creation until used.
- ;;
-(§ defmacro delay [& body] `(delay-impl (c/delay ~@body)))
-
-;;;
- ; Dynamically loads test.check generator named s.
- ;;
-(§ defn gen-for-name [s]
-    (let [g (dynaload s)]
-            (if (generator? g)
-            g
-            (throw (RuntimeException. (str "Var " s " is not a generator")))))
+(§ s/fdef cloiure.core/import
+    :args ::quotable-import-list
 )
 
-;;;
- ; Implementation macro, do not call directly.
- ;;
-(§ defmacro lazy-combinator [s]
-    (let [fqn (c/symbol "cloiure.test.check.generators" (name s))
-                doc (str "Lazy loaded version of " fqn)]
-            `(let [g# (c/delay (dynaload '~fqn))]
-            (defn ~s
-                ~doc
-                [& ~'args]
-                (apply @g# ~'args))))
-)
-
-;;;
- ; Implementation macro, do not call directly.
- ;;
-(§ defmacro lazy-combinators [& syms]
-    `(do ~@(c/map (fn [s] (c/list 'lazy-combinator s)) syms))
-)
-
-(§ lazy-combinators hash-map list map not-empty set vector vector-distinct fmap elements
-                  bind choose fmap one-of such-that tuple sample return
-                  large-integer* double* frequency
-)
-
-;;;
- ; Implementation macro, do not call directly.
- ;;
-(§ defmacro lazy-prim [s]
-    (let [fqn (c/symbol "cloiure.test.check.generators" (name s))
-                doc (str "Fn returning " fqn)]
-            `(let [g# (c/delay (dynaload '~fqn))]
-            (defn ~s
-                ~doc
-                [& ~'args]
-                @g#)))
-)
-
-;;;
- ; Implementation macro, do not call directly.
- ;;
-(§ defmacro lazy-prims [& syms] `(do ~@(c/map (fn [s] (c/list 'lazy-prim s)) syms)))
-
-(§ lazy-prims any any-printable boolean bytes char char-alpha char-alphanumeric char-ascii double
-            int keyword keyword-ns large-integer ratio simple-type simple-type-printable
-            string string-ascii string-alphanumeric symbol symbol-ns uuid
-)
-
-;;;
- ; Returns a generator of a sequence catenated from results of
- ; gens, each of which should generate something sequential.
- ;;
-(§ defn cat [& gens] (fmap #(apply concat %) (apply tuple gens)))
-
-(§ defn- qualified? [ident] (not (nil? (namespace ident))))
-
-(§ def ^:private gen-builtins
-    (c/delay
-        (let [simple (simple-type-printable)]
-            {any? (one-of [(return nil) (any-printable)])
-            some? (such-that some? (any-printable))
-            number? (one-of [(large-integer) (double)])
-            integer? (large-integer)
-            int? (large-integer)
-            pos-int? (large-integer* {:min 1})
-            neg-int? (large-integer* {:max -1})
-            nat-int? (large-integer* {:min 0})
-            float? (double)
-            double? (double)
-            boolean? (boolean)
-            string? (string-alphanumeric)
-            ident? (one-of [(keyword-ns) (symbol-ns)])
-            simple-ident? (one-of [(keyword) (symbol)])
-            qualified-ident? (such-that qualified? (one-of [(keyword-ns) (symbol-ns)]))
-            keyword? (keyword-ns)
-            simple-keyword? (keyword)
-            qualified-keyword? (such-that qualified? (keyword-ns))
-            symbol? (symbol-ns)
-            simple-symbol? (symbol)
-            qualified-symbol? (such-that qualified? (symbol-ns))
-            uuid? (uuid)
-            uri? (fmap #(java.net.URI/create (str "http://" % ".com")) (uuid))
-            decimal? (fmap #(BigDecimal/valueOf %)
-                            (double* {:infinite? false :NaN? false}))
-            inst? (fmap #(java.util.Date. %)
-                        (large-integer))
-            seqable? (one-of [(return nil)
-                                (list simple)
-                                (vector simple)
-                                (map simple simple)
-                                (set simple)
-                                (string-alphanumeric)])
-            indexed? (vector simple)
-            map? (map simple simple)
-            vector? (vector simple)
-            list? (list simple)
-            seq? (list simple)
-            char? (char)
-            set? (set simple)
-            nil? (return nil)
-            false? (return false)
-            true? (return true)
-            zero? (return 0)
-            rational? (one-of [(large-integer) (ratio)])
-            coll? (one-of [(map simple simple)
-                            (list simple)
-                            (vector simple)
-                            (set simple)])
-            empty? (elements [nil '() [] {} #{}])
-            associative? (one-of [(map simple simple) (vector simple)])
-            sequential? (one-of [(list simple) (vector simple)])
-            ratio? (such-that ratio? (ratio))
-            bytes? (bytes)}))
-)
-
-;;;
- ; Given a predicate, returns a built-in generator if one exists.
- ;;
-(§ defn gen-for-pred [pred] (if (set? pred) (elements pred) (get @gen-builtins pred)))
-
-(§ comment
-    (require :reload 'cloiure.spec.gen.alpha)
-    (in-ns 'cloiure.spec.gen.alpha)
-
-    ;; combinators, see call to lazy-combinators above for complete list
-    (generate (one-of [(gen-for-pred integer?) (gen-for-pred string?)]))
-    (generate (such-that #(< 10000 %) (gen-for-pred integer?)))
-    (let [reqs {:a (gen-for-pred number?)
-                    :b (gen-for-pred ratio?)}
-                opts {:c (gen-for-pred string?)}]
-            (generate (bind (choose 0 (count opts))
-                            #(let [args (concat (seq reqs) (shuffle (seq opts)))]
-                            (->> args
-                                    (take (+ % (count reqs)))
-                                    (mapcat identity)
-                                    (apply hash-map))))))
-    (generate (cat (list (gen-for-pred string?))
-                        (list (gen-for-pred ratio?))))
-
-    ;; load your own generator
-    (gen-for-name 'cloiure.test.check.generators/int)
-
-    ;; failure modes
-    (gen-for-name 'unqualified)
-    (gen-for-name 'cloiure.core/+)
-    (gen-for-name 'cloiure.core/name-does-not-exist)
-    (gen-for-name 'ns.does.not.exist/f)
-)
-
-#_(ns cloiure.spec.test.alpha
-    (:refer-cloiure :exclude [test])
-    (:require
-            #_[cloiure.pprint :as pp]
-              [cloiure.spec.alpha :as s]
-              [cloiure.spec.gen.alpha :as gen]
-              [cloiure.string :as str]))
-
-(§ in-ns 'cloiure.spec.test.check)
-(§ in-ns 'cloiure.spec.test.alpha)
-(§ alias 'stc 'cloiure.spec.test.check)
-
-(§ defn- throwable? [x] (instance? Throwable x))
-
-(§ defn ->sym [x] (@#'s/->sym x))
-
-(§ defn- ->var [s-or-v]
-    (if (var? s-or-v)
-            s-or-v
-            (let [v (and (symbol? s-or-v) (resolve s-or-v))]
-            (if (var? v)
-                v
-                (throw (IllegalArgumentException. (str (pr-str s-or-v) " does not name a var"))))))
-)
-
-(§ defn- collectionize [x] (if (symbol? x) (list x) x))
-
-;;;
- ; Given a symbol naming an ns, or a collection of such symbols,
- ; returns the set of all symbols naming vars in those nses.
- ;;
-(§ defn enumerate-namespace [ns-sym-or-syms]
-    (into
-        #{}
-        (mapcat (fn [ns-sym]
-                    (map
-                    (fn [name-sym]
-                        (symbol (name ns-sym) (name name-sym)))
-                    (keys (ns-interns ns-sym)))))
-        (collectionize ns-sym-or-syms))
-)
-
-;;;
- ; if false, instrumented fns call straight through
- ;;
-(§ def ^:private ^:dynamic *instrument-enabled* true)
-
-;;;
- ; Fn-spec must include at least :args or :ret specs.
- ;;
-(§ defn- fn-spec? [m] (or (:args m) (:ret m)))
-
-;;;
- ; Disables instrument's checking of calls, within a scope.
- ;;
-(§ defmacro with-instrument-disabled [& body] `(binding [*instrument-enabled* nil] ~@body))
-
-;;;
- ; Given the vector-of-syms form of a stacktrace element produced
- ; by e.g. Throwable->map, returns a map form that adds some keys
- ; guessing the original Cloiure names. Returns a map with
- ;
- ; :class         class name symbol from stack trace
- ; :method        method symbol from stack trace
- ; :file          filename from stack trace
- ; :line          line number from stack trace
- ; :var-scope     optional Cloiure var symbol scoping fn def
- ; :local-fn      optional local Cloiure symbol scoping fn def
- ;
- ; For non-Cloiure fns, :scope and :local-fn will be absent.
- ;;
-(§ defn- interpret-stack-trace-element [[cls method file line]]
-    (let [cloiure? (contains? '#{invoke invokeStatic} method)
-                demunge #(cloiure.lang.Compiler/demunge %)
-                degensym #(str/replace % #"--.*" "")
-                [ns-sym name-sym local] (when cloiure?
-                                        (->> (str/split (str cls) #"\$" 3)
-                                            (map demunge)))]
-            (merge {:file file
-                    :line line
-                    :method method
-                    :class cls}
-                (when (and ns-sym name-sym)
-                    {:var-scope (symbol ns-sym name-sym)})
-                (when local
-                    {:local-fn (symbol (degensym local))})))
-)
-
-;;;
- ; Takes a coll of stack trace elements (as returned by
- ; StackTraceElement->vec) and returns a coll of maps as per
- ; interpret-stack-trace-element that are relevant to a
- ; failure in instrument.
- ;;
-(§ defn- stacktrace-relevant-to-instrument [elems]
-    (let [plumbing? (fn [{:keys [var-scope]}]
-                            (contains? '#{cloiure.spec.test.alpha/spec-checking-fn} var-scope))]
-            (sequence (comp (map StackTraceElement->vec)
-                            (map interpret-stack-trace-element)
-                            (filter :var-scope)
-                            (drop-while plumbing?))
-                    elems))
-)
-
-(§ defn- spec-checking-fn [v f fn-spec]
-    (let [fn-spec (@#'s/maybe-spec fn-spec)
-                conform! (fn [v role spec data args]
-                        (let [conformed (s/conform spec data)]
-                            (if (= (§ :spec :s/invalid) conformed)
-                            (let [caller (->> (.getStackTrace (Thread/currentThread))
-                                                stacktrace-relevant-to-instrument
-                                                first)
-                                    ed (merge (assoc (s/explain-data* spec [role] [] [] data)
-                                                (§ :spec :s/args) args
-                                                (§ :spec :s/failure) :instrument)
-                                            (when caller
-                                                {::caller (dissoc caller :class :method)}))]
-                                (throw (ex-info
-                                        (str "Call to " v " did not conform to spec:\n" (with-out-str (s/explain-out ed)))
-                                        ed)))
-                            conformed)))]
-            (fn
-            [& args]
-            (if *instrument-enabled*
-            (with-instrument-disabled
-                (when (:args fn-spec) (conform! v :args (:args fn-spec) args args))
-                (binding [*instrument-enabled* true]
-                (.applyTo ^cloiure.lang.IFn f args)))
-            (.applyTo ^cloiure.lang.IFn f args))))
-)
-
-(§ defn- no-fspec [v spec]
-    (ex-info (str "Fn at " v " is not spec'ed.")
-                {:var v :spec spec (§ :spec :s/failure) :no-fspec})
-)
-
-(§ defonce ^:private instrumented-vars (atom {}))
-
-;;;
- ; Helper for instrument.
- ;;
-(§ defn- instrument-choose-fn [f spec sym {over :gen :keys [stub replace]}]
-    (if (some #{sym} stub)
-            (-> spec (s/gen over) gen/generate)
-            (get replace sym f))
-)
-
-;;;
- ; Helper for instrument
- ;;
-(§ defn- instrument-choose-spec [spec sym {overrides :spec}] (get overrides sym spec))
-
-(§ defn- instrument-1 [s opts]
-    (when-let [v (resolve s)]
-            (when-not (-> v meta :macro)
-            (let [spec (s/get-spec v)
-                    {:keys [raw wrapped]} (get @instrumented-vars v)
-                    current @v
-                    to-wrap (if (= wrapped current) raw current)
-                    ospec (or (instrument-choose-spec spec s opts)
-                            (throw (no-fspec v spec)))
-                    ofn (instrument-choose-fn to-wrap ospec s opts)
-                    checked (spec-checking-fn v ofn ospec)]
-                (alter-var-root v (constantly checked))
-                (swap! instrumented-vars assoc v {:raw to-wrap :wrapped checked})
-                (->sym v))))
-)
-
-(§ defn- unstrument-1 [s]
-    (when-let [v (resolve s)]
-            (when-let [{:keys [raw wrapped]} (get @instrumented-vars v)]
-            (swap! instrumented-vars dissoc v)
-            (let [current @v]
-                (when (= wrapped current)
-                (alter-var-root v (constantly raw))
-                (->sym v)))))
-)
-
-;;;
- ; Returns set of symbols referenced by 'instrument' opts map
- ;;
-(§ defn- opt-syms [opts] (reduce into #{} [(:stub opts) (keys (:replace opts)) (keys (:spec opts))]))
-
-(§ defn- fn-spec-name? [s] (and (symbol? s) (not (some-> (resolve s) meta :macro))))
-
-;;;
- ; Given an opts map as per instrument, returns the set of syms
- ; that can be instrumented.
- ;;
-(§ defn instrumentable-syms
-    ([] (instrumentable-syms nil))
-    ([opts]
-            (assert (every? ident? (keys (:gen opts))) "instrument :gen expects ident keys")
-            (reduce into #{} [(filter fn-spec-name? (keys (s/registry)))
-                            (keys (:spec opts))
-                            (:stub opts)
-                            (keys (:replace opts))]))
-)
-
-;;;
- ; Instruments the vars named by sym-or-syms, a symbol or collection
- ; of symbols, or all instrumentable vars if sym-or-syms is not
- ; specified.
- ;
- ; If a var has an :args fn-spec, sets the var's root binding to a
- ; fn that checks arg conformance (throwing an exception on failure)
- ; before delegating to the original fn.
- ;
- ; The opts map can be used to override registered specs, and/or to
- ; replace fn implementations entirely. Opts for symbols not included
- ; in sym-or-syms are ignored. This facilitates sharing a common
- ; options map across many different calls to instrument.
- ;
- ; The opts map may have the following keys:
- ;
- ; :spec     a map from var-name symbols to override specs
- ; :stub     a set of var-name symbols to be replaced by stubs
- ; :gen      a map from spec names to generator overrides
- ; :replace  a map from var-name symbols to replacement fns
- ;
- ; :spec overrides registered fn-specs with specs your provide. Use
- ; :spec overrides to provide specs for libraries that do not have
- ; them, or to constrain your own use of a fn to a subset of its
- ; spec'ed contract.
- ;
- ; :stub replaces a fn with a stub that checks :args, then uses the
- ; :ret spec to generate a return value.
- ;
- ; :gen overrides are used only for :stub generation.
- ;
- ; :replace replaces a fn with a fn that checks args conformance, then
- ; invokes the fn you provide, enabling arbitrary stubbing and mocking.
- ;
- ; :spec can be used in combination with :stub or :replace.
- ;
- ; Returns a collection of syms naming the vars instrumented.
- ;;
-(§ defn instrument
-    ([] (instrument (instrumentable-syms)))
-    ([sym-or-syms] (instrument sym-or-syms nil))
-    ([sym-or-syms opts]
-            (locking instrumented-vars
-            (into
-                []
-                (comp (filter (instrumentable-syms opts))
-                    (distinct)
-                    (map #(instrument-1 % opts))
-                    (remove nil?))
-                (collectionize sym-or-syms))))
-)
-
-;;;
- ; Undoes instrument on the vars named by sym-or-syms, specified
- ; as in instrument. With no args, unstruments all instrumented vars.
- ; Returns a collection of syms naming the vars unstrumented.
- ;;
-(§ defn unstrument
-    ([] (unstrument (map ->sym (keys @instrumented-vars))))
-    ([sym-or-syms]
-            (locking instrumented-vars
-            (into
-                []
-                (comp (filter symbol?)
-                    (map unstrument-1)
-                    (remove nil?))
-                (collectionize sym-or-syms))))
-)
-
-(§ defn- explain-check [args spec v role]
-    (ex-info "Specification-based check failed"
-        (when-not (s/valid? spec v nil)
-            (assoc (s/explain-data* spec [role] [] [] v)
-            ::args args
-            ::val v
-            (§ :spec :s/failure) :check-failed)))
-)
-
-;;;
- ; Returns true if call passes specs, otherwise *returns* an exception
- ; with explain-data + ::s/failure.
- ;;
-(§ defn- check-call [f specs args]
-    (let [cargs (when (:args specs) (s/conform (:args specs) args))]
-            (if (= cargs (§ :spec :s/invalid))
-            (explain-check args (:args specs) args :args)
-            (let [ret (apply f args)
-                    cret (when (:ret specs) (s/conform (:ret specs) ret))]
-                (if (= cret (§ :spec :s/invalid))
-                (explain-check args (:ret specs) ret :ret)
-                (if (and (:args specs) (:ret specs) (:fn specs))
-                    (if (s/valid? (:fn specs) {:args cargs :ret cret})
-                    true
-                    (explain-check args (:fn specs) {:args cargs :ret cret} :fn))
-                    true)))))
-)
-
-(§ defn- quick-check [f specs {gen :gen opts (§ :spec :stc/opts)}]
-    (let [{:keys [num-tests] :or {num-tests 1000}} opts
-                g (try (s/gen (:args specs) gen) (catch Throwable t t))]
-            (if (throwable? g)
-            {:result g}
-            (let [prop (gen/for-all* [g] #(check-call f specs %))]
-                (apply gen/quick-check num-tests prop (mapcat identity opts)))))
-)
-
-;;;
- ; Builds spec result map.
- ;;
-(§ defn- make-check-result [check-sym spec test-check-ret]
-    (merge {:spec spec
-                (§ :spec :stc/ret) test-check-ret}
-                (when check-sym
-                {:sym check-sym})
-                (when-let [result (-> test-check-ret :result)]
-                (when-not (true? result) {:failure result}))
-                (when-let [shrunk (-> test-check-ret :shrunk)]
-                {:failure (:result shrunk)}))
-)
-
-(§ defn- check-1 [{:keys [s f v spec]} opts]
-    (let [re-inst? (and v (seq (unstrument s)) true)
-                f (or f (when v @v))
-                specd (s/spec spec)]
-            (try
-            (cond
-            (or (nil? f) (some-> v meta :macro))
-            {:failure (ex-info "No fn to spec" {(§ :spec :s/failure) :no-fn})
-            :sym s :spec spec}
-
-            (:args specd)
-            (let [tcret (quick-check f specd opts)]
-                (make-check-result s spec tcret))
-
-            :default
-            {:failure (ex-info "No :args spec" {(§ :spec :s/failure) :no-args-spec})
-            :sym s :spec spec})
-            (finally
-            (when re-inst? (instrument s)))))
-)
-
-(§ defn- sym->check-map [s]
-    (let [v (resolve s)]
-            {:s s
-            :v v
-            :spec (when v (s/get-spec v))})
-)
-
-(§ defn- validate-check-opts [opts]
-    (assert (every? ident? (keys (:gen opts))) "check :gen expects ident keys")
-)
-
-;;;
- ; Runs generative tests for fn f using spec and opts. See
- ; 'check' for options and return.
- ;;
-(§ defn check-fn
-    ([f spec] (check-fn f spec nil))
-    ([f spec opts]
-            (validate-check-opts opts)
-            (check-1 {:f f :spec spec} opts))
-)
-
-;;;
- ; Given an opts map as per check, returns the set of syms that
- ; can be checked.
- ;;
-(§ defn checkable-syms
-    ([] (checkable-syms nil))
-    ([opts]
-            (validate-check-opts opts)
-            (reduce into #{} [(filter fn-spec-name? (keys (s/registry)))
-                            (keys (:spec opts))]))
-)
-
-;;;
- ; Run generative tests for spec conformance on vars named by
- ; sym-or-syms, a symbol or collection of symbols. If sym-or-syms
- ; is not specified, check all checkable vars.
- ;
- ; The opts map includes the following optional keys, where stc
- ; aliases cloiure.spec.test.check:
- ;
- ; ::stc/opts  opts to flow through test.check/quick-check
- ; :gen        map from spec names to generator overrides
- ;
- ; The ::stc/opts include :num-tests in addition to the keys
- ; documented by test.check. Generator overrides are passed to
- ; spec/gen when generating function args.
- ;
- ; Returns a lazy sequence of check result maps with the following
- ; keys
- ;
- ; :spec       the spec tested
- ; :sym        optional symbol naming the var tested
- ; :failure    optional test failure
- ; ::stc/ret   optional value returned by test.check/quick-check
- ;
- ; The value for :failure can be any exception. Exceptions thrown by
- ; spec itself will have an ::s/failure value in ex-data:
- ;
- ; :check-failed   at least one checked return did not conform
- ; :no-args-spec   no :args spec provided
- ; :no-fn          no fn provided
- ; :no-fspec       no fspec provided
- ; :no-gen         unable to generate :args
- ; :instrument     invalid args detected by instrument
- ;;
-(§ defn check
-    ([] (check (checkable-syms)))
-    ([sym-or-syms] (check sym-or-syms nil))
-    ([sym-or-syms opts]
-            (->> (collectionize sym-or-syms)
-                (filter (checkable-syms opts))
-                (pmap
-                #(check-1 (sym->check-map %) opts))))
-)
-
-(§ defn- failure-type [x] ((§ :spec :s/failure) (ex-data x)))
-
-(§ defn- unwrap-failure [x] (if (failure-type x) (ex-data x) x))
-
-;;;
- ; Returns the type of the check result. This can be any of the
- ; ::s/failure keywords documented in 'check', or:
- ;
- ; :check-passed   all checked fn returns conformed
- ; :check-threw    checked fn threw an exception
- ;;
-(§ defn- result-type [ret]
-    (let [failure (:failure ret)]
-            (cond
-            (nil? failure) :check-passed
-            (failure-type failure) (failure-type failure)
-            :default :check-threw))
-)
-
-;;;
- ; Given a check result, returns an abbreviated version
- ; suitable for summary use.
- ;;
-(§ defn abbrev-result [x]
-    (if (:failure x)
-            (-> (dissoc x (§ :spec :stc/ret))
-                (update :spec s/describe)
-                (update :failure unwrap-failure))
-            (dissoc x :spec (§ :spec :stc/ret)))
-)
-
-;;;
- ; Given a collection of check-results, e.g. from 'check', pretty
- ; prints the summary-result (default abbrev-result) of each.
- ;
- ; Returns a map with :total, the total number of results, plus a
- ; key with a count for each different :type of result.
- ;;
-(§ defn summarize-results
-    ([check-results] (summarize-results check-results abbrev-result))
-    ([check-results summary-result]
-            (reduce
-            (fn [summary result]
-            #_(pp/pprint (summary-result result))
-                (-> summary
-                    (update :total inc)
-                    (update (result-type result) (fnil inc 0))))
-            {:total 0}
-            check-results))
+(§ s/fdef cloiure.core/refer-cloiure
+    :args
+        (s/*
+            (s/alt
+                :exclude (s/cat :op (quotable #{:exclude}) :arg (quotable ::exclude))
+                :only (s/cat :op (quotable #{:only}) :arg (quotable ::only))
+                :rename (s/cat :op (quotable #{:rename}) :arg (quotable ::rename))
+            )
+        )
 )
