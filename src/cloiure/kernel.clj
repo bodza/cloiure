@@ -1083,11 +1083,8 @@
     )
 
     (defn #_"int" Agent'releasePendingSends []
-        (let [#_"IPersistentVector" sends (.get Agent'nested)]
-            (when (nil? sends)
-                (§ return 0)
-            )
-            (loop-when-recur [#_"int" i 0] (< i (.count sends)) [(inc i)]
+        (let-when [#_"IPersistentVector" sends (.get Agent'nested)] (some? sends) => 0
+            (dotimes [#_"int" i (.count sends)]
                 (let [#_"AgentAction" a (cast' AgentAction (.valAt sends, i))]
                     (.enqueue (:agent a), a)
                 )
@@ -1182,14 +1179,12 @@
     )
 
     (defn #_"KeySeq" KeySeq'createFromMap [#_"IPersistentMap" map]
-        (when (nil? map)
-            (§ return nil)
-        )
-        (let [#_"ISeq" seq (.seq map)]
-            (when (nil? seq)
-                (§ return nil)
+        (when (some? map)
+            (let [#_"ISeq" seq (.seq map)]
+                (when (some? seq)
+                    (KeySeq'new-2 seq, map)
+                )
             )
-            (KeySeq'new-2 seq, map)
         )
     )
 
@@ -1270,14 +1265,12 @@
     )
 
     (defn #_"ValSeq" ValSeq'createFromMap [#_"IPersistentMap" map]
-        (when (nil? map)
-            (§ return nil)
-        )
-        (let [#_"ISeq" seq (.seq map)]
-            (when (nil? seq)
-                (§ return nil)
+        (when (some? map)
+            (let [#_"ISeq" seq (.seq map)]
+                (when (some? seq)
+                    (ValSeq'new-2 seq, map)
+                )
             )
-            (ValSeq'new-2 seq, map)
         )
     )
 
@@ -1560,11 +1553,9 @@
             #_method
             (§ defn #_"boolean" (§ method contains) [#_"AbstractSet" this, #_"Object" o]
                 (when (§ instance? Entry o)
-                    (let [#_"Entry" e (cast' Entry o)]
-                        (let [#_"Entry" found (.entryAt this, (.getKey e))]
-                            (when (and (some? found) (Util'equals (.getValue found), (.getValue e)))
-                                (§ return true)
-                            )
+                    (let [#_"Entry" e (cast' Entry o) #_"Entry" found (.entryAt this, (.getKey e))]
+                        (when (and (some? found) (Util'equals (.getValue found), (.getValue e)))
+                            (§ return true)
                         )
                     )
                 )
@@ -1748,13 +1739,11 @@
             (when-not (= (.size m) (.count s1))
                 (§ return false)
             )
-
             (doseq [#_"Object" aM m]
                 (when (not (.contains s1, aM))
                     (§ return false)
                 )
             )
-
             true
         )
     )
@@ -1764,18 +1753,15 @@
         (when (not (instance? Set obj))
             (§ return false)
         )
-
         (let [#_"Set" m (cast Set obj)]
             (when-not (= (.size m) (.size this))
                 (§ return false)
             )
-
             (doseq [#_"Object" aM m]
                 (when (not (.contains this, aM))
                     (§ return false)
                 )
             )
-
             true
         )
     )
@@ -2076,24 +2062,19 @@
 
     #_method
     (§ defn #_"Object" (§ method nth) [#_"SubVector" this, #_"int" i]
-        (when (or (neg? i) (<= (:end this) (+ (:start this) i)))
+        (if (and (<= 0 i) (< (+ (:start this) i) (:end this)))
+            (.nth (:v this), (+ (:start this) i))
             (throw (IndexOutOfBoundsException.))
         )
-        (.nth (:v this), (+ (:start this) i))
     )
 
     #_method
     (§ defn #_"IPersistentVector" (§ method assocN) [#_"SubVector" this, #_"int" i, #_"Object" val]
-        (cond (< (:end this) (+ (:start this) i))
-            (do
-                (throw (IndexOutOfBoundsException.))
-            )
-            (= (+ (:start this) i) (:end this))
-            (do
-                (§ return (.cons this, val))
-            )
+        (cond
+            (< (:end this) (+ (:start this) i)) (throw (IndexOutOfBoundsException.))
+            (= (+ (:start this) i) (:end this)) (.cons this, val)
+            :else (SubVector'new (:_meta this), (.assocN (:v this), (+ (:start this) i), val), (:start this), (:end this))
         )
-        (SubVector'new (:_meta this), (.assocN (:v this), (+ (:start this) i), val), (:start this), (:end this))
     )
 
     #_override
@@ -2167,103 +2148,49 @@
     )
 
     (defn #_"boolean" APersistentVector'doEquals [#_"IPersistentVector" v, #_"Object" obj]
-        (cond (§ instance? IPersistentVector obj)
-            (do
-                (let [#_"IPersistentVector" ov (cast' IPersistentVector obj)]
-                    (when-not (= (.count ov) (.count v))
-                        (§ return false)
+        (cond
+            (§ instance? IPersistentVector obj)
+                (let-when [#_"IPersistentVector" ov (cast' IPersistentVector obj)] (= (.count ov) (.count v)) => false
+                    (loop-when [#_"int" i 0] (< i (.count v)) => true
+                        (recur-if (Util'equals (.nth v, i), (.nth ov, i)) [(inc i)] => false)
                     )
-                    (loop-when-recur [#_"int" i 0] (< i (.count v)) [(inc i)]
-                        (when (not (Util'equals (.nth v, i), (.nth ov, i)))
-                            (§ return false)
-                        )
-                    )
-                    (§ return true)
                 )
-            )
             (instance? List obj)
-            (do
-                (let [#_"Collection" ma (cast Collection obj)]
-                    (when (or (not= (.size ma) (.count v)) (not= (.hashCode ma) (.hashCode v)))
-                        (§ return false)
+                (let-when [#_"Collection" ma (cast Collection obj)] (and (= (.size ma) (.count v)) (= (.hashCode ma) (.hashCode v))) => false
+                    (loop-when [#_"Iterator" i1 (.iterator (cast List v)) #_"Iterator" i2 (.iterator ma)] (.hasNext i1) => true
+                        (recur-if (Util'equals (.next i1), (.next i2)) [i1 i2] => false)
                     )
-                    (loop-when-recur [#_"Iterator" i1 (.iterator (cast List v)) #_"Iterator" i2 (.iterator ma)] (.hasNext i1) [i1 i2]
-                        (when (not (Util'equals (.next i1), (.next i2)))
-                            (§ return false)
-                        )
-                    )
-                    (§ return true)
                 )
-            )
             :else
-            (do
-                (when (not (§ instance? Sequential obj))
-                    (§ return false)
-                )
-                (let [#_"ISeq" ms (RT'seq obj)]
-                    (loop-when-recur [#_"int" i 0 ms ms] (< i (.count v)) [(inc i) (.next ms)]
-                        (when (or (nil? ms) (not (Util'equals (.nth v, i), (.first ms))))
-                            (§ return false)
-                        )
-                    )
-                    (when (some? ms)
-                        (§ return false)
+                (when (§ instance? Sequential obj) => false
+                    (loop-when [#_"int" i 0 #_"ISeq" ms (RT'seq obj)] (< i (.count v)) => (nil? ms)
+                        (recur-if (and (some? ms) (Util'equals (.nth v, i), (.first ms))) [(inc i) (.next ms)] => false)
                     )
                 )
-            )
         )
-
-        true
     )
 
     (defn #_"boolean" APersistentVector'doEquiv [#_"IPersistentVector" v, #_"Object" obj]
-        (cond (§ instance? IPersistentVector obj)
-            (do
-                (let [#_"IPersistentVector" ov (cast' IPersistentVector obj)]
-                    (when-not (= (.count ov) (.count v))
-                        (§ return false)
+        (cond
+            (§ instance? IPersistentVector obj)
+                (let-when [#_"IPersistentVector" ov (cast' IPersistentVector obj)] (= (.count ov) (.count v)) => false
+                    (loop-when [#_"int" i 0] (< i (.count v)) => true
+                        (recur-if (Util'equiv-2oo (.nth v, i), (.nth ov, i)) [(inc i)] => false)
                     )
-                    (loop-when-recur [#_"int" i 0] (< i (.count v)) [(inc i)]
-                        (when (not (Util'equiv-2oo (.nth v, i), (.nth ov, i)))
-                            (§ return false)
-                        )
-                    )
-                    (§ return true)
                 )
-            )
             (instance? List obj)
-            (do
-                (let [#_"Collection" ma (cast Collection obj)]
-                    (when-not (= (.size ma) (.count v))
-                        (§ return false)
+                (let-when [#_"Collection" ma (cast Collection obj)] (= (.size ma) (.count v)) => false
+                    (loop-when [#_"Iterator" i1 (.iterator (cast List v)) #_"Iterator" i2 (.iterator ma)] (.hasNext i1) => true
+                        (recur-if (Util'equiv-2oo (.next i1), (.next i2)) [i1 i2] => false)
                     )
-                    (loop-when-recur [#_"Iterator" i1 (.iterator (cast List v)) #_"Iterator" i2 (.iterator ma)] (.hasNext i1) [i1 i2]
-                        (when (not (Util'equiv-2oo (.next i1), (.next i2)))
-                            (§ return false)
-                        )
-                    )
-                    (§ return true)
                 )
-            )
             :else
-            (do
-                (when (not (§ instance? Sequential obj))
-                    (§ return false)
-                )
-                (let [#_"ISeq" ms (RT'seq obj)]
-                    (loop-when-recur [#_"int" i 0 ms ms] (< i (.count v)) [(inc i) (.next ms)]
-                        (when (or (nil? ms) (not (Util'equiv-2oo (.nth v, i), (.first ms))))
-                            (§ return false)
-                        )
-                    )
-                    (when (some? ms)
-                        (§ return false)
+                (when (§ instance? Sequential obj) => false
+                    (loop-when [#_"int" i 0 #_"ISeq" ms (RT'seq obj)] (< i (.count v)) => (nil? ms)
+                        (recur-if (and (some? ms) (Util'equiv-2oo (.nth v, i), (.first ms))) [(inc i) (.next ms)] => false)
                     )
                 )
-            )
         )
-
-        true
     )
 
     #_method
@@ -2516,46 +2443,32 @@
 
     #_method
     (§ defn #_"boolean" (§ method containsKey) [#_"APersistentVector" this, #_"Object" key]
-        (when (not (Util'isInteger key))
-            (§ return false)
-        )
-        (let [#_"int" i (.intValue (cast Number key))]
-            (and (<= 0 i) (< i (.count this)))
-        )
+        (and (Util'isInteger key) (< -1 (.intValue (cast Number key)) (.count this)))
     )
 
     #_method
     (§ defn #_"IMapEntry" (§ method entryAt) [#_"APersistentVector" this, #_"Object" key]
         (when (Util'isInteger key)
-            (let [#_"int" i (.intValue (cast Number key))]
-                (when (and (<= 0 i) (< i (.count this)))
-                    (§ return (cast' IMapEntry (MapEntry'create key, (.nth this, i))))
-                )
+            (let-when [#_"int" i (.intValue (cast Number key))] (< -1 i (.count this))
+                (cast' IMapEntry (MapEntry'create key, (.nth this, i)))
             )
         )
-        nil
     )
 
     #_method
     (§ defn #_"IPersistentVector" (§ method assoc) [#_"APersistentVector" this, #_"Object" key, #_"Object" val]
-        (when (Util'isInteger key)
-            (let [#_"int" i (.intValue (cast Number key))]
-                (§ return (.assocN this, i, val))
-            )
+        (when (Util'isInteger key) => (throw (IllegalArgumentException. "Key must be integer"))
+            (.assocN this, (.intValue (cast Number key)), val)
         )
-        (throw (IllegalArgumentException. "Key must be integer"))
     )
 
     #_method
     (§ defn #_"Object" (§ method valAt) [#_"APersistentVector" this, #_"Object" key, #_"Object" notFound]
-        (when (Util'isInteger key)
-            (let [#_"int" i (.intValue (cast Number key))]
-                (when (and (<= 0 i) (< i (.count this)))
-                    (§ return (.nth this, i))
-                )
+        (when (Util'isInteger key) => notFound
+            (let-when [#_"int" i (.intValue (cast Number key))] (< -1 i (.count this)) => notFound
+                (.nth this, i)
             )
         )
-        notFound
     )
 
     #_method
@@ -2630,12 +2543,9 @@
 
     #_method
     (§ defn #_"boolean" (§ method contains) [#_"APersistentVector" this, #_"Object" o]
-        (loop-when-recur [#_"ISeq" s (.seq this)] (some? s) [(.next s)]
-            (when (Util'equiv-2oo (.first s), o)
-                (§ return true)
-            )
+        (loop-when [#_"ISeq" s (.seq this)] (some? s) => false
+            (or (Util'equiv-2oo (.first s), o) (recur (.next s)))
         )
-        false
     )
 
     #_method
@@ -2645,24 +2555,15 @@
 
     #_method
     (§ defn #_"int" (§ method compareTo) [#_"APersistentVector" this, #_"Object" o]
-        (let [#_"IPersistentVector" v (cast' IPersistentVector o)]
-            (cond (< (.count this) (.count v))
-                (do
-                    (§ return -1)
-                )
-                (< (.count v) (.count this))
-                (do
-                    (§ return 1)
-                )
-            )
-            (loop-when-recur [#_"int" i 0] (< i (.count this)) [(inc i)]
-                (let [#_"int" c (Util'compare (.nth this, i), (.nth v, i))]
-                    (when-not (zero? c)
-                        (§ return c)
+        (let [#_"IPersistentVector" v (cast' IPersistentVector o) #_"int" n (.count this) #_"int" m (.count v)]
+            (cond (< n m) -1 (< m n) 1
+                :else
+                    (loop-when [#_"int" i 0] (< i n) => 0
+                        (let [#_"int" cmp (Util'compare (.nth this, i), (.nth v, i))]
+                            (recur-if (zero? cmp) [(inc i)] => cmp)
+                        )
                     )
-                )
             )
-            0
         )
     )
 )
@@ -6207,49 +6108,19 @@
     )
 
     (defn #_"Class" HostExpr'maybeSpecialTag [#_"Symbol" sym]
-        (let [#_"Class" c (Compiler'primClass-1s sym)]
-            (cond (some? c)
-                (do
-                    (§ return c)
-                )
-                (= (:name sym) "objects")
-                (do
-                    (§ ass c (§ class Object[]))
-                )
-                (= (:name sym) "ints")
-                (do
-                    (§ ass c (§ class int[]))
-                )
-                (= (:name sym) "longs")
-                (do
-                    (§ ass c (§ class long[]))
-                )
-                (= (:name sym) "floats")
-                (do
-                    (§ ass c (§ class float[]))
-                )
-                (= (:name sym) "doubles")
-                (do
-                    (§ ass c (§ class double[]))
-                )
-                (= (:name sym) "chars")
-                (do
-                    (§ ass c (§ class char[]))
-                )
-                (= (:name sym) "shorts")
-                (do
-                    (§ ass c (§ class short[]))
-                )
-                (= (:name sym) "bytes")
-                (do
-                    (§ ass c (§ class byte[]))
-                )
-                (= (:name sym) "booleans")
-                (do
-                    (§ ass c (§ class boolean[]))
-                )
+        (or (Compiler'primClass-1s sym)
+            (case (:name sym)
+                "objects"  (§ class Object[])
+                "ints"     (§ class int[])
+                "longs"    (§ class long[])
+                "floats"   (§ class float[])
+                "doubles"  (§ class double[])
+                "chars"    (§ class char[])
+                "shorts"   (§ class short[])
+                "bytes"    (§ class byte[])
+                "booleans" (§ class boolean[])
+                           nil
             )
-            c
         )
     )
 
