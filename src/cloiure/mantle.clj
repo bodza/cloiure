@@ -6522,11 +6522,6 @@
     When there is no file, e.g. in the REPL, the value is not defined."
 )
 
-(§ add-doc-and-meta *command-line-args*
-    "A sequence of the supplied command line arguments, or nil if
-    none were supplied."
-)
-
 (§ add-doc-and-meta *warn-on-reflection*
     "When set to true, the compiler will emit warnings when reflection
     is needed to resolve Java method calls or field accesses.
@@ -9999,8 +9994,8 @@
                 (if (> (bit-shift-right cnt (int 5)) (bit-shift-left (int 1) shift)) ;; overflow root?
                     (let [new-root (VecNode. (.edit root) (object-array 32))]
                         (-> ^objects (.arr new-root)
-                            (.aset 0 root)
-                            (.aset 1 (.newPath this (.edit root) shift tail-node))
+                            (aset 0 root)
+                            (aset 1 (.newPath this (.edit root) shift tail-node))
                         )
                         (Vec. am (inc cnt) (+ shift (int 5)) new-root (let [tl (.array am 1)] (.aset am tl 0 val) tl) (meta this))
                     )
@@ -13546,7 +13541,6 @@
                *print-level* *print-level*
                *print-namespace-maps* true
                *compile-path* "classes"
-               *command-line-args* *command-line-args*
                *assert* *assert*
                cloiure.spec.alpha/*explain-out* cloiure.spec.alpha/*explain-out*
                *1 nil
@@ -13646,7 +13640,7 @@
 ;;;
  ; A sequence of lib specs that are applied to `require` by default when a new command-line REPL is started.
  ;;
-(§ def repl-requires '[[cloiure.repl :refer (source apropos dir pst doc find-doc)]])
+(def repl-requires [['cloiure.repl :refer ['source 'apropos 'dir 'pst 'doc 'find-doc]]])
 
 ;;;
  ; Evaluates body with *read-eval* set to a "known" value, i.e. substituting true for :unknown if necessary.
@@ -13664,38 +13658,38 @@
  ;
  ; Available options and their defaults:
  ;
- ; - :init, function of no arguments, initialization hook called with bindings
- ;          for set!-able vars in place.
- ;          default: #()
+ ; :init function of no arguments, initialization hook called with bindings
+ ;       for set!-able vars in place.
+ ;       default: #()
  ;
- ; - :need-prompt, function of no arguments, called before each read-eval-print
- ;                 except the first, the user will be prompted if it returns true.
- ;                 default: (if (instance? LineNumberingPushbackReader *in*)
- ;                           #(.atLineStart *in*)
- ;                           #(identity true))
+ ; :need-prompt function of no arguments, called before each read-eval-print
+ ;              except the first, the user will be prompted if it returns true.
+ ;              default: (if (instance? LineNumberingPushbackReader *in*)
+ ;                        #(.atLineStart *in*)
+ ;                        #(identity true))
  ;
- ; - :prompt, function of no arguments, prompts for more input.
- ;            default: repl-prompt
+ ; :prompt function of no arguments, prompts for more input.
+ ;         default: repl-prompt
  ;
- ; - :flush, function of no arguments, flushes output.
- ;           default: flush
+ ; :flush function of no arguments, flushes output.
+ ;        default: flush
  ;
- ; - :read, function of two arguments, reads from *in*:
- ;          - returns its first argument to request a fresh prompt
- ;          - depending on need-prompt, this may cause the repl to prompt before reading again
- ;          - returns its second argument to request an exit from the repl
- ;          - else returns the next object read from the input stream
- ;          default: repl-read
+ ; :read function of two arguments, reads from *in*:
+ ;       - returns its first argument to request a fresh prompt
+ ;       - depending on need-prompt, this may cause the repl to prompt before reading again
+ ;       - returns its second argument to request an exit from the repl
+ ;       - else returns the next object read from the input stream
+ ;       default: repl-read
  ;
- ; - :eval, function of one argument, returns the evaluation of its argument.
- ;          default: eval
+ ; :eval function of one argument, returns the evaluation of its argument.
+ ;       default: eval
  ;
- ; - :print, function of one argument, prints its argument to the output.
- ;           default: prn
+ ; :print function of one argument, prints its argument to the output.
+ ;        default: prn
  ;
- ; - :caught, function of one argument, a throwable, called when read, eval, or
- ;            print throws an exception or error.
- ;            default: repl-caught
+ ; :caught function of one argument, a throwable, called when read, eval, or
+ ;         print throws an exception or error.
+ ;         default: repl-caught
  ;;
 (§ defn repl [& options]
     (let [cl (.getContextClassLoader (Thread/currentThread))]
@@ -13748,164 +13742,10 @@
     )
 )
 
-;;;
- ; Loads Cloiure source from a file or resource given its path.
- ; Paths beginning with @ or @/ are considered relative to classpath.
- ;;
-(§ defn load-script [^String path]
-    (if (.startsWith path "@")
-        (RT/loadResourceScript (.substring path (if (.startsWith path "@/") 2 1)))
-        (Compiler/loadFile path)
-    )
-)
-
-;;;
- ; Load a script.
- ;;
-(§ defn- init-opt [path] (load-script path))
-
-;;;
- ; Evals expressions in str, prints each non-nil result using prn.
- ;;
-(§ defn- eval-opt [str]
-    (let [eof (Object.) reader (LineNumberingPushbackReader. (java.io.StringReader. str))]
-        (loop [input (with-read-known (read reader false eof))]
-            (when-not (= input eof)
-                (let [value (eval input)]
-                    (when-not (nil? value)
-                        (prn value)
-                    )
-                    (recur (with-read-known (read reader false eof)))
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; Returns the handler associated with an init opt.
- ;;
-(§ defn- init-dispatch [opt] ({"-i" init-opt "--init" init-opt "-e" eval-opt "--eval" eval-opt} opt))
-
-;;;
- ; Common initialize routine for repl, script, and null opts.
- ;;
-(§ defn- initialize [args inits]
-    (in-ns 'user)
-    (set! *command-line-args* args)
-    (doseq [[opt arg] inits]
-        ((init-dispatch opt) arg)
-    )
-)
-
-;;;
- ; Call the -main function from a namespace with string arguments from the command line.
- ;;
-(§ defn- main-opt [[_ main-ns & args] inits]
-    (with-bindings (initialize args inits)
-        (apply (ns-resolve (doto (symbol main-ns) require) '-main) args)
-    )
-)
-
-;;;
- ; Returns cloiure version as a printable string.
- ;;
-(§ defn cloiure-version [] "x.y.z")
-
-;;;
- ; Start a repl with args and inits. Print greeting if no eval options were present.
- ;;
-(§ defn- repl-opt [[_ & args] inits]
-    (when-not (some #(= eval-opt (init-dispatch (first %))) inits)
-        (println "Cloiure" (cloiure-version))
-    )
-    (repl :init (fn [] (initialize args inits) (apply require repl-requires)))
-    (prn)
-    (System/exit 0)
-)
-
-;;;
- ; Run a script from a file, resource, or standard in with args and inits.
- ;;
-(§ defn- script-opt [[path & args] inits]
-    (with-bindings (initialize args inits)
-        (if (= path "-")
-            (load-reader *in*)
-            (load-script path)
-        )
-    )
-)
-
-;;;
- ; No repl or script opt present, just bind args and run inits.
- ;;
-(§ defn- null-opt [args inits] (with-bindings (initialize args inits)))
-
-;;;
- ; Print help text for main.
- ;;
-(§ defn- help-opt [_ _] (println (:doc (meta (var main)))))
-
-;;;
- ; Returns the handler associated with a main option.
- ;;
-(§ defn- main-dispatch [opt]
-    (or
-        ({"-r" repl-opt "--repl" repl-opt
-          "-m" main-opt "--main" main-opt
-          nil  null-opt
-          "-h" help-opt "--help" help-opt "-?" help-opt}
-            opt
-        )
-        script-opt
-    )
-)
-
-;;;
- ; Usage: java -cp cloiure.jar cloiure.main [init-opt*] [main-opt] [arg*]
- ;
- ; With no options or args, runs an interactive Read-Eval-Print Loop.
- ;
- ; init options:
- ;
- ; -i, --init path     Load a file or resource.
- ; -e, --eval string   Evaluate expressions in string; print non-nil values.
- ;
- ; main options:
- ;
- ; -m, --main ns-name  Call the -main function from a namespace with args.
- ; -r, --repl          Run a repl.
- ; path                Run a script from a file or resource.
- ; -                   Run a script from standard input.
- ; -h, -?, --help      Print this help message and exit.
- ;
- ; operation:
- ;
- ; - Establishes thread-local bindings for commonly set!-able vars
- ; - Enters the user namespace
- ; - Binds *command-line-args* to a seq of strings containing command line
- ;   args that appear after any main option
- ; - Runs all init options in order
- ; - Calls a -main function or runs a repl or script if requested
- ;
- ; The init options may be repeated and mixed freely, but must appear before
- ; any main option. The appearance of any eval option before running a repl
- ; suppresses the usual repl greeting message: "Cloiure ~(cloiure-version)".
- ;
- ; Paths may be absolute or relative in the filesystem or relative to
- ; classpath. Classpath-relative paths have prefix of @ or @/.
- ;;
-(§ defn main [& args]
+(§ defn main [& _args]
     (try
-        (if args
-            (loop [[opt arg & more :as args] args inits []]
-                (if (init-dispatch opt)
-                    (recur more (conj inits [opt arg]))
-                    ((main-dispatch opt) args inits)
-                )
-            )
-            (repl-opt nil nil)
-        )
+        (repl :init (fn [] (in-ns 'user) (apply require repl-requires)))
+        (prn)
         (finally
             (flush)
         )

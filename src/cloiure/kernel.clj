@@ -151,7 +151,7 @@
 (declare Cons'new-2 Cons'new-3)
 (declare Cycle'new-3 Cycle'new-5 Cycle'create)
 (declare Delay'new Delay'force)
-(declare DynamicClassLoader'classCache DynamicClassLoader'EMPTY_URLS DynamicClassLoader'RQ DynamicClassLoader'new-0 DynamicClassLoader'new-1 DynamicClassLoader'findInMemoryClass)
+(declare DynamicClassLoader'classCache DynamicClassLoader'RQ DynamicClassLoader'new DynamicClassLoader'findInMemoryClass)
 (declare ExceptionInfo'new-2 ExceptionInfo'new-3)
 (declare FnLoaderThunk'new)
 (declare Intrinsics'oa Intrinsics'ops Intrinsics'preds)
@@ -236,7 +236,7 @@
 (declare Reflector'invokeInstanceMethod Reflector'getCauseOrElse Reflector'throwCauseOrElseException Reflector'noMethodReport Reflector'invokeMatchingMethod Reflector'getAsMethodOfPublicBase Reflector'isMatch Reflector'invokeConstructor Reflector'invokeStaticMethodVariadic Reflector'invokeStaticMethod-3s Reflector'invokeStaticMethod-3c Reflector'getStaticField-2s Reflector'getStaticField-2c Reflector'setStaticField-3s Reflector'setStaticField-3c Reflector'getInstanceField Reflector'setInstanceField Reflector'invokeNoArgInstanceMember-2 Reflector'invokeNoArgInstanceMember-3 Reflector'invokeInstanceMember-2 Reflector'invokeInstanceMember-3o Reflector'invokeInstanceMember-3a Reflector'getField Reflector'getMethods Reflector'boxArg Reflector'boxArgs Reflector'paramArgTypeMatch Reflector'isCongruent Reflector'prepRet)
 (declare Repeat'INFINITE Repeat'new-2 Repeat'new-3 Repeat'create-1 Repeat'create-2)
 (declare RestFn'ontoArrayPrepend RestFn'findKey)
-(declare RT'T RT'F RT'LOADER_SUFFIX RT'DEFAULT_IMPORTS RT'UTF8 RT'CLOIURE_NS RT'OUT RT'IN RT'ERR RT'TAG_KEY RT'CONST_KEY RT'AGENT RT'READEVAL RT'ASSERT RT'MATH_CONTEXT RT'LINE_KEY RT'COLUMN_KEY RT'FILE_KEY RT'DECLARED_KEY RT'DOC_KEY RT'USE_CONTEXT_CLASSLOADER RT'LOAD_FILE RT'IN_NAMESPACE RT'NAMESPACE RT'IDENTICAL RT'CMD_LINE_ARGS RT'CURRENT_NS RT'FLUSH_ON_NEWLINE RT'PRINT_READABLY RT'WARN_ON_REFLECTION RT'ALLOW_UNRESOLVED_VARS RT'READER_RESOLVER RT'IN_NS_VAR RT'NS_VAR RT'FN_LOADER_VAR RT'PRINT_INITIALIZED RT'PR_ON RT'inNamespace RT'bootNamespace RT'processCommandLine RT'errPrintWriter RT'EMPTY_ARRAY RT'DEFAULT_COMPARATOR RT'ID RT'CHECK_SPEC_ASSERTS RT'INSTRUMENT_MACROS RT'CHECK_SPECS RT'keyword RT'var-2 RT'var-3 RT'loadResourceScript-1 RT'maybeLoadResourceScript RT'loadResourceScript-2s RT'loadResourceScript-2c RT'loadResourceScript-3 RT'lastModified RT'compile RT'load-1 RT'load-2 RT'nextID RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'countFrom RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nthFrom-2 RT'nth-3 RT'nthFrom-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1c RT'intCast-1b RT'intCast-1s RT'intCast-1i RT'intCast-1f RT'intCast-1l RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1f RT'longCast-1l RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1f RT'floatCast-1l RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1f RT'doubleCast-1l RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'printString RT'readString RT'print RT'printInnerSeq RT'formatAesthetic RT'formatStandard RT'format RT'doFormat RT'setValues RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget-2f RT'aset-3f RT'alength-1f RT'aclone-1f RT'aget-2d RT'aset-3d RT'alength-1d RT'aclone-1d RT'aget-2i RT'aset-3i RT'alength-1i RT'aclone-1i RT'aget-2l RT'aset-3l RT'alength-1l RT'aclone-1l RT'aget-2c RT'aset-3c RT'alength-1c RT'aclone-1c RT'aget-2b RT'aset-3b RT'alength-1b RT'aclone-1b RT'aget-2s RT'aset-3s RT'alength-1s RT'aclone-1s RT'aget-2z RT'aset-3z RT'alength-1z RT'aclone-1z RT'aget-2o RT'aset-3o RT'alength-1o RT'aclone-1o)
+(declare RT'T RT'F RT'LOADER_SUFFIX RT'DEFAULT_IMPORTS RT'UTF8 RT'CLOIURE_NS RT'OUT RT'IN RT'ERR RT'TAG_KEY RT'CONST_KEY RT'AGENT RT'READEVAL RT'ASSERT RT'MATH_CONTEXT RT'LINE_KEY RT'COLUMN_KEY RT'FILE_KEY RT'DECLARED_KEY RT'DOC_KEY RT'LOAD_FILE RT'IN_NAMESPACE RT'NAMESPACE RT'IDENTICAL RT'CURRENT_NS RT'FLUSH_ON_NEWLINE RT'PRINT_READABLY RT'WARN_ON_REFLECTION RT'ALLOW_UNRESOLVED_VARS RT'READER_RESOLVER RT'IN_NS_VAR RT'NS_VAR RT'FN_LOADER_VAR RT'PRINT_INITIALIZED RT'PR_ON RT'inNamespace RT'bootNamespace RT'errPrintWriter RT'EMPTY_ARRAY RT'DEFAULT_COMPARATOR RT'ID RT'CHECK_SPEC_ASSERTS RT'INSTRUMENT_MACROS RT'CHECK_SPECS RT'keyword RT'var-2 RT'var-3 RT'loadResourceScript RT'lastModified RT'compile RT'load-1 RT'load-2 RT'nextID RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'countFrom RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nthFrom-2 RT'nth-3 RT'nthFrom-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1c RT'intCast-1b RT'intCast-1s RT'intCast-1i RT'intCast-1f RT'intCast-1l RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1f RT'longCast-1l RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1f RT'floatCast-1l RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1f RT'doubleCast-1l RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'printString RT'readString RT'print RT'printInnerSeq RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget_float RT'aset_float RT'alength_float RT'aclone_float RT'aget_double RT'aset_double RT'alength_double RT'aclone_double RT'aget_int RT'aset_int RT'alength_int RT'aclone_int RT'aget_long RT'aset_long RT'alength_long RT'aclone_long RT'aget_char RT'aset_char RT'alength_char RT'aclone_char RT'aget_byte RT'aset_byte RT'alength_byte RT'aclone_byte RT'aget_short RT'aset_short RT'alength_short RT'aclone_short RT'aget_boolean RT'aset_boolean RT'alength_boolean RT'aclone_boolean RT'aget_object RT'aset_object RT'alength_object RT'aclone_object)
 (declare SeqIterator'START SeqIterator'new)
 (declare StringSeq'create StringSeq'new)
 (declare Symbol'create-2 Symbol'create-1 Symbol'intern-2 Symbol'intern-1 Symbol'new-2 Symbol'new-3)
@@ -2567,7 +2567,7 @@
     (§ defn #_"Object[]" (§ method toArray) [#_"APersistentVector" this]
         (let [#_"Object[]" ret (make-array Object (.count this))]
             (loop-when-recur [#_"int" i 0] (< i (.count this)) [(inc i)]
-                (§ ass (§ aget ret i) (.nth this, i))
+                (aset ret i (.nth this, i))
             )
             ret
         )
@@ -2848,11 +2848,11 @@
     )
 
     (defn #_"ArrayChunk" ArrayChunk'new-1 [#_"Object[]" array]
-        (ArrayChunk'new-3 array, 0, (§ alength array))
+        (ArrayChunk'new-3 array, 0, (alength array))
     )
 
     (defn #_"ArrayChunk" ArrayChunk'new-2 [#_"Object[]" array, #_"int" off]
-        (ArrayChunk'new-3 array, off, (§ alength array))
+        (ArrayChunk'new-3 array, off, (alength array))
     )
 
     (defn #_"ArrayChunk" ArrayChunk'new-3 [#_"Object[]" array, #_"int" off, #_"int" end]
@@ -2866,7 +2866,7 @@
 
     #_method
     (§ defn #_"Object" (§ method nth) [#_"ArrayChunk" this, #_"int" i]
-        (§ aget (:array this) (+ (:off this) i))
+        (aget (:array this) (+ (:off this) i))
     )
 
     #_method
@@ -2889,12 +2889,12 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArrayChunk" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (§ aget (:array this) (:off this)))]
+        (let [#_"Object" ret (.invoke f, start, (aget (:array this) (:off this)))]
             (when (RT'isReduced ret)
                 (§ return ret)
             )
             (loop-when-recur [#_"int" x (inc (:off this))] (< x (:end this)) [(inc x)]
-                (§ ass ret (.invoke f, ret, (§ aget (:array this) x)))
+                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
                 (when (RT'isReduced ret)
                     (§ return ret)
                 )
@@ -2929,13 +2929,13 @@
 
     #_method
     (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter_int" this]
-        (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
+        (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
     #_method
     (§ defn #_"Long" (§ method next) [#_"ArrayIter_int" this]
-        (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
-            (let [_ (Long/valueOf (§ aget (:array this) (:i this)))]
+        (when (and (some? (:array this)) (< (:i this) (alength (:array this))))
+            (let [_ (Long/valueOf (aget (:array this) (:i this)))]
                 (§ ass this (assoc this :i (inc (:i this))))
                 (§ return _)
             )
@@ -2967,13 +2967,13 @@
 
     #_method
     (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter_float" this]
-        (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
+        (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
     #_method
     (§ defn #_"Double" (§ method next) [#_"ArrayIter_float" this]
-        (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
-            (let [_ (Double/valueOf (§ aget (:array this) (:i this)))]
+        (when (and (some? (:array this)) (< (:i this) (alength (:array this))))
+            (let [_ (Double/valueOf (aget (:array this) (:i this)))]
                 (§ ass this (assoc this :i (inc (:i this))))
                 (§ return _)
             )
@@ -3005,13 +3005,13 @@
 
     #_method
     (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter_double" this]
-        (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
+        (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
     #_method
     (§ defn #_"Double" (§ method next) [#_"ArrayIter_double" this]
-        (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
-            (let [_ (§ aget (:array this) (:i this))]
+        (when (and (some? (:array this)) (< (:i this) (alength (:array this))))
+            (let [_ (aget (:array this) (:i this))]
                 (§ ass this (assoc this :i (inc (:i this))))
                 (§ return _)
             )
@@ -3043,13 +3043,13 @@
 
     #_method
     (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter_long" this]
-        (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
+        (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
     #_method
     (§ defn #_"Long" (§ method next) [#_"ArrayIter_long" this]
-        (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
-            (let [_ (Long/valueOf (§ aget (:array this) (:i this)))]
+        (when (and (some? (:array this)) (< (:i this) (alength (:array this))))
+            (let [_ (Long/valueOf (aget (:array this) (:i this)))]
                 (§ ass this (assoc this :i (inc (:i this))))
                 (§ return _)
             )
@@ -3081,13 +3081,13 @@
 
     #_method
     (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter_byte" this]
-        (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
+        (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
     #_method
     (§ defn #_"Byte" (§ method next) [#_"ArrayIter_byte" this]
-        (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
-            (let [_ (§ aget (:array this) (:i this))]
+        (when (and (some? (:array this)) (< (:i this) (alength (:array this))))
+            (let [_ (aget (:array this) (:i this))]
                 (§ ass this (assoc this :i (inc (:i this))))
                 (§ return _)
             )
@@ -3119,13 +3119,13 @@
 
     #_method
     (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter_char" this]
-        (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
+        (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
     #_method
     (§ defn #_"Character" (§ method next) [#_"ArrayIter_char" this]
-        (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
-            (let [_ (§ aget (:array this) (:i this))]
+        (when (and (some? (:array this)) (< (:i this) (alength (:array this))))
+            (let [_ (aget (:array this) (:i this))]
                 (§ ass this (assoc this :i (inc (:i this))))
                 (§ return _)
             )
@@ -3157,13 +3157,13 @@
 
     #_method
     (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter_short" this]
-        (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
+        (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
     #_method
     (§ defn #_"Long" (§ method next) [#_"ArrayIter_short" this]
-        (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
-            (let [_ (Long/valueOf (§ aget (:array this) (:i this)))]
+        (when (and (some? (:array this)) (< (:i this) (alength (:array this))))
+            (let [_ (Long/valueOf (aget (:array this) (:i this)))]
                 (§ ass this (assoc this :i (inc (:i this))))
                 (§ return _)
             )
@@ -3195,13 +3195,13 @@
 
     #_method
     (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter_boolean" this]
-        (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
+        (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
     #_method
     (§ defn #_"Boolean" (§ method next) [#_"ArrayIter_boolean" this]
-        (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
-            (let [_ (Boolean/valueOf (§ aget (:array this) (:i this)))]
+        (when (and (some? (:array this)) (< (:i this) (alength (:array this))))
+            (let [_ (Boolean/valueOf (aget (:array this) (:i this)))]
                 (§ ass this (assoc this :i (inc (:i this))))
                 (§ return _)
             )
@@ -3240,7 +3240,7 @@
     )
 
     (defn #_"Iterator" ArrayIter'create-1 [& #_"Object..." array]
-        (if (and (some? array) (pos? (§ alength array)))
+        (if (and (some? array) (pos? (alength array)))
             (ArrayIter'new array, 0)
             ArrayIter'EMPTY_ITERATOR
         )
@@ -3279,13 +3279,13 @@
 
     #_method
     (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter" this]
-        (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
+        (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
     #_method
     (§ defn #_"Object" (§ method next) [#_"ArrayIter" this]
-        (when (and (some? (:array this)) (< (:i this) (§ alength (:array this))))
-            (let [_ (§ aget (:array this) (:i this))]
+        (when (and (some? (:array this)) (< (:i this) (alength (:array this))))
+            (let [_ (aget (:array this) (:i this))]
                 (§ ass this (assoc this :i (inc (:i this))))
                 (§ return _)
             )
@@ -3322,19 +3322,19 @@
 
     #_override
     (§ defn #_"Object" ISeq'''first [#_"ArraySeq_int" this]
-        (§ aget (:array this) (:i this))
+        (aget (:array this) (:i this))
     )
 
     #_override
     (§ defn #_"ISeq" ISeq'''next [#_"ArraySeq_int" this]
-        (when (< (inc (:i this)) (§ alength (:array this)))
+        (when (< (inc (:i this)) (alength (:array this)))
             (ArraySeq_int'new (.meta this), (:array this), (inc (:i this)))
         )
     )
 
     #_override
     (§ defn #_"int" Counted'''count [#_"ArraySeq_int" this]
-        (- (§ alength (:array this)) (:i this))
+        (- (alength (:array this)) (:i this))
     )
 
     #_method
@@ -3349,9 +3349,9 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_int" this, #_"IFn" f]
-        (let [#_"Object" ret (§ aget (:array this) (:i this))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
-                (§ ass ret (.invoke f, ret, (§ aget (:array this) x)))
+        (let [#_"Object" ret (aget (:array this) (:i this))]
+            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
+                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
                 )
@@ -3362,12 +3362,12 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_int" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (§ aget (:array this) (:i this)))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
+        (let [#_"Object" ret (.invoke f, start, (aget (:array this) (:i this)))]
+            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
                 )
-                (§ ass ret (.invoke f, ret, (§ aget (:array this) x)))
+                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
             )
             (when (RT'isReduced ret)
                 (§ return (.deref (cast' IDeref ret)))
@@ -3380,8 +3380,8 @@
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq_int" this, #_"Object" o]
         (when (instance? Number o)
             (let [#_"int" k (.intValue (cast Number o))]
-                (loop-when-recur [#_"int" j (:i this)] (< j (§ alength (:array this))) [(inc j)]
-                    (when (= k (§ aget (:array this) j))
+                (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
+                    (when (= k (aget (:array this) j))
                         (§ return (- j (:i this)))
                     )
                 )
@@ -3395,8 +3395,8 @@
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_int" this, #_"Object" o]
         (when (instance? Number o)
             (let [#_"int" k (.intValue (cast Number o))]
-                (loop-when-recur [#_"int" j (dec (§ alength (:array this)))] (<= (:i this) j) [(dec j)]
-                    (when (= k (§ aget (:array this) j))
+                (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
+                    (when (= k (aget (:array this) j))
                         (§ return (- j (:i this)))
                     )
                 )
@@ -3425,19 +3425,19 @@
 
     #_override
     (§ defn #_"Object" ISeq'''first [#_"ArraySeq_float" this]
-        (Numbers'num-1f (§ aget (:array this) (:i this)))
+        (Numbers'num-1f (aget (:array this) (:i this)))
     )
 
     #_override
     (§ defn #_"ISeq" ISeq'''next [#_"ArraySeq_float" this]
-        (when (< (inc (:i this)) (§ alength (:array this)))
+        (when (< (inc (:i this)) (alength (:array this)))
             (ArraySeq_float'new (.meta this), (:array this), (inc (:i this)))
         )
     )
 
     #_override
     (§ defn #_"int" Counted'''count [#_"ArraySeq_float" this]
-        (- (§ alength (:array this)) (:i this))
+        (- (alength (:array this)) (:i this))
     )
 
     #_method
@@ -3452,9 +3452,9 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_float" this, #_"IFn" f]
-        (let [#_"Object" ret (Numbers'num-1f (§ aget (:array this) (:i this)))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
-                (§ ass ret (.invoke f, ret, (Numbers'num-1f (§ aget (:array this) x))))
+        (let [#_"Object" ret (Numbers'num-1f (aget (:array this) (:i this)))]
+            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
+                (§ ass ret (.invoke f, ret, (Numbers'num-1f (aget (:array this) x))))
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
                 )
@@ -3465,12 +3465,12 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_float" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (Numbers'num-1f (§ aget (:array this) (:i this))))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
+        (let [#_"Object" ret (.invoke f, start, (Numbers'num-1f (aget (:array this) (:i this))))]
+            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
                 )
-                (§ ass ret (.invoke f, ret, (Numbers'num-1f (§ aget (:array this) x))))
+                (§ ass ret (.invoke f, ret, (Numbers'num-1f (aget (:array this) x))))
             )
             (when (RT'isReduced ret)
                 (§ return (.deref (cast' IDeref ret)))
@@ -3483,8 +3483,8 @@
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq_float" this, #_"Object" o]
         (when (instance? Number o)
             (let [#_"float" f (.floatValue (cast Number o))]
-                (loop-when-recur [#_"int" j (:i this)] (< j (§ alength (:array this))) [(inc j)]
-                    (when (= f (§ aget (:array this) j))
+                (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
+                    (when (= f (aget (:array this) j))
                         (§ return (- j (:i this)))
                     )
                 )
@@ -3497,8 +3497,8 @@
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_float" this, #_"Object" o]
         (when (instance? Number o)
             (let [#_"float" f (.floatValue (cast Number o))]
-                (loop-when-recur [#_"int" j (dec (§ alength (:array this)))] (<= (:i this) j) [(dec j)]
-                    (when (= f (§ aget (:array this) j))
+                (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
+                    (when (= f (aget (:array this) j))
                         (§ return (- j (:i this)))
                     )
                 )
@@ -3526,19 +3526,19 @@
 
     #_override
     (§ defn #_"Object" ISeq'''first [#_"ArraySeq_double" this]
-        (§ aget (:array this) (:i this))
+        (aget (:array this) (:i this))
     )
 
     #_override
     (§ defn #_"ISeq" ISeq'''next [#_"ArraySeq_double" this]
-        (when (< (inc (:i this)) (§ alength (:array this)))
+        (when (< (inc (:i this)) (alength (:array this)))
             (ArraySeq_double'new (.meta this), (:array this), (inc (:i this)))
         )
     )
 
     #_override
     (§ defn #_"int" Counted'''count [#_"ArraySeq_double" this]
-        (- (§ alength (:array this)) (:i this))
+        (- (alength (:array this)) (:i this))
     )
 
     #_method
@@ -3553,9 +3553,9 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_double" this, #_"IFn" f]
-        (let [#_"Object" ret (§ aget (:array this) (:i this))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
-                (§ ass ret (.invoke f, ret, (§ aget (:array this) x)))
+        (let [#_"Object" ret (aget (:array this) (:i this))]
+            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
+                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
                 )
@@ -3566,12 +3566,12 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_double" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (§ aget (:array this) (:i this)))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
+        (let [#_"Object" ret (.invoke f, start, (aget (:array this) (:i this)))]
+            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
                 )
-                (§ ass ret (.invoke f, ret, (§ aget (:array this) x)))
+                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
             )
             (when (RT'isReduced ret)
                 (§ return (.deref (cast' IDeref ret)))
@@ -3584,8 +3584,8 @@
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq_double" this, #_"Object" o]
         (when (instance? Number o)
             (let [#_"double" d (.doubleValue (cast Number o))]
-                (loop-when-recur [#_"int" j (:i this)] (< j (§ alength (:array this))) [(inc j)]
-                    (when (= d (§ aget (:array this) j))
+                (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
+                    (when (= d (aget (:array this) j))
                         (§ return (- j (:i this)))
                     )
                 )
@@ -3599,8 +3599,8 @@
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_double" this, #_"Object" o]
         (when (instance? Number o)
             (let [#_"double" d (.doubleValue (cast Number o))]
-                (loop-when-recur [#_"int" j (dec (§ alength (:array this)))] (<= (:i this) j) [(dec j)]
-                    (when (= d (§ aget (:array this) j))
+                (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
+                    (when (= d (aget (:array this) j))
                         (§ return (- j (:i this)))
                     )
                 )
@@ -3629,19 +3629,19 @@
 
     #_override
     (§ defn #_"Object" ISeq'''first [#_"ArraySeq_long" this]
-        (Numbers'num-1l (§ aget (:array this) (:i this)))
+        (Numbers'num-1l (aget (:array this) (:i this)))
     )
 
     #_override
     (§ defn #_"ISeq" ISeq'''next [#_"ArraySeq_long" this]
-        (when (< (inc (:i this)) (§ alength (:array this)))
+        (when (< (inc (:i this)) (alength (:array this)))
             (ArraySeq_long'new (.meta this), (:array this), (inc (:i this)))
         )
     )
 
     #_override
     (§ defn #_"int" Counted'''count [#_"ArraySeq_long" this]
-        (- (§ alength (:array this)) (:i this))
+        (- (alength (:array this)) (:i this))
     )
 
     #_method
@@ -3656,9 +3656,9 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_long" this, #_"IFn" f]
-        (let [#_"Object" ret (Numbers'num-1l (§ aget (:array this) (:i this)))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
-                (§ ass ret (.invoke f, ret, (Numbers'num-1l (§ aget (:array this) x))))
+        (let [#_"Object" ret (Numbers'num-1l (aget (:array this) (:i this)))]
+            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
+                (§ ass ret (.invoke f, ret, (Numbers'num-1l (aget (:array this) x))))
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
                 )
@@ -3669,12 +3669,12 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_long" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (Numbers'num-1l (§ aget (:array this) (:i this))))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
+        (let [#_"Object" ret (.invoke f, start, (Numbers'num-1l (aget (:array this) (:i this))))]
+            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
                 )
-                (§ ass ret (.invoke f, ret, (Numbers'num-1l (§ aget (:array this) x))))
+                (§ ass ret (.invoke f, ret, (Numbers'num-1l (aget (:array this) x))))
             )
             (when (RT'isReduced ret)
                 (§ return (.deref (cast' IDeref ret)))
@@ -3687,8 +3687,8 @@
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq_long" this, #_"Object" o]
         (when (instance? Number o)
             (let [#_"long" l (.longValue (cast Number o))]
-                (loop-when-recur [#_"int" j (:i this)] (< j (§ alength (:array this))) [(inc j)]
-                    (when (= l (§ aget (:array this) j))
+                (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
+                    (when (= l (aget (:array this) j))
                         (§ return (- j (:i this)))
                     )
                 )
@@ -3702,8 +3702,8 @@
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_long" this, #_"Object" o]
         (when (instance? Number o)
             (let [#_"long" l (.longValue (cast Number o))]
-                (loop-when-recur [#_"int" j (dec (§ alength (:array this)))] (<= (:i this) j) [(dec j)]
-                    (when (= l (§ aget (:array this) j))
+                (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
+                    (when (= l (aget (:array this) j))
                         (§ return (- j (:i this)))
                     )
                 )
@@ -3732,19 +3732,19 @@
 
     #_override
     (§ defn #_"Object" ISeq'''first [#_"ArraySeq_byte" this]
-        (§ aget (:array this) (:i this))
+        (aget (:array this) (:i this))
     )
 
     #_override
     (§ defn #_"ISeq" ISeq'''next [#_"ArraySeq_byte" this]
-        (when (< (inc (:i this)) (§ alength (:array this)))
+        (when (< (inc (:i this)) (alength (:array this)))
             (ArraySeq_byte'new (.meta this), (:array this), (inc (:i this)))
         )
     )
 
     #_override
     (§ defn #_"int" Counted'''count [#_"ArraySeq_byte" this]
-        (- (§ alength (:array this)) (:i this))
+        (- (alength (:array this)) (:i this))
     )
 
     #_method
@@ -3759,9 +3759,9 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_byte" this, #_"IFn" f]
-        (let [#_"Object" ret (§ aget (:array this) (:i this))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
-                (§ ass ret (.invoke f, ret, (§ aget (:array this) x)))
+        (let [#_"Object" ret (aget (:array this) (:i this))]
+            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
+                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
                 )
@@ -3772,12 +3772,12 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_byte" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (§ aget (:array this) (:i this)))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
+        (let [#_"Object" ret (.invoke f, start, (aget (:array this) (:i this)))]
+            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
                 )
-                (§ ass ret (.invoke f, ret, (§ aget (:array this) x)))
+                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
             )
             (when (RT'isReduced ret)
                 (§ return (.deref (cast' IDeref ret)))
@@ -3790,8 +3790,8 @@
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq_byte" this, #_"Object" o]
         (when (instance? Byte o)
             (let [#_"byte" b (.byteValue (cast Byte o))]
-                (loop-when-recur [#_"int" j (:i this)] (< j (§ alength (:array this))) [(inc j)]
-                    (when (= b (§ aget (:array this) j))
+                (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
+                    (when (= b (aget (:array this) j))
                         (§ return (- j (:i this)))
                     )
                 )
@@ -3800,8 +3800,8 @@
         (when (nil? o)
             (§ return -1)
         )
-        (loop-when-recur [#_"int" j (:i this)] (< j (§ alength (:array this))) [(inc j)]
-            (when (.equals o, (§ aget (:array this) j))
+        (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
+            (when (.equals o, (aget (:array this) j))
                 (§ return (- j (:i this)))
             )
         )
@@ -3812,8 +3812,8 @@
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_byte" this, #_"Object" o]
         (when (instance? Byte o)
             (let [#_"byte" b (.byteValue (cast Byte o))]
-                (loop-when-recur [#_"int" j (dec (§ alength (:array this)))] (<= (:i this) j) [(dec j)]
-                    (when (= b (§ aget (:array this) j))
+                (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
+                    (when (= b (aget (:array this) j))
                         (§ return (- j (:i this)))
                     )
                 )
@@ -3822,8 +3822,8 @@
         (when (nil? o)
             (§ return -1)
         )
-        (loop-when-recur [#_"int" j (dec (§ alength (:array this)))] (<= (:i this) j) [(dec j)]
-            (when (.equals o, (§ aget (:array this) j))
+        (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
+            (when (.equals o, (aget (:array this) j))
                 (§ return (- j (:i this)))
             )
         )
@@ -3849,19 +3849,19 @@
 
     #_override
     (§ defn #_"Object" ISeq'''first [#_"ArraySeq_char" this]
-        (§ aget (:array this) (:i this))
+        (aget (:array this) (:i this))
     )
 
     #_override
     (§ defn #_"ISeq" ISeq'''next [#_"ArraySeq_char" this]
-        (when (< (inc (:i this)) (§ alength (:array this)))
+        (when (< (inc (:i this)) (alength (:array this)))
             (ArraySeq_char'new (.meta this), (:array this), (inc (:i this)))
         )
     )
 
     #_override
     (§ defn #_"int" Counted'''count [#_"ArraySeq_char" this]
-        (- (§ alength (:array this)) (:i this))
+        (- (alength (:array this)) (:i this))
     )
 
     #_method
@@ -3876,9 +3876,9 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_char" this, #_"IFn" f]
-        (let [#_"Object" ret (§ aget (:array this) (:i this))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
-                (§ ass ret (.invoke f, ret, (§ aget (:array this) x)))
+        (let [#_"Object" ret (aget (:array this) (:i this))]
+            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
+                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
                 )
@@ -3889,12 +3889,12 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_char" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (§ aget (:array this) (:i this)))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
+        (let [#_"Object" ret (.invoke f, start, (aget (:array this) (:i this)))]
+            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
                 )
-                (§ ass ret (.invoke f, ret, (§ aget (:array this) x)))
+                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
             )
             (when (RT'isReduced ret)
                 (§ return (.deref (cast' IDeref ret)))
@@ -3907,8 +3907,8 @@
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq_char" this, #_"Object" o]
         (when (instance? Character o)
             (let [#_"char" c (.charValue (cast Character o))]
-                (loop-when-recur [#_"int" j (:i this)] (< j (§ alength (:array this))) [(inc j)]
-                    (when (= c (§ aget (:array this) j))
+                (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
+                    (when (= c (aget (:array this) j))
                         (§ return (- j (:i this)))
                     )
                 )
@@ -3917,8 +3917,8 @@
         (when (nil? o)
             (§ return -1)
         )
-        (loop-when-recur [#_"int" j (:i this)] (< j (§ alength (:array this))) [(inc j)]
-            (when (.equals o, (§ aget (:array this) j))
+        (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
+            (when (.equals o, (aget (:array this) j))
                 (§ return (- j (:i this)))
             )
         )
@@ -3929,8 +3929,8 @@
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_char" this, #_"Object" o]
         (when (instance? Character o)
             (let [#_"char" c (.charValue (cast Character o))]
-                (loop-when-recur [#_"int" j (dec (§ alength (:array this)))] (<= (:i this) j) [(dec j)]
-                    (when (= c (§ aget (:array this) j))
+                (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
+                    (when (= c (aget (:array this) j))
                         (§ return (- j (:i this)))
                     )
                 )
@@ -3939,8 +3939,8 @@
         (when (nil? o)
             (§ return -1)
         )
-        (loop-when-recur [#_"int" j (dec (§ alength (:array this)))] (<= (:i this) j) [(dec j)]
-            (when (.equals o, (§ aget (:array this) j))
+        (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
+            (when (.equals o, (aget (:array this) j))
                 (§ return (- j (:i this)))
             )
         )
@@ -3966,19 +3966,19 @@
 
     #_override
     (§ defn #_"Object" ISeq'''first [#_"ArraySeq_short" this]
-        (§ aget (:array this) (:i this))
+        (aget (:array this) (:i this))
     )
 
     #_override
     (§ defn #_"ISeq" ISeq'''next [#_"ArraySeq_short" this]
-        (when (< (inc (:i this)) (§ alength (:array this)))
+        (when (< (inc (:i this)) (alength (:array this)))
             (ArraySeq_short'new (.meta this), (:array this), (inc (:i this)))
         )
     )
 
     #_override
     (§ defn #_"int" Counted'''count [#_"ArraySeq_short" this]
-        (- (§ alength (:array this)) (:i this))
+        (- (alength (:array this)) (:i this))
     )
 
     #_method
@@ -3993,9 +3993,9 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_short" this, #_"IFn" f]
-        (let [#_"Object" ret (§ aget (:array this) (:i this))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
-                (§ ass ret (.invoke f, ret, (§ aget (:array this) x)))
+        (let [#_"Object" ret (aget (:array this) (:i this))]
+            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
+                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
                 )
@@ -4006,12 +4006,12 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_short" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (§ aget (:array this) (:i this)))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
+        (let [#_"Object" ret (.invoke f, start, (aget (:array this) (:i this)))]
+            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
                 )
-                (§ ass ret (.invoke f, ret, (§ aget (:array this) x)))
+                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
             )
             (when (RT'isReduced ret)
                 (§ return (.deref (cast' IDeref ret)))
@@ -4024,8 +4024,8 @@
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq_short" this, #_"Object" o]
         (when (instance? Short o)
             (let [#_"short" s (.shortValue (cast Short o))]
-                (loop-when-recur [#_"int" j (:i this)] (< j (§ alength (:array this))) [(inc j)]
-                    (when (= s (§ aget (:array this) j))
+                (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
+                    (when (= s (aget (:array this) j))
                         (§ return (- j (:i this)))
                     )
                 )
@@ -4034,8 +4034,8 @@
         (when (nil? o)
             (§ return -1)
         )
-        (loop-when-recur [#_"int" j (:i this)] (< j (§ alength (:array this))) [(inc j)]
-            (when (.equals o, (§ aget (:array this) j))
+        (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
+            (when (.equals o, (aget (:array this) j))
                 (§ return (- j (:i this)))
             )
         )
@@ -4046,8 +4046,8 @@
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_short" this, #_"Object" o]
         (when (instance? Short o)
             (let [#_"short" s (.shortValue (cast Short o))]
-                (loop-when-recur [#_"int" j (dec (§ alength (:array this)))] (<= (:i this) j) [(dec j)]
-                    (when (= s (§ aget (:array this) j))
+                (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
+                    (when (= s (aget (:array this) j))
                         (§ return (- j (:i this)))
                     )
                 )
@@ -4056,8 +4056,8 @@
         (when (nil? o)
             (§ return -1)
         )
-        (loop-when-recur [#_"int" j (dec (§ alength (:array this)))] (<= (:i this) j) [(dec j)]
-            (when (.equals o, (§ aget (:array this) j))
+        (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
+            (when (.equals o, (aget (:array this) j))
                 (§ return (- j (:i this)))
             )
         )
@@ -4083,19 +4083,19 @@
 
     #_override
     (§ defn #_"Object" ISeq'''first [#_"ArraySeq_boolean" this]
-        (§ aget (:array this) (:i this))
+        (aget (:array this) (:i this))
     )
 
     #_override
     (§ defn #_"ISeq" ISeq'''next [#_"ArraySeq_boolean" this]
-        (when (< (inc (:i this)) (§ alength (:array this)))
+        (when (< (inc (:i this)) (alength (:array this)))
             (ArraySeq_boolean'new (.meta this), (:array this), (inc (:i this)))
         )
     )
 
     #_override
     (§ defn #_"int" Counted'''count [#_"ArraySeq_boolean" this]
-        (- (§ alength (:array this)) (:i this))
+        (- (alength (:array this)) (:i this))
     )
 
     #_method
@@ -4110,9 +4110,9 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_boolean" this, #_"IFn" f]
-        (let [#_"Object" ret (§ aget (:array this) (:i this))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
-                (§ ass ret (.invoke f, ret, (§ aget (:array this) x)))
+        (let [#_"Object" ret (aget (:array this) (:i this))]
+            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
+                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
                 )
@@ -4123,12 +4123,12 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_boolean" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (§ aget (:array this) (:i this)))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
+        (let [#_"Object" ret (.invoke f, start, (aget (:array this) (:i this)))]
+            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
                 )
-                (§ ass ret (.invoke f, ret, (§ aget (:array this) x)))
+                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
             )
             (when (RT'isReduced ret)
                 (§ return (.deref (cast' IDeref ret)))
@@ -4141,8 +4141,8 @@
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq_boolean" this, #_"Object" o]
         (when (instance? Boolean o)
             (let [#_"boolean" b (.booleanValue (cast Boolean o))]
-                (loop-when-recur [#_"int" j (:i this)] (< j (§ alength (:array this))) [(inc j)]
-                    (when (= b (§ aget (:array this) j))
+                (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
+                    (when (= b (aget (:array this) j))
                         (§ return (- j (:i this)))
                     )
                 )
@@ -4151,8 +4151,8 @@
         (when (nil? o)
             (§ return -1)
         )
-        (loop-when-recur [#_"int" j (:i this)] (< j (§ alength (:array this))) [(inc j)]
-            (when (.equals o, (§ aget (:array this) j))
+        (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
+            (when (.equals o, (aget (:array this) j))
                 (§ return (- j (:i this)))
             )
         )
@@ -4163,8 +4163,8 @@
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_boolean" this, #_"Object" o]
         (when (instance? Boolean o)
             (let [#_"boolean" b (.booleanValue (cast Boolean o))]
-                (loop-when-recur [#_"int" j (dec (§ alength (:array this)))] (<= (:i this) j) [(dec j)]
-                    (when (= b (§ aget (:array this) j))
+                (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
+                    (when (= b (aget (:array this) j))
                         (§ return (- j (:i this)))
                     )
                 )
@@ -4173,8 +4173,8 @@
         (when (nil? o)
             (§ return -1)
         )
-        (loop-when-recur [#_"int" j (dec (§ alength (:array this)))] (<= (:i this) j) [(dec j)]
-            (when (.equals o, (§ aget (:array this) j))
+        (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
+            (when (.equals o, (aget (:array this) j))
                 (§ return (- j (:i this)))
             )
         )
@@ -4188,7 +4188,7 @@
     )
 
     (defn #_"ArraySeq" ArraySeq'create-1 [& #_"Object..." array]
-        (when (and (some? array) (pos? (§ alength array)))
+        (when (and (some? array) (pos? (alength array)))
             (ArraySeq'new-2 array, 0)
         )
     )
@@ -4235,20 +4235,20 @@
     #_override
     (§ defn #_"Object" ISeq'''first [#_"ArraySeq" this]
         (when (some? (:array this))
-            (§ aget (:array this) (:i this))
+            (aget (:array this) (:i this))
         )
     )
 
     #_override
     (§ defn #_"ISeq" ISeq'''next [#_"ArraySeq" this]
-        (when (and (some? (:array this)) (< (inc (:i this)) (§ alength (:array this))))
+        (when (and (some? (:array this)) (< (inc (:i this)) (alength (:array this))))
             (ArraySeq'new-2 (:array this), (inc (:i this)))
         )
     )
 
     #_override
     (§ defn #_"int" Counted'''count [#_"ArraySeq" this]
-        (if (some? (:array this)) (- (§ alength (:array this)) (:i this)) 0)
+        (if (some? (:array this)) (- (alength (:array this)) (:i this)) 0)
     )
 
     #_method
@@ -4264,9 +4264,9 @@
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq" this, #_"IFn" f]
         (when (some? (:array this))
-            (let [#_"Object" ret (§ aget (:array this) (:i this))]
-                (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
-                    (§ ass ret (.invoke f, ret, (§ aget (:array this) x)))
+            (let [#_"Object" ret (aget (:array this) (:i this))]
+                (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
+                    (§ ass ret (.invoke f, ret, (aget (:array this) x)))
                     (when (RT'isReduced ret)
                         (§ return (.deref (cast' IDeref ret)))
                     )
@@ -4280,12 +4280,12 @@
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq" this, #_"IFn" f, #_"Object" start]
         (when (some? (:array this))
-            (let [#_"Object" ret (.invoke f, start, (§ aget (:array this) (:i this)))]
-                (loop-when-recur [#_"int" x (inc (:i this))] (< x (§ alength (:array this))) [(inc x)]
+            (let [#_"Object" ret (.invoke f, start, (aget (:array this) (:i this)))]
+                (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
                     (when (RT'isReduced ret)
                         (§ return (.deref (cast' IDeref ret)))
                     )
-                    (§ ass ret (.invoke f, ret, (§ aget (:array this) x)))
+                    (§ ass ret (.invoke f, ret, (aget (:array this) x)))
                 )
                 (when (RT'isReduced ret)
                     (§ return (.deref (cast' IDeref ret)))
@@ -4299,8 +4299,8 @@
     #_method
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq" this, #_"Object" o]
         (when (some? (:array this))
-            (loop-when-recur [#_"int" j (:i this)] (< j (§ alength (:array this))) [(inc j)]
-                (when (Util'equals o, (§ aget (:array this) j))
+            (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
+                (when (Util'equals o, (aget (:array this) j))
                     (§ return (- j (:i this)))
                 )
             )
@@ -4313,15 +4313,15 @@
         (when (some? (:array this))
             (if (nil? o)
                 (do
-                    (loop-when-recur [#_"int" j (dec (§ alength (:array this)))] (<= (:i this) j) [(dec j)]
-                        (when (nil? (§ aget (:array this) j))
+                    (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
+                        (when (nil? (aget (:array this) j))
                             (§ return (- j (:i this)))
                         )
                     )
                 )
                 (do
-                    (loop-when-recur [#_"int" j (dec (§ alength (:array this)))] (<= (:i this) j) [(dec j)]
-                        (when (.equals o, (§ aget (:array this) j))
+                    (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
+                        (when (.equals o, (aget (:array this) j))
                             (§ return (- j (:i this)))
                         )
                     )
@@ -5242,7 +5242,7 @@
 
     #_method
     (§ defn #_"void" (§ method add) [#_"ChunkBuffer" this, #_"Object" o]
-        (§ ass (§ aget (:buffer this) (:end this)) o)
+        (aset (:buffer this) (:end this) o)
         (§ ass this (assoc this :end (inc (:end this))))
         nil
     )
@@ -6226,39 +6226,39 @@
                 (do
                     (§ return c)
                 )
-                (.equals (:name sym), "objects")
+                (= (:name sym) "objects")
                 (do
                     (§ ass c (§ class Object[]))
                 )
-                (.equals (:name sym), "ints")
+                (= (:name sym) "ints")
                 (do
                     (§ ass c (§ class int[]))
                 )
-                (.equals (:name sym), "longs")
+                (= (:name sym) "longs")
                 (do
                     (§ ass c (§ class long[]))
                 )
-                (.equals (:name sym), "floats")
+                (= (:name sym) "floats")
                 (do
                     (§ ass c (§ class float[]))
                 )
-                (.equals (:name sym), "doubles")
+                (= (:name sym) "doubles")
                 (do
                     (§ ass c (§ class double[]))
                 )
-                (.equals (:name sym), "chars")
+                (= (:name sym) "chars")
                 (do
                     (§ ass c (§ class char[]))
                 )
-                (.equals (:name sym), "shorts")
+                (= (:name sym) "shorts")
                 (do
                     (§ ass c (§ class short[]))
                 )
-                (.equals (:name sym), "bytes")
+                (= (:name sym) "bytes")
                 (do
                     (§ ass c (§ class byte[]))
                 )
-                (.equals (:name sym), "booleans")
+                (= (:name sym) "booleans")
                 (do
                     (§ ass c (§ class boolean[]))
                 )
@@ -6553,38 +6553,38 @@
     )
 
     (defn #_"void" MethodExpr'emitTypedArgs [#_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Class[]" parameterTypes, #_"IPersistentVector" args]
-        (loop-when-recur [#_"int" i 0] (< i (§ alength parameterTypes)) [(inc i)]
+        (loop-when-recur [#_"int" i 0] (< i (alength parameterTypes)) [(inc i)]
             (let [#_"Expr" e (cast' Expr (.nth args, i))]
                 (try
                     (let [#_"Class" primc (Compiler'maybePrimitiveType e)]
-                        (cond (= primc (§ aget parameterTypes i))
+                        (cond (= primc (aget parameterTypes i))
                             (do
                                 (let [#_"MaybePrimitiveExpr" pe (cast' MaybePrimitiveExpr e)]
                                     (.emitUnboxed pe, :Context'EXPRESSION, objx, gen)
                                 )
                             )
-                            (and (= primc Integer/TYPE) (= (§ aget parameterTypes i) Long/TYPE))
+                            (and (= primc Integer/TYPE) (= (aget parameterTypes i) Long/TYPE))
                             (do
                                 (let [#_"MaybePrimitiveExpr" pe (cast' MaybePrimitiveExpr e)]
                                     (.emitUnboxed pe, :Context'EXPRESSION, objx, gen)
                                     (.visitInsn gen, Opcodes/I2L)
                                 )
                             )
-                            (and (= primc Long/TYPE) (= (§ aget parameterTypes i) Integer/TYPE))
+                            (and (= primc Long/TYPE) (= (aget parameterTypes i) Integer/TYPE))
                             (do
                                 (let [#_"MaybePrimitiveExpr" pe (cast' MaybePrimitiveExpr e)]
                                     (.emitUnboxed pe, :Context'EXPRESSION, objx, gen)
                                     (.invokeStatic gen, Compiler'RT_TYPE, (Method/getMethod "int intCast(long)"))
                                 )
                             )
-                            (and (= primc Float/TYPE) (= (§ aget parameterTypes i) Double/TYPE))
+                            (and (= primc Float/TYPE) (= (aget parameterTypes i) Double/TYPE))
                             (do
                                 (let [#_"MaybePrimitiveExpr" pe (cast' MaybePrimitiveExpr e)]
                                     (.emitUnboxed pe, :Context'EXPRESSION, objx, gen)
                                     (.visitInsn gen, Opcodes/F2D)
                                 )
                             )
-                            (and (= primc Double/TYPE) (= (§ aget parameterTypes i) Float/TYPE))
+                            (and (= primc Double/TYPE) (= (aget parameterTypes i) Float/TYPE))
                             (do
                                 (let [#_"MaybePrimitiveExpr" pe (cast' MaybePrimitiveExpr e)]
                                     (.emitUnboxed pe, :Context'EXPRESSION, objx, gen)
@@ -6594,7 +6594,7 @@
                             :else
                             (do
                                 (.emit e, :Context'EXPRESSION, objx, gen)
-                                (HostExpr'emitUnboxArg objx, gen, (§ aget parameterTypes i))
+                                (HostExpr'emitUnboxArg objx, gen, (aget parameterTypes i))
                             )
                         )
                     )
@@ -6694,7 +6694,7 @@
             (let [#_"Object" targetval (.eval (:target this))]
                 (let [#_"Object[]" argvals (make-array Object (.count (:args this)))]
                     (loop-when-recur [#_"int" i 0] (< i (.count (:args this))) [(inc i)]
-                        (§ ass (§ aget argvals i) (.eval (cast' Expr (.nth (:args this), i))))
+                        (aset argvals i (.eval (cast' Expr (.nth (:args this), i))))
                     )
                     (when (some? (:method this))
                         (let [#_"LinkedList" ms (LinkedList.)]
@@ -6881,7 +6881,7 @@
         (try
             (let [#_"Object[]" argvals (make-array Object (.count (:args this)))]
                 (loop-when-recur [#_"int" i 0] (< i (.count (:args this))) [(inc i)]
-                    (§ ass (§ aget argvals i) (.eval (cast' Expr (.nth (:args this), i))))
+                    (aset argvals i (.eval (cast' Expr (.nth (:args this), i))))
                 )
                 (when (some? (:method this))
                     (let [#_"LinkedList" ms (LinkedList.)]
@@ -6926,10 +6926,10 @@
                     )
                 )
                 (let [#_"Object[]" predOps (§ cast Object[] (RT'get-2 Intrinsics'preds, (.toString (:method this))))]
-                    (loop-when-recur [#_"int" i 0] (< i (dec (§ alength predOps))) [(inc i)]
-                        (.visitInsn gen, (cast Integer (§ aget predOps i)))
+                    (loop-when-recur [#_"int" i 0] (< i (dec (alength predOps))) [(inc i)]
+                        (.visitInsn gen, (cast Integer (aget predOps i)))
                     )
-                    (.visitJumpInsn gen, (cast Integer (§ aget predOps (dec (§ alength predOps)))), falseLabel)
+                    (.visitJumpInsn gen, (cast Integer (aget predOps (dec (alength predOps)))), falseLabel)
                 )
             )
             (do
@@ -7868,9 +7868,9 @@
                 (let [#_"ArrayList" ctors (ArrayList.)]
                     (let [#_"ArrayList<Class[]>" params (ArrayList.)]
                         (let [#_"ArrayList<Class>" rets (ArrayList.)]
-                            (loop-when-recur [#_"int" i 0] (< i (§ alength allctors)) [(inc i)]
-                                (let [#_"Constructor" ctor (§ aget allctors i)]
-                                    (when (= (§ alength (.getParameterTypes ctor)) (.count args))
+                            (loop-when-recur [#_"int" i 0] (< i (alength allctors)) [(inc i)]
+                                (let [#_"Constructor" ctor (aget allctors i)]
+                                    (when (= (alength (.getParameterTypes ctor)) (.count args))
                                         (.add ctors, ctor)
                                         (.add params, (.getParameterTypes ctor))
                                         (.add rets, c)
@@ -7903,7 +7903,7 @@
     (§ defn #_"Object" (§ method eval) [#_"NewExpr" this]
         (let [#_"Object[]" argvals (make-array Object (.count (:args this)))]
             (loop-when-recur [#_"int" i 0] (< i (.count (:args this))) [(inc i)]
-                (§ ass (§ aget argvals i) (.eval (cast' Expr (.nth (:args this), i))))
+                (aset argvals i (.eval (cast' Expr (.nth (:args this), i))))
             )
             (when (some? (:ctor this))
                 (try
@@ -8343,7 +8343,7 @@
     (§ defn #_"Object" (§ method eval) [#_"MapExpr" this]
         (let [#_"Object[]" ret (make-array Object (.count (:keyvals this)))]
             (loop-when-recur [#_"int" i 0] (< i (.count (:keyvals this))) [(inc i)]
-                (§ ass (§ aget ret i) (.eval (cast' Expr (.nth (:keyvals this), i))))
+                (aset ret i (.eval (cast' Expr (.nth (:keyvals this), i))))
             )
             (RT'map ret)
         )
@@ -8499,7 +8499,7 @@
     (§ defn #_"Object" (§ method eval) [#_"SetExpr" this]
         (let [#_"Object[]" ret (make-array Object (.count (:keys this)))]
             (loop-when-recur [#_"int" i 0] (< i (.count (:keys this))) [(inc i)]
-                (§ ass (§ aget ret i) (.eval (cast' Expr (.nth (:keys this), i))))
+                (aset ret i (.eval (cast' Expr (.nth (:keys this), i))))
             )
             (RT'set ret)
         )
@@ -8598,7 +8598,7 @@
                 (loop-when-recur [#_"int" i 0] (< i (.count (:args this))) [(inc i)]
                     (.emit (cast' Expr (.nth (:args this), i)), :Context'EXPRESSION, objx, gen)
                 )
-                (.invokeStatic gen, Compiler'TUPLE_TYPE, (§ aget Compiler'createTupleMethods (.count (:args this))))
+                (.invokeStatic gen, Compiler'TUPLE_TYPE, (aget Compiler'createTupleMethods (.count (:args this))))
             )
             (do
                 (MethodExpr'emitArgsAsArray (:args this), objx, gen)
@@ -8889,20 +8889,20 @@
         (let [#_"Method" ms (Method. "invokeStatic", (.getReturnType this), (:paramtypes this))]
             (if (:variadic this)
                 (do
-                    (loop-when-recur [#_"int" i 0] (< i (dec (§ alength (:paramclasses this)))) [(inc i)]
+                    (loop-when-recur [#_"int" i 0] (< i (dec (alength (:paramclasses this)))) [(inc i)]
                         (let [#_"Expr" e (cast' Expr (.nth (:args this), i))]
-                            (if (= (Compiler'maybePrimitiveType e) (§ aget (:paramclasses this) i))
+                            (if (= (Compiler'maybePrimitiveType e) (aget (:paramclasses this) i))
                                 (do
                                     (.emitUnboxed (cast' MaybePrimitiveExpr e), :Context'EXPRESSION, objx, gen)
                                 )
                                 (do
                                     (.emit e, :Context'EXPRESSION, objx, gen)
-                                    (HostExpr'emitUnboxArg objx, gen, (§ aget (:paramclasses this) i))
+                                    (HostExpr'emitUnboxArg objx, gen, (aget (:paramclasses this) i))
                                 )
                             )
                         )
                     )
-                    (let [#_"IPersistentVector" restArgs (RT'subvec (:args this), (dec (§ alength (:paramclasses this))), (.count (:args this)))]
+                    (let [#_"IPersistentVector" restArgs (RT'subvec (:args this), (dec (alength (:paramclasses this))), (.count (:args this)))]
                         (MethodExpr'emitArgsAsArray restArgs, objx, gen)
                         (.invokeStatic gen, (§ unsure Type/getType (§ class ArraySeq)), (Method/getMethod "cloiure.lang.ArraySeq create(Object[])"))
                     )
@@ -8939,15 +8939,15 @@
                         (let [#_"int" argcount (RT'count args)]
                             (let [#_"java.lang.reflect.Method" method nil]
                                 (doseq [#_"java.lang.reflect.Method" m allmethods]
-                                    (when (and (Modifier/isStatic (.getModifiers m)) (.equals (.getName m), "invokeStatic"))
+                                    (when (and (Modifier/isStatic (.getModifiers m)) (= (.getName m) "invokeStatic"))
                                         (let [#_"Class[]" params (.getParameterTypes m)]
-                                            (cond (= argcount (§ alength params))
+                                            (cond (= argcount (alength params))
                                                 (do
                                                     (§ ass method m)
-                                                    (§ ass variadic (and (pos? argcount) (= (§ aget params (dec (§ alength params))) (§ class ISeq))))
+                                                    (§ ass variadic (and (pos? argcount) (= (aget params (dec (alength params))) (§ class ISeq))))
                                                     (§ break )
                                                 )
-                                                (and (< 0 (§ alength params) argcount) (= (§ aget params (dec (§ alength params))) (§ class ISeq)))
+                                                (and (< 0 (alength params) argcount) (= (aget params (dec (alength params))) (§ class ISeq)))
                                                 (do
                                                     (§ ass method m)
                                                     (§ ass variadic true)
@@ -8963,9 +8963,9 @@
 
                                 (let [#_"Class" retClass (.getReturnType method)]
                                     (let [#_"Class[]" paramClasses (.getParameterTypes method)]
-                                        (let [#_"Type[]" paramTypes (make-array Type (§ alength paramClasses))]
-                                            (loop-when-recur [#_"int" i 0] (< i (§ alength paramClasses)) [(inc i)]
-                                                (§ ass (§ aget paramTypes i) (§ unsure Type/getType (§ aget paramClasses i)))
+                                        (let [#_"Type[]" paramTypes (make-array Type (alength paramClasses))]
+                                            (loop-when-recur [#_"int" i 0] (< i (alength paramClasses)) [(inc i)]
+                                                (aset paramTypes i (§ unsure Type/getType (aget paramClasses i)))
                                             )
 
                                             (let [#_"Type" target (§ unsure Type/getType c)]
@@ -9191,7 +9191,7 @@
             )
         )
 
-        (.invokeInterface gen, Compiler'IFN_TYPE, (Method. "invoke", Compiler'OBJECT_TYPE, (§ aget Compiler'ARG_TYPES (Math/min (inc Compiler'MAX_POSITIONAL_ARITY), (.count (:args this))))))
+        (.invokeInterface gen, Compiler'IFN_TYPE, (Method. "invoke", Compiler'OBJECT_TYPE, (aget Compiler'ARG_TYPES (Math/min (inc Compiler'MAX_POSITIONAL_ARITY), (.count (:args this))))))
         nil
     )
 
@@ -9401,7 +9401,7 @@
                                                 )
                                                 (§ ass (:line fn) (Compiler'lineDeref))
                                                 (§ ass (:column fn) (Compiler'columnDeref))
-                                                (let [#_"FnMethod[]" methodArray (§ typeless make-array FnMethod (inc Compiler'MAX_POSITIONAL_ARITY))]
+                                                (let [#_"FnMethod[]" methodArray (make-array #_"FnMethod" Object (inc Compiler'MAX_POSITIONAL_ARITY))]
                                                     (let [#_"FnMethod" variadicMethod nil]
                                                         (let [#_"boolean" usesThis false]
                                                             (loop-when-recur [#_"ISeq" s (RT'next form)] (some? s) [(RT'next s)]
@@ -9420,9 +9420,9 @@
                                                                                 )
                                                                             )
                                                                         )
-                                                                        (nil? (§ aget methodArray (.count (:reqParms f))))
+                                                                        (nil? (aget methodArray (.count (:reqParms f))))
                                                                         (do
-                                                                            (§ ass (§ aget methodArray (.count (:reqParms f))) f)
+                                                                            (aset methodArray (.count (:reqParms f)) f)
                                                                         )
                                                                         :else
                                                                         (do
@@ -9436,7 +9436,7 @@
                                                             )
                                                             (when (some? variadicMethod)
                                                                 (loop-when-recur [#_"int" i (inc (.count (:reqParms variadicMethod)))] (<= i Compiler'MAX_POSITIONAL_ARITY) [(inc i)]
-                                                                    (when (some? (§ aget methodArray i))
+                                                                    (when (some? (aget methodArray i))
                                                                         (throw (Util'runtimeException-1 "Can't have fixed arity function with more params than variadic function"))
                                                                     )
                                                                 )
@@ -9445,9 +9445,9 @@
                                                             (§ ass (:canBeDirect fn) (and (not (:hasEnclosingMethod fn)) (zero? (.count (:closes fn))) (not usesThis)))
 
                                                             (let [#_"IPersistentCollection" methods nil]
-                                                                (loop-when-recur [#_"int" i 0] (< i (§ alength methodArray)) [(inc i)]
-                                                                    (when (some? (§ aget methodArray i))
-                                                                        (§ ass methods (RT'conj methods, (§ aget methodArray i)))
+                                                                (loop-when-recur [#_"int" i 0] (< i (alength methodArray)) [(inc i)]
+                                                                    (when (some? (aget methodArray i))
+                                                                        (§ ass methods (RT'conj methods, (aget methodArray i)))
                                                                     )
                                                                 )
                                                                 (when (some? variadicMethod)
@@ -9704,7 +9704,7 @@
             )
             (let [#_"Type[]" ret (make-array Type (.count tv))]
                 (loop-when-recur [#_"int" i 0] (< i (.count tv)) [(inc i)]
-                    (§ ass (§ aget ret i) (cast Type (.nth tv, i)))
+                    (aset ret i (cast Type (.nth tv, i)))
                 )
                 ret
             )
@@ -9836,9 +9836,9 @@
                                                         (when (pos? (:altCtorDrops this))
                                                             ;; ctor that takes closed-overs and inits base + fields
                                                             (let [#_"Type[]" ctorTypes (.ctorTypes this)]
-                                                                (let [#_"Type[]" altCtorTypes (make-array Type (- (§ alength ctorTypes) (:altCtorDrops this)))]
-                                                                    (loop-when-recur [#_"int" i 0] (< i (§ alength altCtorTypes)) [(inc i)]
-                                                                        (§ ass (§ aget altCtorTypes i) (§ aget ctorTypes i))
+                                                                (let [#_"Type[]" altCtorTypes (make-array Type (- (alength ctorTypes) (:altCtorDrops this)))]
+                                                                    (loop-when-recur [#_"int" i 0] (< i (alength altCtorTypes)) [(inc i)]
+                                                                        (aset altCtorTypes i (aget ctorTypes i))
                                                                     )
                                                                     (let [#_"Method" alt (Method. "<init>", Type/VOID_TYPE, altCtorTypes)]
                                                                         (§ ass ctorgen (GeneratorAdapter. Opcodes/ACC_PUBLIC, alt, nil, nil, cv))
@@ -9857,9 +9857,9 @@
                                                                         (.endMethod ctorgen)
 
                                                                         ;; alt ctor no __hash, __hasheq
-                                                                        (§ ass altCtorTypes (make-array Type (- (§ alength ctorTypes) 2)))
-                                                                        (loop-when-recur [#_"int" i 0] (< i (§ alength altCtorTypes)) [(inc i)]
-                                                                            (§ ass (§ aget altCtorTypes i) (§ aget ctorTypes i))
+                                                                        (§ ass altCtorTypes (make-array Type (- (alength ctorTypes) 2)))
+                                                                        (loop-when-recur [#_"int" i 0] (< i (alength altCtorTypes)) [(inc i)]
+                                                                            (aset altCtorTypes i (aget ctorTypes i))
                                                                         )
 
                                                                         (§ ass alt (Method. "<init>", Type/VOID_TYPE, altCtorTypes))
@@ -9883,9 +9883,9 @@
                                                         (when (.supportsMeta this)
                                                             ;; ctor that takes closed-overs but not meta
                                                             (let [#_"Type[]" ctorTypes (.ctorTypes this)]
-                                                                (let [#_"Type[]" noMetaCtorTypes (make-array Type (dec (§ alength ctorTypes)))]
-                                                                    (loop-when-recur [#_"int" i 1] (< i (§ alength ctorTypes)) [(inc i)]
-                                                                        (§ ass (§ aget noMetaCtorTypes (dec i)) (§ aget ctorTypes i))
+                                                                (let [#_"Type[]" noMetaCtorTypes (make-array Type (dec (alength ctorTypes)))]
+                                                                    (loop-when-recur [#_"int" i 1] (< i (alength ctorTypes)) [(inc i)]
+                                                                        (aset noMetaCtorTypes (dec i) (aget ctorTypes i))
                                                                     )
                                                                     (let [#_"Method" alt (Method. "<init>", Type/VOID_TYPE, noMetaCtorTypes)]
                                                                         (§ ass ctorgen (GeneratorAdapter. Opcodes/ACC_PUBLIC, alt, nil, nil, cv))
@@ -9974,7 +9974,7 @@
 
                                                             (when (and (.isDeftype this) (RT'booleanCast-1o (RT'get-2 (:opts this), Compiler'loadNs)))
                                                                 (let [#_"String" nsname (.getNamespace (cast' Symbol (RT'second (:src this))))]
-                                                                    (when (not (.equals nsname, "cloiure.core"))
+                                                                    (when (not (= nsname "cloiure.core"))
                                                                         (.push clinitgen, "cloiure.core")
                                                                         (.push clinitgen, "require")
                                                                         (.invokeStatic clinitgen, Compiler'RT_TYPE, (Method/getMethod "cloiure.lang.Var var(String, String)"))
@@ -10173,7 +10173,7 @@
                 )
                 (§ instance? IType value)
                 (do
-                    (let [#_"Method" ctor (Method. "<init>", (Type/getConstructorDescriptor (§ aget (.getConstructors (.getClass value)) 0)))]
+                    (let [#_"Method" ctor (Method. "<init>", (Type/getConstructorDescriptor (aget (.getConstructors (.getClass value)) 0)))]
                         (.newInstance gen, (Type/getType (.getClass value)))
                         (.dup gen)
                         (let [#_"IPersistentVector" fields (cast' IPersistentVector (Reflector'invokeStaticMethod-3c (.getClass value), "getBasis", (object-array 0)))]
@@ -10226,7 +10226,7 @@
                                 (loop-when-recur [#_"int" i 0] (< i (.count args)) [(inc i)]
                                     (.emitValue this, (.nth args, i), gen)
                                 )
-                                (.invokeStatic gen, Compiler'TUPLE_TYPE, (§ aget Compiler'createTupleMethods (.count args)))
+                                (.invokeStatic gen, Compiler'TUPLE_TYPE, (aget Compiler'createTupleMethods (.count args)))
                             )
                             (do
                                 (.emitListAsObjectArray this, value, gen)
@@ -10801,7 +10801,7 @@
                             )
                             (when (some? rettag)
                                 (let [#_"String" retstr (.getName (cast' Symbol rettag))]
-                                    (when (not (or (.equals retstr, "long") (.equals retstr, "double")))
+                                    (when (not (or (= retstr "long") (= retstr "double")))
                                         (§ ass rettag nil)
                                     )
                                 )
@@ -10899,8 +10899,8 @@
                                             (§ ass (:argtypes method) (.toArray argtypes, (make-array Type (.size argtypes))))
                                             (§ ass (:argclasses method) (.toArray argclasses, (make-array Class (.size argtypes))))
                                             (when (some? (:prim method))
-                                                (loop-when-recur [#_"int" i 0] (< i (§ alength (:argclasses method))) [(inc i)]
-                                                    (when (or (= (§ aget (:argclasses method) i) Long/TYPE) (= (§ aget (:argclasses method) i) Double/TYPE))
+                                                (loop-when-recur [#_"int" i 0] (< i (alength (:argclasses method))) [(inc i)]
+                                                    (when (or (= (aget (:argclasses method) i) Long/TYPE) (= (aget (:argclasses method) i) Double/TYPE))
                                                         (Compiler'getAndIncLocalNum)
                                                     )
                                                 )
@@ -10960,7 +10960,7 @@
                             (let [#_"Label" end (.mark gen)]
                                 (loop-when-recur [#_"ISeq" lbs (.seq (:argLocals this))] (some? lbs) [(.next lbs)]
                                     (let [#_"LocalBinding" lb (cast' LocalBinding (.first lbs))]
-                                        (.visitLocalVariable gen, (:name lb), (.getDescriptor (§ aget (:argtypes this) (:idx lb))), nil, loopLabel, end, (:idx lb))
+                                        (.visitLocalVariable gen, (:name lb), (.getDescriptor (aget (:argtypes this) (:idx lb))), nil, loopLabel, end, (:idx lb))
                                     )
                                 )
                             )
@@ -10977,10 +10977,10 @@
                             ;; todo don't hardwire EXCEPTION_TYPES
                             (§ ass gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, m, nil, Compiler'EXCEPTION_TYPES, cv))
                             (.visitCode gen)
-                            (loop-when-recur [#_"int" i 0] (< i (§ alength (:argtypes this))) [(inc i)]
+                            (loop-when-recur [#_"int" i 0] (< i (alength (:argtypes this))) [(inc i)]
                                 (.loadArg gen, i)
-                                (HostExpr'emitUnboxArg fn, gen, (§ aget (:argclasses this) i))
-                                (when (not (.isPrimitive (§ aget (:argclasses this) i)))
+                                (HostExpr'emitUnboxArg fn, gen, (aget (:argclasses this) i))
+                                (when (not (.isPrimitive (aget (:argclasses this) i)))
                                     (.visitInsn gen, Opcodes/ACONST_NULL)
                                     (.storeArg gen, i)
                                 )
@@ -11003,9 +11003,9 @@
                                             ;; todo don't hardwire EXCEPTION_TYPES
                                             (§ ass gen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL), pm, nil, Compiler'EXCEPTION_TYPES, cv))
                                             (.visitCode gen)
-                                            (loop-when-recur [#_"int" i 0] (< i (§ alength (:argtypes this))) [(inc i)]
+                                            (loop-when-recur [#_"int" i 0] (< i (alength (:argtypes this))) [(inc i)]
                                                 (.loadArg gen, i)
-                                                (when (not (.isPrimitive (§ aget (:argclasses this) i)))
+                                                (when (not (.isPrimitive (aget (:argclasses this) i)))
                                                     (.visitInsn gen, Opcodes/ACONST_NULL)
                                                     (.storeArg gen, i)
                                                 )
@@ -11057,7 +11057,7 @@
                                 (.visitLocalVariable gen, "this", "Ljava/lang/Object;", nil, loopLabel, end, 0)
                                 (loop-when-recur [#_"ISeq" lbs (.seq (:argLocals this))] (some? lbs) [(.next lbs)]
                                     (let [#_"LocalBinding" lb (cast' LocalBinding (.first lbs))]
-                                        (.visitLocalVariable gen, (:name lb), (.getDescriptor (§ aget (:argtypes this) (dec (:idx lb)))), nil, loopLabel, end, (:idx lb))
+                                        (.visitLocalVariable gen, (:name lb), (.getDescriptor (aget (:argtypes this) (dec (:idx lb)))), nil, loopLabel, end, (:idx lb))
                                     )
                                 )
                             )
@@ -11075,9 +11075,9 @@
                             (§ ass gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, m, nil, Compiler'EXCEPTION_TYPES, cv))
                             (.visitCode gen)
                             (.loadThis gen)
-                            (loop-when-recur [#_"int" i 0] (< i (§ alength (:argtypes this))) [(inc i)]
+                            (loop-when-recur [#_"int" i 0] (< i (alength (:argtypes this))) [(inc i)]
                                 (.loadArg gen, i)
-                                (HostExpr'emitUnboxArg fn, gen, (§ aget (:argclasses this) i))
+                                (HostExpr'emitUnboxArg fn, gen, (aget (:argclasses this) i))
                             )
                             (.invokeInterface gen, (Type/getType (str "L" (:prim this) ";")), ms)
                             (.box gen, (.getReturnType this))
@@ -11169,12 +11169,12 @@
         (when (and (.isVariadic this) (= (.count (:reqParms this)) Compiler'MAX_POSITIONAL_ARITY))
             (let [#_"Type[]" ret (make-array Type (inc Compiler'MAX_POSITIONAL_ARITY))]
                 (loop-when-recur [#_"int" i 0] (< i (inc Compiler'MAX_POSITIONAL_ARITY)) [(inc i)]
-                    (§ ass (§ aget ret i) Compiler'OBJECT_TYPE)
+                    (aset ret i Compiler'OBJECT_TYPE)
                 )
                 (§ return ret)
             )
         )
-        (§ aget Compiler'ARG_TYPES (.numParams this))
+        (aget Compiler'ARG_TYPES (.numParams this))
     )
 
     #_method
@@ -12488,8 +12488,8 @@
                             (let [#_"Symbol" sym (cast' Symbol (.nth fieldSyms, i))]
                                 (let [#_"LocalBinding" lb (LocalBinding'new -1, sym, nil, (MethodParamExpr'new (Compiler'tagClass (Compiler'tagOf sym))), false, nil)]
                                     (§ ass fmap (.assoc fmap, sym, lb))
-                                    (§ ass (§ aget closesvec (* i 2)) lb)
-                                    (§ ass (§ aget closesvec (inc (* i 2))) lb)
+                                    (aset closesvec (* i 2) lb)
+                                    (aset closesvec (inc (* i 2)) lb)
                                 )
                             )
                         )
@@ -12498,7 +12498,7 @@
                         ;; use array map to preserve ctor order
                         (§ ass (:closes ret) (PersistentArrayMap'new-1 closesvec))
                         (§ ass (:fields ret) fmap)
-                        (loop-when-recur [#_"int" i (dec (.count fieldSyms))] (and (<= 0 i) (or (.equals (:name (cast' Symbol (.nth fieldSyms, i))), "__meta") (.equals (:name (cast' Symbol (.nth fieldSyms, i))), "__extmap") (.equals (:name (cast' Symbol (.nth fieldSyms, i))), "__hash") (.equals (:name (cast' Symbol (.nth fieldSyms, i))), "__hasheq"))) [(dec i)]
+                        (loop-when-recur [#_"int" i (dec (.count fieldSyms))] (and (<= 0 i) (any = (:name (cast' Symbol (.nth fieldSyms, i))) "__meta" "__extmap" "__hash" "__hasheq")) [(dec i)]
                             (§ ass (:altCtorDrops ret) (inc (:altCtorDrops ret)))
                         )
                     )
@@ -12516,8 +12516,8 @@
                 )
                 (let [#_"Class" superClass Object]
                     (let [#_"Map[]" mc (NewInstanceExpr'gatherMethods-2s superClass, (RT'seq interfaces))]
-                        (let [#_"Map" overrideables (§ aget mc 0)]
-                            (let [#_"Map" covariants (§ aget mc 1)]
+                        (let [#_"Map" overrideables (aget mc 0)]
+                            (let [#_"Map" covariants (aget mc 1)]
                                 (§ ass (:mmap ret) overrideables)
                                 (§ ass (:covariants ret) covariants)
 
@@ -12636,9 +12636,9 @@
 
                         (when (pos? (:altCtorDrops ret))
                             (let [#_"Type[]" ctorTypes (.ctorTypes ret)]
-                                (let [#_"Type[]" altCtorTypes (make-array Type (- (§ alength ctorTypes) (:altCtorDrops ret)))]
-                                    (loop-when-recur [#_"int" i 0] (< i (§ alength altCtorTypes)) [(inc i)]
-                                        (§ ass (§ aget altCtorTypes i) (§ aget ctorTypes i))
+                                (let [#_"Type[]" altCtorTypes (make-array Type (- (alength ctorTypes) (:altCtorDrops ret)))]
+                                    (loop-when-recur [#_"int" i 0] (< i (alength altCtorTypes)) [(inc i)]
+                                        (aset altCtorTypes i (aget ctorTypes i))
                                     )
                                     (let [#_"Method" alt (Method. "<init>", Type/VOID_TYPE, altCtorTypes)]
                                         (§ ass ctorgen (GeneratorAdapter. Opcodes/ACC_PUBLIC, alt, nil, nil, cv))
@@ -12657,9 +12657,9 @@
                                         (.endMethod ctorgen)
 
                                         ;; alt ctor no __hash, __hasheq
-                                        (§ ass altCtorTypes (make-array Type (- (§ alength ctorTypes) 2)))
-                                        (loop-when-recur [#_"int" i 0] (< i (§ alength altCtorTypes)) [(inc i)]
-                                            (§ ass (§ aget altCtorTypes i) (§ aget ctorTypes i))
+                                        (§ ass altCtorTypes (make-array Type (- (alength ctorTypes) 2)))
+                                        (loop-when-recur [#_"int" i 0] (< i (alength altCtorTypes)) [(inc i)]
+                                            (aset altCtorTypes i (aget ctorTypes i))
                                         )
 
                                         (§ ass alt (Method. "<init>", Type/VOID_TYPE, altCtorTypes))
@@ -12697,7 +12697,7 @@
         (let [#_"int" icnt (.count interfaces)]
             (let [#_"String[]" inames (when (pos? icnt) (make-array String icnt))]
                 (loop-when-recur [#_"int" i 0] (< i icnt) [(inc i)]
-                    (§ ass (§ aget inames i) (NewInstanceExpr'slashname (cast Class (.nth interfaces, i))))
+                    (aset inames i (NewInstanceExpr'slashname (cast Class (.nth interfaces, i))))
                 )
                 inames
             )
@@ -12802,9 +12802,9 @@
         (doseq [#_"Map$Entry<IPersistentVector, Set<Class>>" e (.entrySet (:covariants this))]
             (let [#_"java.lang.reflect.Method" m (.get (:mmap this), (.getKey e))]
                 (let [#_"Class[]" params (.getParameterTypes m)]
-                    (let [#_"Type[]" argTypes (make-array Type (§ alength params))]
-                        (loop-when-recur [#_"int" i 0] (< i (§ alength params)) [(inc i)]
-                            (§ ass (§ aget argTypes i) (§ unsure Type/getType (§ aget params i)))
+                    (let [#_"Type[]" argTypes (make-array Type (alength params))]
+                        (loop-when-recur [#_"int" i 0] (< i (alength params)) [(inc i)]
+                            (aset argTypes i (§ unsure Type/getType (aget params i)))
                         )
 
                         (let [#_"Method" target (Method. (.getName m), (Type/getType (.getReturnType m)), argTypes)]
@@ -12994,7 +12994,7 @@
                                             (§ ass (:argTypes method) (make-array Type (.count parms)))
                                             (let [#_"boolean" hinted (some? (Compiler'tagOf name))]
                                                 (let [#_"Class[]" pclasses (make-array Class (.count parms))]
-                                                    (let [#_"Symbol[]" psyms (§ typeless make-array Symbol (.count parms))]
+                                                    (let [#_"Symbol[]" psyms (make-array #_"Symbol" Object (.count parms))]
                                                         (loop-when-recur [#_"int" i 0] (< i (.count parms)) [(inc i)]
                                                             (when (not (§ instance? Symbol (.nth parms, i)))
                                                                 (throw (IllegalArgumentException. "params must be Symbols"))
@@ -13008,8 +13008,8 @@
                                                                         (§ ass p (Symbol'intern-1 (:name p)))
                                                                     )
                                                                     (let [#_"Class" pclass (Compiler'tagClass tag)]
-                                                                        (§ ass (§ aget pclasses i) pclass)
-                                                                        (§ ass (§ aget psyms i) p)
+                                                                        (aset pclasses i pclass)
+                                                                        (aset psyms i p)
                                                                     )
                                                                 )
                                                             )
@@ -13068,13 +13068,13 @@
                                                                     (§ ass (:exclasses method) (.getExceptionTypes m))
 
                                                                     (loop-when-recur [#_"int" i 0] (< i (.count parms)) [(inc i)]
-                                                                        (let [#_"LocalBinding" lb (Compiler'registerLocal (§ aget psyms i), nil, (MethodParamExpr'new (§ aget pclasses i)), true)]
+                                                                        (let [#_"LocalBinding" lb (Compiler'registerLocal (aget psyms i), nil, (MethodParamExpr'new (aget pclasses i)), true)]
                                                                             (§ ass argLocals (.assocN argLocals, i, lb))
-                                                                            (§ ass (§ aget (:argTypes method) i) (§ unsure Type/getType (§ aget pclasses i)))
+                                                                            (aset (:argTypes method) i (§ unsure Type/getType (aget pclasses i)))
                                                                         )
                                                                     )
                                                                     (loop-when-recur [#_"int" i 0] (< i (.count parms)) [(inc i)]
-                                                                        (when (or (= (§ aget pclasses i) Long/TYPE) (= (§ aget pclasses i) Double/TYPE))
+                                                                        (when (or (= (aget pclasses i) Long/TYPE) (= (aget pclasses i) Double/TYPE))
                                                                             (Compiler'getAndIncLocalNum)
                                                                         )
                                                                     )
@@ -13110,7 +13110,7 @@
             (doseq [#_"Object" o (.entrySet mm)]
                 (let [#_"Map$Entry" e (cast Map$Entry o)]
                     (let [#_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (.getValue e))]
-                        (when (and (.equals name, (.getName m)) (= (§ alength (.getParameterTypes m)) arity))
+                        (when (and (.equals name, (.getName m)) (= (alength (.getParameterTypes m)) arity))
                             (.put ret, (.getKey e), (.getValue e))
                         )
                     )
@@ -13139,10 +13139,10 @@
     (§ defn #_"void" (§ method emit) [#_"NewInstanceMethod" this, #_"ObjExpr" obj, #_"ClassVisitor" cv]
         (let [#_"Method" m (Method. (.getMethodName this), (.getReturnType this), (.getArgTypes this))]
             (let [#_"Type[]" extypes nil]
-                (when (pos? (§ alength (:exclasses this)))
-                    (§ ass extypes (make-array Type (§ alength (:exclasses this))))
-                    (loop-when-recur [#_"int" i 0] (< i (§ alength (:exclasses this))) [(inc i)]
-                        (§ ass (§ aget extypes i) (§ unsure Type/getType (§ aget (:exclasses this) i)))
+                (when (pos? (alength (:exclasses this)))
+                    (§ ass extypes (make-array Type (alength (:exclasses this))))
+                    (loop-when-recur [#_"int" i 0] (< i (alength (:exclasses this))) [(inc i)]
+                        (aset extypes i (§ unsure Type/getType (aget (:exclasses this) i)))
                     )
                 )
                 (let [#_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, m, nil, extypes, cv)]
@@ -13164,7 +13164,7 @@
                                 (.visitLocalVariable gen, "this", (.getDescriptor (:objtype obj)), nil, loopLabel, end, 0)
                                 (loop-when-recur [#_"ISeq" lbs (.seq (:argLocals this))] (some? lbs) [(.next lbs)]
                                     (let [#_"LocalBinding" lb (cast' LocalBinding (.first lbs))]
-                                        (.visitLocalVariable gen, (:name lb), (.getDescriptor (§ aget (:argTypes this) (dec (:idx lb)))), nil, loopLabel, end, (:idx lb))
+                                        (.visitLocalVariable gen, (:name lb), (.getDescriptor (aget (:argTypes this) (dec (:idx lb)))), nil, loopLabel, end, (:idx lb))
                                     )
                                 )
                             )
@@ -13451,7 +13451,7 @@
                                 (do
                                     (let [#_"Label[]" la (make-array Label (inc (- (:high this) (:low this))))]
                                         (loop-when-recur [#_"int" i (:low this)] (<= i (:high this)) [(inc i)]
-                                            (§ ass (§ aget la (- i (:low this))) (if (.containsKey labels, i) (.get labels, i) defaultLabel))
+                                            (aset la (- i (:low this)) (if (.containsKey labels, i) (.get labels, i) defaultLabel))
                                         )
                                         (.visitTableSwitchInsn gen, (:low this), (:high this), defaultLabel, la)
                                     )
@@ -13733,17 +13733,17 @@
         (loop-when-recur [#_"int" i 0] (<= i Compiler'MAX_POSITIONAL_ARITY) [(inc i)]
             (let [#_"Type[]" a (make-array Type i)]
                 (loop-when-recur [#_"int" j 0] (< j i) [(inc j)]
-                    (§ ass (§ aget a j) Compiler'OBJECT_TYPE)
+                    (aset a j Compiler'OBJECT_TYPE)
                 )
-                (§ ass (§ aget Compiler'ARG_TYPES i) a)
+                (aset Compiler'ARG_TYPES i a)
             )
         )
         (let [#_"Type[]" a (make-array Type (inc Compiler'MAX_POSITIONAL_ARITY))]
             (loop-when-recur [#_"int" j 0] (< j Compiler'MAX_POSITIONAL_ARITY) [(inc j)]
-                (§ ass (§ aget a j) Compiler'OBJECT_TYPE)
+                (aset a j Compiler'OBJECT_TYPE)
             )
-            (§ ass (§ aget a Compiler'MAX_POSITIONAL_ARITY) (Type/getType "[Ljava/lang/Object;"))
-            (§ ass (§ aget Compiler'ARG_TYPES (inc Compiler'MAX_POSITIONAL_ARITY)) a)
+            (aset a Compiler'MAX_POSITIONAL_ARITY (Type/getType "[Ljava/lang/Object;"))
+            (aset Compiler'ARG_TYPES (inc Compiler'MAX_POSITIONAL_ARITY) a)
         )
     )
 
@@ -13970,9 +13970,9 @@
     (defn #_"boolean" Compiler'subsumes [#_"Class[]" c1, #_"Class[]" c2]
         ;; presumes matching lengths
         (let [#_"Boolean" better false]
-            (loop-when-recur [#_"int" i 0] (< i (§ alength c1)) [(inc i)]
-                (when-not (= (§ aget c1 i) (§ aget c2 i)) ;; || c2[i].isPrimitive() && c1[i] == Object.class
-                    (if (or (and (not (.isPrimitive (§ aget c1 i))) (.isPrimitive (§ aget c2 i))) (.isAssignableFrom (§ aget c2 i), (§ aget c1 i)))
+            (loop-when-recur [#_"int" i 0] (< i (alength c1)) [(inc i)]
+                (when-not (= (aget c1 i) (aget c2 i)) ;; || c2[i].isPrimitive() && c1[i] == Object.class
+                    (if (or (and (not (.isPrimitive (aget c1 i))) (.isPrimitive (aget c2 i))) (.isAssignableFrom (aget c2 i), (aget c1 i)))
                         (do
                             (§ ass better true)
                         )
@@ -14012,7 +14012,7 @@
                                     (loop-when-recur [#_"int" p 0 aseq aseq] (and match (< p (.count argexprs)) (some? aseq)) [(inc p) (.next aseq)]
                                         (let [#_"Expr" arg (cast' Expr (.first aseq))]
                                             (let [#_"Class" aclass (if (.hasJavaClass arg) (.getJavaClass arg) Object)]
-                                                (let [#_"Class" pclass (§ aget (.get paramlists, i) p)]
+                                                (let [#_"Class" pclass (aget (.get paramlists, i) p)]
                                                     (if (and (.hasJavaClass arg) (= aclass pclass))
                                                         (do
                                                             (§ ass exact (inc exact))
@@ -15151,8 +15151,8 @@
             )
             (let [#_"String[]" dirs (.split internalName, "/")]
                 (let [#_"String" p genPath]
-                    (loop-when-recur [#_"int" i 0] (< i (dec (§ alength dirs))) [(inc i)]
-                        (§ ass p (str p File/separator (§ aget dirs i)))
+                    (loop-when-recur [#_"int" i 0] (< i (dec (alength dirs))) [(inc i)]
+                        (§ ass p (str p File/separator (aget dirs i)))
                         (.mkdir (File. p))
                     )
                     (let [#_"String" path (str genPath File/separator internalName ".class")]
@@ -15707,8 +15707,6 @@
 (class-ns DynamicClassLoader (§ extends URLClassLoader)
     (def #_"ConcurrentHashMap<String, Reference<Class>>" DynamicClassLoader'classCache (ConcurrentHashMap.))
 
-    (def #_"URL[]" DynamicClassLoader'EMPTY_URLS (make-array URL 0))
-
     (def #_"ReferenceQueue" DynamicClassLoader'RQ (ReferenceQueue.))
 
     (defn- #_"DynamicClassLoader" DynamicClassLoader'init []
@@ -15717,19 +15715,14 @@
         )
     )
 
-    (defn #_"DynamicClassLoader" DynamicClassLoader'new-0 []
-        ;; pseudo test in lieu of hasContextClassLoader()
-        (merge (URLClassLoader'new DynamicClassLoader'EMPTY_URLS, (if (or (nil? (.getContextClassLoader (Thread/currentThread))) (= (.getContextClassLoader (Thread/currentThread)) (ClassLoader/getSystemClassLoader))) (.getClassLoader (§ class Compiler)) (.getContextClassLoader (Thread/currentThread)))) (DynamicClassLoader'init))
-    )
-
-    (defn #_"DynamicClassLoader" DynamicClassLoader'new-1 [#_"ClassLoader" parent]
-        (merge (URLClassLoader'new DynamicClassLoader'EMPTY_URLS, parent) (DynamicClassLoader'init))
+    (defn #_"DynamicClassLoader" DynamicClassLoader'new [#_"ClassLoader" parent]
+        (merge (URLClassLoader'new (make-array URL 0), parent) (DynamicClassLoader'init))
     )
 
     #_method
     (§ defn #_"Class" (§ method defineClass) [#_"DynamicClassLoader" this, #_"String" name, #_"byte[]" bytes, #_"Object" srcForm]
         (Util'clearCache DynamicClassLoader'RQ, DynamicClassLoader'classCache)
-        (let [#_"Class" c (.defineClass this, name, bytes, 0, (§ alength bytes))]
+        (let [#_"Class" c (.defineClass this, name, bytes, 0, (alength bytes))]
             (.put DynamicClassLoader'classCache, name, (SoftReference. c, DynamicClassLoader'RQ))
             c
         )
@@ -18040,24 +18033,25 @@
             "public static double cloiure.lang.Numbers.unchecked_dec(double)"             (Intrinsics'oa Opcodes/DCONST_1, Opcodes/DSUB)
             "public static long cloiure.lang.Numbers.unchecked_dec(long)"                 (Intrinsics'oa Opcodes/LCONST_1, Opcodes/LSUB)
 
-            "public static short cloiure.lang.RT.aget(short[],int)"                       Opcodes/SALOAD
-            "public static float cloiure.lang.RT.aget(float[],int)"                       Opcodes/FALOAD
-            "public static double cloiure.lang.RT.aget(double[],int)"                     Opcodes/DALOAD
-            "public static int cloiure.lang.RT.aget(int[],int)"                           Opcodes/IALOAD
-            "public static long cloiure.lang.RT.aget(long[],int)"                         Opcodes/LALOAD
-            "public static char cloiure.lang.RT.aget(char[],int)"                         Opcodes/CALOAD
-            "public static byte cloiure.lang.RT.aget(byte[],int)"                         Opcodes/BALOAD
-            "public static boolean cloiure.lang.RT.aget(boolean[],int)"                   Opcodes/BALOAD
-            "public static java.lang.Object cloiure.lang.RT.aget(java.lang.Object[],int)" Opcodes/AALOAD
-            "public static int cloiure.lang.RT.alength(int[])"                            Opcodes/ARRAYLENGTH
-            "public static int cloiure.lang.RT.alength(long[])"                           Opcodes/ARRAYLENGTH
-            "public static int cloiure.lang.RT.alength(char[])"                           Opcodes/ARRAYLENGTH
-            "public static int cloiure.lang.RT.alength(java.lang.Object[])"               Opcodes/ARRAYLENGTH
-            "public static int cloiure.lang.RT.alength(byte[])"                           Opcodes/ARRAYLENGTH
-            "public static int cloiure.lang.RT.alength(float[])"                          Opcodes/ARRAYLENGTH
-            "public static int cloiure.lang.RT.alength(short[])"                          Opcodes/ARRAYLENGTH
-            "public static int cloiure.lang.RT.alength(boolean[])"                        Opcodes/ARRAYLENGTH
-            "public static int cloiure.lang.RT.alength(double[])"                         Opcodes/ARRAYLENGTH
+            "public static boolean cloiure.lang.RT.aget_boolean(boolean[],int)"                  Opcodes/BALOAD
+            "public static byte cloiure.lang.RT.aget_byte(byte[],int)"                           Opcodes/BALOAD
+            "public static short cloiure.lang.RT.aget_short(short[],int)"                        Opcodes/SALOAD
+            "public static char cloiure.lang.RT.aget_char(char[],int)"                           Opcodes/CALOAD
+            "public static int cloiure.lang.RT.aget_int(int[],int)"                              Opcodes/IALOAD
+            "public static long cloiure.lang.RT.aget_long(long[],int)"                           Opcodes/LALOAD
+            "public static float cloiure.lang.RT.aget_float(float[],int)"                        Opcodes/FALOAD
+            "public static double cloiure.lang.RT.aget_double(double[],int)"                     Opcodes/DALOAD
+            "public static java.lang.Object cloiure.lang.RT.aget_object(java.lang.Object[],int)" Opcodes/AALOAD
+
+            "public static int cloiure.lang.RT.alength_boolean(boolean[])"         Opcodes/ARRAYLENGTH
+            "public static int cloiure.lang.RT.alength_byte(byte[])"               Opcodes/ARRAYLENGTH
+            "public static int cloiure.lang.RT.alength_short(short[])"             Opcodes/ARRAYLENGTH
+            "public static int cloiure.lang.RT.alength_char(char[])"               Opcodes/ARRAYLENGTH
+            "public static int cloiure.lang.RT.alength_int(int[])"                 Opcodes/ARRAYLENGTH
+            "public static int cloiure.lang.RT.alength_long(long[])"               Opcodes/ARRAYLENGTH
+            "public static int cloiure.lang.RT.alength_float(float[])"             Opcodes/ARRAYLENGTH
+            "public static int cloiure.lang.RT.alength_double(double[])"           Opcodes/ARRAYLENGTH
+            "public static int cloiure.lang.RT.alength_object(java.lang.Object[])" Opcodes/ARRAYLENGTH
 
             "public static double cloiure.lang.RT.doubleCast(long)"            Opcodes/L2D
             "public static double cloiure.lang.RT.doubleCast(double)"          Opcodes/NOP
@@ -18849,8 +18843,8 @@
 #_stateless
 (class-ns LazilyPersistentVector
     (defn #_"IPersistentVector" LazilyPersistentVector'createOwning [& #_"Object..." items]
-        (if (<= (§ alength items) 32)
-            (PersistentVector'new-4 (§ alength items), 5, PersistentVector'EMPTY_NODE, items)
+        (if (<= (alength items) 32)
+            (PersistentVector'new-4 (alength items), 5, PersistentVector'EMPTY_NODE, items)
             (PersistentVector'create-1a items)
         )
     )
@@ -19631,7 +19625,7 @@
                                                                         (do
                                                                             (§ ass key (Keyword'intern-2 ns, (.getName kw)))
                                                                         )
-                                                                        (.equals (.getNamespace kw), "_")
+                                                                        (= (.getNamespace kw) "_")
                                                                         (do
                                                                             (§ ass key (Keyword'intern-2 nil, (.getName kw)))
                                                                         )
@@ -19645,7 +19639,7 @@
                                                                         (do
                                                                             (§ ass key (Symbol'intern-2 ns, (.getName s)))
                                                                         )
-                                                                        (.equals (.getNamespace s), "_")
+                                                                        (= (.getNamespace s) "_")
                                                                         (do
                                                                             (§ ass key (Symbol'intern-2 nil, (.getName s)))
                                                                         )
@@ -19653,8 +19647,8 @@
                                                                 )
                                                             )
                                                         )
-                                                        (§ ass (§ aget a i) key)
-                                                        (§ ass (§ aget a (inc i)) val)
+                                                        (aset a i key)
+                                                        (aset a (inc i) val)
                                                     )
                                                 )
                                             )
@@ -19754,7 +19748,7 @@
             (when (= ch -1)
                 (throw (Util'runtimeException-1 "EOF while reading character"))
             )
-            (let [#_"IFn" fn (§ aget dispatchMacros ch)]
+            (let [#_"IFn" fn (aget LispReader'dispatchMacros ch)]
                 ;; Try the ctor reader first
                 (when (nil? fn)
                     (LispReader'unread (cast PushbackReader reader), ch)
@@ -20204,27 +20198,27 @@
                         (do
                             (§ return (Character/valueOf (.charAt token, 0)))
                         )
-                        (.equals token, "newline")
+                        (= token "newline")
                         (do
                             (§ return \newline)
                         )
-                        (.equals token, "space")
+                        (= token "space")
                         (do
                             (§ return \space)
                         )
-                        (.equals token, "tab")
+                        (= token "tab")
                         (do
                             (§ return \tab)
                         )
-                        (.equals token, "backspace")
+                        (= token "backspace")
                         (do
                             (§ return \backspace)
                         )
-                        (.equals token, "formfeed")
+                        (= token "formfeed")
                         (do
                             (§ return \formfeed)
                         )
-                        (.equals token, "return")
+                        (= token "return")
                         (do
                             (§ return \return)
                         )
@@ -20378,7 +20372,7 @@
     (§ defn #_"Object" (§ method invoke) [#_"MapReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (let [#_"Object[]" a (.toArray (LispReader'readDelimitedList \}, r, true, (LispReader'ensurePending pendingForms)))]
-                (when (= (& (§ alength a) 1) 1)
+                (when (= (& (alength a) 1) 1)
                     (throw (Util'runtimeException-1 "Map literal must contain an even number of forms"))
                 )
                 (RT'map a)
@@ -20485,7 +20479,7 @@
                                 (let [#_"IPersistentVector" recordEntries (cast' IPersistentVector form)]
                                     (let [#_"boolean" ctorFound false]
                                         (doseq [#_"Constructor" ctor allctors]
-                                            (when (= (§ alength (.getParameterTypes ctor)) (.count recordEntries))
+                                            (when (= (alength (.getParameterTypes ctor)) (.count recordEntries))
                                                 (§ ass ctorFound true)
                                             )
                                         )
@@ -20537,8 +20531,8 @@
     (§ def #_"Symbol" LispReader'DEREF (Symbol'intern-2 "cloiure.core", "deref"))
     (§ def #_"Keyword" LispReader'UNKNOWN (Keyword'intern-2 nil, "unknown"))
 
-    (def #_"IFn[]" LispReader'macros (§ typeless make-array IFn 256))
-    (def #_"IFn[]" LispReader'dispatchMacros (§ typeless make-array IFn 256))
+    (def #_"IFn[]" LispReader'macros (make-array #_"IFn" Object 256))
+    (def #_"IFn[]" LispReader'dispatchMacros (make-array #_"IFn" Object 256))
 
     (def #_"Pattern" LispReader'symbolPat (Pattern/compile "[:]?([\\D&&[^/]].*/)?(/|[\\D&&[^/]][^/]*)"))
     (def #_"Pattern" LispReader'intPat (Pattern/compile "([-+]?)(?:(0)|([1-9][0-9]*)|0[xX]([0-9A-Fa-f]+)|0([0-7]+)|([1-9][0-9]?)[rR]([0-9A-Za-z]+)|0[0-9]+)(N)?"))
@@ -20552,34 +20546,34 @@
     (§ def #_"IFn" LispReader'ctorReader (CtorReader'new))
 
     (§ static
-        (§ ass (§ aget macros \") (StringReader'new)) ;; oops! "
-        (§ ass (§ aget macros \;) (CommentReader'new))
-        (§ ass (§ aget macros \') (WrappingReader'new LispReader'QUOTE))
-        (§ ass (§ aget macros \@) (WrappingReader'new LispReader'DEREF))
-        (§ ass (§ aget macros \^) (MetaReader'new))
-        (§ ass (§ aget macros \`) (SyntaxQuoteReader'new))
-        (§ ass (§ aget macros \~) (UnquoteReader'new))
-        (§ ass (§ aget macros \() (ListReader'new))
-        (§ ass (§ aget macros \)) (UnmatchedDelimiterReader'new))
-        (§ ass (§ aget macros \[) (VectorReader'new))
-        (§ ass (§ aget macros \]) (UnmatchedDelimiterReader'new))
-        (§ ass (§ aget macros \{) (MapReader'new))
-        (§ ass (§ aget macros \}) (UnmatchedDelimiterReader'new))
-        (§ ass (§ aget macros \\) (CharacterReader'new))
-        (§ ass (§ aget macros \%) (ArgReader'new))
-        (§ ass (§ aget macros \#) (DispatchReader'new))
+        (aset LispReader'macros \" (StringReader'new)) ;; oops! "
+        (aset LispReader'macros \; (CommentReader'new))
+        (aset LispReader'macros \' (WrappingReader'new LispReader'QUOTE))
+        (aset LispReader'macros \@ (WrappingReader'new LispReader'DEREF))
+        (aset LispReader'macros \^ (MetaReader'new))
+        (aset LispReader'macros \` (SyntaxQuoteReader'new))
+        (aset LispReader'macros \~ (UnquoteReader'new))
+        (aset LispReader'macros \( (ListReader'new))
+        (aset LispReader'macros \) (UnmatchedDelimiterReader'new))
+        (aset LispReader'macros \[ (VectorReader'new))
+        (aset LispReader'macros \] (UnmatchedDelimiterReader'new))
+        (aset LispReader'macros \{ (MapReader'new))
+        (aset LispReader'macros \} (UnmatchedDelimiterReader'new))
+        (aset LispReader'macros \\ (CharacterReader'new))
+        (aset LispReader'macros \% (ArgReader'new))
+        (aset LispReader'macros \# (DispatchReader'new))
 
-        (§ ass (§ aget dispatchMacros \^) (MetaReader'new))
-        (§ ass (§ aget dispatchMacros \#) (SymbolicValueReader'new))
-        (§ ass (§ aget dispatchMacros \') (VarReader'new))
-        (§ ass (§ aget dispatchMacros \") (RegexReader'new)) ;; oops! "
-        (§ ass (§ aget dispatchMacros \() (FnReader'new))
-        (§ ass (§ aget dispatchMacros \{) (SetReader'new))
-        (§ ass (§ aget dispatchMacros \=) (EvalReader'new))
-        (§ ass (§ aget dispatchMacros \!) (CommentReader'new))
-        (§ ass (§ aget dispatchMacros \<) (UnreadableReader'new))
-        (§ ass (§ aget dispatchMacros \_) (DiscardReader'new))
-        (§ ass (§ aget dispatchMacros \:) (NamespaceMapReader'new))
+        (aset LispReader'dispatchMacros \^ (MetaReader'new))
+        (aset LispReader'dispatchMacros \# (SymbolicValueReader'new))
+        (aset LispReader'dispatchMacros \' (VarReader'new))
+        (aset LispReader'dispatchMacros \" (RegexReader'new)) ;; oops! "
+        (aset LispReader'dispatchMacros \( (FnReader'new))
+        (aset LispReader'dispatchMacros \{ (SetReader'new))
+        (aset LispReader'dispatchMacros \= (EvalReader'new))
+        (aset LispReader'dispatchMacros \! (CommentReader'new))
+        (aset LispReader'dispatchMacros \< (UnreadableReader'new))
+        (aset LispReader'dispatchMacros \_ (DiscardReader'new))
+        (aset LispReader'dispatchMacros \: (NamespaceMapReader'new))
     )
 
     (defn #_"boolean" LispReader'isWhitespace [#_"int" ch]
@@ -20797,15 +20791,15 @@
     )
 
     (defn- #_"Object" LispReader'interpretToken [#_"String" s, #_"Resolver" resolver]
-        (cond (.equals s, "nil")
+        (cond (= s "nil")
             (do
                 (§ return nil)
             )
-            (.equals s, "true")
+            (= s "true")
             (do
                 (§ return RT'T)
             )
-            (.equals s, "false")
+            (= s "false")
             (do
                 (§ return RT'F)
             )
@@ -20902,7 +20896,7 @@
                     )
                     (§ return (Numbers'num-1l 0))
                 )
-                (let [#_"boolean" negate (.equals (.group m, 1), "-")]
+                (let [#_"boolean" negate (= (.group m, 1) "-")]
                     (§ let [#_"String" n]
                         (let [#_"int" radix 10]
                             (cond (some? (§ ass n (.group m, 3)))
@@ -20959,13 +20953,13 @@
     )
 
     (defn- #_"IFn" LispReader'getMacro [#_"int" ch]
-        (when (< ch (§ alength macros))
-            (§ aget macros ch)
+        (when (< ch (alength LispReader'macros))
+            (aget LispReader'macros ch)
         )
     )
 
     (defn- #_"boolean" LispReader'isMacro [#_"int" ch]
-        (and (< ch (§ alength macros)) (some? (§ aget macros ch)))
+        (and (< ch (alength LispReader'macros)) (some? (aget LispReader'macros ch)))
     )
 
     (defn- #_"boolean" LispReader'isTerminatingMacro [#_"int" ch]
@@ -22133,8 +22127,8 @@
             )
             (do
                 (let [#_"int" idx (<< (& (>> (Util'hash c) (:shift this)) (:mask this)) 1)]
-                    (when (and (< idx (§ alength (:table this))) (= (§ aget (:table this) idx) c))
-                        (let [#_"Entry" e (cast' Entry (§ aget (:table this) (inc idx)))]
+                    (when (and (< idx (alength (:table this))) (= (aget (:table this) idx) c))
+                        (let [#_"Entry" e (cast' Entry (aget (:table this) (inc idx)))]
                             (§ ass this (assoc this :mre e))
                             (§ return (when (some? e) (:fn e)))
                         )
@@ -24478,15 +24472,15 @@
             (if (instance? Number init)
                 (do
                     (let [#_"float" f (.floatValue (cast Number init))]
-                        (loop-when-recur [#_"int" i 0] (< i (§ alength ret)) [(inc i)]
-                            (§ ass (§ aget ret i) f)
+                        (loop-when-recur [#_"int" i 0] (< i (alength ret)) [(inc i)]
+                            (aset ret i f)
                         )
                     )
                 )
                 (do
                     (let [#_"ISeq" s (RT'seq init)]
                         (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                            (§ ass (§ aget ret i) (.floatValue (cast Number (.first s))))
+                            (aset ret i (.floatValue (cast Number (.first s))))
                         )
                     )
                 )
@@ -24505,7 +24499,7 @@
                     (let [#_"int" size (RT'count s)]
                         (let [#_"float[]" ret (.float-array size)]
                             (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                                (§ ass (§ aget ret i) (.floatValue (cast Number (.first s))))
+                                (aset ret i (.floatValue (cast Number (.first s))))
                             )
                             ret
                         )
@@ -24520,15 +24514,15 @@
             (if (instance? Number init)
                 (do
                     (let [#_"double" f (.doubleValue (cast Number init))]
-                        (loop-when-recur [#_"int" i 0] (< i (§ alength ret)) [(inc i)]
-                            (§ ass (§ aget ret i) f)
+                        (loop-when-recur [#_"int" i 0] (< i (alength ret)) [(inc i)]
+                            (aset ret i f)
                         )
                     )
                 )
                 (do
                     (let [#_"ISeq" s (RT'seq init)]
                         (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                            (§ ass (§ aget ret i) (.doubleValue (cast Number (.first s))))
+                            (aset ret i (.doubleValue (cast Number (.first s))))
                         )
                     )
                 )
@@ -24547,7 +24541,7 @@
                     (let [#_"int" size (RT'count s)]
                         (let [#_"double[]" ret (.double-array size)]
                             (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                                (§ ass (§ aget ret i) (.doubleValue (cast Number (.first s))))
+                                (aset ret i (.doubleValue (cast Number (.first s))))
                             )
                             ret
                         )
@@ -24562,15 +24556,15 @@
             (if (instance? Number init)
                 (do
                     (let [#_"int" f (.intValue (cast Number init))]
-                        (loop-when-recur [#_"int" i 0] (< i (§ alength ret)) [(inc i)]
-                            (§ ass (§ aget ret i) f)
+                        (loop-when-recur [#_"int" i 0] (< i (alength ret)) [(inc i)]
+                            (aset ret i f)
                         )
                     )
                 )
                 (do
                     (let [#_"ISeq" s (RT'seq init)]
                         (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                            (§ ass (§ aget ret i) (.intValue (cast Number (.first s))))
+                            (aset ret i (.intValue (cast Number (.first s))))
                         )
                     )
                 )
@@ -24589,7 +24583,7 @@
                     (let [#_"int" size (RT'count s)]
                         (let [#_"int[]" ret (.int-array size)]
                             (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                                (§ ass (§ aget ret i) (.intValue (cast Number (.first s))))
+                                (aset ret i (.intValue (cast Number (.first s))))
                             )
                             ret
                         )
@@ -24604,15 +24598,15 @@
             (if (instance? Number init)
                 (do
                     (let [#_"long" f (.longValue (cast Number init))]
-                        (loop-when-recur [#_"int" i 0] (< i (§ alength ret)) [(inc i)]
-                            (§ ass (§ aget ret i) f)
+                        (loop-when-recur [#_"int" i 0] (< i (alength ret)) [(inc i)]
+                            (aset ret i f)
                         )
                     )
                 )
                 (do
                     (let [#_"ISeq" s (RT'seq init)]
                         (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                            (§ ass (§ aget ret i) (.longValue (cast Number (.first s))))
+                            (aset ret i (.longValue (cast Number (.first s))))
                         )
                     )
                 )
@@ -24631,7 +24625,7 @@
                     (let [#_"int" size (RT'count s)]
                         (let [#_"long[]" ret (.long-array size)]
                             (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                                (§ ass (§ aget ret i) (.longValue (cast Number (.first s))))
+                                (aset ret i (.longValue (cast Number (.first s))))
                             )
                             ret
                         )
@@ -24646,15 +24640,15 @@
             (if (instance? Short init)
                 (do
                     (let [#_"short" s (cast Short init)]
-                        (loop-when-recur [#_"int" i 0] (< i (§ alength ret)) [(inc i)]
-                            (§ ass (§ aget ret i) s)
+                        (loop-when-recur [#_"int" i 0] (< i (alength ret)) [(inc i)]
+                            (aset ret i s)
                         )
                     )
                 )
                 (do
                     (let [#_"ISeq" s (RT'seq init)]
                         (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                            (§ ass (§ aget ret i) (.shortValue (cast Number (.first s))))
+                            (aset ret i (.shortValue (cast Number (.first s))))
                         )
                     )
                 )
@@ -24673,7 +24667,7 @@
                     (let [#_"int" size (RT'count s)]
                         (let [#_"short[]" ret (.short-array size)]
                             (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                                (§ ass (§ aget ret i) (.shortValue (cast Number (.first s))))
+                                (aset ret i (.shortValue (cast Number (.first s))))
                             )
                             ret
                         )
@@ -24688,15 +24682,15 @@
             (if (instance? Character init)
                 (do
                     (let [#_"char" c (cast Character init)]
-                        (loop-when-recur [#_"int" i 0] (< i (§ alength ret)) [(inc i)]
-                            (§ ass (§ aget ret i) c)
+                        (loop-when-recur [#_"int" i 0] (< i (alength ret)) [(inc i)]
+                            (aset ret i c)
                         )
                     )
                 )
                 (do
                     (let [#_"ISeq" s (RT'seq init)]
                         (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                            (§ ass (§ aget ret i) (cast Character (.first s)))
+                            (aset ret i (cast Character (.first s)))
                         )
                     )
                 )
@@ -24715,7 +24709,7 @@
                     (let [#_"int" size (RT'count s)]
                         (let [#_"char[]" ret (.char-array size)]
                             (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                                (§ ass (§ aget ret i) (cast Character (.first s)))
+                                (aset ret i (cast Character (.first s)))
                             )
                             ret
                         )
@@ -24730,15 +24724,15 @@
             (if (instance? Byte init)
                 (do
                     (let [#_"byte" b (cast Byte init)]
-                        (loop-when-recur [#_"int" i 0] (< i (§ alength ret)) [(inc i)]
-                            (§ ass (§ aget ret i) b)
+                        (loop-when-recur [#_"int" i 0] (< i (alength ret)) [(inc i)]
+                            (aset ret i b)
                         )
                     )
                 )
                 (do
                     (let [#_"ISeq" s (RT'seq init)]
                         (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                            (§ ass (§ aget ret i) (.byteValue (cast Number (.first s))))
+                            (aset ret i (.byteValue (cast Number (.first s))))
                         )
                     )
                 )
@@ -24757,7 +24751,7 @@
                     (let [#_"int" size (RT'count s)]
                         (let [#_"byte[]" ret (.byte-array size)]
                             (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                                (§ ass (§ aget ret i) (.byteValue (cast Number (.first s))))
+                                (aset ret i (.byteValue (cast Number (.first s))))
                             )
                             ret
                         )
@@ -24772,15 +24766,15 @@
             (if (instance? Boolean init)
                 (do
                     (let [#_"boolean" b (cast Boolean init)]
-                        (loop-when-recur [#_"int" i 0] (< i (§ alength ret)) [(inc i)]
-                            (§ ass (§ aget ret i) b)
+                        (loop-when-recur [#_"int" i 0] (< i (alength ret)) [(inc i)]
+                            (aset ret i b)
                         )
                     )
                 )
                 (do
                     (let [#_"ISeq" s (RT'seq init)]
                         (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                            (§ ass (§ aget ret i) (cast Boolean (.first s)))
+                            (aset ret i (cast Boolean (.first s)))
                         )
                     )
                 )
@@ -24799,7 +24793,7 @@
                     (let [#_"int" size (RT'count s)]
                         (let [#_"boolean[]" ret (.boolean-array size)]
                             (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                                (§ ass (§ aget ret i) (cast Boolean (.first s)))
+                                (aset ret i (cast Boolean (.first s)))
                             )
                             ret
                         )
@@ -25844,19 +25838,19 @@
 
     #_override
     (§ defn #_"Object" ISeq'''first [#_"MSeq" this]
-        (MapEntry'create (§ aget (:array this) (:i this)), (§ aget (:array this) (inc (:i this))))
+        (MapEntry'create (aget (:array this) (:i this)), (aget (:array this) (inc (:i this))))
     )
 
     #_override
     (§ defn #_"ISeq" ISeq'''next [#_"MSeq" this]
-        (when (< (+ (:i this) 2) (§ alength (:array this)))
+        (when (< (+ (:i this) 2) (alength (:array this)))
             (MSeq'new-2 (:array this), (+ (:i this) 2))
         )
     )
 
     #_override
     (§ defn #_"int" Counted'''count [#_"MSeq" this]
-        (/ (- (§ alength (:array this)) (:i this)) 2)
+        (/ (- (alength (:array this)) (:i this)) 2)
     )
 
     #_method
@@ -25891,14 +25885,14 @@
 
     #_method
     (§ defn #_"boolean" (§ method hasNext) [#_"MIter" this]
-        (< (:i this) (- (§ alength (:array this)) 2))
+        (< (:i this) (- (alength (:array this)) 2))
     )
 
     #_method
     (§ defn #_"Object" (§ method next) [#_"MIter" this]
         (try
             (§ ass this (assoc this :i (+ (:i this) 2)))
-            (.invoke (:f this), (§ aget (:array this) (:i this)), (§ aget (:array this) (inc (:i this))))
+            (.invoke (:f this), (aget (:array this) (:i this)), (aget (:array this) (inc (:i this))))
             (catch IndexOutOfBoundsException e
                 (throw (NoSuchElementException.))
             )
@@ -25925,9 +25919,9 @@
     (defn #_"TransientArrayMap" TransientArrayMap'new [#_"Object[]" array]
         (let [this (merge (ATransientMap'new) (TransientArrayMap'init))]
             (§ ass this (assoc this :owner (Thread/currentThread)))
-            (§ ass this (assoc this :array (make-array Object (Math/max PersistentArrayMap'HASHTABLE_THRESHOLD, (§ alength array)))))
-            (System/arraycopy array, 0, (:array this), 0, (§ alength array))
-            (§ ass this (assoc this :len (§ alength array)))
+            (§ ass this (assoc this :array (make-array Object (Math/max PersistentArrayMap'HASHTABLE_THRESHOLD, (alength array)))))
+            (System/arraycopy array, 0, (:array this), 0, (alength array))
+            (§ ass this (assoc this :len (alength array)))
             this
         )
     )
@@ -25935,7 +25929,7 @@
     #_method
     (§ defn- #_"int" (§ method indexOf) [#_"TransientArrayMap" this, #_"Object" key]
         (loop-when-recur [#_"int" i 0] (< i (:len this)) [(+ i 2)]
-            (when (PersistentArrayMap'equalKey (§ aget (:array this) i), key)
+            (when (PersistentArrayMap'equalKey (aget (:array this) i), key)
                 (§ return i)
             )
         )
@@ -25947,18 +25941,18 @@
         (let [#_"int" i (.indexOf this, key)]
             (cond (<= 0 i) ;; already have key,
                 (do
-                    (when-not (= (§ aget (:array this) (inc i)) val) ;; no change, no op
-                        (§ ass (§ aget (:array this) (inc i)) val)
+                    (when-not (= (aget (:array this) (inc i)) val) ;; no change, no op
+                        (aset (:array this) (inc i) val)
                     )
                 )
                 :else ;; didn't have key, grow
                 (do
-                    (when (<= (§ alength (:array this)) (:len this))
+                    (when (<= (alength (:array this)) (:len this))
                         (§ return (-> (PersistentHashMap'create-1a (:array this)) (.asTransient) (.assoc key, val)))
                     )
-                    (§ ass (§ aget (:array this) (:len this)) key)
+                    (aset (:array this) (:len this) key)
                     (§ ass this (assoc this :len (inc (:len this))))
-                    (§ ass (§ aget (:array this) (:len this)) val)
+                    (aset (:array this) (:len this) val)
                     (§ ass this (assoc this :len (inc (:len this))))
                 )
             )
@@ -25971,8 +25965,8 @@
         (let [#_"int" i (.indexOf this, key)]
             (when (<= 0 i) ;; have key, will remove
                 (when (<= 2 (:len this))
-                    (§ ass (§ aget (:array this) i) (§ aget (:array this) (- (:len this) 2)))
-                    (§ ass (§ aget (:array this) (inc i)) (§ aget (:array this) (- (:len this) 1)))
+                    (aset (:array this) i (aget (:array this) (- (:len this) 2)))
+                    (aset (:array this) (inc i) (aget (:array this) (- (:len this) 1)))
                 )
                 (§ ass this (assoc this :len (- (:len this) 2)))
             )
@@ -25984,7 +25978,7 @@
     (§ defn #_"Object" (§ method doValAt) [#_"TransientArrayMap" this, #_"Object" key, #_"Object" notFound]
         (let [#_"int" i (.indexOf this, key)]
             (when (<= 0 i)
-                (§ return (§ aget (:array this) (inc i)))
+                (§ return (aget (:array this) (inc i)))
             )
             notFound
         )
@@ -26071,10 +26065,10 @@
     )
 
     (defn #_"PersistentArrayMap" PersistentArrayMap'createWithCheck [#_"Object[]" init]
-        (loop-when-recur [#_"int" i 0] (< i (§ alength init)) [(+ i 2)]
-            (loop-when-recur [#_"int" j (+ i 2)] (< j (§ alength init)) [(+ j 2)]
-                (when (PersistentArrayMap'equalKey (§ aget init i), (§ aget init j))
-                    (throw (IllegalArgumentException. (str "Duplicate key: " (§ aget init i))))
+        (loop-when-recur [#_"int" i 0] (< i (alength init)) [(+ i 2)]
+            (loop-when-recur [#_"int" j (+ i 2)] (< j (alength init)) [(+ j 2)]
+                (when (PersistentArrayMap'equalKey (aget init i), (aget init j))
+                    (throw (IllegalArgumentException. (str "Duplicate key: " (aget init i))))
                 )
             )
         )
@@ -26082,18 +26076,18 @@
     )
 
     (defn #_"PersistentArrayMap" PersistentArrayMap'createAsIfByAssoc [#_"Object[]" init]
-        (when (= (& (§ alength init) 1) 1)
-            (throw (IllegalArgumentException. (String/format "No value supplied for key: %s", (object-array [ (§ aget init (dec (§ alength init))) ]))))
+        (when (= (& (alength init) 1) 1)
+            (throw (IllegalArgumentException. (String/format "No value supplied for key: %s", (object-array [ (aget init (dec (alength init))) ]))))
         )
         ;; If this looks like it is doing busy-work, it is because it
         ;; is achieving these goals: O(n^2) run time like
         ;; createWithCheck(), never modify init arg, and only
         ;; allocate memory if there are duplicate keys.
         (let [#_"int" n 0]
-            (loop-when-recur [#_"int" i 0] (< i (§ alength init)) [(+ i 2)]
+            (loop-when-recur [#_"int" i 0] (< i (alength init)) [(+ i 2)]
                 (let [#_"boolean" duplicateKey false]
                     (loop-when-recur [#_"int" j 0] (< j i) [(+ j 2)]
-                        (when (PersistentArrayMap'equalKey (§ aget init i), (§ aget init j))
+                        (when (PersistentArrayMap'equalKey (aget init i), (aget init j))
                             (§ ass duplicateKey true)
                             (§ break )
                         )
@@ -26103,7 +26097,7 @@
                     )
                 )
             )
-            (when (< n (§ alength init))
+            (when (< n (alength init))
                 ;; Create a new shorter array with unique keys, and
                 ;; the last value associated with each key. To behave
                 ;; like assoc, the first occurrence of each key must
@@ -26111,23 +26105,23 @@
                 ;; later equal keys.
                 (let [#_"Object[]" nodups (make-array Object n)]
                     (let [#_"int" m 0]
-                        (loop-when-recur [#_"int" i 0] (< i (§ alength init)) [(+ i 2)]
+                        (loop-when-recur [#_"int" i 0] (< i (alength init)) [(+ i 2)]
                             (let [#_"boolean" duplicateKey false]
                                 (loop-when-recur [#_"int" j 0] (< j m) [(+ j 2)]
-                                    (when (PersistentArrayMap'equalKey (§ aget init i), (§ aget nodups j))
+                                    (when (PersistentArrayMap'equalKey (aget init i), (aget nodups j))
                                         (§ ass duplicateKey true)
                                         (§ break )
                                     )
                                 )
                                 (when (not duplicateKey)
                                     (§ let [#_"int" j]
-                                        (loop-when-recur [j (- (§ alength init) 2)] (<= i j) [(- j 2)]
-                                            (when (PersistentArrayMap'equalKey (§ aget init i), (§ aget init j))
+                                        (loop-when-recur [j (- (alength init) 2)] (<= i j) [(- j 2)]
+                                            (when (PersistentArrayMap'equalKey (aget init i), (aget init j))
                                                 (§ break )
                                             )
                                         )
-                                        (§ ass (§ aget nodups m) (§ aget init i))
-                                        (§ ass (§ aget nodups (inc m)) (§ aget init (inc j)))
+                                        (aset nodups m (aget init i))
+                                        (aset nodups (inc m) (aget init (inc j)))
                                         (§ ass m (+ m 2))
                                     )
                                 )
@@ -26167,7 +26161,7 @@
 
     #_override
     (§ defn #_"int" Counted'''count [#_"PersistentArrayMap" this]
-        (/ (§ alength (:array this)) 2)
+        (/ (alength (:array this)) 2)
     )
 
     #_method
@@ -26179,7 +26173,7 @@
     (§ defn #_"IMapEntry" (§ method entryAt) [#_"PersistentArrayMap" this, #_"Object" key]
         (let [#_"int" i (.indexOf this, key)]
             (when (<= 0 i)
-                (§ return (cast' IMapEntry (MapEntry'create (§ aget (:array this) i), (§ aget (:array this) (inc i)))))
+                (§ return (cast' IMapEntry (MapEntry'create (aget (:array this) i), (aget (:array this) (inc i)))))
             )
             nil
         )
@@ -26195,15 +26189,15 @@
                     )
                     :else ;; didn't have key, grow
                     (do
-                        (when (< PersistentArrayMap'HASHTABLE_THRESHOLD (§ alength (:array this)))
+                        (when (< PersistentArrayMap'HASHTABLE_THRESHOLD (alength (:array this)))
                             (§ return (.assocEx (.createHT this, (:array this)), key, val))
                         )
-                        (§ ass newArray (make-array Object (+ (§ alength (:array this)) 2)))
-                        (when (pos? (§ alength (:array this)))
-                            (System/arraycopy (:array this), 0, newArray, 2, (§ alength (:array this)))
+                        (§ ass newArray (make-array Object (+ (alength (:array this)) 2)))
+                        (when (pos? (alength (:array this)))
+                            (System/arraycopy (:array this), 0, newArray, 2, (alength (:array this)))
                         )
-                        (§ ass (§ aget newArray 0) key)
-                        (§ ass (§ aget newArray 1) val)
+                        (aset newArray 0 key)
+                        (aset newArray 1 val)
                     )
                 )
                 (.create this, newArray)
@@ -26217,23 +26211,23 @@
             (§ let [#_"Object[]" newArray]
                 (cond (<= 0 i) ;; already have key, same-sized replacement
                     (do
-                        (when (= (§ aget (:array this) (inc i)) val) ;; no change, no op
+                        (when (= (aget (:array this) (inc i)) val) ;; no change, no op
                             (§ return this)
                         )
                         (§ ass newArray (.clone (:array this)))
-                        (§ ass (§ aget newArray (inc i)) val)
+                        (aset newArray (inc i) val)
                     )
                     :else ;; didn't have key, grow
                     (do
-                        (when (< PersistentArrayMap'HASHTABLE_THRESHOLD (§ alength (:array this)))
+                        (when (< PersistentArrayMap'HASHTABLE_THRESHOLD (alength (:array this)))
                             (§ return (.assoc (.createHT this, (:array this)), key, val))
                         )
-                        (§ ass newArray (make-array Object (+ (§ alength (:array this)) 2)))
-                        (when (pos? (§ alength (:array this)))
-                            (System/arraycopy (:array this), 0, newArray, 0, (§ alength (:array this)))
+                        (§ ass newArray (make-array Object (+ (alength (:array this)) 2)))
+                        (when (pos? (alength (:array this)))
+                            (System/arraycopy (:array this), 0, newArray, 0, (alength (:array this)))
                         )
-                        (§ ass (§ aget newArray (- (§ alength newArray) 2)) key)
-                        (§ ass (§ aget newArray (- (§ alength newArray) 1)) val)
+                        (aset newArray (- (alength newArray) 2) key)
+                        (aset newArray (- (alength newArray) 1) val)
                     )
                 )
                 (.create this, newArray)
@@ -26245,7 +26239,7 @@
     (§ defn #_"IPersistentMap" (§ method without) [#_"PersistentArrayMap" this, #_"Object" key]
         (let [#_"int" i (.indexOf this, key)]
             (when (<= 0 i) ;; have key, will remove
-                (let [#_"int" newlen (- (§ alength (:array this)) 2)]
+                (let [#_"int" newlen (- (alength (:array this)) 2)]
                     (when (zero? newlen)
                         (§ return (.empty this))
                     )
@@ -26270,7 +26264,7 @@
     (§ defn #_"Object" (§ method valAt) [#_"PersistentArrayMap" this, #_"Object" key, #_"Object" notFound]
         (let [#_"int" i (.indexOf this, key)]
             (when (<= 0 i)
-                (§ return (§ aget (:array this) (inc i)))
+                (§ return (aget (:array this) (inc i)))
             )
             notFound
         )
@@ -26289,8 +26283,8 @@
     #_method
     (§ defn- #_"int" (§ method indexOfObject) [#_"PersistentArrayMap" this, #_"Object" key]
         (let [#_"EquivPred" ep (Util'equivPred key)]
-            (loop-when-recur [#_"int" i 0] (< i (§ alength (:array this))) [(+ i 2)]
-                (when (.equiv ep, key, (§ aget (:array this) i))
+            (loop-when-recur [#_"int" i 0] (< i (alength (:array this))) [(+ i 2)]
+                (when (.equiv ep, key, (aget (:array this) i))
                     (§ return i)
                 )
             )
@@ -26302,8 +26296,8 @@
     (§ defn- #_"int" (§ method indexOf) [#_"PersistentArrayMap" this, #_"Object" key]
         (if (§ instance? Keyword key)
             (do
-                (loop-when-recur [#_"int" i 0] (< i (§ alength (:array this))) [(+ i 2)]
-                    (when (= key (§ aget (:array this) i))
+                (loop-when-recur [#_"int" i 0] (< i (alength (:array this))) [(+ i 2)]
+                    (when (= key (aget (:array this) i))
                         (§ return i)
                     )
                 )
@@ -26336,7 +26330,7 @@
 
     #_method
     (§ defn #_"ISeq" (§ method seq) [#_"PersistentArrayMap" this]
-        (when (pos? (§ alength (:array this)))
+        (when (pos? (alength (:array this)))
             (MSeq'new-2 (:array this), 0)
         )
     )
@@ -26348,8 +26342,8 @@
 
     #_method
     (§ defn #_"Object" (§ method kvreduce) [#_"PersistentArrayMap" this, #_"IFn" f, #_"Object" init]
-        (loop-when-recur [#_"int" i 0] (< i (§ alength (:array this))) [(+ i 2)]
-            (§ ass init (.invoke f, init, (§ aget (:array this) i), (§ aget (:array this) (inc i))))
+        (loop-when-recur [#_"int" i 0] (< i (alength (:array this))) [(+ i 2)]
+            (§ ass init (.invoke f, init, (aget (:array this) i), (aget (:array this) (inc i))))
             (when (RT'isReduced init)
                 (§ return (.deref (cast' IDeref init)))
             )
@@ -26515,9 +26509,9 @@
         (when (some? s)
             (§ return (HSeq'new meta, nodes, i, s))
         )
-        (loop-when-recur [#_"int" j i] (< j (§ alength nodes)) [(inc j)]
-            (when (some? (§ aget nodes j))
-                (let [#_"ISeq" ns (.nodeSeq (§ aget nodes j))]
+        (loop-when-recur [#_"int" j i] (< j (alength nodes)) [(inc j)]
+            (when (some? (aget nodes j))
+                (let [#_"ISeq" ns (.nodeSeq (aget nodes j))]
                     (when (some? ns)
                         (§ return (HSeq'new meta, nodes, (inc j), ns))
                     )
@@ -26592,9 +26586,9 @@
                 )
             )
 
-            (if (< (:i this) (§ alength (:array this)))
+            (if (< (:i this) (alength (:array this)))
                 (do
-                    (let [#_"INode" node (§ aget (:array this) (:i this))]
+                    (let [#_"INode" node (aget (:array this) (:i this))]
                         (§ ass this (assoc this :i (inc (:i this))))
                         (when (some? node)
                             (§ ass this (assoc this :nestedIter (.iterator node, (:f this))))
@@ -26647,7 +26641,7 @@
     #_method
     (§ defn #_"INode" (§ method assoc) [#_"ArrayNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
         (let [#_"int" idx (PersistentHashMap'mask hash, shift)]
-            (let [#_"INode" node (§ aget (:array this) idx)]
+            (let [#_"INode" node (aget (:array this) idx)]
                 (when (nil? node)
                     (§ return (ArrayNode'new nil, (inc (:count this)), (PersistentHashMap'cloneAndSet-3 (:array this), idx, (.assoc BitmapIndexedNode'EMPTY, (+ shift 5), hash, key, val, addedLeaf))))
                 )
@@ -26664,7 +26658,7 @@
     #_method
     (§ defn #_"INode" (§ method without) [#_"ArrayNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
         (let [#_"int" idx (PersistentHashMap'mask hash, shift)]
-            (let [#_"INode" node (§ aget (:array this) idx)]
+            (let [#_"INode" node (aget (:array this) idx)]
                 (when (nil? node)
                     (§ return this)
                 )
@@ -26691,7 +26685,7 @@
     #_method
     (§ defn #_"IMapEntry" (§ method find) [#_"ArrayNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
         (let [#_"int" idx (PersistentHashMap'mask hash, shift)]
-            (let [#_"INode" node (§ aget (:array this) idx)]
+            (let [#_"INode" node (aget (:array this) idx)]
                 (when (nil? node)
                     (§ return nil)
                 )
@@ -26703,7 +26697,7 @@
     #_method
     (§ defn #_"Object" (§ method find) [#_"ArrayNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound]
         (let [#_"int" idx (PersistentHashMap'mask hash, shift)]
-            (let [#_"INode" node (§ aget (:array this) idx)]
+            (let [#_"INode" node (aget (:array this) idx)]
                 (when (nil? node)
                     (§ return notFound)
                 )
@@ -26800,7 +26794,7 @@
     #_method
     (§ defn- #_"ArrayNode" (§ method editAndSet) [#_"ArrayNode" this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"INode" n]
         (let [#_"ArrayNode" editable (.ensureEditable this, edit)]
-            (§ ass (§ aget (:array editable) i) n)
+            (aset (:array editable) i n)
             editable
         )
     )
@@ -26811,15 +26805,15 @@
             (let [#_"int" j 1]
                 (let [#_"int" bitmap 0]
                     (loop-when-recur [#_"int" i 0] (< i idx) [(inc i)]
-                        (when (some? (§ aget (:array this) i))
-                            (§ ass (§ aget newArray j) (§ aget (:array this) i))
+                        (when (some? (aget (:array this) i))
+                            (aset newArray j (aget (:array this) i))
                             (§ ass bitmap (| bitmap (<< 1 i)))
                             (§ ass j (+ j 2))
                         )
                     )
-                    (loop-when-recur [#_"int" i (inc idx)] (< i (§ alength (:array this))) [(inc i)]
-                        (when (some? (§ aget (:array this) i))
-                            (§ ass (§ aget newArray j) (§ aget (:array this) i))
+                    (loop-when-recur [#_"int" i (inc idx)] (< i (alength (:array this))) [(inc i)]
+                        (when (some? (aget (:array this) i))
+                            (aset newArray j (aget (:array this) i))
                             (§ ass bitmap (| bitmap (<< 1 i)))
                             (§ ass j (+ j 2))
                         )
@@ -26833,7 +26827,7 @@
     #_method
     (§ defn #_"INode" (§ method assoc) [#_"ArrayNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
         (let [#_"int" idx (PersistentHashMap'mask hash, shift)]
-            (let [#_"INode" node (§ aget (:array this) idx)]
+            (let [#_"INode" node (aget (:array this) idx)]
                 (when (nil? node)
                     (let [#_"ArrayNode" editable (.editAndSet this, edit, idx, (.assoc BitmapIndexedNode'EMPTY, edit, (+ shift 5), hash, key, val, addedLeaf))]
                         (§ ass (:count editable) (inc (:count editable)))
@@ -26853,7 +26847,7 @@
     #_method
     (§ defn #_"INode" (§ method without) [#_"ArrayNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf]
         (let [#_"int" idx (PersistentHashMap'mask hash, shift)]
-            (let [#_"INode" node (§ aget (:array this) idx)]
+            (let [#_"INode" node (aget (:array this) idx)]
                 (when (nil? node)
                     (§ return this)
                 )
@@ -26908,8 +26902,8 @@
             (let [#_"int" idx (.index this, bit)]
                 (if (not= (& (:bitmap this) bit) 0)
                     (do
-                        (let [#_"Object" keyOrNull (§ aget (:array this) (* 2 idx))]
-                            (let [#_"Object" valOrNode (§ aget (:array this) (inc (* 2 idx)))]
+                        (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))]
+                            (let [#_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
                                 (when (nil? keyOrNull)
                                     (let [#_"INode" n (.assoc (cast' INode valOrNode), (+ shift 5), hash, key, val, addedLeaf)]
                                         (when (= n valOrNode)
@@ -26933,18 +26927,18 @@
                         (let [#_"int" n (Integer/bitCount (:bitmap this))]
                             (if (<= 16 n)
                                 (do
-                                    (let [#_"INode[]" nodes (§ typeless make-array INode 32)]
+                                    (let [#_"INode[]" nodes (make-array #_"INode" Object 32)]
                                         (let [#_"int" jdx (PersistentHashMap'mask hash, shift)]
-                                            (§ ass (§ aget nodes jdx) (.assoc BitmapIndexedNode'EMPTY, (+ shift 5), hash, key, val, addedLeaf))
+                                            (aset nodes jdx (.assoc BitmapIndexedNode'EMPTY, (+ shift 5), hash, key, val, addedLeaf))
                                             (let [#_"int" j 0]
                                                 (loop-when-recur [#_"int" i 0] (< i 32) [(inc i)]
                                                     (when (not= (& (>>> (:bitmap this) i) 1) 0)
-                                                        (if (nil? (§ aget (:array this) j))
+                                                        (if (nil? (aget (:array this) j))
                                                             (do
-                                                                (§ ass (§ aget nodes i) (cast' INode (§ aget (:array this) (inc j))))
+                                                                (aset nodes i (cast' INode (aget (:array this) (inc j))))
                                                             )
                                                             (do
-                                                                (§ ass (§ aget nodes i) (.assoc BitmapIndexedNode'EMPTY, (+ shift 5), (PersistentHashMap'hash (§ aget (:array this) j)), (§ aget (:array this) j), (§ aget (:array this) (inc j)), addedLeaf))
+                                                                (aset nodes i (.assoc BitmapIndexedNode'EMPTY, (+ shift 5), (PersistentHashMap'hash (aget (:array this) j)), (aget (:array this) j), (aget (:array this) (inc j)), addedLeaf))
                                                             )
                                                         )
                                                         (§ ass j (+ j 2))
@@ -26958,9 +26952,9 @@
                                 (do
                                     (let [#_"Object[]" newArray (make-array Object (* 2 (inc n)))]
                                         (System/arraycopy (:array this), 0, newArray, 0, (* 2 idx))
-                                        (§ ass (§ aget newArray (* 2 idx)) key)
+                                        (aset newArray (* 2 idx) key)
                                         (§ ass (:val addedLeaf) addedLeaf)
-                                        (§ ass (§ aget newArray (inc (* 2 idx))) val)
+                                        (aset newArray (inc (* 2 idx)) val)
                                         (System/arraycopy (:array this), (* 2 idx), newArray, (* 2 (inc idx)), (* 2 (- n idx)))
                                         (BitmapIndexedNode'new nil, (| (:bitmap this) bit), newArray)
                                     )
@@ -26980,8 +26974,8 @@
                 (§ return this)
             )
             (let [#_"int" idx (.index this, bit)]
-                (let [#_"Object" keyOrNull (§ aget (:array this) (* 2 idx))]
-                    (let [#_"Object" valOrNode (§ aget (:array this) (inc (* 2 idx)))]
+                (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))]
+                    (let [#_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
                         (when (nil? keyOrNull)
                             (let [#_"INode" n (.without (cast' INode valOrNode), (+ shift 5), hash, key)]
                                 (when (= n valOrNode)
@@ -27014,8 +27008,8 @@
                 (§ return nil)
             )
             (let [#_"int" idx (.index this, bit)]
-                (let [#_"Object" keyOrNull (§ aget (:array this) (* 2 idx))]
-                    (let [#_"Object" valOrNode (§ aget (:array this) (inc (* 2 idx)))]
+                (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))]
+                    (let [#_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
                         (when (nil? keyOrNull)
                             (§ return (.find (cast' INode valOrNode), (+ shift 5), hash, key))
                         )
@@ -27036,8 +27030,8 @@
                 (§ return notFound)
             )
             (let [#_"int" idx (.index this, bit)]
-                (let [#_"Object" keyOrNull (§ aget (:array this) (* 2 idx))]
-                    (let [#_"Object" valOrNode (§ aget (:array this) (inc (* 2 idx)))]
+                (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))]
+                    (let [#_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
                         (when (nil? keyOrNull)
                             (§ return (.find (cast' INode valOrNode), (+ shift 5), hash, key, notFound))
                         )
@@ -27087,7 +27081,7 @@
     #_method
     (§ defn- #_"BitmapIndexedNode" (§ method editAndSet) [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"Object" a]
         (let [#_"BitmapIndexedNode" editable (.ensureEditable this, edit)]
-            (§ ass (§ aget (:array editable) i) a)
+            (aset (:array editable) i a)
             editable
         )
     )
@@ -27095,8 +27089,8 @@
     #_method
     (§ defn- #_"BitmapIndexedNode" (§ method editAndSet) [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"Object" a, #_"int" j, #_"Object" b]
         (let [#_"BitmapIndexedNode" editable (.ensureEditable this, edit)]
-            (§ ass (§ aget (:array editable) i) a)
-            (§ ass (§ aget (:array editable) j) b)
+            (aset (:array editable) i a)
+            (aset (:array editable) j b)
             editable
         )
     )
@@ -27108,9 +27102,9 @@
         )
         (let [#_"BitmapIndexedNode" editable (.ensureEditable this, edit)]
             (§ ass (:bitmap editable) (bit-xor (:bitmap editable) bit))
-            (System/arraycopy (:array editable), (* 2 (inc i)), (:array editable), (* 2 i), (- (§ alength (:array editable)) (* 2 (inc i))))
-            (§ ass (§ aget (:array editable) (- (§ alength (:array editable)) 2)) nil)
-            (§ ass (§ aget (:array editable) (- (§ alength (:array editable)) 1)) nil)
+            (System/arraycopy (:array editable), (* 2 (inc i)), (:array editable), (* 2 i), (- (alength (:array editable)) (* 2 (inc i))))
+            (aset (:array editable) (- (alength (:array editable)) 2) nil)
+            (aset (:array editable) (- (alength (:array editable)) 1) nil)
             editable
         )
     )
@@ -27121,8 +27115,8 @@
             (let [#_"int" idx (.index this, bit)]
                 (if (not= (& (:bitmap this) bit) 0)
                     (do
-                        (let [#_"Object" keyOrNull (§ aget (:array this) (* 2 idx))]
-                            (let [#_"Object" valOrNode (§ aget (:array this) (inc (* 2 idx)))]
+                        (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))]
+                            (let [#_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
                                 (when (nil? keyOrNull)
                                     (let [#_"INode" n (.assoc (cast' INode valOrNode), edit, (+ shift 5), hash, key, val, addedLeaf)]
                                         (when (= n valOrNode)
@@ -27144,30 +27138,30 @@
                     )
                     (do
                         (let [#_"int" n (Integer/bitCount (:bitmap this))]
-                            (when (< (* n 2) (§ alength (:array this)))
+                            (when (< (* n 2) (alength (:array this)))
                                 (§ ass (:val addedLeaf) addedLeaf)
                                 (let [#_"BitmapIndexedNode" editable (.ensureEditable this, edit)]
                                     (System/arraycopy (:array editable), (* 2 idx), (:array editable), (* 2 (inc idx)), (* 2 (- n idx)))
-                                    (§ ass (§ aget (:array editable) (* 2 idx)) key)
-                                    (§ ass (§ aget (:array editable) (inc (* 2 idx))) val)
+                                    (aset (:array editable) (* 2 idx) key)
+                                    (aset (:array editable) (inc (* 2 idx)) val)
                                     (§ ass (:bitmap editable) (| (:bitmap editable) bit))
                                     (§ return editable)
                                 )
                             )
                             (if (<= 16 n)
                                 (do
-                                    (let [#_"INode[]" nodes (§ typeless make-array INode 32)]
+                                    (let [#_"INode[]" nodes (make-array #_"INode" Object 32)]
                                         (let [#_"int" jdx (PersistentHashMap'mask hash, shift)]
-                                            (§ ass (§ aget nodes jdx) (.assoc BitmapIndexedNode'EMPTY, edit, (+ shift 5), hash, key, val, addedLeaf))
+                                            (aset nodes jdx (.assoc BitmapIndexedNode'EMPTY, edit, (+ shift 5), hash, key, val, addedLeaf))
                                             (let [#_"int" j 0]
                                                 (loop-when-recur [#_"int" i 0] (< i 32) [(inc i)]
                                                     (when (not= (& (>>> (:bitmap this) i) 1) 0)
-                                                        (if (nil? (§ aget (:array this) j))
+                                                        (if (nil? (aget (:array this) j))
                                                             (do
-                                                                (§ ass (§ aget nodes i) (cast' INode (§ aget (:array this) (inc j))))
+                                                                (aset nodes i (cast' INode (aget (:array this) (inc j))))
                                                             )
                                                             (do
-                                                                (§ ass (§ aget nodes i) (.assoc BitmapIndexedNode'EMPTY, edit, (+ shift 5), (PersistentHashMap'hash (§ aget (:array this) j)), (§ aget (:array this) j), (§ aget (:array this) (inc j)), addedLeaf))
+                                                                (aset nodes i (.assoc BitmapIndexedNode'EMPTY, edit, (+ shift 5), (PersistentHashMap'hash (aget (:array this) j)), (aget (:array this) j), (aget (:array this) (inc j)), addedLeaf))
                                                             )
                                                         )
                                                         (§ ass j (+ j 2))
@@ -27181,9 +27175,9 @@
                                 (do
                                     (let [#_"Object[]" newArray (make-array Object (* 2 (+ n 4)))]
                                         (System/arraycopy (:array this), 0, newArray, 0, (* 2 idx))
-                                        (§ ass (§ aget newArray (* 2 idx)) key)
+                                        (aset newArray (* 2 idx) key)
                                         (§ ass (:val addedLeaf) addedLeaf)
-                                        (§ ass (§ aget newArray (inc (* 2 idx))) val)
+                                        (aset newArray (inc (* 2 idx)) val)
                                         (System/arraycopy (:array this), (* 2 idx), newArray, (* 2 (inc idx)), (* 2 (- n idx)))
                                         (let [#_"BitmapIndexedNode" editable (.ensureEditable this, edit)]
                                             (§ ass (:array editable) newArray)
@@ -27207,8 +27201,8 @@
                 (§ return this)
             )
             (let [#_"int" idx (.index this, bit)]
-                (let [#_"Object" keyOrNull (§ aget (:array this) (* 2 idx))]
-                    (let [#_"Object" valOrNode (§ aget (:array this) (inc (* 2 idx)))]
+                (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))]
+                    (let [#_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
                         (when (nil? keyOrNull)
                             (let [#_"INode" n (.without (cast' INode valOrNode), edit, (+ shift 5), hash, key, removedLeaf)]
                                 (when (= n valOrNode)
@@ -27261,15 +27255,15 @@
         (when (= hash (:hash this))
             (let [#_"int" idx (.findIndex this, key)]
                 (when-not (= idx -1)
-                    (when (= (§ aget (:array this) (inc idx)) val)
+                    (when (= (aget (:array this) (inc idx)) val)
                         (§ return this)
                     )
                     (§ return (HashCollisionNode'new nil, hash, (:count this), (PersistentHashMap'cloneAndSet-3 (:array this), (inc idx), val)))
                 )
                 (let [#_"Object[]" newArray (make-array Object (* 2 (inc (:count this))))]
                     (System/arraycopy (:array this), 0, newArray, 0, (* 2 (:count this)))
-                    (§ ass (§ aget newArray (* 2 (:count this))) key)
-                    (§ ass (§ aget newArray (inc (* 2 (:count this)))) val)
+                    (aset newArray (* 2 (:count this)) key)
+                    (aset newArray (inc (* 2 (:count this))) val)
                     (§ ass (:val addedLeaf) addedLeaf)
                     (§ return (HashCollisionNode'new (:edit this), hash, (inc (:count this)), newArray))
                 )
@@ -27298,8 +27292,8 @@
             (when (neg? idx)
                 (§ return nil)
             )
-            (when (Util'equiv-2oo key, (§ aget (:array this) idx))
-                (§ return (cast' IMapEntry (MapEntry'create (§ aget (:array this) idx), (§ aget (:array this) (inc idx)))))
+            (when (Util'equiv-2oo key, (aget (:array this) idx))
+                (§ return (cast' IMapEntry (MapEntry'create (aget (:array this) idx), (aget (:array this) (inc idx)))))
             )
             nil
         )
@@ -27311,8 +27305,8 @@
             (when (neg? idx)
                 (§ return notFound)
             )
-            (when (Util'equiv-2oo key, (§ aget (:array this) idx))
-                (§ return (§ aget (:array this) (inc idx)))
+            (when (Util'equiv-2oo key, (aget (:array this) idx))
+                (§ return (aget (:array this) (inc idx)))
             )
             notFound
         )
@@ -27341,7 +27335,7 @@
     #_method
     (§ defn #_"int" (§ method findIndex) [#_"HashCollisionNode" this, #_"Object" key]
         (loop-when-recur [#_"int" i 0] (< i (* 2 (:count this))) [(+ i 2)]
-            (when (Util'equiv-2oo key, (§ aget (:array this) i))
+            (when (Util'equiv-2oo key, (aget (:array this) i))
                 (§ return i)
             )
         )
@@ -27370,7 +27364,7 @@
     #_method
     (§ defn- #_"HashCollisionNode" (§ method editAndSet) [#_"HashCollisionNode" this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"Object" a]
         (let [#_"HashCollisionNode" editable (.ensureEditable this, edit)]
-            (§ ass (§ aget (:array editable) i) a)
+            (aset (:array editable) i a)
             editable
         )
     )
@@ -27378,8 +27372,8 @@
     #_method
     (§ defn- #_"HashCollisionNode" (§ method editAndSet) [#_"HashCollisionNode" this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"Object" a, #_"int" j, #_"Object" b]
         (let [#_"HashCollisionNode" editable (.ensureEditable this, edit)]
-            (§ ass (§ aget (:array editable) i) a)
-            (§ ass (§ aget (:array editable) j) b)
+            (aset (:array editable) i a)
+            (aset (:array editable) j b)
             editable
         )
     )
@@ -27389,22 +27383,22 @@
         (when (= hash (:hash this))
             (let [#_"int" idx (.findIndex this, key)]
                 (when-not (= idx -1)
-                    (when (= (§ aget (:array this) (inc idx)) val)
+                    (when (= (aget (:array this) (inc idx)) val)
                         (§ return this)
                     )
                     (§ return (.editAndSet this, edit, (inc idx), val))
                 )
-                (when (< (* 2 (:count this)) (§ alength (:array this)))
+                (when (< (* 2 (:count this)) (alength (:array this)))
                     (§ ass (:val addedLeaf) addedLeaf)
                     (let [#_"HashCollisionNode" editable (.editAndSet this, edit, (* 2 (:count this)), key, (inc (* 2 (:count this))), val)]
                         (§ ass (:count editable) (inc (:count editable)))
                         (§ return editable)
                     )
                 )
-                (let [#_"Object[]" newArray (make-array Object (+ (§ alength (:array this)) 2))]
-                    (System/arraycopy (:array this), 0, newArray, 0, (§ alength (:array this)))
-                    (§ ass (§ aget newArray (§ alength (:array this))) key)
-                    (§ ass (§ aget newArray (inc (§ alength (:array this)))) val)
+                (let [#_"Object[]" newArray (make-array Object (+ (alength (:array this)) 2))]
+                    (System/arraycopy (:array this), 0, newArray, 0, (alength (:array this)))
+                    (aset newArray (alength (:array this)) key)
+                    (aset newArray (inc (alength (:array this))) val)
                     (§ ass (:val addedLeaf) addedLeaf)
                     (§ return (.ensureEditable this, edit, (inc (:count this)), newArray))
                 )
@@ -27425,10 +27419,10 @@
                 (§ return nil)
             )
             (let [#_"HashCollisionNode" editable (.ensureEditable this, edit)]
-                (§ ass (§ aget (:array editable) idx) (§ aget (:array editable) (- (* 2 (:count this)) 2)))
-                (§ ass (§ aget (:array editable) (inc idx)) (§ aget (:array editable) (- (* 2 (:count this)) 1)))
-                (§ ass (§ aget (:array editable) (- (* 2 (:count this)) 2)) nil)
-                (§ ass (§ aget (:array editable) (- (* 2 (:count this)) 1)) nil)
+                (aset (:array editable) idx (aget (:array editable) (- (* 2 (:count this)) 2)))
+                (aset (:array editable) (inc idx) (aget (:array editable) (- (* 2 (:count this)) 1)))
+                (aset (:array editable) (- (* 2 (:count this)) 2) nil)
+                (aset (:array editable) (- (* 2 (:count this)) 1) nil)
                 (§ ass (:count editable) (dec (:count editable)))
                 editable
             )
@@ -27459,9 +27453,9 @@
 
     #_method
     (§ defn- #_"boolean" (§ method advance) [#_"NodeIter" this]
-        (while (< (:i this) (§ alength (:array this)))
-            (let [#_"Object" key (§ aget (:array this) (:i this))]
-                (let [#_"Object" nodeOrVal (§ aget (:array this) (inc (:i this)))]
+        (while (< (:i this) (alength (:array this)))
+            (let [#_"Object" key (aget (:array this) (:i this))]
+                (let [#_"Object" nodeOrVal (aget (:array this) (inc (:i this)))]
                     (§ ass this (assoc this :i (+ (:i this) 2)))
                     (cond (some? key)
                         (do
@@ -27538,13 +27532,13 @@
     )
 
     (defn #_"Object" NodeSeq'kvreduce [#_"Object[]" array, #_"IFn" f, #_"Object" init]
-        (loop-when-recur [#_"int" i 0] (< i (§ alength array)) [(+ i 2)]
-            (if (some? (§ aget array i))
+        (loop-when-recur [#_"int" i 0] (< i (alength array)) [(+ i 2)]
+            (if (some? (aget array i))
                 (do
-                    (§ ass init (.invoke f, init, (§ aget array i), (§ aget array (inc i))))
+                    (§ ass init (.invoke f, init, (aget array i), (aget array (inc i))))
                 )
                 (do
-                    (let [#_"INode" node (cast' INode (§ aget array (inc i)))]
+                    (let [#_"INode" node (cast' INode (aget array (inc i)))]
                         (when (some? node)
                             (§ ass init (.kvreduce node, f, init))
                         )
@@ -27562,11 +27556,11 @@
         (when (some? s)
             (§ return (NodeSeq'new-4 nil, array, i, s))
         )
-        (loop-when-recur [#_"int" j i] (< j (§ alength array)) [(+ j 2)]
-            (when (some? (§ aget array j))
+        (loop-when-recur [#_"int" j i] (< j (alength array)) [(+ j 2)]
+            (when (some? (aget array j))
                 (§ return (NodeSeq'new-4 nil, array, j, nil))
             )
-            (let [#_"INode" node (cast' INode (§ aget array (inc j)))]
+            (let [#_"INode" node (cast' INode (aget array (inc j)))]
                 (when (some? node)
                     (let [#_"ISeq" nodeSeq (.nodeSeq node)]
                         (when (some? nodeSeq)
@@ -27597,7 +27591,7 @@
     (§ defn #_"Object" ISeq'''first [#_"NodeSeq" this]
         (if (some? (:s this))
             (.first (:s this))
-            (MapEntry'create (§ aget (:array this) (:i this)), (§ aget (:array this) (inc (:i this))))
+            (MapEntry'create (aget (:array this) (:i this)), (aget (:array this) (inc (:i this))))
         )
     )
 
@@ -27639,8 +27633,8 @@
      ;;
     (defn #_"PersistentHashMap" PersistentHashMap'create-1a [& #_"Object..." init]
         (let [#_"ITransientMap" ret (.asTransient PersistentHashMap'EMPTY)]
-            (loop-when-recur [#_"int" i 0] (< i (§ alength init)) [(+ i 2)]
-                (§ ass ret (.assoc ret, (§ aget init i), (§ aget init (inc i))))
+            (loop-when-recur [#_"int" i 0] (< i (alength init)) [(+ i 2)]
+                (§ ass ret (.assoc ret, (aget init i), (aget init (inc i))))
             )
             (cast' PersistentHashMap (.persistent ret))
         )
@@ -27648,10 +27642,10 @@
 
     (defn #_"PersistentHashMap" PersistentHashMap'createWithCheck-1a [& #_"Object..." init]
         (let [#_"ITransientMap" ret (.asTransient PersistentHashMap'EMPTY)]
-            (loop-when-recur [#_"int" i 0] (< i (§ alength init)) [(+ i 2)]
-                (§ ass ret (.assoc ret, (§ aget init i), (§ aget init (inc i))))
+            (loop-when-recur [#_"int" i 0] (< i (alength init)) [(+ i 2)]
+                (§ ass ret (.assoc ret, (aget init i), (aget init (inc i))))
                 (when (not= (.count ret) (inc (/ i 2)))
-                    (throw (IllegalArgumentException. (str "Duplicate key: " (§ aget init i))))
+                    (throw (IllegalArgumentException. (str "Duplicate key: " (aget init i))))
                 )
             )
             (cast' PersistentHashMap (.persistent ret))
@@ -27962,23 +27956,23 @@
 
     (defn- #_"Object[]" PersistentHashMap'cloneAndSet-3 [#_"Object[]" array, #_"int" i, #_"Object" a]
         (let [#_"Object[]" clone (.clone array)]
-            (§ ass (§ aget clone i) a)
+            (aset clone i a)
             clone
         )
     )
 
     (defn- #_"Object[]" PersistentHashMap'cloneAndSet-5 [#_"Object[]" array, #_"int" i, #_"Object" a, #_"int" j, #_"Object" b]
         (let [#_"Object[]" clone (.clone array)]
-            (§ ass (§ aget clone i) a)
-            (§ ass (§ aget clone j) b)
+            (aset clone i a)
+            (aset clone j b)
             clone
         )
     )
 
     (defn- #_"Object[]" PersistentHashMap'removePair [#_"Object[]" array, #_"int" i]
-        (let [#_"Object[]" newArray (make-array Object (- (§ alength array) 2))]
+        (let [#_"Object[]" newArray (make-array Object (- (alength array) 2))]
             (System/arraycopy array, 0, newArray, 0, (* 2 i))
-            (System/arraycopy array, (* 2 (inc i)), newArray, (* 2 i), (- (§ alength newArray) (* 2 i)))
+            (System/arraycopy array, (* 2 (inc i)), newArray, (* 2 i), (- (alength newArray) (* 2 i)))
             newArray
         )
     )
@@ -28040,8 +28034,8 @@
 
     (defn #_"PersistentHashSet" PersistentHashSet'create-1a [& #_"Object..." init]
         (let [#_"ITransientSet" ret (cast' ITransientSet (.asTransient PersistentHashSet'EMPTY))]
-            (loop-when-recur [#_"int" i 0] (< i (§ alength init)) [(inc i)]
-                (§ ass ret (cast' ITransientSet (.conj ret, (§ aget init i))))
+            (loop-when-recur [#_"int" i 0] (< i (alength init)) [(inc i)]
+                (§ ass ret (cast' ITransientSet (.conj ret, (aget init i))))
             )
             (cast' PersistentHashSet (.persistent ret))
         )
@@ -28067,10 +28061,10 @@
 
     (defn #_"PersistentHashSet" PersistentHashSet'createWithCheck-1a [& #_"Object..." init]
         (let [#_"ITransientSet" ret (cast' ITransientSet (.asTransient PersistentHashSet'EMPTY))]
-            (loop-when-recur [#_"int" i 0] (< i (§ alength init)) [(inc i)]
-                (§ ass ret (cast' ITransientSet (.conj ret, (§ aget init i))))
+            (loop-when-recur [#_"int" i 0] (< i (alength init)) [(inc i)]
+                (§ ass ret (cast' ITransientSet (.conj ret, (aget init i))))
                 (when-not (= (.count ret) (inc i))
-                    (throw (IllegalArgumentException. (str "Duplicate key: " (§ aget init i))))
+                    (throw (IllegalArgumentException. (str "Duplicate key: " (aget init i))))
                 )
             )
             (cast' PersistentHashSet (.persistent ret))
@@ -28175,8 +28169,8 @@
         (when (§ instance? ArraySeq args)
             (let [#_"Object[]" argsarray (:array (cast' ArraySeq args))]
                 (let [#_"IPersistentList" ret PersistentList'EMPTY]
-                    (loop-when-recur [#_"int" i (dec (§ alength argsarray))] (<= (:i (cast' ArraySeq args)) i) [(dec i)]
-                        (§ ass ret (cast' IPersistentList (.cons ret, (§ aget argsarray i))))
+                    (loop-when-recur [#_"int" i (dec (alength argsarray))] (<= (:i (cast' ArraySeq args)) i) [(dec i)]
+                        (§ ass ret (cast' IPersistentList (.cons ret, (aget argsarray i))))
                     )
                     (§ return ret)
                 )
@@ -28194,8 +28188,8 @@
         (when (§ instance? ArraySeq args)
             (let [#_"Object[]" argsarray (:array (cast' ArraySeq args))]
                 (let [#_"IPersistentList" ret PersistentList'EMPTY]
-                    (loop-when-recur [#_"int" i (dec (§ alength argsarray))] (<= 0 i) [(dec i)]
-                        (§ ass ret (cast' IPersistentList (.cons ret, (§ aget argsarray i))))
+                    (loop-when-recur [#_"int" i (dec (alength argsarray))] (<= 0 i) [(dec i)]
+                        (§ ass ret (cast' IPersistentList (.cons ret, (aget argsarray i))))
                     )
                     (§ return ret)
                 )
@@ -28383,8 +28377,8 @@
 
     #_method
     (§ defn #_"Object[]" (§ method toArray) [#_"EmptyList" this, #_"Object[]" objects]
-        (when (pos? (§ alength objects))
-            (§ ass (§ aget objects 0) nil)
+        (when (pos? (alength objects))
+            (aset objects 0 nil)
         )
         objects
     )
@@ -30246,8 +30240,8 @@
 
     #_method
     (§ defn #_"ISeq" (§ method chunkedNext) [#_"ChunkedSeq" this]
-        (when (< (+ (:i this) (§ alength (:node this))) (:cnt (:vec this)))
-            (ChunkedSeq'new-3 (:vec this), (+ (:i this) (§ alength (:node this))), 0)
+        (when (< (+ (:i this) (alength (:node this))) (:cnt (:vec this)))
+            (ChunkedSeq'new-3 (:vec this), (+ (:i this) (alength (:node this))), 0)
         )
     )
 
@@ -30271,12 +30265,12 @@
 
     #_override
     (§ defn #_"Object" ISeq'''first [#_"ChunkedSeq" this]
-        (§ aget (:node this) (:offset this))
+        (aget (:node this) (:offset this))
     )
 
     #_override
     (§ defn #_"ISeq" ISeq'''next [#_"ChunkedSeq" this]
-        (if (< (inc (:offset this)) (§ alength (:node this)))
+        (if (< (inc (:offset this)) (alength (:node this)))
             (ChunkedSeq'new-4 (:vec this), (:node this), (:i this), (inc (:offset this)))
             (.chunkedNext this)
         )
@@ -30347,14 +30341,14 @@
         (.ensureEditable this)
         (.set (:edit (:root this)), nil)
         (let [#_"Object[]" trimmedTail (make-array Object (- (:cnt this) (.tailoff this)))]
-            (System/arraycopy (:tail this), 0, trimmedTail, 0, (§ alength trimmedTail))
+            (System/arraycopy (:tail this), 0, trimmedTail, 0, (alength trimmedTail))
             (PersistentVector'new-4 (:cnt this), (:shift this), (:root this), trimmedTail)
         )
     )
 
     (defn #_"Object[]" TransientVector'editableTail [#_"Object[]" tl]
         (let [#_"Object[]" ret (make-array Object 32)]
-            (System/arraycopy tl, 0, ret, 0, (§ alength tl))
+            (System/arraycopy tl, 0, ret, 0, (alength tl))
             ret
         )
     )
@@ -30365,7 +30359,7 @@
         (let [#_"int" i (:cnt this)]
             ;; room in tail?
             (when (< (- i (.tailoff this)) 32)
-                (§ ass (§ aget (:tail this) (& i 0x01f)) val)
+                (aset (:tail this) (& i 0x01f) val)
                 (§ ass this (assoc this :cnt (inc (:cnt this))))
                 (§ return this)
             )
@@ -30373,14 +30367,14 @@
             (§ let [#_"VNode" newroot]
                 (let [#_"VNode" tailnode (VNode'new-2 (:edit (:root this)), (:tail this))]
                     (§ ass this (assoc this :tail (make-array Object 32)))
-                    (§ ass (§ aget (:tail this) 0) val)
+                    (aset (:tail this) 0 val)
                     (let [#_"int" newshift (:shift this)]
                         ;; overflow root?
                         (if (< (<< 1 (:shift this)) (>>> (:cnt this) 5))
                             (do
                                 (§ ass newroot (VNode'new-1 (:edit (:root this))))
-                                (§ ass (§ aget (:array newroot) 0) (:root this))
-                                (§ ass (§ aget (:array newroot) 1) (PersistentVector'newPath (:edit (:root this)), (:shift this), tailnode))
+                                (aset (:array newroot) 0 (:root this))
+                                (aset (:array newroot) 1 (PersistentVector'newPath (:edit (:root this)), (:shift this), tailnode))
                                 (§ ass newshift (+ newshift 5))
                             )
                             (do
@@ -30412,12 +30406,12 @@
                             (§ ass nodeToInsert tailnode)
                         )
                         (do
-                            (let [#_"VNode" child (cast' VNode (§ aget (:array parent) subidx))]
+                            (let [#_"VNode" child (cast' VNode (aget (:array parent) subidx))]
                                 (§ ass nodeToInsert (if (some? child) (.pushTail this, (- level 5), child, tailnode) (PersistentVector'newPath (:edit (:root this)), (- level 5), tailnode)))
                             )
                         )
                     )
-                    (§ ass (§ aget (:array ret) subidx) nodeToInsert)
+                    (aset (:array ret) subidx nodeToInsert)
                     ret
                 )
             )
@@ -30437,7 +30431,7 @@
             )
             (let [#_"VNode" node (:root this)]
                 (loop-when-recur [#_"int" level (:shift this)] (< 0 level) [(- level 5)]
-                    (§ ass node (cast' VNode (§ aget (:array node) (& (>>> i level) 0x01f))))
+                    (§ ass node (cast' VNode (aget (:array node) (& (>>> i level) 0x01f))))
                 )
                 (§ return (:array node))
             )
@@ -30453,7 +30447,7 @@
             )
             (let [#_"VNode" node (:root this)]
                 (loop-when-recur [#_"int" level (:shift this)] (< 0 level) [(- level 5)]
-                    (§ ass node (.ensureEditable this, (cast' VNode (§ aget (:array node) (& (>>> i level) 0x01f)))))
+                    (§ ass node (.ensureEditable this, (cast' VNode (aget (:array node) (& (>>> i level) 0x01f)))))
                 )
                 (§ return (:array node))
             )
@@ -30509,7 +30503,7 @@
     (§ defn #_"Object" (§ method nth) [#_"TransientVector" this, #_"int" i]
         (.ensureEditable this)
         (let [#_"Object[]" node (.arrayFor this, i)]
-            (§ aget node (& i 0x01f))
+            (aget node (& i 0x01f))
         )
     )
 
@@ -30523,7 +30517,7 @@
         (.ensureEditable this)
         (when (and (<= 0 i) (< i (:cnt this)))
             (when (<= (.tailoff this) i)
-                (§ ass (§ aget (:tail this) (& i 0x01f)) val)
+                (aset (:tail this) (& i 0x01f) val)
                 (§ return this)
             )
 
@@ -30552,11 +30546,11 @@
         (let [#_"VNode" ret node]
             (if (zero? level)
                 (do
-                    (§ ass (§ aget (:array ret) (& i 0x01f)) val)
+                    (aset (:array ret) (& i 0x01f) val)
                 )
                 (do
                     (let [#_"int" subidx (& (>>> i level) 0x01f)]
-                        (§ ass (§ aget (:array ret) subidx) (.doAssoc this, (- level 5), (cast' VNode (§ aget (:array node) subidx)), i, val))
+                        (aset (:array ret) subidx (.doAssoc this, (- level 5), (cast' VNode (aget (:array node) subidx)), i, val))
                     )
                 )
             )
@@ -30587,8 +30581,8 @@
                         (when (nil? newroot)
                             (§ ass newroot (VNode'new-1 (:edit (:root this))))
                         )
-                        (when (and (< 5 (:shift this)) (nil? (§ aget (:array newroot) 1)))
-                            (§ ass newroot (.ensureEditable this, (cast' VNode (§ aget (:array newroot) 0))))
+                        (when (and (< 5 (:shift this)) (nil? (aget (:array newroot) 1)))
+                            (§ ass newroot (.ensureEditable this, (cast' VNode (aget (:array newroot) 0))))
                             (§ ass newshift (- newshift 5))
                         )
                         (§ ass this (assoc this :root newroot))
@@ -30608,14 +30602,14 @@
         (let [#_"int" subidx (& (>>> (- (:cnt this) 2) level) 0x01f)]
             (cond (< 5 level)
                 (do
-                    (let [#_"VNode" newchild (.popTail this, (- level 5), (cast' VNode (§ aget (:array node) subidx)))]
+                    (let [#_"VNode" newchild (.popTail this, (- level 5), (cast' VNode (aget (:array node) subidx)))]
                         (if (and (nil? newchild) (zero? subidx))
                             (do
                                 nil
                             )
                             (do
                                 (let [#_"VNode" ret node]
-                                    (§ ass (§ aget (:array ret) subidx) newchild)
+                                    (aset (:array ret) subidx newchild)
                                     ret
                                 )
                             )
@@ -30629,7 +30623,7 @@
                 :else
                 (do
                     (let [#_"VNode" ret node]
-                        (§ ass (§ aget (:array ret) subidx) nil)
+                        (aset (:array ret) subidx nil)
                         ret
                     )
                 )
@@ -30658,7 +30652,7 @@
     )
 
     (defn #_"PersistentVector" PersistentVector'adopt [#_"Object[]" items]
-        (PersistentVector'new-4 (§ alength items), 5, PersistentVector'EMPTY_NODE, items)
+        (PersistentVector'new-4 (alength items), 5, PersistentVector'EMPTY_NODE, items)
     )
 
     (defn #_"PersistentVector" PersistentVector'create-1r [#_"IReduceInit" items]
@@ -30672,7 +30666,7 @@
         (let [#_"Object[]" arr (make-array Object 32)]
             (let [#_"int" i 0]
                 (loop-when-recur [items items] (and (some? items) (< i 32)) [(.next items)]
-                    (§ ass (§ aget arr i) (.first items))
+                    (aset arr i (.first items))
                     (§ ass i (inc i))
                 )
 
@@ -30793,7 +30787,7 @@
             )
             (let [#_"VNode" node (:root this)]
                 (loop-when-recur [#_"int" level (:shift this)] (< 0 level) [(- level 5)]
-                    (§ ass node (cast' VNode (§ aget (:array node) (& (>>> i level) 0x01f))))
+                    (§ ass node (cast' VNode (aget (:array node) (& (>>> i level) 0x01f))))
                 )
                 (§ return (:array node))
             )
@@ -30804,7 +30798,7 @@
     #_method
     (§ defn #_"Object" (§ method nth) [#_"PersistentVector" this, #_"int" i]
         (let [#_"Object[]" node (.arrayFor this, i)]
-            (§ aget node (& i 0x01f))
+            (aget node (& i 0x01f))
         )
     )
 
@@ -30817,15 +30811,15 @@
     (§ defn #_"PersistentVector" (§ method assocN) [#_"PersistentVector" this, #_"int" i, #_"Object" val]
         (when (and (<= 0 i) (< i (:cnt this)))
             (when (<= (.tailoff this) i)
-                (let [#_"Object[]" newTail (make-array Object (§ alength (:tail this)))]
-                    (System/arraycopy (:tail this), 0, newTail, 0, (§ alength (:tail this)))
-                    (§ ass (§ aget newTail (& i 0x01f)) val)
+                (let [#_"Object[]" newTail (make-array Object (alength (:tail this)))]
+                    (System/arraycopy (:tail this), 0, newTail, 0, (alength (:tail this)))
+                    (aset newTail (& i 0x01f) val)
 
                     (§ return (PersistentVector'new-5 (.meta this), (:cnt this), (:shift this), (:root this), newTail))
                 )
             )
 
-            (§ return (PersistentVector'new-5 (.meta this), (:cnt this), (:shift this), (.doAssoc this, (:shift this), (:root this), i, val), (:tail this)))
+            (§ return (PersistentVector'new-5 (.meta this), (:cnt this), (:shift this), (PersistentVector'doAssoc (:shift this), (:root this), i, val), (:tail this)))
         )
         (when (= i (:cnt this)) => (throw (IndexOutOfBoundsException.))
             (.cons this, val)
@@ -30836,11 +30830,11 @@
         (let [#_"VNode" ret (VNode'new-2 (:edit node), (.clone (:array node)))]
             (if (zero? level)
                 (do
-                    (§ ass (§ aget (:array ret) (& i 0x01f)) val)
+                    (aset (:array ret) (& i 0x01f) val)
                 )
                 (do
                     (let [#_"int" subidx (& (>>> i level) 0x01f)]
-                        (§ ass (§ aget (:array ret) subidx) (.doAssoc this, (- level 5), (cast' VNode (§ aget (:array node) subidx)), i, val))
+                        (aset (:array ret) subidx (PersistentVector'doAssoc (- level 5), (cast' VNode (aget (:array node) subidx)), i, val))
                     )
                 )
             )
@@ -30867,9 +30861,9 @@
     (§ defn #_"PersistentVector" (§ method cons) [#_"PersistentVector" this, #_"Object" val]
         ;; room in tail?
         (when (< (- (:cnt this) (.tailoff this)) 32)
-            (let [#_"Object[]" newTail (make-array Object (inc (§ alength (:tail this))))]
-                (System/arraycopy (:tail this), 0, newTail, 0, (§ alength (:tail this)))
-                (§ ass (§ aget newTail (§ alength (:tail this))) val)
+            (let [#_"Object[]" newTail (make-array Object (inc (alength (:tail this))))]
+                (System/arraycopy (:tail this), 0, newTail, 0, (alength (:tail this)))
+                (aset newTail (alength (:tail this)) val)
                 (§ return (PersistentVector'new-5 (.meta this), (inc (:cnt this)), (:shift this), (:root this), newTail))
             )
         )
@@ -30881,8 +30875,8 @@
                     (if (< (<< 1 (:shift this)) (>>> (:cnt this) 5))
                         (do
                             (§ ass newroot (VNode'new-1 (:edit (:root this))))
-                            (§ ass (§ aget (:array newroot) 0) (:root this))
-                            (§ ass (§ aget (:array newroot) 1) (PersistentVector'newPath (:edit (:root this)), (:shift this), tailnode))
+                            (aset (:array newroot) 0 (:root this))
+                            (aset (:array newroot) 1 (PersistentVector'newPath (:edit (:root this)), (:shift this), tailnode))
                             (§ ass newshift (+ newshift 5))
                         )
                         (do
@@ -30901,33 +30895,30 @@
         ;; else does it map to an existing child? -> nodeToInsert = pushNode one more level
         ;; else alloc new path
         ;; return nodeToInsert placed in copy of parent
-        (let [#_"int" subidx (& (>>> (dec (:cnt this)) level) 0x01f)]
-            (let [#_"VNode" ret (VNode'new-2 (:edit parent), (.clone (:array parent)))]
-                (§ let [#_"VNode" nodeToInsert]
-                    (if (= level 5)
-                        (do
-                            (§ ass nodeToInsert tailnode)
-                        )
-                        (do
-                            (let [#_"VNode" child (cast' VNode (§ aget (:array parent) subidx))]
-                                (§ ass nodeToInsert (if (some? child) (.pushTail this, (- level 5), child, tailnode) (PersistentVector'newPath (:edit (:root this)), (- level 5), tailnode)))
-                            )
+        (let [#_"int" subidx (& (>>> (dec (:cnt this)) level) 0x01f)
+              #_"VNode" ret (VNode'new-2 (:edit parent), (.clone (:array parent)))
+              #_"VNode" nodeToInsert
+                (if (= level 5)
+                    tailnode
+                    (let [#_"VNode" child (cast' VNode (aget (:array parent) subidx))]
+                        (if (some? child)
+                            (.pushTail this, (- level 5), child, tailnode)
+                            (PersistentVector'newPath (:edit (:root this)), (- level 5), tailnode)
                         )
                     )
-                    (§ ass (§ aget (:array ret) subidx) nodeToInsert)
-                    ret
-                )
-            )
+                )]
+            (aset (:array ret) subidx nodeToInsert)
+            ret
         )
     )
 
     (defn- #_"VNode" PersistentVector'newPath [#_"AtomicReference<Thread>" edit, #_"int" level, #_"VNode" node]
-        (when (zero? level)
-            (§ return node)
-        )
-        (let [#_"VNode" ret (VNode'new-1 edit)]
-            (§ ass (§ aget (:array ret) 0) (PersistentVector'newPath edit, (- level 5), node))
-            ret
+        (if (zero? level)
+            node
+            (let [#_"VNode" ret (VNode'new-1 edit)]
+                (aset (:array ret) 0 (PersistentVector'newPath edit, (- level 5), node))
+                ret
+            )
         )
     )
 
@@ -30968,7 +30959,7 @@
                             (§ ass this (assoc this :array (.arrayFor this, (:i this))))
                             (§ ass this (assoc this :base (+ (:base this) 32)))
                         )
-                        (let [_ (§ aget (:array this) (& (:i this) 0x01f))]
+                        (let [_ (aget (:array this) (& (:i this) 0x01f))]
                             (§ ass this (assoc this :i (inc (:i this))))
                             _
                         )
@@ -30996,7 +30987,7 @@
         (§ let [#_"Object" init]
             (if (pos? (:cnt this))
                 (do
-                    (§ ass init (§ aget (.arrayFor this, 0) 0))
+                    (§ ass init (aget (.arrayFor this, 0) 0))
                 )
                 (do
                     (§ return (.invoke f))
@@ -31005,13 +30996,13 @@
             (let [#_"int" step 0]
                 (loop-when-recur [#_"int" i 0] (< i (:cnt this)) [(+ i step)]
                     (let [#_"Object[]" array (.arrayFor this, i)]
-                        (loop-when-recur [#_"int" j (if (zero? i) 1 0)] (< j (§ alength array)) [(inc j)]
-                            (§ ass init (.invoke f, init, (§ aget array j)))
+                        (loop-when-recur [#_"int" j (if (zero? i) 1 0)] (< j (alength array)) [(inc j)]
+                            (§ ass init (.invoke f, init, (aget array j)))
                             (when (RT'isReduced init)
                                 (§ return (.deref (cast' IDeref init)))
                             )
                         )
-                        (§ ass step (§ alength array))
+                        (§ ass step (alength array))
                     )
                 )
                 init
@@ -31024,13 +31015,13 @@
         (let [#_"int" step 0]
             (loop-when-recur [#_"int" i 0] (< i (:cnt this)) [(+ i step)]
                 (let [#_"Object[]" array (.arrayFor this, i)]
-                    (loop-when-recur [#_"int" j 0] (< j (§ alength array)) [(inc j)]
-                        (§ ass init (.invoke f, init, (§ aget array j)))
+                    (loop-when-recur [#_"int" j 0] (< j (alength array)) [(inc j)]
+                        (§ ass init (.invoke f, init, (aget array j)))
                         (when (RT'isReduced init)
                             (§ return (.deref (cast' IDeref init)))
                         )
                     )
-                    (§ ass step (§ alength array))
+                    (§ ass step (alength array))
                 )
             )
             init
@@ -31042,13 +31033,13 @@
         (let [#_"int" step 0]
             (loop-when-recur [#_"int" i 0] (< i (:cnt this)) [(+ i step)]
                 (let [#_"Object[]" array (.arrayFor this, i)]
-                    (loop-when-recur [#_"int" j 0] (< j (§ alength array)) [(inc j)]
-                        (§ ass init (.invoke f, init, (+ j i), (§ aget array j)))
+                    (loop-when-recur [#_"int" j 0] (< j (alength array)) [(inc j)]
+                        (§ ass init (.invoke f, init, (+ j i), (aget array j)))
                         (when (RT'isReduced init)
                             (§ return (.deref (cast' IDeref init)))
                         )
                     )
-                    (§ ass step (§ alength array))
+                    (§ ass step (alength array))
                 )
             )
             init
@@ -31069,8 +31060,8 @@
             (§ return (.withMeta PersistentVector'EMPTY, (.meta this)))
         )
         (when (< 1 (- (:cnt this) (.tailoff this)))
-            (let [#_"Object[]" newTail (make-array Object (dec (§ alength (:tail this))))]
-                (System/arraycopy (:tail this), 0, newTail, 0, (§ alength newTail))
+            (let [#_"Object[]" newTail (make-array Object (dec (alength (:tail this))))]
+                (System/arraycopy (:tail this), 0, newTail, 0, (alength newTail))
                 (§ return (PersistentVector'new-5 (.meta this), (dec (:cnt this)), (:shift this), (:root this), newTail))
             )
         )
@@ -31080,8 +31071,8 @@
                     (when (nil? newroot)
                         (§ ass newroot PersistentVector'EMPTY_NODE)
                     )
-                    (when (and (< 5 (:shift this)) (nil? (§ aget (:array newroot) 1)))
-                        (§ ass newroot (cast' VNode (§ aget (:array newroot) 0)))
+                    (when (and (< 5 (:shift this)) (nil? (aget (:array newroot) 1)))
+                        (§ ass newroot (cast' VNode (aget (:array newroot) 0)))
                         (§ ass newshift (- newshift 5))
                     )
                     (PersistentVector'new-5 (.meta this), (dec (:cnt this)), newshift, newroot, newtail)
@@ -31095,14 +31086,14 @@
         (let [#_"int" subidx (& (>>> (- (:cnt this) 2) level) 0x01f)]
             (cond (< 5 level)
                 (do
-                    (let [#_"VNode" newchild (.popTail this, (- level 5), (cast' VNode (§ aget (:array node) subidx)))]
+                    (let [#_"VNode" newchild (.popTail this, (- level 5), (cast' VNode (aget (:array node) subidx)))]
                         (if (and (nil? newchild) (zero? subidx))
                             (do
                                 nil
                             )
                             (do
                                 (let [#_"VNode" ret (VNode'new-2 (:edit (:root this)), (.clone (:array node)))]
-                                    (§ ass (§ aget (:array ret) subidx) newchild)
+                                    (aset (:array ret) subidx newchild)
                                     ret
                                 )
                             )
@@ -31116,7 +31107,7 @@
                 :else
                 (do
                     (let [#_"VNode" ret (VNode'new-2 (:edit (:root this)), (.clone (:array node)))]
-                        (§ ass (§ aget (:array ret) subidx) nil)
+                        (aset (:array ret) subidx nil)
                         ret
                     )
                 )
@@ -31155,15 +31146,15 @@
                         (do
                             (§ return nil)
                         )
-                        (.equals (.getName method), "equals")
+                        (= (.getName method) "equals")
                         (do
-                            (§ return (= proxy (§ aget args 0)))
+                            (§ return (= proxy (aget args 0)))
                         )
-                        (.equals (.getName method), "hashCode")
+                        (= (.getName method) "hashCode")
                         (do
                             (§ return (System/identityHashCode proxy))
                         )
-                        (.equals (.getName method), "toString")
+                        (= (.getName method) "toString")
                         (do
                             (§ return (str "Proxy: " (System/identityHashCode proxy)))
                         )
@@ -31395,7 +31386,7 @@
             (let [#_"int" n 0]
                 (let [#_"Object" val (:start this)]
                     (while (< n Range'CHUNK_SIZE)
-                        (§ ass (§ aget arr n) val)
+                        (aset arr n val)
                         (§ ass n (inc n))
                         (§ ass val (Numbers'addP-2oo val, (:step this)))
                         (when (.exceededBounds (:boundsCheck this), val)
@@ -31422,18 +31413,16 @@
 
     #_override
     (§ defn #_"ISeq" ISeq'''next [#_"Range" this]
-        (when (some? (:_next this))
-            (§ return (:_next this))
-        )
-
-        (.forceChunk this)
-        (when (< 1 (.count (:_chunk this)))
-            (let [#_"IChunk" smallerChunk (.dropFirst (:_chunk this))]
-                (§ ass this (assoc this :_next (Range'new-6 (.nth smallerChunk, 0), (:end this), (:step this), (:boundsCheck this), smallerChunk, (:_chunkNext this))))
-                (§ return (:_next this))
+        (let-when [#_"Range" _next (:_next this)] (nil? _next) => _next
+            (.forceChunk this)
+            (when (< 1 (.count (:_chunk this))) => (.chunkedNext this)
+                (let [#_"IChunk" _rest (.dropFirst (:_chunk this))
+                      _next (Range'new-6 (.nth _rest, 0), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this))]
+                    (§ ass this (assoc this :_next _next))
+                    _next
+                )
             )
         )
-        (.chunkedNext this)
     )
 
     #_method
@@ -32025,7 +32014,7 @@
 #_stateless
 (class-ns Reflector
     (defn #_"Object" Reflector'invokeInstanceMethod [#_"Object" target, #_"String" methodName, #_"Object[]" args]
-        (let [#_"List" methods (Reflector'getMethods (.getClass target), (§ alength args), methodName, false)]
+        (let [#_"List" methods (Reflector'getMethods (.getClass target), (alength args), methodName, false)]
             (Reflector'invokeMatchingMethod methodName, methods, target, args)
         )
     )
@@ -32124,13 +32113,13 @@
 
         (let [#_"Class[]" types1 (.getParameterTypes lhs)]
             (let [#_"Class[]" types2 (.getParameterTypes rhs)]
-                (when-not (= (§ alength types1) (§ alength types2))
+                (when-not (= (alength types1) (alength types2))
                     (§ return false)
                 )
 
                 (let [#_"boolean" match true]
-                    (loop-when-recur [#_"int" i 0] (< i (§ alength types1)) [(inc i)]
-                        (when (not (.isAssignableFrom (§ aget types1 i), (§ aget types2 i)))
+                    (loop-when-recur [#_"int" i 0] (< i (alength types1)) [(inc i)]
+                        (when (not (.isAssignableFrom (aget types1 i), (aget types2 i)))
                             (§ ass match false)
                             (§ break )
                         )
@@ -32145,9 +32134,9 @@
         (try
             (let [#_"Constructor[]" allctors (.getConstructors c)]
                 (let [#_"ArrayList" ctors (ArrayList.)]
-                    (loop-when-recur [#_"int" i 0] (< i (§ alength allctors)) [(inc i)]
-                        (let [#_"Constructor" ctor (§ aget allctors i)]
-                            (when (= (§ alength (.getParameterTypes ctor)) (§ alength args))
+                    (loop-when-recur [#_"int" i 0] (< i (alength allctors)) [(inc i)]
+                        (let [#_"Constructor" ctor (aget allctors i)]
+                            (when (= (alength (.getParameterTypes ctor)) (alength args))
                                 (.add ctors, ctor)
                             )
                         )
@@ -32197,11 +32186,11 @@
     )
 
     (defn #_"Object" Reflector'invokeStaticMethod-3c [#_"Class" c, #_"String" methodName, #_"Object[]" args]
-        (when (.equals methodName, "new")
-            (§ return (Reflector'invokeConstructor c, args))
-        )
-        (let [#_"List" methods (Reflector'getMethods c, (§ alength args), methodName, true)]
-            (Reflector'invokeMatchingMethod methodName, methods, nil, args)
+        (if (= methodName "new")
+            (Reflector'invokeConstructor c, args)
+            (let [#_"List" methods (Reflector'getMethods c, (alength args), methodName, true)]
+                (Reflector'invokeMatchingMethod methodName, methods, nil, args)
+            )
         )
     )
 
@@ -32356,9 +32345,9 @@
 
     (defn #_"Field" Reflector'getField [#_"Class" c, #_"String" name, #_"boolean" getStatics]
         (let [#_"Field[]" allfields (.getFields c)]
-            (loop-when-recur [#_"int" i 0] (< i (§ alength allfields)) [(inc i)]
-                (when (and (.equals name, (.getName (§ aget allfields i))) (= (Modifier/isStatic (.getModifiers (§ aget allfields i))) getStatics))
-                    (§ return (§ aget allfields i))
+            (loop-when-recur [#_"int" i 0] (< i (alength allfields)) [(inc i)]
+                (when (and (.equals name, (.getName (aget allfields i))) (= (Modifier/isStatic (.getModifiers (aget allfields i))) getStatics))
+                    (§ return (aget allfields i))
                 )
             )
             nil
@@ -32369,9 +32358,9 @@
         (let [#_"java.lang.reflect.Method[]" allmethods (.getMethods c)]
             (let [#_"ArrayList" methods (ArrayList.)]
                 (let [#_"ArrayList" bridgeMethods (ArrayList.)]
-                    (loop-when-recur [#_"int" i 0] (< i (§ alength allmethods)) [(inc i)]
-                        (let [#_"java.lang.reflect.Method" method (§ aget allmethods i)]
-                            (when (and (.equals name, (.getName method)) (= (Modifier/isStatic (.getModifiers method)) getStatics) (= (§ alength (.getParameterTypes method)) arity))
+                    (loop-when-recur [#_"int" i 0] (< i (alength allmethods)) [(inc i)]
+                        (let [#_"java.lang.reflect.Method" method (aget allmethods i)]
+                            (when (and (.equals name, (.getName method)) (= (Modifier/isStatic (.getModifiers method)) getStatics) (= (alength (.getParameterTypes method)) arity))
                                 (try
                                     (if (and (.isBridge method) (.equals (.getMethod c, (.getName method), (.getParameterTypes method)), method))
                                         (do
@@ -32393,9 +32382,9 @@
                     )
                     (when (and (not getStatics) (.isInterface c))
                         (§ ass allmethods (.getMethods Object))
-                        (loop-when-recur [#_"int" i 0] (< i (§ alength allmethods)) [(inc i)]
-                            (when (and (.equals name, (.getName (§ aget allmethods i))) (= (Modifier/isStatic (.getModifiers (§ aget allmethods i))) getStatics) (= (§ alength (.getParameterTypes (§ aget allmethods i))) arity))
-                                (.add methods, (§ aget allmethods i))
+                        (loop-when-recur [#_"int" i 0] (< i (alength allmethods)) [(inc i)]
+                            (when (and (.equals name, (.getName (aget allmethods i))) (= (Modifier/isStatic (.getModifiers (aget allmethods i))) getStatics) (= (alength (.getParameterTypes (aget allmethods i))) arity))
+                                (.add methods, (aget allmethods i))
                             )
                         )
                     )
@@ -32430,12 +32419,12 @@
     )
 
     (defn #_"Object[]" Reflector'boxArgs [#_"Class[]" params, #_"Object[]" args]
-        (when (pos? (§ alength params))
-            (let [#_"Object[]" ret (make-array Object (§ alength params))]
-                (loop-when-recur [#_"int" i 0] (< i (§ alength params)) [(inc i)]
-                    (let [#_"Object" arg (§ aget args i)]
-                        (let [#_"Class" paramType (§ aget params i)]
-                            (§ ass (§ aget ret i) (Reflector'boxArg paramType, arg))
+        (when (pos? (alength params))
+            (let [#_"Object[]" ret (make-array Object (alength params))]
+                (loop-when-recur [#_"int" i 0] (< i (alength params)) [(inc i)]
+                    (let [#_"Object" arg (aget args i)]
+                        (let [#_"Class" paramType (aget params i)]
+                            (aset ret i (Reflector'boxArg paramType, arg))
                         )
                     )
                 )
@@ -32468,14 +32457,14 @@
     (defn #_"boolean" Reflector'isCongruent [#_"Class[]" params, #_"Object[]" args]
         (let [#_"boolean" ret false]
             (when (nil? args)
-                (§ return (zero? (§ alength params)))
+                (§ return (zero? (alength params)))
             )
-            (when (= (§ alength params) (§ alength args))
+            (when (= (alength params) (alength args))
                 (§ ass ret true)
-                (loop-when-recur [#_"int" i 0] (and ret (< i (§ alength params))) [(inc i)]
-                    (let [#_"Object" arg (§ aget args i)]
+                (loop-when-recur [#_"int" i 0] (and ret (< i (alength params))) [(inc i)]
+                    (let [#_"Object" arg (aget args i)]
                         (let [#_"Class" argType (when (some? arg) (.getClass arg))]
-                            (let [#_"Class" paramType (§ aget params i)]
+                            (let [#_"Class" paramType (aget params i)]
                                 (§ ass ret (Reflector'paramArgTypeMatch paramType, argType))
                             )
                         )
@@ -37469,8 +37458,8 @@
     #_protected
     (defn #_"ISeq" RestFn'ontoArrayPrepend [#_"Object[]" array & #_"Object..." args]
         (let [#_"ISeq" ret (ArraySeq'create-1 array)]
-            (loop-when-recur [#_"int" i (dec (§ alength args))] (<= 0 i) [(dec i)]
-                (§ ass ret (RT'cons (§ aget args i), ret))
+            (loop-when-recur [#_"int" i (dec (alength args))] (<= 0 i) [(dec i)]
+                (§ ass ret (RT'cons (aget args i), ret))
             )
             ret
         )
@@ -37661,15 +37650,11 @@
     (§ def #_"Keyword" RT'DECLARED_KEY (Keyword'intern-2 nil, "declared"))
     (§ def #_"Keyword" RT'DOC_KEY (Keyword'intern-2 nil, "doc"))
 
-    (§ def #_"Var" RT'USE_CONTEXT_CLASSLOADER (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*use-context-classloader*"), RT'T)))
-
     (§ def #_"Symbol" RT'LOAD_FILE (Symbol'intern-1 "load-file"))
     (§ def #_"Symbol" RT'IN_NAMESPACE (Symbol'intern-1 "in-ns"))
     (§ def #_"Symbol" RT'NAMESPACE (Symbol'intern-1 "ns"))
     (§ def #_"Symbol" RT'IDENTICAL (Symbol'intern-1 "identical?"))
 
-    (§ def #_"Var" RT'CMD_LINE_ARGS (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*command-line-args*"), nil)))
-    ;; symbol
     (§ def #_"Var" RT'CURRENT_NS (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*ns*"), RT'CLOIURE_NS)))
 
     (§ def #_"Var" RT'FLUSH_ON_NEWLINE (.setDynamic (Var'intern-3 RT'CLOIURE_NS, (Symbol'intern-1 "*flush-on-newline*"), RT'T)))
@@ -37704,15 +37689,6 @@
                     (.set RT'CURRENT_NS, ns)
                     ns
                 )
-            )
-        )
-    )
-
-    (defn #_"List<String>" RT'processCommandLine [#_"String[]" args]
-        (let [#_"List<String>" arglist (Arrays/asList args) #_"int" split (.indexOf arglist, "--")]
-            (when (<= 0 split) => arglist
-                (.bindRoot RT'CMD_LINE_ARGS, (RT'seq (.subList arglist, (inc split), (§ alength args))))
-                (.subList arglist, 0, split)
             )
         )
     )
@@ -37780,27 +37756,7 @@
         (Var'intern-3 (Namespace'findOrCreate (Symbol'intern-2 nil, ns)), (Symbol'intern-2 nil, name), init)
     )
 
-    (defn #_"void" RT'loadResourceScript-1 [#_"String" name] #_(§ throws IOException)
-        (RT'loadResourceScript-2s name, true)
-        nil
-    )
-
-    (defn #_"void" RT'maybeLoadResourceScript [#_"String" name] #_(§ throws IOException)
-        (RT'loadResourceScript-2s name, false)
-        nil
-    )
-
-    (defn #_"void" RT'loadResourceScript-2s [#_"String" name, #_"boolean" failIfNotFound] #_(§ throws IOException)
-        (RT'loadResourceScript-3 (§ class RT), name, failIfNotFound)
-        nil
-    )
-
-    (defn #_"void" RT'loadResourceScript-2c [#_"Class" c, #_"String" name] #_(§ throws IOException)
-        (RT'loadResourceScript-3 c, name, true)
-        nil
-    )
-
-    (defn #_"void" RT'loadResourceScript-3 [#_"Class" c, #_"String" name, #_"boolean" failIfNotFound] #_(§ throws IOException)
+    (defn #_"void" RT'loadResourceScript [#_"String" name, #_"boolean" failIfNotFound] #_(§ throws IOException)
         (let [#_"InputStream" ins (RT'resourceAsStream (RT'baseLoader), name)]
             (cond (some? ins)
                 (let [#_"int" slash (.lastIndexOf name, \/) #_"String" file (if (<= 0 slash) (.substring name, (inc slash)) name)]
@@ -37877,7 +37833,7 @@
             (cond (and (not loaded) (some? cljURL))
                 (if (RT'booleanCast-1o (.deref Compiler'COMPILE_FILES))
                     (RT'compile cljfile)
-                    (RT'loadResourceScript-2c (§ class RT), cljfile)
+                    (RT'loadResourceScript cljfile, true)
                 )
                 (and (not loaded) failIfNotFound)
                     (throw (FileNotFoundException. (str "Could not locate " classfile " or " cljfile " on classpath." (when (.contains scriptbase, "_") " Please check that namespaces with dashes use underscores in the Cloiure file name."))))
@@ -37901,7 +37857,7 @@
                         (let [#_"Object[]" arr (make-array Object RT'CHUNK_SIZE)]
                             (let [#_"int" n 0]
                                 (while (and (.hasNext iter) (< n RT'CHUNK_SIZE))
-                                    (§ ass (§ aget arr n) (.next iter))
+                                    (aset arr n (.next iter))
                                     (§ ass n (inc n))
                                 )
                                 (ChunkedCons'new-2 (ArrayChunk'new-3 arr, 0, n), (RT'chunkIteratorSeq iter))
@@ -38369,7 +38325,7 @@
             (§ instance? Object[] coll)
                 ;; hmm... this is not persistent
                 (let [#_"Object[]" array (§ cast Object[] coll)]
-                    (§ ass (§ aget array n) val)
+                    (aset array n val)
                     array
                 )
         )
@@ -38744,7 +38700,7 @@
         (cond
             (nil? init)
                 PersistentArrayMap'EMPTY
-            (<= (§ alength init) PersistentArrayMap'HASHTABLE_THRESHOLD)
+            (<= (alength init) PersistentArrayMap'HASHTABLE_THRESHOLD)
                 (PersistentArrayMap'createWithCheck init)
             :else
                 (PersistentHashMap'createWithCheck-1a init)
@@ -38755,7 +38711,7 @@
         (cond
             (nil? init)
                 PersistentArrayMap'EMPTY
-            (<= (§ alength init) PersistentArrayMap'HASHTABLE_THRESHOLD)
+            (<= (alength init) PersistentArrayMap'HASHTABLE_THRESHOLD)
                 (PersistentArrayMap'new-1 init)
             :else
                 (PersistentHashMap'create-1a init)
@@ -38825,8 +38781,8 @@
 
     (defn #_"ISeq" RT'arrayToList [#_"Object[]" a]
         (let [#_"ISeq" ret nil]
-            (loop-when-recur [#_"int" i (dec (§ alength a))] (<= 0 i) [(dec i)]
-                (§ ass ret (cast' ISeq (RT'cons (§ aget a i), ret)))
+            (loop-when-recur [#_"int" i (dec (alength a))] (<= 0 i) [(dec i)]
+                (§ ass ret (cast' ISeq (RT'cons (aget a i), ret)))
             )
             ret
         )
@@ -38837,7 +38793,7 @@
             (make-array Object (.intValue (cast Number sizeOrSeq)))
             (let [#_"ISeq" s (RT'seq sizeOrSeq) #_"int" size (RT'count s) #_"Object[]" ret (make-array Object size)]
                 (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                    (§ ass (§ aget ret i) (.first s))
+                    (aset ret i (.first s))
                 )
                 ret
             )
@@ -38863,17 +38819,17 @@
                 (.toArray (.entrySet (cast Map coll)))
             (instance? String coll)
                 (let [#_"char[]" chars (.toCharArray (cast String coll))
-                      #_"Object[]" ret (make-array Object (§ alength chars))]
-                    (loop-when-recur [#_"int" i 0] (< i (§ alength chars)) [(inc i)]
-                        (§ ass (§ aget ret i) (§ aget chars i))
+                      #_"Object[]" ret (make-array Object (alength chars))]
+                    (loop-when-recur [#_"int" i 0] (< i (alength chars)) [(inc i)]
+                        (aset ret i (aget chars i))
                     )
                     ret
                 )
             (.isArray (.getClass coll))
                 (let [#_"ISeq" s (RT'seq coll)
                       #_"Object[]" ret (make-array Object (RT'count s))]
-                    (loop-when-recur [#_"int" i 0 s s] (< i (§ alength ret)) [(inc i) (.next s)]
-                        (§ ass (§ aget ret i) (.first s))
+                    (loop-when-recur [#_"int" i 0 s s] (< i (alength ret)) [(inc i) (.next s)]
+                        (aset ret i (.first s))
                     )
                     ret
                 )
@@ -38885,7 +38841,7 @@
     (defn #_"Object[]" RT'seqToArray [#_"ISeq" s]
         (let [#_"Object[]" ret (make-array Object (RT'length s))]
             (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (.next s)]
-                (§ ass (§ aget ret i) (.first s))
+                (aset ret i (.first s))
             )
             ret
         )
@@ -38893,14 +38849,14 @@
 
     (defn #_"Object[]" RT'seqToPassedArray [#_"ISeq" s, #_"Object[]" passed]
         (let [#_"Object[]" dest passed #_"int" len (RT'count s)]
-            (when (< (§ alength dest) len)
+            (when (< (alength dest) len)
                 (§ ass dest (§ cast Object[] (Array/newInstance (.getComponentType (.getClass passed)), len)))
             )
             (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (.next s)]
-                (§ ass (§ aget dest i) (.first s))
+                (aset dest i (.first s))
             )
-            (when (< len (§ alength passed))
-                (§ ass (§ aget dest len) nil)
+            (when (< len (alength passed))
+                (aset dest len nil)
             )
             dest
         )
@@ -39158,172 +39114,47 @@
         nil
     )
 
-    (defn #_"void" RT'formatAesthetic [#_"Writer" w, #_"Object" obj] #_(§ throws IOException)
-        (if (nil? obj)
-            (.write w, "nil")
-            (.write w, (.toString obj))
-        )
-        nil
-    )
-
-    (defn #_"void" RT'formatStandard [#_"Writer" w, #_"Object" obj] #_(§ throws IOException)
-        (cond (nil? obj)
-            (do
-                (.write w, "nil")
-            )
-            (instance? String obj)
-            (do
-                (.write w, \") ;; oops! "
-                (.write w, (cast String obj))
-                (.write w, \") ;; oops! "
-            )
-            (instance? Character obj)
-            (do
-                (.write w, \\)
-                (let [#_"char" c (.charValue (cast Character obj))]
-                    (case c
-                        \newline   (.write w, "newline")
-                        \tab       (.write w, "tab")
-                        \space     (.write w, "space")
-                        \return    (.write w, "return")
-                        \formfeed  (.write w, "formfeed")
-                        \backspace (.write w, "backspace")
-                                   (.write w, c)
-                    )
-                )
-            )
-            :else
-            (do
-                (.write w, (.toString obj))
-            )
-        )
-        nil
-    )
-
-    (defn #_"Object" RT'format [#_"Object" o, #_"String" s & #_"Object..." args] #_(§ throws IOException)
-        (let [#_"Writer" w
-                (cond
-                    (nil? o)              (StringWriter.)
-                    (Util'equals o, RT'T) (cast Writer (.deref RT'OUT))
-                    :else                 (cast Writer o)
-                )]
-            (RT'doFormat w, s, (ArraySeq'create-1 args))
-            (if (nil? o)
-                (.toString w)
-                nil
-            )
-        )
-    )
-
-    (defn #_"ISeq" RT'doFormat [#_"Writer" w, #_"String" s, #_"ISeq" args] #_(§ throws IOException)
-        (loop-when-recur [#_"int" i 0] (< i (.length s)) [i] => args
-            (let [#_"char" c (.charAt s, i) _ (§ ass i (inc i))]
-                (when (= c \~) => (.write w, c)
-                    (let [#_"char" d (.charAt s, i) _ (§ ass i (inc i))]
-                        (case (Character/toLowerCase d)
-                            \%  (.write w, \newline)
-                            \t  (.write w, \tab)
-                            \a  (when (some? args) => (throw (IllegalArgumentException. "Missing argument"))
-                                    (RT'formatAesthetic w, (RT'first args))
-                                    (§ ass args (RT'next args))
-                                )
-                            \s  (when (some? args) => (throw (IllegalArgumentException. "Missing argument"))
-                                    (RT'formatStandard w, (RT'first args))
-                                    (§ ass args (RT'next args))
-                                )
-                            \{  (let [#_"int" j (.indexOf s, "~}", i)] ;; note - does not nest
-                                    (when (= j -1)
-                                        (throw (IllegalArgumentException. "Missing ~}"))
-                                    )
-                                    (let [#_"String" subs (.substring s, i, j)]
-                                        (loop-when-recur [#_"ISeq" sargs (RT'seq (RT'first args))] (some? sargs) [sargs]
-                                            (§ ass sargs (RT'doFormat w, subs, sargs))
-                                        )
-                                        (§ ass args (RT'next args))
-                                        (§ ass i (+ j 2)) ;; skip "~}"
-                                    )
-                                )
-                            \^  (when (nil? args)
-                                    (§ return nil)
-                                )
-                            \~  (.write w, \~)
-                            (throw (IllegalArgumentException. (str "Unsupported ~ directive: " d)))
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"Object[]" RT'setValues [& #_"Object..." vals]
-        (when (pos? (§ alength vals))
-            vals
-        )
-    )
-
     (defn #_"ClassLoader" RT'makeClassLoader []
-        (cast ClassLoader (AccessController/doPrivileged(
+        (cast ClassLoader
+            (§ unsure AccessController/doPrivileged
                 (§ reify PrivilegedAction()
                     #_method
-                    (§ defn #_"Object" (§ method run) [#_"PrivilegedAction" this]
-                        (try
-                            (Var'pushThreadBindings (RT'map RT'USE_CONTEXT_CLASSLOADER, RT'T))
-                            (DynamicClassLoader'new-1 (RT'baseLoader))
-                            (finally
-                                (Var'popThreadBindings)
-                            )
-                        )
+                    (§ defn #_"Object" (§ method run) [#_"PrivilegedAction" _this]
+                        (DynamicClassLoader'new (RT'baseLoader))
                     )
                 )
             )
-        ))
+        )
     )
 
     (defn #_"ClassLoader" RT'baseLoader []
-        (cond (.isBound Compiler'LOADER)
-            (do
-                (§ return (cast ClassLoader (.deref Compiler'LOADER)))
-            )
-            (RT'booleanCast-1o (.deref RT'USE_CONTEXT_CLASSLOADER))
-            (do
-                (§ return (.getContextClassLoader (Thread/currentThread)))
-            )
+        (if (.isBound Compiler'LOADER)
+            (cast ClassLoader (.deref Compiler'LOADER))
+            (.getContextClassLoader (Thread/currentThread))
         )
-        (.getClassLoader (§ class Compiler))
     )
 
     (defn #_"InputStream" RT'resourceAsStream [#_"ClassLoader" loader, #_"String" name]
         (if (nil? loader)
-            (do
-                (ClassLoader/getSystemResourceAsStream name)
-            )
-            (do
-                (.getResourceAsStream loader, name)
-            )
+            (ClassLoader/getSystemResourceAsStream name)
+            (.getResourceAsStream loader, name)
         )
     )
 
     (defn #_"URL" RT'getResource [#_"ClassLoader" loader, #_"String" name]
         (if (nil? loader)
-            (do
-                (ClassLoader/getSystemResource name)
-            )
-            (do
-                (.getResource loader, name)
-            )
+            (ClassLoader/getSystemResource name)
+            (.getResource loader, name)
         )
     )
 
     (defn #_"Class" RT'classForName-3 [#_"String" name, #_"boolean" load, #_"ClassLoader" loader]
         (try
-            (let [#_"Class" c nil]
-                (when (not (§ instance? DynamicClassLoader loader))
-                    (§ ass c (DynamicClassLoader'findInMemoryClass name))
-                )
-                (when (some? c)
-                    (§ return c)
-                )
-                (Class/forName name, load, loader)
+            (let [#_"Class" c
+                    (when-not (§ instance? DynamicClassLoader loader)
+                        (DynamicClassLoader'findInMemoryClass name)
+                    )]
+                (or c (Class/forName name, load, loader))
             )
             (catch ClassNotFoundException e
                 (throw (Util'sneakyThrow e))
@@ -39342,172 +39173,55 @@
     (defn #_"Class" RT'loadClassForName [#_"String" name]
         (try
             (RT'classForNameNonLoading name)
+            (catch ClassNotFoundException e
+                (§ return nil)
+            )
             (catch Exception e
-                (if (instance? ClassNotFoundException e)
-                    (do
-                        (§ return nil)
-                    )
-                    (do
-                        (throw (Util'sneakyThrow e))
-                    )
-                )
+                (throw (Util'sneakyThrow e))
             )
         )
         (RT'classForName-1 name)
     )
 
-    (defn #_"float" RT'aget-2f [#_"float[]" xs, #_"int" i]
-        (§ aget xs i)
-    )
+    (defn #_"boolean" RT'aget_boolean [#_"boolean[]" xs, #_"int" i] (aget xs i))
+    (defn #_"byte"    RT'aget_byte    [#_"byte[]"    xs, #_"int" i] (aget xs i))
+    (defn #_"short"   RT'aget_short   [#_"short[]"   xs, #_"int" i] (aget xs i))
+    (defn #_"char"    RT'aget_char    [#_"char[]"    xs, #_"int" i] (aget xs i))
+    (defn #_"int"     RT'aget_int     [#_"int[]"     xs, #_"int" i] (aget xs i))
+    (defn #_"long"    RT'aget_long    [#_"long[]"    xs, #_"int" i] (aget xs i))
+    (defn #_"float"   RT'aget_float   [#_"float[]"   xs, #_"int" i] (aget xs i))
+    (defn #_"double"  RT'aget_double  [#_"double[]"  xs, #_"int" i] (aget xs i))
+    (defn #_"Object"  RT'aget_object  [#_"Object[]"  xs, #_"int" i] (aget xs i))
 
-    (defn #_"float" RT'aset-3f [#_"float[]" xs, #_"int" i, #_"float" v]
-        (§ ass (§ aget xs i) v)
-        v
-    )
+    (defn #_"boolean" RT'aset_boolean [#_"boolean[]" xs, #_"int" i, #_"boolean" v] (aset xs i v) v)
+    (defn #_"byte"    RT'aset_byte    [#_"byte[]"    xs, #_"int" i, #_"byte"    v] (aset xs i v) v)
+    (defn #_"short"   RT'aset_short   [#_"short[]"   xs, #_"int" i, #_"short"   v] (aset xs i v) v)
+    (defn #_"char"    RT'aset_char    [#_"char[]"    xs, #_"int" i, #_"char"    v] (aset xs i v) v)
+    (defn #_"int"     RT'aset_int     [#_"int[]"     xs, #_"int" i, #_"int"     v] (aset xs i v) v)
+    (defn #_"long"    RT'aset_long    [#_"long[]"    xs, #_"int" i, #_"long"    v] (aset xs i v) v)
+    (defn #_"float"   RT'aset_float   [#_"float[]"   xs, #_"int" i, #_"float"   v] (aset xs i v) v)
+    (defn #_"double"  RT'aset_double  [#_"double[]"  xs, #_"int" i, #_"double"  v] (aset xs i v) v)
+    (defn #_"Object"  RT'aset_object  [#_"Object[]"  xs, #_"int" i, #_"Object"  v] (aset xs i v) v)
 
-    (defn #_"int" RT'alength-1f [#_"float[]" xs]
-        (§ alength xs)
-    )
+    (defn #_"int" RT'alength_boolean [#_"boolean[]" xs] (alength xs))
+    (defn #_"int" RT'alength_byte    [#_"byte[]"    xs] (alength xs))
+    (defn #_"int" RT'alength_short   [#_"short[]"   xs] (alength xs))
+    (defn #_"int" RT'alength_char    [#_"char[]"    xs] (alength xs))
+    (defn #_"int" RT'alength_int     [#_"int[]"     xs] (alength xs))
+    (defn #_"int" RT'alength_long    [#_"long[]"    xs] (alength xs))
+    (defn #_"int" RT'alength_float   [#_"float[]"   xs] (alength xs))
+    (defn #_"int" RT'alength_double  [#_"double[]"  xs] (alength xs))
+    (defn #_"int" RT'alength_object  [#_"Object[]"  xs] (alength xs))
 
-    (defn #_"float[]" RT'aclone-1f [#_"float[]" xs]
-        (.clone xs)
-    )
-
-    (defn #_"double" RT'aget-2d [#_"double[]" xs, #_"int" i]
-        (§ aget xs i)
-    )
-
-    (defn #_"double" RT'aset-3d [#_"double[]" xs, #_"int" i, #_"double" v]
-        (§ ass (§ aget xs i) v)
-        v
-    )
-
-    (defn #_"int" RT'alength-1d [#_"double[]" xs]
-        (§ alength xs)
-    )
-
-    (defn #_"double[]" RT'aclone-1d [#_"double[]" xs]
-        (.clone xs)
-    )
-
-    (defn #_"int" RT'aget-2i [#_"int[]" xs, #_"int" i]
-        (§ aget xs i)
-    )
-
-    (defn #_"int" RT'aset-3i [#_"int[]" xs, #_"int" i, #_"int" v]
-        (§ ass (§ aget xs i) v)
-        v
-    )
-
-    (defn #_"int" RT'alength-1i [#_"int[]" xs]
-        (§ alength xs)
-    )
-
-    (defn #_"int[]" RT'aclone-1i [#_"int[]" xs]
-        (.clone xs)
-    )
-
-    (defn #_"long" RT'aget-2l [#_"long[]" xs, #_"int" i]
-        (§ aget xs i)
-    )
-
-    (defn #_"long" RT'aset-3l [#_"long[]" xs, #_"int" i, #_"long" v]
-        (§ ass (§ aget xs i) v)
-        v
-    )
-
-    (defn #_"int" RT'alength-1l [#_"long[]" xs]
-        (§ alength xs)
-    )
-
-    (defn #_"long[]" RT'aclone-1l [#_"long[]" xs]
-        (.clone xs)
-    )
-
-    (defn #_"char" RT'aget-2c [#_"char[]" xs, #_"int" i]
-        (§ aget xs i)
-    )
-
-    (defn #_"char" RT'aset-3c [#_"char[]" xs, #_"int" i, #_"char" v]
-        (§ ass (§ aget xs i) v)
-        v
-    )
-
-    (defn #_"int" RT'alength-1c [#_"char[]" xs]
-        (§ alength xs)
-    )
-
-    (defn #_"char[]" RT'aclone-1c [#_"char[]" xs]
-        (.clone xs)
-    )
-
-    (defn #_"byte" RT'aget-2b [#_"byte[]" xs, #_"int" i]
-        (§ aget xs i)
-    )
-
-    (defn #_"byte" RT'aset-3b [#_"byte[]" xs, #_"int" i, #_"byte" v]
-        (§ ass (§ aget xs i) v)
-        v
-    )
-
-    (defn #_"int" RT'alength-1b [#_"byte[]" xs]
-        (§ alength xs)
-    )
-
-    (defn #_"byte[]" RT'aclone-1b [#_"byte[]" xs]
-        (.clone xs)
-    )
-
-    (defn #_"short" RT'aget-2s [#_"short[]" xs, #_"int" i]
-        (§ aget xs i)
-    )
-
-    (defn #_"short" RT'aset-3s [#_"short[]" xs, #_"int" i, #_"short" v]
-        (§ ass (§ aget xs i) v)
-        v
-    )
-
-    (defn #_"int" RT'alength-1s [#_"short[]" xs]
-        (§ alength xs)
-    )
-
-    (defn #_"short[]" RT'aclone-1s [#_"short[]" xs]
-        (.clone xs)
-    )
-
-    (defn #_"boolean" RT'aget-2z [#_"boolean[]" xs, #_"int" i]
-        (§ aget xs i)
-    )
-
-    (defn #_"boolean" RT'aset-3z [#_"boolean[]" xs, #_"int" i, #_"boolean" v]
-        (§ ass (§ aget xs i) v)
-        v
-    )
-
-    (defn #_"int" RT'alength-1z [#_"boolean[]" xs]
-        (§ alength xs)
-    )
-
-    (defn #_"boolean[]" RT'aclone-1z [#_"boolean[]" xs]
-        (.clone xs)
-    )
-
-    (defn #_"Object" RT'aget-2o [#_"Object[]" xs, #_"int" i]
-        (§ aget xs i)
-    )
-
-    (defn #_"Object" RT'aset-3o [#_"Object[]" xs, #_"int" i, #_"Object" v]
-        (§ ass (§ aget xs i) v)
-        v
-    )
-
-    (defn #_"int" RT'alength-1o [#_"Object[]" xs]
-        (§ alength xs)
-    )
-
-    (defn #_"Object[]" RT'aclone-1o [#_"Object[]" xs]
-        (.clone xs)
-    )
+    (defn #_"boolean[]" RT'aclone_boolean [#_"boolean[]" xs] (.clone xs))
+    (defn #_"byte[]"    RT'aclone_byte    [#_"byte[]"    xs] (.clone xs))
+    (defn #_"short[]"   RT'aclone_short   [#_"short[]"   xs] (.clone xs))
+    (defn #_"char[]"    RT'aclone_char    [#_"char[]"    xs] (.clone xs))
+    (defn #_"int[]"     RT'aclone_int     [#_"int[]"     xs] (.clone xs))
+    (defn #_"long[]"    RT'aclone_long    [#_"long[]"    xs] (.clone xs))
+    (defn #_"float[]"   RT'aclone_float   [#_"float[]"   xs] (.clone xs))
+    (defn #_"double[]"  RT'aclone_double  [#_"double[]"  xs] (.clone xs))
+    (defn #_"Object[]"  RT'aclone_object  [#_"Object[]"  xs] (.clone xs))
 )
 )
 
@@ -39680,7 +39394,7 @@
 
     (defn #_"Symbol" Symbol'intern-1 [#_"String" nsname]
         (let [#_"int" i (.indexOf nsname, \/)]
-            (if (or (= i -1) (.equals nsname, "/"))
+            (if (or (= i -1) (= nsname "/"))
                 (do
                     (Symbol'new-2 nil, nsname)
                 )
@@ -39835,9 +39549,9 @@
 
     (defn #_"TransactionalHashMap" TransactionalHashMap'new-1i [#_"int" nBins]
         (let [this (merge (AbstractMap'new) (TransactionalHashMap'init))]
-            (§ ass this (assoc this :bins (§ typeless make-array Ref nBins)))
+            (§ ass this (assoc this :bins (make-array #_"Ref" Object nBins)))
             (loop-when-recur [#_"int" i 0] (< i nBins) [(inc i)]
-                (§ ass (§ aget (:bins this) i) (Ref'new-1 PersistentHashMap'EMPTY))
+                (aset (:bins this) i (Ref'new-1 PersistentHashMap'EMPTY))
             )
             this
         )
@@ -39852,7 +39566,7 @@
 
     #_method
     (§ defn #_"IPersistentMap" (§ method mapAt) [#_"TransactionalHashMap" this, #_"int" bin]
-        (cast' IPersistentMap (.deref (§ aget (:bins this) bin)))
+        (cast' IPersistentMap (.deref (aget (:bins this) bin)))
     )
 
     #_method
@@ -39861,7 +39575,7 @@
         (let [#_"int" h (.hashCode k)]
             (§ ass h (bit-xor h (bit-xor (>>> h 20) (>>> h 12))))
             (§ ass h (bit-xor h (bit-xor (>>> h 7) (>>> h 4))))
-            (% h (§ alength (:bins this)))
+            (% h (alength (:bins this)))
         )
     )
 
@@ -39873,7 +39587,7 @@
     #_method
     (§ defn #_"int" (§ method size) [#_"TransactionalHashMap" this]
         (let [#_"int" n 0]
-            (loop-when-recur [#_"int" i 0] (< i (§ alength (:bins this))) [(inc i)]
+            (loop-when-recur [#_"int" i 0] (< i (alength (:bins this))) [(inc i)]
                 (§ ass n (+ n (.count (.mapAt this, i))))
             )
             n
@@ -39902,7 +39616,7 @@
 
     #_method
     (§ defn #_"V" (§ method put) [#_"TransactionalHashMap" this, #_"K" k, #_"V" v]
-        (let [#_"Ref" r (§ aget (:bins this) (.binFor this, k))]
+        (let [#_"Ref" r (aget (:bins this) (.binFor this, k))]
             (let [#_"IPersistentMap" map (cast' IPersistentMap (.deref r))]
                 (let [#_"Object" ret (.valAt map, k)]
                     (.set r, (.assoc map, k, v))
@@ -39914,7 +39628,7 @@
 
     #_method
     (§ defn #_"V" (§ method remove) [#_"TransactionalHashMap" this, #_"Object" k]
-        (let [#_"Ref" r (§ aget (:bins this) (.binFor this, k))]
+        (let [#_"Ref" r (aget (:bins this) (.binFor this, k))]
             (let [#_"IPersistentMap" map (cast' IPersistentMap (.deref r))]
                 (let [#_"Object" ret (.valAt map, k)]
                     (.set r, (.without map, k))
@@ -39936,8 +39650,8 @@
 
     #_method
     (§ defn #_"void" (§ method clear) [#_"TransactionalHashMap" this]
-        (loop-when-recur [#_"int" i 0] (< i (§ alength (:bins this))) [(inc i)]
-            (let [#_"Ref" r (§ aget (:bins this) i)]
+        (loop-when-recur [#_"int" i 0] (< i (alength (:bins this))) [(inc i)]
+            (let [#_"Ref" r (aget (:bins this) i)]
                 (let [#_"IPersistentMap" map (cast' IPersistentMap (.deref r))]
                     (when (pos? (.count map))
                         (.set r, PersistentHashMap'EMPTY)
@@ -39950,8 +39664,8 @@
 
     #_method
     (§ defn #_"Set<Entry<K, V>>" (§ method entrySet) [#_"TransactionalHashMap" this]
-        (let [#_"ArrayList<Map$Entry<K, V>>" entries (ArrayList. (§ alength (:bins this)))]
-            (loop-when-recur [#_"int" i 0] (< i (§ alength (:bins this))) [(inc i)]
+        (let [#_"ArrayList<Map$Entry<K, V>>" entries (ArrayList. (alength (:bins this)))]
+            (loop-when-recur [#_"int" i 0] (< i (alength (:bins this))) [(inc i)]
                 (let [#_"IPersistentMap" map (.mapAt this, i)]
                     (when (pos? (.count map))
                         (.addAll entries, (cast Collection (RT'seq map)))
@@ -39974,7 +39688,7 @@
 
     #_method
     (§ defn #_"V" (§ method putIfAbsent) [#_"TransactionalHashMap" this, #_"K" k, #_"V" v]
-        (let [#_"Ref" r (§ aget (:bins this) (.binFor this, k))]
+        (let [#_"Ref" r (aget (:bins this) (.binFor this, k))]
             (let [#_"IPersistentMap" map (cast' IPersistentMap (.deref r))]
                 (let [#_"Entry" e (.entryAt map, k)]
                     (if (nil? e)
@@ -39993,7 +39707,7 @@
 
     #_method
     (§ defn #_"boolean" (§ method remove) [#_"TransactionalHashMap" this, #_"Object" k, #_"Object" v]
-        (let [#_"Ref" r (§ aget (:bins this) (.binFor this, k))]
+        (let [#_"Ref" r (aget (:bins this) (.binFor this, k))]
             (let [#_"IPersistentMap" map (cast' IPersistentMap (.deref r))]
                 (let [#_"Entry" e (.entryAt map, k)]
                     (when (and (some? e) (.equals (.getValue e), v))
@@ -40008,7 +39722,7 @@
 
     #_method
     (§ defn #_"boolean" (§ method replace) [#_"TransactionalHashMap" this, #_"K" k, #_"V" oldv, #_"V" newv]
-        (let [#_"Ref" r (§ aget (:bins this) (.binFor this, k))]
+        (let [#_"Ref" r (aget (:bins this) (.binFor this, k))]
             (let [#_"IPersistentMap" map (cast' IPersistentMap (.deref r))]
                 (let [#_"Entry" e (.entryAt map, k)]
                     (when (and (some? e) (.equals (.getValue e), oldv))
@@ -40023,7 +39737,7 @@
 
     #_method
     (§ defn #_"V" (§ method replace) [#_"TransactionalHashMap" this, #_"K" k, #_"V" v]
-        (let [#_"Ref" r (§ aget (:bins this) (.binFor this, k))]
+        (let [#_"Ref" r (aget (:bins this) (.binFor this, k))]
             (let [#_"IPersistentMap" map (cast' IPersistentMap (.deref r))]
                 (let [#_"Entry" e (.entryAt map, k)]
                     (when (some? e)
@@ -40199,9 +39913,9 @@
 
     #_method
     (§ defn #_"Object" (§ method next) [#_"MultiIterator" this]
-        (let [#_"Object[]" nexts (make-array Object (§ alength (:iters this)))]
-            (loop-when-recur [#_"int" i 0] (< i (§ alength (:iters this))) [(inc i)]
-                (§ ass (§ aget nexts i) (.next (§ aget (:iters this) i)))
+        (let [#_"Object[]" nexts (make-array Object (alength (:iters this)))]
+            (loop-when-recur [#_"int" i 0] (< i (alength (:iters this))) [(inc i)]
+                (aset nexts i (.next (aget (:iters this) i)))
             )
             (ArraySeq'new-2 nexts, 0)
         )
@@ -40268,7 +39982,7 @@
     (defn #_"Iterator" TransformerIterator'createMulti [#_"IFn" xform, #_"List" sources]
         (let [#_"Iterator[]" iters (make-array Iterator (.size sources))]
             (loop-when-recur [#_"int" i 0] (< i (.size sources)) [(inc i)]
-                (§ ass (§ aget iters i) (cast Iterator (.get sources, i)))
+                (aset iters i (cast Iterator (.get sources, i)))
             )
             (TransformerIterator'new xform, (MultiIterator'new iters), true)
         )
