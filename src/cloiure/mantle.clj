@@ -530,10 +530,10 @@
         (cond
             (keyword? name) name
             (symbol? name) (cloiure.lang.Keyword/intern ^cloiure.lang.Symbol name)
-            (string? name) (cloiure.lang.Keyword/intern ^String name)
+            (string? name) (cloiure.lang.Keyword/intern (cloiure.lang.Symbol/intern ^String name))
         )
     )
-    ([ns name] (cloiure.lang.Keyword/intern ns name))
+    ([ns name] (cloiure.lang.Keyword/intern (cloiure.lang.Symbol/intern ns name)))
 )
 
 ;;;
@@ -4444,7 +4444,7 @@
         (vector? name-vals-vec) "a vector for its binding"
         (even? (count name-vals-vec)) "an even number of forms in binding vector"
     )
-    `(let [~@(interleave (take-nth 2 name-vals-vec) (repeat '(.. cloiure.lang.Var create setDynamic)))]
+    `(let [~@(interleave (take-nth 2 name-vals-vec) (repeat '(.setDynamic (cloiure.lang.Var/create))))]
         (cloiure.lang.Var/pushThreadBindings (hash-map ~@name-vals-vec))
         (try
             ~@body
