@@ -1909,9 +1909,9 @@
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"VSeq" this, #_"IFn" f]
         (let [#_"IPersistentVector" v (:v this) #_"int" i (:i this) #_"int" n (.count v)]
-            (loop-when [#_"Object" ret (.nth v, i) i (inc i)] (< i n) => ret
-                (let-when [ret (.invoke f, ret, (.nth v, i))] (RT'isReduced ret) => (recur ret (inc i))
-                    (.deref (cast' IDeref ret))
+            (loop-when [#_"Object" r (.nth v, i) i (inc i)] (< i n) => r
+                (let-when [r (.invoke f, r, (.nth v, i))] (RT'isReduced r) => (recur r (inc i))
+                    (.deref (cast' IDeref r))
                 )
             )
         )
@@ -1920,9 +1920,9 @@
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"VSeq" this, #_"IFn" f, #_"Object" start]
         (let [#_"IPersistentVector" v (:v this) #_"int" i (:i this) #_"int" n (.count v)]
-            (loop-when [#_"Object" ret (.invoke f, start, (.nth v, i)) i (inc i)] (< i n) => (if (RT'isReduced ret) (.deref (cast' IDeref ret)) ret)
-                (when (RT'isReduced ret) => (recur (.invoke f, ret, (.nth v, i)) (inc i))
-                    (.deref (cast' IDeref ret))
+            (loop-when [#_"Object" r (.invoke f, start, (.nth v, i)) i (inc i)] (< i n) => (if (RT'isReduced r) (.deref (cast' IDeref r)) r)
+                (when (RT'isReduced r) => (recur (.invoke f, r, (.nth v, i)) (inc i))
+                    (.deref (cast' IDeref r))
                 )
             )
         )
@@ -2429,11 +2429,11 @@
 
     #_method
     (§ defn #_"Object[]" (§ method toArray) [#_"APersistentVector" this]
-        (let [#_"Object[]" ret (make-array Object (.count this))]
+        (let [#_"Object[]" a (make-array Object (.count this))]
             (loop-when-recur [#_"int" i 0] (< i (.count this)) [(inc i)]
-                (aset ret i (.nth this, i))
+                (aset a i (.nth this, i))
             )
-            ret
+            a
         )
     )
 
@@ -2741,11 +2741,11 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArrayChunk" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (aget (:array this) (:off this)))]
-            (when-not (RT'isReduced ret) => ret
-                (loop-when [#_"int" i (inc (:off this))] (< i (:end this)) => ret
-                    (let [ret (.invoke f, ret, (aget (:array this) i))]
-                        (when-not (RT'isReduced ret) => ret
+        (let [#_"Object" r (.invoke f, start, (aget (:array this) (:off this)))]
+            (when-not (RT'isReduced r) => r
+                (loop-when [#_"int" i (inc (:off this))] (< i (:end this)) => r
+                    (let [r (.invoke f, r, (aget (:array this) i))]
+                        (when-not (RT'isReduced r) => r
                             (recur (inc i))
                         )
                     )
@@ -3191,58 +3191,40 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_int" this, #_"IFn" f]
-        (let [#_"Object" ret (aget (:array this) (:i this))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
-                )
+        (loop-when [#_"Object" r (aget (:array this) (:i this)) #_"int" x (inc (:i this))] (< x (alength (:array this))) => r
+            (let [r (.invoke f, r, (aget (:array this) x))]
+                (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur r (inc x)))
             )
-            ret
         )
     )
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_int" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (aget (:array this) (:i this)))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
-                )
-                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
-            )
-            (if (RT'isReduced ret) (.deref (cast' IDeref ret)) ret)
+        (loop-when [#_"Object" r (.invoke f, start, (aget (:array this) (:i this))) #_"int" x (inc (:i this))] (< x (alength (:array this))) => (if (RT'isReduced r) (.deref (cast' IDeref r)) r)
+            (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur (.invoke f, r, (aget (:array this) x)) (inc x)))
         )
     )
 
     #_method
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq_int" this, #_"Object" o]
-        (when (instance? Number o)
+        (when (instance? Number o) => -1
             (let [#_"int" k (.intValue (cast Number o))]
-                (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
-                    (when (= k (aget (:array this) j))
-                        (§ return (- j (:i this)))
-                    )
+                (loop-when [#_"int" i (:i this)] (< i (alength (:array this))) => -1
+                    (if (= k (aget (:array this) i)) (- i (:i this)) (recur (inc i)))
                 )
             )
         )
-
-        -1
     )
 
     #_method
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_int" this, #_"Object" o]
-        (when (instance? Number o)
+        (when (instance? Number o) => -1
             (let [#_"int" k (.intValue (cast Number o))]
-                (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
-                    (when (= k (aget (:array this) j))
-                        (§ return (- j (:i this)))
-                    )
+                (loop-when [#_"int" i (dec (alength (:array this)))] (<= (:i this) i) => -1
+                    (if (= k (aget (:array this) i)) (- i (:i this)) (recur (dec i)))
                 )
             )
         )
-
-        -1
     )
 )
 
@@ -3291,56 +3273,40 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_float" this, #_"IFn" f]
-        (let [#_"Object" ret (Numbers'num-1f (aget (:array this) (:i this)))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                (§ ass ret (.invoke f, ret, (Numbers'num-1f (aget (:array this) x))))
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
-                )
+        (loop-when [#_"Object" r (Numbers'num-1f (aget (:array this) (:i this))) #_"int" x (inc (:i this))] (< x (alength (:array this))) => r
+            (let [r (.invoke f, r, (Numbers'num-1f (aget (:array this) x)))]
+                (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur r (inc x)))
             )
-            ret
         )
     )
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_float" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (Numbers'num-1f (aget (:array this) (:i this))))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
-                )
-                (§ ass ret (.invoke f, ret, (Numbers'num-1f (aget (:array this) x))))
-            )
-            (if (RT'isReduced ret) (.deref (cast' IDeref ret)) ret)
+        (loop-when [#_"Object" r (.invoke f, start, (Numbers'num-1f (aget (:array this) (:i this)))) #_"int" x (inc (:i this))] (< x (alength (:array this))) => (if (RT'isReduced r) (.deref (cast' IDeref r)) r)
+            (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur (.invoke f, r, (Numbers'num-1f (aget (:array this) x))) (inc x)))
         )
     )
 
     #_method
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq_float" this, #_"Object" o]
-        (when (instance? Number o)
+        (when (instance? Number o) => -1
             (let [#_"float" f (.floatValue (cast Number o))]
-                (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
-                    (when (= f (aget (:array this) j))
-                        (§ return (- j (:i this)))
-                    )
+                (loop-when [#_"int" i (:i this)] (< i (alength (:array this))) => -1
+                    (if (= f (aget (:array this) i)) (- i (:i this)) (recur (inc i)))
                 )
             )
         )
-        -1
     )
 
     #_method
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_float" this, #_"Object" o]
-        (when (instance? Number o)
+        (when (instance? Number o) => -1
             (let [#_"float" f (.floatValue (cast Number o))]
-                (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
-                    (when (= f (aget (:array this) j))
-                        (§ return (- j (:i this)))
-                    )
+                (loop-when [#_"int" i (dec (alength (:array this)))] (<= (:i this) i) => -1
+                    (if (= f (aget (:array this) i)) (- i (:i this)) (recur (dec i)))
                 )
             )
         )
-        -1
     )
 )
 
@@ -3389,58 +3355,40 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_double" this, #_"IFn" f]
-        (let [#_"Object" ret (aget (:array this) (:i this))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
-                )
+        (loop-when [#_"Object" r (aget (:array this) (:i this)) #_"int" x (inc (:i this))] (< x (alength (:array this))) => r
+            (let [r (.invoke f, r, (aget (:array this) x))]
+                (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur r (inc x)))
             )
-            ret
         )
     )
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_double" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (aget (:array this) (:i this)))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
-                )
-                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
-            )
-            (if (RT'isReduced ret) (.deref (cast' IDeref ret)) ret)
+        (loop-when [#_"Object" r (.invoke f, start, (aget (:array this) (:i this))) #_"int" x (inc (:i this))] (< x (alength (:array this))) => (if (RT'isReduced r) (.deref (cast' IDeref r)) r)
+            (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur (.invoke f, r, (aget (:array this) x)) (inc x)))
         )
     )
 
     #_method
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq_double" this, #_"Object" o]
-        (when (instance? Number o)
+        (when (instance? Number o) => -1
             (let [#_"double" d (.doubleValue (cast Number o))]
-                (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
-                    (when (= d (aget (:array this) j))
-                        (§ return (- j (:i this)))
-                    )
+                (loop-when [#_"int" i (:i this)] (< i (alength (:array this))) => -1
+                    (if (= d (aget (:array this) i)) (- i (:i this)) (recur (inc i)))
                 )
             )
         )
-
-        -1
     )
 
     #_method
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_double" this, #_"Object" o]
-        (when (instance? Number o)
+        (when (instance? Number o) => -1
             (let [#_"double" d (.doubleValue (cast Number o))]
-                (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
-                    (when (= d (aget (:array this) j))
-                        (§ return (- j (:i this)))
-                    )
+                (loop-when [#_"int" i (dec (alength (:array this)))] (<= (:i this) i) => -1
+                    (if (= d (aget (:array this) i)) (- i (:i this)) (recur (dec i)))
                 )
             )
         )
-
-        -1
     )
 )
 
@@ -3489,58 +3437,40 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_long" this, #_"IFn" f]
-        (let [#_"Object" ret (Numbers'num-1l (aget (:array this) (:i this)))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                (§ ass ret (.invoke f, ret, (Numbers'num-1l (aget (:array this) x))))
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
-                )
+        (loop-when [#_"Object" r (Numbers'num-1l (aget (:array this) (:i this))) #_"int" x (inc (:i this))] (< x (alength (:array this))) => r
+            (let [r (.invoke f, r, (Numbers'num-1l (aget (:array this) x)))]
+                (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur r (inc x)))
             )
-            ret
         )
     )
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_long" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (Numbers'num-1l (aget (:array this) (:i this))))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
-                )
-                (§ ass ret (.invoke f, ret, (Numbers'num-1l (aget (:array this) x))))
-            )
-            (if (RT'isReduced ret) (.deref (cast' IDeref ret)) ret)
+        (loop-when [#_"Object" r (.invoke f, start, (Numbers'num-1l (aget (:array this) (:i this)))) #_"int" x (inc (:i this))] (< x (alength (:array this))) => (if (RT'isReduced r) (.deref (cast' IDeref r)) r)
+            (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur (.invoke f, r, (Numbers'num-1l (aget (:array this) x))) (inc x)))
         )
     )
 
     #_method
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq_long" this, #_"Object" o]
-        (when (instance? Number o)
+        (when (instance? Number o) => -1
             (let [#_"long" l (.longValue (cast Number o))]
-                (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
-                    (when (= l (aget (:array this) j))
-                        (§ return (- j (:i this)))
-                    )
+                (loop-when [#_"int" i (:i this)] (< i (alength (:array this))) => -1
+                    (if (= l (aget (:array this) i)) (- i (:i this)) (recur (inc i)))
                 )
             )
         )
-
-        -1
     )
 
     #_method
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_long" this, #_"Object" o]
-        (when (instance? Number o)
+        (when (instance? Number o) => -1
             (let [#_"long" l (.longValue (cast Number o))]
-                (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
-                    (when (= l (aget (:array this) j))
-                        (§ return (- j (:i this)))
-                    )
+                (loop-when [#_"int" i (dec (alength (:array this)))] (<= (:i this) i) => -1
+                    (if (= l (aget (:array this) i)) (- i (:i this)) (recur (dec i)))
                 )
             )
         )
-
-        -1
     )
 )
 
@@ -3589,27 +3519,17 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_byte" this, #_"IFn" f]
-        (let [#_"Object" ret (aget (:array this) (:i this))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
-                )
+        (loop-when [#_"Object" r (aget (:array this) (:i this)) #_"int" x (inc (:i this))] (< x (alength (:array this))) => r
+            (let [r (.invoke f, r, (aget (:array this) x))]
+                (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur r (inc x)))
             )
-            ret
         )
     )
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_byte" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (aget (:array this) (:i this)))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
-                )
-                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
-            )
-            (if (RT'isReduced ret) (.deref (cast' IDeref ret)) ret)
+        (loop-when [#_"Object" r (.invoke f, start, (aget (:array this) (:i this))) #_"int" x (inc (:i this))] (< x (alength (:array this))) => (if (RT'isReduced r) (.deref (cast' IDeref r)) r)
+            (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur (.invoke f, r, (aget (:array this) x)) (inc x)))
         )
     )
 
@@ -3617,44 +3537,36 @@
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq_byte" this, #_"Object" o]
         (when (instance? Byte o)
             (let [#_"byte" b (.byteValue (cast Byte o))]
-                (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
-                    (when (= b (aget (:array this) j))
-                        (§ return (- j (:i this)))
+                (loop-when-recur [#_"int" i (:i this)] (< i (alength (:array this))) [(inc i)]
+                    (when (= b (aget (:array this) i))
+                        (§ return (- i (:i this)))
                     )
                 )
             )
         )
-        (when (nil? o)
-            (§ return -1)
-        )
-        (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
-            (when (.equals o, (aget (:array this) j))
-                (§ return (- j (:i this)))
+        (when (some? o) => -1
+            (loop-when [#_"int" i (:i this)] (< i (alength (:array this))) => -1
+                (if (.equals o, (aget (:array this) i)) (- i (:i this)) (recur (inc i)))
             )
         )
-        -1
     )
 
     #_method
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_byte" this, #_"Object" o]
         (when (instance? Byte o)
             (let [#_"byte" b (.byteValue (cast Byte o))]
-                (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
-                    (when (= b (aget (:array this) j))
-                        (§ return (- j (:i this)))
+                (loop-when-recur [#_"int" i (dec (alength (:array this)))] (<= (:i this) i) [(dec i)]
+                    (when (= b (aget (:array this) i))
+                        (§ return (- i (:i this)))
                     )
                 )
             )
         )
-        (when (nil? o)
-            (§ return -1)
-        )
-        (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
-            (when (.equals o, (aget (:array this) j))
-                (§ return (- j (:i this)))
+        (when (some? o) => -1
+            (loop-when [#_"int" i (dec (alength (:array this)))] (<= (:i this) i) => -1
+                (if (.equals o, (aget (:array this) i)) (- i (:i this)) (recur (dec i)))
             )
         )
-        -1
     )
 )
 
@@ -3703,27 +3615,17 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_char" this, #_"IFn" f]
-        (let [#_"Object" ret (aget (:array this) (:i this))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
-                )
+        (loop-when [#_"Object" r (aget (:array this) (:i this)) #_"int" x (inc (:i this))] (< x (alength (:array this))) => r
+            (let [r (.invoke f, r, (aget (:array this) x))]
+                (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur r (inc x)))
             )
-            ret
         )
     )
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_char" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (aget (:array this) (:i this)))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
-                )
-                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
-            )
-            (if (RT'isReduced ret) (.deref (cast' IDeref ret)) ret)
+        (loop-when [#_"Object" r (.invoke f, start, (aget (:array this) (:i this))) #_"int" x (inc (:i this))] (< x (alength (:array this))) => (if (RT'isReduced r) (.deref (cast' IDeref r)) r)
+            (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur (.invoke f, r, (aget (:array this) x)) (inc x)))
         )
     )
 
@@ -3731,44 +3633,36 @@
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq_char" this, #_"Object" o]
         (when (instance? Character o)
             (let [#_"char" c (.charValue (cast Character o))]
-                (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
-                    (when (= c (aget (:array this) j))
-                        (§ return (- j (:i this)))
+                (loop-when-recur [#_"int" i (:i this)] (< i (alength (:array this))) [(inc i)]
+                    (when (= c (aget (:array this) i))
+                        (§ return (- i (:i this)))
                     )
                 )
             )
         )
-        (when (nil? o)
-            (§ return -1)
-        )
-        (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
-            (when (.equals o, (aget (:array this) j))
-                (§ return (- j (:i this)))
+        (when (some? o) => -1
+            (loop-when [#_"int" i (:i this)] (< i (alength (:array this))) => -1
+                (if (.equals o, (aget (:array this) i)) (- i (:i this)) (recur (inc i)))
             )
         )
-        -1
     )
 
     #_method
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_char" this, #_"Object" o]
         (when (instance? Character o)
             (let [#_"char" c (.charValue (cast Character o))]
-                (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
-                    (when (= c (aget (:array this) j))
-                        (§ return (- j (:i this)))
+                (loop-when-recur [#_"int" i (dec (alength (:array this)))] (<= (:i this) i) [(dec i)]
+                    (when (= c (aget (:array this) i))
+                        (§ return (- i (:i this)))
                     )
                 )
             )
         )
-        (when (nil? o)
-            (§ return -1)
-        )
-        (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
-            (when (.equals o, (aget (:array this) j))
-                (§ return (- j (:i this)))
+        (when (some? o) => -1
+            (loop-when [#_"int" i (dec (alength (:array this)))] (<= (:i this) i) => -1
+                (if (.equals o, (aget (:array this) i)) (- i (:i this)) (recur (dec i)))
             )
         )
-        -1
     )
 )
 
@@ -3817,27 +3711,17 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_short" this, #_"IFn" f]
-        (let [#_"Object" ret (aget (:array this) (:i this))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
-                )
+        (loop-when [#_"Object" r (aget (:array this) (:i this)) #_"int" x (inc (:i this))] (< x (alength (:array this))) => r
+            (let [r (.invoke f, r, (aget (:array this) x))]
+                (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur r (inc x)))
             )
-            ret
         )
     )
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_short" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (aget (:array this) (:i this)))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
-                )
-                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
-            )
-            (if (RT'isReduced ret) (.deref (cast' IDeref ret)) ret)
+        (loop-when [#_"Object" r (.invoke f, start, (aget (:array this) (:i this))) #_"int" x (inc (:i this))] (< x (alength (:array this))) => (if (RT'isReduced r) (.deref (cast' IDeref r)) r)
+            (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur (.invoke f, r, (aget (:array this) x)) (inc x)))
         )
     )
 
@@ -3845,44 +3729,36 @@
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq_short" this, #_"Object" o]
         (when (instance? Short o)
             (let [#_"short" s (.shortValue (cast Short o))]
-                (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
-                    (when (= s (aget (:array this) j))
-                        (§ return (- j (:i this)))
+                (loop-when-recur [#_"int" i (:i this)] (< i (alength (:array this))) [(inc i)]
+                    (when (= s (aget (:array this) i))
+                        (§ return (- i (:i this)))
                     )
                 )
             )
         )
-        (when (nil? o)
-            (§ return -1)
-        )
-        (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
-            (when (.equals o, (aget (:array this) j))
-                (§ return (- j (:i this)))
+        (when (some? o) => -1
+            (loop-when [#_"int" i (:i this)] (< i (alength (:array this))) => -1
+                (if (.equals o, (aget (:array this) i)) (- i (:i this)) (recur (inc i)))
             )
         )
-        -1
     )
 
     #_method
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_short" this, #_"Object" o]
         (when (instance? Short o)
             (let [#_"short" s (.shortValue (cast Short o))]
-                (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
-                    (when (= s (aget (:array this) j))
-                        (§ return (- j (:i this)))
+                (loop-when-recur [#_"int" i (dec (alength (:array this)))] (<= (:i this) i) [(dec i)]
+                    (when (= s (aget (:array this) i))
+                        (§ return (- i (:i this)))
                     )
                 )
             )
         )
-        (when (nil? o)
-            (§ return -1)
-        )
-        (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
-            (when (.equals o, (aget (:array this) j))
-                (§ return (- j (:i this)))
+        (when (some? o) => -1
+            (loop-when [#_"int" i (dec (alength (:array this)))] (<= (:i this) i) => -1
+                (if (.equals o, (aget (:array this) i)) (- i (:i this)) (recur (dec i)))
             )
         )
-        -1
     )
 )
 
@@ -3931,27 +3807,17 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_boolean" this, #_"IFn" f]
-        (let [#_"Object" ret (aget (:array this) (:i this))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
-                )
+        (loop-when [#_"Object" r (aget (:array this) (:i this)) #_"int" x (inc (:i this))] (< x (alength (:array this))) => r
+            (let [r (.invoke f, r, (aget (:array this) x))]
+                (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur r (inc x)))
             )
-            ret
         )
     )
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq_boolean" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret (.invoke f, start, (aget (:array this) (:i this)))]
-            (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
-                )
-                (§ ass ret (.invoke f, ret, (aget (:array this) x)))
-            )
-            (if (RT'isReduced ret) (.deref (cast' IDeref ret)) ret)
+        (loop-when [#_"Object" r (.invoke f, start, (aget (:array this) (:i this))) #_"int" x (inc (:i this))] (< x (alength (:array this))) => (if (RT'isReduced r) (.deref (cast' IDeref r)) r)
+            (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur (.invoke f, r, (aget (:array this) x)) (inc x)))
         )
     )
 
@@ -3959,44 +3825,36 @@
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq_boolean" this, #_"Object" o]
         (when (instance? Boolean o)
             (let [#_"boolean" b (.booleanValue (cast Boolean o))]
-                (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
-                    (when (= b (aget (:array this) j))
-                        (§ return (- j (:i this)))
+                (loop-when-recur [#_"int" i (:i this)] (< i (alength (:array this))) [(inc i)]
+                    (when (= b (aget (:array this) i))
+                        (§ return (- i (:i this)))
                     )
                 )
             )
         )
-        (when (nil? o)
-            (§ return -1)
-        )
-        (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
-            (when (.equals o, (aget (:array this) j))
-                (§ return (- j (:i this)))
+        (when (some? o) => -1
+            (loop-when [#_"int" i (:i this)] (< i (alength (:array this))) => -1
+                (if (.equals o, (aget (:array this) i)) (- i (:i this)) (recur (inc i)))
             )
         )
-        -1
     )
 
     #_method
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq_boolean" this, #_"Object" o]
         (when (instance? Boolean o)
             (let [#_"boolean" b (.booleanValue (cast Boolean o))]
-                (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
-                    (when (= b (aget (:array this) j))
-                        (§ return (- j (:i this)))
+                (loop-when-recur [#_"int" i (dec (alength (:array this)))] (<= (:i this) i) [(dec i)]
+                    (when (= b (aget (:array this) i))
+                        (§ return (- i (:i this)))
                     )
                 )
             )
         )
-        (when (nil? o)
-            (§ return -1)
-        )
-        (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
-            (when (.equals o, (aget (:array this) j))
-                (§ return (- j (:i this)))
+        (when (some? o) => -1
+            (loop-when [#_"int" i (dec (alength (:array this)))] (<= (:i this) i) => -1
+                (if (.equals o, (aget (:array this) i)) (- i (:i this)) (recur (dec i)))
             )
         )
-        -1
     )
 )
 
@@ -4082,14 +3940,14 @@
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq" this, #_"IFn" f]
         (when (some? (:array this))
-            (let [#_"Object" ret (aget (:array this) (:i this))]
+            (let [#_"Object" r (aget (:array this) (:i this))]
                 (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                    (§ ass ret (.invoke f, ret, (aget (:array this) x)))
-                    (when (RT'isReduced ret)
-                        (§ return (.deref (cast' IDeref ret)))
+                    (§ ass r (.invoke f, r, (aget (:array this) x)))
+                    (when (RT'isReduced r)
+                        (§ return (.deref (cast' IDeref r)))
                     )
                 )
-                (§ return ret)
+                (§ return r)
             )
         )
         nil
@@ -4098,17 +3956,17 @@
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq" this, #_"IFn" f, #_"Object" start]
         (when (some? (:array this))
-            (let [#_"Object" ret (.invoke f, start, (aget (:array this) (:i this)))]
+            (let [#_"Object" r (.invoke f, start, (aget (:array this) (:i this)))]
                 (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                    (when (RT'isReduced ret)
-                        (§ return (.deref (cast' IDeref ret)))
+                    (when (RT'isReduced r)
+                        (§ return (.deref (cast' IDeref r)))
                     )
-                    (§ ass ret (.invoke f, ret, (aget (:array this) x)))
+                    (§ ass r (.invoke f, r, (aget (:array this) x)))
                 )
-                (when (RT'isReduced ret)
-                    (§ return (.deref (cast' IDeref ret)))
+                (when (RT'isReduced r)
+                    (§ return (.deref (cast' IDeref r)))
                 )
-                (§ return ret)
+                (§ return r)
             )
         )
         nil
@@ -30238,71 +30096,32 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"ProxyHandler" this, #_"Object" proxy, #_"java.lang.reflect.Method" method, #_"Object[]" args] #_(§ throws Throwable)
-        (let [#_"Class" rt (.getReturnType method)]
-            (let [#_"IFn" fn (cast' IFn (.valAt (:fns this), (.getName method)))]
-                (when (nil? fn)
-                    (cond (= rt Void/TYPE)
-                        (do
-                            (§ return nil)
-                        )
-                        (= (.getName method) "equals")
-                        (do
-                            (§ return (= proxy (aget args 0)))
-                        )
-                        (= (.getName method) "hashCode")
-                        (do
-                            (§ return (System/identityHashCode proxy))
-                        )
-                        (= (.getName method) "toString")
-                        (do
-                            (§ return (str "Proxy: " (System/identityHashCode proxy)))
-                        )
-                    )
-                    (throw (UnsupportedOperationException.))
+        (let [#_"IFn" fn (cast' IFn (.valAt (:fns this), (.getName method))) #_"Class" rt (.getReturnType method)]
+            (if (nil? fn)
+                (cond
+                    (= rt Void/TYPE)                 nil
+                    (= (.getName method) "equals")   (= proxy (aget args 0))
+                    (= (.getName method) "hashCode") (System/identityHashCode proxy)
+                    (= (.getName method) "toString") (str "Proxy: " (System/identityHashCode proxy))
+                    :else                            (throw (UnsupportedOperationException.))
                 )
                 (let [#_"Object" ret (.applyTo fn, (ArraySeq'create-1 args))]
-                    (cond (= rt Void/TYPE)
-                        (do
-                            (§ return nil)
-                        )
+                    (cond
+                        (= rt Void/TYPE) nil
                         (.isPrimitive rt)
-                        (do
-                            (cond (= rt Character/TYPE)
-                                (do
-                                    (§ return ret)
-                                )
-                                (= rt Integer/TYPE)
-                                (do
-                                    (§ return (.intValue (cast Number ret)))
-                                )
-                                (= rt Long/TYPE)
-                                (do
-                                    (§ return (.longValue (cast Number ret)))
-                                )
-                                (= rt Float/TYPE)
-                                (do
-                                    (§ return (.floatValue (cast Number ret)))
-                                )
-                                (= rt Double/TYPE)
-                                (do
-                                    (§ return (.doubleValue (cast Number ret)))
-                                )
-                                (and (= rt Boolean/TYPE) (not (instance? Boolean ret)))
-                                (do
-                                    (§ return (if (nil? ret) Boolean/FALSE Boolean/TRUE))
-                                )
-                                (= rt Byte/TYPE)
-                                (do
-                                    (§ return (byte (.intValue (cast Number ret))))
-                                )
-                                (= rt Short/TYPE)
-                                (do
-                                    (§ return (short (.intValue (cast Number ret))))
-                                )
+                            (cond
+                                (= rt Character/TYPE) ret
+                                (= rt Integer/TYPE)   (.intValue (cast Number ret))
+                                (= rt Long/TYPE)      (.longValue (cast Number ret))
+                                (= rt Float/TYPE)     (.floatValue (cast Number ret))
+                                (= rt Double/TYPE)    (.doubleValue (cast Number ret))
+                                (and (= rt Boolean/TYPE) (not (instance? Boolean ret))) (if (nil? ret) Boolean/FALSE Boolean/TRUE)
+                                (= rt Byte/TYPE)      (byte (.intValue (cast Number ret)))
+                                (= rt Short/TYPE)     (short (.intValue (cast Number ret)))
+                                :else ret
                             )
-                        )
+                        :else ret
                     )
-                    ret
                 )
             )
         )
@@ -30343,15 +30162,10 @@
 
     #_method
     (§ defn #_"Object" (§ method next) [#_"RangeIterator" this]
-        (if (.hasNext this)
-            (do
-                (let [#_"Object" ret (:next this)]
-                    (§ ass this (assoc this :next (Numbers'addP-2oo (:next this), (:step this))))
-                    ret
-                )
-            )
-            (do
-                (throw (NoSuchElementException.))
+        (when (.hasNext this) => (throw (NoSuchElementException.))
+            (let [#_"Object" ret (:next this)]
+                (§ ass this (assoc this :next (Numbers'addP-2oo (:next this), (:step this))))
+                ret
             )
         )
     )
@@ -31515,15 +31329,15 @@
 
     (defn #_"Object[]" Reflector'boxArgs [#_"Class[]" params, #_"Object[]" args]
         (when (pos? (alength params))
-            (let [#_"Object[]" ret (make-array Object (alength params))]
+            (let [#_"Object[]" a (make-array Object (alength params))]
                 (loop-when-recur [#_"int" i 0] (< i (alength params)) [(inc i)]
-                    (let [#_"Object" arg (aget args i)]
+                    (let [#_"Object" ai (aget args i)]
                         (let [#_"Class" paramType (aget params i)]
-                            (aset ret i (Reflector'boxArg paramType, arg))
+                            (aset a i (Reflector'boxArg paramType, ai))
                         )
                     )
                 )
-                ret
+                a
             )
         )
     )
@@ -31649,49 +31463,33 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"Repeat" this, #_"IFn" f]
-        (let [#_"Object" ret (:val this)]
+        (let [#_"Object" r (:val this)]
             (if (= (:count this) Repeat'INFINITE)
-                (do
-                    (while true
-                        (§ ass ret (.invoke f, ret, (:val this)))
-                        (when (RT'isReduced ret)
-                            (§ return (.deref (cast' IDeref ret)))
-                        )
+                (loop [r r]
+                    (let [r (.invoke f, r, (:val this))]
+                        (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur r))
                     )
                 )
-                (do
-                    (loop-when-recur [#_"long" i 1] (< i (:count this)) [(inc i)]
-                        (§ ass ret (.invoke f, ret, (:val this)))
-                        (when (RT'isReduced ret)
-                            (§ return (.deref (cast' IDeref ret)))
-                        )
+                (loop-when [r r #_"long" i 1] (< i (:count this)) => r
+                    (let [r (.invoke f, r, (:val this))]
+                        (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur r (inc i)))
                     )
-                    ret
                 )
             )
         )
     )
 
     #_method
-    (§ defn #_"Object" (§ method reduce) [#_"Repeat" this, #_"IFn" f, #_"Object" start]
-        (let [#_"Object" ret start]
-            (if (= (:count this) Repeat'INFINITE)
-                (do
-                    (while true
-                        (§ ass ret (.invoke f, ret, (:val this)))
-                        (when (RT'isReduced ret)
-                            (§ return (.deref (cast' IDeref ret)))
-                        )
-                    )
+    (§ defn #_"Object" (§ method reduce) [#_"Repeat" this, #_"IFn" f, #_"Object" r]
+        (if (= (:count this) Repeat'INFINITE)
+            (loop [r r]
+                (let [r (.invoke f, r, (:val this))]
+                    (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur r))
                 )
-                (do
-                    (loop-when-recur [#_"long" i 0] (< i (:count this)) [(inc i)]
-                        (§ ass ret (.invoke f, ret, (:val this)))
-                        (when (RT'isReduced ret)
-                            (§ return (.deref (cast' IDeref ret)))
-                        )
-                    )
-                    ret
+            )
+            (loop-when [r r #_"long" i 0] (< i (:count this)) => r
+                (let [r (.invoke f, r, (:val this))]
+                    (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur r (inc i)))
                 )
             )
         )
@@ -37830,22 +37628,22 @@
     )
 
     (defn #_"ISeq" RT'arrayToList [#_"Object[]" a]
-        (let [#_"ISeq" ret nil]
+        (let [#_"ISeq" s nil]
             (loop-when-recur [#_"int" i (dec (alength a))] (<= 0 i) [(dec i)]
-                (§ ass ret (cast' ISeq (RT'cons (aget a i), ret)))
+                (§ ass s (cast' ISeq (RT'cons (aget a i), s)))
             )
-            ret
+            s
         )
     )
 
     (defn #_"Object[]" RT'object_array [#_"Object" sizeOrSeq]
         (if (instance? Number sizeOrSeq)
             (make-array Object (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq) #_"int" size (RT'count s) #_"Object[]" ret (make-array Object size)]
+            (let [#_"ISeq" s (RT'seq sizeOrSeq) #_"int" size (RT'count s) #_"Object[]" a (make-array Object size)]
                 (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                    (aset ret i (.first s))
+                    (aset a i (.first s))
                 )
-                ret
+                a
             )
         )
     )
@@ -37869,19 +37667,19 @@
                 (.toArray (.entrySet (cast Map coll)))
             (instance? String coll)
                 (let [#_"char[]" chars (.toCharArray (cast String coll))
-                      #_"Object[]" ret (make-array Object (alength chars))]
+                      #_"Object[]" a (make-array Object (alength chars))]
                     (loop-when-recur [#_"int" i 0] (< i (alength chars)) [(inc i)]
-                        (aset ret i (aget chars i))
+                        (aset a i (aget chars i))
                     )
-                    ret
+                    a
                 )
             (.isArray (.getClass coll))
                 (let [#_"ISeq" s (RT'seq coll)
-                      #_"Object[]" ret (make-array Object (RT'count s))]
-                    (loop-when-recur [#_"int" i 0 s s] (< i (alength ret)) [(inc i) (.next s)]
-                        (aset ret i (.first s))
+                      #_"Object[]" a (make-array Object (RT'count s))]
+                    (loop-when-recur [#_"int" i 0 s s] (< i (alength a)) [(inc i) (.next s)]
+                        (aset a i (.first s))
                     )
-                    ret
+                    a
                 )
             :else
                 (throw (RuntimeException. (str "Unable to convert: " (.getClass coll) " to Object[]")))
@@ -37889,11 +37687,11 @@
     )
 
     (defn #_"Object[]" RT'seqToArray [#_"ISeq" s]
-        (let [#_"Object[]" ret (make-array Object (RT'length s))]
+        (let [#_"Object[]" a (make-array Object (RT'length s))]
             (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (.next s)]
-                (aset ret i (.first s))
+                (aset a i (.first s))
             )
-            ret
+            a
         )
     )
 
@@ -37919,34 +37717,34 @@
     )
 
     (defn #_"Object" RT'seqToTypedArray-2 [#_"Class" type, #_"ISeq" s]
-        (let [#_"Object" ret (Array/newInstance type, (RT'length s))]
+        (let [#_"Object" a (Array/newInstance type, (RT'length s))]
             (condp = type
                 Integer/TYPE
                     (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (.next s)]
-                        (Array/set ret, i, (RT'intCast-1o (.first s)))
+                        (Array/set a, i, (RT'intCast-1o (.first s)))
                     )
                 Byte/TYPE
                     (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (.next s)]
-                        (Array/set ret, i, (RT'byteCast-1o (.first s)))
+                        (Array/set a, i, (RT'byteCast-1o (.first s)))
                     )
                 Float/TYPE
                     (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (.next s)]
-                        (Array/set ret, i, (RT'floatCast-1o (.first s)))
+                        (Array/set a, i, (RT'floatCast-1o (.first s)))
                     )
                 Short/TYPE
                     (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (.next s)]
-                        (Array/set ret, i, (RT'shortCast-1o (.first s)))
+                        (Array/set a, i, (RT'shortCast-1o (.first s)))
                     )
                 Character/TYPE
                     (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (.next s)]
-                        (Array/set ret, i, (RT'charCast-1o (.first s)))
+                        (Array/set a, i, (RT'charCast-1o (.first s)))
                     )
                 #_else
                     (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (.next s)]
-                        (Array/set ret, i, (.first s))
+                        (Array/set a, i, (.first s))
                     )
             )
-            ret
+            a
         )
     )
 
