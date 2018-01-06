@@ -3939,72 +3939,49 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"ArraySeq" this, #_"IFn" f]
-        (when (some? (:array this))
-            (let [#_"Object" r (aget (:array this) (:i this))]
-                (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                    (§ ass r (.invoke f, r, (aget (:array this) x)))
-                    (when (RT'isReduced r)
-                        (§ return (.deref (cast' IDeref r)))
+        (when-let [#_"Object[]" a (:array this)]
+            (let [#_"int" i (:i this) #_"int" n (alength a)]
+                (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
+                    (let [r (.invoke f, r, (aget a i))]
+                        (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur r (inc i)))
                     )
                 )
-                (§ return r)
             )
         )
-        nil
     )
 
     #_method
-    (§ defn #_"Object" (§ method reduce) [#_"ArraySeq" this, #_"IFn" f, #_"Object" start]
-        (when (some? (:array this))
-            (let [#_"Object" r (.invoke f, start, (aget (:array this) (:i this)))]
-                (loop-when-recur [#_"int" x (inc (:i this))] (< x (alength (:array this))) [(inc x)]
-                    (when (RT'isReduced r)
-                        (§ return (.deref (cast' IDeref r)))
-                    )
-                    (§ ass r (.invoke f, r, (aget (:array this) x)))
+    (§ defn #_"Object" (§ method reduce) [#_"ArraySeq" this, #_"IFn" f, #_"Object" r]
+        (when-let [#_"Object[]" a (:array this)]
+            (let [#_"int" i (:i this) #_"int" n (alength a)]
+                (loop-when [r (.invoke f, r, (aget a i)) i (inc i)] (< i n) => (if (RT'isReduced r) (.deref (cast' IDeref r)) r)
+                    (if (RT'isReduced r) (.deref (cast' IDeref r)) (recur (.invoke f, r, (aget a i)) (inc i)))
                 )
-                (when (RT'isReduced r)
-                    (§ return (.deref (cast' IDeref r)))
-                )
-                (§ return r)
             )
         )
-        nil
     )
 
     #_method
     (§ defn #_"int" (§ method indexOf) [#_"ArraySeq" this, #_"Object" o]
-        (when (some? (:array this))
-            (loop-when-recur [#_"int" j (:i this)] (< j (alength (:array this))) [(inc j)]
-                (when (Util'equals o, (aget (:array this) j))
-                    (§ return (- j (:i this)))
-                )
+        (when (some? (:array this)) => -1
+            (loop-when [#_"int" i (:i this)] (< i (alength (:array this))) => -1
+                (if (Util'equals o, (aget (:array this) i)) (- i (:i this)) (recur (inc i)))
             )
         )
-        -1
     )
 
     #_method
     (§ defn #_"int" (§ method lastIndexOf) [#_"ArraySeq" this, #_"Object" o]
-        (when (some? (:array this))
+        (when (some? (:array this)) => -1
             (if (nil? o)
-                (do
-                    (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
-                        (when (nil? (aget (:array this) j))
-                            (§ return (- j (:i this)))
-                        )
-                    )
+                (loop-when [#_"int" i (dec (alength (:array this)))] (<= (:i this) i) => -1
+                    (if (nil? (aget (:array this) i)) (- i (:i this)) (recur (dec i)))
                 )
-                (do
-                    (loop-when-recur [#_"int" j (dec (alength (:array this)))] (<= (:i this) j) [(dec j)]
-                        (when (.equals o, (aget (:array this) j))
-                            (§ return (- j (:i this)))
-                        )
-                    )
+                (loop-when [#_"int" i (dec (alength (:array this)))] (<= (:i this) i) => -1
+                    (if (.equals o, (aget (:array this) i)) (- i (:i this)) (recur (dec i)))
                 )
             )
         )
-        -1
     )
 )
 )
@@ -4046,34 +4023,25 @@
 
     #_method
     (§ defn #_"boolean" (§ method equiv) [#_"ASeq" this, #_"Object" obj]
-        (when (not (or (§ instance? Sequential obj) (instance? List obj)))
-            (§ return false)
-        )
-        (let [#_"ISeq" ms (RT'seq obj)]
-            (loop-when-recur [#_"ISeq" s (.seq this) ms ms] (some? s) [(.next s) (.next ms)]
-                (when (or (nil? ms) (not (Util'equiv-2oo (.first s), (.first ms))))
-                    (§ return false)
+        (and (or (§ instance? Sequential obj) (instance? List obj))
+            (let [#_"ISeq" ms (RT'seq obj)]
+                (loop-when [#_"ISeq" s (.seq this) ms ms] (some? s) => (nil? ms)
+                    (and (some? ms) (Util'equiv-2oo (.first s), (.first ms)) (recur (.next s) (.next ms)))
                 )
             )
-            (nil? ms)
         )
     )
 
     #_method
     (§ defn #_"boolean" (§ method equals) [#_"ASeq" this, #_"Object" obj]
-        (when (= this obj)
-            (§ return true)
-        )
-        (when (not (or (§ instance? Sequential obj) (instance? List obj)))
-            (§ return false)
-        )
-        (let [#_"ISeq" ms (RT'seq obj)]
-            (loop-when-recur [#_"ISeq" s (.seq this) ms ms] (some? s) [(.next s) (.next ms)]
-                (when (or (nil? ms) (not (Util'equals (.first s), (.first ms))))
-                    (§ return false)
+        (or (= this obj)
+            (and (or (§ instance? Sequential obj) (instance? List obj))
+                (let [#_"ISeq" ms (RT'seq obj)]
+                    (loop-when [#_"ISeq" s (.seq this) ms ms] (some? s) => (nil? ms)
+                        (and (some? ms) (Util'equals (.first s), (.first ms)) (recur (.next s) (.next ms)))
+                    )
                 )
             )
-            (nil? ms)
         )
     )
 
@@ -4100,13 +4068,8 @@
 
     #_override
     (§ defn #_"int" Counted'''count [#_"ASeq" this]
-        (let [#_"int" i 1]
-            (loop-when-recur [#_"ISeq" s (.next this) i i] (some? s) [(.next s) (inc i)]
-                (when (§ instance? Counted s)
-                    (§ return (+ i (.count s)))
-                )
-            )
-            i
+        (loop-when [#_"ISeq" s (.next this) #_"int" i 1] (some? s) => i
+            (if (§ instance? Counted s) (+ i (.count s)) (recur (.next s) (inc i)))
         )
     )
 
@@ -4187,12 +4150,9 @@
 
     #_method
     (§ defn #_"boolean" (§ method contains) [#_"ASeq" this, #_"Object" o]
-        (loop-when-recur [#_"ISeq" s (.seq this)] (some? s) [(.next s)]
-            (when (Util'equiv-2oo (.first s), o)
-                (§ return true)
-            )
+        (loop-when [#_"ISeq" s (.seq this)] (some? s) => false
+            (or (Util'equiv-2oo (.first s), o) (recur (.next s)))
         )
-        false
     )
 
     #_method
@@ -4222,12 +4182,9 @@
 
     #_method
     (§ defn #_"int" (§ method indexOf) [#_"ASeq" this, #_"Object" o]
-        (loop-when-recur [#_"ISeq" s (.seq this) #_"int" i 0] (some? s) [(.next s) (inc i)]
-            (when (Util'equiv-2oo (.first s), o)
-                (§ return i)
-            )
+        (loop-when [#_"ISeq" s (.seq this) #_"int" i 0] (some? s) => -1
+            (if (Util'equiv-2oo (.first s), o) i (recur (.next s) (inc i)))
         )
-        -1
     )
 
     #_method
