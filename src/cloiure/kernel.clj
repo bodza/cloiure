@@ -13348,20 +13348,12 @@
 
     (defn #_"boolean" Compiler'subsumes [#_"Class[]" c1, #_"Class[]" c2]
         ;; presumes matching lengths
-        (let [#_"Boolean" better false]
-            (loop-when-recur [#_"int" i 0] (< i (alength c1)) [(inc i)]
-                (when-not (= (aget c1 i) (aget c2 i)) ;; || c2[i].isPrimitive() && c1[i] == Object.class
-                    (if (or (and (not (.isPrimitive (aget c1 i))) (.isPrimitive (aget c2 i))) (.isAssignableFrom (aget c2 i), (aget c1 i)))
-                        (do
-                            (§ ass better true)
-                        )
-                        (do
-                            (§ return false)
-                        )
-                    )
+        (loop-when [#_"boolean" better false #_"int" i 0] (< i (alength c1)) => better
+            (when-not (= (aget c1 i) (aget c2 i)) => (recur better (inc i))
+                (and (or (and (not (.isPrimitive (aget c1 i))) (.isPrimitive (aget c2 i))) (.isAssignableFrom (aget c2 i), (aget c1 i)))
+                    (recur true (inc i))
                 )
             )
-            better
         )
     )
 
@@ -13369,7 +13361,7 @@
         (let [#_"StringBuilder" sb (StringBuilder.)]
             (loop-when-recur [#_"int" i 0] (< i (.count args)) [(inc i)]
                 (let [#_"Expr" arg (cast' Expr (.nth args, i))]
-                    (when (< 0 i)
+                    (when (pos? i)
                         (.append sb, ", ")
                     )
                     (.append sb, (if (and (.hasJavaClass arg) (some? (.getJavaClass arg))) (.getName (.getJavaClass arg)) "unknown"))
@@ -13393,12 +13385,8 @@
                                             (let [#_"Class" aclass (if (.hasJavaClass arg) (.getJavaClass arg) Object)]
                                                 (let [#_"Class" pclass (aget (.get paramlists, i) p)]
                                                     (if (and (.hasJavaClass arg) (= aclass pclass))
-                                                        (do
-                                                            (§ ass exact (inc exact))
-                                                        )
-                                                        (do
-                                                            (§ ass match (Reflector'paramArgTypeMatch pclass, aclass))
-                                                        )
+                                                        (§ ass exact (inc exact))
+                                                        (§ ass match (Reflector'paramArgTypeMatch pclass, aclass))
                                                     )
                                                 )
                                             )
@@ -13446,7 +13434,6 @@
                     (when tied
                         (throw (IllegalArgumentException. (str "More than one matching method found: " methodName)))
                     )
-
                     matchIdx
                 )
             )
@@ -13617,129 +13604,67 @@
     (defn- #_"Expr" Compiler'analyze-3 [#_"Context" context, #_"Object" form, #_"String" name]
         ;; todo symbol macro expansion?
         (try
-            (when (§ instance? LazySeq form)
-                (let [#_"Object" mform form]
-                    (§ ass form (RT'seq form))
-                    (when (nil? form)
-                        (§ ass form PersistentList'EMPTY)
-                    )
-                    (§ ass form (.withMeta (cast' IObj form), (RT'meta mform)))
-                )
-            )
-            (cond (nil? form)
-                (do
-                    (§ return Compiler'NIL_EXPR)
-                )
-                (= form Boolean/TRUE)
-                (do
-                    (§ return Compiler'TRUE_EXPR)
-                )
-                (= form Boolean/FALSE)
-                (do
-                    (§ return Compiler'FALSE_EXPR)
-                )
-            )
-            (let [#_"Class" fclass (.getClass form)]
-                (cond (= fclass (§ class Symbol))
-                    (do
-                        (§ return (Compiler'analyzeSymbol (cast' Symbol form)))
-                    )
-                    (= fclass (§ class Keyword))
-                    (do
-                        (§ return (Compiler'registerKeyword (cast' Keyword form)))
-                    )
-                    (instance? Number form)
-                    (do
-                        (§ return (NumberExpr'parse (cast Number form)))
-                    )
-                    (= fclass String)
-                    (do
-                        (§ return (StringExpr'new (.intern (cast String form))))
-                    )
-                    (and (§ instance? IPersistentCollection form) (not (§ instance? IRecord form)) (not (§ instance? IType form)) (zero? (.count (cast' IPersistentCollection form))))
-                    (do
-                        (let [#_"Expr" ret (EmptyExpr'new form)]
-                            (when (some? (RT'meta form))
-                                (§ ass ret (MetaExpr'new ret, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (.meta (cast' IObj form)))))
+            (let [form
+                    (when (§ instance? LazySeq form) => form
+                        (.withMeta (cast' IObj (or (RT'seq form) PersistentList'EMPTY)), (RT'meta form))
+                    )]
+                (cond
+                    (nil? form)            Compiler'NIL_EXPR
+                    (= form Boolean/TRUE)  Compiler'TRUE_EXPR
+                    (= form Boolean/FALSE) Compiler'FALSE_EXPR
+                    :else
+                        (let [#_"Class" c (.getClass form)]
+                            (cond
+                                (= c (§ class Symbol))               (Compiler'analyzeSymbol (cast' Symbol form))
+                                (= c (§ class Keyword))              (Compiler'registerKeyword (cast' Keyword form))
+                                (instance? Number form)              (NumberExpr'parse (cast Number form))
+                                (= c String)                         (StringExpr'new (.intern (cast String form)))
+                                (and (§ instance? IPersistentCollection form) (not (§ instance? IRecord form)) (not (§ instance? IType form)) (zero? (.count (cast' IPersistentCollection form))))
+                                    (let-when [#_"Expr" e (EmptyExpr'new form)] (some? (RT'meta form)) => e
+                                        (MetaExpr'new e, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (.meta (cast' IObj form))))
+                                    )
+                                (§ instance? ISeq form)              (Compiler'analyzeSeq context, (cast' ISeq form), name)
+                                (§ instance? IPersistentVector form) (VectorExpr'parse context, (cast' IPersistentVector form))
+                                (§ instance? IRecord form)           (ConstantExpr'new form)
+                                (§ instance? IType form)             (ConstantExpr'new form)
+                                (§ instance? IPersistentMap form)    (MapExpr'parse context, (cast' IPersistentMap form))
+                                (§ instance? IPersistentSet form)    (SetExpr'parse context, (cast' IPersistentSet form))
+                                :else                                (ConstantExpr'new form)
                             )
-                            (§ return ret)
                         )
-                    )
-                    (§ instance? ISeq form)
-                    (do
-                        (§ return (Compiler'analyzeSeq context, (cast' ISeq form), name))
-                    )
-                    (§ instance? IPersistentVector form)
-                    (do
-                        (§ return (VectorExpr'parse context, (cast' IPersistentVector form)))
-                    )
-                    (§ instance? IRecord form)
-                    (do
-                        (§ return (ConstantExpr'new form))
-                    )
-                    (§ instance? IType form)
-                    (do
-                        (§ return (ConstantExpr'new form))
-                    )
-                    (§ instance? IPersistentMap form)
-                    (do
-                        (§ return (MapExpr'parse context, (cast' IPersistentMap form)))
-                    )
-                    (§ instance? IPersistentSet form)
-                    (do
-                        (§ return (SetExpr'parse context, (cast' IPersistentSet form)))
-                    )
                 )
-
-                (ConstantExpr'new form)
             )
             (catch Throwable e
-                (if (not (§ instance? CompilerException e))
-                    (do
-                        (throw (CompilerException'new (Compiler'lineDeref), (Compiler'columnDeref), e))
-                    )
-                    (do
-                        (throw (cast' CompilerException e))
-                    )
-                )
+                (throw (if (§ instance? CompilerException e) (cast' CompilerException e) (CompilerException'new (Compiler'lineDeref), (Compiler'columnDeref), e)))
             )
         )
     )
 
     (defn #_"Var" Compiler'isMacro [#_"Object" op]
         ;; no local macros for now
-        (when (and (§ instance? Symbol op) (some? (Compiler'referenceLocal (cast' Symbol op))))
-            (§ return nil)
-        )
-        (when (or (§ instance? Symbol op) (§ instance? Var op))
-            (let [#_"Var" v (if (§ instance? Var op) (cast' Var op) (Compiler'lookupVar-3 (cast' Symbol op), false, false))]
-                (when (and (some? v) (.isMacro v))
-                    (when (and (not= (:ns v) (Compiler'currentNS)) (not (.isPublic v)))
-                        (throw (IllegalStateException. (str "var: " v " is not public")))
+        (when-not (and (§ instance? Symbol op) (some? (Compiler'referenceLocal (cast' Symbol op))))
+            (when (or (§ instance? Symbol op) (§ instance? Var op))
+                (let [#_"Var" v (if (§ instance? Var op) (cast' Var op) (Compiler'lookupVar-3 (cast' Symbol op), false, false))]
+                    (when (and (some? v) (.isMacro v))
+                        (when (or (= (:ns v) (Compiler'currentNS)) (.isPublic v)) => (throw (IllegalStateException. (str "var: " v " is not public")))
+                            v
+                        )
                     )
-                    (§ return v)
                 )
             )
         )
-        nil
     )
 
     (defn #_"IFn" Compiler'isInline [#_"Object" op, #_"int" arity]
         ;; no local inlines for now
-        (when (and (§ instance? Symbol op) (some? (Compiler'referenceLocal (cast' Symbol op))))
-            (§ return nil)
-        )
-        (when (or (§ instance? Symbol op) (§ instance? Var op))
-            (let [#_"Var" v (if (§ instance? Var op) (cast' Var op) (Compiler'lookupVar-2 (cast' Symbol op), false))]
-                (when (some? v)
-                    (when (and (not= (:ns v) (Compiler'currentNS)) (not (.isPublic v)))
-                        (throw (IllegalStateException. (str "var: " v " is not public")))
-                    )
-                    (let [#_"IFn" ret (cast' IFn (RT'get-2 (.meta v), Compiler'inlineKey))]
-                        (when (some? ret)
+        (when-not (and (§ instance? Symbol op) (some? (Compiler'referenceLocal (cast' Symbol op))))
+            (when (or (§ instance? Symbol op) (§ instance? Var op))
+                (when-let [#_"Var" v (if (§ instance? Var op) (cast' Var op) (Compiler'lookupVar-2 (cast' Symbol op), false))]
+                    (when (or (= (:ns v) (Compiler'currentNS)) (.isPublic v)) => (throw (IllegalStateException. (str "var: " v " is not public")))
+                        (when-let [#_"IFn" f (cast' IFn (RT'get-2 (.meta v), Compiler'inlineKey))]
                             (let [#_"IFn" arityPred (cast' IFn (RT'get-2 (.meta v), Compiler'inlineAritiesKey))]
                                 (when (or (nil? arityPred) (RT'booleanCast-1o (.invoke arityPred, arity)))
-                                    (§ return ret)
+                                    f
                                 )
                             )
                         )
@@ -13747,7 +13672,6 @@
                 )
             )
         )
-        nil
     )
 
     (defn #_"boolean" Compiler'namesStaticMember [#_"Symbol" sym]
@@ -13755,13 +13679,8 @@
     )
 
     (defn #_"Object" Compiler'preserveTag [#_"ISeq" src, #_"Object" dst]
-        (let [#_"Symbol" tag (Compiler'tagOf src)]
-            (when (and (some? tag) (§ instance? IObj dst))
-                (let [#_"IPersistentMap" meta (RT'meta dst)]
-                    (§ return (.withMeta (cast' IObj dst), (cast' IPersistentMap (RT'assoc meta, RT'TAG_KEY, tag))))
-                )
-            )
-            dst
+        (let-when [#_"Symbol" tag (Compiler'tagOf src)] (and (some? tag) (§ instance? IObj dst)) => dst
+            (.withMeta (cast' IObj dst), (cast' IPersistentMap (RT'assoc (RT'meta dst), RT'TAG_KEY, tag)))
         )
     )
 
@@ -13772,18 +13691,20 @@
     (def- #_"Object" Compiler'MACRO_CHECK_LOCK (Object.))
 
     (defn- #_"Var" Compiler'ensureMacroCheck [] #_(§ throws ClassNotFoundException, IOException)
-        (when (nil? Compiler'MACRO_CHECK)
+        (or Compiler'MACRO_CHECK
             (§ sync Compiler'MACRO_CHECK_LOCK
-                (when (nil? Compiler'MACRO_CHECK)
-                    (§ ass Compiler'MACRO_CHECK_LOADING true)
-                    (RT'load-1 "cloiure/spec/alpha")
-                    (RT'load-1 "cloiure/core/specs/alpha")
-                    (§ ass Compiler'MACRO_CHECK (Var'find (Symbol'intern "cloiure.spec.alpha", "macroexpand-check")))
-                    (§ ass Compiler'MACRO_CHECK_LOADING false)
+                (or Compiler'MACRO_CHECK
+                    (do
+                        (§ ass Compiler'MACRO_CHECK_LOADING true)
+                        (RT'load-1 "cloiure/spec/alpha")
+                        (RT'load-1 "cloiure/core/specs/alpha")
+                        (§ ass Compiler'MACRO_CHECK (Var'find (Symbol'intern "cloiure.spec.alpha", "macroexpand-check")))
+                        (§ ass Compiler'MACRO_CHECK_LOADING false)
+                        Compiler'MACRO_CHECK
+                    )
                 )
             )
         )
-        Compiler'MACRO_CHECK
     )
 
     (defn #_"void" Compiler'checkSpecs [#_"Var" v, #_"ISeq" form]
