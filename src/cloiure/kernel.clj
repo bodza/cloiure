@@ -13798,69 +13798,41 @@
     )
 
     (defn #_"Object" Compiler'macroexpand [#_"Object" form]
-        (let [#_"Object" exf (Compiler'macroexpand1 form)]
-            (when-not (= exf form)
-                (§ return (Compiler'macroexpand exf))
-            )
-            form
+        (let [#_"Object" f (Compiler'macroexpand1 form)]
+            (if (= f form) form (recur f))
         )
     )
 
     (defn- #_"Expr" Compiler'analyzeSeq [#_"Context" context, #_"ISeq" form, #_"String" name]
-        (let [#_"Object" line (Compiler'lineDeref)]
-            (let [#_"Object" column (Compiler'columnDeref)]
-                (when (and (some? (RT'meta form)) (.containsKey (RT'meta form), RT'LINE_KEY))
-                    (§ ass line (.valAt (RT'meta form), RT'LINE_KEY))
-                )
-                (when (and (some? (RT'meta form)) (.containsKey (RT'meta form), RT'COLUMN_KEY))
-                    (§ ass column (.valAt (RT'meta form), RT'COLUMN_KEY))
-                )
-                (Var'pushThreadBindings (RT'map Compiler'LINE, line, Compiler'COLUMN, column))
-                (try
-                    (let [#_"Object" me (Compiler'macroexpand1 form)]
-                        (when-not (= me form)
-                            (§ return (Compiler'analyze-3 context, me, name))
-                        )
-
-                        (let [#_"Object" op (RT'first form)]
-                            (when (nil? op)
-                                (throw (IllegalArgumentException. (str "Can't call nil, form: " form)))
-                            )
-                            (let [#_"IFn" inline (Compiler'isInline op, (RT'count (RT'next form)))]
-                                (when (some? inline)
-                                    (§ return (Compiler'analyze-2 context, (Compiler'preserveTag form, (.applyTo inline, (RT'next form)))))
-                                )
-                                (§ let [#_"IParser" p]
-                                    (cond (.equals op, Compiler'FN)
-                                        (do
-                                            (FnExpr'parse context, form, name)
-                                        )
-                                        (some? (§ ass p (cast' IParser (.valAt Compiler'specials, op))))
-                                        (do
+        (let [#_"IPersistentMap" meta (RT'meta form)
+              #_"Object" line   (if (and (some? meta) (.containsKey meta, RT'LINE_KEY))   (.valAt meta, RT'LINE_KEY)   (Compiler'lineDeref))
+              #_"Object" column (if (and (some? meta) (.containsKey meta, RT'COLUMN_KEY)) (.valAt meta, RT'COLUMN_KEY) (Compiler'columnDeref))]
+            (Var'pushThreadBindings (RT'map Compiler'LINE, line, Compiler'COLUMN, column))
+            (try
+                (let-when [#_"Object" me (Compiler'macroexpand1 form)] (= me form) => (Compiler'analyze-3 context, me, name)
+                    (let-when [#_"Object" op (RT'first form)] (some? op) => (throw (IllegalArgumentException. (str "Can't call nil, form: " form)))
+                        (let [#_"IFn" inline (Compiler'isInline op, (RT'count (RT'next form)))]
+                            (cond
+                                (some? inline)
+                                    (Compiler'analyze-2 context, (Compiler'preserveTag form, (.applyTo inline, (RT'next form))))
+                                (.equals op, Compiler'FN)
+                                    (FnExpr'parse context, form, name)
+                                :else
+                                    (let [#_"IParser" p (cast' IParser (.valAt Compiler'specials, op))]
+                                        (if (some? p)
                                             (.parse p, context, form)
-                                        )
-                                        :else
-                                        (do
                                             (InvokeExpr'parse context, form)
                                         )
                                     )
-                                )
                             )
                         )
                     )
-                    (catch Throwable e
-                        (if (not (§ instance? CompilerException e))
-                            (do
-                                (throw (CompilerException'new (Compiler'lineDeref), (Compiler'columnDeref), e))
-                            )
-                            (do
-                                (throw (cast' CompilerException e))
-                            )
-                        )
-                    )
-                    (finally
-                        (Var'popThreadBindings)
-                    )
+                )
+                (catch Throwable e
+                    (throw (if (§ instance? CompilerException e) (cast' CompilerException e) (CompilerException'new (Compiler'lineDeref), (Compiler'columnDeref), e)))
+                )
+                (finally
+                    (Var'popThreadBindings)
                 )
             )
         )
@@ -13871,87 +13843,61 @@
     )
 
     (defn #_"Object" Compiler'eval-2 [#_"Object" form, #_"boolean" freshLoader]
-        (let [#_"boolean" createdLoader false]
-            (when true ;; !LOADER.isBound()
-                (Var'pushThreadBindings (RT'map Compiler'LOADER, (RT'makeClassLoader)))
-                (§ ass createdLoader true)
-            )
-            (try
-                (let [#_"Object" line (Compiler'lineDeref)]
-                    (let [#_"Object" column (Compiler'columnDeref)]
-                        (when (and (some? (RT'meta form)) (.containsKey (RT'meta form), RT'LINE_KEY))
-                            (§ ass line (.valAt (RT'meta form), RT'LINE_KEY))
-                        )
-                        (when (and (some? (RT'meta form)) (.containsKey (RT'meta form), RT'COLUMN_KEY))
-                            (§ ass column (.valAt (RT'meta form), RT'COLUMN_KEY))
-                        )
-                        (Var'pushThreadBindings (RT'map Compiler'LINE, line, Compiler'COLUMN, column))
-                        (try
-                            (§ ass form (Compiler'macroexpand form))
-                            (cond (and (§ instance? ISeq form) (Util'equals (RT'first form), Compiler'DO))
-                                (do
-                                    (let [#_"ISeq" s (RT'next form)]
-                                        (loop-when-recur [s s] (some? (RT'next s)) [(RT'next s)]
-                                            (Compiler'eval-2 (RT'first s), false)
-                                        )
-                                        (Compiler'eval-2 (RT'first s), false)
+        (Var'pushThreadBindings (RT'map Compiler'LOADER, (RT'makeClassLoader)))
+        (try
+            (let [#_"IPersistentMap" meta (RT'meta form)
+                  #_"Object" line   (if (and (some? meta) (.containsKey meta, RT'LINE_KEY))   (.valAt meta, RT'LINE_KEY)   (Compiler'lineDeref))
+                  #_"Object" column (if (and (some? meta) (.containsKey meta, RT'COLUMN_KEY)) (.valAt meta, RT'COLUMN_KEY) (Compiler'columnDeref))]
+                (Var'pushThreadBindings (RT'map Compiler'LINE, line, Compiler'COLUMN, column))
+                (try
+                    (let [form (Compiler'macroexpand form)]
+                        (cond
+                            (and (§ instance? ISeq form) (Util'equals (RT'first form), Compiler'DO))
+                                (loop-when-recur [#_"ISeq" s (RT'next form)] (some? (RT'next s)) [(RT'next s)] => (Compiler'eval-2 (RT'first s), false)
+                                    (Compiler'eval-2 (RT'first s), false)
+                                )
+                            (or (§ instance? IType form) (and (§ instance? IPersistentCollection form) (not (and (§ instance? Symbol (RT'first form)) (.startsWith (:name (cast' Symbol (RT'first form))), "def")))))
+                                (let [#_"ObjExpr" fexpr (cast' ObjExpr (Compiler'analyze-3 :Context'EXPRESSION, (RT'list-3 Compiler'FN, PersistentVector'EMPTY, form), (str "eval" (RT'nextID))))]
+                                    (let [#_"IFn" fn (cast' IFn (.eval fexpr))]
+                                        (.invoke fn)
                                     )
                                 )
-                                (or (§ instance? IType form) (and (§ instance? IPersistentCollection form) (not (and (§ instance? Symbol (RT'first form)) (.startsWith (:name (cast' Symbol (RT'first form))), "def")))))
-                                (do
-                                    (let [#_"ObjExpr" fexpr (cast' ObjExpr (Compiler'analyze-3 :Context'EXPRESSION, (RT'list-3 Compiler'FN, PersistentVector'EMPTY, form), (str "eval" (RT'nextID))))]
-                                        (let [#_"IFn" fn (cast' IFn (.eval fexpr))]
-                                            (.invoke fn)
-                                        )
-                                    )
+                            :else
+                                (let [#_"Expr" expr (Compiler'analyze-2 :Context'EVAL, form)]
+                                    (.eval expr)
                                 )
-                                :else
-                                (do
-                                    (let [#_"Expr" expr (Compiler'analyze-2 :Context'EVAL, form)]
-                                        (.eval expr)
-                                    )
-                                )
-                            )
-                            (finally
-                                (Var'popThreadBindings)
-                            )
                         )
                     )
-                )
-                (finally
-                    (when createdLoader
+                    (finally
                         (Var'popThreadBindings)
                     )
                 )
+            )
+            (finally
+                (Var'popThreadBindings)
             )
         )
     )
 
     (defn- #_"int" Compiler'registerConstant [#_"Object" o]
-        (when (not (.isBound Compiler'CONSTANTS))
-            (§ return -1)
-        )
-        (let [#_"PersistentVector" v (cast' PersistentVector (.deref Compiler'CONSTANTS))]
-            (let [#_"IdentityHashMap<Object, Integer>" ids (cast IdentityHashMap #_"<Object, Integer>" (.deref Compiler'CONSTANT_IDS))]
-                (let [#_"Integer" i (.get ids, o)]
-                    (when (some? i)
-                        (§ return i)
+        (when (.isBound Compiler'CONSTANTS) => -1
+            (let [#_"PersistentVector" v (cast' PersistentVector (.deref Compiler'CONSTANTS))
+                  #_"IdentityHashMap<Object, Integer>" ids (cast IdentityHashMap #_"<Object, Integer>" (.deref Compiler'CONSTANT_IDS))]
+                (or (.get ids, o)
+                    (do
+                        (.set Compiler'CONSTANTS, (RT'conj v, o))
+                        (.put ids, o, (.count v))
+                        (.count v)
                     )
-                    (.set Compiler'CONSTANTS, (RT'conj v, o))
-                    (.put ids, o, (.count v))
-                    (.count v)
                 )
             )
         )
     )
 
     (defn- #_"KeywordExpr" Compiler'registerKeyword [#_"Keyword" keyword]
-        (when (not (.isBound Compiler'KEYWORDS))
-            (§ return (KeywordExpr'new keyword))
-        )
-
-        (let [#_"IPersistentMap" keywordsMap (cast' IPersistentMap (.deref Compiler'KEYWORDS))]
-            (let [#_"Object" id (RT'get-2 keywordsMap, keyword)]
+        (when (.isBound Compiler'KEYWORDS) => (KeywordExpr'new keyword)
+            (let [#_"IPersistentMap" keywordsMap (cast' IPersistentMap (.deref Compiler'KEYWORDS))
+                  #_"Object" id (RT'get-2 keywordsMap, keyword)]
                 (when (nil? id)
                     (.set Compiler'KEYWORDS, (RT'assoc keywordsMap, keyword, (Compiler'registerConstant keyword)))
                 )
@@ -13961,114 +13907,87 @@
     )
 
     (defn- #_"int" Compiler'registerKeywordCallsite [#_"Keyword" keyword]
-        (when (not (.isBound Compiler'KEYWORD_CALLSITES))
-            (throw (IllegalAccessError. "KEYWORD_CALLSITES is not bound"))
-        )
-
-        (let [#_"IPersistentVector" keywordCallsites (cast' IPersistentVector (.deref Compiler'KEYWORD_CALLSITES))]
-            (§ ass keywordCallsites (.cons keywordCallsites, keyword))
-            (.set Compiler'KEYWORD_CALLSITES, keywordCallsites)
-            (dec (.count keywordCallsites))
+        (when (.isBound Compiler'KEYWORD_CALLSITES) => (throw (IllegalAccessError. "KEYWORD_CALLSITES is not bound"))
+            (let [#_"IPersistentVector" callsites (-> (cast' IPersistentVector (.deref Compiler'KEYWORD_CALLSITES)) (.cons keyword))]
+                (.set Compiler'KEYWORD_CALLSITES, callsites)
+                (dec (.count callsites))
+            )
         )
     )
 
     (defn- #_"int" Compiler'registerProtocolCallsite [#_"Var" v]
-        (when (not (.isBound Compiler'PROTOCOL_CALLSITES))
-            (throw (IllegalAccessError. "PROTOCOL_CALLSITES is not bound"))
-        )
-
-        (let [#_"IPersistentVector" protocolCallsites (cast' IPersistentVector (.deref Compiler'PROTOCOL_CALLSITES))]
-            (§ ass protocolCallsites (.cons protocolCallsites, v))
-            (.set Compiler'PROTOCOL_CALLSITES, protocolCallsites)
-            (dec (.count protocolCallsites))
+        (when (.isBound Compiler'PROTOCOL_CALLSITES) => (throw (IllegalAccessError. "PROTOCOL_CALLSITES is not bound"))
+            (let [#_"IPersistentVector" callsites (-> (cast' IPersistentVector (.deref Compiler'PROTOCOL_CALLSITES)) (.cons v))]
+                (.set Compiler'PROTOCOL_CALLSITES, callsites)
+                (dec (.count callsites))
+            )
         )
     )
 
     (defn- #_"void" Compiler'registerVarCallsite [#_"Var" v]
-        (when (not (.isBound Compiler'VAR_CALLSITES))
-            (throw (IllegalAccessError. "VAR_CALLSITES is not bound"))
-        )
-
-        (let [#_"IPersistentCollection" varCallsites (cast' IPersistentCollection (.deref Compiler'VAR_CALLSITES))]
-            (§ ass varCallsites (.cons varCallsites, v))
-            (.set Compiler'VAR_CALLSITES, varCallsites)
-            nil
-        )
-    )
-
-    (defn #_"ISeq" Compiler'fwdPath [#_"PathNode" p1]
-        (let [#_"ISeq" ret nil]
-            (loop-when-recur [p1 p1] (some? p1) [(:parent p1)]
-                (§ ass ret (RT'cons p1, ret))
+        (when (.isBound Compiler'VAR_CALLSITES) => (throw (IllegalAccessError. "VAR_CALLSITES is not bound"))
+            (let [#_"IPersistentCollection" callsites (-> (cast' IPersistentCollection (.deref Compiler'VAR_CALLSITES)) (.cons v))]
+                (.set Compiler'VAR_CALLSITES, callsites)
+                nil
             )
-            ret
         )
     )
 
-    (defn #_"PathNode" Compiler'commonPath [#_"PathNode" n1, #_"PathNode" n2]
-        (let [#_"ISeq" xp (Compiler'fwdPath n1)]
-            (let [#_"ISeq" yp (Compiler'fwdPath n2)]
-                (when-not (= (RT'first xp) (RT'first yp))
-                    (§ return nil)
-                )
-                (while (and (some? (RT'second xp)) (= (RT'second xp) (RT'second yp)))
-                    (§ ass xp (.next xp))
-                    (§ ass yp (.next yp))
-                )
-                (cast' PathNode (RT'first xp))
+    (defn #_"ISeq" Compiler'fwdPath [#_"PathNode" p]
+        (loop-when-recur [#_"ISeq" s nil p p] (some? p) [(RT'cons p, s) (:parent p)] => s)
+    )
+
+    (defn #_"PathNode" Compiler'commonPath [#_"PathNode" p1, #_"PathNode" p2]
+        (let [#_"ISeq" s1 (Compiler'fwdPath p1) #_"ISeq" s2 (Compiler'fwdPath p2)]
+            (when (= (RT'first s1) (RT'first s2))
+                (loop-when-recur [s1 s1 s2 s2]
+                                 (and (some? (RT'second s1)) (= (RT'second s1) (RT'second s2)))
+                                 [(.next s1) (.next s2)]
+                              => (cast' PathNode (RT'first s1)))
             )
         )
     )
 
     (defn- #_"Expr" Compiler'analyzeSymbol [#_"Symbol" sym]
         (let [#_"Symbol" tag (Compiler'tagOf sym)]
-            (cond (nil? (:ns sym)) ;; ns-qualified syms are always Vars
-                (do
-                    (let [#_"LocalBinding" b (Compiler'referenceLocal sym)]
-                        (when (some? b)
-                            (§ return (LocalBindingExpr'new b, tag))
+            (or
+                (cond
+                    (nil? (:ns sym)) ;; ns-qualified syms are always Vars
+                        (when-let [#_"LocalBinding" b (Compiler'referenceLocal sym)]
+                            (LocalBindingExpr'new b, tag)
                         )
-                    )
-                )
-                (nil? (Compiler'namespaceFor-1 sym))
-                (do
-                    (let [#_"Symbol" nsSym (Symbol'intern (:ns sym))]
-                        (let [#_"Class" c (HostExpr'maybeClass nsSym, false)]
-                            (when (some? c)
-                                (when (some? (Reflector'getField c, (:name sym), true))
-                                    (§ return (StaticFieldExpr'new (Compiler'lineDeref), (Compiler'columnDeref), c, (:name sym), tag))
-                                )
+                    (nil? (Compiler'namespaceFor-1 sym))
+                        (when-let [#_"Class" c (HostExpr'maybeClass (Symbol'intern (:ns sym)), false)]
+                            (if (some? (Reflector'getField c, (:name sym), true))
+                                (StaticFieldExpr'new (Compiler'lineDeref), (Compiler'columnDeref), c, (:name sym), tag)
                                 (throw (RuntimeException. (str "Unable to find static field: " (:name sym) " in " c)))
                             )
                         )
+                )
+                (let [#_"Object" o (Compiler'resolve-1 sym)]
+                    (cond
+                        (§ instance? Var o)
+                            (let [#_"Var" v (cast' Var o)]
+                                (cond
+                                    (some? (Compiler'isMacro v))
+                                        (throw (RuntimeException. (str "Can't take value of a macro: " v)))
+                                    (RT'booleanCast-1o (RT'get-2 (.meta v), RT'CONST_KEY))
+                                        (Compiler'analyze-2 :Context'EXPRESSION, (RT'list-2 Compiler'QUOTE, (.get v)))
+                                    :else
+                                        (do
+                                            (Compiler'registerVar v)
+                                            (VarExpr'new v, tag)
+                                        )
+                                )
+                            )
+                        (instance? Class o)
+                            (ConstantExpr'new o)
+                        (§ instance? Symbol o)
+                            (UnresolvedVarExpr'new (cast' Symbol o))
+                        :else
+                            (throw (RuntimeException. (str "Unable to resolve symbol: " sym " in this context")))
                     )
                 )
-            )
-            (let [#_"Object" o (Compiler'resolve-1 sym)]
-                (cond (§ instance? Var o)
-                    (do
-                        (let [#_"Var" v (cast' Var o)]
-                            (when (some? (Compiler'isMacro v))
-                                (throw (RuntimeException. (str "Can't take value of a macro: " v)))
-                            )
-                            (when (RT'booleanCast-1o (RT'get-2 (.meta v), RT'CONST_KEY))
-                                (§ return (Compiler'analyze-2 :Context'EXPRESSION, (RT'list-2 Compiler'QUOTE, (.get v))))
-                            )
-                            (Compiler'registerVar v)
-                            (§ return (VarExpr'new v, tag))
-                        )
-                    )
-                    (instance? Class o)
-                    (do
-                        (§ return (ConstantExpr'new o))
-                    )
-                    (§ instance? Symbol o)
-                    (do
-                        (§ return (UnresolvedVarExpr'new (cast' Symbol o)))
-                    )
-                )
-
-                (throw (RuntimeException. (str "Unable to resolve symbol: " sym " in this context")))
             )
         )
     )
