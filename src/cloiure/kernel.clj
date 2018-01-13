@@ -31,6 +31,10 @@
         (w' [w] (if (= '=> (first w)) (second w)))]
     (defmacro recur-if [y z & w] (let [z (z' z) _ (w' w)] `(if ~y ~z ~_))))
 
+(defmacro cond-let [x y & w]
+    (let [x (if (vector? x) x [`_# x]) z (when (seq w) `(cond-let ~@w))]
+        `(if-let ~x ~y ~z)))
+
 (def % rem)
 (def & bit-and)
 (def | bit-or)
@@ -18087,7 +18091,7 @@
             (let-when-not [#_"IFn" fn (aget LispReader'dispatchMacros ch)] (some? fn) => (.invoke fn, reader, ch, pendingForms)
                 (LispReader'unread (cast PushbackReader reader), ch)
                 (or (.invoke LispReader'ctorReader, reader, ch, (LispReader'ensurePending pendingForms))
-                    (throw (RuntimeException. (String/format "No dispatch macro for: %c", (object-array [ (char ch) ]))))
+                    (throw (RuntimeException. (str "No dispatch macro for: " (char ch))))
                 )
             )
         )
@@ -18467,32 +18471,21 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"ListReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (let [#_"int" line -1]
-                (let [#_"int" column -1]
-                    (when (§ instance? LineNumberingPushbackReader r)
-                        (§ ass line (.getLineNumber (cast' LineNumberingPushbackReader r)))
-                        (§ ass column (dec (.getColumnNumber (cast' LineNumberingPushbackReader r))))
-                    )
-                    (let [#_"List" list (LispReader'readDelimitedList \), r, true, (LispReader'ensurePending pendingForms))]
-                        (when (.isEmpty list)
-                            (§ return PersistentList'EMPTY)
-                        )
-                        (let [#_"IObj" s (cast' IObj (PersistentList'create list))]
-                            (if (not= line -1)
-                                (do
-                                    (.withMeta s, (RT'map
-                                        (object-array [
-                                            RT'LINE_KEY   line
-                                            RT'COLUMN_KEY column
-                                        ])
-                                    ))
-                                )
-                                (do
-                                    s
-                                )
-                            )
-                        )
+        (let [#_"PushbackReader" r (cast PushbackReader reader)
+              [#_"int" line #_"int" column]
+                (when (§ instance? LineNumberingPushbackReader r) => [-1 -1]
+                    [(.getLineNumber (cast' LineNumberingPushbackReader r)) (dec (.getColumnNumber (cast' LineNumberingPushbackReader r)))]
+                )
+              #_"List" list (LispReader'readDelimitedList \), r, true, (LispReader'ensurePending pendingForms))]
+            (when-not (.isEmpty list) => PersistentList'EMPTY
+                (let [#_"IObj" s (cast' IObj (PersistentList'create list))]
+                    (when-not (= line -1) => s
+                        (.withMeta s, (RT'map
+                            (object-array [
+                                RT'LINE_KEY   line
+                                RT'COLUMN_KEY column
+                            ])
+                        ))
                     )
                 )
             )
@@ -18508,46 +18501,37 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"EvalReader" this, #_"Object" reader, #_"Object" eq, #_"Object" pendingForms]
-        (when (not (RT'booleanCast-1o (.deref RT'READEVAL)))
-            (throw (RuntimeException. "EvalReader not allowed when *read-eval* is false."))
-        )
-
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (let [#_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
-                (cond (§ instance? Symbol o)
-                    (do
+        (when (RT'booleanCast-1o (.deref RT'READEVAL)) => (throw (RuntimeException. "EvalReader not allowed when *read-eval* is false."))
+            (let [#_"PushbackReader" r (cast PushbackReader reader)
+                  #_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
+                (cond
+                    (§ instance? Symbol o)
                         (RT'classForName-1 (.toString o))
-                    )
                     (§ instance? IPersistentList o)
-                    (do
                         (let [#_"Symbol" fs (cast' Symbol (RT'first o))]
-                            (when (.equals fs, LispReader'THE_VAR)
-                                (let [#_"Symbol" vs (cast' Symbol (RT'second o))]
-                                    (§ return (RT'var (:ns vs), (:name vs)))
-                                )
-                            )
-                            (when (.endsWith (:name fs), ".")
-                                (let [#_"Object[]" args (RT'toArray (RT'next o))]
-                                    (§ return (Reflector'invokeConstructor (RT'classForName-1 (.substring (:name fs), 0, (dec (.length (:name fs))))), args))
-                                )
-                            )
-                            (when (Compiler'namesStaticMember fs)
-                                (let [#_"Object[]" args (RT'toArray (RT'next o))]
-                                    (§ return (Reflector'invokeStaticMethod-3s (:ns fs), (:name fs), args))
-                                )
-                            )
-                            (let [#_"Object" v (Compiler'maybeResolveIn (Compiler'currentNS), fs)]
-                                (when (§ instance? Var v)
-                                    (§ return (.applyTo (cast' IFn v), (RT'next o)))
-                                )
-                                (throw (RuntimeException. (str "Can't resolve " fs)))
+                            (cond
+                                (.equals fs, LispReader'THE_VAR)
+                                    (let [#_"Symbol" vs (cast' Symbol (RT'second o))]
+                                        (RT'var (:ns vs), (:name vs))
+                                    )
+                                (.endsWith (:name fs), ".")
+                                    (let [#_"Object[]" args (RT'toArray (RT'next o))]
+                                        (Reflector'invokeConstructor (RT'classForName-1 (.substring (:name fs), 0, (dec (.length (:name fs))))), args)
+                                    )
+                                (Compiler'namesStaticMember fs)
+                                    (let [#_"Object[]" args (RT'toArray (RT'next o))]
+                                        (Reflector'invokeStaticMethod-3s (:ns fs), (:name fs), args)
+                                    )
+                                :else
+                                    (let [#_"Object" v (Compiler'maybeResolveIn (Compiler'currentNS), fs)]
+                                        (when (§ instance? Var v) => (throw (RuntimeException. (str "Can't resolve " fs)))
+                                            (.applyTo (cast' IFn v), (RT'next o))
+                                        )
+                                    )
                             )
                         )
-                    )
                     :else
-                    (do
                         (throw (IllegalArgumentException. "Unsupported #= form"))
-                    )
                 )
             )
         )
@@ -18827,334 +18811,223 @@
     )
 
     (defn- #_"Object" LispReader'ensurePending [#_"Object" pendingForms]
-        (if (nil? pendingForms)
-            (do
-                (LinkedList.)
-            )
-            (do
-                pendingForms
-            )
-        )
+        (or pendingForms (LinkedList.))
     )
 
     (defn- #_"Object" LispReader'read-8 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"Character" returnOn, #_"Object" returnOnValue, #_"boolean" isRecursive, #_"Object" pendingForms, #_"Resolver" resolver]
-        (when (= (.deref RT'READEVAL) LispReader'UNKNOWN)
-            (throw (RuntimeException. "Reading disallowed - *read-eval* bound to :unknown"))
-        )
-
-        (try
-            (while true
-                (when (and (instance? List pendingForms) (not (.isEmpty (cast List pendingForms))))
-                    (§ return (.remove (cast List pendingForms), 0))
-                )
-
-                (let [#_"int" ch (LispReader'read1 r)]
-                    (while (LispReader'isWhitespace ch)
-                        (§ ass ch (LispReader'read1 r))
-                    )
-
-                    (when (= ch -1)
-                        (when eofIsError
-                            (throw (RuntimeException. "EOF while reading"))
-                        )
-                        (§ return eofValue)
-                    )
-
-                    (when (and (some? returnOn) (= (.charValue returnOn) ch))
-                        (§ return returnOnValue)
-                    )
-
-                    (when (Character/isDigit ch)
-                        (let [#_"Object" n (LispReader'readNumber r, (char ch))]
-                            (§ return n)
-                        )
-                    )
-
-                    (let [#_"IFn" macroFn (LispReader'getMacro ch)]
-                        (when (some? macroFn)
-                            (let [#_"Object" ret (.invoke macroFn, r, (char ch), pendingForms)]
-                                ;; no op macros return the reader
-                                (when (= ret r)
-                                    (§ continue )
-                                )
-                                (§ return ret)
-                            )
-                        )
-
-                        (when (or (= ch \+) (= ch \-))
-                            (let [#_"int" ch2 (LispReader'read1 r)]
-                                (when (Character/isDigit ch2)
-                                    (LispReader'unread r, ch2)
-                                    (let [#_"Object" n (LispReader'readNumber r, (char ch))]
-                                        (§ return n)
+        (when-not (= (.deref RT'READEVAL) LispReader'UNKNOWN) => (throw (RuntimeException. "Reading disallowed - *read-eval* bound to :unknown"))
+            (try
+                (loop-when [] (or (not (instance? List pendingForms)) (.isEmpty (cast List pendingForms))) => (.remove (cast List pendingForms), 0)
+                    (let [#_"int" ch (loop-when-recur [ch (LispReader'read1 r)] (LispReader'isWhitespace ch) [(LispReader'read1 r)] => ch)]
+                        (cond
+                            (= ch -1)
+                                (if eofIsError (throw (RuntimeException. "EOF while reading")) eofValue)
+                            (and (some? returnOn) (= (.charValue returnOn) ch))
+                                returnOnValue
+                            (Character/isDigit ch)
+                                (LispReader'readNumber r, (char ch))
+                            :else
+                                (let [#_"IFn" macroFn (LispReader'getMacro ch)]
+                                    (if (some? macroFn)
+                                        (let [#_"Object" ret (.invoke macroFn, r, (char ch), pendingForms)]
+                                            ;; no op macros return the reader
+                                            (recur-if (= ret r) [] => ret)
+                                        )
+                                        (do
+                                            (when (any = ch \+ \-)
+                                                (let [#_"int" ch2 (LispReader'read1 r)]
+                                                    (when (Character/isDigit ch2)
+                                                        (LispReader'unread r, ch2)
+                                                        (§ return (LispReader'readNumber r, (char ch)))
+                                                    )
+                                                    (LispReader'unread r, ch2)
+                                                )
+                                            )
+                                            (LispReader'interpretToken (LispReader'readToken r, (char ch)), resolver)
+                                        )
                                     )
                                 )
-                                (LispReader'unread r, ch2)
-                            )
-                        )
-
-                        (let [#_"String" token (LispReader'readToken r, (char ch))]
-                            (§ return (LispReader'interpretToken token, resolver))
                         )
                     )
                 )
-            )
-            (catch Exception e
-                (when (or isRecursive (not (§ instance? LineNumberingPushbackReader r)))
-                    (throw (Util'sneakyThrow e))
-                )
-                (let [#_"LineNumberingPushbackReader" rdr (cast' LineNumberingPushbackReader r)]
-                    (throw (LispReaderException'new (.getLineNumber rdr), (.getColumnNumber rdr), e))
+                (catch Exception e
+                    (when (and (not isRecursive) (§ instance? LineNumberingPushbackReader r)) => (throw (Util'sneakyThrow e))
+                        (let [#_"LineNumberingPushbackReader" rdr (cast' LineNumberingPushbackReader r)]
+                            (throw (LispReaderException'new (.getLineNumber rdr), (.getColumnNumber rdr), e))
+                        )
+                    )
                 )
             )
         )
     )
 
-    (defn- #_"String" LispReader'readToken [#_"PushbackReader" r, #_"char" initch]
-        (let [#_"StringBuilder" sb (StringBuilder.)]
-            (.append sb, initch)
-
-            (while true
-                (let [#_"int" ch (LispReader'read1 r)]
-                    (when (or (= ch -1) (LispReader'isWhitespace ch) (LispReader'isTerminatingMacro ch))
-                        (LispReader'unread r, ch)
-                        (§ return (.toString sb))
-                    )
-                    (.append sb, (char ch))
-                )
-            )
-        )
-    )
-
-    (defn- #_"Object" LispReader'readNumber [#_"PushbackReader" r, #_"char" initch]
-        (let [#_"StringBuilder" sb (StringBuilder.)]
-            (.append sb, initch)
-
-            (while true
-                (let [#_"int" ch (LispReader'read1 r)]
-                    (when (or (= ch -1) (LispReader'isWhitespace ch) (LispReader'isMacro ch))
-                        (LispReader'unread r, ch)
-                        (§ break )
-                    )
-                    (.append sb, (char ch))
-                )
-            )
-
-            (let [#_"String" s (.toString sb)]
-                (let [#_"Object" n (LispReader'matchNumber s)]
-                    (when (nil? n)
-                        (throw (NumberFormatException. (str "Invalid number: " s)))
-                    )
-                    n
-                )
-            )
-        )
-    )
-
-    (defn- #_"int" LispReader'readUnicodeChar-4 [#_"String" token, #_"int" offset, #_"int" length, #_"int" base]
-        (when (not= (.length token) (+ offset length))
-            (throw (IllegalArgumentException. (str "Invalid unicode character: \\" token)))
-        )
-        (let [#_"int" uc 0]
-            (loop-when-recur [#_"int" i offset] (< i (+ offset length)) [(inc i)]
-                (let [#_"int" d (Character/digit (.charAt token, i), base)]
-                    (when (= d -1)
-                        (throw (IllegalArgumentException. (str "Invalid digit: " (.charAt token, i))))
-                    )
-                    (§ ass uc (+ (* uc base) d))
-                )
-            )
-            (char uc)
-        )
-    )
-
-    (defn- #_"int" LispReader'readUnicodeChar-5 [#_"PushbackReader" r, #_"int" initch, #_"int" base, #_"int" length, #_"boolean" exact]
-        (let [#_"int" uc (Character/digit initch, base)]
-            (when (= uc -1)
-                (throw (IllegalArgumentException. (str "Invalid digit: " (char initch))))
-            )
-            (let [#_"int" i 1]
-                (loop-when-recur [i i] (< i length) [(inc i)]
-                    (let [#_"int" ch (LispReader'read1 r)]
-                        (when (or (= ch -1) (LispReader'isWhitespace ch) (LispReader'isMacro ch))
+    (defn- #_"String" LispReader'readToken [#_"PushbackReader" r, #_"char" ch]
+        (let [#_"StringBuilder" sb (StringBuilder.) _ (.append sb, ch)]
+            (loop []
+                (let [ch (LispReader'read1 r)]
+                    (if (or (= ch -1) (LispReader'isWhitespace ch) (LispReader'isTerminatingMacro ch))
+                        (do
                             (LispReader'unread r, ch)
-                            (§ break )
+                            (.toString sb)
                         )
-                        (let [#_"int" d (Character/digit ch, base)]
-                            (when (= d -1)
-                                (throw (IllegalArgumentException. (str "Invalid digit: " (char ch))))
-                            )
-                            (§ ass uc (+ (* uc base) d))
+                        (do
+                            (.append sb, (char ch))
+                            (recur)
                         )
                     )
                 )
-                (when (and (not= i length) exact)
-                    (throw (IllegalArgumentException. (str "Invalid character length: " i ", should be: " length)))
+            )
+        )
+    )
+
+    (defn- #_"Object" LispReader'readNumber [#_"PushbackReader" r, #_"char" ch]
+        (let [#_"String" s
+                (let [#_"StringBuilder" sb (StringBuilder.) _ (.append sb, ch)]
+                    (loop []
+                        (let [ch (LispReader'read1 r)]
+                            (if (or (= ch -1) (LispReader'isWhitespace ch) (LispReader'isMacro ch))
+                                (do
+                                    (LispReader'unread r, ch)
+                                    (.toString sb)
+                                )
+                                (do
+                                    (.append sb, (char ch))
+                                    (recur)
+                                )
+                            )
+                        )
+                    )
+                )]
+            (or (LispReader'matchNumber s) (throw (NumberFormatException. (str "Invalid number: " s))))
+        )
+    )
+
+    (defn- #_"int" LispReader'readUnicodeChar-4 [#_"String" token, #_"int" offset, #_"int" n, #_"int" base]
+        (when (= (.length token) (+ offset n)) => (throw (IllegalArgumentException. (str "Invalid unicode character: \\" token)))
+            (loop-when [#_"int" uc 0 #_"int" i offset] (< i (+ offset n)) => (char uc)
+                (let [#_"int" d (Character/digit (.charAt token, i), base)]
+                    (when-not (= d -1) => (throw (IllegalArgumentException. (str "Invalid digit: " (.charAt token, i))))
+                        (recur (+ (* uc base) d) (inc i))
+                    )
                 )
-                uc
+            )
+        )
+    )
+
+    (defn- #_"int" LispReader'readUnicodeChar-5 [#_"PushbackReader" r, #_"int" ch, #_"int" base, #_"int" n, #_"boolean" exact?]
+        (let-when-not [#_"int" uc (Character/digit ch, base)] (= uc -1) => (throw (IllegalArgumentException. (str "Invalid digit: " (char ch))))
+            (let [[uc #_"int" i]
+                    (loop-when [uc uc i 1] (< i n) => [uc i]
+                        (let [ch (LispReader'read1 r)]
+                            (if (or (= ch -1) (LispReader'isWhitespace ch) (LispReader'isMacro ch))
+                                (do
+                                    (LispReader'unread r, ch)
+                                    [uc i]
+                                )
+                                (let [#_"int" d (Character/digit ch, base)]
+                                    (when-not (= d -1) => (throw (IllegalArgumentException. (str "Invalid digit: " (char ch))))
+                                        (recur (+ (* uc base) d) (inc i))
+                                    )
+                                )
+                            )
+                        )
+                    )]
+                (when (or (= i n) (not exact?)) => (throw (IllegalArgumentException. (str "Invalid character length: " i ", should be: " n)))
+                    uc
+                )
             )
         )
     )
 
     (defn- #_"Object" LispReader'interpretToken [#_"String" s, #_"Resolver" resolver]
-        (cond (= s "nil")
-            (do
-                (§ return nil)
-            )
-            (= s "true")
-            (do
-                (§ return RT'T)
-            )
-            (= s "false")
-            (do
-                (§ return RT'F)
-            )
-        )
-        (let [#_"Object" ret nil]
-            (§ ass ret (LispReader'matchSymbol s, resolver))
-            (when (some? ret)
-                (§ return ret)
-            )
-
-            (throw (RuntimeException. (str "Invalid token: " s)))
+        (case s "nil" nil "true" RT'T "false" RT'F
+            (or (LispReader'matchSymbol s, resolver) (throw (RuntimeException. (str "Invalid token: " s))))
         )
     )
 
     (defn- #_"Object" LispReader'matchSymbol [#_"String" s, #_"Resolver" resolver]
-        (let [#_"Matcher" m (.matcher LispReader'symbolPat, s)]
-            (when (.matches m)
-                (let [#_"int" gc (.groupCount m)]
-                    (let [#_"String" ns (.group m, 1)]
-                        (let [#_"String" name (.group m, 2)]
-                            (when (or (and (some? ns) (.endsWith ns, ":/")) (.endsWith name, ":") (not= (.indexOf s, "::", 1) -1))
-                                (§ return nil)
-                            )
-                            (when (.startsWith s, "::")
-                                (let [#_"Symbol" ks (Symbol'intern (.substring s, 2))]
-                                    (if (some? resolver)
-                                        (do
-                                            (§ let [#_"Symbol" nsym]
-                                                (if (some? (:ns ks))
-                                                    (do
-                                                        (§ ass nsym (.resolveAlias resolver, (Symbol'intern (:ns ks))))
-                                                    )
-                                                    (do
-                                                        (§ ass nsym (.currentNS resolver))
-                                                    )
-                                                )
-                                                ;; auto-resolving keyword
-                                                (if (some? nsym)
-                                                    (do
-                                                        (§ return (Keyword'intern (Symbol'intern (:name nsym), (:name ks))))
-                                                    )
-                                                    (do
-                                                        (§ return nil)
-                                                    )
-                                                )
-                                            )
-                                        )
-                                        (do
-                                            (§ let [#_"Namespace" kns]
-                                                (if (some? (:ns ks))
-                                                    (do
-                                                        (§ ass kns (.lookupAlias (Compiler'currentNS), (Symbol'intern (:ns ks))))
-                                                    )
-                                                    (do
-                                                        (§ ass kns (Compiler'currentNS))
-                                                    )
-                                                )
-                                                ;; auto-resolving keyword
-                                                (if (some? kns)
-                                                    (do
-                                                        (§ return (Keyword'intern (Symbol'intern (:name (:name kns)), (:name ks))))
-                                                    )
-                                                    (do
-                                                        (§ return nil)
-                                                    )
-                                                )
-                                            )
-                                        )
+        (let-when [#_"Matcher" m (.matcher LispReader'symbolPat, s)] (.matches m)
+            (let [#_"int" gc (.groupCount m) #_"String" ns (.group m, 1) #_"String" name (.group m, 2)]
+                (cond
+                    (or (and (some? ns) (.endsWith ns, ":/")) (.endsWith name, ":") (not= (.indexOf s, "::", 1) -1))
+                        nil
+                    (.startsWith s, "::")
+                        (let [#_"Symbol" ks (Symbol'intern (.substring s, 2))]
+                            (if (some? resolver)
+                                (let [#_"Symbol" nsym
+                                        (if (some? (:ns ks))
+                                            (.resolveAlias resolver, (Symbol'intern (:ns ks)))
+                                            (.currentNS resolver)
+                                        )]
+                                    ;; auto-resolving keyword
+                                    (when (some? nsym)
+                                        (Keyword'intern (Symbol'intern (:name nsym), (:name ks)))
                                     )
                                 )
-                            )
-                            (let [#_"boolean" isKeyword (= (.charAt s, 0) \:)]
-                                (let [#_"Symbol" sym (Symbol'intern (.substring s, (if isKeyword 1 0)))]
-                                    (when isKeyword
-                                        (§ return (Keyword'intern sym))
+                                (let [#_"Namespace" kns
+                                        (if (some? (:ns ks))
+                                            (.lookupAlias (Compiler'currentNS), (Symbol'intern (:ns ks)))
+                                            (Compiler'currentNS)
+                                        )]
+                                    ;; auto-resolving keyword
+                                    (when (some? kns)
+                                        (Keyword'intern (Symbol'intern (:name (:name kns)), (:name ks)))
                                     )
-                                    (§ return sym)
                                 )
                             )
                         )
-                    )
+                    :else
+                        (let [#_"boolean" isKeyword (= (.charAt s, 0) \:) #_"Symbol" sym (Symbol'intern (.substring s, (if isKeyword 1 0)))]
+                            (if isKeyword (Keyword'intern sym) sym)
+                        )
                 )
             )
-            nil
         )
     )
 
     (defn- #_"Object" LispReader'matchNumber [#_"String" s]
-        (let [#_"Matcher" m (.matcher LispReader'intPat, s)]
-            (when (.matches m)
-                (when (some? (.group m, 2))
-                    (when (some? (.group m, 8))
-                        (§ return BigInt'ZERO)
-                    )
-                    (§ return (Numbers'num-1l 0))
-                )
-                (let [#_"boolean" negate (= (.group m, 1) "-")]
-                    (§ let [#_"String" n]
-                        (let [#_"int" radix 10]
-                            (cond (some? (§ ass n (.group m, 3)))
-                                (do
-                                    (§ ass radix 10)
-                                )
-                                (some? (§ ass n (.group m, 4)))
-                                (do
-                                    (§ ass radix 16)
-                                )
-                                (some? (§ ass n (.group m, 5)))
-                                (do
-                                    (§ ass radix 8)
-                                )
-                                (some? (§ ass n (.group m, 7)))
-                                (do
-                                    (§ ass radix (Integer/parseInt (.group m, 6)))
-                                )
+        (let [_ (or
+                    (let-when [#_"Matcher" m (.matcher LispReader'intPat, s)] (.matches m)
+                        (if (some? (.group m, 2))
+                            (if (some? (.group m, 8))
+                                BigInt'ZERO
+                                (Numbers'num-1l 0)
                             )
-                            (when (nil? n)
-                                (§ return nil)
-                            )
-                            (let [#_"BigInteger" bn (BigInteger. n, radix)]
-                                (when negate
-                                    (§ ass bn (.negate bn))
+                            (let [[#_"String" n #_"int" radix]
+                                    (cond-let
+                                        [n (.group m, 3)] [n 10]
+                                        [n (.group m, 4)] [n 16]
+                                        [n (.group m, 5)] [n 8]
+                                        [n (.group m, 7)] [n (Integer/parseInt (.group m, 6))]
+                                    )]
+                                (when (some? n) => :nil
+                                    (let [#_"BigInteger" bn (BigInteger. n, radix) bn (if (= (.group m, 1) "-") (.negate bn) bn)]
+                                        (cond
+                                            (some? (.group m, 8))  (BigInt'fromBigInteger bn)
+                                            (< (.bitLength bn) 64) (Numbers'num-1l (.longValue bn))
+                                            :else                  (BigInt'fromBigInteger bn)
+                                        )
+                                    )
                                 )
-                                (when (some? (.group m, 8))
-                                    (§ return (BigInt'fromBigInteger bn))
-                                )
-                                (§ return (if (< (.bitLength bn) 64) (Numbers'num-1l (.longValue bn)) (BigInt'fromBigInteger bn)))
                             )
                         )
                     )
-                )
-            )
-            (§ ass m (.matcher LispReader'floatPat, s))
-            (when (.matches m)
-                (when (some? (.group m, 4))
-                    (§ return (§ unsure BigDecimal. (.group m, 1)))
-                )
-                (§ return (Double/parseDouble s))
-            )
-            (§ ass m (.matcher LispReader'ratioPat, s))
-            (when (.matches m)
-                (let [#_"String" numerator (.group m, 1)]
-                    (when (.startsWith numerator, "+")
-                        (§ ass numerator (.substring numerator, 1))
+                    (let-when [#_"Matcher" m (.matcher LispReader'floatPat, s)] (.matches m)
+                        (if (some? (.group m, 4))
+                            (§ unsure BigDecimal. (.group m, 1))
+                            (Double/parseDouble s)
+                        )
                     )
-                    (§ return (Numbers'divide-2oo (Numbers'reduceBigInt (BigInt'fromBigInteger (BigInteger. numerator))), (Numbers'reduceBigInt (BigInt'fromBigInteger (BigInteger. (.group m, 2))))))
-                )
-            )
-            nil
+                    (let-when [#_"Matcher" m (.matcher LispReader'ratioPat, s)] (.matches m)
+                        (let [#_"String" numerator (.group m, 1) numerator (if (.startsWith numerator, "+") (.substring numerator, 1) numerator)]
+                            (Numbers'divide-2oo
+                                (Numbers'reduceBigInt (BigInt'fromBigInteger (BigInteger. numerator))),
+                                (Numbers'reduceBigInt (BigInt'fromBigInteger (BigInteger. (.group m, 2))))
+                            )
+                        )
+                    )
+                )]
+            (when-not (= _ :nil) _)
         )
     )
 
@@ -19177,16 +19050,14 @@
     )
 
     (defn #_"Symbol" LispReader'registerArg [#_"int" n]
-        (let [#_"PersistentTreeMap" argsyms (cast' PersistentTreeMap (.deref LispReader'ARG_ENV))]
-            (when (nil? argsyms)
-                (throw (IllegalStateException. "arg literal not in #()"))
-            )
-            (let [#_"Symbol" ret (cast' Symbol (.valAt argsyms, n))]
-                (when (nil? ret)
-                    (§ ass ret (LispReader'garg n))
-                    (.set LispReader'ARG_ENV, (.assoc argsyms, n, ret))
+        (let [#_"PersistentTreeMap" args (cast' PersistentTreeMap (.deref LispReader'ARG_ENV))]
+            (when (some? args) => (throw (IllegalStateException. "arg literal not in #()"))
+                (or (cast' Symbol (.valAt args, n))
+                    (let [#_"Symbol" sym (LispReader'garg n)]
+                        (.set LispReader'ARG_ENV, (.assoc args, n, sym))
+                        sym
+                    )
                 )
-                ret
             )
         )
     )
@@ -19204,29 +19075,22 @@
     (def- #_"Object" LispReader'READ_FINISHED (Object.))
 
     (defn #_"List" LispReader'readDelimitedList [#_"char" delim, #_"PushbackReader" r, #_"boolean" isRecursive, #_"Object" pendingForms]
-        (let [#_"int" firstline (if (§ instance? LineNumberingPushbackReader r) (.getLineNumber (cast' LineNumberingPushbackReader r)) -1)]
-            (let [#_"ArrayList" a (ArrayList.)]
-                (let [#_"Resolver" resolver (cast' Resolver (.deref RT'READER_RESOLVER))]
-                    (while true
-                        (let [#_"Object" form (LispReader'read-8 r, false, LispReader'READ_EOF, delim, LispReader'READ_FINISHED, isRecursive, pendingForms, resolver)]
-                            (cond (= form LispReader'READ_EOF)
-                                (do
-                                    (if (neg? firstline)
-                                        (do
-                                            (throw (RuntimeException. "EOF while reading"))
-                                        )
-                                        (do
-                                            (throw (RuntimeException. (str "EOF while reading, starting at line " firstline)))
-                                        )
-                                    )
-                                )
-                                (= form LispReader'READ_FINISHED)
-                                (do
-                                    (§ return a)
-                                )
+        (let [#_"Resolver" resolver (cast' Resolver (.deref RT'READER_RESOLVER))
+              #_"int" firstline (if (§ instance? LineNumberingPushbackReader r) (.getLineNumber (cast' LineNumberingPushbackReader r)) -1)
+              #_"ArrayList" a (ArrayList.)]
+            (loop []
+                (let [#_"Object" form (LispReader'read-8 r, false, LispReader'READ_EOF, delim, LispReader'READ_FINISHED, isRecursive, pendingForms, resolver)]
+                    (condp = form
+                        LispReader'READ_EOF
+                            (if (neg? firstline)
+                                (throw (RuntimeException. "EOF while reading"))
+                                (throw (RuntimeException. (str "EOF while reading, starting at line " firstline)))
                             )
-
+                        LispReader'READ_FINISHED
+                            a
+                        (do
                             (.add a, form)
+                            (recur)
                         )
                     )
                 )
