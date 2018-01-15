@@ -13494,7 +13494,8 @@
                 (loop-when-recur [s1 s1 s2 s2]
                                  (and (some? (RT'second s1)) (= (RT'second s1) (RT'second s2)))
                                  [(.next s1) (.next s2)]
-                              => (cast' PathNode (RT'first s1)))
+                              => (cast' PathNode (RT'first s1))
+                )
             )
         )
     )
@@ -17469,9 +17470,7 @@
     #_method
     (§ defn #_"int" (§ method indexOf) [#_"LazySeq" this, #_"Object" o]
         (loop-when [#_"ISeq" s (.seq this) #_"int" i 0] (some? s) => -1
-            (when-not (Util'equiv-2oo (.first s), o) => i
-                (recur (.next s) (inc i))
-            )
+            (if (Util'equiv-2oo (.first s), o) i (recur (.next s) (inc i)))
         )
     )
 
@@ -23747,10 +23746,7 @@
     #_method
     (§ defn- #_"int" (§ method indexOf) [#_"TransientArrayMap" this, #_"Object" key]
         (loop-when [#_"int" i 0] (< i (:len this)) => -1
-            (if (PersistentArrayMap'equalKey (aget (:array this) i), key)
-                i
-                (recur (+ i 2))
-            )
+            (if (PersistentArrayMap'equalKey (aget (:array this) i), key) i (recur (+ i 2)))
         )
     )
 
@@ -24645,7 +24641,7 @@
                         (let [#_"INode[]" nodes (make-array #_"INode" Object 32) #_"int" jdx (PersistentHashMap'mask hash, shift)]
                             (aset nodes jdx (.assoc BitmapIndexedNode'EMPTY, (+ shift 5), hash, key, val, addedLeaf))
                             (loop-when [#_"int" j 0 #_"int" i 0] (< i 32)
-                                (when (not= (& (>>> (:bitmap this) i) 1) 0) => (recur j (inc i))
+                                (when-not (= (& (>>> (:bitmap this) i) 1) 0) => (recur j (inc i))
                                     (if (some? (aget (:array this) j))
                                         (aset nodes i (.assoc BitmapIndexedNode'EMPTY, (+ shift 5), (PersistentHashMap'hash (aget (:array this) j)), (aget (:array this) j), (aget (:array this) (inc j)), addedLeaf))
                                         (aset nodes i (cast' INode (aget (:array this) (inc j))))
@@ -24655,13 +24651,13 @@
                             )
                             (ArrayNode'new nil, (inc n), nodes)
                         )
-                        (let [#_"Object[]" newArray (make-array Object (* 2 (inc n)))]
-                            (System/arraycopy (:array this), 0, newArray, 0, (* 2 idx))
-                            (aset newArray (* 2 idx) key)
+                        (let [#_"Object[]" a (make-array Object (* 2 (inc n)))]
+                            (System/arraycopy (:array this), 0, a, 0, (* 2 idx))
+                            (aset a (* 2 idx) key)
                             (§ ass (:val addedLeaf) addedLeaf)
-                            (aset newArray (inc (* 2 idx)) val)
-                            (System/arraycopy (:array this), (* 2 idx), newArray, (* 2 (inc idx)), (* 2 (- n idx)))
-                            (BitmapIndexedNode'new nil, (| (:bitmap this) bit), newArray)
+                            (aset a (inc (* 2 idx)) val)
+                            (System/arraycopy (:array this), (* 2 idx), a, (* 2 (inc idx)), (* 2 (- n idx)))
+                            (BitmapIndexedNode'new nil, (| (:bitmap this) bit), a)
                         )
                     )
                 )
@@ -24671,27 +24667,25 @@
 
     #_method
     (§ defn #_"INode" (§ method without) [#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
-        (let [#_"int" bit (PersistentHashMap'bitpos hash, shift)]
-            (when-not (zero? (& (:bitmap this) bit)) => this
-                (let [#_"int" i (.index this, bit) #_"int" ii (* 2 i)
-                      #_"Object" keyOrNull (aget (:array this) ii)
-                      #_"Object" valOrNode (aget (:array this) (inc ii))]
-                    (if (some? keyOrNull)
-                        (when (Util'equiv-2oo key, keyOrNull) => this
-                            ;; TODO: collapse
-                            (BitmapIndexedNode'new nil, (bit-xor (:bitmap this) bit), (PersistentHashMap'removePair (:array this), i))
-                        )
-                        (let [#_"INode" n (.without (cast' INode valOrNode), (+ shift 5), hash, key)]
-                            (cond
-                                (= n valOrNode)
-                                    this
-                                (some? n)
-                                    (BitmapIndexedNode'new nil, (:bitmap this), (PersistentHashMap'cloneAndSet-3 (:array this), (inc ii), n))
-                                (= (:bitmap this) bit)
-                                    nil
-                                :else
-                                    (BitmapIndexedNode'new nil, (bit-xor (:bitmap this) bit), (PersistentHashMap'removePair (:array this), i))
-                            )
+        (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (& (:bitmap this) bit)) => this
+            (let [#_"int" i (.index this, bit) #_"int" ii (* 2 i)
+                  #_"Object" keyOrNull (aget (:array this) ii)
+                  #_"Object" valOrNode (aget (:array this) (inc ii))]
+                (if (some? keyOrNull)
+                    (when (Util'equiv-2oo key, keyOrNull) => this
+                        ;; TODO: collapse
+                        (BitmapIndexedNode'new nil, (bit-xor (:bitmap this) bit), (PersistentHashMap'removePair (:array this), i))
+                    )
+                    (let [#_"INode" n (.without (cast' INode valOrNode), (+ shift 5), hash, key)]
+                        (cond
+                            (= n valOrNode)
+                                this
+                            (some? n)
+                                (BitmapIndexedNode'new nil, (:bitmap this), (PersistentHashMap'cloneAndSet-3 (:array this), (inc ii), n))
+                            (= (:bitmap this) bit)
+                                nil
+                            :else
+                                (BitmapIndexedNode'new nil, (bit-xor (:bitmap this) bit), (PersistentHashMap'removePair (:array this), i))
                         )
                     )
                 )
@@ -24750,127 +24744,105 @@
 
     #_method
     (§ defn- #_"BitmapIndexedNode" (§ method ensureEditable) [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit]
-        (when (= (:edit this) edit)
-            (§ return this)
-        )
-        (let [#_"int" n (Integer/bitCount (:bitmap this))]
-            (let [#_"Object[]" newArray (make-array Object (if (<= 0 n) (* 2 (inc n)) 4))] ;; make room for next assoc
-                (System/arraycopy (:array this), 0, newArray, 0, (* 2 n))
-                (BitmapIndexedNode'new edit, (:bitmap this), newArray)
+        (when-not (= (:edit this) edit) => this
+            (let [#_"int" n (Integer/bitCount (:bitmap this)) #_"Object[]" a (make-array Object (* 2 (inc n)))] ;; make room for next assoc
+                (System/arraycopy (:array this), 0, a, 0, (* 2 n))
+                (BitmapIndexedNode'new edit, (:bitmap this), a)
             )
         )
     )
 
     #_method
-    (§ defn- #_"BitmapIndexedNode" (§ method editAndSet) [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"Object" a]
-        (let [#_"BitmapIndexedNode" editable (.ensureEditable this, edit)]
-            (aset (:array editable) i a)
-            editable
+    (§ defn- #_"BitmapIndexedNode" (§ method editAndSet) [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"Object" x]
+        (let [#_"BitmapIndexedNode" e (.ensureEditable this, edit)]
+            (aset (:array e) i x)
+            e
         )
     )
 
     #_method
-    (§ defn- #_"BitmapIndexedNode" (§ method editAndSet) [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"Object" a, #_"int" j, #_"Object" b]
-        (let [#_"BitmapIndexedNode" editable (.ensureEditable this, edit)]
-            (aset (:array editable) i a)
-            (aset (:array editable) j b)
-            editable
+    (§ defn- #_"BitmapIndexedNode" (§ method editAndSet) [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"Object" x, #_"int" j, #_"Object" y]
+        (let [#_"BitmapIndexedNode" e (.ensureEditable this, edit)]
+            (aset (:array e) i x)
+            (aset (:array e) j y)
+            e
         )
     )
 
     #_method
     (§ defn- #_"BitmapIndexedNode" (§ method editAndRemovePair) [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" bit, #_"int" i]
-        (when (= (:bitmap this) bit)
-            (§ return nil)
-        )
-        (let [#_"BitmapIndexedNode" editable (.ensureEditable this, edit)]
-            (§ ass (:bitmap editable) (bit-xor (:bitmap editable) bit))
-            (System/arraycopy (:array editable), (* 2 (inc i)), (:array editable), (* 2 i), (- (alength (:array editable)) (* 2 (inc i))))
-            (aset (:array editable) (- (alength (:array editable)) 2) nil)
-            (aset (:array editable) (- (alength (:array editable)) 1) nil)
-            editable
+        (when-not (= (:bitmap this) bit)
+            (let [#_"BitmapIndexedNode" e (.ensureEditable this, edit) #_"Object[]" a (:array e) #_"int" n (alength a)]
+                (§ ass (:bitmap e) (bit-xor (:bitmap e) bit))
+                (System/arraycopy a, (* 2 (inc i)), a, (* 2 i), (- n (* 2 (inc i))))
+                (aset a (- n 2) nil)
+                (aset a (- n 1) nil)
+                e
+            )
         )
     )
 
     #_method
     (§ defn #_"INode" (§ method assoc) [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
-        (let [#_"int" bit (PersistentHashMap'bitpos hash, shift)]
-            (let [#_"int" idx (.index this, bit)]
-                (if (not= (& (:bitmap this) bit) 0)
-                    (do
-                        (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))]
-                            (let [#_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
-                                (when (nil? keyOrNull)
-                                    (let [#_"INode" n (.assoc (cast' INode valOrNode), edit, (+ shift 5), hash, key, val, addedLeaf)]
-                                        (when (= n valOrNode)
-                                            (§ return this)
-                                        )
-                                        (§ return (.editAndSet this, edit, (inc (* 2 idx)), n))
-                                    )
+        (let [#_"int" bit (PersistentHashMap'bitpos hash, shift) #_"int" idx (.index this, bit)]
+            (if-not (zero? (& (:bitmap this) bit))
+                (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))
+                      #_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
+                    (cond
+                        (nil? keyOrNull)
+                            (let [#_"INode" n (.assoc (cast' INode valOrNode), edit, (+ shift 5), hash, key, val, addedLeaf)]
+                                (when-not (= n valOrNode) => this
+                                    (.editAndSet this, edit, (inc (* 2 idx)), n)
                                 )
-                                (when (Util'equiv-2oo key, keyOrNull)
-                                    (when (= val valOrNode)
-                                        (§ return this)
-                                    )
-                                    (§ return (.editAndSet this, edit, (inc (* 2 idx)), val))
-                                )
-                                (§ ass (:val addedLeaf) addedLeaf)
+                            )
+                        (Util'equiv-2oo key, keyOrNull)
+                            (when-not (= val valOrNode) => this
+                                (.editAndSet this, edit, (inc (* 2 idx)), val)
+                            )
+                        :else
+                            (let [_ (§ ass (:val addedLeaf) addedLeaf)]
                                 (.editAndSet this, edit, (* 2 idx), nil, (inc (* 2 idx)), (PersistentHashMap'createNode-7 edit, (+ shift 5), keyOrNull, valOrNode, hash, key, val))
                             )
-                        )
                     )
-                    (do
-                        (let [#_"int" n (Integer/bitCount (:bitmap this))]
-                            (when (< (* n 2) (alength (:array this)))
+                )
+                (let [#_"int" n (Integer/bitCount (:bitmap this))]
+                    (cond
+                        (< (* n 2) (alength (:array this)))
+                            (let [_ (§ ass (:val addedLeaf) addedLeaf)
+                                  #_"BitmapIndexedNode" e (.ensureEditable this, edit)]
+                                (System/arraycopy (:array e), (* 2 idx), (:array e), (* 2 (inc idx)), (* 2 (- n idx)))
+                                (aset (:array e) (* 2 idx) key)
+                                (aset (:array e) (inc (* 2 idx)) val)
+                                (§ ass (:bitmap e) (| (:bitmap e) bit))
+                                e
+                            )
+                        (<= 16 n)
+                            (let [#_"INode[]" nodes (make-array #_"INode" Object 32) #_"int" jdx (PersistentHashMap'mask hash, shift)]
+                                (aset nodes jdx (.assoc BitmapIndexedNode'EMPTY, edit, (+ shift 5), hash, key, val, addedLeaf))
+                                (loop-when [#_"int" j 0 #_"int" i 0] (< i 32)
+                                    (when-not (= (& (>>> (:bitmap this) i) 1) 0) => (recur j (inc i))
+                                        (if (some? (aget (:array this) j))
+                                            (aset nodes i (.assoc BitmapIndexedNode'EMPTY, edit, (+ shift 5), (PersistentHashMap'hash (aget (:array this) j)), (aget (:array this) j), (aget (:array this) (inc j)), addedLeaf))
+                                            (aset nodes i (cast' INode (aget (:array this) (inc j))))
+                                        )
+                                        (recur (+ j 2) (inc i))
+                                    )
+                                )
+                                (ArrayNode'new edit, (inc n), nodes)
+                            )
+                        :else
+                            (let [#_"Object[]" a (make-array Object (* 2 (+ n 4)))]
+                                (System/arraycopy (:array this), 0, a, 0, (* 2 idx))
+                                (aset a (* 2 idx) key)
                                 (§ ass (:val addedLeaf) addedLeaf)
-                                (let [#_"BitmapIndexedNode" editable (.ensureEditable this, edit)]
-                                    (System/arraycopy (:array editable), (* 2 idx), (:array editable), (* 2 (inc idx)), (* 2 (- n idx)))
-                                    (aset (:array editable) (* 2 idx) key)
-                                    (aset (:array editable) (inc (* 2 idx)) val)
-                                    (§ ass (:bitmap editable) (| (:bitmap editable) bit))
-                                    (§ return editable)
+                                (aset a (inc (* 2 idx)) val)
+                                (System/arraycopy (:array this), (* 2 idx), a, (* 2 (inc idx)), (* 2 (- n idx)))
+                                (let [#_"BitmapIndexedNode" e (.ensureEditable this, edit)]
+                                    (§ ass (:array e) a)
+                                    (§ ass (:bitmap e) (| (:bitmap e) bit))
+                                    e
                                 )
                             )
-                            (if (<= 16 n)
-                                (do
-                                    (let [#_"INode[]" nodes (make-array #_"INode" Object 32)]
-                                        (let [#_"int" jdx (PersistentHashMap'mask hash, shift)]
-                                            (aset nodes jdx (.assoc BitmapIndexedNode'EMPTY, edit, (+ shift 5), hash, key, val, addedLeaf))
-                                            (let [#_"int" j 0]
-                                                (loop-when-recur [#_"int" i 0] (< i 32) [(inc i)]
-                                                    (when (not= (& (>>> (:bitmap this) i) 1) 0)
-                                                        (if (nil? (aget (:array this) j))
-                                                            (do
-                                                                (aset nodes i (cast' INode (aget (:array this) (inc j))))
-                                                            )
-                                                            (do
-                                                                (aset nodes i (.assoc BitmapIndexedNode'EMPTY, edit, (+ shift 5), (PersistentHashMap'hash (aget (:array this) j)), (aget (:array this) j), (aget (:array this) (inc j)), addedLeaf))
-                                                            )
-                                                        )
-                                                        (§ ass j (+ j 2))
-                                                    )
-                                                )
-                                                (ArrayNode'new edit, (inc n), nodes)
-                                            )
-                                        )
-                                    )
-                                )
-                                (do
-                                    (let [#_"Object[]" newArray (make-array Object (* 2 (+ n 4)))]
-                                        (System/arraycopy (:array this), 0, newArray, 0, (* 2 idx))
-                                        (aset newArray (* 2 idx) key)
-                                        (§ ass (:val addedLeaf) addedLeaf)
-                                        (aset newArray (inc (* 2 idx)) val)
-                                        (System/arraycopy (:array this), (* 2 idx), newArray, (* 2 (inc idx)), (* 2 (- n idx)))
-                                        (let [#_"BitmapIndexedNode" editable (.ensureEditable this, edit)]
-                                            (§ ass (:array editable) newArray)
-                                            (§ ass (:bitmap editable) (| (:bitmap editable) bit))
-                                            editable
-                                        )
-                                    )
-                                )
-                            )
-                        )
                     )
                 )
             )
@@ -24879,33 +24851,27 @@
 
     #_method
     (§ defn #_"INode" (§ method without) [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf]
-        (let [#_"int" bit (PersistentHashMap'bitpos hash, shift)]
-            (when (zero? (& (:bitmap this) bit))
-                (§ return this)
-            )
-            (let [#_"int" idx (.index this, bit)]
-                (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))]
-                    (let [#_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
-                        (when (nil? keyOrNull)
-                            (let [#_"INode" n (.without (cast' INode valOrNode), edit, (+ shift 5), hash, key, removedLeaf)]
-                                (when (= n valOrNode)
-                                    (§ return this)
-                                )
-                                (when (some? n)
-                                    (§ return (.editAndSet this, edit, (inc (* 2 idx)), n))
-                                )
-                                (when (= (:bitmap this) bit)
-                                    (§ return nil)
-                                )
-                                (§ return (.editAndRemovePair this, edit, bit, idx))
-                            )
+        (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (& (:bitmap this) bit)) => this
+            (let [#_"int" i (.index this, bit) #_"int" ii ii
+                  #_"Object" keyOrNull (aget (:array this) ii)
+                  #_"Object" valOrNode (aget (:array this) (inc ii))]
+                (if (some? keyOrNull)
+                    (when (Util'equiv-2oo key, keyOrNull) => this
+                        (§ ass (:val removedLeaf) removedLeaf)
+                        ;; TODO: collapse
+                        (.editAndRemovePair this, edit, bit, i)
+                    )
+                    (let [#_"INode" n (.without (cast' INode valOrNode), edit, (+ shift 5), hash, key, removedLeaf)]
+                        (cond
+                            (= n valOrNode)
+                                this
+                            (some? n)
+                                (.editAndSet this, edit, (inc ii), n)
+                            (= (:bitmap this) bit)
+                                nil
+                            :else
+                                (.editAndRemovePair this, edit, bit, i)
                         )
-                        (when (Util'equiv-2oo key, keyOrNull)
-                            (§ ass (:val removedLeaf) removedLeaf)
-                            ;; TODO: collapse
-                            (§ return (.editAndRemovePair this, edit, bit, idx))
-                        )
-                        this
                     )
                 )
             )
@@ -25122,29 +25088,28 @@
 
     #_method
     (§ defn- #_"boolean" (§ method advance) [#_"NodeIter" this]
-        (while (< (:i this) (alength (:array this)))
-            (let [#_"Object" key (aget (:array this) (:i this))]
-                (let [#_"Object" nodeOrVal (aget (:array this) (inc (:i this)))]
-                    (§ ass this (assoc this :i (+ (:i this) 2)))
-                    (cond (some? key)
+        (loop-when [] (< (:i this) (alength (:array this))) => false
+            (let [#_"Object" key (aget (:array this) (:i this))
+                  #_"Object" nodeOrVal (aget (:array this) (inc (:i this)))
+                  _ (§ ass this (assoc this :i (+ (:i this) 2)))]
+                (cond
+                    (some? key)
                         (do
                             (§ ass this (assoc this :nextEntry (.invoke (:f this), key, nodeOrVal)))
-                            (§ return true)
+                            true
                         )
-                        (some? nodeOrVal)
-                        (do
-                            (let [#_"Iterator" iter (.iterator (cast' INode nodeOrVal), (:f this))]
-                                (when (and (some? iter) (.hasNext iter))
-                                    (§ ass this (assoc this :nextIter iter))
-                                    (§ return true)
-                                )
+                    (some? nodeOrVal)
+                        (let [#_"Iterator" it (.iterator (cast' INode nodeOrVal), (:f this))]
+                            (when (and (some? it) (.hasNext it)) => (recur)
+                                (§ ass this (assoc this :nextIter it))
+                                true
                             )
                         )
-                    )
+                    :else
+                        (recur)
                 )
             )
         )
-        false
     )
 
     #_method
@@ -25154,26 +25119,24 @@
 
     #_method
     (§ defn #_"Object" (§ method next) [#_"NodeIter" this]
-        (let [#_"Object" ret (:nextEntry this)]
-            (cond (not= ret NodeIter'NULL)
-                (do
-                    (§ ass this (assoc this :nextEntry NodeIter'NULL))
-                    (§ return ret)
-                )
-                (some? (:nextIter this))
-                (do
-                    (§ ass ret (.next (:nextIter this)))
-                    (when (not (.hasNext (:nextIter this)))
-                        (§ ass this (assoc this :nextIter nil))
+        (let [#_"Object" e (:nextEntry this)]
+            (cond
+                (not= e NodeIter'NULL)
+                    (let [_ (§ ass this (assoc this :nextEntry NodeIter'NULL))]
+                        e
                     )
-                    (§ return ret)
-                )
+                (some? (:nextIter this))
+                    (let [_ (§ ass e (.next (:nextIter this)))
+                          _ (when-not (.hasNext (:nextIter this))
+                                (§ ass this (assoc this :nextIter nil))
+                            )]
+                        e
+                    )
                 (.advance this)
-                (do
-                    (§ return (.next this))
-                )
+                    (.next this)
+                :else
+                    (throw (NoSuchElementException.))
             )
-            (throw (NoSuchElementException.))
         )
     )
 
@@ -25200,46 +25163,36 @@
         (NodeSeq'create-3 array, 0, nil)
     )
 
-    (defn #_"Object" NodeSeq'kvreduce [#_"Object[]" array, #_"IFn" f, #_"Object" init]
-        (loop-when-recur [#_"int" i 0] (< i (alength array)) [(+ i 2)]
-            (if (some? (aget array i))
-                (do
-                    (§ ass init (.invoke f, init, (aget array i), (aget array (inc i))))
-                )
-                (do
-                    (let [#_"INode" node (cast' INode (aget array (inc i)))]
-                        (when (some? node)
-                            (§ ass init (.kvreduce node, f, init))
+    (defn #_"Object" NodeSeq'kvreduce [#_"Object[]" array, #_"IFn" f, #_"Object" r]
+        (loop-when [r r #_"int" i 0] (< i (alength array)) => r
+            (let [r (if (some? (aget array i))
+                        (.invoke f, r, (aget array i), (aget array (inc i)))
+                        (let-when [#_"INode" node (cast' INode (aget array (inc i)))] (some? node) => r
+                            (.kvreduce node, f, r)
                         )
-                    )
+                    )]
+                (when-not (RT'isReduced r) => r
+                    (recur r (+ i 2))
                 )
-            )
-            (when (RT'isReduced init)
-                (§ return init)
             )
         )
-        init
     )
 
     (defn- #_"ISeq" NodeSeq'create-3 [#_"Object[]" array, #_"int" i, #_"ISeq" s]
-        (when (some? s)
-            (§ return (NodeSeq'new-4 nil, array, i, s))
-        )
-        (loop-when-recur [#_"int" j i] (< j (alength array)) [(+ j 2)]
-            (when (some? (aget array j))
-                (§ return (NodeSeq'new-4 nil, array, j, nil))
-            )
-            (let [#_"INode" node (cast' INode (aget array (inc j)))]
-                (when (some? node)
-                    (let [#_"ISeq" nodeSeq (.nodeSeq node)]
-                        (when (some? nodeSeq)
-                            (§ return (NodeSeq'new-4 nil, array, (+ j 2), nodeSeq))
+        (when (nil? s) => (NodeSeq'new-4 nil, array, i, s)
+            (loop-when i (< i (alength array))
+                (when (nil? (aget array i)) => (NodeSeq'new-4 nil, array, i, nil)
+                    (or
+                        (when-let [#_"INode" node (cast' INode (aget array (inc i)))]
+                            (when-let [s (.nodeSeq node)]
+                                (NodeSeq'new-4 nil, array, (+ i 2), s)
+                            )
                         )
+                        (recur (+ i 2))
                     )
                 )
             )
         )
-        nil
     )
 
     (defn #_"NodeSeq" NodeSeq'new-4 [#_"IPersistentMap" meta, #_"Object[]" array, #_"int" i, #_"ISeq" s]
@@ -25411,18 +25364,15 @@
 
     #_method
     (§ defn #_"IPersistentMap" (§ method assoc) [#_"PersistentHashMap" this, #_"Object" key, #_"Object" val]
-        (when (nil? key)
-            (when (and (:hasNull this) (= val (:nullValue this)))
-                (§ return this)
+        (if (nil? key)
+            (when-not (and (:hasNull this) (= val (:nullValue this))) => this
+                (PersistentHashMap'new-5 (.meta this), (+ (:count this) (if (:hasNull this) 0 1)), (:root this), true, val)
             )
-            (§ return (PersistentHashMap'new-5 (.meta this), (if (:hasNull this) (:count this) (inc (:count this))), (:root this), true, val))
-        )
-        (let [#_"Box" addedLeaf (Box'new nil)]
-            (let [#_"INode" newroot (.assoc (or (:root this) BitmapIndexedNode'EMPTY), 0, (PersistentHashMap'hash key), key, val, addedLeaf)]
-                (when (= newroot (:root this))
-                    (§ return this)
+            (let [#_"Box" addedLeaf (Box'new nil)
+                  #_"INode" newroot (.assoc (or (:root this) BitmapIndexedNode'EMPTY), 0, (PersistentHashMap'hash key), key, val, addedLeaf)]
+                (when-not (= newroot (:root this)) => this
+                    (PersistentHashMap'new-5 (.meta this), (+ (:count this) (if (some? (:val addedLeaf)) 1 0)), newroot, (:hasNull this), (:nullValue this))
                 )
-                (PersistentHashMap'new-5 (.meta this), (if (nil? (:val addedLeaf)) (:count this) (inc (:count this))), newroot, (:hasNull this), (:nullValue this))
             )
         )
     )
@@ -25450,17 +25400,17 @@
 
     #_method
     (§ defn #_"IPersistentMap" (§ method without) [#_"PersistentHashMap" this, #_"Object" key]
-        (when (nil? key)
-            (§ return (if (:hasNull this) (PersistentHashMap'new-5 (.meta this), (dec (:count this)), (:root this), false, nil) this))
-        )
-        (when (nil? (:root this))
-            (§ return this)
-        )
-        (let [#_"INode" newroot (.without (:root this), 0, (PersistentHashMap'hash key), key)]
-            (when (= newroot (:root this))
-                (§ return this)
-            )
-            (PersistentHashMap'new-5 (.meta this), (dec (:count this)), newroot, (:hasNull this), (:nullValue this))
+        (cond
+            (nil? key)
+                (if (:hasNull this) (PersistentHashMap'new-5 (.meta this), (dec (:count this)), (:root this), false, nil) this)
+            (nil? (:root this))
+                this
+            :else
+                (let [#_"INode" newroot (.without (:root this), 0, (PersistentHashMap'hash key), key)]
+                    (when-not (= newroot (:root this)) => this
+                        (PersistentHashMap'new-5 (.meta this), (dec (:count this)), newroot, (:hasNull this), (:nullValue this))
+                    )
+                )
         )
     )
 
@@ -25549,23 +25499,18 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method kvreduce) [#_"PersistentHashMap" this, #_"IFn" f, #_"Object" init]
-        (§ ass init (if (:hasNull this) (.invoke f, init, nil, (:nullValue this)) init))
-        (when (RT'isReduced init)
-            (§ return (.deref (cast' IDeref init)))
-        )
-        (when (some? (:root this))
-            (§ ass init (.kvreduce (:root this), f, init))
-            (if (RT'isReduced init)
-                (do
-                    (§ return (.deref (cast' IDeref init)))
-                )
-                (do
-                    (§ return init)
+    (§ defn #_"Object" (§ method kvreduce) [#_"PersistentHashMap" this, #_"IFn" f, #_"Object" r]
+        (let [r (if (:hasNull this) (.invoke f, r, nil, (:nullValue this)) r)]
+            (when-not (RT'isReduced r) => (.deref (cast' IDeref r))
+                (when (some? (:root this)) => r
+                    (let [r (.kvreduce (:root this), f, r)]
+                        (when-not (RT'isReduced r) => (.deref (cast' IDeref r))
+                            r
+                        )
+                    )
                 )
             )
         )
-        init
     )
 
     #_method
@@ -25623,36 +25568,33 @@
         (:_meta this)
     )
 
-    (defn- #_"Object[]" PersistentHashMap'cloneAndSet-3 [#_"Object[]" array, #_"int" i, #_"Object" a]
-        (let [#_"Object[]" clone (.clone array)]
-            (aset clone i a)
-            clone
+    (defn- #_"Object[]" PersistentHashMap'cloneAndSet-3 [#_"Object[]" array, #_"int" i, #_"Object" x]
+        (let [#_"Object[]" a (.clone array)]
+            (aset a i x)
+            a
         )
     )
 
-    (defn- #_"Object[]" PersistentHashMap'cloneAndSet-5 [#_"Object[]" array, #_"int" i, #_"Object" a, #_"int" j, #_"Object" b]
-        (let [#_"Object[]" clone (.clone array)]
-            (aset clone i a)
-            (aset clone j b)
-            clone
+    (defn- #_"Object[]" PersistentHashMap'cloneAndSet-5 [#_"Object[]" array, #_"int" i, #_"Object" x, #_"int" j, #_"Object" y]
+        (let [#_"Object[]" a (.clone array)]
+            (aset a i x)
+            (aset a j y)
+            a
         )
     )
 
     (defn- #_"Object[]" PersistentHashMap'removePair [#_"Object[]" array, #_"int" i]
-        (let [#_"Object[]" newArray (make-array Object (- (alength array) 2))]
-            (System/arraycopy array, 0, newArray, 0, (* 2 i))
-            (System/arraycopy array, (* 2 (inc i)), newArray, (* 2 i), (- (alength newArray) (* 2 i)))
-            newArray
+        (let [#_"Object[]" a (make-array Object (- (alength array) 2))]
+            (System/arraycopy array, 0, a, 0, (* 2 i))
+            (System/arraycopy array, (* 2 (inc i)), a, (* 2 i), (- (alength a) (* 2 i)))
+            a
         )
     )
 
     (defn- #_"INode" PersistentHashMap'createNode-6 [#_"int" shift, #_"Object" key1, #_"Object" val1, #_"int" key2hash, #_"Object" key2, #_"Object" val2]
         (let [#_"int" key1hash (PersistentHashMap'hash key1)]
-            (when (= key1hash key2hash)
-                (§ return (HashCollisionNode'new nil, key1hash, 2, (object-array [ key1, val1, key2, val2 ])))
-            )
-            (let [#_"Box" addedLeaf (Box'new nil)]
-                (let [#_"AtomicReference<Thread>" edit (AtomicReference.)]
+            (when-not (= key1hash key2hash) => (HashCollisionNode'new nil, key1hash, 2, (object-array [ key1, val1, key2, val2 ]))
+                (let [#_"Box" addedLeaf (Box'new nil) #_"AtomicReference<Thread>" edit (AtomicReference.)]
                     (-> BitmapIndexedNode'EMPTY
                         (.assoc edit, shift, key1hash, key1, val1, addedLeaf)
                         (.assoc edit, shift, key2hash, key2, val2, addedLeaf)
@@ -25664,13 +25606,12 @@
 
     (defn- #_"INode" PersistentHashMap'createNode-7 [#_"AtomicReference<Thread>" edit, #_"int" shift, #_"Object" key1, #_"Object" val1, #_"int" key2hash, #_"Object" key2, #_"Object" val2]
         (let [#_"int" key1hash (PersistentHashMap'hash key1)]
-            (when (= key1hash key2hash)
-                (§ return (HashCollisionNode'new nil, key1hash, 2, (object-array [ key1, val1, key2, val2 ])))
-            )
-            (let [#_"Box" addedLeaf (Box'new nil)]
-                (-> BitmapIndexedNode'EMPTY
-                    (.assoc edit, shift, key1hash, key1, val1, addedLeaf)
-                    (.assoc edit, shift, key2hash, key2, val2, addedLeaf)
+            (when-not (= key1hash key2hash) => (HashCollisionNode'new nil, key1hash, 2, (object-array [ key1, val1, key2, val2 ]))
+                (let [#_"Box" addedLeaf (Box'new nil)]
+                    (-> BitmapIndexedNode'EMPTY
+                        (.assoc edit, shift, key1hash, key1, val1, addedLeaf)
+                        (.assoc edit, shift, key2hash, key2, val2, addedLeaf)
+                    )
                 )
             )
         )
@@ -25835,40 +25776,38 @@
     #_protected
     #_method
     (§ defn #_"Object" (§ method doInvoke) [#_"Primordial" this, #_"Object" args]
-        (when (§ instance? ArraySeq args)
-            (let [#_"Object[]" argsarray (:array (cast' ArraySeq args))]
-                (let [#_"IPersistentList" ret PersistentList'EMPTY]
-                    (loop-when-recur [#_"int" i (dec (alength argsarray))] (<= (:i (cast' ArraySeq args)) i) [(dec i)]
-                        (§ ass ret (cast' IPersistentList (.cons ret, (aget argsarray i))))
-                    )
-                    (§ return ret)
+        (if (§ instance? ArraySeq args)
+            (let [#_"Object[]" a (:array (cast' ArraySeq args))]
+                (loop-when-recur [#_"IPersistentList" l PersistentList'EMPTY #_"int" i (dec (alength a))]
+                                 (<= (:i (cast' ArraySeq args)) i)
+                                 [(cast' IPersistentList (.cons l, (aget a i))) (dec i)]
+                              => l
                 )
             )
-        )
-        (let [#_"LinkedList" list (LinkedList.)]
-            (loop-when-recur [#_"ISeq" s (RT'seq args)] (some? s) [(.next s)]
-                (.add list, (.first s))
+            (let [#_"LinkedList" l (LinkedList.)]
+                (loop-when-recur [#_"ISeq" s (RT'seq args)] (some? s) [(.next s)]
+                    (.add l, (.first s))
+                )
+                (PersistentList'create l)
             )
-            (PersistentList'create list)
         )
     )
 
     (defn #_"Object" Primordial'invokeStatic [#_"ISeq" args]
-        (when (§ instance? ArraySeq args)
-            (let [#_"Object[]" argsarray (:array (cast' ArraySeq args))]
-                (let [#_"IPersistentList" ret PersistentList'EMPTY]
-                    (loop-when-recur [#_"int" i (dec (alength argsarray))] (<= 0 i) [(dec i)]
-                        (§ ass ret (cast' IPersistentList (.cons ret, (aget argsarray i))))
-                    )
-                    (§ return ret)
+        (if (§ instance? ArraySeq args)
+            (let [#_"Object[]" a (:array (cast' ArraySeq args))]
+                (loop-when-recur [#_"IPersistentList" l PersistentList'EMPTY #_"int" i (dec (alength a))]
+                                 (<= 0 i)
+                                 [(cast' IPersistentList (.cons l, (aget a i))) (dec i)]
+                              => l
                 )
             )
-        )
-        (let [#_"LinkedList" list (LinkedList.)]
-            (loop-when-recur [#_"ISeq" s (RT'seq args)] (some? s) [(.next s)]
-                (.add list, (.first s))
+            (let [#_"LinkedList" l (LinkedList.)]
+                (loop-when-recur [#_"ISeq" s (RT'seq args)] (some? s) [(.next s)]
+                    (.add l, (.first s))
+                )
+                (PersistentList'create l)
             )
-            (PersistentList'create list)
         )
     )
 
@@ -26074,12 +26013,9 @@
 
     #_method
     (§ defn #_"int" (§ method indexOf) [#_"EmptyList" this, #_"Object" o]
-        (loop-when-recur [#_"ISeq" s (.seq this) #_"int" i 0] (some? s) [(.next s) (inc i)]
-            (when (Util'equiv-2oo (.first s), o)
-                (§ return i)
-            )
+        (loop-when [#_"ISeq" s (.seq this) #_"int" i 0] (some? s) => -1
+            (if (Util'equiv-2oo (.first s), o) i (recur (.next s) (inc i)))
         )
-        -1
     )
 
     #_method
@@ -26298,31 +26234,23 @@
 
     #_method
     (§ defn #_"boolean" (§ method equiv) [#_"PersistentQueue" this, #_"Object" obj]
-        (when (not (§ instance? Sequential obj))
-            (§ return false)
-        )
-        (let [#_"ISeq" ms (RT'seq obj)]
-            (loop-when-recur [#_"ISeq" s (.seq this) ms ms] (some? s) [(.next s) (.next ms)]
-                (when (or (nil? ms) (not (Util'equiv-2oo (.first s), (.first ms))))
-                    (§ return false)
+        (and (§ instance? Sequential obj)
+            (loop-when [#_"ISeq" s (.seq this) #_"ISeq" ms (RT'seq obj)] (some? s) => (nil? ms)
+                (and (some? ms) (Util'equiv-2oo (.first s), (.first ms))
+                    (recur (.next s) (.next ms))
                 )
             )
-            (nil? ms)
         )
     )
 
     #_method
     (§ defn #_"boolean" (§ method equals) [#_"PersistentQueue" this, #_"Object" obj]
-        (when (not (§ instance? Sequential obj))
-            (§ return false)
-        )
-        (let [#_"ISeq" ms (RT'seq obj)]
-            (loop-when-recur [#_"ISeq" s (.seq this) ms ms] (some? s) [(.next s) (.next ms)]
-                (when (or (nil? ms) (not (Util'equals (.first s), (.first ms))))
-                    (§ return false)
+        (and (§ instance? Sequential obj)
+            (loop-when [#_"ISeq" s (.seq this) #_"ISeq" ms (RT'seq obj)] (some? s) => (nil? ms)
+                (and (some? ms) (Util'equals (.first s), (.first ms))
+                    (recur (.next s) (.next ms))
                 )
             )
-            (nil? ms)
         )
     )
 
@@ -26357,16 +26285,13 @@
 
     #_method
     (§ defn #_"PersistentQueue" (§ method pop) [#_"PersistentQueue" this]
-        (when (nil? (:f this)) ;; hmmm... pop of empty queue -> empty queue?
-            (§ return this)
-        )
-        (let [#_"ISeq" f1 (.next (:f this))]
-            (let [#_"PersistentVector" r1 (:r this)]
-                (when (nil? f1)
-                    (§ ass f1 (RT'seq (:r this)))
-                    (§ ass r1 nil)
-                )
-                (PersistentQueue'new (.meta this), (dec (:cnt this)), f1, r1)
+        (when (some? (:f this)) => this ;; hmmm... pop of empty queue -> empty queue?
+            (let [#_"ISeq" f (.next (:f this)) #_"PersistentVector" r (:r this)
+                  [f r]
+                    (when (nil? f) => [f r]
+                        [(RT'seq r) nil]
+                    )]
+                (PersistentQueue'new (.meta this), (dec (:cnt this)), f, r)
             )
         )
     )
@@ -26385,13 +26310,12 @@
 
     #_method
     (§ defn #_"PersistentQueue" (§ method cons) [#_"PersistentQueue" this, #_"Object" o]
-        (if (nil? (:f this)) ;; empty
-            (do
-                (PersistentQueue'new (.meta this), (inc (:cnt this)), (RT'list-1 o), nil)
-            )
-            (do
-                (PersistentQueue'new (.meta this), (inc (:cnt this)), (:f this), (.cons (or (:r this) PersistentVector'EMPTY), o))
-            )
+        (let [[#_"ISeq" f #_"PersistentVector" r]
+                (if (nil? (:f this)) ;; empty
+                    [(RT'list-1 o) nil]
+                    [(:f this) (.cons (or (:r this) PersistentVector'EMPTY), o)]
+                )]
+            (PersistentQueue'new (.meta this), (inc (:cnt this)), f, r)
         )
     )
 
@@ -26590,22 +26514,20 @@
     (§ defn #_"TNode" (§ method replace) [#_"TNode" this, #_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" right])
 
     #_method
-    (§ defn #_"Object" (§ method kvreduce) [#_"TNode" this, #_"IFn" f, #_"Object" init]
+    (§ defn #_"Object" (§ method kvreduce) [#_"TNode" this, #_"IFn" f, #_"Object" r]
         (when (some? (.left this))
-            (§ ass init (.kvreduce (.left this), f, init))
-            (when (RT'isReduced init)
-                (§ return init)
+            (§ ass r (.kvreduce (.left this), f, r))
+            (when (RT'isReduced r)
+                (§ return r)
             )
         )
-        (§ ass init (.invoke f, init, (.key this), (.val this)))
-        (when (RT'isReduced init)
-            (§ return init)
+        (let [r (.invoke f, r, (.key this), (.val this))]
+            (cond
+                (RT'isReduced r)      r
+                (some? (.right this)) (.kvreduce (.right this), f, r)
+                :else                 r
+            )
         )
-
-        (when (some? (.right this))
-            (§ ass init (.kvreduce (.right this), f, init))
-        )
-        init
     )
 )
 
@@ -27190,27 +27112,21 @@
 
     #_method
     (§ defn #_"PersistentTreeMap" (§ method assocEx) [#_"PersistentTreeMap" this, #_"Object" key, #_"Object" val]
-        (let [#_"Box" found (Box'new nil)]
-            (let [#_"TNode" t (.add this, (:tree this), key, val, found)]
-                (when (nil? t) ;; nil == already contains key
-                    (throw (RuntimeException. "Key already present"))
-                )
-                (PersistentTreeMap'new-4c (:comp this), (.blacken t), (inc (:_count this)), (.meta this))
+        (let [#_"Box" found (Box'new nil) #_"TNode" t (.add this, (:tree this), key, val, found)]
+            (when (nil? t) ;; nil == already contains key
+                (throw (RuntimeException. "Key already present"))
             )
+            (PersistentTreeMap'new-4c (:comp this), (.blacken t), (inc (:_count this)), (.meta this))
         )
     )
 
     #_method
     (§ defn #_"PersistentTreeMap" (§ method assoc) [#_"PersistentTreeMap" this, #_"Object" key, #_"Object" val]
-        (let [#_"Box" found (Box'new nil)]
-            (let [#_"TNode" t (.add this, (:tree this), key, val, found)]
-                (when (nil? t) ;; nil == already contains key
-                    (let [#_"TNode" foundNode (cast' TNode (:val found))]
-                        (when (= (.val foundNode) val) ;; note only get same collection on identity of val, not equals()
-                            (§ return this)
-                        )
-                        (§ return (PersistentTreeMap'new-4c (:comp this), (.replace this, (:tree this), key, val), (:_count this), (.meta this)))
-                    )
+        (let [#_"Box" found (Box'new nil) #_"TNode" t (.add this, (:tree this), key, val, found)]
+            (if (nil? t) ;; nil == already contains key
+                (if (= (.val (cast' TNode (:val found))) val) ;; note only get same collection on identity of val, not equals()
+                    this
+                    (PersistentTreeMap'new-4c (:comp this), (.replace this, (:tree this), key, val), (:_count this), (.meta this))
                 )
                 (PersistentTreeMap'new-4c (:comp this), (.blacken t), (inc (:_count this)), (.meta this))
             )
@@ -27219,14 +27135,11 @@
 
     #_method
     (§ defn #_"PersistentTreeMap" (§ method without) [#_"PersistentTreeMap" this, #_"Object" key]
-        (let [#_"Box" found (Box'new nil)]
-            (let [#_"TNode" t (.remove this, (:tree this), key, found)]
-                (when (nil? t)
-                    (when (nil? (:val found)) ;; nil == doesn't contain key
-                        (§ return this)
-                    )
-                    ;; empty
-                    (§ return (PersistentTreeMap'new-2 (.meta this), (:comp this)))
+        (let [#_"Box" found (Box'new nil) #_"TNode" t (.remove this, (:tree this), key, found)]
+            (if (nil? t)
+                (if (nil? (:val found)) ;; nil == doesn't contain key
+                    this
+                    (PersistentTreeMap'new-2 (.meta this), (:comp this)) ;; empty
                 )
                 (PersistentTreeMap'new-4c (:comp this), (.blacken t), (dec (:_count this)), (.meta this))
             )
@@ -27272,49 +27185,16 @@
     #_method
     (§ defn #_"ISeq" (§ method seqFrom) [#_"PersistentTreeMap" this, #_"Object" key, #_"boolean" ascending]
         (when (pos? (:_count this))
-            (let [#_"ISeq" stack nil]
-                (let [#_"TNode" t (:tree this)]
-                    (while (some? t)
-                        (let [#_"int" c (.doCompare this, key, (:key t))]
-                            (cond (zero? c)
-                                (do
-                                    (§ ass stack (RT'cons t, stack))
-                                    (§ return (TSeq'new-2 stack, ascending))
-                                )
-                                ascending
-                                (do
-                                    (if (neg? c)
-                                        (do
-                                            (§ ass stack (RT'cons t, stack))
-                                            (§ ass t (.left t))
-                                        )
-                                        (do
-                                            (§ ass t (.right t))
-                                        )
-                                    )
-                                )
-                                :else
-                                (do
-                                    (if (pos? c)
-                                        (do
-                                            (§ ass stack (RT'cons t, stack))
-                                            (§ ass t (.right t))
-                                        )
-                                        (do
-                                            (§ ass t (.left t))
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                    (when (some? stack)
-                        (§ return (TSeq'new-2 stack, ascending))
+            (loop-when [#_"ISeq" s nil #_"TNode" t (:tree this)] (some? t) => (when (some? s) (TSeq'new-2 s, ascending))
+                (let [#_"int" cmp (.doCompare this, key, (:key t))]
+                    (cond
+                        (zero? cmp) (TSeq'new-2 (RT'cons t, s), ascending)
+                        ascending   (if (neg? cmp) (recur (RT'cons t, s) (.left t)) (recur s (.right t)))
+                        :else       (if (pos? cmp) (recur (RT'cons t, s) (.right t)) (recur s (.left t)))
                     )
                 )
             )
         )
-        nil
     )
 
     #_method
@@ -27323,14 +27203,10 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method kvreduce) [#_"PersistentTreeMap" this, #_"IFn" f, #_"Object" init]
-        (when (some? (:tree this))
-            (§ ass init (.kvreduce (:tree this), f, init))
+    (§ defn #_"Object" (§ method kvreduce) [#_"PersistentTreeMap" this, #_"IFn" f, #_"Object" r]
+        (let [r (if (some? (:tree this)) (.kvreduce (:tree this), f, r) r)]
+            (if (RT'isReduced r) (.deref (cast' IDeref r)) r)
         )
-        (when (RT'isReduced init)
-            (§ ass init (.deref (cast' IDeref init)))
-        )
-        init
     )
 
     #_method
@@ -27432,17 +27308,14 @@
 
     #_method
     (§ defn #_"TNode" (§ method entryAt) [#_"PersistentTreeMap" this, #_"Object" key]
-        (let [#_"TNode" t (:tree this)]
-            (while (some? t)
-                (let [#_"int" c (.doCompare this, key, (:key t))]
-                    (cond
-                        (neg? c) (§ ass t (.left t))
-                        (pos? c) (§ ass t (.right t))
-                        :else    (§ return t)
-                    )
+        (loop-when [#_"TNode" t (:tree this)] (some? t) => t
+            (let [#_"int" cmp (.doCompare this, key, (:key t))]
+                (cond
+                    (neg? cmp) (recur (.left t))
+                    (pos? cmp) (recur (.right t))
+                    :else      t
                 )
             )
-            t
         )
     )
 
@@ -27453,186 +27326,137 @@
 
     #_method
     (§ defn #_"TNode" (§ method add) [#_"PersistentTreeMap" this, #_"TNode" t, #_"Object" key, #_"Object" val, #_"Box" found]
-        (when (nil? t)
-            (when (nil? val)
-                (§ return (Red'new key))
+        (if (nil? t)
+            (if (nil? val)
+                (Red'new key)
+                (RedVal'new key, val)
             )
-            (§ return (RedVal'new key, val))
-        )
-        (let [#_"int" c (.doCompare this, key, (:key t))]
-            (when (zero? c)
-                (§ ass (:val found) t)
-                (§ return nil)
-            )
-            (let [#_"TNode" ins (if (neg? c) (.add this, (.left t), key, val, found) (.add this, (.right t), key, val, found))]
-                (when (nil? ins) ;; found below
-                    (§ return nil)
+            (let [#_"int" cmp (.doCompare this, key, (:key t))]
+                (if (zero? cmp)
+                    (do
+                        (§ ass (:val found) t)
+                        nil
+                    )
+                    (let [#_"TNode" ins (if (neg? cmp) (.add this, (.left t), key, val, found) (.add this, (.right t), key, val, found))]
+                        (cond
+                            (nil? ins) nil ;; found below
+                            (neg? cmp) (.addLeft t, ins)
+                            :else      (.addRight t, ins)
+                        )
+                    )
                 )
-                (when (neg? c)
-                    (§ return (.addLeft t, ins))
-                )
-                (.addRight t, ins)
             )
         )
     )
 
     #_method
     (§ defn #_"TNode" (§ method remove) [#_"PersistentTreeMap" this, #_"TNode" t, #_"Object" key, #_"Box" found]
-        (when (nil? t)
-            (§ return nil) ;; not found indicator
-        )
-        (let [#_"int" c (.doCompare this, key, (:key t))]
-            (when (zero? c)
-                (§ ass (:val found) t)
-                (§ return (PersistentTreeMap'append (.left t), (.right t)))
-            )
-            (let [#_"TNode" del (if (neg? c) (.remove this, (.left t), key, found) (.remove this, (.right t), key, found))]
-                (when (and (nil? del) (nil? (:val found))) ;; not found below
-                    (§ return nil)
-                )
-                (when (neg? c)
-                    (if (§ instance? Black (.left t))
-                        (do
-                            (§ return (PersistentTreeMap'balanceLeftDel (:key t), (.val t), del, (.right t)))
-                        )
-                        (do
-                            (§ return (PersistentTreeMap'red (:key t), (.val t), del, (.right t)))
+        (when (some? t) => nil ;; not found indicator
+            (let [#_"int" cmp (.doCompare this, key, (:key t))]
+                (if (zero? cmp)
+                    (do
+                        (§ ass (:val found) t)
+                        (PersistentTreeMap'append (.left t), (.right t))
+                    )
+                    (let [#_"TNode" del (if (neg? cmp) (.remove this, (.left t), key, found) (.remove this, (.right t), key, found))]
+                        (when (or (some? del) (some? (:val found))) => nil ;; not found below
+                            (if (neg? cmp)
+                                (if (§ instance? Black (.left t))
+                                    (PersistentTreeMap'balanceLeftDel (:key t), (.val t), del, (.right t))
+                                    (PersistentTreeMap'red (:key t), (.val t), del, (.right t))
+                                )
+                                (if (§ instance? Black (.right t))
+                                    (PersistentTreeMap'balanceRightDel (:key t), (.val t), (.left t), del)
+                                    (PersistentTreeMap'red (:key t), (.val t), (.left t), del)
+                                )
+                            )
                         )
                     )
                 )
-                (when (§ instance? Black (.right t))
-                    (§ return (PersistentTreeMap'balanceRightDel (:key t), (.val t), (.left t), del))
-                )
-                (PersistentTreeMap'red (:key t), (.val t), (.left t), del)
             )
         )
     )
 
     (defn #_"TNode" PersistentTreeMap'append [#_"TNode" left, #_"TNode" right]
-        (cond (nil? left)
-            (do
+        (cond
+            (nil? left)
                 right
-            )
             (nil? right)
-            (do
                 left
-            )
             (§ instance? Red left)
-            (do
                 (if (§ instance? Red right)
-                    (do
-                        (let [#_"TNode" app (PersistentTreeMap'append (.right left), (.left right))]
-                            (if (§ instance? Red app)
-                                (do
-                                    (PersistentTreeMap'red (:key app), (.val app), (PersistentTreeMap'red (:key left), (.val left), (.left left), (.left app)), (PersistentTreeMap'red (:key right), (.val right), (.right app), (.right right)))
-                                )
-                                (do
-                                    (PersistentTreeMap'red (:key left), (.val left), (.left left), (PersistentTreeMap'red (:key right), (.val right), app, (.right right)))
-                                )
-                            )
+                    (let [#_"TNode" app (PersistentTreeMap'append (.right left), (.left right))]
+                        (if (§ instance? Red app)
+                            (PersistentTreeMap'red (:key app), (.val app), (PersistentTreeMap'red (:key left), (.val left), (.left left), (.left app)), (PersistentTreeMap'red (:key right), (.val right), (.right app), (.right right)))
+                            (PersistentTreeMap'red (:key left), (.val left), (.left left), (PersistentTreeMap'red (:key right), (.val right), app, (.right right)))
                         )
                     )
-                    (do
-                        (PersistentTreeMap'red (:key left), (.val left), (.left left), (PersistentTreeMap'append (.right left), right))
-                    )
+                    (PersistentTreeMap'red (:key left), (.val left), (.left left), (PersistentTreeMap'append (.right left), right))
                 )
-            )
             (§ instance? Red right)
-            (do
                 (PersistentTreeMap'red (:key right), (.val right), (PersistentTreeMap'append left, (.left right)), (.right right))
-            )
             :else ;; black/black
-            (do
                 (let [#_"TNode" app (PersistentTreeMap'append (.right left), (.left right))]
                     (if (§ instance? Red app)
-                        (do
-                            (PersistentTreeMap'red (:key app), (.val app), (PersistentTreeMap'black (:key left), (.val left), (.left left), (.left app)), (PersistentTreeMap'black (:key right), (.val right), (.right app), (.right right)))
-                        )
-                        (do
-                            (PersistentTreeMap'balanceLeftDel (:key left), (.val left), (.left left), (PersistentTreeMap'black (:key right), (.val right), app, (.right right)))
-                        )
+                        (PersistentTreeMap'red (:key app), (.val app), (PersistentTreeMap'black (:key left), (.val left), (.left left), (.left app)), (PersistentTreeMap'black (:key right), (.val right), (.right app), (.right right)))
+                        (PersistentTreeMap'balanceLeftDel (:key left), (.val left), (.left left), (PersistentTreeMap'black (:key right), (.val right), app, (.right right)))
                     )
                 )
-            )
         )
     )
 
     (defn #_"TNode" PersistentTreeMap'balanceLeftDel [#_"Object" key, #_"Object" val, #_"TNode" del, #_"TNode" right]
-        (cond (§ instance? Red del)
-            (do
+        (cond
+            (§ instance? Red del)
                 (PersistentTreeMap'red key, val, (.blacken del), right)
-            )
             (§ instance? Black right)
-            (do
                 (PersistentTreeMap'rightBalance key, val, del, (.redden right))
-            )
             (and (§ instance? Red right) (§ instance? Black (.left right)))
-            (do
                 (PersistentTreeMap'red (:key (.left right)), (.val (.left right)), (PersistentTreeMap'black key, val, del, (.left (.left right))), (PersistentTreeMap'rightBalance (:key right), (.val right), (.right (.left right)), (.redden (.right right))))
-            )
             :else
-            (do
                 (throw (UnsupportedOperationException. "Invariant violation"))
-            )
         )
     )
 
     (defn #_"TNode" PersistentTreeMap'balanceRightDel [#_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" del]
-        (cond (§ instance? Red del)
-            (do
+        (cond
+            (§ instance? Red del)
                 (PersistentTreeMap'red key, val, left, (.blacken del))
-            )
             (§ instance? Black left)
-            (do
                 (PersistentTreeMap'leftBalance key, val, (.redden left), del)
-            )
             (and (§ instance? Red left) (§ instance? Black (.right left)))
-            (do
                 (PersistentTreeMap'red (:key (.right left)), (.val (.right left)), (PersistentTreeMap'leftBalance (:key left), (.val left), (.redden (.left left)), (.left (.right left))), (PersistentTreeMap'black key, val, (.right (.right left)), del))
-            )
             :else
-            (do
                 (throw (UnsupportedOperationException. "Invariant violation"))
-            )
         )
     )
 
     (defn #_"TNode" PersistentTreeMap'leftBalance [#_"Object" key, #_"Object" val, #_"TNode" ins, #_"TNode" right]
-        (cond (and (§ instance? Red ins) (§ instance? Red (.left ins)))
-            (do
+        (cond
+            (and (§ instance? Red ins) (§ instance? Red (.left ins)))
                 (PersistentTreeMap'red (:key ins), (.val ins), (.blacken (.left ins)), (PersistentTreeMap'black key, val, (.right ins), right))
-            )
             (and (§ instance? Red ins) (§ instance? Red (.right ins)))
-            (do
                 (PersistentTreeMap'red (:key (.right ins)), (.val (.right ins)), (PersistentTreeMap'black (:key ins), (.val ins), (.left ins), (.left (.right ins))), (PersistentTreeMap'black key, val, (.right (.right ins)), right))
-            )
             :else
-            (do
                 (PersistentTreeMap'black key, val, ins, right)
-            )
         )
     )
 
     (defn #_"TNode" PersistentTreeMap'rightBalance [#_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" ins]
-        (cond (and (§ instance? Red ins) (§ instance? Red (.right ins)))
-            (do
+        (cond
+            (and (§ instance? Red ins) (§ instance? Red (.right ins)))
                 (PersistentTreeMap'red (:key ins), (.val ins), (PersistentTreeMap'black key, val, left, (.left ins)), (.blacken (.right ins)))
-            )
             (and (§ instance? Red ins) (§ instance? Red (.left ins)))
-            (do
                 (PersistentTreeMap'red (:key (.left ins)), (.val (.left ins)), (PersistentTreeMap'black key, val, left, (.left (.left ins))), (PersistentTreeMap'black (:key ins), (.val ins), (.right (.left ins)), (.right ins)))
-            )
             :else
-            (do
                 (PersistentTreeMap'black key, val, left, ins)
-            )
         )
     )
 
     #_method
     (§ defn #_"TNode" (§ method replace) [#_"PersistentTreeMap" this, #_"TNode" t, #_"Object" key, #_"Object" val]
-        (let [#_"int" c (.doCompare this, key, (:key t))]
-            (.replace t, (:key t), (if (zero? c) val (.val t)), (if (neg? c) (.replace this, (.left t), key, val) (.left t)), (if (pos? c) (.replace this, (.right t), key, val) (.right t)))
+        (let [#_"int" cmp (.doCompare this, key, (:key t))]
+            (.replace t, (:key t), (if (zero? cmp) val (.val t)), (if (neg? cmp) (.replace this, (.left t), key, val) (.left t)), (if (pos? cmp) (.replace this, (.right t), key, val) (.right t)))
         )
     )
 
@@ -27647,28 +27471,28 @@
     )
 
     (defn #_"Red" PersistentTreeMap'red [#_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" right]
-        (when (and (nil? left) (nil? right))
-            (when (nil? val)
-                (§ return (Red'new key))
+        (if (and (nil? left) (nil? right))
+            (if (nil? val)
+                (Red'new key)
+                (RedVal'new key, val)
             )
-            (§ return (RedVal'new key, val))
-        )
-        (if (nil? val)
-            (RedBranch'new key, left, right)
-            (RedBranchVal'new key, val, left, right)
+            (if (nil? val)
+                (RedBranch'new key, left, right)
+                (RedBranchVal'new key, val, left, right)
+            )
         )
     )
 
     (defn #_"Black" PersistentTreeMap'black [#_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" right]
-        (when (and (nil? left) (nil? right))
-            (when (nil? val)
-                (§ return (Black'new key))
+        (if (and (nil? left) (nil? right))
+            (if (nil? val)
+                (Black'new key)
+                (BlackVal'new key, val)
             )
-            (§ return (BlackVal'new key, val))
-        )
-        (if (nil? val)
-            (BlackBranch'new key, left, right)
-            (BlackBranchVal'new key, val, left, right)
+            (if (nil? val)
+                (BlackBranch'new key, left, right)
+                (BlackBranchVal'new key, val, left, right)
+            )
         )
     )
 
@@ -27686,21 +27510,19 @@
 (class-ns PersistentTreeSet (§ extends APersistentSet) (§ implements IObj, Reversible, Sorted)
     (§ def #_"PersistentTreeSet" PersistentTreeSet'EMPTY (PersistentTreeSet'new nil, PersistentTreeMap'EMPTY))
 
-    (defn #_"PersistentTreeSet" PersistentTreeSet'create-1 [#_"ISeq" items]
-        (let [#_"PersistentTreeSet" ret PersistentTreeSet'EMPTY]
-            (loop-when-recur [items items] (some? items) [(.next items)]
-                (§ ass ret (cast' PersistentTreeSet (.cons ret, (.first items))))
-            )
-            ret
+    (defn #_"PersistentTreeSet" PersistentTreeSet'create-1 [#_"ISeq" s]
+        (loop-when-recur [#_"PersistentTreeSet" t PersistentTreeSet'EMPTY s s]
+                         (some? s)
+                         [(cast' PersistentTreeSet (.cons t, (.first s))) (.next s)]
+                      => t
         )
     )
 
-    (defn #_"PersistentTreeSet" PersistentTreeSet'create-2 [#_"Comparator" comp, #_"ISeq" items]
-        (let [#_"PersistentTreeSet" ret (PersistentTreeSet'new nil, (PersistentTreeMap'new-2 nil, comp))]
-            (loop-when-recur [items items] (some? items) [(.next items)]
-                (§ ass ret (cast' PersistentTreeSet (.cons ret, (.first items))))
-            )
-            ret
+    (defn #_"PersistentTreeSet" PersistentTreeSet'create-2 [#_"Comparator" comp, #_"ISeq" s]
+        (loop-when-recur [#_"PersistentTreeSet" t (PersistentTreeSet'new nil, (PersistentTreeMap'new-2 nil, comp)) s s]
+                         (some? s)
+                         [(cast' PersistentTreeSet (.cons t, (.first s))) (.next s)]
+                      => t
         )
     )
 
@@ -27721,7 +27543,7 @@
     (§ defn #_"boolean" (§ method equals) [#_"PersistentTreeSet" this, #_"Object" obj]
         (try
             (.equals (§ super ), obj)
-            (catch ClassCastException e
+            (catch ClassCastException _
                 false
             )
         )
@@ -27731,7 +27553,7 @@
     (§ defn #_"boolean" (§ method equiv) [#_"PersistentTreeSet" this, #_"Object" obj]
         (try
             (.equiv (§ super ), obj)
-            (catch ClassCastException e
+            (catch ClassCastException _
                 false
             )
         )
@@ -27990,33 +27812,29 @@
     #_method
     (§ defn #_"TransientVector" (§ method conj) [#_"TransientVector" this, #_"Object" val]
         (.ensureEditable this)
-        (let [#_"int" i (:cnt this)]
-            ;; room in tail?
-            (when (< (- i (.tailoff this)) 32)
-                (aset (:tail this) (& i 0x01f) val)
-                (§ ass this (assoc this :cnt (inc (:cnt this))))
-                (§ return this)
-            )
-            ;; full tail, push into tree
-            (§ let [#_"VNode" newroot]
+        (let [#_"int" n (:cnt this)]
+            (if (< (- n (.tailoff this)) 32) ;; room in tail?
+                (do
+                    (aset (:tail this) (& n 0x01f) val)
+                    (§ ass this (assoc this :cnt (inc (:cnt this))))
+                    this
+                )
+                ;; full tail, push into tree
                 (let [#_"VNode" tailnode (VNode'new-2 (:edit (:root this)), (:tail this))]
                     (§ ass this (assoc this :tail (make-array Object 32)))
                     (aset (:tail this) 0 val)
-                    (let [#_"int" newshift (:shift this)]
-                        ;; overflow root?
-                        (if (< (<< 1 (:shift this)) (>>> (:cnt this) 5))
-                            (do
-                                (§ ass newroot (VNode'new-1 (:edit (:root this))))
-                                (aset (:array newroot) 0 (:root this))
-                                (aset (:array newroot) 1 (PersistentVector'newPath (:edit (:root this)), (:shift this), tailnode))
-                                (§ ass newshift (+ newshift 5))
-                            )
-                            (do
-                                (§ ass newroot (.pushTail this, (:shift this), (:root this), tailnode))
-                            )
-                        )
-                        (§ ass this (assoc this :root newroot))
-                        (§ ass this (assoc this :shift newshift))
+                    (let [#_"int" shift (:shift this)
+                          [#_"VNode" root shift]
+                            (if (< (<< 1 shift) (>>> n 5)) ;; overflow root?
+                                (let [root (VNode'new-1 (:edit (:root this)))]
+                                    (aset (:array root) 0 (:root this))
+                                    (aset (:array root) 1 (PersistentVector'newPath (:edit (:root this)), shift, tailnode))
+                                    [root (+ shift 5)]
+                                )
+                                [(.pushTail this, shift, (:root this), tailnode) shift]
+                            )]
+                        (§ ass this (assoc this :root root))
+                        (§ ass this (assoc this :shift shift))
                         (§ ass this (assoc this :cnt (inc (:cnt this))))
                         this
                     )
@@ -28031,24 +27849,19 @@
         ;; else does it map to an existing child? -> nodeToInsert = pushNode one more level
         ;; else alloc new path
         ;; return nodeToInsert placed in parent
-        (§ ass parent (.ensureEditable this, parent))
-        (let [#_"int" subidx (& (>>> (dec (:cnt this)) level) 0x01f)]
-            (let [#_"VNode" ret parent]
-                (§ let [#_"VNode" nodeToInsert]
-                    (if (= level 5)
-                        (do
-                            (§ ass nodeToInsert tailnode)
-                        )
-                        (do
-                            (let [#_"VNode" child (cast' VNode (aget (:array parent) subidx))]
-                                (§ ass nodeToInsert (if (some? child) (.pushTail this, (- level 5), child, tailnode) (PersistentVector'newPath (:edit (:root this)), (- level 5), tailnode)))
-                            )
+        (let [parent (.ensureEditable this, parent)
+              #_"int" i (& (>>> (dec (:cnt this)) level) 0x01f)
+              #_"VNode" nodeToInsert
+                (when-not (= level 5) => tailnode
+                    (let [#_"VNode" child (cast' VNode (aget (:array parent) i))]
+                        (if (some? child)
+                            (.pushTail this, (- level 5), child, tailnode)
+                            (PersistentVector'newPath (:edit (:root this)), (- level 5), tailnode)
                         )
                     )
-                    (aset (:array ret) subidx nodeToInsert)
-                    ret
-                )
-            )
+                )]
+            (aset (:array parent) i nodeToInsert)
+            parent
         )
     )
 
@@ -29307,18 +29120,8 @@
 
     #_method
     (§ defn #_"int" (§ method compareTo) [#_"Ref" this, #_"Ref" ref]
-        (cond (= (:id this) (:id ref))
-            (do
-                0
-            )
-            (< (:id this) (:id ref))
-            (do
-                -1
-            )
-            :else
-            (do
-                1
-            )
+        (let [a (:id this) b (:id ref)]
+            (cond (< a b) -1 (> a b) 1 :else 0)
         )
     )
 
