@@ -19271,23 +19271,24 @@
                 (.tryWriteLock this, ref)
                 (§ ass unlocked false)
 
-                (when (and (some? (:tvals ref)) (< (:readPoint this) (:point (:tvals ref))))
-                    (throw (:retryex this))
-                )
-                (let [#_"LockingTransactionInfo" refinfo (:tinfo ref)]
-                    ;; write lock conflict
-                    (when (and (some? refinfo) (not= refinfo (:info this)) (.running refinfo))
-                        (when (not (.barge this, refinfo))
-                            (.unlock (.writeLock (:lock ref)))
-                            (§ ass unlocked true)
-                            (§ return (.blockAndBail this, refinfo))
+                (when-not (and (some? (:tvals ref)) (< (:readPoint this) (:point (:tvals ref)))) => (throw (:retryex this))
+                    (let [#_"LockingTransactionInfo" refinfo (:tinfo ref)]
+                        ;; write lock conflict
+                        (if (and (some? refinfo) (not= refinfo (:info this)) (.running refinfo) (not (.barge this, refinfo)))
+                            (do
+                                (.unlock (.writeLock (:lock ref)))
+                                (§ ass unlocked true)
+                                (.blockAndBail this, refinfo)
+                            )
+                            (do
+                                (§ ass (:tinfo ref) (:info this))
+                                (when (some? (:tvals ref)) (:val (:tvals ref)))
+                            )
                         )
                     )
-                    (§ ass (:tinfo ref) (:info this))
-                    (when (some? (:tvals ref)) (:val (:tvals ref)))
                 )
                 (finally
-                    (when (not unlocked)
+                    (when-not unlocked
                         (.unlock (.writeLock (:lock ref)))
                     )
                 )
@@ -19301,7 +19302,7 @@
         (.stop this, LockingTransaction'RETRY)
         (try
             (.await (:latch refinfo), LockingTransaction'LOCK_WAIT_MSECS, TimeUnit/MILLISECONDS)
-            (catch InterruptedException e
+            (catch InterruptedException _
                 ;; ignore
             )
         )
@@ -19523,48 +19524,43 @@
 
     #_method
     (§ defn #_"Object" (§ method doGet) [#_"LockingTransaction" this, #_"Ref" ref]
-        (when (not (.running (:info this)))
-            (throw (:retryex this))
-        )
-        (when (.containsKey (:vals this), ref)
-            (§ return (.get (:vals this), ref))
-        )
-        (try
-            (.lock (.readLock (:lock ref)))
-            (when (nil? (:tvals ref))
-                (throw (IllegalStateException. (str (.toString ref) " is unbound.")))
-            )
-            (let [#_"RefTVal" ver (:tvals ref)]
-                (§ loop
-                    (when (<= (:point ver) (:readPoint this))
-                        (§ return (:val ver))
+        (when (.running (:info this)) => (throw (:retryex this))
+            (when-not (.containsKey (:vals this), ref) => (.get (:vals this), ref)
+                (let [_ (try
+                            (.lock (.readLock (:lock ref)))
+                            (let-when [#_"RefTVal" ver (:tvals ref)] (some? ver) => (throw (IllegalStateException. (str (.toString ref) " is unbound.")))
+                                (loop-when [ver ver] (< (:readPoint this) (:point ver)) => (:val ver)
+                                    (let-when [ver (:prior ver)] (not= ver (:tvals ref)) => :nil
+                                        (recur ver)
+                                    )
+                                )
+                            )
+                            (finally
+                                (.unlock (.readLock (:lock ref)))
+                            )
+                        )]
+                    (when (= _ :nil) => _
+                        ;; no version of val precedes the read point
+                        (.incrementAndGet (:faults ref))
+                        (throw (:retryex this))
                     )
-                    (§ recur-if (not= (§ ass ver (:prior ver)) (:tvals ref)))
                 )
             )
-            (finally
-                (.unlock (.readLock (:lock ref)))
-            )
         )
-        ;; no version of val precedes the read point
-        (.incrementAndGet (:faults ref))
-        (throw (:retryex this))
     )
 
     #_method
     (§ defn #_"Object" (§ method doSet) [#_"LockingTransaction" this, #_"Ref" ref, #_"Object" val]
-        (when (not (.running (:info this)))
-            (throw (:retryex this))
+        (when (.running (:info this)) => (throw (:retryex this))
+            (when-not (.containsKey (:commutes this), ref) => (throw (IllegalStateException. "Can't set after commute"))
+                (when-not (.contains (:sets this), ref)
+                    (.add (:sets this), ref)
+                    (.lock this, ref)
+                )
+                (.put (:vals this), ref, val)
+                val
+            )
         )
-        (when (.containsKey (:commutes this), ref)
-            (throw (IllegalStateException. "Can't set after commute"))
-        )
-        (when (not (.contains (:sets this), ref))
-            (.add (:sets this), ref)
-            (.lock this, ref)
-        )
-        (.put (:vals this), ref, val)
-        val
     )
 
     #_method
@@ -19573,7 +19569,7 @@
             (when-not (.contains (:ensures this), ref)
                 (.lock (.readLock (:lock ref)))
                 ;; someone completed a write after our snapshot
-                (when (and (some? (:tvals ref)) (< (:readPoint this) (:point (:tvals ref))))
+                (let-when [#_"RefTVal" ver (:tvals ref)] (and (some? ver) (< (:readPoint this) (:point ver)))
                     (.unlock (.readLock (:lock ref)))
                     (throw (:retryex this))
                 )
@@ -19591,29 +19587,28 @@
 
     #_method
     (§ defn #_"Object" (§ method doCommute) [#_"LockingTransaction" this, #_"Ref" ref, #_"IFn" fn, #_"ISeq" args]
-        (when (not (.running (:info this)))
-            (throw (:retryex this))
-        )
-        (when (not (.containsKey (:vals this), ref))
-            (let [#_"Object" val nil]
-                (try
-                    (.lock (.readLock (:lock ref)))
-                    (§ ass val (when (some? (:tvals ref)) (:val (:tvals ref))))
-                    (finally
-                        (.unlock (.readLock (:lock ref)))
-                    )
+        (when (.running (:info this)) => (throw (:retryex this))
+            (when-not (.containsKey (:vals this), ref)
+                (let [#_"Object" val
+                        (try
+                            (.lock (.readLock (:lock ref)))
+                            (when (some? (:tvals ref)) (:val (:tvals ref)))
+                            (finally
+                                (.unlock (.readLock (:lock ref)))
+                            )
+                        )]
+                    (.put (:vals this), ref, val)
                 )
-                (.put (:vals this), ref, val)
             )
-        )
-        (let [#_"ArrayList<CFn>" fns (.get (:commutes this), ref)]
-            (when (nil? fns)
-                (.put (:commutes this), ref, (§ ass fns (ArrayList.)))
-            )
-            (.add fns, (CFn'new fn, args))
-            (let [#_"Object" ret (.applyTo fn, (RT'cons (.get (:vals this), ref), args))]
-                (.put (:vals this), ref, ret)
-                ret
+            (let [#_"ArrayList<CFn>" fns (.get (:commutes this), ref)]
+                (when (nil? fns)
+                    (.put (:commutes this), ref, (§ ass fns (ArrayList.)))
+                )
+                (.add fns, (CFn'new fn, args))
+                (let [#_"Object" ret (.applyTo fn, (RT'cons (.get (:vals this), ref), args))]
+                    (.put (:vals this), ref, ret)
+                    ret
+                )
             )
         )
     )
@@ -19721,24 +19716,16 @@
 
     #_method
     (§ defn #_"LongChunk" (§ method dropFirst) [#_"LongChunk" this]
-        (if (< 1 (:count this))
+        (when (< 1 (:count this)) => (throw (IllegalStateException. "dropFirst of empty chunk"))
             (LongChunk'new (+ (:start this) (:step this)), (:step this), (dec (:count this)))
-            (throw (IllegalStateException. "dropFirst of empty chunk"))
         )
     )
 
     #_method
-    (§ defn #_"Object" (§ method reduce) [#_"LongChunk" this, #_"IFn" f, #_"Object" init]
-        (let [#_"long" x (:start this)]
-            (let [#_"Object" ret init]
-                (loop-when-recur [#_"int" i 0] (< i (:count this)) [(inc i)]
-                    (§ ass ret (.invoke f, ret, x))
-                    (when (RT'isReduced ret)
-                        (§ return ret)
-                    )
-                    (§ ass x (+ x (:step this)))
-                )
-                ret
+    (§ defn #_"Object" (§ method reduce) [#_"LongChunk" this, #_"IFn" f, #_"Object" r]
+        (loop-when [r r #_"long" x (:start this) #_"int" i 0] (< i (:count this)) => r
+            (let-when-not [r (.invoke f, r, x)] (RT'isReduced r) => r
+                (recur r (+ x (:step this)) (inc i))
             )
         )
     )
@@ -19883,18 +19870,16 @@
 
     #_override
     (§ defn #_"ISeq" ISeq'''next [#_"LongRange" this]
-        (when (some? (:_next this))
-            (§ return (:_next this))
-        )
-
-        (.forceChunk this)
-        (when (< 1 (.count (:_chunk this)))
-            (let [#_"LongChunk" smallerChunk (.dropFirst (:_chunk this))]
-                (§ ass this (assoc this :_next (LongRange'new-6 (.first smallerChunk), (:end this), (:step this), (:boundsCheck this), smallerChunk, (:_chunkNext this))))
-                (§ return (:_next this))
+        (let-when [#_"ISeq" _next (:_next this)] (nil? _next) => _next
+            (.forceChunk this)
+            (when (< 1 (.count (:_chunk this))) => (.chunkedNext this)
+                (let [#_"LongChunk" _rest (.dropFirst (:_chunk this))
+                      _next (LongRange'new-6 (.first _rest), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this))]
+                    (§ ass this (assoc this :_next _next))
+                    _next
+                )
             )
         )
-        (.chunkedNext this)
     )
 
     #_method
@@ -19918,25 +19903,20 @@
     ;; returns either exact count or CHUNK_SIZE+1
     #_method
     (§ defn #_"long" (§ method steppingCount) [#_"LongRange" this, #_"long" start, #_"long" end, #_"long" step]
-        (let [#_"long" count 1]
-            (let [#_"long" s start]
-                (while (<= count LongRange'CHUNK_SIZE)
+        (loop-when [#_"long" s start #_"long" n 1] (<= n LongRange'CHUNK_SIZE) => n
+            (let [[s n]
                     (try
-                        (§ ass s (Numbers'add-2ll s, step))
-                        (if (.exceededBounds (:boundsCheck this), s)
-                            (do
-                                (§ break )
-                            )
-                            (do
-                                (§ ass count (inc count))
+                        (let [s (Numbers'add-2ll s, step)]
+                            (if (.exceededBounds (:boundsCheck this), s)
+                                [nil n]
+                                [s (inc n)]
                             )
                         )
-                        (catch ArithmeticException e
-                            (§ break )
+                        (catch ArithmeticException _
+                            [nil n]
                         )
-                    )
-                )
-                count
+                    )]
+                (recur-if (some? s) [s n] => n)
             )
         )
     )
@@ -19953,33 +19933,19 @@
     #_override
     (§ defn #_"int" Counted'''count [#_"LongRange" this]
         (try
-            (let [#_"long" c (.rangeCount this, (:start this), (:end this), (:step this))]
-                (if (< Integer/MAX_VALUE c)
-                    (do
-                        (Numbers'throwIntOverflow)
-                    )
-                    (do
-                        (int c)
-                    )
+            (let [#_"long" n (.rangeCount this, (:start this), (:end this), (:step this))]
+                (when (<= n Integer/MAX_VALUE) => (Numbers'throwIntOverflow)
+                    (int n)
                 )
             )
-            (catch ArithmeticException e
+            (catch ArithmeticException _
                 ;; rare case from large range or step, fall back to iterating and counting
-                (let [#_"Iterator" iter (.iterator this)]
-                    (let [#_"long" count 0]
-                        (while (.hasNext iter)
-                            (.next iter)
-                            (§ ass count (inc count))
-                        )
-
-                        (if (< Integer/MAX_VALUE count)
-                            (do
-                                (Numbers'throwIntOverflow)
-                            )
-                            (do
-                                (int count)
-                            )
-                        )
+                (let [#_"long" n
+                        (loop-when-recur [#_"Iterator" it (.iterator this) n 0] (.hasNext it) [it (inc n)] => n
+                            (.next it)
+                        )]
+                    (when (<= n Integer/MAX_VALUE) => (Numbers'throwIntOverflow)
+                        (int n)
                     )
                 )
             )
@@ -19988,33 +19954,22 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"LongRange" this, #_"IFn" f]
-        (let [#_"Object" acc (:start this)]
-            (let [#_"long" i (+ (:start this) (:step this))]
-                (while (not (.exceededBounds (:boundsCheck this), i))
-                    (§ ass acc (.invoke f, acc, i))
-                    (when (§ instance? Reduced acc)
-                        (§ return (.deref (cast' Reduced acc)))
-                    )
-                    (§ ass i (+ i (:step this)))
+        (loop [#_"Object" r (:start this) #_"long" i r]
+            (let-when-not [i (+ i (:step this))] (.exceededBounds (:boundsCheck this), i) => r
+                (let-when-not [r (.invoke f, r, i)] (RT'isReduced r) => (.deref (cast' Reduced r))
+                    (recur r i)
                 )
-                acc
             )
         )
     )
 
     #_method
-    (§ defn #_"Object" (§ method reduce) [#_"LongRange" this, #_"IFn" f, #_"Object" val]
-        (let [#_"Object" acc val]
-            (let [#_"long" i (:start this)]
-                (§ loop
-                    (§ ass acc (.invoke f, acc, i))
-                    (when (RT'isReduced acc)
-                        (§ return (.deref (cast' Reduced acc)))
-                    )
-                    (§ ass i (+ i (:step this)))
-                    (§ recur-if (not (.exceededBounds (:boundsCheck this), i)))
+    (§ defn #_"Object" (§ method reduce) [#_"LongRange" this, #_"IFn" f, #_"Object" r]
+        (loop [r r #_"long" i (:start this)]
+            (let-when-not [r (.invoke f, r, i)] (RT'isReduced r) => (.deref (cast' Reduced r))
+                (let-when-not [i (+ i (:step this))] (.exceededBounds (:boundsCheck this), i) => r
+                    (recur r i)
                 )
-                acc
             )
         )
     )
@@ -20152,21 +20107,16 @@
     #_method
     (§ defn #_"IFn" (§ method findFnFor) [#_"MethodImplCache" this, #_"Class" c]
         (if (some? (:map this))
-            (do
-                (let [#_"Entry" e (cast' Entry (.get (:map this), c))]
-                    (§ ass this (assoc this :mre e))
-                    (when (some? e) (:fn e))
-                )
+            (let [#_"Entry" e (cast' Entry (.get (:map this), c))]
+                (§ ass this (assoc this :mre e))
+                (when (some? e) (:fn e))
             )
-            (do
-                (let [#_"int" idx (<< (& (>> (Util'hash c) (:shift this)) (:mask this)) 1)]
-                    (when (and (< idx (alength (:table this))) (= (aget (:table this) idx) c))
-                        (let [#_"Entry" e (cast' Entry (aget (:table this) (inc idx)))]
-                            (§ ass this (assoc this :mre e))
-                            (§ return (when (some? e) (:fn e)))
-                        )
+            (let [#_"int" idx (<< (& (>> (Util'hash c) (:shift this)) (:mask this)) 1)]
+                (when (and (< idx (alength (:table this))) (= (aget (:table this) idx) c))
+                    (let [#_"Entry" e (cast' Entry (aget (:table this) (inc idx)))]
+                        (§ ass this (assoc this :mre e))
+                        (when (some? e) (:fn e))
                     )
-                    nil
                 )
             )
         )
@@ -20276,21 +20226,16 @@
 
     #_method
     (§ defn- #_"boolean" (§ method prefers) [#_"MultiFn" this, #_"Object" x, #_"Object" y]
-        (let [#_"IPersistentSet" xprefs (cast' IPersistentSet (.valAt (.getPreferTable this), x))]
-            (when (and (some? xprefs) (.contains xprefs, y))
-                (§ return true)
+        (or
+            (let [#_"IPersistentSet" xprefs (cast' IPersistentSet (.valAt (.getPreferTable this), x))]
+                (and (some? xprefs) (.contains xprefs, y))
             )
-            (loop-when-recur [#_"ISeq" ps (RT'seq (.invoke MultiFn'parents, y))] (some? ps) [(.next ps)]
-                (when (.prefers this, x, (.first ps))
-                    (§ return true)
-                )
+            (loop-when [#_"ISeq" ps (RT'seq (.invoke MultiFn'parents, y))] (some? ps) => false
+                (or (.prefers this, x, (.first ps)) (recur (.next ps)))
             )
-            (loop-when-recur [#_"ISeq" ps (RT'seq (.invoke MultiFn'parents, x))] (some? ps) [(.next ps)]
-                (when (.prefers this, (.first ps), y)
-                    (§ return true)
-                )
+            (loop-when [#_"ISeq" ps (RT'seq (.invoke MultiFn'parents, x))] (some? ps) => false
+                (or (.prefers this, (.first ps), y) (recur (.next ps)))
             )
-            false
         )
     )
 
@@ -20337,58 +20282,43 @@
     #_method
     (§ defn- #_"IFn" (§ method findAndCacheBestMethod) [#_"MultiFn" this, #_"Object" dispatchVal]
         (.lock (.readLock (:rw this)))
-        (§ let [#_"Object" bestValue]
-            (let [#_"IPersistentMap" mt (:methodTable this)]
-                (let [#_"IPersistentMap" pt (:preferTable this)]
-                    (let [#_"Object" ch (:cachedHierarchy this)]
-                        (try
-                            (let [#_"Map$Entry" bestEntry nil]
-                                (doseq [#_"Object" o (.getMethodTable this)]
-                                    (let [#_"Map$Entry" e (cast Map$Entry o)]
-                                        (when (.isA this, dispatchVal, (.getKey e))
-                                            (when (or (nil? bestEntry) (.dominates this, (.getKey e), (.getKey bestEntry)))
-                                                (§ ass bestEntry e)
-                                            )
-                                            (when (not (.dominates this, (.getKey bestEntry), (.getKey e)))
-                                                (throw (IllegalArgumentException. (str "Multiple methods in multimethod '" (:name this) "' match dispatch value: " dispatchVal " -> " (.getKey e) " and " (.getKey bestEntry) ", and neither is preferred")))
-                                            )
+        (let [#_"IPersistentMap" mt (:methodTable this) #_"IPersistentMap" pt (:preferTable this) #_"Object" ch (:cachedHierarchy this)]
+            (let [#_"Object" bestValue
+                    (try
+                        (let [#_"Map$Entry" bestEntry nil
+                              _ (doseq [#_"Object" o (.getMethodTable this)]
+                                    (let-when [#_"Map$Entry" e (cast Map$Entry o)] (.isA this, dispatchVal, (.getKey e))
+                                        (when (or (nil? bestEntry) (.dominates this, (.getKey e), (.getKey bestEntry)))
+                                            (§ ass bestEntry e)
+                                        )
+                                        (when-not (.dominates this, (.getKey bestEntry), (.getKey e))
+                                            (throw (IllegalArgumentException. (str "Multiple methods in multimethod '" (:name this) "' match dispatch value: " dispatchVal " -> " (.getKey e) " and " (.getKey bestEntry) ", and neither is preferred")))
                                         )
                                     )
-                                )
-                                (if (nil? bestEntry)
-                                    (do
-                                        (§ ass bestValue (.valAt (:methodTable this), (:defaultDispatchVal this)))
-                                        (when (nil? bestValue)
-                                            (§ return nil)
-                                        )
-                                    )
-                                    (do
-                                        (§ ass bestValue (.getValue bestEntry))
-                                    )
-                                )
+                                )]
+                            (if (some? bestEntry) (.getValue bestEntry) (.valAt (:methodTable this), (:defaultDispatchVal this)))
+                        )
+                        (finally
+                            (.unlock (.readLock (:rw this)))
+                        )
+                    )]
+                (when (some? bestValue)
+                    ;; ensure basis has stayed stable throughout, else redo
+                    (.lock (.writeLock (:rw this)))
+                    (try
+                        (if (and (= mt (:methodTable this)) (= pt (:preferTable this)) (= ch (:cachedHierarchy this)) (= (:cachedHierarchy this) (.deref (:hierarchy this))))
+                            (do
+                                ;; place in cache
+                                (§ ass this (assoc this :methodCache (.assoc (:methodCache this), dispatchVal, bestValue)))
+                                (cast' IFn bestValue)
                             )
-                            (finally
-                                (.unlock (.readLock (:rw this)))
+                            (do
+                                (.resetCache this)
+                                (.findAndCacheBestMethod this, dispatchVal)
                             )
                         )
-
-                        ;; ensure basis has stayed stable throughout, else redo
-                        (.lock (.writeLock (:rw this)))
-                        (try
-                            (if (and (= mt (:methodTable this)) (= pt (:preferTable this)) (= ch (:cachedHierarchy this)) (= (:cachedHierarchy this) (.deref (:hierarchy this))))
-                                (do
-                                    ;; place in cache
-                                    (§ ass this (assoc this :methodCache (.assoc (:methodCache this), dispatchVal, bestValue)))
-                                    (cast' IFn bestValue)
-                                )
-                                (do
-                                    (.resetCache this)
-                                    (.findAndCacheBestMethod this, dispatchVal)
-                                )
-                            )
-                            (finally
-                                (.unlock (.writeLock (:rw this)))
-                            )
+                        (finally
+                            (.unlock (.writeLock (:rw this)))
                         )
                     )
                 )
@@ -20804,30 +20734,23 @@
     (def- #_"int" Murmur3'C2 0x1b873593)
 
     (defn #_"int" Murmur3'hashInt [#_"int" input]
-        (when (zero? input)
-            (§ return 0)
-        )
-        (let [#_"int" k1 (Murmur3'mixK1 input)]
-            (let [#_"int" h1 (Murmur3'mixH1 Murmur3'seed, k1)]
+        (when-not (zero? input) => 0
+            (let [#_"int" k1 (Murmur3'mixK1 input)
+                  #_"int" h1 (Murmur3'mixH1 Murmur3'seed, k1)]
                 (Murmur3'fmix h1, 4)
             )
         )
     )
 
     (defn #_"int" Murmur3'hashLong [#_"long" input]
-        (when (zero? input)
-            (§ return 0)
-        )
-        (let [#_"int" low (int input)]
-            (let [#_"int" high (int (>>> input 32))]
-                (let [#_"int" k1 (Murmur3'mixK1 low)]
-                    (let [#_"int" h1 (Murmur3'mixH1 Murmur3'seed, k1)]
-                        (§ ass k1 (Murmur3'mixK1 high))
-                        (§ ass h1 (Murmur3'mixH1 h1, k1))
-
-                        (Murmur3'fmix h1, 8)
-                    )
-                )
+        (when-not (zero? input) => 0
+            (let [#_"int" low (int input)
+                  #_"int" high (int (>>> input 32))
+                  #_"int" k1 (Murmur3'mixK1 low)
+                  #_"int" h1 (Murmur3'mixH1 Murmur3'seed, k1)
+                  k1 (Murmur3'mixK1 high)
+                  h1 (Murmur3'mixH1 h1, k1)]
+                (Murmur3'fmix h1, 8)
             )
         )
     )
@@ -20974,78 +20897,60 @@
     )
 
     #_method
-    (§ defn #_"Var" (§ method intern) [#_"Namespace" this, #_"Symbol" sym]
-        (when (some? (:ns sym))
-            (throw (IllegalArgumentException. "Can't intern namespace-qualified symbol"))
-        )
-        (let [#_"IPersistentMap" m (.getMappings this)]
-            (§ let [#_"Object" o]
-                (let [#_"Var" v nil]
-                    (while (nil? (§ ass o (.valAt m, sym)))
-                        (when (nil? v)
-                            (§ ass v (Var'new this, sym))
+    (§ defn- #_"void" (§ method warnOrFailOnReplace) [#_"Namespace" this, #_"Symbol" sym, #_"Object" o, #_"Var" var]
+        (or
+            (when (§ instance? Var o)
+                (let [#_"Namespace" ns (:ns (cast' Var o))]
+                    (when-not (or (= ns this) (= (:ns var) RT'CLOIURE_NS)) => :ok
+                        (when-not (= ns RT'CLOIURE_NS)
+                            (throw (IllegalStateException. (str sym " already refers to: " o " in namespace: " (:name this))))
                         )
-                        (.compareAndSet (:mappings this), m, (.assoc m, sym, v))
-                        (§ ass m (.getMappings this))
                     )
-                    (when (and (§ instance? Var o) (= (:ns (cast' Var o)) this))
-                        (§ return (cast' Var o))
-                    )
-
-                    (when (nil? v)
-                        (§ ass v (Var'new this, sym))
-                    )
-
-                    (.warnOrFailOnReplace this, sym, o, v)
-
-                    (while (not (.compareAndSet (:mappings this), m, (.assoc m, sym, v)))
-                        (§ ass m (.getMappings this))
-                    )
-
-                    v
                 )
             )
+            (.println (RT'errPrintWriter), (str "WARNING: " sym " already refers to: " o " in namespace: " (:name this) ", being replaced by: " var))
         )
-    )
-
-    #_method
-    (§ defn- #_"void" (§ method warnOrFailOnReplace) [#_"Namespace" this, #_"Symbol" sym, #_"Object" o, #_"Object" v]
-        (when (§ instance? Var o)
-            (let [#_"Namespace" ns (:ns (cast' Var o))]
-                (when (or (= ns this) (and (§ instance? Var v) (= (:ns (cast' Var v)) RT'CLOIURE_NS)))
-                    (§ return nil)
-                )
-                (when-not (= ns RT'CLOIURE_NS)
-                    (throw (IllegalStateException. (str sym " already refers to: " o " in namespace: " (:name this))))
-                )
-            )
-        )
-        (.println (RT'errPrintWriter), (str "WARNING: " sym " already refers to: " o " in namespace: " (:name this) ", being replaced by: " v))
         nil
     )
 
     #_method
-    (§ defn #_"Object" (§ method reference) [#_"Namespace" this, #_"Symbol" sym, #_"Object" val]
-        (when (some? (:ns sym))
-            (throw (IllegalArgumentException. "Can't intern namespace-qualified symbol"))
+    (§ defn #_"Var" (§ method intern) [#_"Namespace" this, #_"Symbol" sym]
+        (when (nil? (:ns sym)) => (throw (IllegalArgumentException. "Can't intern namespace-qualified symbol"))
+            (let [[#_"IPersistentMap" m #_"Object" o #_"Var" v]
+                    (loop [v nil]
+                        (let-when [m (.getMappings this) o (.valAt m, sym)] (nil? o) => [m o v]
+                            (let [v (or v (Var'new this, sym))]
+                                (.compareAndSet (:mappings this), m, (.assoc m, sym, v))
+                                (recur v)
+                            )
+                        )
+                    )]
+                (when-not (and (§ instance? Var o) (= (:ns (cast' Var o)) this)) => (cast' Var o)
+                    (let [v (or v (Var'new this, sym))]
+                        (.warnOrFailOnReplace this, sym, o, v)
+                        (loop-when-recur m (not (.compareAndSet (:mappings this), m, (.assoc m, sym, v))) (.getMappings this))
+                        v
+                    )
+                )
+            )
         )
-        (let [#_"IPersistentMap" m (.getMappings this)]
-            (§ let [#_"Object" o]
-                (while (nil? (§ ass o (.valAt m, sym)))
-                    (.compareAndSet (:mappings this), m, (.assoc m, sym, val))
-                    (§ ass m (.getMappings this))
-                )
-                (when (= o val)
-                    (§ return o)
-                )
+    )
 
-                (.warnOrFailOnReplace this, sym, o, val)
-
-                (while (not (.compareAndSet (:mappings this), m, (.assoc m, sym, val)))
-                    (§ ass m (.getMappings this))
+    #_method
+    (§ defn #_"Var" (§ method referenceVar) [#_"Namespace" this, #_"Symbol" sym, #_"Var" var]
+        (when (nil? (:ns sym)) => (throw (IllegalArgumentException. "Can't intern namespace-qualified symbol"))
+            (let [[#_"IPersistentMap" m #_"Object" o]
+                    (loop []
+                        (let-when [m (.getMappings this) o (.valAt m, sym)] (nil? o) => [m o]
+                            (.compareAndSet (:mappings this), m, (.assoc m, sym, var))
+                            (recur)
+                        )
+                    )]
+                (when-not (= o var)
+                    (.warnOrFailOnReplace this, sym, o, var)
+                    (loop-when-recur m (not (.compareAndSet (:mappings this), m, (.assoc m, sym, var))) (.getMappings this))
                 )
-
-                val
+                var
             )
         )
     )
@@ -21055,22 +20960,20 @@
     )
 
     #_method
-    (§ defn #_"Class" (§ method referenceClass) [#_"Namespace" this, #_"Symbol" sym, #_"Class" val]
-        (when (some? (:ns sym))
-            (throw (IllegalArgumentException. "Can't intern namespace-qualified symbol"))
-        )
-        (let [#_"IPersistentMap" m (.getMappings this)]
-            (let [#_"Class" c (cast Class (.valAt m, sym))]
-                (while (or (nil? c) (Namespace'areDifferentInstancesOfSameClassName c, val))
-                    (.compareAndSet (:mappings this), m, (.assoc m, sym, val))
-                    (§ ass m (.getMappings this))
-                    (§ ass c (cast Class (.valAt m, sym)))
+    (§ defn #_"Class" (§ method referenceClass) [#_"Namespace" this, #_"Symbol" sym, #_"Class" cls]
+        (when (nil? (:ns sym)) => (throw (IllegalArgumentException. "Can't intern namespace-qualified symbol"))
+            (let [#_"Class" c
+                    (loop []
+                        (let [#_"IPersistentMap" m (.getMappings this) c (cast Class (.valAt m, sym))]
+                            (when (or (nil? c) (Namespace'areDifferentInstancesOfSameClassName c, cls)) => c
+                                (.compareAndSet (:mappings this), m, (.assoc m, sym, cls))
+                                (recur)
+                            )
+                        )
+                    )]
+                (when (= c cls) => (throw (IllegalStateException. (str sym " already refers to: " c " in namespace: " (:name this))))
+                    c
                 )
-                (when (= c val)
-                    (§ return c)
-                )
-
-                (throw (IllegalStateException. (str sym " already refers to: " c " in namespace: " (:name this))))
             )
         )
     )
@@ -21086,30 +20989,26 @@
     )
 
     #_method
-    (§ defn #_"Class" (§ method importClass) [#_"Namespace" this, #_"Symbol" sym, #_"Class" c]
-        (.referenceClass this, sym, c)
+    (§ defn #_"Class" (§ method importClass) [#_"Namespace" this, #_"Symbol" sym, #_"Class" cls]
+        (.referenceClass this, sym, cls)
     )
 
     #_method
-    (§ defn #_"Class" (§ method importClass) [#_"Namespace" this, #_"Class" c]
-        (let [#_"String" n (.getName c)]
-            (.importClass this, (Symbol'intern (.substring n, (inc (.lastIndexOf n, \.)))), c)
+    (§ defn #_"Class" (§ method importClass) [#_"Namespace" this, #_"Class" cls]
+        (let [#_"String" s (.getName cls)]
+            (.importClass this, (Symbol'intern (.substring s, (inc (.lastIndexOf s, \.)))), cls)
         )
     )
 
     #_method
     (§ defn #_"Var" (§ method refer) [#_"Namespace" this, #_"Symbol" sym, #_"Var" var]
-        (cast' Var (.reference this, sym, var))
+        (.referenceVar this, sym, var)
     )
 
     (defn #_"Namespace" Namespace'findOrCreate [#_"Symbol" name]
-        (let [#_"Namespace" ns (.get Namespace'namespaces, name)]
-            (when (some? ns)
-                (§ return ns)
-            )
-            (let [#_"Namespace" newns (Namespace'new name)]
-                (§ ass ns (.putIfAbsent Namespace'namespaces, name, newns))
-                (or ns newns)
+        (or (.get Namespace'namespaces, name)
+            (let [#_"Namespace" ns (Namespace'new name)]
+                (or (.putIfAbsent Namespace'namespaces, name, ns) ns)
             )
         )
     )
@@ -21327,12 +21226,10 @@
 
     #_method
     (§ defn #_"Number" (§ method addP) [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
-            (let [#_"long" ret (+ lx ly)]
-                (when (and (neg? (bit-xor ret lx)) (neg? (bit-xor ret ly)))
-                    (§ return (.add Numbers'BIGINT_OPS, x, y))
-                )
-                (Numbers'num-1l ret)
+        (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y) #_"long" lz (+ lx ly)]
+            (if (and (neg? (bit-xor lz lx)) (neg? (bit-xor lz ly)))
+                (.add Numbers'BIGINT_OPS, x, y)
+                (Numbers'num-1l lz)
             )
         )
     )
@@ -21345,47 +21242,30 @@
     #_method
     (§ defn #_"Number" (§ method multiplyP) [#_"LongOps" this, #_"Number" x, #_"Number" y]
         (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
-            (when (and (= lx Long/MIN_VALUE) (neg? ly))
-                (§ return (.multiply Numbers'BIGINT_OPS, x, y))
-            )
-            (let [#_"long" ret (* lx ly)]
-                (when (and (not= ly 0) (not= (/ ret ly) lx))
-                    (§ return (.multiply Numbers'BIGINT_OPS, x, y))
+            (if (and (= lx Long/MIN_VALUE) (neg? ly))
+                (.multiply Numbers'BIGINT_OPS, x, y)
+                (let [#_"long" lz (* lx ly)]
+                    (if (and (not= ly 0) (not= (/ lz ly) lx))
+                        (.multiply Numbers'BIGINT_OPS, x, y)
+                        (Numbers'num-1l lz)
+                    )
                 )
-                (Numbers'num-1l ret)
             )
         )
     )
 
-    (defn #_"long" LongOps'gcd [#_"long" u, #_"long" v]
-        (while (not= v 0)
-            (let [#_"long" r (% u v)]
-                (§ ass u v)
-                (§ ass v r)
-            )
-        )
-        u
-    )
+    (defn #_"long" LongOps'gcd [#_"long" u, #_"long" v] (if (zero? v) u (recur v (% u v))))
 
     #_method
     (§ defn #_"Number" (§ method divide) [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"long" n (.longValue x)]
-            (let [#_"long" val (.longValue y)]
-                (let [#_"long" gcd (LongOps'gcd n, val)]
-                    (when (zero? gcd)
-                        (§ return (Numbers'num-1l 0))
-                    )
-
-                    (§ ass n (/ n gcd))
-                    (let [#_"long" d (/ val gcd)]
-                        (when (= d 1)
-                            (§ return (Numbers'num-1l n))
-                        )
-                        (when (neg? d)
-                            (§ ass n (- n))
-                            (§ ass d (- d))
-                        )
-                        (Ratio'new (BigInteger/valueOf n), (BigInteger/valueOf d))
+        (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
+            (let-when-not [#_"long" gcd (LongOps'gcd lx, ly)] (zero? gcd) => (Numbers'num-1l 0)
+                (let-when-not [lx (/ lx gcd) ly (/ ly gcd)] (= ly 1) => (Numbers'num-1l lx)
+                    (let [[lx ly]
+                            (when (neg? ly) => [lx ly]
+                                [(- lx) (- ly)]
+                            )]
+                        (Ratio'new (BigInteger/valueOf lx), (BigInteger/valueOf ly))
                     )
                 )
             )
@@ -22090,20 +21970,16 @@
     )
 
     (defn #_"Number" Numbers'divide-2oo [#_"Object" x, #_"Object" y]
-        (cond (Numbers'isNaN x)
-            (do
-                (§ return (cast Number x))
-            )
-            (Numbers'isNaN y)
-            (do
-                (§ return (cast Number y))
-            )
-        )
-        (let [#_"Ops" yops (Numbers'ops y)]
-            (when (.isZero yops, (cast Number y))
-                (throw (ArithmeticException. "Divide by zero"))
-            )
-            (-> (.combine (Numbers'ops x), yops) (.divide (cast Number x), (cast Number y)))
+        (cond
+            (Numbers'isNaN x) (cast Number x)
+            (Numbers'isNaN y) (cast Number y)
+            :else
+                (let [#_"Ops" yops (Numbers'ops y)]
+                    (when (.isZero yops, (cast Number y))
+                        (throw (ArithmeticException. "Divide by zero"))
+                    )
+                    (-> (.combine (Numbers'ops x), yops) (.divide (cast Number x), (cast Number y)))
+                )
         )
     )
 
@@ -23870,12 +23746,12 @@
 
     #_method
     (§ defn- #_"int" (§ method indexOf) [#_"TransientArrayMap" this, #_"Object" key]
-        (loop-when-recur [#_"int" i 0] (< i (:len this)) [(+ i 2)]
-            (when (PersistentArrayMap'equalKey (aget (:array this) i), key)
-                (§ return i)
+        (loop-when [#_"int" i 0] (< i (:len this)) => -1
+            (if (PersistentArrayMap'equalKey (aget (:array this) i), key)
+                i
+                (recur (+ i 2))
             )
         )
-        -1
     )
 
     #_method
@@ -23886,32 +23762,32 @@
                     (when-not (= (aget (:array this) (inc i)) val) ;; no change, no op
                         (aset (:array this) (inc i) val)
                     )
+                    this
                 )
                 :else ;; didn't have key, grow
-                (do
-                    (when (<= (alength (:array this)) (:len this))
-                        (§ return (-> (PersistentHashMap'create-1a (:array this)) (.asTransient) (.assoc key, val)))
+                (if (< (:len this) (alength (:array this)))
+                    (do
+                        (aset (:array this) (:len this) key)
+                        (§ ass this (assoc this :len (inc (:len this))))
+                        (aset (:array this) (:len this) val)
+                        (§ ass this (assoc this :len (inc (:len this))))
+                        this
                     )
-                    (aset (:array this) (:len this) key)
-                    (§ ass this (assoc this :len (inc (:len this))))
-                    (aset (:array this) (:len this) val)
-                    (§ ass this (assoc this :len (inc (:len this))))
+                    (-> (PersistentHashMap'create-1a (:array this)) (.asTransient) (.assoc key, val))
                 )
             )
-            this
         )
     )
 
     #_method
     (§ defn #_"ITransientMap" (§ method doWithout) [#_"TransientArrayMap" this, #_"Object" key]
-        (let [#_"int" i (.indexOf this, key)]
-            (when (<= 0 i) ;; have key, will remove
-                (when (<= 2 (:len this))
-                    (aset (:array this) i (aget (:array this) (- (:len this) 2)))
-                    (aset (:array this) (inc i) (aget (:array this) (- (:len this) 1)))
-                )
-                (§ ass this (assoc this :len (- (:len this) 2)))
+        (let-when [#_"int" i (.indexOf this, key)] (<= 0 i) => this
+            ;; have key, will remove
+            (when (<= 2 (:len this))
+                (aset (:array this) i (aget (:array this) (- (:len this) 2)))
+                (aset (:array this) (inc i) (aget (:array this) (- (:len this) 1)))
             )
+            (§ ass this (assoc this :len (- (:len this) 2)))
             this
         )
     )
@@ -24298,51 +24174,51 @@
 
     #_method
     (§ defn #_"ITransientMap" (§ method doAssoc) [#_"TransientHashMap" this, #_"Object" key, #_"Object" val]
-        (when (nil? key)
-            (when-not (= (:nullValue this) val)
-                (§ ass this (assoc this :nullValue val))
+        (if (nil? key)
+            (do
+                (when-not (= (:nullValue this) val)
+                    (§ ass this (assoc this :nullValue val))
+                )
+                (when (not (:hasNull this))
+                    (§ ass this (assoc this :count (inc (:count this))))
+                    (§ ass this (assoc this :hasNull true))
+                )
+                this
             )
-            (when (not (:hasNull this))
-                (§ ass this (assoc this :count (inc (:count this))))
-                (§ ass this (assoc this :hasNull true))
+            (let [_ (§ ass (:val (:leafFlag this)) nil)
+                  #_"INode" n (.assoc (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (PersistentHashMap'hash key), key, val, (:leafFlag this))]
+                (when (not= n (:root this))
+                    (§ ass this (assoc this :root n))
+                )
+                (when (some? (:val (:leafFlag this)))
+                    (§ ass this (assoc this :count (inc (:count this))))
+                )
+                this
             )
-            (§ return this)
-        )
-        (§ ass (:val (:leafFlag this)) nil)
-        (let [#_"INode" n (.assoc (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (PersistentHashMap'hash key), key, val, (:leafFlag this))]
-            (when (not= n (:root this))
-                (§ ass this (assoc this :root n))
-            )
-            (when (some? (:val (:leafFlag this)))
-                (§ ass this (assoc this :count (inc (:count this))))
-            )
-            this
         )
     )
 
     #_method
     (§ defn #_"ITransientMap" (§ method doWithout) [#_"TransientHashMap" this, #_"Object" key]
-        (when (nil? key)
-            (when (not (:hasNull this))
-                (§ return this)
-            )
-            (§ ass this (assoc this :hasNull false))
-            (§ ass this (assoc this :nullValue nil))
-            (§ ass this (assoc this :count (dec (:count this))))
-            (§ return this)
-        )
-        (when (nil? (:root this))
-            (§ return this)
-        )
-        (§ ass (:val (:leafFlag this)) nil)
-        (let [#_"INode" n (.without (:root this), (:edit this), 0, (PersistentHashMap'hash key), key, (:leafFlag this))]
-            (when (not= n (:root this))
-                (§ ass this (assoc this :root n))
-            )
-            (when (some? (:val (:leafFlag this)))
+        (if (nil? key)
+            (when (:hasNull this) => this
+                (§ ass this (assoc this :hasNull false))
+                (§ ass this (assoc this :nullValue nil))
                 (§ ass this (assoc this :count (dec (:count this))))
+                this
             )
-            this
+            (when (some? (:root this)) => this
+                (let [_ (§ ass (:val (:leafFlag this)) nil)
+                      #_"INode" n (.without (:root this), (:edit this), 0, (PersistentHashMap'hash key), key, (:leafFlag this))]
+                    (when (not= n (:root this))
+                        (§ ass this (assoc this :root n))
+                    )
+                    (when (some? (:val (:leafFlag this)))
+                        (§ ass this (assoc this :count (dec (:count this))))
+                    )
+                    this
+                )
+            )
         )
     )
 
@@ -24354,12 +24230,13 @@
 
     #_method
     (§ defn #_"Object" (§ method doValAt) [#_"TransientHashMap" this, #_"Object" key, #_"Object" notFound]
-        (when (nil? key)
-            (§ return (if (:hasNull this) (:nullValue this) notFound))
-        )
-        (if (some? (:root this))
-            (.find (:root this), 0, (PersistentHashMap'hash key), key, notFound)
-            notFound
+        (if (nil? key)
+            (when (:hasNull this) => notFound
+                (:nullValue this)
+            )
+            (when (some? (:root this)) => notFound
+                (.find (:root this), 0, (PersistentHashMap'hash key), key, notFound)
+            )
         )
     )
 
@@ -24478,16 +24355,15 @@
                     (§ ass this (assoc this :nestedIter nil))
                 )
             )
-            (if (< (:i this) (alength (:array this)))
+            (when (< (:i this) (alength (:array this))) => false
                 (let [#_"INode" ai (aget (:array this) (:i this))]
                     (§ ass this (assoc this :i (inc (:i this))))
                     (when (some? ai)
                         (§ ass this (assoc this :nestedIter (.iterator ai, (:f this))))
                     )
+                    (recur)
                 )
-                (§ return false)
             )
-            (recur)
         )
     )
 
@@ -24742,68 +24618,50 @@
 
     #_method
     (§ defn #_"INode" (§ method assoc) [#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
-        (let [#_"int" bit (PersistentHashMap'bitpos hash, shift)]
-            (let [#_"int" idx (.index this, bit)]
-                (if (not= (& (:bitmap this) bit) 0)
-                    (do
-                        (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))]
-                            (let [#_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
-                                (when (nil? keyOrNull)
-                                    (let [#_"INode" n (.assoc (cast' INode valOrNode), (+ shift 5), hash, key, val, addedLeaf)]
-                                        (when (= n valOrNode)
-                                            (§ return this)
-                                        )
-                                        (§ return (BitmapIndexedNode'new nil, (:bitmap this), (PersistentHashMap'cloneAndSet-3 (:array this), (inc (* 2 idx)), n)))
+        (let [#_"int" bit (PersistentHashMap'bitpos hash, shift) #_"int" idx (.index this, bit)]
+            (if-not (zero? (& (:bitmap this) bit))
+                (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))
+                      #_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))
+                      _ (cond
+                            (nil? keyOrNull)
+                                (let [#_"INode" n (.assoc (cast' INode valOrNode), (+ shift 5), hash, key, val, addedLeaf)]
+                                    (when-not (= n valOrNode)
+                                        (PersistentHashMap'cloneAndSet-3 (:array this), (inc (* 2 idx)), n)
                                     )
                                 )
-                                (when (Util'equiv-2oo key, keyOrNull)
-                                    (when (= val valOrNode)
-                                        (§ return this)
-                                    )
-                                    (§ return (BitmapIndexedNode'new nil, (:bitmap this), (PersistentHashMap'cloneAndSet-3 (:array this), (inc (* 2 idx)), val)))
+                            (Util'equiv-2oo key, keyOrNull)
+                                (when-not (= val valOrNode)
+                                    (PersistentHashMap'cloneAndSet-3 (:array this), (inc (* 2 idx)), val)
                                 )
-                                (§ ass (:val addedLeaf) addedLeaf)
-                                (BitmapIndexedNode'new nil, (:bitmap this), (PersistentHashMap'cloneAndSet-5 (:array this), (* 2 idx), nil, (inc (* 2 idx)), (PersistentHashMap'createNode-6 (+ shift 5), keyOrNull, valOrNode, hash, key, val)))
+                            :else
+                                (let [_ (§ ass (:val addedLeaf) addedLeaf)]
+                                    (PersistentHashMap'cloneAndSet-5 (:array this), (* 2 idx), nil, (inc (* 2 idx)), (PersistentHashMap'createNode-6 (+ shift 5), keyOrNull, valOrNode, hash, key, val))
+                                )
+                        )]
+                    (if (some? _) (BitmapIndexedNode'new nil, (:bitmap this), _) this)
+                )
+                (let [#_"int" n (Integer/bitCount (:bitmap this))]
+                    (if (<= 16 n)
+                        (let [#_"INode[]" nodes (make-array #_"INode" Object 32) #_"int" jdx (PersistentHashMap'mask hash, shift)]
+                            (aset nodes jdx (.assoc BitmapIndexedNode'EMPTY, (+ shift 5), hash, key, val, addedLeaf))
+                            (loop-when [#_"int" j 0 #_"int" i 0] (< i 32)
+                                (when (not= (& (>>> (:bitmap this) i) 1) 0) => (recur j (inc i))
+                                    (if (some? (aget (:array this) j))
+                                        (aset nodes i (.assoc BitmapIndexedNode'EMPTY, (+ shift 5), (PersistentHashMap'hash (aget (:array this) j)), (aget (:array this) j), (aget (:array this) (inc j)), addedLeaf))
+                                        (aset nodes i (cast' INode (aget (:array this) (inc j))))
+                                    )
+                                    (recur (+ j 2) (inc i))
+                                )
                             )
+                            (ArrayNode'new nil, (inc n), nodes)
                         )
-                    )
-                    (do
-                        (let [#_"int" n (Integer/bitCount (:bitmap this))]
-                            (if (<= 16 n)
-                                (do
-                                    (let [#_"INode[]" nodes (make-array #_"INode" Object 32)]
-                                        (let [#_"int" jdx (PersistentHashMap'mask hash, shift)]
-                                            (aset nodes jdx (.assoc BitmapIndexedNode'EMPTY, (+ shift 5), hash, key, val, addedLeaf))
-                                            (let [#_"int" j 0]
-                                                (loop-when-recur [#_"int" i 0] (< i 32) [(inc i)]
-                                                    (when (not= (& (>>> (:bitmap this) i) 1) 0)
-                                                        (if (nil? (aget (:array this) j))
-                                                            (do
-                                                                (aset nodes i (cast' INode (aget (:array this) (inc j))))
-                                                            )
-                                                            (do
-                                                                (aset nodes i (.assoc BitmapIndexedNode'EMPTY, (+ shift 5), (PersistentHashMap'hash (aget (:array this) j)), (aget (:array this) j), (aget (:array this) (inc j)), addedLeaf))
-                                                            )
-                                                        )
-                                                        (§ ass j (+ j 2))
-                                                    )
-                                                )
-                                                (ArrayNode'new nil, (inc n), nodes)
-                                            )
-                                        )
-                                    )
-                                )
-                                (do
-                                    (let [#_"Object[]" newArray (make-array Object (* 2 (inc n)))]
-                                        (System/arraycopy (:array this), 0, newArray, 0, (* 2 idx))
-                                        (aset newArray (* 2 idx) key)
-                                        (§ ass (:val addedLeaf) addedLeaf)
-                                        (aset newArray (inc (* 2 idx)) val)
-                                        (System/arraycopy (:array this), (* 2 idx), newArray, (* 2 (inc idx)), (* 2 (- n idx)))
-                                        (BitmapIndexedNode'new nil, (| (:bitmap this) bit), newArray)
-                                    )
-                                )
-                            )
+                        (let [#_"Object[]" newArray (make-array Object (* 2 (inc n)))]
+                            (System/arraycopy (:array this), 0, newArray, 0, (* 2 idx))
+                            (aset newArray (* 2 idx) key)
+                            (§ ass (:val addedLeaf) addedLeaf)
+                            (aset newArray (inc (* 2 idx)) val)
+                            (System/arraycopy (:array this), (* 2 idx), newArray, (* 2 (inc idx)), (* 2 (- n idx)))
+                            (BitmapIndexedNode'new nil, (| (:bitmap this) bit), newArray)
                         )
                     )
                 )
@@ -24814,31 +24672,27 @@
     #_method
     (§ defn #_"INode" (§ method without) [#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
         (let [#_"int" bit (PersistentHashMap'bitpos hash, shift)]
-            (when (zero? (& (:bitmap this) bit))
-                (§ return this)
-            )
-            (let [#_"int" idx (.index this, bit)]
-                (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))]
-                    (let [#_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
-                        (when (nil? keyOrNull)
-                            (let [#_"INode" n (.without (cast' INode valOrNode), (+ shift 5), hash, key)]
-                                (when (= n valOrNode)
-                                    (§ return this)
-                                )
-                                (when (some? n)
-                                    (§ return (BitmapIndexedNode'new nil, (:bitmap this), (PersistentHashMap'cloneAndSet-3 (:array this), (inc (* 2 idx)), n)))
-                                )
-                                (when (= (:bitmap this) bit)
-                                    (§ return nil)
-                                )
-                                (§ return (BitmapIndexedNode'new nil, (bit-xor (:bitmap this) bit), (PersistentHashMap'removePair (:array this), idx)))
+            (when-not (zero? (& (:bitmap this) bit)) => this
+                (let [#_"int" i (.index this, bit) #_"int" ii (* 2 i)
+                      #_"Object" keyOrNull (aget (:array this) ii)
+                      #_"Object" valOrNode (aget (:array this) (inc ii))]
+                    (if (some? keyOrNull)
+                        (when (Util'equiv-2oo key, keyOrNull) => this
+                            ;; TODO: collapse
+                            (BitmapIndexedNode'new nil, (bit-xor (:bitmap this) bit), (PersistentHashMap'removePair (:array this), i))
+                        )
+                        (let [#_"INode" n (.without (cast' INode valOrNode), (+ shift 5), hash, key)]
+                            (cond
+                                (= n valOrNode)
+                                    this
+                                (some? n)
+                                    (BitmapIndexedNode'new nil, (:bitmap this), (PersistentHashMap'cloneAndSet-3 (:array this), (inc ii), n))
+                                (= (:bitmap this) bit)
+                                    nil
+                                :else
+                                    (BitmapIndexedNode'new nil, (bit-xor (:bitmap this) bit), (PersistentHashMap'removePair (:array this), i))
                             )
                         )
-                        (when (Util'equiv-2oo key, keyOrNull)
-                            ;; TODO: collapse
-                            (§ return (BitmapIndexedNode'new nil, (bit-xor (:bitmap this) bit), (PersistentHashMap'removePair (:array this), idx)))
-                        )
-                        this
                     )
                 )
             )
@@ -24847,21 +24701,13 @@
 
     #_method
     (§ defn #_"IMapEntry" (§ method find) [#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
-        (let [#_"int" bit (PersistentHashMap'bitpos hash, shift)]
-            (when (zero? (& (:bitmap this) bit))
-                (§ return nil)
-            )
-            (let [#_"int" idx (.index this, bit)]
-                (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))]
-                    (let [#_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
-                        (when (nil? keyOrNull)
-                            (§ return (.find (cast' INode valOrNode), (+ shift 5), hash, key))
-                        )
-                        (when (Util'equiv-2oo key, keyOrNull)
-                            (§ return (cast' IMapEntry (MapEntry'create keyOrNull, valOrNode)))
-                        )
-                        nil
-                    )
+        (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (& (:bitmap this) bit))
+            (let [#_"int" i (.index this, bit)
+                  #_"Object" keyOrNull (aget (:array this) (* 2 i))
+                  #_"Object" valOrNode (aget (:array this) (inc (* 2 i)))]
+                (cond
+                    (nil? keyOrNull)                (.find (cast' INode valOrNode), (+ shift 5), hash, key)
+                    (Util'equiv-2oo key, keyOrNull) (cast' IMapEntry (MapEntry'create keyOrNull, valOrNode))
                 )
             )
         )
@@ -24869,21 +24715,14 @@
 
     #_method
     (§ defn #_"Object" (§ method find) [#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound]
-        (let [#_"int" bit (PersistentHashMap'bitpos hash, shift)]
-            (when (zero? (& (:bitmap this) bit))
-                (§ return notFound)
-            )
-            (let [#_"int" idx (.index this, bit)]
-                (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))]
-                    (let [#_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
-                        (when (nil? keyOrNull)
-                            (§ return (.find (cast' INode valOrNode), (+ shift 5), hash, key, notFound))
-                        )
-                        (when (Util'equiv-2oo key, keyOrNull)
-                            (§ return valOrNode)
-                        )
-                        notFound
-                    )
+        (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (& (:bitmap this) bit)) => notFound
+            (let [#_"int" i (.index this, bit)
+                  #_"Object" keyOrNull (aget (:array this) (* 2 i))
+                  #_"Object" valOrNode (aget (:array this) (inc (* 2 i)))]
+                (cond
+                    (nil? keyOrNull)                (.find (cast' INode valOrNode), (+ shift 5), hash, key, notFound)
+                    (Util'equiv-2oo key, keyOrNull) valOrNode
+                    :else                           notFound
                 )
             )
         )
@@ -30113,7 +29952,7 @@
                                             (.add methods, method)
                                         )
                                     )
-                                    (catch NoSuchMethodException e
+                                    (catch NoSuchMethodException _
                                     )
                                 )
                             )
@@ -36641,11 +36480,9 @@
         )
     )
 
-    (defn #_"boolean" RT'isLineNumberingReader [#_"Reader" r] (§ instance? LineNumberingPushbackReader r)
-    )
+    (defn #_"boolean" RT'isLineNumberingReader [#_"Reader" r] (§ instance? LineNumberingPushbackReader r))
 
-    (defn #_"boolean" RT'isReduced [#_"Object" r] (§ instance? Reduced r)
-    )
+    (defn #_"boolean" RT'isReduced [#_"Object" r] (§ instance? Reduced r))
 
     (defn #_"String" RT'printString [#_"Object" x]
         (try
