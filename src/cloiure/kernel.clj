@@ -27872,34 +27872,28 @@
 
     #_method
     (§ defn- #_"Object[]" (§ method arrayFor) [#_"TransientVector" this, #_"int" i]
-        (when (and (<= 0 i) (< i (:cnt this)))
-            (when (<= (.tailoff this) i)
-                (§ return (:tail this))
-            )
-            (let [#_"VNode" node (:root this)]
-                (loop-when-recur [#_"int" level (:shift this)] (< 0 level) [(- level 5)]
-                    (§ ass node (cast' VNode (aget (:array node) (& (>>> i level) 0x01f))))
+        (when (< -1 i (:cnt this)) => (throw (IndexOutOfBoundsException.))
+            (when (< i (.tailoff this)) => (:tail this)
+                (loop-when-recur [#_"VNode" node (:root this) #_"int" level (:shift this)]
+                                 (< 0 level)
+                                 [(cast' VNode (aget (:array node) (& (>>> i level) 0x01f))) (- level 5)]
+                              => (:array node)
                 )
-                (§ return (:array node))
             )
         )
-        (throw (IndexOutOfBoundsException.))
     )
 
     #_method
     (§ defn- #_"Object[]" (§ method editableArrayFor) [#_"TransientVector" this, #_"int" i]
-        (when (and (<= 0 i) (< i (:cnt this)))
-            (when (<= (.tailoff this) i)
-                (§ return (:tail this))
-            )
-            (let [#_"VNode" node (:root this)]
-                (loop-when-recur [#_"int" level (:shift this)] (< 0 level) [(- level 5)]
-                    (§ ass node (.ensureEditable this, (cast' VNode (aget (:array node) (& (>>> i level) 0x01f)))))
+        (when (< -1 i (:cnt this)) => (throw (IndexOutOfBoundsException.))
+            (when (< i (.tailoff this)) => (:tail this)
+                (loop-when-recur [#_"VNode" node (:root this) #_"int" level (:shift this)]
+                                 (< 0 level)
+                                 [(.ensureEditable this, (cast' VNode (aget (:array node) (& (>>> i level) 0x01f)))) (- level 5)]
+                              => (:array node)
                 )
-                (§ return (:array node))
             )
         )
-        (throw (IndexOutOfBoundsException.))
     )
 
     #_method
@@ -27911,14 +27905,11 @@
     #_method
     (§ defn #_"Object" (§ method valAt) [#_"TransientVector" this, #_"Object" key, #_"Object" notFound]
         (.ensureEditable this)
-        (when (Util'isInteger key)
-            (let [#_"int" i (.intValue (cast Number key))]
-                (when (and (<= 0 i) (< i (:cnt this)))
-                    (§ return (.nth this, i))
-                )
+        (when (Util'isInteger key) => notFound
+            (let-when [#_"int" i (.intValue (cast Number key))] (< -1 i (:cnt this)) => notFound
+                (.nth this, i)
             )
         )
-        notFound
     )
 
     (def- #_"Object" TransientVector'NOT_FOUND (Object.))
@@ -27932,9 +27923,8 @@
     (§ defn #_"IMapEntry" (§ method entryAt) [#_"TransientVector" this, #_"Object" key]
         (let [#_"Object" v (.valAt this, key, TransientVector'NOT_FOUND)]
             (when-not (= v TransientVector'NOT_FOUND)
-                (§ return (MapEntry'create key, v))
+                (MapEntry'create key, v)
             )
-            nil
         )
     )
 
@@ -27956,87 +27946,66 @@
 
     #_method
     (§ defn #_"Object" (§ method nth) [#_"TransientVector" this, #_"int" i, #_"Object" notFound]
-        (if (< -1 i (.count this)) (.nth this, i) notFound)
+        (when (< -1 i (.count this)) => notFound
+            (.nth this, i)
+        )
     )
 
     #_method
     (§ defn #_"TransientVector" (§ method assocN) [#_"TransientVector" this, #_"int" i, #_"Object" val]
         (.ensureEditable this)
-        (when (and (<= 0 i) (< i (:cnt this)))
-            (when (<= (.tailoff this) i)
-                (aset (:tail this) (& i 0x01f) val)
-                (§ return this)
+        (if (< -1 i (:cnt this))
+            (if (<= (.tailoff this) i)
+                (do
+                    (aset (:tail this) (& i 0x01f) val)
+                    this
+                )
+                (do
+                    (§ ass this (assoc this :root (.doAssoc this, (:shift this), (:root this), i, val)))
+                    this
+                )
             )
-
-            (§ ass this (assoc this :root (.doAssoc this, (:shift this), (:root this), i, val)))
-            (§ return this)
-        )
-        (when (= i (:cnt this)) => (throw (IndexOutOfBoundsException.))
-            (.conj this, val)
+            (when (= i (:cnt this)) => (throw (IndexOutOfBoundsException.))
+                (.conj this, val)
+            )
         )
     )
 
     #_method
     (§ defn #_"TransientVector" (§ method assoc) [#_"TransientVector" this, #_"Object" key, #_"Object" val]
         ;; note - relies on ensureEditable in assocN
-        (when (Util'isInteger key)
-            (let [#_"int" i (.intValue (cast Number key))]
-                (§ return (.assocN this, i, val))
-            )
+        (when (Util'isInteger key) => (throw (IllegalArgumentException. "Key must be integer"))
+            (.assocN this, (.intValue (cast Number key)), val)
         )
-        (throw (IllegalArgumentException. "Key must be integer"))
     )
 
     #_method
     (§ defn- #_"VNode" (§ method doAssoc) [#_"TransientVector" this, #_"int" level, #_"VNode" node, #_"int" i, #_"Object" val]
-        (§ ass node (.ensureEditable this, node))
-        (let [#_"VNode" ret node]
+        (let [node (.ensureEditable this, node)]
             (if (zero? level)
-                (do
-                    (aset (:array ret) (& i 0x01f) val)
-                )
-                (do
-                    (let [#_"int" subidx (& (>>> i level) 0x01f)]
-                        (aset (:array ret) subidx (.doAssoc this, (- level 5), (cast' VNode (aget (:array node) subidx)), i, val))
-                    )
+                (aset (:array node) (& i 0x01f) val)
+                (let [#_"int" si (& (>>> i level) 0x01f)]
+                    (aset (:array node) si (.doAssoc this, (- level 5), (cast' VNode (aget (:array node) si)), i, val))
                 )
             )
-            ret
+            node
         )
     )
 
     #_method
     (§ defn #_"TransientVector" (§ method pop) [#_"TransientVector" this]
         (.ensureEditable this)
-        (when (zero? (:cnt this))
-            (throw (IllegalStateException. "Can't pop empty vector"))
-        )
-        (when (= (:cnt this) 1)
-            (§ ass this (assoc this :cnt 0))
-            (§ return this)
-        )
-        (let [#_"int" i (dec (:cnt this))]
-            ;; pop in tail?
-            (when (pos? (& i 0x01f))
-                (§ ass this (assoc this :cnt (dec (:cnt this))))
-                (§ return this)
-            )
-
-            (let [#_"Object[]" newtail (.editableArrayFor this, (- (:cnt this) 2))]
-                (let [#_"VNode" newroot (.popTail this, (:shift this), (:root this))]
-                    (let [#_"int" newshift (:shift this)]
-                        (when (nil? newroot)
-                            (§ ass newroot (VNode'new-1 (:edit (:root this))))
-                        )
-                        (when (and (< 5 (:shift this)) (nil? (aget (:array newroot) 1)))
-                            (§ ass newroot (.ensureEditable this, (cast' VNode (aget (:array newroot) 0))))
-                            (§ ass newshift (- newshift 5))
-                        )
-                        (§ ass this (assoc this :root newroot))
-                        (§ ass this (assoc this :shift newshift))
-                        (§ ass this (assoc this :cnt (dec (:cnt this))))
-                        (§ ass this (assoc this :tail newtail))
-                        this
+        (let [#_"int" n (:cnt this)]
+            (when-not (zero? n) => (throw (IllegalStateException. "Can't pop empty vector"))
+                (when (and (not= n 1) (zero? (& (dec n) 0x01f))) => (assoc this :cnt (dec n))
+                    (let [#_"Object[]" tail (.editableArrayFor this, (- n 2))
+                          #_"int" shift (:shift this) #_"VNode" root (:root this)
+                          root (or (.popTail this, shift, root) (VNode'new-1 (:edit root)))
+                          [shift root]
+                            (when (and (< 5 shift) (nil? (aget (:array root) 1))) => [shift root]
+                                [(- shift 5) (.ensureEditable this, (cast' VNode (aget (:array root) 0)))]
+                            )]
+                        (assoc this :cnt (dec n), :shift shift, :root root, :tail tail)
                     )
                 )
             )
@@ -28045,35 +28014,21 @@
 
     #_method
     (§ defn- #_"VNode" (§ method popTail) [#_"TransientVector" this, #_"int" level, #_"VNode" node]
-        (§ ass node (.ensureEditable this, node))
-        (let [#_"int" subidx (& (>>> (- (:cnt this) 2) level) 0x01f)]
-            (cond (< 5 level)
-                (do
-                    (let [#_"VNode" newchild (.popTail this, (- level 5), (cast' VNode (aget (:array node) subidx)))]
-                        (if (and (nil? newchild) (zero? subidx))
-                            (do
-                                nil
-                            )
-                            (do
-                                (let [#_"VNode" ret node]
-                                    (aset (:array ret) subidx newchild)
-                                    ret
-                                )
-                            )
+        (let [node (.ensureEditable this, node)
+              #_"int" i (& (>>> (- (:cnt this) 2) level) 0x01f)]
+            (cond
+                (< 5 level)
+                    (let [#_"VNode" child (.popTail this, (- level 5), (cast' VNode (aget (:array node) i)))]
+                        (when-not (and (nil? child) (zero? i))
+                            (aset (:array node) i child)
+                            node
                         )
                     )
-                )
-                (zero? subidx)
-                (do
-                    nil
-                )
-                :else
-                (do
-                    (let [#_"VNode" ret node]
-                        (aset (:array ret) subidx nil)
-                        ret
+                (pos? i)
+                    (do
+                        (aset (:array node) i nil)
+                        node
                     )
-                )
             )
         )
     )
@@ -28110,77 +28065,59 @@
     )
 
     (defn #_"PersistentVector" PersistentVector'create-1s [#_"ISeq" items]
-        (let [#_"Object[]" arr (make-array Object 32)]
-            (let [#_"int" i 0]
-                (loop-when-recur [items items] (and (some? items) (< i 32)) [(.next items)]
-                    (aset arr i (.first items))
-                    (§ ass i (inc i))
-                )
-
-                (cond (some? items) ;; >32, construct with array directly
-                    (do
-                        (let [#_"PersistentVector" start (PersistentVector'new-4 32, 5, PersistentVector'EMPTY_NODE, arr)]
-                            (let [#_"TransientVector" ret (.asTransient start)]
-                                (loop-when-recur [items items] (some? items) [(.next items)]
-                                    (§ ass ret (.conj ret, (.first items)))
-                                )
-                                (.persistent ret)
-                            )
+        (let [#_"Object[]" a (make-array Object 32)
+              #_"int" i
+                (loop-when-recur [items items i 0] (and (some? items) (< i 32)) [(.next items) (inc i)] => i
+                    (aset a i (.first items))
+                )]
+            (cond
+                (some? items) ;; >32, construct with array directly
+                    (let [#_"PersistentVector" v0 (PersistentVector'new-4 32, 5, PersistentVector'EMPTY_NODE, a)]
+                        (loop-when-recur [#_"TransientVector" v (.asTransient v0) items items]
+                                         (some? items)
+                                         [(.conj v, (.first items)) (.next items)]
+                                      => (.persistent v)
                         )
                     )
-                    (= i 32) ;; exactly 32, skip copy
-                    (do
-                        (PersistentVector'new-4 32, 5, PersistentVector'EMPTY_NODE, arr)
+                (= i 32) ;; exactly 32, skip copy
+                    (PersistentVector'new-4 32, 5, PersistentVector'EMPTY_NODE, a)
+                :else ;; <32, copy to minimum array and construct
+                    (let [#_"Object[]" b (make-array Object i)]
+                        (System/arraycopy a, 0, b, 0, i)
+                        (PersistentVector'new-4 i, 5, PersistentVector'EMPTY_NODE, b)
                     )
-                    :else ;; <32, copy to minimum array and construct
-                    (do
-                        (let [#_"Object[]" arr2 (make-array Object i)]
-                            (System/arraycopy arr, 0, arr2, 0, i)
-                            (PersistentVector'new-4 i, 5, PersistentVector'EMPTY_NODE, arr2)
-                        )
-                    )
-                )
             )
         )
     )
 
-    (defn #_"PersistentVector" PersistentVector'create-1l [#_"List" list]
-        (let [#_"int" size (.size list)]
-            (when (<= size 32)
-                (§ return (PersistentVector'new-4 size, 5, PersistentVector'EMPTY_NODE, (.toArray list)))
-            )
-
-            (let [#_"TransientVector" ret (.asTransient PersistentVector'EMPTY)]
-                (loop-when-recur [#_"int" i 0] (< i size) [(inc i)]
-                    (§ ass ret (.conj ret, (.get list, i)))
-                )
-                (.persistent ret)
+    (defn #_"PersistentVector" PersistentVector'create-1l [#_"List" items]
+        (let-when [#_"int" n (.size items)] (< 32 n) => (PersistentVector'new-4 n, 5, PersistentVector'EMPTY_NODE, (.toArray items))
+            (loop-when-recur [#_"TransientVector" v (.asTransient PersistentVector'EMPTY) #_"int" i 0]
+                             (< i n)
+                             [(.conj v, (.get items, i)) (inc i)]
+                          => (.persistent v)
             )
         )
     )
 
     (defn #_"PersistentVector" PersistentVector'create-1i [#_"Iterable" items]
-        ;; optimize common case
-        (when (instance? ArrayList items)
-            (§ return (.create this, (cast ArrayList items)))
-        )
-
-        (let [#_"Iterator" iter (.iterator items)]
-            (let [#_"TransientVector" ret (.asTransient PersistentVector'EMPTY)]
-                (while (.hasNext iter)
-                    (§ ass ret (.conj ret, (.next iter)))
+        (when-not (instance? ArrayList items) => (PersistentVector'create-1l (cast ArrayList items)) ;; optimize common case
+            (let [#_"Iterator" it (.iterator items)]
+                (loop-when-recur [#_"TransientVector" v (.asTransient PersistentVector'EMPTY)]
+                                 (.hasNext it)
+                                 [(.conj v, (.next it))]
+                              => (.persistent v)
                 )
-                (.persistent ret)
             )
         )
     )
 
     (defn #_"PersistentVector" PersistentVector'create-1a [& #_"Object..." items]
-        (let [#_"TransientVector" ret (.asTransient PersistentVector'EMPTY)]
+        (let [#_"TransientVector" v (.asTransient PersistentVector'EMPTY)]
             (doseq [#_"Object" item items]
-                (§ ass ret (.conj ret, item))
+                (§ ass v (.conj v, item))
             )
-            (.persistent ret)
+            (.persistent v)
         )
     )
 
@@ -28228,61 +28165,52 @@
 
     #_method
     (§ defn #_"Object[]" (§ method arrayFor) [#_"PersistentVector" this, #_"int" i]
-        (when (and (<= 0 i) (< i (:cnt this)))
-            (when (<= (.tailoff this) i)
-                (§ return (:tail this))
-            )
-            (let [#_"VNode" node (:root this)]
-                (loop-when-recur [#_"int" level (:shift this)] (< 0 level) [(- level 5)]
-                    (§ ass node (cast' VNode (aget (:array node) (& (>>> i level) 0x01f))))
+        (when (< -1 i (:cnt this)) => (throw (IndexOutOfBoundsException.))
+            (when (< i (.tailoff this)) => (:tail this)
+                (loop-when-recur [#_"VNode" node (:root this) #_"int" level (:shift this)]
+                                 (< 0 level)
+                                 [(cast' VNode (aget (:array node) (& (>>> i level) 0x01f))) (- level 5)]
+                              => (:array node)
                 )
-                (§ return (:array node))
             )
         )
-        (throw (IndexOutOfBoundsException.))
     )
 
     #_method
     (§ defn #_"Object" (§ method nth) [#_"PersistentVector" this, #_"int" i]
-        (let [#_"Object[]" node (.arrayFor this, i)]
-            (aget node (& i 0x01f))
-        )
+        (aget (.arrayFor this, i) (& i 0x01f))
     )
 
     #_method
     (§ defn #_"Object" (§ method nth) [#_"PersistentVector" this, #_"int" i, #_"Object" notFound]
-        (if (< -1 i (:cnt this)) (.nth this, i) notFound)
+        (when (< -1 i (:cnt this)) => notFound
+            (.nth this, i)
+        )
     )
 
     #_method
     (§ defn #_"PersistentVector" (§ method assocN) [#_"PersistentVector" this, #_"int" i, #_"Object" val]
-        (when (and (<= 0 i) (< i (:cnt this)))
-            (when (<= (.tailoff this) i)
-                (let [#_"Object[]" newTail (make-array Object (alength (:tail this)))]
-                    (System/arraycopy (:tail this), 0, newTail, 0, (alength (:tail this)))
-                    (aset newTail (& i 0x01f) val)
-
-                    (§ return (PersistentVector'new-5 (.meta this), (:cnt this), (:shift this), (:root this), newTail))
+        (if (< -1 i (:cnt this))
+            (if (<= (.tailoff this) i)
+                (let [#_"Object[]" tail (make-array Object (alength (:tail this)))]
+                    (System/arraycopy (:tail this), 0, tail, 0, (alength (:tail this)))
+                    (aset tail (& i 0x01f) val)
+                    (PersistentVector'new-5 (.meta this), (:cnt this), (:shift this), (:root this), tail)
                 )
+                (PersistentVector'new-5 (.meta this), (:cnt this), (:shift this), (PersistentVector'doAssoc (:shift this), (:root this), i, val), (:tail this))
             )
-
-            (§ return (PersistentVector'new-5 (.meta this), (:cnt this), (:shift this), (PersistentVector'doAssoc (:shift this), (:root this), i, val), (:tail this)))
-        )
-        (when (= i (:cnt this)) => (throw (IndexOutOfBoundsException.))
-            (.cons this, val)
+            (when (= i (:cnt this)) => (throw (IndexOutOfBoundsException.))
+                (.cons this, val)
+            )
         )
     )
 
     (defn- #_"VNode" PersistentVector'doAssoc [#_"int" level, #_"VNode" node, #_"int" i, #_"Object" val]
         (let [#_"VNode" ret (VNode'new-2 (:edit node), (.clone (:array node)))]
             (if (zero? level)
-                (do
-                    (aset (:array ret) (& i 0x01f) val)
-                )
-                (do
-                    (let [#_"int" subidx (& (>>> i level) 0x01f)]
-                        (aset (:array ret) subidx (PersistentVector'doAssoc (- level 5), (cast' VNode (aget (:array node) subidx)), i, val))
-                    )
+                (aset (:array ret) (& i 0x01f) val)
+                (let [#_"int" si (& (>>> i level) 0x01f)]
+                    (aset (:array ret) si (PersistentVector'doAssoc (- level 5), (cast' VNode (aget (:array node) si)), i, val))
                 )
             )
             ret
@@ -28306,31 +28234,26 @@
 
     #_method
     (§ defn #_"PersistentVector" (§ method cons) [#_"PersistentVector" this, #_"Object" val]
-        ;; room in tail?
-        (when (< (- (:cnt this) (.tailoff this)) 32)
-            (let [#_"Object[]" newTail (make-array Object (inc (alength (:tail this))))]
-                (System/arraycopy (:tail this), 0, newTail, 0, (alength (:tail this)))
-                (aset newTail (alength (:tail this)) val)
-                (§ return (PersistentVector'new-5 (.meta this), (inc (:cnt this)), (:shift this), (:root this), newTail))
-            )
-        )
-        ;; full tail, push into tree
-        (§ let [#_"VNode" newroot]
-            (let [#_"VNode" tailnode (VNode'new-2 (:edit (:root this)), (:tail this))]
-                (let [#_"int" newshift (:shift this)]
-                    ;; overflow root?
-                    (if (< (<< 1 (:shift this)) (>>> (:cnt this) 5))
-                        (do
-                            (§ ass newroot (VNode'new-1 (:edit (:root this))))
-                            (aset (:array newroot) 0 (:root this))
-                            (aset (:array newroot) 1 (PersistentVector'newPath (:edit (:root this)), (:shift this), tailnode))
-                            (§ ass newshift (+ newshift 5))
-                        )
-                        (do
-                            (§ ass newroot (.pushTail this, (:shift this), (:root this), tailnode))
-                        )
-                    )
-                    (PersistentVector'new-5 (.meta this), (inc (:cnt this)), newshift, newroot, (object-array [ val ]))
+        (let [#_"int" n (:cnt this)]
+            (if (< (- n (.tailoff this)) 32) ;; room in tail?
+                (let [#_"int" e (alength (:tail this))  #_"Object[]" tail (make-array Object (inc e))]
+                    (System/arraycopy (:tail this), 0, tail, 0, e)
+                    (aset tail e val)
+                    (PersistentVector'new-5 (.meta this), (inc n), (:shift this), (:root this), tail)
+                )
+                ;; full tail, push into tree
+                (let [#_"VNode" tailnode (VNode'new-2 (:edit (:root this)), (:tail this))
+                      #_"int" shift (:shift this)
+                      [#_"VNode" root shift]
+                        (if (< (<< 1 shift) (>>> n 5)) ;; overflow root?
+                            (let [root (VNode'new-1 (:edit (:root this)))]
+                                (aset (:array root) 0 (:root this))
+                                (aset (:array root) 1 (PersistentVector'newPath (:edit (:root this)), shift, tailnode))
+                                [root (+ shift 5)]
+                            )
+                            [(.pushTail this, shift, (:root this), tailnode) shift]
+                        )]
+                    (PersistentVector'new-5 (.meta this), (inc n), shift, root, (object-array [ val ]))
                 )
             )
         )
@@ -28342,26 +28265,24 @@
         ;; else does it map to an existing child? -> nodeToInsert = pushNode one more level
         ;; else alloc new path
         ;; return nodeToInsert placed in copy of parent
-        (let [#_"int" subidx (& (>>> (dec (:cnt this)) level) 0x01f)
+        (let [#_"int" i (& (>>> (dec (:cnt this)) level) 0x01f)
               #_"VNode" ret (VNode'new-2 (:edit parent), (.clone (:array parent)))
               #_"VNode" nodeToInsert
-                (if (= level 5)
-                    tailnode
-                    (let [#_"VNode" child (cast' VNode (aget (:array parent) subidx))]
+                (when-not (= level 5) => tailnode
+                    (let [#_"VNode" child (cast' VNode (aget (:array parent) i))]
                         (if (some? child)
                             (.pushTail this, (- level 5), child, tailnode)
                             (PersistentVector'newPath (:edit (:root this)), (- level 5), tailnode)
                         )
                     )
                 )]
-            (aset (:array ret) subidx nodeToInsert)
+            (aset (:array ret) i nodeToInsert)
             ret
         )
     )
 
     (defn- #_"VNode" PersistentVector'newPath [#_"AtomicReference<Thread>" edit, #_"int" level, #_"VNode" node]
-        (if (zero? level)
-            node
+        (when-not (zero? level) => node
             (let [#_"VNode" ret (VNode'new-1 edit)]
                 (aset (:array ret) 0 (PersistentVector'newPath edit, (- level 5), node))
                 ret
@@ -28431,65 +28352,51 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"PersistentVector" this, #_"IFn" f]
-        (§ let [#_"Object" init]
-            (if (pos? (:cnt this))
-                (do
-                    (§ ass init (aget (.arrayFor this, 0) 0))
-                )
-                (do
-                    (§ return (.invoke f))
+        (when (pos? (:cnt this)) => (.invoke f)
+            (loop-when [#_"Object" r (aget (.arrayFor this, 0) 0) #_"int" i 0] (< i (:cnt this)) => r
+                (let [#_"Object[]" a (.arrayFor this, i)
+                      r (loop-when [r r #_"int" j (if (zero? i) 1 0)] (< j (alength a)) => r
+                            (let [r (.invoke f, r, (aget a j))]
+                                (when-not (RT'isReduced r) => (§ return (.deref (cast' IDeref r)))
+                                    (recur r (inc j))
+                                )
+                            )
+                        )]
+                    (recur r (+ i (alength a)))
                 )
             )
-            (let [#_"int" step 0]
-                (loop-when-recur [#_"int" i 0] (< i (:cnt this)) [(+ i step)]
-                    (let [#_"Object[]" array (.arrayFor this, i)]
-                        (loop-when-recur [#_"int" j (if (zero? i) 1 0)] (< j (alength array)) [(inc j)]
-                            (§ ass init (.invoke f, init, (aget array j)))
-                            (when (RT'isReduced init)
-                                (§ return (.deref (cast' IDeref init)))
+        )
+    )
+
+    #_method
+    (§ defn #_"Object" (§ method reduce) [#_"PersistentVector" this, #_"IFn" f, #_"Object" r]
+        (loop-when [r r #_"int" i 0] (< i (:cnt this)) => r
+            (let [#_"Object[]" a (.arrayFor this, i)
+                  r (loop-when [r r #_"int" j 0] (< j (alength a)) => r
+                        (let [r (.invoke f, r, (aget a j))]
+                            (when-not (RT'isReduced r) => (§ return (.deref (cast' IDeref r)))
+                                (recur r (inc j))
                             )
                         )
-                        (§ ass step (alength array))
-                    )
-                )
-                init
+                    )]
+                (recur r (+ i (alength a)))
             )
         )
     )
 
     #_method
-    (§ defn #_"Object" (§ method reduce) [#_"PersistentVector" this, #_"IFn" f, #_"Object" init]
-        (let [#_"int" step 0]
-            (loop-when-recur [#_"int" i 0] (< i (:cnt this)) [(+ i step)]
-                (let [#_"Object[]" array (.arrayFor this, i)]
-                    (loop-when-recur [#_"int" j 0] (< j (alength array)) [(inc j)]
-                        (§ ass init (.invoke f, init, (aget array j)))
-                        (when (RT'isReduced init)
-                            (§ return (.deref (cast' IDeref init)))
+    (§ defn #_"Object" (§ method kvreduce) [#_"PersistentVector" this, #_"IFn" f, #_"Object" r]
+        (loop-when [r r #_"int" i 0] (< i (:cnt this)) => r
+            (let [#_"Object[]" a (.arrayFor this, i)
+                  r (loop-when [r r #_"int" j 0] (< j (alength a)) => r
+                        (let [r (.invoke f, r, (+ j i), (aget a j))]
+                            (when-not (RT'isReduced r) => (§ return (.deref (cast' IDeref r)))
+                                (recur r (inc j))
+                            )
                         )
-                    )
-                    (§ ass step (alength array))
-                )
+                    )]
+                (recur r (+ i (alength a)))
             )
-            init
-        )
-    )
-
-    #_method
-    (§ defn #_"Object" (§ method kvreduce) [#_"PersistentVector" this, #_"IFn" f, #_"Object" init]
-        (let [#_"int" step 0]
-            (loop-when-recur [#_"int" i 0] (< i (:cnt this)) [(+ i step)]
-                (let [#_"Object[]" array (.arrayFor this, i)]
-                    (loop-when-recur [#_"int" j 0] (< j (alength array)) [(inc j)]
-                        (§ ass init (.invoke f, init, (+ j i), (aget array j)))
-                        (when (RT'isReduced init)
-                            (§ return (.deref (cast' IDeref init)))
-                        )
-                    )
-                    (§ ass step (alength array))
-                )
-            )
-            init
         )
     )
 
@@ -28500,31 +28407,29 @@
 
     #_method
     (§ defn #_"PersistentVector" (§ method pop) [#_"PersistentVector" this]
-        (when (zero? (:cnt this))
-            (throw (IllegalStateException. "Can't pop empty vector"))
-        )
-        (when (= (:cnt this) 1)
-            (§ return (.withMeta PersistentVector'EMPTY, (.meta this)))
-        )
-        (when (< 1 (- (:cnt this) (.tailoff this)))
-            (let [#_"Object[]" newTail (make-array Object (dec (alength (:tail this))))]
-                (System/arraycopy (:tail this), 0, newTail, 0, (alength newTail))
-                (§ return (PersistentVector'new-5 (.meta this), (dec (:cnt this)), (:shift this), (:root this), newTail))
-            )
-        )
-        (let [#_"Object[]" newtail (.arrayFor this, (- (:cnt this) 2))]
-            (let [#_"VNode" newroot (.popTail this, (:shift this), (:root this))]
-                (let [#_"int" newshift (:shift this)]
-                    (when (nil? newroot)
-                        (§ ass newroot PersistentVector'EMPTY_NODE)
-                    )
-                    (when (and (< 5 (:shift this)) (nil? (aget (:array newroot) 1)))
-                        (§ ass newroot (cast' VNode (aget (:array newroot) 0)))
-                        (§ ass newshift (- newshift 5))
-                    )
-                    (PersistentVector'new-5 (.meta this), (dec (:cnt this)), newshift, newroot, newtail)
+        (cond
+            (zero? (:cnt this))
+                (throw (IllegalStateException. "Can't pop empty vector"))
+            (= (:cnt this) 1)
+                (.withMeta PersistentVector'EMPTY, (.meta this))
+            (< 1 (- (:cnt this) (.tailoff this)))
+                (let [#_"Object[]" tail (make-array Object (dec (alength (:tail this))))]
+                    (System/arraycopy (:tail this), 0, tail, 0, (alength tail))
+                    (PersistentVector'new-5 (.meta this), (dec (:cnt this)), (:shift this), (:root this), tail)
                 )
-            )
+            :else
+                (let [#_"Object[]" tail (.arrayFor this, (- (:cnt this) 2))
+                      #_"VNode" root (.popTail this, (:shift this), (:root this))
+                      #_"int" shift (:shift this)]
+                    (when (nil? root)
+                        (§ ass root PersistentVector'EMPTY_NODE)
+                    )
+                    (when (and (< 5 (:shift this)) (nil? (aget (:array root) 1)))
+                        (§ ass root (cast' VNode (aget (:array root) 0)))
+                        (§ ass shift (- shift 5))
+                    )
+                    (PersistentVector'new-5 (.meta this), (dec (:cnt this)), shift, root, tail)
+                )
         )
     )
 
