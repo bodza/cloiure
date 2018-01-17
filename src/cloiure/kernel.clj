@@ -237,7 +237,7 @@
 (declare Reduced'new)
 (declare RefTVal'new-3 RefTVal'new-2)
 (declare Ref'ids Ref'new-1 Ref'new-2)
-(declare Reflector'invokeInstanceMethod Reflector'getCauseOrElse Reflector'throwCauseOrElseException Reflector'noMethodReport Reflector'invokeMatchingMethod Reflector'getAsMethodOfPublicBase Reflector'isMatch Reflector'invokeConstructor Reflector'invokeStaticMethodVariadic Reflector'invokeStaticMethod-3s Reflector'invokeStaticMethod-3c Reflector'getStaticField-2s Reflector'getStaticField-2c Reflector'setStaticField-3s Reflector'setStaticField-3c Reflector'getInstanceField Reflector'setInstanceField Reflector'invokeNoArgInstanceMember-2 Reflector'invokeNoArgInstanceMember-3 Reflector'invokeInstanceMember-2 Reflector'invokeInstanceMember-3o Reflector'invokeInstanceMember-3a Reflector'getField Reflector'getMethods Reflector'boxArg Reflector'boxArgs Reflector'paramArgTypeMatch Reflector'isCongruent Reflector'prepRet)
+(declare Reflector'invokeInstanceMethod Reflector'getCauseOrElse Reflector'throwCauseOrElseException Reflector'noMethodReport Reflector'invokeMatchingMethod Reflector'getAsMethodOfPublicBase Reflector'isMatch Reflector'invokeConstructor Reflector'invokeStaticMethodVariadic Reflector'invokeStaticMethod-3s Reflector'invokeStaticMethod-3c Reflector'getStaticField-2s Reflector'getStaticField-2c Reflector'setStaticField-3s Reflector'setStaticField-3c Reflector'getInstanceField Reflector'setInstanceField Reflector'invokeNoArgInstanceMember Reflector'invokeInstanceMember-2 Reflector'invokeInstanceMember-3o Reflector'invokeInstanceMember-3a Reflector'getField Reflector'getMethods Reflector'boxArg Reflector'boxArgs Reflector'paramArgTypeMatch Reflector'isCongruent Reflector'prepRet)
 (declare Repeat'INFINITE Repeat'new-2 Repeat'new-3 Repeat'create-1 Repeat'create-2)
 (declare RestFn'ontoArrayPrepend RestFn'findKey)
 (declare RT'T RT'F RT'LOADER_SUFFIX RT'DEFAULT_IMPORTS RT'UTF8 RT'CLOIURE_NS RT'OUT RT'IN RT'ERR RT'TAG_KEY RT'CONST_KEY RT'AGENT RT'READEVAL RT'ASSERT RT'MATH_CONTEXT RT'LINE_KEY RT'COLUMN_KEY RT'DECLARED_KEY RT'DOC_KEY RT'IN_NAMESPACE RT'NAMESPACE RT'IDENTICAL RT'CURRENT_NS RT'FLUSH_ON_NEWLINE RT'PRINT_READABLY RT'WARN_ON_REFLECTION RT'ALLOW_UNRESOLVED_VARS RT'READER_RESOLVER RT'IN_NS_VAR RT'NS_VAR RT'FN_LOADER_VAR RT'PRINT_INITIALIZED RT'PR_ON RT'inNamespace RT'bootNamespace RT'errPrintWriter RT'EMPTY_ARRAY RT'DEFAULT_COMPARATOR RT'ID RT'CHECK_SPEC_ASSERTS RT'INSTRUMENT_MACROS RT'CHECK_SPECS RT'keyword RT'var RT'loadResourceScript RT'lastModified RT'load-1 RT'load-2 RT'nextID RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'countFrom RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nthFrom-2 RT'nth-3 RT'nthFrom-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1c RT'intCast-1b RT'intCast-1s RT'intCast-1i RT'intCast-1f RT'intCast-1l RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1f RT'longCast-1l RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1f RT'floatCast-1l RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1f RT'doubleCast-1l RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'printString RT'readString RT'print RT'printInnerSeq RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget_float RT'aset_float RT'alength_float RT'aclone_float RT'aget_double RT'aset_double RT'alength_double RT'aclone_double RT'aget_int RT'aset_int RT'alength_int RT'aclone_int RT'aget_long RT'aset_long RT'alength_long RT'aclone_long RT'aget_char RT'aset_char RT'alength_char RT'aclone_char RT'aget_byte RT'aset_byte RT'alength_byte RT'aclone_byte RT'aget_short RT'aset_short RT'alength_short RT'aclone_short RT'aget_boolean RT'aset_boolean RT'alength_boolean RT'aclone_boolean RT'aget_object RT'aset_object RT'alength_object RT'aclone_object)
@@ -5848,7 +5848,7 @@
 
     #_method
     (§ defn #_"Object" (§ method eval) [#_"InstanceFieldExpr" this]
-        (Reflector'invokeNoArgInstanceMember-3 (.eval (:target this)), (:fieldName this), (:requireField this))
+        (Reflector'invokeNoArgInstanceMember (.eval (:target this)), (:fieldName this), (:requireField this))
     )
 
     #_method
@@ -19953,10 +19953,10 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"LongRange" this, #_"IFn" f]
-        (loop [#_"Object" r (:start this) #_"long" i r]
-            (let-when-not [i (+ i (:step this))] (.exceededBounds (:boundsCheck this), i) => r
-                (let-when-not [r (.invoke f, r, i)] (RT'isReduced r) => (.deref (cast' Reduced r))
-                    (recur r i)
+        (loop [#_"Object" r (:start this) #_"long" n r]
+            (let-when-not [n (+ n (:step this))] (.exceededBounds (:boundsCheck this), n) => r
+                (let-when-not [r (.invoke f, r, n)] (RT'isReduced r) => (.deref (cast' Reduced r))
+                    (recur r n)
                 )
             )
         )
@@ -19964,10 +19964,10 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"LongRange" this, #_"IFn" f, #_"Object" r]
-        (loop [r r #_"long" i (:start this)]
-            (let-when-not [r (.invoke f, r, i)] (RT'isReduced r) => (.deref (cast' Reduced r))
-                (let-when-not [i (+ i (:step this))] (.exceededBounds (:boundsCheck this), i) => r
-                    (recur r i)
+        (loop [r r #_"long" n (:start this)]
+            (let-when-not [r (.invoke f, r, n)] (RT'isReduced r) => (.deref (cast' Reduced r))
+                (let-when-not [n (+ n (:step this))] (.exceededBounds (:boundsCheck this), n) => r
+                    (recur r n)
                 )
             )
         )
@@ -28419,15 +28419,12 @@
                 )
             :else
                 (let [#_"Object[]" tail (.arrayFor this, (- (:cnt this) 2))
-                      #_"VNode" root (.popTail this, (:shift this), (:root this))
-                      #_"int" shift (:shift this)]
-                    (when (nil? root)
-                        (§ ass root PersistentVector'EMPTY_NODE)
-                    )
-                    (when (and (< 5 (:shift this)) (nil? (aget (:array root) 1)))
-                        (§ ass root (cast' VNode (aget (:array root) 0)))
-                        (§ ass shift (- shift 5))
-                    )
+                      #_"int" shift (:shift this)
+                      #_"VNode" root (or (.popTail this, shift, (:root this)) PersistentVector'EMPTY_NODE)
+                      [shift root]
+                        (when (and (< 5 shift) (nil? (aget (:array root) 1))) => [shift root]
+                            [(- shift 5) (cast' VNode (aget (:array root) 0))]
+                        )]
                     (PersistentVector'new-5 (.meta this), (dec (:cnt this)), shift, root, tail)
                 )
         )
@@ -28435,34 +28432,22 @@
 
     #_method
     (§ defn- #_"VNode" (§ method popTail) [#_"PersistentVector" this, #_"int" level, #_"VNode" node]
-        (let [#_"int" subidx (& (>>> (- (:cnt this) 2) level) 0x01f)]
-            (cond (< 5 level)
-                (do
-                    (let [#_"VNode" newchild (.popTail this, (- level 5), (cast' VNode (aget (:array node) subidx)))]
-                        (if (and (nil? newchild) (zero? subidx))
-                            (do
-                                nil
-                            )
-                            (do
-                                (let [#_"VNode" ret (VNode'new-2 (:edit (:root this)), (.clone (:array node)))]
-                                    (aset (:array ret) subidx newchild)
-                                    ret
-                                )
+        (let [#_"int" i (& (>>> (- (:cnt this) 2) level) 0x01f)]
+            (cond
+                (< 5 level)
+                    (let [#_"VNode" child (.popTail this, (- level 5), (cast' VNode (aget (:array node) i)))]
+                        (when-not (and (nil? child) (zero? i))
+                            (let [#_"VNode" ret (VNode'new-2 (:edit (:root this)), (.clone (:array node)))]
+                                (aset (:array ret) i child)
+                                ret
                             )
                         )
                     )
-                )
-                (zero? subidx)
-                (do
-                    nil
-                )
-                :else
-                (do
+                (pos? i)
                     (let [#_"VNode" ret (VNode'new-2 (:edit (:root this)), (.clone (:array node)))]
-                        (aset (:array ret) subidx nil)
+                        (aset (:array ret) i nil)
                         ret
                     )
-                )
             )
         )
     )
@@ -28687,27 +28672,27 @@
     #_method
     (§ defn #_"void" (§ method forceChunk) [#_"Range" this]
         (when (nil? (:_chunk this))
-            (let [#_"Object[]" arr (make-array Object Range'CHUNK_SIZE) #_"Object" val (:start this)]
-                (loop-when-recur [#_"int" n 0] (< n Range'CHUNK_SIZE) [n]
-                    (aset arr n val)
-                    (§ ass n (inc n))
-                    (§ ass val (Numbers'addP-2oo val, (:step this)))
-                    (when (.exceededBounds (:boundsCheck this), val)
-                        ;; partial last chunk
-                        (§ ass this (assoc this :_chunk (ArrayChunk'new-3 arr, 0, n)))
-                        (§ return nil)
-                    )
-                )
-
-                (if (.exceededBounds (:boundsCheck this), val)
-                    (do
-                        ;; full last chunk
-                        (§ ass this (assoc this :_chunk (ArrayChunk'new-3 arr, 0, Range'CHUNK_SIZE)))
-                    )
-                    (do
-                        ;; full intermediate chunk
-                        (§ ass this (assoc this :_chunk (ArrayChunk'new-3 arr, 0, Range'CHUNK_SIZE)))
-                        (§ ass this (assoc this :_chunkNext (Range'new-4 val, (:end this), (:step this), (:boundsCheck this))))
+            (let [#_"Object[]" a (make-array Object Range'CHUNK_SIZE)]
+                (loop [#_"Object" n (:start this) #_"int" i 0]
+                    (if (< i Range'CHUNK_SIZE)
+                        (do
+                            (aset a i n)
+                            (let-when [n (Numbers'addP-2oo n, (:step this))] (.exceededBounds (:boundsCheck this), n) => (recur n (inc i))
+                                ;; partial last chunk
+                                (§ ass this (assoc this :_chunk (ArrayChunk'new-3 a, 0, (inc i))))
+                            )
+                        )
+                        (if (.exceededBounds (:boundsCheck this), n)
+                            (do
+                                ;; full last chunk
+                                (§ ass this (assoc this :_chunk (ArrayChunk'new-3 a, 0, Range'CHUNK_SIZE)))
+                            )
+                            (do
+                                ;; full intermediate chunk
+                                (§ ass this (assoc this :_chunk (ArrayChunk'new-3 a, 0, Range'CHUNK_SIZE)))
+                                (§ ass this (assoc this :_chunkNext (Range'new-4 n, (:end this), (:step this), (:boundsCheck this))))
+                            )
+                        )
                     )
                 )
             )
@@ -28748,32 +28733,22 @@
 
     #_method
     (§ defn #_"Object" (§ method reduce) [#_"Range" this, #_"IFn" f]
-        (let [#_"Object" acc (:start this)]
-            (let [#_"Number" i (Numbers'addP-2oo (:start this), (:step this))]
-                (while (not (.exceededBounds (:boundsCheck this), i))
-                    (§ ass acc (.invoke f, acc, i))
-                    (when (RT'isReduced acc)
-                        (§ return (.deref (cast' Reduced acc)))
-                    )
-                    (§ ass i (Numbers'addP-2oo i, (:step this)))
+        (loop [#_"Object" r (:start this) #_"Number" n r]
+            (let-when-not [n (Numbers'addP-2oo n, (:step this))] (.exceededBounds (:boundsCheck this), n) => r
+                (let-when-not [r (.invoke f, r, n)] (RT'isReduced r) => (.deref (cast' Reduced r))
+                    (recur r n)
                 )
-                acc
             )
         )
     )
 
     #_method
-    (§ defn #_"Object" (§ method reduce) [#_"Range" this, #_"IFn" f, #_"Object" val]
-        (let [#_"Object" acc val]
-            (let [#_"Object" i (:start this)]
-                (while (not (.exceededBounds (:boundsCheck this), i))
-                    (§ ass acc (.invoke f, acc, i))
-                    (when (RT'isReduced acc)
-                        (§ return (.deref (cast' Reduced acc)))
-                    )
-                    (§ ass i (Numbers'addP-2oo i, (:step this)))
+    (§ defn #_"Object" (§ method reduce) [#_"Range" this, #_"IFn" f, #_"Object" r]
+        (loop [r r #_"Object" n (:start this)]
+            (let-when-not [r (.invoke f, r, n)] (RT'isReduced r) => (.deref (cast' Reduced r))
+                (let-when-not [n (Numbers'addP-2oo n, (:step this))] (.exceededBounds (:boundsCheck this), n) => r
+                    (recur r n)
                 )
-                acc
             )
         )
     )
@@ -29383,10 +29358,7 @@
                 )
             )
         )
-        (let [#_"Class" sc (.getSuperclass c)]
-            (when (nil? sc)
-                (§ return nil)
-            )
+        (when-let [#_"Class" sc (.getSuperclass c)]
             (doseq [#_"java.lang.reflect.Method" scm (.getMethods sc)]
                 (when (Reflector'isMatch scm, m)
                     (§ return scm)
@@ -29397,24 +29369,14 @@
     )
 
     (defn #_"boolean" Reflector'isMatch [#_"java.lang.reflect.Method" lhs, #_"java.lang.reflect.Method" rhs]
-        (when-not (and (.equals (.getName lhs), (.getName rhs)) (Modifier/isPublic (.getModifiers (.getDeclaringClass lhs))))
-            (§ return false)
-        )
-
-        (let [#_"Class[]" types1 (.getParameterTypes lhs)]
-            (let [#_"Class[]" types2 (.getParameterTypes rhs)]
-                (when-not (= (alength types1) (alength types2))
-                    (§ return false)
-                )
-
-                (let [#_"boolean" match true]
-                    (loop-when-recur [#_"int" i 0] (< i (alength types1)) [(inc i)]
-                        (when (not (.isAssignableFrom (aget types1 i), (aget types2 i)))
-                            (§ ass match false)
-                            (§ break )
+        (and (.equals (.getName lhs), (.getName rhs)) (Modifier/isPublic (.getModifiers (.getDeclaringClass lhs)))
+            (let [#_"Class[]" types1 (.getParameterTypes lhs) #_"Class[]" types2 (.getParameterTypes rhs)]
+                (and (= (alength types1) (alength types2))
+                    (loop-when [#_"int" i 0] (< i (alength types1)) => true
+                        (and (.isAssignableFrom (aget types1 i), (aget types2 i))
+                            (recur (inc i))
                         )
                     )
-                    match
                 )
             )
         )
@@ -29422,40 +29384,26 @@
 
     (defn #_"Object" Reflector'invokeConstructor [#_"Class" c, #_"Object[]" args]
         (try
-            (let [#_"Constructor[]" allctors (.getConstructors c)]
-                (let [#_"ArrayList" ctors (ArrayList.)]
-                    (loop-when-recur [#_"int" i 0] (< i (alength allctors)) [(inc i)]
-                        (let [#_"Constructor" ctor (aget allctors i)]
-                            (when (= (alength (.getParameterTypes ctor)) (alength args))
-                                (.add ctors, ctor)
-                            )
-                        )
+            (let [#_"Constructor[]" allctors (.getConstructors c) #_"ArrayList" ctors (ArrayList.)]
+                (dotimes [#_"int" i (alength allctors)]
+                    (let-when [#_"Constructor" ctor (aget allctors i)] (= (alength (.getParameterTypes ctor)) (alength args))
+                        (.add ctors, ctor)
                     )
-                    (cond (.isEmpty ctors)
-                        (do
-                            (throw (IllegalArgumentException. (str "No matching ctor found for " c)))
+                )
+                (condp = (.size ctors)
+                    0   (throw (IllegalArgumentException. (str "No matching ctor found for " c)))
+                    1   (let [#_"Constructor" ctor (cast Constructor (.get ctors, 0))]
+                            (.newInstance ctor, (Reflector'boxArgs (.getParameterTypes ctor), args))
                         )
-                        (= (.size ctors) 1)
-                        (do
-                            (let [#_"Constructor" ctor (cast Constructor (.get ctors, 0))]
-                                (.newInstance ctor, (Reflector'boxArgs (.getParameterTypes ctor), args))
-                            )
-                        )
-                        :else ;; overloaded w/same arity
-                        (do
-                            (loop-when-recur [#_"Iterator" iterator (.iterator ctors)] (.hasNext iterator) [iterator]
-                                (let [#_"Constructor" ctor (cast Constructor (.next iterator))]
-                                    (let [#_"Class[]" params (.getParameterTypes ctor)]
-                                        (when (Reflector'isCongruent params, args)
-                                            (let [#_"Object[]" boxedArgs (Reflector'boxArgs params, args)]
-                                                (§ return (.newInstance ctor, boxedArgs))
-                                            )
-                                        )
-                                    )
+                    (or ;; overloaded w/same arity
+                        (loop-when-recur [#_"Iterator" it (.iterator ctors)] (.hasNext it) [it]
+                            (let [#_"Constructor" ctor (cast Constructor (.next it))]
+                                (let-when [#_"Class[]" params (.getParameterTypes ctor)] (Reflector'isCongruent params, args)
+                                    (.newInstance ctor, (Reflector'boxArgs params, args))
                                 )
                             )
-                            (throw (IllegalArgumentException. (str "No matching ctor found for " c)))
                         )
+                        (throw (IllegalArgumentException. (str "No matching ctor found for " c)))
                     )
                 )
             )
@@ -29470,9 +29418,7 @@
     )
 
     (defn #_"Object" Reflector'invokeStaticMethod-3s [#_"String" className, #_"String" methodName, #_"Object[]" args]
-        (let [#_"Class" c (RT'classForName-1 className)]
-            (Reflector'invokeStaticMethod-3c c, methodName, args)
-        )
+        (Reflector'invokeStaticMethod-3c (RT'classForName-1 className), methodName, args)
     )
 
     (defn #_"Object" Reflector'invokeStaticMethod-3c [#_"Class" c, #_"String" methodName, #_"Object[]" args]
@@ -29492,102 +29438,75 @@
 
     (defn #_"Object" Reflector'getStaticField-2c [#_"Class" c, #_"String" fieldName]
         (let [#_"Field" f (Reflector'getField c, fieldName, true)]
-            (when (some? f)
+            (when (some? f) => (throw (IllegalArgumentException. (str "No matching field found: " fieldName " for " c)))
                 (try
-                    (§ return (Reflector'prepRet (.getType f), (.get f, nil)))
+                    (Reflector'prepRet (.getType f), (.get f, nil))
                     (catch IllegalAccessException e
                         (throw (Util'sneakyThrow e))
                     )
                 )
             )
-            (throw (IllegalArgumentException. (str "No matching field found: " fieldName " for " c)))
         )
     )
 
     (defn #_"Object" Reflector'setStaticField-3s [#_"String" className, #_"String" fieldName, #_"Object" val]
-        (let [#_"Class" c (RT'classForName-1 className)]
-            (Reflector'setStaticField-3c c, fieldName, val)
-        )
+        (Reflector'setStaticField-3c (RT'classForName-1 className), fieldName, val)
     )
 
     (defn #_"Object" Reflector'setStaticField-3c [#_"Class" c, #_"String" fieldName, #_"Object" val]
         (let [#_"Field" f (Reflector'getField c, fieldName, true)]
-            (when (some? f)
+            (when (some? f) => (throw (IllegalArgumentException. (str "No matching field found: " fieldName " for " c)))
                 (try
                     (.set f, nil, (Reflector'boxArg (.getType f), val))
                     (catch IllegalAccessException e
                         (throw (Util'sneakyThrow e))
                     )
                 )
-                (§ return val)
+                val
             )
-            (throw (IllegalArgumentException. (str "No matching field found: " fieldName " for " c)))
         )
     )
 
     (defn #_"Object" Reflector'getInstanceField [#_"Object" target, #_"String" fieldName]
-        (let [#_"Class" c (.getClass target)]
-            (let [#_"Field" f (Reflector'getField c, fieldName, false)]
-                (when (some? f)
-                    (try
-                        (§ return (Reflector'prepRet (.getType f), (.get f, target)))
-                        (catch IllegalAccessException e
-                            (throw (Util'sneakyThrow e))
-                        )
+        (let [#_"Class" c (.getClass target) #_"Field" f (Reflector'getField c, fieldName, false)]
+            (when (some? f) => (throw (IllegalArgumentException. (str "No matching field found: " fieldName " for " c)))
+                (try
+                    (Reflector'prepRet (.getType f), (.get f, target))
+                    (catch IllegalAccessException e
+                        (throw (Util'sneakyThrow e))
                     )
                 )
-                (throw (IllegalArgumentException. (str "No matching field found: " fieldName " for " (.getClass target))))
             )
         )
     )
 
     (defn #_"Object" Reflector'setInstanceField [#_"Object" target, #_"String" fieldName, #_"Object" val]
-        (let [#_"Class" c (.getClass target)]
-            (let [#_"Field" f (Reflector'getField c, fieldName, false)]
-                (when (some? f)
-                    (try
-                        (.set f, target, (Reflector'boxArg (.getType f), val))
-                        (catch IllegalAccessException e
-                            (throw (Util'sneakyThrow e))
-                        )
+        (let [#_"Class" c (.getClass target) #_"Field" f (Reflector'getField c, fieldName, false)]
+            (when (some? f) => (throw (IllegalArgumentException. (str "No matching field found: " fieldName " for " (.getClass target))))
+                (try
+                    (.set f, target, (Reflector'boxArg (.getType f), val))
+                    (catch IllegalAccessException e
+                        (throw (Util'sneakyThrow e))
                     )
-                    (§ return val)
                 )
-                (throw (IllegalArgumentException. (str "No matching field found: " fieldName " for " (.getClass target))))
+                val
             )
         )
     )
 
-    ;; not used as of Clojure 1.6, but left for runtime compatibility with compiled bytecode from older versions
-    (defn #_"Object" Reflector'invokeNoArgInstanceMember-2 [#_"Object" target, #_"String" name]
-        (Reflector'invokeNoArgInstanceMember-3 target, name, false)
-    )
-
-    (defn #_"Object" Reflector'invokeNoArgInstanceMember-3 [#_"Object" target, #_"String" name, #_"boolean" requireField]
+    (defn #_"Object" Reflector'invokeNoArgInstanceMember [#_"Object" target, #_"String" name, #_"boolean" requireField]
         (let [#_"Class" c (.getClass target)]
             (if requireField
-                (do
-                    (let [#_"Field" f (Reflector'getField c, name, false)]
-                        (if (some? f)
-                            (do
-                                (Reflector'getInstanceField target, name)
-                            )
-                            (do
-                                (throw (IllegalArgumentException. (str "No matching field found: " name " for " (.getClass target))))
-                            )
-                        )
+                (let [#_"Field" f (Reflector'getField c, name, false)]
+                    (if (some? f)
+                        (Reflector'getInstanceField target, name)
+                        (throw (IllegalArgumentException. (str "No matching field found: " name " for " (.getClass target))))
                     )
                 )
-                (do
-                    (let [#_"List" meths (Reflector'getMethods c, 0, name, false)]
-                        (if (pos? (.size meths))
-                            (do
-                                (Reflector'invokeMatchingMethod name, meths, target, RT'EMPTY_ARRAY)
-                            )
-                            (do
-                                (Reflector'getInstanceField target, name)
-                            )
-                        )
+                (let [#_"List" meths (Reflector'getMethods c, 0, name, false)]
+                    (if (pos? (.size meths))
+                        (Reflector'invokeMatchingMethod name, meths, target, RT'EMPTY_ARRAY)
+                        (Reflector'getInstanceField target, name)
                     )
                 )
             )
@@ -29596,35 +29515,29 @@
 
     (defn #_"Object" Reflector'invokeInstanceMember-2 [#_"Object" target, #_"String" name]
         ;; check for field first
-        (let [#_"Class" c (.getClass target)]
-            (let [#_"Field" f (Reflector'getField c, name, false)]
-                (when (some? f) ;; field get
-                    (try
-                        (§ return (Reflector'prepRet (.getType f), (.get f, target)))
-                        (catch IllegalAccessException e
-                            (throw (Util'sneakyThrow e))
-                        )
+        (let [#_"Class" c (.getClass target) #_"Field" f (Reflector'getField c, name, false)]
+            (when (some? f) => (Reflector'invokeInstanceMethod target, name, RT'EMPTY_ARRAY)
+                (try ;; field get
+                    (Reflector'prepRet (.getType f), (.get f, target))
+                    (catch IllegalAccessException e
+                        (throw (Util'sneakyThrow e))
                     )
                 )
-                (Reflector'invokeInstanceMethod target, name, RT'EMPTY_ARRAY)
             )
         )
     )
 
     (defn #_"Object" Reflector'invokeInstanceMember-3o [#_"String" name, #_"Object" target, #_"Object" arg1]
         ;; check for field first
-        (let [#_"Class" c (.getClass target)]
-            (let [#_"Field" f (Reflector'getField c, name, false)]
-                (when (some? f) ;; field set
-                    (try
-                        (.set f, target, (Reflector'boxArg (.getType f), arg1))
-                        (catch IllegalAccessException e
-                            (throw (Util'sneakyThrow e))
-                        )
+        (let [#_"Class" c (.getClass target) #_"Field" f (Reflector'getField c, name, false)]
+            (when (some? f) => (Reflector'invokeInstanceMethod target, name, (object-array [ arg1 ]))
+                (try ;; field set
+                    (.set f, target, (Reflector'boxArg (.getType f), arg1))
+                    (catch IllegalAccessException e
+                        (throw (Util'sneakyThrow e))
                     )
-                    (§ return arg1)
                 )
-                (Reflector'invokeInstanceMethod target, name, (object-array [ arg1 ]))
+                arg1
             )
         )
     )
@@ -29635,52 +29548,49 @@
 
     (defn #_"Field" Reflector'getField [#_"Class" c, #_"String" name, #_"boolean" getStatics]
         (let [#_"Field[]" allfields (.getFields c)]
-            (loop-when-recur [#_"int" i 0] (< i (alength allfields)) [(inc i)]
-                (when (and (.equals name, (.getName (aget allfields i))) (= (Modifier/isStatic (.getModifiers (aget allfields i))) getStatics))
-                    (§ return (aget allfields i))
+            (loop-when [#_"int" i 0] (< i (alength allfields))
+                (let [#_"Field" f (aget allfields i)]
+                    (if (and (.equals name, (.getName f)) (= (Modifier/isStatic (.getModifiers f)) getStatics))
+                        f
+                        (recur (inc i))
+                    )
                 )
             )
-            nil
         )
     )
 
     (defn #_"List" Reflector'getMethods [#_"Class" c, #_"int" arity, #_"String" name, #_"boolean" getStatics]
-        (let [#_"java.lang.reflect.Method[]" allmethods (.getMethods c)]
-            (let [#_"ArrayList" methods (ArrayList.)]
-                (let [#_"ArrayList" bridgeMethods (ArrayList.)]
-                    (loop-when-recur [#_"int" i 0] (< i (alength allmethods)) [(inc i)]
-                        (let [#_"java.lang.reflect.Method" method (aget allmethods i)]
-                            (when (and (.equals name, (.getName method)) (= (Modifier/isStatic (.getModifiers method)) getStatics) (= (alength (.getParameterTypes method)) arity))
-                                (try
-                                    (if (and (.isBridge method) (.equals (.getMethod c, (.getName method), (.getParameterTypes method)), method))
-                                        (do
-                                            (.add bridgeMethods, method)
-                                        )
-                                        (do
-                                            (.add methods, method)
-                                        )
-                                    )
-                                    (catch NoSuchMethodException _
-                                    )
-                                )
+        (let [#_"java.lang.reflect.Method[]" allmethods (.getMethods c)
+              #_"ArrayList" methods (ArrayList.) #_"ArrayList" bridgeMethods (ArrayList.)]
+            (dotimes [#_"int" i (alength allmethods)]
+                (let [#_"java.lang.reflect.Method" m (aget allmethods i)]
+                    (when (and (.equals name, (.getName m)) (= (Modifier/isStatic (.getModifiers m)) getStatics) (= (alength (.getParameterTypes m)) arity))
+                        (try
+                            (if (and (.isBridge m) (.equals (.getMethod c, (.getName m), (.getParameterTypes m)), m))
+                                (.add bridgeMethods, m)
+                                (.add methods, m)
+                            )
+                            (catch NoSuchMethodException _
                             )
                         )
                     )
-
-                    (when (.isEmpty methods)
-                        (.addAll methods, bridgeMethods)
-                    )
-                    (when (and (not getStatics) (.isInterface c))
-                        (§ ass allmethods (.getMethods Object))
-                        (loop-when-recur [#_"int" i 0] (< i (alength allmethods)) [(inc i)]
-                            (when (and (.equals name, (.getName (aget allmethods i))) (= (Modifier/isStatic (.getModifiers (aget allmethods i))) getStatics) (= (alength (.getParameterTypes (aget allmethods i))) arity))
-                                (.add methods, (aget allmethods i))
-                            )
-                        )
-                    )
-                    methods
                 )
             )
+            (when (.isEmpty methods)
+                (.addAll methods, bridgeMethods)
+            )
+            (when (and (not getStatics) (.isInterface c))
+                (let [allmethods (.getMethods Object)]
+                    (dotimes [#_"int" i (alength allmethods)]
+                        (let [#_"java.lang.reflect.Method" m (aget allmethods i)]
+                            (when (and (.equals name, (.getName m)) (= (Modifier/isStatic (.getModifiers m)) getStatics) (= (alength (.getParameterTypes m)) arity))
+                                (.add methods, m)
+                            )
+                        )
+                    )
+                )
+            )
+            methods
         )
     )
 
@@ -29711,12 +29621,8 @@
     (defn #_"Object[]" Reflector'boxArgs [#_"Class[]" params, #_"Object[]" args]
         (when (pos? (alength params))
             (let [#_"Object[]" a (make-array Object (alength params))]
-                (loop-when-recur [#_"int" i 0] (< i (alength params)) [(inc i)]
-                    (let [#_"Object" ai (aget args i)]
-                        (let [#_"Class" paramType (aget params i)]
-                            (aset a i (Reflector'boxArg paramType, ai))
-                        )
-                    )
+                (dotimes [#_"int" i (alength params)]
+                    (aset a i (Reflector'boxArg (aget params i), (aget args i)))
                 )
                 a
             )
@@ -29745,34 +29651,22 @@
     )
 
     (defn #_"boolean" Reflector'isCongruent [#_"Class[]" params, #_"Object[]" args]
-        (let [#_"boolean" ret false]
-            (when (nil? args)
-                (§ return (zero? (alength params)))
-            )
-            (when (= (alength params) (alength args))
-                (§ ass ret true)
-                (loop-when-recur [#_"int" i 0] (and ret (< i (alength params))) [(inc i)]
+        (when (some? args) => (zero? (alength params))
+            (and (= (alength params) (alength args))
+                (loop-when [#_"boolean" ? true #_"int" i 0] (and ? (< i (alength params)))
                     (let [#_"Object" arg (aget args i)]
-                        (let [#_"Class" argType (when (some? arg) (.getClass arg))]
-                            (let [#_"Class" paramType (aget params i)]
-                                (§ ass ret (Reflector'paramArgTypeMatch paramType, argType))
-                            )
-                        )
+                        (recur (Reflector'paramArgTypeMatch (aget params i), (when (some? arg) (.getClass arg))) (inc i))
                     )
                 )
             )
-            ret
         )
     )
 
     (defn #_"Object" Reflector'prepRet [#_"Class" c, #_"Object" x]
         (cond
-            (not (or (.isPrimitive c) (= c Boolean)))
-                x
-            (instance? Boolean x)
-                (if (cast Boolean x) Boolean/TRUE Boolean/FALSE)
-            :else
-                x
+            (not (or (.isPrimitive c) (= c Boolean))) x
+            (instance? Boolean x)                     (if (cast Boolean x) Boolean/TRUE Boolean/FALSE)
+            :else                                     x
         )
     )
 )
@@ -35436,18 +35330,13 @@
     ;; returns tail starting at val of matching key if found, else nil
 
     (defn #_"ISeq" RT'findKey [#_"Keyword" key, #_"ISeq" keyvals]
-        (while (some? keyvals)
-            (let [#_"ISeq" r (.next keyvals)]
-                (when (nil? r)
-                    (throw (RuntimeException. "Malformed keyword argslist"))
+        (loop-when keyvals (some? keyvals)
+            (let-when [#_"ISeq" r (.next keyvals)] (some? r) => (throw (RuntimeException. "Malformed keyword argslist"))
+                (when-not (= (.first keyvals) key) => r
+                    (recur (.next r))
                 )
-                (when (= (.first keyvals) key)
-                    (§ return r)
-                )
-                (§ ass keyvals (.next r))
             )
         )
-        nil
     )
 
     (defn #_"Object" RT'dissoc [#_"Object" coll, #_"Object" key]
@@ -36404,7 +36293,7 @@
     (defn #_"Class" RT'loadClassForName [#_"String" name]
         (try
             (RT'classForNameNonLoading name)
-            (catch ClassNotFoundException e
+            (catch ClassNotFoundException _
                 (§ return nil)
             )
             (catch Exception e
@@ -36722,23 +36611,16 @@
     #_method
     (§ defn #_"int" (§ method compareTo) [#_"Symbol" this, #_"Object" o]
         (let [#_"Symbol" s (cast' Symbol o)]
-            (when (.equals this, o)
-                (§ return 0)
-            )
-            (when (and (nil? (:ns this)) (some? (:ns s)))
-                (§ return -1)
-            )
-            (when (some? (:ns this))
-                (when (nil? (:ns s))
-                    (§ return 1)
-                )
-                (let [#_"int" nsc (.compareTo (:ns this), (:ns s))]
-                    (when-not (zero? nsc)
-                        (§ return nsc)
+            (cond
+                (.equals this, o)                       0
+                (and (nil? (:ns this)) (some? (:ns s))) -1
+                (nil? (:ns this))                       (.compareTo (:name this), (:name s))
+                (nil? (:ns s))                          1
+                :else
+                    (let-when [#_"int" nsc (.compareTo (:ns this), (:ns s))] (zero? nsc) => nsc
+                        (.compareTo (:name this), (:name s))
                     )
-                )
             )
-            (.compareTo (:name this), (:name s))
         )
     )
 
@@ -37188,24 +37070,20 @@
     (§ defn- #_"boolean" (§ method step) [#_"TransformerIterator" this]
         (loop-when-recur [] (= (:next this) TransformerIterator'NONE) [] => true
             (if (.isEmpty (:buffer this))
-                (cond (:completed this)
-                    (do
+                (cond
+                    (:completed this)
                         (§ return false)
-                    )
                     (.hasNext (:sourceIter this))
-                    (do
-                        (let [#_"Object" iter
+                        (let [#_"Object" it
                                 (if (:multi this)
                                     (.applyTo (:xf this), (RT'cons nil, (.next (:sourceIter this))))
                                     (.invoke (:xf this), nil, (.next (:sourceIter this)))
                                 )]
-
-                            (when (RT'isReduced iter)
+                            (when (RT'isReduced it)
                                 (.invoke (:xf this), nil)
                                 (§ ass this (assoc this :completed true))
                             )
                         )
-                    )
                     :else
                     (do
                         (.invoke (:xf this), nil)
