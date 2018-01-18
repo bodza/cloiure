@@ -9488,7 +9488,7 @@
 
     java.util.Collection
     (contains [this o] (boolean (some #(= % o) this)))
-    (containsAll [this c] (every? #(.contains this %) c))
+    (containsAll [_ c] (throw (UnsupportedOperationException.)))
     (isEmpty [_] (zero? cnt))
     (toArray [this] (into-array Object this))
     (toArray [this arr]

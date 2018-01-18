@@ -1689,20 +1689,14 @@
     )
 
     (defn #_"boolean" APersistentSet'setEquals [#_"IPersistentSet" s1, #_"Object" obj]
-        (cond
-            (= s1 obj)
-                true
-            (not (instance? Set obj))
-                false
-            :else
+        (or (= s1 obj)
+            (and (instance? Set obj)
                 (let-when [#_"Set" m (cast Set obj)] (= (.size m) (.count s1)) => false
-                    (doseq [#_"Object" aM m]
-                        (when (not (.contains s1, aM))
-                            (§ return false)
-                        )
+                    (loop-when [#_"Iterator" it (.iterator m)] (.hasNext it) => true
+                        (and (.contains s1, (.next it)) (recur it))
                     )
-                    true
                 )
+            )
         )
     )
 
@@ -1710,12 +1704,9 @@
     (§ defn #_"boolean" (§ method equiv) [#_"APersistentSet" this, #_"Object" obj]
         (and (instance? Set obj)
             (let-when [#_"Set" m (cast Set obj)] (= (.size m) (.size this)) => false
-                (doseq [#_"Object" aM m]
-                    (when (not (.contains this, aM))
-                        (§ return false)
-                    )
+                (loop-when [#_"Iterator" it (.iterator m)] (.hasNext it) => true
+                    (and (.contains this, (.next it)) (recur it))
                 )
-                true
             )
         )
     )
@@ -1782,12 +1773,7 @@
 
     #_method
     (§ defn #_"boolean" (§ method containsAll) [#_"APersistentSet" this, #_"Collection" c]
-        (doseq [#_"Object" o c]
-            (when (not (.contains this, o))
-                (§ return false)
-            )
-        )
-        true
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -2471,12 +2457,7 @@
 
     #_method
     (§ defn #_"boolean" (§ method containsAll) [#_"APersistentVector" this, #_"Collection" c]
-        (doseq [#_"Object" o c]
-            (when (not (.contains this, o))
-                (§ return false)
-            )
-        )
-        true
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -4159,12 +4140,7 @@
 
     #_method
     (§ defn #_"boolean" (§ method containsAll) [#_"ASeq" this, #_"Collection" c]
-        (doseq [#_"Object" o c]
-            (when (not (.contains this, o))
-                (§ return false)
-            )
-        )
-        true
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -8229,37 +8205,37 @@
 
     (defn #_"Expr" StaticInvokeExpr'parse [#_"Var" v, #_"ISeq" args, #_"Object" tag, #_"boolean" tailPosition]
         (when (and (.isBound v) (some? (.get v)))
-            (let [#_"Class" c (.getClass (.get v)) #_"String" cname (.getName c) #_"int" argcount (RT'count args)
-                  #_"java.lang.reflect.Method" method nil #_"boolean" variadic false
-                  _ (doseq [#_"java.lang.reflect.Method" m (.getMethods c)]
-                        (when (and (Modifier/isStatic (.getModifiers m)) (= (.getName m) "invokeStatic"))
-                            (let [#_"Class[]" params (.getParameterTypes m)]
-                                (cond (= argcount (alength params))
-                                    (do
-                                        (§ ass method m)
-                                        (§ ass variadic (and (pos? argcount) (= (aget params (dec (alength params))) (§ class ISeq))))
-                                        (§ break )
-                                    )
-                                    (and (< 0 (alength params) argcount) (= (aget params (dec (alength params))) (§ class ISeq)))
-                                    (do
-                                        (§ ass method m)
-                                        (§ ass variadic true)
-                                        (§ break )
+            (let [#_"Class" c (.getClass (.get v)) #_"java.lang.reflect.Method[]" methods (.getMethods c) #_"int" argc (RT'count args)
+                  [#_"java.lang.reflect.Method" method #_"boolean" variadic]
+                    (loop-when [#_"int" i 0] (< i (alength methods)) => [nil false]
+                        (let [#_"java.lang.reflect.Method" m (aget methods i)]
+                            (or
+                                (when (and (Modifier/isStatic (.getModifiers m)) (= (.getName m) "invokeStatic"))
+                                    (let [#_"Class[]" types (.getParameterTypes m) #_"int" n (alength types)]
+                                        (cond
+                                            (= n argc)
+                                                [m (and (pos? n) (= (aget types (dec n)) (§ class ISeq)))]
+                                            (and (< 0 n argc) (= (aget types (dec n)) (§ class ISeq)))
+                                                [m true]
+                                        )
                                     )
                                 )
+                                (recur (inc i))
                             )
                         )
                     )]
                 (when (some? method)
                     (let [#_"Class" retClass (.getReturnType method) #_"Class[]" paramClasses (.getParameterTypes method)
                           #_"Type[]" paramTypes (make-array Type (alength paramClasses))
-                          _ (loop-when-recur [#_"int" i 0] (< i (alength paramClasses)) [(inc i)]
+                          _ (dotimes [#_"int" i (alength paramClasses)]
                                 (aset paramTypes i (§ unsure Type/getType (aget paramClasses i)))
                             )
                           #_"Type" target (§ unsure Type/getType c)
-                          #_"PersistentVector" argv PersistentVector'EMPTY
-                          _ (loop-when-recur [#_"ISeq" s (RT'seq args)] (some? s) [(.next s)]
-                                (§ ass argv (.cons argv, (Compiler'analyze-2 :Context'EXPRESSION, (.first s))))
+                          #_"PersistentVector" argv
+                            (loop-when-recur [argv PersistentVector'EMPTY #_"ISeq" s (RT'seq args)]
+                                             (some? s)
+                                             [(.cons argv, (Compiler'analyze-2 :Context'EXPRESSION, (.first s))) (.next s)]
+                                          => argv
                             )]
                         (StaticInvokeExpr'new target, retClass, paramClasses, paramTypes, variadic, argv, tag, tailPosition)
                     )
@@ -8714,9 +8690,9 @@
                                                                 )
 
                                                                 (when (:canBeDirect fn)
-                                                                    (doseq [#_"FnMethod" fm (cast Collection #_"<FnMethod>" methods)]
+                                                                    (doseq [#_"FnMethod" fm (cast Collection #_"<FnMethod>" methods)]
                                                                         (when (some? (:locals fm))
-                                                                            (doseq [#_"LocalBinding" lb (cast Collection #_"<LocalBinding>" (RT'keys (:locals fm)))]
+                                                                            (doseq [#_"LocalBinding" lb (cast Collection #_"<LocalBinding>" (RT'keys (:locals fm)))]
                                                                                 (when (:isArg lb)
                                                                                     (§ ass (:idx lb) (dec (:idx lb)))
                                                                                 )
@@ -10734,13 +10710,8 @@
 
     #_method
     (§ defn #_"Object" (§ method eval) [#_"BodyExpr" this]
-        (let [#_"Object" ret nil]
-            (doseq [#_"Object" o (:exprs this)]
-                (let [#_"Expr" e (cast' Expr o)]
-                    (§ ass ret (.eval e))
-                )
-            )
-            ret
+        (let [#_"Iterator" it (.iterator (:exprs this))]
+            (loop-when-recur [#_"Object" ret nil] (.hasNext it) [(.eval (cast' Expr (.next it)))] => ret)
         )
     )
 
@@ -11931,51 +11902,37 @@
         nil
     )
 
-    (defn #_"Map[]" NewInstanceExpr'gatherMethods-2s [#_"Class" sc, #_"ISeq" interfaces]
-        (let [#_"Map" allm (HashMap.)]
-            (NewInstanceExpr'gatherMethods-2m sc, allm)
-            (loop-when-recur [interfaces interfaces] (some? interfaces) [(.next interfaces)]
-                (NewInstanceExpr'gatherMethods-2m (cast Class (.first interfaces)), allm)
-            )
-
-            (let [#_"Map<IPersistentVector, java.lang.reflect.Method>" mm (HashMap.)]
-                (let [#_"Map<IPersistentVector, Set<Class>>" covariants (HashMap.)]
-                    (doseq [#_"Object" o (.entrySet allm)]
-                        (let [#_"Map$Entry" e (cast Map$Entry o)]
-                            (let [#_"IPersistentVector" mk (cast' IPersistentVector (.getKey e))]
-                                (§ ass mk (cast' IPersistentVector (.pop mk)))
-                                (let [#_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (.getValue e))]
-                                    (if (.containsKey mm, mk) ;; covariant return
-                                        (do
-                                            (let [#_"Set<Class>" cvs (.get covariants, mk)]
-                                                (when (nil? cvs)
-                                                    (§ ass cvs (HashSet.))
-                                                    (.put covariants, mk, cvs)
-                                                )
-                                                (let [#_"java.lang.reflect.Method" om (.get mm, mk)]
-                                                    (if (.isAssignableFrom (.getReturnType om), (.getReturnType m))
-                                                        (do
-                                                            (.add cvs, (.getReturnType om))
-                                                            (.put mm, mk, m)
-                                                        )
-                                                        (do
-                                                            (.add cvs, (.getReturnType m))
-                                                        )
-                                                    )
-                                                )
-                                            )
-                                        )
-                                        (do
-                                            (.put mm, mk, m)
-                                        )
+    (defn #_"Map[]" NewInstanceExpr'gatherMethods-2s [#_"Class" sc, #_"ISeq" ifaces]
+        (let [#_"Map" allm (HashMap.)
+              _ (NewInstanceExpr'gatherMethods-2m sc, allm)
+              _ (loop-when-recur ifaces (some? ifaces) [(.next ifaces)]
+                    (NewInstanceExpr'gatherMethods-2m (cast Class (.first ifaces)), allm)
+                )
+              #_"Map<IPersistentVector, java.lang.reflect.Method>" methods (HashMap.)
+              #_"Map<IPersistentVector, Set<Class>>" covariants (HashMap.)]
+            (loop-when-recur [#_"Iterator" it (.iterator (.entrySet allm))] (.hasNext it) [it]
+                (let [#_"Map$Entry" e (cast Map$Entry (.next it))
+                      #_"IPersistentVector" mk (cast' IPersistentVector (.pop (cast' IPersistentVector (.getKey e))))
+                      #_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (.getValue e))]
+                    (if (.containsKey methods, mk) ;; covariant return
+                        (let [#_"Set<Class>" cvs
+                                (or (.get covariants, mk)
+                                    (let [cvs (HashSet.)]
+                                        (.put covariants, mk, cvs)
+                                        cvs
                                     )
                                 )
+                              #_"Class" tk (.getReturnType (.get methods, mk)) #_"Class" t (.getReturnType m)]
+                            (when (.isAssignableFrom tk, t) => (.add cvs, t)
+                                (.add cvs, tk)
+                                (.put methods, mk, m)
                             )
                         )
+                        (.put methods, mk, m)
                     )
-                    (§ new Map[] (object-array [ mm, covariants ]))
                 )
             )
+            (§ new Map[] (object-array [ methods, covariants ]))
         )
     )
 )
@@ -12891,25 +12848,24 @@
 
     (defn #_"Class" Compiler'maybeJavaClass [#_"Collection<Expr>" exprs]
         (try
-            (let [#_"Class" match nil]
-                (doseq [#_"Expr" e exprs]
-                    (when-not (§ instance? ThrowExpr e)
-                        (if (.hasJavaClass e)
-                            (let [#_"Class" c (.getJavaClass e)]
-                                (cond
-                                    (nil? match)
-                                        (§ ass match c)
-                                    (not= match c)
-                                        (§ return nil)
+            (let [#_"Iterator" it (.iterator exprs)]
+                (loop-when [#_"Class" match nil] (.hasNext it) => match
+                    (let [#_"Expr" e (.next it)]
+                        (cond
+                            (§ instance? ThrowExpr e)
+                                (recur match)
+                            (.hasJavaClass e)
+                                (let [#_"Class" c (.getJavaClass e)]
+                                    (cond
+                                        (nil? match) (recur c)
+                                        (= match c) (recur match)
+                                    )
                                 )
-                            )
-                            (§ return nil)
                         )
                     )
                 )
-                match
             )
-            (catch Exception e
+            (catch Exception _
                 nil
             )
         )
@@ -13047,29 +13003,21 @@
     (def #_"Pattern" Compiler'DEMUNGE_PATTERN nil)
 
     (§ static
-        ;; DEMUNGE_MAP maps strings to characters in the opposite
-        ;; direction that CHAR_MAP does, plus it maps "$" to '/'
-        (let [#_"IPersistentMap" m (RT'map "$", \/)]
-            (loop-when-recur [#_"ISeq" s (RT'seq Compiler'CHAR_MAP)] (some? s) [(.next s)]
-                (let [#_"IMapEntry" e (cast' IMapEntry (.first s))]
-                    (let [#_"Character" origCh (cast Character (.key e))]
-                        (let [#_"String" escapeStr (cast String (.val e))]
-                            (§ ass m (.assoc m, escapeStr, origCh))
-                        )
+        ;; DEMUNGE_MAP maps strings to characters in the opposite direction that CHAR_MAP does, plus it maps "$" to '/'.
+        (let [#_"IPersistentMap" m
+                (loop-when [m (RT'map "$", \/) #_"ISeq" s (RT'seq Compiler'CHAR_MAP)] (some? s) => m
+                    (let [#_"IMapEntry" e (cast' IMapEntry (.first s))]
+                        (recur (.assoc m, (cast String (.val e)), (cast Character (.key e))) (.next s))
                     )
-                )
-            )
+                )]
             (§ ass Compiler'DEMUNGE_MAP m)
 
-            ;; DEMUNGE_PATTERN searches for the first of any occurrence of
-            ;; the strings that are keys of DEMUNGE_MAP.
-            ;; Note: Regex matching rules mean that #"_|_COLON_" "_COLON_"
-            ;; returns "_", but #"_COLON_|_" "_COLON_" returns "_COLON_"
-            ;; as desired. Sorting string keys of DEMUNGE_MAP from longest to
-            ;; shortest ensures correct matching behavior, even if some strings are
-            ;; prefixes of others.
-            (let [#_"Object[]" mungeStrs (RT'toArray (RT'keys m))]
-                (Arrays/sort mungeStrs,
+            ;; DEMUNGE_PATTERN searches for the first of any occurrence of the strings that are keys of DEMUNGE_MAP.
+            ;; Note: Regex matching rules mean that #"_|_COLON_" "_COLON_" returns "_", but #"_COLON_|_" "_COLON_"
+            ;; returns "_COLON_" as desired. Sorting string keys of DEMUNGE_MAP from longest to shortest ensures
+            ;; correct matching behavior, even if some strings are prefixes of others.
+            (let [#_"Object[]" a (RT'toArray (RT'keys m))]
+                (Arrays/sort a,
                     (§ reify Comparator()
                         #_method
                         (§ defn #_"int" (§ method compare) [#_"Comparator" this, #_"Object" s1, #_"Object" s2]
@@ -13078,20 +13026,15 @@
                     )
                 )
                 (let [#_"StringBuilder" sb (StringBuilder.)]
-                    (let [#_"boolean" first true]
-                        (doseq [#_"Object" s mungeStrs]
-                            (let [#_"String" escapeStr (cast String s)]
-                                (when (not first)
-                                    (.append sb, "|")
-                                )
-                                (§ ass first false)
-                                (.append sb, "\\Q")
-                                (.append sb, escapeStr)
-                                (.append sb, "\\E")
-                            )
+                    (loop-when-recur [#_"int" i 0] (< i (alength a)) [(inc i)]
+                        (when (pos? i)
+                            (.append sb, "|")
                         )
-                        (§ ass Compiler'DEMUNGE_PATTERN (Pattern/compile (.toString sb)))
+                        (.append sb, "\\Q")
+                        (.append sb, (cast String (aget a i)))
+                        (.append sb, "\\E")
                     )
+                    (§ ass Compiler'DEMUNGE_PATTERN (Pattern/compile (.toString sb)))
                 )
             )
         )
@@ -13100,16 +13043,7 @@
     (defn #_"String" Compiler'munge [#_"String" name]
         (let [#_"StringBuilder" sb (StringBuilder.)]
             (doseq [#_"char" c (.toCharArray name)]
-                (let [#_"String" sub (cast String (.valAt Compiler'CHAR_MAP, c))]
-                    (if (some? sub)
-                        (do
-                            (.append sb, sub)
-                        )
-                        (do
-                            (.append sb, c)
-                        )
-                    )
-                )
+                (.append sb, (or (cast String (.valAt Compiler'CHAR_MAP, c)) c))
             )
             (.toString sb)
         )
@@ -17412,12 +17346,7 @@
 
     #_method
     (§ defn #_"boolean" (§ method containsAll) [#_"LazySeq" this, #_"Collection" c]
-        (doseq [#_"Object" o c]
-            (when (not (.contains this, o))
-                (§ return false)
-            )
-        )
-        true
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -18641,60 +18570,32 @@
 
     #_method
     (§ defn- #_"Object" (§ method readRecord) [#_"CtorReader" this, #_"Object" form, #_"Symbol" recordName, #_"Object" pendingForms]
-        (when-not (RT'booleanCast-1o (.deref RT'READEVAL))
-            (throw (RuntimeException. "Record construction syntax can only be used when *read-eval* == true"))
-        )
-
-        (let [#_"Class" recordClass (RT'classForNameNonLoading (.toString recordName))]
-            (let [#_"boolean" shortForm true]
-                (cond (§ instance? IPersistentMap form)
-                    (do
-                        (§ ass shortForm false)
-                    )
-                    (§ instance? IPersistentVector form)
-                    (do
-                        (§ ass shortForm true)
-                    )
-                    :else
-                    (do
-                        (throw (RuntimeException. (str "Unreadable constructor form starting with \"#" recordName "\"")))
-                    )
-                )
-
-                (let [#_"Object" ret nil]
-                    (let [#_"Constructor[]" allctors (.getConstructors (cast Class recordClass))]
-                        (if shortForm
-                            (do
-                                (let [#_"IPersistentVector" recordEntries (cast' IPersistentVector form)]
-                                    (let [#_"boolean" ctorFound false]
-                                        (doseq [#_"Constructor" ctor allctors]
-                                            (when (= (alength (.getParameterTypes ctor)) (.count recordEntries))
-                                                (§ ass ctorFound true)
-                                            )
-                                        )
-
-                                        (when (not ctorFound)
-                                            (throw (RuntimeException. (str "Unexpected number of constructor arguments to " (.toString recordClass) ": got " (.count recordEntries))))
-                                        )
-
-                                        (§ ass ret (Reflector'invokeConstructor recordClass, (RT'toArray recordEntries)))
-                                    )
+        (when (RT'booleanCast-1o (.deref RT'READEVAL)) => (throw (RuntimeException. "Record construction syntax can only be used when *read-eval* == true"))
+            (let [#_"Class" recordClass (RT'classForNameNonLoading (.toString recordName))]
+                (cond
+                    (§ instance? IPersistentMap form)
+                        (let [#_"IPersistentMap" m (cast' IPersistentMap form)]
+                            (loop-when-recur [#_"ISeq" s (RT'keys m)] (some? s) [(.next s)]
+                                (when (not (§ instance? Keyword (.first s)))
+                                    (throw (RuntimeException. (str "Unreadable defrecord form: key must be of type cloiure.lang.Keyword, got " (.first s))))
                                 )
                             )
-                            (do
-                                (let [#_"IPersistentMap" vals (cast' IPersistentMap form)]
-                                    (loop-when-recur [#_"ISeq" s (RT'keys vals)] (some? s) [(.next s)]
-                                        (when (not (§ instance? Keyword (.first s)))
-                                            (throw (RuntimeException. (str "Unreadable defrecord form: key must be of type cloiure.lang.Keyword, got " (.toString (.first s)))))
-                                        )
+                            (Reflector'invokeStaticMethod-3c recordClass, "create", (object-array [ m ]))
+                        )
+                    (§ instance? IPersistentVector form)
+                        (let [#_"IPersistentVector" v (cast' IPersistentVector form)
+                              #_"boolean" found
+                                (let [#_"Constructor[]" allctors (.getConstructors (cast Class recordClass))]
+                                    (loop-when [#_"int" i 0] (< i (alength allctors)) => false
+                                        (or (= (alength (.getParameterTypes (aget allctors i))) (.count v)) (recur (inc i)))
                                     )
-                                    (§ ass ret (Reflector'invokeStaticMethod-3c recordClass, "create", (object-array [ vals ])))
-                                )
+                                )]
+                            (when found => (throw (RuntimeException. (str "Unexpected number of constructor arguments to " recordClass ": got " (.count v))))
+                                (Reflector'invokeConstructor recordClass, (RT'toArray v))
                             )
                         )
-
-                        ret
-                    )
+                    :else
+                        (throw (RuntimeException. (str "Unreadable constructor form starting with \"#" recordName "\"")))
                 )
             )
         )
@@ -19395,7 +19296,7 @@
                                 (§ ass ret (.call fn))
                                 ;; make sure no one has killed us before this point, and can't from now on
                                 (when (.compareAndSet (:status (:info this)), LockingTransaction'RUNNING, LockingTransaction'COMMITTING)
-                                    (doseq [#_"Map$Entry<Ref, ArrayList<CFn>>" e (.entrySet (:commutes this))]
+                                    (doseq [#_"Map$Entry<Ref, ArrayList<CFn>>" e (.entrySet (:commutes this))]
                                         (let [#_"Ref" ref (.getKey e)]
                                             (when (.contains (:sets this), ref)
                                                 (§ continue )
@@ -19441,7 +19342,7 @@
                                     ;; at this point, all values calced, all refs to be written locked
                                     ;; no more client code to be called
                                     (let [#_"long" commitPoint (.getCommitPoint this)]
-                                        (doseq [#_"Map$Entry<Ref, Object>" e (.entrySet (:vals this))]
+                                        (doseq [#_"Map$Entry<Ref, Object>" e (.entrySet (:vals this))]
                                             (let [#_"Ref" ref (.getKey e)]
                                                 (let [#_"Object" oldval (when (some? (:tvals ref)) (:val (:tvals ref)))]
                                                     (let [#_"Object" newval (.getValue e)]
@@ -20285,7 +20186,7 @@
             (let [#_"Object" bestValue
                     (try
                         (let [#_"Map$Entry" bestEntry nil
-                              _ (doseq [#_"Object" o (.getMethodTable this)]
+                              _ (doseq [#_"Object" o (.getMethodTable this)]
                                     (let-when [#_"Map$Entry" e (cast Map$Entry o)] (.isA this, dispatchVal, (.getKey e))
                                         (when (or (nil? bestEntry) (.dominates this, (.getKey e), (.getKey bestEntry)))
                                             (§ ass bestEntry e)
@@ -20786,27 +20687,21 @@
     )
 
     (defn #_"int" Murmur3'hashOrdered [#_"Iterable" xs]
-        (let [#_"int" n 0]
-            (let [#_"int" hash 1]
-                (doseq [#_"Object" x xs]
-                    (§ ass hash (+ (* 31 hash) (Util'hasheq x)))
-                    (§ ass n (inc n))
-                )
-
-                (Murmur3'mixCollHash hash, n)
+        (let [#_"Iterator" it (.iterator xs)]
+            (loop-when-recur [#_"int" hash 1 #_"int" n 0]
+                             (.hasNext it)
+                             [(+ (* 31 hash) (Util'hasheq (.next it))) (inc n)]
+                          => (Murmur3'mixCollHash hash, n)
             )
         )
     )
 
     (defn #_"int" Murmur3'hashUnordered [#_"Iterable" xs]
-        (let [#_"int" hash 0]
-            (let [#_"int" n 0]
-                (doseq [#_"Object" x xs]
-                    (§ ass hash (+ hash (Util'hasheq x)))
-                    (§ ass n (inc n))
-                )
-
-                (Murmur3'mixCollHash hash, n)
+        (let [#_"Iterator" it (.iterator xs)]
+            (loop-when-recur [#_"int" hash 0 #_"int" n 0]
+                             (.hasNext it)
+                             [(+ hash (Util'hasheq (.next it))) (inc n)]
+                          => (Murmur3'mixCollHash hash, n)
             )
         )
     )
@@ -23834,13 +23729,12 @@
     (def #_"int" PersistentArrayMap'HASHTABLE_THRESHOLD 16)
 
     (defn #_"IPersistentMap" PersistentArrayMap'create [#_"Map" other]
-        (let [#_"ITransientMap" ret (.asTransient PersistentArrayMap'EMPTY)]
-            (doseq [#_"Object" o (.entrySet other)]
-                (let [#_"Map$Entry" e (cast' Entry o)]
-                    (§ ass ret (.assoc ret, (.getKey e), (.getValue e)))
+        (let [#_"Iterator" it (.iterator (.entrySet other))]
+            (loop-when [#_"ITransientMap" ret (.asTransient PersistentArrayMap'EMPTY)] (.hasNext it) => (.persistent ret)
+                (let [#_"Map$Entry" e (cast' Entry (.next it))]
+                    (recur (.assoc ret, (.getKey e), (.getValue e)))
                 )
             )
-            (.persistent ret)
         )
     )
 
@@ -24452,16 +24346,18 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method kvreduce) [#_"ArrayNode" this, #_"IFn" f, #_"Object" init]
-        (doseq [#_"INode" node (:array this)]
-            (when (some? node)
-                (§ ass init (.kvreduce node, f, init))
-                (when (RT'isReduced init)
-                    (§ return init)
+    (§ defn #_"Object" (§ method kvreduce) [#_"ArrayNode" this, #_"IFn" f, #_"Object" r]
+        (let [#_"INode[]" a (:array this)]
+            (loop-when [r r #_"int" i 0] (< i (alength a)) => r
+                (let-when [#_"INode" node (aget a i)] (some? node) => (recur r (inc i))
+                    (let [r (.kvreduce node, f, r)]
+                        (when-not (RT'isReduced r) => r
+                            (recur r (inc i))
+                        )
+                    )
                 )
             )
         )
-        init
     )
 
     #_method
@@ -25240,13 +25136,12 @@
     (def- #_"Object" PersistentHashMap'NOT_FOUND (Object.))
 
     (defn #_"IPersistentMap" PersistentHashMap'create-1m [#_"Map" other]
-        (let [#_"ITransientMap" ret (.asTransient PersistentHashMap'EMPTY)]
-            (doseq [#_"Object" o (.entrySet other)]
-                (let [#_"Map$Entry" e (cast' Entry o)]
-                    (§ ass ret (.assoc ret, (.getKey e), (.getValue e)))
+        (let [#_"Iterator" it (.iterator (.entrySet other))]
+            (loop-when [#_"ITransientMap" ret (.asTransient PersistentHashMap'EMPTY)] (.hasNext it) => (.persistent ret)
+                (let [#_"Map$Entry" e (cast' Entry (.next it))]
+                    (recur (.assoc ret, (.getKey e), (.getValue e)))
                 )
             )
-            (.persistent ret)
         )
     )
 
@@ -25642,21 +25537,22 @@
 (class-ns PersistentHashSet (§ extends APersistentSet) (§ implements IObj, IEditableCollection)
     (§ def #_"PersistentHashSet" PersistentHashSet'EMPTY (PersistentHashSet'new nil, PersistentHashMap'EMPTY))
 
-    (defn #_"PersistentHashSet" PersistentHashSet'create-1a [& #_"Object..." init]
+    (defn #_"PersistentHashSet" PersistentHashSet'create-1a [& #_"Object..." items]
         (let [#_"ITransientSet" ret (cast' ITransientSet (.asTransient PersistentHashSet'EMPTY))]
-            (loop-when-recur [#_"int" i 0] (< i (alength init)) [(inc i)]
-                (§ ass ret (cast' ITransientSet (.conj ret, (aget init i))))
+            (loop-when-recur [#_"int" i 0] (< i (alength items)) [(inc i)]
+                (§ ass ret (cast' ITransientSet (.conj ret, (aget items i))))
             )
             (cast' PersistentHashSet (.persistent ret))
         )
     )
 
-    (defn #_"PersistentHashSet" PersistentHashSet'create-1l [#_"List" init]
+    (defn #_"PersistentHashSet" PersistentHashSet'create-1l [#_"List" items]
         (let [#_"ITransientSet" ret (cast' ITransientSet (.asTransient PersistentHashSet'EMPTY))]
-            (doseq [#_"Object" key init]
-                (§ ass ret (cast' ITransientSet (.conj ret, key)))
+            (let [#_"Iterator" it (.iterator items)]
+                (loop-when-recur [] (.hasNext it) [] => (cast' PersistentHashSet (.persistent ret))
+                    (§ ass ret (cast' ITransientSet (.conj ret, (.next it))))
+                )
             )
-            (cast' PersistentHashSet (.persistent ret))
         )
     )
 
@@ -25669,29 +25565,29 @@
         )
     )
 
-    (defn #_"PersistentHashSet" PersistentHashSet'createWithCheck-1a [& #_"Object..." init]
+    (defn #_"PersistentHashSet" PersistentHashSet'createWithCheck-1a [& #_"Object..." items]
         (let [#_"ITransientSet" ret (cast' ITransientSet (.asTransient PersistentHashSet'EMPTY))]
-            (loop-when-recur [#_"int" i 0] (< i (alength init)) [(inc i)]
-                (§ ass ret (cast' ITransientSet (.conj ret, (aget init i))))
+            (loop-when-recur [#_"int" i 0] (< i (alength items)) [(inc i)]
+                (§ ass ret (cast' ITransientSet (.conj ret, (aget items i))))
                 (when-not (= (.count ret) (inc i))
-                    (throw (IllegalArgumentException. (str "Duplicate key: " (aget init i))))
+                    (throw (IllegalArgumentException. (str "Duplicate key: " (aget items i))))
                 )
             )
             (cast' PersistentHashSet (.persistent ret))
         )
     )
 
-    (defn #_"PersistentHashSet" PersistentHashSet'createWithCheck-1l [#_"List" init]
+    (defn #_"PersistentHashSet" PersistentHashSet'createWithCheck-1l [#_"List" items]
         (let [#_"ITransientSet" ret (cast' ITransientSet (.asTransient PersistentHashSet'EMPTY))]
-            (let [#_"int" i 0]
-                (doseq [#_"Object" key init]
-                    (§ ass ret (cast' ITransientSet (.conj ret, key)))
-                    (when-not (= (.count ret) (inc i))
-                        (throw (IllegalArgumentException. (str "Duplicate key: " key)))
+            (let [#_"Iterator" it (.iterator items)]
+                (loop-when-recur [#_"int" i 0] (.hasNext it) [(inc i)] => (cast' PersistentHashSet (.persistent ret))
+                    (let [#_"Object" key (.next it)]
+                        (§ ass ret (cast' ITransientSet (.conj ret, key)))
+                        (when-not (= (.count ret) (inc i))
+                            (throw (IllegalArgumentException. (str "Duplicate key: " key)))
+                        )
                     )
-                    (§ ass i (inc i))
                 )
-                (cast' PersistentHashSet (.persistent ret))
             )
         )
     )
@@ -25980,7 +25876,7 @@
 
     #_method
     (§ defn #_"boolean" (§ method containsAll) [#_"EmptyList" this, #_"Collection" collection]
-        (.isEmpty collection)
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -26080,8 +25976,8 @@
         )
     )
 
-    (defn #_"IPersistentList" PersistentList'create [#_"List" init]
-        (let [#_"ListIterator" it (.listIterator init, (.size init))]
+    (defn #_"IPersistentList" PersistentList'create [#_"List" items]
+        (let [#_"ListIterator" it (.listIterator items, (.size items))]
             (loop-when-recur [#_"IPersistentList" ret PersistentList'EMPTY] (.hasPrevious it) [(cast' IPersistentList (.cons ret, (.previous it)))] => ret)
         )
     )
@@ -26366,12 +26262,7 @@
 
     #_method
     (§ defn #_"boolean" (§ method containsAll) [#_"PersistentQueue" this, #_"Collection" c]
-        (doseq [#_"Object" o c]
-            (when (.contains this, o)
-                (§ return true)
-            )
-        )
-        false
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -27009,13 +26900,12 @@
     (§ def #_"PersistentTreeMap" PersistentTreeMap'EMPTY (PersistentTreeMap'new-0))
 
     (defn #_"IPersistentMap" PersistentTreeMap'create-1m [#_"Map" other]
-        (let [#_"IPersistentMap" ret PersistentTreeMap'EMPTY]
-            (doseq [#_"Object" o (.entrySet other)]
-                (let [#_"Map$Entry" e (cast' Entry o)]
-                    (§ ass ret (.assoc ret, (.getKey e), (.getValue e)))
+        (let [#_"Iterator" it (.iterator (.entrySet other))]
+            (loop-when [#_"IPersistentMap" ret PersistentTreeMap'EMPTY] (.hasNext it) => ret
+                (let [#_"Map$Entry" e (cast' Entry (.next it))]
+                    (recur (.assoc ret, (.getKey e), (.getValue e)))
                 )
             )
-            ret
         )
     )
 
@@ -28113,11 +28003,10 @@
     )
 
     (defn #_"PersistentVector" PersistentVector'create-1a [& #_"Object..." items]
-        (let [#_"TransientVector" v (.asTransient PersistentVector'EMPTY)]
-            (doseq [#_"Object" item items]
-                (§ ass v (.conj v, item))
-            )
-            (.persistent v)
+        (loop-when-recur [#_"TransientVector" v (.asTransient PersistentVector'EMPTY) #_"int" i 0]
+                         (< i (alength items))
+                         [(.conj v, (aget items i)) (inc i)]
+                      => (.persistent v)
         )
     )
 
@@ -29351,20 +29240,30 @@
     )
 
     (defn #_"java.lang.reflect.Method" Reflector'getAsMethodOfPublicBase [#_"Class" c, #_"java.lang.reflect.Method" m]
-        (doseq [#_"Class" iface (.getInterfaces c)]
-            (doseq [#_"java.lang.reflect.Method" im (.getMethods iface)]
-                (when (Reflector'isMatch im, m)
-                    (§ return im)
+        (or
+            (let [#_"Class[]" ifaces (.getInterfaces c)]
+                (loop-when [#_"int" j 0] (< j (alength ifaces))
+                    (let [#_"java.lang.reflect.Method[]" methods (.getMethods (aget ifaces j))]
+                        (or
+                            (loop-when [#_"int" i 0] (< i (alength methods))
+                                (let-when [#_"java.lang.reflect.Method" im (aget methods i)] (Reflector'isMatch im, m) => (recur (inc i))
+                                    im
+                                )
+                            )
+                            (recur (inc j))
+                        )
+                    )
                 )
             )
-        )
-        (when-let [#_"Class" sc (.getSuperclass c)]
-            (doseq [#_"java.lang.reflect.Method" scm (.getMethods sc)]
-                (when (Reflector'isMatch scm, m)
-                    (§ return scm)
+            (when-let [#_"Class" sc (.getSuperclass c)]
+                (let [#_"java.lang.reflect.Method[]" methods (.getMethods sc)]
+                    (loop-when [#_"int" i 0] (< i (alength methods)) => (Reflector'getAsMethodOfPublicBase sc, m)
+                        (let-when [#_"java.lang.reflect.Method" scm (aget methods i)] (Reflector'isMatch scm, m) => (recur (inc i))
+                            scm
+                        )
+                    )
                 )
             )
-            (Reflector'getAsMethodOfPublicBase sc, m)
         )
     )
 
@@ -36981,19 +36880,19 @@
 
     #_method
     (§ defn #_"boolean" (§ method hasNext) [#_"MultiIterator" this]
-        (doseq [#_"Iterator" iter (:iters this)]
-            (when (not (.hasNext iter))
-                (§ return false)
+        (let [#_"Iterator[]" iters (:iters this)]
+            (loop-when [#_"int" i 0] (< i (alength iters)) => true
+                (and (.hasNext (aget iters i)) (recur (inc i)))
             )
         )
-        true
     )
 
     #_method
     (§ defn #_"Object" (§ method next) [#_"MultiIterator" this]
-        (let [#_"Object[]" nexts (make-array Object (alength (:iters this)))]
-            (loop-when-recur [#_"int" i 0] (< i (alength (:iters this))) [(inc i)]
-                (aset nexts i (.next (aget (:iters this) i)))
+        (let [#_"Iterator[]" iters (:iters this)
+              #_"Object[]" nexts (make-array Object (alength iters))]
+            (dotimes [#_"int" i (alength iters)]
+                (aset nexts i (.next (aget iters i)))
             )
             (ArraySeq'new-2 nexts, 0)
         )
@@ -37319,14 +37218,16 @@
             (while (some? (.poll rq))
             )
             (doseq [#_"Map$Entry<K, Reference<V>>" e (.entrySet cache)]
-                (let [#_"Reference<V>" val (.getValue e)]
-                    (when (and (some? val) (nil? (.get val)))
-                        (.remove cache, (.getKey e), val)
-                    )
+                (let-when [#_"Reference<V>" r (.getValue e)] (and (some? r) (nil? (.get r)))
+                    (.remove cache, (.getKey e), r)
                 )
             )
         )
         nil
+    )
+
+    (defn- #_"<T extends Throwable> void" Util'sneakyThrow0 [#_"Throwable" t] #_(§ throws T)
+        (throw (cast' T t))
     )
 
     ;;;
@@ -37337,15 +37238,10 @@
      ;;
     (defn #_"RuntimeException" Util'sneakyThrow [#_"Throwable" t]
         ;; http://www.mail-archive.com/javaposse@googlegroups.com/msg05984.html
-        (when (nil? t)
-            (throw (NullPointerException.))
+        (when (some? t) => (throw (NullPointerException.))
+            (Util'sneakyThrow0 #_"<RuntimeException>" t)
         )
-        (Util'sneakyThrow0 #_"<RuntimeException>" t)
         nil
-    )
-
-    (defn- #_"<T extends Throwable> void" Util'sneakyThrow0 [#_"Throwable" t] #_(§ throws T)
-        (throw (cast' T t))
     )
 )
 )
