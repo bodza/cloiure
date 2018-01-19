@@ -3882,9 +3882,6 @@
  ;
  ; :eof - on eof, return value unless :eofthrow, then throw.
  ;        if not specified, will throw.
- ;
- ; Note that read can execute code (controlled by *read-eval*),
- ; and as such should be used only with trusted sources.
  ;;
 (§ defn read
     ([]
@@ -3913,9 +3910,6 @@
 
 ;;;
  ; Reads one object from the string s.
- ;
- ; Note that read-string can execute code (controlled by *read-eval*),
- ; and as such should be used only with trusted sources.
  ;;
 (§ defn read-string [s] (cloiure.lang.RT/readString s))
 
@@ -6450,29 +6444,6 @@
     "When set to logical false, strings and characters will be printed with
     non-alphanumeric characters converted to the appropriate escape sequences.
     Defaults to true."
-)
-
-(§ add-doc-and-meta *read-eval*
-    "Defaults to true (or value specified by system property, see below)
-    ***This setting implies that the full power of the reader is in play,
-    including syntax that can cause code to execute. It should never be
-    used with untrusted sources.***
-
-    When set to logical false in the thread-local binding,
-    the eval reader (#=) and record/type literal syntax are disabled in read/load.
-    Example (will fail): (binding [*read-eval* false] (read-string \"#=(* 2 21)\"))
-
-    The default binding can be controlled by the system property 'cloiure.read.eval'.
-    System properties can be set on the command line like this:
-
-    java -Dcloiure.read.eval=false ...
-
-    The system property can also be set to 'unknown' via -Dcloiure.read.eval=unknown,
-    in which case the default binding is :unknown and all reads will fail in contexts
-    where *read-eval* has not been explicitly bound to either true or false. This setting
-    can be a useful diagnostic tool to ensure that all of your reads occur in considered
-    contexts. You can also accomplish this in a particular scope by binding *read-eval*
-    to :unknown."
 )
 
 ;;;
@@ -12752,13 +12723,6 @@
 (def repl-requires [['cloiure.repl :refer ['doc 'pst]]])
 
 ;;;
- ; Evaluates body with *read-eval* set to a "known" value, i.e. substituting true for :unknown if necessary.
- ;;
-(§ defmacro with-read-known [& body]
-    `(binding [*read-eval* (if (= :unknown *read-eval*) true *read-eval*)] ~@body)
-)
-
-;;;
  ; Generic, reusable, read-eval-print loop. By default, reads from *in*, writes
  ; to *out*, and prints exception summaries to *err*. If you use the default
  ; :read hook, *in* must either be an instance of LineNumberingPushbackReader or
@@ -12819,9 +12783,9 @@
           read-eval-print
             (fn []
                 (try
-                    (let [read-eval *read-eval* input (with-read-known (read request-prompt request-exit))]
+                    (let [input (read request-prompt request-exit)]
                         (or (#{request-prompt request-exit} input)
-                            (let [value (binding [*read-eval* read-eval] (eval input))]
+                            (let [value (eval input)]
                                 (print value)
                                 (set! *3 *2)
                                 (set! *2 *1)
