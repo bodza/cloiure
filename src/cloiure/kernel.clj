@@ -8690,11 +8690,15 @@
                                                                 )
 
                                                                 (when (:canBeDirect fn)
-                                                                    (doseq [#_"FnMethod" fm (cast Collection #_"<FnMethod>" methods)]
-                                                                        (when (some? (:locals fm))
-                                                                            (doseq [#_"LocalBinding" lb (cast Collection #_"<LocalBinding>" (RT'keys (:locals fm)))]
-                                                                                (when (:isArg lb)
-                                                                                    (§ ass (:idx lb) (dec (:idx lb)))
+                                                                    (let [#_"Iterator" fmi (.iterator (cast Collection #_"<FnMethod>" methods))]
+                                                                        (while (.hasNext fmi)
+                                                                            (let-when [#_"FnMethod" fm (.next fmi)] (some? (:locals fm))
+                                                                                (let [#_"Iterator" lbi (.iterator (cast Collection #_"<LocalBinding>" (RT'keys (:locals fm))))]
+                                                                                    (while (.hasNext lbi)
+                                                                                        (let-when [#_"LocalBinding" lb (.next lbi)] (:isArg lb)
+                                                                                            (§ ass (:idx lb) (dec (:idx lb)))
+                                                                                        )
+                                                                                    )
                                                                                 )
                                                                             )
                                                                         )
@@ -9826,14 +9830,6 @@
     )
 )
 
-(def PState'enum-set
-    (hash-set
-        :PState'REQ
-        :PState'REST
-        :PState'DONE
-    )
-)
-
 (class-ns FnMethod (§ extends ObjMethod)
     (defn- #_"FnMethod" FnMethod'init []
         (hash-map
@@ -9884,158 +9880,107 @@
 
     (defn #_"FnMethod" FnMethod'parse [#_"ObjExpr" objx, #_"ISeq" form, #_"Object" rettag]
         ;; ([args] body...)
-        (let [#_"IPersistentVector" parms (cast' IPersistentVector (RT'first form))]
-            (let [#_"ISeq" body (RT'next form)]
-                (try
-                    (let [#_"FnMethod" method (FnMethod'new objx, (cast' ObjMethod (.deref Compiler'METHOD)))]
-                        (§ ass (:line method) (Compiler'lineDeref))
-                        (§ ass (:column method) (Compiler'columnDeref))
-                        ;; register as the current method and set up a new env frame
-                        (let [#_"PathNode" pnode (cast' PathNode (.get Compiler'CLEAR_PATH))]
-                            (when (nil? pnode)
-                                (§ ass pnode (PathNode'new :PathType'PATH, nil))
+        (let [#_"IPersistentVector" parms (cast' IPersistentVector (RT'first form))
+              #_"ISeq" body (RT'next form)]
+            (try
+                (let [#_"FnMethod" method
+                        (assoc (FnMethod'new objx, (cast' ObjMethod (.deref Compiler'METHOD))) :line (Compiler'lineDeref) :column (Compiler'columnDeref))
+                      ;; register as the current method and set up a new env frame
+                      #_"PathNode" pnode (or (cast' PathNode (.get Compiler'CLEAR_PATH)) (PathNode'new :PathType'PATH, nil))]
+                    (Var'pushThreadBindings (RT'mapUniqueKeys
+                        (object-array [
+                            Compiler'METHOD                method
+                            Compiler'LOCAL_ENV             (.deref Compiler'LOCAL_ENV)
+                            Compiler'LOOP_LOCALS           nil
+                            Compiler'NEXT_LOCAL_NUM        0
+                            Compiler'CLEAR_PATH            pnode
+                            Compiler'CLEAR_ROOT            pnode
+                            Compiler'CLEAR_SITES           PersistentHashMap'EMPTY
+                            Compiler'METHOD_RETURN_CONTEXT RT'T
+                        ])
+                    ))
+                    (§ ass (:prim method) (FnMethod'primInterface parms))
+                    (when (some? (:prim method))
+                        (§ ass (:prim method) (.replace (:prim method), \., \/))
+                    )
+                    (let [rettag (if (instance? String rettag) (Symbol'intern nil, (cast String rettag)) rettag)
+                          rettag (when (and (§ instance? Symbol rettag) (any = (.getName (cast' Symbol rettag)) "long" "double")) rettag)]
+                        (§ ass (:retClass method) (Compiler'tagClass (or (Compiler'tagOf parms) rettag)))
+                        (if (.isPrimitive (:retClass method))
+                            (when-not (any = (:retClass method) Double/TYPE Long/TYPE)
+                                (throw (IllegalArgumentException. "Only long and double primitives are supported"))
                             )
-                            (Var'pushThreadBindings (RT'mapUniqueKeys
-                                (object-array [
-                                    Compiler'METHOD                method
-                                    Compiler'LOCAL_ENV             (.deref Compiler'LOCAL_ENV)
-                                    Compiler'LOOP_LOCALS           nil
-                                    Compiler'NEXT_LOCAL_NUM        0
-                                    Compiler'CLEAR_PATH            pnode
-                                    Compiler'CLEAR_ROOT            pnode
-                                    Compiler'CLEAR_SITES           PersistentHashMap'EMPTY
-                                    Compiler'METHOD_RETURN_CONTEXT RT'T
-                                ])
-                            ))
-
-                            (§ ass (:prim method) (FnMethod'primInterface parms))
-                            (when (some? (:prim method))
-                                (§ ass (:prim method) (.replace (:prim method), \., \/))
-                            )
-
-                            (when (instance? String rettag)
-                                (§ ass rettag (Symbol'intern nil, (cast String rettag)))
-                            )
-                            (when (not (§ instance? Symbol rettag))
-                                (§ ass rettag nil)
-                            )
-                            (when (some? rettag)
-                                (let [#_"String" retstr (.getName (cast' Symbol rettag))]
-                                    (when (not (or (= retstr "long") (= retstr "double")))
-                                        (§ ass rettag nil)
-                                    )
-                                )
-                            )
-                            (§ ass (:retClass method) (Compiler'tagClass (or (Compiler'tagOf parms) rettag)))
-                            (if (.isPrimitive (:retClass method))
-                                (do
-                                    (when (not (or (= (:retClass method) Double/TYPE) (= (:retClass method) Long/TYPE)))
-                                        (throw (IllegalArgumentException. "Only long and double primitives are supported"))
-                                    )
-                                )
-                                (do
-                                    (§ ass (:retClass method) Object)
-                                )
-                            )
-                            ;; register 'this' as local 0
-                            (if (some? (:thisName objx))
-                                (do
-                                    (Compiler'registerLocal (Symbol'intern (:thisName objx)), nil, nil, false)
-                                )
-                                (do
-                                    (Compiler'getAndIncLocalNum)
-                                )
-                            )
-                            (let [#_"PState" state :PState'REQ]
-                                (let [#_"PersistentVector" argLocals PersistentVector'EMPTY]
-                                    (let [#_"ArrayList<Type>" argtypes (ArrayList.)]
-                                        (let [#_"ArrayList<Class>" argclasses (ArrayList.)]
-                                            (loop-when-recur [#_"int" i 0] (< i (.count parms)) [(inc i)]
-                                                (when (not (§ instance? Symbol (.nth parms, i)))
-                                                    (throw (IllegalArgumentException. "fn params must be Symbols"))
-                                                )
-                                                (let [#_"Symbol" p (cast' Symbol (.nth parms, i))]
-                                                    (when (some? (.getNamespace p))
-                                                        (throw (RuntimeException. (str "Can't use qualified name as parameter: " p)))
+                            (§ ass (:retClass method) Object)
+                        )
+                        ;; register 'this' as local 0
+                        (if (some? (:thisName objx))
+                            (Compiler'registerLocal (Symbol'intern (:thisName objx)), nil, nil, false)
+                            (Compiler'getAndIncLocalNum)
+                        )
+                        (let [#_"ArrayList<Type>" argtypes (ArrayList.) #_"ArrayList<Class>" argclasses (ArrayList.)
+                              #_"PersistentVector" argLocals
+                                (loop-when [#_"boolean" rest? false argLocals PersistentVector'EMPTY #_"int" i 0] (< i (.count parms)) => argLocals
+                                    (when (§ instance? Symbol (.nth parms, i)) => (throw (IllegalArgumentException. "fn params must be Symbols"))
+                                        (let [#_"Symbol" p (cast' Symbol (.nth parms, i))]
+                                            (cond
+                                                (some? (.getNamespace p))
+                                                    (throw (RuntimeException. (str "Can't use qualified name as parameter: " p)))
+                                                (.equals p, Compiler'_AMP_)
+                                                    (when-not rest? => (throw (RuntimeException. "Invalid parameter list"))
+                                                        (recur true argLocals (inc i))
                                                     )
-                                                    (if (.equals p, Compiler'_AMP_)
-                                                        (do
-                                                            (if (= state :PState'REQ)
-                                                                (do
-                                                                    (§ ass state :PState'REST)
-                                                                )
-                                                                (do
-                                                                    (throw (RuntimeException. "Invalid parameter list"))
-                                                                )
-                                                            )
+                                                :else
+                                                    (let [#_"Class" pc (Compiler'primClass-1c (Compiler'tagClass (Compiler'tagOf p)))]
+                                                        (when (and (.isPrimitive pc) (not (any = pc Double/TYPE Long/TYPE)))
+                                                            (throw (IllegalArgumentException. (str "Only long and double primitives are supported: " p)))
                                                         )
-                                                        (do
-                                                            (let [#_"Class" pc (Compiler'primClass-1c (Compiler'tagClass (Compiler'tagOf p)))]
-                                                                (when (and (.isPrimitive pc) (not (or (= pc Double/TYPE) (= pc Long/TYPE))))
-                                                                    (throw (IllegalArgumentException. (str "Only long and double primitives are supported: " p)))
+                                                        (when (and rest? (some? (Compiler'tagOf p)))
+                                                            (throw (RuntimeException. "& arg cannot have type hint"))
+                                                        )
+                                                        (when (and rest? (some? (:prim method)))
+                                                            (throw (RuntimeException. "fns taking primitives cannot be variadic"))
+                                                        )
+                                                        (let [pc (if rest? (§ class ISeq) pc)]
+                                                            (.add argtypes, (Type/getType pc))
+                                                            (.add argclasses, pc)
+                                                            (let [#_"LocalBinding" lb
+                                                                    (if (.isPrimitive pc)
+                                                                        (Compiler'registerLocal p, nil, (MethodParamExpr'new pc), true)
+                                                                        (Compiler'registerLocal p, (if rest? Compiler'ISEQ (Compiler'tagOf p)), nil, true)
+                                                                    )]
+                                                                (if-not rest?
+                                                                    (§ ass (:reqParms method) (.cons (:reqParms method), lb))
+                                                                    (§ ass (:restParm method) lb)
                                                                 )
-
-                                                                (when (and (= state :PState'REST) (some? (Compiler'tagOf p)))
-                                                                    (throw (RuntimeException. "& arg cannot have type hint"))
-                                                                )
-                                                                (when (and (= state :PState'REST) (some? (:prim method)))
-                                                                    (throw (RuntimeException. "fns taking primitives cannot be variadic"))
-                                                                )
-
-                                                                (when (= state :PState'REST)
-                                                                    (§ ass pc (§ class ISeq))
-                                                                )
-                                                                (.add argtypes, (Type/getType pc))
-                                                                (.add argclasses, pc)
-                                                                (let [#_"LocalBinding" lb (if (.isPrimitive pc) (Compiler'registerLocal p, nil, (MethodParamExpr'new pc), true) (Compiler'registerLocal p, (if (= state :PState'REST) Compiler'ISEQ (Compiler'tagOf p)), nil, true))]
-                                                                    (§ ass argLocals (.cons argLocals, lb))
-                                                                    (case state
-                                                                        :PState'REQ
-                                                                        (do
-                                                                            (§ ass (:reqParms method) (.cons (:reqParms method), lb))
-                                                                            (§ break )
-                                                                        )
-                                                                        :PState'REST
-                                                                        (do
-                                                                            (§ ass (:restParm method) lb)
-                                                                            (§ ass state :PState'DONE)
-                                                                            (§ break )
-                                                                        )
-                                                                        (do
-                                                                            (throw (RuntimeException. "Unexpected parameter"))
-                                                                        )
-                                                                    )
-                                                                )
+                                                                (.cons argLocals, lb)
                                                             )
                                                         )
                                                     )
-                                                )
                                             )
-                                            (when (< Compiler'MAX_POSITIONAL_ARITY (.count (:reqParms method)))
-                                                (throw (RuntimeException. (str "Can't specify more than " Compiler'MAX_POSITIONAL_ARITY " params")))
-                                            )
-                                            (.set Compiler'LOOP_LOCALS, argLocals)
-                                            (§ ass (:argLocals method) argLocals)
-                                            (§ ass (:argtypes method) (.toArray argtypes, (make-array Type (.size argtypes))))
-                                            (§ ass (:argclasses method) (.toArray argclasses, (make-array Class (.size argtypes))))
-                                            (when (some? (:prim method))
-                                                (loop-when-recur [#_"int" i 0] (< i (alength (:argclasses method))) [(inc i)]
-                                                    (when (or (= (aget (:argclasses method) i) Long/TYPE) (= (aget (:argclasses method) i) Double/TYPE))
-                                                        (Compiler'getAndIncLocalNum)
-                                                    )
-                                                )
-                                            )
-                                            (§ ass (:body method) (.parse (BodyParser'new), :Context'RETURN, body))
-                                            method
                                         )
                                     )
+                                )]
+                            (when (< Compiler'MAX_POSITIONAL_ARITY (.count (:reqParms method)))
+                                (throw (RuntimeException. (str "Can't specify more than " Compiler'MAX_POSITIONAL_ARITY " params")))
+                            )
+                            (.set Compiler'LOOP_LOCALS, argLocals)
+                            (§ ass (:argLocals method) argLocals)
+                            (§ ass (:argtypes method) (.toArray argtypes, (make-array Type (.size argtypes))))
+                            (§ ass (:argclasses method) (.toArray argclasses, (make-array Class (.size argtypes))))
+                            (when (some? (:prim method))
+                                (dotimes [#_"int" i (alength (:argclasses method))]
+                                    (when (any = (aget (:argclasses method) i) Long/TYPE Double/TYPE)
+                                        (Compiler'getAndIncLocalNum)
+                                    )
                                 )
                             )
+                            (§ ass (:body method) (.parse (BodyParser'new), :Context'RETURN, body))
+                            method
                         )
                     )
-                    (finally
-                        (Var'popThreadBindings)
-                    )
+                )
+                (finally
+                    (Var'popThreadBindings)
                 )
             )
         )
@@ -17517,31 +17462,13 @@
     #_method
     (§ defn #_"String" (§ method readLine) [#_"LineNumberingPushbackReader" this] #_(§ throws IOException)
         (let [#_"int" c (.read this)]
-            (§ let [#_"String" line]
-                (condp = c
-                    -1
-                    (do
-                        (§ ass line nil)
-                        (§ break )
-                    )
-                    LineNumberingPushbackReader'newline
-                    (do
-                        (§ ass line "")
-                        (§ break )
-                    )
-                    (do
-                        (let [#_"String" first (String/valueOf (char c))]
-                            (let [#_"String" rest (.readLine (cast LineNumberReader in))]
-                                (§ ass line (if (nil? rest) first (str first rest)))
-                                (§ ass this (assoc this :_prev false))
-                                (§ ass this (assoc this :_atLineStart true))
-                                (§ ass this (assoc this :_columnNumber 1))
-                                (§ break )
-                            )
-                        )
-                    )
+            (condp = c -1 nil LineNumberingPushbackReader'newline ""
+                (let [#_"String" s (String/valueOf (char c)) #_"String" z (.readLine (cast LineNumberReader in))]
+                    (§ ass this (assoc this :_prev false))
+                    (§ ass this (assoc this :_atLineStart true))
+                    (§ ass this (assoc this :_columnNumber 1))
+                    (if (nil? z) s (str s z))
                 )
-                line
             )
         )
     )
@@ -17650,80 +17577,45 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"StringReader" this, #_"Object" reader, #_"Object" doublequote, #_"Object" pendingForms]
-        (let [#_"StringBuilder" sb (StringBuilder.)]
-            (let [#_"Reader" r (cast Reader reader)]
-                (loop-when-recur [#_"int" ch (LispReader'read1 r)] (not= ch \") [(LispReader'read1 r)] ;; oops! "
-                    (when (= ch -1)
-                        (throw (RuntimeException. "EOF while reading string"))
-                    )
-                    (when (= ch \\) ;; escape
-                        (§ ass ch (LispReader'read1 r))
-                        (when (= ch -1)
-                            (throw (RuntimeException. "EOF while reading string"))
-                        )
-                        (case ch
-                            \t
-                            (do
-                                (§ ass ch \tab)
-                                (§ break )
-                            )
-                            \r
-                            (do
-                                (§ ass ch \return)
-                                (§ break )
-                            )
-                            \n
-                            (do
-                                (§ ass ch \newline)
-                                (§ break )
-                            )
-                            \\
-                            (do
-                                (§ break )
-                            )
-                            \" ;; oops! "
-                            (do
-                                (§ break )
-                            )
-                            \b
-                            (do
-                                (§ ass ch \backspace)
-                                (§ break )
-                            )
-                            \f
-                            (do
-                                (§ ass ch \formfeed)
-                                (§ break )
-                            )
-                            \u
-                            (do
-                                (§ ass ch (LispReader'read1 r))
-                                (when (= (Character/digit ch, 16) -1)
-                                    (throw (RuntimeException. (str "Invalid unicode escape: \\u" (char ch))))
-                                )
-                                (§ ass ch (LispReader'readUnicodeChar-5 (cast PushbackReader r), ch, 16, 4, true))
-                                (§ break )
-                            )
-                            (do
-                                (if (Character/isDigit ch)
-                                    (do
-                                        (§ ass ch (LispReader'readUnicodeChar-5 (cast PushbackReader r), ch, 8, 3, false))
-                                        (when (< 0377 ch)
-                                            (throw (RuntimeException. "Octal escape sequence must be in range [0, 377]."))
+        (let [#_"StringBuilder" sb (StringBuilder.) #_"Reader" r (cast Reader reader)]
+            (loop-when-recur [#_"int" ch (LispReader'read1 r)] (not= ch \") [(LispReader'read1 r)] ;; oops! "
+                (when (not= ch -1) => (throw (RuntimeException. "EOF while reading string"))
+                    (let [ch
+                            (when (= ch \\) => ch
+                                ;; escape
+                                (let [ch (LispReader'read1 r)]
+                                    (when (not= ch -1) => (throw (RuntimeException. "EOF while reading string"))
+                                        (case ch
+                                            \t  \tab
+                                            \r  \return
+                                            \n  \newline
+                                            \\  ch
+                                            \"  ch ;; oops! "
+                                            \b  \backspace
+                                            \f  \formfeed
+                                            \u  (let [ch (LispReader'read1 r)]
+                                                    (when (= (Character/digit ch, 16) -1)
+                                                        (throw (RuntimeException. (str "Invalid unicode escape: \\u" (char ch))))
+                                                    )
+                                                    (LispReader'readUnicodeChar-5 (cast PushbackReader r), ch, 16, 4, true)
+                                                )
+                                            (when (Character/isDigit ch) => (throw (RuntimeException. (str "Unsupported escape character: \\" (char ch))))
+                                                (let [ch (LispReader'readUnicodeChar-5 (cast PushbackReader r), ch, 8, 3, false)]
+                                                    (when (< 0377 ch)
+                                                        (throw (RuntimeException. "Octal escape sequence must be in range [0, 377]."))
+                                                    )
+                                                    ch
+                                                )
+                                            )
                                         )
                                     )
-                                    (do
-                                        (throw (RuntimeException. (str "Unsupported escape character: \\" (char ch))))
-                                    )
                                 )
-                                (§ break )
-                            )
-                        )
+                            )]
+                        (.append sb, (char ch))
                     )
-                    (.append sb, (char ch))
                 )
-                (.toString sb)
             )
+            (.toString sb)
         )
     )
 )
@@ -19281,11 +19173,10 @@
 
     #_method
     (§ defn #_"Object" (§ method run) [#_"LockingTransaction" this, #_"Callable" fn] #_(§ throws Exception)
-        (let [#_"boolean" done false]
-            (let [#_"Object" ret nil]
-                (let [#_"ArrayList<Ref>" locked (ArrayList.)]
-                    (let [#_"ArrayList<Notify>" notify (ArrayList.)]
-                        (loop-when-recur [#_"int" i 0] (and (not done) (< i LockingTransaction'RETRY_LIMIT)) [(inc i)]
+        (let [#_"ArrayList<Ref>" locked (ArrayList.) #_"ArrayList<Notify>" notify (ArrayList.)]
+            (loop [#_"boolean" done false #_"Object" ret nil #_"int" i 0]
+                (if (and (not done) (< i LockingTransaction'RETRY_LIMIT))
+                    (let [[done ret]
                             (try
                                 (.getReadPoint this)
                                 (when (zero? i)
@@ -19293,91 +19184,84 @@
                                     (§ ass this (assoc this :startTime (System/nanoTime)))
                                 )
                                 (§ ass this (assoc this :info (LockingTransactionInfo'new LockingTransaction'RUNNING, (:startPoint this))))
-                                (§ ass ret (.call fn))
-                                ;; make sure no one has killed us before this point, and can't from now on
-                                (when (.compareAndSet (:status (:info this)), LockingTransaction'RUNNING, LockingTransaction'COMMITTING)
-                                    (doseq [#_"Map$Entry<Ref, ArrayList<CFn>>" e (.entrySet (:commutes this))]
-                                        (let [#_"Ref" ref (.getKey e)]
-                                            (when (.contains (:sets this), ref)
-                                                (§ continue )
-                                            )
-
-                                            (let [#_"boolean" wasEnsured (.contains (:ensures this), ref)]
-                                                ;; can't upgrade readLock, so release it
-                                                (.releaseIfEnsured this, ref)
-                                                (.tryWriteLock this, ref)
-                                                (.add locked, ref)
-                                                (when (and wasEnsured (some? (:tvals ref)) (< (:readPoint this) (:point (:tvals ref))))
-                                                    (throw (:retryex this))
-                                                )
-
-                                                (let [#_"LockingTransactionInfo" refinfo (:tinfo ref)]
-                                                    (when (and (some? refinfo) (not= refinfo (:info this)) (.running refinfo))
-                                                        (when (not (.barge this, refinfo))
-                                                            (throw (:retryex this))
-                                                        )
-                                                    )
-                                                    (let [#_"Object" val (when (some? (:tvals ref)) (:val (:tvals ref)))]
-                                                        (.put (:vals this), ref, val)
-                                                        (doseq [#_"CFn" f (.getValue e)]
-                                                            (.put (:vals this), ref, (.applyTo (:fn f), (RT'cons (.get (:vals this), ref), (:args f))))
+                                (let [ret (.call fn)]
+                                    ;; make sure no one has killed us before this point, and can't from now on
+                                    (when (.compareAndSet (:status (:info this)), LockingTransaction'RUNNING, LockingTransaction'COMMITTING) => [false ret]
+                                        (let [#_"Iterator" it (.iterator (.entrySet (:commutes this)))]
+                                            (while (.hasNext it)
+                                                (let [#_"Map$Entry<Ref, ArrayList<CFn>>" e (.next it) #_"Ref" ref (.getKey e)]
+                                                    (when-not (.contains (:sets this), ref)
+                                                        (let [#_"boolean" wasEnsured (.contains (:ensures this), ref)]
+                                                            ;; can't upgrade readLock, so release it
+                                                            (.releaseIfEnsured this, ref)
+                                                            (.tryWriteLock this, ref)
+                                                            (.add locked, ref)
+                                                            (when (and wasEnsured (some? (:tvals ref)) (< (:readPoint this) (:point (:tvals ref))))
+                                                                (throw (:retryex this))
+                                                            )
+                                                            (let [#_"LockingTransactionInfo" refinfo (:tinfo ref)]
+                                                                (when (and (some? refinfo) (not= refinfo (:info this)) (.running refinfo) (not (.barge this, refinfo)))
+                                                                    (throw (:retryex this))
+                                                                )
+                                                                (let [#_"Object" val (when (some? (:tvals ref)) (:val (:tvals ref)))]
+                                                                    (.put (:vals this), ref, val)
+                                                                    (doseq [#_"CFn" f (.getValue e)]
+                                                                        (.put (:vals this), ref, (.applyTo (:fn f), (RT'cons (.get (:vals this), ref), (:args f))))
+                                                                    )
+                                                                )
+                                                            )
                                                         )
                                                     )
                                                 )
                                             )
                                         )
-                                    )
-                                    (doseq [#_"Ref" ref (:sets this)]
-                                        (.tryWriteLock this, ref)
-                                        (.add locked, ref)
-                                    )
-
-                                    ;; validate and enqueue notifications
-                                    (doseq [#_"Map$Entry<Ref, Object>" e (.entrySet (:vals this))]
-                                        (let [#_"Ref" ref (.getKey e)]
-                                            (.validate ref, (.getValidator ref), (.getValue e))
+                                        (doseq [#_"Ref" ref (:sets this)]
+                                            (.tryWriteLock this, ref)
+                                            (.add locked, ref)
                                         )
-                                    )
-
-                                    ;; at this point, all values calced, all refs to be written locked
-                                    ;; no more client code to be called
-                                    (let [#_"long" commitPoint (.getCommitPoint this)]
-                                        (doseq [#_"Map$Entry<Ref, Object>" e (.entrySet (:vals this))]
+                                        ;; validate and enqueue notifications
+                                        (doseq [#_"Map$Entry<Ref, Object>" e (.entrySet (:vals this))]
                                             (let [#_"Ref" ref (.getKey e)]
-                                                (let [#_"Object" oldval (when (some? (:tvals ref)) (:val (:tvals ref)))]
-                                                    (let [#_"Object" newval (.getValue e)]
-                                                        (let [#_"int" hcount (.histCount ref)]
-                                                            (cond (nil? (:tvals ref))
-                                                                (do
-                                                                    (§ ass (:tvals ref) (RefTVal'new-2 newval, commitPoint))
-                                                                )
-                                                                (or (and (pos? (.get (:faults ref))) (< hcount (:maxHistory ref))) (< hcount (:minHistory ref)))
-                                                                (do
-                                                                    (§ ass (:tvals ref) (RefTVal'new-3 newval, commitPoint, (:tvals ref)))
-                                                                    (.set (:faults ref), 0)
-                                                                )
-                                                                :else
-                                                                (do
-                                                                    (§ ass (:tvals ref) (:next (:tvals ref)))
-                                                                    (§ ass (:val (:tvals ref)) newval)
-                                                                    (§ ass (:point (:tvals ref)) commitPoint)
-                                                                )
-                                                            )
-                                                            (when (pos? (.count (.getWatches ref)))
-                                                                (.add notify, (Notify'new ref, oldval, newval))
-                                                            )
+                                                (.validate ref, (.getValidator ref), (.getValue e))
+                                            )
+                                        )
+                                        ;; at this point, all values calced, all refs to be written locked
+                                        ;; no more client code to be called
+                                        (let [#_"long" commitPoint (.getCommitPoint this) #_"Iterator" it (.iterator (.entrySet (:vals this)))]
+                                            (while (.hasNext it)
+                                                (let [#_"Map$Entry<Ref, Object>" e (.next it) #_"Ref" ref (.getKey e)
+                                                      #_"Object" oldval (when (some? (:tvals ref)) (:val (:tvals ref))) #_"Object" newval (.getValue e)
+                                                      #_"int" hcount (.histCount ref)]
+                                                    (cond
+                                                        (nil? (:tvals ref))
+                                                        (do
+                                                            (§ ass (:tvals ref) (RefTVal'new-2 newval, commitPoint))
                                                         )
+                                                        (or (and (pos? (.get (:faults ref))) (< hcount (:maxHistory ref))) (< hcount (:minHistory ref)))
+                                                        (do
+                                                            (§ ass (:tvals ref) (RefTVal'new-3 newval, commitPoint, (:tvals ref)))
+                                                            (.set (:faults ref), 0)
+                                                        )
+                                                        :else
+                                                        (do
+                                                            (§ ass (:tvals ref) (:next (:tvals ref)))
+                                                            (§ ass (:val (:tvals ref)) newval)
+                                                            (§ ass (:point (:tvals ref)) commitPoint)
+                                                        )
+                                                    )
+                                                    (when (pos? (.count (.getWatches ref)))
+                                                        (.add notify, (Notify'new ref, oldval, newval))
                                                     )
                                                 )
                                             )
+                                            (.set (:status (:info this)), LockingTransaction'COMMITTED)
+                                            [true ret]
                                         )
-
-                                        (§ ass done true)
-                                        (.set (:status (:info this)), LockingTransaction'COMMITTED)
                                     )
                                 )
-                                (§ catch RetryEx retry
+                                (§ catch RetryEx _
                                     ;; eat this so we retry rather than fall out
+                                    [false ret]
                                 )
                                 (finally
                                     (loop-when-recur [#_"int" k (dec (.size locked))] (<= 0 k) [(dec k)]
@@ -19388,9 +19272,9 @@
                                         (.unlock (.readLock (:lock r)))
                                     )
                                     (.clear (:ensures this))
-                                    (.stop this, (if done LockingTransaction'COMMITTED LockingTransaction'RETRY))
+                                    (.stop this, (if (§ naughty done) LockingTransaction'COMMITTED LockingTransaction'RETRY))
                                     (try
-                                        (when done ;; re-dispatch out of transaction
+                                        (when (§ naughty done) ;; re-dispatch out of transaction
                                             (doseq [#_"Notify" n notify]
                                                 (.notifyWatches (:ref n), (:oldval n), (:newval n))
                                             )
@@ -19404,11 +19288,10 @@
                                         )
                                     )
                                 )
-                            )
-                        )
-                        (when (not done)
-                            (throw (RuntimeException. "Transaction failed after reaching retry limit"))
-                        )
+                            )]
+                        (recur [done ret (inc i)])
+                    )
+                    (when done => (throw (RuntimeException. "Transaction failed after reaching retry limit"))
                         ret
                     )
                 )
@@ -20185,14 +20068,18 @@
         (let [#_"IPersistentMap" mt (:methodTable this) #_"IPersistentMap" pt (:preferTable this) #_"Object" ch (:cachedHierarchy this)]
             (let [#_"Object" bestValue
                     (try
-                        (let [#_"Map$Entry" bestEntry nil
-                              _ (doseq [#_"Object" o (.getMethodTable this)]
-                                    (let-when [#_"Map$Entry" e (cast Map$Entry o)] (.isA this, dispatchVal, (.getKey e))
-                                        (when (or (nil? bestEntry) (.dominates this, (.getKey e), (.getKey bestEntry)))
-                                            (§ ass bestEntry e)
-                                        )
-                                        (when-not (.dominates this, (.getKey bestEntry), (.getKey e))
-                                            (throw (IllegalArgumentException. (str "Multiple methods in multimethod '" (:name this) "' match dispatch value: " dispatchVal " -> " (.getKey e) " and " (.getKey bestEntry) ", and neither is preferred")))
+                        (let [#_"Iterator" it (.iterator (.getMethodTable this))
+                              #_"Map$Entry" bestEntry
+                                (loop-when [bestEntry nil] (.hasNext it) => bestEntry
+                                    (let-when [#_"Map$Entry" e (cast Map$Entry (.next it))] (.isA this, dispatchVal, (.getKey e)) => (recur bestEntry)
+                                        (let [bestEntry
+                                                (when (or (nil? bestEntry) (.dominates this, (.getKey e), (.getKey bestEntry))) => bestEntry
+                                                    e
+                                                )]
+                                            (when-not (.dominates this, (.getKey bestEntry), (.getKey e))
+                                                (throw (IllegalArgumentException. (str "Multiple methods in multimethod '" (:name this) "' match dispatch value: " dispatchVal " -> " (.getKey e) " and " (.getKey bestEntry) ", and neither is preferred")))
+                                            )
+                                            (recur bestEntry)
                                         )
                                     )
                                 )]
@@ -23786,55 +23673,52 @@
         )
         ;; If this looks like it is doing busy-work, it is because it is achieving these goals: O(n^2) run time
         ;; like createWithCheck(), never modify init arg, and only allocate memory if there are duplicate keys.
-        (let [#_"int" n 0]
-            (loop-when-recur [#_"int" i 0] (< i (alength init)) [(+ i 2)]
-                (let [#_"boolean" duplicateKey false]
-                    (loop-when-recur [#_"int" j 0] (< j i) [(+ j 2)]
-                        (when (PersistentArrayMap'equalKey (aget init i), (aget init j))
-                            (§ ass duplicateKey true)
-                            (§ break )
-                        )
-                    )
-                    (when (not duplicateKey)
-                        (§ ass n (+ n 2))
+        (let [#_"int" n
+                (loop-when [n 0 #_"int" i 0] (< i (alength init)) => n
+                    (let [#_"boolean" dup?
+                            (loop-when [dup? false #_"int" j 0] (< j i) => dup?
+                                (or (PersistentArrayMap'equalKey (aget init i), (aget init j))
+                                    (recur dup? (+ j 2))
+                                )
+                            )]
+                        (recur (if dup? n (+ n 2)) (+ i 2))
                     )
                 )
-            )
-            (when (< n (alength init))
-                ;; Create a new shorter array with unique keys, and the last value associated with each key.
-                ;; To behave like assoc, the first occurrence of each key must be used, since its metadata
-                ;; may be different than later equal keys.
-                (let [#_"Object[]" nodups (make-array Object n)]
-                    (let [#_"int" m 0]
-                        (loop-when-recur [#_"int" i 0] (< i (alength init)) [(+ i 2)]
-                            (let [#_"boolean" duplicateKey false]
-                                (loop-when-recur [#_"int" j 0] (< j m) [(+ j 2)]
-                                    (when (PersistentArrayMap'equalKey (aget init i), (aget nodups j))
-                                        (§ ass duplicateKey true)
-                                        (§ break )
-                                    )
-                                )
-                                (when (not duplicateKey)
-                                    (§ let [#_"int" j]
-                                        (loop-when-recur [j (- (alength init) 2)] (<= i j) [(- j 2)]
-                                            (when (PersistentArrayMap'equalKey (aget init i), (aget init j))
-                                                (§ break )
+              init
+                (when (< n (alength init)) => init
+                    ;; Create a new shorter array with unique keys, and the last value associated with each key.
+                    ;; To behave like assoc, the first occurrence of each key must be used, since its metadata
+                    ;; may be different than later equal keys.
+                    (let [#_"Object[]" nodups (make-array Object n)
+                          #_"int" m
+                            (loop-when [m 0 #_"int" i 0] (< i (alength init)) => m
+                                (let [#_"boolean" dup?
+                                        (loop-when [dup? false #_"int" j 0] (< j m) => dup?
+                                            (or (PersistentArrayMap'equalKey (aget init i), (aget nodups j))
+                                                (recur dup? (+ j 2))
                                             )
                                         )
-                                        (aset nodups m (aget init i))
-                                        (aset nodups (inc m) (aget init (inc j)))
-                                        (§ ass m (+ m 2))
-                                    )
+                                      m (when-not dup? => m
+                                            (let [#_"int" j
+                                                    (loop-when [j (- (alength init) 2)] (<= i j) => j
+                                                        (if (PersistentArrayMap'equalKey (aget init i), (aget init j))
+                                                            j
+                                                            (recur (- j 2))
+                                                        )
+                                                    )]
+                                                (aset nodups m (aget init i))
+                                                (aset nodups (inc m) (aget init (inc j)))
+                                                (+ m 2)
+                                            )
+                                        )]
+                                    (recur m (+ i 2))
                                 )
-                            )
+                            )]
+                        (when (= m n) => (throw (IllegalArgumentException. (str "Internal error: m=" m)))
+                            nodups
                         )
-                        (when-not (= m n)
-                            (throw (IllegalArgumentException. (str "Internal error: m=" m)))
-                        )
-                        (§ ass init nodups)
                     )
-                )
-            )
+                )]
             (PersistentArrayMap'new-1 init)
         )
     )
@@ -26406,17 +26290,20 @@
 
     #_method
     (§ defn #_"Object" (§ method kvreduce) [#_"TNode" this, #_"IFn" f, #_"Object" r]
-        (when (some? (.left this))
-            (§ ass r (.kvreduce (.left this), f, r))
-            (when (RT'isReduced r)
-                (§ return r)
+        (or
+            (when (some? (.left this))
+                (let [r (.kvreduce (.left this), f, r)]
+                    (when (RT'isReduced r)
+                        r
+                    )
+                )
             )
-        )
-        (let [r (.invoke f, r, (.key this), (.val this))]
-            (cond
-                (RT'isReduced r)      r
-                (some? (.right this)) (.kvreduce (.right this), f, r)
-                :else                 r
+            (let [r (.invoke f, r, (.key this), (.val this))]
+                (cond
+                    (RT'isReduced r)      r
+                    (some? (.right this)) (.kvreduce (.right this), f, r)
+                    :else                 r
+                )
             )
         )
     )
@@ -36967,29 +36854,35 @@
 
     #_method
     (§ defn- #_"boolean" (§ method step) [#_"TransformerIterator" this]
-        (loop-when-recur [] (= (:next this) TransformerIterator'NONE) [] => true
-            (if (.isEmpty (:buffer this))
-                (cond
-                    (:completed this)
-                        (§ return false)
-                    (.hasNext (:sourceIter this))
-                        (let [#_"Object" it
-                                (if (:multi this)
-                                    (.applyTo (:xf this), (RT'cons nil, (.next (:sourceIter this))))
-                                    (.invoke (:xf this), nil, (.next (:sourceIter this)))
-                                )]
-                            (when (RT'isReduced it)
-                                (.invoke (:xf this), nil)
-                                (§ ass this (assoc this :completed true))
-                            )
+        (loop []
+            (cond
+                (not (= (:next this) TransformerIterator'NONE))
+                    true
+                (not (.isEmpty (:buffer this)))
+                    (do
+                        (§ ass this (assoc this :next (.remove (:buffer this))))
+                        (recur)
+                    )
+                (:completed this)
+                    false
+                (.hasNext (:sourceIter this))
+                    (let [#_"Object" it
+                            (if (:multi this)
+                                (.applyTo (:xf this), (RT'cons nil, (.next (:sourceIter this))))
+                                (.invoke (:xf this), nil, (.next (:sourceIter this)))
+                            )]
+                        (when (RT'isReduced it)
+                            (.invoke (:xf this), nil)
+                            (§ ass this (assoc this :completed true))
                         )
-                    :else
+                        (recur)
+                    )
+                :else
                     (do
                         (.invoke (:xf this), nil)
                         (§ ass this (assoc this :completed true))
+                        (recur)
                     )
-                )
-                (§ ass this (assoc this :next (.remove (:buffer this))))
             )
         )
     )
