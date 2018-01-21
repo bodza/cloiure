@@ -171,7 +171,7 @@
 (declare SymbolicValueReader'specials)
 (declare WrappingReader'new)
 (declare SyntaxQuoteReader'syntaxQuote SyntaxQuoteReader'sqExpandList SyntaxQuoteReader'flattenMap)
-(declare LispReader'QUOTE LispReader'THE_VAR LispReader'UNQUOTE LispReader'UNQUOTE_SPLICING LispReader'CONCAT LispReader'SEQ LispReader'LIST LispReader'APPLY LispReader'HASHMAP LispReader'HASHSET LispReader'VECTOR LispReader'WITH_META LispReader'META LispReader'DEREF LispReader'macros LispReader'dispatchMacros LispReader'symbolPat LispReader'intPat LispReader'ratioPat LispReader'floatPat LispReader'GENSYM_ENV LispReader'ARG_ENV LispReader'isWhitespace LispReader'unread LispReader'read1 LispReader'OPT_EOF LispReader'EOFTHROW LispReader'read-1 LispReader'read-4 LispReader'read-5 LispReader'ensurePending LispReader'read-8 LispReader'readToken LispReader'readNumber LispReader'readUnicodeChar-4 LispReader'readUnicodeChar-5 LispReader'interpretToken LispReader'matchSymbol LispReader'matchNumber LispReader'getMacro LispReader'isMacro LispReader'isTerminatingMacro LispReader'garg LispReader'registerArg LispReader'isUnquoteSplicing LispReader'isUnquote LispReader'READ_EOF LispReader'READ_FINISHED LispReader'readDelimitedList)
+(declare LispReader'QUOTE LispReader'THE_VAR LispReader'UNQUOTE LispReader'UNQUOTE_SPLICING LispReader'CONCAT LispReader'SEQ LispReader'LIST LispReader'APPLY LispReader'HASHMAP LispReader'HASHSET LispReader'VECTOR LispReader'WITH_META LispReader'META LispReader'DEREF LispReader'macros LispReader'dispatchMacros LispReader'symbolPat LispReader'intPat LispReader'ratioPat LispReader'floatPat LispReader'GENSYM_ENV LispReader'ARG_ENV LispReader'isWhitespace LispReader'unread LispReader'read1 LispReader'OPT_EOF LispReader'EOFTHROW LispReader'read-1 LispReader'read-4 LispReader'read-5 LispReader'ensurePending LispReader'read-7 LispReader'readToken LispReader'readNumber LispReader'readUnicodeChar-4 LispReader'readUnicodeChar-5 LispReader'interpretToken LispReader'matchSymbol LispReader'matchNumber LispReader'getMacro LispReader'isMacro LispReader'isTerminatingMacro LispReader'garg LispReader'registerArg LispReader'isUnquoteSplicing LispReader'isUnquote LispReader'READ_EOF LispReader'READ_FINISHED LispReader'readDelimitedList)
 (declare LockingTransactionInfo'new)
 (declare CFn'new)
 (declare Notify'new)
@@ -240,7 +240,7 @@
 (declare Reflector'invokeInstanceMethod Reflector'getCauseOrElse Reflector'throwCauseOrElseException Reflector'noMethodReport Reflector'invokeMatchingMethod Reflector'getAsMethodOfPublicBase Reflector'isMatch Reflector'invokeConstructor Reflector'invokeStaticMethodVariadic Reflector'invokeStaticMethod-3s Reflector'invokeStaticMethod-3c Reflector'getStaticField-2s Reflector'getStaticField-2c Reflector'setStaticField-3s Reflector'setStaticField-3c Reflector'getInstanceField Reflector'setInstanceField Reflector'invokeNoArgInstanceMember Reflector'invokeInstanceMember-2 Reflector'invokeInstanceMember-3o Reflector'invokeInstanceMember-3a Reflector'getField Reflector'getMethods Reflector'boxArg Reflector'boxArgs Reflector'paramArgTypeMatch Reflector'isCongruent Reflector'prepRet)
 (declare Repeat'INFINITE Repeat'new-2 Repeat'new-3 Repeat'create-1 Repeat'create-2)
 (declare RestFn'ontoArrayPrepend RestFn'findKey)
-(declare RT'T RT'F RT'LOADER_SUFFIX RT'DEFAULT_IMPORTS RT'UTF8 RT'CLOIURE_NS RT'OUT RT'IN RT'ERR RT'TAG_KEY RT'AGENT RT'ASSERT RT'MATH_CONTEXT RT'LINE_KEY RT'COLUMN_KEY RT'DECLARED_KEY RT'DOC_KEY RT'IN_NAMESPACE RT'NAMESPACE RT'IDENTICAL RT'CURRENT_NS RT'FLUSH_ON_NEWLINE RT'PRINT_READABLY RT'WARN_ON_REFLECTION RT'ALLOW_UNRESOLVED_VARS RT'READER_RESOLVER RT'IN_NS_VAR RT'NS_VAR RT'FN_LOADER_VAR RT'PRINT_INITIALIZED RT'PR_ON RT'inNamespace RT'bootNamespace RT'errPrintWriter RT'EMPTY_ARRAY RT'DEFAULT_COMPARATOR RT'ID RT'CHECK_SPEC_ASSERTS RT'INSTRUMENT_MACROS RT'CHECK_SPECS RT'keyword RT'var RT'loadResourceScript RT'lastModified RT'load-1 RT'load-2 RT'nextID RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'countFrom RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nthFrom-2 RT'nth-3 RT'nthFrom-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1c RT'intCast-1b RT'intCast-1s RT'intCast-1i RT'intCast-1f RT'intCast-1l RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1f RT'longCast-1l RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1f RT'floatCast-1l RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1f RT'doubleCast-1l RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'printString RT'readString RT'print RT'printInnerSeq RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget_float RT'aset_float RT'alength_float RT'aclone_float RT'aget_double RT'aset_double RT'alength_double RT'aclone_double RT'aget_int RT'aset_int RT'alength_int RT'aclone_int RT'aget_long RT'aset_long RT'alength_long RT'aclone_long RT'aget_char RT'aset_char RT'alength_char RT'aclone_char RT'aget_byte RT'aset_byte RT'alength_byte RT'aclone_byte RT'aget_short RT'aset_short RT'alength_short RT'aclone_short RT'aget_boolean RT'aset_boolean RT'alength_boolean RT'aclone_boolean RT'aget_object RT'aset_object RT'alength_object RT'aclone_object)
+(declare RT'T RT'F RT'LOADER_SUFFIX RT'DEFAULT_IMPORTS RT'UTF8 RT'CLOIURE_NS RT'OUT RT'IN RT'ERR RT'TAG_KEY RT'AGENT RT'ASSERT RT'MATH_CONTEXT RT'LINE_KEY RT'COLUMN_KEY RT'DECLARED_KEY RT'DOC_KEY RT'IN_NAMESPACE RT'NAMESPACE RT'IDENTICAL RT'CURRENT_NS RT'FLUSH_ON_NEWLINE RT'PRINT_READABLY RT'WARN_ON_REFLECTION RT'ALLOW_UNRESOLVED_VARS RT'IN_NS_VAR RT'NS_VAR RT'FN_LOADER_VAR RT'PRINT_INITIALIZED RT'PR_ON RT'inNamespace RT'bootNamespace RT'errPrintWriter RT'EMPTY_ARRAY RT'DEFAULT_COMPARATOR RT'ID RT'CHECK_SPEC_ASSERTS RT'INSTRUMENT_MACROS RT'CHECK_SPECS RT'keyword RT'var RT'loadResourceScript RT'lastModified RT'load-1 RT'load-2 RT'nextID RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'countFrom RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nthFrom-2 RT'nth-3 RT'nthFrom-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1c RT'intCast-1b RT'intCast-1s RT'intCast-1i RT'intCast-1f RT'intCast-1l RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1f RT'longCast-1l RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1f RT'floatCast-1l RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1f RT'doubleCast-1l RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'printString RT'readString RT'print RT'printInnerSeq RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget_float RT'aset_float RT'alength_float RT'aclone_float RT'aget_double RT'aset_double RT'alength_double RT'aclone_double RT'aget_int RT'aset_int RT'alength_int RT'aclone_int RT'aget_long RT'aset_long RT'alength_long RT'aclone_long RT'aget_char RT'aset_char RT'alength_char RT'aclone_char RT'aget_byte RT'aset_byte RT'alength_byte RT'aclone_byte RT'aget_short RT'aset_short RT'alength_short RT'aclone_short RT'aget_boolean RT'aset_boolean RT'alength_boolean RT'aclone_boolean RT'aget_object RT'aset_object RT'alength_object RT'aclone_object)
 (declare SeqIterator'START SeqIterator'new)
 (declare StringSeq'create StringSeq'new)
 (declare Symbol'create-2 Symbol'create-1 Symbol'intern Symbol'new-2 Symbol'new-3)
@@ -16851,17 +16851,6 @@
 (§ import java.util.regex.Matcher)
 (§ import java.util.regex.Pattern)
 
-(§ defprotocol Resolver
-    #_abstract
-    (#_"Symbol" Resolver'''(§ method currentNS) [#_"Resolver" this])
-    #_abstract
-    (#_"Symbol" Resolver'''(§ method resolveClass) [#_"Resolver" this, #_"Symbol" sym])
-    #_abstract
-    (#_"Symbol" Resolver'''(§ method resolveAlias) [#_"Resolver" this, #_"Symbol" sym])
-    #_abstract
-    (#_"Symbol" Resolver'''(§ method resolveVar) [#_"Resolver" this, #_"Symbol" sym])
-)
-
 (class-ns LispReaderException (§ extends RuntimeException)
     (defn- #_"LispReaderException" LispReaderException'init []
         (hash-map
@@ -17050,26 +17039,21 @@
             ;; resolve autoresolved ns
             (let [#_"String" ns
                     (cond auto
-                        (let [#_"Resolver" resolver (cast' Resolver (.deref RT'READER_RESOLVER))]
-                            (cond (nil? sym)
-                                (do
-                                    (if (some? resolver) (:name (.currentNS resolver)) (.getName (.getName (Compiler'currentNS))))
-                                )
-                                (or (not (§ instance? Symbol sym)) (some? (.getNamespace (cast' Symbol sym))))
-                                (do
-                                    (throw (RuntimeException. (str "Namespaced map must specify a valid namespace: " sym)))
-                                )
-                                :else
-                                (let [#_"Symbol" resolvedNS
-                                        (if (some? resolver)
-                                            (.resolveAlias resolver, (cast' Symbol sym))
-                                            (let [#_"Namespace" rns (.lookupAlias (Compiler'currentNS), (cast' Symbol sym))]
-                                                (when (some? rns) (.getName rns))
-                                            )
-                                        )]
-                                    (when (some? resolvedNS) => (throw (RuntimeException. (str "Unknown auto-resolved namespace alias: " sym)))
-                                        (.getName resolvedNS)
-                                    )
+                        (cond (nil? sym)
+                            (do
+                                (.getName (.getName (Compiler'currentNS)))
+                            )
+                            (or (not (§ instance? Symbol sym)) (some? (.getNamespace (cast' Symbol sym))))
+                            (do
+                                (throw (RuntimeException. (str "Namespaced map must specify a valid namespace: " sym)))
+                            )
+                            :else
+                            (let [#_"Symbol" resolvedNS
+                                    (when-let [#_"Namespace" rns (.lookupAlias (Compiler'currentNS), (cast' Symbol sym))]
+                                        (.getName rns)
+                                    )]
+                                (when (some? resolvedNS) => (throw (RuntimeException. (str "Unknown auto-resolved namespace alias: " sym)))
+                                    (.getName resolvedNS)
                                 )
                             )
                         )
@@ -17257,7 +17241,7 @@
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"ArgReader" this, #_"Object" reader, #_"Object" pct, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (when (some? (.deref LispReader'ARG_ENV)) => (LispReader'interpretToken (LispReader'readToken r, \%), nil)
+            (when (some? (.deref LispReader'ARG_ENV)) => (LispReader'interpretToken (LispReader'readToken r, \%))
                 (let [#_"int" ch (LispReader'read1 r) _ (LispReader'unread r, ch)]
                     ;; % alone is first arg
                     (if (or (= ch -1) (LispReader'isWhitespace ch) (LispReader'isTerminatingMacro ch))
@@ -17351,66 +17335,30 @@
                     (Compiler'isSpecial form)
                         (§ ass ret (RT'list-2 Compiler'QUOTE, form))
                     (§ instance? Symbol form)
-                        (let [#_"Resolver" resolver (cast' Resolver (.deref RT'READER_RESOLVER))
-                              #_"Symbol" sym (cast' Symbol form)]
+                        (let [#_"Symbol" sym (cast' Symbol form)]
                             (cond
                                 (and (nil? (:ns sym)) (.endsWith (:name sym), "#"))
                                     (let [#_"IPersistentMap" gmap (cast' IPersistentMap (.deref LispReader'GENSYM_ENV))]
-                                        (when (nil? gmap)
-                                            (throw (IllegalStateException. "Gensym literal not in syntax-quote"))
-                                        )
-                                        (let [#_"Symbol" gs (cast' Symbol (.valAt gmap, sym))]
-                                            (when (nil? gs)
-                                                (§ ass gs (Symbol'intern nil, (str (.substring (:name sym), 0, (dec (.length (:name sym)))) "__" (RT'nextID) "__auto__")))
-                                                (.set LispReader'GENSYM_ENV, (.assoc gmap, sym, gs))
+                                        (when (some? gmap) => (throw (IllegalStateException. "Gensym literal not in syntax-quote"))
+                                            (let [#_"Symbol" gs (cast' Symbol (.valAt gmap, sym))]
+                                                (when (nil? gs)
+                                                    (§ ass gs (Symbol'intern nil, (str (.substring (:name sym), 0, (dec (.length (:name sym)))) "__" (RT'nextID) "__auto__")))
+                                                    (.set LispReader'GENSYM_ENV, (.assoc gmap, sym, gs))
+                                                )
+                                                (§ ass sym gs)
                                             )
-                                            (§ ass sym gs)
                                         )
                                     )
                                 (and (nil? (:ns sym)) (.endsWith (:name sym), "."))
                                     (let [#_"Symbol" csym (Symbol'intern nil, (.substring (:name sym), 0, (dec (.length (:name sym)))))]
-                                        (if (some? resolver)
-                                            (let [#_"Symbol" rc (.resolveClass resolver, csym)]
-                                                (when (some? rc)
-                                                    (§ ass csym rc)
-                                                )
-                                            )
-                                            (§ ass csym (Compiler'resolveSymbol csym))
-                                        )
-                                        (§ ass sym (Symbol'intern nil, (.concat (:name csym), ".")))
+                                        (§ ass sym (Symbol'intern nil, (.concat (:name (Compiler'resolveSymbol csym)), ".")))
                                     )
                                 (and (nil? (:ns sym)) (.startsWith (:name sym), "."))
                                 (do
                                     ;; Simply quote method names.
                                 )
-                                (some? resolver)
-                                    (let [#_"Symbol" nsym nil]
-                                        (when (some? (:ns sym))
-                                            (let [#_"Symbol" alias (Symbol'intern nil, (:ns sym))]
-                                                (§ ass nsym (.resolveClass resolver, alias))
-                                                (when (nil? nsym)
-                                                    (§ ass nsym (.resolveAlias resolver, alias))
-                                                )
-                                            )
-                                        )
-                                        (cond
-                                            (some? nsym) ;; Classname/foo -> package.qualified.Classname/foo
-                                                (§ ass sym (Symbol'intern (:name nsym), (:name sym)))
-                                            (nil? (:ns sym))
-                                                (let [#_"Symbol" rsym (.resolveClass resolver, sym)]
-                                                    (when (nil? rsym)
-                                                        (§ ass rsym (.resolveVar resolver, sym))
-                                                    )
-                                                    (§ ass sym (or rsym (Symbol'intern (:name (.currentNS resolver)), (:name sym))))
-                                                )
-                                        )
-                                        ;; leave alone if qualified
-                                    )
                                 :else
-                                    (let [#_"Object" maybeClass nil]
-                                        (when (some? (:ns sym))
-                                            (§ ass maybeClass (.getMapping (Compiler'currentNS), (Symbol'intern nil, (:ns sym))))
-                                        )
+                                    (let [#_"Object" maybeClass (when (some? (:ns sym)) (.getMapping (Compiler'currentNS), (Symbol'intern nil, (:ns sym))))]
                                         (if (instance? Class maybeClass) ;; Classname/foo -> package.qualified.Classname/foo
                                             (§ ass sym (Symbol'intern (.getName (cast Class maybeClass)), (:name sym)))
                                             (§ ass sym (Compiler'resolveSymbol sym))
@@ -17756,18 +17704,18 @@
 
     (defn #_"Object" LispReader'read-4 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"boolean" isRecursive]
         ;; start with pendingForms nil as reader conditional splicing is not allowed at top level
-        (LispReader'read-8 r, eofIsError, eofValue, nil, nil, isRecursive, nil, (cast' Resolver (.deref RT'READER_RESOLVER)))
+        (LispReader'read-7 r, eofIsError, eofValue, nil, nil, isRecursive, nil)
     )
 
     (defn- #_"Object" LispReader'read-5 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"boolean" isRecursive, #_"Object" pendingForms]
-        (LispReader'read-8 r, eofIsError, eofValue, nil, nil, isRecursive, (LispReader'ensurePending pendingForms), (cast' Resolver (.deref RT'READER_RESOLVER)))
+        (LispReader'read-7 r, eofIsError, eofValue, nil, nil, isRecursive, (LispReader'ensurePending pendingForms))
     )
 
     (defn- #_"Object" LispReader'ensurePending [#_"Object" pendingForms]
         (or pendingForms (LinkedList.))
     )
 
-    (defn- #_"Object" LispReader'read-8 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"Character" returnOn, #_"Object" returnOnValue, #_"boolean" isRecursive, #_"Object" pendingForms, #_"Resolver" resolver]
+    (defn- #_"Object" LispReader'read-7 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"Character" returnOn, #_"Object" returnOnValue, #_"boolean" isRecursive, #_"Object" pendingForms]
         (try
             (loop-when [] (or (not (instance? List pendingForms)) (.isEmpty (cast List pendingForms))) => (.remove (cast List pendingForms), 0)
                 (let [#_"int" ch (loop-when-recur [ch (LispReader'read1 r)] (LispReader'isWhitespace ch) [(LispReader'read1 r)] => ch)]
@@ -17795,7 +17743,7 @@
                                                 (LispReader'unread r, ch2)
                                             )
                                         )
-                                        (LispReader'interpretToken (LispReader'readToken r, (char ch)), resolver)
+                                        (LispReader'interpretToken (LispReader'readToken r, (char ch)))
                                     )
                                 )
                             )
@@ -17890,41 +17838,24 @@
         )
     )
 
-    (defn- #_"Object" LispReader'interpretToken [#_"String" s, #_"Resolver" resolver]
+    (defn- #_"Object" LispReader'interpretToken [#_"String" s]
         (case s "nil" nil "true" RT'T "false" RT'F
-            (or (LispReader'matchSymbol s, resolver) (throw (RuntimeException. (str "Invalid token: " s))))
+            (or (LispReader'matchSymbol s) (throw (RuntimeException. (str "Invalid token: " s))))
         )
     )
 
-    (defn- #_"Object" LispReader'matchSymbol [#_"String" s, #_"Resolver" resolver]
+    (defn- #_"Object" LispReader'matchSymbol [#_"String" s]
         (let-when [#_"Matcher" m (.matcher LispReader'symbolPat, s)] (.matches m)
             (let [#_"int" gc (.groupCount m) #_"String" ns (.group m, 1) #_"String" name (.group m, 2)]
                 (cond
                     (or (and (some? ns) (.endsWith ns, ":/")) (.endsWith name, ":") (not= (.indexOf s, "::", 1) -1))
                         nil
                     (.startsWith s, "::")
-                        (let [#_"Symbol" ks (Symbol'intern (.substring s, 2))]
-                            (if (some? resolver)
-                                (let [#_"Symbol" nsym
-                                        (if (some? (:ns ks))
-                                            (.resolveAlias resolver, (Symbol'intern (:ns ks)))
-                                            (.currentNS resolver)
-                                        )]
-                                    ;; auto-resolving keyword
-                                    (when (some? nsym)
-                                        (Keyword'intern (Symbol'intern (:name nsym), (:name ks)))
-                                    )
-                                )
-                                (let [#_"Namespace" kns
-                                        (if (some? (:ns ks))
-                                            (.lookupAlias (Compiler'currentNS), (Symbol'intern (:ns ks)))
-                                            (Compiler'currentNS)
-                                        )]
-                                    ;; auto-resolving keyword
-                                    (when (some? kns)
-                                        (Keyword'intern (Symbol'intern (:name (:name kns)), (:name ks)))
-                                    )
-                                )
+                        (let [#_"Symbol" ks (Symbol'intern (.substring s, 2))
+                              #_"Namespace" kns (if (some? (:ns ks)) (.lookupAlias (Compiler'currentNS), (Symbol'intern (:ns ks))) (Compiler'currentNS))]
+                            ;; auto-resolving keyword
+                            (when (some? kns)
+                                (Keyword'intern (Symbol'intern (:name (:name kns)), (:name ks)))
                             )
                         )
                     :else
@@ -18026,11 +17957,10 @@
     (def- #_"Object" LispReader'READ_FINISHED (Object.))
 
     (defn #_"List" LispReader'readDelimitedList [#_"char" delim, #_"PushbackReader" r, #_"boolean" isRecursive, #_"Object" pendingForms]
-        (let [#_"Resolver" resolver (cast' Resolver (.deref RT'READER_RESOLVER))
-              #_"int" firstline (if (§ instance? LineNumberingPushbackReader r) (.getLineNumber (cast' LineNumberingPushbackReader r)) -1)
+        (let [#_"int" firstline (if (§ instance? LineNumberingPushbackReader r) (.getLineNumber (cast' LineNumberingPushbackReader r)) -1)
               #_"ArrayList" a (ArrayList.)]
             (loop []
-                (let [#_"Object" form (LispReader'read-8 r, false, LispReader'READ_EOF, delim, LispReader'READ_FINISHED, isRecursive, pendingForms, resolver)]
+                (let [#_"Object" form (LispReader'read-7 r, false, LispReader'READ_EOF, delim, LispReader'READ_FINISHED, isRecursive, pendingForms)]
                     (condp = form
                         LispReader'READ_EOF
                             (if (neg? firstline)
@@ -33578,7 +33508,6 @@
     (§ def #_"Var" RT'PRINT_READABLY (.setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*print-readably*"), RT'T)))
     (§ def #_"Var" RT'WARN_ON_REFLECTION (.setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*warn-on-reflection*"), RT'F)))
     (§ def #_"Var" RT'ALLOW_UNRESOLVED_VARS (.setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*allow-unresolved-vars*"), RT'F)))
-    (§ def #_"Var" RT'READER_RESOLVER (.setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*reader-resolver*"), nil)))
 
     (§ def #_"Var" RT'IN_NS_VAR (Var'intern RT'CLOIURE_NS, (Symbol'intern "in-ns"), RT'F))
     (§ def #_"Var" RT'NS_VAR (Var'intern RT'CLOIURE_NS, (Symbol'intern "ns"), RT'F))

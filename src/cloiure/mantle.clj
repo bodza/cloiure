@@ -7156,8 +7156,6 @@
  ;;
 (§ def ^:dynamic *print-level* nil)
 
-(§ def ^:dynamic *verbose-defrecords* false)
-
 ;;;
  ; *print-namespace-maps* controls whether the printer will print namespace map literal
  ; syntax. It defaults to false, but the REPL binds to true.
