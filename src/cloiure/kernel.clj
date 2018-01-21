@@ -12241,58 +12241,66 @@
         )
     )
 
-    (defn #_"int" Compiler'getMatchingParams [#_"String" methodName, #_"ArrayList<Class[]>" paramlists, #_"IPersistentVector" argexprs, #_"List<Class>" rets]
+    (defn #_"int" Compiler'getMatchingParams [#_"String" methodName, #_"ArrayList<Class[]>" pars, #_"IPersistentVector" args, #_"List<Class>" rets]
         ;; presumes matching lengths
-        (let [#_"int" matchIdx -1
-              #_"boolean" tied false
-              #_"boolean" foundExact false]
-            (loop-when-recur [#_"int" i 0] (< i (.size paramlists)) [(inc i)]
-                (let [#_"boolean" match true
-                      #_"ISeq" aseq (.seq argexprs)
-                      #_"int" exact 0]
-                    (loop-when-recur [#_"int" p 0 aseq aseq] (and match (< p (.count argexprs)) (some? aseq)) [(inc p) (.next aseq)]
-                        (let [#_"Expr" arg (cast' Expr (.first aseq))
-                              #_"Class" aclass (if (.hasJavaClass arg) (.getJavaClass arg) Object)
-                              #_"Class" pclass (aget (.get paramlists, i) p)]
-                            (if (and (.hasJavaClass arg) (= aclass pclass))
-                                (§ ass exact (inc exact))
-                                (§ ass match (Reflector'paramArgTypeMatch pclass, aclass))
-                            )
-                        )
-                    )
-                    (cond (= exact (.count argexprs))
-                        (do
-                            (when (or (not foundExact) (= matchIdx -1) (.isAssignableFrom (.get rets, matchIdx), (.get rets, i)))
-                                (§ ass matchIdx i)
-                            )
-                            (§ ass tied false)
-                            (§ ass foundExact true)
-                        )
-                        (and match (not foundExact))
-                        (do
-                            (if (= matchIdx -1)
-                                (§ ass matchIdx i)
-                                (cond (Compiler'subsumes (.get paramlists, i), (.get paramlists, matchIdx))
-                                    (do
-                                        (§ ass matchIdx i)
-                                        (§ ass tied false)
-                                    )
-                                    (Arrays/equals (.get paramlists, matchIdx), (.get paramlists, i))
-                                    (do
-                                        (when (.isAssignableFrom (.get rets, matchIdx), (.get rets, i))
-                                            (§ ass matchIdx i)
-                                        )
-                                    )
-                                    (not (Compiler'subsumes (.get paramlists, matchIdx), (.get paramlists, i)))
-                                    (do
-                                        (§ ass tied true)
-                                    )
+        (let [[#_"int" matchIdx #_"boolean" tied]
+                (loop-when [matchIdx -1 tied false #_"boolean" foundExact false #_"int" i 0] (< i (.size pars)) => [matchIdx tied]
+                    (let [[#_"int" exact #_"boolean" match]
+                            (loop-when [exact 0 match true #_"int" p 0 #_"ISeq" s (.seq args)] (and match (< p (.count args)) (some? s)) => [exact match]
+                                (let [#_"Expr" arg (cast' Expr (.first s))
+                                      #_"Class" aclass (if (.hasJavaClass arg) (.getJavaClass arg) Object) #_"Class" pclass (aget (.get pars, i) p)
+                                      [exact match]
+                                        (if (and (.hasJavaClass arg) (= aclass pclass))
+                                            [(inc exact) match]
+                                            [exact (Reflector'paramArgTypeMatch pclass, aclass)]
+                                        )]
+                                    (recur exact match (inc p) (.next s))
                                 )
                             )
-                        )
+                          [matchIdx tied foundExact]
+                            (cond (= exact (.count args))
+                                (let [matchIdx
+                                        (when (or (not foundExact) (= matchIdx -1) (.isAssignableFrom (.get rets, matchIdx), (.get rets, i))) => matchIdx
+                                            i
+                                        )]
+                                    [matchIdx false true]
+                                )
+                                (and match (not foundExact))
+                                (let [[matchIdx tied]
+                                        (cond (= matchIdx -1)
+                                            (do
+                                                [i tied]
+                                            )
+                                            (Compiler'subsumes (.get pars, i), (.get pars, matchIdx))
+                                            (do
+                                                [i false]
+                                            )
+                                            (Arrays/equals (.get pars, matchIdx), (.get pars, i))
+                                            (let [matchIdx
+                                                    (when (.isAssignableFrom (.get rets, matchIdx), (.get rets, i)) => matchIdx
+                                                        i
+                                                    )]
+                                                [matchIdx tied]
+                                            )
+                                            (not (Compiler'subsumes (.get pars, matchIdx), (.get pars, i)))
+                                            (do
+                                                [matchIdx true]
+                                            )
+                                            :else
+                                            (do
+                                                [matchIdx tied]
+                                            )
+                                        )]
+                                    [matchIdx tied foundExact]
+                                )
+                                :else
+                                (do
+                                    [matchIdx tied foundExact]
+                                )
+                            )]
+                        (recur matchIdx tied foundExact (inc i))
                     )
-                )
-            )
+                )]
             (when tied
                 (throw (IllegalArgumentException. (str "More than one matching method found: " methodName)))
             )
@@ -12380,22 +12388,19 @@
     )
 
     (defn #_"String" Compiler'demunge [#_"String" mungedName]
-        (let [#_"StringBuilder" sb (StringBuilder.)
+        (let [#_"StringBuilder" sb (StringBuilder.)
               #_"Matcher" m (.matcher Compiler'DEMUNGE_PATTERN, mungedName)
-              #_"int" lastMatchEnd 0]
-            (while (.find m)
-                (let [#_"int" start (.start m)
-                      #_"int" end (.end m)]
-                    ;; Keep everything before the match
-                    (.append sb, (.substring mungedName, lastMatchEnd, start))
-                    (§ ass lastMatchEnd end)
-                    ;; Replace the match with DEMUNGE_MAP result
-                    (let [#_"Character" origCh (cast Character (.valAt Compiler'DEMUNGE_MAP, (.group m)))]
-                        (.append sb, origCh)
+              #_"int" lastMatchEnd
+                (loop-when [lastMatchEnd 0] (.find m) => lastMatchEnd
+                    (let [#_"int" start (.start m) #_"int" end (.end m)]
+                        ;; keep everything before the match
+                        (.append sb, (.substring mungedName, lastMatchEnd, start))
+                        ;; replace the match with DEMUNGE_MAP result
+                        (.append sb, (cast Character (.valAt Compiler'DEMUNGE_MAP, (.group m))))
+                        (recur end)
                     )
-                )
-            )
-            ;; Keep everything after the last match
+                )]
+            ;; keep everything after the last match
             (.append sb, (.substring mungedName, lastMatchEnd))
             (.toString sb)
         )
@@ -12406,26 +12411,25 @@
     )
 
     (defn- #_"LocalBinding" Compiler'registerLocal [#_"Symbol" sym, #_"Symbol" tag, #_"Expr" init, #_"boolean" isArg]
-        (let [#_"int" num (Compiler'getAndIncLocalNum)
-              #_"LocalBinding" b (LocalBinding'new num, sym, tag, init, isArg, (Compiler'clearPathRoot))
-              #_"IPersistentMap" localsMap (cast' IPersistentMap (.deref Compiler'LOCAL_ENV))]
-            (.set Compiler'LOCAL_ENV, (RT'assoc localsMap, (:sym b), b))
+        (let [#_"int" n (Compiler'getAndIncLocalNum)
+              #_"LocalBinding" lb (LocalBinding'new n, sym, tag, init, isArg, (Compiler'clearPathRoot))]
+            (.set Compiler'LOCAL_ENV, (RT'assoc (cast' IPersistentMap (.deref Compiler'LOCAL_ENV)), (:sym lb), lb))
             (let [#_"ObjMethod" method (cast' ObjMethod (.deref Compiler'METHOD))]
-                (§ ass (:locals method) (cast' IPersistentMap (RT'assoc (:locals method), b, b)))
-                (§ ass (:indexlocals method) (cast' IPersistentMap (RT'assoc (:indexlocals method), num, b)))
-                b
+                (§ ass (:locals method) (cast' IPersistentMap (RT'assoc (:locals method), lb, lb)))
+                (§ ass (:indexlocals method) (cast' IPersistentMap (RT'assoc (:indexlocals method), n, lb)))
+                lb
             )
         )
     )
 
     (defn- #_"int" Compiler'getAndIncLocalNum []
-        (let [#_"int" num (.intValue (cast Number (.deref Compiler'NEXT_LOCAL_NUM)))
+        (let [#_"int" n (.intValue (cast Number (.deref Compiler'NEXT_LOCAL_NUM)))
               #_"ObjMethod" m (cast' ObjMethod (.deref Compiler'METHOD))]
-            (when (< (:maxLocal m) num)
-                (§ ass (:maxLocal m) num)
+            (when (< (:maxLocal m) n)
+                (§ ass (:maxLocal m) n)
             )
-            (.set Compiler'NEXT_LOCAL_NUM, (inc num))
-            num
+            (.set Compiler'NEXT_LOCAL_NUM, (inc n))
+            n
         )
     )
 
@@ -12666,7 +12670,7 @@
                                     (Compiler'eval-2 (RT'first s), false)
                                 )
                             (or (§ instance? IType form) (and (§ instance? IPersistentCollection form) (not (and (§ instance? Symbol (RT'first form)) (.startsWith (:name (cast' Symbol (RT'first form))), "def")))))
-                                (let [#_"ObjExpr" fexpr (cast' ObjExpr (Compiler'analyze-3 :Context'EXPRESSION, (RT'list-3 Compiler'FN, PersistentVector'EMPTY, form), (str "eval" (RT'nextID))))
+                                (let [#_"ObjExpr" fexpr (cast' ObjExpr (Compiler'analyze-3 :Context'EXPRESSION, (RT'list-3 Compiler'FN, PersistentVector'EMPTY, form), (str "eval" (RT'nextID))))
                                       #_"IFn" fn (cast' IFn (.eval fexpr))]
                                     (.invoke fn)
                                 )
@@ -12983,11 +12987,9 @@
         nil
     )
 
-    (defn #_"Object" Compiler'load [#_"Reader" rdr]
-        (let [#_"Object" EOF (Object.)
-              #_"Object" ret nil
-              #_"LineNumberingPushbackReader" pushbackReader (if (§ instance? LineNumberingPushbackReader rdr) (cast' LineNumberingPushbackReader rdr) (LineNumberingPushbackReader'new-1 rdr))]
-            (Compiler'consumeWhitespaces pushbackReader)
+    (defn #_"Object" Compiler'load [#_"Reader" reader]
+        (let [#_"LineNumberingPushbackReader" r
+                (if (§ instance? LineNumberingPushbackReader reader) (cast' LineNumberingPushbackReader reader) (LineNumberingPushbackReader'new-1 reader))]
             (Var'pushThreadBindings (RT'mapUniqueKeys
                 (object-array [
                     Compiler'LOADER         (RT'makeClassLoader)
@@ -12999,11 +13001,14 @@
                     RT'WARN_ON_REFLECTION   (.deref RT'WARN_ON_REFLECTION)
                 ])
             ))
-
             (try
-                (loop-when-recur [#_"Object" r (LispReader'read-4 pushbackReader, false, EOF, false)] (not= r EOF) [(LispReader'read-4 pushbackReader, false, EOF, false)]
-                    (Compiler'consumeWhitespaces pushbackReader)
-                    (§ ass ret (Compiler'eval-2 r, false))
+                (let [#_"Object" EOF (Object.)]
+                    (loop [#_"Object" v nil]
+                        (Compiler'consumeWhitespaces r)
+                        (let-when [#_"Object" x (LispReader'read-4 r, false, EOF, false)] (not= x EOF) => v
+                            (recur (Compiler'eval-2 x, false))
+                        )
+                    )
                 )
                 (§ catch LispReaderException e
                     (throw (CompilerException'new (:line e), (:column e), (.getCause e)))
@@ -13015,7 +13020,6 @@
                     (Var'popThreadBindings)
                 )
             )
-            ret
         )
     )
 
@@ -16885,19 +16889,18 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"RegexReader" this, #_"Object" reader, #_"Object" doublequote, #_"Object" pendingForms]
-        (let [#_"StringBuilder" sb (StringBuilder.)
-              #_"Reader" r (cast Reader reader)]
-            (loop-when-recur [#_"int" ch (LispReader'read1 r)] (not= ch \") [(LispReader'read1 r)] ;; oops! "
-                (when (= ch -1)
-                    (throw (RuntimeException. "EOF while reading regex"))
-                )
-                (.append sb, (char ch))
-                (when (= ch \\) ;; escape
-                    (§ ass ch (LispReader'read1 r))
-                    (when (= ch -1)
-                        (throw (RuntimeException. "EOF while reading regex"))
+        (let [#_"Reader" r (cast Reader reader) #_"StringBuilder" sb (StringBuilder.)]
+            (loop []
+                (let-when [#_"int" ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading regex"))
+                    (when-not (= ch \") ;; oops! "
+                        (.append sb, (char ch))
+                        (when (= ch \\) ;; escape
+                            (let-when [ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading regex"))
+                                (.append sb, (char ch))
+                            )
+                        )
+                        (recur)
                     )
-                    (.append sb, (char ch))
                 )
             )
             (Pattern/compile (.toString sb))
@@ -17002,77 +17005,70 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"NamespaceMapReader" this, #_"Object" reader, #_"Object" colon, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)
-              #_"boolean" auto false
-              #_"int" autoChar (LispReader'read1 r)]
-            (if (= autoChar \:)
-                (§ ass auto true)
-                (LispReader'unread r, autoChar)
-            )
-
-            (let [#_"Object" sym nil
-                  #_"int" nextChar (LispReader'read1 r)]
-                (cond (LispReader'isWhitespace nextChar) ;; the #:: { } case or an error
-                    (do
-                        (if auto
-                            (do
-                                (while (LispReader'isWhitespace nextChar)
-                                    (§ ass nextChar (LispReader'read1 r))
-                                )
-                                (when (not= nextChar \{)
-                                    (LispReader'unread r, nextChar)
-                                    (throw (RuntimeException. "Namespaced map must specify a namespace"))
-                                )
-                            )
-                            (do
+        (let [#_"PushbackReader" r (cast PushbackReader reader)
+              #_"boolean" auto
+                (let [#_"int" autoChar (LispReader'read1 r)]
+                    (or (= autoChar \:)
+                        (do (LispReader'unread r, autoChar) false)
+                    )
+                )
+              #_"int" nextChar (LispReader'read1 r)
+              [#_"Object" sym nextChar]
+                (cond
+                    (LispReader'isWhitespace nextChar) ;; the #:: { } case or an error
+                    (if auto
+                        (let [nextChar (loop-when-recur nextChar (LispReader'isWhitespace nextChar) (LispReader'read1 r) => nextChar)]
+                            (when (not= nextChar \{)
                                 (LispReader'unread r, nextChar)
                                 (throw (RuntimeException. "Namespaced map must specify a namespace"))
                             )
+                            [nil nextChar]
+                        )
+                        (do
+                            (LispReader'unread r, nextChar)
+                            (throw (RuntimeException. "Namespaced map must specify a namespace"))
                         )
                     )
                     (not= nextChar \{) ;; #:foo { } or #::foo { }
                     (do
                         (LispReader'unread r, nextChar)
-                        (§ ass sym (LispReader'read-5 r, true, nil, false, pendingForms))
-                        (§ ass nextChar (LispReader'read1 r))
-                        (while (LispReader'isWhitespace nextChar)
-                            (§ ass nextChar (LispReader'read1 r))
+                        (let [sym (LispReader'read-5 r, true, nil, false, pendingForms)
+                              nextChar (LispReader'read1 r)
+                              nextChar (loop-when-recur nextChar (LispReader'isWhitespace nextChar) (LispReader'read1 r) => nextChar)]
+                            [sym nextChar]
                         )
                     )
-                )
-                (when (not= nextChar \{)
-                    (throw (RuntimeException. "Namespaced map must specify a map"))
-                )
+                    :else
+                    (do
+                        [nil nextChar]
+                    )
+                )]
+            (when (not= nextChar \{)
+                (throw (RuntimeException. "Namespaced map must specify a map"))
+            )
 
-                ;; Resolve autoresolved ns
-                (§ let [#_"String" ns]
+            ;; resolve autoresolved ns
+            (let [#_"String" ns
                     (cond auto
                         (let [#_"Resolver" resolver (cast' Resolver (.deref RT'READER_RESOLVER))]
                             (cond (nil? sym)
                                 (do
-                                    (if (some? resolver)
-                                        (§ ass ns (:name (.currentNS resolver)))
-                                        (§ ass ns (.getName (.getName (Compiler'currentNS))))
-                                    )
+                                    (if (some? resolver) (:name (.currentNS resolver)) (.getName (.getName (Compiler'currentNS))))
                                 )
                                 (or (not (§ instance? Symbol sym)) (some? (.getNamespace (cast' Symbol sym))))
                                 (do
                                     (throw (RuntimeException. (str "Namespaced map must specify a valid namespace: " sym)))
                                 )
                                 :else
-                                (do
-                                    (§ let [#_"Symbol" resolvedNS]
+                                (let [#_"Symbol" resolvedNS
                                         (if (some? resolver)
-                                            (§ ass resolvedNS (.resolveAlias resolver, (cast' Symbol sym)))
+                                            (.resolveAlias resolver, (cast' Symbol sym))
                                             (let [#_"Namespace" rns (.lookupAlias (Compiler'currentNS), (cast' Symbol sym))]
-                                                (§ ass resolvedNS (when (some? rns) (.getName rns)))
+                                                (when (some? rns) (.getName rns))
                                             )
-                                        )
-
-                                        (if (nil? resolvedNS)
-                                            (throw (RuntimeException. (str "Unknown auto-resolved namespace alias: " sym)))
-                                            (§ ass ns (.getName resolvedNS))
-                                        )
+                                        )]
+                                    (when (some? resolvedNS) => (throw (RuntimeException. (str "Unknown auto-resolved namespace alias: " sym)))
+                                        (.getName resolvedNS)
                                     )
                                 )
                             )
@@ -17083,53 +17079,41 @@
                         )
                         :else
                         (do
-                            (§ ass ns (.getName (cast' Symbol sym)))
+                            (.getName (cast' Symbol sym))
                         )
+                    )]
+
+                ;; read map
+                (let [#_"List" kvs (LispReader'readDelimitedList \}, r, true, (LispReader'ensurePending pendingForms))]
+                    (when (= (& (.size kvs) 1) 1)
+                        (throw (RuntimeException. "Namespaced map literal must contain an even number of forms"))
                     )
 
-                    ;; Read map
-                    (let [#_"List" kvs (LispReader'readDelimitedList \}, r, true, (LispReader'ensurePending pendingForms))]
-                        (when (= (& (.size kvs) 1) 1)
-                            (throw (RuntimeException. "Namespaced map literal must contain an even number of forms"))
-                        )
-
-                        ;; Construct output map
-                        (let [#_"Object[]" a (make-array Object (.size kvs))
-                              #_"Iterator" iter (.iterator kvs)]
-                            (loop-when-recur [#_"int" i 0] (.hasNext iter) [(+ i 2)]
-                                (let [#_"Object" key (.next iter)
-                                      #_"Object" val (.next iter)]
-                                    (cond (§ instance? Keyword key)
+                    ;; construct output map
+                    (let [#_"Object[]" a (make-array Object (.size kvs)) #_"Iterator" it (.iterator kvs)]
+                        (loop-when-recur [#_"int" i 0] (.hasNext it) [(+ i 2)]
+                            (let [#_"Object" key (.next it) #_"Object" val (.next it)
+                                  _ (cond
+                                        (§ instance? Keyword key)
                                         (let [#_"Keyword" kw (cast' Keyword key)]
-                                            (cond (nil? (.getNamespace kw))
-                                                (do
-                                                    (§ ass key (Keyword'intern (Symbol'intern ns, (.getName kw))))
-                                                )
-                                                (= (.getNamespace kw) "_")
-                                                (do
-                                                    (§ ass key (Keyword'intern (Symbol'intern nil, (.getName kw))))
-                                                )
+                                            (cond
+                                                (nil? (.getNamespace kw))  (Keyword'intern (Symbol'intern ns, (.getName kw)))
+                                                (= (.getNamespace kw) "_") (Keyword'intern (Symbol'intern nil, (.getName kw)))
                                             )
                                         )
                                         (§ instance? Symbol key)
                                         (let [#_"Symbol" s (cast' Symbol key)]
-                                            (cond (nil? (.getNamespace s))
-                                                (do
-                                                    (§ ass key (Symbol'intern ns, (.getName s)))
-                                                )
-                                                (= (.getNamespace s) "_")
-                                                (do
-                                                    (§ ass key (Symbol'intern nil, (.getName s)))
-                                                )
+                                            (cond
+                                                (nil? (.getNamespace s))  (Symbol'intern ns, (.getName s))
+                                                (= (.getNamespace s) "_") (Symbol'intern nil, (.getName s))
                                             )
                                         )
-                                    )
-                                    (aset a i key)
-                                    (aset a (inc i) val)
-                                )
+                                    )]
+                                (aset a i (or _ key))
+                                (aset a (inc i) val)
                             )
-                            (RT'map a)
                         )
+                        (RT'map a)
                     )
                 )
             )
@@ -17153,15 +17137,14 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"SymbolicValueReader" this, #_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)
+        (let [#_"PushbackReader" r (cast PushbackReader reader)
               #_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
-            (when (not (§ instance? Symbol o))
+            (when-not (§ instance? Symbol o)
                 (throw (RuntimeException. (str "Invalid token: ##" o)))
             )
-            (when (not (.containsKey SymbolicValueReader'specials, o))
+            (when-not (.containsKey SymbolicValueReader'specials, o)
                 (throw (RuntimeException. (str "Unknown symbolic value: ##" o)))
             )
-
             (.valAt SymbolicValueReader'specials, o)
         )
     )
@@ -17183,7 +17166,7 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"WrappingReader" this, #_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)
+        (let [#_"PushbackReader" r (cast PushbackReader reader)
               #_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
             (RT'list-2 (:sym this), o)
         )
@@ -17198,7 +17181,7 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"VarReader" this, #_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)
+        (let [#_"PushbackReader" r (cast PushbackReader reader)
               #_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
             (RT'list-2 LispReader'THE_VAR, o)
         )
@@ -17237,30 +17220,24 @@
             (try
                 (Var'pushThreadBindings (RT'map LispReader'ARG_ENV, PersistentTreeMap'EMPTY))
                 (LispReader'unread r, \()
-                (let [#_"Object" form (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))
+                (let [#_"Object" form (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))
                       #_"PersistentVector" args PersistentVector'EMPTY
                       #_"PersistentTreeMap" argsyms (cast' PersistentTreeMap (.deref LispReader'ARG_ENV))
-                      #_"ISeq" rargs (.rseq argsyms)]
-                    (when (some? rargs)
-                        (let [#_"int" higharg (cast Integer (.getKey (cast Map$Entry (.first rargs))))]
-                            (when (< 0 higharg)
-                                (loop-when-recur [#_"int" i 1] (<= i higharg) [(inc i)]
-                                    (let [#_"Object" sym (.valAt argsyms, i)]
-                                        (when (nil? sym)
-                                            (§ ass sym (LispReader'garg i))
+                      args
+                        (let-when [#_"ISeq" rargs (.rseq argsyms)] (some? rargs) => args
+                            (let [args
+                                    (let-when [#_"int" higharg (cast Integer (.getKey (cast Map$Entry (.first rargs))))] (pos? higharg) => args
+                                        (loop-when [args args #_"int" i 1] (<= i higharg) => args
+                                            (let [#_"Object" sym (or (.valAt argsyms, i) (LispReader'garg i))]
+                                                (recur (.cons args, sym) (inc i))
+                                            )
                                         )
-                                        (§ ass args (.cons args, sym))
-                                    )
+                                    )]
+                                (let-when [#_"Object" restsym (.valAt argsyms, -1)] (some? restsym) => args
+                                    (-> args (.cons Compiler'_AMP_) (.cons restsym))
                                 )
                             )
-                            (let [#_"Object" restsym (.valAt argsyms, -1)]
-                                (when (some? restsym)
-                                    (§ ass args (.cons args, Compiler'_AMP_))
-                                    (§ ass args (.cons args, restsym))
-                                )
-                            )
-                        )
-                    )
+                        )]
                     (RT'list-3 Compiler'FN, args, form)
                 )
                 (finally
@@ -17511,20 +17488,19 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"UnquoteReader" this, #_"Object" reader, #_"Object" comma, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)
-              #_"int" ch (LispReader'read1 r)]
-            (when (= ch -1)
-                (throw (RuntimeException. "EOF while reading character"))
-            )
-            (§ ass pendingForms (LispReader'ensurePending pendingForms))
-            (if (= ch \@)
-                (let [#_"Object" o (LispReader'read-5 r, true, nil, true, pendingForms)]
-                    (RT'list-2 LispReader'UNQUOTE_SPLICING, o)
-                )
-                (do
-                    (LispReader'unread r, ch)
-                    (let [#_"Object" o (LispReader'read-5 r, true, nil, true, pendingForms)]
-                        (RT'list-2 LispReader'UNQUOTE, o)
+        (let [#_"PushbackReader" r (cast PushbackReader reader)]
+            (let-when [#_"int" ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading character"))
+                (let [pendingForms (LispReader'ensurePending pendingForms)]
+                    (if (= ch \@)
+                        (let [#_"Object" o (LispReader'read-5 r, true, nil, true, pendingForms)]
+                            (RT'list-2 LispReader'UNQUOTE_SPLICING, o)
+                        )
+                        (do
+                            (LispReader'unread r, ch)
+                            (let [#_"Object" o (LispReader'read-5 r, true, nil, true, pendingForms)]
+                                (RT'list-2 LispReader'UNQUOTE, o)
+                            )
+                        )
                     )
                 )
             )
@@ -17634,7 +17610,7 @@
 
     #_method
     (§ defn #_"Object" (§ method invoke) [#_"MapReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)
+        (let [#_"PushbackReader" r (cast PushbackReader reader)
               #_"Object[]" a (.toArray (LispReader'readDelimitedList \}, r, true, (LispReader'ensurePending pendingForms)))]
             (when (= (& (alength a) 1) 1)
                 (throw (RuntimeException. "Map literal must contain an even number of forms"))
@@ -19243,7 +19219,7 @@
     #_method
     (§ defn- #_"IFn" (§ method findAndCacheBestMethod) [#_"MultiFn" this, #_"Object" dispatchVal]
         (.lock (.readLock (:rw this)))
-        (let [#_"IPersistentMap" mt (:methodTable this) #_"IPersistentMap" pt (:preferTable this) #_"Object" ch (:cachedHierarchy this)
+        (let [#_"IPersistentMap" mt (:methodTable this) #_"IPersistentMap" pt (:preferTable this) #_"Object" ch (:cachedHierarchy this)
               #_"Object" bestValue
                 (try
                     (let [#_"Iterator" it (.iterator (.getMethodTable this))
@@ -19741,12 +19717,8 @@
         )
     )
 
-    (defn #_"int" Murmur3'mixCollHash [#_"int" hash, #_"int" count]
-        (let [#_"int" h1 Murmur3'seed
-              #_"int" k1 (Murmur3'mixK1 hash)]
-            (§ ass h1 (Murmur3'mixH1 h1, k1))
-            (Murmur3'fmix h1, count)
-        )
+    (defn #_"int" Murmur3'mixCollHash [#_"int" hash, #_"int" n]
+        (Murmur3'fmix (Murmur3'mixH1 Murmur3'seed, (Murmur3'mixK1 hash)), n)
     )
 
     (defn #_"int" Murmur3'hashOrdered [#_"Iterable" xs]
@@ -21240,7 +21212,7 @@
     (defn #_"float[]" Numbers'float_array-1 [#_"Object" sizeOrSeq]
         (if (instance? Number sizeOrSeq)
             (.float-array (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq)
+            (let [#_"ISeq" s (RT'seq sizeOrSeq)
                   #_"int" size (RT'count s)
                   #_"float[]" ret (.float-array size)]
                 (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
@@ -21272,7 +21244,7 @@
     (defn #_"double[]" Numbers'double_array-1 [#_"Object" sizeOrSeq]
         (if (instance? Number sizeOrSeq)
             (.double-array (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq)
+            (let [#_"ISeq" s (RT'seq sizeOrSeq)
                   #_"int" size (RT'count s)
                   #_"double[]" ret (.double-array size)]
                 (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
@@ -21304,7 +21276,7 @@
     (defn #_"int[]" Numbers'int_array-1 [#_"Object" sizeOrSeq]
         (if (instance? Number sizeOrSeq)
             (.int-array (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq)
+            (let [#_"ISeq" s (RT'seq sizeOrSeq)
                   #_"int" size (RT'count s)
                   #_"int[]" ret (.int-array size)]
                 (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
@@ -21336,7 +21308,7 @@
     (defn #_"long[]" Numbers'long_array-1 [#_"Object" sizeOrSeq]
         (if (instance? Number sizeOrSeq)
             (.long-array (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq)
+            (let [#_"ISeq" s (RT'seq sizeOrSeq)
                   #_"int" size (RT'count s)
                   #_"long[]" ret (.long-array size)]
                 (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
@@ -21368,7 +21340,7 @@
     (defn #_"short[]" Numbers'short_array-1 [#_"Object" sizeOrSeq]
         (if (instance? Number sizeOrSeq)
             (.short-array (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq)
+            (let [#_"ISeq" s (RT'seq sizeOrSeq)
                   #_"int" size (RT'count s)
                   #_"short[]" ret (.short-array size)]
                 (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
@@ -21400,7 +21372,7 @@
     (defn #_"char[]" Numbers'char_array-1 [#_"Object" sizeOrSeq]
         (if (instance? Number sizeOrSeq)
             (.char-array (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq)
+            (let [#_"ISeq" s (RT'seq sizeOrSeq)
                   #_"int" size (RT'count s)
                   #_"char[]" ret (.char-array size)]
                 (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
@@ -21432,7 +21404,7 @@
     (defn #_"byte[]" Numbers'byte_array-1 [#_"Object" sizeOrSeq]
         (if (instance? Number sizeOrSeq)
             (.byte-array (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq)
+            (let [#_"ISeq" s (RT'seq sizeOrSeq)
                   #_"int" size (RT'count s)
                   #_"byte[]" ret (.byte-array size)]
                 (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
@@ -21464,7 +21436,7 @@
     (defn #_"boolean[]" Numbers'boolean_array-1 [#_"Object" sizeOrSeq]
         (if (instance? Number sizeOrSeq)
             (.boolean-array (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq)
+            (let [#_"ISeq" s (RT'seq sizeOrSeq)
                   #_"int" size (RT'count s)
                   #_"boolean[]" ret (.boolean-array size)]
                 (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
@@ -23375,23 +23347,27 @@
 
     #_method
     (§ defn- #_"INode" (§ method pack) [#_"ArrayNode" this, #_"AtomicReference<Thread>" edit, #_"int" idx]
-        (let [#_"Object[]" a (make-array Object (* 2 (dec (:count this))))
-              #_"int" j 1
-              #_"int" bitmap 0]
-            (loop-when-recur [#_"int" i 0] (< i idx) [(inc i)]
-                (when (some? (aget (:array this) i))
-                    (aset a j (aget (:array this) i))
-                    (§ ass bitmap (| bitmap (<< 1 i)))
-                    (§ ass j (+ j 2))
+        (let [#_"Object[]" a (make-array Object (* 2 (dec (:count this))))
+              [#_"int" bitmap #_"int" j]
+                (loop-when [bitmap 0 j 1 #_"int" i 0] (< i idx) => [bitmap j]
+                    (let [[bitmap j]
+                            (when (some? (aget (:array this) i)) => [bitmap j]
+                                (aset a j (aget (:array this) i))
+                                [(| bitmap (<< 1 i)) (+ j 2)]
+                            )]
+                        (recur bitmap j (inc i))
+                    )
                 )
-            )
-            (loop-when-recur [#_"int" i (inc idx)] (< i (alength (:array this))) [(inc i)]
-                (when (some? (aget (:array this) i))
-                    (aset a j (aget (:array this) i))
-                    (§ ass bitmap (| bitmap (<< 1 i)))
-                    (§ ass j (+ j 2))
-                )
-            )
+              bitmap
+                (loop-when [bitmap bitmap j j #_"int" i (inc idx)] (< i (alength (:array this))) => bitmap
+                    (let [[bitmap j]
+                            (when (some? (aget (:array this) i)) => [bitmap j]
+                                (aset a j (aget (:array this) i))
+                                [(| bitmap (<< 1 i)) (+ j 2)]
+                            )]
+                        (recur bitmap j (inc i))
+                    )
+                )]
             (BitmapIndexedNode'new edit, bitmap, a)
         )
     )
@@ -24478,7 +24454,7 @@
     )
 
     (defn #_"PersistentHashSet" PersistentHashSet'create-1l [#_"List" items]
-        (let [#_"ITransientSet" ret (cast' ITransientSet (.asTransient PersistentHashSet'EMPTY))
+        (let [#_"ITransientSet" ret (cast' ITransientSet (.asTransient PersistentHashSet'EMPTY))
               #_"Iterator" it (.iterator items)]
             (loop-when-recur [] (.hasNext it) [] => (cast' PersistentHashSet (.persistent ret))
                 (§ ass ret (cast' ITransientSet (.conj ret, (.next it))))
@@ -24508,7 +24484,7 @@
     )
 
     (defn #_"PersistentHashSet" PersistentHashSet'createWithCheck-1l [#_"List" items]
-        (let [#_"ITransientSet" ret (cast' ITransientSet (.asTransient PersistentHashSet'EMPTY))
+        (let [#_"ITransientSet" ret (cast' ITransientSet (.asTransient PersistentHashSet'EMPTY))
               #_"Iterator" it (.iterator items)]
             (loop-when-recur [#_"int" i 0] (.hasNext it) [(inc i)] => (cast' PersistentHashSet (.persistent ret))
                 (let [#_"Object" key (.next it)]
@@ -28088,51 +28064,40 @@
     )
 
     (defn #_"Object" Reflector'invokeMatchingMethod [#_"String" methodName, #_"List" methods, #_"Object" target, #_"Object[]" args]
-        (let [#_"java.lang.reflect.Method" m nil
-              #_"Object[]" boxedArgs nil]
-            (cond (.isEmpty methods)
-                (do
-                    (throw (§ unsure IllegalArgumentException. (Reflector'noMethodReport methodName, target)))
-                )
-                (= (.size methods) 1)
-                (do
-                    (§ ass m (cast java.lang.reflect.Method (.get methods, 0)))
-                    (§ ass boxedArgs (Reflector'boxArgs (.getParameterTypes m), args))
-                )
-                :else ;; overloaded w/same arity
-                (let [#_"java.lang.reflect.Method" foundm nil]
-                    (loop-when-recur [#_"Iterator" i (.iterator methods)] (.hasNext i) [i]
-                        (§ ass m (cast java.lang.reflect.Method (.next i)))
-
-                        (let [#_"Class[]" params (.getParameterTypes m)]
-                            (when (Reflector'isCongruent params, args)
-                                (when (or (nil? foundm) (Compiler'subsumes params, (.getParameterTypes foundm)))
-                                    (§ ass foundm m)
-                                    (§ ass boxedArgs (Reflector'boxArgs params, args))
+        (let-when [#_"int" n (.size methods)] (pos? n) => (throw (§ unsure IllegalArgumentException. (Reflector'noMethodReport methodName, target)))
+            (let [[#_"java.lang.reflect.Method" m #_"Object[]" boxedArgs]
+                    (if (= n 1)
+                        (let [m (cast java.lang.reflect.Method (.get methods, 0))]
+                            [m (Reflector'boxArgs (.getParameterTypes m), args)]
+                        )
+                        ;; overloaded w/same arity
+                        (let [#_"Iterator" it (.iterator methods)]
+                            (loop-when [#_"java.lang.reflect.Method" found nil boxedArgs nil] (.hasNext it) => [found boxedArgs]
+                                (let [m (cast java.lang.reflect.Method (.next it)) #_"Class[]" params (.getParameterTypes m)
+                                    [found boxedArgs]
+                                        (if (and (Reflector'isCongruent params, args) (or (nil? found) (Compiler'subsumes params, (.getParameterTypes found))))
+                                            [m (Reflector'boxArgs params, args)]
+                                            [found boxedArgs]
+                                        )]
+                                    (recur found boxedArgs)
                                 )
                             )
                         )
+                    )]
+                (when (some? m) => (throw (§ unsure IllegalArgumentException. (Reflector'noMethodReport methodName, target)))
+                    (let [m (when-not (Modifier/isPublic (.getModifiers (.getDeclaringClass m))) => m
+                                ;; public method of non-public class, try to find it in hierarchy
+                                (or (Reflector'getAsMethodOfPublicBase (.getClass target), m)
+                                    (throw (IllegalArgumentException. (str "Can't call public method of non-public class: " m)))
+                                )
+                            )]
+                        (try
+                            (Reflector'prepRet (.getReturnType m), (.invoke m, target, boxedArgs))
+                            (catch Exception e
+                                (throw (Util'sneakyThrow (Reflector'getCauseOrElse e)))
+                            )
+                        )
                     )
-                    (§ ass m foundm)
-                )
-            )
-            (when (nil? m)
-                (throw (§ unsure IllegalArgumentException. (Reflector'noMethodReport methodName, target)))
-            )
-
-            (when (not (Modifier/isPublic (.getModifiers (.getDeclaringClass m))))
-                ;; public method of non-public class, try to find it in hierarchy
-                (let [#_"java.lang.reflect.Method" oldm m]
-                    (§ ass m (Reflector'getAsMethodOfPublicBase (.getClass target), m))
-                    (when (nil? m)
-                        (throw (IllegalArgumentException. (str "Can't call public method of non-public class: " (.toString oldm))))
-                    )
-                )
-            )
-            (try
-                (Reflector'prepRet (.getReturnType m), (.invoke m, target, boxedArgs))
-                (catch Exception e
-                    (throw (Util'sneakyThrow (Reflector'getCauseOrElse e)))
                 )
             )
         )
@@ -35510,7 +35475,7 @@
 
     #_method
     (§ defn #_"V" (§ method put) [#_"TransactionalHashMap" this, #_"K" k, #_"V" v]
-        (let [#_"Ref" r (aget (:bins this) (.binFor this, k))
+        (let [#_"Ref" r (aget (:bins this) (.binFor this, k))
               #_"IPersistentMap" m (cast' IPersistentMap (.deref r))
               #_"Object" ret (.valAt m, k)]
             (.set r, (.assoc m, k, v))
@@ -35520,7 +35485,7 @@
 
     #_method
     (§ defn #_"V" (§ method remove) [#_"TransactionalHashMap" this, #_"Object" k]
-        (let [#_"Ref" r (aget (:bins this) (.binFor this, k))
+        (let [#_"Ref" r (aget (:bins this) (.binFor this, k))
               #_"IPersistentMap" m (cast' IPersistentMap (.deref r))
               #_"Object" ret (.valAt m, k)]
             (.set r, (.without m, k))
@@ -35541,7 +35506,7 @@
     #_method
     (§ defn #_"void" (§ method clear) [#_"TransactionalHashMap" this]
         (dotimes [#_"int" i (alength (:bins this))]
-            (let [#_"Ref" r (aget (:bins this) i)
+            (let [#_"Ref" r (aget (:bins this) i)
                   #_"IPersistentMap" m (cast' IPersistentMap (.deref r))]
                 (when (pos? (.count m))
                     (.set r, PersistentHashMap'EMPTY)
