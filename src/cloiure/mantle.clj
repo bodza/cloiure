@@ -9499,37 +9499,9 @@
             )
         )
     )
-    (listIterator [this] (.listIterator this 0))
-    (listIterator [this i]
-        (let [i (java.util.concurrent.atomic.AtomicInteger. i)]
-            (reify java.util.ListIterator
-                (hasNext [_] (< (.get i) cnt))
-                (hasPrevious [_] (pos? i))
-                (next [_]
-                    (try
-                        (.nth this (dec (.incrementAndGet i)))
-                        (catch IndexOutOfBoundsException _
-                            (throw (java.util.NoSuchElementException.))
-                        )
-                    )
-                )
-                (nextIndex [_] (.get i))
-                (previous [_]
-                    (try
-                        (.nth this (.decrementAndGet i))
-                        (catch IndexOutOfBoundsException _
-                            (throw (java.util.NoSuchElementException.))
-                        )
-                    )
-                )
-                (previousIndex [_] (dec (.get i)))
-                (add [_ e] (throw (UnsupportedOperationException.)))
-                (remove [_] (throw (UnsupportedOperationException.)))
-                (set [_ e] (throw (UnsupportedOperationException.)))
-            )
-        )
-    )
-    (subList [this a z] (subvec this a z))
+    (listIterator [_] (throw (UnsupportedOperationException.)))
+    (listIterator [_ i] (throw (UnsupportedOperationException.)))
+    (subList [_ a z] (throw (UnsupportedOperationException.)))
     (add [_ i o] (throw (UnsupportedOperationException.)))
     (addAll [_ i c] (throw (UnsupportedOperationException.)))
     (^Object remove [_ ^int i] (throw (UnsupportedOperationException.)))

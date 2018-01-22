@@ -70,7 +70,7 @@
     [cloiure.asm.commons GeneratorAdapter Method]
 )
 
-(declare IKeywordLookup'''getLookupThunk Ops'''isZero Ops'''isPos Ops'''isNeg Ops'''negate Ops'''negateP Ops'''incP Ops'''decP Ops'''add Ops'''combine Ops'''addP Ops'''multiply Ops'''multiplyP Ops'''divide Ops'''quotient Ops'''remainder Ops'''equiv Ops'''lt Ops'''lte Ops'''gte)
+(declare IKeywordLookup'''getLookupThunk Ops'''isZero Ops'''isPos Ops'''isNeg Ops'''negate Ops'''negateP Ops'''incP Ops'''decP Ops'''add Ops'''combine Ops'''addP Ops'''multiply Ops'''multiplyP Ops'''divide Ops'''quotient Ops'''remainder Ops'''equiv Ops'''lt Ops'''lte Ops'''gte Expr'''emit MaybePrimitiveExpr'''emitUnboxed Expr'''hasJavaClass Expr'''getJavaClass Expr'''eval MaybePrimitiveExpr'''canEmitPrimitive IParser'''parse LineNumberingPushbackReader''getLineNumber LineNumberingPushbackReader''getColumnNumber LockingTransaction''run IHashEq'''hasheq)
 (declare AgentAction''execute Agent''setState Agent''getError Agent''setErrorMode Agent''getErrorMode Agent''setErrorHandler Agent''getErrorHandler Agent''restart Agent''dispatch Agent''getQueueCount AMapEntry''asVector AMapEntry''setValue APersistentMap''containsValue APersistentMap''keySet APersistentMap''values ARef''notifyWatches BigInt''toBigInteger BigInt''toBigDecimal BigInt''byteValue BigInt''shortValue BigInt''bitLength BigInt''multiply BigInt''quotient BigInt''remainder BigInt''lt ChunkBuffer''chunk DefExpr''includesExplicitMetadata StaticMethodExpr''canEmitIntrinsicPredicate StaticMethodExpr''emitIntrinsicPredicate InvokeExpr''emitProto InvokeExpr''emitArgsAndCall SourceDebugExtensionAttribute''writeSMAP FnExpr''emitForDefn ObjExpr''ctorTypes ObjExpr''compile ObjExpr''emitKeywordCallsites ObjExpr''emitListAsObjectArray ObjExpr''emitValue ObjExpr''emitConstants ObjExpr''isMutable ObjExpr''isVolatile ObjExpr''isDeftype ObjExpr''emitClearCloses ObjExpr''getCompiledClass ObjExpr''emitLetFnInits ObjExpr''emitAssignLocal ObjExpr''emitLocal ObjExpr''emitUnboxedLocal ObjExpr''emitVar ObjExpr''emitVarValue ObjExpr''emitKeyword ObjExpr''emitConstant ObjExpr''constantName ObjExpr''siteName ObjExpr''siteNameStatic ObjExpr''thunkName ObjExpr''cachedClassName ObjExpr''cachedVarName ObjExpr''varCallsiteName ObjExpr''thunkNameStatic ObjExpr''constantType FnMethod''doEmitStatic FnMethod''doEmitPrim ObjMethod''emitClearLocalsOld ObjMethod''emitClearThis LocalBinding''getPrimitiveType BodyExpr''lastExpr CaseExpr''isShiftMasked CaseExpr''emitShiftMask CaseExpr''emitExprForInts CaseExpr''emitThenForInts CaseExpr''emitExprForHashes CaseExpr''emitThenForHashes Cycle''current FnLoaderThunk''load KeywordLookupSite''ilookupThunk KeywordLookupSite''install LazySeq''sval LockingTransactionInfo''running LockingTransaction''getReadPoint LockingTransaction''getCommitPoint LockingTransaction''stop LockingTransaction''tryWriteLock LockingTransaction''lock LockingTransaction''blockAndBail LockingTransaction''releaseIfEnsured LockingTransaction''abort LockingTransaction''bargeTimeElapsed LockingTransaction''barge LockingTransaction''doGet LockingTransaction''doEnsure LockingTransaction''doCommute LongChunk''first LongRange''steppingCount LongRange''rangeCount MethodImplCache''fnFor MethodImplCache''findFnFor MultiFn''addMethod MultiFn''removeMethod MultiFn''preferMethod MultiFn''prefers MultiFn''isA MultiFn''dominates MultiFn''resetCache MultiFn''getMethod MultiFn''getFn MultiFn''findAndCacheBestMethod Namespace''getMappings Namespace''warnOrFailOnReplace Namespace''intern Namespace''referenceVar Namespace''referenceClass Namespace''unmap Namespace''refer Namespace''getMapping Namespace''findInternedVar Namespace''getAliases Namespace''lookupAlias Namespace''addAlias Namespace''removeAlias PersistentArrayMap''createHT PersistentArrayMap''indexOfObject ArrayNode''pack BitmapIndexedNode''editAndRemovePair HashCollisionNode''findIndex NodeIter''advance NodeIterator''push PersistentTreeMap''reverseIterator PersistentTreeMap''minKey PersistentTreeMap''min PersistentTreeMap''maxKey PersistentTreeMap''max PersistentTreeMap''doCompare TransientVector''editableArrayFor PersistentVector''chunkedSeq Ratio''decimalValue Ratio''decimalValue Ratio''bigIntegerValue Ref''getMinHistory Ref''setMinHistory Ref''getMaxHistory Ref''setMaxHistory Ref''currentVal Ref''commute Ref''touch Ref''trimHistory Ref''getHistoryCount Ref''histCount TransformerIterator''step Var''isDynamic Var''setMeta Var''setMacro Var''isMacro Var''isPublic Var''getRawRoot Var''getTag Var''setTag Var''hasRoot Var''bindRoot Var''swapRoot Var''unbindRoot Var''commuteRoot Var''alterRoot Var''getThreadBinding)
 (declare AFn'new AFunction'new AMapEntry'new APersistentMap'new APersistentVector'new AReference'new ASeq'new ATransientMap'new AbortException'new AbstractMap'new ArgReader'new AssignParser'new Attribute'new BigDecimalOps'new BigIntOps'new BodyParser'new CaseParser'new ConstantParser'new DefParser'new DefaultComparator'new DeftypeParser'new DoubleOps'new EmptyBuffer'new Error'new Exception'new FieldExpr'new FnReader'new HostExpr'new HostParser'new IfParser'new IllegalArgumentException'new ImportParser'new IteratorSeqState'new LetFnParser'new LetParser'new CharacterReader'new CommentReader'new DiscardReader'new DispatchReader'new ListReader'new MapReader'new MetaReader'new NamespaceMapReader'new SetReader'new StringReader'new SymbolicValueReader'new UnmatchedDelimiterReader'new UnreadableReader'new VectorReader'new LiteralExpr'new LockingTransaction'new LongOps'new MethodExpr'new MonitorEnterParser'new MonitorExitParser'new NewParser'new NilExpr'new Number'new Obj'new OpsP'new Primordial'new PushbackReader'new RatioOps'new RecurParser'new RegexReader'new ReifyParser'new RestFn'new RetryEx'new RuntimeException'new SyntaxQuoteReader'new TheVarParser'new ThrowParser'new TryParser'new URLClassLoader'new UnquoteReader'new UntypedExpr'new VarReader'new)
 (declare AFn'applyToHelper)
@@ -256,7 +256,7 @@
 (declare TBox'new)
 (declare Unbound'new)
 (declare Frame'TOP Frame'new)
-(declare Var'dvals Var'rev Var'privateKey Var'privateMeta Var'macroKey Var'nameKey Var'nsKey Var'getThreadBindingFrame Var'cloneThreadBindingFrame Var'resetThreadBindingFrame Var'intern Var'find Var'internPrivate Var'create Var'new Var'pushThreadBindings Var'popThreadBindings Var'getThreadBindings Var'assoc Var'dissoc)
+(declare Var'dvals Var'rev Var'privateKey Var'privateMeta Var'macroKey Var'nameKey Var'nsKey Var'getThreadBindingFrame Var'resetThreadBindingFrame Var'intern Var'find Var'internPrivate Var'create Var'new Var'pushThreadBindings Var'popThreadBindings Var'getThreadBindings Var'assoc Var'dissoc)
 (declare Volatile'new)
 (declare main'CLOIURE_MAIN main'REQUIRE main'MAIN)
 
@@ -270,13 +270,13 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Object" (§ method call) [#_"AFn" this]
+    #_foreign
+    (§ defn #_"Object" call [#_"AFn" this]
         (.invoke this)
     )
 
-    #_method
-    (§ defn #_"void" (§ method run) [#_"AFn" this]
+    #_foreign
+    (§ defn #_"void" run [#_"AFn" this]
         (.invoke this)
         nil
     )
@@ -758,8 +758,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"int" (§ method compare) [#_"AFunction" this, #_"Object" o1, #_"Object" o2]
+    #_foreign
+    (§ defn #_"int" compare [#_"AFunction" this, #_"Object" o1, #_"Object" o2]
         (let [#_"Object" o (.invoke this, o1, o2)]
             (if (instance? Boolean o)
                 (cond (RT'booleanCast-1o o) -1 (RT'booleanCast-1o (.invoke this, o2, o1)) 1 :else 0)
@@ -883,8 +883,8 @@
         nil
     )
 
-    #_method
-    (§ defn #_"void" (§ method run) [#_"AgentAction" this]
+    #_foreign
+    (§ defn #_"void" run [#_"AgentAction" this]
         (AgentAction'doRun this)
         nil
     )
@@ -899,8 +899,8 @@
 
     (defn- #_"ThreadFactory" Agent'createThreadFactory [#_"String" format, #_"AtomicLong" threadPoolCounter]
         (§ reify ThreadFactory()
-            #_method
-            (§ defn #_"Thread" (§ method newThread) [#_"ThreadFactory" this, #_"Runnable" runnable]
+            #_foreign
+            (§ defn #_"Thread" newThread [#_"ThreadFactory" this, #_"Runnable" runnable]
                 (let [#_"Thread" thread (Thread. runnable)]
                     (.setName thread, (String/format format, (object-array [ (.getAndIncrement threadPoolCounter) ])))
                     thread
@@ -1190,22 +1190,22 @@
             (nil? (:iterable this))
                 (.iterator (§ super ))
             (§ instance? IMapIterable (:iterable this))
-                (.keyIterator (cast' IMapIterable (:iterable this)))
+                (IMapIterable'''keyIterator (cast' IMapIterable (:iterable this)))
             :else
                 (let [#_"Iterator" mapIter (.iterator (:iterable this))]
                     (§ reify Iterator()
-                        #_method
-                        (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
+                        #_foreign
+                        (§ defn #_"boolean" hasNext [#_"Iterator" this]
                             (.hasNext mapIter)
                         )
 
-                        #_method
-                        (§ defn #_"Object" (§ method next) [#_"Iterator" this]
+                        #_foreign
+                        (§ defn #_"Object" next [#_"Iterator" this]
                             (.getKey (cast Map$Entry (.next mapIter)))
                         )
 
-                        #_method
-                        (§ defn #_"void" (§ method remove) [#_"Iterator" this]
+                        #_foreign
+                        (§ defn #_"void" remove [#_"Iterator" this]
                             (throw (UnsupportedOperationException.))
                         )
                     )
@@ -1275,22 +1275,22 @@
             (nil? (:iterable this))
                 (.iterator (§ super ))
             (§ instance? IMapIterable (:iterable this))
-                (.valIterator (cast' IMapIterable (:iterable this)))
+                (IMapIterable'''valIterator (cast' IMapIterable (:iterable this)))
             :else
                 (let [#_"Iterator" mapIter (.iterator (:iterable this))]
                     (§ reify Iterator()
-                        #_method
-                        (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
+                        #_foreign
+                        (§ defn #_"boolean" hasNext [#_"Iterator" this]
                             (.hasNext mapIter)
                         )
 
-                        #_method
-                        (§ defn #_"Object" (§ method next) [#_"Iterator" this]
+                        #_foreign
+                        (§ defn #_"Object" next [#_"Iterator" this]
                             (.getValue (cast Map$Entry (.next mapIter)))
                         )
 
-                        #_method
-                        (§ defn #_"void" (§ method remove) [#_"Iterator" this]
+                        #_foreign
+                        (§ defn #_"void" remove [#_"Iterator" this]
                             (throw (UnsupportedOperationException.))
                         )
                     )
@@ -1313,8 +1313,8 @@
         (merge (AFn'new) (APersistentMap'init))
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"APersistentMap" this]
+    #_foreign
+    (§ defn #_"String" toString [#_"APersistentMap" this]
         (RT'printString this)
     )
 
@@ -1340,8 +1340,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method equals) [#_"APersistentMap" this, #_"Object" obj]
+    #_foreign
+    (§ defn #_"boolean" equals [#_"APersistentMap" this, #_"Object" obj]
         (APersistentMap'mapEquals this, obj)
     )
 
@@ -1384,8 +1384,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"int" (§ method hashCode) [#_"APersistentMap" this]
+    #_foreign
+    (§ defn #_"int" hashCode [#_"APersistentMap" this]
         (let [#_"int" cached (:_hash this)]
             (when (zero? cached)
                 (§ ass this (assoc this :_hash (§ ass cached (APersistentMap'mapHash this))))
@@ -1402,8 +1402,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"int" (§ method hasheq) [#_"APersistentMap" this]
+    #_override
+    (§ defn #_"int" IHashEq'''hasheq [#_"APersistentMap" this]
         (let [#_"int" cached (:_hasheq this)]
             (when (zero? cached)
                 (§ ass this (assoc this :_hasheq (§ ass cached (Murmur3'hashUnordered this))))
@@ -1453,8 +1453,8 @@
         (.valAt this, arg1, notFound)
     )
 
-    #_method
-    (§ defn #_"void" (§ method clear) [#_"APersistentMap" this]
+    #_foreign
+    (§ defn #_"void" clear [#_"APersistentMap" this]
         (throw (UnsupportedOperationException.))
     )
 
@@ -1476,8 +1476,8 @@
                 (.count this)
             )
 
-            #_method
-            (§ defn #_"int" (§ method hashCode) [#_"AbstractSet" this]
+            #_foreign
+            (§ defn #_"int" hashCode [#_"AbstractSet" this]
                 (.hashCode (§ this APersistentMap))
             )
 
@@ -1509,20 +1509,20 @@
             (§ defn #_"Iterator" (§ method iterator) [#_"AbstractSet" this]
                 (let [#_"Iterator" mi (.iterator (§ this APersistentMap))]
                     (§ reify Iterator()
-                        #_method
-                        (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
+                        #_foreign
+                        (§ defn #_"boolean" hasNext [#_"Iterator" this]
                             (.hasNext mi)
                         )
 
-                        #_method
-                        (§ defn #_"Object" (§ method next) [#_"Iterator" this]
+                        #_foreign
+                        (§ defn #_"Object" next [#_"Iterator" this]
                             (let [#_"Entry" e (cast' Entry (.next mi))]
                                 (.getKey e)
                             )
                         )
 
-                        #_method
-                        (§ defn #_"void" (§ method remove) [#_"Iterator" this]
+                        #_foreign
+                        (§ defn #_"void" remove [#_"Iterator" this]
                             (throw (UnsupportedOperationException.))
                         )
                     )
@@ -1546,8 +1546,8 @@
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"void" (§ method putAll) [#_"APersistentMap" this, #_"Map" t]
+    #_foreign
+    (§ defn #_"void" putAll [#_"APersistentMap" this, #_"Map" t]
         (throw (UnsupportedOperationException.))
     )
 
@@ -1568,20 +1568,20 @@
             (§ defn #_"Iterator" (§ method iterator) [#_"AbstractCollection" this]
                 (let [#_"Iterator" mi (.iterator (§ this APersistentMap))]
                     (§ reify Iterator()
-                        #_method
-                        (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
+                        #_foreign
+                        (§ defn #_"boolean" hasNext [#_"Iterator" this]
                             (.hasNext mi)
                         )
 
-                        #_method
-                        (§ defn #_"Object" (§ method next) [#_"Iterator" this]
+                        #_foreign
+                        (§ defn #_"Object" next [#_"Iterator" this]
                             (let [#_"Entry" e (cast' Entry (.next mi))]
                                 (.getValue e)
                             )
                         )
 
-                        #_method
-                        (§ defn #_"void" (§ method remove) [#_"Iterator" this]
+                        #_foreign
+                        (§ defn #_"void" remove [#_"Iterator" this]
                             (throw (UnsupportedOperationException.))
                         )
                     )
@@ -1621,8 +1621,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"APersistentSet" this]
+    #_foreign
+    (§ defn #_"String" toString [#_"APersistentSet" this]
         (RT'printString this)
     )
 
@@ -1651,8 +1651,8 @@
         (.get this, arg1)
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method equals) [#_"APersistentSet" this, #_"Object" obj]
+    #_foreign
+    (§ defn #_"boolean" equals [#_"APersistentSet" this, #_"Object" obj]
         (APersistentSet'setEquals this, obj)
     )
 
@@ -1679,8 +1679,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"int" (§ method hashCode) [#_"APersistentSet" this]
+    #_foreign
+    (§ defn #_"int" hashCode [#_"APersistentSet" this]
         (let [#_"int" hash (:_hash this)]
             (when (zero? hash)
                 (loop-when-recur [#_"ISeq" s (.seq this)] (some? s) [(.next s)]
@@ -1694,8 +1694,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"int" (§ method hasheq) [#_"APersistentSet" this]
+    #_override
+    (§ defn #_"int" IHashEq'''hasheq [#_"APersistentSet" this]
         (let [#_"int" cached (:_hasheq this)]
             (when (zero? cached)
                 (§ ass this (assoc this :_hasheq (§ ass cached (Murmur3'hashUnordered this))))
@@ -1709,38 +1709,38 @@
         (RT'seqToArray (.seq this))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method add) [#_"APersistentSet" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"boolean" add [#_"APersistentSet" this, #_"Object" o]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method remove) [#_"APersistentSet" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"boolean" remove [#_"APersistentSet" this, #_"Object" o]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method addAll) [#_"APersistentSet" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" addAll [#_"APersistentSet" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"void" (§ method clear) [#_"APersistentSet" this]
+    #_foreign
+    (§ defn #_"void" clear [#_"APersistentSet" this]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method retainAll) [#_"APersistentSet" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" retainAll [#_"APersistentSet" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method removeAll) [#_"APersistentSet" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" removeAll [#_"APersistentSet" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method containsAll) [#_"APersistentSet" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" containsAll [#_"APersistentSet" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
@@ -1762,7 +1762,7 @@
     #_method
     (§ defn #_"Iterator" (§ method iterator) [#_"APersistentSet" this]
         (if (§ instance? IMapIterable (:impl this))
-            (.keyIterator (cast' IMapIterable (:impl this)))
+            (IMapIterable'''keyIterator (cast' IMapIterable (:impl this)))
             (§ reify Iterator()
                 (§ init
                     (hash-map
@@ -1770,18 +1770,18 @@
                     )
                 )
 
-                #_method
-                (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
+                #_foreign
+                (§ defn #_"boolean" hasNext [#_"Iterator" this]
                     (.hasNext (:iter this))
                 )
 
-                #_method
-                (§ defn #_"Object" (§ method next) [#_"Iterator" this]
+                #_foreign
+                (§ defn #_"Object" next [#_"Iterator" this]
                     (.key (cast' IMapEntry (.next (:iter this))))
                 )
 
-                #_method
-                (§ defn #_"void" (§ method remove) [#_"Iterator" this]
+                #_foreign
+                (§ defn #_"void" remove [#_"Iterator" this]
                     (throw (UnsupportedOperationException.))
                 )
             )
@@ -2025,8 +2025,8 @@
         (merge (AFn'new) (APersistentVector'init))
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"APersistentVector" this]
+    #_foreign
+    (§ defn #_"String" toString [#_"APersistentVector" this]
         (RT'printString this)
     )
 
@@ -2037,8 +2037,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"ISeq" (§ method rseq) [#_"APersistentVector" this]
+    #_override
+    (§ defn #_"ISeq" Reversible'''rseq [#_"APersistentVector" this]
         (when (pos? (.count this))
             (RSeq'new-2 this, (dec (.count this)))
         )
@@ -2090,8 +2090,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method equals) [#_"APersistentVector" this, #_"Object" obj]
+    #_foreign
+    (§ defn #_"boolean" equals [#_"APersistentVector" this, #_"Object" obj]
         (or (= obj this) (APersistentVector'doEquals this, obj))
     )
 
@@ -2100,8 +2100,8 @@
         (or (= obj this) (APersistentVector'doEquiv this, obj))
     )
 
-    #_method
-    (§ defn #_"int" (§ method hashCode) [#_"APersistentVector" this]
+    #_foreign
+    (§ defn #_"int" hashCode [#_"APersistentVector" this]
         (let [#_"int" hash (:_hash this)]
             (when (zero? hash)
                 (§ ass hash 1)
@@ -2116,8 +2116,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"int" (§ method hasheq) [#_"APersistentVector" this]
+    #_override
+    (§ defn #_"int" IHashEq'''hasheq [#_"APersistentVector" this]
         (let [#_"int" hash (:_hasheq this)]
             (when (zero? hash)
                 (§ let [#_"int" n]
@@ -2163,77 +2163,14 @@
         )
     )
 
-    #_method
-    (§ defn #_"ListIterator" (§ method listIterator) [#_"APersistentVector" this]
-        (.listIterator this, 0)
+    #_foreign
+    (§ defn #_"ListIterator" listIterator [#_"APersistentVector" this]
+        (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"ListIterator" (§ method listIterator) [#_"APersistentVector" this, #_"int" index]
-        (§ reify ListIterator()
-            (§ init
-                (hash-map
-                    #_"int" :nexti index
-                )
-            )
-
-            #_method
-            (§ defn #_"boolean" (§ method hasNext) [#_"ListIterator" this]
-                (< (:nexti this) (.count this))
-            )
-
-            #_method
-            (§ defn #_"Object" (§ method next) [#_"ListIterator" this]
-                (if (< (:nexti this) (.count this))
-                    (let [_ (.nth this, (:nexti this))]
-                        (§ ass (:nexti this) (inc (:nexti this)))
-                        _
-                    )
-                    (throw (NoSuchElementException.))
-                )
-            )
-
-            #_method
-            (§ defn #_"boolean" (§ method hasPrevious) [#_"ListIterator" this]
-                (< 0 (:nexti this))
-            )
-
-            #_method
-            (§ defn #_"Object" (§ method previous) [#_"ListIterator" this]
-                (if (< 0 (:nexti this))
-                    (do
-                        (§ ass (:nexti this) (dec (:nexti this)))
-                        (.nth this, (:nexti this))
-                    )
-                    (throw (NoSuchElementException.))
-                )
-            )
-
-            #_method
-            (§ defn #_"int" (§ method nextIndex) [#_"ListIterator" this]
-                (:nexti this)
-            )
-
-            #_method
-            (§ defn #_"int" (§ method previousIndex) [#_"ListIterator" this]
-                (dec (:nexti this))
-            )
-
-            #_method
-            (§ defn #_"void" (§ method remove) [#_"ListIterator" this]
-                (throw (UnsupportedOperationException.))
-            )
-
-            #_method
-            (§ defn #_"void" (§ method set) [#_"ListIterator" this, #_"Object" o]
-                (throw (UnsupportedOperationException.))
-            )
-
-            #_method
-            (§ defn #_"void" (§ method add) [#_"ListIterator" this, #_"Object" o]
-                (throw (UnsupportedOperationException.))
-            )
-        )
+    #_foreign
+    (§ defn #_"ListIterator" listIterator [#_"APersistentVector" this, #_"int" index]
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -2245,13 +2182,13 @@
                 )
             )
 
-            #_method
-            (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"boolean" hasNext [#_"Iterator" this]
                 (< (:i this) end)
             )
 
-            #_method
-            (§ defn #_"Object" (§ method next) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"Object" next [#_"Iterator" this]
                 (if (< (:i this) end)
                     (let [_ (.nth this, (:i this))]
                         (§ ass (:i this) (inc (:i this)))
@@ -2261,16 +2198,16 @@
                 )
             )
 
-            #_method
-            (§ defn #_"void" (§ method remove) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"void" remove [#_"Iterator" this]
                 (throw (UnsupportedOperationException.))
             )
         )
     )
 
-    #_method
-    (§ defn #_"List" (§ method subList) [#_"APersistentVector" this, #_"int" fromIndex, #_"int" toIndex]
-        (cast List (RT'subvec this, fromIndex, toIndex))
+    #_foreign
+    (§ defn #_"List" subList [#_"APersistentVector" this, #_"int" fromIndex, #_"int" toIndex]
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -2283,8 +2220,8 @@
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method addAll) [#_"APersistentVector" this, #_"int" i, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" addAll [#_"APersistentVector" this, #_"int" i, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
@@ -2306,13 +2243,13 @@
                 )
             )
 
-            #_method
-            (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"boolean" hasNext [#_"Iterator" this]
                 (< (:i this) (.count this))
             )
 
-            #_method
-            (§ defn #_"Object" (§ method next) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"Object" next [#_"Iterator" this]
                 (if (< (:i this) (.count this))
                     (let [_ (.nth this, (:i this))]
                         (§ ass (:i this) (inc (:i this)))
@@ -2322,8 +2259,8 @@
                 )
             )
 
-            #_method
-            (§ defn #_"void" (§ method remove) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"void" remove [#_"Iterator" this]
                 (throw (UnsupportedOperationException.))
             )
         )
@@ -2381,38 +2318,38 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method add) [#_"APersistentVector" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"boolean" add [#_"APersistentVector" this, #_"Object" o]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method remove) [#_"APersistentVector" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"boolean" remove [#_"APersistentVector" this, #_"Object" o]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method addAll) [#_"APersistentVector" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" addAll [#_"APersistentVector" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"void" (§ method clear) [#_"APersistentVector" this]
+    #_foreign
+    (§ defn #_"void" clear [#_"APersistentVector" this]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method retainAll) [#_"APersistentVector" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" retainAll [#_"APersistentVector" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method removeAll) [#_"APersistentVector" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" removeAll [#_"APersistentVector" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method containsAll) [#_"APersistentVector" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" containsAll [#_"APersistentVector" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
@@ -2443,8 +2380,8 @@
         (.count this)
     )
 
-    #_method
-    (§ defn #_"int" (§ method compareTo) [#_"APersistentVector" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"int" compareTo [#_"APersistentVector" this, #_"Object" o]
         (let [#_"IPersistentVector" v (cast' IPersistentVector o) #_"int" n (.count this) #_"int" m (.count v)]
             (cond (< n m) -1 (< m n) 1
                 :else
@@ -2667,10 +2604,9 @@
         (- (:end this) (:off this))
     )
 
-    #_method
-    (§ defn #_"IChunk" (§ method dropFirst) [#_"ArrayChunk" this]
-        (if (= (:off this) (:end this))
-            (throw (IllegalStateException. "dropFirst of empty chunk"))
+    #_override
+    (§ defn #_"IChunk" IChunk'''dropFirst [#_"ArrayChunk" this]
+        (when-not (= (:off this) (:end this)) => (throw (IllegalStateException. "dropFirst of empty chunk"))
             (ArrayChunk'new-3 (:array this), (inc (:off this)), (:end this))
         )
     )
@@ -2714,13 +2650,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter_int" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"ArrayIter_int" this]
         (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
-    #_method
-    (§ defn #_"Long" (§ method next) [#_"ArrayIter_int" this]
+    #_foreign
+    (§ defn #_"Long" next [#_"ArrayIter_int" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (Long/valueOf (aget (:array this) (:i this)))]
                 (§ ass this (assoc this :i (inc (:i this))))
@@ -2729,8 +2665,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"ArrayIter_int" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"ArrayIter_int" this]
         (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
@@ -2751,13 +2687,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter_float" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"ArrayIter_float" this]
         (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
-    #_method
-    (§ defn #_"Double" (§ method next) [#_"ArrayIter_float" this]
+    #_foreign
+    (§ defn #_"Double" next [#_"ArrayIter_float" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (Double/valueOf (aget (:array this) (:i this)))]
                 (§ ass this (assoc this :i (inc (:i this))))
@@ -2766,8 +2702,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"ArrayIter_float" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"ArrayIter_float" this]
         (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
@@ -2788,13 +2724,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter_double" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"ArrayIter_double" this]
         (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
-    #_method
-    (§ defn #_"Double" (§ method next) [#_"ArrayIter_double" this]
+    #_foreign
+    (§ defn #_"Double" next [#_"ArrayIter_double" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (aget (:array this) (:i this))]
                 (§ ass this (assoc this :i (inc (:i this))))
@@ -2803,8 +2739,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"ArrayIter_double" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"ArrayIter_double" this]
         (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
@@ -2825,13 +2761,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter_long" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"ArrayIter_long" this]
         (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
-    #_method
-    (§ defn #_"Long" (§ method next) [#_"ArrayIter_long" this]
+    #_foreign
+    (§ defn #_"Long" next [#_"ArrayIter_long" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (Long/valueOf (aget (:array this) (:i this)))]
                 (§ ass this (assoc this :i (inc (:i this))))
@@ -2840,8 +2776,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"ArrayIter_long" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"ArrayIter_long" this]
         (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
@@ -2862,13 +2798,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter_byte" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"ArrayIter_byte" this]
         (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
-    #_method
-    (§ defn #_"Byte" (§ method next) [#_"ArrayIter_byte" this]
+    #_foreign
+    (§ defn #_"Byte" next [#_"ArrayIter_byte" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (aget (:array this) (:i this))]
                 (§ ass this (assoc this :i (inc (:i this))))
@@ -2877,8 +2813,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"ArrayIter_byte" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"ArrayIter_byte" this]
         (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
@@ -2899,13 +2835,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter_char" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"ArrayIter_char" this]
         (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
-    #_method
-    (§ defn #_"Character" (§ method next) [#_"ArrayIter_char" this]
+    #_foreign
+    (§ defn #_"Character" next [#_"ArrayIter_char" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (aget (:array this) (:i this))]
                 (§ ass this (assoc this :i (inc (:i this))))
@@ -2914,8 +2850,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"ArrayIter_char" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"ArrayIter_char" this]
         (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
@@ -2936,13 +2872,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter_short" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"ArrayIter_short" this]
         (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
-    #_method
-    (§ defn #_"Long" (§ method next) [#_"ArrayIter_short" this]
+    #_foreign
+    (§ defn #_"Long" next [#_"ArrayIter_short" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (Long/valueOf (aget (:array this) (:i this)))]
                 (§ ass this (assoc this :i (inc (:i this))))
@@ -2951,8 +2887,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"ArrayIter_short" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"ArrayIter_short" this]
         (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
@@ -2973,13 +2909,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter_boolean" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"ArrayIter_boolean" this]
         (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
-    #_method
-    (§ defn #_"Boolean" (§ method next) [#_"ArrayIter_boolean" this]
+    #_foreign
+    (§ defn #_"Boolean" next [#_"ArrayIter_boolean" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (Boolean/valueOf (aget (:array this) (:i this)))]
                 (§ ass this (assoc this :i (inc (:i this))))
@@ -2988,8 +2924,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"ArrayIter_boolean" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"ArrayIter_boolean" this]
         (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
@@ -2997,18 +2933,18 @@
 (class-ns ArrayIter (§ implements Iterator)
     (def #_"Iterator" ArrayIter'EMPTY_ITERATOR
         (§ reify Iterator()
-            #_method
-            (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"boolean" hasNext [#_"Iterator" this]
                 false
             )
 
-            #_method
-            (§ defn #_"Object" (§ method next) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"Object" next [#_"Iterator" this]
                 (throw (NoSuchElementException.))
             )
 
-            #_method
-            (§ defn #_"void" (§ method remove) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"void" remove [#_"Iterator" this]
                 (throw (UnsupportedOperationException. "remove() not supported"))
             )
         )
@@ -3056,13 +2992,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"ArrayIter" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"ArrayIter" this]
         (and (some? (:array this)) (< (:i this) (alength (:array this))))
     )
 
-    #_method
-    (§ defn #_"Object" (§ method next) [#_"ArrayIter" this]
+    #_foreign
+    (§ defn #_"Object" next [#_"ArrayIter" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (aget (:array this) (:i this))]
                 (§ ass this (assoc this :i (inc (:i this))))
@@ -3071,8 +3007,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"ArrayIter" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"ArrayIter" this]
         (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
@@ -3979,8 +3915,8 @@
         (merge (Obj'new) (ASeq'init))
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"ASeq" this]
+    #_foreign
+    (§ defn #_"String" toString [#_"ASeq" this]
         (RT'printString this)
     )
 
@@ -4000,8 +3936,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method equals) [#_"ASeq" this, #_"Object" obj]
+    #_foreign
+    (§ defn #_"boolean" equals [#_"ASeq" this, #_"Object" obj]
         (or (= this obj)
             (and (or (§ instance? Sequential obj) (instance? List obj))
                 (let [#_"ISeq" ms (RT'seq obj)]
@@ -4013,8 +3949,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"int" (§ method hashCode) [#_"ASeq" this]
+    #_foreign
+    (§ defn #_"int" hashCode [#_"ASeq" this]
         (when (zero? (:_hash this))
             (let [#_"int" hash 1]
                 (loop-when-recur [#_"ISeq" s (.seq this)] (some? s) [(.next s)]
@@ -4026,8 +3962,8 @@
         (:_hash this)
     )
 
-    #_method
-    (§ defn #_"int" (§ method hasheq) [#_"ASeq" this]
+    #_override
+    (§ defn #_"int" IHashEq'''hasheq [#_"ASeq" this]
         (when (zero? (:_hasheq this))
             (§ ass this (assoc this :_hasheq (Murmur3'hashOrdered this)))
         )
@@ -4061,38 +3997,38 @@
         (RT'seqToArray (.seq this))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method add) [#_"ASeq" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"boolean" add [#_"ASeq" this, #_"Object" o]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method remove) [#_"ASeq" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"boolean" remove [#_"ASeq" this, #_"Object" o]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method addAll) [#_"ASeq" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" addAll [#_"ASeq" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"void" (§ method clear) [#_"ASeq" this]
+    #_foreign
+    (§ defn #_"void" clear [#_"ASeq" this]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method retainAll) [#_"ASeq" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" retainAll [#_"ASeq" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method removeAll) [#_"ASeq" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" removeAll [#_"ASeq" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method containsAll) [#_"ASeq" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" containsAll [#_"ASeq" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
@@ -4128,9 +4064,9 @@
         (Collections/unmodifiableList (ArrayList. this))
     )
 
-    #_method
-    (§ defn #_"List" (§ method subList) [#_"ASeq" this, #_"int" fromIndex, #_"int" toIndex]
-        (.subList (.reify this), fromIndex, toIndex)
+    #_foreign
+    (§ defn #_"List" subList [#_"ASeq" this, #_"int" fromIndex, #_"int" toIndex]
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -4155,14 +4091,14 @@
         (.lastIndexOf (.reify this), o)
     )
 
-    #_method
-    (§ defn #_"ListIterator" (§ method listIterator) [#_"ASeq" this]
-        (.listIterator (.reify this))
+    #_foreign
+    (§ defn #_"ListIterator" listIterator [#_"ASeq" this]
+        (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"ListIterator" (§ method listIterator) [#_"ASeq" this, #_"int" index]
-        (.listIterator (.reify this), index)
+    #_foreign
+    (§ defn #_"ListIterator" listIterator [#_"ASeq" this, #_"int" index]
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -4175,8 +4111,8 @@
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method addAll) [#_"ASeq" this, #_"int" index, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" addAll [#_"ASeq" this, #_"int" index, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 )
@@ -4565,24 +4501,24 @@
     )
 
     ;; must follow Long
-    #_method
-    (§ defn #_"int" (§ method hashCode) [#_"BigInt" this]
+    #_foreign
+    (§ defn #_"int" hashCode [#_"BigInt" this]
         (if (nil? (:bipart this))
             (int (bit-xor (:lpart this) (>>> (:lpart this) 32)))
             (.hashCode (:bipart this))
         )
     )
 
-    #_method
-    (§ defn #_"int" (§ method hasheq) [#_"BigInt" this]
+    #_override
+    (§ defn #_"int" IHashEq'''hasheq [#_"BigInt" this]
         (if (nil? (:bipart this))
             (Murmur3'hashLong (:lpart this))
             (.hashCode (:bipart this))
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method equals) [#_"BigInt" this, #_"Object" obj]
+    #_foreign
+    (§ defn #_"boolean" equals [#_"BigInt" this, #_"Object" obj]
         (cond
             (= this obj)
                 true
@@ -4677,8 +4613,8 @@
         (BigInt'new val, nil)
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"BigInt" this]
+    #_foreign
+    (§ defn #_"String" toString [#_"BigInt" this]
         (if (nil? (:bipart this))
             (String/valueOf (:lpart this))
             (.toString (:bipart this))
@@ -4871,31 +4807,31 @@
     #_override
     (§ defn #_"ISeq" ISeq'''next [#_"ChunkedCons" this]
         (if (< 1 (.count (:chunk this)))
-            (ChunkedCons'new-2 (.dropFirst (:chunk this)), (:_more this))
-            (.chunkedNext this)
+            (ChunkedCons'new-2 (IChunk'''dropFirst (:chunk this)), (:_more this))
+            (IChunkedSeq'''chunkedNext this)
         )
     )
 
     #_method
     (§ defn #_"ISeq" (§ method more) [#_"ChunkedCons" this]
         (if (< 1 (.count (:chunk this)))
-            (ChunkedCons'new-2 (.dropFirst (:chunk this)), (:_more this))
+            (ChunkedCons'new-2 (IChunk'''dropFirst (:chunk this)), (:_more this))
             (or (:_more this) PersistentList'EMPTY)
         )
     )
 
-    #_method
-    (§ defn #_"IChunk" (§ method chunkedFirst) [#_"ChunkedCons" this]
+    #_override
+    (§ defn #_"IChunk" IChunkedSeq'''chunkedFirst [#_"ChunkedCons" this]
         (:chunk this)
     )
 
-    #_method
-    (§ defn #_"ISeq" (§ method chunkedNext) [#_"ChunkedCons" this]
-        (.seq (.chunkedMore this))
+    #_override
+    (§ defn #_"ISeq" IChunkedSeq'''chunkedNext [#_"ChunkedCons" this]
+        (.seq (IChunkedSeq'''chunkedMore this))
     )
 
-    #_method
-    (§ defn #_"ISeq" (§ method chunkedMore) [#_"ChunkedCons" this]
+    #_override
+    (§ defn #_"ISeq" IChunkedSeq'''chunkedMore [#_"ChunkedCons" this]
         (or (:_more this) PersistentList'EMPTY)
     )
 )
@@ -4930,13 +4866,13 @@
 
 (§ defprotocol Expr
     #_abstract
-    (#_"Object" Expr'''(§ method eval) [#_"Expr" this])
+    (#_"Object" Expr'''eval [#_"Expr" this])
     #_abstract
-    (#_"void" Expr'''(§ method emit) [#_"Expr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen])
+    (#_"void" Expr'''emit [#_"Expr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen])
     #_abstract
-    (#_"boolean" Expr'''(§ method hasJavaClass) [#_"Expr" this])
+    (#_"boolean" Expr'''hasJavaClass [#_"Expr" this])
     #_abstract
-    (#_"Class" Expr'''(§ method getJavaClass) [#_"Expr" this])
+    (#_"Class" Expr'''getJavaClass [#_"Expr" this])
 )
 
 #_stateless
@@ -4947,20 +4883,20 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"UntypedExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"UntypedExpr" this]
         (throw (IllegalArgumentException. "Has no Java class"))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"UntypedExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"UntypedExpr" this]
         false
     )
 )
 
 (§ defprotocol IParser
     #_abstract
-    (#_"Expr" IParser'''(§ method parse) [#_"IParser" this, #_"Context" context, #_"Object" form])
+    (#_"Expr" IParser'''parse [#_"IParser" this, #_"Context" context, #_"Object" form])
 )
 
 #_closure
@@ -4969,8 +4905,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"DefParser" this, #_"Context" context, #_"Object" form]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"DefParser" this, #_"Context" context, #_"Object" form]
         ;; (def x) or (def x initexpr) or (def x "docstring" initexpr)
         (let [[#_"String" docstring form]
                 (when (and (= (RT'count form) 4) (instance? String (RT'third form))) => [nil form]
@@ -5055,14 +4991,14 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"DefExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"DefExpr" this]
         (try
             (when (:initProvided this)
-                (Var''bindRoot (:var this), (.eval (:init this)))
+                (Var''bindRoot (:var this), (Expr'''eval (:init this)))
             )
             (when (some? (:meta this))
-                (let [#_"IPersistentMap" metaMap (cast' IPersistentMap (.eval (:meta this)))]
+                (let [#_"IPersistentMap" metaMap (cast' IPersistentMap (Expr'''eval (:meta this)))]
                     (when (or (:initProvided this) true)
                         (Var''setMeta (:var this), metaMap)
                     )
@@ -5075,8 +5011,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"DefExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"DefExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (ObjExpr''emitVar objx, gen, (:var this))
         (when (:shadowsCoreMapping this)
             (.dup gen)
@@ -5093,7 +5029,7 @@
         )
         (when (some? (:meta this))
             (.dup gen)
-            (.emit (:meta this), :Context'EXPRESSION, objx, gen)
+            (Expr'''emit (:meta this), :Context'EXPRESSION, objx, gen)
             (.checkCast gen, Compiler'IPERSISTENTMAP_TYPE)
             (.invokeVirtual gen, Compiler'VAR_TYPE, setMetaMethod)
         )
@@ -5101,7 +5037,7 @@
             (.dup gen)
             (if (§ instance? FnExpr (:init this))
                 (FnExpr''emitForDefn (cast' FnExpr (:init this)), objx, gen)
-                (.emit (:init this), :Context'EXPRESSION, objx, gen)
+                (Expr'''emit (:init this), :Context'EXPRESSION, objx, gen)
             )
             (.invokeVirtual gen, Compiler'VAR_TYPE, bindRootMethod)
         )
@@ -5111,13 +5047,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"DefExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"DefExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"DefExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"DefExpr" this]
         (§ class Var)
     )
 )
@@ -5128,8 +5064,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"AssignParser" this, #_"Context" context, #_"Object" frm]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"AssignParser" this, #_"Context" context, #_"Object" frm]
         (let [#_"ISeq" form (cast' ISeq frm)]
             (when-not (= (RT'length form) 3)
                 (throw (IllegalArgumentException. "Malformed assignment, expecting (set! target val)"))
@@ -5160,25 +5096,25 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"AssignExpr" this]
-        (.evalAssign (:target this), (:val this))
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"AssignExpr" this]
+        (AssignableExpr'''evalAssign (:target this), (:val this))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"AssignExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-        (.emitAssign (:target this), context, objx, gen, (:val this))
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"AssignExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+        (AssignableExpr'''emitAssign (:target this), context, objx, gen, (:val this))
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"AssignExpr" this]
-        (.hasJavaClass (:val this))
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"AssignExpr" this]
+        (Expr'''hasJavaClass (:val this))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"AssignExpr" this]
-        (.getJavaClass (:val this))
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"AssignExpr" this]
+        (Expr'''getJavaClass (:val this))
     )
 )
 
@@ -5203,13 +5139,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"VarExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"VarExpr" this]
         (.deref (:var this))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"VarExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"VarExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (ObjExpr''emitVarValue objx, gen, (:var this))
         (when (= context :Context'STATEMENT)
             (.pop gen)
@@ -5217,28 +5153,28 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"VarExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"VarExpr" this]
         (some? (:tag this))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"VarExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"VarExpr" this]
         (when (nil? (:jc this))
             (§ ass this (assoc this :jc (HostExpr'tagToClass (:tag this))))
         )
         (:jc this)
     )
 
-    #_method
-    (§ defn #_"Object" (§ method evalAssign) [#_"VarExpr" this, #_"Expr" val]
-        (.set (:var this), (.eval val))
+    #_override
+    (§ defn #_"Object" AssignableExpr'''evalAssign [#_"VarExpr" this, #_"Expr" val]
+        (.set (:var this), (Expr'''eval val))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitAssign) [#_"VarExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val]
+    #_override
+    (§ defn #_"void" AssignableExpr'''emitAssign [#_"VarExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val]
         (ObjExpr''emitVar objx, gen, (:var this))
-        (.emit val, :Context'EXPRESSION, objx, gen)
+        (Expr'''emit val, :Context'EXPRESSION, objx, gen)
         (.invokeVirtual gen, Compiler'VAR_TYPE, VarExpr'setMethod)
         (when (= context :Context'STATEMENT)
             (.pop gen)
@@ -5253,8 +5189,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"TheVarParser" this, #_"Context" context, #_"Object" form]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"TheVarParser" this, #_"Context" context, #_"Object" form]
         (let [#_"Symbol" sym (cast' Symbol (RT'second form)) #_"Var" v (Compiler'lookupVar-2 sym, false)]
             (when (some? v) => (throw (RuntimeException. (str "Unable to resolve var: " sym " in this context")))
                 (TheVarExpr'new v)
@@ -5277,13 +5213,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"TheVarExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"TheVarExpr" this]
         (:var this)
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"TheVarExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"TheVarExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (ObjExpr''emitVar objx, gen, (:var this))
         (when (= context :Context'STATEMENT)
             (.pop gen)
@@ -5291,13 +5227,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"TheVarExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"TheVarExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"TheVarExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"TheVarExpr" this]
         (§ class Var)
     )
 )
@@ -5321,13 +5257,13 @@
         (:k this)
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"KeywordExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"KeywordExpr" this]
         (:k this)
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"KeywordExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"KeywordExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (ObjExpr''emitKeyword objx, gen, (:k this))
         (when (= context :Context'STATEMENT)
             (.pop gen)
@@ -5335,13 +5271,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"KeywordExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"KeywordExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"KeywordExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"KeywordExpr" this]
         (§ class Keyword)
     )
 )
@@ -5352,8 +5288,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"ImportParser" this, #_"Context" context, #_"Object" form]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"ImportParser" this, #_"Context" context, #_"Object" form]
         (ImportExpr'new (cast String (RT'second form)))
     )
 )
@@ -5376,16 +5312,16 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"ImportExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"ImportExpr" this]
         (let [#_"Namespace" ns (cast' Namespace (.deref RT'CURRENT_NS))]
             (.importClass ns, (RT'classForNameNonLoading (:c this)))
             nil
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"ImportExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"ImportExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (.getStatic gen, Compiler'RT_TYPE, "CURRENT_NS", Compiler'VAR_TYPE)
         (.invokeVirtual gen, Compiler'VAR_TYPE, ImportExpr'derefMethod)
         (.checkCast gen, Compiler'NS_TYPE)
@@ -5398,13 +5334,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"ImportExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"ImportExpr" this]
         false
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"ImportExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"ImportExpr" this]
         (throw (IllegalArgumentException. "ImportExpr has no Java class"))
     )
 )
@@ -5420,24 +5356,24 @@
     #_abstract
     (§ defn #_"Object" (§ method val) [#_"LiteralExpr" this])
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"LiteralExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"LiteralExpr" this]
         (.val this)
     )
 )
 
 (§ defprotocol AssignableExpr
     #_abstract
-    (#_"Object" AssignableExpr'''(§ method evalAssign) [#_"AssignableExpr" this, #_"Expr" val])
+    (#_"Object" AssignableExpr'''evalAssign [#_"AssignableExpr" this, #_"Expr" val])
     #_abstract
-    (#_"void" AssignableExpr'''(§ method emitAssign) [#_"AssignableExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val])
+    (#_"void" AssignableExpr'''emitAssign [#_"AssignableExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val])
 )
 
 (§ defprotocol MaybePrimitiveExpr #_(§ extends Expr)
     #_abstract
-    (#_"boolean" MaybePrimitiveExpr'''(§ method canEmitPrimitive) [#_"MaybePrimitiveExpr" this])
+    (#_"boolean" MaybePrimitiveExpr'''canEmitPrimitive [#_"MaybePrimitiveExpr" this])
     #_abstract
-    (#_"void" MaybePrimitiveExpr'''(§ method emitUnboxed) [#_"MaybePrimitiveExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen])
+    (#_"void" MaybePrimitiveExpr'''emitUnboxed [#_"MaybePrimitiveExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen])
 )
 
 #_closure
@@ -5446,8 +5382,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"HostParser" this, #_"Context" context, #_"Object" frm]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"HostParser" this, #_"Context" context, #_"Object" frm]
         ;; (. x fieldname-sym) or
         ;; (. x 0-ary-method)
         ;; (. x methodname-sym args+)
@@ -5466,8 +5402,8 @@
                                 (cond
                                     (some? c)
                                         (zero? (.size (Reflector'getMethods c, 0, (Compiler'munge (:name sym)), true)))
-                                    (and (some? instance) (.hasJavaClass instance) (some? (.getJavaClass instance)))
-                                        (zero? (.size (Reflector'getMethods (.getJavaClass instance), 0, (Compiler'munge (:name sym)), false)))
+                                    (and (some? instance) (Expr'''hasJavaClass instance) (some? (Expr'''getJavaClass instance)))
+                                        (zero? (.size (Reflector'getMethods (Expr'''getJavaClass instance), 0, (Compiler'munge (:name sym)), false)))
                                     :else
                                         maybeField
                                 )
@@ -5559,7 +5495,7 @@
                         (.getStatic gen, Compiler'BOOLEAN_OBJECT_TYPE, "FALSE", Compiler'BOOLEAN_OBJECT_TYPE)
                         (.mark gen, endLabel)
                     )
-                Void/TYPE      (.emit Compiler'NIL_EXPR, :Context'EXPRESSION, objx, gen)
+                Void/TYPE      (Expr'''emit Compiler'NIL_EXPR, :Context'EXPRESSION, objx, gen)
                 Character/TYPE (.invokeStatic gen, HostExpr'CHAR_TYPE, HostExpr'charValueOfMethod)
                 Integer/TYPE   (.invokeStatic gen, HostExpr'INTEGER_TYPE, HostExpr'intValueOfMethod)
                 Float/TYPE     (.invokeStatic gen, HostExpr'FLOAT_TYPE, HostExpr'floatValueOfMethod)
@@ -5701,7 +5637,7 @@
     (defn #_"InstanceFieldExpr" InstanceFieldExpr'new [#_"int" line, #_"int" column, #_"Expr" target, #_"String" fieldName, #_"Symbol" tag, #_"boolean" requireField]
         (let [this (merge (FieldExpr'new) (InstanceFieldExpr'init))]
             (§ ass this (assoc this :target target))
-            (§ ass this (assoc this :targetClass (when (.hasJavaClass target) (.getJavaClass target))))
+            (§ ass this (assoc this :targetClass (when (Expr'''hasJavaClass target) (Expr'''getJavaClass target))))
             (§ ass this (assoc this :field (when (some? (:targetClass this)) (Reflector'getField (:targetClass this), fieldName, false))))
             (§ ass this (assoc this :fieldName fieldName))
             (§ ass this (assoc this :line line))
@@ -5719,20 +5655,20 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"InstanceFieldExpr" this]
-        (Reflector'invokeNoArgInstanceMember (.eval (:target this)), (:fieldName this), (:requireField this))
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"InstanceFieldExpr" this]
+        (Reflector'invokeNoArgInstanceMember (Expr'''eval (:target this)), (:fieldName this), (:requireField this))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method canEmitPrimitive) [#_"InstanceFieldExpr" this]
+    #_override
+    (§ defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive [#_"InstanceFieldExpr" this]
         (and (some? (:targetClass this)) (some? (:field this)) (Util'isPrimitive (.getType (:field this))))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitUnboxed) [#_"InstanceFieldExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" MaybePrimitiveExpr'''emitUnboxed [#_"InstanceFieldExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (when (and (some? (:targetClass this)) (some? (:field this))) => (throw (UnsupportedOperationException. "Unboxed emit of unknown member"))
-            (.emit (:target this), :Context'EXPRESSION, objx, gen)
+            (Expr'''emit (:target this), :Context'EXPRESSION, objx, gen)
             (.visitLineNumber gen, (:line this), (.mark gen))
             (.checkCast gen, (Compiler'getType (:targetClass this)))
             (.getField gen, (Compiler'getType (:targetClass this)), (:fieldName this), (Type/getType (.getType (:field this))))
@@ -5740,11 +5676,11 @@
         nil
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"InstanceFieldExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"InstanceFieldExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (if (and (some? (:targetClass this)) (some? (:field this)))
             (do
-                (.emit (:target this), :Context'EXPRESSION, objx, gen)
+                (Expr'''emit (:target this), :Context'EXPRESSION, objx, gen)
                 (.visitLineNumber gen, (:line this), (.mark gen))
                 (.checkCast gen, (Compiler'getType (:targetClass this)))
                 (.getField gen, (Compiler'getType (:targetClass this)), (:fieldName this), (Type/getType (.getType (:field this))))
@@ -5754,7 +5690,7 @@
                 )
             )
             (do
-                (.emit (:target this), :Context'EXPRESSION, objx, gen)
+                (Expr'''emit (:target this), :Context'EXPRESSION, objx, gen)
                 (.visitLineNumber gen, (:line this), (.mark gen))
                 (.push gen, (:fieldName this))
                 (.push gen, (:requireField this))
@@ -5767,40 +5703,40 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"InstanceFieldExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"InstanceFieldExpr" this]
         (or (some? (:field this)) (some? (:tag this)))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"InstanceFieldExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"InstanceFieldExpr" this]
         (when (nil? (:jc this))
             (§ ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getType (:field this)))))
         )
         (:jc this)
     )
 
-    #_method
-    (§ defn #_"Object" (§ method evalAssign) [#_"InstanceFieldExpr" this, #_"Expr" val]
-        (Reflector'setInstanceField (.eval (:target this)), (:fieldName this), (.eval val))
+    #_override
+    (§ defn #_"Object" AssignableExpr'''evalAssign [#_"InstanceFieldExpr" this, #_"Expr" val]
+        (Reflector'setInstanceField (Expr'''eval (:target this)), (:fieldName this), (Expr'''eval val))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitAssign) [#_"InstanceFieldExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val]
+    #_override
+    (§ defn #_"void" AssignableExpr'''emitAssign [#_"InstanceFieldExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val]
         (if (and (some? (:targetClass this)) (some? (:field this)))
             (do
-                (.emit (:target this), :Context'EXPRESSION, objx, gen)
+                (Expr'''emit (:target this), :Context'EXPRESSION, objx, gen)
                 (.checkCast gen, (Compiler'getType (:targetClass this)))
-                (.emit val, :Context'EXPRESSION, objx, gen)
+                (Expr'''emit val, :Context'EXPRESSION, objx, gen)
                 (.visitLineNumber gen, (:line this), (.mark gen))
                 (.dupX1 gen)
                 (HostExpr'emitUnboxArg objx, gen, (.getType (:field this)))
                 (.putField gen, (Compiler'getType (:targetClass this)), (:fieldName this), (Type/getType (.getType (:field this))))
             )
             (do
-                (.emit (:target this), :Context'EXPRESSION, objx, gen)
+                (Expr'''emit (:target this), :Context'EXPRESSION, objx, gen)
                 (.push gen, (:fieldName this))
-                (.emit val, :Context'EXPRESSION, objx, gen)
+                (Expr'''emit val, :Context'EXPRESSION, objx, gen)
                 (.visitLineNumber gen, (:line this), (.mark gen))
                 (.invokeStatic gen, Compiler'REFLECTOR_TYPE, InstanceFieldExpr'setInstanceFieldMethod)
             )
@@ -5844,25 +5780,25 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"StaticFieldExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"StaticFieldExpr" this]
         (Reflector'getStaticField-2c (:c this), (:fieldName this))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method canEmitPrimitive) [#_"StaticFieldExpr" this]
+    #_override
+    (§ defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive [#_"StaticFieldExpr" this]
         (Util'isPrimitive (.getType (:field this)))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitUnboxed) [#_"StaticFieldExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" MaybePrimitiveExpr'''emitUnboxed [#_"StaticFieldExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (.visitLineNumber gen, (:line this), (.mark gen))
         (.getStatic gen, (Type/getType (:c this)), (:fieldName this), (Type/getType (.getType (:field this))))
         nil
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"StaticFieldExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"StaticFieldExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (.visitLineNumber gen, (:line this), (.mark gen))
 
         (.getStatic gen, (Type/getType (:c this)), (:fieldName this), (Type/getType (.getType (:field this))))
@@ -5873,27 +5809,27 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"StaticFieldExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"StaticFieldExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"StaticFieldExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"StaticFieldExpr" this]
         (when (nil? (:jc this))
             (§ ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getType (:field this)))))
         )
         (:jc this)
     )
 
-    #_method
-    (§ defn #_"Object" (§ method evalAssign) [#_"StaticFieldExpr" this, #_"Expr" val]
-        (Reflector'setStaticField-3c (:c this), (:fieldName this), (.eval val))
+    #_override
+    (§ defn #_"Object" AssignableExpr'''evalAssign [#_"StaticFieldExpr" this, #_"Expr" val]
+        (Reflector'setStaticField-3c (:c this), (:fieldName this), (Expr'''eval val))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitAssign) [#_"StaticFieldExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val]
-        (.emit val, :Context'EXPRESSION, objx, gen)
+    #_override
+    (§ defn #_"void" AssignableExpr'''emitAssign [#_"StaticFieldExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val]
+        (Expr'''emit val, :Context'EXPRESSION, objx, gen)
         (.visitLineNumber gen, (:line this), (.mark gen))
         (.dup gen)
         (HostExpr'emitUnboxArg objx, gen, (.getType (:field this)))
@@ -5919,7 +5855,7 @@
         (dotimes [#_"int" i (.count args)]
             (.dup gen)
             (.push gen, i)
-            (.emit (cast' Expr (.nth args, i)), :Context'EXPRESSION, objx, gen)
+            (Expr'''emit (cast' Expr (.nth args, i)), :Context'EXPRESSION, objx, gen)
             (.arrayStore gen, Compiler'OBJECT_TYPE)
         )
         nil
@@ -5933,31 +5869,31 @@
                         (cond
                             (= primc (aget parameterTypes i))
                                 (let [#_"MaybePrimitiveExpr" pe (cast' MaybePrimitiveExpr e)]
-                                    (.emitUnboxed pe, :Context'EXPRESSION, objx, gen)
+                                    (MaybePrimitiveExpr'''emitUnboxed pe, :Context'EXPRESSION, objx, gen)
                                 )
                             (and (= primc Integer/TYPE) (= (aget parameterTypes i) Long/TYPE))
                                 (let [#_"MaybePrimitiveExpr" pe (cast' MaybePrimitiveExpr e)]
-                                    (.emitUnboxed pe, :Context'EXPRESSION, objx, gen)
+                                    (MaybePrimitiveExpr'''emitUnboxed pe, :Context'EXPRESSION, objx, gen)
                                     (.visitInsn gen, Opcodes/I2L)
                                 )
                             (and (= primc Long/TYPE) (= (aget parameterTypes i) Integer/TYPE))
                                 (let [#_"MaybePrimitiveExpr" pe (cast' MaybePrimitiveExpr e)]
-                                    (.emitUnboxed pe, :Context'EXPRESSION, objx, gen)
+                                    (MaybePrimitiveExpr'''emitUnboxed pe, :Context'EXPRESSION, objx, gen)
                                     (.invokeStatic gen, Compiler'RT_TYPE, (Method/getMethod "int intCast(long)"))
                                 )
                             (and (= primc Float/TYPE) (= (aget parameterTypes i) Double/TYPE))
                                 (let [#_"MaybePrimitiveExpr" pe (cast' MaybePrimitiveExpr e)]
-                                    (.emitUnboxed pe, :Context'EXPRESSION, objx, gen)
+                                    (MaybePrimitiveExpr'''emitUnboxed pe, :Context'EXPRESSION, objx, gen)
                                     (.visitInsn gen, Opcodes/F2D)
                                 )
                             (and (= primc Double/TYPE) (= (aget parameterTypes i) Float/TYPE))
                                 (let [#_"MaybePrimitiveExpr" pe (cast' MaybePrimitiveExpr e)]
-                                    (.emitUnboxed pe, :Context'EXPRESSION, objx, gen)
+                                    (MaybePrimitiveExpr'''emitUnboxed pe, :Context'EXPRESSION, objx, gen)
                                     (.visitInsn gen, Opcodes/D2F)
                                 )
                             :else
                                 (do
-                                    (.emit e, :Context'EXPRESSION, objx, gen)
+                                    (Expr'''emit e, :Context'EXPRESSION, objx, gen)
                                     (HostExpr'emitUnboxArg objx, gen, (aget parameterTypes i))
                                 )
                         )
@@ -5999,13 +5935,13 @@
             (§ ass this (assoc this :target target))
             (§ ass this (assoc this :tag tag))
             (§ ass this (assoc this :tailPosition tailPosition))
-            (if (and (.hasJavaClass target) (some? (.getJavaClass target)))
-                (let [#_"List" methods (Reflector'getMethods (.getJavaClass target), (.count args), methodName, false)]
+            (if (and (Expr'''hasJavaClass target) (some? (Expr'''getJavaClass target)))
+                (let [#_"List" methods (Reflector'getMethods (Expr'''getJavaClass target), (.count args), methodName, false)]
                     (if (.isEmpty methods)
                         (do
                             (§ ass this (assoc this :method nil))
                             (when (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION))
-                                (.format (RT'errPrintWriter), "Reflection warning, %d:%d - call to method %s on %s can't be resolved (no such method).\n", (object-array [ line, column, methodName, (.getName (.getJavaClass target)) ]))
+                                (.format (RT'errPrintWriter), "Reflection warning, %d:%d - call to method %s on %s can't be resolved (no such method).\n", (object-array [ line, column, methodName, (.getName (Expr'''getJavaClass target)) ]))
                             )
                         )
                         (let [#_"int" methodidx 0]
@@ -6027,7 +5963,7 @@
                                 )
                                 (§ ass this (assoc this :method m))
                                 (when (and (nil? (:method this)) (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION)))
-                                    (.format (RT'errPrintWriter), "Reflection warning, %d:%d - call to method %s on %s can't be resolved (argument types: %s).\n", (object-array [ line, column, methodName, (.getName (.getJavaClass target)), (Compiler'getTypeStringForArgs args) ]))
+                                    (.format (RT'errPrintWriter), "Reflection warning, %d:%d - call to method %s on %s can't be resolved (argument types: %s).\n", (object-array [ line, column, methodName, (.getName (Expr'''getJavaClass target)), (Compiler'getTypeStringForArgs args) ]))
                                 )
                             )
                         )
@@ -6044,12 +5980,12 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"InstanceMethodExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"InstanceMethodExpr" this]
         (try
-            (let [#_"Object" target (.eval (:target this)) #_"Object[]" args (make-array Object (.count (:args this)))]
+            (let [#_"Object" target (Expr'''eval (:target this)) #_"Object[]" args (make-array Object (.count (:args this)))]
                 (dotimes [#_"int" i (.count (:args this))]
-                    (aset args i (.eval (cast' Expr (.nth (:args this), i))))
+                    (aset args i (Expr'''eval (cast' Expr (.nth (:args this), i))))
                 )
                 (if (some? (:method this))
                     (let [#_"LinkedList" ms (LinkedList.)]
@@ -6065,16 +6001,16 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method canEmitPrimitive) [#_"InstanceMethodExpr" this]
+    #_override
+    (§ defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive [#_"InstanceMethodExpr" this]
         (and (some? (:method this)) (Util'isPrimitive (.getReturnType (:method this))))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitUnboxed) [#_"InstanceMethodExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" MaybePrimitiveExpr'''emitUnboxed [#_"InstanceMethodExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (when (some? (:method this)) => (throw (UnsupportedOperationException. "Unboxed emit of unknown member"))
             (let [#_"Type" type (Type/getType (.getDeclaringClass (:method this)))]
-                (.emit (:target this), :Context'EXPRESSION, objx, gen)
+                (Expr'''emit (:target this), :Context'EXPRESSION, objx, gen)
                 (.checkCast gen, type)
                 (MethodExpr'emitTypedArgs objx, gen, (.getParameterTypes (:method this)), (:args this))
                 (.visitLineNumber gen, (:line this), (.mark gen))
@@ -6092,11 +6028,11 @@
         nil
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"InstanceMethodExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"InstanceMethodExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (if (some? (:method this))
             (let [#_"Type" type (Type/getType (.getDeclaringClass (:method this)))]
-                (.emit (:target this), :Context'EXPRESSION, objx, gen)
+                (Expr'''emit (:target this), :Context'EXPRESSION, objx, gen)
                 (.checkCast gen, type)
                 (MethodExpr'emitTypedArgs objx, gen, (.getParameterTypes (:method this)), (:args this))
                 (.visitLineNumber gen, (:line this), (.mark gen))
@@ -6112,7 +6048,7 @@
                 )
             )
             (do
-                (.emit (:target this), :Context'EXPRESSION, objx, gen)
+                (Expr'''emit (:target this), :Context'EXPRESSION, objx, gen)
                 (.push gen, (:methodName this))
                 (MethodExpr'emitArgsAsArray (:args this), objx, gen)
                 (.visitLineNumber gen, (:line this), (.mark gen))
@@ -6128,13 +6064,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"InstanceMethodExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"InstanceMethodExpr" this]
         (or (some? (:method this)) (some? (:tag this)))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"InstanceMethodExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"InstanceMethodExpr" this]
         (when (nil? (:jc this))
             (§ ass this (assoc this :jc (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this))))))
         )
@@ -6198,12 +6134,12 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"StaticMethodExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"StaticMethodExpr" this]
         (try
             (let [#_"Object[]" args (make-array Object (.count (:args this)))]
                 (dotimes [#_"int" i (.count (:args this))]
-                    (aset args i (.eval (cast' Expr (.nth (:args this), i))))
+                    (aset args i (Expr'''eval (cast' Expr (.nth (:args this), i))))
                 )
                 (if (some? (:method this))
                     (let [#_"LinkedList" ms (LinkedList.)]
@@ -6219,8 +6155,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method canEmitPrimitive) [#_"StaticMethodExpr" this]
+    #_override
+    (§ defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive [#_"StaticMethodExpr" this]
         (and (some? (:method this)) (Util'isPrimitive (.getReturnType (:method this))))
     )
 
@@ -6247,8 +6183,8 @@
         nil
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitUnboxed) [#_"StaticMethodExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" MaybePrimitiveExpr'''emitUnboxed [#_"StaticMethodExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (when (some? (:method this)) => (throw (UnsupportedOperationException. "Unboxed emit of unknown member"))
             (MethodExpr'emitTypedArgs objx, gen, (.getParameterTypes (:method this)), (:args this))
             (.visitLineNumber gen, (:line this), (.mark gen))
@@ -6272,8 +6208,8 @@
         nil
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"StaticMethodExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"StaticMethodExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (if (some? (:method this))
             (do
                 (MethodExpr'emitTypedArgs objx, gen, (.getParameterTypes (:method this)), (:args this))
@@ -6313,13 +6249,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"StaticMethodExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"StaticMethodExpr" this]
         (or (some? (:method this)) (some? (:tag this)))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"StaticMethodExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"StaticMethodExpr" this]
         (when (nil? (:jc this))
             (§ ass this (assoc this :jc (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this))))))
         )
@@ -6341,23 +6277,23 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"UnresolvedVarExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"UnresolvedVarExpr" this]
         false
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"UnresolvedVarExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"UnresolvedVarExpr" this]
         (throw (IllegalArgumentException. "UnresolvedVarExpr has no Java class"))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"UnresolvedVarExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"UnresolvedVarExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         nil
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"UnresolvedVarExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"UnresolvedVarExpr" this]
         (throw (IllegalArgumentException. "UnresolvedVarExpr cannot be evalled"))
     )
 )
@@ -6383,21 +6319,21 @@
         (:n this)
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"NumberExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"NumberExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (when (not= context :Context'STATEMENT)
             (ObjExpr''emitConstant objx, gen, (:id this))
         )
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"NumberExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"NumberExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"NumberExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"NumberExpr" this]
         (cond
             (instance? Integer (:n this)) Long/TYPE
             (instance? Double (:n this))  Double/TYPE
@@ -6406,13 +6342,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method canEmitPrimitive) [#_"NumberExpr" this]
+    #_override
+    (§ defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive [#_"NumberExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitUnboxed) [#_"NumberExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" MaybePrimitiveExpr'''emitUnboxed [#_"NumberExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (cond
             (instance? Integer (:n this)) (.push gen, (.longValue (:n this)))
             (instance? Double (:n this))  (.push gen, (.doubleValue (:n this)))
@@ -6437,8 +6373,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"ConstantParser" this, #_"Context" context, #_"Object" form]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"ConstantParser" this, #_"Context" context, #_"Object" form]
         (let [#_"int" argCount (dec (RT'count form))]
             (if-not (= argCount 1)
                 (let [#_"IPersistentMap" exData (PersistentArrayMap'new-1 (object-array [ ConstantParser'formKey, form ]))]
@@ -6483,8 +6419,8 @@
         (:v this)
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"ConstantExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"ConstantExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (ObjExpr''emitConstant objx, gen, (:id this))
         (when (= context :Context'STATEMENT)
             (.pop gen)
@@ -6492,13 +6428,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"ConstantExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"ConstantExpr" this]
         (Modifier/isPublic (.getModifiers (.getClass (:v this))))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"ConstantExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"ConstantExpr" this]
         (cond
             (§ instance? APersistentMap (:v this))    (§ class APersistentMap)
             (§ instance? APersistentSet (:v this))    (§ class APersistentSet)
@@ -6518,8 +6454,8 @@
         nil
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"NilExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"NilExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (.visitInsn gen, Opcodes/ACONST_NULL)
         (when (= context :Context'STATEMENT)
             (.pop gen)
@@ -6527,13 +6463,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"NilExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"NilExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"NilExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"NilExpr" this]
         nil
     )
 )
@@ -6557,8 +6493,8 @@
         (if (:val this) RT'T RT'F)
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"BooleanExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"BooleanExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (.getStatic gen, Compiler'BOOLEAN_OBJECT_TYPE, (if (:val this) "TRUE" "FALSE"), Compiler'BOOLEAN_OBJECT_TYPE)
         (when (= context :Context'STATEMENT)
             (.pop gen)
@@ -6566,13 +6502,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"BooleanExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"BooleanExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"BooleanExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"BooleanExpr" this]
         Boolean
     )
 )
@@ -6596,21 +6532,21 @@
         (:str this)
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"StringExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"StringExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (when (not= context :Context'STATEMENT)
             (.push gen, (:str this))
         )
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"StringExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"StringExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"StringExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"StringExpr" this]
         String
     )
 )
@@ -6621,8 +6557,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"MonitorEnterParser" this, #_"Context" context, #_"Object" form]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"MonitorEnterParser" this, #_"Context" context, #_"Object" form]
         (MonitorEnterExpr'new (Compiler'analyze-2 :Context'EXPRESSION, (RT'second form)))
     )
 )
@@ -6641,16 +6577,16 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"MonitorEnterExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"MonitorEnterExpr" this]
         (throw (UnsupportedOperationException. "Can't eval monitor-enter"))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"MonitorEnterExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-        (.emit (:target this), :Context'EXPRESSION, objx, gen)
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"MonitorEnterExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+        (Expr'''emit (:target this), :Context'EXPRESSION, objx, gen)
         (.monitorEnter gen)
-        (.emit Compiler'NIL_EXPR, context, objx, gen)
+        (Expr'''emit Compiler'NIL_EXPR, context, objx, gen)
         nil
     )
 )
@@ -6661,8 +6597,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"MonitorExitParser" this, #_"Context" context, #_"Object" form]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"MonitorExitParser" this, #_"Context" context, #_"Object" form]
         (MonitorExitExpr'new (Compiler'analyze-2 :Context'EXPRESSION, (RT'second form)))
     )
 )
@@ -6681,16 +6617,16 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"MonitorExitExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"MonitorExitExpr" this]
         (throw (UnsupportedOperationException. "Can't eval monitor-exit"))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"MonitorExitExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-        (.emit (:target this), :Context'EXPRESSION, objx, gen)
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"MonitorExitExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+        (Expr'''emit (:target this), :Context'EXPRESSION, objx, gen)
         (.monitorExit gen)
-        (.emit Compiler'NIL_EXPR, context, objx, gen)
+        (Expr'''emit Compiler'NIL_EXPR, context, objx, gen)
         nil
     )
 )
@@ -6722,8 +6658,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"TryParser" this, #_"Context" context, #_"Object" frm]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"TryParser" this, #_"Context" context, #_"Object" frm]
         ;; (try try-expr* catch-expr* finally-expr?)
         ;; catch-expr: (catch class sym expr*)
         ;; finally-expr: (finally expr*)
@@ -6750,7 +6686,7 @@
                                                     Compiler'METHOD_RETURN_CONTEXT nil
                                                 ])
                                             ))
-                                            (§ ass bodyExpr (.parse (BodyParser'new), context, (RT'seq body)))
+                                            (§ ass bodyExpr (IParser'''parse (BodyParser'new), context, (RT'seq body)))
                                             (finally
                                                 (Var'popThreadBindings)
                                             )
@@ -6780,7 +6716,7 @@
                                                     (try
                                                         (Var'pushThreadBindings dynamicBindings)
                                                         (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (cast' Symbol (when (§ instance? Symbol (RT'second f)) (RT'second f))), nil, false)
-                                                              #_"Expr" handler (.parse (BodyParser'new), :Context'EXPRESSION, (RT'next (RT'next (RT'next f))))]
+                                                              #_"Expr" handler (IParser'''parse (BodyParser'new), :Context'EXPRESSION, (RT'next (RT'next (RT'next f))))]
                                                             (§ ass catches (.cons catches, (CatchClause'new c, lb, handler)))
                                                         )
                                                         (finally
@@ -6802,7 +6738,7 @@
                                                         Compiler'IN_CATCH_FINALLY RT'T
                                                     ])
                                                 ))
-                                                (§ ass finallyExpr (.parse (BodyParser'new), :Context'STATEMENT, (RT'next f)))
+                                                (§ ass finallyExpr (IParser'''parse (BodyParser'new), :Context'STATEMENT, (RT'next f)))
                                                 (finally
                                                     (Var'popThreadBindings)
                                                 )
@@ -6822,7 +6758,7 @@
                                     Compiler'NO_RECUR true
                                 ])
                             ))
-                            (.parse (BodyParser'new), context, (RT'seq body))
+                            (IParser'''parse (BodyParser'new), context, (RT'seq body))
                             (finally
                                 (Var'popThreadBindings)
                             )
@@ -6856,13 +6792,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"TryExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"TryExpr" this]
         (throw (UnsupportedOperationException. "Can't eval try"))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"TryExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"TryExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (let [#_"Label" startTry (.newLabel gen) #_"Label" endTry (.newLabel gen) #_"Label" end (.newLabel gen) #_"Label" ret (.newLabel gen) #_"Label" finallyLabel (.newLabel gen)]
             (loop-when-recur [#_"int" i 0] (< i (.count (:catchExprs this))) [(inc i)]
                 (let [#_"CatchClause" clause (cast' CatchClause (.nth (:catchExprs this), i))]
@@ -6872,13 +6808,13 @@
             )
 
             (.mark gen, startTry)
-            (.emit (:tryExpr this), context, objx, gen)
+            (Expr'''emit (:tryExpr this), context, objx, gen)
             (when (not= context :Context'STATEMENT)
                 (.visitVarInsn gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:retLocal this))
             )
             (.mark gen, endTry)
             (when (some? (:finallyExpr this))
-                (.emit (:finallyExpr this), :Context'STATEMENT, objx, gen)
+                (Expr'''emit (:finallyExpr this), :Context'STATEMENT, objx, gen)
             )
             (.goTo gen, ret)
 
@@ -6888,14 +6824,14 @@
                     ;; exception should be on stack
                     ;; put in clause local
                     (.visitVarInsn gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:idx (:lb clause)))
-                    (.emit (:handler clause), context, objx, gen)
+                    (Expr'''emit (:handler clause), context, objx, gen)
                     (when (not= context :Context'STATEMENT)
                         (.visitVarInsn gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:retLocal this))
                     )
                     (.mark gen, (:endLabel clause))
 
                     (when (some? (:finallyExpr this))
-                        (.emit (:finallyExpr this), :Context'STATEMENT, objx, gen)
+                        (Expr'''emit (:finallyExpr this), :Context'STATEMENT, objx, gen)
                     )
                     (.goTo gen, ret)
                 )
@@ -6904,7 +6840,7 @@
                 (.mark gen, finallyLabel)
                 ;; exception should be on stack
                 (.visitVarInsn gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:finallyLocal this))
-                (.emit (:finallyExpr this), :Context'STATEMENT, objx, gen)
+                (Expr'''emit (:finallyExpr this), :Context'STATEMENT, objx, gen)
                 (.visitVarInsn gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ILOAD), (:finallyLocal this))
                 (.throwException gen)
             )
@@ -6935,14 +6871,14 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"TryExpr" this]
-        (.hasJavaClass (:tryExpr this))
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"TryExpr" this]
+        (Expr'''hasJavaClass (:tryExpr this))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"TryExpr" this]
-        (.getJavaClass (:tryExpr this))
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"TryExpr" this]
+        (Expr'''getJavaClass (:tryExpr this))
     )
 )
 
@@ -6952,8 +6888,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"ThrowParser" this, #_"Context" context, #_"Object" form]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"ThrowParser" this, #_"Context" context, #_"Object" form]
         (cond
             (= context :Context'EVAL) (Compiler'analyze-2 context, (RT'list-1 (RT'list-3 Compiler'FNONCE, PersistentVector'EMPTY, form)))
             (= (RT'count form) 1)     (throw (RuntimeException. "Too few arguments to throw, throw expects a single Throwable instance"))
@@ -6977,14 +6913,14 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"ThrowExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"ThrowExpr" this]
         (throw (RuntimeException. "Can't eval throw"))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"ThrowExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-        (.emit (:excExpr this), :Context'EXPRESSION, objx, gen)
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"ThrowExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+        (Expr'''emit (:excExpr this), :Context'EXPRESSION, objx, gen)
         (.checkCast gen, Compiler'THROWABLE_TYPE)
         (.throwException gen)
         nil
@@ -6997,8 +6933,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"NewParser" this, #_"Context" context, #_"Object" frm]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"NewParser" this, #_"Context" context, #_"Object" frm]
         ;; (new Classname args...)
         (let [#_"int" line (Compiler'lineDeref) #_"int" column (Compiler'columnDeref) #_"ISeq" form (cast' ISeq frm)]
             (when (< 1 (.count form)) => (throw (RuntimeException. "wrong number of arguments, expecting: (new Classname args...)"))
@@ -7059,11 +6995,11 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"NewExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"NewExpr" this]
         (let [#_"Object[]" args (make-array Object (.count (:args this)))]
             (dotimes [#_"int" i (.count (:args this))]
-                (aset args i (.eval (cast' Expr (.nth (:args this), i))))
+                (aset args i (Expr'''eval (cast' Expr (.nth (:args this), i))))
             )
             (when (some? (:ctor this)) => (Reflector'invokeConstructor (:c this), args)
                 (try
@@ -7076,8 +7012,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"NewExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"NewExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (if (some? (:ctor this))
             (let [#_"Type" type (Compiler'getType (:c this))]
                 (.newInstance gen, type)
@@ -7098,13 +7034,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"NewExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"NewExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"NewExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"NewExpr" this]
         (:c this)
     )
 )
@@ -7128,16 +7064,16 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"MetaExpr" this]
-        (.withMeta (cast' IObj (.eval (:expr this))), (cast' IPersistentMap (.eval (:meta this))))
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"MetaExpr" this]
+        (.withMeta (cast' IObj (Expr'''eval (:expr this))), (cast' IPersistentMap (Expr'''eval (:meta this))))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"MetaExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-        (.emit (:expr this), :Context'EXPRESSION, objx, gen)
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"MetaExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+        (Expr'''emit (:expr this), :Context'EXPRESSION, objx, gen)
         (.checkCast gen, MetaExpr'IOBJ_TYPE)
-        (.emit (:meta this), :Context'EXPRESSION, objx, gen)
+        (Expr'''emit (:meta this), :Context'EXPRESSION, objx, gen)
         (.checkCast gen, Compiler'IPERSISTENTMAP_TYPE)
         (.invokeInterface gen, MetaExpr'IOBJ_TYPE, MetaExpr'withMetaMethod)
         (when (= context :Context'STATEMENT)
@@ -7146,14 +7082,14 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"MetaExpr" this]
-        (.hasJavaClass (:expr this))
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"MetaExpr" this]
+        (Expr'''hasJavaClass (:expr this))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"MetaExpr" this]
-        (.getJavaClass (:expr this))
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"MetaExpr" this]
+        (Expr'''getJavaClass (:expr this))
     )
 )
 
@@ -7163,8 +7099,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"IfParser" this, #_"Context" context, #_"Object" frm]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"IfParser" this, #_"Context" context, #_"Object" frm]
         ;; (if test then) or (if test then else)
         (let [#_"ISeq" form (cast' ISeq frm)]
             (cond
@@ -7225,24 +7161,24 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"IfExpr" this]
-        (let [#_"Object" t (.eval (:testExpr this))]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"IfExpr" this]
+        (let [#_"Object" t (Expr'''eval (:testExpr this))]
             (if (and (some? t) (not= t Boolean/FALSE))
-                (.eval (:thenExpr this))
-                (.eval (:elseExpr this))
+                (Expr'''eval (:thenExpr this))
+                (Expr'''eval (:elseExpr this))
             )
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"IfExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"IfExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (.doEmit this, context, objx, gen, false)
         nil
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitUnboxed) [#_"IfExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" MaybePrimitiveExpr'''emitUnboxed [#_"IfExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (.doEmit this, context, objx, gen, true)
         nil
     )
@@ -7258,12 +7194,12 @@
                 )
                 (= (Compiler'maybePrimitiveType (:testExpr this)) Boolean/TYPE)
                 (do
-                    (.emitUnboxed (cast' MaybePrimitiveExpr (:testExpr this)), :Context'EXPRESSION, objx, gen)
+                    (MaybePrimitiveExpr'''emitUnboxed (cast' MaybePrimitiveExpr (:testExpr this)), :Context'EXPRESSION, objx, gen)
                     (.ifZCmp gen, GeneratorAdapter/EQ, falseLabel)
                 )
                 :else
                 (do
-                    (.emit (:testExpr this), :Context'EXPRESSION, objx, gen)
+                    (Expr'''emit (:testExpr this), :Context'EXPRESSION, objx, gen)
                     (.dup gen)
                     (.ifNull gen, nullLabel)
                     (.getStatic gen, Compiler'BOOLEAN_OBJECT_TYPE, "FALSE", Compiler'BOOLEAN_OBJECT_TYPE)
@@ -7271,55 +7207,55 @@
                 )
             )
             (if emitUnboxed
-                (.emitUnboxed (cast' MaybePrimitiveExpr (:thenExpr this)), context, objx, gen)
-                (.emit (:thenExpr this), context, objx, gen)
+                (MaybePrimitiveExpr'''emitUnboxed (cast' MaybePrimitiveExpr (:thenExpr this)), context, objx, gen)
+                (Expr'''emit (:thenExpr this), context, objx, gen)
             )
             (.goTo gen, endLabel)
             (.mark gen, nullLabel)
             (.pop gen)
             (.mark gen, falseLabel)
             (if emitUnboxed
-                (.emitUnboxed (cast' MaybePrimitiveExpr (:elseExpr this)), context, objx, gen)
-                (.emit (:elseExpr this), context, objx, gen)
+                (MaybePrimitiveExpr'''emitUnboxed (cast' MaybePrimitiveExpr (:elseExpr this)), context, objx, gen)
+                (Expr'''emit (:elseExpr this), context, objx, gen)
             )
             (.mark gen, endLabel)
         )
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"IfExpr" this]
-        (and (.hasJavaClass (:thenExpr this))
-             (.hasJavaClass (:elseExpr this))
-            (or (= (.getJavaClass (:thenExpr this)) (.getJavaClass (:elseExpr this)))
-                (= (.getJavaClass (:thenExpr this)) Compiler'RECUR_CLASS)
-                (= (.getJavaClass (:elseExpr this)) Compiler'RECUR_CLASS)
-                (and (nil? (.getJavaClass (:thenExpr this))) (not (.isPrimitive (.getJavaClass (:elseExpr this)))))
-                (and (nil? (.getJavaClass (:elseExpr this))) (not (.isPrimitive (.getJavaClass (:thenExpr this)))))))
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"IfExpr" this]
+        (and (Expr'''hasJavaClass (:thenExpr this))
+             (Expr'''hasJavaClass (:elseExpr this))
+            (or (= (Expr'''getJavaClass (:thenExpr this)) (Expr'''getJavaClass (:elseExpr this)))
+                (= (Expr'''getJavaClass (:thenExpr this)) Compiler'RECUR_CLASS)
+                (= (Expr'''getJavaClass (:elseExpr this)) Compiler'RECUR_CLASS)
+                (and (nil? (Expr'''getJavaClass (:thenExpr this))) (not (.isPrimitive (Expr'''getJavaClass (:elseExpr this)))))
+                (and (nil? (Expr'''getJavaClass (:elseExpr this))) (not (.isPrimitive (Expr'''getJavaClass (:thenExpr this)))))))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method canEmitPrimitive) [#_"IfExpr" this]
+    #_override
+    (§ defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive [#_"IfExpr" this]
         (try
             (and (§ instance? MaybePrimitiveExpr (:thenExpr this))
                  (§ instance? MaybePrimitiveExpr (:elseExpr this))
-                (or (= (.getJavaClass (:thenExpr this)) (.getJavaClass (:elseExpr this)))
-                    (= (.getJavaClass (:thenExpr this)) Compiler'RECUR_CLASS)
-                    (= (.getJavaClass (:elseExpr this)) Compiler'RECUR_CLASS))
-                 (.canEmitPrimitive (cast' MaybePrimitiveExpr (:thenExpr this)))
-                 (.canEmitPrimitive (cast' MaybePrimitiveExpr (:elseExpr this))))
+                (or (= (Expr'''getJavaClass (:thenExpr this)) (Expr'''getJavaClass (:elseExpr this)))
+                    (= (Expr'''getJavaClass (:thenExpr this)) Compiler'RECUR_CLASS)
+                    (= (Expr'''getJavaClass (:elseExpr this)) Compiler'RECUR_CLASS))
+                 (MaybePrimitiveExpr'''canEmitPrimitive (cast' MaybePrimitiveExpr (:thenExpr this)))
+                 (MaybePrimitiveExpr'''canEmitPrimitive (cast' MaybePrimitiveExpr (:elseExpr this))))
             (catch Exception e
                 false
             )
         )
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"IfExpr" this]
-        (let [#_"Class" thenClass (.getJavaClass (:thenExpr this))]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"IfExpr" this]
+        (let [#_"Class" thenClass (Expr'''getJavaClass (:thenExpr this))]
             (if (and (some? thenClass) (not= thenClass Compiler'RECUR_CLASS))
                 thenClass
-                (.getJavaClass (:elseExpr this))
+                (Expr'''getJavaClass (:elseExpr this))
             )
         )
     )
@@ -7347,13 +7283,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"EmptyExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"EmptyExpr" this]
         (:coll this)
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"EmptyExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"EmptyExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (cond
             (§ instance? IPersistentList (:coll this))   (.getStatic gen, EmptyExpr'LIST_TYPE,    "EMPTY", EmptyExpr'EMPTY_LIST_TYPE)
             (§ instance? IPersistentVector (:coll this)) (.getStatic gen, EmptyExpr'VECTOR_TYPE,  "EMPTY", EmptyExpr'VECTOR_TYPE)
@@ -7367,13 +7303,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"EmptyExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"EmptyExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"EmptyExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"EmptyExpr" this]
         (cond
             (§ instance? IPersistentList (:coll this))   (§ class IPersistentList)
             (§ instance? IPersistentVector (:coll this)) (§ class IPersistentVector)
@@ -7400,18 +7336,18 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"ListExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"ListExpr" this]
         (let [#_"IPersistentVector" ret PersistentVector'EMPTY]
             (loop-when-recur [#_"int" i 0] (< i (.count (:args this))) [(inc i)]
-                (§ ass ret (cast' IPersistentVector (.cons ret, (.eval (cast' Expr (.nth (:args this), i))))))
+                (§ ass ret (cast' IPersistentVector (.cons ret, (Expr'''eval (cast' Expr (.nth (:args this), i))))))
             )
             (.seq ret)
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"ListExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"ListExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (MethodExpr'emitArgsAsArray (:args this), objx, gen)
         (.invokeStatic gen, Compiler'RT_TYPE, ListExpr'arrayToListMethod)
         (when (= context :Context'STATEMENT)
@@ -7420,13 +7356,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"ListExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"ListExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"ListExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"ListExpr" this]
         (§ class IPersistentList)
     )
 )
@@ -7448,24 +7384,24 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"MapExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"MapExpr" this]
         (let [#_"Object[]" a (make-array Object (.count (:keyvals this)))]
             (dotimes [#_"int" i (.count (:keyvals this))]
-                (aset a i (.eval (cast' Expr (.nth (:keyvals this), i))))
+                (aset a i (Expr'''eval (cast' Expr (.nth (:keyvals this), i))))
             )
             (RT'map a)
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"MapExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"MapExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (let [[#_"boolean" allKeysConstant #_"boolean" allConstantKeysUnique]
                 (loop-when [constant? true unique? true #_"IPersistentSet" keys PersistentHashSet'EMPTY #_"int" i 0] (< i (.count (:keyvals this))) => [constant? unique?]
                     (let [#_"Expr" k (cast' Expr (.nth (:keyvals this), i))
                           [constant? unique? keys]
                             (when (§ instance? LiteralExpr k) => [false unique? keys]
-                                (let-when-not [#_"Object" v (.eval k)] (.contains keys, v) => [constant? false keys]
+                                (let-when-not [#_"Object" v (Expr'''eval k)] (.contains keys, v) => [constant? false keys]
                                     [constant? unique? (cast' IPersistentSet (.cons keys, v))]
                                 )
                             )]
@@ -7484,13 +7420,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"MapExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"MapExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"MapExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"MapExpr" this]
         (§ class IPersistentMap)
     )
 
@@ -7505,7 +7441,7 @@
                     (§ ass keyvals (cast' IPersistentVector (.cons keyvals, k)))
                     (§ ass keyvals (cast' IPersistentVector (.cons keyvals, v)))
                     (if (§ instance? LiteralExpr k)
-                        (let [#_"Object" kval (.eval k)]
+                        (let [#_"Object" kval (Expr'''eval k)]
                             (if (.contains constantKeys, kval)
                                 (§ ass allConstantKeysUnique false)
                                 (§ ass constantKeys (cast' IPersistentSet (.cons constantKeys, kval)))
@@ -7558,18 +7494,18 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"SetExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"SetExpr" this]
         (let [#_"Object[]" ret (make-array Object (.count (:keys this)))]
             (dotimes [#_"int" i (.count (:keys this))]
-                (aset ret i (.eval (cast' Expr (.nth (:keys this), i))))
+                (aset ret i (Expr'''eval (cast' Expr (.nth (:keys this), i))))
             )
             (RT'set ret)
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"SetExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"SetExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (MethodExpr'emitArgsAsArray (:keys this), objx, gen)
         (.invokeStatic gen, Compiler'RT_TYPE, setMethod)
         (when (= context :Context'STATEMENT)
@@ -7578,13 +7514,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"SetExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"SetExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"SetExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"SetExpr" this]
         (§ class IPersistentSet)
     )
 
@@ -7627,22 +7563,22 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"VectorExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"VectorExpr" this]
         (let [#_"IPersistentVector" ret PersistentVector'EMPTY]
             (loop-when-recur [#_"int" i 0] (< i (.count (:args this))) [(inc i)]
-                (§ ass ret (cast' IPersistentVector (.cons ret, (.eval (cast' Expr (.nth (:args this), i))))))
+                (§ ass ret (cast' IPersistentVector (.cons ret, (Expr'''eval (cast' Expr (.nth (:args this), i))))))
             )
             ret
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"VectorExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"VectorExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (if (<= (.count (:args this)) Tuple'MAX_SIZE)
             (do
                 (dotimes [#_"int" i (.count (:args this))]
-                    (.emit (cast' Expr (.nth (:args this), i)), :Context'EXPRESSION, objx, gen)
+                    (Expr'''emit (cast' Expr (.nth (:args this), i)), :Context'EXPRESSION, objx, gen)
                 )
                 (.invokeStatic gen, Compiler'TUPLE_TYPE, (aget Compiler'createTupleMethods (.count (:args this))))
             )
@@ -7658,13 +7594,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"VectorExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"VectorExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"VectorExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"VectorExpr" this]
         (§ class IPersistentVector)
     )
 
@@ -7719,23 +7655,23 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"KeywordInvokeExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"KeywordInvokeExpr" this]
         (try
-            (.invoke (:k (:kw this)), (.eval (:target this)))
+            (.invoke (:k (:kw this)), (Expr'''eval (:target this)))
             (catch Throwable e
                 (throw (if (§ instance? CompilerException e) (cast' CompilerException e) (CompilerException'new (:line this), (:column this), e)))
             )
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"KeywordInvokeExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"KeywordInvokeExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (let [#_"Label" endLabel (.newLabel gen) #_"Label" faultLabel (.newLabel gen)]
             (.visitLineNumber gen, (:line this), (.mark gen))
             (.getStatic gen, (:objtype objx), (ObjExpr''thunkNameStatic objx, (:siteIndex this)), ObjExpr'ILOOKUP_THUNK_TYPE)
             (.dup gen) ;; thunk, thunk
-            (.emit (:target this), :Context'EXPRESSION, objx, gen) ;; thunk, thunk, target
+            (Expr'''emit (:target this), :Context'EXPRESSION, objx, gen) ;; thunk, thunk, target
             (.visitLineNumber gen, (:line this), (.mark gen))
             (.dupX2 gen) ;; target, thunk, thunk, target
             (.invokeInterface gen, ObjExpr'ILOOKUP_THUNK_TYPE, (Method/getMethod "Object get(Object)")) ;; target, thunk, result
@@ -7764,13 +7700,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"KeywordInvokeExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"KeywordInvokeExpr" this]
         (some? (:tag this))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"KeywordInvokeExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"KeywordInvokeExpr" this]
         (when (nil? (:jc this))
             (§ ass this (assoc this :jc (HostExpr'tagToClass (:tag this))))
         )
@@ -7794,26 +7730,26 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"InstanceOfExpr" this]
-        (if (.isInstance (:c this), (.eval (:expr this))) RT'T RT'F)
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"InstanceOfExpr" this]
+        (if (.isInstance (:c this), (Expr'''eval (:expr this))) RT'T RT'F)
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method canEmitPrimitive) [#_"InstanceOfExpr" this]
+    #_override
+    (§ defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive [#_"InstanceOfExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitUnboxed) [#_"InstanceOfExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-        (.emit (:expr this), :Context'EXPRESSION, objx, gen)
+    #_override
+    (§ defn #_"void" MaybePrimitiveExpr'''emitUnboxed [#_"InstanceOfExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+        (Expr'''emit (:expr this), :Context'EXPRESSION, objx, gen)
         (.instanceOf gen, (Compiler'getType (:c this)))
         nil
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"InstanceOfExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-        (.emitUnboxed this, context, objx, gen)
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"InstanceOfExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+        (MaybePrimitiveExpr'''emitUnboxed this, context, objx, gen)
         (HostExpr'emitBoxReturn objx, gen, Boolean/TYPE)
         (when (= context :Context'STATEMENT)
             (.pop gen)
@@ -7821,13 +7757,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"InstanceOfExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"InstanceOfExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"InstanceOfExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"InstanceOfExpr" this]
         Boolean/TYPE
     )
 )
@@ -7862,14 +7798,14 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"StaticInvokeExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"StaticInvokeExpr" this]
         (throw (UnsupportedOperationException. "Can't eval StaticInvokeExpr"))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"StaticInvokeExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-        (.emitUnboxed this, context, objx, gen)
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"StaticInvokeExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+        (MaybePrimitiveExpr'''emitUnboxed this, context, objx, gen)
         (when (not= context :Context'STATEMENT)
             (HostExpr'emitBoxReturn objx, gen, (:retClass this))
         )
@@ -7882,36 +7818,36 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"StaticInvokeExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"StaticInvokeExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"StaticInvokeExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"StaticInvokeExpr" this]
         (when (nil? (:jc this))
             (§ ass this (assoc this :jc (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (:retClass this))))
         )
         (:jc this)
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method canEmitPrimitive) [#_"StaticInvokeExpr" this]
+    #_override
+    (§ defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive [#_"StaticInvokeExpr" this]
         (.isPrimitive (:retClass this))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitUnboxed) [#_"StaticInvokeExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" MaybePrimitiveExpr'''emitUnboxed [#_"StaticInvokeExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (let [#_"Method" ms (Method. "invokeStatic", (.getReturnType this), (:paramtypes this))]
             (when (:variadic this) => (MethodExpr'emitTypedArgs objx, gen, (:paramclasses this), (:args this))
                 (dotimes [#_"int" i (dec (alength (:paramclasses this)))]
                     (let [#_"Expr" e (cast' Expr (.nth (:args this), i))]
                         (if (= (Compiler'maybePrimitiveType e) (aget (:paramclasses this) i))
                             (do
-                                (.emitUnboxed (cast' MaybePrimitiveExpr e), :Context'EXPRESSION, objx, gen)
+                                (MaybePrimitiveExpr'''emitUnboxed (cast' MaybePrimitiveExpr e), :Context'EXPRESSION, objx, gen)
                             )
                             (do
-                                (.emit e, :Context'EXPRESSION, objx, gen)
+                                (Expr'''emit e, :Context'EXPRESSION, objx, gen)
                                 (HostExpr'emitUnboxArg objx, gen, (aget (:paramclasses this) i))
                             )
                         )
@@ -8045,14 +7981,14 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"InvokeExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"InvokeExpr" this]
         (try
-            (let [#_"IFn" fn (cast' IFn (.eval (:fexpr this)))
+            (let [#_"IFn" fn (cast' IFn (Expr'''eval (:fexpr this)))
                   #_"PersistentVector" argvs
                     (loop-when-recur [argvs PersistentVector'EMPTY #_"int" i 0]
                                      (< i (.count (:args this)))
-                                     [(.cons argvs, (.eval (cast' Expr (.nth (:args this), i)))) (inc i)]
+                                     [(.cons argvs, (Expr'''eval (cast' Expr (.nth (:args this), i)))) (inc i)]
                                   => argvs
                     )]
                 (.applyTo fn, (RT'seq (Util'ret1 argvs, (§ ass argvs nil))))
@@ -8063,15 +7999,15 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"InvokeExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"InvokeExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (if (:isProtocol this)
             (do
                 (.visitLineNumber gen, (:line this), (.mark gen))
                 (InvokeExpr''emitProto this, context, objx, gen)
             )
             (do
-                (.emit (:fexpr this), :Context'EXPRESSION, objx, gen)
+                (Expr'''emit (:fexpr this), :Context'EXPRESSION, objx, gen)
                 (.visitLineNumber gen, (:line this), (.mark gen))
                 (.checkCast gen, Compiler'IFN_TYPE)
                 (InvokeExpr''emitArgsAndCall this, 0, context, objx, gen)
@@ -8088,7 +8024,7 @@
         (let [#_"Label" onLabel (.newLabel gen) #_"Label" callLabel (.newLabel gen) #_"Label" endLabel (.newLabel gen)
               #_"Var" v (:var (cast' VarExpr (:fexpr this)))
               #_"Expr" e (cast' Expr (.nth (:args this), 0))]
-            (.emit e, :Context'EXPRESSION, objx, gen)
+            (Expr'''emit e, :Context'EXPRESSION, objx, gen)
             (.dup gen) ;; target, target
             (.invokeStatic gen, Compiler'UTIL_TYPE, (Method/getMethod "Class classOf(Object)")) ;; target, class
             (.getStatic gen, (:objtype objx), (ObjExpr''cachedClassName objx, (:siteIndex this)), Compiler'CLASS_TYPE) ;; target, class, cached-class
@@ -8131,7 +8067,7 @@
     (defn #_"void" InvokeExpr''emitArgsAndCall [#_"InvokeExpr" this, #_"int" firstArgToEmit, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (loop-when-recur [#_"int" i firstArgToEmit] (< i (Math/min Compiler'MAX_POSITIONAL_ARITY, (.count (:args this)))) [(inc i)]
             (let [#_"Expr" e (cast' Expr (.nth (:args this), i))]
-                (.emit e, :Context'EXPRESSION, objx, gen)
+                (Expr'''emit e, :Context'EXPRESSION, objx, gen)
             )
         )
         (when (< Compiler'MAX_POSITIONAL_ARITY (.count (:args this)))
@@ -8152,13 +8088,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"InvokeExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"InvokeExpr" this]
         (some? (:tag this))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"InvokeExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"InvokeExpr" this]
         (when (nil? (:jc this))
             (§ ass this (assoc this :jc (HostExpr'tagToClass (:tag this))))
         )
@@ -8240,8 +8176,8 @@
         (merge (ObjExpr'new tag) (FnExpr'init))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"FnExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"FnExpr" this]
         true
     )
 
@@ -8250,8 +8186,8 @@
         (:hasMeta this)
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"FnExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"FnExpr" this]
         (when (nil? (:jc this))
             (§ ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (§ class AFunction))))
         )
@@ -8264,7 +8200,7 @@
         ;; override of invoke/doInvoke for each method
         (loop-when-recur [#_"ISeq" s (RT'seq (:methods this))] (some? s) [(.next s)]
             (let [#_"ObjMethod" method (cast' ObjMethod (.first s))]
-                (.emit method, this, cv)
+                (Expr'''emit method, this, cv)
             )
         )
 
@@ -8433,7 +8369,7 @@
 
     #_method
     (defn #_"void" FnExpr''emitForDefn [#_"FnExpr" this, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-        (.emit this, :Context'EXPRESSION, objx, gen)
+        (Expr'''emit this, :Context'EXPRESSION, objx, gen)
         nil
     )
 )
@@ -9049,8 +8985,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"ObjExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"ObjExpr" this]
         (when-not (ObjExpr''isDeftype this)
             (try
                 (.newInstance (ObjExpr''getCompiledClass this))
@@ -9089,8 +9025,8 @@
         nil
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"ObjExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"ObjExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         ;; emitting a Fn means constructing an instance, feeding closed-overs from enclosing scope, if any
         ;; objx arg is enclosing objx, not this
         (when-not (ObjExpr''isDeftype this) => (.visitInsn gen, Opcodes/ACONST_NULL)
@@ -9115,13 +9051,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"ObjExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"ObjExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"ObjExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"ObjExpr" this]
         (when (nil? (:jc this))
             (§ ass this (assoc this :jc (cond (some? (:compiledClass this)) (:compiledClass this) (some? (:tag this)) (HostExpr'tagToClass (:tag this)) :else (§ class IFn))))
         )
@@ -9135,16 +9071,16 @@
                 (.loadThis gen)
                 (if (some? primc)
                     (do
-                        (when (not (and (§ instance? MaybePrimitiveExpr val) (.canEmitPrimitive (cast' MaybePrimitiveExpr val))))
+                        (when (not (and (§ instance? MaybePrimitiveExpr val) (MaybePrimitiveExpr'''canEmitPrimitive (cast' MaybePrimitiveExpr val))))
                             (throw (IllegalArgumentException. (str "Must assign primitive to primitive mutable: " (:name lb))))
                         )
                         (let [#_"MaybePrimitiveExpr" me (cast' MaybePrimitiveExpr val)]
-                            (.emitUnboxed me, :Context'EXPRESSION, this, gen)
+                            (MaybePrimitiveExpr'''emitUnboxed me, :Context'EXPRESSION, this, gen)
                             (.putField gen, (:objtype this), (:name lb), (Type/getType primc))
                         )
                     )
                     (do
-                        (.emit val, :Context'EXPRESSION, this, gen)
+                        (Expr'''emit val, :Context'EXPRESSION, this, gen)
                         (.putField gen, (:objtype this), (:name lb), Compiler'OBJECT_TYPE)
                     )
                 )
@@ -9498,7 +9434,7 @@
                                     )
                                 )
                             )
-                            (§ ass (:body method) (.parse (BodyParser'new), :Context'RETURN, body))
+                            (§ ass (:body method) (IParser'''parse (BodyParser'new), :Context'RETURN, body))
                             method
                         )
                     )
@@ -9510,8 +9446,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"FnMethod" this, #_"ObjExpr" fn, #_"ClassVisitor" cv]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"FnMethod" this, #_"ObjExpr" fn, #_"ClassVisitor" cv]
         (cond
             (:canBeDirect fn)    (FnMethod''doEmitStatic this, fn, cv)
             (some? (:prim this)) (FnMethod''doEmitPrim this, fn, cv)
@@ -9668,7 +9604,7 @@
                             ])
                         ))
 
-                        (.emit (:body this), :Context'RETURN, fn, gen)
+                        (Expr'''emit (:body this), :Context'RETURN, fn, gen)
                         (let [#_"Label" end (.mark gen)]
                             (.visitLocalVariable gen, "this", "Ljava/lang/Object;", nil, loopLabel, end, 0)
                             (loop-when-recur [#_"ISeq" lbs (.seq (:argLocals this))] (some? lbs) [(.next lbs)]
@@ -9766,40 +9702,40 @@
 
     (defn #_"void" ObjMethod'emitBody [#_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Class" retClass, #_"Expr" body]
         (let [#_"MaybePrimitiveExpr" be (cast' MaybePrimitiveExpr body)]
-            (if (and (Util'isPrimitive retClass) (.canEmitPrimitive be))
+            (if (and (Util'isPrimitive retClass) (MaybePrimitiveExpr'''canEmitPrimitive be))
                 (let [#_"Class" bc (Compiler'maybePrimitiveType be)]
                     (cond (= bc retClass)
                         (do
-                            (.emitUnboxed be, :Context'RETURN, objx, gen)
+                            (MaybePrimitiveExpr'''emitUnboxed be, :Context'RETURN, objx, gen)
                         )
                         (and (= retClass Long/TYPE) (= bc Integer/TYPE))
                         (do
-                            (.emitUnboxed be, :Context'RETURN, objx, gen)
+                            (MaybePrimitiveExpr'''emitUnboxed be, :Context'RETURN, objx, gen)
                             (.visitInsn gen, Opcodes/I2L)
                         )
                         (and (= retClass Double/TYPE) (= bc Float/TYPE))
                         (do
-                            (.emitUnboxed be, :Context'RETURN, objx, gen)
+                            (MaybePrimitiveExpr'''emitUnboxed be, :Context'RETURN, objx, gen)
                             (.visitInsn gen, Opcodes/F2D)
                         )
                         (and (= retClass Integer/TYPE) (= bc Long/TYPE))
                         (do
-                            (.emitUnboxed be, :Context'RETURN, objx, gen)
+                            (MaybePrimitiveExpr'''emitUnboxed be, :Context'RETURN, objx, gen)
                             (.invokeStatic gen, Compiler'RT_TYPE, (Method/getMethod "int intCast(long)"))
                         )
                         (and (= retClass Float/TYPE) (= bc Double/TYPE))
                         (do
-                            (.emitUnboxed be, :Context'RETURN, objx, gen)
+                            (MaybePrimitiveExpr'''emitUnboxed be, :Context'RETURN, objx, gen)
                             (.visitInsn gen, Opcodes/D2F)
                         )
                         :else
                         (do
-                            (throw (IllegalArgumentException. (str "Mismatched primitive return, expected: " retClass ", had: " (.getJavaClass be))))
+                            (throw (IllegalArgumentException. (str "Mismatched primitive return, expected: " retClass ", had: " (Expr'''getJavaClass be))))
                         )
                     )
                 )
                 (do
-                    (.emit body, :Context'RETURN, objx, gen)
+                    (Expr'''emit body, :Context'RETURN, objx, gen)
                     (if (= retClass Void/TYPE)
                         (.pop gen)
                         (.unbox gen, (Type/getType retClass))
@@ -9819,8 +9755,8 @@
     #_abstract
     (§ defn #_"Type[]" (§ method getArgTypes) [#_"ObjMethod" this])
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"ObjMethod" this, #_"ObjExpr" fn, #_"ClassVisitor" cv]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"ObjMethod" this, #_"ObjExpr" fn, #_"ClassVisitor" cv]
         (let [#_"Method" m (Method. (.getMethodName this), (.getReturnType this), (.getArgTypes this))]
             ;; todo don't hardwire EXCEPTION_TYPES
             (let [#_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, m, nil, Compiler'EXCEPTION_TYPES, cv)]
@@ -9836,7 +9772,7 @@
                             ])
                         ))
 
-                        (.emit (:body this), :Context'RETURN, fn, gen)
+                        (Expr'''emit (:body this), :Context'RETURN, fn, gen)
                         (let [#_"Label" end (.mark gen)]
                             (.visitLocalVariable gen, "this", "Ljava/lang/Object;", nil, loopLabel, end, 0)
                             (loop-when-recur [#_"ISeq" lbs (.seq (:argLocals this))] (some? lbs) [(.next lbs)]
@@ -9930,21 +9866,21 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"LocalBinding" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"LocalBinding" this]
         (when (nil? (:hjc this))
-            (if (and (some? (:init this)) (.hasJavaClass (:init this)) (Util'isPrimitive (.getJavaClass (:init this))) (not (§ instance? MaybePrimitiveExpr (:init this))))
+            (if (and (some? (:init this)) (Expr'''hasJavaClass (:init this)) (Util'isPrimitive (Expr'''getJavaClass (:init this))) (not (§ instance? MaybePrimitiveExpr (:init this))))
                 (§ ass this (assoc this :hjc false))
-                (§ ass this (assoc this :hjc (or (some? (:tag this)) (and (some? (:init this)) (.hasJavaClass (:init this))))))
+                (§ ass this (assoc this :hjc (or (some? (:tag this)) (and (some? (:init this)) (Expr'''hasJavaClass (:init this))))))
             )
         )
         (:hjc this)
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"LocalBinding" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"LocalBinding" this]
         (when (nil? (:jc this))
-            (§ ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getJavaClass (:init this)))))
+            (§ ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (Expr'''getJavaClass (:init this)))))
         )
         (:jc this)
     )
@@ -10005,37 +9941,37 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"LocalBindingExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"LocalBindingExpr" this]
         (throw (UnsupportedOperationException. "Can't eval locals"))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method canEmitPrimitive) [#_"LocalBindingExpr" this]
+    #_override
+    (§ defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive [#_"LocalBindingExpr" this]
         (some? (LocalBinding''getPrimitiveType (:lb this)))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitUnboxed) [#_"LocalBindingExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" MaybePrimitiveExpr'''emitUnboxed [#_"LocalBindingExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (ObjExpr''emitUnboxedLocal objx, gen, (:lb this))
         nil
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"LocalBindingExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"LocalBindingExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (when (not= context :Context'STATEMENT)
             (ObjExpr''emitLocal objx, gen, (:lb this), (:shouldClear this))
         )
         nil
     )
 
-    #_method
-    (§ defn #_"Object" (§ method evalAssign) [#_"LocalBindingExpr" this, #_"Expr" val]
+    #_override
+    (§ defn #_"Object" AssignableExpr'''evalAssign [#_"LocalBindingExpr" this, #_"Expr" val]
         (throw (UnsupportedOperationException. "Can't eval locals"))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitAssign) [#_"LocalBindingExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val]
+    #_override
+    (§ defn #_"void" AssignableExpr'''emitAssign [#_"LocalBindingExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val]
         (ObjExpr''emitAssignLocal objx, gen, (:lb this), val)
         (when (not= context :Context'STATEMENT)
             (ObjExpr''emitLocal objx, gen, (:lb this), false)
@@ -10043,15 +9979,15 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"LocalBindingExpr" this]
-        (or (some? (:tag this)) (.hasJavaClass (:lb this)))
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"LocalBindingExpr" this]
+        (or (some? (:tag this)) (Expr'''hasJavaClass (:lb this)))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"LocalBindingExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"LocalBindingExpr" this]
         (when (nil? (:jc this))
-            (§ ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getJavaClass (:lb this)))))
+            (§ ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (Expr'''getJavaClass (:lb this)))))
         )
         (:jc this)
     )
@@ -10063,8 +9999,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"BodyParser" this, #_"Context" context, #_"Object" frms]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"BodyParser" this, #_"Context" context, #_"Object" frms]
         (let [#_"ISeq" forms (cast' ISeq frms)]
             (when (Util'equals (RT'first forms), Compiler'DO)
                 (§ ass forms (RT'next forms))
@@ -10098,52 +10034,52 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"BodyExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"BodyExpr" this]
         (let [#_"Iterator" it (.iterator (:exprs this))]
-            (loop-when-recur [#_"Object" ret nil] (.hasNext it) [(.eval (cast' Expr (.next it)))] => ret)
+            (loop-when-recur [#_"Object" ret nil] (.hasNext it) [(Expr'''eval (cast' Expr (.next it)))] => ret)
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method canEmitPrimitive) [#_"BodyExpr" this]
-        (and (§ instance? MaybePrimitiveExpr (BodyExpr''lastExpr this)) (.canEmitPrimitive (cast' MaybePrimitiveExpr (BodyExpr''lastExpr this))))
+    #_override
+    (§ defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive [#_"BodyExpr" this]
+        (and (§ instance? MaybePrimitiveExpr (BodyExpr''lastExpr this)) (MaybePrimitiveExpr'''canEmitPrimitive (cast' MaybePrimitiveExpr (BodyExpr''lastExpr this))))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitUnboxed) [#_"BodyExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" MaybePrimitiveExpr'''emitUnboxed [#_"BodyExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (dotimes [#_"int" i (dec (.count (:exprs this)))]
             (let [#_"Expr" e (cast' Expr (.nth (:exprs this), i))]
-                (.emit e, :Context'STATEMENT, objx, gen)
+                (Expr'''emit e, :Context'STATEMENT, objx, gen)
             )
         )
         (let [#_"MaybePrimitiveExpr" last (cast' MaybePrimitiveExpr (.nth (:exprs this), (dec (.count (:exprs this)))))]
-            (.emitUnboxed last, context, objx, gen)
+            (MaybePrimitiveExpr'''emitUnboxed last, context, objx, gen)
         )
         nil
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"BodyExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"BodyExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (dotimes [#_"int" i (dec (.count (:exprs this)))]
             (let [#_"Expr" e (cast' Expr (.nth (:exprs this), i))]
-                (.emit e, :Context'STATEMENT, objx, gen)
+                (Expr'''emit e, :Context'STATEMENT, objx, gen)
             )
         )
         (let [#_"Expr" last (cast' Expr (.nth (:exprs this), (dec (.count (:exprs this)))))]
-            (.emit last, context, objx, gen)
+            (Expr'''emit last, context, objx, gen)
         )
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"BodyExpr" this]
-        (.hasJavaClass (BodyExpr''lastExpr this))
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"BodyExpr" this]
+        (Expr'''hasJavaClass (BodyExpr''lastExpr this))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"BodyExpr" this]
-        (.getJavaClass (BodyExpr''lastExpr this))
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"BodyExpr" this]
+        (Expr'''getJavaClass (BodyExpr''lastExpr this))
     )
 
     #_method
@@ -10175,8 +10111,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"LetFnParser" this, #_"Context" context, #_"Object" frm]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"LetFnParser" this, #_"Context" context, #_"Object" frm]
         (let [#_"ISeq" form (cast' ISeq frm)]
             ;; (letfns* [var (fn [args] body) ...] body...)
             (when (§ instance? IPersistentVector (RT'second form)) => (throw (IllegalArgumentException. "Bad binding form, expected vector"))
@@ -10216,7 +10152,7 @@
                                                 (§ ass bindingInits (.cons bindingInits, (BindingInit'new lb, init)))
                                             )
                                         )]
-                                    (LetFnExpr'new bindingInits, (.parse (BodyParser'new), context, (RT'next (RT'next form))))
+                                    (LetFnExpr'new bindingInits, (IParser'''parse (BodyParser'new), context, (RT'next (RT'next form))))
                                 )
                                 (finally
                                     (Var'popThreadBindings)
@@ -10246,13 +10182,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"LetFnExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"LetFnExpr" this]
         (throw (UnsupportedOperationException. "Can't eval letfns"))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"LetFnExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"LetFnExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (dotimes [#_"int" i (.count (:bindingInits this))]
             (let [#_"BindingInit" bi (cast' BindingInit (.nth (:bindingInits this), i))]
                 (.visitInsn gen, Opcodes/ACONST_NULL)
@@ -10264,7 +10200,7 @@
             (loop-when-recur [#_"int" i 0] (< i (.count (:bindingInits this))) [(inc i)]
                 (let [#_"BindingInit" bi (cast' BindingInit (.nth (:bindingInits this), i))]
                     (§ ass lbset (cast' IPersistentSet (.cons lbset, (:binding bi))))
-                    (.emit (:init bi), :Context'EXPRESSION, objx, gen)
+                    (Expr'''emit (:init bi), :Context'EXPRESSION, objx, gen)
                     (.visitVarInsn gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:idx (:binding bi)))
                 )
             )
@@ -10277,7 +10213,7 @@
             )
 
             (let [#_"Label" loopLabel (.mark gen)]
-                (.emit (:body this), context, objx, gen)
+                (Expr'''emit (:body this), context, objx, gen)
 
                 (let [#_"Label" end (.mark gen)]
                     (loop-when-recur [#_"ISeq" bis (.seq (:bindingInits this))] (some? bis) [(.next bis)]
@@ -10297,14 +10233,14 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"LetFnExpr" this]
-        (.hasJavaClass (:body this))
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"LetFnExpr" this]
+        (Expr'''hasJavaClass (:body this))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"LetFnExpr" this]
-        (.getJavaClass (:body this))
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"LetFnExpr" this]
+        (Expr'''getJavaClass (:body this))
     )
 )
 
@@ -10314,8 +10250,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"LetParser" this, #_"Context" context, #_"Object" frm]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"LetParser" this, #_"Context" context, #_"Object" frm]
         ;; (let [var val var2 val2 ...] body...)
         (let [#_"ISeq" form (cast' ISeq frm) #_"boolean" isLoop (.equals (RT'first form), Compiler'LOOP)]
             (when (§ instance? IPersistentVector (RT'second form)) => (throw (IllegalArgumentException. "Bad binding form, expected vector"))
@@ -10418,7 +10354,7 @@
                                                                     ])
                                                                 ))
                                                             )
-                                                            (§ ass bodyExpr (.parse (BodyParser'new), (if isLoop :Context'RETURN context), body))
+                                                            (§ ass bodyExpr (IParser'''parse (BodyParser'new), (if isLoop :Context'RETURN context), body))
                                                             (finally
                                                                 (when isLoop
                                                                     (Var'popThreadBindings)
@@ -10470,19 +10406,19 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"LetExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"LetExpr" this]
         (throw (UnsupportedOperationException. "Can't eval let/loop"))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"LetExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"LetExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (.doEmit this, context, objx, gen, false)
         nil
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitUnboxed) [#_"LetExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" MaybePrimitiveExpr'''emitUnboxed [#_"LetExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (.doEmit this, context, objx, gen, true)
         nil
     )
@@ -10495,11 +10431,11 @@
                       #_"Class" primc (Compiler'maybePrimitiveType (:init bi))]
                     (if (some? primc)
                         (do
-                            (.emitUnboxed (cast' MaybePrimitiveExpr (:init bi)), :Context'EXPRESSION, objx, gen)
+                            (MaybePrimitiveExpr'''emitUnboxed (cast' MaybePrimitiveExpr (:init bi)), :Context'EXPRESSION, objx, gen)
                             (.visitVarInsn gen, (.getOpcode (Type/getType primc), Opcodes/ISTORE), (:idx (:binding bi)))
                         )
                         (do
-                            (.emit (:init bi), :Context'EXPRESSION, objx, gen)
+                            (Expr'''emit (:init bi), :Context'EXPRESSION, objx, gen)
                             (if (and (not (:used (:binding bi))) (:canBeCleared (:binding bi)))
                                 (.pop gen)
                                 (.visitVarInsn gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:idx (:binding bi)))
@@ -10514,16 +10450,16 @@
                     (try
                         (Var'pushThreadBindings (RT'map Compiler'LOOP_LABEL, loopLabel))
                         (if emitUnboxed
-                            (.emitUnboxed (cast' MaybePrimitiveExpr (:body this)), context, objx, gen)
-                            (.emit (:body this), context, objx, gen)
+                            (MaybePrimitiveExpr'''emitUnboxed (cast' MaybePrimitiveExpr (:body this)), context, objx, gen)
+                            (Expr'''emit (:body this), context, objx, gen)
                         )
                         (finally
                             (Var'popThreadBindings)
                         )
                     )
                     (if emitUnboxed
-                        (.emitUnboxed (cast' MaybePrimitiveExpr (:body this)), context, objx, gen)
-                        (.emit (:body this), context, objx, gen)
+                        (MaybePrimitiveExpr'''emitUnboxed (cast' MaybePrimitiveExpr (:body this)), context, objx, gen)
+                        (Expr'''emit (:body this), context, objx, gen)
                     )
                 )
                 (let [#_"Label" end (.mark gen)]
@@ -10547,19 +10483,19 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"LetExpr" this]
-        (.hasJavaClass (:body this))
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"LetExpr" this]
+        (Expr'''hasJavaClass (:body this))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"LetExpr" this]
-        (.getJavaClass (:body this))
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"LetExpr" this]
+        (Expr'''getJavaClass (:body this))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method canEmitPrimitive) [#_"LetExpr" this]
-        (and (§ instance? MaybePrimitiveExpr (:body this)) (.canEmitPrimitive (cast' MaybePrimitiveExpr (:body this))))
+    #_override
+    (§ defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive [#_"LetExpr" this]
+        (and (§ instance? MaybePrimitiveExpr (:body this)) (MaybePrimitiveExpr'''canEmitPrimitive (cast' MaybePrimitiveExpr (:body this))))
     )
 )
 
@@ -10569,8 +10505,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"RecurParser" this, #_"Context" context, #_"Object" frm]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"RecurParser" this, #_"Context" context, #_"Object" frm]
         (let [#_"int" line (Compiler'lineDeref) #_"int" column (Compiler'columnDeref)
               #_"ISeq" form (cast' ISeq frm)
               #_"IPersistentVector" loopLocals (cast' IPersistentVector (.deref Compiler'LOOP_LOCALS))]
@@ -10636,45 +10572,45 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"RecurExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"RecurExpr" this]
         (throw (UnsupportedOperationException. "Can't eval recur"))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"RecurExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"RecurExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (let-when [#_"Label" loopLabel (cast Label (.deref Compiler'LOOP_LABEL))] (some? loopLabel) => (throw (IllegalStateException.))
             (dotimes [#_"int" i (.count (:loopLocals this))]
                 (let [#_"LocalBinding" lb (cast' LocalBinding (.nth (:loopLocals this), i)) #_"Expr" arg (cast' Expr (.nth (:args this), i))]
-                    (when (some? (LocalBinding''getPrimitiveType lb)) => (.emit arg, :Context'EXPRESSION, objx, gen)
+                    (when (some? (LocalBinding''getPrimitiveType lb)) => (Expr'''emit arg, :Context'EXPRESSION, objx, gen)
                         (let [#_"Class" primc (LocalBinding''getPrimitiveType lb) #_"Class" pc (Compiler'maybePrimitiveType arg)]
                             (cond (= primc pc)
                                 (do
-                                    (.emitUnboxed (cast' MaybePrimitiveExpr arg), :Context'EXPRESSION, objx, gen)
+                                    (MaybePrimitiveExpr'''emitUnboxed (cast' MaybePrimitiveExpr arg), :Context'EXPRESSION, objx, gen)
                                 )
                                 (and (= primc Long/TYPE) (= pc Integer/TYPE))
                                 (do
-                                    (.emitUnboxed (cast' MaybePrimitiveExpr arg), :Context'EXPRESSION, objx, gen)
+                                    (MaybePrimitiveExpr'''emitUnboxed (cast' MaybePrimitiveExpr arg), :Context'EXPRESSION, objx, gen)
                                     (.visitInsn gen, Opcodes/I2L)
                                 )
                                 (and (= primc Double/TYPE) (= pc Float/TYPE))
                                 (do
-                                    (.emitUnboxed (cast' MaybePrimitiveExpr arg), :Context'EXPRESSION, objx, gen)
+                                    (MaybePrimitiveExpr'''emitUnboxed (cast' MaybePrimitiveExpr arg), :Context'EXPRESSION, objx, gen)
                                     (.visitInsn gen, Opcodes/F2D)
                                 )
                                 (and (= primc Integer/TYPE) (= pc Long/TYPE))
                                 (do
-                                    (.emitUnboxed (cast' MaybePrimitiveExpr arg), :Context'EXPRESSION, objx, gen)
+                                    (MaybePrimitiveExpr'''emitUnboxed (cast' MaybePrimitiveExpr arg), :Context'EXPRESSION, objx, gen)
                                     (.invokeStatic gen, Compiler'RT_TYPE, (Method/getMethod "int intCast(long)"))
                                 )
                                 (and (= primc Float/TYPE) (= pc Double/TYPE))
                                 (do
-                                    (.emitUnboxed (cast' MaybePrimitiveExpr arg), :Context'EXPRESSION, objx, gen)
+                                    (MaybePrimitiveExpr'''emitUnboxed (cast' MaybePrimitiveExpr arg), :Context'EXPRESSION, objx, gen)
                                     (.visitInsn gen, Opcodes/D2F)
                                 )
                                 :else
                                 (do
-                                    (throw (IllegalArgumentException. (str "recur arg for primitive local: " (:name lb) " is not matching primitive, had: " (if (.hasJavaClass arg) (.getName (.getJavaClass arg)) "Object") ", needed: " (.getName primc))))
+                                    (throw (IllegalArgumentException. (str "recur arg for primitive local: " (:name lb) " is not matching primitive, had: " (if (Expr'''hasJavaClass arg) (.getName (Expr'''getJavaClass arg)) "Object") ", needed: " (.getName primc))))
                                 )
                             )
                         )
@@ -10694,24 +10630,24 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"RecurExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"RecurExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"RecurExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"RecurExpr" this]
         Compiler'RECUR_CLASS
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method canEmitPrimitive) [#_"RecurExpr" this]
+    #_override
+    (§ defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive [#_"RecurExpr" this]
         true
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitUnboxed) [#_"RecurExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-        (.emit this, context, objx, gen)
+    #_override
+    (§ defn #_"void" MaybePrimitiveExpr'''emitUnboxed [#_"RecurExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+        (Expr'''emit this, context, objx, gen)
         nil
     )
 )
@@ -10730,8 +10666,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"CompilerException" this]
+    #_foreign
+    (§ defn #_"String" toString [#_"CompilerException" this]
         (.getMessage this)
     )
 )
@@ -10742,8 +10678,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"DeftypeParser" this, #_"Context" context, #_"Object" frm]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"DeftypeParser" this, #_"Context" context, #_"Object" frm]
         (let [#_"ISeq" rform (cast' ISeq frm)]
             ;; (deftype* tagname classname [fields] :implements [interfaces] :tag tagname methods*)
             (§ ass rform (RT'next rform))
@@ -10776,8 +10712,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"ReifyParser" this, #_"Context" context, #_"Object" form]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"ReifyParser" this, #_"Context" context, #_"Object" form]
         ;; (reify this-name? [interfaces] (method-name [args] body)*)
         (let [#_"ISeq" s (cast' ISeq form)
               #_"ObjMethod" owner (cast' ObjMethod (.deref Compiler'METHOD))
@@ -11094,7 +11030,7 @@
     #_method
     (§ defn #_"void" (§ method emitMethods) [#_"NewInstanceExpr" this, #_"ClassVisitor" cv]
         (loop-when-recur [#_"ISeq" s (RT'seq (:methods this))] (some? s) [(.next s)]
-            (.emit (cast' ObjMethod (.first s)), this, cv)
+            (Expr'''emit (cast' ObjMethod (.first s)), this, cv)
         )
         ;; emit bridge methods
         (doseq [#_"Map$Entry<IPersistentVector, Set<Class>>" e (.entrySet (:covariants this))]
@@ -11335,7 +11271,7 @@
                                     (§ ass (:methodMeta method) (RT'meta name))
                                     (§ ass (:parms method) parms)
                                     (§ ass (:argLocals method) argLocals)
-                                    (§ ass (:body method) (.parse (BodyParser'new), :Context'RETURN, body))
+                                    (§ ass (:body method) (IParser'''parse (BodyParser'new), :Context'RETURN, body))
                                     method
                                 )
                             )
@@ -11377,8 +11313,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"NewInstanceMethod" this, #_"ObjExpr" obj, #_"ClassVisitor" cv]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"NewInstanceMethod" this, #_"ObjExpr" obj, #_"ClassVisitor" cv]
         (let [#_"Method" m (Method. (.getMethodName this), (.getReturnType this), (.getArgTypes this))
               #_"Type[]" extypes
                 (let-when [#_"int" n (alength (:exclasses this))] (pos? n)
@@ -11433,33 +11369,33 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"MethodParamExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"MethodParamExpr" this]
         (throw (RuntimeException. "Can't eval"))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"MethodParamExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"MethodParamExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (throw (RuntimeException. "Can't emit"))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"MethodParamExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"MethodParamExpr" this]
         (some? (:c this))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"MethodParamExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"MethodParamExpr" this]
         (:c this)
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method canEmitPrimitive) [#_"MethodParamExpr" this]
+    #_override
+    (§ defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive [#_"MethodParamExpr" this]
         (Util'isPrimitive (:c this))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitUnboxed) [#_"MethodParamExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" MaybePrimitiveExpr'''emitUnboxed [#_"MethodParamExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (throw (RuntimeException. "Can't emit"))
     )
 )
@@ -11474,8 +11410,8 @@
     ;; prepared by case macro and presumed correct
     ;; case macro binds actual expr in let so expr is always a local,
     ;; no need to worry about multiple evaluation
-    #_method
-    (§ defn #_"Expr" (§ method parse) [#_"CaseParser" this, #_"Context" context, #_"Object" frm]
+    #_override
+    (§ defn #_"Expr" IParser'''parse [#_"CaseParser" this, #_"Context" context, #_"Object" frm]
         (let [#_"ISeq" form (cast' ISeq frm)]
             (if (= context :Context'EVAL)
                 (Compiler'analyze-2 context, (RT'list-1 (RT'list-3 Compiler'FNONCE, PersistentVector'EMPTY, form)))
@@ -11600,34 +11536,34 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasJavaClass) [#_"CaseExpr" this]
+    #_override
+    (§ defn #_"boolean" Expr'''hasJavaClass [#_"CaseExpr" this]
         (some? (:returnType this))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method canEmitPrimitive) [#_"CaseExpr" this]
+    #_override
+    (§ defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive [#_"CaseExpr" this]
         (Util'isPrimitive (:returnType this))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method getJavaClass) [#_"CaseExpr" this]
+    #_override
+    (§ defn #_"Class" Expr'''getJavaClass [#_"CaseExpr" this]
         (:returnType this)
     )
 
-    #_method
-    (§ defn #_"Object" (§ method eval) [#_"CaseExpr" this]
+    #_override
+    (§ defn #_"Object" Expr'''eval [#_"CaseExpr" this]
         (throw (UnsupportedOperationException. "Can't eval case"))
     )
 
-    #_method
-    (§ defn #_"void" (§ method emit) [#_"CaseExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" Expr'''emit [#_"CaseExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (.doEmit this, context, objx, gen, false)
         nil
     )
 
-    #_method
-    (§ defn #_"void" (§ method emitUnboxed) [#_"CaseExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_override
+    (§ defn #_"void" MaybePrimitiveExpr'''emitUnboxed [#_"CaseExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (.doEmit this, context, objx, gen, true)
         nil
     )
@@ -11708,17 +11644,17 @@
                 (when (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION))
                     (.format (RT'errPrintWriter), "Performance warning, %d:%d - case has int tests, but tested expression is not primitive.\n", (object-array [ (:line this), (:column this) ]))
                 )
-                (.emit (:expr this), :Context'EXPRESSION, objx, gen)
+                (Expr'''emit (:expr this), :Context'EXPRESSION, objx, gen)
                 (.instanceOf gen, CaseExpr'NUMBER_TYPE)
                 (.ifZCmp gen, GeneratorAdapter/EQ, defaultLabel)
-                (.emit (:expr this), :Context'EXPRESSION, objx, gen)
+                (Expr'''emit (:expr this), :Context'EXPRESSION, objx, gen)
                 (.checkCast gen, CaseExpr'NUMBER_TYPE)
                 (.invokeVirtual gen, CaseExpr'NUMBER_TYPE, HostExpr'intValueMethod)
                 (CaseExpr''emitShiftMask this, gen)
             )
             (or (= exprType Type/LONG_TYPE) (= exprType Type/INT_TYPE) (= exprType Type/SHORT_TYPE) (= exprType Type/BYTE_TYPE))
             (do
-                (.emitUnboxed (:expr this), :Context'EXPRESSION, objx, gen)
+                (MaybePrimitiveExpr'''emitUnboxed (:expr this), :Context'EXPRESSION, objx, gen)
                 (.cast gen, exprType, Type/INT_TYPE)
                 (CaseExpr''emitShiftMask this, gen)
             )
@@ -11734,24 +11670,24 @@
     (defn- #_"void" CaseExpr''emitThenForInts [#_"CaseExpr" this, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Type" exprType, #_"Expr" test, #_"Expr" then, #_"Label" defaultLabel, #_"boolean" emitUnboxed]
         (cond (nil? exprType)
             (do
-                (.emit (:expr this), :Context'EXPRESSION, objx, gen)
-                (.emit test, :Context'EXPRESSION, objx, gen)
+                (Expr'''emit (:expr this), :Context'EXPRESSION, objx, gen)
+                (Expr'''emit test, :Context'EXPRESSION, objx, gen)
                 (.invokeStatic gen, Compiler'UTIL_TYPE, CaseExpr'equivMethod)
                 (.ifZCmp gen, GeneratorAdapter/EQ, defaultLabel)
                 (CaseExpr'emitExpr objx, gen, then, emitUnboxed)
             )
             (= exprType Type/LONG_TYPE)
             (do
-                (.emitUnboxed (cast' NumberExpr test), :Context'EXPRESSION, objx, gen)
-                (.emitUnboxed (:expr this), :Context'EXPRESSION, objx, gen)
+                (MaybePrimitiveExpr'''emitUnboxed (cast' NumberExpr test), :Context'EXPRESSION, objx, gen)
+                (MaybePrimitiveExpr'''emitUnboxed (:expr this), :Context'EXPRESSION, objx, gen)
                 (.ifCmp gen, Type/LONG_TYPE, GeneratorAdapter/NE, defaultLabel)
                 (CaseExpr'emitExpr objx, gen, then, emitUnboxed)
             )
             (or (= exprType Type/INT_TYPE) (= exprType Type/SHORT_TYPE) (= exprType Type/BYTE_TYPE))
             (do
                 (when (CaseExpr''isShiftMasked this)
-                    (.emitUnboxed (cast' NumberExpr test), :Context'EXPRESSION, objx, gen)
-                    (.emitUnboxed (:expr this), :Context'EXPRESSION, objx, gen)
+                    (MaybePrimitiveExpr'''emitUnboxed (cast' NumberExpr test), :Context'EXPRESSION, objx, gen)
+                    (MaybePrimitiveExpr'''emitUnboxed (:expr this), :Context'EXPRESSION, objx, gen)
                     (.cast gen, exprType, Type/LONG_TYPE)
                     (.ifCmp gen, Type/LONG_TYPE, GeneratorAdapter/NE, defaultLabel)
                 )
@@ -11768,7 +11704,7 @@
 
     #_method
     (defn- #_"void" CaseExpr''emitExprForHashes [#_"CaseExpr" this, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-        (.emit (:expr this), :Context'EXPRESSION, objx, gen)
+        (Expr'''emit (:expr this), :Context'EXPRESSION, objx, gen)
         (.invokeStatic gen, Compiler'UTIL_TYPE, CaseExpr'hashMethod)
         (CaseExpr''emitShiftMask this, gen)
         nil
@@ -11776,8 +11712,8 @@
 
     #_method
     (defn- #_"void" CaseExpr''emitThenForHashes [#_"CaseExpr" this, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" test, #_"Expr" then, #_"Label" defaultLabel, #_"boolean" emitUnboxed]
-        (.emit (:expr this), :Context'EXPRESSION, objx, gen)
-        (.emit test, :Context'EXPRESSION, objx, gen)
+        (Expr'''emit (:expr this), :Context'EXPRESSION, objx, gen)
+        (Expr'''emit test, :Context'EXPRESSION, objx, gen)
         (if (= (:testType this) CaseExpr'hashIdentityKey)
             (do
                 (.visitJumpInsn gen, Opcodes/IF_ACMPNE, defaultLabel)
@@ -11793,8 +11729,8 @@
 
     (defn- #_"void" CaseExpr'emitExpr [#_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" expr, #_"boolean" emitUnboxed]
         (if (and emitUnboxed (§ instance? MaybePrimitiveExpr expr))
-            (.emitUnboxed (cast' MaybePrimitiveExpr expr), :Context'EXPRESSION, objx, gen)
-            (.emit expr, :Context'EXPRESSION, objx, gen)
+            (MaybePrimitiveExpr'''emitUnboxed (cast' MaybePrimitiveExpr expr), :Context'EXPRESSION, objx, gen)
+            (Expr'''emit expr, :Context'EXPRESSION, objx, gen)
         )
         nil
     )
@@ -12047,8 +11983,8 @@
     )
 
     (defn #_"Class" Compiler'maybePrimitiveType [#_"Expr" e]
-        (when (and (§ instance? MaybePrimitiveExpr e) (.hasJavaClass e) (.canEmitPrimitive (cast' MaybePrimitiveExpr e)))
-            (let [#_"Class" c (.getJavaClass e)]
+        (when (and (§ instance? MaybePrimitiveExpr e) (Expr'''hasJavaClass e) (MaybePrimitiveExpr'''canEmitPrimitive (cast' MaybePrimitiveExpr e)))
+            (let [#_"Class" c (Expr'''getJavaClass e)]
                 (when (Util'isPrimitive c)
                     c
                 )
@@ -12064,8 +12000,8 @@
                         (cond
                             (§ instance? ThrowExpr e)
                                 (recur match)
-                            (.hasJavaClass e)
-                                (let [#_"Class" c (.getJavaClass e)]
+                            (Expr'''hasJavaClass e)
+                                (let [#_"Class" c (Expr'''getJavaClass e)]
                                     (cond
                                         (nil? match) (recur c)
                                         (= match c) (recur match)
@@ -12104,7 +12040,7 @@
                     (when (pos? i)
                         (.append sb, ", ")
                     )
-                    (.append sb, (if (and (.hasJavaClass arg) (some? (.getJavaClass arg))) (.getName (.getJavaClass arg)) "unknown"))
+                    (.append sb, (if (and (Expr'''hasJavaClass arg) (some? (Expr'''getJavaClass arg))) (.getName (Expr'''getJavaClass arg)) "unknown"))
                 )
             )
             (.toString sb)
@@ -12118,9 +12054,9 @@
                     (let [[#_"int" exact #_"boolean" match]
                             (loop-when [exact 0 match true #_"int" p 0 #_"ISeq" s (.seq args)] (and match (< p (.count args)) (some? s)) => [exact match]
                                 (let [#_"Expr" arg (cast' Expr (.first s))
-                                      #_"Class" aclass (if (.hasJavaClass arg) (.getJavaClass arg) Object) #_"Class" pclass (aget (.get pars, i) p)
+                                      #_"Class" aclass (if (Expr'''hasJavaClass arg) (Expr'''getJavaClass arg) Object) #_"Class" pclass (aget (.get pars, i) p)
                                       [exact match]
-                                        (if (and (.hasJavaClass arg) (= aclass pclass))
+                                        (if (and (Expr'''hasJavaClass arg) (= aclass pclass))
                                             [(inc exact) match]
                                             [exact (Reflector'paramArgTypeMatch pclass, aclass)]
                                         )]
@@ -12227,8 +12163,8 @@
             (let [#_"Object[]" a (RT'toArray (RT'keys m))]
                 (Arrays/sort a,
                     (§ reify Comparator()
-                        #_method
-                        (§ defn #_"int" (§ method compare) [#_"Comparator" this, #_"Object" s1, #_"Object" s2]
+                        #_foreign
+                        (§ defn #_"int" compare [#_"Comparator" this, #_"Object" s1, #_"Object" s2]
                             (- (.length (cast String s2)) (.length (cast String s1)))
                         )
                     )
@@ -12503,7 +12439,7 @@
                                 :else
                                     (let [#_"IParser" p (cast' IParser (.valAt Compiler'specials, op))]
                                         (if (some? p)
-                                            (.parse p, context, form)
+                                            (IParser'''parse p, context, form)
                                             (InvokeExpr'parse context, form)
                                         )
                                     )
@@ -12541,12 +12477,12 @@
                                 )
                             (or (§ instance? IType form) (and (§ instance? IPersistentCollection form) (not (and (§ instance? Symbol (RT'first form)) (.startsWith (:name (cast' Symbol (RT'first form))), "def")))))
                                 (let [#_"ObjExpr" fexpr (cast' ObjExpr (Compiler'analyze-3 :Context'EXPRESSION, (RT'list-3 Compiler'FN, PersistentVector'EMPTY, form), (str "eval" (RT'nextID))))
-                                      #_"IFn" fn (cast' IFn (.eval fexpr))]
+                                      #_"IFn" fn (cast' IFn (Expr'''eval fexpr))]
                                     (.invoke fn)
                                 )
                             :else
                                 (let [#_"Expr" expr (Compiler'analyze-2 :Context'EVAL, form)]
-                                    (.eval expr)
+                                    (Expr'''eval expr)
                                 )
                         )
                     )
@@ -13101,8 +13037,8 @@
         (:_current this)
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method isRealized) [#_"Cycle" this]
+    #_override
+    (§ defn #_"boolean" IPending'''isRealized [#_"Cycle" this]
         (some? (:_current this))
     )
 
@@ -13197,8 +13133,8 @@
         (:val this)
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method isRealized) [#_"Delay" this]
+    #_override
+    (§ defn #_"boolean" IPending'''isRealized [#_"Delay" this]
         (§ sync this
             (nil? (:fn this))
         )
@@ -13232,8 +13168,8 @@
         (merge (URLClassLoader'new (make-array URL 0), parent) (DynamicClassLoader'init))
     )
 
-    #_method
-    (§ defn #_"Class" (§ method defineClass) [#_"DynamicClassLoader" this, #_"String" name, #_"byte[]" bytes, #_"Object" srcForm]
+    #_foreign
+    (§ defn #_"Class" defineClass [#_"DynamicClassLoader" this, #_"String" name, #_"byte[]" bytes, #_"Object" srcForm]
         (Util'clearCache DynamicClassLoader'RQ, DynamicClassLoader'classCache)
         (let [#_"Class" c (.defineClass this, name, bytes, 0, (alength bytes))]
             (.put DynamicClassLoader'classCache, name, (SoftReference. c, DynamicClassLoader'RQ))
@@ -13248,14 +13184,14 @@
     )
 
     #_protected
-    #_method
-    (§ defn #_"Class<?>" (§ method findClass) [#_"DynamicClassLoader" this, #_"String" name] #_(§ throws ClassNotFoundException)
+    #_foreign
+    (§ defn #_"Class<?>" findClass [#_"DynamicClassLoader" this, #_"String" name] #_(§ throws ClassNotFoundException)
         (or (DynamicClassLoader'findInMemoryClass name) (.findClass (§ super ), name))
     )
 
     #_protected
-    #_method
-    (§ defn #_"Class<?>" (§ method loadClass) [#_"DynamicClassLoader" this, #_"String" name, #_"boolean" resolve] #_(§ throws ClassNotFoundException)
+    #_foreign
+    (§ defn #_"Class<?>" loadClass [#_"DynamicClassLoader" this, #_"String" name, #_"boolean" resolve] #_(§ throws ClassNotFoundException)
         (§ sync this
             (let [#_"Class" c (.findLoadedClass this, name)]
                 (when (nil? c)
@@ -13273,13 +13209,13 @@
     )
 
     #_method
-    (§ defn #_"void" (§ method registerConstants) [#_"DynamicClassLoader" this, #_"int" id, #_"Object[]" val]
+    (§ defn #_"void" DynamicClassLoader''registerConstants [#_"DynamicClassLoader" this, #_"int" id, #_"Object[]" val]
         (.put (:constantVals this), id, val)
         nil
     )
 
     #_method
-    (§ defn #_"Object[]" (§ method getConstants) [#_"DynamicClassLoader" this, #_"int" id]
+    (§ defn #_"Object[]" DynamicClassLoader''getConstants [#_"DynamicClassLoader" this, #_"int" id]
         (.get (:constantVals this), id)
     )
 )
@@ -13318,9 +13254,9 @@
         (:data this)
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"ExceptionInfo" this]
-        (str "cloiure.lang.ExceptionInfo: " (.getMessage this) " " (.toString (:data this)))
+    #_foreign
+    (§ defn #_"String" toString [#_"ExceptionInfo" this]
+        (str "cloiure.lang.ExceptionInfo: " (.getMessage this) " " (:data this))
     )
 )
 )
@@ -13455,7 +13391,7 @@
 
 (§ defprotocol IChunk #_(§ extends Indexed)
     #_abstract
-    (#_"IChunk" IChunk'''(§ method dropFirst) [#_"IChunk" this])
+    (#_"IChunk" IChunk'''dropFirst [#_"IChunk" this])
     #_abstract
     (#_"Object" IChunk'''(§ method reduce) [#_"IChunk" this, #_"IFn" f, #_"Object" start])
 )
@@ -13465,11 +13401,11 @@
 
 (§ defprotocol IChunkedSeq #_(§ extends ISeq, Sequential)
     #_abstract
-    (#_"IChunk" IChunkedSeq'''(§ method chunkedFirst) [#_"IChunkedSeq" this])
+    (#_"IChunk" IChunkedSeq'''chunkedFirst [#_"IChunkedSeq" this])
     #_abstract
-    (#_"ISeq" IChunkedSeq'''(§ method chunkedNext) [#_"IChunkedSeq" this])
+    (#_"ISeq" IChunkedSeq'''chunkedNext [#_"IChunkedSeq" this])
     #_abstract
-    (#_"ISeq" IChunkedSeq'''(§ method chunkedMore) [#_"IChunkedSeq" this])
+    (#_"ISeq" IChunkedSeq'''chunkedMore [#_"IChunkedSeq" this])
 )
 )
 
@@ -15370,7 +15306,7 @@
 
 (§ defprotocol IHashEq
     #_abstract
-    (#_"int" IHashEq'''(§ method hasheq) [#_"IHashEq" this])
+    (#_"int" IHashEq'''hasheq [#_"IHashEq" this])
 )
 )
 
@@ -15437,9 +15373,9 @@
  ;;
 (§ defprotocol IMapIterable
     #_abstract
-    (#_"Iterator" IMapIterable'''(§ method keyIterator) [#_"IMapIterable" this])
+    (#_"Iterator" IMapIterable'''keyIterator [#_"IMapIterable" this])
     #_abstract
-    (#_"Iterator" IMapIterable'''(§ method valIterator) [#_"IMapIterable" this])
+    (#_"Iterator" IMapIterable'''valIterator [#_"IMapIterable" this])
 )
 )
 
@@ -15612,7 +15548,7 @@
 
 (§ defprotocol IPending
     #_abstract
-    (#_"boolean" IPending'''(§ method isRealized) [#_"IPending" this])
+    (#_"boolean" IPending'''isRealized [#_"IPending" this])
 )
 )
 
@@ -15801,8 +15737,8 @@
         (Iterate'new-3 f, nil, seed)
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method isRealized) [#_"Iterate" this]
+    #_override
+    (§ defn #_"boolean" IPending'''isRealized [#_"Iterate" this]
         (not= (:_seed this) Iterate'UNREALIZED_SEED)
     )
 
@@ -16053,7 +15989,7 @@
     (defn- #_"Keyword" Keyword'new [#_"Symbol" sym]
         (let [this (Keyword'init)]
             (§ ass this (assoc this :sym sym))
-            (§ ass this (assoc this :hasheq (+ (.hasheq sym) 0x9e3779b9)))
+            (§ ass this (assoc this :hasheq (+ (IHashEq'''hasheq sym) 0x9e3779b9)))
             this
         )
     )
@@ -16074,18 +16010,18 @@
         (Keyword'find (Symbol'intern nsname))
     )
 
-    #_method
-    (§ defn #_"int" (§ method hashCode) [#_"Keyword" this]
+    #_foreign
+    (§ defn #_"int" hashCode [#_"Keyword" this]
         (+ (.hashCode (:sym this)) 0x9e3779b9)
     )
 
-    #_method
-    (§ defn #_"int" (§ method hasheq) [#_"Keyword" this]
+    #_override
+    (§ defn #_"int" IHashEq'''hasheq [#_"Keyword" this]
         (:hasheq this)
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"Keyword" this]
+    #_foreign
+    (§ defn #_"String" toString [#_"Keyword" this]
         (when (nil? (:_str this))
             (§ ass this (assoc this :_str (str ":" (:sym this))))
         )
@@ -16094,16 +16030,16 @@
 
     #_method
     (§ defn #_"Object" (§ method throwArity) [#_"Keyword" this]
-        (throw (IllegalArgumentException. (str "Wrong number of args passed to keyword: " (.toString this))))
+        (throw (IllegalArgumentException. (str "Wrong number of args passed to keyword: " this)))
     )
 
-    #_method
-    (§ defn #_"Object" (§ method call) [#_"Keyword" this]
+    #_foreign
+    (§ defn #_"Object" call [#_"Keyword" this]
         (.throwArity this)
     )
 
-    #_method
-    (§ defn #_"void" (§ method run) [#_"Keyword" this]
+    #_foreign
+    (§ defn #_"void" run [#_"Keyword" this]
         (throw (UnsupportedOperationException.))
     )
 
@@ -16112,8 +16048,8 @@
         (.throwArity this)
     )
 
-    #_method
-    (§ defn #_"int" (§ method compareTo) [#_"Keyword" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"int" compareTo [#_"Keyword" this, #_"Object" o]
         (.compareTo (:sym this), (:sym (cast' Keyword o)))
     )
 
@@ -16443,20 +16379,20 @@
         )
     )
 
-    #_method
-    (§ defn #_"int" (§ method hashCode) [#_"LazySeq" this]
+    #_foreign
+    (§ defn #_"int" hashCode [#_"LazySeq" this]
         (let [#_"ISeq" s (.seq this)]
             (if (some? s) (Util'hash s) 1)
         )
     )
 
-    #_method
-    (§ defn #_"int" (§ method hasheq) [#_"LazySeq" this]
+    #_override
+    (§ defn #_"int" IHashEq'''hasheq [#_"LazySeq" this]
         (Murmur3'hashOrdered this)
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method equals) [#_"LazySeq" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"boolean" equals [#_"LazySeq" this, #_"Object" o]
         (let [#_"ISeq" s (.seq this)]
             (if (some? s)
                 (.equals s, o)
@@ -16470,38 +16406,38 @@
         (RT'seqToArray (.seq this))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method add) [#_"LazySeq" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"boolean" add [#_"LazySeq" this, #_"Object" o]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method remove) [#_"LazySeq" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"boolean" remove [#_"LazySeq" this, #_"Object" o]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method addAll) [#_"LazySeq" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" addAll [#_"LazySeq" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"void" (§ method clear) [#_"LazySeq" this]
+    #_foreign
+    (§ defn #_"void" clear [#_"LazySeq" this]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method retainAll) [#_"LazySeq" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" retainAll [#_"LazySeq" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method removeAll) [#_"LazySeq" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" removeAll [#_"LazySeq" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method containsAll) [#_"LazySeq" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" containsAll [#_"LazySeq" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
@@ -16537,9 +16473,9 @@
         (ArrayList. this)
     )
 
-    #_method
-    (§ defn #_"List" (§ method subList) [#_"LazySeq" this, #_"int" fromIndex, #_"int" toIndex]
-        (.subList (.reify this), fromIndex, toIndex)
+    #_foreign
+    (§ defn #_"List" subList [#_"LazySeq" this, #_"int" fromIndex, #_"int" toIndex]
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -16564,14 +16500,14 @@
         (.lastIndexOf (.reify this), o)
     )
 
-    #_method
-    (§ defn #_"ListIterator" (§ method listIterator) [#_"LazySeq" this]
-        (.listIterator (.reify this))
+    #_foreign
+    (§ defn #_"ListIterator" listIterator [#_"LazySeq" this]
+        (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"ListIterator" (§ method listIterator) [#_"LazySeq" this, #_"int" index]
-        (.listIterator (.reify this), index)
+    #_foreign
+    (§ defn #_"ListIterator" listIterator [#_"LazySeq" this, #_"int" index]
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -16584,13 +16520,13 @@
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method addAll) [#_"LazySeq" this, #_"int" index, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" addAll [#_"LazySeq" this, #_"int" index, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method isRealized) [#_"LazySeq" this]
+    #_override
+    (§ defn #_"boolean" IPending'''isRealized [#_"LazySeq" this]
         (§ sync this
             (nil? (:fn this))
         )
@@ -16629,23 +16565,23 @@
     )
 
     #_method
-    (§ defn #_"int" (§ method getLineNumber) [#_"LineNumberingPushbackReader" this]
+    (§ defn #_"int" LineNumberingPushbackReader''getLineNumber [#_"LineNumberingPushbackReader" this]
         (inc (.getLineNumber (cast LineNumberReader in)))
     )
 
     #_method
-    (§ defn #_"void" (§ method setLineNumber) [#_"LineNumberingPushbackReader" this, #_"int" line]
+    (§ defn #_"void" LineNumberingPushbackReader''setLineNumber [#_"LineNumberingPushbackReader" this, #_"int" line]
         (.setLineNumber (cast LineNumberReader in), (dec line))
         nil
     )
 
     #_method
-    (§ defn #_"int" (§ method getColumnNumber) [#_"LineNumberingPushbackReader" this]
+    (§ defn #_"int" LineNumberingPushbackReader''getColumnNumber [#_"LineNumberingPushbackReader" this]
         (:_columnNumber this)
     )
 
-    #_method
-    (§ defn #_"int" (§ method read) [#_"LineNumberingPushbackReader" this] #_(§ throws IOException)
+    #_foreign
+    (§ defn #_"int" read [#_"LineNumberingPushbackReader" this] #_(§ throws IOException)
         (let [#_"int" c (.read (§ super ))]
             (§ ass this (assoc this :_prev (:_atLineStart this)))
             (if (or (= c LineNumberingPushbackReader'newline) (= c -1))
@@ -16662,8 +16598,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method unread) [#_"LineNumberingPushbackReader" this, #_"int" c] #_(§ throws IOException)
+    #_foreign
+    (§ defn #_"void" unread [#_"LineNumberingPushbackReader" this, #_"int" c] #_(§ throws IOException)
         (.unread (§ super ), c)
         (§ ass this (assoc this :_atLineStart (:_prev this)))
         (§ ass this (assoc this :_columnNumber (dec (:_columnNumber this))))
@@ -16671,7 +16607,7 @@
     )
 
     #_method
-    (§ defn #_"String" (§ method readLine) [#_"LineNumberingPushbackReader" this] #_(§ throws IOException)
+    (§ defn #_"String" LineNumberingPushbackReader''readLine [#_"LineNumberingPushbackReader" this] #_(§ throws IOException)
         (let [#_"int" c (.read this)]
             (condp = c -1 nil LineNumberingPushbackReader'newline ""
                 (let [#_"String" s (String/valueOf (char c)) #_"String" z (.readLine (cast LineNumberReader in))]
@@ -16685,7 +16621,7 @@
     )
 
     #_method
-    (§ defn #_"boolean" (§ method atLineStart) [#_"LineNumberingPushbackReader" this]
+    (§ defn #_"boolean" LineNumberingPushbackReader''atLineStart [#_"LineNumberingPushbackReader" this]
         (:_atLineStart this)
     )
 )
@@ -17078,7 +17014,7 @@
                       #_"PersistentVector" args PersistentVector'EMPTY
                       #_"PersistentTreeMap" argsyms (cast' PersistentTreeMap (.deref LispReader'ARG_ENV))
                       args
-                        (let-when [#_"ISeq" rargs (.rseq argsyms)] (some? rargs) => args
+                        (let-when [#_"ISeq" rargs (Reversible'''rseq argsyms)] (some? rargs) => args
                             (let [args
                                     (let-when [#_"int" higharg (cast Integer (.getKey (cast Map$Entry (.first rargs))))] (pos? higharg) => args
                                         (loop-when [args args #_"int" i 1] (<= i higharg) => args
@@ -17141,7 +17077,7 @@
         (let [#_"PushbackReader" r (cast PushbackReader reader)
               [#_"int" line #_"int" column]
                 (when (§ instance? LineNumberingPushbackReader r) => [-1 -1]
-                    [(.getLineNumber (cast' LineNumberingPushbackReader r)) (dec (.getColumnNumber (cast' LineNumberingPushbackReader r)))]
+                    [(LineNumberingPushbackReader''getLineNumber (cast' LineNumberingPushbackReader r)) (dec (LineNumberingPushbackReader''getColumnNumber (cast' LineNumberingPushbackReader r)))]
                 )
               pendingForms (LispReader'ensurePending pendingForms)
               #_"Object" meta (LispReader'read-5 r, true, nil, true, pendingForms)
@@ -17387,11 +17323,11 @@
         (let [#_"PushbackReader" r (cast PushbackReader reader)
               [#_"int" line #_"int" column]
                 (when (§ instance? LineNumberingPushbackReader r) => [-1 -1]
-                    [(.getLineNumber (cast' LineNumberingPushbackReader r)) (dec (.getColumnNumber (cast' LineNumberingPushbackReader r)))]
+                    [(LineNumberingPushbackReader''getLineNumber (cast' LineNumberingPushbackReader r)) (dec (LineNumberingPushbackReader''getColumnNumber (cast' LineNumberingPushbackReader r)))]
                 )
-              #_"List" list (LispReader'readDelimitedList \), r, true, (LispReader'ensurePending pendingForms))]
-            (when-not (.isEmpty list) => PersistentList'EMPTY
-                (let [#_"IObj" s (cast' IObj (PersistentList'create list))]
+              #_"List" l (LispReader'readDelimitedList \), r, true, (LispReader'ensurePending pendingForms))]
+            (when-not (.isEmpty l) => PersistentList'EMPTY
+                (let [#_"IObj" s (cast' IObj (PersistentList'create l))]
                     (when-not (= line -1) => s
                         (.withMeta s, (RT'map
                             (object-array [
@@ -17623,7 +17559,7 @@
             (catch Exception e
                 (when (and (not isRecursive) (§ instance? LineNumberingPushbackReader r)) => (throw (Util'sneakyThrow e))
                     (let [#_"LineNumberingPushbackReader" rdr (cast' LineNumberingPushbackReader r)]
-                        (throw (LispReaderException'new (.getLineNumber rdr), (.getColumnNumber rdr), e))
+                        (throw (LispReaderException'new (LineNumberingPushbackReader''getLineNumber rdr), (LineNumberingPushbackReader''getColumnNumber rdr), e))
                     )
                 )
             )
@@ -17827,7 +17763,7 @@
     (def- #_"Object" LispReader'READ_FINISHED (Object.))
 
     (defn #_"List" LispReader'readDelimitedList [#_"char" delim, #_"PushbackReader" r, #_"boolean" isRecursive, #_"Object" pendingForms]
-        (let [#_"int" firstline (if (§ instance? LineNumberingPushbackReader r) (.getLineNumber (cast' LineNumberingPushbackReader r)) -1)
+        (let [#_"int" firstline (if (§ instance? LineNumberingPushbackReader r) (LineNumberingPushbackReader''getLineNumber (cast' LineNumberingPushbackReader r)) -1)
               #_"ArrayList" a (ArrayList.)]
             (loop []
                 (let [#_"Object" form (LispReader'read-7 r, false, LispReader'READ_EOF, delim, LispReader'READ_FINISHED, isRecursive, pendingForms)]
@@ -18116,11 +18052,11 @@
 
     (defn #_"Object" LockingTransaction'runInTransaction [#_"Callable" fn] #_(§ throws Exception)
         (let [#_"LockingTransaction" t (.get LockingTransaction'transaction)]
-            (when (nil? t) => (if (some? (:info t)) (.call fn) (.run t, fn))
+            (when (nil? t) => (if (some? (:info t)) (.call fn) (LockingTransaction''run t, fn))
                 (let [t (LockingTransaction'new)]
                     (.set LockingTransaction'transaction, t)
                     (try
-                        (.run t, fn)
+                        (LockingTransaction''run t, fn)
                         (finally
                             (.remove LockingTransaction'transaction)
                         )
@@ -18131,7 +18067,7 @@
     )
 
     #_method
-    (§ defn #_"Object" (§ method run) [#_"LockingTransaction" this, #_"Callable" fn] #_(§ throws Exception)
+    (§ defn #_"Object" LockingTransaction''run [#_"LockingTransaction" this, #_"Callable" fn] #_(§ throws Exception)
         (let [#_"ArrayList<Ref>" locked (ArrayList.) #_"ArrayList<Notify>" notify (ArrayList.)]
             (loop [#_"boolean" done false #_"Object" ret nil #_"int" i 0]
                 (if (and (not done) (< i LockingTransaction'RETRY_LIMIT))
@@ -18270,7 +18206,7 @@
             (when-not (.containsKey (:vals this), ref) => (.get (:vals this), ref)
                 (let [_ (try
                             (.lock (.readLock (:lock ref)))
-                            (let-when [#_"RefTVal" ver (:tvals ref)] (some? ver) => (throw (IllegalStateException. (str (.toString ref) " is unbound.")))
+                            (let-when [#_"RefTVal" ver (:tvals ref)] (some? ver) => (throw (IllegalStateException. (str ref " is unbound.")))
                                 (loop-when [ver ver] (< (:readPoint this) (:point ver)) => (:val ver)
                                     (let-when [ver (:prior ver)] (not= ver (:tvals ref)) => :nil
                                         (recur ver)
@@ -18385,13 +18321,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"LongRangeIterator" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"LongRangeIterator" this]
         (:hasNext this)
     )
 
-    #_method
-    (§ defn #_"Object" (§ method next) [#_"LongRangeIterator" this]
+    #_foreign
+    (§ defn #_"Object" next [#_"LongRangeIterator" this]
         (when (:hasNext this) => (throw (NoSuchElementException.))
             (let [#_"long" ret (:next this)]
                 (try
@@ -18406,8 +18342,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"LongRangeIterator" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"LongRangeIterator" this]
         (throw (UnsupportedOperationException.))
     )
 )
@@ -18451,8 +18387,8 @@
         (:count this)
     )
 
-    #_method
-    (§ defn #_"LongChunk" (§ method dropFirst) [#_"LongChunk" this]
+    #_override
+    (§ defn #_"LongChunk" IChunk'''dropFirst [#_"LongChunk" this]
         (when (< 1 (:count this)) => (throw (IllegalStateException. "dropFirst of empty chunk"))
             (LongChunk'new (+ (:start this) (:step this)), (:step this), (dec (:count this)))
         )
@@ -18609,8 +18545,8 @@
     (§ defn #_"ISeq" ISeq'''next [#_"LongRange" this]
         (let-when [#_"ISeq" _next (:_next this)] (nil? _next) => _next
             (.forceChunk this)
-            (when (< 1 (.count (:_chunk this))) => (.chunkedNext this)
-                (let [#_"LongChunk" _rest (.dropFirst (:_chunk this))
+            (when (< 1 (.count (:_chunk this))) => (IChunkedSeq'''chunkedNext this)
+                (let [#_"LongChunk" _rest (IChunk'''dropFirst (:_chunk this))
                       _next (LongRange'new-6 (LongChunk''first _rest), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this))]
                     (§ ass this (assoc this :_next _next))
                     _next
@@ -18619,19 +18555,19 @@
         )
     )
 
-    #_method
-    (§ defn #_"IChunk" (§ method chunkedFirst) [#_"LongRange" this]
+    #_override
+    (§ defn #_"IChunk" IChunkedSeq'''chunkedFirst [#_"LongRange" this]
         (.forceChunk this)
         (:_chunk this)
     )
 
-    #_method
-    (§ defn #_"ISeq" (§ method chunkedNext) [#_"LongRange" this]
-        (.seq (.chunkedMore this))
+    #_override
+    (§ defn #_"ISeq" IChunkedSeq'''chunkedNext [#_"LongRange" this]
+        (.seq (IChunkedSeq'''chunkedMore this))
     )
 
-    #_method
-    (§ defn #_"ISeq" (§ method chunkedMore) [#_"LongRange" this]
+    #_override
+    (§ defn #_"ISeq" IChunkedSeq'''chunkedMore [#_"LongRange" this]
         (.forceChunk this)
         (or (:_chunkNext this) PersistentList'EMPTY)
     )
@@ -19596,8 +19532,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"Namespace" this]
+    #_foreign
+    (§ defn #_"String" toString [#_"Namespace" this]
         (.toString (:name this))
     )
 
@@ -22306,13 +22242,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"MIter" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"MIter" this]
         (< (:i this) (- (alength (:array this)) 2))
     )
 
-    #_method
-    (§ defn #_"Object" (§ method next) [#_"MIter" this]
+    #_foreign
+    (§ defn #_"Object" next [#_"MIter" this]
         (try
             (§ ass this (assoc this :i (+ (:i this) 2)))
             (.invoke (:f this), (aget (:array this) (:i this)), (aget (:array this) (inc (:i this))))
@@ -22322,8 +22258,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"MIter" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"MIter" this]
         (throw (UnsupportedOperationException.))
     )
 )
@@ -22695,13 +22631,13 @@
         (MIter'new-2 (:array this), APersistentMap'MAKE_ENTRY)
     )
 
-    #_method
-    (§ defn #_"Iterator" (§ method keyIterator) [#_"PersistentArrayMap" this]
+    #_override
+    (§ defn #_"Iterator" IMapIterable'''keyIterator [#_"PersistentArrayMap" this]
         (MIter'new-2 (:array this), APersistentMap'MAKE_KEY)
     )
 
-    #_method
-    (§ defn #_"Iterator" (§ method valIterator) [#_"PersistentArrayMap" this]
+    #_override
+    (§ defn #_"Iterator" IMapIterable'''valIterator [#_"PersistentArrayMap" this]
         (MIter'new-2 (:array this), APersistentMap'MAKE_VAL)
     )
 
@@ -22944,8 +22880,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"HIter" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"HIter" this]
         (loop []
             (when (some? (:nestedIter this))
                 (if (.hasNext (:nestedIter this))
@@ -22965,15 +22901,15 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method next) [#_"HIter" this]
+    #_foreign
+    (§ defn #_"Object" next [#_"HIter" this]
         (when (.hasNext this) => (throw (NoSuchElementException.))
             (.next (:nestedIter this))
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"HIter" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"HIter" this]
         (throw (UnsupportedOperationException.))
     )
 )
@@ -23075,8 +23011,8 @@
                 (when (some? node)
                     (.add tasks,
                         (§ reify Callable()
-                            #_method
-                            (§ defn #_"Object" (§ method call) [#_"Callable" this] #_(§ throws Exception)
+                            #_foreign
+                            (§ defn #_"Object" call [#_"Callable" this] #_(§ throws Exception)
                                 (.fold node, combinef, reducef, fjtask, fjfork, fjjoin)
                             )
                         )
@@ -23104,8 +23040,8 @@
                       #_"Object" forked
                         (.invoke fjfork, (.invoke fjtask,
                             (§ reify Callable()
-                                #_method
-                                (§ defn #_"Object" (§ method call) [#_"Callable" this] #_(§ throws Exception)
+                                #_foreign
+                                (§ defn #_"Object" call [#_"Callable" this] #_(§ throws Exception)
                                     (ArrayNode'foldTasks t2, combinef, fjtask, fjfork, fjjoin)
                                 )
                             )
@@ -23718,13 +23654,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"NodeIter" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"NodeIter" this]
         (or (not= (:nextEntry this) NodeIter'NULL) (some? (:nextIter this)) (NodeIter''advance this))
     )
 
-    #_method
-    (§ defn #_"Object" (§ method next) [#_"NodeIter" this]
+    #_foreign
+    (§ defn #_"Object" next [#_"NodeIter" this]
         (let [#_"Object" e (:nextEntry this)]
             (cond
                 (not= e NodeIter'NULL)
@@ -23746,8 +23682,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"NodeIter" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"NodeIter" this]
         (throw (UnsupportedOperationException.))
     )
 )
@@ -24021,18 +23957,18 @@
 
     (def #_"Iterator" PersistentHashMap'EMPTY_ITER
         (§ reify Iterator()
-            #_method
-            (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"boolean" hasNext [#_"Iterator" this]
                 false
             )
 
-            #_method
-            (§ defn #_"Object" (§ method next) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"Object" next [#_"Iterator" this]
                 (throw (NoSuchElementException.))
             )
 
-            #_method
-            (§ defn #_"void" (§ method remove) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"void" remove [#_"Iterator" this]
                 (throw (UnsupportedOperationException.))
             )
         )
@@ -24049,21 +23985,21 @@
                         )
                     )
 
-                    #_method
-                    (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
+                    #_foreign
+                    (§ defn #_"boolean" hasNext [#_"Iterator" this]
                         (or (not (:seen this)) (.hasNext rootIter))
                     )
 
-                    #_method
-                    (§ defn #_"Object" (§ method next) [#_"Iterator" this]
+                    #_foreign
+                    (§ defn #_"Object" next [#_"Iterator" this]
                         (when (not (:seen this)) => (.next rootIter)
                             (§ ass this (assoc this :seen true))
                             (.invoke f, nil, (:nullValue this))
                         )
                     )
 
-                    #_method
-                    (§ defn #_"void" (§ method remove) [#_"Iterator" this]
+                    #_foreign
+                    (§ defn #_"void" remove [#_"Iterator" this]
                         (throw (UnsupportedOperationException.))
                     )
                 )
@@ -24076,13 +24012,13 @@
         (.iterator this, APersistentMap'MAKE_ENTRY)
     )
 
-    #_method
-    (§ defn #_"Iterator" (§ method keyIterator) [#_"PersistentHashMap" this]
+    #_override
+    (§ defn #_"Iterator" IMapIterable'''keyIterator [#_"PersistentHashMap" this]
         (.iterator this, APersistentMap'MAKE_KEY)
     )
 
-    #_method
-    (§ defn #_"Iterator" (§ method valIterator) [#_"PersistentHashMap" this]
+    #_override
+    (§ defn #_"Iterator" IMapIterable'''valIterator [#_"PersistentHashMap" this]
         (.iterator this, APersistentMap'MAKE_VAL)
     )
 
@@ -24106,8 +24042,8 @@
         ;; we are ignoring n for now
         (let [#_"Callable" top
                 (§ reify Callable()
-                    #_method
-                    (§ defn #_"Object" (§ method call) [#_"Callable" this] #_(§ throws Exception)
+                    #_foreign
+                    (§ defn #_"Object" call [#_"Callable" this] #_(§ throws Exception)
                         (let [#_"Object" ret (.invoke combinef)]
                             (when (some? (:root this))
                                 (§ ass ret (.invoke combinef, ret, (.fold (:root this), combinef, reducef, fjtask, fjfork, fjjoin)))
@@ -24417,8 +24353,8 @@
         (Obj'new meta)
     )
 
-    #_method
-    (§ defn #_"int" (§ method hashCode) [#_"EmptyList" this]
+    #_foreign
+    (§ defn #_"int" hashCode [#_"EmptyList" this]
         1
     )
 
@@ -24427,13 +24363,13 @@
         EmptyList'HASHEQ
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"EmptyList" this]
+    #_foreign
+    (§ defn #_"String" toString [#_"EmptyList" this]
         "()"
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method equals) [#_"EmptyList" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"boolean" equals [#_"EmptyList" this, #_"Object" o]
         (and (or (§ instance? Sequential o) (instance? List o)) (nil? (RT'seq o)))
     )
 
@@ -24513,18 +24449,18 @@
     #_method
     (§ defn #_"Iterator" (§ method iterator) [#_"EmptyList" this]
         (§ reify Iterator()
-            #_method
-            (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"boolean" hasNext [#_"Iterator" this]
                 false
             )
 
-            #_method
-            (§ defn #_"Object" (§ method next) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"Object" next [#_"Iterator" this]
                 (throw (NoSuchElementException.))
             )
 
-            #_method
-            (§ defn #_"void" (§ method remove) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"void" remove [#_"Iterator" this]
                 (throw (UnsupportedOperationException.))
             )
         )
@@ -24535,38 +24471,38 @@
         RT'EMPTY_ARRAY
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method add) [#_"EmptyList" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"boolean" add [#_"EmptyList" this, #_"Object" o]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method remove) [#_"EmptyList" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"boolean" remove [#_"EmptyList" this, #_"Object" o]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method addAll) [#_"EmptyList" this, #_"Collection" collection]
+    #_foreign
+    (§ defn #_"boolean" addAll [#_"EmptyList" this, #_"Collection" collection]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"void" (§ method clear) [#_"EmptyList" this]
+    #_foreign
+    (§ defn #_"void" clear [#_"EmptyList" this]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method retainAll) [#_"EmptyList" this, #_"Collection" collection]
+    #_foreign
+    (§ defn #_"boolean" retainAll [#_"EmptyList" this, #_"Collection" collection]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method removeAll) [#_"EmptyList" this, #_"Collection" collection]
+    #_foreign
+    (§ defn #_"boolean" removeAll [#_"EmptyList" this, #_"Collection" collection]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method containsAll) [#_"EmptyList" this, #_"Collection" collection]
+    #_foreign
+    (§ defn #_"boolean" containsAll [#_"EmptyList" this, #_"Collection" collection]
         (throw (UnsupportedOperationException.))
     )
 
@@ -24583,9 +24519,9 @@
         (Collections/unmodifiableList (ArrayList. this))
     )
 
-    #_method
-    (§ defn #_"List" (§ method subList) [#_"EmptyList" this, #_"int" fromIndex, #_"int" toIndex]
-        (.subList (.reify this), fromIndex, toIndex)
+    #_foreign
+    (§ defn #_"List" subList [#_"EmptyList" this, #_"int" fromIndex, #_"int" toIndex]
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -24610,14 +24546,14 @@
         (.lastIndexOf (.reify this), o)
     )
 
-    #_method
-    (§ defn #_"ListIterator" (§ method listIterator) [#_"EmptyList" this]
-        (.listIterator (.reify this))
+    #_foreign
+    (§ defn #_"ListIterator" listIterator [#_"EmptyList" this]
+        (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"ListIterator" (§ method listIterator) [#_"EmptyList" this, #_"int" index]
-        (.listIterator (.reify this), index)
+    #_foreign
+    (§ defn #_"ListIterator" listIterator [#_"EmptyList" this, #_"int" index]
+        (throw (UnsupportedOperationException.))
     )
 
     #_method
@@ -24630,8 +24566,8 @@
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method addAll) [#_"EmptyList" this, #_"int" index, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" addAll [#_"EmptyList" this, #_"int" index, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 )
@@ -24830,8 +24766,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method equals) [#_"PersistentQueue" this, #_"Object" obj]
+    #_foreign
+    (§ defn #_"boolean" equals [#_"PersistentQueue" this, #_"Object" obj]
         (and (§ instance? Sequential obj)
             (loop-when [#_"ISeq" s (.seq this) #_"ISeq" ms (RT'seq obj)] (some? s) => (nil? ms)
                 (and (some? ms) (Util'equals (.first s), (.first ms))
@@ -24841,8 +24777,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"int" (§ method hashCode) [#_"PersistentQueue" this]
+    #_foreign
+    (§ defn #_"int" hashCode [#_"PersistentQueue" this]
         (let [#_"int" hash (:_hash this)]
             (when (zero? hash)
                 (§ ass hash 1)
@@ -24855,8 +24791,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"int" (§ method hasheq) [#_"PersistentQueue" this]
+    #_override
+    (§ defn #_"int" IHashEq'''hasheq [#_"PersistentQueue" this]
         (let [#_"int" cached (:_hasheq this)]
             (when (zero? cached)
                 (§ ass this (assoc this :_hasheq (§ ass cached (Murmur3'hashOrdered this))))
@@ -24921,38 +24857,38 @@
         (RT'seqToArray (.seq this))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method add) [#_"PersistentQueue" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"boolean" add [#_"PersistentQueue" this, #_"Object" o]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method remove) [#_"PersistentQueue" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"boolean" remove [#_"PersistentQueue" this, #_"Object" o]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method addAll) [#_"PersistentQueue" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" addAll [#_"PersistentQueue" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"void" (§ method clear) [#_"PersistentQueue" this]
+    #_foreign
+    (§ defn #_"void" clear [#_"PersistentQueue" this]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method retainAll) [#_"PersistentQueue" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" retainAll [#_"PersistentQueue" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method removeAll) [#_"PersistentQueue" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" removeAll [#_"PersistentQueue" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method containsAll) [#_"PersistentQueue" this, #_"Collection" c]
+    #_foreign
+    (§ defn #_"boolean" containsAll [#_"PersistentQueue" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
@@ -24988,13 +24924,13 @@
                 )
             )
 
-            #_method
-            (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"boolean" hasNext [#_"Iterator" this]
                 (or (and (some? (:fseq this)) (some? (.seq (:fseq this)))) (and (some? (:riter this)) (.hasNext (:riter this))))
             )
 
-            #_method
-            (§ defn #_"Object" (§ method next) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"Object" next [#_"Iterator" this]
                 (cond (some? (:fseq this))
                     (let [#_"Object" ret (.first (:fseq this))]
                         (§ ass this (assoc this :fseq (.next (:fseq this))))
@@ -25011,8 +24947,8 @@
                 )
             )
 
-            #_method
-            (§ defn #_"void" (§ method remove) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"void" remove [#_"Iterator" this]
                 (throw (UnsupportedOperationException.))
             )
         )
@@ -25499,13 +25435,13 @@
         nil
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"NodeIterator" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"NodeIterator" this]
         (not (.isEmpty (:stack this)))
     )
 
-    #_method
-    (§ defn #_"Object" (§ method next) [#_"NodeIterator" this]
+    #_foreign
+    (§ defn #_"Object" next [#_"NodeIterator" this]
         (try
             (let [#_"TNode" t (cast' TNode (.pop (:stack this)))]
                 (NodeIterator''push this, (if (:asc this) (.right t) (.left t)))
@@ -25517,8 +25453,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"NodeIterator" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"NodeIterator" this]
         (throw (UnsupportedOperationException.))
     )
 )
@@ -25537,18 +25473,18 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"KeyIterator" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"KeyIterator" this]
         (.hasNext (:it this))
     )
 
-    #_method
-    (§ defn #_"Object" (§ method next) [#_"KeyIterator" this]
+    #_foreign
+    (§ defn #_"Object" next [#_"KeyIterator" this]
         (:key (cast' TNode (.next (:it this))))
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"KeyIterator" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"KeyIterator" this]
         (throw (UnsupportedOperationException.))
     )
 )
@@ -25567,18 +25503,18 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"ValIterator" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"ValIterator" this]
         (.hasNext (:it this))
     )
 
-    #_method
-    (§ defn #_"Object" (§ method next) [#_"ValIterator" this]
+    #_foreign
+    (§ defn #_"Object" next [#_"ValIterator" this]
         (.val (cast' TNode (.next (:it this))))
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"ValIterator" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"ValIterator" this]
         (throw (UnsupportedOperationException.))
     )
 )
@@ -25674,8 +25610,8 @@
         (some? (.entryAt this, key))
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method equals) [#_"PersistentTreeMap" this, #_"Object" obj]
+    #_foreign
+    (§ defn #_"boolean" equals [#_"PersistentTreeMap" this, #_"Object" obj]
         (try
             (.equals (§ super ), obj)
             (catch ClassCastException e
@@ -25742,15 +25678,15 @@
         (PersistentTreeMap'new-2 (.meta this), (:comp this))
     )
 
-    #_method
-    (§ defn #_"ISeq" (§ method rseq) [#_"PersistentTreeMap" this]
+    #_override
+    (§ defn #_"ISeq" Reversible'''rseq [#_"PersistentTreeMap" this]
         (when (pos? (:_count this))
             (TSeq'create (:tree this), false, (:_count this))
         )
     )
 
-    #_method
-    (§ defn #_"Comparator" (§ method comparator) [#_"PersistentTreeMap" this]
+    #_override
+    (§ defn #_"Comparator" Sorted'''comparator [#_"PersistentTreeMap" this]
         (:comp this)
     )
 
@@ -26123,8 +26059,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method equals) [#_"PersistentTreeSet" this, #_"Object" obj]
+    #_foreign
+    (§ defn #_"boolean" equals [#_"PersistentTreeSet" this, #_"Object" obj]
         (try
             (.equals (§ super ), obj)
             (catch ClassCastException _
@@ -26164,9 +26100,9 @@
         (PersistentTreeSet'new (.meta this), (cast' PersistentTreeMap (.empty (:impl this))))
     )
 
-    #_method
-    (§ defn #_"ISeq" (§ method rseq) [#_"PersistentTreeSet" this]
-        (KeySeq'create (.rseq (cast' Reversible (:impl this))))
+    #_override
+    (§ defn #_"ISeq" Reversible'''rseq [#_"PersistentTreeSet" this]
+        (KeySeq'create (Reversible'''rseq (cast' Reversible (:impl this))))
     )
 
     #_method
@@ -26174,9 +26110,9 @@
         (PersistentTreeSet'new meta, (:impl this))
     )
 
-    #_method
-    (§ defn #_"Comparator" (§ method comparator) [#_"PersistentTreeSet" this]
-        (.comparator (cast' Sorted (:impl this)))
+    #_override
+    (§ defn #_"Comparator" Sorted'''comparator [#_"PersistentTreeSet" this]
+        (Sorted'''comparator (cast' Sorted (:impl this)))
     )
 
     #_method
@@ -26279,21 +26215,21 @@
         )
     )
 
-    #_method
-    (§ defn #_"IChunk" (§ method chunkedFirst) [#_"ChunkedSeq" this]
+    #_override
+    (§ defn #_"IChunk" IChunkedSeq'''chunkedFirst [#_"ChunkedSeq" this]
         (ArrayChunk'new-2 (:node this), (:offset this))
     )
 
-    #_method
-    (§ defn #_"ISeq" (§ method chunkedNext) [#_"ChunkedSeq" this]
+    #_override
+    (§ defn #_"ISeq" IChunkedSeq'''chunkedNext [#_"ChunkedSeq" this]
         (when (< (+ (:i this) (alength (:node this))) (:cnt (:vec this)))
             (ChunkedSeq'new-3 (:vec this), (+ (:i this) (alength (:node this))), 0)
         )
     )
 
-    #_method
-    (§ defn #_"ISeq" (§ method chunkedMore) [#_"ChunkedSeq" this]
-        (or (.chunkedNext this) PersistentList'EMPTY)
+    #_override
+    (§ defn #_"ISeq" IChunkedSeq'''chunkedMore [#_"ChunkedSeq" this]
+        (or (IChunkedSeq'''chunkedNext this) PersistentList'EMPTY)
     )
 
     #_method
@@ -26312,7 +26248,7 @@
     (§ defn #_"ISeq" ISeq'''next [#_"ChunkedSeq" this]
         (if (< (inc (:offset this)) (alength (:node this)))
             (ChunkedSeq'new-4 (:vec this), (:node this), (:i this), (inc (:offset this)))
-            (.chunkedNext this)
+            (IChunkedSeq'''chunkedNext this)
         )
     )
 
@@ -26897,13 +26833,13 @@
                 )
             )
 
-            #_method
-            (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"boolean" hasNext [#_"Iterator" this]
                 (< (:i this) end)
             )
 
-            #_method
-            (§ defn #_"Object" (§ method next) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"Object" next [#_"Iterator" this]
                 (when (< (:i this) end) => (throw (NoSuchElementException.))
                     (when (= (- (:i this) (:base this)) 32)
                         (§ ass this (assoc this :array (.arrayFor this, (:i this))))
@@ -26916,8 +26852,8 @@
                 )
             )
 
-            #_method
-            (§ defn #_"void" (§ method remove) [#_"Iterator" this]
+            #_foreign
+            (§ defn #_"void" remove [#_"Iterator" this]
                 (throw (UnsupportedOperationException.))
             )
         )
@@ -27113,13 +27049,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"RangeIterator" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"RangeIterator" this]
         (not (.exceededBounds (:boundsCheck this), (:next this)))
     )
 
-    #_method
-    (§ defn #_"Object" (§ method next) [#_"RangeIterator" this]
+    #_foreign
+    (§ defn #_"Object" next [#_"RangeIterator" this]
         (when (.hasNext this) => (throw (NoSuchElementException.))
             (let [#_"Object" ret (:next this)]
                 (§ ass this (assoc this :next (Numbers'addP-2oo (:next this), (:step this))))
@@ -27128,8 +27064,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"RangeIterator" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"RangeIterator" this]
         (throw (UnsupportedOperationException.))
     )
 )
@@ -27282,8 +27218,8 @@
     (§ defn #_"ISeq" ISeq'''next [#_"Range" this]
         (let-when [#_"Range" _next (:_next this)] (nil? _next) => _next
             (.forceChunk this)
-            (when (< 1 (.count (:_chunk this))) => (.chunkedNext this)
-                (let [#_"IChunk" _rest (.dropFirst (:_chunk this))
+            (when (< 1 (.count (:_chunk this))) => (IChunkedSeq'''chunkedNext this)
+                (let [#_"IChunk" _rest (IChunk'''dropFirst (:_chunk this))
                       _next (Range'new-6 (.nth _rest, 0), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this))]
                     (§ ass this (assoc this :_next _next))
                     _next
@@ -27292,19 +27228,19 @@
         )
     )
 
-    #_method
-    (§ defn #_"IChunk" (§ method chunkedFirst) [#_"Range" this]
+    #_override
+    (§ defn #_"IChunk" IChunkedSeq'''chunkedFirst [#_"Range" this]
         (.forceChunk this)
         (:_chunk this)
     )
 
-    #_method
-    (§ defn #_"ISeq" (§ method chunkedNext) [#_"Range" this]
-        (.seq (.chunkedMore this))
+    #_override
+    (§ defn #_"ISeq" IChunkedSeq'''chunkedNext [#_"Range" this]
+        (.seq (IChunkedSeq'''chunkedMore this))
     )
 
-    #_method
-    (§ defn #_"ISeq" (§ method chunkedMore) [#_"Range" this]
+    #_override
+    (§ defn #_"ISeq" IChunkedSeq'''chunkedMore [#_"Range" this]
         (.forceChunk this)
         (or (:_chunkNext this) PersistentList'EMPTY)
     )
@@ -27360,19 +27296,19 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method equals) [#_"Ratio" this, #_"Object" arg0]
+    #_foreign
+    (§ defn #_"boolean" equals [#_"Ratio" this, #_"Object" arg0]
         (and (some? arg0) (§ instance? Ratio arg0) (.equals (:numerator (cast' Ratio arg0)), (:numerator this)) (.equals (:denominator (cast' Ratio arg0)), (:denominator this)))
     )
 
-    #_method
-    (§ defn #_"int" (§ method hashCode) [#_"Ratio" this]
+    #_foreign
+    (§ defn #_"int" hashCode [#_"Ratio" this]
         (bit-xor (.hashCode (:numerator this)) (.hashCode (:denominator this)))
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"Ratio" this]
-        (str (.toString (:numerator this)) "/" (.toString (:denominator this)))
+    #_foreign
+    (§ defn #_"String" toString [#_"Ratio" this]
+        (str (:numerator this) "/" (:denominator this))
     )
 
     #_method
@@ -27413,8 +27349,8 @@
         (.divide (:numerator this), (:denominator this))
     )
 
-    #_method
-    (§ defn #_"int" (§ method compareTo) [#_"Ratio" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"int" compareTo [#_"Ratio" this, #_"Object" o]
         (Numbers'compare this, (cast Number o))
     )
 )
@@ -27445,13 +27381,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"RecordIterator" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"RecordIterator" this]
         (or (< (:i this) (:basecnt this)) (.hasNext (:extmap this)))
     )
 
-    #_method
-    (§ defn #_"Object" (§ method next) [#_"RecordIterator" this]
+    #_foreign
+    (§ defn #_"Object" next [#_"RecordIterator" this]
         (when (< (:i this) (:basecnt this)) => (.next (:extmap this))
             (let [#_"Object" k (.nth (:basefields this), (:i this))]
                 (§ ass this (assoc this :i (inc (:i this))))
@@ -27460,8 +27396,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"RecordIterator" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"RecordIterator" this]
         (throw (UnsupportedOperationException.))
     )
 )
@@ -27561,8 +27497,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"int" (§ method compareTo) [#_"Ref" this, #_"Ref" ref]
+    #_foreign
+    (§ defn #_"int" compareTo [#_"Ref" this, #_"Ref" ref]
         (let [a (:id this) b (:id ref)]
             (cond (< a b) -1 (> a b) 1 :else 0)
         )
@@ -27597,7 +27533,7 @@
     (defn #_"Object" Ref''currentVal [#_"Ref" this]
         (try
             (.lock (.readLock (:lock this)))
-            (when (some? (:tvals this)) => (throw (IllegalStateException. (str (.toString this) " is unbound.")))
+            (when (some? (:tvals this)) => (throw (IllegalStateException. (str this " is unbound.")))
                 (:val (:tvals this))
             )
             (finally
@@ -27685,13 +27621,13 @@
         (cast' IFn (.deref this))
     )
 
-    #_method
-    (§ defn #_"Object" (§ method call) [#_"Ref" this]
+    #_foreign
+    (§ defn #_"Object" call [#_"Ref" this]
         (.invoke this)
     )
 
-    #_method
-    (§ defn #_"void" (§ method run) [#_"Ref" this]
+    #_foreign
+    (§ defn #_"void" run [#_"Ref" this]
         (.invoke this)
         nil
     )
@@ -33190,7 +33126,7 @@
 
 (§ defprotocol Reversible
     #_abstract
-    (#_"ISeq" Reversible'''(§ method rseq) [#_"Reversible" this])
+    (#_"ISeq" Reversible'''rseq [#_"Reversible" this])
 )
 )
 
@@ -33219,8 +33155,8 @@
         (hash-map)
     )
 
-    #_method
-    (§ defn #_"int" (§ method compare) [#_"DefaultComparator" this, #_"Object" o1, #_"Object" o2]
+    #_foreign
+    (§ defn #_"int" compare [#_"DefaultComparator" this, #_"Object" o1, #_"Object" o2]
         (Util'compare o1, o2)
     )
 )
@@ -33575,18 +33511,18 @@
                 (.iterator (cast Iterable coll))
             (nil? coll)
                 (§ reify Iterator()
-                    #_method
-                    (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
+                    #_foreign
+                    (§ defn #_"boolean" hasNext [#_"Iterator" this]
                         false
                     )
 
-                    #_method
-                    (§ defn #_"Object" (§ method next) [#_"Iterator" this]
+                    #_foreign
+                    (§ defn #_"Object" next [#_"Iterator" this]
                         (throw (NoSuchElementException.))
                     )
 
-                    #_method
-                    (§ defn #_"void" (§ method remove) [#_"Iterator" this]
+                    #_foreign
+                    (§ defn #_"void" remove [#_"Iterator" this]
                         (throw (UnsupportedOperationException.))
                     )
                 )
@@ -33601,21 +33537,21 @@
                             )
                         )
 
-                        #_method
-                        (§ defn #_"boolean" (§ method hasNext) [#_"Iterator" this]
+                        #_foreign
+                        (§ defn #_"boolean" hasNext [#_"Iterator" this]
                             (< (:i this) (.length s))
                         )
 
-                        #_method
-                        (§ defn #_"Object" (§ method next) [#_"Iterator" this]
+                        #_foreign
+                        (§ defn #_"Object" next [#_"Iterator" this]
                             (let [_ (.charAt s, (:i this))]
                                 (§ ass (:i this) (inc (:i this)))
                                 _
                             )
                         )
 
-                        #_method
-                        (§ defn #_"void" (§ method remove) [#_"Iterator" this]
+                        #_foreign
+                        (§ defn #_"void" remove [#_"Iterator" this]
                             (throw (UnsupportedOperationException.))
                         )
                     )
@@ -34602,14 +34538,14 @@
 
     (defn #_"int" RT'getLineNumber [#_"Reader" r]
         (if (§ instance? LineNumberingPushbackReader r)
-            (.getLineNumber (cast' LineNumberingPushbackReader r))
+            (LineNumberingPushbackReader''getLineNumber (cast' LineNumberingPushbackReader r))
             0
         )
     )
 
     (defn #_"int" RT'getColumnNumber [#_"Reader" r]
         (if (§ instance? LineNumberingPushbackReader r)
-            (.getColumnNumber (cast' LineNumberingPushbackReader r))
+            (LineNumberingPushbackReader''getColumnNumber (cast' LineNumberingPushbackReader r))
             0
         )
     )
@@ -34782,8 +34718,8 @@
         (cast ClassLoader
             (§ unsure AccessController/doPrivileged
                 (§ reify PrivilegedAction()
-                    #_method
-                    (§ defn #_"Object" (§ method run) [#_"PrivilegedAction" _this]
+                    #_foreign
+                    (§ defn #_"Object" run [#_"PrivilegedAction" _this]
                         (DynamicClassLoader'new (RT'baseLoader))
                     )
                 )
@@ -34847,45 +34783,45 @@
         (RT'classForName-1 name)
     )
 
-    (defn #_"boolean" RT'aget_boolean [#_"boolean[]" xs, #_"int" i] (aget xs i))
-    (defn #_"byte"    RT'aget_byte    [#_"byte[]"    xs, #_"int" i] (aget xs i))
-    (defn #_"short"   RT'aget_short   [#_"short[]"   xs, #_"int" i] (aget xs i))
-    (defn #_"char"    RT'aget_char    [#_"char[]"    xs, #_"int" i] (aget xs i))
-    (defn #_"int"     RT'aget_int     [#_"int[]"     xs, #_"int" i] (aget xs i))
-    (defn #_"long"    RT'aget_long    [#_"long[]"    xs, #_"int" i] (aget xs i))
-    (defn #_"float"   RT'aget_float   [#_"float[]"   xs, #_"int" i] (aget xs i))
-    (defn #_"double"  RT'aget_double  [#_"double[]"  xs, #_"int" i] (aget xs i))
-    (defn #_"Object"  RT'aget_object  [#_"Object[]"  xs, #_"int" i] (aget xs i))
+    (defn #_"boolean" RT'aget_boolean [#_"boolean[]" a, #_"int" i] (aget a i))
+    (defn #_"byte"    RT'aget_byte    [#_"byte[]"    a, #_"int" i] (aget a i))
+    (defn #_"short"   RT'aget_short   [#_"short[]"   a, #_"int" i] (aget a i))
+    (defn #_"char"    RT'aget_char    [#_"char[]"    a, #_"int" i] (aget a i))
+    (defn #_"int"     RT'aget_int     [#_"int[]"     a, #_"int" i] (aget a i))
+    (defn #_"long"    RT'aget_long    [#_"long[]"    a, #_"int" i] (aget a i))
+    (defn #_"float"   RT'aget_float   [#_"float[]"   a, #_"int" i] (aget a i))
+    (defn #_"double"  RT'aget_double  [#_"double[]"  a, #_"int" i] (aget a i))
+    (defn #_"Object"  RT'aget_object  [#_"Object[]"  a, #_"int" i] (aget a i))
 
-    (defn #_"boolean" RT'aset_boolean [#_"boolean[]" xs, #_"int" i, #_"boolean" v] (aset xs i v) v)
-    (defn #_"byte"    RT'aset_byte    [#_"byte[]"    xs, #_"int" i, #_"byte"    v] (aset xs i v) v)
-    (defn #_"short"   RT'aset_short   [#_"short[]"   xs, #_"int" i, #_"short"   v] (aset xs i v) v)
-    (defn #_"char"    RT'aset_char    [#_"char[]"    xs, #_"int" i, #_"char"    v] (aset xs i v) v)
-    (defn #_"int"     RT'aset_int     [#_"int[]"     xs, #_"int" i, #_"int"     v] (aset xs i v) v)
-    (defn #_"long"    RT'aset_long    [#_"long[]"    xs, #_"int" i, #_"long"    v] (aset xs i v) v)
-    (defn #_"float"   RT'aset_float   [#_"float[]"   xs, #_"int" i, #_"float"   v] (aset xs i v) v)
-    (defn #_"double"  RT'aset_double  [#_"double[]"  xs, #_"int" i, #_"double"  v] (aset xs i v) v)
-    (defn #_"Object"  RT'aset_object  [#_"Object[]"  xs, #_"int" i, #_"Object"  v] (aset xs i v) v)
+    (defn #_"boolean" RT'aset_boolean [#_"boolean[]" a, #_"int" i, #_"boolean" v] (aset a i v) v)
+    (defn #_"byte"    RT'aset_byte    [#_"byte[]"    a, #_"int" i, #_"byte"    v] (aset a i v) v)
+    (defn #_"short"   RT'aset_short   [#_"short[]"   a, #_"int" i, #_"short"   v] (aset a i v) v)
+    (defn #_"char"    RT'aset_char    [#_"char[]"    a, #_"int" i, #_"char"    v] (aset a i v) v)
+    (defn #_"int"     RT'aset_int     [#_"int[]"     a, #_"int" i, #_"int"     v] (aset a i v) v)
+    (defn #_"long"    RT'aset_long    [#_"long[]"    a, #_"int" i, #_"long"    v] (aset a i v) v)
+    (defn #_"float"   RT'aset_float   [#_"float[]"   a, #_"int" i, #_"float"   v] (aset a i v) v)
+    (defn #_"double"  RT'aset_double  [#_"double[]"  a, #_"int" i, #_"double"  v] (aset a i v) v)
+    (defn #_"Object"  RT'aset_object  [#_"Object[]"  a, #_"int" i, #_"Object"  v] (aset a i v) v)
 
-    (defn #_"int" RT'alength_boolean [#_"boolean[]" xs] (alength xs))
-    (defn #_"int" RT'alength_byte    [#_"byte[]"    xs] (alength xs))
-    (defn #_"int" RT'alength_short   [#_"short[]"   xs] (alength xs))
-    (defn #_"int" RT'alength_char    [#_"char[]"    xs] (alength xs))
-    (defn #_"int" RT'alength_int     [#_"int[]"     xs] (alength xs))
-    (defn #_"int" RT'alength_long    [#_"long[]"    xs] (alength xs))
-    (defn #_"int" RT'alength_float   [#_"float[]"   xs] (alength xs))
-    (defn #_"int" RT'alength_double  [#_"double[]"  xs] (alength xs))
-    (defn #_"int" RT'alength_object  [#_"Object[]"  xs] (alength xs))
+    (defn #_"int" RT'alength_boolean [#_"boolean[]" a] (alength a))
+    (defn #_"int" RT'alength_byte    [#_"byte[]"    a] (alength a))
+    (defn #_"int" RT'alength_short   [#_"short[]"   a] (alength a))
+    (defn #_"int" RT'alength_char    [#_"char[]"    a] (alength a))
+    (defn #_"int" RT'alength_int     [#_"int[]"     a] (alength a))
+    (defn #_"int" RT'alength_long    [#_"long[]"    a] (alength a))
+    (defn #_"int" RT'alength_float   [#_"float[]"   a] (alength a))
+    (defn #_"int" RT'alength_double  [#_"double[]"  a] (alength a))
+    (defn #_"int" RT'alength_object  [#_"Object[]"  a] (alength a))
 
-    (defn #_"boolean[]" RT'aclone_boolean [#_"boolean[]" xs] (.clone xs))
-    (defn #_"byte[]"    RT'aclone_byte    [#_"byte[]"    xs] (.clone xs))
-    (defn #_"short[]"   RT'aclone_short   [#_"short[]"   xs] (.clone xs))
-    (defn #_"char[]"    RT'aclone_char    [#_"char[]"    xs] (.clone xs))
-    (defn #_"int[]"     RT'aclone_int     [#_"int[]"     xs] (.clone xs))
-    (defn #_"long[]"    RT'aclone_long    [#_"long[]"    xs] (.clone xs))
-    (defn #_"float[]"   RT'aclone_float   [#_"float[]"   xs] (.clone xs))
-    (defn #_"double[]"  RT'aclone_double  [#_"double[]"  xs] (.clone xs))
-    (defn #_"Object[]"  RT'aclone_object  [#_"Object[]"  xs] (.clone xs))
+    (defn #_"boolean[]" RT'aclone_boolean [#_"boolean[]" a] (.clone a))
+    (defn #_"byte[]"    RT'aclone_byte    [#_"byte[]"    a] (.clone a))
+    (defn #_"short[]"   RT'aclone_short   [#_"short[]"   a] (.clone a))
+    (defn #_"char[]"    RT'aclone_char    [#_"char[]"    a] (.clone a))
+    (defn #_"int[]"     RT'aclone_int     [#_"int[]"     a] (.clone a))
+    (defn #_"long[]"    RT'aclone_long    [#_"long[]"    a] (.clone a))
+    (defn #_"float[]"   RT'aclone_float   [#_"float[]"   a] (.clone a))
+    (defn #_"double[]"  RT'aclone_double  [#_"double[]"  a] (.clone a))
+    (defn #_"Object[]"  RT'aclone_object  [#_"Object[]"  a] (.clone a))
 )
 )
 
@@ -34920,8 +34856,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"SeqIterator" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"SeqIterator" this]
         (cond (= (:seq this) SeqIterator'START)
             (do
                 (§ ass this (assoc this :seq nil))
@@ -34935,8 +34871,8 @@
         (some? (:next this))
     )
 
-    #_method
-    (§ defn #_"Object" (§ method next) [#_"SeqIterator" this] #_(§ throws NoSuchElementException)
+    #_foreign
+    (§ defn #_"Object" next [#_"SeqIterator" this] #_(§ throws NoSuchElementException)
         (when (not (.hasNext this))
             (throw (NoSuchElementException.))
         )
@@ -34944,8 +34880,8 @@
         (RT'first (:next this))
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"SeqIterator" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"SeqIterator" this]
         (throw (UnsupportedOperationException.))
     )
 )
@@ -34973,7 +34909,7 @@
 
 (§ defprotocol Sorted
     #_abstract
-    (#_"Comparator" Sorted'''(§ method comparator) [#_"Sorted" this])
+    (#_"Comparator" Sorted'''comparator [#_"Sorted" this])
     #_abstract
     (#_"Object" Sorted'''(§ method entryKey) [#_"Sorted" this, #_"Object" entry])
     #_abstract
@@ -35086,8 +35022,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"Symbol" this]
+    #_foreign
+    (§ defn #_"String" toString [#_"Symbol" this]
         (when (nil? (:_str this))
             (§ ass this (assoc this :_str (if (some? (:ns this)) (str (:ns this) "/" (:name this)) (:name this))))
         )
@@ -35104,8 +35040,8 @@
         (:name this)
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method equals) [#_"Symbol" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"boolean" equals [#_"Symbol" this, #_"Object" o]
         (cond
             (= this o)
                 true
@@ -35118,13 +35054,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"int" (§ method hashCode) [#_"Symbol" this]
+    #_foreign
+    (§ defn #_"int" hashCode [#_"Symbol" this]
         (Util'hashCombine (.hashCode (:name this)), (Util'hash (:ns this)))
     )
 
-    #_method
-    (§ defn #_"int" (§ method hasheq) [#_"Symbol" this]
+    #_override
+    (§ defn #_"int" IHashEq'''hasheq [#_"Symbol" this]
         (when (zero? (:_hasheq this))
             (§ ass this (assoc this :_hasheq (Util'hashCombine (Murmur3'hashUnencodedChars (:name this)), (Util'hash (:ns this)))))
         )
@@ -35145,8 +35081,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"int" (§ method compareTo) [#_"Symbol" this, #_"Object" o]
+    #_foreign
+    (§ defn #_"int" compareTo [#_"Symbol" this, #_"Object" o]
         (let [#_"Symbol" s (cast' Symbol o)]
             (cond
                 (.equals this, o)                       0
@@ -35212,12 +35148,12 @@
     )
 
     #_method
-    (§ defn #_"IPersistentMap" (§ method mapAt) [#_"TransactionalHashMap" this, #_"int" bin]
+    (§ defn #_"IPersistentMap" TransactionalHashMap''mapAt [#_"TransactionalHashMap" this, #_"int" bin]
         (cast' IPersistentMap (.deref (aget (:bins this) bin)))
     )
 
     #_method
-    (§ defn #_"int" (§ method binFor) [#_"TransactionalHashMap" this, #_"Object" k]
+    (§ defn #_"int" TransactionalHashMap''binFor [#_"TransactionalHashMap" this, #_"Object" k]
         ;; spread hashes, a la Cliff Click
         (let [#_"int" h (.hashCode k)]
             (§ ass h (bit-xor h (bit-xor (>>> h 20) (>>> h 12))))
@@ -35228,14 +35164,14 @@
 
     #_method
     (§ defn #_"Entry" (§ method entryAt) [#_"TransactionalHashMap" this, #_"Object" k]
-        (.entryAt (.mapAt this, (.binFor this, k)), k)
+        (.entryAt (TransactionalHashMap''mapAt this, (TransactionalHashMap''binFor this, k)), k)
     )
 
     #_method
     (§ defn #_"int" (§ method size) [#_"TransactionalHashMap" this]
         (let [#_"int" n 0]
             (loop-when-recur [#_"int" i 0] (< i (alength (:bins this))) [(inc i)]
-                (§ ass n (+ n (.count (.mapAt this, i))))
+                (§ ass n (+ n (.count (TransactionalHashMap''mapAt this, i))))
             )
             n
         )
@@ -35260,7 +35196,7 @@
 
     #_method
     (§ defn #_"V" (§ method put) [#_"TransactionalHashMap" this, #_"K" k, #_"V" v]
-        (let [#_"Ref" r (aget (:bins this) (.binFor this, k))
+        (let [#_"Ref" r (aget (:bins this) (TransactionalHashMap''binFor this, k))
               #_"IPersistentMap" m (cast' IPersistentMap (.deref r))
               #_"Object" ret (.valAt m, k)]
             (.set r, (.assoc m, k, v))
@@ -35270,7 +35206,7 @@
 
     #_method
     (§ defn #_"V" (§ method remove) [#_"TransactionalHashMap" this, #_"Object" k]
-        (let [#_"Ref" r (aget (:bins this) (.binFor this, k))
+        (let [#_"Ref" r (aget (:bins this) (TransactionalHashMap''binFor this, k))
               #_"IPersistentMap" m (cast' IPersistentMap (.deref r))
               #_"Object" ret (.valAt m, k)]
             (.set r, (.without m, k))
@@ -35278,8 +35214,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method putAll) [#_"TransactionalHashMap" this, #_"Map<? extends K, ? extends V>" m]
+    #_foreign
+    (§ defn #_"void" putAll [#_"TransactionalHashMap" this, #_"Map<? extends K, ? extends V>" m]
         (loop-when-recur [#_"Iterator" i (.iterator (.entrySet m))] (.hasNext i) [i]
             (let [#_"Entry<K, V>" e (cast' Entry (.next i))]
                 (.put this, (.getKey e), (.getValue e))
@@ -35288,8 +35224,8 @@
         nil
     )
 
-    #_method
-    (§ defn #_"void" (§ method clear) [#_"TransactionalHashMap" this]
+    #_foreign
+    (§ defn #_"void" clear [#_"TransactionalHashMap" this]
         (dotimes [#_"int" i (alength (:bins this))]
             (let [#_"Ref" r (aget (:bins this) i)
                   #_"IPersistentMap" m (cast' IPersistentMap (.deref r))]
@@ -35305,7 +35241,7 @@
     (§ defn #_"Set<Entry<K, V>>" (§ method entrySet) [#_"TransactionalHashMap" this]
         (let [#_"ArrayList<Map$Entry<K, V>>" entries (ArrayList. (alength (:bins this)))]
             (dotimes [#_"int" i (alength (:bins this))]
-                (let [#_"IPersistentMap" m (.mapAt this, i)]
+                (let [#_"IPersistentMap" m (TransactionalHashMap''mapAt this, i)]
                     (when (pos? (.count m))
                         (.addAll entries, (cast Collection (RT'seq m)))
                     )
@@ -35325,9 +35261,9 @@
         )
     )
 
-    #_method
-    (§ defn #_"V" (§ method putIfAbsent) [#_"TransactionalHashMap" this, #_"K" k, #_"V" v]
-        (let [#_"Ref" r (aget (:bins this) (.binFor this, k)) #_"IPersistentMap" m (cast' IPersistentMap (.deref r))]
+    #_foreign
+    (§ defn #_"V" putIfAbsent [#_"TransactionalHashMap" this, #_"K" k, #_"V" v]
+        (let [#_"Ref" r (aget (:bins this) (TransactionalHashMap''binFor this, k)) #_"IPersistentMap" m (cast' IPersistentMap (.deref r))]
             (let-when [#_"Entry" e (.entryAt m, k)] (nil? e) => (cast' V (.getValue e))
                 (.set r, (.assoc m, k, v))
                 nil
@@ -35335,9 +35271,9 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method remove) [#_"TransactionalHashMap" this, #_"Object" k, #_"Object" v]
-        (let [#_"Ref" r (aget (:bins this) (.binFor this, k)) #_"IPersistentMap" m (cast' IPersistentMap (.deref r))]
+    #_foreign
+    (§ defn #_"boolean" remove [#_"TransactionalHashMap" this, #_"Object" k, #_"Object" v]
+        (let [#_"Ref" r (aget (:bins this) (TransactionalHashMap''binFor this, k)) #_"IPersistentMap" m (cast' IPersistentMap (.deref r))]
             (let-when [#_"Entry" e (.entryAt m, k)] (and (some? e) (.equals (.getValue e), v)) => false
                 (.set r, (.without m, k))
                 true
@@ -35347,7 +35283,7 @@
 
     #_method
     (§ defn #_"boolean" (§ method replace) [#_"TransactionalHashMap" this, #_"K" k, #_"V" oldv, #_"V" newv]
-        (let [#_"Ref" r (aget (:bins this) (.binFor this, k)) #_"IPersistentMap" m (cast' IPersistentMap (.deref r))]
+        (let [#_"Ref" r (aget (:bins this) (TransactionalHashMap''binFor this, k)) #_"IPersistentMap" m (cast' IPersistentMap (.deref r))]
             (let-when [#_"Entry" e (.entryAt m, k)] (and (some? e) (.equals (.getValue e), oldv)) => false
                 (.set r, (.assoc m, k, newv))
                 true
@@ -35357,7 +35293,7 @@
 
     #_method
     (§ defn #_"V" (§ method replace) [#_"TransactionalHashMap" this, #_"K" k, #_"V" v]
-        (let [#_"Ref" r (aget (:bins this) (.binFor this, k)) #_"IPersistentMap" m (cast' IPersistentMap (.deref r))]
+        (let [#_"Ref" r (aget (:bins this) (TransactionalHashMap''binFor this, k)) #_"IPersistentMap" m (cast' IPersistentMap (.deref r))]
             (when-let [#_"Entry" e (.entryAt m, k)]
                 (.set r, (.assoc m, k, v))
                 (cast' V (.getValue e))
@@ -35406,8 +35342,8 @@
         true
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"EmptyBuffer" this]
+    #_foreign
+    (§ defn #_"String" toString [#_"EmptyBuffer" this]
         "EmptyBuffer"
     )
 )
@@ -35452,8 +35388,8 @@
         (= (:val this) TransformerIterator'NONE)
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"SingleBuffer" this]
+    #_foreign
+    (§ defn #_"String" toString [#_"SingleBuffer" this]
         (str "SingleBuffer: " (:val this))
     )
 )
@@ -35490,9 +35426,9 @@
         (.isEmpty (:vals this))
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"ManyBuffer" this]
-        (str "ManyBuffer: " (.toString (:vals this)))
+    #_foreign
+    (§ defn #_"String" toString [#_"ManyBuffer" this]
+        (str "ManyBuffer: " (:vals this))
     )
 )
 
@@ -35511,8 +35447,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"MultiIterator" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"MultiIterator" this]
         (let [#_"Iterator[]" iters (:iters this)]
             (loop-when [#_"int" i 0] (< i (alength iters)) => true
                 (and (.hasNext (aget iters i)) (recur (inc i)))
@@ -35520,8 +35456,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"Object" (§ method next) [#_"MultiIterator" this]
+    #_foreign
+    (§ defn #_"Object" next [#_"MultiIterator" this]
         (let [#_"Iterator[]" iters (:iters this)
               #_"Object[]" nexts (make-array Object (alength iters))]
             (dotimes [#_"int" i (alength iters)]
@@ -35531,8 +35467,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"MultiIterator" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"MultiIterator" this]
         (throw (UnsupportedOperationException.))
     )
 )
@@ -35633,13 +35569,13 @@
         )
     )
 
-    #_method
-    (§ defn #_"boolean" (§ method hasNext) [#_"TransformerIterator" this]
+    #_foreign
+    (§ defn #_"boolean" hasNext [#_"TransformerIterator" this]
         (TransformerIterator''step this)
     )
 
-    #_method
-    (§ defn #_"Object" (§ method next) [#_"TransformerIterator" this]
+    #_foreign
+    (§ defn #_"Object" next [#_"TransformerIterator" this]
         (when (.hasNext this) => (throw (NoSuchElementException.))
             (let [#_"Object" ret (:next this)]
                 (§ ass this (assoc this :next TransformerIterator'NONE))
@@ -35648,8 +35584,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"void" (§ method remove) [#_"TransformerIterator" this]
+    #_foreign
+    (§ defn #_"void" remove [#_"TransformerIterator" this]
         (throw (UnsupportedOperationException.))
     )
 )
@@ -35827,7 +35763,7 @@
     (defn #_"int" Util'hasheq [#_"Object" o]
         (cond
             (nil? o)                0
-            (§ instance? IHashEq o) (.hasheq (cast' IHashEq o))
+            (§ instance? IHashEq o) (IHashEq'''hasheq (cast' IHashEq o))
             (instance? Number o)    (Numbers'hasheq (cast Number o))
             (instance? String o)    (Murmur3'hashInt (.hashCode o))
             :else                   (.hashCode o)
@@ -35921,8 +35857,8 @@
         )
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"Unbound" this]
+    #_foreign
+    (§ defn #_"String" toString [#_"Unbound" this]
         (str "Unbound: " (:v this))
     )
 
@@ -35951,20 +35887,14 @@
             this
         )
     )
-
-    #_protected
-    #_method
-    (§ defn #_"Object" (§ method clone) [#_"Frame" this]
-        (Frame'new (:bindings this), nil)
-    )
 )
 
 (class-ns Var (§ extends ARef) (§ implements IFn, IRef, Settable)
     (def #_"ThreadLocal<Frame>" Var'dvals
         (§ reify ThreadLocal<Frame>()
             #_protected
-            #_method
-            (§ defn #_"Frame" (§ method initialValue) [#_"ThreadLocal<Frame>" this]
+            #_foreign
+            (§ defn #_"Frame" initialValue [#_"ThreadLocal<Frame>" this]
                 Frame'TOP
             )
         )
@@ -35981,10 +35911,6 @@
 
     (defn #_"Object" Var'getThreadBindingFrame []
         (.get Var'dvals)
-    )
-
-    (defn #_"Object" Var'cloneThreadBindingFrame []
-        (.clone (.get Var'dvals))
     )
 
     (defn #_"void" Var'resetThreadBindingFrame [#_"Object" frame]
@@ -36079,11 +36005,11 @@
         (:dynamic this)
     )
 
-    #_method
-    (§ defn #_"String" (§ method toString) [#_"Var" this]
+    #_foreign
+    (§ defn #_"String" toString [#_"Var" this]
         (if (some? (:ns this))
             (str "#'" (:name (:ns this)) "/" (:sym this))
-            (str "#<Var: " (if (some? (:sym this)) (.toString (:sym this)) "--unnamed--") ">")
+            (str "#<Var: " (or (:sym this) "--unnamed--") ">")
         )
     )
 
@@ -36305,13 +36231,13 @@
         (cast' IFn (.deref this))
     )
 
-    #_method
-    (§ defn #_"Object" (§ method call) [#_"Var" this]
+    #_foreign
+    (§ defn #_"Object" call [#_"Var" this]
         (.invoke this)
     )
 
-    #_method
-    (§ defn #_"void" (§ method run) [#_"Var" this]
+    #_foreign
+    (§ defn #_"void" run [#_"Var" this]
         (.invoke this)
         nil
     )
