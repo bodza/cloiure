@@ -4105,22 +4105,6 @@
 )
 
 ;;;
- ; Returns a (potentially-ragged) 2-dimensional array of Objects containing
- ; the contents of coll, which can be any Collection of any Collection.
- ;;
-(§ defn ^"[[Ljava.lang.Object;" to-array-2d [^java.util.Collection coll]
-    (let [ret (make-array (Class/forName "[Ljava.lang.Object;") (.size coll))]
-        (loop [i 0 xs (seq coll)]
-            (when xs
-                (aset ret i (to-array (first xs)))
-                (recur (inc i) (next xs))
-            )
-        )
-        ret
-    )
-)
-
-;;;
  ; If form represents a macro form, returns its expansion, else returns form.
  ;;
 (§ defn macroexpand-1 [form] (cloiure.lang.Compiler/macroexpand1 form))
@@ -9457,7 +9441,6 @@
 
     java.util.Collection
     (contains [this o] (boolean (some #(= % o) this)))
-    (containsAll [_ c] (throw (UnsupportedOperationException.)))
     (isEmpty [_] (zero? cnt))
     (toArray [this] (into-array Object this))
     (toArray [this arr]
@@ -9473,11 +9456,8 @@
     )
     (size [_] cnt)
     (add [_ o] (throw (UnsupportedOperationException.)))
-    (addAll [_ c] (throw (UnsupportedOperationException.)))
     (clear [_] (throw (UnsupportedOperationException.)))
     (^boolean remove [_ o] (throw (UnsupportedOperationException.)))
-    (removeAll [_ c] (throw (UnsupportedOperationException.)))
-    (retainAll [_ c] (throw (UnsupportedOperationException.)))
 
     java.util.List
     (get [this i] (.nth this i))
@@ -9499,11 +9479,7 @@
             )
         )
     )
-    (listIterator [_] (throw (UnsupportedOperationException.)))
-    (listIterator [_ i] (throw (UnsupportedOperationException.)))
-    (subList [_ a z] (throw (UnsupportedOperationException.)))
     (add [_ i o] (throw (UnsupportedOperationException.)))
-    (addAll [_ i c] (throw (UnsupportedOperationException.)))
     (^Object remove [_ ^int i] (throw (UnsupportedOperationException.)))
     (set [_ i e] (throw (UnsupportedOperationException.)))
 )

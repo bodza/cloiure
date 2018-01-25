@@ -316,7 +316,6 @@
 (declare SeqIterator'START SeqIterator'init SeqIterator'new)
 (declare StringSeq'create StringSeq'init StringSeq'new)
 (declare Symbol'create-2 Symbol'create-1 Symbol'intern Symbol'init Symbol'new-2 Symbol'new-3)
-(declare TransactionalHashMap'init TransactionalHashMap'new-0 TransactionalHashMap'new-1i TransactionalHashMap'new-1m TransactionalHashMap''mapAt TransactionalHashMap''binFor)
 (declare EmptyBuffer'new)
 (declare SingleBuffer'init SingleBuffer'new)
 (declare ManyBuffer'init ManyBuffer'new)
@@ -3035,309 +3034,309 @@
 
     #_override
     (defn #_"Object" IFn'''applyTo--AFn [#_"AFn" this, #_"ISeq" args]
-        (AFn'applyToHelper this, (Util'ret1 args, (§ ass args nil)))
+        (AFn'applyToHelper this, (Util'ret1 args, (ß ass args nil)))
     )
 
     (defn #_"Object" AFn'applyToHelper [#_"IFn" ifn, #_"ISeq" args]
         (case (RT'boundedLength args, 20)
             0
             (do
-                (§ ass args nil)
+                (ß ass args nil)
                 (IFn'''invoke-1 ifn)
             )
             1
             (do
-                (IFn'''invoke-2 ifn, (Util'ret1 (.first args), (§ ass args nil)))
+                (IFn'''invoke-2 ifn, (Util'ret1 (.first args), (ß ass args nil)))
             )
             2
             (do
                 (IFn'''invoke-3 ifn, (.first args),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             3
             (do
                 (IFn'''invoke-4 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             4
             (do
                 (IFn'''invoke-5 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             5
             (do
                 (IFn'''invoke-6 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             6
             (do
                 (IFn'''invoke-7 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             7
             (do
                 (IFn'''invoke-8 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             8
             (do
                 (IFn'''invoke-9 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             9
             (do
                 (IFn'''invoke-10 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             10
             (do
                 (IFn'''invoke-11 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             11
             (do
                 (IFn'''invoke-12 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             12
             (do
                 (IFn'''invoke-13 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             13
             (do
                 (IFn'''invoke-14 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             14
             (do
                 (IFn'''invoke-15 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             15
             (do
                 (IFn'''invoke-16 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             16
             (do
                 (IFn'''invoke-17 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             17
             (do
                 (IFn'''invoke-18 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             18
             (do
                 (IFn'''invoke-19 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             19
             (do
               #_(IFn'''invoke-20 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             20
             (do
               #_(IFn'''invoke-21 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (Util'ret1 (.first (ß ass args (.next args))), (ß ass args nil)))
             )
             #_else
             (do
               #_(IFn'''invoke-22 ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (RT'seqToArray (Util'ret1 (.next args), (§ ass args nil))))
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (.first (ß ass args (.next args))),
+                        (RT'seqToArray (Util'ret1 (.next args), (ß ass args nil))))
             )
         )
     )
@@ -3433,9 +3432,7 @@
 
     (defn #_"ActionQueue" ActionQueue'new [#_"IPersistentStack" q, #_"Throwable" error]
         (let [this (ActionQueue'init)]
-            (§ ass this (assoc this :q q))
-            (§ ass this (assoc this :error error))
-            this
+            (assoc this :q q :error error)
         )
     )
 )
@@ -3452,11 +3449,7 @@
 
     (defn #_"AgentAction" AgentAction'new [#_"Agent" agent, #_"IFn" fn, #_"ISeq" args, #_"Executor" exec]
         (let [this (AgentAction'init)]
-            (§ ass this (assoc this :agent agent))
-            (§ ass this (assoc this :args args))
-            (§ ass this (assoc this :fn fn))
-            (§ ass this (assoc this :exec exec))
-            this
+            (assoc this :agent agent :args args :fn fn :exec exec)
         )
     )
 
@@ -3504,7 +3497,7 @@
                         )
                     )
                     (when (= (:errorMode (:agent action)) Agent'CONTINUE)
-                        (§ ass error nil)
+                        (ß ass error nil)
                     )
                 )
                 (let [#_"ActionQueue" next
@@ -3593,7 +3586,7 @@
     (defn #_"boolean" Agent''setState [#_"Agent" this, #_"Object" newState]
         (ARef''validate this, newState)
         (let [#_"boolean" ret (not= (:state this) newState)]
-            (§ ass this (assoc this :state newState))
+            (ß ass this (assoc this :state newState))
             ret
         )
     )
@@ -3610,7 +3603,7 @@
 
     #_method
     (defn #_"void" Agent''setErrorMode [#_"Agent" this, #_"Keyword" k]
-        (§ ass this (assoc this :errorMode k))
+        (ß ass this (assoc this :errorMode k))
         nil
     )
 
@@ -3621,7 +3614,7 @@
 
     #_method
     (defn #_"void" Agent''setErrorHandler [#_"Agent" this, #_"IFn" f]
-        (§ ass this (assoc this :errorHandler f))
+        (ß ass this (assoc this :errorHandler f))
         nil
     )
 
@@ -3635,7 +3628,7 @@
         (§ sync this
             (when (some? (Agent''getError this)) => (throw (RuntimeException. "Agent does not need a restart"))
                 (ARef''validate this, newState)
-                (§ ass this (assoc this :state newState))
+                (ß ass this (assoc this :state newState))
                 (when-not clearActions => (.set (:aq this), ActionQueue'EMPTY)
                     (let [#_"ActionQueue" prior
                             (loop-when [prior nil #_"boolean" restarted false] (not restarted) => prior
@@ -3797,17 +3790,13 @@
 
     (defn- #_"KeySeq" KeySeq'new-2 [#_"ISeq" seq, #_"Iterable" iterable]
         (let [this (merge (ASeq'new-0) (KeySeq'init))]
-            (§ ass this (assoc this :seq seq))
-            (§ ass this (assoc this :iterable iterable))
-            this
+            (assoc this :seq seq :iterable iterable)
         )
     )
 
     (defn- #_"KeySeq" KeySeq'new-3 [#_"IPersistentMap" meta, #_"ISeq" seq, #_"Iterable" iterable]
         (let [this (merge (ASeq'new-1 meta) (KeySeq'init))]
-            (§ ass this (assoc this :seq seq))
-            (§ ass this (assoc this :iterable iterable))
-            this
+            (assoc this :seq seq :iterable iterable)
         )
     )
 
@@ -3882,17 +3871,13 @@
 
     (defn- #_"ValSeq" ValSeq'new-2 [#_"ISeq" seq, #_"Iterable" iterable]
         (let [this (merge (ASeq'new-0) (ValSeq'init))]
-            (§ ass this (assoc this :seq seq))
-            (§ ass this (assoc this :iterable iterable))
-            this
+            (assoc this :seq seq :iterable iterable)
         )
     )
 
     (defn- #_"ValSeq" ValSeq'new-3 [#_"IPersistentMap" meta, #_"ISeq" seq, #_"Iterable" iterable]
         (let [this (merge (ASeq'new-1 meta) (ValSeq'init))]
-            (§ ass this (assoc this :seq seq))
-            (§ ass this (assoc this :iterable iterable))
-            this
+            (assoc this :seq seq :iterable iterable)
         )
     )
 
@@ -4030,7 +4015,7 @@
     (§ defn #_"int" hashCode [#_"APersistentMap" this]
         (let [#_"int" cached (:_hash this)]
             (when (zero? cached)
-                (§ ass this (assoc this :_hash (§ ass cached (APersistentMap'mapHash this))))
+                (ß ass this (assoc this :_hash (ß ass cached (APersistentMap'mapHash this))))
             )
             cached
         )
@@ -4048,7 +4033,7 @@
     (defn #_"int" IHashEq'''hasheq--APersistentMap [#_"APersistentMap" this]
         (let [#_"int" cached (:_hasheq this)]
             (when (zero? cached)
-                (§ ass this (assoc this :_hasheq (§ ass cached (Murmur3'hashUnordered this))))
+                (ß ass this (assoc this :_hasheq (ß ass cached (Murmur3'hashUnordered this))))
             )
             cached
         )
@@ -4258,8 +4243,7 @@
     #_protected
     (defn #_"APersistentSet" APersistentSet'new [#_"IPersistentMap" impl]
         (let [this (merge (AFn'new) (APersistentSet'init))]
-            (§ ass this (assoc this :impl impl))
-            this
+            (assoc this :impl impl)
         )
     )
 
@@ -4327,10 +4311,10 @@
             (when (zero? hash)
                 (loop-when-recur [#_"ISeq" s (Seqable'''seq this)] (some? s) [(.next s)]
                     (let [#_"Object" e (.first s)]
-                        (§ ass hash (+ hash (Util'hash e)))
+                        (ß ass hash (+ hash (Util'hash e)))
                     )
                 )
-                (§ ass this (assoc this :_hash hash))
+                (ß ass this (assoc this :_hash hash))
             )
             hash
         )
@@ -4340,7 +4324,7 @@
     (defn #_"int" IHashEq'''hasheq--APersistentSet [#_"APersistentSet" this]
         (let [#_"int" cached (:_hasheq this)]
             (when (zero? cached)
-                (§ ass this (assoc this :_hasheq (§ ass cached (Murmur3'hashUnordered this))))
+                (ß ass this (assoc this :_hasheq (ß ass cached (Murmur3'hashUnordered this))))
             )
             cached
         )
@@ -4362,27 +4346,7 @@
     )
 
     #_foreign
-    (§ defn #_"boolean" addAll [#_"APersistentSet" this, #_"Collection" c]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (§ defn #_"void" clear [#_"APersistentSet" this]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" retainAll [#_"APersistentSet" this, #_"Collection" c]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" removeAll [#_"APersistentSet" this, #_"Collection" c]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" containsAll [#_"APersistentSet" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
@@ -4447,17 +4411,13 @@
 
     (defn #_"VSeq" VSeq'new-2 [#_"IPersistentVector" v, #_"int" i]
         (let [this (merge (ASeq'new-0) (VSeq'init))]
-            (§ ass this (assoc this :v v))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :v v :i i)
         )
     )
 
     (defn #_"VSeq" VSeq'new-3 [#_"IPersistentMap" meta, #_"IPersistentVector" v, #_"int" i]
         (let [this (merge (ASeq'new-1 meta) (VSeq'init))]
-            (§ ass this (assoc this :v v))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :v v :i i)
         )
     )
 
@@ -4519,19 +4479,15 @@
         )
     )
 
-    (defn #_"RSeq" RSeq'new-2 [#_"IPersistentVector" vector, #_"int" i]
+    (defn #_"RSeq" RSeq'new-2 [#_"IPersistentVector" v, #_"int" i]
         (let [this (merge (ASeq'new-0) (RSeq'init))]
-            (§ ass this (assoc this :v vector))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :v v :i i)
         )
     )
 
     (defn #_"RSeq" RSeq'new-3 [#_"IPersistentMap" meta, #_"IPersistentVector" v, #_"int" i]
         (let [this (merge (ASeq'new-1 meta) (RSeq'init))]
-            (§ ass this (assoc this :v v))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :v v :i i)
         )
     )
 
@@ -4575,19 +4531,16 @@
 
     (defn #_"SubVector" SubVector'new [#_"IPersistentMap" meta, #_"IPersistentVector" v, #_"int" start, #_"int" end]
         (let [this (merge (APersistentVector'new) (SubVector'init))]
-            (§ ass this (assoc this :_meta meta))
+            (ß ass this (assoc this :_meta meta))
 
             (when (§ instance? SubVector v)
                 (let [#_"SubVector" sv (cast' SubVector v)]
-                    (§ ass start (+ start (:start sv)))
-                    (§ ass end (+ end (:start sv)))
-                    (§ ass v (:v sv))
+                    (ß ass start (+ start (:start sv)))
+                    (ß ass end (+ end (:start sv)))
+                    (ß ass v (:v sv))
                 )
             )
-            (§ ass this (assoc this :v v))
-            (§ ass this (assoc this :start start))
-            (§ ass this (assoc this :end end))
-            this
+            (assoc this :v v :start start :end end)
         )
     )
 
@@ -4746,13 +4699,13 @@
     (§ defn #_"int" hashCode [#_"APersistentVector" this]
         (let [#_"int" hash (:_hash this)]
             (when (zero? hash)
-                (§ ass hash 1)
+                (ß ass hash 1)
                 (loop-when-recur [#_"int" i 0] (< i (.count this)) [(inc i)]
                     (let [#_"Object" obj (Indexed'''nth-2 this, i)]
-                        (§ ass hash (+ (* 31 hash) (if (nil? obj) 0 (.hashCode obj))))
+                        (ß ass hash (+ (* 31 hash) (if (nil? obj) 0 (.hashCode obj))))
                     )
                 )
-                (§ ass this (assoc this :_hash hash))
+                (ß ass this (assoc this :_hash hash))
             )
             hash
         )
@@ -4762,14 +4715,14 @@
     (defn #_"int" IHashEq'''hasheq--APersistentVector [#_"APersistentVector" this]
         (let [#_"int" hash (:_hasheq this)]
             (when (zero? hash)
-                (§ let [#_"int" n]
-                    (§ ass hash 1)
+                (ß let [#_"int" n]
+                    (ß ass hash 1)
 
                     (loop-when-recur [n 0] (< n (.count this)) [(inc n)]
-                        (§ ass hash (+ (* 31 hash) (Util'hasheq (Indexed'''nth-2 this, n))))
+                        (ß ass hash (+ (* 31 hash) (Util'hasheq (Indexed'''nth-2 this, n))))
                     )
 
-                    (§ ass this (assoc this :_hasheq (§ ass hash (Murmur3'mixCollHash hash, n))))
+                    (ß ass this (assoc this :_hasheq (ß ass hash (Murmur3'mixCollHash hash, n))))
                 )
             )
             hash
@@ -4805,16 +4758,6 @@
         )
     )
 
-    #_foreign
-    (§ defn #_"ListIterator" listIterator [#_"APersistentVector" this]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"ListIterator" listIterator [#_"APersistentVector" this, #_"int" index]
-        (throw (UnsupportedOperationException.))
-    )
-
     #_abstract
     (defn #_"Iterator" APersistentVector'''rangedIterator [#_"APersistentVector" this, #_"int" start, #_"int" end]
         (§ reify Iterator()
@@ -4833,7 +4776,7 @@
             (§ defn #_"Object" next [#_"Iterator" this]
                 (if (< (:i this) end)
                     (let [_ (Indexed'''nth-2 this, (:i this))]
-                        (§ ass (:i this) (inc (:i this)))
+                        (ß ass (:i this) (inc (:i this)))
                         _
                     )
                     (throw (NoSuchElementException.))
@@ -4848,22 +4791,12 @@
     )
 
     #_foreign
-    (§ defn #_"List" subList [#_"APersistentVector" this, #_"int" fromIndex, #_"int" toIndex]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (§ defn #_"Object" set [#_"APersistentVector" this, #_"int" i, #_"Object" o]
         (throw (UnsupportedOperationException.))
     )
 
     #_foreign
     (§ defn #_"void" add [#_"APersistentVector" this, #_"int" i, #_"Object" o]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" addAll [#_"APersistentVector" this, #_"int" i, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
@@ -4894,7 +4827,7 @@
             (§ defn #_"Object" next [#_"Iterator" this]
                 (if (< (:i this) (.count this))
                     (let [_ (Indexed'''nth-2 this, (:i this))]
-                        (§ ass (:i this) (inc (:i this)))
+                        (ß ass (:i this) (inc (:i this)))
                         _
                     )
                     (throw (NoSuchElementException.))
@@ -4971,27 +4904,7 @@
     )
 
     #_foreign
-    (§ defn #_"boolean" addAll [#_"APersistentVector" this, #_"Collection" c]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (§ defn #_"void" clear [#_"APersistentVector" this]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" retainAll [#_"APersistentVector" this, #_"Collection" c]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" removeAll [#_"APersistentVector" this, #_"Collection" c]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" containsAll [#_"APersistentVector" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
@@ -5087,7 +5000,7 @@
     #_override
     (defn #_"void" IRef'''setValidator--ARef [#_"ARef" this, #_"IFn" vf]
         (ARef''validate this, vf, (IDeref'''deref this))
-        (§ ass this (assoc this :validator vf))
+        (ß ass this (assoc this :validator vf))
         nil
     )
 
@@ -5104,16 +5017,14 @@
     #_override
     (defn #_"IRef" IRef'''addWatch--ARef [#_"ARef" this, #_"Object" key, #_"IFn" callback]
         (§ sync this
-            (§ ass this (assoc this :watches (IPersistentMap'''assoc (:watches this), key, callback)))
-            this
+            (assoc this :watches (IPersistentMap'''assoc (:watches this), key, callback))
         )
     )
 
     #_override
     (defn #_"IRef" IRef'''removeWatch--ARef [#_"ARef" this, #_"Object" key]
         (§ sync this
-            (§ ass this (assoc this :watches (IPersistentMap'''without (:watches this), key)))
-            this
+            (assoc this :watches (IPersistentMap'''without (:watches this), key))
         )
     )
 
@@ -5149,8 +5060,7 @@
 
     (defn #_"AReference" AReference'new-1 [#_"IPersistentMap" meta]
         (let [this (AReference'init)]
-            (§ ass this (assoc this :_meta meta))
-            this
+            (assoc this :_meta meta)
         )
     )
 
@@ -5164,7 +5074,7 @@
     #_override
     (defn #_"IPersistentMap" IReference'''alterMeta--AReference [#_"AReference" this, #_"IFn" alter, #_"ISeq" args]
         (§ sync this
-            (§ ass this (assoc this :_meta (cast' IPersistentMap (IFn'''applyTo alter, (Cons'new-2 (:_meta this), args)))))
+            (ß ass this (assoc this :_meta (cast' IPersistentMap (IFn'''applyTo alter, (Cons'new-2 (:_meta this), args)))))
             (:_meta this)
         )
     )
@@ -5172,7 +5082,7 @@
     #_override
     (defn #_"IPersistentMap" IReference'''resetMeta--AReference [#_"AReference" this, #_"IPersistentMap" m]
         (§ sync this
-            (§ ass this (assoc this :_meta m))
+            (ß ass this (assoc this :_meta m))
             m
         )
     )
@@ -5195,9 +5105,7 @@
 
     (defn #_"ArityException" ArityException'new-3 [#_"int" actual, #_"String" name, #_"Throwable" cause]
         (let [this (merge (§ foreign IllegalArgumentException'new (str "Wrong number of args (" actual ") passed to: " name), cause) (ArityException'init))]
-            (§ ass this (assoc this :actual actual))
-            (§ ass this (assoc this :name name))
-            this
+            (assoc this :actual actual :name name)
         )
     )
 )
@@ -5224,10 +5132,7 @@
 
     (defn #_"ArrayChunk" ArrayChunk'new-3 [#_"Object[]" array, #_"int" off, #_"int" end]
         (let [this (ArrayChunk'init)]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :off off))
-            (§ ass this (assoc this :end end))
-            this
+            (assoc this :array array :off off :end end)
         )
     )
 
@@ -5286,9 +5191,7 @@
 
     (defn #_"ArrayIter_int" ArrayIter_int'new [#_"int[]" array, #_"int" i]
         (let [this (ArrayIter_int'init)]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -5301,8 +5204,8 @@
     (§ defn #_"Long" next [#_"ArrayIter_int" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (Long/valueOf (aget (:array this) (:i this)))]
-                (§ ass this (assoc this :i (inc (:i this))))
-                (§ return _)
+                (ß ass this (assoc this :i (inc (:i this))))
+                (ß return _)
             )
         )
     )
@@ -5323,9 +5226,7 @@
 
     (defn #_"ArrayIter_float" ArrayIter_float'new [#_"float[]" array, #_"int" i]
         (let [this (ArrayIter_float'init)]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -5338,8 +5239,8 @@
     (§ defn #_"Double" next [#_"ArrayIter_float" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (Double/valueOf (aget (:array this) (:i this)))]
-                (§ ass this (assoc this :i (inc (:i this))))
-                (§ return _)
+                (ß ass this (assoc this :i (inc (:i this))))
+                (ß return _)
             )
         )
     )
@@ -5360,9 +5261,7 @@
 
     (defn #_"ArrayIter_double" ArrayIter_double'new [#_"double[]" array, #_"int" i]
         (let [this (ArrayIter_double'init)]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -5375,8 +5274,8 @@
     (§ defn #_"Double" next [#_"ArrayIter_double" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (aget (:array this) (:i this))]
-                (§ ass this (assoc this :i (inc (:i this))))
-                (§ return _)
+                (ß ass this (assoc this :i (inc (:i this))))
+                (ß return _)
             )
         )
     )
@@ -5397,9 +5296,7 @@
 
     (defn #_"ArrayIter_long" ArrayIter_long'new [#_"long[]" array, #_"int" i]
         (let [this (ArrayIter_long'init)]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -5412,8 +5309,8 @@
     (§ defn #_"Long" next [#_"ArrayIter_long" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (Long/valueOf (aget (:array this) (:i this)))]
-                (§ ass this (assoc this :i (inc (:i this))))
-                (§ return _)
+                (ß ass this (assoc this :i (inc (:i this))))
+                (ß return _)
             )
         )
     )
@@ -5434,9 +5331,7 @@
 
     (defn #_"ArrayIter_byte" ArrayIter_byte'new [#_"byte[]" array, #_"int" i]
         (let [this (ArrayIter_byte'init)]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -5449,8 +5344,8 @@
     (§ defn #_"Byte" next [#_"ArrayIter_byte" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (aget (:array this) (:i this))]
-                (§ ass this (assoc this :i (inc (:i this))))
-                (§ return _)
+                (ß ass this (assoc this :i (inc (:i this))))
+                (ß return _)
             )
         )
     )
@@ -5471,9 +5366,7 @@
 
     (defn #_"ArrayIter_char" ArrayIter_char'new [#_"char[]" array, #_"int" i]
         (let [this (ArrayIter_char'init)]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -5486,8 +5379,8 @@
     (§ defn #_"Character" next [#_"ArrayIter_char" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (aget (:array this) (:i this))]
-                (§ ass this (assoc this :i (inc (:i this))))
-                (§ return _)
+                (ß ass this (assoc this :i (inc (:i this))))
+                (ß return _)
             )
         )
     )
@@ -5508,9 +5401,7 @@
 
     (defn #_"ArrayIter_short" ArrayIter_short'new [#_"short[]" array, #_"int" i]
         (let [this (ArrayIter_short'init)]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -5523,8 +5414,8 @@
     (§ defn #_"Long" next [#_"ArrayIter_short" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (Long/valueOf (aget (:array this) (:i this)))]
-                (§ ass this (assoc this :i (inc (:i this))))
-                (§ return _)
+                (ß ass this (assoc this :i (inc (:i this))))
+                (ß return _)
             )
         )
     )
@@ -5545,9 +5436,7 @@
 
     (defn #_"ArrayIter_boolean" ArrayIter_boolean'new [#_"boolean[]" array, #_"int" i]
         (let [this (ArrayIter_boolean'init)]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -5560,8 +5449,8 @@
     (§ defn #_"Boolean" next [#_"ArrayIter_boolean" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (Boolean/valueOf (aget (:array this) (:i this)))]
-                (§ ass this (assoc this :i (inc (:i this))))
-                (§ return _)
+                (ß ass this (assoc this :i (inc (:i this))))
+                (ß return _)
             )
         )
     )
@@ -5628,9 +5517,7 @@
 
     (defn #_"ArrayIter" ArrayIter'new [#_"Object" array, #_"int" i]
         (let [this (ArrayIter'init)]
-            (§ ass this (assoc this :i i))
-            (§ ass this (assoc this :array (§ cast Object[] array)))
-            this
+            (assoc this :i i :array (§ cast Object[] array))
         )
     )
 
@@ -5643,8 +5530,8 @@
     (§ defn #_"Object" next [#_"ArrayIter" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (aget (:array this) (:i this))]
-                (§ ass this (assoc this :i (inc (:i this))))
-                (§ return _)
+                (ß ass this (assoc this :i (inc (:i this))))
+                (ß return _)
             )
         )
     )
@@ -5670,9 +5557,7 @@
 
     (defn #_"ArraySeq_int" ArraySeq_int'new [#_"IPersistentMap" meta, #_"int[]" array, #_"int" i]
         (let [this (merge (ASeq'new-1 meta) (ArraySeq_int'init))]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -5756,9 +5641,7 @@
 
     (defn #_"ArraySeq_float" ArraySeq_float'new [#_"IPersistentMap" meta, #_"float[]" array, #_"int" i]
         (let [this (merge (ASeq'new-1 meta) (ArraySeq_float'init))]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -5842,9 +5725,7 @@
 
     (defn #_"ArraySeq_double" ArraySeq_double'new [#_"IPersistentMap" meta, #_"double[]" array, #_"int" i]
         (let [this (merge (ASeq'new-1 meta) (ArraySeq_double'init))]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -5928,9 +5809,7 @@
 
     (defn #_"ArraySeq_long" ArraySeq_long'new [#_"IPersistentMap" meta, #_"long[]" array, #_"int" i]
         (let [this (merge (ASeq'new-1 meta) (ArraySeq_long'init))]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -6014,9 +5893,7 @@
 
     (defn #_"ArraySeq_byte" ArraySeq_byte'new [#_"IPersistentMap" meta, #_"byte[]" array, #_"int" i]
         (let [this (merge (ASeq'new-1 meta) (ArraySeq_byte'init))]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -6114,9 +5991,7 @@
 
     (defn #_"ArraySeq_char" ArraySeq_char'new [#_"IPersistentMap" meta, #_"char[]" array, #_"int" i]
         (let [this (merge (ASeq'new-1 meta) (ArraySeq_char'init))]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -6214,9 +6089,7 @@
 
     (defn #_"ArraySeq_short" ArraySeq_short'new [#_"IPersistentMap" meta, #_"short[]" array, #_"int" i]
         (let [this (merge (ASeq'new-1 meta) (ArraySeq_short'init))]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -6314,9 +6187,7 @@
 
     (defn #_"ArraySeq_boolean" ArraySeq_boolean'new [#_"IPersistentMap" meta, #_"boolean[]" array, #_"int" i]
         (let [this (merge (ASeq'new-1 meta) (ArraySeq_boolean'init))]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -6440,17 +6311,13 @@
 
     (defn #_"ArraySeq" ArraySeq'new-2 [#_"Object" array, #_"int" i]
         (let [this (merge (ASeq'new-0) (ArraySeq'init))]
-            (§ ass this (assoc this :i i))
-            (§ ass this (assoc this :array (§ cast Object[] array)))
-            this
+            (assoc this :i i :array (§ cast Object[] array))
         )
     )
 
     (defn #_"ArraySeq" ArraySeq'new-3 [#_"IPersistentMap" meta, #_"Object" array, #_"int" i]
         (let [this (merge (ASeq'new-1 meta) (ArraySeq'init))]
-            (§ ass this (assoc this :i i))
-            (§ ass this (assoc this :array (§ cast Object[] array)))
-            this
+            (assoc this :i i :array (§ cast Object[] array))
         )
     )
 
@@ -6596,9 +6463,9 @@
         (when (zero? (:_hash this))
             (let [#_"int" hash 1]
                 (loop-when-recur [#_"ISeq" s (Seqable'''seq this)] (some? s) [(.next s)]
-                    (§ ass hash (+ (* 31 hash) (if (nil? (.first s)) 0 (.hashCode (.first s)))))
+                    (ß ass hash (+ (* 31 hash) (if (nil? (.first s)) 0 (.hashCode (.first s)))))
                 )
-                (§ ass this (assoc this :_hash hash))
+                (ß ass this (assoc this :_hash hash))
             )
         )
         (:_hash this)
@@ -6607,7 +6474,7 @@
     #_override
     (defn #_"int" IHashEq'''hasheq--ASeq [#_"ASeq" this]
         (when (zero? (:_hasheq this))
-            (§ ass this (assoc this :_hasheq (Murmur3'hashOrdered this)))
+            (ß ass this (assoc this :_hasheq (Murmur3'hashOrdered this)))
         )
         (:_hasheq this)
     )
@@ -6650,27 +6517,7 @@
     )
 
     #_foreign
-    (§ defn #_"boolean" addAll [#_"ASeq" this, #_"Collection" c]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (§ defn #_"void" clear [#_"ASeq" this]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" retainAll [#_"ASeq" this, #_"Collection" c]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" removeAll [#_"ASeq" this, #_"Collection" c]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" containsAll [#_"ASeq" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
@@ -6702,11 +6549,6 @@
     )
 
     #_foreign
-    (§ defn #_"List" subList [#_"ASeq" this, #_"int" fromIndex, #_"int" toIndex]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (§ defn #_"Object" set [#_"ASeq" this, #_"int" index, #_"Object" element]
         (throw (UnsupportedOperationException.))
     )
@@ -6729,27 +6571,12 @@
     )
 
     #_foreign
-    (§ defn #_"ListIterator" listIterator [#_"ASeq" this]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"ListIterator" listIterator [#_"ASeq" this, #_"int" index]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (§ defn #_"Object" get [#_"ASeq" this, #_"int" index]
         (RT'nth-2 this, index)
     )
 
     #_foreign
     (§ defn #_"void" add [#_"ASeq" this, #_"int" index, #_"Object" element]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" addAll [#_"ASeq" this, #_"int" index, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 )
@@ -6768,15 +6595,13 @@
 
     (defn #_"Atom" Atom'new-1 [#_"Object" state]
         (let [this (merge (ARef'new-0) (Atom'init))]
-            (§ ass this (assoc this :state (AtomicReference. state)))
-            this
+            (assoc this :state (AtomicReference. state))
         )
     )
 
     (defn #_"Atom" Atom'new-2 [#_"Object" state, #_"IPersistentMap" meta]
         (let [this (merge (ARef'new-1 meta) (Atom'init))]
-            (§ ass this (assoc this :state (AtomicReference. state)))
-            this
+            (assoc this :state (AtomicReference. state))
         )
     )
 
@@ -7049,8 +6874,7 @@
 
     (defn #_"ATransientSet" ATransientSet'new [#_"ITransientMap" impl]
         (let [this (merge (AFn'new) (ATransientSet'init))]
-            (§ ass this (assoc this :impl impl))
-            this
+            (assoc this :impl impl)
         )
     )
 
@@ -7063,7 +6887,7 @@
     (defn #_"ITransientSet" ITransientCollection'''conj--ATransientSet [#_"ATransientSet" this, #_"Object" val]
         (let [#_"ITransientMap" m (ITransientMap'''assoc (:impl this), val, val)]
             (when-not (= m (:impl this))
-                (§ ass this (assoc this :impl m))
+                (ß ass this (assoc this :impl m))
             )
             this
         )
@@ -7078,7 +6902,7 @@
     (defn #_"ITransientSet" ITransientSet'''disjoin--ATransientSet [#_"ATransientSet" this, #_"Object" key]
         (let [#_"ITransientMap" m (ITransientMap'''without (:impl this), key)]
             (when-not (= m (:impl this))
-                (§ ass this (assoc this :impl m))
+                (ß ass this (assoc this :impl m))
             )
             this
         )
@@ -7119,9 +6943,7 @@
 
     (defn- #_"BigInt" BigInt'new [#_"long" lpart, #_"BigInteger" bipart]
         (let [this (merge (§ foreign Number'new) (BigInt'init))]
-            (§ ass this (assoc this :lpart lpart))
-            (§ ass this (assoc this :bipart bipart))
-            this
+            (assoc this :lpart lpart :bipart bipart)
         )
     )
 
@@ -7320,17 +7142,13 @@
 
     (defn #_"Binding" Binding'new-1 [#_"T" val]
         (let [this (Binding'init)]
-            (§ ass this (assoc this :val val))
-            (§ ass this (assoc this :rest nil))
-            this
+            (assoc this :val val :rest nil)
         )
     )
 
     (defn #_"Binding" Binding'new-2 [#_"T" val, #_"Binding" rest]
         (let [this (Binding'init)]
-            (§ ass this (assoc this :val val))
-            (§ ass this (assoc this :rest rest))
-            this
+            (assoc this :val val :rest rest)
         )
     )
 )
@@ -7347,8 +7165,7 @@
 
     (defn #_"Box" Box'new [#_"Object" val]
         (let [this (Box'init)]
-            (§ ass this (assoc this :val val))
-            this
+            (assoc this :val val)
         )
     )
 )
@@ -7366,23 +7183,21 @@
 
     (defn #_"ChunkBuffer" ChunkBuffer'new [#_"int" capacity]
         (let [this (ChunkBuffer'init)]
-            (§ ass this (assoc this :buffer (make-array Object capacity)))
-            (§ ass this (assoc this :end 0))
-            this
+            (assoc this :buffer (make-array Object capacity) :end 0)
         )
     )
 
     #_method
     (defn #_"void" ChunkBuffer''add [#_"ChunkBuffer" this, #_"Object" o]
         (aset (:buffer this) (:end this) o)
-        (§ ass this (assoc this :end (inc (:end this))))
+        (ß ass this (assoc this :end (inc (:end this))))
         nil
     )
 
     #_method
     (defn #_"IChunk" ChunkBuffer''chunk [#_"ChunkBuffer" this]
         (let [#_"ArrayChunk" ret (ArrayChunk'new-3 (:buffer this), 0, (:end this))]
-            (§ ass this (assoc this :buffer nil))
+            (ß ass this (assoc this :buffer nil))
             ret
         )
     )
@@ -7406,9 +7221,7 @@
 
     (defn #_"ChunkedCons" ChunkedCons'new-3 [#_"IPersistentMap" meta, #_"IChunk" chunk, #_"ISeq" more]
         (let [this (merge (ASeq'new-1 meta) (ChunkedCons'init))]
-            (§ ass this (assoc this :chunk chunk))
-            (§ ass this (assoc this :_more more))
-            this
+            (assoc this :chunk chunk :_more more)
         )
     )
 
@@ -7579,15 +7392,7 @@
 
     (defn #_"DefExpr" DefExpr'new [#_"int" line, #_"int" column, #_"Var" var, #_"Expr" init, #_"Expr" meta, #_"boolean" initProvided, #_"boolean" isDynamic, #_"boolean" shadowsCoreMapping]
         (let [this (DefExpr'init)]
-            (§ ass this (assoc this :line line))
-            (§ ass this (assoc this :column column))
-            (§ ass this (assoc this :var var))
-            (§ ass this (assoc this :init init))
-            (§ ass this (assoc this :meta meta))
-            (§ ass this (assoc this :isDynamic isDynamic))
-            (§ ass this (assoc this :shadowsCoreMapping shadowsCoreMapping))
-            (§ ass this (assoc this :initProvided initProvided))
-            this
+            (assoc this :line line :column column :var var :init init :meta meta :isDynamic isDynamic :shadowsCoreMapping shadowsCoreMapping :initProvided initProvided)
         )
     )
 
@@ -7699,9 +7504,7 @@
 
     (defn #_"AssignExpr" AssignExpr'new [#_"AssignableExpr" target, #_"Expr" val]
         (let [this (AssignExpr'init)]
-            (§ ass this (assoc this :target target))
-            (§ ass this (assoc this :val val))
-            this
+            (assoc this :target target :val val)
         )
     )
 
@@ -7742,9 +7545,7 @@
 
     (defn #_"VarExpr" VarExpr'new [#_"Var" var, #_"Symbol" tag]
         (let [this (VarExpr'init)]
-            (§ ass this (assoc this :var var))
-            (§ ass this (assoc this :tag (or tag (Var''getTag var))))
-            this
+            (assoc this :var var :tag (or tag (Var''getTag var)))
         )
     )
 
@@ -7770,7 +7571,7 @@
     #_override
     (defn #_"Class" Expr'''getJavaClass--VarExpr [#_"VarExpr" this]
         (when (nil? (:jc this))
-            (§ ass this (assoc this :jc (HostExpr'tagToClass (:tag this))))
+            (ß ass this (assoc this :jc (HostExpr'tagToClass (:tag this))))
         )
         (:jc this)
     )
@@ -7817,8 +7618,7 @@
 
     (defn #_"TheVarExpr" TheVarExpr'new [#_"Var" var]
         (let [this (TheVarExpr'init)]
-            (§ ass this (assoc this :var var))
-            this
+            (assoc this :var var)
         )
     )
 
@@ -7856,8 +7656,7 @@
 
     (defn #_"KeywordExpr" KeywordExpr'new [#_"Keyword" k]
         (let [this (merge (LiteralExpr'new) (KeywordExpr'init))]
-            (§ ass this (assoc this :k k))
-            this
+            (assoc this :k k)
         )
     )
 
@@ -7916,8 +7715,7 @@
 
     (defn #_"ImportExpr" ImportExpr'new [#_"String" c]
         (let [this (ImportExpr'init)]
-            (§ ass this (assoc this :c c))
-            this
+            (assoc this :c c)
         )
     )
 
@@ -8231,14 +8029,14 @@
 
     (defn #_"InstanceFieldExpr" InstanceFieldExpr'new [#_"int" line, #_"int" column, #_"Expr" target, #_"String" fieldName, #_"Symbol" tag, #_"boolean" requireField]
         (let [this (merge (FieldExpr'new) (InstanceFieldExpr'init))]
-            (§ ass this (assoc this :target target))
-            (§ ass this (assoc this :targetClass (when (Expr'''hasJavaClass target) (Expr'''getJavaClass target))))
-            (§ ass this (assoc this :field (when (some? (:targetClass this)) (Reflector'getField (:targetClass this), fieldName, false))))
-            (§ ass this (assoc this :fieldName fieldName))
-            (§ ass this (assoc this :line line))
-            (§ ass this (assoc this :column column))
-            (§ ass this (assoc this :tag tag))
-            (§ ass this (assoc this :requireField requireField))
+            (ß ass this (assoc this :target target))
+            (ß ass this (assoc this :targetClass (when (Expr'''hasJavaClass target) (Expr'''getJavaClass target))))
+            (ß ass this (assoc this :field (when (some? (:targetClass this)) (Reflector'getField (:targetClass this), fieldName, false))))
+            (ß ass this (assoc this :fieldName fieldName))
+            (ß ass this (assoc this :line line))
+            (ß ass this (assoc this :column column))
+            (ß ass this (assoc this :tag tag))
+            (ß ass this (assoc this :requireField requireField))
 
             (when (and (nil? (:field this)) (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION)))
                 (if (nil? (:targetClass this))
@@ -8306,7 +8104,7 @@
     #_override
     (defn #_"Class" Expr'''getJavaClass--InstanceFieldExpr [#_"InstanceFieldExpr" this]
         (when (nil? (:jc this))
-            (§ ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getType (:field this)))))
+            (ß ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getType (:field this)))))
         )
         (:jc this)
     )
@@ -8360,18 +8158,17 @@
 
     (defn #_"StaticFieldExpr" StaticFieldExpr'new [#_"int" line, #_"int" column, #_"Class" c, #_"String" fieldName, #_"Symbol" tag]
         (let [this (merge (FieldExpr'new) (StaticFieldExpr'init))]
-            (§ ass this (assoc this :fieldName fieldName))
-            (§ ass this (assoc this :line line))
-            (§ ass this (assoc this :column column))
-            (§ ass this (assoc this :c c))
+            (ß ass this (assoc this :fieldName fieldName))
+            (ß ass this (assoc this :line line))
+            (ß ass this (assoc this :column column))
+            (ß ass this (assoc this :c c))
             (try
-                (§ ass this (assoc this :field (.getField c, fieldName)))
+                (ß ass this (assoc this :field (.getField c, fieldName)))
                 (catch NoSuchFieldException e
                     (throw (Util'sneakyThrow e))
                 )
             )
-            (§ ass this (assoc this :tag tag))
-            this
+            (assoc this :tag tag)
         )
     )
 
@@ -8412,7 +8209,7 @@
     #_override
     (defn #_"Class" Expr'''getJavaClass--StaticFieldExpr [#_"StaticFieldExpr" this]
         (when (nil? (:jc this))
-            (§ ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getType (:field this)))))
+            (ß ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getType (:field this)))))
         )
         (:jc this)
     )
@@ -8523,18 +8320,18 @@
 
     (defn #_"InstanceMethodExpr" InstanceMethodExpr'new [#_"int" line, #_"int" column, #_"Symbol" tag, #_"Expr" target, #_"String" methodName, #_"IPersistentVector" args, #_"boolean" tailPosition]
         (let [this (merge (MethodExpr'new) (InstanceMethodExpr'init))]
-            (§ ass this (assoc this :line line))
-            (§ ass this (assoc this :column column))
-            (§ ass this (assoc this :args args))
-            (§ ass this (assoc this :methodName methodName))
-            (§ ass this (assoc this :target target))
-            (§ ass this (assoc this :tag tag))
-            (§ ass this (assoc this :tailPosition tailPosition))
+            (ß ass this (assoc this :line line))
+            (ß ass this (assoc this :column column))
+            (ß ass this (assoc this :args args))
+            (ß ass this (assoc this :methodName methodName))
+            (ß ass this (assoc this :target target))
+            (ß ass this (assoc this :tag tag))
+            (ß ass this (assoc this :tailPosition tailPosition))
             (if (and (Expr'''hasJavaClass target) (some? (Expr'''getJavaClass target)))
                 (let [#_"List" methods (Reflector'getMethods (Expr'''getJavaClass target), (.count args), methodName, false)]
                     (if (.isEmpty methods)
                         (do
-                            (§ ass this (assoc this :method nil))
+                            (ß ass this (assoc this :method nil))
                             (when (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION))
                                 (.format (RT'errPrintWriter), "Reflection warning, %d:%d - call to method %s on %s can't be resolved (no such method).\n", (object-array [ line, column, methodName, (.getName (Expr'''getJavaClass target)) ]))
                             )
@@ -8548,15 +8345,15 @@
                                             (.add rets, (.getReturnType m))
                                         )
                                     )
-                                    (§ ass methodidx (Compiler'getMatchingParams methodName, params, args, rets))
+                                    (ß ass methodidx (Compiler'getMatchingParams methodName, params, args, rets))
                                 )
                             )
                             (let [#_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (when (<= 0 methodidx) (.get methods, methodidx)))]
                                 (when (and (some? m) (not (Modifier/isPublic (.getModifiers (.getDeclaringClass m)))))
                                     ;; public method of non-public class, try to find it in hierarchy
-                                    (§ ass m (Reflector'getAsMethodOfPublicBase (.getDeclaringClass m), m))
+                                    (ß ass m (Reflector'getAsMethodOfPublicBase (.getDeclaringClass m), m))
                                 )
-                                (§ ass this (assoc this :method m))
+                                (ß ass this (assoc this :method m))
                                 (when (and (nil? (:method this)) (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION)))
                                     (.format (RT'errPrintWriter), "Reflection warning, %d:%d - call to method %s on %s can't be resolved (argument types: %s).\n", (object-array [ line, column, methodName, (.getName (Expr'''getJavaClass target)), (Compiler'getTypeStringForArgs args) ]))
                                 )
@@ -8565,7 +8362,7 @@
                     )
                 )
                 (do
-                    (§ ass this (assoc this :method nil))
+                    (ß ass this (assoc this :method nil))
                     (when (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION))
                         (.format (RT'errPrintWriter), "Reflection warning, %d:%d - call to method %s can't be resolved (target class is unknown).\n", (object-array [ line, column, methodName ]))
                     )
@@ -8667,7 +8464,7 @@
     #_override
     (defn #_"Class" Expr'''getJavaClass--InstanceMethodExpr [#_"InstanceMethodExpr" this]
         (when (nil? (:jc this))
-            (§ ass this (assoc this :jc (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this))))))
+            (ß ass this (assoc this :jc (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this))))))
         )
         (:jc this)
     )
@@ -8694,13 +8491,13 @@
 
     (defn #_"StaticMethodExpr" StaticMethodExpr'new [#_"int" line, #_"int" column, #_"Symbol" tag, #_"Class" c, #_"String" methodName, #_"IPersistentVector" args, #_"boolean" tailPosition]
         (let [this (merge (MethodExpr'new) (StaticMethodExpr'init))]
-            (§ ass this (assoc this :c c))
-            (§ ass this (assoc this :methodName methodName))
-            (§ ass this (assoc this :args args))
-            (§ ass this (assoc this :line line))
-            (§ ass this (assoc this :column column))
-            (§ ass this (assoc this :tag tag))
-            (§ ass this (assoc this :tailPosition tailPosition))
+            (ß ass this (assoc this :c c))
+            (ß ass this (assoc this :methodName methodName))
+            (ß ass this (assoc this :args args))
+            (ß ass this (assoc this :line line))
+            (ß ass this (assoc this :column column))
+            (ß ass this (assoc this :tag tag))
+            (ß ass this (assoc this :tailPosition tailPosition))
 
             (let [#_"List" methods (Reflector'getMethods c, (.count args), methodName, true)]
                 (when (.isEmpty methods)
@@ -8716,10 +8513,10 @@
                                     (.add rets, (.getReturnType m))
                                 )
                             )
-                            (§ ass methodidx (Compiler'getMatchingParams methodName, params, args, rets))
+                            (ß ass methodidx (Compiler'getMatchingParams methodName, params, args, rets))
                         )
                     )
-                    (§ ass this (assoc this :method (cast java.lang.reflect.Method (when (<= 0 methodidx) (.get methods, methodidx)))))
+                    (ß ass this (assoc this :method (cast java.lang.reflect.Method (when (<= 0 methodidx) (.get methods, methodidx)))))
                     (when (and (nil? (:method this)) (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION)))
                         (.format (RT'errPrintWriter), "Reflection warning, %d:%d - call to static method %s on %s can't be resolved (argument types: %s).\n", (object-array [ line, column, methodName, (.getName c), (Compiler'getTypeStringForArgs args) ]))
                     )
@@ -8852,7 +8649,7 @@
     #_override
     (defn #_"Class" Expr'''getJavaClass--StaticMethodExpr [#_"StaticMethodExpr" this]
         (when (nil? (:jc this))
-            (§ ass this (assoc this :jc (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this))))))
+            (ß ass this (assoc this :jc (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this))))))
         )
         (:jc this)
     )
@@ -8867,8 +8664,7 @@
 
     (defn #_"UnresolvedVarExpr" UnresolvedVarExpr'new [#_"Symbol" symbol]
         (let [this (UnresolvedVarExpr'init)]
-            (§ ass this (assoc this :symbol symbol))
-            this
+            (assoc this :symbol symbol)
         )
     )
 
@@ -8903,9 +8699,7 @@
 
     (defn #_"NumberExpr" NumberExpr'new [#_"Number" n]
         (let [this (merge (LiteralExpr'new) (NumberExpr'init))]
-            (§ ass this (assoc this :n n))
-            (§ ass this (assoc this :id (Compiler'registerConstant n)))
-            this
+            (assoc this :n n :id (Compiler'registerConstant n))
         )
     )
 
@@ -9003,9 +8797,7 @@
 
     (defn #_"ConstantExpr" ConstantExpr'new [#_"Object" v]
         (let [this (merge (LiteralExpr'new) (ConstantExpr'init))]
-            (§ ass this (assoc this :v v))
-            (§ ass this (assoc this :id (Compiler'registerConstant v)))
-            this
+            (assoc this :v v :id (Compiler'registerConstant v))
         )
     )
 
@@ -9078,8 +8870,7 @@
 
     (defn #_"BooleanExpr" BooleanExpr'new [#_"boolean" val]
         (let [this (merge (LiteralExpr'new) (BooleanExpr'init))]
-            (§ ass this (assoc this :val val))
-            this
+            (assoc this :val val)
         )
     )
 
@@ -9117,8 +8908,7 @@
 
     (defn #_"StringExpr" StringExpr'new [#_"String" str]
         (let [this (merge (LiteralExpr'new) (StringExpr'init))]
-            (§ ass this (assoc this :str str))
-            this
+            (assoc this :str str)
         )
     )
 
@@ -9167,8 +8957,7 @@
 
     (defn #_"MonitorEnterExpr" MonitorEnterExpr'new [#_"Expr" target]
         (let [this (merge (UntypedExpr'new) (MonitorEnterExpr'init))]
-            (§ ass this (assoc this :target target))
-            this
+            (assoc this :target target)
         )
     )
 
@@ -9207,8 +8996,7 @@
 
     (defn #_"MonitorExitExpr" MonitorExitExpr'new [#_"Expr" target]
         (let [this (merge (UntypedExpr'new) (MonitorExitExpr'init))]
-            (§ ass this (assoc this :target target))
-            this
+            (assoc this :target target)
         )
     )
 
@@ -9239,10 +9027,7 @@
 
     (defn #_"CatchClause" CatchClause'new [#_"Class" c, #_"LocalBinding" lb, #_"Expr" handler]
         (let [this (CatchClause'init)]
-            (§ ass this (assoc this :c c))
-            (§ ass this (assoc this :lb lb))
-            (§ ass this (assoc this :handler handler))
-            this
+            (assoc this :c c :lb lb :handler handler)
         )
     )
 )
@@ -9269,7 +9054,7 @@
                             (if (and (not (Util'equals op, Compiler'CATCH)) (not (Util'equals op, Compiler'FINALLY)))
                                 (do
                                     (when-not caught => (throw (RuntimeException. "Only catch or finally clause can follow catch in try expression"))
-                                        (§ ass body (IPersistentVector'''cons body, f))
+                                        (ß ass body (IPersistentVector'''cons body, f))
                                     )
                                 )
                                 (do
@@ -9281,7 +9066,7 @@
                                                     Compiler'METHOD_RETURN_CONTEXT nil
                                                 ])
                                             ))
-                                            (§ ass bodyExpr (IParser'''parse (BodyParser'new), context, (RT'seq body)))
+                                            (ß ass bodyExpr (IParser'''parse (BodyParser'new), context, (RT'seq body)))
                                             (finally
                                                 (Var'popThreadBindings)
                                             )
@@ -9312,13 +9097,13 @@
                                                         (Var'pushThreadBindings dynamicBindings)
                                                         (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (cast' Symbol (when (§ instance? Symbol (RT'second f)) (RT'second f))), nil, false)
                                                               #_"Expr" handler (IParser'''parse (BodyParser'new), :Context'EXPRESSION, (RT'next (RT'next (RT'next f))))]
-                                                            (§ ass catches (IPersistentVector'''cons catches, (CatchClause'new c, lb, handler)))
+                                                            (ß ass catches (IPersistentVector'''cons catches, (CatchClause'new c, lb, handler)))
                                                         )
                                                         (finally
                                                             (Var'popThreadBindings)
                                                         )
                                                     )
-                                                    (§ ass caught true)
+                                                    (ß ass caught true)
                                                 )
                                             )
                                         )
@@ -9333,7 +9118,7 @@
                                                         Compiler'IN_CATCH_FINALLY RT'T
                                                     ])
                                                 ))
-                                                (§ ass finallyExpr (IParser'''parse (BodyParser'new), :Context'STATEMENT, (RT'next f)))
+                                                (ß ass finallyExpr (IParser'''parse (BodyParser'new), :Context'STATEMENT, (RT'next f)))
                                                 (finally
                                                     (Var'popThreadBindings)
                                                 )
@@ -9378,12 +9163,7 @@
 
     (defn #_"TryExpr" TryExpr'new [#_"Expr" tryExpr, #_"PersistentVector" catchExprs, #_"Expr" finallyExpr, #_"int" retLocal, #_"int" finallyLocal]
         (let [this (TryExpr'init)]
-            (§ ass this (assoc this :tryExpr tryExpr))
-            (§ ass this (assoc this :catchExprs catchExprs))
-            (§ ass this (assoc this :finallyExpr finallyExpr))
-            (§ ass this (assoc this :retLocal retLocal))
-            (§ ass this (assoc this :finallyLocal finallyLocal))
-            this
+            (assoc this :tryExpr tryExpr :catchExprs catchExprs :finallyExpr finallyExpr :retLocal retLocal :finallyLocal finallyLocal)
         )
     )
 
@@ -9397,8 +9177,8 @@
         (let [#_"Label" startTry (.newLabel gen) #_"Label" endTry (.newLabel gen) #_"Label" end (.newLabel gen) #_"Label" ret (.newLabel gen) #_"Label" finallyLabel (.newLabel gen)]
             (loop-when-recur [#_"int" i 0] (< i (.count (:catchExprs this))) [(inc i)]
                 (let [#_"CatchClause" clause (cast' CatchClause (Indexed'''nth-2 (:catchExprs this), i))]
-                    (§ ass (:label clause) (.newLabel gen))
-                    (§ ass (:endLabel clause) (.newLabel gen))
+                    (ß ass (:label clause) (.newLabel gen))
+                    (ß ass (:endLabel clause) (.newLabel gen))
                 )
             )
 
@@ -9503,8 +9283,7 @@
 
     (defn #_"ThrowExpr" ThrowExpr'new [#_"Expr" excExpr]
         (let [this (merge (UntypedExpr'new) (ThrowExpr'init))]
-            (§ ass this (assoc this :excExpr excExpr))
-            this
+            (assoc this :excExpr excExpr)
         )
     )
 
@@ -9564,8 +9343,8 @@
 
     (defn #_"NewExpr" NewExpr'new [#_"Class" c, #_"IPersistentVector" args, #_"int" line, #_"int" column]
         (let [this (NewExpr'init)]
-            (§ ass this (assoc this :args args))
-            (§ ass this (assoc this :c c))
+            (ß ass this (assoc this :args args))
+            (ß ass this (assoc this :c c))
             (let [#_"Constructor[]" allctors (.getConstructors c)
                   #_"ArrayList" ctors (ArrayList.) #_"ArrayList<Class[]>" params (ArrayList.) #_"ArrayList<Class>" rets (ArrayList.)]
                 (dotimes [#_"int" i (alength allctors)]
@@ -9653,9 +9432,7 @@
 
     (defn #_"MetaExpr" MetaExpr'new [#_"Expr" expr, #_"Expr" meta]
         (let [this (MetaExpr'init)]
-            (§ ass this (assoc this :expr expr))
-            (§ ass this (assoc this :meta meta))
-            this
+            (assoc this :expr expr :meta meta)
         )
     )
 
@@ -9747,12 +9524,7 @@
 
     (defn #_"IfExpr" IfExpr'new [#_"int" line, #_"int" column, #_"Expr" testExpr, #_"Expr" thenExpr, #_"Expr" elseExpr]
         (let [this (IfExpr'init)]
-            (§ ass this (assoc this :testExpr testExpr))
-            (§ ass this (assoc this :thenExpr thenExpr))
-            (§ ass this (assoc this :elseExpr elseExpr))
-            (§ ass this (assoc this :line line))
-            (§ ass this (assoc this :column column))
-            this
+            (assoc this :testExpr testExpr :thenExpr thenExpr :elseExpr elseExpr :line line :column column)
         )
     )
 
@@ -9873,8 +9645,7 @@
 
     (defn #_"EmptyExpr" EmptyExpr'new [#_"Object" coll]
         (let [this (EmptyExpr'init)]
-            (§ ass this (assoc this :coll coll))
-            this
+            (assoc this :coll coll)
         )
     )
 
@@ -9926,8 +9697,7 @@
 
     (defn #_"ListExpr" ListExpr'new [#_"IPersistentVector" args]
         (let [this (ListExpr'init)]
-            (§ ass this (assoc this :args args))
-            this
+            (assoc this :args args)
         )
     )
 
@@ -9935,7 +9705,7 @@
     (defn #_"Object" Expr'''eval--ListExpr [#_"ListExpr" this]
         (let [#_"IPersistentVector" ret PersistentVector'EMPTY]
             (loop-when-recur [#_"int" i 0] (< i (.count (:args this))) [(inc i)]
-                (§ ass ret (cast' IPersistentVector (IPersistentVector'''cons ret, (Expr'''eval (cast' Expr (Indexed'''nth-2 (:args this), i))))))
+                (ß ass ret (cast' IPersistentVector (IPersistentVector'''cons ret, (Expr'''eval (cast' Expr (Indexed'''nth-2 (:args this), i))))))
             )
             (Seqable'''seq ret)
         )
@@ -9974,8 +9744,7 @@
 
     (defn #_"MapExpr" MapExpr'new [#_"IPersistentVector" keyvals]
         (let [this (MapExpr'init)]
-            (§ ass this (assoc this :keyvals keyvals))
-            this
+            (assoc this :keyvals keyvals)
         )
     )
 
@@ -10033,19 +9802,19 @@
                 (let [#_"IMapEntry" e (cast' IMapEntry (.first s))
                       #_"Expr" k (Compiler'analyze-2 (if (= context :Context'EVAL) context :Context'EXPRESSION), (IMapEntry'''key e))
                       #_"Expr" v (Compiler'analyze-2 (if (= context :Context'EVAL) context :Context'EXPRESSION), (IMapEntry'''val e))]
-                    (§ ass keyvals (cast' IPersistentVector (IPersistentVector'''cons keyvals, k)))
-                    (§ ass keyvals (cast' IPersistentVector (IPersistentVector'''cons keyvals, v)))
+                    (ß ass keyvals (cast' IPersistentVector (IPersistentVector'''cons keyvals, k)))
+                    (ß ass keyvals (cast' IPersistentVector (IPersistentVector'''cons keyvals, v)))
                     (if (§ instance? LiteralExpr k)
                         (let [#_"Object" kval (Expr'''eval k)]
                             (if (IPersistentSet'''contains constantKeys, kval)
-                                (§ ass allConstantKeysUnique false)
-                                (§ ass constantKeys (cast' IPersistentSet (IPersistentCollection'''cons constantKeys, kval)))
+                                (ß ass allConstantKeysUnique false)
+                                (ß ass constantKeys (cast' IPersistentSet (IPersistentCollection'''cons constantKeys, kval)))
                             )
                         )
-                        (§ ass keysConstant false)
+                        (ß ass keysConstant false)
                     )
                     (when (not (§ instance? LiteralExpr v))
-                        (§ ass valsConstant false)
+                        (ß ass valsConstant false)
                     )
                 )
             )
@@ -10084,8 +9853,7 @@
 
     (defn #_"SetExpr" SetExpr'new [#_"IPersistentVector" keys]
         (let [this (SetExpr'init)]
-            (§ ass this (assoc this :keys keys))
-            this
+            (assoc this :keys keys)
         )
     )
 
@@ -10153,8 +9921,7 @@
 
     (defn #_"VectorExpr" VectorExpr'new [#_"IPersistentVector" args]
         (let [this (VectorExpr'init)]
-            (§ ass this (assoc this :args args))
-            this
+            (assoc this :args args)
         )
     )
 
@@ -10162,7 +9929,7 @@
     (defn #_"Object" Expr'''eval--VectorExpr [#_"VectorExpr" this]
         (let [#_"IPersistentVector" ret PersistentVector'EMPTY]
             (loop-when-recur [#_"int" i 0] (< i (.count (:args this))) [(inc i)]
-                (§ ass ret (cast' IPersistentVector (IPersistentVector'''cons ret, (Expr'''eval (cast' Expr (Indexed'''nth-2 (:args this), i))))))
+                (ß ass ret (cast' IPersistentVector (IPersistentVector'''cons ret, (Expr'''eval (cast' Expr (Indexed'''nth-2 (:args this), i))))))
             )
             ret
         )
@@ -10240,13 +10007,7 @@
 
     (defn #_"KeywordInvokeExpr" KeywordInvokeExpr'new [#_"int" line, #_"int" column, #_"Symbol" tag, #_"KeywordExpr" kw, #_"Expr" target]
         (let [this (KeywordInvokeExpr'init)]
-            (§ ass this (assoc this :kw kw))
-            (§ ass this (assoc this :target target))
-            (§ ass this (assoc this :line line))
-            (§ ass this (assoc this :column column))
-            (§ ass this (assoc this :tag tag))
-            (§ ass this (assoc this :siteIndex (Compiler'registerKeywordCallsite (:k kw))))
-            this
+            (assoc this :kw kw :target target :line line :column column :tag tag :siteIndex (Compiler'registerKeywordCallsite (:k kw)))
         )
     )
 
@@ -10303,7 +10064,7 @@
     #_override
     (defn #_"Class" Expr'''getJavaClass--KeywordInvokeExpr [#_"KeywordInvokeExpr" this]
         (when (nil? (:jc this))
-            (§ ass this (assoc this :jc (HostExpr'tagToClass (:tag this))))
+            (ß ass this (assoc this :jc (HostExpr'tagToClass (:tag this))))
         )
         (:jc this)
     )
@@ -10319,9 +10080,7 @@
 
     (defn #_"InstanceOfExpr" InstanceOfExpr'new [#_"Class" c, #_"Expr" expr]
         (let [this (InstanceOfExpr'init)]
-            (§ ass this (assoc this :expr expr))
-            (§ ass this (assoc this :c c))
-            this
+            (assoc this :expr expr :c c)
         )
     )
 
@@ -10381,15 +10140,7 @@
 
     (defn #_"StaticInvokeExpr" StaticInvokeExpr'new [#_"Type" target, #_"Class" retClass, #_"Class[]" paramclasses, #_"Type[]" paramtypes, #_"boolean" variadic, #_"IPersistentVector" args, #_"Object" tag, #_"boolean" tailPosition]
         (let [this (StaticInvokeExpr'init)]
-            (§ ass this (assoc this :target target))
-            (§ ass this (assoc this :retClass retClass))
-            (§ ass this (assoc this :paramclasses paramclasses))
-            (§ ass this (assoc this :paramtypes paramtypes))
-            (§ ass this (assoc this :args args))
-            (§ ass this (assoc this :variadic variadic))
-            (§ ass this (assoc this :tailPosition tailPosition))
-            (§ ass this (assoc this :tag tag))
-            this
+            (assoc this :target target :retClass retClass :paramclasses paramclasses :paramtypes paramtypes :args args :variadic variadic :tailPosition tailPosition :tag tag)
         )
     )
 
@@ -10421,7 +10172,7 @@
     #_override
     (defn #_"Class" Expr'''getJavaClass--StaticInvokeExpr [#_"StaticInvokeExpr" this]
         (when (nil? (:jc this))
-            (§ ass this (assoc this :jc (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (:retClass this))))
+            (ß ass this (assoc this :jc (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (:retClass this))))
         )
         (:jc this)
     )
@@ -10530,19 +10281,19 @@
 
     (defn #_"InvokeExpr" InvokeExpr'new [#_"int" line, #_"int" column, #_"Symbol" tag, #_"Expr" fexpr, #_"IPersistentVector" args, #_"boolean" tailPosition]
         (let [this (InvokeExpr'init)]
-            (§ ass this (assoc this :fexpr fexpr))
-            (§ ass this (assoc this :args args))
-            (§ ass this (assoc this :line line))
-            (§ ass this (assoc this :column column))
-            (§ ass this (assoc this :tailPosition tailPosition))
+            (ß ass this (assoc this :fexpr fexpr))
+            (ß ass this (assoc this :args args))
+            (ß ass this (assoc this :line line))
+            (ß ass this (assoc this :column column))
+            (ß ass this (assoc this :tailPosition tailPosition))
 
             (when (§ instance? VarExpr fexpr)
                 (let [#_"Var" fvar (:var (cast' VarExpr fexpr)) #_"Var" pvar (cast' Var (RT'get-2 (IMeta'''meta fvar), Compiler'protocolKey))]
                     (when (and (some? pvar) (Var''isBound Compiler'PROTOCOL_CALLSITES))
-                        (§ ass this (assoc this :isProtocol true))
-                        (§ ass this (assoc this :siteIndex (Compiler'registerProtocolCallsite (:var (cast' VarExpr fexpr)))))
+                        (ß ass this (assoc this :isProtocol true))
+                        (ß ass this (assoc this :siteIndex (Compiler'registerProtocolCallsite (:var (cast' VarExpr fexpr)))))
                         (let [#_"Object" pon (RT'get-2 (Var''get pvar), Compiler'onKey)]
-                            (§ ass this (assoc this :protocolOn (HostExpr'maybeClass pon, false)))
+                            (ß ass this (assoc this :protocolOn (HostExpr'maybeClass pon, false)))
                             (when (some? (:protocolOn this))
                                 (let [#_"IPersistentMap" mmap (cast' IPersistentMap (RT'get-2 (Var''get pvar), InvokeExpr'methodMapKey))
                                       #_"Keyword" mmapVal (cast' Keyword (ILookup'''valAt-2 mmap, (Keyword'intern (:sym fvar))))]
@@ -10554,7 +10305,7 @@
                                         (when (not= (.size methods) 1)
                                             (throw (IllegalArgumentException. (str "No single method: " mname " of interface: " (.getName (:protocolOn this)) " found for function: " (:sym fvar) " of protocol: " (:sym pvar))))
                                         )
-                                        (§ ass this (assoc this :onMethod (cast java.lang.reflect.Method (.get methods, 0))))
+                                        (ß ass this (assoc this :onMethod (cast java.lang.reflect.Method (.get methods, 0))))
                                     )
                                 )
                             )
@@ -10581,7 +10332,7 @@
                                      [(IPersistentVector'''cons argvs, (Expr'''eval (cast' Expr (Indexed'''nth-2 (:args this), i)))) (inc i)]
                                   => argvs
                     )]
-                (IFn'''applyTo fn, (RT'seq (Util'ret1 argvs, (§ ass argvs nil))))
+                (IFn'''applyTo fn, (RT'seq (Util'ret1 argvs, (ß ass argvs nil))))
             )
             (catch Throwable e
                 (throw (if (§ instance? CompilerException e) (cast' CompilerException e) (CompilerException'new (:line this), (:column this), e)))
@@ -10663,7 +10414,7 @@
         (when (< Compiler'MAX_POSITIONAL_ARITY (.count (:args this)))
             (let [#_"PersistentVector" restArgs PersistentVector'EMPTY]
                 (loop-when-recur [#_"int" i Compiler'MAX_POSITIONAL_ARITY] (< i (.count (:args this))) [(inc i)]
-                    (§ ass restArgs (IPersistentVector'''cons restArgs, (Indexed'''nth-2 (:args this), i)))
+                    (ß ass restArgs (IPersistentVector'''cons restArgs, (Indexed'''nth-2 (:args this), i)))
                 )
                 (MethodExpr'emitArgsAsArray restArgs, objx, gen)
             )
@@ -10686,7 +10437,7 @@
     #_override
     (defn #_"Class" Expr'''getJavaClass--InvokeExpr [#_"InvokeExpr" this]
         (when (nil? (:jc this))
-            (§ ass this (assoc this :jc (HostExpr'tagToClass (:tag this))))
+            (ß ass this (assoc this :jc (HostExpr'tagToClass (:tag this))))
         )
         (:jc this)
     )
@@ -10721,7 +10472,7 @@
 
                 (let [#_"PersistentVector" args PersistentVector'EMPTY
                       _ (loop-when-recur [#_"ISeq" s (RT'seq (.next form))] (some? s) [(.next s)]
-                            (§ ass args (IPersistentVector'''cons args, (Compiler'analyze-2 context, (.first s))))
+                            (ß ass args (IPersistentVector'''cons args, (Compiler'analyze-2 context, (.first s))))
                         )]
                     (InvokeExpr'new (Compiler'lineDeref), (Compiler'columnDeref), (Compiler'tagOf form), fexpr, args, tailPosition)
                 )
@@ -10764,7 +10515,7 @@
     #_override
     (defn #_"Class" Expr'''getJavaClass--FnExpr [#_"FnExpr" this]
         (when (nil? (:jc this))
-            (§ ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (§ class AFunction))))
+            (ß ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (§ class AFunction))))
         )
         (:jc this)
     )
@@ -10793,11 +10544,11 @@
               #_"FnExpr" fn (FnExpr'new (Compiler'tagOf form))
               #_"Keyword" retkey (Keyword'intern (Symbol'intern nil, "rettag"))
               #_"Object" rettag (RT'get-2 (RT'meta form), retkey)
-              _ (§ ass (:src fn) form)
+              _ (ß ass (:src fn) form)
               #_"ObjMethod" owner (cast' ObjMethod (IDeref'''deref Compiler'METHOD))
-              _ (§ ass (:hasEnclosingMethod fn) (some? owner))
+              _ (ß ass (:hasEnclosingMethod fn) (some? owner))
               _ (when (some? (IMeta'''meta (cast' IMeta (.first form))))
-                    (§ ass (:onceOnly fn) (RT'booleanCast-1o (RT'get-2 (RT'meta (.first form)), (Keyword'intern (Symbol'intern nil, "once")))))
+                    (ß ass (:onceOnly fn) (RT'booleanCast-1o (RT'get-2 (RT'meta (.first form)), (Keyword'intern (Symbol'intern nil, "once")))))
                 )
               #_"String" basename (if (some? owner) (:name (:objx owner)) (Compiler'munge (:name (:name (Compiler'currentNS)))))
               [#_"Symbol" nm name]
@@ -10811,9 +10562,9 @@
                         :else         [nil name]
                     )
                 )
-              _ (§ ass (:name fn) (str basename "$" (.replace (Compiler'munge name), ".", "_DOT_")))
-              _ (§ ass (:internalName fn) (.replace (:name fn), \., \/))
-              _ (§ ass (:objtype fn) (Type/getObjectType (:internalName fn)))
+              _ (ß ass (:name fn) (str basename "$" (.replace (Compiler'munge name), ".", "_DOT_")))
+              _ (ß ass (:internalName fn) (.replace (:name fn), \., \/))
+              _ (ß ass (:objtype fn) (Type/getObjectType (:internalName fn)))
               #_"ArrayList<String>" prims (ArrayList.)]
 
             (try
@@ -10832,17 +10583,17 @@
 
                 ;; arglist might be preceded by symbol naming this fn
                 (when (some? nm)
-                    (§ ass (:thisName fn) (:name nm))
-                    (§ ass form (RT'cons Compiler'FN, (RT'next (RT'next form))))
+                    (ß ass (:thisName fn) (:name nm))
+                    (ß ass form (RT'cons Compiler'FN, (RT'next (RT'next form))))
                 )
 
                 ;; now (fn [args] body...) or (fn ([args] body...) ([args2] body2...) ...)
                 ;; turn former into latter
                 (when (§ instance? IPersistentVector (RT'second form))
-                    (§ ass form (RT'list-2 Compiler'FN, (RT'next form)))
+                    (ß ass form (RT'list-2 Compiler'FN, (RT'next form)))
                 )
-                (§ ass (:line fn) (Compiler'lineDeref))
-                (§ ass (:column fn) (Compiler'columnDeref))
+                (ß ass (:line fn) (Compiler'lineDeref))
+                (ß ass (:column fn) (Compiler'columnDeref))
                 (let [#_"FnMethod[]" methodArray (make-array #_"FnMethod" Object (inc Compiler'MAX_POSITIONAL_ARITY))
                       [#_"FnMethod" variadicMethod #_"boolean" usesThis]
                         (loop-when [variadicMethod nil usesThis false #_"ISeq" s (RT'next form)] (some? s) => [variadicMethod usesThis]
@@ -10874,7 +10625,7 @@
                         )
                     )
 
-                    (§ ass (:canBeDirect fn) (and (not (:hasEnclosingMethod fn)) (zero? (.count (:closes fn))) (not usesThis)))
+                    (ß ass (:canBeDirect fn) (and (not (:hasEnclosingMethod fn)) (zero? (.count (:closes fn))) (not usesThis)))
 
                     (let [#_"IPersistentCollection" methods
                             (loop-when [methods nil #_"int" i 0] (< i (alength methodArray)) => methods
@@ -10891,7 +10642,7 @@
                                         (let [#_"Iterator" lbi (.iterator (cast Collection #_"<LocalBinding>" (RT'keys (:locals fm))))]
                                             (while (.hasNext lbi)
                                                 (let-when [#_"LocalBinding" lb (.next lbi)] (:isArg lb)
-                                                    (§ ass (:idx lb) (dec (:idx lb)))
+                                                    (ß ass (:idx lb) (dec (:idx lb)))
                                                 )
                                             )
                                         )
@@ -10900,16 +10651,16 @@
                             )
                         )
 
-                        (§ ass (:methods fn) methods)
-                        (§ ass (:variadicMethod fn) variadicMethod)
-                        (§ ass (:keywords fn) (cast' IPersistentMap (IDeref'''deref Compiler'KEYWORDS)))
-                        (§ ass (:vars fn) (cast' IPersistentMap (IDeref'''deref Compiler'VARS)))
-                        (§ ass (:constants fn) (cast' PersistentVector (IDeref'''deref Compiler'CONSTANTS)))
-                        (§ ass (:keywordCallsites fn) (cast' IPersistentVector (IDeref'''deref Compiler'KEYWORD_CALLSITES)))
-                        (§ ass (:protocolCallsites fn) (cast' IPersistentVector (IDeref'''deref Compiler'PROTOCOL_CALLSITES)))
-                        (§ ass (:varCallsites fn) (cast' IPersistentSet (IDeref'''deref Compiler'VAR_CALLSITES)))
+                        (ß ass (:methods fn) methods)
+                        (ß ass (:variadicMethod fn) variadicMethod)
+                        (ß ass (:keywords fn) (cast' IPersistentMap (IDeref'''deref Compiler'KEYWORDS)))
+                        (ß ass (:vars fn) (cast' IPersistentMap (IDeref'''deref Compiler'VARS)))
+                        (ß ass (:constants fn) (cast' PersistentVector (IDeref'''deref Compiler'CONSTANTS)))
+                        (ß ass (:keywordCallsites fn) (cast' IPersistentVector (IDeref'''deref Compiler'KEYWORD_CALLSITES)))
+                        (ß ass (:protocolCallsites fn) (cast' IPersistentVector (IDeref'''deref Compiler'PROTOCOL_CALLSITES)))
+                        (ß ass (:varCallsites fn) (cast' IPersistentSet (IDeref'''deref Compiler'VAR_CALLSITES)))
 
-                        (§ ass (:constantsID fn) (RT'nextID))
+                        (ß ass (:constantsID fn) (RT'nextID))
                     )
                 )
                 (finally
@@ -10917,10 +10668,10 @@
                 )
             )
 
-            (let [_ (§ ass (:hasPrimSigs fn) (pos? (.size prims)))
+            (let [_ (ß ass (:hasPrimSigs fn) (pos? (.size prims)))
                   #_"IPersistentMap" fmeta (RT'meta origForm)
                   fmeta (when (some? fmeta) (-> fmeta (IPersistentMap'''without RT'LINE_KEY) (IPersistentMap'''without RT'COLUMN_KEY) (IPersistentMap'''without retkey)))
-                  _ (§ ass (:hasMeta fn) (pos? (RT'count fmeta)))]
+                  _ (ß ass (:hasMeta fn) (pos? (RT'count fmeta)))]
                 (try
                     (ObjExpr''compile fn, (if (FnExpr''isVariadic fn) "cloiure/lang/RestFn" "cloiure/lang/AFunction"), (when (pos? (.size prims)) (.toArray prims, (make-array String (.size prims)))), (:onceOnly fn))
                     (catch IOException e
@@ -11017,8 +10768,7 @@
 
     (defn #_"ObjExpr" ObjExpr'new [#_"Object" tag]
         (let [this (ObjExpr'init)]
-            (§ ass this (assoc this :tag tag))
-            this
+            (assoc this :tag tag)
         )
     )
 
@@ -11033,7 +10783,7 @@
         (let [#_"IPersistentVector" tv (if (not (ObjExpr'''supportsMeta this)) PersistentVector'EMPTY (RT'vector Compiler'IPERSISTENTMAP_TYPE))]
             (loop-when-recur [#_"ISeq" s (RT'keys (:closes this))] (some? s) [(.next s)]
                 (let [#_"LocalBinding" lb (cast' LocalBinding (.first s))]
-                    (§ ass tv (IPersistentVector'''cons tv, (if (some? (LocalBinding''getPrimitiveType lb)) (Type/getType (LocalBinding''getPrimitiveType lb)) Compiler'OBJECT_TYPE)))
+                    (ß ass tv (IPersistentVector'''cons tv, (if (some? (LocalBinding''getPrimitiveType lb)) (Type/getType (LocalBinding''getPrimitiveType lb)) Compiler'OBJECT_TYPE)))
                 )
             )
             (let [#_"Type[]" ret (make-array Type (.count tv))]
@@ -11124,7 +10874,7 @@
                                                 a
                                             )
                                         )]
-                                    (§ ass this (assoc this :closesExprs (IPersistentVector'''cons (:closesExprs this), (LocalBindingExpr'new lb, nil))))
+                                    (ß ass this (assoc this :closesExprs (IPersistentVector'''cons (:closesExprs this), (LocalBindingExpr'new lb, nil))))
                                 )
                                 (recur (inc a) (.next s))
                             )
@@ -11282,7 +11032,7 @@
                         ;; end of class
                         (.visitEnd cv)
 
-                        (§ ass this (assoc this :bytecode (.toByteArray cw)))
+                        (ß ass this (assoc this :bytecode (.toByteArray cw)))
                     )
                 )
             )
@@ -11480,7 +11230,7 @@
                 :else
                 (let [#_"String" cs nil]
                     (try
-                        (§ ass cs (RT'printString value))
+                        (ß ass cs (RT'printString value))
                         (catch Exception e
                             (throw (RuntimeException. (str "Can't embed object in code: " value)))
                         )
@@ -11494,7 +11244,7 @@
 
                     (.push gen, cs)
                     (.invokeStatic gen, Compiler'RT_TYPE, ObjExpr'readStringMethod)
-                    (§ ass partial false)
+                    (ß ass partial false)
                 )
             )
 
@@ -11551,8 +11301,8 @@
     (defn #_"Class" ObjExpr''getCompiledClass [#_"ObjExpr" this]
         (§ sync this
             (when (nil? (:compiledClass this))
-                (§ ass this (assoc this :loader (cast' DynamicClassLoader (IDeref'''deref Compiler'LOADER))))
-                (§ ass this (assoc this :compiledClass (.defineClass (:loader this), (:name this), (:bytecode this), (:src this))))
+                (ß ass this (assoc this :loader (cast' DynamicClassLoader (IDeref'''deref Compiler'LOADER))))
+                (ß ass this (assoc this :compiledClass (.defineClass (:loader this), (:name this), (:bytecode this), (:src this))))
             )
             (:compiledClass this)
         )
@@ -11632,7 +11382,7 @@
     #_override
     (defn #_"Class" Expr'''getJavaClass--ObjExpr [#_"ObjExpr" this]
         (when (nil? (:jc this))
-            (§ ass this (assoc this :jc (cond (some? (:compiledClass this)) (:compiledClass this) (some? (:tag this)) (HostExpr'tagToClass (:tag this)) :else (§ class IFn))))
+            (ß ass this (assoc this :jc (cond (some? (:compiledClass this)) (:compiledClass this) (some? (:tag this)) (HostExpr'tagToClass (:tag this)) :else (§ class IFn))))
         )
         (:jc this)
     )
@@ -11773,7 +11523,7 @@
 
     #_method
     (defn #_"void" ObjExpr''emitConstant [#_"ObjExpr" this, #_"GeneratorAdapter" gen, #_"int" id]
-        (§ ass this (assoc this :usedConstants (cast' IPersistentSet (IPersistentCollection'''cons (:usedConstants this), id))))
+        (ß ass this (assoc this :usedConstants (cast' IPersistentSet (IPersistentCollection'''cons (:usedConstants this), id))))
         (.getStatic gen, (:objtype this), (ObjExpr''constantName this, id), (ObjExpr''constantType this, id))
         nil
     )
@@ -11856,9 +11606,7 @@
 
     (defn #_"PathNode" PathNode'new [#_"PathType" type, #_"PathNode" parent]
         (let [this (PathNode'init)]
-            (§ ass this (assoc this :type type))
-            (§ ass this (assoc this :parent parent))
-            this
+            (assoc this :type type :parent parent)
         )
     )
 )
@@ -11932,18 +11680,18 @@
                             Compiler'METHOD_RETURN_CONTEXT RT'T
                         ])
                     ))
-                    (§ ass (:prim method) (FnMethod'primInterface parms))
+                    (ß ass (:prim method) (FnMethod'primInterface parms))
                     (when (some? (:prim method))
-                        (§ ass (:prim method) (.replace (:prim method), \., \/))
+                        (ß ass (:prim method) (.replace (:prim method), \., \/))
                     )
                     (let [rettag (if (instance? String rettag) (Symbol'intern nil, (cast String rettag)) rettag)
                           rettag (when (and (§ instance? Symbol rettag) (any = (Named'''getName (cast' Symbol rettag)) "long" "double")) rettag)]
-                        (§ ass (:retClass method) (Compiler'tagClass (or (Compiler'tagOf parms) rettag)))
+                        (ß ass (:retClass method) (Compiler'tagClass (or (Compiler'tagOf parms) rettag)))
                         (if (.isPrimitive (:retClass method))
                             (when-not (any = (:retClass method) Double/TYPE Long/TYPE)
                                 (throw (IllegalArgumentException. "Only long and double primitives are supported"))
                             )
-                            (§ ass (:retClass method) Object)
+                            (ß ass (:retClass method) Object)
                         )
                         ;; register 'this' as local 0
                         (if (some? (:thisName objx))
@@ -11982,8 +11730,8 @@
                                                                         (Compiler'registerLocal p, (if rest? Compiler'ISEQ (Compiler'tagOf p)), nil, true)
                                                                     )]
                                                                 (if-not rest?
-                                                                    (§ ass (:reqParms method) (IPersistentVector'''cons (:reqParms method), lb))
-                                                                    (§ ass (:restParm method) lb)
+                                                                    (ß ass (:reqParms method) (IPersistentVector'''cons (:reqParms method), lb))
+                                                                    (ß ass (:restParm method) lb)
                                                                 )
                                                                 (IPersistentVector'''cons argLocals, lb)
                                                             )
@@ -11997,9 +11745,9 @@
                                 (throw (RuntimeException. (str "Can't specify more than " Compiler'MAX_POSITIONAL_ARITY " params")))
                             )
                             (Var''set Compiler'LOOP_LOCALS, argLocals)
-                            (§ ass (:argLocals method) argLocals)
-                            (§ ass (:argtypes method) (.toArray argtypes, (make-array Type (.size argtypes))))
-                            (§ ass (:argclasses method) (.toArray argclasses, (make-array Class (.size argtypes))))
+                            (ß ass (:argLocals method) argLocals)
+                            (ß ass (:argtypes method) (.toArray argtypes, (make-array Type (.size argtypes))))
+                            (ß ass (:argclasses method) (.toArray argclasses, (make-array Class (.size argtypes))))
                             (when (some? (:prim method))
                                 (dotimes [#_"int" i (alength (:argclasses method))]
                                     (when (any = (aget (:argclasses method) i) Long/TYPE Double/TYPE)
@@ -12007,7 +11755,7 @@
                                     )
                                 )
                             )
-                            (§ ass (:body method) (IParser'''parse (BodyParser'new), :Context'RETURN, body))
+                            (ß ass (:body method) (IParser'''parse (BodyParser'new), :Context'RETURN, body))
                             method
                         )
                     )
@@ -12142,7 +11890,7 @@
                 ;; generate the regular invoke, calling the prim method
                 (let [#_"Method" m (Method. (ObjMethod'''getMethodName this), Compiler'OBJECT_TYPE, (ObjMethod'''getArgTypes this))]
                     ;; todo don't hardwire EXCEPTION_TYPES
-                    (§ ass gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, m, nil, Compiler'EXCEPTION_TYPES, cv))
+                    (ß ass gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, m, nil, Compiler'EXCEPTION_TYPES, cv))
                     (.visitCode gen)
                     (.loadThis gen)
                     (dotimes [#_"int" i (alength (:argtypes this))]
@@ -12262,9 +12010,7 @@
 
     (defn #_"ObjMethod" ObjMethod'new [#_"ObjExpr" objx, #_"ObjMethod" parent]
         (let [this (ObjMethod'init)]
-            (§ ass this (assoc this :parent parent))
-            (§ ass this (assoc this :objx objx))
-            this
+            (assoc this :parent parent :objx objx)
         )
     )
 
@@ -12423,14 +12169,7 @@
             (when (and (some? (Compiler'maybePrimitiveType init)) (some? tag))
                 (throw (UnsupportedOperationException. "Can't type hint a local with a primitive initializer"))
             )
-            (§ ass this (assoc this :idx num))
-            (§ ass this (assoc this :sym sym))
-            (§ ass this (assoc this :tag tag))
-            (§ ass this (assoc this :init init))
-            (§ ass this (assoc this :isArg isArg))
-            (§ ass this (assoc this :clearPathRoot clearPathRoot))
-            (§ ass this (assoc this :name (Compiler'munge (:name sym))))
-            this
+            (assoc this :idx num :sym sym :tag tag :init init :isArg isArg :clearPathRoot clearPathRoot :name (Compiler'munge (:name sym)))
         )
     )
 
@@ -12438,8 +12177,8 @@
     (defn #_"boolean" Expr'''hasJavaClass--LocalBinding [#_"LocalBinding" this]
         (when (nil? (:hjc this))
             (if (and (some? (:init this)) (Expr'''hasJavaClass (:init this)) (Util'isPrimitive (Expr'''getJavaClass (:init this))) (not (§ instance? MaybePrimitiveExpr (:init this))))
-                (§ ass this (assoc this :hjc false))
-                (§ ass this (assoc this :hjc (or (some? (:tag this)) (and (some? (:init this)) (Expr'''hasJavaClass (:init this))))))
+                (ß ass this (assoc this :hjc false))
+                (ß ass this (assoc this :hjc (or (some? (:tag this)) (and (some? (:init this)) (Expr'''hasJavaClass (:init this))))))
             )
         )
         (:hjc this)
@@ -12448,7 +12187,7 @@
     #_override
     (defn #_"Class" Expr'''getJavaClass--LocalBinding [#_"LocalBinding" this]
         (when (nil? (:jc this))
-            (§ ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (Expr'''getJavaClass (:init this)))))
+            (ß ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (Expr'''getJavaClass (:init this)))))
         )
         (:jc this)
     )
@@ -12478,13 +12217,13 @@
             (when (and (some? (LocalBinding''getPrimitiveType lb)) (some? tag))
                 (throw (UnsupportedOperationException. "Can't type hint a primitive local"))
             )
-            (§ ass this (assoc this :lb lb))
-            (§ ass this (assoc this :tag tag))
+            (ß ass this (assoc this :lb lb))
+            (ß ass this (assoc this :tag tag))
 
-            (§ ass this (assoc this :clearPath (cast' PathNode (Var''get Compiler'CLEAR_PATH))))
-            (§ ass this (assoc this :clearRoot (cast' PathNode (Var''get Compiler'CLEAR_ROOT))))
+            (ß ass this (assoc this :clearPath (cast' PathNode (Var''get Compiler'CLEAR_PATH))))
+            (ß ass this (assoc this :clearRoot (cast' PathNode (Var''get Compiler'CLEAR_ROOT))))
             (let [#_"IPersistentCollection" sites (cast' IPersistentCollection (RT'get-2 (Var''get Compiler'CLEAR_SITES), lb))]
-                (§ ass (:used lb) true)
+                (ß ass (:used lb) true)
 
                 (when (pos? (:idx lb))
                     (when (some? sites)
@@ -12492,15 +12231,15 @@
                             (let [#_"LocalBindingExpr" o (cast' LocalBindingExpr (.first s))
                                   #_"PathNode" common (Compiler'commonPath (:clearPath this), (:clearPath o))]
                                 (when (and (some? common) (= (:type common) :PathType'PATH))
-                                    (§ ass (:shouldClear o) false)
+                                    (ß ass (:shouldClear o) false)
                                 )
                             )
                         )
                     )
 
                     (when (= (:clearRoot this) (:clearPathRoot lb))
-                        (§ ass this (assoc this :shouldClear true))
-                        (§ ass sites (RT'conj sites, this))
+                        (ß ass this (assoc this :shouldClear true))
+                        (ß ass sites (RT'conj sites, this))
                         (Var''set Compiler'CLEAR_SITES, (RT'assoc (Var''get Compiler'CLEAR_SITES), lb, sites))
                     )
                 )
@@ -12555,7 +12294,7 @@
     #_override
     (defn #_"Class" Expr'''getJavaClass--LocalBindingExpr [#_"LocalBindingExpr" this]
         (when (nil? (:jc this))
-            (§ ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (Expr'''getJavaClass (:lb this)))))
+            (ß ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (Expr'''getJavaClass (:lb this)))))
         )
         (:jc this)
     )
@@ -12571,16 +12310,16 @@
     (defn #_"Expr" IParser'''parse--BodyParser [#_"BodyParser" this, #_"Context" context, #_"Object" frms]
         (let [#_"ISeq" forms (cast' ISeq frms)]
             (when (Util'equals (RT'first forms), Compiler'DO)
-                (§ ass forms (RT'next forms))
+                (ß ass forms (RT'next forms))
             )
             (let [#_"PersistentVector" v PersistentVector'EMPTY]
                 (loop-when-recur [forms forms] (some? forms) [(.next forms)]
                     (let [#_"Expr" e (if (and (not= context :Context'EVAL) (or (= context :Context'STATEMENT) (some? (.next forms)))) (Compiler'analyze-2 :Context'STATEMENT, (.first forms)) (Compiler'analyze-2 context, (.first forms)))]
-                        (§ ass v (IPersistentVector'''cons v, e))
+                        (ß ass v (IPersistentVector'''cons v, e))
                     )
                 )
                 (when (zero? (.count v))
-                    (§ ass v (IPersistentVector'''cons v, Compiler'NIL_EXPR))
+                    (ß ass v (IPersistentVector'''cons v, Compiler'NIL_EXPR))
                 )
                 (BodyExpr'new v)
             )
@@ -12597,8 +12336,7 @@
 
     (defn #_"BodyExpr" BodyExpr'new [#_"PersistentVector" exprs]
         (let [this (BodyExpr'init)]
-            (§ ass this (assoc this :exprs exprs))
-            this
+            (assoc this :exprs exprs)
         )
     )
 
@@ -12666,9 +12404,7 @@
 
     (defn #_"BindingInit" BindingInit'new [#_"LocalBinding" binding, #_"Expr" init]
         (let [this (BindingInit'init)]
-            (§ ass this (assoc this :binding binding))
-            (§ ass this (assoc this :init init))
-            this
+            (assoc this :binding binding :init init)
         )
     )
 )
@@ -12706,8 +12442,8 @@
                                                     (throw (RuntimeException. (str "Can't let qualified name: " sym)))
                                                 )
                                                 (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (Compiler'tagOf sym), nil, false)]
-                                                    (§ ass (:canBeCleared lb) false)
-                                                    (§ ass lbs (IPersistentVector'''cons lbs, lb))
+                                                    (ß ass (:canBeCleared lb) false)
+                                                    (ß ass lbs (IPersistentVector'''cons lbs, lb))
                                                 )
                                             )
                                         )
@@ -12716,8 +12452,8 @@
                                             (let [#_"Symbol" sym (cast' Symbol (Indexed'''nth-2 bindings, i))
                                                   #_"Expr" init (Compiler'analyze-3 :Context'EXPRESSION, (Indexed'''nth-2 bindings, (inc i)), (:name sym))
                                                   #_"LocalBinding" lb (cast' LocalBinding (Indexed'''nth-2 lbs, (/ i 2)))]
-                                                (§ ass (:init lb) init)
-                                                (§ ass bindingInits (IPersistentVector'''cons bindingInits, (BindingInit'new lb, init)))
+                                                (ß ass (:init lb) init)
+                                                (ß ass bindingInits (IPersistentVector'''cons bindingInits, (BindingInit'new lb, init)))
                                             )
                                         )]
                                     (LetFnExpr'new bindingInits, (IParser'''parse (BodyParser'new), context, (RT'next (RT'next form))))
@@ -12744,9 +12480,7 @@
 
     (defn #_"LetFnExpr" LetFnExpr'new [#_"PersistentVector" bindingInits, #_"Expr" body]
         (let [this (LetFnExpr'init)]
-            (§ ass this (assoc this :bindingInits bindingInits))
-            (§ ass this (assoc this :body body))
-            this
+            (assoc this :bindingInits bindingInits :body body)
         )
     )
 
@@ -12767,7 +12501,7 @@
         (let [#_"IPersistentSet" lbset PersistentHashSet'EMPTY]
             (loop-when-recur [#_"int" i 0] (< i (.count (:bindingInits this))) [(inc i)]
                 (let [#_"BindingInit" bi (cast' BindingInit (Indexed'''nth-2 (:bindingInits this), i))]
-                    (§ ass lbset (cast' IPersistentSet (IPersistentCollection'''cons lbset, (:binding bi))))
+                    (ß ass lbset (cast' IPersistentSet (IPersistentCollection'''cons lbset, (:binding bi))))
                     (Expr'''emit (:init bi), :Context'EXPRESSION, objx, gen)
                     (.visitVarInsn gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:idx (:binding bi)))
                 )
@@ -12788,7 +12522,7 @@
                         (let [#_"BindingInit" bi (cast' BindingInit (.first bis))
                               #_"String" lname (:name (:binding bi))]
                             (when (.endsWith lname, "__auto__")
-                                (§ ass lname (+ lname (RT'nextID)))
+                                (ß ass lname (+ lname (RT'nextID)))
                             )
                             (let [#_"Class" primc (Compiler'maybePrimitiveType (:init bi))]
                                 (.visitLocalVariable gen, lname, (if (some? primc) (Type/getDescriptor primc) "Ljava/lang/Object;"), nil, loopLabel, end, (:idx (:binding bi)))
@@ -12833,7 +12567,7 @@
                                   #_"IPersistentMap" backupMethodIndexLocals (:indexlocals method)
                                   #_"IPersistentVector" recurMismatches PersistentVector'EMPTY
                                   _ (loop-when-recur [#_"int" i 0] (< i (/ (.count bindings) 2)) [(inc i)]
-                                        (§ ass recurMismatches (IPersistentVector'''cons recurMismatches, RT'F))
+                                        (ß ass recurMismatches (IPersistentVector'''cons recurMismatches, RT'F))
                                     )]
                                 ;; may repeat once for each binding with a mismatch, return breaks
                                 (while true
@@ -12844,13 +12578,13 @@
                                                     Compiler'NEXT_LOCAL_NUM (IDeref'''deref Compiler'NEXT_LOCAL_NUM)
                                                 ])
                                             )
-                                          _ (§ ass (:locals method) backupMethodLocals)
-                                          _ (§ ass (:indexlocals method) backupMethodIndexLocals)
+                                          _ (ß ass (:locals method) backupMethodLocals)
+                                          _ (ß ass (:indexlocals method) backupMethodIndexLocals)
                                           #_"PathNode" looproot (PathNode'new :PathType'PATH, (cast' PathNode (Var''get Compiler'CLEAR_PATH)))
                                           #_"PathNode" clearroot (PathNode'new :PathType'PATH, looproot)
                                           #_"PathNode" clearpath (PathNode'new :PathType'PATH, looproot)]
                                         (when isLoop
-                                            (§ ass dynamicBindings (IPersistentMap'''assoc dynamicBindings, Compiler'LOOP_LOCALS, nil))
+                                            (ß ass dynamicBindings (IPersistentMap'''assoc dynamicBindings, Compiler'LOOP_LOCALS, nil))
                                         )
                                         (try
                                             (Var'pushThreadBindings dynamicBindings)
@@ -12869,15 +12603,15 @@
                                                                     (cond
                                                                         (and (some? recurMismatches) (RT'booleanCast-1o (Indexed'''nth-2 recurMismatches, (/ i 2))))
                                                                         (do
-                                                                            (§ ass init (StaticMethodExpr'new 0, 0, nil, (§ class RT), "box", (RT'vector init), false))
+                                                                            (ß ass init (StaticMethodExpr'new 0, 0, nil, (§ class RT), "box", (RT'vector init), false))
                                                                             (when (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION))
                                                                                 (.println (RT'errPrintWriter), (str "Auto-boxing loop arg: " sym))
                                                                             )
                                                                         )
                                                                         (= (Compiler'maybePrimitiveType init) Integer/TYPE)
-                                                                            (§ ass init (StaticMethodExpr'new 0, 0, nil, (§ class RT), "longCast", (RT'vector init), false))
+                                                                            (ß ass init (StaticMethodExpr'new 0, 0, nil, (§ class RT), "longCast", (RT'vector init), false))
                                                                         (= (Compiler'maybePrimitiveType init) Float/TYPE)
-                                                                            (§ ass init (StaticMethodExpr'new 0, 0, nil, (§ class RT), "doubleCast", (RT'vector init), false))
+                                                                            (ß ass init (StaticMethodExpr'new 0, 0, nil, (§ class RT), "doubleCast", (RT'vector init), false))
                                                                     )
                                                                 )
                                                                 ;; sequential enhancement of env (like Lisp let*)
@@ -12892,9 +12626,9 @@
                                                                         ))
                                                                     )
                                                                     (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (Compiler'tagOf sym), init, false)]
-                                                                        (§ ass bindingInits (IPersistentVector'''cons bindingInits, (BindingInit'new lb, init)))
+                                                                        (ß ass bindingInits (IPersistentVector'''cons bindingInits, (BindingInit'new lb, init)))
                                                                         (when isLoop
-                                                                            (§ ass loopLocals (IPersistentVector'''cons loopLocals, lb))
+                                                                            (ß ass loopLocals (IPersistentVector'''cons loopLocals, lb))
                                                                         )
                                                                     )
                                                                     (finally
@@ -12909,7 +12643,7 @@
                                                 (when isLoop
                                                     (Var''set Compiler'LOOP_LOCALS, loopLocals)
                                                 )
-                                                (§ let [#_"Expr" bodyExpr]
+                                                (ß let [#_"Expr" bodyExpr]
                                                     (let [#_"boolean" moreMismatches false]
                                                         (try
                                                             (when isLoop
@@ -12922,21 +12656,21 @@
                                                                     ])
                                                                 ))
                                                             )
-                                                            (§ ass bodyExpr (IParser'''parse (BodyParser'new), (if isLoop :Context'RETURN context), body))
+                                                            (ß ass bodyExpr (IParser'''parse (BodyParser'new), (if isLoop :Context'RETURN context), body))
                                                             (finally
                                                                 (when isLoop
                                                                     (Var'popThreadBindings)
                                                                     (loop-when-recur [#_"int" i 0] (< i (.count loopLocals)) [(inc i)]
                                                                         (when (:recurMistmatch (cast' LocalBinding (Indexed'''nth-2 loopLocals, i)))
-                                                                            (§ ass recurMismatches (cast' IPersistentVector (Associative'''assoc recurMismatches, i, RT'T)))
-                                                                            (§ ass moreMismatches true)
+                                                                            (ß ass recurMismatches (cast' IPersistentVector (Associative'''assoc recurMismatches, i, RT'T)))
+                                                                            (ß ass moreMismatches true)
                                                                         )
                                                                     )
                                                                 )
                                                             )
                                                         )
                                                         (when (not moreMismatches)
-                                                            (§ return (LetExpr'new bindingInits, bodyExpr, isLoop))
+                                                            (ß return (LetExpr'new bindingInits, bodyExpr, isLoop))
                                                         )
                                                     )
                                                 )
@@ -12967,10 +12701,7 @@
 
     (defn #_"LetExpr" LetExpr'new [#_"PersistentVector" bindingInits, #_"Expr" body, #_"boolean" isLoop]
         (let [this (LetExpr'init)]
-            (§ ass this (assoc this :bindingInits bindingInits))
-            (§ ass this (assoc this :body body))
-            (§ ass this (assoc this :isLoop isLoop))
-            this
+            (assoc this :bindingInits bindingInits :body body :isLoop isLoop)
         )
     )
 
@@ -13035,7 +12766,7 @@
                         (let [#_"BindingInit" bi (cast' BindingInit (.first bis))
                               #_"String" lname (:name (:binding bi))]
                             (when (.endsWith lname, "__auto__")
-                                (§ ass lname (+ lname (RT'nextID)))
+                                (ß ass lname (+ lname (RT'nextID)))
                             )
                             (let [#_"Class" primc (Compiler'maybePrimitiveType (:init bi))]
                                 (if (some? primc)
@@ -13104,7 +12835,7 @@
                                                     false
                                     )]
                                 (when mismatch?
-                                    (§ ass (:recurMistmatch lb) true)
+                                    (ß ass (:recurMistmatch lb) true)
                                     (when (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION))
                                         (.println (RT'errPrintWriter), (str "line " line ": recur arg for primitive local: " (:name lb) " is not matching primitive, had: " (if (some? pc) (.getName pc) "Object") ", needed: " (.getName primc)))
                                     )
@@ -13132,11 +12863,7 @@
 
     (defn #_"RecurExpr" RecurExpr'new [#_"IPersistentVector" loopLocals, #_"IPersistentVector" args, #_"int" line, #_"int" column]
         (let [this (RecurExpr'init)]
-            (§ ass this (assoc this :loopLocals loopLocals))
-            (§ ass this (assoc this :args args))
-            (§ ass this (assoc this :line line))
-            (§ ass this (assoc this :column column))
-            this
+            (assoc this :loopLocals loopLocals :args args :line line :column column)
         )
     )
 
@@ -13229,8 +12956,7 @@
 
     (defn #_"CompilerException" CompilerException'new [#_"int" line, #_"int" column, #_"Throwable" cause]
         (let [this (merge (§ foreign RuntimeException'new (str cause ", compiling at (" line ":" column ")"), cause) (CompilerException'init))]
-            (§ ass this (assoc this :line line))
-            this
+            (assoc this :line line)
         )
     )
 
@@ -13250,17 +12976,17 @@
     (defn #_"Expr" IParser'''parse--DeftypeParser [#_"DeftypeParser" this, #_"Context" context, #_"Object" frm]
         (let [#_"ISeq" rform (cast' ISeq frm)]
             ;; (deftype* tagname classname [fields] :implements [interfaces] :tag tagname methods*)
-            (§ ass rform (RT'next rform))
+            (ß ass rform (RT'next rform))
             (let [#_"String" tagname (Named'''getName (cast' Symbol (.first rform)))]
-                (§ ass rform (.next rform))
+                (ß ass rform (.next rform))
                 (let [#_"Symbol" classname (cast' Symbol (.first rform))]
-                    (§ ass rform (.next rform))
+                    (ß ass rform (.next rform))
                     (let [#_"IPersistentVector" fields (cast' IPersistentVector (.first rform))]
-                        (§ ass rform (.next rform))
+                        (ß ass rform (.next rform))
                         (let [#_"IPersistentMap" opts PersistentHashMap'EMPTY]
                             (while (and (some? rform) (§ instance? Keyword (.first rform)))
-                                (§ ass opts (IPersistentMap'''assoc opts, (.first rform), (RT'second rform)))
-                                (§ ass rform (.next (.next rform)))
+                                (ß ass opts (IPersistentMap'''assoc opts, (.first rform), (RT'second rform)))
+                                (ß ass rform (.next (.next rform)))
                             )
 
                             (let [#_"ObjExpr" ret (NewInstanceExpr'build (cast' IPersistentVector (RT'get-3 opts, Compiler'implementsKey, PersistentVector'EMPTY)), fields, nil, tagname, classname, (cast' Symbol (RT'get-2 opts, RT'TAG_KEY)), rform, frm, opts)]
@@ -13314,14 +13040,14 @@
 
     (defn #_"ObjExpr" NewInstanceExpr'build [#_"IPersistentVector" interfaceSyms, #_"IPersistentVector" fieldSyms, #_"Symbol" thisSym, #_"String" tagName, #_"Symbol" className, #_"Symbol" typeTag, #_"ISeq" methodForms, #_"Object" frm, #_"IPersistentMap" opts]
         (let [#_"NewInstanceExpr" ret (NewInstanceExpr'new nil)
-              _ (§ ass (:src ret) frm)
-              _ (§ ass (:name ret) (.toString className))
-              _ (§ ass (:classMeta ret) (RT'meta className))
-              _ (§ ass (:internalName ret) (.replace (:name ret), \., \/))
-              _ (§ ass (:objtype ret) (Type/getObjectType (:internalName ret)))
-              _ (§ ass (:opts ret) opts)
+              _ (ß ass (:src ret) frm)
+              _ (ß ass (:name ret) (.toString className))
+              _ (ß ass (:classMeta ret) (RT'meta className))
+              _ (ß ass (:internalName ret) (.replace (:name ret), \., \/))
+              _ (ß ass (:objtype ret) (Type/getObjectType (:internalName ret)))
+              _ (ß ass (:opts ret) opts)
               _ (when (some? thisSym)
-                    (§ ass (:thisName ret) (:name thisSym))
+                    (ß ass (:thisName ret) (:name thisSym))
                 )]
 
             (when (some? fieldSyms)
@@ -13338,10 +13064,10 @@
 
                     ;; todo - inject __meta et al into closes - when?
                     ;; use array map to preserve ctor order
-                    (§ ass (:closes ret) (PersistentArrayMap'new-1 closesvec))
-                    (§ ass (:fields ret) fmap)
+                    (ß ass (:closes ret) (PersistentArrayMap'new-1 closesvec))
+                    (ß ass (:fields ret) fmap)
                     (loop-when-recur [#_"int" i (dec (.count fieldSyms))] (and (<= 0 i) (any = (:name (cast' Symbol (Indexed'''nth-2 fieldSyms, i))) "__meta" "__extmap" "__hash" "__hasheq")) [(dec i)]
-                        (§ ass (:altCtorDrops ret) (inc (:altCtorDrops ret)))
+                        (ß ass (:altCtorDrops ret) (inc (:altCtorDrops ret)))
                     )
                 )
             )
@@ -13357,8 +13083,8 @@
                   #_"Class" superClass Object
                   #_"Map[]" mc (NewInstanceExpr'gatherMethods-2s superClass, (RT'seq ifaces))
                   #_"Map" overrideables (aget mc 0) #_"Map" covariants (aget mc 1)
-                  _ (§ ass (:mmap ret) overrideables)
-                  _ (§ ass (:covariants ret) covariants)
+                  _ (ß ass (:mmap ret) overrideables)
+                  _ (ß ass (:covariants ret) covariants)
                   #_"String[]" inames (NewInstanceExpr'interfaceNames ifaces)
                   #_"Class" stub (NewInstanceExpr'compileStub (NewInstanceExpr'slashname superClass), ret, inames, frm)
                   #_"Symbol" thistag (Symbol'intern nil, (.getName stub))]
@@ -13385,26 +13111,26 @@
                                 Compiler'COMPILE_STUB_CLASS stub
                             ])
                         ))
-                        (§ ass (:hintedFields ret) (RT'subvec fieldSyms, 0, (- (.count fieldSyms) (:altCtorDrops ret))))
+                        (ß ass (:hintedFields ret) (RT'subvec fieldSyms, 0, (- (.count fieldSyms) (:altCtorDrops ret))))
                     )
 
                     ;; now (methodname [args] body)*
-                    (§ ass (:line ret) (Compiler'lineDeref))
-                    (§ ass (:column ret) (Compiler'columnDeref))
+                    (ß ass (:line ret) (Compiler'lineDeref))
+                    (ß ass (:column ret) (Compiler'columnDeref))
                     (let [#_"IPersistentCollection" methods
                             (loop-when [methods nil #_"ISeq" s methodForms] (some? s) => methods
                                 (let [#_"NewInstanceMethod" m (NewInstanceMethod'parse ret, (cast' ISeq (RT'first s)), thistag, overrideables)]
                                     (recur (RT'conj methods, m) (RT'next s))
                                 )
                             )]
-                        (§ ass (:methods ret) methods)
-                        (§ ass (:keywords ret) (cast' IPersistentMap (IDeref'''deref Compiler'KEYWORDS)))
-                        (§ ass (:vars ret) (cast' IPersistentMap (IDeref'''deref Compiler'VARS)))
-                        (§ ass (:constants ret) (cast' PersistentVector (IDeref'''deref Compiler'CONSTANTS)))
-                        (§ ass (:constantsID ret) (RT'nextID))
-                        (§ ass (:keywordCallsites ret) (cast' IPersistentVector (IDeref'''deref Compiler'KEYWORD_CALLSITES)))
-                        (§ ass (:protocolCallsites ret) (cast' IPersistentVector (IDeref'''deref Compiler'PROTOCOL_CALLSITES)))
-                        (§ ass (:varCallsites ret) (cast' IPersistentSet (IDeref'''deref Compiler'VAR_CALLSITES)))
+                        (ß ass (:methods ret) methods)
+                        (ß ass (:keywords ret) (cast' IPersistentMap (IDeref'''deref Compiler'KEYWORDS)))
+                        (ß ass (:vars ret) (cast' IPersistentMap (IDeref'''deref Compiler'VARS)))
+                        (ß ass (:constants ret) (cast' PersistentVector (IDeref'''deref Compiler'CONSTANTS)))
+                        (ß ass (:constantsID ret) (RT'nextID))
+                        (ß ass (:keywordCallsites ret) (cast' IPersistentVector (IDeref'''deref Compiler'KEYWORD_CALLSITES)))
+                        (ß ass (:protocolCallsites ret) (cast' IPersistentVector (IDeref'''deref Compiler'PROTOCOL_CALLSITES)))
+                        (ß ass (:varCallsites ret) (cast' IPersistentSet (IDeref'''deref Compiler'VAR_CALLSITES)))
                     )
                     (finally
                         (when (ObjExpr''isDeftype ret)
@@ -13681,7 +13407,7 @@
                     )
                 )
             )
-            (§ new Map[] (object-array [ methods, covariants ]))
+            (ß new Map[] (object-array [ methods, covariants ]))
         )
     )
 )
@@ -13741,8 +13467,8 @@
                       parms (RT'subvec parms, 1, (.count parms))
                       #_"ISeq" body (RT'next (RT'next form))]
                     (try
-                        (let [_ (§ ass (:line method) (Compiler'lineDeref))
-                              _ (§ ass (:column method) (Compiler'columnDeref))
+                        (let [_ (ß ass (:line method) (Compiler'lineDeref))
+                              _ (ß ass (:column method) (Compiler'columnDeref))
                               ;; register as the current method and set up a new env frame
                               #_"PathNode" pnode (PathNode'new :PathType'PATH, (cast' PathNode (Var''get Compiler'CLEAR_PATH)))]
                             (Var'pushThreadBindings (RT'mapUniqueKeys
@@ -13764,8 +13490,8 @@
                                 (Compiler'getAndIncLocalNum)
                             )
 
-                            (let [_ (§ ass (:retClass method) (Compiler'tagClass (Compiler'tagOf name)))
-                                  _ (§ ass (:argTypes method) (make-array Type (.count parms)))
+                            (let [_ (ß ass (:retClass method) (Compiler'tagClass (Compiler'tagOf name)))
+                                  _ (ß ass (:argTypes method) (make-array Type (.count parms)))
                                   #_"Class[]" pclasses (make-array Class (.count parms))
                                   #_"Symbol[]" psyms (make-array #_"Symbol" Object (.count parms))
                                   #_"boolean" hinted
@@ -13798,8 +13524,8 @@
                                                 )
                                                 ;; adopt found method sig
                                                 (let [m (cast java.lang.reflect.Method (.next (.iterator (.values matches))))]
-                                                    (§ ass (:retClass method) (.getReturnType m))
-                                                    (§ ass pclasses (.getParameterTypes m))
+                                                    (ß ass (:retClass method) (.getReturnType m))
+                                                    (ß ass pclasses (.getParameterTypes m))
                                                     m
                                                 )
                                             )
@@ -13819,8 +13545,8 @@
 
                                 ;; validate unque name+arity among additional methods
 
-                                (§ ass (:retType method) (Type/getType (:retClass method)))
-                                (§ ass (:exclasses method) (.getExceptionTypes m))
+                                (ß ass (:retType method) (Type/getType (:retClass method)))
+                                (ß ass (:exclasses method) (.getExceptionTypes m))
 
                                 (let [#_"PersistentVector" argLocals
                                         (loop-when [argLocals PersistentVector'EMPTY #_"int" i 0] (< i (.count parms)) => argLocals
@@ -13835,11 +13561,11 @@
                                         )
                                     )
                                     (Var''set Compiler'LOOP_LOCALS, argLocals)
-                                    (§ ass (:name method) (:name name))
-                                    (§ ass (:methodMeta method) (RT'meta name))
-                                    (§ ass (:parms method) parms)
-                                    (§ ass (:argLocals method) argLocals)
-                                    (§ ass (:body method) (IParser'''parse (BodyParser'new), :Context'RETURN, body))
+                                    (ß ass (:name method) (:name name))
+                                    (ß ass (:methodMeta method) (RT'meta name))
+                                    (ß ass (:parms method) parms)
+                                    (ß ass (:argLocals method) argLocals)
+                                    (ß ass (:body method) (IParser'''parse (BodyParser'new), :Context'RETURN, body))
                                     method
                                 )
                             )
@@ -13932,8 +13658,7 @@
 
     (defn #_"MethodParamExpr" MethodParamExpr'new [#_"Class" c]
         (let [this (MethodParamExpr'init)]
-            (§ ass this (assoc this :c c))
-            this
+            (assoc this :c c)
         )
     )
 
@@ -13996,7 +13721,7 @@
                       #_"int" low (.intValue (cast Number (RT'first keys)))
                       #_"int" high (.intValue (cast Number (RT'nth-2 keys, (dec (RT'count keys)))))
                       #_"LocalBindingExpr" testexpr (cast' LocalBindingExpr (Compiler'analyze-2 :Context'EXPRESSION, exprForm))
-                      _ (§ ass (:shouldClear testexpr) false)
+                      _ (ß ass (:shouldClear testexpr) false)
                       #_"SortedMap<Integer, Expr>" tests (TreeMap.)
                       #_"HashMap<Integer, Expr>" thens (HashMap.)
                       #_"PathNode" branch (PathNode'new :PathType'BRANCH, (cast' PathNode (Var''get Compiler'CLEAR_PATH)))
@@ -14074,28 +13799,28 @@
     ;; (case* expr shift mask default map<minhash, [test then]> table-type test-type skip-check?)
     (defn #_"CaseExpr" CaseExpr'new [#_"int" line, #_"int" column, #_"LocalBindingExpr" expr, #_"int" shift, #_"int" mask, #_"int" low, #_"int" high, #_"Expr" defaultExpr, #_"SortedMap<Integer, Expr>" tests, #_"HashMap<Integer, Expr>" thens, #_"Keyword" switchType, #_"Keyword" testType, #_"Set<Integer>" skipCheck]
         (let [this (CaseExpr'init)]
-            (§ ass this (assoc this :expr expr))
-            (§ ass this (assoc this :shift shift))
-            (§ ass this (assoc this :mask mask))
-            (§ ass this (assoc this :low low))
-            (§ ass this (assoc this :high high))
-            (§ ass this (assoc this :defaultExpr defaultExpr))
-            (§ ass this (assoc this :tests tests))
-            (§ ass this (assoc this :thens thens))
-            (§ ass this (assoc this :line line))
-            (§ ass this (assoc this :column column))
+            (ß ass this (assoc this :expr expr))
+            (ß ass this (assoc this :shift shift))
+            (ß ass this (assoc this :mask mask))
+            (ß ass this (assoc this :low low))
+            (ß ass this (assoc this :high high))
+            (ß ass this (assoc this :defaultExpr defaultExpr))
+            (ß ass this (assoc this :tests tests))
+            (ß ass this (assoc this :thens thens))
+            (ß ass this (assoc this :line line))
+            (ß ass this (assoc this :column column))
             (when (and (not= switchType CaseExpr'compactKey) (not= switchType CaseExpr'sparseKey))
                 (throw (IllegalArgumentException. (str "Unexpected switch type: " switchType)))
             )
-            (§ ass this (assoc this :switchType switchType))
+            (ß ass this (assoc this :switchType switchType))
             (when (and (not= testType CaseExpr'intKey) (not= testType CaseExpr'hashEquivKey) (not= testType CaseExpr'hashIdentityKey))
                 (throw (IllegalArgumentException. (str "Unexpected test type: " switchType)))
             )
-            (§ ass this (assoc this :testType testType))
-            (§ ass this (assoc this :skipCheck skipCheck))
+            (ß ass this (assoc this :testType testType))
+            (ß ass this (assoc this :skipCheck skipCheck))
             (let [#_"Collection<Expr>" returns (ArrayList. (.values thens))]
                 (.add returns, defaultExpr)
-                (§ ass this (assoc this :returnType (Compiler'maybeJavaClass returns)))
+                (ß ass this (assoc this :returnType (Compiler'maybeJavaClass returns)))
                 (when (and (pos? (RT'count skipCheck)) (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION)))
                     (.format (RT'errPrintWriter), "Performance warning, %d:%d - hash collision of some case test constants; if selected, those entries will be tested sequentially.\n", (object-array [ line, column ]))
                 )
@@ -14152,7 +13877,7 @@
 
                 (if (= (:switchType this) CaseExpr'sparseKey)
                     (let [#_"Label[]" la (make-array Label (.size labels))]
-                        (§ ass la (.toArray (.values labels), la))
+                        (ß ass la (.toArray (.values labels), la))
                         (let [#_"int[]" ints (Numbers'int_array-1 (.keySet (:tests this)))]
                             (.visitLookupSwitchInsn gen, defaultLabel, ints, la)
                         )
@@ -14424,7 +14149,7 @@
     (def- #_"Type[]" Compiler'EXCEPTION_TYPES (object-array 0))
 
     (§ static
-        (§ ass Compiler'ARG_TYPES (§ new Type[(+ Compiler'MAX_POSITIONAL_ARITY 2)][]))
+        (ß ass Compiler'ARG_TYPES (ß new Type[(+ Compiler'MAX_POSITIONAL_ARITY 2)][]))
         (loop-when-recur [#_"int" i 0] (<= i Compiler'MAX_POSITIONAL_ARITY) [(inc i)]
             (let [#_"Type[]" a (make-array Type i)]
                 (loop-when-recur [#_"int" j 0] (< j i) [(inc j)]
@@ -14722,7 +14447,7 @@
                         (recur (IPersistentMap'''assoc m, (cast String (IMapEntry'''val e)), (cast Character (IMapEntry'''key e))) (.next s))
                     )
                 )]
-            (§ ass Compiler'DEMUNGE_MAP m)
+            (ß ass Compiler'DEMUNGE_MAP m)
 
             ;; DEMUNGE_PATTERN searches for the first of any occurrence of the strings that are keys of DEMUNGE_MAP.
             ;; Note: Regex matching rules mean that #"_|_COLON_" "_COLON_" returns "_", but #"_COLON_|_" "_COLON_"
@@ -14746,7 +14471,7 @@
                         (.append sb, (cast String (aget a i)))
                         (.append sb, "\\E")
                     )
-                    (§ ass Compiler'DEMUNGE_PATTERN (Pattern/compile (.toString sb)))
+                    (ß ass Compiler'DEMUNGE_PATTERN (Pattern/compile (.toString sb)))
                 )
             )
         )
@@ -14789,8 +14514,8 @@
               #_"LocalBinding" lb (LocalBinding'new n, sym, tag, init, isArg, (Compiler'clearPathRoot))]
             (Var''set Compiler'LOCAL_ENV, (RT'assoc (cast' IPersistentMap (IDeref'''deref Compiler'LOCAL_ENV)), (:sym lb), lb))
             (let [#_"ObjMethod" method (cast' ObjMethod (IDeref'''deref Compiler'METHOD))]
-                (§ ass (:locals method) (cast' IPersistentMap (RT'assoc (:locals method), lb, lb)))
-                (§ ass (:indexlocals method) (cast' IPersistentMap (RT'assoc (:indexlocals method), n, lb)))
+                (ß ass (:locals method) (cast' IPersistentMap (RT'assoc (:locals method), lb, lb)))
+                (ß ass (:indexlocals method) (cast' IPersistentMap (RT'assoc (:indexlocals method), n, lb)))
                 lb
             )
         )
@@ -14800,7 +14525,7 @@
         (let [#_"int" n (.intValue (cast Number (IDeref'''deref Compiler'NEXT_LOCAL_NUM)))
               #_"ObjMethod" m (cast' ObjMethod (IDeref'''deref Compiler'METHOD))]
             (when (< (:maxLocal m) n)
-                (§ ass (:maxLocal m) n)
+                (ß ass (:maxLocal m) n)
             )
             (Var''set Compiler'NEXT_LOCAL_NUM, (inc n))
             n
@@ -14905,11 +14630,11 @@
             (§ sync Compiler'MACRO_CHECK_LOCK
                 (or Compiler'MACRO_CHECK
                     (do
-                        (§ ass Compiler'MACRO_CHECK_LOADING true)
+                        (ß ass Compiler'MACRO_CHECK_LOADING true)
                         (RT'load-1 "cloiure/spec/alpha")
                         (RT'load-1 "cloiure/core/specs/alpha")
-                        (§ ass Compiler'MACRO_CHECK (Var'find (Symbol'intern "cloiure.spec.alpha", "macroexpand-check")))
-                        (§ ass Compiler'MACRO_CHECK_LOADING false)
+                        (ß ass Compiler'MACRO_CHECK (Var'find (Symbol'intern "cloiure.spec.alpha", "macroexpand-check")))
+                        (ß ass Compiler'MACRO_CHECK_LOADING false)
                         Compiler'MACRO_CHECK
                     )
                 )
@@ -15312,15 +15037,15 @@
             (let [#_"LocalBinding" lb (cast' LocalBinding (RT'get-2 (:locals method), b))]
                 (if (nil? lb)
                     (do
-                        (§ ass (:closes (:objx method)) (cast' IPersistentMap (RT'assoc (:closes (:objx method)), b, b)))
+                        (ß ass (:closes (:objx method)) (cast' IPersistentMap (RT'assoc (:closes (:objx method)), b, b)))
                         (Compiler'closeOver b, (:parent method))
                     )
                     (do
                         (when (zero? (:idx lb))
-                            (§ ass (:usesThis method) true)
+                            (ß ass (:usesThis method) true)
                         )
                         (when (some? (IDeref'''deref Compiler'IN_CATCH_FINALLY))
-                            (§ ass (:localsUsedInCatchFinally method) (cast' PersistentHashSet (IPersistentCollection'''cons (:localsUsedInCatchFinally method), (:idx b))))
+                            (ß ass (:localsUsedInCatchFinally method) (cast' PersistentHashSet (IPersistentCollection'''cons (:localsUsedInCatchFinally method), (:idx b))))
                         )
                     )
                 )
@@ -15334,7 +15059,7 @@
             (when-let [#_"LocalBinding" b (cast' LocalBinding (RT'get-2 (IDeref'''deref Compiler'LOCAL_ENV), sym))]
                 (let [#_"ObjMethod" method (cast' ObjMethod (IDeref'''deref Compiler'METHOD))]
                     (when (zero? (:idx b))
-                        (§ ass (:usesThis method) true)
+                        (ß ass (:usesThis method) true)
                     )
                     (Compiler'closeOver b, method)
                     b
@@ -15504,17 +15229,13 @@
 
     (defn #_"Cons" Cons'new-2 [#_"Object" _first, #_"ISeq" _more]
         (let [this (merge (ASeq'new-0) (Cons'init))]
-            (§ ass this (assoc this :_first _first))
-            (§ ass this (assoc this :_more _more))
-            this
+            (assoc this :_first _first :_more _more)
         )
     )
 
     (defn #_"Cons" Cons'new-3 [#_"IPersistentMap" meta, #_"Object" _first, #_"ISeq" _more]
         (let [this (merge (ASeq'new-1 meta) (Cons'init))]
-            (§ ass this (assoc this :_first _first))
-            (§ ass this (assoc this :_more _more))
-            this
+            (assoc this :_first _first :_more _more)
         )
     )
 
@@ -15561,20 +15282,13 @@
 
     (defn- #_"Cycle" Cycle'new-3 [#_"ISeq" all, #_"ISeq" prev, #_"ISeq" current]
         (let [this (merge (ASeq'new-0) (Cycle'init))]
-            (§ ass this (assoc this :all all))
-            (§ ass this (assoc this :prev prev))
-            (§ ass this (assoc this :_current current))
-            this
+            (assoc this :all all :prev prev :_current current)
         )
     )
 
     (defn- #_"Cycle" Cycle'new-5 [#_"IPersistentMap" meta, #_"ISeq" all, #_"ISeq" prev, #_"ISeq" current, #_"ISeq" next]
         (let [this (merge (ASeq'new-1 meta) (Cycle'init))]
-            (§ ass this (assoc this :all all))
-            (§ ass this (assoc this :prev prev))
-            (§ ass this (assoc this :_current current))
-            (§ ass this (assoc this :_next next))
-            this
+            (assoc this :all all :prev prev :_current current :_next next)
         )
     )
 
@@ -15587,7 +15301,7 @@
     (defn- #_"ISeq" Cycle''current [#_"Cycle" this]
         (when (nil? (:_current this))
             (let [#_"ISeq" current (.next (:prev this))]
-                (§ ass this (assoc this :_current (or current (:all this))))
+                (ß ass this (assoc this :_current (or current (:all this))))
             )
         )
         (:_current this)
@@ -15606,7 +15320,7 @@
     #_override
     (defn #_"ISeq" ISeq'''next--Cycle [#_"Cycle" this]
         (when (nil? (:_next this))
-            (§ ass this (assoc this :_next (Cycle'new-3 (:all this), (Cycle''current this), nil)))
+            (ß ass this (assoc this :_next (Cycle'new-3 (:all this), (Cycle''current this), nil)))
         )
         (:_next this)
     )
@@ -15656,10 +15370,7 @@
 
     (defn #_"Delay" Delay'new [#_"IFn" fn]
         (let [this (Delay'init)]
-            (§ ass this (assoc this :fn fn))
-            (§ ass this (assoc this :val nil))
-            (§ ass this (assoc this :exception nil))
-            this
+            (assoc this :fn fn :val nil :exception nil)
         )
     )
 
@@ -15674,12 +15385,12 @@
                 ;; double check
                 (when (some? (:fn this))
                     (try
-                        (§ ass this (assoc this :val (IFn'''invoke-1 (:fn this))))
+                        (ß ass this (assoc this :val (IFn'''invoke-1 (:fn this))))
                         (catch Throwable t
-                            (§ ass this (assoc this :exception t))
+                            (ß ass this (assoc this :exception t))
                         )
                     )
-                    (§ ass this (assoc this :fn nil))
+                    (ß ass this (assoc this :fn nil))
                 )
             )
         )
@@ -15751,9 +15462,9 @@
         (§ sync this
             (let [#_"Class" c (.findLoadedClass this, name)]
                 (when (nil? c)
-                    (§ ass c (DynamicClassLoader'findInMemoryClass name))
+                    (ß ass c (DynamicClassLoader'findInMemoryClass name))
                     (when (nil? c)
-                        (§ ass c (.loadClass (§ super ), name, false))
+                        (ß ass c (.loadClass (§ super ), name, false))
                     )
                 )
                 (when resolve
@@ -15799,7 +15510,7 @@
         (let [this (merge (§ foreign RuntimeException'new s, throwable) (ExceptionInfo'init))]
             ;; nil cause is equivalent to not passing a cause
             (when (some? data) => (throw (IllegalArgumentException. "Additional data must be non-nil."))
-                (§ ass this (assoc this :data data))
+                (ß ass this (assoc this :data data))
             )
             this
         )
@@ -15831,11 +15542,7 @@
 
     (defn #_"FnLoaderThunk" FnLoaderThunk'new [#_"Var" v, #_"String" fnClassName]
         (let [this (merge (RestFn'new) (FnLoaderThunk'init))]
-            (§ ass this (assoc this :v v))
-            (§ ass this (assoc this :loader (cast ClassLoader (Var''get RT'FN_LOADER_VAR))))
-            (§ ass this (assoc this :fnClassName fnClassName))
-            (§ ass this (assoc this :fn nil))
-            this
+            (assoc this :v v :loader (cast ClassLoader (Var''get RT'FN_LOADER_VAR)) :fnClassName fnClassName :fn nil)
         )
     )
 
@@ -15868,12 +15575,12 @@
     (defn- #_"void" FnLoaderThunk''load [#_"FnLoaderThunk" this]
         (when (nil? (:fn this))
             (try
-                (§ ass this (assoc this :fn (cast' IFn (.newInstance (Class/forName (:fnClassName this), true, (:loader this))))))
+                (ß ass this (assoc this :fn (cast' IFn (.newInstance (Class/forName (:fnClassName this), true, (:loader this))))))
                 (catch Exception e
                     (throw (Util'sneakyThrow e))
                 )
             )
-            (§ ass (:root (:v this)) (:fn this))
+            (ß ass (:root (:v this)) (:fn this))
         )
         nil
     )
@@ -16044,20 +15751,13 @@
 
     (defn- #_"Iterate" Iterate'new-3 [#_"IFn" f, #_"Object" prevSeed, #_"Object" seed]
         (let [this (merge (ASeq'new-0) (Iterate'init))]
-            (§ ass this (assoc this :f f))
-            (§ ass this (assoc this :prevSeed prevSeed))
-            (§ ass this (assoc this :_seed seed))
-            this
+            (assoc this :f f :prevSeed prevSeed :_seed seed)
         )
     )
 
     (defn- #_"Iterate" Iterate'new-5 [#_"IPersistentMap" meta, #_"IFn" f, #_"Object" prevSeed, #_"Object" seed, #_"ISeq" next]
         (let [this (merge (ASeq'new-1 meta) (Iterate'init))]
-            (§ ass this (assoc this :f f))
-            (§ ass this (assoc this :prevSeed prevSeed))
-            (§ ass this (assoc this :_seed seed))
-            (§ ass this (assoc this :_next next))
-            this
+            (assoc this :f f :prevSeed prevSeed :_seed seed :_next next)
         )
     )
 
@@ -16073,7 +15773,7 @@
     #_override
     (defn #_"Object" ISeq'''first--Iterate [#_"Iterate" this]
         (when (= (:_seed this) Iterate'UNREALIZED_SEED)
-            (§ ass this (assoc this :_seed (IFn'''invoke-2 (:f this), (:prevSeed this))))
+            (ß ass this (assoc this :_seed (IFn'''invoke-2 (:f this), (:prevSeed this))))
         )
         (:_seed this)
     )
@@ -16081,7 +15781,7 @@
     #_override
     (defn #_"ISeq" ISeq'''next--Iterate [#_"Iterate" this]
         (when (nil? (:_next this))
-            (§ ass this (assoc this :_next (Iterate'new-3 (:f this), (.first this), Iterate'UNREALIZED_SEED)))
+            (ß ass this (assoc this :_next (Iterate'new-3 (:f this), (.first this), Iterate'UNREALIZED_SEED)))
         )
         (:_next this)
     )
@@ -16151,19 +15851,17 @@
 
     (defn #_"IteratorSeq" IteratorSeq'new-1 [#_"Iterator" iter]
         (let [this (merge (ASeq'new-0) (IteratorSeq'init))]
-            (§ ass this (assoc this :iter iter))
-            (§ ass this (assoc this :state (IteratorSeqState'new)))
-            (§ ass (:val (:state this)) (:state this))
-            (§ ass (:_rest (:state this)) (:state this))
+            (ß ass this (assoc this :iter iter))
+            (ß ass this (assoc this :state (IteratorSeqState'new)))
+            (ß ass (:val (:state this)) (:state this))
+            (ß ass (:_rest (:state this)) (:state this))
             this
         )
     )
 
     (defn #_"IteratorSeq" IteratorSeq'new-3 [#_"IPersistentMap" meta, #_"Iterator" iter, #_"IteratorSeqState" state]
         (let [this (merge (ASeq'new-1 meta) (IteratorSeq'init))]
-            (§ ass this (assoc this :iter iter))
-            (§ ass this (assoc this :state state))
-            this
+            (assoc this :iter iter :state state)
         )
     )
 
@@ -16172,7 +15870,7 @@
         (when (= (:val (:state this)) (:state this))
             (§ sync (:state this)
                 (when (= (:val (:state this)) (:state this))
-                    (§ ass (:val (:state this)) (.next (:iter this)))
+                    (ß ass (:val (:state this)) (.next (:iter this)))
                 )
             )
         )
@@ -16185,7 +15883,7 @@
             (§ sync (:state this)
                 (when (= (:_rest (:state this)) (:state this))
                     (.first this)
-                    (§ ass (:_rest (:state this)) (IteratorSeq'create (:iter this)))
+                    (ß ass (:_rest (:state this)) (IteratorSeq'create (:iter this)))
                 )
             )
         )
@@ -16248,9 +15946,7 @@
 
     (defn- #_"Keyword" Keyword'new [#_"Symbol" sym]
         (let [this (Keyword'init)]
-            (§ ass this (assoc this :sym sym))
-            (§ ass this (assoc this :hasheq (+ (IHashEq'''hasheq sym) 0x9e3779b9)))
-            this
+            (assoc this :sym sym :hasheq (+ (IHashEq'''hasheq sym) 0x9e3779b9))
         )
     )
 
@@ -16283,7 +15979,7 @@
     #_foreign
     (§ defn #_"String" toString [#_"Keyword" this]
         (when (nil? (:_str this))
-            (§ ass this (assoc this :_str (str ":" (:sym this))))
+            (ß ass this (assoc this :_str (str ":" (:sym this))))
         )
         (:_str this)
     )
@@ -16452,8 +16148,7 @@
 
     (defn #_"KeywordLookupSite" KeywordLookupSite'new [#_"Keyword" k]
         (let [this (KeywordLookupSite'init)]
-            (§ ass this (assoc this :k k))
-            this
+            (assoc this :k k)
         )
     )
 
@@ -16541,16 +16236,13 @@
 
     (defn #_"LazySeq" LazySeq'new-1 [#_"IFn" fn]
         (let [this (merge (Obj'new-0) (LazySeq'init))]
-            (§ ass this (assoc this :fn fn))
-            this
+            (assoc this :fn fn)
         )
     )
 
     (defn- #_"LazySeq" LazySeq'new-2 [#_"IPersistentMap" meta, #_"ISeq" s]
         (let [this (merge (Obj'new-1 meta) (LazySeq'init))]
-            (§ ass this (assoc this :fn nil))
-            (§ ass this (assoc this :s s))
-            this
+            (assoc this :fn nil :s s)
         )
     )
 
@@ -16563,8 +16255,8 @@
     (defn #_"Object" LazySeq''sval [#_"LazySeq" this]
         (§ sync this
             (when (some? (:fn this))
-                (§ ass this (assoc this :sv (IFn'''invoke-1 (:fn this))))
-                (§ ass this (assoc this :fn nil))
+                (ß ass this (assoc this :sv (IFn'''invoke-1 (:fn this))))
+                (ß ass this (assoc this :fn nil))
             )
             (or (:sv this) (:s this))
         )
@@ -16576,11 +16268,11 @@
             (LazySeq''sval this)
             (when (some? (:sv this))
                 (let [#_"Object" ls (:sv this)]
-                    (§ ass this (assoc this :sv nil))
+                    (ß ass this (assoc this :sv nil))
                     (while (§ instance? LazySeq ls)
-                        (§ ass ls (LazySeq''sval (cast' LazySeq ls)))
+                        (ß ass ls (LazySeq''sval (cast' LazySeq ls)))
                     )
-                    (§ ass this (assoc this :s (RT'seq ls)))
+                    (ß ass this (assoc this :s (RT'seq ls)))
                 )
             )
             (:s this)
@@ -16591,7 +16283,7 @@
     (defn #_"int" Counted'''count--LazySeq [#_"LazySeq" this]
         (let [#_"int" c 0]
             (loop-when-recur [#_"ISeq" s (Seqable'''seq this)] (some? s) [(.next s)]
-                (§ ass c (inc c))
+                (ß ass c (inc c))
             )
             c
         )
@@ -16677,27 +16369,7 @@
     )
 
     #_foreign
-    (§ defn #_"boolean" addAll [#_"LazySeq" this, #_"Collection" c]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (§ defn #_"void" clear [#_"LazySeq" this]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" retainAll [#_"LazySeq" this, #_"Collection" c]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" removeAll [#_"LazySeq" this, #_"Collection" c]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" containsAll [#_"LazySeq" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
@@ -16729,11 +16401,6 @@
     )
 
     #_foreign
-    (§ defn #_"List" subList [#_"LazySeq" this, #_"int" fromIndex, #_"int" toIndex]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (§ defn #_"Object" set [#_"LazySeq" this, #_"int" index, #_"Object" element]
         (throw (UnsupportedOperationException.))
     )
@@ -16756,27 +16423,12 @@
     )
 
     #_foreign
-    (§ defn #_"ListIterator" listIterator [#_"LazySeq" this]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"ListIterator" listIterator [#_"LazySeq" this, #_"int" index]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (§ defn #_"Object" get [#_"LazySeq" this, #_"int" index]
         (RT'nth-2 this, index)
     )
 
     #_foreign
     (§ defn #_"void" add [#_"LazySeq" this, #_"int" index, #_"Object" element]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" addAll [#_"LazySeq" this, #_"int" index, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
@@ -16838,15 +16490,15 @@
     #_foreign
     (§ defn #_"int" read [#_"LineNumberingPushbackReader" this] #_(§ throws IOException)
         (let [#_"int" c (.read (§ super ))]
-            (§ ass this (assoc this :_prev (:_atLineStart this)))
+            (ß ass this (assoc this :_prev (:_atLineStart this)))
             (if (or (= c LineNumberingPushbackReader'newline) (= c -1))
                 (do
-                    (§ ass this (assoc this :_atLineStart true))
-                    (§ ass this (assoc this :_columnNumber 1))
+                    (ß ass this (assoc this :_atLineStart true))
+                    (ß ass this (assoc this :_columnNumber 1))
                 )
                 (do
-                    (§ ass this (assoc this :_atLineStart false))
-                    (§ ass this (assoc this :_columnNumber (inc (:_columnNumber this))))
+                    (ß ass this (assoc this :_atLineStart false))
+                    (ß ass this (assoc this :_columnNumber (inc (:_columnNumber this))))
                 )
             )
             c
@@ -16856,8 +16508,8 @@
     #_foreign
     (§ defn #_"void" unread [#_"LineNumberingPushbackReader" this, #_"int" c] #_(§ throws IOException)
         (.unread (§ super ), c)
-        (§ ass this (assoc this :_atLineStart (:_prev this)))
-        (§ ass this (assoc this :_columnNumber (dec (:_columnNumber this))))
+        (ß ass this (assoc this :_atLineStart (:_prev this)))
+        (ß ass this (assoc this :_columnNumber (dec (:_columnNumber this))))
         nil
     )
 
@@ -16866,9 +16518,9 @@
         (let [#_"int" c (.read this)]
             (condp = c -1 nil LineNumberingPushbackReader'newline ""
                 (let [#_"String" s (String/valueOf (char c)) #_"String" z (.readLine (cast LineNumberReader (§ foreign in)))]
-                    (§ ass this (assoc this :_prev false))
-                    (§ ass this (assoc this :_atLineStart true))
-                    (§ ass this (assoc this :_columnNumber 1))
+                    (ß ass this (assoc this :_prev false))
+                    (ß ass this (assoc this :_atLineStart true))
+                    (ß ass this (assoc this :_columnNumber 1))
                     (if (nil? z) s (str s z))
                 )
             )
@@ -16922,9 +16574,7 @@
 
     (defn #_"LispReaderException" LispReaderException'new [#_"int" line, #_"int" column, #_"Throwable" cause]
         (let [this (merge (§ foreign RuntimeException'new cause) (LispReaderException'init))]
-            (§ ass this (assoc this :line line))
-            (§ ass this (assoc this :column column))
-            this
+            (assoc this :line line :column column)
         )
     )
 )
@@ -17018,10 +16668,10 @@
     #_override
     (defn #_"Object" IFn'''invoke-4--CommentReader [#_"CommentReader" this, #_"Object" reader, #_"Object" semicolon, #_"Object" pendingForms]
         (let [#_"Reader" r (cast Reader reader)]
-            (§ let [#_"int" ch]
-                (§ loop
-                    (§ ass ch (LispReader'read1 r))
-                    (§ recur-if (not (or (= ch -1) (= ch \newline) (= ch \return))))
+            (ß let [#_"int" ch]
+                (ß loop
+                    (ß ass ch (LispReader'read1 r))
+                    (ß recur-if (not (or (= ch -1) (= ch \newline) (= ch \return))))
                 )
                 r
             )
@@ -17204,8 +16854,7 @@
 
     (defn #_"WrappingReader" WrappingReader'new [#_"Symbol" sym]
         (let [this (merge (AFn'new) (WrappingReader'init))]
-            (§ ass this (assoc this :sym sym))
-            this
+            (assoc this :sym sym)
         )
     )
 
@@ -17394,7 +17043,7 @@
         (let [#_"Object" ret
                 (cond
                     (Compiler'isSpecial form)
-                        (§ ass ret (RT'list-2 Compiler'QUOTE, form))
+                        (ß ass ret (RT'list-2 Compiler'QUOTE, form))
                     (§ instance? Symbol form)
                         (let [#_"Symbol" sym (cast' Symbol form)]
                             (cond
@@ -17403,16 +17052,16 @@
                                         (when (some? gmap) => (throw (IllegalStateException. "Gensym literal not in syntax-quote"))
                                             (let [#_"Symbol" gs (cast' Symbol (ILookup'''valAt-2 gmap, sym))]
                                                 (when (nil? gs)
-                                                    (§ ass gs (Symbol'intern nil, (str (.substring (:name sym), 0, (dec (.length (:name sym)))) "__" (RT'nextID) "__auto__")))
+                                                    (ß ass gs (Symbol'intern nil, (str (.substring (:name sym), 0, (dec (.length (:name sym)))) "__" (RT'nextID) "__auto__")))
                                                     (Var''set LispReader'GENSYM_ENV, (IPersistentMap'''assoc gmap, sym, gs))
                                                 )
-                                                (§ ass sym gs)
+                                                (ß ass sym gs)
                                             )
                                         )
                                     )
                                 (and (nil? (:ns sym)) (.endsWith (:name sym), "."))
                                     (let [#_"Symbol" csym (Symbol'intern nil, (.substring (:name sym), 0, (dec (.length (:name sym)))))]
-                                        (§ ass sym (Symbol'intern nil, (.concat (:name (Compiler'resolveSymbol csym)), ".")))
+                                        (ß ass sym (Symbol'intern nil, (.concat (:name (Compiler'resolveSymbol csym)), ".")))
                                     )
                                 (and (nil? (:ns sym)) (.startsWith (:name sym), "."))
                                 (do
@@ -17421,40 +17070,40 @@
                                 :else
                                     (let [#_"Object" maybeClass (when (some? (:ns sym)) (Namespace''getMapping (Compiler'currentNS), (Symbol'intern nil, (:ns sym))))]
                                         (if (instance? Class maybeClass) ;; Classname/foo -> package.qualified.Classname/foo
-                                            (§ ass sym (Symbol'intern (.getName (cast Class maybeClass)), (:name sym)))
-                                            (§ ass sym (Compiler'resolveSymbol sym))
+                                            (ß ass sym (Symbol'intern (.getName (cast Class maybeClass)), (:name sym)))
+                                            (ß ass sym (Compiler'resolveSymbol sym))
                                         )
                                     )
                             )
-                            (§ ass ret (RT'list-2 Compiler'QUOTE, sym))
+                            (ß ass ret (RT'list-2 Compiler'QUOTE, sym))
                         )
                     (LispReader'isUnquote form)
-                        (§ return (RT'second form))
+                        (ß return (RT'second form))
                     (LispReader'isUnquoteSplicing form)
                         (throw (IllegalStateException. "splice not in list"))
                     (§ instance? IPersistentCollection form)
                         (cond
                             (§ instance? IRecord form)
-                                (§ ass ret form)
+                                (ß ass ret form)
                             (§ instance? IPersistentMap form)
                                 (let [#_"IPersistentVector" keyvals (SyntaxQuoteReader'flattenMap form)]
-                                    (§ ass ret (RT'list-3 LispReader'APPLY, LispReader'HASHMAP, (RT'list-2 LispReader'SEQ, (RT'cons LispReader'CONCAT, (SyntaxQuoteReader'sqExpandList (Seqable'''seq keyvals))))))
+                                    (ß ass ret (RT'list-3 LispReader'APPLY, LispReader'HASHMAP, (RT'list-2 LispReader'SEQ, (RT'cons LispReader'CONCAT, (SyntaxQuoteReader'sqExpandList (Seqable'''seq keyvals))))))
                                 )
                             (§ instance? IPersistentVector form)
-                                (§ ass ret (RT'list-3 LispReader'APPLY, LispReader'VECTOR, (RT'list-2 LispReader'SEQ, (RT'cons LispReader'CONCAT, (SyntaxQuoteReader'sqExpandList (Seqable'''seq (cast' IPersistentVector form)))))))
+                                (ß ass ret (RT'list-3 LispReader'APPLY, LispReader'VECTOR, (RT'list-2 LispReader'SEQ, (RT'cons LispReader'CONCAT, (SyntaxQuoteReader'sqExpandList (Seqable'''seq (cast' IPersistentVector form)))))))
                             (§ instance? IPersistentSet form)
-                                (§ ass ret (RT'list-3 LispReader'APPLY, LispReader'HASHSET, (RT'list-2 LispReader'SEQ, (RT'cons LispReader'CONCAT, (SyntaxQuoteReader'sqExpandList (Seqable'''seq (cast' IPersistentSet form)))))))
+                                (ß ass ret (RT'list-3 LispReader'APPLY, LispReader'HASHSET, (RT'list-2 LispReader'SEQ, (RT'cons LispReader'CONCAT, (SyntaxQuoteReader'sqExpandList (Seqable'''seq (cast' IPersistentSet form)))))))
                             (or (§ instance? ISeq form) (§ instance? IPersistentList form))
                                 (let [#_"ISeq" seq (RT'seq form)]
-                                    (§ ass ret (if (some? seq) (RT'list-2 LispReader'SEQ, (RT'cons LispReader'CONCAT, (SyntaxQuoteReader'sqExpandList seq))) (RT'cons LispReader'LIST, nil)))
+                                    (ß ass ret (if (some? seq) (RT'list-2 LispReader'SEQ, (RT'cons LispReader'CONCAT, (SyntaxQuoteReader'sqExpandList seq))) (RT'cons LispReader'LIST, nil)))
                                 )
                             :else
                                 (throw (UnsupportedOperationException. "Unknown collection type"))
                         )
                     (or (§ instance? Keyword form) (instance? Number form) (instance? Character form) (instance? String form))
-                        (§ ass ret form)
+                        (ß ass ret form)
                     :else
-                        (§ ass ret (RT'list-2 Compiler'QUOTE, form))
+                        (ß ass ret (RT'list-2 Compiler'QUOTE, form))
                 )]
             (when (and (§ instance? IObj form) (some? (RT'meta form))) => ret
                 ;; filter line and column numbers
@@ -17799,7 +17448,7 @@
                                             (let [#_"int" ch2 (LispReader'read1 r)]
                                                 (when (Character/isDigit ch2)
                                                     (LispReader'unread r, ch2)
-                                                    (§ return (LispReader'readNumber r, (char ch)))
+                                                    (ß return (LispReader'readNumber r, (char ch)))
                                                 )
                                                 (LispReader'unread r, ch2)
                                             )
@@ -18074,10 +17723,7 @@
 
     (defn #_"LockingTransactionInfo" LockingTransactionInfo'new [#_"int" status, #_"long" startPoint]
         (let [this (LockingTransactionInfo'init)]
-            (§ ass this (assoc this :status (AtomicInteger. status)))
-            (§ ass this (assoc this :startPoint startPoint))
-            (§ ass this (assoc this :latch (CountDownLatch. 1)))
-            this
+            (assoc this :status (AtomicInteger. status) :startPoint startPoint :latch (CountDownLatch. 1))
         )
     )
 
@@ -18099,9 +17745,7 @@
 
     (defn #_"CFn" CFn'new [#_"IFn" fn, #_"ISeq" args]
         (let [this (CFn'init)]
-            (§ ass this (assoc this :fn fn))
-            (§ ass this (assoc this :args args))
-            this
+            (assoc this :fn fn :args args)
         )
     )
 )
@@ -18117,10 +17761,7 @@
 
     (defn #_"Notify" Notify'new [#_"Ref" ref, #_"Object" oldval, #_"Object" newval]
         (let [this (Notify'init)]
-            (§ ass this (assoc this :ref ref))
-            (§ ass this (assoc this :oldval oldval))
-            (§ ass this (assoc this :newval newval))
-            this
+            (assoc this :ref ref :oldval oldval :newval newval)
         )
     )
 )
@@ -18165,7 +17806,7 @@
 
     #_method
     (defn #_"void" LockingTransaction''getReadPoint [#_"LockingTransaction" this]
-        (§ ass this (assoc this :readPoint (.incrementAndGet LockingTransaction'lastPoint)))
+        (ß ass this (assoc this :readPoint (.incrementAndGet LockingTransaction'lastPoint)))
         nil
     )
 
@@ -18181,7 +17822,7 @@
                 (.set (:status (:info this)), status)
                 (.countDown (:latch (:info this)))
             )
-            (§ ass this (assoc this :info nil))
+            (ß ass this (assoc this :info nil))
             (.clear (:vals this))
             (.clear (:sets this))
             (.clear (:commutes this))
@@ -18211,7 +17852,7 @@
         (let [#_"boolean" unlocked true]
             (try
                 (LockingTransaction''tryWriteLock this, ref)
-                (§ ass unlocked false)
+                (ß ass unlocked false)
 
                 (when-not (and (some? (:tvals ref)) (< (:readPoint this) (:point (:tvals ref)))) => (throw (:retryex this))
                     (let [#_"LockingTransactionInfo" refinfo (:tinfo ref)]
@@ -18219,11 +17860,11 @@
                         (if (and (some? refinfo) (not= refinfo (:info this)) (LockingTransactionInfo''running refinfo) (not (LockingTransaction''barge this, refinfo)))
                             (do
                                 (.unlock (.writeLock (:lock ref)))
-                                (§ ass unlocked true)
+                                (ß ass unlocked true)
                                 (LockingTransaction''blockAndBail this, refinfo)
                             )
                             (do
-                                (§ ass (:tinfo ref) (:info this))
+                                (ß ass (:tinfo ref) (:info this))
                                 (when (some? (:tvals ref)) (:val (:tvals ref)))
                             )
                         )
@@ -18276,7 +17917,7 @@
         (let [#_"boolean" barged false]
             ;; if this transaction is older, try to abort the other
             (when (and (LockingTransaction''bargeTimeElapsed this) (< (:startPoint this) (:startPoint refinfo)))
-                (§ ass barged (.compareAndSet (:status refinfo), LockingTransaction'RUNNING, LockingTransaction'KILLED))
+                (ß ass barged (.compareAndSet (:status refinfo), LockingTransaction'RUNNING, LockingTransaction'KILLED))
                 (when barged
                     (.countDown (:latch refinfo))
                 )
@@ -18330,10 +17971,10 @@
                             (try
                                 (LockingTransaction''getReadPoint this)
                                 (when (zero? i)
-                                    (§ ass this (assoc this :startPoint (:readPoint this)))
-                                    (§ ass this (assoc this :startTime (System/nanoTime)))
+                                    (ß ass this (assoc this :startPoint (:readPoint this)))
+                                    (ß ass this (assoc this :startTime (System/nanoTime)))
                                 )
-                                (§ ass this (assoc this :info (LockingTransactionInfo'new LockingTransaction'RUNNING, (:startPoint this))))
+                                (ß ass this (assoc this :info (LockingTransactionInfo'new LockingTransaction'RUNNING, (:startPoint this))))
                                 (let [ret (.call fn)]
                                     ;; make sure no one has killed us before this point, and can't from now on
                                     (when (.compareAndSet (:status (:info this)), LockingTransaction'RUNNING, LockingTransaction'COMMITTING) => [false ret]
@@ -18385,18 +18026,18 @@
                                                     (cond
                                                         (nil? (:tvals ref))
                                                         (do
-                                                            (§ ass (:tvals ref) (RefTVal'new-2 newval, commitPoint))
+                                                            (ß ass (:tvals ref) (RefTVal'new-2 newval, commitPoint))
                                                         )
                                                         (or (and (pos? (.get (:faults ref))) (< hcount (:maxHistory ref))) (< hcount (:minHistory ref)))
                                                         (do
-                                                            (§ ass (:tvals ref) (RefTVal'new-3 newval, commitPoint, (:tvals ref)))
+                                                            (ß ass (:tvals ref) (RefTVal'new-3 newval, commitPoint, (:tvals ref)))
                                                             (.set (:faults ref), 0)
                                                         )
                                                         :else
                                                         (do
-                                                            (§ ass (:tvals ref) (:next (:tvals ref)))
-                                                            (§ ass (:val (:tvals ref)) newval)
-                                                            (§ ass (:point (:tvals ref)) commitPoint)
+                                                            (ß ass (:tvals ref) (:next (:tvals ref)))
+                                                            (ß ass (:val (:tvals ref)) newval)
+                                                            (ß ass (:point (:tvals ref)) commitPoint)
                                                         )
                                                     )
                                                     (when (pos? (.count (IRef'''getWatches ref)))
@@ -18535,7 +18176,7 @@
             )
             (let [#_"ArrayList<CFn>" fns (.get (:commutes this), ref)]
                 (when (nil? fns)
-                    (.put (:commutes this), ref, (§ ass fns (ArrayList.)))
+                    (.put (:commutes this), ref, (ß ass fns (ArrayList.)))
                 )
                 (.add fns, (CFn'new fn, args))
                 (let [#_"Object" ret (IFn'''applyTo fn, (RT'cons (.get (:vals this), ref), args))]
@@ -18564,9 +18205,7 @@
 
     (defn #_"LongRangeIterator" LongRangeIterator'new []
         (let [this (LongRangeIterator'init)]
-            (§ ass this (assoc this :next (:start this)))
-            (§ ass this (assoc this :hasNext true))
-            this
+            (assoc this :next (:start this) :hasNext true)
         )
     )
 
@@ -18580,10 +18219,10 @@
         (when (:hasNext this) => (throw (NoSuchElementException.))
             (let [#_"long" ret (:next this)]
                 (try
-                    (§ ass this (assoc this :next (Numbers'add-2ll (:next this), (:step this))))
-                    (§ ass this (assoc this :hasNext (not (LongRangeBoundsCheck'''exceededBounds (:boundsCheck this), (:next this)))))
+                    (ß ass this (assoc this :next (Numbers'add-2ll (:next this), (:step this))))
+                    (ß ass this (assoc this :hasNext (not (LongRangeBoundsCheck'''exceededBounds (:boundsCheck this), (:next this)))))
                     (catch ArithmeticException e
-                        (§ ass this (assoc this :hasNext false))
+                        (ß ass this (assoc this :hasNext false))
                     )
                 )
                 ret
@@ -18609,10 +18248,7 @@
 
     (defn #_"LongChunk" LongChunk'new [#_"long" start, #_"long" step, #_"int" count]
         (let [this (LongChunk'init)]
-            (§ ass this (assoc this :start start))
-            (§ ass this (assoc this :step step))
-            (§ ass this (assoc this :count count))
-            this
+            (assoc this :start start :step step :count count)
         )
     )
 
@@ -18696,35 +18332,19 @@
 
     (defn- #_"LongRange" LongRange'new-4 [#_"long" start, #_"long" end, #_"long" step, #_"LongRangeBoundsCheck" boundsCheck]
         (let [this (merge (ASeq'new-0) (LongRange'init))]
-            (§ ass this (assoc this :start start))
-            (§ ass this (assoc this :end end))
-            (§ ass this (assoc this :step step))
-            (§ ass this (assoc this :boundsCheck boundsCheck))
-            this
+            (assoc this :start start :end end :step step :boundsCheck boundsCheck)
         )
     )
 
     (defn- #_"LongRange" LongRange'new-6 [#_"long" start, #_"long" end, #_"long" step, #_"LongRangeBoundsCheck" boundsCheck, #_"LongChunk" chunk, #_"ISeq" chunkNext]
         (let [this (merge (ASeq'new-0) (LongRange'init))]
-            (§ ass this (assoc this :start start))
-            (§ ass this (assoc this :end end))
-            (§ ass this (assoc this :step step))
-            (§ ass this (assoc this :boundsCheck boundsCheck))
-            (§ ass this (assoc this :_chunk chunk))
-            (§ ass this (assoc this :_chunkNext chunkNext))
-            this
+            (assoc this :start start :end end :step step :boundsCheck boundsCheck :_chunk chunk :_chunkNext chunkNext)
         )
     )
 
     (defn- #_"LongRange" LongRange'new-7 [#_"IPersistentMap" meta, #_"long" start, #_"long" end, #_"long" step, #_"LongRangeBoundsCheck" boundsCheck, #_"LongChunk" chunk, #_"ISeq" chunkNext]
         (let [this (merge (ASeq'new-1 meta) (LongRange'init))]
-            (§ ass this (assoc this :start start))
-            (§ ass this (assoc this :end end))
-            (§ ass this (assoc this :step step))
-            (§ ass this (assoc this :boundsCheck boundsCheck))
-            (§ ass this (assoc this :_chunk chunk))
-            (§ ass this (assoc this :_chunkNext chunkNext))
-            this
+            (assoc this :start start :end end :step step :boundsCheck boundsCheck :_chunk chunk :_chunkNext chunkNext)
         )
     )
 
@@ -18779,11 +18399,11 @@
                 (if (< LongRange'CHUNK_SIZE n)
                     ;; not last chunk
                     (let [#_"long" nextStart (+ (:start this) (* (:step this) LongRange'CHUNK_SIZE))] ;; cannot overflow, must be < end
-                        (§ ass this (assoc this :_chunkNext (LongRange'new-4 nextStart, (:end this), (:step this), (:boundsCheck this))))
-                        (§ ass this (assoc this :_chunk (LongChunk'new (:start this), (:step this), LongRange'CHUNK_SIZE)))
+                        (ß ass this (assoc this :_chunkNext (LongRange'new-4 nextStart, (:end this), (:step this), (:boundsCheck this))))
+                        (ß ass this (assoc this :_chunk (LongChunk'new (:start this), (:step this), LongRange'CHUNK_SIZE)))
                     )
                     ;; last chunk
-                    (§ ass this (assoc this :_chunk (LongChunk'new (:start this), (:step this), (int n)))) ;; n must be <= CHUNK_SIZE
+                    (ß ass this (assoc this :_chunk (LongChunk'new (:start this), (:step this), (int n)))) ;; n must be <= CHUNK_SIZE
                 )
             )
         )
@@ -18797,7 +18417,7 @@
             (when (< 1 (.count (:_chunk this))) => (IChunkedSeq'''chunkedNext this)
                 (let [#_"LongChunk" _rest (IChunk'''dropFirst (:_chunk this))
                       _next (LongRange'new-6 (LongChunk''first _rest), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this))]
-                    (§ ass this (assoc this :_next _next))
+                    (ß ass this (assoc this :_next _next))
                     _next
                 )
             )
@@ -18921,9 +18541,7 @@
 
     (defn #_"MapEntry" MapEntry'new [#_"Object" key, #_"Object" val]
         (let [this (merge (AMapEntry'new) (MapEntry'init))]
-            (§ ass this (assoc this :_key key))
-            (§ ass this (assoc this :_val val))
-            this
+            (assoc this :_key key :_val val)
         )
     )
 
@@ -18963,9 +18581,7 @@
 
     (defn #_"Entry" Entry'new [#_"Class" c, #_"IFn" fn]
         (let [this (Entry'init)]
-            (§ ass this (assoc this :c c))
-            (§ ass this (assoc this :fn fn))
-            this
+            (assoc this :c c :fn fn)
         )
     )
 )
@@ -18990,25 +18606,13 @@
 
     (defn #_"MethodImplCache" MethodImplCache'new-5 [#_"IPersistentMap" protocol, #_"Keyword" methodk, #_"int" shift, #_"int" mask, #_"Object[]" table]
         (let [this (MethodImplCache'init)]
-            (§ ass this (assoc this :protocol protocol))
-            (§ ass this (assoc this :methodk methodk))
-            (§ ass this (assoc this :shift shift))
-            (§ ass this (assoc this :mask mask))
-            (§ ass this (assoc this :table table))
-            (§ ass this (assoc this :map nil))
-            this
+            (assoc this :protocol protocol :methodk methodk :shift shift :mask mask :table table :map nil)
         )
     )
 
     (defn #_"MethodImplCache" MethodImplCache'new-3 [#_"IPersistentMap" protocol, #_"Keyword" methodk, #_"Map" map]
         (let [this (MethodImplCache'init)]
-            (§ ass this (assoc this :protocol protocol))
-            (§ ass this (assoc this :methodk methodk))
-            (§ ass this (assoc this :shift 0))
-            (§ ass this (assoc this :mask 0))
-            (§ ass this (assoc this :table nil))
-            (§ ass this (assoc this :map map))
-            this
+            (assoc this :protocol protocol :methodk methodk :shift 0 :mask 0 :table nil :map map)
         )
     )
 
@@ -19023,13 +18627,13 @@
     (defn #_"IFn" MethodImplCache''findFnFor [#_"MethodImplCache" this, #_"Class" c]
         (if (some? (:map this))
             (let [#_"Entry" e (cast' Entry (.get (:map this), c))]
-                (§ ass this (assoc this :mre e))
+                (ß ass this (assoc this :mre e))
                 (when (some? e) (:fn e))
             )
             (let [#_"int" idx (<< (& (>> (Util'hash c) (:shift this)) (:mask this)) 1)]
                 (when (and (< idx (alength (:table this))) (= (aget (:table this) idx) c))
                     (let [#_"Entry" e (cast' Entry (aget (:table this) (inc idx)))]
-                        (§ ass this (assoc this :mre e))
+                        (ß ass this (assoc this :mre e))
                         (when (some? e) (:fn e))
                     )
                 )
@@ -19071,16 +18675,7 @@
 
     (defn #_"MultiFn" MultiFn'new [#_"String" name, #_"IFn" dispatchFn, #_"Object" defaultDispatchVal, #_"IRef" hierarchy]
         (let [this (merge (AFn'new) (MultiFn'init))]
-            (§ ass this (assoc this :rw (ReentrantReadWriteLock.)))
-            (§ ass this (assoc this :name name))
-            (§ ass this (assoc this :dispatchFn dispatchFn))
-            (§ ass this (assoc this :defaultDispatchVal defaultDispatchVal))
-            (§ ass this (assoc this :methodTable PersistentHashMap'EMPTY))
-            (§ ass this (assoc this :methodCache (:methodTable this)))
-            (§ ass this (assoc this :preferTable PersistentHashMap'EMPTY))
-            (§ ass this (assoc this :hierarchy hierarchy))
-            (§ ass this (assoc this :cachedHierarchy nil))
-            this
+            (assoc this :rw (ReentrantReadWriteLock.) :name name :dispatchFn dispatchFn :defaultDispatchVal defaultDispatchVal :methodTable PersistentHashMap'EMPTY :methodCache PersistentHashMap'EMPTY :preferTable PersistentHashMap'EMPTY :hierarchy hierarchy :cachedHierarchy nil)
         )
     )
 
@@ -19088,9 +18683,7 @@
     (defn #_"MultiFn" MultiFn''reset [#_"MultiFn" this]
         (.lock (.writeLock (:rw this)))
         (try
-            (§ ass this (assoc this :methodTable (§ ass this (assoc this :methodCache (§ ass this (assoc this :preferTable PersistentHashMap'EMPTY))))))
-            (§ ass this (assoc this :cachedHierarchy nil))
-            this
+            (assoc this :methodTable PersistentHashMap'EMPTY :methodCache PersistentHashMap'EMPTY :preferTable PersistentHashMap'EMPTY :cachedHierarchy nil)
             (finally
                 (.unlock (.writeLock (:rw this)))
             )
@@ -19101,7 +18694,7 @@
     (defn #_"MultiFn" MultiFn''addMethod [#_"MultiFn" this, #_"Object" dispatchVal, #_"IFn" method]
         (.lock (.writeLock (:rw this)))
         (try
-            (§ ass this (assoc this :methodTable (IPersistentMap'''assoc (:methodTable this), dispatchVal, method)))
+            (ß ass this (assoc this :methodTable (IPersistentMap'''assoc (:methodTable this), dispatchVal, method)))
             (MultiFn''resetCache this)
             this
             (finally
@@ -19114,7 +18707,7 @@
     (defn #_"MultiFn" MultiFn''removeMethod [#_"MultiFn" this, #_"Object" dispatchVal]
         (.lock (.writeLock (:rw this)))
         (try
-            (§ ass this (assoc this :methodTable (IPersistentMap'''without (:methodTable this), dispatchVal)))
+            (ß ass this (assoc this :methodTable (IPersistentMap'''without (:methodTable this), dispatchVal)))
             (MultiFn''resetCache this)
             this
             (finally
@@ -19130,7 +18723,7 @@
             (when (MultiFn''prefers this, dispatchValY, dispatchValX)
                 (throw (IllegalStateException. (str "Preference conflict in multimethod '" (:name this) "': " dispatchValY " is already preferred to " dispatchValX)))
             )
-            (§ ass this (assoc this :preferTable (IPersistentMap'''assoc (:preferTable this), dispatchValX, (RT'conj (cast' IPersistentCollection (RT'get-3 (:preferTable this), dispatchValX, PersistentHashSet'EMPTY)), dispatchValY))))
+            (ß ass this (assoc this :preferTable (IPersistentMap'''assoc (:preferTable this), dispatchValX, (RT'conj (cast' IPersistentCollection (RT'get-3 (:preferTable this), dispatchValX, PersistentHashSet'EMPTY)), dispatchValY))))
             (MultiFn''resetCache this)
             this
             (finally
@@ -19168,8 +18761,8 @@
     (defn- #_"IPersistentMap" MultiFn''resetCache [#_"MultiFn" this]
         (.lock (.writeLock (:rw this)))
         (try
-            (§ ass this (assoc this :methodCache (:methodTable this)))
-            (§ ass this (assoc this :cachedHierarchy (IDeref'''deref (:hierarchy this))))
+            (ß ass this (assoc this :methodCache (:methodTable this)))
+            (ß ass this (assoc this :cachedHierarchy (IDeref'''deref (:hierarchy this))))
             (:methodCache this)
             (finally
                 (.unlock (.writeLock (:rw this)))
@@ -19228,7 +18821,7 @@
                     (if (and (= mt (:methodTable this)) (= pt (:preferTable this)) (= ch (:cachedHierarchy this)) (= (:cachedHierarchy this) (IDeref'''deref (:hierarchy this))))
                         (do
                             ;; place in cache
-                            (§ ass this (assoc this :methodCache (IPersistentMap'''assoc (:methodCache this), dispatchVal, bestValue)))
+                            (ß ass this (assoc this :methodCache (IPersistentMap'''assoc (:methodCache this), dispatchVal, bestValue)))
                             (cast' IFn bestValue)
                         )
                         (do
@@ -19252,356 +18845,356 @@
     #_override
     (defn #_"Object" IFn'''invoke-2--MultiFn [#_"MultiFn" this, #_"Object" arg1]
         (IFn'''invoke-2 (MultiFn''getFn this, (IFn'''invoke-2 (:dispatchFn this), arg1)),
-            (Util'ret1 arg1, (§ ass arg1 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-3--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2]
         (IFn'''invoke-3 (MultiFn''getFn this, (IFn'''invoke-3 (:dispatchFn this), arg1, arg2)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-4--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
         (IFn'''invoke-4 (MultiFn''getFn this, (IFn'''invoke-4 (:dispatchFn this), arg1, arg2, arg3)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-5--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
         (IFn'''invoke-5 (MultiFn''getFn this, (IFn'''invoke-5 (:dispatchFn this), arg1, arg2, arg3, arg4)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-6--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
         (IFn'''invoke-6 (MultiFn''getFn this, (IFn'''invoke-6 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-7--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
         (IFn'''invoke-7 (MultiFn''getFn this, (IFn'''invoke-7 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-8--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
         (IFn'''invoke-8 (MultiFn''getFn this, (IFn'''invoke-8 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-9--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
         (IFn'''invoke-9 (MultiFn''getFn this, (IFn'''invoke-9 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-10--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
         (IFn'''invoke-10 (MultiFn''getFn this, (IFn'''invoke-10 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-11--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
         (IFn'''invoke-11 (MultiFn''getFn this, (IFn'''invoke-11 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-12--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
         (IFn'''invoke-12 (MultiFn''getFn this, (IFn'''invoke-12 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-13--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
         (IFn'''invoke-13 (MultiFn''getFn this, (IFn'''invoke-13 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-14--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
         (IFn'''invoke-14 (MultiFn''getFn this, (IFn'''invoke-14 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-15--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
         (IFn'''invoke-15 (MultiFn''getFn this, (IFn'''invoke-15 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil)),
+            (Util'ret1 arg14, (ß ass arg14 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-16--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
         (IFn'''invoke-16 (MultiFn''getFn this, (IFn'''invoke-16 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil)),
+            (Util'ret1 arg14, (ß ass arg14 nil)),
+            (Util'ret1 arg15, (ß ass arg15 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-17--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
         (IFn'''invoke-17 (MultiFn''getFn this, (IFn'''invoke-17 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil)),
+            (Util'ret1 arg14, (ß ass arg14 nil)),
+            (Util'ret1 arg15, (ß ass arg15 nil)),
+            (Util'ret1 arg16, (ß ass arg16 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-18--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
         (IFn'''invoke-18 (MultiFn''getFn this, (IFn'''invoke-18 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil)),
+            (Util'ret1 arg14, (ß ass arg14 nil)),
+            (Util'ret1 arg15, (ß ass arg15 nil)),
+            (Util'ret1 arg16, (ß ass arg16 nil)),
+            (Util'ret1 arg17, (ß ass arg17 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-19--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
         (IFn'''invoke-19 (MultiFn''getFn this, (IFn'''invoke-19 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil)),
-            (Util'ret1 arg18, (§ ass arg18 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil)),
+            (Util'ret1 arg14, (ß ass arg14 nil)),
+            (Util'ret1 arg15, (ß ass arg15 nil)),
+            (Util'ret1 arg16, (ß ass arg16 nil)),
+            (Util'ret1 arg17, (ß ass arg17 nil)),
+            (Util'ret1 arg18, (ß ass arg18 nil))
         )
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-20--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
         (IFn'''invoke-20 (MultiFn''getFn this, (IFn'''invoke-20 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil)),
-            (Util'ret1 arg18, (§ ass arg18 nil)),
-            (Util'ret1 arg19, (§ ass arg19 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil)),
+            (Util'ret1 arg14, (ß ass arg14 nil)),
+            (Util'ret1 arg15, (ß ass arg15 nil)),
+            (Util'ret1 arg16, (ß ass arg16 nil)),
+            (Util'ret1 arg17, (ß ass arg17 nil)),
+            (Util'ret1 arg18, (ß ass arg18 nil)),
+            (Util'ret1 arg19, (ß ass arg19 nil))
         )
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-21--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
         (IFn'''invoke-21 (MultiFn''getFn this, (IFn'''invoke-21 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil)),
-            (Util'ret1 arg18, (§ ass arg18 nil)),
-            (Util'ret1 arg19, (§ ass arg19 nil)),
-            (Util'ret1 arg20, (§ ass arg20 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil)),
+            (Util'ret1 arg14, (ß ass arg14 nil)),
+            (Util'ret1 arg15, (ß ass arg15 nil)),
+            (Util'ret1 arg16, (ß ass arg16 nil)),
+            (Util'ret1 arg17, (ß ass arg17 nil)),
+            (Util'ret1 arg18, (ß ass arg18 nil)),
+            (Util'ret1 arg19, (ß ass arg19 nil)),
+            (Util'ret1 arg20, (ß ass arg20 nil))
         )
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-22--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args]
         (IFn'''invoke-22 (MultiFn''getFn this, (IFn'''invoke-22 (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, args)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil)),
-            (Util'ret1 arg18, (§ ass arg18 nil)),
-            (Util'ret1 arg19, (§ ass arg19 nil)),
-            (Util'ret1 arg20, (§ ass arg20 nil)),
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil)),
+            (Util'ret1 arg14, (ß ass arg14 nil)),
+            (Util'ret1 arg15, (ß ass arg15 nil)),
+            (Util'ret1 arg16, (ß ass arg16 nil)),
+            (Util'ret1 arg17, (ß ass arg17 nil)),
+            (Util'ret1 arg18, (ß ass arg18 nil)),
+            (Util'ret1 arg19, (ß ass arg19 nil)),
+            (Util'ret1 arg20, (ß ass arg20 nil)),
             args
         )
     )
@@ -19668,16 +19261,16 @@
             ;; step through the CharSequence 2 chars at a time
             (loop-when-recur [#_"int" i 1] (< i (.length input)) [(+ i 2)]
                 (let [#_"int" k1 (| (.charAt input, (dec i)) (<< (.charAt input, i) 16))]
-                    (§ ass k1 (Murmur3'mixK1 k1))
-                    (§ ass h1 (Murmur3'mixH1 h1, k1))
+                    (ß ass k1 (Murmur3'mixK1 k1))
+                    (ß ass h1 (Murmur3'mixH1 h1, k1))
                 )
             )
 
             ;; deal with any remaining characters
             (when (= (& (.length input) 1) 1)
                 (let [#_"int" k1 (.charAt input, (dec (.length input)))]
-                    (§ ass k1 (Murmur3'mixK1 k1))
-                    (§ ass h1 (bit-xor h1 k1))
+                    (ß ass k1 (Murmur3'mixK1 k1))
+                    (ß ass h1 (bit-xor h1 k1))
                 )
             )
 
@@ -19710,27 +19303,27 @@
     )
 
     (defn- #_"int" Murmur3'mixK1 [#_"int" k1]
-        (§ ass k1 (* k1 Murmur3'C1))
-        (§ ass k1 (Integer/rotateLeft k1, 15))
-        (§ ass k1 (* k1 Murmur3'C2))
+        (ß ass k1 (* k1 Murmur3'C1))
+        (ß ass k1 (Integer/rotateLeft k1, 15))
+        (ß ass k1 (* k1 Murmur3'C2))
         k1
     )
 
     (defn- #_"int" Murmur3'mixH1 [#_"int" h1, #_"int" k1]
-        (§ ass h1 (bit-xor h1 k1))
-        (§ ass h1 (Integer/rotateLeft h1, 13))
-        (§ ass h1 (+ (* h1 5) 0xe6546b64))
+        (ß ass h1 (bit-xor h1 k1))
+        (ß ass h1 (Integer/rotateLeft h1, 13))
+        (ß ass h1 (+ (* h1 5) 0xe6546b64))
         h1
     )
 
     ;; Finalization mix - force all bits of a hash block to avalanche
     (defn- #_"int" Murmur3'fmix [#_"int" h1, #_"int" n]
-        (§ ass h1 (bit-xor h1 n))
-        (§ ass h1 (bit-xor h1 (>>> h1 16)))
-        (§ ass h1 (* h1 0x85ebca6b))
-        (§ ass h1 (bit-xor h1 (>>> h1 13)))
-        (§ ass h1 (* h1 0xc2b2ae35))
-        (§ ass h1 (bit-xor h1 (>>> h1 16)))
+        (ß ass h1 (bit-xor h1 n))
+        (ß ass h1 (bit-xor h1 (>>> h1 16)))
+        (ß ass h1 (* h1 0x85ebca6b))
+        (ß ass h1 (bit-xor h1 (>>> h1 13)))
+        (ß ass h1 (* h1 0xc2b2ae35))
+        (ß ass h1 (bit-xor h1 (>>> h1 16)))
         h1
     )
 )
@@ -19757,7 +19350,7 @@
 
     (defn #_"Namespace" Namespace'new [#_"Symbol" name]
         (let [this (merge (AReference'new-1 (IMeta'''meta name)) (Namespace'init))]
-            (§ ass this (assoc this :name name))
+            (ß ass this (assoc this :name name))
             (.set (:mappings this), RT'DEFAULT_IMPORTS)
             (.set (:aliases this), (RT'map))
             this
@@ -22319,15 +21912,13 @@
 
     (defn #_"Obj" Obj'new-1 [#_"IPersistentMap" meta]
         (let [this (Obj'init)]
-            (§ ass this (assoc this :_meta meta))
-            this
+            (assoc this :_meta meta)
         )
     )
 
     (defn #_"Obj" Obj'new-0 []
         (let [this (Obj'init)]
-            (§ ass this (assoc this :_meta nil))
-            this
+            (assoc this :_meta nil)
         )
     )
 
@@ -22358,17 +21949,13 @@
 
     (defn #_"MSeq" MSeq'new-2 [#_"Object[]" array, #_"int" i]
         (let [this (merge (ASeq'new-0) (MSeq'init))]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
     (defn #_"MSeq" MSeq'new-3 [#_"IPersistentMap" meta, #_"Object[]" array, #_"int" i]
         (let [this (merge (ASeq'new-1 meta) (MSeq'init))]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :array array :i i)
         )
     )
 
@@ -22412,10 +21999,7 @@
     ;; for entryAt
     (defn #_"MIter" MIter'new-3 [#_"Object[]" array, #_"int" i, #_"IFn" f]
         (let [this (MIter'init)]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            (§ ass this (assoc this :f f))
-            this
+            (assoc this :array array :i i :f f)
         )
     )
 
@@ -22427,7 +22011,7 @@
     #_foreign
     (§ defn #_"Object" next [#_"MIter" this]
         (try
-            (§ ass this (assoc this :i (+ (:i this) 2)))
+            (ß ass this (assoc this :i (+ (:i this) 2)))
             (IFn'''invoke-3 (:f this), (aget (:array this) (:i this)), (aget (:array this) (inc (:i this))))
             (catch IndexOutOfBoundsException e
                 (throw (NoSuchElementException.))
@@ -22454,11 +22038,10 @@
 
     (defn #_"TransientArrayMap" TransientArrayMap'new [#_"Object[]" array]
         (let [this (merge (ATransientMap'new) (TransientArrayMap'init))]
-            (§ ass this (assoc this :owner (Thread/currentThread)))
-            (§ ass this (assoc this :array (make-array Object (Math/max PersistentArrayMap'HASHTABLE_THRESHOLD, (alength array)))))
+            (ß ass this (assoc this :owner (Thread/currentThread)))
+            (ß ass this (assoc this :array (make-array Object (Math/max PersistentArrayMap'HASHTABLE_THRESHOLD, (alength array)))))
             (System/arraycopy array, 0, (:array this), 0, (alength array))
-            (§ ass this (assoc this :len (alength array)))
-            this
+            (assoc this :len (alength array))
         )
     )
 
@@ -22483,10 +22066,9 @@
                 (if (< (:len this) (alength (:array this)))
                     (do
                         (aset (:array this) (:len this) key)
-                        (§ ass this (assoc this :len (inc (:len this))))
+                        (ß ass this (assoc this :len (inc (:len this))))
                         (aset (:array this) (:len this) val)
-                        (§ ass this (assoc this :len (inc (:len this))))
-                        this
+                        (assoc this :len (inc (:len this)))
                     )
                     (-> (PersistentHashMap'create-1a (:array this)) (IEditableCollection'''asTransient) (ITransientMap'''assoc key, val))
                 )
@@ -22502,8 +22084,7 @@
                 (aset (:array this) i (aget (:array this) (- (:len this) 2)))
                 (aset (:array this) (inc i) (aget (:array this) (- (:len this) 1)))
             )
-            (§ ass this (assoc this :len (- (:len this) 2)))
-            this
+            (assoc this :len (- (:len this) 2))
         )
     )
 
@@ -22522,7 +22103,7 @@
     #_override
     (defn #_"IPersistentMap" ATransientMap'''doPersistent--TransientArrayMap [#_"TransientArrayMap" this]
         (ATransientMap'''ensureEditable this)
-        (§ ass this (assoc this :owner nil))
+        (ß ass this (assoc this :owner nil))
         (let [#_"Object[]" a (make-array Object (:len this))]
             (System/arraycopy (:array this), 0, a, 0, (:len this))
             (PersistentArrayMap'new-1 a)
@@ -22572,9 +22153,7 @@
     #_protected
     (defn #_"PersistentArrayMap" PersistentArrayMap'new-0 []
         (let [this (merge (APersistentMap'new) (PersistentArrayMap'init))]
-            (§ ass this (assoc this :array (make-array Object 0)))
-            (§ ass this (assoc this :_meta nil))
-            this
+            (assoc this :array (make-array Object 0) :_meta nil)
         )
     )
 
@@ -22667,17 +22246,13 @@
      ;;
     (defn #_"PersistentArrayMap" PersistentArrayMap'new-1 [#_"Object[]" init]
         (let [this (merge (APersistentMap'new) (PersistentArrayMap'init))]
-            (§ ass this (assoc this :array init))
-            (§ ass this (assoc this :_meta nil))
-            this
+            (assoc this :array init :_meta nil)
         )
     )
 
     (defn #_"PersistentArrayMap" PersistentArrayMap'new-2 [#_"IPersistentMap" meta, #_"Object[]" init]
         (let [this (merge (APersistentMap'new) (PersistentArrayMap'init))]
-            (§ ass this (assoc this :_meta meta))
-            (§ ass this (assoc this :array init))
-            this
+            (assoc this :_meta meta :array init)
         )
     )
 
@@ -22874,12 +22449,7 @@
 
     (defn #_"TransientHashMap" TransientHashMap'new-5 [#_"AtomicReference<Thread>" edit, #_"INode" root, #_"int" count, #_"boolean" hasNull, #_"Object" nullValue]
         (let [this (merge (ATransientMap'new) (TransientHashMap'init))]
-            (§ ass this (assoc this :edit edit))
-            (§ ass this (assoc this :root root))
-            (§ ass this (assoc this :count count))
-            (§ ass this (assoc this :hasNull hasNull))
-            (§ ass this (assoc this :nullValue nullValue))
-            this
+            (assoc this :edit edit :root root :count count :hasNull hasNull :nullValue nullValue)
         )
     )
 
@@ -22888,21 +22458,21 @@
         (if (nil? key)
             (do
                 (when-not (= (:nullValue this) val)
-                    (§ ass this (assoc this :nullValue val))
+                    (ß ass this (assoc this :nullValue val))
                 )
                 (when (not (:hasNull this))
-                    (§ ass this (assoc this :count (inc (:count this))))
-                    (§ ass this (assoc this :hasNull true))
+                    (ß ass this (assoc this :count (inc (:count this))))
+                    (ß ass this (assoc this :hasNull true))
                 )
                 this
             )
-            (let [_ (§ ass (:val (:leafFlag this)) nil)
+            (let [_ (ß ass (:val (:leafFlag this)) nil)
                   #_"INode" n (INode'''assoc-7 (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (PersistentHashMap'hash key), key, val, (:leafFlag this))]
                 (when (not= n (:root this))
-                    (§ ass this (assoc this :root n))
+                    (ß ass this (assoc this :root n))
                 )
                 (when (some? (:val (:leafFlag this)))
-                    (§ ass this (assoc this :count (inc (:count this))))
+                    (ß ass this (assoc this :count (inc (:count this))))
                 )
                 this
             )
@@ -22913,19 +22483,16 @@
     (defn #_"ITransientMap" ATransientMap'''doWithout--TransientHashMap [#_"TransientHashMap" this, #_"Object" key]
         (if (nil? key)
             (when (:hasNull this) => this
-                (§ ass this (assoc this :hasNull false))
-                (§ ass this (assoc this :nullValue nil))
-                (§ ass this (assoc this :count (dec (:count this))))
-                this
+                (assoc this :hasNull false :nullValue nil :count (dec (:count this)))
             )
             (when (some? (:root this)) => this
-                (let [_ (§ ass (:val (:leafFlag this)) nil)
+                (let [_ (ß ass (:val (:leafFlag this)) nil)
                       #_"INode" n (INode'''without-6 (:root this), (:edit this), 0, (PersistentHashMap'hash key), key, (:leafFlag this))]
                     (when (not= n (:root this))
-                        (§ ass this (assoc this :root n))
+                        (ß ass this (assoc this :root n))
                     )
                     (when (some? (:val (:leafFlag this)))
-                        (§ ass this (assoc this :count (dec (:count this))))
+                        (ß ass this (assoc this :count (dec (:count this))))
                     )
                     this
                 )
@@ -22992,10 +22559,7 @@
 
     (defn- #_"HSeq" HSeq'new [#_"IPersistentMap" meta, #_"INode[]" nodes, #_"int" i, #_"ISeq" s]
         (let [this (merge (ASeq'new-1 meta) (HSeq'init))]
-            (§ ass this (assoc this :nodes nodes))
-            (§ ass this (assoc this :i i))
-            (§ ass this (assoc this :s s))
-            this
+            (assoc this :nodes nodes :i i :s s)
         )
     )
 
@@ -23027,9 +22591,7 @@
 
     (defn- #_"HIter" HIter'new [#_"INode[]" array, #_"IFn" f]
         (let [this (HIter'init)]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :f f))
-            this
+            (assoc this :array array :f f)
         )
     )
 
@@ -23038,15 +22600,15 @@
         (loop []
             (when (some? (:nestedIter this))
                 (if (.hasNext (:nestedIter this))
-                    (§ return true)
-                    (§ ass this (assoc this :nestedIter nil))
+                    (ß return true)
+                    (ß ass this (assoc this :nestedIter nil))
                 )
             )
             (when (< (:i this) (alength (:array this))) => false
                 (let [#_"INode" ai (aget (:array this) (:i this))]
-                    (§ ass this (assoc this :i (inc (:i this))))
+                    (ß ass this (assoc this :i (inc (:i this))))
                     (when (some? ai)
-                        (§ ass this (assoc this :nestedIter (INode'''iterator ai, (:f this))))
+                        (ß ass this (assoc this :nestedIter (INode'''iterator ai, (:f this))))
                     )
                     (recur)
                 )
@@ -23078,10 +22640,7 @@
 
     (defn #_"ArrayNode" ArrayNode'new [#_"AtomicReference<Thread>" edit, #_"int" count, #_"INode[]" array]
         (let [this (ArrayNode'init)]
-            (§ ass this (assoc this :edit edit))
-            (§ ass this (assoc this :count count))
-            (§ ass this (assoc this :array array))
-            this
+            (assoc this :edit edit :count count :array array)
         )
     )
 
@@ -23257,7 +22816,7 @@
                     )
                 )
                 (let [#_"ArrayNode" e (ArrayNode''editAndSet this, edit, i, (INode'''assoc-7 BitmapIndexedNode'EMPTY, edit, (+ shift 5), hash, key, val, addedLeaf))]
-                    (§ ass (:count e) (inc (:count e)))
+                    (ß ass (:count e) (inc (:count e)))
                     e
                 )
             )
@@ -23273,7 +22832,7 @@
                     (<= (:count this) 8) (ArrayNode''pack this, edit, i) ;; shrink
                     :else
                         (let [#_"ArrayNode" e (ArrayNode''editAndSet this, edit, i, node)]
-                            (§ ass (:count e) (dec (:count e)))
+                            (ß ass (:count e) (dec (:count e)))
                             e
                         )
                 )
@@ -23295,10 +22854,7 @@
 
     (defn #_"BitmapIndexedNode" BitmapIndexedNode'new [#_"AtomicReference<Thread>" edit, #_"int" bitmap, #_"Object[]" array]
         (let [this (BitmapIndexedNode'init)]
-            (§ ass this (assoc this :bitmap bitmap))
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :edit edit))
-            this
+            (assoc this :bitmap bitmap :array array :edit edit)
         )
     )
 
@@ -23325,7 +22881,7 @@
                                     (PersistentHashMap'cloneAndSet-3 (:array this), (inc (* 2 idx)), val)
                                 )
                             :else
-                                (let [_ (§ ass (:val addedLeaf) addedLeaf)]
+                                (let [_ (ß ass (:val addedLeaf) addedLeaf)]
                                     (PersistentHashMap'cloneAndSet-5 (:array this), (* 2 idx), nil, (inc (* 2 idx)), (PersistentHashMap'createNode-6 (+ shift 5), keyOrNull, valOrNode, hash, key, val))
                                 )
                         )]
@@ -23349,7 +22905,7 @@
                         (let [#_"Object[]" a (make-array Object (* 2 (inc n)))]
                             (System/arraycopy (:array this), 0, a, 0, (* 2 idx))
                             (aset a (* 2 idx) key)
-                            (§ ass (:val addedLeaf) addedLeaf)
+                            (ß ass (:val addedLeaf) addedLeaf)
                             (aset a (inc (* 2 idx)) val)
                             (System/arraycopy (:array this), (* 2 idx), a, (* 2 (inc idx)), (* 2 (- n idx)))
                             (BitmapIndexedNode'new nil, (| (:bitmap this) bit), a)
@@ -23468,7 +23024,7 @@
     (defn- #_"BitmapIndexedNode" BitmapIndexedNode''editAndRemovePair [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" bit, #_"int" i]
         (when-not (= (:bitmap this) bit)
             (let [#_"BitmapIndexedNode" e (BitmapIndexedNode''ensureEditable this, edit) #_"Object[]" a (:array e) #_"int" n (alength a)]
-                (§ ass (:bitmap e) (bit-xor (:bitmap e) bit))
+                (ß ass (:bitmap e) (bit-xor (:bitmap e) bit))
                 (System/arraycopy a, (* 2 (inc i)), a, (* 2 i), (- n (* 2 (inc i))))
                 (aset a (- n 2) nil)
                 (aset a (- n 1) nil)
@@ -23495,7 +23051,7 @@
                                 (BitmapIndexedNode''editAndSet this, edit, (inc (* 2 idx)), val)
                             )
                         :else
-                            (let [_ (§ ass (:val addedLeaf) addedLeaf)]
+                            (let [_ (ß ass (:val addedLeaf) addedLeaf)]
                                 (BitmapIndexedNode''editAndSet this, edit, (* 2 idx), nil, (inc (* 2 idx)), (PersistentHashMap'createNode-7 edit, (+ shift 5), keyOrNull, valOrNode, hash, key, val))
                             )
                     )
@@ -23503,12 +23059,12 @@
                 (let [#_"int" n (Integer/bitCount (:bitmap this))]
                     (cond
                         (< (* n 2) (alength (:array this)))
-                            (let [_ (§ ass (:val addedLeaf) addedLeaf)
+                            (let [_ (ß ass (:val addedLeaf) addedLeaf)
                                   #_"BitmapIndexedNode" e (BitmapIndexedNode''ensureEditable this, edit)]
                                 (System/arraycopy (:array e), (* 2 idx), (:array e), (* 2 (inc idx)), (* 2 (- n idx)))
                                 (aset (:array e) (* 2 idx) key)
                                 (aset (:array e) (inc (* 2 idx)) val)
-                                (§ ass (:bitmap e) (| (:bitmap e) bit))
+                                (ß ass (:bitmap e) (| (:bitmap e) bit))
                                 e
                             )
                         (<= 16 n)
@@ -23529,12 +23085,12 @@
                             (let [#_"Object[]" a (make-array Object (* 2 (+ n 4)))]
                                 (System/arraycopy (:array this), 0, a, 0, (* 2 idx))
                                 (aset a (* 2 idx) key)
-                                (§ ass (:val addedLeaf) addedLeaf)
+                                (ß ass (:val addedLeaf) addedLeaf)
                                 (aset a (inc (* 2 idx)) val)
                                 (System/arraycopy (:array this), (* 2 idx), a, (* 2 (inc idx)), (* 2 (- n idx)))
                                 (let [#_"BitmapIndexedNode" e (BitmapIndexedNode''ensureEditable this, edit)]
-                                    (§ ass (:array e) a)
-                                    (§ ass (:bitmap e) (| (:bitmap e) bit))
+                                    (ß ass (:array e) a)
+                                    (ß ass (:bitmap e) (| (:bitmap e) bit))
                                     e
                                 )
                             )
@@ -23552,7 +23108,7 @@
                   #_"Object" valOrNode (aget (:array this) (inc ii))]
                 (if (some? keyOrNull)
                     (when (Util'equiv-2oo key, keyOrNull) => this
-                        (§ ass (:val removedLeaf) removedLeaf)
+                        (ß ass (:val removedLeaf) removedLeaf)
                         ;; TODO: collapse
                         (BitmapIndexedNode''editAndRemovePair this, edit, bit, i)
                     )
@@ -23586,11 +23142,7 @@
 
     (defn #_"HashCollisionNode" HashCollisionNode'new [#_"AtomicReference<Thread>" edit, #_"int" hash, #_"int" count & #_"Object..." array]
         (let [this (HashCollisionNode'init)]
-            (§ ass this (assoc this :edit edit))
-            (§ ass this (assoc this :hash hash))
-            (§ ass this (assoc this :count count))
-            (§ ass this (assoc this :array array))
-            this
+            (assoc this :edit edit :hash hash :count count :array array)
         )
     )
 
@@ -23606,7 +23158,7 @@
                         (System/arraycopy (:array this), 0, a, 0, (* 2 n))
                         (aset a (* 2 n) key)
                         (aset a (inc (* 2 n)) val)
-                        (§ ass (:val addedLeaf) addedLeaf)
+                        (ß ass (:val addedLeaf) addedLeaf)
                         (HashCollisionNode'new (:edit this), hash, (inc n), a)
                     )
                 )
@@ -23719,16 +23271,16 @@
                     )
                     (let [#_"int" n (:count this) #_"int" m (alength (:array this))]
                         (if (< (* 2 n) m)
-                            (let [_ (§ ass (:val addedLeaf) addedLeaf)
+                            (let [_ (ß ass (:val addedLeaf) addedLeaf)
                                   #_"HashCollisionNode" e (HashCollisionNode''editAndSet this, edit, (* 2 n), key, (inc (* 2 n)), val)]
-                                (§ ass (:count e) (inc (:count e)))
+                                (ß ass (:count e) (inc (:count e)))
                                 e
                             )
                             (let [#_"Object[]" a (make-array Object (+ m 2))]
                                 (System/arraycopy (:array this), 0, a, 0, m)
                                 (aset a m key)
                                 (aset a (inc m) val)
-                                (§ ass (:val addedLeaf) addedLeaf)
+                                (ß ass (:val addedLeaf) addedLeaf)
                                 (HashCollisionNode''ensureEditable this, edit, (inc n), a)
                             )
                         )
@@ -23745,14 +23297,14 @@
     #_override
     (defn #_"INode" INode'''without-6--HashCollisionNode [#_"HashCollisionNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf]
         (let-when [#_"int" i (HashCollisionNode''findIndex this, key)] (<= 0 i) => this
-            (§ ass (:val removedLeaf) removedLeaf)
+            (ß ass (:val removedLeaf) removedLeaf)
             (let-when [#_"int" n (:count this)] (< 1 n)
                 (let [#_"HashCollisionNode" e (HashCollisionNode''ensureEditable this, edit) #_"int" m (* 2 n)]
                     (aset (:array e) i (aget (:array e) (- m 2)))
                     (aset (:array e) (inc i) (aget (:array e) (- m 1)))
                     (aset (:array e) (- m 2) nil)
                     (aset (:array e) (- m 1) nil)
-                    (§ ass (:count e) (dec (:count e)))
+                    (ß ass (:count e) (dec (:count e)))
                     e
                 )
             )
@@ -23775,9 +23327,7 @@
 
     (defn #_"NodeIter" NodeIter'new [#_"Object[]" array, #_"IFn" f]
         (let [this (NodeIter'init)]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :f f))
-            this
+            (assoc this :array array :f f)
         )
     )
 
@@ -23786,17 +23336,17 @@
         (loop-when [] (< (:i this) (alength (:array this))) => false
             (let [#_"Object" key (aget (:array this) (:i this))
                   #_"Object" nodeOrVal (aget (:array this) (inc (:i this)))
-                  _ (§ ass this (assoc this :i (+ (:i this) 2)))]
+                  _ (ß ass this (assoc this :i (+ (:i this) 2)))]
                 (cond
                     (some? key)
                         (do
-                            (§ ass this (assoc this :nextEntry (IFn'''invoke-3 (:f this), key, nodeOrVal)))
+                            (ß ass this (assoc this :nextEntry (IFn'''invoke-3 (:f this), key, nodeOrVal)))
                             true
                         )
                     (some? nodeOrVal)
                         (let [#_"Iterator" it (INode'''iterator (cast' INode nodeOrVal), (:f this))]
                             (when (and (some? it) (.hasNext it)) => (recur)
-                                (§ ass this (assoc this :nextIter it))
+                                (ß ass this (assoc this :nextIter it))
                                 true
                             )
                         )
@@ -23817,13 +23367,13 @@
         (let [#_"Object" e (:nextEntry this)]
             (cond
                 (not= e NodeIter'NULL)
-                    (let [_ (§ ass this (assoc this :nextEntry NodeIter'NULL))]
+                    (let [_ (ß ass this (assoc this :nextEntry NodeIter'NULL))]
                         e
                     )
                 (some? (:nextIter this))
-                    (let [_ (§ ass e (.next (:nextIter this)))
+                    (let [_ (ß ass e (.next (:nextIter this)))
                           _ (when-not (.hasNext (:nextIter this))
-                                (§ ass this (assoc this :nextIter nil))
+                                (ß ass this (assoc this :nextIter nil))
                             )]
                         e
                     )
@@ -23892,10 +23442,7 @@
 
     (defn #_"NodeSeq" NodeSeq'new-4 [#_"IPersistentMap" meta, #_"Object[]" array, #_"int" i, #_"ISeq" s]
         (let [this (merge (ASeq'new-1 meta) (NodeSeq'init))]
-            (§ ass this (assoc this :array array))
-            (§ ass this (assoc this :i i))
-            (§ ass this (assoc this :s s))
-            this
+            (assoc this :array array :i i :s s)
         )
     )
 
@@ -23950,7 +23497,7 @@
     (defn #_"PersistentHashMap" PersistentHashMap'create-1a [& #_"Object..." init]
         (let [#_"ITransientMap" ret (IEditableCollection'''asTransient PersistentHashMap'EMPTY)]
             (loop-when-recur [#_"int" i 0] (< i (alength init)) [(+ i 2)]
-                (§ ass ret (ITransientMap'''assoc ret, (aget init i), (aget init (inc i))))
+                (ß ass ret (ITransientMap'''assoc ret, (aget init i), (aget init (inc i))))
             )
             (cast' PersistentHashMap (ITransientMap'''persistent ret))
         )
@@ -23959,7 +23506,7 @@
     (defn #_"PersistentHashMap" PersistentHashMap'createWithCheck-1a [& #_"Object..." init]
         (let [#_"ITransientMap" ret (IEditableCollection'''asTransient PersistentHashMap'EMPTY)]
             (loop-when-recur [#_"int" i 0] (< i (alength init)) [(+ i 2)]
-                (§ ass ret (ITransientMap'''assoc ret, (aget init i), (aget init (inc i))))
+                (ß ass ret (ITransientMap'''assoc ret, (aget init i), (aget init (inc i))))
                 (when (not= (.count ret) (inc (/ i 2)))
                     (throw (IllegalArgumentException. (str "Duplicate key: " (aget init i))))
                 )
@@ -23974,7 +23521,7 @@
                 (when (nil? (.next items))
                     (throw (IllegalArgumentException. (str "No value supplied for key: " (.first items))))
                 )
-                (§ ass ret (ITransientMap'''assoc ret, (.first items), (RT'second items)))
+                (ß ass ret (ITransientMap'''assoc ret, (.first items), (RT'second items)))
             )
             (cast' PersistentHashMap (ITransientMap'''persistent ret))
         )
@@ -23986,7 +23533,7 @@
                 (when (nil? (.next items))
                     (throw (IllegalArgumentException. (str "No value supplied for key: " (.first items))))
                 )
-                (§ ass ret (ITransientMap'''assoc ret, (.first items), (RT'second items)))
+                (ß ass ret (ITransientMap'''assoc ret, (.first items), (RT'second items)))
                 (when-not (= (.count ret) (inc i))
                     (throw (IllegalArgumentException. (str "Duplicate key: " (.first items))))
                 )
@@ -24014,23 +23561,13 @@
 
     (defn #_"PersistentHashMap" PersistentHashMap'new-4 [#_"int" count, #_"INode" root, #_"boolean" hasNull, #_"Object" nullValue]
         (let [this (merge (APersistentMap'new) (PersistentHashMap'init))]
-            (§ ass this (assoc this :count count))
-            (§ ass this (assoc this :root root))
-            (§ ass this (assoc this :hasNull hasNull))
-            (§ ass this (assoc this :nullValue nullValue))
-            (§ ass this (assoc this :_meta nil))
-            this
+            (assoc this :count count :root root :hasNull hasNull :nullValue nullValue :_meta nil)
         )
     )
 
     (defn #_"PersistentHashMap" PersistentHashMap'new-5 [#_"IPersistentMap" meta, #_"int" count, #_"INode" root, #_"boolean" hasNull, #_"Object" nullValue]
         (let [this (merge (APersistentMap'new) (PersistentHashMap'init))]
-            (§ ass this (assoc this :_meta meta))
-            (§ ass this (assoc this :count count))
-            (§ ass this (assoc this :root root))
-            (§ ass this (assoc this :hasNull hasNull))
-            (§ ass this (assoc this :nullValue nullValue))
-            this
+            (assoc this :_meta meta :count count :root root :hasNull hasNull :nullValue nullValue)
         )
     )
 
@@ -24146,7 +23683,7 @@
                     #_foreign
                     (§ defn #_"Object" next [#_"Iterator" this]
                         (when (not (:seen this)) => (.next rootIter)
-                            (§ ass this (assoc this :seen true))
+                            (ß ass this (assoc this :seen true))
                             (IFn'''invoke-3 f, nil, (:nullValue this))
                         )
                     )
@@ -24199,7 +23736,7 @@
                     (§ defn #_"Object" call [#_"Callable" this] #_(§ throws Exception)
                         (let [#_"Object" ret (IFn'''invoke-1 combinef)]
                             (when (some? (:root this))
-                                (§ ass ret (IFn'''invoke-3 combinef, ret, (INode'''fold (:root this), combinef, reducef, fjtask, fjfork, fjjoin)))
+                                (ß ass ret (IFn'''invoke-3 combinef, ret, (INode'''fold (:root this), combinef, reducef, fjtask, fjfork, fjjoin)))
                             )
                             (if (:hasNull this) (IFn'''invoke-3 combinef, ret, (IFn'''invoke-4 reducef, (IFn'''invoke-1 combinef), nil, (:nullValue this))) ret)
                         )
@@ -24322,7 +23859,7 @@
     (defn #_"PersistentHashSet" PersistentHashSet'create-1a [& #_"Object..." items]
         (let [#_"ITransientSet" ret (cast' ITransientSet (IEditableCollection'''asTransient PersistentHashSet'EMPTY))]
             (loop-when-recur [#_"int" i 0] (< i (alength items)) [(inc i)]
-                (§ ass ret (cast' ITransientSet (ITransientCollection'''conj ret, (aget items i))))
+                (ß ass ret (cast' ITransientSet (ITransientCollection'''conj ret, (aget items i))))
             )
             (cast' PersistentHashSet (ITransientCollection'''persistent ret))
         )
@@ -24332,7 +23869,7 @@
         (let [#_"ITransientSet" ret (cast' ITransientSet (IEditableCollection'''asTransient PersistentHashSet'EMPTY))
               #_"Iterator" it (.iterator items)]
             (loop-when-recur [] (.hasNext it) [] => (cast' PersistentHashSet (ITransientCollection'''persistent ret))
-                (§ ass ret (cast' ITransientSet (ITransientCollection'''conj ret, (.next it))))
+                (ß ass ret (cast' ITransientSet (ITransientCollection'''conj ret, (.next it))))
             )
         )
     )
@@ -24340,7 +23877,7 @@
     (defn #_"PersistentHashSet" PersistentHashSet'create-1s [#_"ISeq" items]
         (let [#_"ITransientSet" ret (cast' ITransientSet (IEditableCollection'''asTransient PersistentHashSet'EMPTY))]
             (loop-when-recur [items items] (some? items) [(.next items)]
-                (§ ass ret (cast' ITransientSet (ITransientCollection'''conj ret, (.first items))))
+                (ß ass ret (cast' ITransientSet (ITransientCollection'''conj ret, (.first items))))
             )
             (cast' PersistentHashSet (ITransientCollection'''persistent ret))
         )
@@ -24349,7 +23886,7 @@
     (defn #_"PersistentHashSet" PersistentHashSet'createWithCheck-1a [& #_"Object..." items]
         (let [#_"ITransientSet" ret (cast' ITransientSet (IEditableCollection'''asTransient PersistentHashSet'EMPTY))]
             (loop-when-recur [#_"int" i 0] (< i (alength items)) [(inc i)]
-                (§ ass ret (cast' ITransientSet (ITransientCollection'''conj ret, (aget items i))))
+                (ß ass ret (cast' ITransientSet (ITransientCollection'''conj ret, (aget items i))))
                 (when-not (= (.count ret) (inc i))
                     (throw (IllegalArgumentException. (str "Duplicate key: " (aget items i))))
                 )
@@ -24363,7 +23900,7 @@
               #_"Iterator" it (.iterator items)]
             (loop-when-recur [#_"int" i 0] (.hasNext it) [(inc i)] => (cast' PersistentHashSet (ITransientCollection'''persistent ret))
                 (let [#_"Object" key (.next it)]
-                    (§ ass ret (cast' ITransientSet (ITransientCollection'''conj ret, key)))
+                    (ß ass ret (cast' ITransientSet (ITransientCollection'''conj ret, key)))
                     (when-not (= (.count ret) (inc i))
                         (throw (IllegalArgumentException. (str "Duplicate key: " key)))
                     )
@@ -24375,7 +23912,7 @@
     (defn #_"PersistentHashSet" PersistentHashSet'createWithCheck-1s [#_"ISeq" items]
         (let [#_"ITransientSet" ret (cast' ITransientSet (IEditableCollection'''asTransient PersistentHashSet'EMPTY))]
             (loop-when-recur [items items #_"int" i 0] (some? items) [(.next items) (inc i)]
-                (§ ass ret (cast' ITransientSet (ITransientCollection'''conj ret, (.first items))))
+                (ß ass ret (cast' ITransientSet (ITransientCollection'''conj ret, (.first items))))
                 (when-not (= (.count ret) (inc i))
                     (throw (IllegalArgumentException. (str "Duplicate key: " (.first items))))
                 )
@@ -24392,8 +23929,7 @@
 
     (defn #_"PersistentHashSet" PersistentHashSet'new [#_"IPersistentMap" meta, #_"IPersistentMap" impl]
         (let [this (merge (APersistentSet'new impl) (PersistentHashSet'init))]
-            (§ ass this (assoc this :_meta meta))
-            this
+            (assoc this :_meta meta)
         )
     )
 
@@ -24635,27 +24171,7 @@
     )
 
     #_foreign
-    (§ defn #_"boolean" addAll [#_"EmptyList" this, #_"Collection" collection]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (§ defn #_"void" clear [#_"EmptyList" this]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" retainAll [#_"EmptyList" this, #_"Collection" collection]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" removeAll [#_"EmptyList" this, #_"Collection" collection]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" containsAll [#_"EmptyList" this, #_"Collection" collection]
         (throw (UnsupportedOperationException.))
     )
 
@@ -24665,11 +24181,6 @@
             (aset objects 0 nil)
         )
         objects
-    )
-
-    #_foreign
-    (§ defn #_"List" subList [#_"EmptyList" this, #_"int" fromIndex, #_"int" toIndex]
-        (throw (UnsupportedOperationException.))
     )
 
     #_foreign
@@ -24695,27 +24206,12 @@
     )
 
     #_foreign
-    (§ defn #_"ListIterator" listIterator [#_"EmptyList" this]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"ListIterator" listIterator [#_"EmptyList" this, #_"int" index]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (§ defn #_"Object" get [#_"EmptyList" this, #_"int" index]
         (RT'nth-2 this, index)
     )
 
     #_foreign
     (§ defn #_"void" add [#_"EmptyList" this, #_"int" index, #_"Object" element]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" addAll [#_"EmptyList" this, #_"int" index, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 )
@@ -24735,19 +24231,13 @@
 
     (defn #_"PersistentList" PersistentList'new-1 [#_"Object" _first]
         (let [this (merge (ASeq'new-0) (PersistentList'init))]
-            (§ ass this (assoc this :_first _first))
-            (§ ass this (assoc this :_rest nil))
-            (§ ass this (assoc this :_count 1))
-            this
+            (assoc this :_first _first :_rest nil :_count 1)
         )
     )
 
     (defn #_"PersistentList" PersistentList'new-4 [#_"IPersistentMap" meta, #_"Object" _first, #_"IPersistentList" _rest, #_"int" _count]
         (let [this (merge (ASeq'new-1 meta) (PersistentList'init))]
-            (§ ass this (assoc this :_first _first))
-            (§ ass this (assoc this :_rest _rest))
-            (§ ass this (assoc this :_count _count))
-            this
+            (assoc this :_first _first :_rest _rest :_count _count)
         )
     )
 
@@ -24835,17 +24325,13 @@
 
     (defn #_"QSeq" QSeq'new-2 [#_"ISeq" f, #_"ISeq" rseq]
         (let [this (merge (ASeq'new-0) (QSeq'init))]
-            (§ ass this (assoc this :f f))
-            (§ ass this (assoc this :rseq rseq))
-            this
+            (assoc this :f f :rseq rseq)
         )
     )
 
     (defn #_"QSeq" QSeq'new-3 [#_"IPersistentMap" meta, #_"ISeq" f, #_"ISeq" rseq]
         (let [this (merge (ASeq'new-1 meta) (QSeq'init))]
-            (§ ass this (assoc this :f f))
-            (§ ass this (assoc this :rseq rseq))
-            this
+            (assoc this :f f :rseq rseq)
         )
     )
 
@@ -24896,10 +24382,7 @@
 
     (defn #_"PersistentQueue" PersistentQueue'new [#_"IPersistentMap" meta, #_"int" cnt, #_"ISeq" f, #_"PersistentVector" r]
         (let [this (merge (Obj'new-1 meta) (PersistentQueue'init))]
-            (§ ass this (assoc this :cnt cnt))
-            (§ ass this (assoc this :f f))
-            (§ ass this (assoc this :r r))
-            this
+            (assoc this :cnt cnt :f f :r r)
         )
     )
 
@@ -24929,11 +24412,11 @@
     (§ defn #_"int" hashCode [#_"PersistentQueue" this]
         (let [#_"int" hash (:_hash this)]
             (when (zero? hash)
-                (§ ass hash 1)
+                (ß ass hash 1)
                 (loop-when-recur [#_"ISeq" s (Seqable'''seq this)] (some? s) [(.next s)]
-                    (§ ass hash (+ (* 31 hash) (if (nil? (.first s)) 0 (.hashCode (.first s)))))
+                    (ß ass hash (+ (* 31 hash) (if (nil? (.first s)) 0 (.hashCode (.first s)))))
                 )
-                (§ ass this (assoc this :_hash hash))
+                (ß ass this (assoc this :_hash hash))
             )
             hash
         )
@@ -24943,7 +24426,7 @@
     (defn #_"int" IHashEq'''hasheq--PersistentQueue [#_"PersistentQueue" this]
         (let [#_"int" cached (:_hasheq this)]
             (when (zero? cached)
-                (§ ass this (assoc this :_hasheq (§ ass cached (Murmur3'hashOrdered this))))
+                (ß ass this (assoc this :_hasheq (ß ass cached (Murmur3'hashOrdered this))))
             )
             cached
         )
@@ -25016,27 +24499,7 @@
     )
 
     #_foreign
-    (§ defn #_"boolean" addAll [#_"PersistentQueue" this, #_"Collection" c]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (§ defn #_"void" clear [#_"PersistentQueue" this]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" retainAll [#_"PersistentQueue" this, #_"Collection" c]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" removeAll [#_"PersistentQueue" this, #_"Collection" c]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" containsAll [#_"PersistentQueue" this, #_"Collection" c]
         (throw (UnsupportedOperationException.))
     )
 
@@ -25081,7 +24544,7 @@
             (§ defn #_"Object" next [#_"Iterator" this]
                 (cond (some? (:fseq this))
                     (let [#_"Object" ret (.first (:fseq this))]
-                        (§ ass this (assoc this :fseq (.next (:fseq this))))
+                        (ß ass this (assoc this :fseq (.next (:fseq this))))
                         ret
                     )
                     (and (some? (:riter this)) (.hasNext (:riter this)))
@@ -25118,8 +24581,7 @@
 
     (defn #_"TNode" TNode'new [#_"Object" key]
         (let [this (merge (AMapEntry'new) (TNode'init))]
-            (§ ass this (assoc this :key key))
-            this
+            (assoc this :key key)
         )
     )
 
@@ -25251,8 +24713,7 @@
 
     (defn #_"BlackVal" BlackVal'new [#_"Object" key, #_"Object" val]
         (let [this (merge (Black'new key) (BlackVal'init))]
-            (§ ass this (assoc this :val val))
-            this
+            (assoc this :val val)
         )
     )
 
@@ -25277,9 +24738,7 @@
 
     (defn #_"BlackBranch" BlackBranch'new [#_"Object" key, #_"TNode" left, #_"TNode" right]
         (let [this (merge (Black'new key) (BlackBranch'init))]
-            (§ ass this (assoc this :left left))
-            (§ ass this (assoc this :right right))
-            this
+            (assoc this :left left :right right)
         )
     )
 
@@ -25308,8 +24767,7 @@
 
     (defn #_"BlackBranchVal" BlackBranchVal'new [#_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" right]
         (let [this (merge (BlackBranch'new key, left, right) (BlackBranchVal'init))]
-            (§ ass this (assoc this :val val))
-            this
+            (assoc this :val val)
         )
     )
 
@@ -25375,8 +24833,7 @@
 
     (defn #_"RedVal" RedVal'new [#_"Object" key, #_"Object" val]
         (let [this (merge (Red'new key) (RedVal'init))]
-            (§ ass this (assoc this :val val))
-            this
+            (assoc this :val val)
         )
     )
 
@@ -25401,9 +24858,7 @@
 
     (defn #_"RedBranch" RedBranch'new [#_"Object" key, #_"TNode" left, #_"TNode" right]
         (let [this (merge (Red'new key) (RedBranch'init))]
-            (§ ass this (assoc this :left left))
-            (§ ass this (assoc this :right right))
-            this
+            (assoc this :left left :right right)
         )
     )
 
@@ -25466,8 +24921,7 @@
 
     (defn #_"RedBranchVal" RedBranchVal'new [#_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" right]
         (let [this (merge (RedBranch'new key, left, right) (RedBranchVal'init))]
-            (§ ass this (assoc this :val val))
-            this
+            (assoc this :val val)
         )
     )
 
@@ -25493,28 +24947,19 @@
 
     (defn #_"TSeq" TSeq'new-2 [#_"ISeq" stack, #_"boolean" asc]
         (let [this (merge (ASeq'new-0) (TSeq'init))]
-            (§ ass this (assoc this :stack stack))
-            (§ ass this (assoc this :asc asc))
-            (§ ass this (assoc this :cnt -1))
-            this
+            (assoc this :stack stack :asc asc :cnt -1)
         )
     )
 
     (defn #_"TSeq" TSeq'new-3 [#_"ISeq" stack, #_"boolean" asc, #_"int" cnt]
         (let [this (merge (ASeq'new-0) (TSeq'init))]
-            (§ ass this (assoc this :stack stack))
-            (§ ass this (assoc this :asc asc))
-            (§ ass this (assoc this :cnt cnt))
-            this
+            (assoc this :stack stack :asc asc :cnt cnt)
         )
     )
 
     (defn #_"TSeq" TSeq'new-4 [#_"IPersistentMap" meta, #_"ISeq" stack, #_"boolean" asc, #_"int" cnt]
         (let [this (merge (ASeq'new-1 meta) (TSeq'init))]
-            (§ ass this (assoc this :stack stack))
-            (§ ass this (assoc this :asc asc))
-            (§ ass this (assoc this :cnt cnt))
-            this
+            (assoc this :stack stack :asc asc :cnt cnt)
         )
     )
 
@@ -25524,8 +24969,8 @@
 
     (defn #_"ISeq" TSeq'push [#_"TNode" t, #_"ISeq" stack, #_"boolean" asc]
         (while (some? t)
-            (§ ass stack (RT'cons t, stack))
-            (§ ass t (if asc (TNode'''left t) (TNode'''right t)))
+            (ß ass stack (RT'cons t, stack))
+            (ß ass t (if asc (TNode'''left t) (TNode'''right t)))
         )
         stack
     )
@@ -25568,7 +25013,7 @@
 
     (defn #_"NodeIterator" NodeIterator'new [#_"TNode" t, #_"boolean" asc]
         (let [this (NodeIterator'init)]
-            (§ ass this (assoc this :asc asc))
+            (ß ass this (assoc this :asc asc))
             (NodeIterator''push this, t)
             this
         )
@@ -25578,7 +25023,7 @@
     (defn #_"void" NodeIterator''push [#_"NodeIterator" this, #_"TNode" t]
         (while (some? t)
             (.push (:stack this), t)
-            (§ ass t (if (:asc this) (TNode'''left t) (TNode'''right t)))
+            (ß ass t (if (:asc this) (TNode'''left t) (TNode'''right t)))
         )
         nil
     )
@@ -25616,8 +25061,7 @@
 
     (defn #_"KeyIterator" KeyIterator'new [#_"NodeIterator" it]
         (let [this (KeyIterator'init)]
-            (§ ass this (assoc this :it it))
-            this
+            (assoc this :it it)
         )
     )
 
@@ -25646,8 +25090,7 @@
 
     (defn #_"ValIterator" ValIterator'new [#_"NodeIterator" it]
         (let [this (ValIterator'init)]
-            (§ ass this (assoc this :it it))
-            this
+            (assoc this :it it)
         )
     )
 
@@ -25706,21 +25149,13 @@
 
     (defn #_"PersistentTreeMap" PersistentTreeMap'new-2 [#_"IPersistentMap" meta, #_"Comparator" comp]
         (let [this (merge (APersistentMap'new) (PersistentTreeMap'init))]
-            (§ ass this (assoc this :comp comp))
-            (§ ass this (assoc this :_meta meta))
-            (§ ass this (assoc this :tree nil))
-            (§ ass this (assoc this :_count 0))
-            this
+            (assoc this :comp comp :_meta meta :tree nil :_count 0)
         )
     )
 
     (defn #_"PersistentTreeMap" PersistentTreeMap'new-4m [#_"IPersistentMap" meta, #_"Comparator" comp, #_"TNode" tree, #_"int" _count]
         (let [this (merge (APersistentMap'new) (PersistentTreeMap'init))]
-            (§ ass this (assoc this :_meta meta))
-            (§ ass this (assoc this :comp comp))
-            (§ ass this (assoc this :tree tree))
-            (§ ass this (assoc this :_count _count))
-            this
+            (assoc this :_meta meta :comp comp :tree tree :_count _count)
         )
     )
 
@@ -25735,7 +25170,7 @@
                 (when (nil? (.next items))
                     (throw (IllegalArgumentException. (str "No value supplied for key: " (.first items))))
                 )
-                (§ ass ret (IPersistentMap'''assoc ret, (.first items), (RT'second items)))
+                (ß ass ret (IPersistentMap'''assoc ret, (.first items), (RT'second items)))
             )
             (cast' PersistentTreeMap ret)
         )
@@ -25747,7 +25182,7 @@
                 (when (nil? (.next items))
                     (throw (IllegalArgumentException. (str "No value supplied for key: " (.first items))))
                 )
-                (§ ass ret (IPersistentMap'''assoc ret, (.first items), (RT'second items)))
+                (ß ass ret (IPersistentMap'''assoc ret, (.first items), (RT'second items)))
             )
             (cast' PersistentTreeMap ret)
         )
@@ -25914,7 +25349,7 @@
         (let [#_"TNode" t (:tree this)]
             (when (some? t)
                 (while (some? (TNode'''left t))
-                    (§ ass t (TNode'''left t))
+                    (ß ass t (TNode'''left t))
                 )
             )
             t
@@ -25933,7 +25368,7 @@
         (let [#_"TNode" t (:tree this)]
             (when (some? t)
                 (while (some? (TNode'''right t))
-                    (§ ass t (TNode'''right t))
+                    (ß ass t (TNode'''right t))
                 )
             )
             t
@@ -26002,7 +25437,7 @@
             (let [#_"int" cmp (PersistentTreeMap''doCompare this, key, (:key t))]
                 (if (zero? cmp)
                     (do
-                        (§ ass (:val found) t)
+                        (ß ass (:val found) t)
                         nil
                     )
                     (let [#_"TNode" ins (if (neg? cmp) (PersistentTreeMap''add this, (TNode'''left t), key, val, found) (PersistentTreeMap''add this, (TNode'''right t), key, val, found))]
@@ -26023,7 +25458,7 @@
             (let [#_"int" cmp (PersistentTreeMap''doCompare this, key, (:key t))]
                 (if (zero? cmp)
                     (do
-                        (§ ass (:val found) t)
+                        (ß ass (:val found) t)
                         (PersistentTreeMap'append (TNode'''left t), (TNode'''right t))
                     )
                     (let [#_"TNode" del (if (neg? cmp) (PersistentTreeMap''remove this, (TNode'''left t), key, found) (PersistentTreeMap''remove this, (TNode'''right t), key, found))]
@@ -26130,11 +25565,7 @@
 
     (defn #_"PersistentTreeMap" PersistentTreeMap'new-4c [#_"Comparator" comp, #_"TNode" tree, #_"int" count, #_"IPersistentMap" meta]
         (let [this (merge (APersistentMap'new) (PersistentTreeMap'init))]
-            (§ ass this (assoc this :_meta meta))
-            (§ ass this (assoc this :comp comp))
-            (§ ass this (assoc this :tree tree))
-            (§ ass this (assoc this :_count count))
-            this
+            (assoc this :_meta meta :comp comp :tree tree :_count count)
         )
     )
 
@@ -26202,8 +25633,7 @@
 
     (defn #_"PersistentTreeSet" PersistentTreeSet'new [#_"IPersistentMap" meta, #_"IPersistentMap" impl]
         (let [this (merge (APersistentSet'new impl) (PersistentTreeSet'init))]
-            (§ ass this (assoc this :_meta meta))
-            this
+            (assoc this :_meta meta)
         )
     )
 
@@ -26308,17 +25738,13 @@
 
     (defn #_"VNode" VNode'new-2 [#_"AtomicReference<Thread>" edit, #_"Object[]" array]
         (let [this (VNode'init)]
-            (§ ass this (assoc this :edit edit))
-            (§ ass this (assoc this :array array))
-            this
+            (assoc this :edit edit :array array)
         )
     )
 
     (defn #_"VNode" VNode'new-1 [#_"AtomicReference<Thread>" edit]
         (let [this (VNode'init)]
-            (§ ass this (assoc this :edit edit))
-            (§ ass this (assoc this :array (make-array Object 32)))
-            this
+            (assoc this :edit edit :array (make-array Object 32))
         )
     )
 )
@@ -26335,31 +25761,19 @@
 
     (defn #_"ChunkedSeq" ChunkedSeq'new-3 [#_"PersistentVector" vec, #_"int" i, #_"int" offset]
         (let [this (merge (ASeq'new-0) (ChunkedSeq'init))]
-            (§ ass this (assoc this :vec vec))
-            (§ ass this (assoc this :i i))
-            (§ ass this (assoc this :offset offset))
-            (§ ass this (assoc this :node (PersistentVector''arrayFor vec, i)))
-            this
+            (assoc this :vec vec :i i :offset offset :node (PersistentVector''arrayFor vec, i))
         )
     )
 
     (defn #_"ChunkedSeq" ChunkedSeq'new-5 [#_"IPersistentMap" meta, #_"PersistentVector" vec, #_"Object[]" node, #_"int" i, #_"int" offset]
         (let [this (merge (ASeq'new-1 meta) (ChunkedSeq'init))]
-            (§ ass this (assoc this :vec vec))
-            (§ ass this (assoc this :node node))
-            (§ ass this (assoc this :i i))
-            (§ ass this (assoc this :offset offset))
-            this
+            (assoc this :vec vec :node node :i i :offset offset)
         )
     )
 
     (defn #_"ChunkedSeq" ChunkedSeq'new-4 [#_"PersistentVector" vec, #_"Object[]" node, #_"int" i, #_"int" offset]
         (let [this (merge (ASeq'new-0) (ChunkedSeq'init))]
-            (§ ass this (assoc this :vec vec))
-            (§ ass this (assoc this :node node))
-            (§ ass this (assoc this :i i))
-            (§ ass this (assoc this :offset offset))
-            this
+            (assoc this :vec vec :node node :i i :offset offset)
         )
     )
 
@@ -26422,11 +25836,7 @@
 
     (defn #_"TransientVector" TransientVector'new-4 [#_"int" cnt, #_"int" shift, #_"VNode" root, #_"Object[]" tail]
         (let [this (merge (AFn'new) (TransientVector'init))]
-            (§ ass this (assoc this :cnt cnt))
-            (§ ass this (assoc this :shift shift))
-            (§ ass this (assoc this :root root))
-            (§ ass this (assoc this :tail tail))
-            this
+            (assoc this :cnt cnt :shift shift :root root :tail tail)
         )
     )
 
@@ -26484,12 +25894,11 @@
             (if (< (- n (TransientVector''tailoff this)) 32) ;; room in tail?
                 (do
                     (aset (:tail this) (& n 0x01f) val)
-                    (§ ass this (assoc this :cnt (inc (:cnt this))))
-                    this
+                    (assoc this :cnt (inc (:cnt this)))
                 )
                 ;; full tail, push into tree
                 (let [#_"VNode" tailnode (VNode'new-2 (:edit (:root this)), (:tail this))]
-                    (§ ass this (assoc this :tail (make-array Object 32)))
+                    (ß ass this (assoc this :tail (make-array Object 32)))
                     (aset (:tail this) 0 val)
                     (let [#_"int" shift (:shift this)
                           [#_"VNode" root shift]
@@ -26501,10 +25910,7 @@
                                 )
                                 [(TransientVector''pushTail this, shift, (:root this), tailnode) shift]
                             )]
-                        (§ ass this (assoc this :root root))
-                        (§ ass this (assoc this :shift shift))
-                        (§ ass this (assoc this :cnt (inc (:cnt this))))
-                        this
+                        (assoc this :root root :shift shift :cnt (inc (:cnt this)))
                     )
                 )
             )
@@ -26629,8 +26035,7 @@
                     this
                 )
                 (do
-                    (§ ass this (assoc this :root (TransientVector''doAssoc this, (:shift this), (:root this), i, val)))
-                    this
+                    (assoc this :root (TransientVector''doAssoc this, (:shift this), (:root this), i, val))
                 )
             )
             (when (= i (:cnt this)) => (throw (IndexOutOfBoundsException.))
@@ -26673,7 +26078,7 @@
                             (when (and (< 5 shift) (nil? (aget (:array root) 1))) => [shift root]
                                 [(- shift 5) (TransientVector''ensureEditable this, (cast' VNode (aget (:array root) 0)))]
                             )]
-                        (assoc this :cnt (dec n), :shift shift, :root root, :tail tail)
+                        (assoc this :cnt (dec n) :shift shift :root root :tail tail)
                     )
                 )
             )
@@ -26800,23 +26205,13 @@
 
     (defn #_"PersistentVector" PersistentVector'new-4 [#_"int" cnt, #_"int" shift, #_"VNode" root, #_"Object[]" tail]
         (let [this (merge (APersistentVector'new) (PersistentVector'init))]
-            (§ ass this (assoc this :_meta nil))
-            (§ ass this (assoc this :cnt cnt))
-            (§ ass this (assoc this :shift shift))
-            (§ ass this (assoc this :root root))
-            (§ ass this (assoc this :tail tail))
-            this
+            (assoc this :_meta nil :cnt cnt :shift shift :root root :tail tail)
         )
     )
 
     (defn #_"PersistentVector" PersistentVector'new-5 [#_"IPersistentMap" meta, #_"int" cnt, #_"int" shift, #_"VNode" root, #_"Object[]" tail]
         (let [this (merge (APersistentVector'new) (PersistentVector'init))]
-            (§ ass this (assoc this :_meta meta))
-            (§ ass this (assoc this :cnt cnt))
-            (§ ass this (assoc this :shift shift))
-            (§ ass this (assoc this :root root))
-            (§ ass this (assoc this :tail tail))
-            this
+            (assoc this :_meta meta :cnt cnt :shift shift :root root :tail tail)
         )
     )
 
@@ -26989,11 +26384,11 @@
             (§ defn #_"Object" next [#_"Iterator" this]
                 (when (< (:i this) end) => (throw (NoSuchElementException.))
                     (when (= (- (:i this) (:base this)) 32)
-                        (§ ass this (assoc this :array (PersistentVector''arrayFor this, (:i this))))
-                        (§ ass this (assoc this :base (+ (:base this) 32)))
+                        (ß ass this (assoc this :array (PersistentVector''arrayFor this, (:i this))))
+                        (ß ass this (assoc this :base (+ (:base this) 32)))
                     )
                     (let [_ (aget (:array this) (& (:i this) 0x01f))]
-                        (§ ass this (assoc this :i (inc (:i this))))
+                        (ß ass this (assoc this :i (inc (:i this))))
                         _
                     )
                 )
@@ -27018,7 +26413,7 @@
                 (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
                       r (loop-when [r r #_"int" j (if (zero? i) 1 0)] (< j (alength a)) => r
                             (let [r (IFn'''invoke-3 f, r, (aget a j))]
-                                (when-not (RT'isReduced r) => (§ return (IDeref'''deref (cast' IDeref r)))
+                                (when-not (RT'isReduced r) => (ß return (IDeref'''deref (cast' IDeref r)))
                                     (recur r (inc j))
                                 )
                             )
@@ -27035,7 +26430,7 @@
             (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
                   r (loop-when [r r #_"int" j 0] (< j (alength a)) => r
                         (let [r (IFn'''invoke-3 f, r, (aget a j))]
-                            (when-not (RT'isReduced r) => (§ return (IDeref'''deref (cast' IDeref r)))
+                            (when-not (RT'isReduced r) => (ß return (IDeref'''deref (cast' IDeref r)))
                                 (recur r (inc j))
                             )
                         )
@@ -27051,7 +26446,7 @@
             (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
                   r (loop-when [r r #_"int" j 0] (< j (alength a)) => r
                         (let [r (IFn'''invoke-4 f, r, (+ j i), (aget a j))]
-                            (when-not (RT'isReduced r) => (§ return (IDeref'''deref (cast' IDeref r)))
+                            (when-not (RT'isReduced r) => (ß return (IDeref'''deref (cast' IDeref r)))
                                 (recur r (inc j))
                             )
                         )
@@ -27130,8 +26525,7 @@
 
     (defn #_"ProxyHandler" ProxyHandler'new [#_"IPersistentMap" fns]
         (let [this (ProxyHandler'init)]
-            (§ ass this (assoc this :fns fns))
-            this
+            (assoc this :fns fns)
         )
     )
 
@@ -27185,8 +26579,7 @@
 
     (defn #_"RangeIterator" RangeIterator'new []
         (let [this (RangeIterator'init)]
-            (§ ass this (assoc this :next (:start this)))
-            this
+            (assoc this :next (:start this))
         )
     )
 
@@ -27199,7 +26592,7 @@
     (§ defn #_"Object" next [#_"RangeIterator" this]
         (when (.hasNext this) => (throw (NoSuchElementException.))
             (let [#_"Object" ret (:next this)]
-                (§ ass this (assoc this :next (Numbers'addP-2oo (:next this), (:step this))))
+                (ß ass this (assoc this :next (Numbers'addP-2oo (:next this), (:step this))))
                 ret
             )
         )
@@ -27254,35 +26647,19 @@
 
     (defn- #_"Range" Range'new-4 [#_"Object" start, #_"Object" end, #_"Object" step, #_"RangeBoundsCheck" boundsCheck]
         (let [this (merge (ASeq'new-0) (Range'init))]
-            (§ ass this (assoc this :end end))
-            (§ ass this (assoc this :start start))
-            (§ ass this (assoc this :step step))
-            (§ ass this (assoc this :boundsCheck boundsCheck))
-            this
+            (assoc this :end end :start start :step step :boundsCheck boundsCheck)
         )
     )
 
     (defn- #_"Range" Range'new-6 [#_"Object" start, #_"Object" end, #_"Object" step, #_"RangeBoundsCheck" boundsCheck, #_"IChunk" chunk, #_"ISeq" chunkNext]
         (let [this (merge (ASeq'new-0) (Range'init))]
-            (§ ass this (assoc this :end end))
-            (§ ass this (assoc this :start start))
-            (§ ass this (assoc this :step step))
-            (§ ass this (assoc this :boundsCheck boundsCheck))
-            (§ ass this (assoc this :_chunk chunk))
-            (§ ass this (assoc this :_chunkNext chunkNext))
-            this
+            (assoc this :end end :start start :step step :boundsCheck boundsCheck :_chunk chunk :_chunkNext chunkNext)
         )
     )
 
     (defn- #_"Range" Range'new-7 [#_"IPersistentMap" meta, #_"Object" start, #_"Object" end, #_"Object" step, #_"RangeBoundsCheck" boundsCheck, #_"IChunk" chunk, #_"ISeq" chunkNext]
         (let [this (merge (ASeq'new-1 meta) (Range'init))]
-            (§ ass this (assoc this :end end))
-            (§ ass this (assoc this :start start))
-            (§ ass this (assoc this :step step))
-            (§ ass this (assoc this :boundsCheck boundsCheck))
-            (§ ass this (assoc this :_chunk chunk))
-            (§ ass this (assoc this :_chunkNext chunkNext))
-            this
+            (assoc this :end end :start start :step step :boundsCheck boundsCheck :_chunk chunk :_chunkNext chunkNext)
         )
     )
 
@@ -27334,18 +26711,18 @@
                             (aset a i n)
                             (let-when [n (Numbers'addP-2oo n, (:step this))] (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => (recur n (inc i))
                                 ;; partial last chunk
-                                (§ ass this (assoc this :_chunk (ArrayChunk'new-3 a, 0, (inc i))))
+                                (ß ass this (assoc this :_chunk (ArrayChunk'new-3 a, 0, (inc i))))
                             )
                         )
                         (if (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n)
                             (do
                                 ;; full last chunk
-                                (§ ass this (assoc this :_chunk (ArrayChunk'new-3 a, 0, Range'CHUNK_SIZE)))
+                                (ß ass this (assoc this :_chunk (ArrayChunk'new-3 a, 0, Range'CHUNK_SIZE)))
                             )
                             (do
                                 ;; full intermediate chunk
-                                (§ ass this (assoc this :_chunk (ArrayChunk'new-3 a, 0, Range'CHUNK_SIZE)))
-                                (§ ass this (assoc this :_chunkNext (Range'new-4 n, (:end this), (:step this), (:boundsCheck this))))
+                                (ß ass this (assoc this :_chunk (ArrayChunk'new-3 a, 0, Range'CHUNK_SIZE)))
+                                (ß ass this (assoc this :_chunkNext (Range'new-4 n, (:end this), (:step this), (:boundsCheck this))))
                             )
                         )
                     )
@@ -27362,7 +26739,7 @@
             (when (< 1 (.count (:_chunk this))) => (IChunkedSeq'''chunkedNext this)
                 (let [#_"IChunk" _rest (IChunk'''dropFirst (:_chunk this))
                       _next (Range'new-6 (Indexed'''nth-2 _rest, 0), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this))]
-                    (§ ass this (assoc this :_next _next))
+                    (ß ass this (assoc this :_next _next))
                     _next
                 )
             )
@@ -27431,9 +26808,7 @@
 
     (defn #_"Ratio" Ratio'new [#_"BigInteger" numerator, #_"BigInteger" denominator]
         (let [this (merge (§ foreign Number'new) (Ratio'init))]
-            (§ ass this (assoc this :numerator numerator))
-            (§ ass this (assoc this :denominator denominator))
-            this
+            (assoc this :numerator numerator :denominator denominator)
         )
     )
 
@@ -27514,11 +26889,7 @@
 
     (defn #_"RecordIterator" RecordIterator'new [#_"ILookup" rec, #_"IPersistentVector" basefields, #_"Iterator" extmap]
         (let [this (RecordIterator'init)]
-            (§ ass this (assoc this :rec rec))
-            (§ ass this (assoc this :basefields basefields))
-            (§ ass this (assoc this :basecnt (.count basefields)))
-            (§ ass this (assoc this :extmap extmap))
-            this
+            (assoc this :rec rec :basefields basefields :basecnt (.count basefields) :extmap extmap)
         )
     )
 
@@ -27531,7 +26902,7 @@
     (§ defn #_"Object" next [#_"RecordIterator" this]
         (when (< (:i this) (:basecnt this)) => (.next (:extmap this))
             (let [#_"Object" k (Indexed'''nth-2 (:basefields this), (:i this))]
-                (§ ass this (assoc this :i (inc (:i this))))
+                (ß ass this (assoc this :i (inc (:i this))))
                 (MapEntry'create k, (ILookup'''valAt-2 (:rec this), k))
             )
         )
@@ -27555,8 +26926,7 @@
 
     (defn #_"Reduced" Reduced'new [#_"Object" val]
         (let [this (Reduced'init)]
-            (§ ass this (assoc this :val val))
-            this
+            (assoc this :val val)
         )
     )
 
@@ -27585,23 +26955,19 @@
 
     (defn #_"RefTVal" RefTVal'new-3 [#_"Object" val, #_"long" point, #_"RefTVal" prior]
         (let [this (RefTVal'init)]
-            (§ ass this (assoc this :val val))
-            (§ ass this (assoc this :point point))
-            (§ ass this (assoc this :prior prior))
-            (§ ass this (assoc this :next (:next prior)))
-            (§ ass (:next (:prior this)) this)
-            (§ ass (:prior (:next this)) this)
+            (ß ass this (assoc this :val val))
+            (ß ass this (assoc this :point point))
+            (ß ass this (assoc this :prior prior))
+            (ß ass this (assoc this :next (:next prior)))
+            (ß ass (:next (:prior this)) this)
+            (ß ass (:prior (:next this)) this)
             this
         )
     )
 
     (defn #_"RefTVal" RefTVal'new-2 [#_"Object" val, #_"long" point]
         (let [this (RefTVal'init)]
-            (§ ass this (assoc this :val val))
-            (§ ass this (assoc this :point point))
-            (§ ass this (assoc this :next this))
-            (§ ass this (assoc this :prior this))
-            this
+            (assoc this :val val :point point :next this :prior this)
         )
     )
 )
@@ -27630,11 +26996,7 @@
 
     (defn #_"Ref" Ref'new-2 [#_"Object" initVal, #_"IPersistentMap" meta]
         (let [this (merge (ARef'new-1 meta) (Ref'init))]
-            (§ ass this (assoc this :id (.getAndIncrement Ref'ids)))
-            (§ ass this (assoc this :faults (AtomicInteger.)))
-            (§ ass this (assoc this :lock (ReentrantReadWriteLock.)))
-            (§ ass this (assoc this :tvals (RefTVal'new-2 initVal, 0)))
-            this
+            (assoc this :id (.getAndIncrement Ref'ids) :faults (AtomicInteger.) :lock (ReentrantReadWriteLock.) :tvals (RefTVal'new-2 initVal, 0))
         )
     )
 
@@ -27652,8 +27014,7 @@
 
     #_method
     (defn #_"Ref" Ref''setMinHistory [#_"Ref" this, #_"int" minHistory]
-        (§ ass this (assoc this :minHistory minHistory))
-        this
+        (assoc this :minHistory minHistory)
     )
 
     #_method
@@ -27663,8 +27024,7 @@
 
     #_method
     (defn #_"Ref" Ref''setMaxHistory [#_"Ref" this, #_"int" maxHistory]
-        (§ ass this (assoc this :maxHistory maxHistory))
-        this
+        (assoc this :maxHistory maxHistory)
     )
 
     ;; the latest val
@@ -27729,8 +27089,8 @@
         (try
             (.lock (.writeLock (:lock this)))
             (when (some? (:tvals this))
-                (§ ass (:next (:tvals this)) (:tvals this))
-                (§ ass (:prior (:tvals this)) (:tvals this))
+                (ß ass (:next (:tvals this)) (:tvals this))
+                (ß ass (:prior (:tvals this)) (:tvals this))
             )
             (finally
                 (.unlock (.writeLock (:lock this)))
@@ -28314,17 +27674,13 @@
 
     (defn- #_"Repeat" Repeat'new-2 [#_"long" count, #_"Object" val]
         (let [this (merge (ASeq'new-0) (Repeat'init))]
-            (§ ass this (assoc this :count count))
-            (§ ass this (assoc this :val val))
-            this
+            (assoc this :count count :val val)
         )
     )
 
     (defn- #_"Repeat" Repeat'new-3 [#_"IPersistentMap" meta, #_"long" count, #_"Object" val]
         (let [this (merge (ASeq'new-1 meta) (Repeat'init))]
-            (§ ass this (assoc this :count count))
-            (§ ass this (assoc this :val val))
-            this
+            (assoc this :count count :val val)
         )
     )
 
@@ -28346,11 +27702,11 @@
         (when (nil? (:_next this))
             (cond (< 1 (:count this))
                 (do
-                    (§ ass this (assoc this :_next (Repeat'new-2 (dec (:count this)), (:val this))))
+                    (ß ass this (assoc this :_next (Repeat'new-2 (dec (:count this)), (:val this))))
                 )
                 (= (:count this) Repeat'INFINITE)
                 (do
-                    (§ ass this (assoc this :_next this))
+                    (ß ass this (assoc this :_next this))
                 )
             )
         )
@@ -28540,280 +27896,280 @@
     #_override
     (defn #_"Object" IFn'''applyTo--RestFn [#_"RestFn" this, #_"ISeq" args]
         (when (<= (RT'boundedLength args, (RestFn'''getRequiredArity this)) (RestFn'''getRequiredArity this))
-            (§ return (AFn'applyToHelper this, (Util'ret1 args, (§ ass args nil))))
+            (ß return (AFn'applyToHelper this, (Util'ret1 args, (ß ass args nil))))
         )
         (case (RestFn'''getRequiredArity this)
             0
-                (RestFn'''doInvoke-2 this, (Util'ret1 args, (§ ass args nil)))
+                (RestFn'''doInvoke-2 this, (Util'ret1 args, (ß ass args nil)))
             1
                 (RestFn'''doInvoke-3 this, (.first args),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             2
                 (RestFn'''doInvoke-4 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             3
                 (RestFn'''doInvoke-5 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             4
                 (RestFn'''doInvoke-6 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             5
                 (RestFn'''doInvoke-7 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             6
                 (RestFn'''doInvoke-8 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             7
                 (RestFn'''doInvoke-9 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             8
                 (RestFn'''doInvoke-10 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             9
                 (RestFn'''doInvoke-11 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             10
                 (RestFn'''doInvoke-12 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             11
                 (RestFn'''doInvoke-13 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             12
                 (RestFn'''doInvoke-14 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             13
                 (RestFn'''doInvoke-15 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             14
                 (RestFn'''doInvoke-16 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             15
                 (RestFn'''doInvoke-17 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             16
                 (RestFn'''doInvoke-18 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             17
                 (RestFn'''doInvoke-19 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             18
                 (RestFn'''doInvoke-20 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             19
                 (RestFn'''doInvoke-21 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             20
                 (RestFn'''doInvoke-22 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (.first (ß ass args (.next args))),
+                    (Util'ret1 (.next args), (ß ass args nil))
                 )
             (AFn'''throwArity this, -1)
         )
@@ -28834,9 +28190,9 @@
     (defn #_"Object" IFn'''invoke-2--RestFn [#_"RestFn" this, #_"Object" arg1]
         (case (RestFn'''getRequiredArity this)
             0
-                (RestFn'''doInvoke-2 this, (ArraySeq'create-1 (Util'ret1 arg1, (§ ass arg1 nil))))
+                (RestFn'''doInvoke-2 this, (ArraySeq'create-1 (Util'ret1 arg1, (ß ass arg1 nil))))
             1
-                (RestFn'''doInvoke-3 this, (Util'ret1 arg1, (§ ass arg1 nil)), nil)
+                (RestFn'''doInvoke-3 this, (Util'ret1 arg1, (ß ass arg1 nil)), nil)
             (do
                 (AFn'''throwArity this, 1)
             )
@@ -28849,17 +28205,17 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                     (ArraySeq'create-1
-                        (Util'ret1 arg2, (§ ass arg2 nil))))
+                        (Util'ret1 arg2, (ß ass arg2 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)), nil)
             (do
                 (AFn'''throwArity this, 2)
             )
@@ -28872,26 +28228,26 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                     (ArraySeq'create-1
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil))))
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                     (ArraySeq'create-1
-                        (Util'ret1 arg3, (§ ass arg3 nil))))
+                        (Util'ret1 arg3, (ß ass arg3 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)), nil)
             (do
                 (AFn'''throwArity this, 3)
             )
@@ -28904,37 +28260,37 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                     (ArraySeq'create-1
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil))))
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                     (ArraySeq'create-1
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil))))
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                     (ArraySeq'create-1
-                        (Util'ret1 arg4, (§ ass arg4 nil))))
+                        (Util'ret1 arg4, (ß ass arg4 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)), nil)
             (do
                 (AFn'''throwArity this, 4)
             )
@@ -28947,50 +28303,50 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil))))
+                            (Util'ret1 arg2, (ß ass arg2 nil)),
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)), nil)
             (do
                 (AFn'''throwArity this, 5)
             )
@@ -29003,65 +28359,65 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil))))
+                            (Util'ret1 arg2, (ß ass arg2 nil)),
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil))))
+                            (Util'ret1 arg6, (ß ass arg6 nil))))
             6
                 (RestFn'''doInvoke-8 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)), nil)
             (do
                 (AFn'''throwArity this, 6)
             )
@@ -29074,82 +28430,82 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                            (Util'ret1 arg2, (ß ass arg2 nil)),
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                     (ArraySeq'create-1
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil))))
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil))))
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil))))
             6
                 (RestFn'''doInvoke-8 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil))))
+                            (Util'ret1 arg7, (ß ass arg7 nil))))
             7
                 (RestFn'''doInvoke-9 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)), nil)
             (do
                 (AFn'''throwArity this, 7)
             )
@@ -29162,101 +28518,101 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                     (ArraySeq'create-1
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil))))
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil))))
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil))))
             6
                 (RestFn'''doInvoke-8 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil))))
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil))))
             7
                 (RestFn'''doInvoke-9 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil))))
+                            (Util'ret1 arg8, (ß ass arg8 nil))))
             8
                 (RestFn'''doInvoke-10 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)), nil)
             (do
                 (AFn'''throwArity this, 8)
             )
@@ -29269,122 +28625,122 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil)),
+                        (Util'ret1 arg9, (ß ass arg9 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                     (ArraySeq'create-1
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil))))
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil)),
+                        (Util'ret1 arg9, (ß ass arg9 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil))))
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil))))
             6
                 (RestFn'''doInvoke-8 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil))))
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil))))
             7
                 (RestFn'''doInvoke-9 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil))))
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil))))
             8
                 (RestFn'''doInvoke-10 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil))))
+                            (Util'ret1 arg9, (ß ass arg9 nil))))
             9
                 (RestFn'''doInvoke-11 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)), nil)
             (do
                 (AFn'''throwArity this, 9)
             )
@@ -29397,145 +28753,145 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil)),
+                        (Util'ret1 arg9, (ß ass arg9 nil)),
+                        (Util'ret1 arg10, (ß ass arg10 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                     (ArraySeq'create-1
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil))))
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil)),
+                        (Util'ret1 arg9, (ß ass arg9 nil)),
+                        (Util'ret1 arg10, (ß ass arg10 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil))))
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil))))
             6
                 (RestFn'''doInvoke-8 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil))))
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil))))
             7
                 (RestFn'''doInvoke-9 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil))))
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil))))
             8
                 (RestFn'''doInvoke-10 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil))))
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil))))
             9
                 (RestFn'''doInvoke-11 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil))))
+                            (Util'ret1 arg10, (ß ass arg10 nil))))
             10
                 (RestFn'''doInvoke-12 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)), nil)
             (do
                 (AFn'''throwArity this, 10)
             )
@@ -29548,170 +28904,170 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil)),
+                        (Util'ret1 arg9, (ß ass arg9 nil)),
+                        (Util'ret1 arg10, (ß ass arg10 nil)),
+                        (Util'ret1 arg11, (ß ass arg11 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                            (Util'ret1 arg2, (ß ass arg2 nil)),
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil))))
             6
                 (RestFn'''doInvoke-8 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil))))
             7
                 (RestFn'''doInvoke-9 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil))))
             8
                 (RestFn'''doInvoke-10 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil))))
             9
                 (RestFn'''doInvoke-11 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil))))
             10
                 (RestFn'''doInvoke-12 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                            (Util'ret1 arg11, (ß ass arg11 nil))))
             11
                 (RestFn'''doInvoke-13 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)), nil)
             (do
                 (AFn'''throwArity this, 11)
             )
@@ -29724,197 +29080,197 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil)),
+                        (Util'ret1 arg9, (ß ass arg9 nil)),
+                        (Util'ret1 arg10, (ß ass arg10 nil)),
+                        (Util'ret1 arg11, (ß ass arg11 nil)),
+                        (Util'ret1 arg12, (ß ass arg12 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                            (Util'ret1 arg2, (ß ass arg2 nil)),
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil))))
             6
                 (RestFn'''doInvoke-8 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil))))
             7
                 (RestFn'''doInvoke-9 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil))))
             8
                 (RestFn'''doInvoke-10 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil))))
             9
                 (RestFn'''doInvoke-11 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil))))
             10
                 (RestFn'''doInvoke-12 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil))))
             11
                 (RestFn'''doInvoke-13 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                            (Util'ret1 arg12, (ß ass arg12 nil))))
             12
                 (RestFn'''doInvoke-14 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)), nil)
             (do
                 (AFn'''throwArity this, 12)
             )
@@ -29927,226 +29283,226 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil)),
+                        (Util'ret1 arg9, (ß ass arg9 nil)),
+                        (Util'ret1 arg10, (ß ass arg10 nil)),
+                        (Util'ret1 arg11, (ß ass arg11 nil)),
+                        (Util'ret1 arg12, (ß ass arg12 nil)),
+                        (Util'ret1 arg13, (ß ass arg13 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                            (Util'ret1 arg2, (ß ass arg2 nil)),
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil))))
             6
                 (RestFn'''doInvoke-8 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil))))
             7
                 (RestFn'''doInvoke-9 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil))))
             8
                 (RestFn'''doInvoke-10 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil))))
             9
                 (RestFn'''doInvoke-11 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil))))
             10
                 (RestFn'''doInvoke-12 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil))))
             11
                 (RestFn'''doInvoke-13 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil))))
             12
                 (RestFn'''doInvoke-14 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                            (Util'ret1 arg13, (ß ass arg13 nil))))
             13
                 (RestFn'''doInvoke-15 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)), nil)
             (do
                 (AFn'''throwArity this, 13)
             )
@@ -30159,257 +29515,257 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (Util'ret1 arg14, (§ ass arg14 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil)),
+                        (Util'ret1 arg9, (ß ass arg9 nil)),
+                        (Util'ret1 arg10, (ß ass arg10 nil)),
+                        (Util'ret1 arg11, (ß ass arg11 nil)),
+                        (Util'ret1 arg12, (ß ass arg12 nil)),
+                        (Util'ret1 arg13, (ß ass arg13 nil)),
+                        (Util'ret1 arg14, (ß ass arg14 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                            (Util'ret1 arg2, (ß ass arg2 nil)),
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil))))
             6
                 (RestFn'''doInvoke-8 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil))))
             7
                 (RestFn'''doInvoke-9 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil))))
             8
                 (RestFn'''doInvoke-10 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil))))
             9
                 (RestFn'''doInvoke-11 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil))))
             10
                 (RestFn'''doInvoke-12 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil))))
             11
                 (RestFn'''doInvoke-13 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil))))
             12
                 (RestFn'''doInvoke-14 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil))))
             13
                 (RestFn'''doInvoke-15 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                            (Util'ret1 arg14, (ß ass arg14 nil))))
             14
                 (RestFn'''doInvoke-16 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)), nil)
             (do
                 (AFn'''throwArity this, 14)
             )
@@ -30422,290 +29778,290 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (Util'ret1 arg15, (§ ass arg15 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil)),
+                        (Util'ret1 arg9, (ß ass arg9 nil)),
+                        (Util'ret1 arg10, (ß ass arg10 nil)),
+                        (Util'ret1 arg11, (ß ass arg11 nil)),
+                        (Util'ret1 arg12, (ß ass arg12 nil)),
+                        (Util'ret1 arg13, (ß ass arg13 nil)),
+                        (Util'ret1 arg14, (ß ass arg14 nil)),
+                        (Util'ret1 arg15, (ß ass arg15 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                            (Util'ret1 arg2, (ß ass arg2 nil)),
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil))))
             6
                 (RestFn'''doInvoke-8 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil))))
             7
                 (RestFn'''doInvoke-9 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil))))
             8
                 (RestFn'''doInvoke-10 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil))))
             9
                 (RestFn'''doInvoke-11 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil))))
             10
                 (RestFn'''doInvoke-12 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil))))
             11
                 (RestFn'''doInvoke-13 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil))))
             12
                 (RestFn'''doInvoke-14 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil))))
             13
                 (RestFn'''doInvoke-15 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil))))
             14
                 (RestFn'''doInvoke-16 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                            (Util'ret1 arg15, (ß ass arg15 nil))))
             15
                 (RestFn'''doInvoke-17 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)), nil)
             (do
                 (AFn'''throwArity this, 15)
             )
@@ -30718,325 +30074,325 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (Util'ret1 arg16, (§ ass arg16 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil)),
+                        (Util'ret1 arg9, (ß ass arg9 nil)),
+                        (Util'ret1 arg10, (ß ass arg10 nil)),
+                        (Util'ret1 arg11, (ß ass arg11 nil)),
+                        (Util'ret1 arg12, (ß ass arg12 nil)),
+                        (Util'ret1 arg13, (ß ass arg13 nil)),
+                        (Util'ret1 arg14, (ß ass arg14 nil)),
+                        (Util'ret1 arg15, (ß ass arg15 nil)),
+                        (Util'ret1 arg16, (ß ass arg16 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                            (Util'ret1 arg2, (ß ass arg2 nil)),
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil))))
             6
                 (RestFn'''doInvoke-8 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil))))
             7
                 (RestFn'''doInvoke-9 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil))))
             8
                 (RestFn'''doInvoke-10 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil))))
             9
                 (RestFn'''doInvoke-11 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil))))
             10
                 (RestFn'''doInvoke-12 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil))))
             11
                 (RestFn'''doInvoke-13 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil))))
             12
                 (RestFn'''doInvoke-14 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil))))
             13
                 (RestFn'''doInvoke-15 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil))))
             14
                 (RestFn'''doInvoke-16 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil))))
             15
                 (RestFn'''doInvoke-17 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                            (Util'ret1 arg16, (ß ass arg16 nil))))
             16
                 (RestFn'''doInvoke-18 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)), nil)
             (do
                 (AFn'''throwArity this, 16)
             )
@@ -31049,362 +30405,362 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (Util'ret1 arg16, (§ ass arg16 nil)),
-                        (Util'ret1 arg17, (§ ass arg17 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil)),
+                        (Util'ret1 arg9, (ß ass arg9 nil)),
+                        (Util'ret1 arg10, (ß ass arg10 nil)),
+                        (Util'ret1 arg11, (ß ass arg11 nil)),
+                        (Util'ret1 arg12, (ß ass arg12 nil)),
+                        (Util'ret1 arg13, (ß ass arg13 nil)),
+                        (Util'ret1 arg14, (ß ass arg14 nil)),
+                        (Util'ret1 arg15, (ß ass arg15 nil)),
+                        (Util'ret1 arg16, (ß ass arg16 nil)),
+                        (Util'ret1 arg17, (ß ass arg17 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                            (Util'ret1 arg2, (ß ass arg2 nil)),
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil))))
             6
                 (RestFn'''doInvoke-8 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil))))
             7
                 (RestFn'''doInvoke-9 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil))))
             8
                 (RestFn'''doInvoke-10 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil))))
             9
                 (RestFn'''doInvoke-11 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil))))
             10
                 (RestFn'''doInvoke-12 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil))))
             11
                 (RestFn'''doInvoke-13 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil))))
             12
                 (RestFn'''doInvoke-14 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil))))
             13
                 (RestFn'''doInvoke-15 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil))))
             14
                 (RestFn'''doInvoke-16 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil))))
             15
                 (RestFn'''doInvoke-17 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil))))
             16
                 (RestFn'''doInvoke-18 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                            (Util'ret1 arg17, (ß ass arg17 nil))))
             17
                 (RestFn'''doInvoke-19 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
+                    (Util'ret1 arg17, (ß ass arg17 nil)), nil)
             (do
                 (AFn'''throwArity this, 17)
             )
@@ -31417,401 +30773,401 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (Util'ret1 arg16, (§ ass arg16 nil)),
-                        (Util'ret1 arg17, (§ ass arg17 nil)),
-                        (Util'ret1 arg18, (§ ass arg18 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil)),
+                        (Util'ret1 arg9, (ß ass arg9 nil)),
+                        (Util'ret1 arg10, (ß ass arg10 nil)),
+                        (Util'ret1 arg11, (ß ass arg11 nil)),
+                        (Util'ret1 arg12, (ß ass arg12 nil)),
+                        (Util'ret1 arg13, (ß ass arg13 nil)),
+                        (Util'ret1 arg14, (ß ass arg14 nil)),
+                        (Util'ret1 arg15, (ß ass arg15 nil)),
+                        (Util'ret1 arg16, (ß ass arg16 nil)),
+                        (Util'ret1 arg17, (ß ass arg17 nil)),
+                        (Util'ret1 arg18, (ß ass arg18 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg2, (ß ass arg2 nil)),
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             6
                 (RestFn'''doInvoke-8 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             7
                 (RestFn'''doInvoke-9 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             8
                 (RestFn'''doInvoke-10 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             9
                 (RestFn'''doInvoke-11 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             10
                 (RestFn'''doInvoke-12 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             11
                 (RestFn'''doInvoke-13 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             12
                 (RestFn'''doInvoke-14 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             13
                 (RestFn'''doInvoke-15 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             14
                 (RestFn'''doInvoke-16 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             15
                 (RestFn'''doInvoke-17 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             16
                 (RestFn'''doInvoke-18 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             17
                 (RestFn'''doInvoke-19 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
+                    (Util'ret1 arg17, (ß ass arg17 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                            (Util'ret1 arg18, (ß ass arg18 nil))))
             18
                 (RestFn'''doInvoke-20 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
+                    (Util'ret1 arg17, (ß ass arg17 nil)),
+                    (Util'ret1 arg18, (ß ass arg18 nil)), nil)
             (do
                 (AFn'''throwArity this, 18)
             )
@@ -31824,442 +31180,442 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (Util'ret1 arg16, (§ ass arg16 nil)),
-                        (Util'ret1 arg17, (§ ass arg17 nil)),
-                        (Util'ret1 arg18, (§ ass arg18 nil)),
-                        (Util'ret1 arg19, (§ ass arg19 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil)),
+                        (Util'ret1 arg9, (ß ass arg9 nil)),
+                        (Util'ret1 arg10, (ß ass arg10 nil)),
+                        (Util'ret1 arg11, (ß ass arg11 nil)),
+                        (Util'ret1 arg12, (ß ass arg12 nil)),
+                        (Util'ret1 arg13, (ß ass arg13 nil)),
+                        (Util'ret1 arg14, (ß ass arg14 nil)),
+                        (Util'ret1 arg15, (ß ass arg15 nil)),
+                        (Util'ret1 arg16, (ß ass arg16 nil)),
+                        (Util'ret1 arg17, (ß ass arg17 nil)),
+                        (Util'ret1 arg18, (ß ass arg18 nil)),
+                        (Util'ret1 arg19, (ß ass arg19 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg2, (ß ass arg2 nil)),
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             6
                 (RestFn'''doInvoke-8 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             7
                 (RestFn'''doInvoke-9 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             8
                 (RestFn'''doInvoke-10 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             9
                 (RestFn'''doInvoke-11 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             10
                 (RestFn'''doInvoke-12 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             11
                 (RestFn'''doInvoke-13 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             12
                 (RestFn'''doInvoke-14 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             13
                 (RestFn'''doInvoke-15 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             14
                 (RestFn'''doInvoke-16 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             15
                 (RestFn'''doInvoke-17 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             16
                 (RestFn'''doInvoke-18 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             17
                 (RestFn'''doInvoke-19 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
+                    (Util'ret1 arg17, (ß ass arg17 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             18
                 (RestFn'''doInvoke-20 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
+                    (Util'ret1 arg17, (ß ass arg17 nil)),
+                    (Util'ret1 arg18, (ß ass arg18 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                            (Util'ret1 arg19, (ß ass arg19 nil))))
             19
                 (RestFn'''doInvoke-21 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)),
-                    (Util'ret1 arg19, (§ ass arg19 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
+                    (Util'ret1 arg17, (ß ass arg17 nil)),
+                    (Util'ret1 arg18, (ß ass arg18 nil)),
+                    (Util'ret1 arg19, (ß ass arg19 nil)), nil)
             (do
                 (AFn'''throwArity this, 19)
             )
@@ -32272,485 +31628,485 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (Util'ret1 arg16, (§ ass arg16 nil)),
-                        (Util'ret1 arg17, (§ ass arg17 nil)),
-                        (Util'ret1 arg18, (§ ass arg18 nil)),
-                        (Util'ret1 arg19, (§ ass arg19 nil)),
-                        (Util'ret1 arg20, (§ ass arg20 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil)),
+                        (Util'ret1 arg9, (ß ass arg9 nil)),
+                        (Util'ret1 arg10, (ß ass arg10 nil)),
+                        (Util'ret1 arg11, (ß ass arg11 nil)),
+                        (Util'ret1 arg12, (ß ass arg12 nil)),
+                        (Util'ret1 arg13, (ß ass arg13 nil)),
+                        (Util'ret1 arg14, (ß ass arg14 nil)),
+                        (Util'ret1 arg15, (ß ass arg15 nil)),
+                        (Util'ret1 arg16, (ß ass arg16 nil)),
+                        (Util'ret1 arg17, (ß ass arg17 nil)),
+                        (Util'ret1 arg18, (ß ass arg18 nil)),
+                        (Util'ret1 arg19, (ß ass arg19 nil)),
+                        (Util'ret1 arg20, (ß ass arg20 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg2, (ß ass arg2 nil)),
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             6
                 (RestFn'''doInvoke-8 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             7
                 (RestFn'''doInvoke-9 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             8
                 (RestFn'''doInvoke-10 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             9
                 (RestFn'''doInvoke-11 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             10
                 (RestFn'''doInvoke-12 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             11
                 (RestFn'''doInvoke-13 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             12
                 (RestFn'''doInvoke-14 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             13
                 (RestFn'''doInvoke-15 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             14
                 (RestFn'''doInvoke-16 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             15
                 (RestFn'''doInvoke-17 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             16
                 (RestFn'''doInvoke-18 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             17
                 (RestFn'''doInvoke-19 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
+                    (Util'ret1 arg17, (ß ass arg17 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             18
                 (RestFn'''doInvoke-20 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
+                    (Util'ret1 arg17, (ß ass arg17 nil)),
+                    (Util'ret1 arg18, (ß ass arg18 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             19
                 (RestFn'''doInvoke-21 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)),
-                    (Util'ret1 arg19, (§ ass arg19 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
+                    (Util'ret1 arg17, (ß ass arg17 nil)),
+                    (Util'ret1 arg18, (ß ass arg18 nil)),
+                    (Util'ret1 arg19, (ß ass arg19 nil)),
                         (ArraySeq'create-1
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             20
                 (RestFn'''doInvoke-22 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)),
-                    (Util'ret1 arg19, (§ ass arg19 nil)),
-                    (Util'ret1 arg20, (§ ass arg20 nil)), nil)
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
+                    (Util'ret1 arg17, (ß ass arg17 nil)),
+                    (Util'ret1 arg18, (ß ass arg18 nil)),
+                    (Util'ret1 arg19, (ß ass arg19 nil)),
+                    (Util'ret1 arg20, (ß ass arg20 nil)), nil)
             (do
                 (AFn'''throwArity this, 20)
             )
@@ -32763,485 +32119,485 @@
             0
                 (RestFn'''doInvoke-2 this,
                     (RestFn'ontoArrayPrepend args,
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (Util'ret1 arg16, (§ ass arg16 nil)),
-                        (Util'ret1 arg17, (§ ass arg17 nil)),
-                        (Util'ret1 arg18, (§ ass arg18 nil)),
-                        (Util'ret1 arg19, (§ ass arg19 nil)),
-                        (Util'ret1 arg20, (§ ass arg20 nil))))
+                        (Util'ret1 arg1, (ß ass arg1 nil)),
+                        (Util'ret1 arg2, (ß ass arg2 nil)),
+                        (Util'ret1 arg3, (ß ass arg3 nil)),
+                        (Util'ret1 arg4, (ß ass arg4 nil)),
+                        (Util'ret1 arg5, (ß ass arg5 nil)),
+                        (Util'ret1 arg6, (ß ass arg6 nil)),
+                        (Util'ret1 arg7, (ß ass arg7 nil)),
+                        (Util'ret1 arg8, (ß ass arg8 nil)),
+                        (Util'ret1 arg9, (ß ass arg9 nil)),
+                        (Util'ret1 arg10, (ß ass arg10 nil)),
+                        (Util'ret1 arg11, (ß ass arg11 nil)),
+                        (Util'ret1 arg12, (ß ass arg12 nil)),
+                        (Util'ret1 arg13, (ß ass arg13 nil)),
+                        (Util'ret1 arg14, (ß ass arg14 nil)),
+                        (Util'ret1 arg15, (ß ass arg15 nil)),
+                        (Util'ret1 arg16, (ß ass arg16 nil)),
+                        (Util'ret1 arg17, (ß ass arg17 nil)),
+                        (Util'ret1 arg18, (ß ass arg18 nil)),
+                        (Util'ret1 arg19, (ß ass arg19 nil)),
+                        (Util'ret1 arg20, (ß ass arg20 nil))))
             1
                 (RestFn'''doInvoke-3 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg2, (ß ass arg2 nil)),
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             2
                 (RestFn'''doInvoke-4 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg3, (ß ass arg3 nil)),
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             3
                 (RestFn'''doInvoke-5 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg4, (ß ass arg4 nil)),
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             4
                 (RestFn'''doInvoke-6 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg5, (ß ass arg5 nil)),
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             5
                 (RestFn'''doInvoke-7 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg6, (ß ass arg6 nil)),
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             6
                 (RestFn'''doInvoke-8 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg7, (ß ass arg7 nil)),
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             7
                 (RestFn'''doInvoke-9 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg8, (ß ass arg8 nil)),
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             8
                 (RestFn'''doInvoke-10 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg9, (ß ass arg9 nil)),
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             9
                 (RestFn'''doInvoke-11 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg10, (ß ass arg10 nil)),
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             10
                 (RestFn'''doInvoke-12 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg11, (ß ass arg11 nil)),
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             11
                 (RestFn'''doInvoke-13 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg12, (ß ass arg12 nil)),
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             12
                 (RestFn'''doInvoke-14 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg13, (ß ass arg13 nil)),
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             13
                 (RestFn'''doInvoke-15 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg14, (ß ass arg14 nil)),
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             14
                 (RestFn'''doInvoke-16 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg15, (ß ass arg15 nil)),
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             15
                 (RestFn'''doInvoke-17 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg16, (ß ass arg16 nil)),
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             16
                 (RestFn'''doInvoke-18 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg17, (ß ass arg17 nil)),
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             17
                 (RestFn'''doInvoke-19 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
+                    (Util'ret1 arg17, (ß ass arg17 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg18, (ß ass arg18 nil)),
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             18
                 (RestFn'''doInvoke-20 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
+                    (Util'ret1 arg17, (ß ass arg17 nil)),
+                    (Util'ret1 arg18, (ß ass arg18 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg19, (ß ass arg19 nil)),
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             19
                 (RestFn'''doInvoke-21 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)),
-                    (Util'ret1 arg19, (§ ass arg19 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
+                    (Util'ret1 arg17, (ß ass arg17 nil)),
+                    (Util'ret1 arg18, (ß ass arg18 nil)),
+                    (Util'ret1 arg19, (ß ass arg19 nil)),
                         (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                            (Util'ret1 arg20, (ß ass arg20 nil))))
             20
                 (RestFn'''doInvoke-22 this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)),
-                    (Util'ret1 arg19, (§ ass arg19 nil)),
-                    (Util'ret1 arg20, (§ ass arg20 nil)),
+                    (Util'ret1 arg1, (ß ass arg1 nil)),
+                    (Util'ret1 arg2, (ß ass arg2 nil)),
+                    (Util'ret1 arg3, (ß ass arg3 nil)),
+                    (Util'ret1 arg4, (ß ass arg4 nil)),
+                    (Util'ret1 arg5, (ß ass arg5 nil)),
+                    (Util'ret1 arg6, (ß ass arg6 nil)),
+                    (Util'ret1 arg7, (ß ass arg7 nil)),
+                    (Util'ret1 arg8, (ß ass arg8 nil)),
+                    (Util'ret1 arg9, (ß ass arg9 nil)),
+                    (Util'ret1 arg10, (ß ass arg10 nil)),
+                    (Util'ret1 arg11, (ß ass arg11 nil)),
+                    (Util'ret1 arg12, (ß ass arg12 nil)),
+                    (Util'ret1 arg13, (ß ass arg13 nil)),
+                    (Util'ret1 arg14, (ß ass arg14 nil)),
+                    (Util'ret1 arg15, (ß ass arg15 nil)),
+                    (Util'ret1 arg16, (ß ass arg16 nil)),
+                    (Util'ret1 arg17, (ß ass arg17 nil)),
+                    (Util'ret1 arg18, (ß ass arg18 nil)),
+                    (Util'ret1 arg19, (ß ass arg19 nil)),
+                    (Util'ret1 arg20, (ß ass arg20 nil)),
                         (ArraySeq'create-1 args))
             (do
                 (AFn'''throwArity this, 21)
@@ -33497,7 +32853,7 @@
                     (throw (Util'sneakyThrow e))
                 )
             )
-            (§ ass RT'CHECK_SPECS RT'INSTRUMENT_MACROS)
+            (ß ass RT'CHECK_SPECS RT'INSTRUMENT_MACROS)
         )
     )
 
@@ -33565,7 +32921,7 @@
                             RT'WARN_ON_REFLECTION (IDeref'''deref RT'WARN_ON_REFLECTION)
                         ])
                     ))
-                    (§ ass loaded (some? (RT'loadClassForName (str (.replace scriptbase, \/, \.) RT'LOADER_SUFFIX))))
+                    (ß ass loaded (some? (RT'loadClassForName (str (.replace scriptbase, \/, \.) RT'LOADER_SUFFIX))))
                     (finally
                         (Var'popThreadBindings)
                     )
@@ -33678,7 +33034,7 @@
                         #_foreign
                         (§ defn #_"Object" next [#_"Iterator" this]
                             (let [_ (.charAt s, (:i this))]
-                                (§ ass (:i this) (inc (:i this)))
+                                (ß ass (:i this) (inc (:i this)))
                                 _
                             )
                         )
@@ -33725,7 +33081,7 @@
     (defn #_"int" RT'count [#_"Object" o]
         (if (§ instance? Counted o)
             (.count (cast' Counted o))
-            (RT'countFrom (Util'ret1 o, (§ ass o nil)))
+            (RT'countFrom (Util'ret1 o, (ß ass o nil)))
         )
     )
 
@@ -33734,7 +33090,7 @@
             (nil? o)
                 0
             (§ instance? IPersistentCollection o)
-                (let [#_"ISeq" s (RT'seq o) _ (§ ass o nil)]
+                (let [#_"ISeq" s (RT'seq o) _ (ß ass o nil)]
                     (loop-when [#_"int" i 0 s s] (some? s) => i
                         (if (§ instance? Counted s)
                             (+ i (.count s))
@@ -33951,7 +33307,7 @@
     (defn #_"Object" RT'nth-2 [#_"Object" coll, #_"int" n]
         (if (§ instance? Indexed coll)
             (Indexed'''nth-2 (cast' Indexed coll), n)
-            (RT'nthFrom-2 (Util'ret1 coll, (§ ass coll nil)), n)
+            (RT'nthFrom-2 (Util'ret1 coll, (ß ass coll nil)), n)
         )
     )
 
@@ -33976,7 +33332,7 @@
                     )
                 )
             (§ instance? Sequential coll)
-                (let [#_"ISeq" s (RT'seq coll) _ (§ ass coll nil)]
+                (let [#_"ISeq" s (RT'seq coll) _ (ß ass coll nil)]
                     (loop-when [#_"int" i 0 s s] (and (<= i n) (some? s)) => (throw (IndexOutOfBoundsException.))
                         (if (= i n)
                             (.first s)
@@ -34028,7 +33384,7 @@
                     )
                 )
             (§ instance? Sequential coll)
-                (let [#_"ISeq" s (RT'seq coll) _ (§ ass coll nil)]
+                (let [#_"ISeq" s (RT'seq coll) _ (ß ass coll nil)]
                     (loop-when [#_"int" i 0 s s] (and (<= i n) (some? s)) => notFound
                         (if (= i n)
                             (.first s)
@@ -34507,7 +33863,7 @@
     (defn #_"ISeq" RT'arrayToList [#_"Object[]" a]
         (let [#_"ISeq" s nil]
             (loop-when-recur [#_"int" i (dec (alength a))] (<= 0 i) [(dec i)]
-                (§ ass s (cast' ISeq (RT'cons (aget a i), s)))
+                (ß ass s (cast' ISeq (RT'cons (aget a i), s)))
             )
             s
         )
@@ -34575,7 +33931,7 @@
     (defn #_"Object[]" RT'seqToPassedArray [#_"ISeq" s, #_"Object[]" passed]
         (let [#_"Object[]" dest passed #_"int" len (RT'count s)]
             (when (< (alength dest) len)
-                (§ ass dest (§ cast Object[] (Array/newInstance (.getComponentType (.getClass passed)), len)))
+                (ß ass dest (§ cast Object[] (Array/newInstance (.getComponentType (.getClass passed)), len)))
             )
             (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (.next s)]
                 (aset dest i (.first s))
@@ -34897,7 +34253,7 @@
         (try
             (RT'classForNameNonLoading name)
             (catch ClassNotFoundException _
-                (§ return nil)
+                (ß return nil)
             )
             (catch Exception e
                 (throw (Util'sneakyThrow e))
@@ -34965,9 +34321,7 @@
 
     (defn #_"SeqIterator" SeqIterator'new [#_"Object" o]
         (let [this (SeqIterator'init)]
-            (§ ass this (assoc this :seq SeqIterator'START))
-            (§ ass this (assoc this :next o))
-            this
+            (assoc this :seq SeqIterator'START :next o)
         )
     )
 
@@ -34975,12 +34329,12 @@
     (§ defn #_"boolean" hasNext [#_"SeqIterator" this]
         (cond (= (:seq this) SeqIterator'START)
             (do
-                (§ ass this (assoc this :seq nil))
-                (§ ass this (assoc this :next (RT'seq (:next this))))
+                (ß ass this (assoc this :seq nil))
+                (ß ass this (assoc this :next (RT'seq (:next this))))
             )
             (= (:seq this) (:next this))
             (do
-                (§ ass this (assoc this :next (RT'next (:seq this))))
+                (ß ass this (assoc this :next (RT'next (:seq this))))
             )
         )
         (some? (:next this))
@@ -34991,7 +34345,7 @@
         (when (not (.hasNext this))
             (throw (NoSuchElementException.))
         )
-        (§ ass this (assoc this :seq (:next this)))
+        (ß ass this (assoc this :seq (:next this)))
         (RT'first (:next this))
     )
 
@@ -35020,9 +34374,7 @@
 
     (defn #_"StringSeq" StringSeq'new [#_"IPersistentMap" meta, #_"CharSequence" s, #_"int" i]
         (let [this (merge (ASeq'new-1 meta) (StringSeq'init))]
-            (§ ass this (assoc this :s s))
-            (§ ass this (assoc this :i i))
-            this
+            (assoc this :s s :i i)
         )
     )
 
@@ -35098,17 +34450,14 @@
 
     (defn- #_"Symbol" Symbol'new-2 [#_"String" ns_interned, #_"String" name_interned]
         (let [this (merge (AFn'new) (Symbol'init))]
-            (§ ass this (assoc this :name name_interned))
-            (§ ass this (assoc this :ns ns_interned))
-            (§ ass this (assoc this :_meta nil))
-            this
+            (assoc this :name name_interned :ns ns_interned :_meta nil)
         )
     )
 
     #_foreign
     (§ defn #_"String" toString [#_"Symbol" this]
         (when (nil? (:_str this))
-            (§ ass this (assoc this :_str (if (some? (:ns this)) (str (:ns this) "/" (:name this)) (:name this))))
+            (ß ass this (assoc this :_str (if (some? (:ns this)) (str (:ns this) "/" (:name this)) (:name this))))
         )
         (:_str this)
     )
@@ -35145,7 +34494,7 @@
     #_override
     (defn #_"int" IHashEq'''hasheq--Symbol [#_"Symbol" this]
         (when (zero? (:_hasheq this))
-            (§ ass this (assoc this :_hasheq (Util'hashCombine (Murmur3'hashUnencodedChars (:name this)), (Util'hash (:ns this)))))
+            (ß ass this (assoc this :_hasheq (Util'hashCombine (Murmur3'hashUnencodedChars (:name this)), (Util'hash (:ns this)))))
         )
         (:_hasheq this)
     )
@@ -35157,10 +34506,7 @@
 
     (defn- #_"Symbol" Symbol'new-3 [#_"IPersistentMap" meta, #_"String" ns, #_"String" name]
         (let [this (merge (AFn'new) (Symbol'init))]
-            (§ ass this (assoc this :name name))
-            (§ ass this (assoc this :ns ns))
-            (§ ass this (assoc this :_meta meta))
-            this
+            (assoc this :name name :ns ns :_meta meta)
         )
     )
 
@@ -35193,195 +34539,6 @@
     #_override
     (defn #_"IPersistentMap" IMeta'''meta--Symbol [#_"Symbol" this]
         (:_meta this)
-    )
-)
-)
-
-(java-ns cloiure.lang.TransactionalHashMap
-
-(§ import java.util.concurrent.ConcurrentMap)
-(§ import java.util.*)
-
-(class-ns TransactionalHashMap #_"<K, V>" (§ extends AbstractMap #_"<K, V>") (§ implements ConcurrentMap #_"<K, V>")
-    (defn- #_"TransactionalHashMap" TransactionalHashMap'init []
-        (hash-map
-            #_"Ref[]" :bins nil
-        )
-    )
-
-    (defn #_"TransactionalHashMap" TransactionalHashMap'new-0 []
-        (TransactionalHashMap'new-1i 421)
-    )
-
-    (defn #_"TransactionalHashMap" TransactionalHashMap'new-1i [#_"int" nBins]
-        (let [this (merge (§ foreign AbstractMap'new) (TransactionalHashMap'init))]
-            (§ ass this (assoc this :bins (make-array #_"Ref" Object nBins)))
-            (loop-when-recur [#_"int" i 0] (< i nBins) [(inc i)]
-                (aset (:bins this) i (Ref'new-1 PersistentHashMap'EMPTY))
-            )
-            this
-        )
-    )
-
-    (defn #_"TransactionalHashMap" TransactionalHashMap'new-1m [#_"Map<? extends K, ? extends V>" m]
-        (let [this (TransactionalHashMap'new-1i (.size m))]
-            (.putAll this, m)
-            this
-        )
-    )
-
-    #_method
-    (defn #_"IPersistentMap" TransactionalHashMap''mapAt [#_"TransactionalHashMap" this, #_"int" bin]
-        (cast' IPersistentMap (IDeref'''deref (aget (:bins this) bin)))
-    )
-
-    #_method
-    (defn #_"int" TransactionalHashMap''binFor [#_"TransactionalHashMap" this, #_"Object" k]
-        ;; spread hashes, a la Cliff Click
-        (let [#_"int" h (.hashCode k)]
-            (§ ass h (bit-xor h (bit-xor (>>> h 20) (>>> h 12))))
-            (§ ass h (bit-xor h (bit-xor (>>> h 7) (>>> h 4))))
-            (% h (alength (:bins this)))
-        )
-    )
-
-    #_foreign
-    (§ defn #_"Map$Entry" entryAt [#_"TransactionalHashMap" this, #_"Object" k]
-        (Associative'''entryAt (TransactionalHashMap''mapAt this, (TransactionalHashMap''binFor this, k)), k)
-    )
-
-    #_foreign
-    (§ defn #_"int" size [#_"TransactionalHashMap" this]
-        (let [#_"int" n 0]
-            (loop-when-recur [#_"int" i 0] (< i (alength (:bins this))) [(inc i)]
-                (§ ass n (+ n (.count (TransactionalHashMap''mapAt this, i))))
-            )
-            n
-        )
-    )
-
-    #_foreign
-    (§ defn #_"boolean" isEmpty [#_"TransactionalHashMap" this]
-        (zero? (.size this))
-    )
-
-    #_foreign
-    (§ defn #_"boolean" containsKey [#_"TransactionalHashMap" this, #_"Object" k]
-        (some? (.entryAt this, k))
-    )
-
-    #_foreign
-    (§ defn #_"V" get [#_"TransactionalHashMap" this, #_"Object" k]
-        (when-let [#_"Map$Entry" e (.entryAt this, k)]
-            (cast' V (.getValue e))
-        )
-    )
-
-    #_foreign
-    (§ defn #_"V" put [#_"TransactionalHashMap" this, #_"K" k, #_"V" v]
-        (let [#_"Ref" r (aget (:bins this) (TransactionalHashMap''binFor this, k))
-              #_"IPersistentMap" m (cast' IPersistentMap (IDeref'''deref r))
-              #_"Object" ret (ILookup'''valAt-2 m, k)]
-            (Ref''set r, (IPersistentMap'''assoc m, k, v))
-            (cast' V ret)
-        )
-    )
-
-    #_foreign
-    (§ defn #_"V" remove [#_"TransactionalHashMap" this, #_"Object" k]
-        (let [#_"Ref" r (aget (:bins this) (TransactionalHashMap''binFor this, k))
-              #_"IPersistentMap" m (cast' IPersistentMap (IDeref'''deref r))
-              #_"Object" ret (ILookup'''valAt-2 m, k)]
-            (Ref''set r, (IPersistentMap'''without m, k))
-            (cast' V ret)
-        )
-    )
-
-    #_foreign
-    (§ defn #_"void" putAll [#_"TransactionalHashMap" this, #_"Map<? extends K, ? extends V>" m]
-        (loop-when-recur [#_"Iterator" i (.iterator (.entrySet m))] (.hasNext i) [i]
-            (let [#_"Map$Entry<K, V>" e (cast Map$Entry (.next i))]
-                (.put this, (.getKey e), (.getValue e))
-            )
-        )
-        nil
-    )
-
-    #_foreign
-    (§ defn #_"void" clear [#_"TransactionalHashMap" this]
-        (dotimes [#_"int" i (alength (:bins this))]
-            (let [#_"Ref" r (aget (:bins this) i)
-                  #_"IPersistentMap" m (cast' IPersistentMap (IDeref'''deref r))]
-                (when (pos? (.count m))
-                    (Ref''set r, PersistentHashMap'EMPTY)
-                )
-            )
-        )
-        nil
-    )
-
-    #_foreign
-    (§ defn #_"Set<Map$Entry<K, V>>" entrySet [#_"TransactionalHashMap" this]
-        (let [#_"ArrayList<Map$Entry<K, V>>" entries (ArrayList. (alength (:bins this)))]
-            (dotimes [#_"int" i (alength (:bins this))]
-                (let [#_"IPersistentMap" m (TransactionalHashMap''mapAt this, i)]
-                    (when (pos? (.count m))
-                        (.addAll entries, (cast Collection (RT'seq m)))
-                    )
-                )
-            )
-            (§ reify AbstractSet<Map$Entry<K, V>>()
-                #_foreign
-                (§ defn #_"Iterator" iterator [#_"AbstractSet<Map$Entry<K, V>>" this]
-                    (.iterator (Collections/unmodifiableList entries))
-                )
-
-                #_foreign
-                (§ defn #_"int" size [#_"AbstractSet<Map$Entry<K, V>>" this]
-                    (.size entries)
-                )
-            )
-        )
-    )
-
-    #_foreign
-    (§ defn #_"V" putIfAbsent [#_"TransactionalHashMap" this, #_"K" k, #_"V" v]
-        (let [#_"Ref" r (aget (:bins this) (TransactionalHashMap''binFor this, k)) #_"IPersistentMap" m (cast' IPersistentMap (IDeref'''deref r))]
-            (let-when [#_"Map$Entry" e (Associative'''entryAt m, k)] (nil? e) => (cast' V (.getValue e))
-                (Ref''set r, (IPersistentMap'''assoc m, k, v))
-                nil
-            )
-        )
-    )
-
-    #_foreign
-    (§ defn #_"boolean" remove [#_"TransactionalHashMap" this, #_"Object" k, #_"Object" v]
-        (let [#_"Ref" r (aget (:bins this) (TransactionalHashMap''binFor this, k)) #_"IPersistentMap" m (cast' IPersistentMap (IDeref'''deref r))]
-            (let-when [#_"Map$Entry" e (Associative'''entryAt m, k)] (and (some? e) (.equals (.getValue e), v)) => false
-                (Ref''set r, (IPersistentMap'''without m, k))
-                true
-            )
-        )
-    )
-
-    #_foreign
-    (§ defn #_"boolean" replace [#_"TransactionalHashMap" this, #_"K" k, #_"V" oldv, #_"V" newv]
-        (let [#_"Ref" r (aget (:bins this) (TransactionalHashMap''binFor this, k)) #_"IPersistentMap" m (cast' IPersistentMap (IDeref'''deref r))]
-            (let-when [#_"Map$Entry" e (Associative'''entryAt m, k)] (and (some? e) (.equals (.getValue e), oldv)) => false
-                (Ref''set r, (IPersistentMap'''assoc m, k, newv))
-                true
-            )
-        )
-    )
-
-    #_foreign
-    (§ defn #_"V" replace [#_"TransactionalHashMap" this, #_"K" k, #_"V" v]
-        (let [#_"Ref" r (aget (:bins this) (TransactionalHashMap''binFor this, k)) #_"IPersistentMap" m (cast' IPersistentMap (IDeref'''deref r))]
-            (when-let [#_"Map$Entry" e (Associative'''entryAt m, k)]
-                (Ref''set r, (IPersistentMap'''assoc m, k, v))
-                (cast' V (.getValue e))
-            )
-        )
     )
 )
 )
@@ -35432,8 +34589,7 @@
 
     (defn #_"SingleBuffer" SingleBuffer'new [#_"Object" o]
         (let [this (SingleBuffer'init)]
-            (§ ass this (assoc this :val o))
-            this
+            (assoc this :val o)
         )
     )
 
@@ -35451,7 +34607,7 @@
             (throw (IllegalStateException. "Removing object from empty buffer"))
         )
         (let [#_"Object" ret (:val this)]
-            (§ ass this (assoc this :val TransformerIterator'NONE))
+            (ß ass this (assoc this :val TransformerIterator'NONE))
             ret
         )
     )
@@ -35515,8 +34671,7 @@
 
     (defn #_"MultiIterator" MultiIterator'new [#_"Iterator[]" iters]
         (let [this (MultiIterator'init)]
-            (§ ass this (assoc this :iters iters))
-            this
+            (assoc this :iters iters)
         )
     )
 
@@ -35569,8 +34724,8 @@
 
     (defn- #_"TransformerIterator" TransformerIterator'new [#_"IFn" xform, #_"Iterator" sourceIter, #_"boolean" multi]
         (let [this (TransformerIterator'init)]
-            (§ ass this (assoc this :sourceIter sourceIter))
-            (§ ass this (assoc this :xf (cast' IFn (IFn'''invoke-2 xform,
+            (ß ass this (assoc this :sourceIter sourceIter))
+            (ß ass this (assoc this :xf (cast' IFn (IFn'''invoke-2 xform,
                 (§ reify AFn()
                     #_override
                     (defn #_"Object" IFn'''invoke-1--AFn [#_"AFn" this]
@@ -35584,13 +34739,12 @@
 
                     #_override
                     (defn #_"Object" IFn'''invoke-3--AFn [#_"AFn" this, #_"Object" acc, #_"Object" o]
-                        (§ ass this (assoc this :buffer (Buffer'''add (:buffer this), o)))
+                        (ß ass this (assoc this :buffer (Buffer'''add (:buffer this), o)))
                         acc
                     )
                 )
             ))))
-            (§ ass this (assoc this :multi multi))
-            this
+            (assoc this :multi multi)
         )
     )
 
@@ -35615,7 +34769,7 @@
                     true
                 (not (Buffer'''isEmpty (:buffer this)))
                     (do
-                        (§ ass this (assoc this :next (Buffer'''remove (:buffer this))))
+                        (ß ass this (assoc this :next (Buffer'''remove (:buffer this))))
                         (recur)
                     )
                 (:completed this)
@@ -35628,14 +34782,14 @@
                             )]
                         (when (RT'isReduced it)
                             (IFn'''invoke-2 (:xf this), nil)
-                            (§ ass this (assoc this :completed true))
+                            (ß ass this (assoc this :completed true))
                         )
                         (recur)
                     )
                 :else
                     (do
                         (IFn'''invoke-2 (:xf this), nil)
-                        (§ ass this (assoc this :completed true))
+                        (ß ass this (assoc this :completed true))
                         (recur)
                     )
             )
@@ -35651,7 +34805,7 @@
     (§ defn #_"Object" next [#_"TransformerIterator" this]
         (when (.hasNext this) => (throw (NoSuchElementException.))
             (let [#_"Object" ret (:next this)]
-                (§ ass this (assoc this :next TransformerIterator'NONE))
+                (ß ass this (assoc this :next TransformerIterator'NONE))
                 ret
             )
         )
@@ -35904,9 +35058,7 @@
 
     (defn #_"TBox" TBox'new [#_"Thread" t, #_"Object" val]
         (let [this (TBox'init)]
-            (§ ass this (assoc this :thread t))
-            (§ ass this (assoc this :val val))
-            this
+            (assoc this :thread t :val val)
         )
     )
 )
@@ -35920,8 +35072,7 @@
 
     (defn #_"Unbound" Unbound'new [#_"Var" v]
         (let [this (merge (AFn'new) (Unbound'init))]
-            (§ ass this (assoc this :v v))
-            this
+            (assoc this :v v)
         )
     )
 
@@ -35950,9 +35101,7 @@
 
     (defn #_"Frame" Frame'new [#_"Associative" bindings, #_"Frame" prev]
         (let [this (Frame'init)]
-            (§ ass this (assoc this :bindings bindings))
-            (§ ass this (assoc this :prev prev))
-            this
+            (assoc this :bindings bindings :prev prev)
         )
     )
 )
@@ -36041,18 +35190,18 @@
     (defn #_"Var" Var'new
         ([#_"Namespace" ns, #_"Symbol" sym]
             (let [this (merge (ARef'new-0) (Var'init))]
-                (§ ass this (assoc this :ns ns))
-                (§ ass this (assoc this :sym sym))
-                (§ ass this (assoc this :threadBound (AtomicBoolean. false)))
-                (§ ass this (assoc this :root (Unbound'new this)))
+                (ß ass this (assoc this :ns ns))
+                (ß ass this (assoc this :sym sym))
+                (ß ass this (assoc this :threadBound (AtomicBoolean. false)))
+                (ß ass this (assoc this :root (Unbound'new this)))
                 (Var''setMeta this, PersistentHashMap'EMPTY)
                 this
             )
         )
         ([#_"Namespace" ns, #_"Symbol" sym, #_"Object" root]
             (let [this (Var'new ns, sym)]
-                (§ ass this (assoc this :root root))
-                (§ ass Var'rev (inc Var'rev))
+                (ß ass this (assoc this :root root))
+                (ß ass Var'rev (inc Var'rev))
                 this
             )
         )
@@ -36103,7 +35252,7 @@
         (when (Var''hasRoot this)
             (ARef''validate this, vf, (:root this))
         )
-        (§ ass this (assoc this :validator vf))
+        (ß ass this (assoc this :validator vf))
         nil
     )
 
@@ -36119,7 +35268,7 @@
         (let [#_"TBox" b (Var''getThreadBinding this)]
             (when (some? b) => (throw (IllegalStateException. (str "Can't change/establish root binding of: " (:sym this) " with set")))
                 (when (= (Thread/currentThread) (:thread b)) => (throw (IllegalStateException. (str "Can't set!: " (:sym this) " from non-binding thread")))
-                    (§ ass b (assoc b :val val))
+                    (ß ass b (assoc b :val val))
                     val
                 )
             )
@@ -36187,8 +35336,8 @@
         (§ sync this
             (ARef''validate this, (IRef'''getValidator this), root)
             (let [#_"Object" oldroot (:root this)]
-                (§ ass this (assoc this :root root))
-                (§ ass Var'rev (inc Var'rev))
+                (ß ass this (assoc this :root root))
+                (ß ass Var'rev (inc Var'rev))
                 (IReference'''alterMeta this, Var'dissoc, (RT'list-1 Var'macroKey))
                 (ARef''notifyWatches this, oldroot, (:root this))
             )
@@ -36201,8 +35350,8 @@
         (§ sync this
             (ARef''validate this, (IRef'''getValidator this), root)
             (let [#_"Object" oldroot (:root this)]
-                (§ ass this (assoc this :root root))
-                (§ ass Var'rev (inc Var'rev))
+                (ß ass this (assoc this :root root))
+                (ß ass Var'rev (inc Var'rev))
                 (ARef''notifyWatches this, oldroot, root)
             )
         )
@@ -36212,8 +35361,8 @@
     #_method
     (defn #_"void" Var''unbindRoot [#_"Var" this]
         (§ sync this
-            (§ ass this (assoc this :root (Unbound'new this)))
-            (§ ass Var'rev (inc Var'rev))
+            (ß ass this (assoc this :root (Unbound'new this)))
+            (ß ass Var'rev (inc Var'rev))
         )
         nil
     )
@@ -36224,8 +35373,8 @@
             (let [#_"Object" newRoot (IFn'''invoke-2 fn, (:root this))]
                 (ARef''validate this, (IRef'''getValidator this), newRoot)
                 (let [#_"Object" oldroot (:root this)]
-                    (§ ass this (assoc this :root newRoot))
-                    (§ ass Var'rev (inc Var'rev))
+                    (ß ass this (assoc this :root newRoot))
+                    (ß ass Var'rev (inc Var'rev))
                     (ARef''notifyWatches this, oldroot, newRoot)
                 )
             )
@@ -36239,8 +35388,8 @@
             (let [#_"Object" newRoot (IFn'''applyTo fn, (RT'cons (:root this), args))]
                 (ARef''validate this, (IRef'''getValidator this), newRoot)
                 (let [#_"Object" oldroot (:root this)]
-                    (§ ass this (assoc this :root newRoot))
-                    (§ ass Var'rev (inc Var'rev))
+                    (ß ass this (assoc this :root newRoot))
+                    (ß ass Var'rev (inc Var'rev))
                     (ARef''notifyWatches this, oldroot, newRoot)
                     newRoot
                 )
@@ -36317,356 +35466,356 @@
 
     #_override
     (defn #_"Object" IFn'''invoke-2--Var [#_"Var" this, #_"Object" arg1]
-        (IFn'''invoke-2 (Var''fn this), (Util'ret1 arg1, (§ ass arg1 nil)))
+        (IFn'''invoke-2 (Var''fn this), (Util'ret1 arg1, (ß ass arg1 nil)))
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-3--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2]
         (IFn'''invoke-3 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-4--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
         (IFn'''invoke-4 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-5--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
         (IFn'''invoke-5 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-6--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
         (IFn'''invoke-6 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-7--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
         (IFn'''invoke-7 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-8--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
         (IFn'''invoke-8 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-9--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
         (IFn'''invoke-9 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-10--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
         (IFn'''invoke-10 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-11--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
         (IFn'''invoke-11 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-12--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
         (IFn'''invoke-12 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-13--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
         (IFn'''invoke-13 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-14--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
         (IFn'''invoke-14 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-15--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
         (IFn'''invoke-15 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil)),
+            (Util'ret1 arg14, (ß ass arg14 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-16--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
         (IFn'''invoke-16 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil)),
+            (Util'ret1 arg14, (ß ass arg14 nil)),
+            (Util'ret1 arg15, (ß ass arg15 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-17--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
         (IFn'''invoke-17 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil)),
+            (Util'ret1 arg14, (ß ass arg14 nil)),
+            (Util'ret1 arg15, (ß ass arg15 nil)),
+            (Util'ret1 arg16, (ß ass arg16 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-18--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
         (IFn'''invoke-18 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil)),
+            (Util'ret1 arg14, (ß ass arg14 nil)),
+            (Util'ret1 arg15, (ß ass arg15 nil)),
+            (Util'ret1 arg16, (ß ass arg16 nil)),
+            (Util'ret1 arg17, (ß ass arg17 nil))
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-19--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
         (IFn'''invoke-19 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil)),
-            (Util'ret1 arg18, (§ ass arg18 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil)),
+            (Util'ret1 arg14, (ß ass arg14 nil)),
+            (Util'ret1 arg15, (ß ass arg15 nil)),
+            (Util'ret1 arg16, (ß ass arg16 nil)),
+            (Util'ret1 arg17, (ß ass arg17 nil)),
+            (Util'ret1 arg18, (ß ass arg18 nil))
         )
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-20--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
         (IFn'''invoke-20 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil)),
-            (Util'ret1 arg18, (§ ass arg18 nil)),
-            (Util'ret1 arg19, (§ ass arg19 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil)),
+            (Util'ret1 arg14, (ß ass arg14 nil)),
+            (Util'ret1 arg15, (ß ass arg15 nil)),
+            (Util'ret1 arg16, (ß ass arg16 nil)),
+            (Util'ret1 arg17, (ß ass arg17 nil)),
+            (Util'ret1 arg18, (ß ass arg18 nil)),
+            (Util'ret1 arg19, (ß ass arg19 nil))
         )
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-21--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
         (IFn'''invoke-21 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil)),
-            (Util'ret1 arg18, (§ ass arg18 nil)),
-            (Util'ret1 arg19, (§ ass arg19 nil)),
-            (Util'ret1 arg20, (§ ass arg20 nil))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil)),
+            (Util'ret1 arg14, (ß ass arg14 nil)),
+            (Util'ret1 arg15, (ß ass arg15 nil)),
+            (Util'ret1 arg16, (ß ass arg16 nil)),
+            (Util'ret1 arg17, (ß ass arg17 nil)),
+            (Util'ret1 arg18, (ß ass arg18 nil)),
+            (Util'ret1 arg19, (ß ass arg19 nil)),
+            (Util'ret1 arg20, (ß ass arg20 nil))
         )
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-22--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args]
         (IFn'''invoke-22 (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil)),
-            (Util'ret1 arg18, (§ ass arg18 nil)),
-            (Util'ret1 arg19, (§ ass arg19 nil)),
-            (Util'ret1 arg20, (§ ass arg20 nil)),
-            (§ cast Object[] (Util'ret1 args, (§ ass args nil)))
+            (Util'ret1 arg1, (ß ass arg1 nil)),
+            (Util'ret1 arg2, (ß ass arg2 nil)),
+            (Util'ret1 arg3, (ß ass arg3 nil)),
+            (Util'ret1 arg4, (ß ass arg4 nil)),
+            (Util'ret1 arg5, (ß ass arg5 nil)),
+            (Util'ret1 arg6, (ß ass arg6 nil)),
+            (Util'ret1 arg7, (ß ass arg7 nil)),
+            (Util'ret1 arg8, (ß ass arg8 nil)),
+            (Util'ret1 arg9, (ß ass arg9 nil)),
+            (Util'ret1 arg10, (ß ass arg10 nil)),
+            (Util'ret1 arg11, (ß ass arg11 nil)),
+            (Util'ret1 arg12, (ß ass arg12 nil)),
+            (Util'ret1 arg13, (ß ass arg13 nil)),
+            (Util'ret1 arg14, (ß ass arg14 nil)),
+            (Util'ret1 arg15, (ß ass arg15 nil)),
+            (Util'ret1 arg16, (ß ass arg16 nil)),
+            (Util'ret1 arg17, (ß ass arg17 nil)),
+            (Util'ret1 arg18, (ß ass arg18 nil)),
+            (Util'ret1 arg19, (ß ass arg19 nil)),
+            (Util'ret1 arg20, (ß ass arg20 nil)),
+            (§ cast Object[] (Util'ret1 args, (ß ass args nil)))
         )
     )
 
@@ -36707,8 +35856,7 @@
 
     (defn #_"Volatile" Volatile'new [#_"Object" val]
         (let [this (Volatile'init)]
-            (§ ass this (assoc this :val val))
-            this
+            (assoc this :val val)
         )
     )
 
@@ -36719,7 +35867,7 @@
 
     #_method
     (defn #_"Object" Volatile''reset [#_"Volatile" this, #_"Object" newval]
-        (§ ass this (assoc this :val newval))
+        (ß ass this (assoc this :val newval))
         newval
     )
 )
