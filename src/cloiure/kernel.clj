@@ -3481,33 +3481,33 @@
                             (ARef''notifyWatches (:agent action), oldval, newval)
                             nil
                         )
-                        (catch Throwable e
-                            e
+                        (catch Throwable error
+                            error
+                        )
+                    )
+                  error
+                    (when (some? error) => (do (Agent'releasePendingSends) nil)
+                        (.set Agent'nested, nil) ;; allow errorHandler to send
+                        (when (some? (:errorHandler (:agent action)))
+                            (try
+                                (IFn'''invoke-3 (:errorHandler (:agent action)), (:agent action), error)
+                                (catch Throwable _
+                                    ;; ignore errorHandler errors
+                                )
+                            )
+                        )
+                        (when (= (:errorMode (:agent action)) Agent'CONTINUE) => error
+                            nil
+                        )
+                    )
+                  #_"ActionQueue" next
+                    (loop-when [next nil #_"boolean" popped false] (not popped) => next
+                        (let [#_"ActionQueue" prior (.get (:aq (:agent action))) next (ActionQueue'new (IPersistentStack'''pop (:q prior)), error)]
+                            (recur next (.compareAndSet (:aq (:agent action)), prior, next))
                         )
                     )]
-                (when (some? error) => (Agent'releasePendingSends)
-                    (.set Agent'nested, nil) ;; allow errorHandler to send
-                    (when (some? (:errorHandler (:agent action)))
-                        (try
-                            (IFn'''invoke-3 (:errorHandler (:agent action)), (:agent action), error)
-                            (catch Throwable e
-                                ;; ignore errorHandler errors
-                            )
-                        )
-                    )
-                    (when (= (:errorMode (:agent action)) Agent'CONTINUE)
-                        (ß ass error nil)
-                    )
-                )
-                (let [#_"ActionQueue" next
-                        (loop-when [next nil #_"boolean" popped false] (not popped) => next
-                            (let [#_"ActionQueue" prior (.get (:aq (:agent action))) next (ActionQueue'new (IPersistentStack'''pop (:q prior)), error)]
-                                (recur next (.compareAndSet (:aq (:agent action)), prior, next))
-                            )
-                        )]
-                    (when (and (nil? error) (pos? (.count (:q next))))
-                        (AgentAction''execute (cast' AgentAction (IPersistentStack'''peek (:q next))))
-                    )
+                (when (and (nil? error) (pos? (.count (:q next))))
+                    (AgentAction''execute (cast' AgentAction (IPersistentStack'''peek (:q next))))
                 )
             )
             (finally
@@ -3648,10 +3648,8 @@
     #_method
     (defn #_"Object" Agent''dispatch [#_"Agent" this, #_"IFn" fn, #_"ISeq" args, #_"Executor" exec]
         (let-when [#_"Throwable" e (Agent''getError this)] (nil? e) => (throw (RuntimeException. "Agent is failed, needs restart", e))
-            (let [#_"AgentAction" action (AgentAction'new this, fn, args, exec)]
-                (Agent'dispatchAction action)
-                this
-            )
+            (Agent'dispatchAction (AgentAction'new this, fn, args, exec))
+            this
         )
     )
 
@@ -3833,11 +3831,6 @@
                         (defn #_"Object" next---Iterator [#_"Iterator" this]
                             (.getKey (cast Map$Entry (.next mapIter)))
                         )
-
-                        #_foreign
-                        (defn #_"void" remove---Iterator [#_"Iterator" this]
-                            (throw (UnsupportedOperationException.))
-                        )
                     )
                 )
         )
@@ -3913,11 +3906,6 @@
                         #_foreign
                         (defn #_"Object" next---Iterator [#_"Iterator" this]
                             (.getValue (cast Map$Entry (.next mapIter)))
-                        )
-
-                        #_foreign
-                        (defn #_"void" remove---Iterator [#_"Iterator" this]
-                            (throw (UnsupportedOperationException.))
                         )
                     )
                 )
@@ -4146,11 +4134,6 @@
                                 (.getKey e)
                             )
                         )
-
-                        #_foreign
-                        (defn #_"void" remove---Iterator [#_"Iterator" this]
-                            (throw (UnsupportedOperationException.))
-                        )
                     )
                 )
             )
@@ -4169,16 +4152,6 @@
 
     #_foreign
     (defn #_"Object" put---APersistentMap [#_"APersistentMap" this, #_"Object" key, #_"Object" value]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (defn #_"void" putAll---APersistentMap [#_"APersistentMap" this, #_"Map" t]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (defn #_"Object" remove---APersistentMap [#_"APersistentMap" this, #_"Object" key]
         (throw (UnsupportedOperationException.))
     )
 
@@ -4204,11 +4177,6 @@
                             (let [#_"Map$Entry" e (cast Map$Entry (.next mi))]
                                 (.getValue e)
                             )
-                        )
-
-                        #_foreign
-                        (defn #_"void" remove---Iterator [#_"Iterator" this]
-                            (throw (UnsupportedOperationException.))
                         )
                     )
                 )
@@ -4338,11 +4306,6 @@
     )
 
     #_foreign
-    (defn #_"boolean" remove---APersistentSet [#_"APersistentSet" this, #_"Object" o]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (defn #_"void" clear---APersistentSet [#_"APersistentSet" this]
         (throw (UnsupportedOperationException.))
     )
@@ -4381,11 +4344,6 @@
                 #_foreign
                 (defn #_"Object" next---Iterator [#_"Iterator" this]
                     (IMapEntry'''key (cast' IMapEntry (.next (:iter this))))
-                )
-
-                #_foreign
-                (defn #_"void" remove---Iterator [#_"Iterator" this]
-                    (throw (UnsupportedOperationException.))
                 )
             )
         )
@@ -4527,17 +4485,13 @@
     )
 
     (defn #_"SubVector" SubVector'new [#_"IPersistentMap" meta, #_"IPersistentVector" v, #_"int" start, #_"int" end]
-        (let [this (merge (APersistentVector'new) (SubVector'init))]
-            (ß ass this (assoc this :_meta meta))
-
-            (when (§ instance? SubVector v)
+        (let [this (merge (APersistentVector'new) (SubVector'init))
+              this (assoc this :_meta meta)]
+            (when (§ instance? SubVector v) => (assoc this :v v :start start :end end)
                 (let [#_"SubVector" sv (cast' SubVector v)]
-                    (ß ass start (+ start (:start sv)))
-                    (ß ass end (+ end (:start sv)))
-                    (ß ass v (:v sv))
+                    (assoc this :v (:v sv) :start (+ start (:start sv)) :end (+ end (:start sv)))
                 )
             )
-            (assoc this :v v :start start :end end)
         )
     )
 
@@ -4731,11 +4685,6 @@
     )
 
     #_foreign
-    (defn #_"Object" remove---APersistentVector [#_"APersistentVector" this, #_"int" i]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (defn #_"int" indexOf---APersistentVector [#_"APersistentVector" this, #_"Object" o]
         (loop-when [#_"int" i 0] (< i (.count this)) => -1
             (if (Util'equiv-2oo (Indexed'''nth-2 this, i), o) i (recur (inc i)))
@@ -4765,18 +4714,12 @@
 
             #_foreign
             (defn #_"Object" next---Iterator [#_"Iterator" this]
-                (if (< (:i this) end)
+                (when (< (:i this) end) => (throw (NoSuchElementException.))
                     (let [_ (Indexed'''nth-2 this, (:i this))]
-                        (ß ass (:i this) (inc (:i this)))
+                        (ß ass this (update this :i inc))
                         _
                     )
-                    (throw (NoSuchElementException.))
                 )
-            )
-
-            #_foreign
-            (defn #_"void" remove---Iterator [#_"Iterator" this]
-                (throw (UnsupportedOperationException.))
             )
         )
     )
@@ -4816,18 +4759,12 @@
 
             #_foreign
             (defn #_"Object" next---Iterator [#_"Iterator" this]
-                (if (< (:i this) (.count this))
+                (when (< (:i this) (.count this)) => (throw (NoSuchElementException.))
                     (let [_ (Indexed'''nth-2 this, (:i this))]
-                        (ß ass (:i this) (inc (:i this)))
+                        (ß ass this (update this :i inc))
                         _
                     )
-                    (throw (NoSuchElementException.))
                 )
-            )
-
-            #_foreign
-            (defn #_"void" remove---Iterator [#_"Iterator" this]
-                (throw (UnsupportedOperationException.))
             )
         )
     )
@@ -4886,11 +4823,6 @@
 
     #_foreign
     (defn #_"boolean" add---APersistentVector [#_"APersistentVector" this, #_"Object" o]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (defn #_"boolean" remove---APersistentVector [#_"APersistentVector" this, #_"Object" o]
         (throw (UnsupportedOperationException.))
     )
 
@@ -5065,8 +4997,10 @@
     #_override
     (defn #_"IPersistentMap" IReference'''alterMeta--AReference [#_"AReference" this, #_"IFn" alter, #_"ISeq" args]
         (§ sync this
-            (ß ass this (assoc this :_meta (cast' IPersistentMap (IFn'''applyTo alter, (Cons'new-2 (:_meta this), args)))))
-            (:_meta this)
+            (let [#_"IPersistentMap" m (cast' IPersistentMap (IFn'''applyTo alter, (Cons'new-2 (:_meta this), args)))]
+                (ß ass this (assoc this :_meta m))
+                (:_meta this)
+            )
         )
     )
 
@@ -5195,15 +5129,10 @@
     (defn #_"Long" next---ArrayIter_int [#_"ArrayIter_int" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (Long/valueOf (aget (:array this) (:i this)))]
-                (ß ass this (assoc this :i (inc (:i this))))
-                (ß return _)
+                (ß ass this (update this :i inc))
+                _
             )
         )
-    )
-
-    #_foreign
-    (defn #_"void" remove---ArrayIter_int [#_"ArrayIter_int" this]
-        (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
 
@@ -5230,15 +5159,10 @@
     (defn #_"Double" next---ArrayIter_float [#_"ArrayIter_float" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (Double/valueOf (aget (:array this) (:i this)))]
-                (ß ass this (assoc this :i (inc (:i this))))
-                (ß return _)
+                (ß ass this (update this :i inc))
+                _
             )
         )
-    )
-
-    #_foreign
-    (defn #_"void" remove---ArrayIter_float [#_"ArrayIter_float" this]
-        (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
 
@@ -5265,15 +5189,10 @@
     (defn #_"Double" next---ArrayIter_double [#_"ArrayIter_double" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (aget (:array this) (:i this))]
-                (ß ass this (assoc this :i (inc (:i this))))
-                (ß return _)
+                (ß ass this (update this :i inc))
+                _
             )
         )
-    )
-
-    #_foreign
-    (defn #_"void" remove---ArrayIter_double [#_"ArrayIter_double" this]
-        (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
 
@@ -5300,15 +5219,10 @@
     (defn #_"Long" next---ArrayIter_long [#_"ArrayIter_long" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (Long/valueOf (aget (:array this) (:i this)))]
-                (ß ass this (assoc this :i (inc (:i this))))
-                (ß return _)
+                (ß ass this (update this :i inc))
+                _
             )
         )
-    )
-
-    #_foreign
-    (defn #_"void" remove---ArrayIter_long [#_"ArrayIter_long" this]
-        (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
 
@@ -5335,15 +5249,10 @@
     (defn #_"Byte" next---ArrayIter_byte [#_"ArrayIter_byte" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (aget (:array this) (:i this))]
-                (ß ass this (assoc this :i (inc (:i this))))
-                (ß return _)
+                (ß ass this (update this :i inc))
+                _
             )
         )
-    )
-
-    #_foreign
-    (defn #_"void" remove---ArrayIter_byte [#_"ArrayIter_byte" this]
-        (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
 
@@ -5370,15 +5279,10 @@
     (defn #_"Character" next---ArrayIter_char [#_"ArrayIter_char" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (aget (:array this) (:i this))]
-                (ß ass this (assoc this :i (inc (:i this))))
-                (ß return _)
+                (ß ass this (update this :i inc))
+                _
             )
         )
-    )
-
-    #_foreign
-    (defn #_"void" remove---ArrayIter_char [#_"ArrayIter_char" this]
-        (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
 
@@ -5405,15 +5309,10 @@
     (defn #_"Long" next---ArrayIter_short [#_"ArrayIter_short" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (Long/valueOf (aget (:array this) (:i this)))]
-                (ß ass this (assoc this :i (inc (:i this))))
-                (ß return _)
+                (ß ass this (update this :i inc))
+                _
             )
         )
-    )
-
-    #_foreign
-    (defn #_"void" remove---ArrayIter_short [#_"ArrayIter_short" this]
-        (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
 
@@ -5440,15 +5339,10 @@
     (defn #_"Boolean" next---ArrayIter_boolean [#_"ArrayIter_boolean" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (Boolean/valueOf (aget (:array this) (:i this)))]
-                (ß ass this (assoc this :i (inc (:i this))))
-                (ß return _)
+                (ß ass this (update this :i inc))
+                _
             )
         )
-    )
-
-    #_foreign
-    (defn #_"void" remove---ArrayIter_boolean [#_"ArrayIter_boolean" this]
-        (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
 
@@ -5463,11 +5357,6 @@
             #_foreign
             (defn #_"Object" next---Iterator [#_"Iterator" this]
                 (throw (NoSuchElementException.))
-            )
-
-            #_foreign
-            (defn #_"void" remove---Iterator [#_"Iterator" this]
-                (throw (UnsupportedOperationException. "remove() not supported"))
             )
         )
     )
@@ -5521,15 +5410,10 @@
     (defn #_"Object" next---ArrayIter [#_"ArrayIter" this]
         (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
             (let [_ (aget (:array this) (:i this))]
-                (ß ass this (assoc this :i (inc (:i this))))
-                (ß return _)
+                (ß ass this (update this :i inc))
+                _
             )
         )
-    )
-
-    #_foreign
-    (defn #_"void" remove---ArrayIter [#_"ArrayIter" this]
-        (throw (UnsupportedOperationException. "remove() not supported"))
     )
 )
 )
@@ -6505,11 +6389,6 @@
     )
 
     #_foreign
-    (defn #_"boolean" remove---ASeq [#_"ASeq" this, #_"Object" o]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (defn #_"void" clear---ASeq [#_"ASeq" this]
         (throw (UnsupportedOperationException.))
     )
@@ -6543,11 +6422,6 @@
 
     #_foreign
     (defn #_"Object" set---ASeq [#_"ASeq" this, #_"int" index, #_"Object" element]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (defn #_"Object" remove---ASeq [#_"ASeq" this, #_"int" index]
         (throw (UnsupportedOperationException.))
     )
 
@@ -6879,10 +6753,9 @@
     #_override
     (defn #_"ITransientSet" ITransientCollection'''conj--ATransientSet [#_"ATransientSet" this, #_"Object" val]
         (let [#_"ITransientMap" m (ITransientMap'''assoc (:impl this), val, val)]
-            (when-not (= m (:impl this))
-                (ß ass this (assoc this :impl m))
+            (when-not (= m (:impl this)) => this
+                (assoc this :impl m)
             )
-            this
         )
     )
 
@@ -6894,10 +6767,9 @@
     #_override
     (defn #_"ITransientSet" ITransientSet'''disjoin--ATransientSet [#_"ATransientSet" this, #_"Object" key]
         (let [#_"ITransientMap" m (ITransientMap'''without (:impl this), key)]
-            (when-not (= m (:impl this))
-                (ß ass this (assoc this :impl m))
+            (when-not (= m (:impl this)) => this
+                (assoc this :impl m)
             )
-            this
         )
     )
 
@@ -7183,7 +7055,7 @@
     #_method
     (defn #_"void" ChunkBuffer''add [#_"ChunkBuffer" this, #_"Object" o]
         (aset (:buffer this) (:end this) o)
-        (ß ass this (assoc this :end (inc (:end this))))
+        (ß ass this (update this :end inc))
         nil
     )
 
@@ -8021,23 +7893,17 @@
     )
 
     (defn #_"InstanceFieldExpr" InstanceFieldExpr'new [#_"int" line, #_"int" column, #_"Expr" target, #_"String" fieldName, #_"Symbol" tag, #_"boolean" requireField]
-        (let [this (merge (FieldExpr'new) (InstanceFieldExpr'init))]
-            (ß ass this (assoc this :target target))
-            (ß ass this (assoc this :targetClass (when (Expr'''hasJavaClass target) (Expr'''getJavaClass target))))
-            (ß ass this (assoc this :field (when (some? (:targetClass this)) (Reflector'getField (:targetClass this), fieldName, false))))
-            (ß ass this (assoc this :fieldName fieldName))
-            (ß ass this (assoc this :line line))
-            (ß ass this (assoc this :column column))
-            (ß ass this (assoc this :tag tag))
-            (ß ass this (assoc this :requireField requireField))
-
-            (when (and (nil? (:field this)) (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION)))
-                (if (nil? (:targetClass this))
+        (let [#_"Class" c (when (Expr'''hasJavaClass target) (Expr'''getJavaClass target))
+              #_"java.lang.reflect.Field" f (when (some? c) (Reflector'getField c, fieldName, false))]
+            (when (and (nil? f) (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION)))
+                (if (nil? c)
                     (.format (RT'errPrintWriter), "Reflection warning, %d:%d - reference to field %s can't be resolved.\n", (object-array [ line, column, fieldName ]))
-                    (.format (RT'errPrintWriter), "Reflection warning, %d:%d - reference to field %s on %s can't be resolved.\n", (object-array [ line, column, fieldName, (.getName (:targetClass this)) ]))
+                    (.format (RT'errPrintWriter), "Reflection warning, %d:%d - reference to field %s on %s can't be resolved.\n", (object-array [ line, column, fieldName, (.getName c) ]))
                 )
             )
-            this
+            (-> (merge (FieldExpr'new) (InstanceFieldExpr'init))
+                (assoc :target target :targetClass c :field f :fieldName fieldName :line line :column column :tag tag :requireField requireField)
+            )
         )
     )
 
@@ -8150,18 +8016,16 @@
     )
 
     (defn #_"StaticFieldExpr" StaticFieldExpr'new [#_"int" line, #_"int" column, #_"Class" c, #_"String" fieldName, #_"Symbol" tag]
-        (let [this (merge (FieldExpr'new) (StaticFieldExpr'init))]
-            (ß ass this (assoc this :fieldName fieldName))
-            (ß ass this (assoc this :line line))
-            (ß ass this (assoc this :column column))
-            (ß ass this (assoc this :c c))
-            (try
-                (ß ass this (assoc this :field (.getField c, fieldName)))
-                (catch NoSuchFieldException e
-                    (throw (Util'sneakyThrow e))
-                )
+        (let [#_"java.lang.reflect.Field" f
+                (try
+                    (.getField c, fieldName)
+                    (catch NoSuchFieldException e
+                        (throw (Util'sneakyThrow e))
+                    )
+                )]
+            (-> (merge (FieldExpr'new) (StaticFieldExpr'init))
+                (assoc :fieldName fieldName :line line :column column :c c :field f :tag tag)
             )
-            (assoc this :tag tag)
         )
     )
 
@@ -16349,11 +16213,6 @@
     )
 
     #_foreign
-    (defn #_"boolean" remove---LazySeq [#_"LazySeq" this, #_"Object" o]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (defn #_"void" clear---LazySeq [#_"LazySeq" this]
         (throw (UnsupportedOperationException.))
     )
@@ -16387,11 +16246,6 @@
 
     #_foreign
     (defn #_"Object" set---LazySeq [#_"LazySeq" this, #_"int" index, #_"Object" element]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (defn #_"Object" remove---LazySeq [#_"LazySeq" this, #_"int" index]
         (throw (UnsupportedOperationException.))
     )
 
@@ -16483,7 +16337,7 @@
                 )
                 (do
                     (ß ass this (assoc this :_atLineStart false))
-                    (ß ass this (assoc this :_columnNumber (inc (:_columnNumber this))))
+                    (ß ass this (update this :_columnNumber inc))
                 )
             )
             c
@@ -16494,7 +16348,7 @@
     (defn #_"void" unread---LineNumberingPushbackReader [#_"LineNumberingPushbackReader" this, #_"int" c] #_(§ throws IOException)
         (.unread (§ super ), c)
         (ß ass this (assoc this :_atLineStart (:_prev this)))
-        (ß ass this (assoc this :_columnNumber (dec (:_columnNumber this))))
+        (ß ass this (update this :_columnNumber dec))
         nil
     )
 
@@ -18208,11 +18062,6 @@
                 ret
             )
         )
-    )
-
-    #_foreign
-    (defn #_"void" remove---LongRangeIterator [#_"LongRangeIterator" this]
-        (throw (UnsupportedOperationException.))
     )
 )
 
@@ -21998,11 +21847,6 @@
             )
         )
     )
-
-    #_foreign
-    (defn #_"void" remove---MIter [#_"MIter" this]
-        (throw (UnsupportedOperationException.))
-    )
 )
 
 (class-ns TransientArrayMap (§ extends ATransientMap)
@@ -22046,9 +21890,9 @@
                 (if (< (:len this) (alength (:array this)))
                     (do
                         (aset (:array this) (:len this) key)
-                        (ß ass this (assoc this :len (inc (:len this))))
+                        (ß ass this (update this :len inc))
                         (aset (:array this) (:len this) val)
-                        (assoc this :len (inc (:len this)))
+                        (update this :len inc)
                     )
                     (-> (PersistentHashMap'create-1a (:array this)) (IEditableCollection'''asTransient) (ITransientMap'''assoc key, val))
                 )
@@ -22441,7 +22285,7 @@
                     (ß ass this (assoc this :nullValue val))
                 )
                 (when (not (:hasNull this))
-                    (ß ass this (assoc this :count (inc (:count this))))
+                    (ß ass this (update this :count inc))
                     (ß ass this (assoc this :hasNull true))
                 )
                 this
@@ -22452,7 +22296,7 @@
                     (ß ass this (assoc this :root n))
                 )
                 (when (some? (:val (:leafFlag this)))
-                    (ß ass this (assoc this :count (inc (:count this))))
+                    (ß ass this (update this :count inc))
                 )
                 this
             )
@@ -22463,7 +22307,7 @@
     (defn #_"ITransientMap" ATransientMap'''doWithout--TransientHashMap [#_"TransientHashMap" this, #_"Object" key]
         (if (nil? key)
             (when (:hasNull this) => this
-                (assoc this :hasNull false :nullValue nil :count (dec (:count this)))
+                (-> this (assoc :hasNull false :nullValue nil) (update :count dec))
             )
             (when (some? (:root this)) => this
                 (let [_ (ß ass (:val (:leafFlag this)) nil)
@@ -22472,7 +22316,7 @@
                         (ß ass this (assoc this :root n))
                     )
                     (when (some? (:val (:leafFlag this)))
-                        (ß ass this (assoc this :count (dec (:count this))))
+                        (ß ass this (update this :count dec))
                     )
                     this
                 )
@@ -22586,7 +22430,7 @@
             )
             (when (< (:i this) (alength (:array this))) => false
                 (let [#_"INode" ai (aget (:array this) (:i this))]
-                    (ß ass this (assoc this :i (inc (:i this))))
+                    (ß ass this (update this :i inc))
                     (when (some? ai)
                         (ß ass this (assoc this :nestedIter (INode'''iterator ai, (:f this))))
                     )
@@ -22601,11 +22445,6 @@
         (when (.hasNext this) => (throw (NoSuchElementException.))
             (.next (:nestedIter this))
         )
-    )
-
-    #_foreign
-    (defn #_"void" remove---HIter [#_"HIter" this]
-        (throw (UnsupportedOperationException.))
     )
 )
 
@@ -23364,11 +23203,6 @@
             )
         )
     )
-
-    #_foreign
-    (defn #_"void" remove---NodeIter [#_"NodeIter" this]
-        (throw (UnsupportedOperationException.))
-    )
 )
 
 (class-ns NodeSeq (§ extends ASeq)
@@ -23632,11 +23466,6 @@
             (defn #_"Object" next---Iterator [#_"Iterator" this]
                 (throw (NoSuchElementException.))
             )
-
-            #_foreign
-            (defn #_"void" remove---Iterator [#_"Iterator" this]
-                (throw (UnsupportedOperationException.))
-            )
         )
     )
 
@@ -23662,11 +23491,6 @@
                             (ß ass this (assoc this :seen true))
                             (IFn'''invoke-3 f, nil, (:nullValue this))
                         )
-                    )
-
-                    #_foreign
-                    (defn #_"void" remove---Iterator [#_"Iterator" this]
-                        (throw (UnsupportedOperationException.))
                     )
                 )
             )
@@ -24124,11 +23948,6 @@
             (defn #_"Object" next---Iterator [#_"Iterator" this]
                 (throw (NoSuchElementException.))
             )
-
-            #_foreign
-            (defn #_"void" remove---Iterator [#_"Iterator" this]
-                (throw (UnsupportedOperationException.))
-            )
         )
     )
 
@@ -24139,11 +23958,6 @@
 
     #_foreign
     (defn #_"boolean" add---EmptyList [#_"EmptyList" this, #_"Object" o]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (defn #_"boolean" remove---EmptyList [#_"EmptyList" this, #_"Object" o]
         (throw (UnsupportedOperationException.))
     )
 
@@ -24162,11 +23976,6 @@
 
     #_foreign
     (defn #_"Object" set---EmptyList [#_"EmptyList" this, #_"int" index, #_"Object" element]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (defn #_"Object" remove---EmptyList [#_"EmptyList" this, #_"int" index]
         (throw (UnsupportedOperationException.))
     )
 
@@ -24470,11 +24279,6 @@
     )
 
     #_foreign
-    (defn #_"boolean" remove---PersistentQueue [#_"PersistentQueue" this, #_"Object" o]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (defn #_"void" clear---PersistentQueue [#_"PersistentQueue" this]
         (throw (UnsupportedOperationException.))
     )
@@ -24532,11 +24336,6 @@
                         (throw (NoSuchElementException.))
                     )
                 )
-            )
-
-            #_foreign
-            (defn #_"void" remove---Iterator [#_"Iterator" this]
-                (throw (UnsupportedOperationException.))
             )
         )
     )
@@ -25021,11 +24820,6 @@
             )
         )
     )
-
-    #_foreign
-    (defn #_"void" remove---NodeIterator [#_"NodeIterator" this]
-        (throw (UnsupportedOperationException.))
-    )
 )
 
 (class-ns KeyIterator (§ implements Iterator)
@@ -25050,11 +24844,6 @@
     (defn #_"Object" next---KeyIterator [#_"KeyIterator" this]
         (:key (cast' TNode (.next (:it this))))
     )
-
-    #_foreign
-    (defn #_"void" remove---KeyIterator [#_"KeyIterator" this]
-        (throw (UnsupportedOperationException.))
-    )
 )
 
 (class-ns ValIterator (§ implements Iterator)
@@ -25078,11 +24867,6 @@
     #_foreign
     (defn #_"Object" next---ValIterator [#_"ValIterator" this]
         (IMapEntry'''val (cast' TNode (.next (:it this))))
-    )
-
-    #_foreign
-    (defn #_"void" remove---ValIterator [#_"ValIterator" this]
-        (throw (UnsupportedOperationException.))
     )
 )
 
@@ -25870,7 +25654,7 @@
             (if (< (- n (TransientVector''tailoff this)) 32) ;; room in tail?
                 (do
                     (aset (:tail this) (& n 0x01f) val)
-                    (assoc this :cnt (inc (:cnt this)))
+                    (update this :cnt inc)
                 )
                 ;; full tail, push into tree
                 (let [#_"VNode" tailnode (VNode'new-2 (:edit (:root this)), (:tail this))]
@@ -25886,7 +25670,7 @@
                                 )
                                 [(TransientVector''pushTail this, shift, (:root this), tailnode) shift]
                             )]
-                        (assoc this :root root :shift shift :cnt (inc (:cnt this)))
+                        (-> this (assoc :root root :shift shift) (update :cnt inc))
                     )
                 )
             )
@@ -26364,15 +26148,10 @@
                         (ß ass this (assoc this :base (+ (:base this) 32)))
                     )
                     (let [_ (aget (:array this) (& (:i this) 0x01f))]
-                        (ß ass this (assoc this :i (inc (:i this))))
+                        (ß ass this (update this :i inc))
                         _
                     )
                 )
-            )
-
-            #_foreign
-            (defn #_"void" remove---Iterator [#_"Iterator" this]
-                (throw (UnsupportedOperationException.))
             )
         )
     )
@@ -26572,11 +26351,6 @@
                 ret
             )
         )
-    )
-
-    #_foreign
-    (defn #_"void" remove---RangeIterator [#_"RangeIterator" this]
-        (throw (UnsupportedOperationException.))
     )
 )
 
@@ -26878,15 +26652,10 @@
     (defn #_"Object" next---RecordIterator [#_"RecordIterator" this]
         (when (< (:i this) (:basecnt this)) => (.next (:extmap this))
             (let [#_"Object" k (Indexed'''nth-2 (:basefields this), (:i this))]
-                (ß ass this (assoc this :i (inc (:i this))))
+                (ß ass this (update this :i inc))
                 (MapEntry'create k, (ILookup'''valAt-2 (:rec this), k))
             )
         )
-    )
-
-    #_foreign
-    (defn #_"void" remove---RecordIterator [#_"RecordIterator" this]
-        (throw (UnsupportedOperationException.))
     )
 )
 )
@@ -32985,11 +32754,6 @@
                     (defn #_"Object" next---Iterator [#_"Iterator" this]
                         (throw (NoSuchElementException.))
                     )
-
-                    #_foreign
-                    (defn #_"void" remove---Iterator [#_"Iterator" this]
-                        (throw (UnsupportedOperationException.))
-                    )
                 )
             (instance? Map coll)
                 (.iterator (.entrySet (cast Map coll)))
@@ -33013,11 +32777,6 @@
                                 (ß ass (:i this) (inc (:i this)))
                                 _
                             )
-                        )
-
-                        #_foreign
-                        (defn #_"void" remove---Iterator [#_"Iterator" this]
-                            (throw (UnsupportedOperationException.))
                         )
                     )
                 )
@@ -34319,11 +34078,6 @@
         (ß ass this (assoc this :seq (:next this)))
         (RT'first (:next this))
     )
-
-    #_foreign
-    (defn #_"void" remove---SeqIterator [#_"SeqIterator" this]
-        (throw (UnsupportedOperationException.))
-    )
 )
 )
 
@@ -34665,11 +34419,6 @@
             (ArraySeq'new-2 nexts, 0)
         )
     )
-
-    #_foreign
-    (defn #_"void" remove---MultiIterator [#_"MultiIterator" this]
-        (throw (UnsupportedOperationException.))
-    )
 )
 
 (class-ns TransformerIterator (§ implements Iterator)
@@ -34780,11 +34529,6 @@
                 ret
             )
         )
-    )
-
-    #_foreign
-    (defn #_"void" remove---TransformerIterator [#_"TransformerIterator" this]
-        (throw (UnsupportedOperationException.))
     )
 )
 )

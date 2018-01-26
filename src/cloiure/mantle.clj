@@ -8010,8 +8010,6 @@
                                 `(containsValue [this# v#] (boolean (some #{v#} (vals this#))))
                                 `(get [this# k#] (.valAt this# k#))
                                 `(put [this# k# v#] (throw (UnsupportedOperationException.)))
-                                `(remove [this# k#] (throw (UnsupportedOperationException.)))
-                                `(putAll [this# m#] (throw (UnsupportedOperationException.)))
                                 `(clear [this#] (throw (UnsupportedOperationException.)))
                                 `(keySet [this#] (set (keys this#)))
                                 `(values [this#] (vals this#))
@@ -9434,7 +9432,6 @@
                         )
                     )
                 )
-                (remove [_] (throw (UnsupportedOperationException.)))
             )
         )
     )
@@ -9457,7 +9454,6 @@
     (size [_] cnt)
     (add [_ o] (throw (UnsupportedOperationException.)))
     (clear [_] (throw (UnsupportedOperationException.)))
-    (^boolean remove [_ o] (throw (UnsupportedOperationException.)))
 
     java.util.List
     (get [this i] (.nth this i))
@@ -9480,7 +9476,6 @@
         )
     )
     (add [_ i o] (throw (UnsupportedOperationException.)))
-    (^Object remove [_ ^int i] (throw (UnsupportedOperationException.)))
     (set [_ i e] (throw (UnsupportedOperationException.)))
 )
 
