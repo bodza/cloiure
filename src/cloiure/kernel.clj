@@ -8176,56 +8176,50 @@
     )
 
     (defn #_"InstanceMethodExpr" InstanceMethodExpr'new [#_"int" line, #_"int" column, #_"Symbol" tag, #_"Expr" target, #_"String" methodName, #_"IPersistentVector" args, #_"boolean" tailPosition]
-        (let [this (merge (MethodExpr'new) (InstanceMethodExpr'init))]
-            (ß ass this (assoc this :line line))
-            (ß ass this (assoc this :column column))
-            (ß ass this (assoc this :args args))
-            (ß ass this (assoc this :methodName methodName))
-            (ß ass this (assoc this :target target))
-            (ß ass this (assoc this :tag tag))
-            (ß ass this (assoc this :tailPosition tailPosition))
-            (if (and (Expr'''hasJavaClass target) (some? (Expr'''getJavaClass target)))
-                (let [#_"List" methods (Reflector'getMethods (Expr'''getJavaClass target), (.count args), methodName, false)]
-                    (if (.isEmpty methods)
-                        (do
-                            (ß ass this (assoc this :method nil))
-                            (when (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION))
-                                (.format (RT'errPrintWriter), "Reflection warning, %d:%d - call to method %s on %s can't be resolved (no such method).\n", (object-array [ line, column, methodName, (.getName (Expr'''getJavaClass target)) ]))
+        (let [#_"java.lang.reflect.Method" method
+                (if (and (Expr'''hasJavaClass target) (some? (Expr'''getJavaClass target)))
+                    (let [#_"List" methods (Reflector'getMethods (Expr'''getJavaClass target), (.count args), methodName, false)]
+                        (if (.isEmpty methods)
+                            (do
+                                (when (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION))
+                                    (.format (RT'errPrintWriter), "Reflection warning, %d:%d - call to method %s on %s can't be resolved (no such method).\n", (object-array [ line, column, methodName, (.getName (Expr'''getJavaClass target)) ]))
+                                )
+                                nil
                             )
-                        )
-                        (let [#_"int" methodidx 0]
-                            (when (< 1 (.size methods))
-                                (let [#_"ArrayList<Class[]>" params (ArrayList.) #_"ArrayList<Class>" rets (ArrayList.)]
-                                    (dotimes [#_"int" i (.size methods)]
-                                        (let [#_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (.get methods, i))]
-                                            (.add params, (.getParameterTypes m))
-                                            (.add rets, (.getReturnType m))
+                            (let [#_"int" methodidx
+                                    (when (< 1 (.size methods)) => 0
+                                        (let [#_"ArrayList<Class[]>" params (ArrayList.) #_"ArrayList<Class>" rets (ArrayList.)]
+                                            (dotimes [#_"int" i (.size methods)]
+                                                (let [#_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (.get methods, i))]
+                                                    (.add params, (.getParameterTypes m))
+                                                    (.add rets, (.getReturnType m))
+                                                )
+                                            )
+                                            (Compiler'getMatchingParams methodName, params, args, rets)
                                         )
                                     )
-                                    (ß ass methodidx (Compiler'getMatchingParams methodName, params, args, rets))
-                                )
-                            )
-                            (let [#_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (when (<= 0 methodidx) (.get methods, methodidx)))]
-                                (when (and (some? m) (not (Modifier/isPublic (.getModifiers (.getDeclaringClass m)))))
-                                    ;; public method of non-public class, try to find it in hierarchy
-                                    (ß ass m (Reflector'getAsMethodOfPublicBase (.getDeclaringClass m), m))
-                                )
-                                (ß ass this (assoc this :method m))
-                                (when (and (nil? (:method this)) (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION)))
+                                #_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (when (<= 0 methodidx) (.get methods, methodidx)))
+                                m (when (and (some? m) (not (Modifier/isPublic (.getModifiers (.getDeclaringClass m))))) => m
+                                        ;; public method of non-public class, try to find it in hierarchy
+                                        (Reflector'getAsMethodOfPublicBase (.getDeclaringClass m), m)
+                                    )]
+                                (when (and (nil? m) (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION)))
                                     (.format (RT'errPrintWriter), "Reflection warning, %d:%d - call to method %s on %s can't be resolved (argument types: %s).\n", (object-array [ line, column, methodName, (.getName (Expr'''getJavaClass target)), (Compiler'getTypeStringForArgs args) ]))
                                 )
+                                m
                             )
                         )
                     )
-                )
-                (do
-                    (ß ass this (assoc this :method nil))
-                    (when (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION))
-                        (.format (RT'errPrintWriter), "Reflection warning, %d:%d - call to method %s can't be resolved (target class is unknown).\n", (object-array [ line, column, methodName ]))
+                    (do
+                        (when (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION))
+                            (.format (RT'errPrintWriter), "Reflection warning, %d:%d - call to method %s can't be resolved (target class is unknown).\n", (object-array [ line, column, methodName ]))
+                        )
+                        nil
                     )
-                )
+                )]
+            (-> (merge (MethodExpr'new) (InstanceMethodExpr'init))
+                (assoc :line line :column column :args args :methodName methodName :target target :tag tag :tailPosition tailPosition :method method)
             )
-            this
         )
     )
 
@@ -8347,38 +8341,31 @@
     )
 
     (defn #_"StaticMethodExpr" StaticMethodExpr'new [#_"int" line, #_"int" column, #_"Symbol" tag, #_"Class" c, #_"String" methodName, #_"IPersistentVector" args, #_"boolean" tailPosition]
-        (let [this (merge (MethodExpr'new) (StaticMethodExpr'init))]
-            (ß ass this (assoc this :c c))
-            (ß ass this (assoc this :methodName methodName))
-            (ß ass this (assoc this :args args))
-            (ß ass this (assoc this :line line))
-            (ß ass this (assoc this :column column))
-            (ß ass this (assoc this :tag tag))
-            (ß ass this (assoc this :tailPosition tailPosition))
-
-            (let [#_"List" methods (Reflector'getMethods c, (.count args), methodName, true)]
-                (when (.isEmpty methods)
-                    (throw (IllegalArgumentException. (str "No matching method: " methodName)))
-                )
-
-                (let [#_"int" methodidx 0]
-                    (when (< 1 (.size methods))
-                        (let [#_"ArrayList<Class[]>" params (ArrayList.) #_"ArrayList<Class>" rets (ArrayList.)]
-                            (dotimes [#_"int" i (.size methods)]
-                                (let [#_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (.get methods, i))]
-                                    (.add params, (.getParameterTypes m))
-                                    (.add rets, (.getReturnType m))
+        (let [#_"java.lang.reflect.Method" method
+                (let [#_"List" methods (Reflector'getMethods c, (.count args), methodName, true)]
+                    (when-not (.isEmpty methods) => (throw (IllegalArgumentException. (str "No matching method: " methodName)))
+                        (let [#_"int" methodidx
+                                (when (< 1 (.size methods)) => 0
+                                    (let [#_"ArrayList<Class[]>" params (ArrayList.) #_"ArrayList<Class>" rets (ArrayList.)]
+                                        (dotimes [#_"int" i (.size methods)]
+                                            (let [#_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (.get methods, i))]
+                                                (.add params, (.getParameterTypes m))
+                                                (.add rets, (.getReturnType m))
+                                            )
+                                        )
+                                        (Compiler'getMatchingParams methodName, params, args, rets)
+                                    )
                                 )
+                              #_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (when (<= 0 methodidx) (.get methods, methodidx)))]
+                            (when (and (nil? m) (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION)))
+                                (.format (RT'errPrintWriter), "Reflection warning, %d:%d - call to static method %s on %s can't be resolved (argument types: %s).\n", (object-array [ line, column, methodName, (.getName c), (Compiler'getTypeStringForArgs args) ]))
                             )
-                            (ß ass methodidx (Compiler'getMatchingParams methodName, params, args, rets))
+                            m
                         )
                     )
-                    (ß ass this (assoc this :method (cast java.lang.reflect.Method (when (<= 0 methodidx) (.get methods, methodidx)))))
-                    (when (and (nil? (:method this)) (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION)))
-                        (.format (RT'errPrintWriter), "Reflection warning, %d:%d - call to static method %s on %s can't be resolved (argument types: %s).\n", (object-array [ line, column, methodName, (.getName c), (Compiler'getTypeStringForArgs args) ]))
-                    )
-                    this
-                )
+                )]
+            (-> (merge (MethodExpr'new) (StaticMethodExpr'init))
+                (assoc :c c :methodName methodName :args args :line line :column column :method method :tag tag :tailPosition tailPosition)
             )
         )
     )
