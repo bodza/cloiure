@@ -19006,23 +19006,18 @@
     )
 
     (defn #_"int" Murmur3'hashUnencodedChars [#_"CharSequence" input]
-        (let [#_"int" h1 Murmur3'seed]
-            ;; step through the CharSequence 2 chars at a time
-            (loop-when-recur [#_"int" i 1] (< i (.length input)) [(+ i 2)]
-                (let [#_"int" k1 (| (.charAt input, (dec i)) (<< (.charAt input, i) 16))]
-                    (ß ass k1 (Murmur3'mixK1 k1))
-                    (ß ass h1 (Murmur3'mixH1 h1, k1))
+        (let [#_"int" h1 ;; step through the input 2 chars at a time
+                (loop-when [h1 Murmur3'seed #_"int" i 1] (< i (.length input)) => h1
+                    (let [#_"int" k1 (| (.charAt input, (dec i)) (<< (.charAt input, i) 16))]
+                        (recur (Murmur3'mixH1 h1, (Murmur3'mixK1 k1)) (+ i 2))
+                    )
                 )
-            )
-
-            ;; deal with any remaining characters
-            (when (= (& (.length input) 1) 1)
-                (let [#_"int" k1 (.charAt input, (dec (.length input)))]
-                    (ß ass k1 (Murmur3'mixK1 k1))
-                    (ß ass h1 (bit-xor h1 k1))
-                )
-            )
-
+              h1 ;; deal with any remaining characters
+                (when (= (& (.length input) 1) 1) => h1
+                    (let [#_"int" k1 (.charAt input, (dec (.length input)))]
+                        (bit-xor h1 (Murmur3'mixK1 k1))
+                    )
+                )]
             (Murmur3'fmix h1, (* 2 (.length input)))
         )
     )
@@ -19052,28 +19047,20 @@
     )
 
     (defn- #_"int" Murmur3'mixK1 [#_"int" k1]
-        (ß ass k1 (* k1 Murmur3'C1))
-        (ß ass k1 (Integer/rotateLeft k1, 15))
-        (ß ass k1 (* k1 Murmur3'C2))
-        k1
+        (-> k1 (* Murmur3'C1) (Integer/rotateLeft 15) (* Murmur3'C2))
     )
 
     (defn- #_"int" Murmur3'mixH1 [#_"int" h1, #_"int" k1]
-        (ß ass h1 (bit-xor h1 k1))
-        (ß ass h1 (Integer/rotateLeft h1, 13))
-        (ß ass h1 (+ (* h1 5) 0xe6546b64))
-        h1
+        (-> h1 (bit-xor k1) (Integer/rotateLeft 13) (* 5) (+ 0xe6546b64))
     )
 
-    ;; Finalization mix - force all bits of a hash block to avalanche
+    ;; finalization mix - force all bits of a hash block to avalanche
     (defn- #_"int" Murmur3'fmix [#_"int" h1, #_"int" n]
-        (ß ass h1 (bit-xor h1 n))
-        (ß ass h1 (bit-xor h1 (>>> h1 16)))
-        (ß ass h1 (* h1 0x85ebca6b))
-        (ß ass h1 (bit-xor h1 (>>> h1 13)))
-        (ß ass h1 (* h1 0xc2b2ae35))
-        (ß ass h1 (bit-xor h1 (>>> h1 16)))
-        h1
+        (let [h1 (bit-xor h1 n)    h1 (bit-xor h1 (>>> h1 16))
+              h1 (* h1 0x85ebca6b) h1 (bit-xor h1 (>>> h1 13))
+              h1 (* h1 0xc2b2ae35) h1 (bit-xor h1 (>>> h1 16))]
+            h1
+        )
     )
 )
 )
@@ -19098,8 +19085,10 @@
     )
 
     (defn #_"Namespace" Namespace'new [#_"Symbol" name]
-        (let [this (merge (AReference'new-1 (IMeta'''meta name)) (Namespace'init))]
-            (ß ass this (assoc this :name name))
+        (let [this
+                (-> (merge (AReference'new-1 (IMeta'''meta name)) (Namespace'init))
+                    (assoc :name name)
+                )]
             (.set (:mappings this), RT'DEFAULT_IMPORTS)
             (.set (:aliases this), (RT'map))
             this
@@ -21762,7 +21751,7 @@
         (try
             (ß ass this (assoc this :i (+ (:i this) 2)))
             (IFn'''invoke-3 (:f this), (aget (:array this) (:i this)), (aget (:array this) (inc (:i this))))
-            (catch IndexOutOfBoundsException e
+            (catch IndexOutOfBoundsException _
                 (throw (NoSuchElementException.))
             )
         )
@@ -21781,11 +21770,11 @@
     )
 
     (defn #_"TransientArrayMap" TransientArrayMap'new [#_"Object[]" array]
-        (let [this (merge (ATransientMap'new) (TransientArrayMap'init))]
-            (ß ass this (assoc this :owner (Thread/currentThread)))
-            (ß ass this (assoc this :array (make-array Object (Math/max PersistentArrayMap'HASHTABLE_THRESHOLD, (alength array)))))
-            (System/arraycopy array, 0, (:array this), 0, (alength array))
-            (assoc this :len (alength array))
+        (let [#_"Object[]" a (make-array Object (Math/max PersistentArrayMap'HASHTABLE_THRESHOLD, (alength array)))
+              _ (System/arraycopy array, 0, a, 0, (alength array))]
+            (-> (merge (ATransientMap'new) (TransientArrayMap'init))
+                (assoc :owner (Thread/currentThread) :array a :len (alength array))
+            )
         )
     )
 
@@ -21808,11 +21797,9 @@
                 )
                 :else ;; didn't have key, grow
                 (if (< (:len this) (alength (:array this)))
-                    (do
-                        (aset (:array this) (:len this) key)
-                        (ß ass this (update this :len inc))
-                        (aset (:array this) (:len this) val)
-                        (update this :len inc)
+                    (let [_ (aset (:array this) (:len this) key) this (update this :len inc)
+                          _ (aset (:array this) (:len this) val) this (update this :len inc)]
+                        this
                     )
                     (-> (PersistentHashMap'create-1a (:array this)) (IEditableCollection'''asTransient) (ITransientMap'''assoc key, val))
                 )
@@ -22200,25 +22187,17 @@
     #_override
     (defn #_"ITransientMap" ATransientMap'''doAssoc--TransientHashMap [#_"TransientHashMap" this, #_"Object" key, #_"Object" val]
         (if (nil? key)
-            (do
-                (when-not (= (:nullValue this) val)
-                    (ß ass this (assoc this :nullValue val))
+            (let [this (if (= (:nullValue this) val) this (assoc this :nullValue val))]
+                (when-not (:hasNull this) => this
+                    (-> this (update :count inc) (assoc :hasNull true))
                 )
-                (when (not (:hasNull this))
-                    (ß ass this (update this :count inc))
-                    (ß ass this (assoc this :hasNull true))
-                )
-                this
             )
-            (let [_ (ß ass (:val (:leafFlag this)) nil)
-                  #_"INode" n (INode'''assoc-7 (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (PersistentHashMap'hash key), key, val, (:leafFlag this))]
-                (when (not= n (:root this))
-                    (ß ass this (assoc this :root n))
+            (let [this (assoc-in this [:leafFlag :val] nil)
+                  #_"INode" n (INode'''assoc-7 (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (PersistentHashMap'hash key), key, val, (:leafFlag this))
+                  this (if (= (:root this) n) this (assoc this :root n))]
+                (when (some? (:val (:leafFlag this))) => this
+                    (update this :count inc)
                 )
-                (when (some? (:val (:leafFlag this)))
-                    (ß ass this (update this :count inc))
-                )
-                this
             )
         )
     )
@@ -22230,15 +22209,12 @@
                 (-> this (assoc :hasNull false :nullValue nil) (update :count dec))
             )
             (when (some? (:root this)) => this
-                (let [_ (ß ass (:val (:leafFlag this)) nil)
-                      #_"INode" n (INode'''without-6 (:root this), (:edit this), 0, (PersistentHashMap'hash key), key, (:leafFlag this))]
-                    (when (not= n (:root this))
-                        (ß ass this (assoc this :root n))
+                (let [this (assoc-in this [:leafFlag :val] nil)
+                      #_"INode" n (INode'''without-6 (:root this), (:edit this), 0, (PersistentHashMap'hash key), key, (:leafFlag this))
+                      this (if (= (:root this) n) this (assoc this :root n))]
+                    (when (some? (:val (:leafFlag this))) => this
+                        (update this :count dec)
                     )
-                    (when (some? (:val (:leafFlag this)))
-                        (ß ass this (update this :count dec))
-                    )
-                    this
                 )
             )
         )
@@ -22554,9 +22530,8 @@
                         (ArrayNode''editAndSet this, edit, i, node)
                     )
                 )
-                (let [#_"ArrayNode" e (ArrayNode''editAndSet this, edit, i, (INode'''assoc-7 BitmapIndexedNode'EMPTY, edit, (+ shift 5), hash, key, val, addedLeaf))]
-                    (ß ass (:count e) (inc (:count e)))
-                    e
+                (-> (ArrayNode''editAndSet this, edit, i, (INode'''assoc-7 BitmapIndexedNode'EMPTY, edit, (+ shift 5), hash, key, val, addedLeaf))
+                    (update :count inc)
                 )
             )
         )
@@ -22569,11 +22544,7 @@
                 (cond
                     (some? node)         (ArrayNode''editAndSet this, edit, i, node)
                     (<= (:count this) 8) (ArrayNode''pack this, edit, i) ;; shrink
-                    :else
-                        (let [#_"ArrayNode" e (ArrayNode''editAndSet this, edit, i, node)]
-                            (ß ass (:count e) (dec (:count e)))
-                            e
-                        )
+                    :else            (-> (ArrayNode''editAndSet this, edit, i, node) (update :count dec))
                 )
             )
         )
@@ -22762,8 +22733,8 @@
     #_method
     (defn- #_"BitmapIndexedNode" BitmapIndexedNode''editAndRemovePair [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" bit, #_"int" i]
         (when-not (= (:bitmap this) bit)
-            (let [#_"BitmapIndexedNode" e (BitmapIndexedNode''ensureEditable this, edit) #_"Object[]" a (:array e) #_"int" n (alength a)]
-                (ß ass (:bitmap e) (bit-xor (:bitmap e) bit))
+            (let [#_"BitmapIndexedNode" e (-> (BitmapIndexedNode''ensureEditable this, edit) (update :bitmap bit-xor bit))
+                  #_"Object[]" a (:array e) #_"int" n (alength a)]
                 (System/arraycopy a, (* 2 (inc i)), a, (* 2 i), (- n (* 2 (inc i))))
                 (aset a (- n 2) nil)
                 (aset a (- n 1) nil)
@@ -22799,11 +22770,10 @@
                     (cond
                         (< (* n 2) (alength (:array this)))
                             (let [_ (ß ass (:val addedLeaf) addedLeaf)
-                                  #_"BitmapIndexedNode" e (BitmapIndexedNode''ensureEditable this, edit)]
+                                  #_"BitmapIndexedNode" e (-> (BitmapIndexedNode''ensureEditable this, edit) (update :bitmap | bit))]
                                 (System/arraycopy (:array e), (* 2 idx), (:array e), (* 2 (inc idx)), (* 2 (- n idx)))
                                 (aset (:array e) (* 2 idx) key)
                                 (aset (:array e) (inc (* 2 idx)) val)
-                                (ß ass (:bitmap e) (| (:bitmap e) bit))
                                 e
                             )
                         (<= 16 n)
@@ -22827,10 +22797,9 @@
                                 (ß ass (:val addedLeaf) addedLeaf)
                                 (aset a (inc (* 2 idx)) val)
                                 (System/arraycopy (:array this), (* 2 idx), a, (* 2 (inc idx)), (* 2 (- n idx)))
-                                (let [#_"BitmapIndexedNode" e (BitmapIndexedNode''ensureEditable this, edit)]
-                                    (ß ass (:array e) a)
-                                    (ß ass (:bitmap e) (| (:bitmap e) bit))
-                                    e
+                                (-> (BitmapIndexedNode''ensureEditable this, edit)
+                                    (assoc :array a)
+                                    (update :bitmap | bit)
                                 )
                             )
                     )
@@ -23010,10 +22979,10 @@
                     )
                     (let [#_"int" n (:count this) #_"int" m (alength (:array this))]
                         (if (< (* 2 n) m)
-                            (let [_ (ß ass (:val addedLeaf) addedLeaf)
-                                  #_"HashCollisionNode" e (HashCollisionNode''editAndSet this, edit, (* 2 n), key, (inc (* 2 n)), val)]
-                                (ß ass (:count e) (inc (:count e)))
-                                e
+                            (let [_ (ß ass (:val addedLeaf) addedLeaf)]
+                                (-> (HashCollisionNode''editAndSet this, edit, (* 2 n), key, (inc (* 2 n)), val)
+                                    (update :count inc)
+                                )
                             )
                             (let [#_"Object[]" a (make-array Object (+ m 2))]
                                 (System/arraycopy (:array this), 0, a, 0, m)
@@ -23038,12 +23007,12 @@
         (let-when [#_"int" i (HashCollisionNode''findIndex this, key)] (<= 0 i) => this
             (ß ass (:val removedLeaf) removedLeaf)
             (let-when [#_"int" n (:count this)] (< 1 n)
-                (let [#_"HashCollisionNode" e (HashCollisionNode''ensureEditable this, edit) #_"int" m (* 2 n)]
+                (let [#_"HashCollisionNode" e (-> (HashCollisionNode''ensureEditable this, edit) (update :count dec))
+                      #_"int" m (* 2 n)]
                     (aset (:array e) i (aget (:array e) (- m 2)))
                     (aset (:array e) (inc i) (aget (:array e) (- m 1)))
                     (aset (:array e) (- m 2) nil)
                     (aset (:array e) (- m 1) nil)
-                    (ß ass (:count e) (dec (:count e)))
                     e
                 )
             )
@@ -23454,11 +23423,10 @@
                 (§ reify Callable()
                     #_foreign
                     (defn #_"Object" call---Callable [#_"Callable" this] #_(§ throws Exception)
-                        (let [#_"Object" ret (IFn'''invoke-1 combinef)]
-                            (when (some? (:root this))
-                                (ß ass ret (IFn'''invoke-3 combinef, ret, (INode'''fold (:root this), combinef, reducef, fjtask, fjfork, fjjoin)))
-                            )
-                            (if (:hasNull this) (IFn'''invoke-3 combinef, ret, (IFn'''invoke-4 reducef, (IFn'''invoke-1 combinef), nil, (:nullValue this))) ret)
+                        (let [#_"Object" ret (IFn'''invoke-1 combinef)
+                              ret (if (some? (:root this)) (IFn'''invoke-3 combinef, ret, (INode'''fold (:root this), combinef, reducef, fjtask, fjfork, fjjoin)) ret)
+                              ret (if (:hasNull this) (IFn'''invoke-3 combinef, ret, (IFn'''invoke-4 reducef, (IFn'''invoke-1 combinef), nil, (:nullValue this))) ret)]
+                            ret
                         )
                     )
                 )]
