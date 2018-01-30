@@ -52,7 +52,7 @@
     (:use [cloiure slang]))
 
 (import
-    [java.io File FileInputStream FileNotFoundException FileOutputStream InputStreamReader IOException LineNumberReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
+    [java.io FileNotFoundException InputStreamReader IOException LineNumberReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
   #_[java.lang Character Class Exception IllegalArgumentException IllegalStateException Integer Number NumberFormatException Object RuntimeException String StringBuilder Throwable UnsupportedOperationException]
     [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
     [java.lang.reflect Array Constructor Field InvocationHandler #_Method Modifier]
@@ -84,7 +84,7 @@
 (declare ActionQueue'init ActionQueue'new)
 (declare AgentAction'init AgentAction'new AgentAction''execute AgentAction'doRun)
 (declare Agent'sendThreadPoolCounter Agent'sendOffThreadPoolCounter Agent'createThreadFactory Agent'nested Agent'shutdown Agent'init Agent'new-1 Agent'new-2 Agent''setState Agent''getError Agent''setErrorMode Agent''getErrorMode Agent''setErrorHandler Agent''getErrorHandler Agent''restart Agent''dispatch Agent'dispatchAction Agent''enqueue Agent''getQueueCount Agent'releasePendingSends)
-(declare AMapEntry'new AMapEntry''asVector AMapEntry''setValue)
+(declare AMapEntry'new AMapEntry''asVector)
 (declare KeySeq'create KeySeq'createFromMap KeySeq'init KeySeq'new-2 KeySeq'new-3)
 (declare ValSeq'create ValSeq'createFromMap ValSeq'init ValSeq'new-2 ValSeq'new-3)
 (declare APersistentMap'init APersistentMap'new APersistentMap'mapEquals APersistentMap'mapHash APersistentMap'mapHasheq APersistentMap'MAKE_ENTRY APersistentMap'MAKE_KEY APersistentMap'MAKE_VAL APersistentMap''containsValue APersistentMap''keySet APersistentMap''values)
@@ -405,8 +405,7 @@
 (java-ns cloiure.lang.Counted
 
 ;;;
- ; A class that implements Counted promises that it is a collection
- ; that implement a constant-time count()
+ ; Counted promises constant-time (count coll).
  ;;
 (defprotocol Counted
     #_abstract
@@ -503,9 +502,9 @@
 (java-ns cloiure.lang.IExceptionInfo
 
 ;;;
- ; Interface for exceptions that carry data (a map) as additional payload. Cloiure
- ; programs that need richer semantics for exceptions should use this in lieu of
- ; defining project-specific exception classes.
+ ; Interface for exceptions that carry data (a map) as additional payload.
+ ; Cloiure programs that need richer semantics for exceptions should use this
+ ; in lieu of defining project-specific exception classes.
  ;;
 (defprotocol IExceptionInfo
     #_abstract
@@ -2308,10 +2307,9 @@
 )
 
 ;;;
- ; <code>IFn</code> provides complete access to invoking
- ; any of Cloiure's <a href="http://clojure.github.io/clojure/">API</a>s.
- ; You can also access any other library written in Cloiure, after adding
- ; either its source or compiled form to the classpath.
+ ; IFn provides complete access to invoking any of Cloiure's APIs.
+ ; You can also access any other library written in Cloiure, after
+ ; adding either its source or compiled form to the classpath.
  ;;
 (defprotocol IFn #_(§ extends Callable, Runnable)
     #_abstract
@@ -2619,10 +2617,9 @@
 (java-ns cloiure.lang.ISeq
 
 ;;;
- ; A persistent, functional, sequence interface
+ ; A persistent, functional, sequence interface.
  ;
- ; ISeqs are immutable values, i.e. neither first(), nor rest() changes
- ; or invalidates the ISeq
+ ; ISeqs are immutable values, i.e. neither first(), nor rest() changes or invalidates the ISeq.
  ;;
 (defprotocol ISeq #_(§ extends IPersistentCollection)
     #_abstract
@@ -3742,11 +3739,6 @@
     (defn #_"IPersistentStack" IPersistentStack'''pop--AMapEntry [#_"AMapEntry" this]
         (LazilyPersistentVector'createOwning (IMapEntry'''key this))
     )
-
-    #_method
-    (defn #_"Object" AMapEntry''setValue [#_"AMapEntry" this, #_"Object" value]
-        (throw (UnsupportedOperationException.))
-    )
 )
 )
 
@@ -4060,11 +4052,6 @@
         (ILookup'''valAt-3 this, arg1, notFound)
     )
 
-    #_foreign
-    (defn #_"void" clear---APersistentMap [#_"APersistentMap" this]
-        (throw (UnsupportedOperationException.))
-    )
-
     #_method
     (defn #_"boolean" APersistentMap''containsValue [#_"APersistentMap" this, #_"Object" value]
         (.contains (APersistentMap''values this), value)
@@ -4141,11 +4128,6 @@
                 (Associative'''containsKey (§ this APersistentMap), o)
             )
         )
-    )
-
-    #_foreign
-    (defn #_"Object" put---APersistentMap [#_"APersistentMap" this, #_"Object" key, #_"Object" value]
-        (throw (UnsupportedOperationException.))
     )
 
     #_foreign
@@ -4291,16 +4273,6 @@
     #_foreign
     (defn #_"Object[]" toArray---APersistentSet [#_"APersistentSet" this]
         (RT'seqToArray (Seqable'''seq this))
-    )
-
-    #_foreign
-    (defn #_"boolean" add---APersistentSet [#_"APersistentSet" this, #_"Object" o]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (defn #_"void" clear---APersistentSet [#_"APersistentSet" this]
-        (throw (UnsupportedOperationException.))
     )
 
     #_foreign
@@ -4717,16 +4689,6 @@
         )
     )
 
-    #_foreign
-    (defn #_"Object" set---APersistentVector [#_"APersistentVector" this, #_"int" i, #_"Object" o]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (defn #_"void" add---APersistentVector [#_"APersistentVector" this, #_"int" i, #_"Object" o]
-        (throw (UnsupportedOperationException.))
-    )
-
     #_override
     (defn #_"Object" IFn'''invoke-2--APersistentVector [#_"APersistentVector" this, #_"Object" arg1]
         (if (Util'isInteger arg1)
@@ -4812,16 +4774,6 @@
             )
             a
         )
-    )
-
-    #_foreign
-    (defn #_"boolean" add---APersistentVector [#_"APersistentVector" this, #_"Object" o]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (defn #_"void" clear---APersistentVector [#_"APersistentVector" this]
-        (throw (UnsupportedOperationException.))
     )
 
     #_foreign
@@ -6377,16 +6329,6 @@
     )
 
     #_foreign
-    (defn #_"boolean" add---ASeq [#_"ASeq" this, #_"Object" o]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (defn #_"void" clear---ASeq [#_"ASeq" this]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (defn #_"Object[]" toArray---ASeq [#_"ASeq" this, #_"Object[]" a]
         (RT'seqToPassedArray (Seqable'''seq this), a)
     )
@@ -6414,11 +6356,6 @@
     )
 
     #_foreign
-    (defn #_"Object" set---ASeq [#_"ASeq" this, #_"int" index, #_"Object" element]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (defn #_"int" indexOf---ASeq [#_"ASeq" this, #_"Object" o]
         (loop-when [#_"ISeq" s (Seqable'''seq this) #_"int" i 0] (some? s) => -1
             (if (Util'equiv-2oo (.first s), o) i (recur (.next s) (inc i)))
@@ -6433,11 +6370,6 @@
     #_foreign
     (defn #_"Object" get---ASeq [#_"ASeq" this, #_"int" index]
         (RT'nth-2 this, index)
-    )
-
-    #_foreign
-    (defn #_"void" add---ASeq [#_"ASeq" this, #_"int" index, #_"Object" element]
-        (throw (UnsupportedOperationException.))
     )
 )
 )
@@ -8181,7 +8113,7 @@
                             )
                             (let [#_"int" methodidx
                                     (when (< 1 (.size methods)) => 0
-                                        (let [#_"ArrayList<Class[]>" params (ArrayList.) #_"ArrayList<Class>" rets (ArrayList.)]
+                                        (let [#_"List<Class[]>" params (ArrayList.) #_"List<Class>" rets (ArrayList.)]
                                             (dotimes [#_"int" i (.size methods)]
                                                 (let [#_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (.get methods, i))]
                                                     (.add params, (.getParameterTypes m))
@@ -8224,8 +8156,7 @@
                     (aset args i (Expr'''eval (cast' Expr (Indexed'''nth-2 (:args this), i))))
                 )
                 (if (some? (:method this))
-                    (let [#_"LinkedList" ms (LinkedList.)]
-                        (.add ms, (:method this))
+                    (let [#_"List" ms (LinkedList.) _ (.add ms, (:method this))]
                         (Reflector'invokeMatchingMethod (:methodName this), ms, target, args)
                     )
                     (Reflector'invokeInstanceMethod target, (:methodName this), args)
@@ -8339,7 +8270,7 @@
                     (when-not (.isEmpty methods) => (throw (IllegalArgumentException. (str "No matching method: " methodName)))
                         (let [#_"int" methodidx
                                 (when (< 1 (.size methods)) => 0
-                                    (let [#_"ArrayList<Class[]>" params (ArrayList.) #_"ArrayList<Class>" rets (ArrayList.)]
+                                    (let [#_"List<Class[]>" params (ArrayList.) #_"List<Class>" rets (ArrayList.)]
                                         (dotimes [#_"int" i (.size methods)]
                                             (let [#_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (.get methods, i))]
                                                 (.add params, (.getParameterTypes m))
@@ -8371,8 +8302,7 @@
                     (aset args i (Expr'''eval (cast' Expr (Indexed'''nth-2 (:args this), i))))
                 )
                 (if (some? (:method this))
-                    (let [#_"LinkedList" ms (LinkedList.)]
-                        (.add ms, (:method this))
+                    (let [#_"List" ms (LinkedList.) _ (.add ms, (:method this))]
                         (Reflector'invokeMatchingMethod (:methodName this), ms, nil, args)
                     )
                     (Reflector'invokeStaticMethod-3c (:c this), (:methodName this), args)
@@ -9181,7 +9111,7 @@
     (defn #_"NewExpr" NewExpr'new [#_"Class" c, #_"IPersistentVector" args, #_"int" line, #_"int" column]
         (let [#_"Constructor" ctor
                 (let [#_"Constructor[]" allctors (.getConstructors c)
-                      #_"ArrayList" ctors (ArrayList.) #_"ArrayList<Class[]>" params (ArrayList.) #_"ArrayList<Class>" rets (ArrayList.)]
+                      #_"List" ctors (ArrayList.) #_"List<Class[]>" params (ArrayList.) #_"List<Class>" rets (ArrayList.)]
                     (dotimes [#_"int" i (alength allctors)]
                         (let [#_"Constructor" ctor (aget allctors i)]
                             (when (= (alength (.getParameterTypes ctor)) (.count args))
@@ -10393,7 +10323,7 @@
               fn (assoc fn :internalName (.replace (:name fn), \., \/))
               fn (assoc fn :objtype (Type/getObjectType (:internalName fn)))
               #_"Keyword" retkey (Keyword'intern (Symbol'intern nil, "rettag")) #_"Object" rettag (RT'get-2 fmeta, retkey)
-              #_"ArrayList<String>" prims (ArrayList.)
+              #_"List<String>" prims (ArrayList.)
               fn (try
                     (Var'pushThreadBindings (RT'mapUniqueKeys
                         (object-array [
@@ -11239,7 +11169,7 @@
     )
 
     #_method
-    (defn- #_"void" ObjExpr''emitLocal [#_"ObjExpr" this, #_"GeneratorAdapter" gen, #_"LocalBinding" lb, #_"boolean" clear]
+    (defn- #_"void" ObjExpr''emitLocal [#_"ObjExpr" this, #_"GeneratorAdapter" gen, #_"LocalBinding" lb, #_"boolean" clear?]
         (if (Associative'''containsKey (:closes this), lb)
             (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
                 (.loadThis gen)
@@ -11250,7 +11180,7 @@
                     )
                     (do
                         (.getField gen, (:objtype this), (:name lb), Compiler'OBJECT_TYPE)
-                        (when (and (:onceOnly this) clear (:canBeCleared lb))
+                        (when (and (:onceOnly this) clear? (:canBeCleared lb))
                             (.loadThis gen)
                             (.visitInsn gen, Opcodes/ACONST_NULL)
                             (.putField gen, (:objtype this), (:name lb), Compiler'OBJECT_TYPE)
@@ -11266,7 +11196,7 @@
                             (do
                                 (HostExpr'emitBoxReturn this, gen, primc)
                             )
-                            (and clear (:canBeCleared lb))
+                            (and clear? (:canBeCleared lb))
                             (do
                                 (.visitInsn gen, Opcodes/ACONST_NULL)
                                 (.storeArg gen, (- (:idx lb) argoff))
@@ -11280,7 +11210,7 @@
                         )
                         (do
                             (.visitVarInsn gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ILOAD), (:idx lb))
-                            (when (and clear (:canBeCleared lb))
+                            (when (and clear? (:canBeCleared lb))
                                 (.visitInsn gen, Opcodes/ACONST_NULL)
                                 (.visitVarInsn gen, (.getOpcode Compiler'OBJECT_TYPE, Opcodes/ISTORE), (:idx lb))
                             )
@@ -11524,7 +11454,7 @@
                             (Compiler'registerLocal (Symbol'intern (:thisName objx)), nil, nil, false)
                             (Compiler'getAndIncLocalNum)
                         )
-                        (let [#_"ArrayList<Type>" argtypes (ArrayList.) #_"ArrayList<Class>" argclasses (ArrayList.)
+                        (let [#_"List<Type>" argtypes (ArrayList.) #_"List<Class>" argclasses (ArrayList.)
                               [#_"PersistentVector" reqParms #_"LocalBinding" restParm #_"PersistentVector" argLocals]
                                 (loop-when [#_"boolean" rest? false reqParms PersistentVector'EMPTY restParm nil argLocals PersistentVector'EMPTY #_"int" i 0] (< i (.count parms)) => [reqParms restParm argLocals]
                                     (when (§ instance? Symbol (Indexed'''nth-2 parms, i)) => (throw (IllegalArgumentException. "fn params must be Symbols"))
@@ -13593,7 +13523,7 @@
                 )
               this (assoc this :testType testType)
               this (assoc this :skipCheck skipCheck)
-              #_"Collection<Expr>" returns (ArrayList. (.values thens)) _ (.add returns, defaultExpr)
+              #_"List<Expr>" returns (ArrayList. (.values thens)) _ (.add returns, defaultExpr)
               this (assoc this :returnType (Compiler'maybeJavaClass returns))]
             (when (and (pos? (RT'count skipCheck)) (RT'booleanCast-1o (IDeref'''deref RT'WARN_ON_REFLECTION)))
                 (.format (RT'errPrintWriter), "Performance warning, %d:%d - hash collision of some case test constants; if selected, those entries will be tested sequentially.\n", (object-array [ line, column ]))
@@ -14050,7 +13980,7 @@
         )
     )
 
-    (defn #_"Class" Compiler'maybeJavaClass [#_"Collection<Expr>" exprs]
+    (defn #_"Class" Compiler'maybeJavaClass [#_"Iterable" exprs]
         (try
             (let [#_"Iterator" it (.iterator exprs)]
                 (loop-when [#_"Class" match nil] (.hasNext it) => match
@@ -14105,7 +14035,7 @@
         )
     )
 
-    (defn #_"int" Compiler'getMatchingParams [#_"String" methodName, #_"ArrayList<Class[]>" pars, #_"IPersistentVector" args, #_"List<Class>" rets]
+    (defn #_"int" Compiler'getMatchingParams [#_"String" methodName, #_"List<Class[]>" pars, #_"IPersistentVector" args, #_"List<Class>" rets]
         ;; presumes matching lengths
         (let [[#_"int" matchIdx #_"boolean" tied]
                 (loop-when [matchIdx -1 tied false #_"boolean" foundExact false #_"int" i 0] (< i (.size pars)) => [matchIdx tied]
@@ -16112,16 +16042,6 @@
     )
 
     #_foreign
-    (defn #_"boolean" add---LazySeq [#_"LazySeq" this, #_"Object" o]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (defn #_"void" clear---LazySeq [#_"LazySeq" this]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (defn #_"Object[]" toArray---LazySeq [#_"LazySeq" this, #_"Object[]" a]
         (RT'seqToPassedArray (Seqable'''seq this), a)
     )
@@ -16149,11 +16069,6 @@
     )
 
     #_foreign
-    (defn #_"Object" set---LazySeq [#_"LazySeq" this, #_"int" index, #_"Object" element]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (defn #_"int" indexOf---LazySeq [#_"LazySeq" this, #_"Object" o]
         (loop-when [#_"ISeq" s (Seqable'''seq this) #_"int" i 0] (some? s) => -1
             (if (Util'equiv-2oo (.first s), o) i (recur (.next s) (inc i)))
@@ -16168,11 +16083,6 @@
     #_foreign
     (defn #_"Object" get---LazySeq [#_"LazySeq" this, #_"int" index]
         (RT'nth-2 this, index)
-    )
-
-    #_foreign
-    (defn #_"void" add---LazySeq [#_"LazySeq" this, #_"int" index, #_"Object" element]
-        (throw (UnsupportedOperationException.))
     )
 
     #_override
@@ -17401,7 +17311,7 @@
 
     (defn #_"List" LispReader'readDelimitedList [#_"char" delim, #_"PushbackReader" r, #_"boolean" isRecursive, #_"Object" pendingForms]
         (let [#_"int" firstline (if (§ instance? LineNumberingPushbackReader r) (LineNumberingPushbackReader''getLineNumber (cast' LineNumberingPushbackReader r)) -1)
-              #_"ArrayList" a (ArrayList.)]
+              #_"List" a (ArrayList.)]
             (loop []
                 (let [#_"Object" form (LispReader'read-7 r, false, LispReader'READ_EOF, delim, LispReader'READ_FINISHED, isRecursive, pendingForms)]
                     (condp = form
@@ -17524,10 +17434,10 @@
             #_"long" :startTime 0
 
             #_"RetryEx" :retryex (RetryEx'new)
-            #_"ArrayList<AgentAction>" :actions (ArrayList.)
+            #_"List<AgentAction>" :actions (ArrayList.)
             #_"HashMap<Ref, Object>" :vals (HashMap.)
             #_"HashSet<Ref>" :sets (HashSet.)
-            #_"TreeMap<Ref, ArrayList<CFn>>" :commutes (TreeMap.)
+            #_"TreeMap<Ref, List<CFn>>" :commutes (TreeMap.)
 
             #_"HashSet<Ref>" :ensures (HashSet.) ;; all hold readLock
         )
@@ -17696,7 +17606,7 @@
 
     #_method
     (defn #_"Object" LockingTransaction''run [#_"LockingTransaction" this, #_"Callable" fn] #_(§ throws Exception)
-        (let [#_"ArrayList<Ref>" locked (ArrayList.) #_"ArrayList<Notify>" notify (ArrayList.)]
+        (let [#_"List<Ref>" locked (ArrayList.) #_"List<Notify>" notify (ArrayList.)]
             (loop [#_"boolean" done false #_"Object" ret nil #_"int" i 0]
                 (if (and (not done) (< i LockingTransaction'RETRY_LIMIT))
                     (let [[done ret]
@@ -17712,7 +17622,7 @@
                                     (when (.compareAndSet (:status (:info this)), LockingTransaction'RUNNING, LockingTransaction'COMMITTING) => [false ret]
                                         (let [#_"Iterator" it (.iterator (.entrySet (:commutes this)))]
                                             (while (.hasNext it)
-                                                (let [#_"Map$Entry<Ref, ArrayList<CFn>>" e (.next it) #_"Ref" ref (.getKey e)]
+                                                (let [#_"Map$Entry<Ref, List<CFn>>" e (.next it) #_"Ref" ref (.getKey e)]
                                                     (when-not (.contains (:sets this), ref)
                                                         (let [#_"boolean" wasEnsured (.contains (:ensures this), ref)]
                                                             ;; can't upgrade readLock, so release it
@@ -17906,7 +17816,7 @@
                     (.put (:vals this), ref, val)
                 )
             )
-            (let [#_"ArrayList<CFn>" fns
+            (let [#_"List<CFn>" fns
                     (or (.get (:commutes this), ref)
                         (let [fns (ArrayList.)]
                             (.put (:commutes this), ref, fns)
@@ -18935,21 +18845,6 @@
 )
 
 (java-ns cloiure.lang.Murmur3
-;;;
- ; MurmurHash3 was written by Austin Appleby, and is placed in the public
- ; domain. The author hereby disclaims copyright to this source code.
- ;;
-
-;;;
- ; Source:
- ; http://code.google.com/p/smhasher/source/browse/trunk/MurmurHash3.cpp
- ; (Modified to adapt to Guava coding conventions and to use the HashFunction interface)
- ;;
-
-;;;
- ; Modified to remove stuff Clojure doesn't need, placed under clojure.lang namespace,
- ; all fns made static, added hashOrdered/Unordered
- ;;
 
 (§ import java.nio.ByteBuffer)
 
@@ -21835,14 +21730,11 @@
 )
 
 ;;;
- ; Simple implementation of persistent map on an array
+ ; Simple implementation of persistent map on an array.
  ;
- ; Note that instances of this class are constant values
- ; i.e. add/remove etc return new values
- ;
- ; Copies array on every change, so only appropriate for _very_small_ maps
- ;
- ; nil keys and values are ok, but you won't be able to distinguish a nil value via valAt - use contains/entryAt
+ ; Note that instances of this class are constant values, i.e. add/remove etc return new values.
+ ; Copies array on every change, so only appropriate for _very_small_ maps. nil keys and values are
+ ; ok, but you won't be able to distinguish a nil value via valAt, use contains/entryAt for that.
  ;;
 (class-ns PersistentArrayMap (§ extends APersistentMap) (§ implements IObj, IEditableCollection, IMapIterable, IKVReduce)
     (§ def #_"PersistentArrayMap" PersistentArrayMap'EMPTY (PersistentArrayMap'new-0))
@@ -21955,9 +21847,7 @@
     )
 
     ;;;
-     ; This ctor captures/aliases the passed array, so do not modify later
-     ;
-     ; @param init {key1, val1, key2, val2, ...}
+     ; This ctor captures/aliases the passed array, so do not modify it later.
      ;;
     (defn #_"PersistentArrayMap" PersistentArrayMap'new-1 [#_"Object[]" init]
         (let [this (merge (APersistentMap'new) (PersistentArrayMap'init))]
@@ -23156,13 +23046,14 @@
 )
 
 ;;;
- ; A persistent rendition of Phil Bagwell's Hash Array Mapped Trie
+ ; A persistent rendition of Phil Bagwell's Hash Array Mapped Trie.
  ;
- ; Uses path copying for persistence
- ; HashCollision leaves vs. extended hashing
- ; Node polymorphism vs. conditionals
- ; No sub-tree pools or root-resizing
- ; Any errors are my own
+ ; Uses path copying for persistence,
+ ; hash collision leaves vs. extended hashing,
+ ; node polymorphism vs. conditionals,
+ ; no sub-tree pools or root-resizing.
+ ;
+ ; Any errors are my own.
  ;;
 (class-ns PersistentHashMap (§ extends APersistentMap) (§ implements IEditableCollection, IObj, IMapIterable, IKVReduce)
     (§ def #_"PersistentHashMap" PersistentHashMap'EMPTY (PersistentHashMap'new-4 0, nil, false, nil))
@@ -23225,9 +23116,6 @@
         )
     )
 
-    ;;;
-     ; @param init {key1, val1, key2, val2, ...}
-     ;;
     (defn #_"PersistentHashMap" PersistentHashMap'create-2 [#_"IPersistentMap" meta & #_"Object..." init]
         (-> (PersistentHashMap'create-1a init) (IObj'''withMeta meta))
     )
@@ -23669,7 +23557,7 @@
                               => l
                 )
             )
-            (let [#_"LinkedList" l (LinkedList.)]
+            (let [#_"List" l (LinkedList.)]
                 (loop-when-recur [#_"ISeq" s (RT'seq args)] (some? s) [(.next s)]
                     (.add l, (.first s))
                 )
@@ -23687,7 +23575,7 @@
                               => l
                 )
             )
-            (let [#_"LinkedList" l (LinkedList.)]
+            (let [#_"List" l (LinkedList.)]
                 (loop-when-recur [#_"ISeq" s (RT'seq args)] (some? s) [(.next s)]
                     (.add l, (.first s))
                 )
@@ -23829,26 +23717,11 @@
     )
 
     #_foreign
-    (defn #_"boolean" add---EmptyList [#_"EmptyList" this, #_"Object" o]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (defn #_"void" clear---EmptyList [#_"EmptyList" this]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
     (defn #_"Object[]" toArray---EmptyList [#_"EmptyList" this, #_"Object[]" objects]
         (when (pos? (alength objects))
             (aset objects 0 nil)
         )
         objects
-    )
-
-    #_foreign
-    (defn #_"Object" set---EmptyList [#_"EmptyList" this, #_"int" index, #_"Object" element]
-        (throw (UnsupportedOperationException.))
     )
 
     #_foreign
@@ -23866,11 +23739,6 @@
     #_foreign
     (defn #_"Object" get---EmptyList [#_"EmptyList" this, #_"int" index]
         (RT'nth-2 this, index)
-    )
-
-    #_foreign
-    (defn #_"void" add---EmptyList [#_"EmptyList" this, #_"int" index, #_"Object" element]
-        (throw (UnsupportedOperationException.))
     )
 )
 
@@ -24021,9 +23889,10 @@
 
 ;;;
  ; conses onto rear, peeks/pops from front
- ; See Okasaki's Batched Queues
- ; This differs in that it uses a PersistentVector as the rear, which is in-order,
- ; so no reversing or suspensions required for persistent use
+ ;
+ ; See Okasaki's Batched Queues.
+ ; Differs in that, it uses a PersistentVector as the rear, which is in-order,
+ ; so no reversing or suspensions required for persistent use.
  ;;
 (class-ns PersistentQueue (§ extends Obj) (§ implements IPersistentList, Collection, Counted, IHashEq)
     (§ def #_"PersistentQueue" PersistentQueue'EMPTY (PersistentQueue'new nil, 0, nil, nil))
@@ -24143,16 +24012,6 @@
     #_foreign
     (defn #_"Object[]" toArray---PersistentQueue [#_"PersistentQueue" this]
         (RT'seqToArray (Seqable'''seq this))
-    )
-
-    #_foreign
-    (defn #_"boolean" add---PersistentQueue [#_"PersistentQueue" this, #_"Object" o]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_foreign
-    (defn #_"void" clear---PersistentQueue [#_"PersistentQueue" this]
-        (throw (UnsupportedOperationException.))
     )
 
     #_foreign
@@ -24738,11 +24597,12 @@
 )
 
 ;;;
- ; Persistent Red Black Tree
- ; Note that instances of this class are constant values
- ; i.e. add/remove etc return new values
+ ; Persistent Red Black Tree.
  ;
- ; See Okasaki, Kahrs, Larsen et al
+ ; Note that instances of this class are constant values,
+ ; i.e. add/remove etc return new values.
+ ;
+ ; See Okasaki, Kahrs, Larsen, et al.
  ;;
 (class-ns PersistentTreeMap (§ extends APersistentMap) (§ implements IObj, Reversible, Sorted, IKVReduce)
     (§ def #_"PersistentTreeMap" PersistentTreeMap'EMPTY (PersistentTreeMap'new-0))
@@ -26924,7 +26784,7 @@
 
     (defn #_"Object" Reflector'invokeConstructor [#_"Class" c, #_"Object[]" args]
         (try
-            (let [#_"Constructor[]" allctors (.getConstructors c) #_"ArrayList" ctors (ArrayList.)]
+            (let [#_"Constructor[]" allctors (.getConstructors c) #_"List" ctors (ArrayList.)]
                 (dotimes [#_"int" i (alength allctors)]
                     (let-when [#_"Constructor" ctor (aget allctors i)] (= (alength (.getParameterTypes ctor)) (alength args))
                         (.add ctors, ctor)
@@ -27101,7 +26961,7 @@
 
     (defn #_"List" Reflector'getMethods [#_"Class" c, #_"int" arity, #_"String" name, #_"boolean" getStatics]
         (let [#_"java.lang.reflect.Method[]" allmethods (.getMethods c)
-              #_"ArrayList" methods (ArrayList.) #_"ArrayList" bridgeMethods (ArrayList.)]
+              #_"List" methods (ArrayList.) #_"List" bridgeMethods (ArrayList.)]
             (dotimes [#_"int" i (alength allmethods)]
                 (let [#_"java.lang.reflect.Method" m (aget allmethods i)]
                     (when (and (.equals name, (.getName m)) (= (Modifier/isStatic (.getModifiers m)) getStatics) (= (alength (.getParameterTypes m)) arity))
@@ -33430,11 +33290,11 @@
             (instance? Collection coll)
                 (.toArray (cast Collection coll))
             (instance? Iterable coll)
-                (let [#_"ArrayList" ret (ArrayList.)]
+                (let [#_"List" l (ArrayList.)]
                     (doseq [#_"Object" o (cast Iterable coll)]
-                        (.add ret, o)
+                        (.add l, o)
                     )
-                    (.toArray ret)
+                    (.toArray l)
                 )
             (instance? Map coll)
                 (.toArray (.entrySet (cast Map coll)))
@@ -34551,17 +34411,13 @@
     )
 
     ;;;
-     ; Throw even checked exceptions without being required
-     ; to declare them or catch them. Suggested idiom:
-     ;
-     ; <code>throw sneakyThrow(some exception);</code>
+     ; Throw even checked exceptions without being required to declare or catch them.
      ;;
     (defn #_"RuntimeException" Util'sneakyThrow [#_"Throwable" t]
-        ;; http://www.mail-archive.com/javaposse@googlegroups.com/msg05984.html
         (when (some? t) => (throw (NullPointerException.))
             (Util'sneakyThrow0 #_"<RuntimeException>" t)
+            nil
         )
-        nil
     )
 )
 )

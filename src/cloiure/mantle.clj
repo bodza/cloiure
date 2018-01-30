@@ -5465,7 +5465,7 @@
     ([n-or-q s]
         (let [^BlockingQueue q (if (instance? BlockingQueue n-or-q) n-or-q (LinkedBlockingQueue. (int n-or-q)))
               NIL (Object.) ;; nil sentinel since LBQ doesn't support nils
-              agt (agent (lazy-seq s)) ;; never start with nil; that signifies we've already put eos
+              agt (agent (lazy-seq s)) ;; never start with nil, that signifies we've already put eos
               log-error (fn [q e] (if (.offer q q) (throw e) e))
               fill
                 (fn [s]
@@ -9180,8 +9180,6 @@
         )
     )
     (size [_] cnt)
-    (add [_ o] (throw (UnsupportedOperationException.)))
-    (clear [_] (throw (UnsupportedOperationException.)))
 
     java.util.List
     (get [this i] (.nth this i))
@@ -9203,8 +9201,6 @@
             )
         )
     )
-    (add [_ i o] (throw (UnsupportedOperationException.)))
-    (set [_ i e] (throw (UnsupportedOperationException.)))
 )
 
 (§ defmethod print-method ::Vec [v w]
