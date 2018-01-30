@@ -24631,11 +24631,9 @@
     )
 
     (defn #_"ISeq" TSeq'push [#_"TNode" t, #_"ISeq" stack, #_"boolean" asc]
-        (while (some? t)
-            (ß ass stack (RT'cons t, stack))
-            (ß ass t (if asc (TNode'''left t) (TNode'''right t)))
+        (loop-when [stack stack t t] (some? t) => stack
+            (recur (RT'cons t, stack) (if asc (TNode'''left t) (TNode'''right t)))
         )
-        stack
     )
 
     #_override
@@ -24645,10 +24643,9 @@
 
     #_override
     (defn #_"ISeq" ISeq'''next--TSeq [#_"TSeq" this]
-        (let [#_"TNode" t (cast' TNode (.first (:stack this)))
-              #_"ISeq" nextstack (TSeq'push (if (:asc this) (TNode'''right t) (TNode'''left t)), (.next (:stack this)), (:asc this))]
-            (when (some? nextstack)
-                (TSeq'new-3 nextstack, (:asc this), (dec (:cnt this)))
+        (let [#_"TNode" t (cast' TNode (.first (:stack this))) #_"boolean" asc? (:asc this)]
+            (when-let [#_"ISeq" stack (TSeq'push (if asc? (TNode'''right t) (TNode'''left t)), (.next (:stack this)), asc?)]
+                (TSeq'new-3 stack, asc?, (dec (:cnt this)))
             )
         )
     )
@@ -24675,8 +24672,7 @@
     )
 
     (defn #_"NodeIterator" NodeIterator'new [#_"TNode" t, #_"boolean" asc]
-        (let [this (NodeIterator'init)]
-            (ß ass this (assoc this :asc asc))
+        (let [this (-> (NodeIterator'init) (assoc :asc asc))]
             (NodeIterator''push this, t)
             this
         )
@@ -24684,9 +24680,8 @@
 
     #_method
     (defn #_"void" NodeIterator''push [#_"NodeIterator" this, #_"TNode" t]
-        (while (some? t)
+        (loop-when-recur t (some? t) (if (:asc this) (TNode'''left t) (TNode'''right t))
             (.push (:stack this), t)
-            (ß ass t (if (:asc this) (TNode'''left t) (TNode'''right t)))
         )
         nil
     )
@@ -24812,27 +24807,19 @@
         (PersistentTreeMap'new-4m meta, (:comp this), (:tree this), (:_count this))
     )
 
-    (defn #_"PersistentTreeMap" PersistentTreeMap'create-1s [#_"ISeq" items]
-        (let [#_"IPersistentMap" ret PersistentTreeMap'EMPTY]
-            (loop-when-recur [items items] (some? items) [(.next (.next items))]
-                (when (nil? (.next items))
-                    (throw (IllegalArgumentException. (str "No value supplied for key: " (.first items))))
-                )
-                (ß ass ret (IPersistentMap'''assoc ret, (.first items), (RT'second items)))
+    (defn #_"PersistentTreeMap" PersistentTreeMap'create-1s [#_"ISeq" s]
+        (loop-when [#_"IPersistentMap" m PersistentTreeMap'EMPTY s s] (some? s) => (cast' PersistentTreeMap m)
+            (when (some? (.next s)) => (throw (IllegalArgumentException. (str "No value supplied for key: " (.first s))))
+                (recur (IPersistentMap'''assoc m, (.first s), (RT'second s)) (.next (.next s)))
             )
-            (cast' PersistentTreeMap ret)
         )
     )
 
-    (defn #_"PersistentTreeMap" PersistentTreeMap'create-2 [#_"Comparator" comp, #_"ISeq" items]
-        (let [#_"IPersistentMap" ret (PersistentTreeMap'new-1 comp)]
-            (loop-when-recur [items items] (some? items) [(.next (.next items))]
-                (when (nil? (.next items))
-                    (throw (IllegalArgumentException. (str "No value supplied for key: " (.first items))))
-                )
-                (ß ass ret (IPersistentMap'''assoc ret, (.first items), (RT'second items)))
+    (defn #_"PersistentTreeMap" PersistentTreeMap'create-2 [#_"Comparator" comp, #_"ISeq" s]
+        (loop-when [#_"IPersistentMap" m (PersistentTreeMap'new-1 comp) s s] (some? s) => (cast' PersistentTreeMap m)
+            (when (some? (.next s)) => (throw (IllegalArgumentException. (str "No value supplied for key: " (.first s))))
+                (recur (IPersistentMap'''assoc m, (.first s), (RT'second s)) (.next (.next s)))
             )
-            (cast' PersistentTreeMap ret)
         )
     )
 
@@ -24994,13 +24981,8 @@
 
     #_method
     (defn #_"TNode" PersistentTreeMap''min [#_"PersistentTreeMap" this]
-        (let [#_"TNode" t (:tree this)]
-            (when (some? t)
-                (while (some? (TNode'''left t))
-                    (ß ass t (TNode'''left t))
-                )
-            )
-            t
+        (when-let [#_"TNode" t (:tree this)]
+            (loop-when-recur t (some? (TNode'''left t)) (TNode'''left t) => t)
         )
     )
 
@@ -25013,13 +24995,8 @@
 
     #_method
     (defn #_"TNode" PersistentTreeMap''max [#_"PersistentTreeMap" this]
-        (let [#_"TNode" t (:tree this)]
-            (when (some? t)
-                (while (some? (TNode'''right t))
-                    (ß ass t (TNode'''right t))
-                )
-            )
-            t
+        (when-let [#_"TNode" t (:tree this)]
+            (loop-when-recur t (some? (TNode'''right t)) (TNode'''right t) => t)
         )
     )
 
@@ -25528,10 +25505,10 @@
         )
     )
 
-    (defn #_"Object[]" TransientVector'editableTail [#_"Object[]" tl]
-        (let [#_"Object[]" ret (make-array Object 32)]
-            (System/arraycopy tl, 0, ret, 0, (alength tl))
-            ret
+    (defn #_"Object[]" TransientVector'editableTail [#_"Object[]" tail]
+        (let [#_"Object[]" a (make-array Object 32)]
+            (System/arraycopy tail, 0, a, 0, (alength tail))
+            a
         )
     )
 
@@ -25545,21 +25522,20 @@
                     (update this :cnt inc)
                 )
                 ;; full tail, push into tree
-                (let [#_"VNode" tailnode (VNode'new-2 (:edit (:root this)), (:tail this))]
-                    (ß ass this (assoc this :tail (make-array Object 32)))
-                    (aset (:tail this) 0 val)
-                    (let [#_"int" shift (:shift this)
-                          [#_"VNode" root shift]
-                            (if (< (<< 1 shift) (>>> n 5)) ;; overflow root?
-                                (let [root (VNode'new-1 (:edit (:root this)))]
-                                    (aset (:array root) 0 (:root this))
-                                    (aset (:array root) 1 (PersistentVector'newPath (:edit (:root this)), shift, tailnode))
-                                    [root (+ shift 5)]
-                                )
-                                [(TransientVector''pushTail this, shift, (:root this), tailnode) shift]
-                            )]
-                        (-> this (assoc :root root :shift shift) (update :cnt inc))
-                    )
+                (let [#_"VNode" tailnode (VNode'new-2 (:edit (:root this)), (:tail this))
+                      this (assoc this :tail (make-array Object 32))
+                      _ (aset (:tail this) 0 val)
+                      #_"int" shift (:shift this)
+                      [#_"VNode" root shift]
+                        (if (< (<< 1 shift) (>>> n 5)) ;; overflow root?
+                            (let [root (VNode'new-1 (:edit (:root this)))]
+                                (aset (:array root) 0 (:root this))
+                                (aset (:array root) 1 (PersistentVector'newPath (:edit (:root this)), shift, tailnode))
+                                [root (+ shift 5)]
+                            )
+                            [(TransientVector''pushTail this, shift, (:root this), tailnode) shift]
+                        )]
+                    (-> this (assoc :root root :shift shift) (update :cnt inc))
                 )
             )
         )
@@ -26587,11 +26563,10 @@
     )
 
     (defn #_"RefTVal" RefTVal'new-3 [#_"Object" val, #_"long" point, #_"RefTVal" prior]
-        (let [this (RefTVal'init)]
-            (ß ass this (assoc this :val val))
-            (ß ass this (assoc this :point point))
-            (ß ass this (assoc this :prior prior))
-            (ß ass this (assoc this :next (:next prior)))
+        (let [this
+                (-> (RefTVal'init)
+                    (assoc :val val :point point :prior prior :next (:next prior))
+                )]
             (ß ass (:next (:prior this)) this)
             (ß ass (:prior (:next this)) this)
             this
@@ -27528,283 +27503,282 @@
 
     #_override
     (defn #_"Object" IFn'''applyTo--RestFn [#_"RestFn" this, #_"ISeq" args]
-        (when (<= (RT'boundedLength args, (RestFn'''getRequiredArity this)) (RestFn'''getRequiredArity this))
-            (ß return (AFn'applyToHelper this, (Util'ret1 args, (§ ass args nil))))
-        )
-        (case (RestFn'''getRequiredArity this)
-            0
-                (RestFn'''doInvoke-2 this, (Util'ret1 args, (§ ass args nil)))
-            1
-                (RestFn'''doInvoke-3 this, (.first args),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            2
-                (RestFn'''doInvoke-4 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            3
-                (RestFn'''doInvoke-5 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            4
-                (RestFn'''doInvoke-6 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            5
-                (RestFn'''doInvoke-7 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            6
-                (RestFn'''doInvoke-8 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            7
-                (RestFn'''doInvoke-9 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            8
-                (RestFn'''doInvoke-10 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            9
-                (RestFn'''doInvoke-11 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            10
-                (RestFn'''doInvoke-12 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            11
-                (RestFn'''doInvoke-13 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            12
-                (RestFn'''doInvoke-14 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            13
-                (RestFn'''doInvoke-15 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            14
-                (RestFn'''doInvoke-16 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            15
-                (RestFn'''doInvoke-17 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            16
-                (RestFn'''doInvoke-18 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            17
-                (RestFn'''doInvoke-19 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            18
-                (RestFn'''doInvoke-20 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            19
-                (RestFn'''doInvoke-21 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            20
-                (RestFn'''doInvoke-22 this, (.first args),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (.first (§ ass args (.next args))),
-                    (Util'ret1 (.next args), (§ ass args nil))
-                )
-            (AFn'''throwArity this, -1)
+        (when (< (RestFn'''getRequiredArity this) (RT'boundedLength args, (RestFn'''getRequiredArity this))) => (AFn'applyToHelper this, (Util'ret1 args, (§ ass args nil)))
+            (case (RestFn'''getRequiredArity this)
+                0
+                    (RestFn'''doInvoke-2 this, (Util'ret1 args, (§ ass args nil)))
+                1
+                    (RestFn'''doInvoke-3 this, (.first args),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                2
+                    (RestFn'''doInvoke-4 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                3
+                    (RestFn'''doInvoke-5 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                4
+                    (RestFn'''doInvoke-6 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                5
+                    (RestFn'''doInvoke-7 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                6
+                    (RestFn'''doInvoke-8 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                7
+                    (RestFn'''doInvoke-9 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                8
+                    (RestFn'''doInvoke-10 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                9
+                    (RestFn'''doInvoke-11 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                10
+                    (RestFn'''doInvoke-12 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                11
+                    (RestFn'''doInvoke-13 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                12
+                    (RestFn'''doInvoke-14 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                13
+                    (RestFn'''doInvoke-15 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                14
+                    (RestFn'''doInvoke-16 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                15
+                    (RestFn'''doInvoke-17 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                16
+                    (RestFn'''doInvoke-18 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                17
+                    (RestFn'''doInvoke-19 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                18
+                    (RestFn'''doInvoke-20 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                19
+                    (RestFn'''doInvoke-21 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                20
+                    (RestFn'''doInvoke-22 this, (.first args),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (.first (§ ass args (.next args))),
+                        (Util'ret1 (.next args), (§ ass args nil))
+                    )
+                (AFn'''throwArity this, -1)
+            )
         )
     )
 
@@ -32545,23 +32519,25 @@
     (defn #_"void" RT'load-2 [#_"String" scriptbase, #_"boolean" failIfNotFound] #_(§ throws IOException, ClassNotFoundException)
         (let [#_"String" classfile (str scriptbase RT'LOADER_SUFFIX ".class") #_"String" cljfile (str scriptbase ".cli")
               #_"URL" classURL (RT'getResource (RT'baseLoader), classfile) #_"URL" cljURL (RT'getResource (RT'baseLoader), cljfile)
-              #_"boolean" loaded false]
-            (when (or (and (some? classURL) (or (nil? cljURL) (< (RT'lastModified cljURL, cljfile) (RT'lastModified classURL, classfile)))) (nil? classURL))
-                (try
-                    (Var'pushThreadBindings (RT'mapUniqueKeys
-                        (object-array [
-                            RT'CURRENT_NS         (IDeref'''deref RT'CURRENT_NS)
-                            RT'WARN_ON_REFLECTION (IDeref'''deref RT'WARN_ON_REFLECTION)
-                        ])
-                    ))
-                    (ß ass loaded (some? (RT'loadClassForName (str (.replace scriptbase, \/, \.) RT'LOADER_SUFFIX))))
-                    (finally
-                        (Var'popThreadBindings)
+              #_"boolean" loaded false
+              loaded
+                (when (or (and (some? classURL) (or (nil? cljURL) (< (RT'lastModified cljURL, cljfile) (RT'lastModified classURL, classfile)))) (nil? classURL)) => loaded
+                    (try
+                        (Var'pushThreadBindings (RT'mapUniqueKeys
+                            (object-array [
+                                RT'CURRENT_NS         (IDeref'''deref RT'CURRENT_NS)
+                                RT'WARN_ON_REFLECTION (IDeref'''deref RT'WARN_ON_REFLECTION)
+                            ])
+                        ))
+                        (some? (RT'loadClassForName (str (.replace scriptbase, \/, \.) RT'LOADER_SUFFIX)))
+                        (finally
+                            (Var'popThreadBindings)
+                        )
                     )
-                )
-            )
-            (cond (and (not loaded) (some? cljURL))
-                (RT'loadResourceScript cljfile, true)
+                )]
+            (cond
+                (and (not loaded) (some? cljURL))
+                    (RT'loadResourceScript cljfile, true)
                 (and (not loaded) failIfNotFound)
                     (throw (FileNotFoundException. (str "Could not locate " classfile " or " cljfile " on classpath." (when (.contains scriptbase, "_") " Please check that namespaces with dashes use underscores in the Cloiure file name."))))
             )
@@ -32662,7 +32638,7 @@
                         #_foreign
                         (defn #_"Object" next---Iterator [#_"Iterator" this]
                             (let [_ (.charAt s, (:i this))]
-                                (ß ass (:i this) (inc (:i this)))
+                                (ß ass this (update this :i inc))
                                 _
                             )
                         )
@@ -32704,7 +32680,7 @@
     (defn #_"int" RT'count [#_"Object" o]
         (if (§ instance? Counted o)
             (.count (cast' Counted o))
-            (RT'countFrom (Util'ret1 o, (ß ass o nil)))
+            (RT'countFrom (Util'ret1 o, (§ ass o nil)))
         )
     )
 
@@ -32713,7 +32689,7 @@
             (nil? o)
                 0
             (§ instance? IPersistentCollection o)
-                (let [#_"ISeq" s (RT'seq o) _ (ß ass o nil)]
+                (let [#_"ISeq" s (RT'seq o) _ (§ ass o nil)]
                     (loop-when [#_"int" i 0 s s] (some? s) => i
                         (if (§ instance? Counted s)
                             (+ i (.count s))
@@ -32930,7 +32906,7 @@
     (defn #_"Object" RT'nth-2 [#_"Object" coll, #_"int" n]
         (if (§ instance? Indexed coll)
             (Indexed'''nth-2 (cast' Indexed coll), n)
-            (RT'nthFrom-2 (Util'ret1 coll, (ß ass coll nil)), n)
+            (RT'nthFrom-2 (Util'ret1 coll, (§ ass coll nil)), n)
         )
     )
 
@@ -32955,7 +32931,7 @@
                     )
                 )
             (§ instance? Sequential coll)
-                (let [#_"ISeq" s (RT'seq coll) _ (ß ass coll nil)]
+                (let [#_"ISeq" s (RT'seq coll) _ (§ ass coll nil)]
                     (loop-when [#_"int" i 0 s s] (and (<= i n) (some? s)) => (throw (IndexOutOfBoundsException.))
                         (if (= i n)
                             (.first s)
@@ -33007,7 +32983,7 @@
                     )
                 )
             (§ instance? Sequential coll)
-                (let [#_"ISeq" s (RT'seq coll) _ (ß ass coll nil)]
+                (let [#_"ISeq" s (RT'seq coll) _ (§ ass coll nil)]
                     (loop-when [#_"int" i 0 s s] (and (<= i n) (some? s)) => notFound
                         (if (= i n)
                             (.first s)
@@ -33547,17 +33523,15 @@
     )
 
     (defn #_"Object[]" RT'seqToPassedArray [#_"ISeq" s, #_"Object[]" passed]
-        (let [#_"Object[]" dest passed #_"int" len (RT'count s)]
-            (when (< (alength dest) len)
-                (ß ass dest (§ cast Object[] (Array/newInstance (.getComponentType (.getClass passed)), len)))
-            )
+        (let [#_"Object[]" a passed #_"int" n (RT'count s)
+              a (if (< (alength a) n) (§ cast Object[] (Array/newInstance (.getComponentType (.getClass passed)), n)) a)]
             (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (.next s)]
-                (aset dest i (.first s))
+                (aset a i (.first s))
             )
-            (when (< len (alength passed))
-                (aset dest len nil)
+            (when (< n (alength passed))
+                (aset a n nil)
             )
-            dest
+            a
         )
     )
 
@@ -34315,12 +34289,12 @@
 
     (defn- #_"TransformerIterator" TransformerIterator'init []
         (hash-map
-            ;; Source
+            ;; source
             #_"Iterator" :sourceIter nil
             #_"IFn" :xf nil
             #_"boolean" :multi false
 
-            ;; Iteration state
+            ;; iteration state
             #_volatile
             #_"Buffer" :buffer TransformerIterator'EMPTY
             #_volatile
@@ -34331,28 +34305,28 @@
     )
 
     (defn- #_"TransformerIterator" TransformerIterator'new [#_"IFn" xform, #_"Iterator" sourceIter, #_"boolean" multi]
-        (let [this (TransformerIterator'init)]
-            (ß ass this (assoc this :sourceIter sourceIter))
-            (ß ass this (assoc this :xf (cast' IFn (IFn'''invoke-2 xform,
-                (§ reify AFn()
-                    #_override
-                    (defn #_"Object" IFn'''invoke-1--AFn [#_"AFn" this]
-                        nil
-                    )
+        (let [this (TransformerIterator'init)
+              #_"IFn" xf
+                (cast' IFn (IFn'''invoke-2 xform,
+                    (§ reify AFn()
+                        #_override
+                        (defn #_"Object" IFn'''invoke-1--AFn [#_"AFn" this]
+                            nil
+                        )
 
-                    #_override
-                    (defn #_"Object" IFn'''invoke-2--AFn [#_"AFn" this, #_"Object" acc]
-                        acc
-                    )
+                        #_override
+                        (defn #_"Object" IFn'''invoke-2--AFn [#_"AFn" this, #_"Object" acc]
+                            acc
+                        )
 
-                    #_override
-                    (defn #_"Object" IFn'''invoke-3--AFn [#_"AFn" this, #_"Object" acc, #_"Object" o]
-                        (ß ass this (assoc this :buffer (Buffer'''add (:buffer this), o)))
-                        acc
+                        #_override
+                        (defn #_"Object" IFn'''invoke-3--AFn [#_"AFn" this, #_"Object" acc, #_"Object" o]
+                            (ß ass this (assoc this :buffer (Buffer'''add (:buffer this), o)))
+                            acc
+                        )
                     )
-                )
-            ))))
-            (assoc this :multi multi)
+                ))]
+            (assoc this :sourceIter sourceIter :xf xf :multi multi)
         )
     )
 
@@ -34792,18 +34766,15 @@
 
     (defn #_"Var" Var'new
         ([#_"Namespace" ns, #_"Symbol" sym]
-            (let [this (merge (ARef'new-0) (Var'init))]
-                (ß ass this (assoc this :ns ns))
-                (ß ass this (assoc this :sym sym))
-                (ß ass this (assoc this :threadBound (AtomicBoolean. false)))
-                (ß ass this (assoc this :root (Unbound'new this)))
+            (let [this (merge (ARef'new-0) (Var'init))
+                  this (assoc this :ns ns :sym sym :threadBound (AtomicBoolean. false))
+                  this (assoc this :root (Unbound'new this))]
                 (Var''setMeta this, PersistentHashMap'EMPTY)
                 this
             )
         )
         ([#_"Namespace" ns, #_"Symbol" sym, #_"Object" root]
-            (let [this (Var'new ns, sym)]
-                (ß ass this (assoc this :root root))
+            (let [this (-> (Var'new ns, sym) (assoc :root root))]
                 (ß ass Var'rev (inc Var'rev))
                 this
             )
