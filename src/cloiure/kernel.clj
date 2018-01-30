@@ -303,7 +303,6 @@
 (declare RangeIterator'init RangeIterator'new)
 (declare Range'CHUNK_SIZE Range'positiveStep Range'negativeStep Range'init Range'new-4 Range'new-6 Range'new-7 Range'create-1 Range'create-2 Range'create-3 Range''forceChunk)
 (declare Ratio'init Ratio'new Ratio''intValue Ratio''longValue Ratio''floatValue Ratio''doubleValue Ratio''decimalValue Ratio''decimalValue Ratio''bigIntegerValue)
-(declare RecordIterator'init RecordIterator'new)
 (declare Reduced'init Reduced'new)
 (declare RefTVal'init RefTVal'new-3 RefTVal'new-2)
 (declare Ref'ids Ref'init Ref'new-1 Ref'new-2 Ref''getMinHistory Ref''setMinHistory Ref''getMaxHistory Ref''setMaxHistory Ref''currentVal Ref''set Ref''commute Ref''alter Ref''touch Ref''isBound Ref''trimHistory Ref''getHistoryCount Ref''histCount Ref''fn)
@@ -2572,12 +2571,6 @@
     (#_"void" IProxy'''__updateCloiureFnMappings [#_"IProxy" this, #_"IPersistentMap" m])
     #_abstract
     (#_"IPersistentMap" IProxy'''__getCloiureFnMappings [#_"IProxy" this])
-)
-)
-
-(java-ns cloiure.lang.IRecord
-
-(defprotocol IRecord
 )
 )
 
@@ -11010,12 +11003,6 @@
                         )
                         true
                     )
-                    (§ instance? IRecord value)
-                    (let [#_"Method" createMethod (Method/getMethod (str (.getName (.getClass value)) " create(cloiure.lang.IPersistentMap)"))]
-                        (ObjExpr''emitValue this, (PersistentArrayMap'create (cast java.util.Map value)), gen)
-                        (.invokeStatic gen, (Compiler'getType (.getClass value)), createMethod)
-                        true
-                    )
                     (§ instance? IPersistentMap value)
                     (let [#_"List" entries (ArrayList.)]
                         (doseq [#_"Map$Entry" entry (cast Set #_"<Map$Entry>" (.entrySet (cast Map value)))]
@@ -12956,11 +12943,11 @@
     )
 
     ;;;
-     ; Current host interop uses reflection, which requires pre-existing classes
+     ; Current host interop uses reflection, which requires pre-existing classes.
      ; Work around this by:
      ; Generate a stub class that has the same interfaces and fields as the class we are generating.
-     ; Use it as a type hint for this, and bind the simple name of the class to this stub (in resolve etc)
-     ; Unmunge the name (using a magic prefix) on any code gen for classes
+     ; Use it as a type hint for this, and bind the simple name of the class to this stub (in resolve etc.)
+     ; Unmunge the name (using a magic prefix) on any code gen for classes.
      ;;
     (defn #_"Class" NewInstanceExpr'compileStub [#_"String" superName, #_"NewInstanceExpr" ret, #_"String[]" interfaceNames, #_"Object" frm]
         (let [#_"ClassWriter" cw (ClassWriter. ClassWriter/COMPUTE_MAXS) #_"ClassVisitor" cv cw]
@@ -14332,13 +14319,12 @@
                                 (= c (§ class Keyword))              (Compiler'registerKeyword (cast' Keyword form))
                                 (instance? Number form)              (NumberExpr'parse (cast Number form))
                                 (= c String)                         (StringExpr'new (.intern (cast String form)))
-                                (and (§ instance? IPersistentCollection form) (not (§ instance? IRecord form)) (not (§ instance? IType form)) (zero? (.count (cast' IPersistentCollection form))))
+                                (and (§ instance? IPersistentCollection form) (not (§ instance? IType form)) (zero? (.count (cast' IPersistentCollection form))))
                                     (let-when [#_"Expr" e (EmptyExpr'new form)] (some? (RT'meta form)) => e
                                         (MetaExpr'new e, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (IMeta'''meta (cast' IObj form))))
                                     )
                                 (§ instance? ISeq form)              (Compiler'analyzeSeq context, (cast' ISeq form), name)
                                 (§ instance? IPersistentVector form) (VectorExpr'parse context, (cast' IPersistentVector form))
-                                (§ instance? IRecord form)           (ConstantExpr'new form)
                                 (§ instance? IType form)             (ConstantExpr'new form)
                                 (§ instance? IPersistentMap form)    (MapExpr'parse context, (cast' IPersistentMap form))
                                 (§ instance? IPersistentSet form)    (SetExpr'parse context, (cast' IPersistentSet form))
@@ -16829,8 +16815,6 @@
                         (throw (IllegalStateException. "splice not in list"))
                     (§ instance? IPersistentCollection form)
                         (cond
-                            (§ instance? IRecord form)
-                                form
                             (§ instance? IPersistentMap form)
                                 (let [#_"IPersistentVector" keyvals (SyntaxQuoteReader'flattenMap form)]
                                     (RT'list-3 LispReader'APPLY, LispReader'HASHMAP, (RT'list-2 LispReader'SEQ, (RT'cons LispReader'CONCAT, (SyntaxQuoteReader'sqExpandList (Seqable'''seq keyvals)))))
@@ -26482,44 +26466,6 @@
     #_foreign
     (defn #_"int" compareTo---Ratio [#_"Ratio" this, #_"Object" o]
         (Numbers'compare this, (cast Number o))
-    )
-)
-)
-
-(java-ns cloiure.lang.RecordIterator
-
-(§ import java.util.Iterator)
-
-(class-ns RecordIterator (§ implements Iterator)
-    (defn- #_"RecordIterator" RecordIterator'init []
-        (hash-map
-            #_"int" :i 0
-            #_"int" :basecnt 0
-            #_"ILookup" :rec nil
-            #_"IPersistentVector" :basefields nil
-            #_"Iterator" :extmap nil
-        )
-    )
-
-    (defn #_"RecordIterator" RecordIterator'new [#_"ILookup" rec, #_"IPersistentVector" basefields, #_"Iterator" extmap]
-        (let [this (RecordIterator'init)]
-            (assoc this :rec rec :basefields basefields :basecnt (.count basefields) :extmap extmap)
-        )
-    )
-
-    #_foreign
-    (defn #_"boolean" hasNext---RecordIterator [#_"RecordIterator" this]
-        (or (< (:i this) (:basecnt this)) (.hasNext (:extmap this)))
-    )
-
-    #_foreign
-    (defn #_"Object" next---RecordIterator [#_"RecordIterator" this]
-        (when (< (:i this) (:basecnt this)) => (.next (:extmap this))
-            (let [#_"Object" k (Indexed'''nth-2 (:basefields this), (:i this))]
-                (ß ass this (update this :i inc))
-                (MapEntry'create k, (ILookup'''valAt-2 (:rec this), k))
-            )
-        )
     )
 )
 )
