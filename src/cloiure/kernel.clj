@@ -204,27 +204,27 @@
 (declare LazySeq'init LazySeq'new-1 LazySeq'new-2 LazySeq''sval)
 (declare LineNumberingPushbackReader'newline LineNumberingPushbackReader'init LineNumberingPushbackReader'new-1 LineNumberingPushbackReader'new-2 LineNumberingPushbackReader''getLineNumber LineNumberingPushbackReader''setLineNumber LineNumberingPushbackReader''getColumnNumber LineNumberingPushbackReader''readLine LineNumberingPushbackReader''atLineStart)
 (declare LispReaderException'init LispReaderException'new)
-(declare RegexReader'new)
-(declare StringReader'new)
-(declare CommentReader'new)
-(declare DiscardReader'new)
-(declare NamespaceMapReader'new)
-(declare SymbolicValueReader'new)
+(declare RegexReader'fn)
+(declare StringReader'fn)
+(declare CommentReader'fn)
+(declare DiscardReader'fn)
+(declare NamespaceMapReader'fn)
+(declare SymbolicValueReader'fn)
 (declare WrappingReader'init WrappingReader'new)
-(declare VarReader'new)
-(declare DispatchReader'new)
-(declare FnReader'new)
-(declare ArgReader'new)
-(declare MetaReader'new)
-(declare SyntaxQuoteReader'new SyntaxQuoteReader'syntaxQuote SyntaxQuoteReader'sqExpandList SyntaxQuoteReader'flattenMap)
-(declare UnquoteReader'new)
-(declare CharacterReader'new)
-(declare ListReader'new)
-(declare VectorReader'new)
-(declare MapReader'new)
-(declare SetReader'new)
-(declare UnmatchedDelimiterReader'new)
-(declare UnreadableReader'new)
+(declare VarReader'fn)
+(declare DispatchReader'fn)
+(declare FnReader'fn)
+(declare ArgReader'fn)
+(declare MetaReader'fn)
+(declare SyntaxQuoteReader'fn SyntaxQuoteReader'syntaxQuote SyntaxQuoteReader'sqExpandList SyntaxQuoteReader'flattenMap)
+(declare UnquoteReader'fn)
+(declare CharacterReader'fn)
+(declare ListReader'fn)
+(declare VectorReader'fn)
+(declare MapReader'fn)
+(declare SetReader'fn)
+(declare UnmatchedDelimiterReader'fn)
+(declare UnreadableReader'fn)
 (declare LispReader'macros LispReader'dispatchMacros LispReader'symbolPat LispReader'intPat LispReader'ratioPat LispReader'floatPat LispReader'isWhitespace LispReader'unread LispReader'read1 LispReader'read-1 LispReader'read-4 LispReader'read-5 LispReader'ensurePending LispReader'read-7 LispReader'readToken LispReader'readNumber LispReader'readUnicodeChar-4 LispReader'readUnicodeChar-5 LispReader'interpretToken LispReader'matchSymbol LispReader'matchNumber LispReader'getMacro LispReader'isMacro LispReader'isTerminatingMacro LispReader'garg LispReader'registerArg LispReader'isUnquoteSplicing LispReader'isUnquote LispReader'READ_EOF LispReader'READ_FINISHED LispReader'readDelimitedList)
 (declare RetryEx'new)
 (declare AbortException'new)
@@ -298,7 +298,6 @@
 (declare Reflector'invokeInstanceMethod Reflector'getCauseOrElse Reflector'noMethodReport Reflector'invokeMatchingMethod Reflector'getAsMethodOfPublicBase Reflector'isMatch Reflector'invokeConstructor Reflector'invokeStaticMethodVariadic Reflector'invokeStaticMethod-3s Reflector'invokeStaticMethod-3c Reflector'getStaticField-2s Reflector'getStaticField-2c Reflector'setStaticField-3s Reflector'setStaticField-3c Reflector'getInstanceField Reflector'setInstanceField Reflector'invokeNoArgInstanceMember Reflector'invokeInstanceMember-2 Reflector'invokeInstanceMember-3o Reflector'invokeInstanceMember-3a Reflector'getField Reflector'getMethods Reflector'boxArg Reflector'boxArgs Reflector'paramArgTypeMatch Reflector'isCongruent Reflector'prepRet)
 (declare Repeat'INFINITE Repeat'init Repeat'new-2 Repeat'new-3 Repeat'create-1 Repeat'create-2)
 (declare RestFn'new RestFn'ontoArrayPrepend RestFn'findKey)
-(declare DefaultComparator'new)
 (declare RT'BOOLEANS_CLASS RT'BYTES_CLASS RT'SHORTS_CLASS RT'CHARS_CLASS RT'INTS_CLASS RT'LONGS_CLASS RT'FLOATS_CLASS RT'DOUBLES_CLASS RT'OBJECTS_CLASS)
 (declare RT'T RT'F RT'LOADER_SUFFIX RT'UTF8 RT'inNamespace RT'bootNamespace RT'errPrintWriter RT'EMPTY_ARRAY RT'ID RT'CHECK_SPEC_ASSERTS RT'INSTRUMENT_MACROS RT'CHECK_SPECS RT'keyword RT'var RT'loadResourceScript RT'lastModified RT'load-1 RT'load-2 RT'nextID RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'countFrom RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nthFrom-2 RT'nth-3 RT'nthFrom-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1b RT'intCast-1s RT'intCast-1c RT'intCast-1i RT'intCast-1l RT'intCast-1f RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1l RT'longCast-1f RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1l RT'floatCast-1f RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1l RT'doubleCast-1f RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'printString RT'readString RT'print RT'printInnerSeq RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget_boolean RT'aget_byte RT'aget_short RT'aget_char RT'aget_int RT'aget_long RT'aget_float RT'aget_double RT'aget_object RT'aset_boolean RT'aset_byte RT'aset_short RT'aset_char RT'aset_int RT'aset_long RT'aset_float RT'aset_double RT'aset_object RT'alength_boolean RT'alength_byte RT'alength_short RT'alength_char RT'alength_int RT'alength_long RT'alength_float RT'alength_double RT'alength_object RT'aclone_boolean RT'aclone_byte RT'aclone_short RT'aclone_char RT'aclone_int RT'aclone_long RT'aclone_float RT'aclone_double RT'aclone_object)
 (declare SeqIterator'START SeqIterator'init SeqIterator'new)
@@ -310,7 +309,7 @@
 (declare MultiIterator'init MultiIterator'new)
 (declare TransformerIterator'EMPTY TransformerIterator'NONE TransformerIterator'init TransformerIterator'new TransformerIterator'create TransformerIterator'createMulti TransformerIterator''step)
 (declare Tuple'MAX_SIZE Tuple'create)
-(declare Util'equiv-2oo Util'equivNull Util'equivEquals Util'equivNumber Util'equivColl Util'equivPred Util'equiv-2ll Util'equiv-2ol Util'equiv-2lo Util'equiv-2dd Util'equiv-2od Util'equiv-2do Util'equiv-2bb Util'equiv-2ob Util'equiv-2bo Util'equiv-2cc Util'pcequiv Util'equals Util'identical Util'classOf Util'compare Util'hash Util'hasheq Util'hashCombine Util'isPrimitive Util'isInteger Util'ret1 Util'clearCache)
+(declare Util'equiv-2oo Util'equivNull Util'equivEquals Util'equivNumber Util'equivColl Util'equivPred Util'equiv-2ll Util'equiv-2ol Util'equiv-2lo Util'equiv-2dd Util'equiv-2od Util'equiv-2do Util'equiv-2bb Util'equiv-2ob Util'equiv-2bo Util'equiv-2cc Util'pcequiv Util'equals Util'identical Util'classOf Util'compare Util'hash Util'hasheq Util'hashCombine Util'isPrimitive Util'isInteger Util'clearCache)
 (declare TBox'init TBox'new)
 (declare Unbound'init Unbound'new)
 (declare Frame'init Frame'new)
@@ -326,7 +325,6 @@
 (declare CaseExpr'compactKey CaseExpr'sparseKey CaseExpr'hashIdentityKey CaseExpr'hashEquivKey CaseExpr'intKey)
 (declare Compiler'DEF Compiler'LOOP Compiler'RECUR Compiler'IF Compiler'LET Compiler'LETFN Compiler'DO Compiler'FN Compiler'FNONCE Compiler'QUOTE Compiler'THE_VAR Compiler'DOT Compiler'ASSIGN Compiler'TRY Compiler'CATCH Compiler'FINALLY Compiler'THROW Compiler'MONITOR_ENTER Compiler'MONITOR_EXIT Compiler'IMPORT Compiler'DEFTYPE Compiler'CASE Compiler'CLASS Compiler'NEW Compiler'THIS Compiler'REIFY Compiler'LIST Compiler'HASHMAP Compiler'VECTOR Compiler'IDENTITY Compiler'_AMP_ Compiler'ISEQ Compiler'loadNs Compiler'inlineKey Compiler'inlineAritiesKey Compiler'volatileKey Compiler'implementsKey Compiler'protocolKey Compiler'onKey Compiler'dynamicKey Compiler'redefKey Compiler'NS Compiler'IN_NS Compiler'specials Compiler'LOCAL_ENV Compiler'LOOP_LOCALS Compiler'LOOP_LABEL Compiler'CONSTANTS Compiler'CONSTANT_IDS Compiler'KEYWORD_CALLSITES Compiler'PROTOCOL_CALLSITES Compiler'VAR_CALLSITES Compiler'KEYWORDS Compiler'VARS Compiler'METHOD Compiler'IN_CATCH_FINALLY Compiler'METHOD_RETURN_CONTEXT Compiler'NO_RECUR Compiler'LOADER Compiler'INSTANCE Compiler'LINE Compiler'COLUMN Compiler'NEXT_LOCAL_NUM Compiler'RET_LOCAL_NUM Compiler'COMPILE_STUB_SYM Compiler'COMPILE_STUB_CLASS Compiler'CLEAR_PATH Compiler'CLEAR_ROOT Compiler'CLEAR_SITES Compiler'NIL_EXPR Compiler'TRUE_EXPR Compiler'FALSE_EXPR Compiler'CHAR_MAP)
 (declare Intrinsics'ops Intrinsics'preds)
-(declare RegexReader'stringrdr)
 (declare SymbolicValueReader'specials)
 (declare LispReader'QUOTE LispReader'THE_VAR LispReader'UNQUOTE LispReader'UNQUOTE_SPLICING LispReader'CONCAT LispReader'SEQ LispReader'LIST LispReader'APPLY LispReader'HASHMAP LispReader'HASHSET LispReader'VECTOR LispReader'WITH_META LispReader'META LispReader'DEREF LispReader'GENSYM_ENV LispReader'ARG_ENV LispReader'OPT_EOF LispReader'EOFTHROW)
 (declare MultiFn'assoc MultiFn'dissoc MultiFn'isa MultiFn'parents)
@@ -3009,23 +3007,14 @@
 )
 
 (java-ns cloiure.lang.Compiler
-    #_private
     #_stateless
     (class! Recur [])
     #_abstract
     (class! UntypedExpr [Expr])
-    #_closure
-    (class! DefParser [IParser])
     (class! DefExpr [Expr])
-    #_closure
-    (class! AssignParser [IParser])
     (class! AssignExpr [Expr])
     (class! VarExpr [Expr AssignableExpr])
-    #_closure
-    (class! TheVarParser [IParser])
     (class! TheVarExpr [Expr])
-    #_closure
-    (class! ImportParser [IParser])
     (class! ImportExpr [Expr])
     #_abstract
     (class! LiteralExpr [Expr]
@@ -3033,8 +3022,6 @@
         (#_"Object" val [#_"LiteralExpr" this])
     )
     (class! KeywordExpr [#_"LiteralExpr"])
-    #_closure
-    (class! HostParser [IParser])
     #_abstract
     (class! HostExpr [Expr MaybePrimitiveExpr])
     #_abstract
@@ -3047,31 +3034,17 @@
     (class! StaticMethodExpr [#_"MethodExpr"])
     (class! UnresolvedVarExpr [Expr])
     (class! NumberExpr [#_"LiteralExpr" MaybePrimitiveExpr])
-    #_closure
-    (class! ConstantParser [IParser])
     (class! ConstantExpr [#_"LiteralExpr"])
     (class! NilExpr [#_"LiteralExpr"])
     (class! BooleanExpr [#_"LiteralExpr"])
     (class! StringExpr [#_"LiteralExpr"])
-    #_closure
-    (class! MonitorEnterParser [IParser])
     (class! MonitorEnterExpr [#_"UntypedExpr"])
-    #_closure
-    (class! MonitorExitParser [IParser])
     (class! MonitorExitExpr [#_"UntypedExpr"])
     (class! CatchClause [])
-    #_closure
-    (class! TryParser [IParser])
     (class! TryExpr [Expr])
-    #_closure
-    (class! ThrowParser [IParser])
     (class! ThrowExpr [#_"UntypedExpr"])
-    #_closure
-    (class! NewParser [IParser])
     (class! NewExpr [Expr])
     (class! MetaExpr [Expr])
-    #_closure
-    (class! IfParser [IParser])
     (class! IfExpr [Expr MaybePrimitiveExpr])
     (class! EmptyExpr [Expr])
     (class! ListExpr [Expr])
@@ -3106,29 +3079,15 @@
     (class! FnMethod [#_"ObjMethod"])
     (class! LocalBinding [])
     (class! LocalBindingExpr [Expr MaybePrimitiveExpr AssignableExpr])
-    #_closure
-    (class! BodyParser [IParser])
     (class! BodyExpr [Expr MaybePrimitiveExpr])
     (class! BindingInit [])
-    #_closure
-    (class! LetFnParser [IParser])
     (class! LetFnExpr [Expr])
-    #_closure
-    (class! LetParser [IParser])
     (class! LetExpr [Expr MaybePrimitiveExpr])
-    #_closure
-    (class! RecurParser [IParser])
     (class! RecurExpr [Expr MaybePrimitiveExpr])
     (class! CompilerException [#_"RuntimeException"])
-    #_closure
-    (class! DeftypeParser [IParser])
-    #_closure
-    (class! ReifyParser [IParser])
     (class! NewInstanceExpr [#_"ObjExpr"])
     (class! NewInstanceMethod [#_"ObjMethod"])
     (class! MethodParamExpr [Expr MaybePrimitiveExpr])
-    #_closure
-    (class! CaseParser [IParser])
     (class! CaseExpr [Expr MaybePrimitiveExpr])
 )
 
@@ -3179,47 +3138,7 @@
 
 (java-ns cloiure.lang.LispReader
     (class! LispReaderException [#_"RuntimeException"])
-    #_closure
-    (class! RegexReader [#_"AFn"])
-    #_closure
-    (class! StringReader [#_"AFn"])
-    #_closure
-    (class! CommentReader [#_"AFn"])
-    #_closure
-    (class! DiscardReader [#_"AFn"])
-    #_closure
-    (class! NamespaceMapReader [#_"AFn"])
-    #_closure
-    (class! SymbolicValueReader [#_"AFn"])
     (class! WrappingReader [#_"AFn"])
-    #_closure
-    (class! VarReader [#_"AFn"])
-    #_closure
-    (class! DispatchReader [#_"AFn"])
-    #_closure
-    (class! FnReader [#_"AFn"])
-    #_closure
-    (class! ArgReader [#_"AFn"])
-    #_closure
-    (class! MetaReader [#_"AFn"])
-    #_closure
-    (class! SyntaxQuoteReader [#_"AFn"])
-    #_closure
-    (class! UnquoteReader [#_"AFn"])
-    #_closure
-    (class! CharacterReader [#_"AFn"])
-    #_closure
-    (class! ListReader [#_"AFn"])
-    #_closure
-    (class! VectorReader [#_"AFn"])
-    #_closure
-    (class! MapReader [#_"AFn"])
-    #_closure
-    (class! SetReader [#_"AFn"])
-    #_closure
-    (class! UnmatchedDelimiterReader [#_"AFn"])
-    #_closure
-    (class! UnreadableReader [#_"AFn"])
 )
 
 (java-ns cloiure.lang.LockingTransaction
@@ -3234,7 +3153,6 @@
 (java-ns cloiure.lang.LongRange
     #_non-static
     (class! LongRangeIterator [Iterator])
-    #_private
     (class! LongChunk [IChunk])
     (class! LongRange [#_"ASeq" Counted IChunkedSeq IReduce])
 )
@@ -3360,7 +3278,6 @@
 )
 
 (java-ns cloiure.lang.Range
-    #_private
     #_non-static
     (class! RangeIterator [Iterator])
     (class! Range [#_"ASeq" IChunkedSeq IReduce])
@@ -3389,9 +3306,6 @@
 )
 
 (java-ns cloiure.lang.RT
-    #_private
-    #_closure
-    (class! DefaultComparator [Comparator])
     #_stateless
     (class! RT [])
 )
@@ -3409,13 +3323,9 @@
 )
 
 (java-ns cloiure.lang.TransformerIterator
-    #_private
     (class! EmptyBuffer [Buffer])
-    #_private
     (class! SingleBuffer [Buffer])
-    #_private
     (class! ManyBuffer [Buffer])
-    #_private
     (class! MultiIterator [Iterator])
     (class! TransformerIterator [Iterator])
 )
@@ -3444,7 +3354,6 @@
 (java-ns cloiure.lang.AFn
 
 (class-ns AFn
-    #_protected
     (defn #_"AFn" AFn'new []
         (hash-map)
     )
@@ -3572,37 +3481,36 @@
 
     #_override
     (defn #_"Object" IFn'''applyTo--AFn [#_"AFn" this, #_"ISeq" args]
-        (AFn'applyToHelper this, (Util'ret1 args, (§ ass args nil)))
+        (AFn'applyToHelper this, args)
     )
 
     (defn #_"Object" AFn'applyToHelper [#_"IFn" ifn, #_"ISeq" args]
         (case (RT'boundedLength args, 20)
             0
             (do
-                (§ ass args nil)
                 (.invoke ifn)
             )
             1
             (do
-                (.invoke ifn, (Util'ret1 (.first args), (§ ass args nil)))
+                (.invoke ifn, (.first args))
             )
             2
             (do
                 (.invoke ifn, (.first args),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             3
             (do
                 (.invoke ifn, (.first args),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             4
             (do
                 (.invoke ifn, (.first args),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             5
             (do
@@ -3610,7 +3518,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             6
             (do
@@ -3619,7 +3527,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             7
             (do
@@ -3629,7 +3537,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             8
             (do
@@ -3640,7 +3548,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             9
             (do
@@ -3652,7 +3560,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             10
             (do
@@ -3665,7 +3573,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             11
             (do
@@ -3679,7 +3587,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             12
             (do
@@ -3694,7 +3602,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             13
             (do
@@ -3710,7 +3618,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             14
             (do
@@ -3727,7 +3635,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             15
             (do
@@ -3745,7 +3653,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             16
             (do
@@ -3764,7 +3672,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             17
             (do
@@ -3784,7 +3692,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             18
             (do
@@ -3805,7 +3713,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             19
             (do
@@ -3827,7 +3735,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             20
             (do
@@ -3850,7 +3758,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.first (§ ass args (.next args))), (§ ass args nil)))
+                        (.first (.next args)))
             )
             #_else
             (do
@@ -3874,7 +3782,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (RT'seqToArray (Util'ret1 (.next args), (§ ass args nil))))
+                        (RT'seqToArray (.next args)))
             )
         )
     )
@@ -3898,7 +3806,6 @@
         )
     )
 
-    #_protected
     (defn #_"AFunction" AFunction'new []
         (merge (AFn'new) (AFunction'init))
     )
@@ -3911,7 +3818,6 @@
     #_override
     (defn #_"IObj" IObj'''withMeta--AFunction [#_"AFunction" this, #_"IPersistentMap" meta]
         (§ proxy RestFn()
-            #_protected
             #_override
             (defn #_"Object" RestFn'''doInvoke-2--RestFn [#_"RestFn" this, #_"Object" args]
                 (.applyTo (§ this AFunction), (cast ISeq args))
@@ -3949,132 +3855,110 @@
 (java-ns cloiure.lang.RestFn
 
 (class-ns RestFn
-    #_protected
     (defn #_"RestFn" RestFn'new []
         (AFunction'new)
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-2--RestFn [#_"RestFn" this, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-3--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-4--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-5--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-6--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-7--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-8--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-9--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-10--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-11--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-12--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-13--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-14--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-15--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-16--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-17--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-18--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-19--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-20--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
   #_(defn #_"Object" RestFn'''doInvoke-21--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" args]
         nil
     )
 
-    #_protected
     #_override
   #_(defn #_"Object" RestFn'''doInvoke-22--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20, #_"Object" args]
         nil
@@ -4082,31 +3966,31 @@
 
     #_override
     (defn #_"Object" IFn'''applyTo--RestFn [#_"RestFn" this, #_"ISeq" args]
-        (when (< (.getRequiredArity this) (RT'boundedLength args, (.getRequiredArity this))) => (AFn'applyToHelper this, (Util'ret1 args, (§ ass args nil)))
+        (when (< (.getRequiredArity this) (RT'boundedLength args, (.getRequiredArity this))) => (AFn'applyToHelper this, args)
             (case (.getRequiredArity this)
                 0
-                    (.doInvoke this, (Util'ret1 args, (§ ass args nil)))
+                    (.doInvoke this, args)
                 1
                     (.doInvoke this, (.first args),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 2
                     (.doInvoke this, (.first args),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 3
                     (.doInvoke this, (.first args),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 4
                     (.doInvoke this, (.first args),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 5
                     (.doInvoke this, (.first args),
@@ -4114,7 +3998,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 6
                     (.doInvoke this, (.first args),
@@ -4123,7 +4007,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 7
                     (.doInvoke this, (.first args),
@@ -4133,7 +4017,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 8
                     (.doInvoke this, (.first args),
@@ -4144,7 +4028,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 9
                     (.doInvoke this, (.first args),
@@ -4156,7 +4040,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 10
                     (.doInvoke this, (.first args),
@@ -4169,7 +4053,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 11
                     (.doInvoke this, (.first args),
@@ -4183,7 +4067,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 12
                     (.doInvoke this, (.first args),
@@ -4198,7 +4082,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 13
                     (.doInvoke this, (.first args),
@@ -4214,7 +4098,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 14
                     (.doInvoke this, (.first args),
@@ -4231,7 +4115,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 15
                     (.doInvoke this, (.first args),
@@ -4249,7 +4133,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 16
                     (.doInvoke this, (.first args),
@@ -4268,7 +4152,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 17
                     (.doInvoke this, (.first args),
@@ -4288,7 +4172,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 18
                     (.doInvoke this, (.first args),
@@ -4309,7 +4193,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 19
                     (.doInvoke this, (.first args),
@@ -4331,7 +4215,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 20
                     (.doInvoke this, (.first args),
@@ -4354,7 +4238,7 @@
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
                         (.first (§ ass args (.next args))),
-                        (Util'ret1 (.next args), (§ ass args nil))
+                        (.next args)
                     )
                 (.throwArity this, -1)
             )
@@ -4376,9 +4260,9 @@
     (defn #_"Object" IFn'''invoke-2--RestFn [#_"RestFn" this, #_"Object" arg1]
         (case (.getRequiredArity this)
             0
-                (.doInvoke this, (ArraySeq'create-1 (Util'ret1 arg1, (§ ass arg1 nil))))
+                (.doInvoke this, (ArraySeq'create-1 arg1))
             1
-                (.doInvoke this, (Util'ret1 arg1, (§ ass arg1 nil)), nil)
+                (.doInvoke this, arg1, nil)
             (do
                 (.throwArity this, 1)
             )
@@ -4390,18 +4274,12 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil))))
+                    (ArraySeq'create-1 arg1, arg2))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (ArraySeq'create-1
-                        (Util'ret1 arg2, (§ ass arg2 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)), nil)
+                (.doInvoke this, arg1, arg2, nil)
             (do
                 (.throwArity this, 2)
             )
@@ -4413,27 +4291,15 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (ArraySeq'create-1
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (ArraySeq'create-1
-                        (Util'ret1 arg3, (§ ass arg3 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, nil)
             (do
                 (.throwArity this, 3)
             )
@@ -4445,38 +4311,18 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (ArraySeq'create-1
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (ArraySeq'create-1
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (ArraySeq'create-1
-                        (Util'ret1 arg4, (§ ass arg4 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, nil)
             (do
                 (.throwArity this, 4)
             )
@@ -4488,51 +4334,21 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4, arg5))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4, arg5))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4, arg5))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (ArraySeq'create-1 arg5))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, nil)
             (do
                 (.throwArity this, 5)
             )
@@ -4544,66 +4360,24 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4, arg5, arg6))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4, arg5, arg6))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (ArraySeq'create-1 arg5, arg6))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                    (ArraySeq'create-1 arg6))
             6
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, nil)
             (do
                 (.throwArity this, 6)
             )
@@ -4615,83 +4389,27 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (ArraySeq'create-1
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4, arg5, arg6, arg7))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (ArraySeq'create-1 arg5, arg6, arg7))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                    (ArraySeq'create-1 arg6, arg7))
             6
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                    (ArraySeq'create-1 arg7))
             7
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, nil)
             (do
                 (.throwArity this, 7)
             )
@@ -4703,102 +4421,30 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (ArraySeq'create-1
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (ArraySeq'create-1 arg5, arg6, arg7, arg8))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                    (ArraySeq'create-1 arg6, arg7, arg8))
             6
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                    (ArraySeq'create-1 arg7, arg8))
             7
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                    (ArraySeq'create-1 arg8))
             8
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, nil)
             (do
                 (.throwArity this, 8)
             )
@@ -4810,123 +4456,33 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (ArraySeq'create-1
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                    (ArraySeq'create-1 arg6, arg7, arg8, arg9))
             6
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                    (ArraySeq'create-1 arg7, arg8, arg9))
             7
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                    (ArraySeq'create-1 arg8, arg9))
             8
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                    (ArraySeq'create-1 arg9))
             9
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, nil)
             (do
                 (.throwArity this, 9)
             )
@@ -4938,146 +4494,36 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (ArraySeq'create-1
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10))
             6
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                    (ArraySeq'create-1 arg7, arg8, arg9, arg10))
             7
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                    (ArraySeq'create-1 arg8, arg9, arg10))
             8
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                    (ArraySeq'create-1 arg9, arg10))
             9
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                    (ArraySeq'create-1 arg10))
             10
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, nil)
             (do
                 (.throwArity this, 10)
             )
@@ -5089,171 +4535,39 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11))
             6
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11))
             7
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                    (ArraySeq'create-1 arg8, arg9, arg10, arg11))
             8
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                    (ArraySeq'create-1 arg9, arg10, arg11))
             9
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                    (ArraySeq'create-1 arg10, arg11))
             10
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                    (ArraySeq'create-1 arg11))
             11
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, nil)
             (do
                 (.throwArity this, 11)
             )
@@ -5265,198 +4579,42 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12))
             6
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12))
             7
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12))
             8
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                    (ArraySeq'create-1 arg9, arg10, arg11, arg12))
             9
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                    (ArraySeq'create-1 arg10, arg11, arg12))
             10
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                    (ArraySeq'create-1 arg11, arg12))
             11
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                    (ArraySeq'create-1 arg12))
             12
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, nil)
             (do
                 (.throwArity this, 12)
             )
@@ -5468,227 +4626,45 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
             6
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12, arg13))
             7
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12, arg13))
             8
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                    (ArraySeq'create-1 arg9, arg10, arg11, arg12, arg13))
             9
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                    (ArraySeq'create-1 arg10, arg11, arg12, arg13))
             10
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                    (ArraySeq'create-1 arg11, arg12, arg13))
             11
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                    (ArraySeq'create-1 arg12, arg13))
             12
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg13, (§ ass arg13 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                    (ArraySeq'create-1 arg13))
             13
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, nil)
             (do
                 (.throwArity this, 13)
             )
@@ -5700,258 +4676,48 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (Util'ret1 arg14, (§ ass arg14 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
             6
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
             7
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12, arg13, arg14))
             8
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                    (ArraySeq'create-1 arg9, arg10, arg11, arg12, arg13, arg14))
             9
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                    (ArraySeq'create-1 arg10, arg11, arg12, arg13, arg14))
             10
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                    (ArraySeq'create-1 arg11, arg12, arg13, arg14))
             11
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                    (ArraySeq'create-1 arg12, arg13, arg14))
             12
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                    (ArraySeq'create-1 arg13, arg14))
             13
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg14, (§ ass arg14 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
+                    (ArraySeq'create-1 arg14))
             14
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, nil)
             (do
                 (.throwArity this, 14)
             )
@@ -5963,291 +4729,51 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (Util'ret1 arg15, (§ ass arg15 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
             6
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
             7
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
             8
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                    (ArraySeq'create-1 arg9, arg10, arg11, arg12, arg13, arg14, arg15))
             9
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                    (ArraySeq'create-1 arg10, arg11, arg12, arg13, arg14, arg15))
             10
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                    (ArraySeq'create-1 arg11, arg12, arg13, arg14, arg15))
             11
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                    (ArraySeq'create-1 arg12, arg13, arg14, arg15))
             12
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                    (ArraySeq'create-1 arg13, arg14, arg15))
             13
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
+                    (ArraySeq'create-1 arg14, arg15))
             14
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg15, (§ ass arg15 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
+                    (ArraySeq'create-1 arg15))
             15
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, nil)
             (do
                 (.throwArity this, 15)
             )
@@ -6259,326 +4785,54 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (Util'ret1 arg16, (§ ass arg16 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
             6
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
             7
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
             8
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                    (ArraySeq'create-1 arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
             9
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                    (ArraySeq'create-1 arg10, arg11, arg12, arg13, arg14, arg15, arg16))
             10
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                    (ArraySeq'create-1 arg11, arg12, arg13, arg14, arg15, arg16))
             11
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                    (ArraySeq'create-1 arg12, arg13, arg14, arg15, arg16))
             12
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                    (ArraySeq'create-1 arg13, arg14, arg15, arg16))
             13
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
+                    (ArraySeq'create-1 arg14, arg15, arg16))
             14
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
+                    (ArraySeq'create-1 arg15, arg16))
             15
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg16, (§ ass arg16 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
+                    (ArraySeq'create-1 arg16))
             16
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, nil)
             (do
                 (.throwArity this, 16)
             )
@@ -6590,363 +4844,57 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (Util'ret1 arg16, (§ ass arg16 nil)),
-                        (Util'ret1 arg17, (§ ass arg17 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
             6
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
             7
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
             8
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                    (ArraySeq'create-1 arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
             9
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                    (ArraySeq'create-1 arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
             10
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                    (ArraySeq'create-1 arg11, arg12, arg13, arg14, arg15, arg16, arg17))
             11
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                    (ArraySeq'create-1 arg12, arg13, arg14, arg15, arg16, arg17))
             12
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                    (ArraySeq'create-1 arg13, arg14, arg15, arg16, arg17))
             13
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
+                    (ArraySeq'create-1 arg14, arg15, arg16, arg17))
             14
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
+                    (ArraySeq'create-1 arg15, arg16, arg17))
             15
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
+                    (ArraySeq'create-1 arg16, arg17))
             16
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg17, (§ ass arg17 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16,
+                    (ArraySeq'create-1 arg17))
             17
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, nil)
             (do
                 (.throwArity this, 17)
             )
@@ -6958,402 +4906,60 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (Util'ret1 arg16, (§ ass arg16 nil)),
-                        (Util'ret1 arg17, (§ ass arg17 nil)),
-                        (Util'ret1 arg18, (§ ass arg18 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
             6
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
             7
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
             8
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                    (ArraySeq'create-1 arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
             9
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                    (ArraySeq'create-1 arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
             10
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                    (ArraySeq'create-1 arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
             11
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                    (ArraySeq'create-1 arg12, arg13, arg14, arg15, arg16, arg17, arg18))
             12
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                    (ArraySeq'create-1 arg13, arg14, arg15, arg16, arg17, arg18))
             13
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
+                    (ArraySeq'create-1 arg14, arg15, arg16, arg17, arg18))
             14
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
+                    (ArraySeq'create-1 arg15, arg16, arg17, arg18))
             15
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
+                    (ArraySeq'create-1 arg16, arg17, arg18))
             16
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16,
+                    (ArraySeq'create-1 arg17, arg18))
             17
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg18, (§ ass arg18 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17,
+                    (ArraySeq'create-1 arg18))
             18
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, nil)
             (do
                 (.throwArity this, 18)
             )
@@ -7365,443 +4971,63 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (Util'ret1 arg16, (§ ass arg16 nil)),
-                        (Util'ret1 arg17, (§ ass arg17 nil)),
-                        (Util'ret1 arg18, (§ ass arg18 nil)),
-                        (Util'ret1 arg19, (§ ass arg19 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
             6
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
             7
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
             8
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                    (ArraySeq'create-1 arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
             9
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                    (ArraySeq'create-1 arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
             10
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                    (ArraySeq'create-1 arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
             11
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                    (ArraySeq'create-1 arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
             12
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                    (ArraySeq'create-1 arg13, arg14, arg15, arg16, arg17, arg18, arg19))
             13
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
+                    (ArraySeq'create-1 arg14, arg15, arg16, arg17, arg18, arg19))
             14
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
+                    (ArraySeq'create-1 arg15, arg16, arg17, arg18, arg19))
             15
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
+                    (ArraySeq'create-1 arg16, arg17, arg18, arg19))
             16
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16,
+                    (ArraySeq'create-1 arg17, arg18, arg19))
             17
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17,
+                    (ArraySeq'create-1 arg18, arg19))
             18
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg19, (§ ass arg19 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18,
+                    (ArraySeq'create-1 arg19))
             19
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)),
-                    (Util'ret1 arg19, (§ ass arg19 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, nil)
             (do
                 (.throwArity this, 19)
             )
@@ -7813,486 +5039,66 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (ArraySeq'create-1
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (Util'ret1 arg16, (§ ass arg16 nil)),
-                        (Util'ret1 arg17, (§ ass arg17 nil)),
-                        (Util'ret1 arg18, (§ ass arg18 nil)),
-                        (Util'ret1 arg19, (§ ass arg19 nil)),
-                        (Util'ret1 arg20, (§ ass arg20 nil))))
+                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1,
+                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             6
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             7
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             8
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                    (ArraySeq'create-1 arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             9
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                    (ArraySeq'create-1 arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             10
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                    (ArraySeq'create-1 arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             11
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                    (ArraySeq'create-1 arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             12
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                    (ArraySeq'create-1 arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             13
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
+                    (ArraySeq'create-1 arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             14
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
+                    (ArraySeq'create-1 arg15, arg16, arg17, arg18, arg19, arg20))
             15
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
+                    (ArraySeq'create-1 arg16, arg17, arg18, arg19, arg20))
             16
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16,
+                    (ArraySeq'create-1 arg17, arg18, arg19, arg20))
             17
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17,
+                    (ArraySeq'create-1 arg18, arg19, arg20))
             18
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18,
+                    (ArraySeq'create-1 arg19, arg20))
             19
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)),
-                    (Util'ret1 arg19, (§ ass arg19 nil)),
-                        (ArraySeq'create-1
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19,
+                    (ArraySeq'create-1 arg20))
             20
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)),
-                    (Util'ret1 arg19, (§ ass arg19 nil)),
-                    (Util'ret1 arg20, (§ ass arg20 nil)), nil)
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, nil)
             (do
                 (.throwArity this, 20)
             )
@@ -8304,499 +5110,77 @@
         (case (.getRequiredArity this)
             0
                 (.doInvoke this,
-                    (RestFn'ontoArrayPrepend args,
-                        (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (Util'ret1 arg16, (§ ass arg16 nil)),
-                        (Util'ret1 arg17, (§ ass arg17 nil)),
-                        (Util'ret1 arg18, (§ ass arg18 nil)),
-                        (Util'ret1 arg19, (§ ass arg19 nil)),
-                        (Util'ret1 arg20, (§ ass arg20 nil))))
+                    (RestFn'ontoArrayPrepend args, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             1
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg2, (§ ass arg2 nil)),
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1,
+                    (RestFn'ontoArrayPrepend args, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             2
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg3, (§ ass arg3 nil)),
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2,
+                    (RestFn'ontoArrayPrepend args, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             3
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg4, (§ ass arg4 nil)),
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3,
+                    (RestFn'ontoArrayPrepend args, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             4
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg5, (§ ass arg5 nil)),
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4,
+                    (RestFn'ontoArrayPrepend args, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             5
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg6, (§ ass arg6 nil)),
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                    (RestFn'ontoArrayPrepend args, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             6
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg7, (§ ass arg7 nil)),
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                    (RestFn'ontoArrayPrepend args, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             7
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg8, (§ ass arg8 nil)),
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                    (RestFn'ontoArrayPrepend args, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             8
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg9, (§ ass arg9 nil)),
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                    (RestFn'ontoArrayPrepend args, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             9
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg10, (§ ass arg10 nil)),
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                    (RestFn'ontoArrayPrepend args, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             10
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg11, (§ ass arg11 nil)),
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                    (RestFn'ontoArrayPrepend args, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             11
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg12, (§ ass arg12 nil)),
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                    (RestFn'ontoArrayPrepend args, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             12
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg13, (§ ass arg13 nil)),
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                    (RestFn'ontoArrayPrepend args, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             13
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg14, (§ ass arg14 nil)),
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
+                    (RestFn'ontoArrayPrepend args, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
             14
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg15, (§ ass arg15 nil)),
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
+                    (RestFn'ontoArrayPrepend args, arg15, arg16, arg17, arg18, arg19, arg20))
             15
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg16, (§ ass arg16 nil)),
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
+                    (RestFn'ontoArrayPrepend args, arg16, arg17, arg18, arg19, arg20))
             16
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg17, (§ ass arg17 nil)),
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16,
+                    (RestFn'ontoArrayPrepend args, arg17, arg18, arg19, arg20))
             17
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg18, (§ ass arg18 nil)),
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17,
+                    (RestFn'ontoArrayPrepend args, arg18, arg19, arg20))
             18
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg19, (§ ass arg19 nil)),
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18,
+                    (RestFn'ontoArrayPrepend args, arg19, arg20))
             19
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)),
-                    (Util'ret1 arg19, (§ ass arg19 nil)),
-                        (RestFn'ontoArrayPrepend args,
-                            (Util'ret1 arg20, (§ ass arg20 nil))))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19,
+                    (RestFn'ontoArrayPrepend args, arg20))
             20
-                (.doInvoke this,
-                    (Util'ret1 arg1, (§ ass arg1 nil)),
-                    (Util'ret1 arg2, (§ ass arg2 nil)),
-                    (Util'ret1 arg3, (§ ass arg3 nil)),
-                    (Util'ret1 arg4, (§ ass arg4 nil)),
-                    (Util'ret1 arg5, (§ ass arg5 nil)),
-                    (Util'ret1 arg6, (§ ass arg6 nil)),
-                    (Util'ret1 arg7, (§ ass arg7 nil)),
-                    (Util'ret1 arg8, (§ ass arg8 nil)),
-                    (Util'ret1 arg9, (§ ass arg9 nil)),
-                    (Util'ret1 arg10, (§ ass arg10 nil)),
-                    (Util'ret1 arg11, (§ ass arg11 nil)),
-                    (Util'ret1 arg12, (§ ass arg12 nil)),
-                    (Util'ret1 arg13, (§ ass arg13 nil)),
-                    (Util'ret1 arg14, (§ ass arg14 nil)),
-                    (Util'ret1 arg15, (§ ass arg15 nil)),
-                    (Util'ret1 arg16, (§ ass arg16 nil)),
-                    (Util'ret1 arg17, (§ ass arg17 nil)),
-                    (Util'ret1 arg18, (§ ass arg18 nil)),
-                    (Util'ret1 arg19, (§ ass arg19 nil)),
-                    (Util'ret1 arg20, (§ ass arg20 nil)),
-                        (ArraySeq'create-1 args))
+                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20,
+                    (ArraySeq'create-1 args))
             (do
                 (.throwArity this, 21)
             )
         )
     )
 
-    #_protected
     (defn #_"ISeq" RestFn'ontoArrayPrepend [#_"Object[]" array & #_"Object..." args]
         (loop-when-recur [#_"ISeq" s (ArraySeq'create-1 array) #_"int" i (dec (alength args))] (<= 0 i) [(RT'cons (aget args i), s) (dec i)] => s)
     )
 
-    #_protected
     (defn #_"ISeq" RestFn'findKey [#_"Object" key, #_"ISeq" args]
         (loop-when args (some? args)
             (if (= key (.first args)) (.next args) (recur (RT'next (RT'next args))))
@@ -8845,12 +5229,10 @@
         )
     )
 
-    #_protected
     (defn #_"ASeq" ASeq'new-1 [#_"IPersistentMap" meta]
         (merge (Obj'new-1 meta) (ASeq'init))
     )
 
-    #_protected
     (defn #_"ASeq" ASeq'new-0 []
         (merge (Obj'new-0) (ASeq'init))
     )
@@ -9327,7 +5709,6 @@
         )
     )
 
-    #_protected
     (defn #_"APersistentMap" APersistentMap'new []
         (merge (AFn'new) (APersistentMap'init))
     )
@@ -9597,7 +5978,6 @@
         )
     )
 
-    #_protected
     (defn #_"APersistentSet" APersistentSet'new [#_"IPersistentMap" impl]
         (let [this (merge (AFn'new) (APersistentSet'init))]
             (assoc this :impl impl)
@@ -9856,7 +6236,6 @@
         )
     )
 
-    #_protected
     (defn #_"APersistentVector" APersistentVector'new []
         (merge (AFn'new) (APersistentVector'init))
     )
@@ -10221,7 +6600,6 @@
 (java-ns cloiure.lang.AMapEntry
 
 (class-ns AMapEntry
-    #_protected
     (defn #_"AMapEntry" AMapEntry'new []
         (APersistentVector'new)
     )
@@ -10319,7 +6697,6 @@
 (class-ns ARef
     (defn- #_"ARef" ARef'init []
         (hash-map
-            #_protected
             #_volatile
             #_"IFn" :validator nil
             #_volatile
@@ -12113,7 +8490,6 @@
 (java-ns cloiure.lang.ATransientMap
 
 (class-ns ATransientMap
-    #_protected
     (defn #_"ATransientMap" ATransientMap'new []
         (AFn'new)
     )
@@ -12624,7 +9000,6 @@
 )
 
 (class-ns UntypedExpr
-    #_protected
     (defn #_"UntypedExpr" UntypedExpr'new []
         (hash-map)
     )
@@ -12641,45 +9016,45 @@
 )
 
 (class-ns DefParser
-    (defn #_"DefParser" DefParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--DefParser [#_"DefParser" this, #_"Context" context, #_"Object" form]
-        ;; (def x) or (def x initexpr) or (def x "docstring" initexpr)
-        (let [[#_"String" docstring form]
-                (when (and (= (RT'count form) 4) (instance? String (RT'third form))) => [nil form]
-                    [(cast String (RT'third form)) (RT'list-3 (RT'first form), (RT'second form), (RT'fourth form))]
-                )]
-            (cond
-                (< 3 (RT'count form))                     (throw (RuntimeException. "Too many arguments to def"))
-                (< (RT'count form) 2)                     (throw (RuntimeException. "Too few arguments to def"))
-                (not (instance? Symbol (RT'second form))) (throw (RuntimeException. "First argument to def must be a Symbol"))
-            )
-            (let [#_"Symbol" sym (cast Symbol (RT'second form)) #_"Var" v (Compiler'lookupVar-2 sym, true)]
-                (when (some? v) => (throw (RuntimeException. "Can't refer to qualified var that doesn't exist"))
-                    (let [[v #_"boolean" shadowsCoreMapping]
-                            (when (not (.equals (:ns v), (Compiler'currentNS))) => [v false]
-                                (when (nil? (:ns sym)) => (throw (RuntimeException. "Can't create defs outside of current ns"))
-                                    (let [v (Namespace''intern (Compiler'currentNS), sym)]
-                                        (Compiler'registerVar v)
-                                        [v true]
+    (defn #_"IParser" DefParser'new []
+        (reify IParser
+            ;; (def x) or (def x initexpr) or (def x "docstring" initexpr)
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" form]
+                (let [[#_"String" docstring form]
+                        (when (and (= (RT'count form) 4) (instance? String (RT'third form))) => [nil form]
+                            [(cast String (RT'third form)) (RT'list-3 (RT'first form), (RT'second form), (RT'fourth form))]
+                        )]
+                    (cond
+                        (< 3 (RT'count form))                     (throw (RuntimeException. "Too many arguments to def"))
+                        (< (RT'count form) 2)                     (throw (RuntimeException. "Too few arguments to def"))
+                        (not (instance? Symbol (RT'second form))) (throw (RuntimeException. "First argument to def must be a Symbol"))
+                    )
+                    (let [#_"Symbol" sym (cast Symbol (RT'second form)) #_"Var" v (Compiler'lookupVar-2 sym, true)]
+                        (when (some? v) => (throw (RuntimeException. "Can't refer to qualified var that doesn't exist"))
+                            (let [[v #_"boolean" shadowsCoreMapping]
+                                    (when (not (.equals (:ns v), (Compiler'currentNS))) => [v false]
+                                        (when (nil? (:ns sym)) => (throw (RuntimeException. "Can't create defs outside of current ns"))
+                                            (let [v (Namespace''intern (Compiler'currentNS), sym)]
+                                                (Compiler'registerVar v)
+                                                [v true]
+                                            )
+                                        )
                                     )
+                                  #_"IPersistentMap" mm (.meta sym)
+                                  #_"boolean" isDynamic (RT'booleanCast-1o (RT'get-2 mm, Compiler'dynamicKey))]
+                                (when isDynamic
+                                    (Var''setDynamic v)
+                                )
+                                (when (and (not isDynamic) (.startsWith (:name sym), "*") (.endsWith (:name sym), "*") (< 2 (.length (:name sym))))
+                                    (.format (RT'errPrintWriter), "Warning: %s not declared dynamic and thus is not dynamically rebindable, but its name suggests otherwise. Please either indicate ^:dynamic or change the name.\n", (object-array [ sym ]))
+                                )
+                                (let [mm (cast IPersistentMap (-> mm (RT'assoc RT'LINE_KEY, (Var''get Compiler'LINE)) (.assoc RT'COLUMN_KEY, (Var''get Compiler'COLUMN))))
+                                      mm (if (some? docstring) (cast IPersistentMap (RT'assoc mm, RT'DOC_KEY, docstring)) mm)
+                                      #_"Expr" meta (when (pos? (.count mm)) (Compiler'analyze-2 (if (= context :Context'EVAL) context :Context'EXPRESSION), mm))]
+                                    (DefExpr'new (Compiler'lineDeref), (Compiler'columnDeref), v, (Compiler'analyze-3 (if (= context :Context'EVAL) context :Context'EXPRESSION), (RT'third form), (:name (:sym v))), meta, (= (RT'count form) 3), isDynamic, shadowsCoreMapping)
                                 )
                             )
-                          #_"IPersistentMap" mm (.meta sym)
-                          #_"boolean" isDynamic (RT'booleanCast-1o (RT'get-2 mm, Compiler'dynamicKey))]
-                        (when isDynamic
-                            (Var''setDynamic v)
-                        )
-                        (when (and (not isDynamic) (.startsWith (:name sym), "*") (.endsWith (:name sym), "*") (< 2 (.length (:name sym))))
-                            (.format (RT'errPrintWriter), "Warning: %s not declared dynamic and thus is not dynamically rebindable, but its name suggests otherwise. Please either indicate ^:dynamic or change the name.\n", (object-array [ sym ]))
-                        )
-                        (let [mm (cast IPersistentMap (-> mm (RT'assoc RT'LINE_KEY, (Var''get Compiler'LINE)) (.assoc RT'COLUMN_KEY, (Var''get Compiler'COLUMN))))
-                              mm (if (some? docstring) (cast IPersistentMap (RT'assoc mm, RT'DOC_KEY, docstring)) mm)
-                              #_"Expr" meta (when (pos? (.count mm)) (Compiler'analyze-2 (if (= context :Context'EVAL) context :Context'EXPRESSION), mm))]
-                            (DefExpr'new (Compiler'lineDeref), (Compiler'columnDeref), v, (Compiler'analyze-3 (if (= context :Context'EVAL) context :Context'EXPRESSION), (RT'third form), (:name (:sym v))), meta, (= (RT'count form) 3), isDynamic, shadowsCoreMapping)
                         )
                     )
                 )
@@ -12791,21 +9166,19 @@
 )
 
 (class-ns AssignParser
-    (defn #_"AssignParser" AssignParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--AssignParser [#_"AssignParser" this, #_"Context" context, #_"Object" frm]
-        (let [#_"ISeq" form (cast ISeq frm)]
-            (when-not (= (RT'length form) 3)
-                (throw (IllegalArgumentException. "Malformed assignment, expecting (set! target val)"))
-            )
-            (let [#_"Expr" target (Compiler'analyze-2 :Context'EXPRESSION, (RT'second form))]
-                (when (not (instance? AssignableExpr target))
-                    (throw (IllegalArgumentException. "Invalid assignment target"))
+    (defn #_"IParser" AssignParser'new []
+        (reify IParser
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" form]
+                (let [#_"ISeq" s (cast ISeq form)]
+                    (when (= (RT'length s) 3) => (throw (IllegalArgumentException. "Malformed assignment, expecting (set! target val)"))
+                        (let [#_"Expr" target (Compiler'analyze-2 :Context'EXPRESSION, (RT'second s))]
+                            (when (instance? AssignableExpr target) => (throw (IllegalArgumentException. "Invalid assignment target"))
+                                (AssignExpr'new (cast AssignableExpr target), (Compiler'analyze-2 :Context'EXPRESSION, (RT'third s)))
+                            )
+                        )
+                    )
                 )
-                (AssignExpr'new (cast AssignableExpr target), (Compiler'analyze-2 :Context'EXPRESSION, (RT'third form)))
             )
         )
     )
@@ -12911,15 +9284,15 @@
 )
 
 (class-ns TheVarParser
-    (defn #_"TheVarParser" TheVarParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--TheVarParser [#_"TheVarParser" this, #_"Context" context, #_"Object" form]
-        (let [#_"Symbol" sym (cast Symbol (RT'second form)) #_"Var" v (Compiler'lookupVar-2 sym, false)]
-            (when (some? v) => (throw (RuntimeException. (str "Unable to resolve var: " sym " in this context")))
-                (TheVarExpr'new v)
+    (defn #_"IParser" TheVarParser'new []
+        (reify IParser
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" form]
+                (let [#_"Symbol" sym (cast Symbol (RT'second form)) #_"Var" v (Compiler'lookupVar-2 sym, false)]
+                    (when (some? v) => (throw (RuntimeException. (str "Unable to resolve var: " sym " in this context")))
+                        (TheVarExpr'new v)
+                    )
+                )
             )
         )
     )
@@ -12964,13 +9337,13 @@
 )
 
 (class-ns ImportParser
-    (defn #_"ImportParser" ImportParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--ImportParser [#_"ImportParser" this, #_"Context" context, #_"Object" form]
-        (ImportExpr'new (cast String (RT'second form)))
+    (defn #_"IParser" ImportParser'new []
+        (reify IParser
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" form]
+                (ImportExpr'new (cast String (RT'second form)))
+            )
+        )
     )
 )
 
@@ -13025,7 +9398,6 @@
 )
 
 (class-ns LiteralExpr
-    #_protected
     (defn #_"LiteralExpr" LiteralExpr'new []
         (hash-map)
     )
@@ -13080,60 +9452,60 @@
 )
 
 (class-ns HostParser
-    (defn #_"HostParser" HostParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--HostParser [#_"HostParser" this, #_"Context" context, #_"Object" frm]
-        ;; (. x fieldname-sym) or
-        ;; (. x 0-ary-method)
-        ;; (. x methodname-sym args+)
-        ;; (. x (methodname-sym args?))
-        (let [#_"ISeq" form (cast ISeq frm)]
-            (when-not (< (RT'length form) 3) => (throw (IllegalArgumentException. "Malformed member expression, expecting (. target member ...)"))
-                ;; determine static or instance
-                ;; static target must be symbol, either fully.qualified.Classname or Classname that has been imported
-                (let [#_"int" line (Compiler'lineDeref) #_"int" column (Compiler'columnDeref) #_"Class" c (HostExpr'maybeClass (RT'second form), false)
-                      ;; at this point c will be non-null if static
-                      #_"Expr" instance (when (nil? c) (Compiler'analyze-2 (if (= context :Context'EVAL) context :Context'EXPRESSION), (RT'second form)))
-                      #_"boolean" maybeField (and (= (RT'length form) 3) (instance? Symbol (RT'third form)))
-                      maybeField
-                        (when (and maybeField (not= (.charAt (:name (cast Symbol (RT'third form))), 0) \-)) => maybeField
-                            (let [#_"Symbol" sym (cast Symbol (RT'third form))]
-                                (cond
-                                    (some? c)
-                                        (zero? (.size (Reflector'getMethods c, 0, (Compiler'munge (:name sym)), true)))
-                                    (and (some? instance) (.hasJavaClass instance) (some? (.getJavaClass instance)))
-                                        (zero? (.size (Reflector'getMethods (.getJavaClass instance), 0, (Compiler'munge (:name sym)), false)))
-                                    :else
-                                        maybeField
-                                )
-                            )
-                        )]
-                    (if maybeField
-                        (let [? (= (.charAt (:name (cast Symbol (RT'third form))), 0) \-)
-                              #_"Symbol" sym (if ? (Symbol'intern (.substring (:name (cast Symbol (RT'third form))), 1)) (cast Symbol (RT'third form)))
-                              #_"Symbol" tag (Compiler'tagOf form)]
-                            (if (some? c)
-                                (StaticFieldExpr'new line, column, c, (Compiler'munge (:name sym)), tag)
-                                (InstanceFieldExpr'new line, column, instance, (Compiler'munge (:name sym)), tag, ?)
-                            )
-                        )
-                        (let [#_"ISeq" call (cast ISeq (if (instance? ISeq (RT'third form)) (RT'third form) (RT'next (RT'next form))))]
-                            (when (instance? Symbol (RT'first call)) => (throw (IllegalArgumentException. "Malformed member expression"))
-                                (let [#_"Symbol" sym (cast Symbol (RT'first call))
-                                      #_"Symbol" tag (Compiler'tagOf form)
-                                      #_"boolean" tailPosition (Compiler'inTailCall context)
-                                      #_"PersistentVector" args
-                                        (loop-when-recur [args PersistentVector'EMPTY #_"ISeq" s (RT'next call)]
-                                                         (some? s)
-                                                         [(.cons args, (Compiler'analyze-2 (if (= context :Context'EVAL) context :Context'EXPRESSION), (.first s))) (.next s)]
-                                                      => args
-                                        )]
+    (defn #_"IParser" HostParser'new []
+        (reify IParser
+            ;; (. x fieldname-sym) or
+            ;; (. x 0-ary-method)
+            ;; (. x methodname-sym args+)
+            ;; (. x (methodname-sym args?))
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" frm]
+                (let [#_"ISeq" form (cast ISeq frm)]
+                    (when-not (< (RT'length form) 3) => (throw (IllegalArgumentException. "Malformed member expression, expecting (. target member ...)"))
+                        ;; determine static or instance
+                        ;; static target must be symbol, either fully.qualified.Classname or Classname that has been imported
+                        (let [#_"int" line (Compiler'lineDeref) #_"int" column (Compiler'columnDeref) #_"Class" c (HostExpr'maybeClass (RT'second form), false)
+                              ;; at this point c will be non-null if static
+                              #_"Expr" instance (when (nil? c) (Compiler'analyze-2 (if (= context :Context'EVAL) context :Context'EXPRESSION), (RT'second form)))
+                              #_"boolean" maybeField (and (= (RT'length form) 3) (instance? Symbol (RT'third form)))
+                              maybeField
+                                (when (and maybeField (not= (.charAt (:name (cast Symbol (RT'third form))), 0) \-)) => maybeField
+                                    (let [#_"Symbol" sym (cast Symbol (RT'third form))]
+                                        (cond
+                                            (some? c)
+                                                (zero? (.size (Reflector'getMethods c, 0, (Compiler'munge (:name sym)), true)))
+                                            (and (some? instance) (.hasJavaClass instance) (some? (.getJavaClass instance)))
+                                                (zero? (.size (Reflector'getMethods (.getJavaClass instance), 0, (Compiler'munge (:name sym)), false)))
+                                            :else
+                                                maybeField
+                                        )
+                                    )
+                                )]
+                            (if maybeField
+                                (let [? (= (.charAt (:name (cast Symbol (RT'third form))), 0) \-)
+                                      #_"Symbol" sym (if ? (Symbol'intern (.substring (:name (cast Symbol (RT'third form))), 1)) (cast Symbol (RT'third form)))
+                                      #_"Symbol" tag (Compiler'tagOf form)]
                                     (if (some? c)
-                                        (StaticMethodExpr'new line, column, tag, c, (Compiler'munge (:name sym)), args, tailPosition)
-                                        (InstanceMethodExpr'new line, column, tag, instance, (Compiler'munge (:name sym)), args, tailPosition)
+                                        (StaticFieldExpr'new line, column, c, (Compiler'munge (:name sym)), tag)
+                                        (InstanceFieldExpr'new line, column, instance, (Compiler'munge (:name sym)), tag, ?)
+                                    )
+                                )
+                                (let [#_"ISeq" call (cast ISeq (if (instance? ISeq (RT'third form)) (RT'third form) (RT'next (RT'next form))))]
+                                    (when (instance? Symbol (RT'first call)) => (throw (IllegalArgumentException. "Malformed member expression"))
+                                        (let [#_"Symbol" sym (cast Symbol (RT'first call))
+                                              #_"Symbol" tag (Compiler'tagOf form)
+                                              #_"boolean" tailPosition (Compiler'inTailCall context)
+                                              #_"PersistentVector" args
+                                                (loop-when-recur [args PersistentVector'EMPTY #_"ISeq" s (RT'next call)]
+                                                                 (some? s)
+                                                                 [(.cons args, (Compiler'analyze-2 (if (= context :Context'EVAL) context :Context'EXPRESSION), (.first s))) (.next s)]
+                                                              => args
+                                                )]
+                                            (if (some? c)
+                                                (StaticMethodExpr'new line, column, tag, c, (Compiler'munge (:name sym)), args, tailPosition)
+                                                (InstanceMethodExpr'new line, column, tag, instance, (Compiler'munge (:name sym)), args, tailPosition)
+                                            )
+                                        )
                                     )
                                 )
                             )
@@ -13146,7 +9518,6 @@
 )
 
 (class-ns HostExpr
-    #_protected
     (defn #_"HostExpr" HostExpr'new []
         (hash-map)
     )
@@ -13306,7 +9677,6 @@
 )
 
 (class-ns FieldExpr
-    #_protected
     (defn #_"FieldExpr" FieldExpr'new []
         (HostExpr'new)
     )
@@ -13525,7 +9895,6 @@
 )
 
 (class-ns MethodExpr
-    #_protected
     (defn #_"MethodExpr" MethodExpr'new []
         (HostExpr'new)
     )
@@ -14024,26 +10393,26 @@
 (class-ns ConstantParser
     (§ def #_"Keyword" ConstantParser'formKey (Keyword'intern (Symbol'intern "form")))
 
-    (defn #_"ConstantParser" ConstantParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--ConstantParser [#_"ConstantParser" this, #_"Context" context, #_"Object" form]
-        (let [#_"int" argCount (dec (RT'count form))]
-            (if-not (= argCount 1)
-                (let [#_"IPersistentMap" exData (PersistentArrayMap'new-1 (object-array [ ConstantParser'formKey, form ]))]
-                    (throw (ExceptionInfo'new-2 (str "Wrong number of args (" argCount ") passed to quote"), exData))
-                )
-                (let [#_"Object" v (RT'second form)]
-                    (cond
-                        (nil? v)             Compiler'NIL_EXPR
-                        (= v Boolean/TRUE)   Compiler'TRUE_EXPR
-                        (= v Boolean/FALSE)  Compiler'FALSE_EXPR
-                        (instance? Number v) (NumberExpr'parse (cast Number v))
-                        (instance? String v) (StringExpr'new (cast String v))
-                        (and (instance? IPersistentCollection v) (zero? (.count (cast IPersistentCollection v)))) (EmptyExpr'new v)
-                        :else                (ConstantExpr'new v)
+    (defn #_"IParser" ConstantParser'new []
+        (reify IParser
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" form]
+                (let [#_"int" argCount (dec (RT'count form))]
+                    (if-not (= argCount 1)
+                        (let [#_"IPersistentMap" exData (PersistentArrayMap'new-1 (object-array [ ConstantParser'formKey, form ]))]
+                            (throw (ExceptionInfo'new-2 (str "Wrong number of args (" argCount ") passed to quote"), exData))
+                        )
+                        (let [#_"Object" v (RT'second form)]
+                            (cond
+                                (nil? v)             Compiler'NIL_EXPR
+                                (= v Boolean/TRUE)   Compiler'TRUE_EXPR
+                                (= v Boolean/FALSE)  Compiler'FALSE_EXPR
+                                (instance? Number v) (NumberExpr'parse (cast Number v))
+                                (instance? String v) (StringExpr'new (cast String v))
+                                (and (instance? IPersistentCollection v) (zero? (.count (cast IPersistentCollection v)))) (EmptyExpr'new v)
+                                :else                (ConstantExpr'new v)
+                            )
+                        )
                     )
                 )
             )
@@ -14203,13 +10572,13 @@
 )
 
 (class-ns MonitorEnterParser
-    (defn #_"MonitorEnterParser" MonitorEnterParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--MonitorEnterParser [#_"MonitorEnterParser" this, #_"Context" context, #_"Object" form]
-        (MonitorEnterExpr'new (Compiler'analyze-2 :Context'EXPRESSION, (RT'second form)))
+    (defn #_"IParser" MonitorEnterParser'new []
+        (reify IParser
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" form]
+                (MonitorEnterExpr'new (Compiler'analyze-2 :Context'EXPRESSION, (RT'second form)))
+            )
+        )
     )
 )
 
@@ -14241,13 +10610,13 @@
 )
 
 (class-ns MonitorExitParser
-    (defn #_"MonitorExitParser" MonitorExitParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--MonitorExitParser [#_"MonitorExitParser" this, #_"Context" context, #_"Object" form]
-        (MonitorExitExpr'new (Compiler'analyze-2 :Context'EXPRESSION, (RT'second form)))
+    (defn #_"IParser" MonitorExitParser'new []
+        (reify IParser
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" form]
+                (MonitorExitExpr'new (Compiler'analyze-2 :Context'EXPRESSION, (RT'second form)))
+            )
+        )
     )
 )
 
@@ -14297,113 +10666,113 @@
 )
 
 (class-ns TryParser
-    (defn #_"TryParser" TryParser'new []
-        (hash-map)
-    )
+    (defn #_"IParser" TryParser'new []
+        (reify IParser
+            ;; (try try-expr* catch-expr* finally-expr?)
+            ;; catch-expr: (catch class sym expr*)
+            ;; finally-expr: (finally expr*)
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" frm]
+                (let [#_"ISeq" form (cast ISeq frm)]
+                    (when (= context :Context'RETURN) => (Compiler'analyze-2 context, (RT'list-1 (RT'list-3 Compiler'FNONCE, PersistentVector'EMPTY, form)))
+                        (let [#_"PersistentVector" body PersistentVector'EMPTY #_"PersistentVector" catches PersistentVector'EMPTY
+                              #_"Expr" bodyExpr nil #_"Expr" finallyExpr nil #_"boolean" caught false
+                              #_"int" retLocal (Compiler'getAndIncLocalNum) #_"int" finallyLocal (Compiler'getAndIncLocalNum)]
 
-    #_override
-    (defn #_"Expr" IParser'''parse--TryParser [#_"TryParser" this, #_"Context" context, #_"Object" frm]
-        ;; (try try-expr* catch-expr* finally-expr?)
-        ;; catch-expr: (catch class sym expr*)
-        ;; finally-expr: (finally expr*)
-        (let [#_"ISeq" form (cast ISeq frm)]
-            (when (= context :Context'RETURN) => (Compiler'analyze-2 context, (RT'list-1 (RT'list-3 Compiler'FNONCE, PersistentVector'EMPTY, form)))
-                (let [#_"PersistentVector" body PersistentVector'EMPTY #_"PersistentVector" catches PersistentVector'EMPTY
-                      #_"Expr" bodyExpr nil #_"Expr" finallyExpr nil #_"boolean" caught false
-                      #_"int" retLocal (Compiler'getAndIncLocalNum) #_"int" finallyLocal (Compiler'getAndIncLocalNum)]
-
-                    (loop-when-recur [#_"ISeq" fs (.next form)] (some? fs) [(.next fs)]
-                        (let [#_"Object" f (.first fs) #_"Object" op (when (instance? ISeq f) (.first (cast ISeq f)))]
-                            (if (and (not (Util'equals op, Compiler'CATCH)) (not (Util'equals op, Compiler'FINALLY)))
-                                (do
-                                    (when-not caught => (throw (RuntimeException. "Only catch or finally clause can follow catch in try expression"))
-                                        (ß ass body (.cons body, f))
-                                    )
-                                )
-                                (do
-                                    (when (nil? bodyExpr)
-                                        (try
-                                            (Var'pushThreadBindings (RT'map
-                                                (object-array [
-                                                    Compiler'NO_RECUR              true
-                                                    Compiler'METHOD_RETURN_CONTEXT nil
-                                                ])
-                                            ))
-                                            (ß ass bodyExpr (.parse (BodyParser'new), context, (RT'seq body)))
-                                            (finally
-                                                (Var'popThreadBindings)
+                            (loop-when-recur [#_"ISeq" fs (.next form)] (some? fs) [(.next fs)]
+                                (let [#_"Object" f (.first fs) #_"Object" op (when (instance? ISeq f) (.first (cast ISeq f)))]
+                                    (if (and (not (Util'equals op, Compiler'CATCH)) (not (Util'equals op, Compiler'FINALLY)))
+                                        (do
+                                            (when-not caught => (throw (RuntimeException. "Only catch or finally clause can follow catch in try expression"))
+                                                (ß ass body (.cons body, f))
                                             )
                                         )
-                                    )
-
-                                    (cond (Util'equals op, Compiler'CATCH)
-                                        (let [#_"Class" c (HostExpr'maybeClass (RT'second f), false)]
-                                            (when (nil? c)
-                                                (throw (IllegalArgumentException. (str "Unable to resolve classname: " (RT'second f))))
-                                            )
-                                            (when (not (instance? Symbol (RT'third f)))
-                                                (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " (RT'third f))))
-                                            )
-                                            (let [#_"Symbol" sym (cast Symbol (RT'third f))]
-                                                (when (some? (.getNamespace sym))
-                                                    (throw (RuntimeException. (str "Can't bind qualified name:" sym)))
+                                        (do
+                                            (when (nil? bodyExpr)
+                                                (try
+                                                    (Var'pushThreadBindings (RT'map
+                                                        (object-array [
+                                                            Compiler'NO_RECUR              true
+                                                            Compiler'METHOD_RETURN_CONTEXT nil
+                                                        ])
+                                                    ))
+                                                    (ß ass bodyExpr (.parse (BodyParser'new), context, (RT'seq body)))
+                                                    (finally
+                                                        (Var'popThreadBindings)
+                                                    )
                                                 )
-                                                (let [#_"IPersistentMap" dynamicBindings
-                                                        (RT'map
+                                            )
+
+                                            (cond (Util'equals op, Compiler'CATCH)
+                                                (let [#_"Class" c (HostExpr'maybeClass (RT'second f), false)]
+                                                    (when (nil? c)
+                                                        (throw (IllegalArgumentException. (str "Unable to resolve classname: " (RT'second f))))
+                                                    )
+                                                    (when (not (instance? Symbol (RT'third f)))
+                                                        (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " (RT'third f))))
+                                                    )
+                                                    (let [#_"Symbol" sym (cast Symbol (RT'third f))]
+                                                        (when (some? (.getNamespace sym))
+                                                            (throw (RuntimeException. (str "Can't bind qualified name:" sym)))
+                                                        )
+                                                        (let [#_"IPersistentMap" dynamicBindings
+                                                                (RT'map
+                                                                    (object-array [
+                                                                        Compiler'LOCAL_ENV        (.deref Compiler'LOCAL_ENV)
+                                                                        Compiler'NEXT_LOCAL_NUM   (.deref Compiler'NEXT_LOCAL_NUM)
+                                                                        Compiler'IN_CATCH_FINALLY RT'T
+                                                                    ])
+                                                                )]
+                                                            (try
+                                                                (Var'pushThreadBindings dynamicBindings)
+                                                                (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (cast Symbol (when (instance? Symbol (RT'second f)) (RT'second f))), nil, false)
+                                                                      #_"Expr" handler (.parse (BodyParser'new), :Context'EXPRESSION, (RT'next (RT'next (RT'next f))))]
+                                                                    (ß ass catches (.cons catches, (CatchClause'new c, lb, handler)))
+                                                                )
+                                                                (finally
+                                                                    (Var'popThreadBindings)
+                                                                )
+                                                            )
+                                                            (ß ass caught true)
+                                                        )
+                                                    )
+                                                )
+                                                :else ;; finally
+                                                (do
+                                                    (when (some? (.next fs))
+                                                        (throw (RuntimeException. "finally clause must be last in try expression"))
+                                                    )
+                                                    (try
+                                                        (Var'pushThreadBindings (RT'map
                                                             (object-array [
-                                                                Compiler'LOCAL_ENV        (.deref Compiler'LOCAL_ENV)
-                                                                Compiler'NEXT_LOCAL_NUM   (.deref Compiler'NEXT_LOCAL_NUM)
                                                                 Compiler'IN_CATCH_FINALLY RT'T
                                                             ])
-                                                        )]
-                                                    (try
-                                                        (Var'pushThreadBindings dynamicBindings)
-                                                        (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (cast Symbol (when (instance? Symbol (RT'second f)) (RT'second f))), nil, false)
-                                                              #_"Expr" handler (.parse (BodyParser'new), :Context'EXPRESSION, (RT'next (RT'next (RT'next f))))]
-                                                            (ß ass catches (.cons catches, (CatchClause'new c, lb, handler)))
-                                                        )
+                                                        ))
+                                                        (ß ass finallyExpr (.parse (BodyParser'new), :Context'STATEMENT, (RT'next f)))
                                                         (finally
                                                             (Var'popThreadBindings)
                                                         )
                                                     )
-                                                    (ß ass caught true)
-                                                )
-                                            )
-                                        )
-                                        :else ;; finally
-                                        (do
-                                            (when (some? (.next fs))
-                                                (throw (RuntimeException. "finally clause must be last in try expression"))
-                                            )
-                                            (try
-                                                (Var'pushThreadBindings (RT'map
-                                                    (object-array [
-                                                        Compiler'IN_CATCH_FINALLY RT'T
-                                                    ])
-                                                ))
-                                                (ß ass finallyExpr (.parse (BodyParser'new), :Context'STATEMENT, (RT'next f)))
-                                                (finally
-                                                    (Var'popThreadBindings)
                                                 )
                                             )
                                         )
                                     )
                                 )
                             )
-                        )
-                    )
 
-                    (when (nil? bodyExpr) => (TryExpr'new bodyExpr, catches, finallyExpr, retLocal, finallyLocal)
-                        ;; when there is neither catch nor finally, e.g. (try (expr)) return a body expr directly
-                        (try
-                            (Var'pushThreadBindings (RT'map
-                                (object-array [
-                                    Compiler'NO_RECUR true
-                                ])
-                            ))
-                            (.parse (BodyParser'new), context, (RT'seq body))
-                            (finally
-                                (Var'popThreadBindings)
+                            (when (nil? bodyExpr) => (TryExpr'new bodyExpr, catches, finallyExpr, retLocal, finallyLocal)
+                                ;; when there is neither catch nor finally, e.g. (try (expr)) return a body expr directly
+                                (try
+                                    (Var'pushThreadBindings (RT'map
+                                        (object-array [
+                                            Compiler'NO_RECUR true
+                                        ])
+                                    ))
+                                    (.parse (BodyParser'new), context, (RT'seq body))
+                                    (finally
+                                        (Var'popThreadBindings)
+                                    )
+                                )
                             )
                         )
                     )
@@ -14521,17 +10890,17 @@
 )
 
 (class-ns ThrowParser
-    (defn #_"ThrowParser" ThrowParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--ThrowParser [#_"ThrowParser" this, #_"Context" context, #_"Object" form]
-        (cond
-            (= context :Context'EVAL) (Compiler'analyze-2 context, (RT'list-1 (RT'list-3 Compiler'FNONCE, PersistentVector'EMPTY, form)))
-            (= (RT'count form) 1)     (throw (RuntimeException. "Too few arguments to throw, throw expects a single Throwable instance"))
-            (< 2 (RT'count form))     (throw (RuntimeException. "Too many arguments to throw, throw expects a single Throwable instance"))
-            :else                     (ThrowExpr'new (Compiler'analyze-2 :Context'EXPRESSION, (RT'second form)))
+    (defn #_"IParser" ThrowParser'new []
+        (reify IParser
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" form]
+                (cond
+                    (= context :Context'EVAL) (Compiler'analyze-2 context, (RT'list-1 (RT'list-3 Compiler'FNONCE, PersistentVector'EMPTY, form)))
+                    (= (RT'count form) 1)     (throw (RuntimeException. "Too few arguments to throw, throw expects a single Throwable instance"))
+                    (< 2 (RT'count form))     (throw (RuntimeException. "Too many arguments to throw, throw expects a single Throwable instance"))
+                    :else                     (ThrowExpr'new (Compiler'analyze-2 :Context'EXPRESSION, (RT'second form)))
+                )
+            )
         )
     )
 )
@@ -14564,24 +10933,24 @@
 )
 
 (class-ns NewParser
-    (defn #_"NewParser" NewParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--NewParser [#_"NewParser" this, #_"Context" context, #_"Object" frm]
-        ;; (new Classname args...)
-        (let [#_"int" line (Compiler'lineDeref) #_"int" column (Compiler'columnDeref) #_"ISeq" form (cast ISeq frm)]
-            (when (< 1 (.count form)) => (throw (RuntimeException. "wrong number of arguments, expecting: (new Classname args...)"))
-                (let [#_"Class" c (HostExpr'maybeClass (RT'second form), false)]
-                    (when (some? c) => (throw (IllegalArgumentException. (str "Unable to resolve classname: " (RT'second form))))
-                        (let [#_"PersistentVector" args
-                                (loop-when-recur [args PersistentVector'EMPTY #_"ISeq" s (RT'next (RT'next form))]
-                                                 (some? s)
-                                                 [(.cons args, (Compiler'analyze-2 (if (= context :Context'EVAL) context :Context'EXPRESSION), (.first s))) (.next s)]
-                                              => args
-                                )]
-                            (NewExpr'new c, args, line, column)
+    (defn #_"IParser" NewParser'new []
+        (reify IParser
+            ;; (new Classname args...)
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" frm]
+                (let [#_"int" line (Compiler'lineDeref) #_"int" column (Compiler'columnDeref) #_"ISeq" form (cast ISeq frm)]
+                    (when (< 1 (.count form)) => (throw (RuntimeException. "wrong number of arguments, expecting: (new Classname args...)"))
+                        (let [#_"Class" c (HostExpr'maybeClass (RT'second form), false)]
+                            (when (some? c) => (throw (IllegalArgumentException. (str "Unable to resolve classname: " (RT'second form))))
+                                (let [#_"PersistentVector" args
+                                        (loop-when-recur [args PersistentVector'EMPTY #_"ISeq" s (RT'next (RT'next form))]
+                                                         (some? s)
+                                                         [(.cons args, (Compiler'analyze-2 (if (= context :Context'EVAL) context :Context'EXPRESSION), (.first s))) (.next s)]
+                                                      => args
+                                        )]
+                                    (NewExpr'new c, args, line, column)
+                                )
+                            )
                         )
                     )
                 )
@@ -14723,45 +11092,45 @@
 )
 
 (class-ns IfParser
-    (defn #_"IfParser" IfParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--IfParser [#_"IfParser" this, #_"Context" context, #_"Object" frm]
-        ;; (if test then) or (if test then else)
-        (let [#_"ISeq" form (cast ISeq frm)]
-            (cond
-                (< 4 (.count form)) (throw (RuntimeException. "Too many arguments to if"))
-                (< (.count form) 3) (throw (RuntimeException. "Too few arguments to if"))
-            )
-            (let [#_"PathNode" branch (PathNode'new :PathType'BRANCH, (cast PathNode (Var''get Compiler'CLEAR_PATH)))
-                  #_"Expr" testexpr (Compiler'analyze-2 (if (= context :Context'EVAL) context :Context'EXPRESSION), (RT'second form))
-                  #_"Expr" thenexpr
-                    (try
-                        (Var'pushThreadBindings (RT'map
-                            (object-array [
-                                Compiler'CLEAR_PATH (PathNode'new :PathType'PATH, branch)
-                            ])
-                        ))
-                        (Compiler'analyze-2 context, (RT'third form))
-                        (finally
-                            (Var'popThreadBindings)
-                        )
+    (defn #_"IParser" IfParser'new []
+        (reify IParser
+            ;; (if test then) or (if test then else)
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" frm]
+                (let [#_"ISeq" form (cast ISeq frm)]
+                    (cond
+                        (< 4 (.count form)) (throw (RuntimeException. "Too many arguments to if"))
+                        (< (.count form) 3) (throw (RuntimeException. "Too few arguments to if"))
                     )
-                  #_"Expr" elseexpr
-                    (try
-                        (Var'pushThreadBindings (RT'map
-                            (object-array [
-                                Compiler'CLEAR_PATH (PathNode'new :PathType'PATH, branch)
-                            ])
-                        ))
-                        (Compiler'analyze-2 context, (RT'fourth form))
-                        (finally
-                            (Var'popThreadBindings)
-                        )
-                    )]
-                (IfExpr'new (Compiler'lineDeref), (Compiler'columnDeref), testexpr, thenexpr, elseexpr)
+                    (let [#_"PathNode" branch (PathNode'new :PathType'BRANCH, (cast PathNode (Var''get Compiler'CLEAR_PATH)))
+                          #_"Expr" testexpr (Compiler'analyze-2 (if (= context :Context'EVAL) context :Context'EXPRESSION), (RT'second form))
+                          #_"Expr" thenexpr
+                            (try
+                                (Var'pushThreadBindings (RT'map
+                                    (object-array [
+                                        Compiler'CLEAR_PATH (PathNode'new :PathType'PATH, branch)
+                                    ])
+                                ))
+                                (Compiler'analyze-2 context, (RT'third form))
+                                (finally
+                                    (Var'popThreadBindings)
+                                )
+                            )
+                          #_"Expr" elseexpr
+                            (try
+                                (Var'pushThreadBindings (RT'map
+                                    (object-array [
+                                        Compiler'CLEAR_PATH (PathNode'new :PathType'PATH, branch)
+                                    ])
+                                ))
+                                (Compiler'analyze-2 context, (RT'fourth form))
+                                (finally
+                                    (Var'popThreadBindings)
+                                )
+                            )]
+                        (IfExpr'new (Compiler'lineDeref), (Compiler'columnDeref), testexpr, thenexpr, elseexpr)
+                    )
+                )
             )
         )
     )
@@ -15574,7 +11943,7 @@
                                      [(.cons argvs, (.eval (cast Expr (.nth (:args this), i)))) (inc i)]
                                   => argvs
                     )]
-                (.applyTo fn, (RT'seq (Util'ret1 argvs, (§ ass argvs nil))))
+                (.applyTo fn, (RT'seq argvs))
             )
             (catch Throwable e
                 (throw (if (instance? CompilerException e) (cast CompilerException e) (CompilerException'new (:line this), (:column this), e)))
@@ -15783,9 +12152,7 @@
 
             #_"IPersistentMap" :opts PersistentHashMap'EMPTY
 
-            #_protected
             #_"IPersistentMap" :classMeta nil
-            #_protected
             #_"boolean" :canBeDirect false
 
             #_"DynamicClassLoader" :loader nil
@@ -16085,13 +12452,11 @@
         nil
     )
 
-    #_protected
     #_override
     (defn #_"void" ObjExpr'''emitStatics--ObjExpr [#_"ObjExpr" this, #_"ClassVisitor" gen]
         nil
     )
 
-    #_protected
     #_override
     (defn #_"void" ObjExpr'''emitMethods--ObjExpr [#_"ObjExpr" this, #_"ClassVisitor" gen]
         nil
@@ -16662,7 +13027,6 @@
         (:jc this)
     )
 
-    #_protected
     #_override
     (defn #_"void" ObjExpr'''emitMethods--FnExpr [#_"FnExpr" this, #_"ClassVisitor" cv]
         ;; override of invoke/doInvoke for each method
@@ -16863,7 +13227,6 @@
             #_"int" :column 0
             #_"boolean" :usesThis false
             #_"PersistentHashSet" :localsUsedInCatchFinally PersistentHashSet'EMPTY
-            #_protected
             #_"IPersistentMap" :methodMeta nil
         )
     )
@@ -17526,20 +13889,20 @@
 )
 
 (class-ns BodyParser
-    (defn #_"BodyParser" BodyParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--BodyParser [#_"BodyParser" this, #_"Context" context, #_"Object" forms]
-        (let [#_"ISeq" s (cast ISeq forms) s (if (Util'equals (RT'first s), Compiler'DO) (RT'next s) s)
-              #_"PersistentVector" v
-                (loop-when [v PersistentVector'EMPTY s s] (some? s) => v
-                    (let [#_"Context" c (if (and (not= context :Context'EVAL) (or (= context :Context'STATEMENT) (some? (.next s)))) :Context'STATEMENT context)]
-                        (recur (.cons v, (Compiler'analyze-2 c, (.first s))) (.next s))
-                    )
-                )]
-            (BodyExpr'new (if (pos? (.count v)) v (.cons v, Compiler'NIL_EXPR)))
+    (defn #_"IParser" BodyParser'new []
+        (reify IParser
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" forms]
+                (let [#_"ISeq" s (cast ISeq forms) s (if (Util'equals (RT'first s), Compiler'DO) (RT'next s) s)
+                      #_"PersistentVector" v
+                        (loop-when [v PersistentVector'EMPTY s s] (some? s) => v
+                            (let [#_"Context" c (if (and (not= context :Context'EVAL) (or (= context :Context'STATEMENT) (some? (.next s)))) :Context'STATEMENT context)]
+                                (recur (.cons v, (Compiler'analyze-2 c, (.first s))) (.next s))
+                            )
+                        )]
+                    (BodyExpr'new (if (pos? (.count v)) v (.cons v, Compiler'NIL_EXPR)))
+                )
+            )
         )
     )
 )
@@ -17627,51 +13990,51 @@
 )
 
 (class-ns LetFnParser
-    (defn #_"LetFnParser" LetFnParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--LetFnParser [#_"LetFnParser" this, #_"Context" context, #_"Object" frm]
-        (let [#_"ISeq" form (cast ISeq frm)]
+    (defn #_"IParser" LetFnParser'new []
+        (reify IParser
             ;; (letfns* [var (fn [args] body) ...] body...)
-            (when (instance? IPersistentVector (RT'second form)) => (throw (IllegalArgumentException. "Bad binding form, expected vector"))
-                (let [#_"IPersistentVector" bindings (cast IPersistentVector (RT'second form))]
-                    (when (zero? (% (.count bindings) 2)) => (throw (IllegalArgumentException. "Bad binding form, expected matched symbol expression pairs"))
-                        (if (= context :Context'EVAL)
-                            (Compiler'analyze-2 context, (RT'list-1 (RT'list-3 Compiler'FNONCE, PersistentVector'EMPTY, form)))
-                            (try
-                                (Var'pushThreadBindings (RT'map
-                                    (object-array [
-                                        Compiler'LOCAL_ENV      (.deref Compiler'LOCAL_ENV)
-                                        Compiler'NEXT_LOCAL_NUM (.deref Compiler'NEXT_LOCAL_NUM)
-                                    ])
-                                ))
-                                ;; pre-seed env (like Lisp labels)
-                                (let [#_"PersistentVector" lbs
-                                        (loop-when [lbs PersistentVector'EMPTY #_"int" i 0] (< i (.count bindings)) => lbs
-                                            (let-when [#_"Object" o (.nth bindings, i)] (instance? Symbol o) => (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " o)))
-                                                (let-when [#_"Symbol" sym (cast Symbol o)] (nil? (.getNamespace sym)) => (throw (RuntimeException. (str "Can't let qualified name: " sym)))
-                                                    (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (Compiler'tagOf sym), nil, false)]
-                                                        (ß ass (:canBeCleared lb) false)
-                                                        (recur (.cons lbs, lb) (+ i 2))
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" frm]
+                (let [#_"ISeq" form (cast ISeq frm)]
+                    (when (instance? IPersistentVector (RT'second form)) => (throw (IllegalArgumentException. "Bad binding form, expected vector"))
+                        (let [#_"IPersistentVector" bindings (cast IPersistentVector (RT'second form))]
+                            (when (zero? (% (.count bindings) 2)) => (throw (IllegalArgumentException. "Bad binding form, expected matched symbol expression pairs"))
+                                (if (= context :Context'EVAL)
+                                    (Compiler'analyze-2 context, (RT'list-1 (RT'list-3 Compiler'FNONCE, PersistentVector'EMPTY, form)))
+                                    (try
+                                        (Var'pushThreadBindings (RT'map
+                                            (object-array [
+                                                Compiler'LOCAL_ENV      (.deref Compiler'LOCAL_ENV)
+                                                Compiler'NEXT_LOCAL_NUM (.deref Compiler'NEXT_LOCAL_NUM)
+                                            ])
+                                        ))
+                                        ;; pre-seed env (like Lisp labels)
+                                        (let [#_"PersistentVector" lbs
+                                                (loop-when [lbs PersistentVector'EMPTY #_"int" i 0] (< i (.count bindings)) => lbs
+                                                    (let-when [#_"Object" o (.nth bindings, i)] (instance? Symbol o) => (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " o)))
+                                                        (let-when [#_"Symbol" sym (cast Symbol o)] (nil? (.getNamespace sym)) => (throw (RuntimeException. (str "Can't let qualified name: " sym)))
+                                                            (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (Compiler'tagOf sym), nil, false)]
+                                                                (ß ass (:canBeCleared lb) false)
+                                                                (recur (.cons lbs, lb) (+ i 2))
+                                                            )
+                                                        )
                                                     )
                                                 )
-                                            )
+                                              #_"PersistentVector" bis
+                                                (loop-when [bis PersistentVector'EMPTY #_"int" i 0] (< i (.count bindings)) => bis
+                                                    (let [#_"Symbol" sym (cast Symbol (.nth bindings, i))
+                                                          #_"Expr" init (Compiler'analyze-3 :Context'EXPRESSION, (.nth bindings, (inc i)), (:name sym))
+                                                          #_"LocalBinding" lb (cast LocalBinding (.nth lbs, (/ i 2)))]
+                                                        (ß ass (:init lb) init)
+                                                        (recur (.cons bis, (BindingInit'new lb, init)) (+ i 2))
+                                                    )
+                                                )]
+                                            (LetFnExpr'new bis, (.parse (BodyParser'new), context, (RT'next (RT'next form))))
                                         )
-                                      #_"PersistentVector" bis
-                                        (loop-when [bis PersistentVector'EMPTY #_"int" i 0] (< i (.count bindings)) => bis
-                                            (let [#_"Symbol" sym (cast Symbol (.nth bindings, i))
-                                                  #_"Expr" init (Compiler'analyze-3 :Context'EXPRESSION, (.nth bindings, (inc i)), (:name sym))
-                                                  #_"LocalBinding" lb (cast LocalBinding (.nth lbs, (/ i 2)))]
-                                                (ß ass (:init lb) init)
-                                                (recur (.cons bis, (BindingInit'new lb, init)) (+ i 2))
-                                            )
-                                        )]
-                                    (LetFnExpr'new bis, (.parse (BodyParser'new), context, (RT'next (RT'next form))))
-                                )
-                                (finally
-                                    (Var'popThreadBindings)
+                                        (finally
+                                            (Var'popThreadBindings)
+                                        )
+                                    )
                                 )
                             )
                         )
@@ -17752,136 +14115,136 @@
 )
 
 (class-ns LetParser
-    (defn #_"LetParser" LetParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--LetParser [#_"LetParser" this, #_"Context" context, #_"Object" frm]
-        ;; (let [var val var2 val2 ...] body...)
-        (let [#_"ISeq" form (cast ISeq frm) #_"boolean" isLoop (.equals (RT'first form), Compiler'LOOP)]
-            (when (instance? IPersistentVector (RT'second form)) => (throw (IllegalArgumentException. "Bad binding form, expected vector"))
-                (let [#_"IPersistentVector" bindings (cast IPersistentVector (RT'second form))]
-                    (when (zero? (% (.count bindings) 2)) => (throw (IllegalArgumentException. "Bad binding form, expected matched symbol expression pairs"))
-                        (if (or (= context :Context'EVAL) (and (= context :Context'EXPRESSION) isLoop))
-                            (Compiler'analyze-2 context, (RT'list-1 (RT'list-3 Compiler'FNONCE, PersistentVector'EMPTY, form)))
-                            (let [#_"ISeq" body (RT'next (RT'next form))
-                                  #_"ObjMethod" method (cast ObjMethod (.deref Compiler'METHOD))
-                                  #_"IPersistentMap" backupMethodLocals (:locals method)
-                                  #_"IPersistentMap" backupMethodIndexLocals (:indexlocals method)
-                                  #_"IPersistentVector" recurMismatches
-                                    (loop-when-recur [recurMismatches PersistentVector'EMPTY #_"int" i 0]
-                                                     (< i (/ (.count bindings) 2))
-                                                     [(.cons recurMismatches, RT'F) (inc i)]
-                                                  => recurMismatches
-                                    )]
-                                ;; may repeat once for each binding with a mismatch, return breaks
-                                (while true
-                                    (let [#_"IPersistentMap" dynamicBindings
-                                            (RT'map
-                                                (object-array [
-                                                    Compiler'LOCAL_ENV      (.deref Compiler'LOCAL_ENV)
-                                                    Compiler'NEXT_LOCAL_NUM (.deref Compiler'NEXT_LOCAL_NUM)
-                                                ])
-                                            )
-                                          dynamicBindings
-                                            (when isLoop => dynamicBindings
-                                                (.assoc dynamicBindings, Compiler'LOOP_LOCALS, nil)
-                                            )
-                                          _ (ß ass method (assoc method :locals backupMethodLocals))
-                                          _ (ß ass method (assoc method :indexlocals backupMethodIndexLocals))
-                                          #_"PathNode" looproot (PathNode'new :PathType'PATH, (cast PathNode (Var''get Compiler'CLEAR_PATH)))
-                                          #_"PathNode" clearroot (PathNode'new :PathType'PATH, looproot)
-                                          #_"PathNode" clearpath (PathNode'new :PathType'PATH, looproot)]
-                                        (try
-                                            (Var'pushThreadBindings dynamicBindings)
-                                            (let [#_"PersistentVector" bindingInits PersistentVector'EMPTY
-                                                  #_"PersistentVector" loopLocals PersistentVector'EMPTY
-                                                  _ (loop-when-recur [#_"int" i 0] (< i (.count bindings)) [(+ i 2)]
-                                                        (when (instance? Symbol (.nth bindings, i)) => (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " (.nth bindings, i))))
-                                                            (let [#_"Symbol" sym (cast Symbol (.nth bindings, i))]
-                                                                (when (nil? (.getNamespace sym)) => (throw (RuntimeException. (str "Can't let qualified name: " sym)))
-                                                                    (let [#_"Expr" init (Compiler'analyze-3 :Context'EXPRESSION, (.nth bindings, (inc i)), (:name sym))
-                                                                          init
-                                                                            (when isLoop => init
-                                                                                (if (and (some? recurMismatches) (RT'booleanCast-1o (.nth recurMismatches, (/ i 2))))
-                                                                                    (do
-                                                                                        (when (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION))
-                                                                                            (.println (RT'errPrintWriter), (str "Auto-boxing loop arg: " sym))
+    (defn #_"IParser" LetParser'new []
+        (reify IParser
+            ;; (let [var val var2 val2 ...] body...)
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" frm]
+                (let [#_"ISeq" form (cast ISeq frm) #_"boolean" isLoop (.equals (RT'first form), Compiler'LOOP)]
+                    (when (instance? IPersistentVector (RT'second form)) => (throw (IllegalArgumentException. "Bad binding form, expected vector"))
+                        (let [#_"IPersistentVector" bindings (cast IPersistentVector (RT'second form))]
+                            (when (zero? (% (.count bindings) 2)) => (throw (IllegalArgumentException. "Bad binding form, expected matched symbol expression pairs"))
+                                (if (or (= context :Context'EVAL) (and (= context :Context'EXPRESSION) isLoop))
+                                    (Compiler'analyze-2 context, (RT'list-1 (RT'list-3 Compiler'FNONCE, PersistentVector'EMPTY, form)))
+                                    (let [#_"ISeq" body (RT'next (RT'next form))
+                                          #_"ObjMethod" method (cast ObjMethod (.deref Compiler'METHOD))
+                                          #_"IPersistentMap" backupMethodLocals (:locals method)
+                                          #_"IPersistentMap" backupMethodIndexLocals (:indexlocals method)
+                                          #_"IPersistentVector" recurMismatches
+                                            (loop-when-recur [recurMismatches PersistentVector'EMPTY #_"int" i 0]
+                                                             (< i (/ (.count bindings) 2))
+                                                             [(.cons recurMismatches, RT'F) (inc i)]
+                                                          => recurMismatches
+                                            )]
+                                        ;; may repeat once for each binding with a mismatch, return breaks
+                                        (while true
+                                            (let [#_"IPersistentMap" dynamicBindings
+                                                    (RT'map
+                                                        (object-array [
+                                                            Compiler'LOCAL_ENV      (.deref Compiler'LOCAL_ENV)
+                                                            Compiler'NEXT_LOCAL_NUM (.deref Compiler'NEXT_LOCAL_NUM)
+                                                        ])
+                                                    )
+                                                  dynamicBindings
+                                                    (when isLoop => dynamicBindings
+                                                        (.assoc dynamicBindings, Compiler'LOOP_LOCALS, nil)
+                                                    )
+                                                  _ (ß ass method (assoc method :locals backupMethodLocals))
+                                                  _ (ß ass method (assoc method :indexlocals backupMethodIndexLocals))
+                                                  #_"PathNode" looproot (PathNode'new :PathType'PATH, (cast PathNode (Var''get Compiler'CLEAR_PATH)))
+                                                  #_"PathNode" clearroot (PathNode'new :PathType'PATH, looproot)
+                                                  #_"PathNode" clearpath (PathNode'new :PathType'PATH, looproot)]
+                                                (try
+                                                    (Var'pushThreadBindings dynamicBindings)
+                                                    (let [#_"PersistentVector" bindingInits PersistentVector'EMPTY
+                                                          #_"PersistentVector" loopLocals PersistentVector'EMPTY
+                                                          _ (loop-when-recur [#_"int" i 0] (< i (.count bindings)) [(+ i 2)]
+                                                                (when (instance? Symbol (.nth bindings, i)) => (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " (.nth bindings, i))))
+                                                                    (let [#_"Symbol" sym (cast Symbol (.nth bindings, i))]
+                                                                        (when (nil? (.getNamespace sym)) => (throw (RuntimeException. (str "Can't let qualified name: " sym)))
+                                                                            (let [#_"Expr" init (Compiler'analyze-3 :Context'EXPRESSION, (.nth bindings, (inc i)), (:name sym))
+                                                                                  init
+                                                                                    (when isLoop => init
+                                                                                        (if (and (some? recurMismatches) (RT'booleanCast-1o (.nth recurMismatches, (/ i 2))))
+                                                                                            (do
+                                                                                                (when (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION))
+                                                                                                    (.println (RT'errPrintWriter), (str "Auto-boxing loop arg: " sym))
+                                                                                                )
+                                                                                                (StaticMethodExpr'new 0, 0, nil, RT, "box", (RT'vector init), false)
+                                                                                            )
+                                                                                            (condp = (Compiler'maybePrimitiveType init)
+                                                                                                Integer/TYPE (StaticMethodExpr'new 0, 0, nil, RT, "longCast", (RT'vector init), false)
+                                                                                                Float/TYPE   (StaticMethodExpr'new 0, 0, nil, RT, "doubleCast", (RT'vector init), false)
+                                                                                                             init
+                                                                                            )
                                                                                         )
-                                                                                        (StaticMethodExpr'new 0, 0, nil, RT, "box", (RT'vector init), false)
+                                                                                    )]
+                                                                                ;; sequential enhancement of env (like Lisp let*)
+                                                                                (try
+                                                                                    (when isLoop
+                                                                                        (Var'pushThreadBindings (RT'map
+                                                                                            (object-array [
+                                                                                                Compiler'CLEAR_PATH clearpath
+                                                                                                Compiler'CLEAR_ROOT clearroot
+                                                                                                Compiler'NO_RECUR   nil
+                                                                                            ])
+                                                                                        ))
                                                                                     )
-                                                                                    (condp = (Compiler'maybePrimitiveType init)
-                                                                                        Integer/TYPE (StaticMethodExpr'new 0, 0, nil, RT, "longCast", (RT'vector init), false)
-                                                                                        Float/TYPE   (StaticMethodExpr'new 0, 0, nil, RT, "doubleCast", (RT'vector init), false)
-                                                                                                     init
+                                                                                    (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (Compiler'tagOf sym), init, false)]
+                                                                                        (ß ass bindingInits (.cons bindingInits, (BindingInit'new lb, init)))
+                                                                                        (when isLoop
+                                                                                            (ß ass loopLocals (.cons loopLocals, lb))
+                                                                                        )
                                                                                     )
-                                                                                )
-                                                                            )]
-                                                                        ;; sequential enhancement of env (like Lisp let*)
-                                                                        (try
-                                                                            (when isLoop
-                                                                                (Var'pushThreadBindings (RT'map
-                                                                                    (object-array [
-                                                                                        Compiler'CLEAR_PATH clearpath
-                                                                                        Compiler'CLEAR_ROOT clearroot
-                                                                                        Compiler'NO_RECUR   nil
-                                                                                    ])
-                                                                                ))
-                                                                            )
-                                                                            (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (Compiler'tagOf sym), init, false)]
-                                                                                (ß ass bindingInits (.cons bindingInits, (BindingInit'new lb, init)))
-                                                                                (when isLoop
-                                                                                    (ß ass loopLocals (.cons loopLocals, lb))
-                                                                                )
-                                                                            )
-                                                                            (finally
-                                                                                (when isLoop
-                                                                                    (Var'popThreadBindings)
+                                                                                    (finally
+                                                                                        (when isLoop
+                                                                                            (Var'popThreadBindings)
+                                                                                        )
+                                                                                    )
                                                                                 )
                                                                             )
                                                                         )
                                                                     )
                                                                 )
+                                                            )]
+                                                        (when isLoop
+                                                            (Var''set Compiler'LOOP_LOCALS, loopLocals)
+                                                        )
+                                                        (let [#_"boolean" moreMismatches false
+                                                              #_"Expr" bodyExpr
+                                                                (try
+                                                                    (when isLoop
+                                                                        (Var'pushThreadBindings (RT'map
+                                                                            (object-array [
+                                                                                Compiler'CLEAR_PATH            clearpath
+                                                                                Compiler'CLEAR_ROOT            clearroot
+                                                                                Compiler'NO_RECUR              nil
+                                                                                Compiler'METHOD_RETURN_CONTEXT (when (= context :Context'RETURN) (.deref Compiler'METHOD_RETURN_CONTEXT))
+                                                                            ])
+                                                                        ))
+                                                                    )
+                                                                    (.parse (BodyParser'new), (if isLoop :Context'RETURN context), body)
+                                                                    (finally
+                                                                        (when isLoop
+                                                                            (Var'popThreadBindings)
+                                                                            (loop-when-recur [#_"int" i 0] (< i (.count loopLocals)) [(inc i)]
+                                                                                (when (:recurMistmatch (cast LocalBinding (.nth loopLocals, i)))
+                                                                                    (ß ass recurMismatches (cast IPersistentVector (.assoc recurMismatches, i, RT'T)))
+                                                                                    (ß ass moreMismatches true)
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )]
+                                                            (when-not moreMismatches
+                                                                (ß return (LetExpr'new bindingInits, bodyExpr, isLoop))
                                                             )
                                                         )
-                                                    )]
-                                                (when isLoop
-                                                    (Var''set Compiler'LOOP_LOCALS, loopLocals)
-                                                )
-                                                (let [#_"boolean" moreMismatches false
-                                                      #_"Expr" bodyExpr
-                                                        (try
-                                                            (when isLoop
-                                                                (Var'pushThreadBindings (RT'map
-                                                                    (object-array [
-                                                                        Compiler'CLEAR_PATH            clearpath
-                                                                        Compiler'CLEAR_ROOT            clearroot
-                                                                        Compiler'NO_RECUR              nil
-                                                                        Compiler'METHOD_RETURN_CONTEXT (when (= context :Context'RETURN) (.deref Compiler'METHOD_RETURN_CONTEXT))
-                                                                    ])
-                                                                ))
-                                                            )
-                                                            (.parse (BodyParser'new), (if isLoop :Context'RETURN context), body)
-                                                            (finally
-                                                                (when isLoop
-                                                                    (Var'popThreadBindings)
-                                                                    (loop-when-recur [#_"int" i 0] (< i (.count loopLocals)) [(inc i)]
-                                                                        (when (:recurMistmatch (cast LocalBinding (.nth loopLocals, i)))
-                                                                            (ß ass recurMismatches (cast IPersistentVector (.assoc recurMismatches, i, RT'T)))
-                                                                            (ß ass moreMismatches true)
-                                                                        )
-                                                                    )
-                                                                )
-                                                            )
-                                                        )]
-                                                    (when-not moreMismatches
-                                                        (ß return (LetExpr'new bindingInits, bodyExpr, isLoop))
+                                                    )
+                                                    (finally
+                                                        (Var'popThreadBindings)
                                                     )
                                                 )
-                                            )
-                                            (finally
-                                                (Var'popThreadBindings)
                                             )
                                         )
                                     )
@@ -17997,51 +14360,51 @@
 )
 
 (class-ns RecurParser
-    (defn #_"RecurParser" RecurParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--RecurParser [#_"RecurParser" this, #_"Context" context, #_"Object" frm]
-        (let [#_"int" line (Compiler'lineDeref) #_"int" column (Compiler'columnDeref)
-              #_"ISeq" form (cast ISeq frm)
-              #_"IPersistentVector" loopLocals (cast IPersistentVector (.deref Compiler'LOOP_LOCALS))]
-            (when-not (and (= context :Context'RETURN) (some? loopLocals))
-                (throw (UnsupportedOperationException. "Can only recur from tail position"))
-            )
-            (when (some? (.deref Compiler'NO_RECUR))
-                (throw (UnsupportedOperationException. "Cannot recur across try"))
-            )
-            (let [#_"PersistentVector" args
-                    (loop-when-recur [args PersistentVector'EMPTY #_"ISeq" s (RT'seq (.next form))]
-                                     (some? s)
-                                     [(.cons args, (Compiler'analyze-2 :Context'EXPRESSION, (.first s))) (.next s)]
-                                  => args
-                    )]
-                (when-not (= (.count args) (.count loopLocals))
-                    (throw (IllegalArgumentException. (str "Mismatched argument count to recur, expected: " (.count loopLocals) " args, got: " (.count args))))
-                )
-                (dotimes [#_"int" i (.count loopLocals)]
-                    (let [#_"LocalBinding" lb (cast LocalBinding (.nth loopLocals, i))]
-                        (when-let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
-                            (let [#_"Class" pc (Compiler'maybePrimitiveType (cast Expr (.nth args, i)))
-                                  #_"boolean" mismatch?
-                                    (condp = primc
-                                        Long/TYPE   (not (any = pc Long/TYPE Integer/TYPE Short/TYPE Character/TYPE Byte/TYPE))
-                                        Double/TYPE (not (any = pc Double/TYPE Float/TYPE))
-                                                    false
-                                    )]
-                                (when mismatch?
-                                    (ß ass (:recurMistmatch lb) true)
-                                    (when (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION))
-                                        (.println (RT'errPrintWriter), (str "line " line ": recur arg for primitive local: " (:name lb) " is not matching primitive, had: " (if (some? pc) (.getName pc) "Object") ", needed: " (.getName primc)))
+    (defn #_"IParser" RecurParser'new []
+        (reify IParser
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" frm]
+                (let [#_"int" line (Compiler'lineDeref) #_"int" column (Compiler'columnDeref)
+                      #_"ISeq" form (cast ISeq frm)
+                      #_"IPersistentVector" loopLocals (cast IPersistentVector (.deref Compiler'LOOP_LOCALS))]
+                    (when-not (and (= context :Context'RETURN) (some? loopLocals))
+                        (throw (UnsupportedOperationException. "Can only recur from tail position"))
+                    )
+                    (when (some? (.deref Compiler'NO_RECUR))
+                        (throw (UnsupportedOperationException. "Cannot recur across try"))
+                    )
+                    (let [#_"PersistentVector" args
+                            (loop-when-recur [args PersistentVector'EMPTY #_"ISeq" s (RT'seq (.next form))]
+                                             (some? s)
+                                             [(.cons args, (Compiler'analyze-2 :Context'EXPRESSION, (.first s))) (.next s)]
+                                          => args
+                            )]
+                        (when-not (= (.count args) (.count loopLocals))
+                            (throw (IllegalArgumentException. (str "Mismatched argument count to recur, expected: " (.count loopLocals) " args, got: " (.count args))))
+                        )
+                        (dotimes [#_"int" i (.count loopLocals)]
+                            (let [#_"LocalBinding" lb (cast LocalBinding (.nth loopLocals, i))]
+                                (when-let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
+                                    (let [#_"Class" pc (Compiler'maybePrimitiveType (cast Expr (.nth args, i)))
+                                          #_"boolean" mismatch?
+                                            (condp = primc
+                                                Long/TYPE   (not (any = pc Long/TYPE Integer/TYPE Short/TYPE Character/TYPE Byte/TYPE))
+                                                Double/TYPE (not (any = pc Double/TYPE Float/TYPE))
+                                                            false
+                                            )]
+                                        (when mismatch?
+                                            (ß ass (:recurMistmatch lb) true)
+                                            (when (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION))
+                                                (.println (RT'errPrintWriter), (str "line " line ": recur arg for primitive local: " (:name lb) " is not matching primitive, had: " (if (some? pc) (.getName pc) "Object") ", needed: " (.getName primc)))
+                                            )
+                                        )
                                     )
                                 )
                             )
                         )
+                        (RecurExpr'new loopLocals, args, line, column)
                     )
                 )
-                (RecurExpr'new loopLocals, args, line, column)
             )
         )
     )
@@ -18164,46 +14527,46 @@
 )
 
 (class-ns DeftypeParser
-    (defn #_"DeftypeParser" DeftypeParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--DeftypeParser [#_"DeftypeParser" this, #_"Context" context, #_"Object" form]
-        ;; (deftype* tagname classname [fields] :implements [interfaces] :tag tagname methods*)
-        (let [#_"ISeq" s (cast ISeq form)                                      s (RT'next s)
-              #_"String" tagname (.getName (cast Symbol (.first s)))           s (.next s)
-              #_"Symbol" classname (cast Symbol (.first s))                    s (.next s)
-              #_"IPersistentVector" fields (cast IPersistentVector (.first s)) s (.next s)
-              [#_"IPersistentMap" opts s]
-                (loop-when-recur [opts PersistentHashMap'EMPTY s s]
-                                 (and (some? s) (instance? Keyword (.first s)))
-                                 [(.assoc opts, (.first s), (RT'second s)) (.next (.next s))]
-                              => [opts s]
-                )]
-            (NewInstanceExpr'build (cast IPersistentVector (RT'get-3 opts, Compiler'implementsKey, PersistentVector'EMPTY)), fields, nil, tagname, classname, (cast Symbol (RT'get-2 opts, RT'TAG_KEY)), s, form, opts)
+    (defn #_"IParser" DeftypeParser'new []
+        (reify IParser
+            ;; (deftype* tagname classname [fields] :implements [interfaces] :tag tagname methods*)
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" form]
+                (let [#_"ISeq" s (cast ISeq form)                                      s (RT'next s)
+                      #_"String" tagname (.getName (cast Symbol (.first s)))           s (.next s)
+                      #_"Symbol" classname (cast Symbol (.first s))                    s (.next s)
+                      #_"IPersistentVector" fields (cast IPersistentVector (.first s)) s (.next s)
+                      [#_"IPersistentMap" opts s]
+                        (loop-when-recur [opts PersistentHashMap'EMPTY s s]
+                                         (and (some? s) (instance? Keyword (.first s)))
+                                         [(.assoc opts, (.first s), (RT'second s)) (.next (.next s))]
+                                      => [opts s]
+                        )]
+                    (NewInstanceExpr'build (cast IPersistentVector (RT'get-3 opts, Compiler'implementsKey, PersistentVector'EMPTY)), fields, nil, tagname, classname, (cast Symbol (RT'get-2 opts, RT'TAG_KEY)), s, form, opts)
+                )
+            )
         )
     )
 )
 
 (class-ns ReifyParser
-    (defn #_"ReifyParser" ReifyParser'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Expr" IParser'''parse--ReifyParser [#_"ReifyParser" this, #_"Context" context, #_"Object" form]
-        ;; (reify this-name? [interfaces] (method-name [args] body)*)
-        (let [#_"ISeq" s (cast ISeq form)
-              #_"ObjMethod" owner (cast ObjMethod (.deref Compiler'METHOD))
-              #_"String" basename (if (some? owner) (ObjExpr'trimGenID (:name (:objx owner))) (Compiler'munge (:name (:name (Compiler'currentNS)))))
-              #_"String" classname (str basename "$" "reify__" (RT'nextID))
-              s (RT'next s)
-              #_"IPersistentVector" ifaces (.cons (cast IPersistentVector (RT'first s)), (Symbol'intern "cloiure.lang.IObj"))
-              s (RT'next s)
-              #_"ObjExpr" ret (NewInstanceExpr'build ifaces, nil, nil, classname, (Symbol'intern classname), nil, s, form, nil)]
-            (when (and (instance? IObj form) (some? (.meta (cast IObj form)))) => ret
-                (MetaExpr'new ret, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (.meta (cast IObj form))))
+    (defn #_"IParser" ReifyParser'new []
+        (reify IParser
+            ;; (reify this-name? [interfaces] (method-name [args] body)*)
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" form]
+                (let [#_"ISeq" s (cast ISeq form)
+                      #_"ObjMethod" owner (cast ObjMethod (.deref Compiler'METHOD))
+                      #_"String" basename (if (some? owner) (ObjExpr'trimGenID (:name (:objx owner))) (Compiler'munge (:name (:name (Compiler'currentNS)))))
+                      #_"String" classname (str basename "$" "reify__" (RT'nextID))
+                      s (RT'next s)
+                      #_"IPersistentVector" ifaces (.cons (cast IPersistentVector (RT'first s)), (Symbol'intern "cloiure.lang.IObj"))
+                      s (RT'next s)
+                      #_"ObjExpr" ret (NewInstanceExpr'build ifaces, nil, nil, classname, (Symbol'intern classname), nil, s, form, nil)]
+                    (when (and (instance? IObj form) (some? (.meta (cast IObj form)))) => ret
+                        (MetaExpr'new ret, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (.meta (cast IObj form))))
+                    )
+                )
             )
         )
     )
@@ -18432,7 +14795,6 @@
         (.replace (.getName c), \., \/)
     )
 
-    #_protected
     #_override
     (defn #_"void" ObjExpr'''emitStatics--NewInstanceExpr [#_"NewInstanceExpr" this, #_"ClassVisitor" cv]
         (when (ObjExpr''isDeftype this)
@@ -18497,7 +14859,6 @@
         nil
     )
 
-    #_protected
     #_override
     (defn #_"void" ObjExpr'''emitMethods--NewInstanceExpr [#_"NewInstanceExpr" this, #_"ClassVisitor" cv]
         (loop-when-recur [#_"ISeq" s (RT'seq (:methods this))] (some? s) [(.next s)]
@@ -18863,69 +15224,69 @@
 )
 
 (class-ns CaseParser
-    (defn #_"CaseParser" CaseParser'new []
-        (hash-map)
-    )
-
-    ;; (case* expr shift mask default map<minhash, [test then]> table-type test-type skip-check?)
-    ;; prepared by case macro and presumed correct
-    ;; case macro binds actual expr in let so expr is always a local,
-    ;; no need to worry about multiple evaluation
-    #_override
-    (defn #_"Expr" IParser'''parse--CaseParser [#_"CaseParser" this, #_"Context" context, #_"Object" frm]
-        (let [#_"ISeq" form (cast ISeq frm)]
-            (if (= context :Context'EVAL)
-                (Compiler'analyze-2 context, (RT'list-1 (RT'list-3 Compiler'FNONCE, PersistentVector'EMPTY, form)))
-                (let [#_"IPersistentVector" args (LazilyPersistentVector'create (.next form))
-                      #_"Object" exprForm (.nth args, 0)
-                      #_"int" shift (.intValue (cast Number (.nth args, 1)))
-                      #_"int" mask (.intValue (cast Number (.nth args, 2)))
-                      #_"Object" defaultForm (.nth args, 3)
-                      #_"Map" caseMap (cast Map (.nth args, 4))
-                      #_"Keyword" switchType (cast Keyword (.nth args, 5))
-                      #_"Keyword" testType (cast Keyword (.nth args, 6))
-                      #_"Set" skipCheck (when (< 7 (RT'count args)) (cast Set (.nth args, 7)))
-                      #_"ISeq" keys (RT'keys caseMap)
-                      #_"int" low (.intValue (cast Number (RT'first keys)))
-                      #_"int" high (.intValue (cast Number (RT'nth-2 keys, (dec (RT'count keys)))))
-                      #_"LocalBindingExpr" testexpr (cast LocalBindingExpr (Compiler'analyze-2 :Context'EXPRESSION, exprForm))
-                      testexpr (assoc testexpr :shouldClear false)
-                      #_"SortedMap<Integer, Expr>" tests (TreeMap.)
-                      #_"HashMap<Integer, Expr>" thens (HashMap.)
-                      #_"PathNode" branch (PathNode'new :PathType'BRANCH, (cast PathNode (Var''get Compiler'CLEAR_PATH)))
-                      _ (doseq [#_"Object" o (.entrySet caseMap)]
-                            (let [#_"Map$Entry" e (cast Map$Entry o)
-                                  #_"Integer" minhash (.intValue (cast Number (.getKey e)))
-                                  #_"Object" pair (.getValue e) ;; [test-val then-expr]
-                                  #_"Expr" testExpr
-                                    (if (= testType CaseExpr'intKey)
-                                        (NumberExpr'parse (.intValue (cast Number (RT'first pair))))
-                                        (ConstantExpr'new (RT'first pair))
-                                    )]
-                                (.put tests, minhash, testExpr)
-                                (let [#_"Expr" thenExpr
-                                        (try
-                                            (Var'pushThreadBindings (RT'map Compiler'CLEAR_PATH, (PathNode'new :PathType'PATH, branch)))
-                                            (Compiler'analyze-2 context, (RT'second pair))
-                                            (finally
-                                                (Var'popThreadBindings)
-                                            )
-                                        )]
-                                    (.put thens, minhash, thenExpr)
+    (defn #_"IParser" CaseParser'new []
+        (reify IParser
+            ;; (case* expr shift mask default map<minhash, [test then]> table-type test-type skip-check?)
+            ;; prepared by case macro and presumed correct
+            ;; case macro binds actual expr in let so expr is always a local,
+            ;; no need to worry about multiple evaluation
+            #_override
+            (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" frm]
+                (let [#_"ISeq" form (cast ISeq frm)]
+                    (if (= context :Context'EVAL)
+                        (Compiler'analyze-2 context, (RT'list-1 (RT'list-3 Compiler'FNONCE, PersistentVector'EMPTY, form)))
+                        (let [#_"IPersistentVector" args (LazilyPersistentVector'create (.next form))
+                              #_"Object" exprForm (.nth args, 0)
+                              #_"int" shift (.intValue (cast Number (.nth args, 1)))
+                              #_"int" mask (.intValue (cast Number (.nth args, 2)))
+                              #_"Object" defaultForm (.nth args, 3)
+                              #_"Map" caseMap (cast Map (.nth args, 4))
+                              #_"Keyword" switchType (cast Keyword (.nth args, 5))
+                              #_"Keyword" testType (cast Keyword (.nth args, 6))
+                              #_"Set" skipCheck (when (< 7 (RT'count args)) (cast Set (.nth args, 7)))
+                              #_"ISeq" keys (RT'keys caseMap)
+                              #_"int" low (.intValue (cast Number (RT'first keys)))
+                              #_"int" high (.intValue (cast Number (RT'nth-2 keys, (dec (RT'count keys)))))
+                              #_"LocalBindingExpr" testexpr (cast LocalBindingExpr (Compiler'analyze-2 :Context'EXPRESSION, exprForm))
+                              testexpr (assoc testexpr :shouldClear false)
+                              #_"SortedMap<Integer, Expr>" tests (TreeMap.)
+                              #_"HashMap<Integer, Expr>" thens (HashMap.)
+                              #_"PathNode" branch (PathNode'new :PathType'BRANCH, (cast PathNode (Var''get Compiler'CLEAR_PATH)))
+                              _ (doseq [#_"Object" o (.entrySet caseMap)]
+                                    (let [#_"Map$Entry" e (cast Map$Entry o)
+                                          #_"Integer" minhash (.intValue (cast Number (.getKey e)))
+                                          #_"Object" pair (.getValue e) ;; [test-val then-expr]
+                                          #_"Expr" testExpr
+                                            (if (= testType CaseExpr'intKey)
+                                                (NumberExpr'parse (.intValue (cast Number (RT'first pair))))
+                                                (ConstantExpr'new (RT'first pair))
+                                            )]
+                                        (.put tests, minhash, testExpr)
+                                        (let [#_"Expr" thenExpr
+                                                (try
+                                                    (Var'pushThreadBindings (RT'map Compiler'CLEAR_PATH, (PathNode'new :PathType'PATH, branch)))
+                                                    (Compiler'analyze-2 context, (RT'second pair))
+                                                    (finally
+                                                        (Var'popThreadBindings)
+                                                    )
+                                                )]
+                                            (.put thens, minhash, thenExpr)
+                                        )
+                                    )
                                 )
-                            )
+                              #_"Expr" defaultExpr
+                                (try
+                                    (Var'pushThreadBindings (RT'map Compiler'CLEAR_PATH, (PathNode'new :PathType'PATH, branch)))
+                                    (Compiler'analyze-2 context, (.nth args, 3))
+                                    (finally
+                                        (Var'popThreadBindings)
+                                    )
+                                )
+                              #_"int" line (.intValue (cast Number (.deref Compiler'LINE)))
+                              #_"int" column (.intValue (cast Number (.deref Compiler'COLUMN)))]
+                            (CaseExpr'new line, column, testexpr, shift, mask, low, high, defaultExpr, tests, thens, switchType, testType, skipCheck)
                         )
-                      #_"Expr" defaultExpr
-                        (try
-                            (Var'pushThreadBindings (RT'map Compiler'CLEAR_PATH, (PathNode'new :PathType'PATH, branch)))
-                            (Compiler'analyze-2 context, (.nth args, 3))
-                            (finally
-                                (Var'popThreadBindings)
-                            )
-                        )
-                      #_"int" line (.intValue (cast Number (.deref Compiler'LINE)))
-                      #_"int" column (.intValue (cast Number (.deref Compiler'COLUMN)))]
-                    (CaseExpr'new line, column, testexpr, shift, mask, low, high, defaultExpr, tests, thens, switchType, testType, skipCheck)
+                    )
                 )
             )
         )
@@ -20588,13 +16949,11 @@
         )
     )
 
-    #_protected
     #_foreign
     (defn #_"Class<?>" findClass---DynamicClassLoader [#_"DynamicClassLoader" this, #_"String" name] #_(§ throws ClassNotFoundException)
         (or (DynamicClassLoader'findInMemoryClass name) (.findClass (§ super ), name))
     )
 
-    #_protected
     #_foreign
     (defn #_"Class<?>" loadClass---DynamicClassLoader [#_"DynamicClassLoader" this, #_"String" name, #_"boolean" resolve] #_(§ throws ClassNotFoundException)
         (§ sync this
@@ -20699,7 +17058,6 @@
         (.invoke (:fn this), arg1, arg2, arg3)
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-2--FnLoaderThunk [#_"FnLoaderThunk" this, #_"Object" args]
         (FnLoaderThunk''load this)
@@ -21441,14 +17799,7 @@
 )
 
 (class-ns RegexReader
-    (defn #_"RegexReader" RegexReader'new []
-        (AFn'new)
-    )
-
-    (§ def #_"StringReader" RegexReader'stringrdr (StringReader'new))
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--RegexReader [#_"RegexReader" this, #_"Object" reader, #_"Object" doublequote, #_"Object" pendingForms]
+    (defn #_"Object" RegexReader'fn [#_"Object" reader, #_"Object" doublequote, #_"Object" pendingForms]
         (let [#_"Reader" r (cast Reader reader) #_"StringBuilder" sb (StringBuilder.)]
             (loop []
                 (let-when [#_"int" ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading regex"))
@@ -21469,12 +17820,7 @@
 )
 
 (class-ns StringReader
-    (defn #_"StringReader" StringReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--StringReader [#_"StringReader" this, #_"Object" reader, #_"Object" doublequote, #_"Object" pendingForms]
+    (defn #_"Object" StringReader'fn [#_"Object" reader, #_"Object" doublequote, #_"Object" pendingForms]
         (let [#_"StringBuilder" sb (StringBuilder.) #_"Reader" r (cast Reader reader)]
             (loop-when-recur [#_"int" ch (LispReader'read1 r)] (not= ch \") [(LispReader'read1 r)] ;; oops! "
                 (when (not= ch -1) => (throw (RuntimeException. "EOF while reading string"))
@@ -21519,12 +17865,7 @@
 )
 
 (class-ns CommentReader
-    (defn #_"CommentReader" CommentReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--CommentReader [#_"CommentReader" this, #_"Object" reader, #_"Object" semicolon, #_"Object" pendingForms]
+    (defn #_"Object" CommentReader'fn [#_"Object" reader, #_"Object" semicolon, #_"Object" pendingForms]
         (let [#_"Reader" r (cast Reader reader)]
             (while (not (any = (LispReader'read1 r) -1 \newline \return)))
             r
@@ -21533,12 +17874,7 @@
 )
 
 (class-ns DiscardReader
-    (defn #_"DiscardReader" DiscardReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--DiscardReader [#_"DiscardReader" this, #_"Object" reader, #_"Object" underscore, #_"Object" pendingForms]
+    (defn #_"Object" DiscardReader'fn [#_"Object" reader, #_"Object" underscore, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))
             r
@@ -21546,16 +17882,11 @@
     )
 )
 
-;; :a.b{:c 1} => {:a.b/c 1}
-;; ::{:c 1}   => {:a.b/c 1}  (where *ns* = a.b)
-;; ::a{:c 1}  => {:a.b/c 1}  (where a is aliased to a.b)
 (class-ns NamespaceMapReader
-    (defn #_"NamespaceMapReader" NamespaceMapReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--NamespaceMapReader [#_"NamespaceMapReader" this, #_"Object" reader, #_"Object" colon, #_"Object" pendingForms]
+    ;; :a.b{:c 1} => {:a.b/c 1}
+    ;; ::{:c 1}   => {:a.b/c 1}  (where *ns* = a.b)
+    ;; ::a{:c 1}  => {:a.b/c 1}  (where a is aliased to a.b)
+    (defn #_"Object" NamespaceMapReader'fn [#_"Object" reader, #_"Object" colon, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)
               #_"boolean" auto
                 (let [#_"int" autoChar (LispReader'read1 r)]
@@ -21668,10 +17999,6 @@
 )
 
 (class-ns SymbolicValueReader
-    (defn #_"SymbolicValueReader" SymbolicValueReader'new []
-        (AFn'new)
-    )
-
     (§ def #_"IPersistentMap" SymbolicValueReader'specials (PersistentHashMap'create-1a
         (object-array [
             (Symbol'intern "Inf")  Double/POSITIVE_INFINITY
@@ -21680,8 +18007,7 @@
         ])
     ))
 
-    #_override
-    (defn #_"Object" IFn'''invoke-4--SymbolicValueReader [#_"SymbolicValueReader" this, #_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
+    (defn #_"Object" SymbolicValueReader'fn [#_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)
               #_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
             (when-not (instance? Symbol o)
@@ -21718,12 +18044,7 @@
 )
 
 (class-ns VarReader
-    (defn #_"VarReader" VarReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--VarReader [#_"VarReader" this, #_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
+    (defn #_"Object" VarReader'fn [#_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)
               #_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
             (RT'list-2 LispReader'THE_VAR, o)
@@ -21732,12 +18053,7 @@
 )
 
 (class-ns DispatchReader
-    (defn #_"DispatchReader" DispatchReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--DispatchReader [#_"DispatchReader" this, #_"Object" reader, #_"Object" hash, #_"Object" pendingForms]
+    (defn #_"Object" DispatchReader'fn [#_"Object" reader, #_"Object" hash, #_"Object" pendingForms]
         (let-when-not [#_"int" ch (LispReader'read1 (cast Reader reader))] (= ch -1) => (throw (RuntimeException. "EOF while reading character"))
             (let-when-not [#_"IFn" fn (aget LispReader'dispatchMacros ch)] (some? fn) => (.invoke fn, reader, ch, pendingForms)
                 (LispReader'unread (cast PushbackReader reader), ch)
@@ -21748,12 +18064,7 @@
 )
 
 (class-ns FnReader
-    (defn #_"FnReader" FnReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--FnReader [#_"FnReader" this, #_"Object" reader, #_"Object" lparen, #_"Object" pendingForms]
+    (defn #_"Object" FnReader'fn [#_"Object" reader, #_"Object" lparen, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (when (some? (.deref LispReader'ARG_ENV))
                 (throw (IllegalStateException. "Nested #()s are not allowed"))
@@ -21790,12 +18101,7 @@
 )
 
 (class-ns ArgReader
-    (defn #_"ArgReader" ArgReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--ArgReader [#_"ArgReader" this, #_"Object" reader, #_"Object" pct, #_"Object" pendingForms]
+    (defn #_"Object" ArgReader'fn [#_"Object" reader, #_"Object" pct, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (when (some? (.deref LispReader'ARG_ENV)) => (LispReader'interpretToken (LispReader'readToken r, \%))
                 (let [#_"int" ch (LispReader'read1 r) _ (LispReader'unread r, ch)]
@@ -21817,12 +18123,7 @@
 )
 
 (class-ns MetaReader
-    (defn #_"MetaReader" MetaReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--MetaReader [#_"MetaReader" this, #_"Object" reader, #_"Object" caret, #_"Object" pendingForms]
+    (defn #_"Object" MetaReader'fn [#_"Object" reader, #_"Object" caret, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)
               [#_"int" line #_"int" column]
                 (when (instance? LineNumberingPushbackReader r) => [-1 -1]
@@ -21864,12 +18165,7 @@
 )
 
 (class-ns SyntaxQuoteReader
-    (defn #_"SyntaxQuoteReader" SyntaxQuoteReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--SyntaxQuoteReader [#_"SyntaxQuoteReader" this, #_"Object" reader, #_"Object" backquote, #_"Object" pendingForms]
+    (defn #_"Object" SyntaxQuoteReader'fn [#_"Object" reader, #_"Object" backquote, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (try
                 (Var'pushThreadBindings (RT'map LispReader'GENSYM_ENV, PersistentHashMap'EMPTY))
@@ -21980,12 +18276,7 @@
 )
 
 (class-ns UnquoteReader
-    (defn #_"UnquoteReader" UnquoteReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--UnquoteReader [#_"UnquoteReader" this, #_"Object" reader, #_"Object" comma, #_"Object" pendingForms]
+    (defn #_"Object" UnquoteReader'fn [#_"Object" reader, #_"Object" comma, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (let-when [#_"int" ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading character"))
                 (let [pendingForms (LispReader'ensurePending pendingForms)]
@@ -22007,12 +18298,7 @@
 )
 
 (class-ns CharacterReader
-    (defn #_"CharacterReader" CharacterReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--CharacterReader [#_"CharacterReader" this, #_"Object" reader, #_"Object" backslash, #_"Object" pendingForms]
+    (defn #_"Object" CharacterReader'fn [#_"Object" reader, #_"Object" backslash, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader) #_"int" ch (LispReader'read1 r)]
             (when-not (= ch -1) => (throw (RuntimeException. "EOF while reading character"))
                 (let [#_"String" token (LispReader'readToken r, (char ch))]
@@ -22056,12 +18342,7 @@
 )
 
 (class-ns ListReader
-    (defn #_"ListReader" ListReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--ListReader [#_"ListReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
+    (defn #_"Object" ListReader'fn [#_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)
               [#_"int" line #_"int" column]
                 (when (instance? LineNumberingPushbackReader r) => [-1 -1]
@@ -22085,12 +18366,7 @@
 )
 
 (class-ns VectorReader
-    (defn #_"VectorReader" VectorReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--VectorReader [#_"VectorReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
+    (defn #_"Object" VectorReader'fn [#_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (LazilyPersistentVector'create (LispReader'readDelimitedList \], r, true, (LispReader'ensurePending pendingForms)))
         )
@@ -22098,12 +18374,7 @@
 )
 
 (class-ns MapReader
-    (defn #_"MapReader" MapReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--MapReader [#_"MapReader" this, #_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
+    (defn #_"Object" MapReader'fn [#_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)
               #_"Object[]" a (.toArray (LispReader'readDelimitedList \}, r, true, (LispReader'ensurePending pendingForms)))]
             (when (= (& (alength a) 1) 1)
@@ -22115,12 +18386,7 @@
 )
 
 (class-ns SetReader
-    (defn #_"SetReader" SetReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--SetReader [#_"SetReader" this, #_"Object" reader, #_"Object" leftbracket, #_"Object" pendingForms]
+    (defn #_"Object" SetReader'fn [#_"Object" reader, #_"Object" leftbracket, #_"Object" pendingForms]
         (let [#_"PushbackReader" r (cast PushbackReader reader)]
             (PersistentHashSet'createWithCheck-1l (LispReader'readDelimitedList \}, r, true, (LispReader'ensurePending pendingForms)))
         )
@@ -22128,23 +18394,13 @@
 )
 
 (class-ns UnmatchedDelimiterReader
-    (defn #_"UnmatchedDelimiterReader" UnmatchedDelimiterReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--UnmatchedDelimiterReader [#_"UnmatchedDelimiterReader" this, #_"Object" reader, #_"Object" rightdelim, #_"Object" pendingForms]
+    (defn #_"Object" UnmatchedDelimiterReader'fn [#_"Object" reader, #_"Object" rightdelim, #_"Object" pendingForms]
         (throw (RuntimeException. (str "Unmatched delimiter: " rightdelim)))
     )
 )
 
 (class-ns UnreadableReader
-    (defn #_"UnreadableReader" UnreadableReader'new []
-        (AFn'new)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--UnreadableReader [#_"UnreadableReader" this, #_"Object" reader, #_"Object" leftangle, #_"Object" pendingForms]
+    (defn #_"Object" UnreadableReader'fn [#_"Object" reader, #_"Object" leftangle, #_"Object" pendingForms]
         (throw (RuntimeException. "Unreadable form"))
     )
 )
@@ -22180,33 +18436,33 @@
     (§ def #_"Var" LispReader'ARG_ENV (Var''setDynamic (Var'create nil)))
 
     (§ static
-        (aset LispReader'macros \" (StringReader'new)) ;; oops! "
-        (aset LispReader'macros \; (CommentReader'new))
+        (aset LispReader'macros \" StringReader'fn) ;; oops! "
+        (aset LispReader'macros \; CommentReader'fn)
         (aset LispReader'macros \' (WrappingReader'new LispReader'QUOTE))
         (aset LispReader'macros \@ (WrappingReader'new LispReader'DEREF))
-        (aset LispReader'macros \^ (MetaReader'new))
-        (aset LispReader'macros \` (SyntaxQuoteReader'new))
-        (aset LispReader'macros \~ (UnquoteReader'new))
-        (aset LispReader'macros \( (ListReader'new))
-        (aset LispReader'macros \) (UnmatchedDelimiterReader'new))
-        (aset LispReader'macros \[ (VectorReader'new))
-        (aset LispReader'macros \] (UnmatchedDelimiterReader'new))
-        (aset LispReader'macros \{ (MapReader'new))
-        (aset LispReader'macros \} (UnmatchedDelimiterReader'new))
-        (aset LispReader'macros \\ (CharacterReader'new))
-        (aset LispReader'macros \% (ArgReader'new))
-        (aset LispReader'macros \# (DispatchReader'new))
+        (aset LispReader'macros \^ MetaReader'fn)
+        (aset LispReader'macros \` SyntaxQuoteReader'fn)
+        (aset LispReader'macros \~ UnquoteReader'fn)
+        (aset LispReader'macros \( ListReader'fn)
+        (aset LispReader'macros \) UnmatchedDelimiterReader'fn)
+        (aset LispReader'macros \[ VectorReader'fn)
+        (aset LispReader'macros \] UnmatchedDelimiterReader'fn)
+        (aset LispReader'macros \{ MapReader'fn)
+        (aset LispReader'macros \} UnmatchedDelimiterReader'fn)
+        (aset LispReader'macros \\ CharacterReader'fn)
+        (aset LispReader'macros \% ArgReader'fn)
+        (aset LispReader'macros \# DispatchReader'fn)
 
-        (aset LispReader'dispatchMacros \^ (MetaReader'new))
-        (aset LispReader'dispatchMacros \# (SymbolicValueReader'new))
-        (aset LispReader'dispatchMacros \' (VarReader'new))
-        (aset LispReader'dispatchMacros \" (RegexReader'new)) ;; oops! "
-        (aset LispReader'dispatchMacros \( (FnReader'new))
-        (aset LispReader'dispatchMacros \{ (SetReader'new))
-        (aset LispReader'dispatchMacros \! (CommentReader'new))
-        (aset LispReader'dispatchMacros \< (UnreadableReader'new))
-        (aset LispReader'dispatchMacros \_ (DiscardReader'new))
-        (aset LispReader'dispatchMacros \: (NamespaceMapReader'new))
+        (aset LispReader'dispatchMacros \^ MetaReader'fn)
+        (aset LispReader'dispatchMacros \# SymbolicValueReader'fn)
+        (aset LispReader'dispatchMacros \' VarReader'fn)
+        (aset LispReader'dispatchMacros \" RegexReader'fn) ;; oops! "
+        (aset LispReader'dispatchMacros \( FnReader'fn)
+        (aset LispReader'dispatchMacros \{ SetReader'fn)
+        (aset LispReader'dispatchMacros \! CommentReader'fn)
+        (aset LispReader'dispatchMacros \< UnreadableReader'fn)
+        (aset LispReader'dispatchMacros \_ DiscardReader'fn)
+        (aset LispReader'dispatchMacros \: NamespaceMapReader'fn)
     )
 
     (defn #_"boolean" LispReader'isWhitespace [#_"int" ch]
@@ -23647,357 +19903,127 @@
 
     #_override
     (defn #_"Object" IFn'''invoke-2--MultiFn [#_"MultiFn" this, #_"Object" arg1]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1)),
-            (Util'ret1 arg1, (§ ass arg1 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1)), arg1
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-3--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2)), arg1, arg2
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-4--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3)), arg1, arg2, arg3
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-5--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4)), arg1, arg2, arg3, arg4
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-6--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5)), arg1, arg2, arg3, arg4, arg5
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-7--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6)), arg1, arg2, arg3, arg4, arg5, arg6
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-8--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7)), arg1, arg2, arg3, arg4, arg5, arg6, arg7
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-9--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-10--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-11--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-12--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-13--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-14--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-15--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-16--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-17--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-18--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-19--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil)),
-            (Util'ret1 arg18, (§ ass arg18 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18
         )
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-20--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil)),
-            (Util'ret1 arg18, (§ ass arg18 nil)),
-            (Util'ret1 arg19, (§ ass arg19 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19
         )
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-21--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil)),
-            (Util'ret1 arg18, (§ ass arg18 nil)),
-            (Util'ret1 arg19, (§ ass arg19 nil)),
-            (Util'ret1 arg20, (§ ass arg20 nil))
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20
         )
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-22--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, args)),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil)),
-            (Util'ret1 arg18, (§ ass arg18 nil)),
-            (Util'ret1 arg19, (§ ass arg19 nil)),
-            (Util'ret1 arg20, (§ ass arg20 nil)),
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, args)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20,
             args
         )
     )
@@ -24328,7 +20354,6 @@
 (java-ns cloiure.lang.Numbers
 
 (class-ns OpsP
-    #_protected
     (defn #_"OpsP" OpsP'new []
         (hash-map)
     )
@@ -26844,7 +22869,6 @@
         )
     )
 
-    #_protected
     (defn #_"PersistentArrayMap" PersistentArrayMap'new-0 []
         (let [this (merge (APersistentMap'new) (PersistentArrayMap'init))]
             (assoc this :array (make-array Object 0) :_meta nil)
@@ -28614,7 +24638,6 @@
         0
     )
 
-    #_protected
     #_override
     (defn #_"Object" RestFn'''doInvoke-2--Primordial [#_"Primordial" this, #_"Object" args]
         (if (instance? ArraySeq args)
@@ -32131,17 +28154,6 @@
 
 (java-ns cloiure.lang.RT
 
-(class-ns DefaultComparator
-    (defn #_"DefaultComparator" DefaultComparator'new []
-        (hash-map)
-    )
-
-    #_foreign
-    (defn #_"int" compare---DefaultComparator [#_"DefaultComparator" this, #_"Object" o1, #_"Object" o2]
-        (Util'compare o1, o2)
-    )
-)
-
 (class-ns RT
     (def #_"Class" RT'BOOLEANS_CLASS (Class/forName "[Z"))
     (def #_"Class" RT'BYTES_CLASS (Class/forName "[B"))
@@ -32329,7 +28341,14 @@
     )
 
     (def #_"Object[]" RT'EMPTY_ARRAY (make-array Object 0))
-    (§ def #_"Comparator" RT'DEFAULT_COMPARATOR (DefaultComparator'new))
+    (def #_"Comparator" RT'DEFAULT_COMPARATOR
+        (reify Comparator
+            #_foreign
+            (#_"int" compare [#_"Comparator" _self, #_"Object" o1, #_"Object" o2]
+                (Util'compare o1, o2)
+            )
+        )
+    )
 
     (def #_"AtomicInteger" RT'ID (AtomicInteger. 1))
 
@@ -32563,7 +28582,7 @@
     (defn #_"int" RT'count [#_"Object" o]
         (if (instance? Counted o)
             (.count (cast Counted o))
-            (RT'countFrom (Util'ret1 o, (§ ass o nil)))
+            (RT'countFrom o)
         )
     )
 
@@ -32572,12 +28591,9 @@
             (nil? o)
                 0
             (instance? IPersistentCollection o)
-                (let [#_"ISeq" s (RT'seq o) _ (§ ass o nil)]
-                    (loop-when [#_"int" i 0 s s] (some? s) => i
-                        (if (instance? Counted s)
-                            (+ i (.count s))
-                            (recur (inc i) (.next s))
-                        )
+                (loop-when [#_"int" i 0 #_"ISeq" s (RT'seq o)] (some? s) => i
+                    (when (instance? Counted s) => (recur (inc i) (.next s))
+                        (+ i (.count s))
                     )
                 )
             (instance? CharSequence o)
@@ -32789,7 +28805,7 @@
     (defn #_"Object" RT'nth-2 [#_"Object" coll, #_"int" n]
         (if (instance? Indexed coll)
             (.nth (cast Indexed coll), n)
-            (RT'nthFrom-2 (Util'ret1 coll, (§ ass coll nil)), n)
+            (RT'nthFrom-2 coll, n)
         )
     )
 
@@ -32814,12 +28830,9 @@
                     )
                 )
             (instance? Sequential coll)
-                (let [#_"ISeq" s (RT'seq coll) _ (§ ass coll nil)]
-                    (loop-when [#_"int" i 0 s s] (and (<= i n) (some? s)) => (throw (IndexOutOfBoundsException.))
-                        (if (= i n)
-                            (.first s)
-                            (recur (inc i) (.next s))
-                        )
+                (loop-when [#_"int" i 0 #_"ISeq" s (RT'seq coll)] (and (<= i n) (some? s)) => (throw (IndexOutOfBoundsException.))
+                    (when (= i n) => (recur (inc i) (.next s))
+                        (.first s)
                     )
                 )
             :else
@@ -32866,12 +28879,9 @@
                     )
                 )
             (instance? Sequential coll)
-                (let [#_"ISeq" s (RT'seq coll) _ (§ ass coll nil)]
-                    (loop-when [#_"int" i 0 s s] (and (<= i n) (some? s)) => notFound
-                        (if (= i n)
-                            (.first s)
-                            (recur (inc i) (.next s))
-                        )
+                (loop-when [#_"int" i 0 #_"ISeq" s (RT'seq coll)] (and (<= i n) (some? s)) => notFound
+                    (when (= i n) => (recur (inc i) (.next s))
+                        (.first s)
                     )
                 )
             :else
@@ -34429,10 +30439,6 @@
         (or (instance? Integer x) (instance? Long x) (instance? BigInt x) (instance? BigInteger x))
     )
 
-    (defn #_"Object" Util'ret1 [#_"Object" ret, #_"Object" _nil]
-        ret
-    )
-
     (defn #_"<K, V> void" Util'clearCache [#_"ReferenceQueue" rq, #_"ConcurrentHashMap<K, Reference<V>>" cache]
         ;; cleanup any dead entries
         (when (some? (.poll rq))
@@ -34513,7 +30519,6 @@
 (class-ns Var
     (def #_"ThreadLocal<Frame>" Var'dvals
         (§ proxy ThreadLocal<Frame>()
-            #_protected
             #_foreign
             (defn #_"Frame" initialValue---ThreadLocal<Frame> [#_"ThreadLocal<Frame>" this]
                 Frame'TOP
@@ -34867,356 +30872,127 @@
 
     #_override
     (defn #_"Object" IFn'''invoke-2--Var [#_"Var" this, #_"Object" arg1]
-        (.invoke (Var''fn this), (Util'ret1 arg1, (§ ass arg1 nil)))
+        (.invoke (Var''fn this), arg1)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-3--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil))
+        (.invoke (Var''fn this), arg1, arg2
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-4--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-5--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-6--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-7--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-8--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-9--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-10--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-11--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-12--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-13--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-14--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-15--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-16--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-17--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-18--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17
         )
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-19--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil)),
-            (Util'ret1 arg18, (§ ass arg18 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18
         )
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-20--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil)),
-            (Util'ret1 arg18, (§ ass arg18 nil)),
-            (Util'ret1 arg19, (§ ass arg19 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19
         )
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-21--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil)),
-            (Util'ret1 arg18, (§ ass arg18 nil)),
-            (Util'ret1 arg19, (§ ass arg19 nil)),
-            (Util'ret1 arg20, (§ ass arg20 nil))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20
         )
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-22--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args]
-        (.invoke (Var''fn this),
-            (Util'ret1 arg1, (§ ass arg1 nil)),
-            (Util'ret1 arg2, (§ ass arg2 nil)),
-            (Util'ret1 arg3, (§ ass arg3 nil)),
-            (Util'ret1 arg4, (§ ass arg4 nil)),
-            (Util'ret1 arg5, (§ ass arg5 nil)),
-            (Util'ret1 arg6, (§ ass arg6 nil)),
-            (Util'ret1 arg7, (§ ass arg7 nil)),
-            (Util'ret1 arg8, (§ ass arg8 nil)),
-            (Util'ret1 arg9, (§ ass arg9 nil)),
-            (Util'ret1 arg10, (§ ass arg10 nil)),
-            (Util'ret1 arg11, (§ ass arg11 nil)),
-            (Util'ret1 arg12, (§ ass arg12 nil)),
-            (Util'ret1 arg13, (§ ass arg13 nil)),
-            (Util'ret1 arg14, (§ ass arg14 nil)),
-            (Util'ret1 arg15, (§ ass arg15 nil)),
-            (Util'ret1 arg16, (§ ass arg16 nil)),
-            (Util'ret1 arg17, (§ ass arg17 nil)),
-            (Util'ret1 arg18, (§ ass arg18 nil)),
-            (Util'ret1 arg19, (§ ass arg19 nil)),
-            (Util'ret1 arg20, (§ ass arg20 nil)),
-            (cast RT'OBJECTS_CLASS (Util'ret1 args, (§ ass args nil)))
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20,
+            (cast RT'OBJECTS_CLASS args)
         )
     )
 
