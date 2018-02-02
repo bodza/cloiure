@@ -59,7 +59,7 @@
     [java.nio ByteBuffer]
     [java.nio.charset Charset]
     [java.security AccessController PrivilegedAction]
-    [java.util ArrayList Arrays Collection Comparator EmptyStackException HashMap HashSet IdentityHashMap Iterator LinkedList List Map Map$Entry NoSuchElementException Queue RandomAccess Set Stack TreeMap]
+    [java.util AbstractCollection AbstractSet ArrayList Arrays Collection Comparator EmptyStackException HashMap HashSet IdentityHashMap Iterator LinkedList List Map Map$Entry NoSuchElementException Queue Set Stack TreeMap]
     [java.util.concurrent Callable ConcurrentHashMap ConcurrentMap CountDownLatch Executor ExecutorService Executors ThreadFactory TimeUnit]
     [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicLong AtomicReference]
     [java.util.concurrent.locks ReentrantReadWriteLock]
@@ -204,27 +204,26 @@
 (declare LazySeq'init LazySeq'new-1 LazySeq'new-2 LazySeq''sval)
 (declare LineNumberingPushbackReader'newline LineNumberingPushbackReader'init LineNumberingPushbackReader'new-1 LineNumberingPushbackReader'new-2 LineNumberingPushbackReader''getLineNumber LineNumberingPushbackReader''setLineNumber LineNumberingPushbackReader''getColumnNumber LineNumberingPushbackReader''readLine LineNumberingPushbackReader''atLineStart)
 (declare LispReaderException'init LispReaderException'new)
-(declare RegexReader'fn)
-(declare StringReader'fn)
-(declare CommentReader'fn)
-(declare DiscardReader'fn)
-(declare NamespaceMapReader'fn)
-(declare SymbolicValueReader'fn)
-(declare WrappingReader'init WrappingReader'new)
-(declare VarReader'fn)
-(declare DispatchReader'fn)
-(declare FnReader'fn)
-(declare ArgReader'fn)
-(declare MetaReader'fn)
-(declare SyntaxQuoteReader'fn SyntaxQuoteReader'syntaxQuote SyntaxQuoteReader'sqExpandList SyntaxQuoteReader'flattenMap)
-(declare UnquoteReader'fn)
-(declare CharacterReader'fn)
-(declare ListReader'fn)
-(declare VectorReader'fn)
-(declare MapReader'fn)
-(declare SetReader'fn)
-(declare UnmatchedDelimiterReader'fn)
-(declare UnreadableReader'fn)
+(declare RegexReader'new)
+(declare StringReader'new)
+(declare CommentReader'new)
+(declare DiscardReader'new)
+(declare NamespaceMapReader'new)
+(declare SymbolicValueReader'new)
+(declare WrappingReader'new)
+(declare VarReader'new)
+(declare DispatchReader'new)
+(declare FnReader'new)
+(declare ArgReader'new)
+(declare MetaReader'new)
+(declare SyntaxQuoteReader'new SyntaxQuoteReader'syntaxQuote SyntaxQuoteReader'sqExpandList SyntaxQuoteReader'flattenMap)
+(declare UnquoteReader'new)
+(declare CharacterReader'new)
+(declare ListReader'new)
+(declare VectorReader'new)
+(declare MapReader'new)
+(declare SetReader'new)
+(declare UnmatchedDelimiterReader'new)
 (declare LispReader'macros LispReader'dispatchMacros LispReader'symbolPat LispReader'intPat LispReader'ratioPat LispReader'floatPat LispReader'isWhitespace LispReader'unread LispReader'read1 LispReader'read-1 LispReader'read-4 LispReader'read-5 LispReader'ensurePending LispReader'read-7 LispReader'readToken LispReader'readNumber LispReader'readUnicodeChar-4 LispReader'readUnicodeChar-5 LispReader'interpretToken LispReader'matchSymbol LispReader'matchNumber LispReader'getMacro LispReader'isMacro LispReader'isTerminatingMacro LispReader'garg LispReader'registerArg LispReader'isUnquoteSplicing LispReader'isUnquote LispReader'READ_EOF LispReader'READ_FINISHED LispReader'readDelimitedList)
 (declare RetryEx'new)
 (declare AbortException'new)
@@ -299,7 +298,7 @@
 (declare Repeat'INFINITE Repeat'init Repeat'new-2 Repeat'new-3 Repeat'create-1 Repeat'create-2)
 (declare RestFn'new RestFn'ontoArrayPrepend RestFn'findKey)
 (declare RT'BOOLEANS_CLASS RT'BYTES_CLASS RT'SHORTS_CLASS RT'CHARS_CLASS RT'INTS_CLASS RT'LONGS_CLASS RT'FLOATS_CLASS RT'DOUBLES_CLASS RT'OBJECTS_CLASS)
-(declare RT'T RT'F RT'LOADER_SUFFIX RT'UTF8 RT'inNamespace RT'bootNamespace RT'errPrintWriter RT'EMPTY_ARRAY RT'ID RT'CHECK_SPEC_ASSERTS RT'INSTRUMENT_MACROS RT'CHECK_SPECS RT'keyword RT'var RT'loadResourceScript RT'lastModified RT'load-1 RT'load-2 RT'nextID RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'countFrom RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nthFrom-2 RT'nth-3 RT'nthFrom-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1b RT'intCast-1s RT'intCast-1c RT'intCast-1i RT'intCast-1l RT'intCast-1f RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1l RT'longCast-1f RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1l RT'floatCast-1f RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1l RT'doubleCast-1f RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'printString RT'readString RT'print RT'printInnerSeq RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget_boolean RT'aget_byte RT'aget_short RT'aget_char RT'aget_int RT'aget_long RT'aget_float RT'aget_double RT'aget_object RT'aset_boolean RT'aset_byte RT'aset_short RT'aset_char RT'aset_int RT'aset_long RT'aset_float RT'aset_double RT'aset_object RT'alength_boolean RT'alength_byte RT'alength_short RT'alength_char RT'alength_int RT'alength_long RT'alength_float RT'alength_double RT'alength_object RT'aclone_boolean RT'aclone_byte RT'aclone_short RT'aclone_char RT'aclone_int RT'aclone_long RT'aclone_float RT'aclone_double RT'aclone_object)
+(declare RT'T RT'F RT'LOADER_SUFFIX RT'UTF8 RT'inNamespace RT'bootNamespace RT'errPrintWriter RT'EMPTY_ARRAY RT'ID RT'CHECK_SPEC_ASSERTS RT'INSTRUMENT_MACROS RT'CHECK_SPECS RT'keyword RT'var RT'loadResourceScript RT'lastModified RT'load-1 RT'load-2 RT'nextID RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nth-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1b RT'intCast-1s RT'intCast-1c RT'intCast-1i RT'intCast-1l RT'intCast-1f RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1l RT'longCast-1f RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1l RT'floatCast-1f RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1l RT'doubleCast-1f RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'printString RT'readString RT'print RT'printInnerSeq RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget_boolean RT'aget_byte RT'aget_short RT'aget_char RT'aget_int RT'aget_long RT'aget_float RT'aget_double RT'aget_object RT'aset_boolean RT'aset_byte RT'aset_short RT'aset_char RT'aset_int RT'aset_long RT'aset_float RT'aset_double RT'aset_object RT'alength_boolean RT'alength_byte RT'alength_short RT'alength_char RT'alength_int RT'alength_long RT'alength_float RT'alength_double RT'alength_object RT'aclone_boolean RT'aclone_byte RT'aclone_short RT'aclone_char RT'aclone_int RT'aclone_long RT'aclone_float RT'aclone_double RT'aclone_object)
 (declare SeqIterator'START SeqIterator'init SeqIterator'new)
 (declare StringSeq'create StringSeq'init StringSeq'new)
 (declare Symbol'create-2 Symbol'create-1 Symbol'intern Symbol'init Symbol'new-2 Symbol'new-3)
@@ -313,7 +312,7 @@
 (declare TBox'init TBox'new)
 (declare Unbound'init Unbound'new)
 (declare Frame'init Frame'new)
-(declare Var'dvals Var'rev Var'getThreadBindingFrame Var'resetThreadBindingFrame Var'intern Var'internPrivate Var'find Var'create Var'init Var'new Var''setDynamic Var''setDynamic Var''isDynamic Var''isBound Var''get Var''alter Var''set Var''setMeta Var''setMacro Var''isMacro Var''isPublic Var''getRawRoot Var''getTag Var''setTag Var''hasRoot Var''bindRoot Var''swapRoot Var''unbindRoot Var''commuteRoot Var''alterRoot Var'pushThreadBindings Var'popThreadBindings Var'getThreadBindings Var''getThreadBinding Var''fn Var'assoc Var'dissoc)
+(declare Var'dvals Var'rev Var'getThreadBindingFrame Var'resetThreadBindingFrame Var'intern Var'internPrivate Var'find Var'create Var'init Var'new Var''setDynamic Var''setDynamic Var''isDynamic Var''isBound Var''get Var''alter Var''set Var''setMeta Var''setMacro Var''isMacro Var''isPublic Var''getRawRoot Var''getTag Var''setTag Var''hasRoot Var''bindRoot Var''swapRoot Var''unbindRoot Var''commuteRoot Var''alterRoot Var'pushThreadBindings Var'popThreadBindings Var'getThreadBindings Var''getThreadBinding Var''fn)
 (declare Volatile'init Volatile'new Volatile''reset)
 
 (declare ActionQueue'EMPTY)
@@ -2900,7 +2899,7 @@
     (class! VSeq [#_"ASeq" IndexedSeq IReduce])
     (class! RSeq [#_"ASeq" IndexedSeq Counted])
     #_abstract
-    (class! APersistentVector [#_"AFn" IPersistentVector Iterable List RandomAccess Comparable IHashEq]
+    (class! APersistentVector [#_"AFn" IPersistentVector Iterable List Comparable IHashEq]
         #_abstract
         (#_"Iterator" rangedIterator [#_"APersistentVector" this, #_"int" start, #_"int" end])
     )
@@ -3138,7 +3137,6 @@
 
 (java-ns cloiure.lang.LispReader
     (class! LispReaderException [#_"RuntimeException"])
-    (class! WrappingReader [#_"AFn"])
 )
 
 (java-ns cloiure.lang.LockingTransaction
@@ -3487,311 +3485,285 @@
     (defn #_"Object" AFn'applyToHelper [#_"IFn" ifn, #_"ISeq" args]
         (case (RT'boundedLength args, 20)
             0
-            (do
                 (.invoke ifn)
-            )
             1
-            (do
                 (.invoke ifn, (.first args))
-            )
             2
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (.next args)))
-            )
+                    (.first (.next args))
+                )
             3
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             4
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             5
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             6
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             7
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             8
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             9
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             10
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             11
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             12
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             13
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             14
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             15
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             16
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             17
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             18
-            (do
                 (.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             19
-            (do
               #_(.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             20
-            (do
               #_(.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (.next args))
+                )
             #_else
-            (do
               #_(.invoke ifn, (.first args),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (.first (§ ass args (.next args))),
-                        (RT'seqToArray (.next args)))
-            )
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (.first (§ ass args (.next args))),
+                    (RT'seqToArray (.next args))
+                )
         )
     )
 
     #_override
     (defn #_"Object" AFn'''throwArity--AFn [#_"AFn" this, #_"int" n]
-        (let [#_"String" name (.getSimpleName (.getClass this))]
-            (throw (ArityException'new-2 n, (Compiler'demunge name)))
-        )
+        (throw (ArityException'new-2 n, (Compiler'demunge (.getSimpleName (.getClass this)))))
     )
 )
 )
@@ -5816,31 +5788,16 @@
         (Murmur3'hashUnordered m)
     )
 
-    (def #_"IFn" APersistentMap'MAKE_ENTRY
-        (§ proxy AFn()
-            #_override
-            (defn #_"Object" IFn'''invoke-3--AFn [#_"AFn" this, #_"Object" key, #_"Object" val]
-                (MapEntry'create key, val)
-            )
-        )
+    (defn #_"Object" APersistentMap'MAKE_ENTRY [#_"Object" key, #_"Object" val]
+        (MapEntry'create key, val)
     )
 
-    (def #_"IFn" APersistentMap'MAKE_KEY
-        (§ proxy AFn()
-            #_override
-            (defn #_"Object" IFn'''invoke-3--AFn [#_"AFn" this, #_"Object" key, #_"Object" val]
-                key
-            )
-        )
+    (defn #_"Object" APersistentMap'MAKE_KEY [#_"Object" key, #_"Object" val]
+        key
     )
 
-    (def #_"IFn" APersistentMap'MAKE_VAL
-        (§ proxy AFn()
-            #_override
-            (defn #_"Object" IFn'''invoke-3--AFn [#_"AFn" this, #_"Object" key, #_"Object" val]
-                val
-            )
-        )
+    (defn #_"Object" APersistentMap'MAKE_VAL [#_"Object" key, #_"Object" val]
+        val
     )
 
     #_override
@@ -5859,27 +5816,27 @@
     )
 
     #_foreign
-    (defn #_"Set" entrySet---APersistentMap [#_"APersistentMap" this]
-        (§ proxy AbstractSet()
+    (defn #_"Set" entrySet---APersistentMap [#_"APersistentMap" this!]
+        (proxy [AbstractSet] []
             #_foreign
-            (defn #_"Iterator" iterator---AbstractSet [#_"AbstractSet" this]
-                (.iterator (§ this APersistentMap))
+            (#_"Iterator" iterator [#_"AbstractSet" #_this]
+                (.iterator this!)
             )
 
             #_foreign
-            (defn #_"int" size---AbstractSet [#_"AbstractSet" this]
-                (.count this)
+            (#_"int" size [#_"AbstractSet" #_this]
+                (.count this!)
             )
 
             #_foreign
-            (defn #_"int" hashCode---AbstractSet [#_"AbstractSet" this]
-                (.hashCode (§ this APersistentMap))
+            (#_"int" hashCode [#_"AbstractSet" #_this]
+                (.hashCode this!)
             )
 
             #_foreign
-            (defn #_"boolean" contains---AbstractSet [#_"AbstractSet" this, #_"Object" o]
+            (#_"boolean" contains [#_"AbstractSet" #_this, #_"Object" o]
                 (and (instance? Map$Entry o)
-                    (let [#_"Map$Entry" e (cast Map$Entry o) #_"Map$Entry" found (.entryAt this, (.getKey e))]
+                    (let [#_"Map$Entry" e (cast Map$Entry o) #_"Map$Entry" found (.entryAt this!, (.getKey e))]
                         (and (some? found) (Util'equals (.getValue found), (.getValue e)))
                     )
                 )
@@ -5898,11 +5855,11 @@
     )
 
     #_method
-    (defn #_"Set" APersistentMap''keySet [#_"APersistentMap" this]
-        (§ proxy AbstractSet()
+    (defn #_"Set" APersistentMap''keySet [#_"APersistentMap" this!]
+        (proxy [AbstractSet] []
             #_foreign
-            (defn #_"Iterator" iterator---AbstractSet [#_"AbstractSet" this]
-                (let [#_"Iterator" it (.iterator (§ this APersistentMap))]
+            (#_"Iterator" iterator [#_"AbstractSet" #_this]
+                (let [#_"Iterator" it (.iterator this!)]
                     (reify Iterator
                         #_foreign
                         (#_"boolean" hasNext [#_"Iterator" _self]
@@ -5911,22 +5868,20 @@
 
                         #_foreign
                         (#_"Object" next [#_"Iterator" _self]
-                            (let [#_"Map$Entry" e (cast Map$Entry (.next it))]
-                                (.getKey e)
-                            )
+                            (.getKey (cast Map$Entry (.next it)))
                         )
                     )
                 )
             )
 
             #_foreign
-            (defn #_"int" size---AbstractSet [#_"AbstractSet" this]
-                (.count this)
+            (#_"int" size [#_"AbstractSet" #_this]
+                (.count this!)
             )
 
             #_foreign
-            (defn #_"boolean" contains---AbstractSet [#_"AbstractSet" this, #_"Object" o]
-                (.containsKey (§ this APersistentMap), o)
+            (#_"boolean" contains [#_"AbstractSet" #_this, #_"Object" o]
+                (.containsKey this!, o)
             )
         )
     )
@@ -5937,11 +5892,11 @@
     )
 
     #_method
-    (defn #_"Collection" APersistentMap''values [#_"APersistentMap" this]
-        (§ proxy AbstractCollection()
+    (defn #_"Collection" APersistentMap''values [#_"APersistentMap" this!]
+        (proxy [AbstractCollection] []
             #_foreign
-            (defn #_"Iterator" iterator---AbstractCollection [#_"AbstractCollection" this]
-                (let [#_"Iterator" it (.iterator (§ this APersistentMap))]
+            (#_"Iterator" iterator [#_"AbstractCollection" #_this]
+                (let [#_"Iterator" it (.iterator this!)]
                     (reify Iterator
                         #_foreign
                         (#_"boolean" hasNext [#_"Iterator" _self]
@@ -5950,17 +5905,15 @@
 
                         #_foreign
                         (#_"Object" next [#_"Iterator" _self]
-                            (let [#_"Map$Entry" e (cast Map$Entry (.next it))]
-                                (.getValue e)
-                            )
+                            (.getValue (cast Map$Entry (.next it)))
                         )
                     )
                 )
             )
 
             #_foreign
-            (defn #_"int" size---AbstractCollection [#_"AbstractCollection" this]
-                (.count this)
+            (#_"int" size [#_"AbstractCollection" #_this]
+                (.count this!)
             )
         )
     )
@@ -12192,7 +12145,7 @@
     )
 
     #_method
-    (defn #_"void" ObjExpr''compile [#_"ObjExpr" this, #_"String" superName, #_"String[]" interfaceNames, #_"boolean" oneTimeUse] #_(§ throws IOException)
+    (defn #_"void" ObjExpr''compile [#_"ObjExpr" this, #_"String" superName, #_"String[]" interfaceNames, #_"boolean" oneTimeUse] #_throws #_"IOException"
         ;; create bytecode for a class
         ;; with name current_ns.defname[$letname]+
         ;; anonymous fns get names fn__id
@@ -16133,7 +16086,7 @@
     (def- #_"boolean" Compiler'MACRO_CHECK_LOADING false)
     (def- #_"Object" Compiler'MACRO_CHECK_LOCK (Object.))
 
-    (defn- #_"Var" Compiler'ensureMacroCheck [] #_(§ throws ClassNotFoundException, IOException)
+    (defn- #_"Var" Compiler'ensureMacroCheck [] #_throws #_"ClassNotFoundException, IOException"
         (or Compiler'MACRO_CHECK
             (§ sync Compiler'MACRO_CHECK_LOCK
                 (or Compiler'MACRO_CHECK
@@ -16950,12 +16903,12 @@
     )
 
     #_foreign
-    (defn #_"Class<?>" findClass---DynamicClassLoader [#_"DynamicClassLoader" this, #_"String" name] #_(§ throws ClassNotFoundException)
+    (defn #_"Class<?>" findClass---DynamicClassLoader [#_"DynamicClassLoader" this, #_"String" name] #_throws #_"ClassNotFoundException"
         (or (DynamicClassLoader'findInMemoryClass name) (.findClass (§ super ), name))
     )
 
     #_foreign
-    (defn #_"Class<?>" loadClass---DynamicClassLoader [#_"DynamicClassLoader" this, #_"String" name, #_"boolean" resolve] #_(§ throws ClassNotFoundException)
+    (defn #_"Class<?>" loadClass---DynamicClassLoader [#_"DynamicClassLoader" this, #_"String" name, #_"boolean" resolve] #_throws #_"ClassNotFoundException"
         (§ sync this
             (let [#_"Class" c
                     (or (.findLoadedClass this, name)
@@ -17737,7 +17690,7 @@
     )
 
     #_foreign
-    (defn #_"int" read---LineNumberingPushbackReader [#_"LineNumberingPushbackReader" this] #_(§ throws IOException)
+    (defn #_"int" read---LineNumberingPushbackReader [#_"LineNumberingPushbackReader" this] #_throws #_"IOException"
         (let [#_"int" c (.read (§ super ))]
             (ß ass this (assoc this :_prev (:_atLineStart this)))
             (if (or (= c LineNumberingPushbackReader'newline) (= c -1))
@@ -17755,7 +17708,7 @@
     )
 
     #_foreign
-    (defn #_"void" unread---LineNumberingPushbackReader [#_"LineNumberingPushbackReader" this, #_"int" c] #_(§ throws IOException)
+    (defn #_"void" unread---LineNumberingPushbackReader [#_"LineNumberingPushbackReader" this, #_"int" c] #_throws #_"IOException"
         (.unread (§ super ), c)
         (ß ass this (assoc this :_atLineStart (:_prev this)))
         (ß ass this (update this :_columnNumber dec))
@@ -17763,7 +17716,7 @@
     )
 
     #_method
-    (defn #_"String" LineNumberingPushbackReader''readLine [#_"LineNumberingPushbackReader" this] #_(§ throws IOException)
+    (defn #_"String" LineNumberingPushbackReader''readLine [#_"LineNumberingPushbackReader" this] #_throws #_"IOException"
         (let [#_"int" c (.read this)]
             (condp = c -1 nil LineNumberingPushbackReader'newline ""
                 (let [#_"String" s (String/valueOf (char c)) #_"String" z (.readLine (cast LineNumberReader (§ foreign in)))]
@@ -17799,85 +17752,93 @@
 )
 
 (class-ns RegexReader
-    (defn #_"Object" RegexReader'fn [#_"Object" reader, #_"Object" doublequote, #_"Object" pendingForms]
-        (let [#_"Reader" r (cast Reader reader) #_"StringBuilder" sb (StringBuilder.)]
-            (loop []
-                (let-when [#_"int" ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading regex"))
-                    (when-not (= ch \") ;; oops! "
-                        (.append sb, (char ch))
-                        (when (= ch \\) ;; escape
-                            (let-when [ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading regex"))
-                                (.append sb, (char ch))
+    (defn #_"Fn" RegexReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" doublequote, #_"Object" pendingForms]
+            (let [#_"Reader" r (cast Reader reader) #_"StringBuilder" sb (StringBuilder.)]
+                (loop []
+                    (let-when [#_"int" ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading regex"))
+                        (when-not (= ch \") ;; oops! "
+                            (.append sb, (char ch))
+                            (when (= ch \\) ;; escape
+                                (let-when [ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading regex"))
+                                    (.append sb, (char ch))
+                                )
                             )
+                            (recur)
                         )
-                        (recur)
                     )
                 )
+                (Pattern/compile (.toString sb))
             )
-            (Pattern/compile (.toString sb))
         )
     )
 )
 
 (class-ns StringReader
-    (defn #_"Object" StringReader'fn [#_"Object" reader, #_"Object" doublequote, #_"Object" pendingForms]
-        (let [#_"StringBuilder" sb (StringBuilder.) #_"Reader" r (cast Reader reader)]
-            (loop-when-recur [#_"int" ch (LispReader'read1 r)] (not= ch \") [(LispReader'read1 r)] ;; oops! "
-                (when (not= ch -1) => (throw (RuntimeException. "EOF while reading string"))
-                    (let [ch
-                            (when (= ch \\) => ch
-                                ;; escape
-                                (let [ch (LispReader'read1 r)]
-                                    (when (not= ch -1) => (throw (RuntimeException. "EOF while reading string"))
-                                        (case ch
-                                            \t  \tab
-                                            \r  \return
-                                            \n  \newline
-                                            \\  ch
-                                            \"  ch ;; oops! "
-                                            \b  \backspace
-                                            \f  \formfeed
-                                            \u  (let [ch (LispReader'read1 r)]
-                                                    (when (= (Character/digit ch, 16) -1)
-                                                        (throw (RuntimeException. (str "Invalid unicode escape: \\u" (char ch))))
+    (defn #_"Fn" StringReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" doublequote, #_"Object" pendingForms]
+            (let [#_"StringBuilder" sb (StringBuilder.) #_"Reader" r (cast Reader reader)]
+                (loop-when-recur [#_"int" ch (LispReader'read1 r)] (not= ch \") [(LispReader'read1 r)] ;; oops! "
+                    (when (not= ch -1) => (throw (RuntimeException. "EOF while reading string"))
+                        (let [ch
+                                (when (= ch \\) => ch
+                                    ;; escape
+                                    (let [ch (LispReader'read1 r)]
+                                        (when (not= ch -1) => (throw (RuntimeException. "EOF while reading string"))
+                                            (case ch
+                                                \t  \tab
+                                                \r  \return
+                                                \n  \newline
+                                                \\  ch
+                                                \"  ch ;; oops! "
+                                                \b  \backspace
+                                                \f  \formfeed
+                                                \u  (let [ch (LispReader'read1 r)]
+                                                        (when (= (Character/digit ch, 16) -1)
+                                                            (throw (RuntimeException. (str "Invalid unicode escape: \\u" (char ch))))
+                                                        )
+                                                        (LispReader'readUnicodeChar-5 (cast PushbackReader r), ch, 16, 4, true)
                                                     )
-                                                    (LispReader'readUnicodeChar-5 (cast PushbackReader r), ch, 16, 4, true)
-                                                )
-                                            (when (Character/isDigit ch) => (throw (RuntimeException. (str "Unsupported escape character: \\" (char ch))))
-                                                (let [ch (LispReader'readUnicodeChar-5 (cast PushbackReader r), ch, 8, 3, false)]
-                                                    (when (< 0377 ch)
-                                                        (throw (RuntimeException. "Octal escape sequence must be in range [0, 377]."))
+                                                (when (Character/isDigit ch) => (throw (RuntimeException. (str "Unsupported escape character: \\" (char ch))))
+                                                    (let [ch (LispReader'readUnicodeChar-5 (cast PushbackReader r), ch, 8, 3, false)]
+                                                        (when (< 0377 ch)
+                                                            (throw (RuntimeException. "Octal escape sequence must be in range [0, 377]."))
+                                                        )
+                                                        ch
                                                     )
-                                                    ch
                                                 )
                                             )
                                         )
                                     )
-                                )
-                            )]
-                        (.append sb, (char ch))
+                                )]
+                            (.append sb, (char ch))
+                        )
                     )
                 )
+                (.toString sb)
             )
-            (.toString sb)
         )
     )
 )
 
 (class-ns CommentReader
-    (defn #_"Object" CommentReader'fn [#_"Object" reader, #_"Object" semicolon, #_"Object" pendingForms]
-        (let [#_"Reader" r (cast Reader reader)]
-            (while (not (any = (LispReader'read1 r) -1 \newline \return)))
-            r
+    (defn #_"Fn" CommentReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" semicolon, #_"Object" pendingForms]
+            (let [#_"Reader" r (cast Reader reader)]
+                (while (not (any = (LispReader'read1 r) -1 \newline \return)))
+                r
+            )
         )
     )
 )
 
 (class-ns DiscardReader
-    (defn #_"Object" DiscardReader'fn [#_"Object" reader, #_"Object" underscore, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))
-            r
+    (defn #_"Fn" DiscardReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" underscore, #_"Object" pendingForms]
+            (let [#_"PushbackReader" r (cast PushbackReader reader)]
+                (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))
+                r
+            )
         )
     )
 )
@@ -17886,111 +17847,113 @@
     ;; :a.b{:c 1} => {:a.b/c 1}
     ;; ::{:c 1}   => {:a.b/c 1}  (where *ns* = a.b)
     ;; ::a{:c 1}  => {:a.b/c 1}  (where a is aliased to a.b)
-    (defn #_"Object" NamespaceMapReader'fn [#_"Object" reader, #_"Object" colon, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)
-              #_"boolean" auto
-                (let [#_"int" autoChar (LispReader'read1 r)]
-                    (or (= autoChar \:)
-                        (do (LispReader'unread r, autoChar) false)
+    (defn #_"Fn" NamespaceMapReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" colon, #_"Object" pendingForms]
+            (let [#_"PushbackReader" r (cast PushbackReader reader)
+                  #_"boolean" auto
+                    (let [#_"int" autoChar (LispReader'read1 r)]
+                        (or (= autoChar \:)
+                            (do (LispReader'unread r, autoChar) false)
+                        )
                     )
-                )
-              #_"int" nextChar (LispReader'read1 r)
-              [#_"Object" sym nextChar]
-                (cond
-                    (LispReader'isWhitespace nextChar) ;; the #:: { } case or an error
-                    (if auto
-                        (let [nextChar (loop-when-recur nextChar (LispReader'isWhitespace nextChar) (LispReader'read1 r) => nextChar)]
-                            (when (not= nextChar \{)
+                  #_"int" nextChar (LispReader'read1 r)
+                  [#_"Object" sym nextChar]
+                    (cond
+                        (LispReader'isWhitespace nextChar) ;; the #:: { } case or an error
+                        (if auto
+                            (let [nextChar (loop-when-recur nextChar (LispReader'isWhitespace nextChar) (LispReader'read1 r) => nextChar)]
+                                (when (not= nextChar \{)
+                                    (LispReader'unread r, nextChar)
+                                    (throw (RuntimeException. "Namespaced map must specify a namespace"))
+                                )
+                                [nil nextChar]
+                            )
+                            (do
                                 (LispReader'unread r, nextChar)
                                 (throw (RuntimeException. "Namespaced map must specify a namespace"))
                             )
-                            [nil nextChar]
                         )
+                        (not= nextChar \{) ;; #:foo { } or #::foo { }
                         (do
                             (LispReader'unread r, nextChar)
-                            (throw (RuntimeException. "Namespaced map must specify a namespace"))
+                            (let [sym (LispReader'read-5 r, true, nil, false, pendingForms)
+                                  nextChar (LispReader'read1 r)
+                                  nextChar (loop-when-recur nextChar (LispReader'isWhitespace nextChar) (LispReader'read1 r) => nextChar)]
+                                [sym nextChar]
+                            )
                         )
-                    )
-                    (not= nextChar \{) ;; #:foo { } or #::foo { }
-                    (do
-                        (LispReader'unread r, nextChar)
-                        (let [sym (LispReader'read-5 r, true, nil, false, pendingForms)
-                              nextChar (LispReader'read1 r)
-                              nextChar (loop-when-recur nextChar (LispReader'isWhitespace nextChar) (LispReader'read1 r) => nextChar)]
-                            [sym nextChar]
+                        :else
+                        (do
+                            [nil nextChar]
                         )
-                    )
-                    :else
-                    (do
-                        [nil nextChar]
-                    )
-                )]
-            (when (not= nextChar \{)
-                (throw (RuntimeException. "Namespaced map must specify a map"))
-            )
+                    )]
+                (when (not= nextChar \{)
+                    (throw (RuntimeException. "Namespaced map must specify a map"))
+                )
 
-            ;; resolve autoresolved ns
-            (let [#_"String" ns
-                    (cond auto
-                        (cond (nil? sym)
-                            (do
-                                (.getName (Namespace''getName (Compiler'currentNS)))
+                ;; resolve autoresolved ns
+                (let [#_"String" ns
+                        (cond auto
+                            (cond (nil? sym)
+                                (do
+                                    (.getName (Namespace''getName (Compiler'currentNS)))
+                                )
+                                (or (not (instance? Symbol sym)) (some? (.getNamespace (cast Symbol sym))))
+                                (do
+                                    (throw (RuntimeException. (str "Namespaced map must specify a valid namespace: " sym)))
+                                )
+                                :else
+                                (let [#_"Symbol" resolvedNS
+                                        (when-let [#_"Namespace" rns (Namespace''lookupAlias (Compiler'currentNS), (cast Symbol sym))]
+                                            (Namespace''getName rns)
+                                        )]
+                                    (when (some? resolvedNS) => (throw (RuntimeException. (str "Unknown auto-resolved namespace alias: " sym)))
+                                        (.getName resolvedNS)
+                                    )
+                                )
                             )
                             (or (not (instance? Symbol sym)) (some? (.getNamespace (cast Symbol sym))))
                             (do
                                 (throw (RuntimeException. (str "Namespaced map must specify a valid namespace: " sym)))
                             )
                             :else
-                            (let [#_"Symbol" resolvedNS
-                                    (when-let [#_"Namespace" rns (Namespace''lookupAlias (Compiler'currentNS), (cast Symbol sym))]
-                                        (Namespace''getName rns)
-                                    )]
-                                (when (some? resolvedNS) => (throw (RuntimeException. (str "Unknown auto-resolved namespace alias: " sym)))
-                                    (.getName resolvedNS)
+                            (do
+                                (.getName (cast Symbol sym))
+                            )
+                        )]
+
+                    ;; read map
+                    (let [#_"List" kvs (LispReader'readDelimitedList \}, r, true, (LispReader'ensurePending pendingForms))]
+                        (when (= (& (.size kvs) 1) 1)
+                            (throw (RuntimeException. "Namespaced map literal must contain an even number of forms"))
+                        )
+
+                        ;; construct output map
+                        (let [#_"Object[]" a (make-array Object (.size kvs)) #_"Iterator" it (.iterator kvs)]
+                            (loop-when-recur [#_"int" i 0] (.hasNext it) [(+ i 2)]
+                                (let [#_"Object" key (.next it) #_"Object" val (.next it)
+                                      _ (cond
+                                            (instance? Keyword key)
+                                            (let [#_"Keyword" kw (cast Keyword key)]
+                                                (cond
+                                                    (nil? (.getNamespace kw))  (Keyword'intern (Symbol'intern ns, (.getName kw)))
+                                                    (= (.getNamespace kw) "_") (Keyword'intern (Symbol'intern nil, (.getName kw)))
+                                                )
+                                            )
+                                            (instance? Symbol key)
+                                            (let [#_"Symbol" s (cast Symbol key)]
+                                                (cond
+                                                    (nil? (.getNamespace s))  (Symbol'intern ns, (.getName s))
+                                                    (= (.getNamespace s) "_") (Symbol'intern nil, (.getName s))
+                                                )
+                                            )
+                                        )]
+                                    (aset a i (or _ key))
+                                    (aset a (inc i) val)
                                 )
                             )
+                            (RT'map a)
                         )
-                        (or (not (instance? Symbol sym)) (some? (.getNamespace (cast Symbol sym))))
-                        (do
-                            (throw (RuntimeException. (str "Namespaced map must specify a valid namespace: " sym)))
-                        )
-                        :else
-                        (do
-                            (.getName (cast Symbol sym))
-                        )
-                    )]
-
-                ;; read map
-                (let [#_"List" kvs (LispReader'readDelimitedList \}, r, true, (LispReader'ensurePending pendingForms))]
-                    (when (= (& (.size kvs) 1) 1)
-                        (throw (RuntimeException. "Namespaced map literal must contain an even number of forms"))
-                    )
-
-                    ;; construct output map
-                    (let [#_"Object[]" a (make-array Object (.size kvs)) #_"Iterator" it (.iterator kvs)]
-                        (loop-when-recur [#_"int" i 0] (.hasNext it) [(+ i 2)]
-                            (let [#_"Object" key (.next it) #_"Object" val (.next it)
-                                  _ (cond
-                                        (instance? Keyword key)
-                                        (let [#_"Keyword" kw (cast Keyword key)]
-                                            (cond
-                                                (nil? (.getNamespace kw))  (Keyword'intern (Symbol'intern ns, (.getName kw)))
-                                                (= (.getNamespace kw) "_") (Keyword'intern (Symbol'intern nil, (.getName kw)))
-                                            )
-                                        )
-                                        (instance? Symbol key)
-                                        (let [#_"Symbol" s (cast Symbol key)]
-                                            (cond
-                                                (nil? (.getNamespace s))  (Symbol'intern ns, (.getName s))
-                                                (= (.getNamespace s) "_") (Symbol'intern nil, (.getName s))
-                                            )
-                                        )
-                                    )]
-                                (aset a i (or _ key))
-                                (aset a (inc i) val)
-                            )
-                        )
-                        (RT'map a)
                     )
                 )
             )
@@ -18007,93 +17970,90 @@
         ])
     ))
 
-    (defn #_"Object" SymbolicValueReader'fn [#_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)
-              #_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
-            (when-not (instance? Symbol o)
-                (throw (RuntimeException. (str "Invalid token: ##" o)))
+    (defn #_"Fn" SymbolicValueReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
+            (let [#_"PushbackReader" r (cast PushbackReader reader)
+                  #_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
+                (when-not (instance? Symbol o)
+                    (throw (RuntimeException. (str "Invalid token: ##" o)))
+                )
+                (when-not (.containsKey SymbolicValueReader'specials, o)
+                    (throw (RuntimeException. (str "Unknown symbolic value: ##" o)))
+                )
+                (.valAt SymbolicValueReader'specials, o)
             )
-            (when-not (.containsKey SymbolicValueReader'specials, o)
-                (throw (RuntimeException. (str "Unknown symbolic value: ##" o)))
-            )
-            (.valAt SymbolicValueReader'specials, o)
         )
     )
 )
 
 (class-ns WrappingReader
-    (defn- #_"WrappingReader" WrappingReader'init []
-        (hash-map
-            #_"Symbol" :sym nil
-        )
-    )
-
-    (defn #_"WrappingReader" WrappingReader'new [#_"Symbol" sym]
-        (let [this (merge (AFn'new) (WrappingReader'init))]
-            (assoc this :sym sym)
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--WrappingReader [#_"WrappingReader" this, #_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)
-              #_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
-            (RT'list-2 (:sym this), o)
+    (defn #_"Fn" WrappingReader'new [#_"Symbol" sym]
+        (fn #_"Object" [#_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
+            (let [#_"PushbackReader" r (cast PushbackReader reader)
+                  #_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
+                (RT'list-2 sym, o)
+            )
         )
     )
 )
 
 (class-ns VarReader
-    (defn #_"Object" VarReader'fn [#_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)
-              #_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
-            (RT'list-2 LispReader'THE_VAR, o)
+    (defn #_"Fn" VarReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
+            (let [#_"PushbackReader" r (cast PushbackReader reader)
+                  #_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
+                (RT'list-2 LispReader'THE_VAR, o)
+            )
         )
     )
 )
 
 (class-ns DispatchReader
-    (defn #_"Object" DispatchReader'fn [#_"Object" reader, #_"Object" hash, #_"Object" pendingForms]
-        (let-when-not [#_"int" ch (LispReader'read1 (cast Reader reader))] (= ch -1) => (throw (RuntimeException. "EOF while reading character"))
-            (let-when-not [#_"IFn" fn (aget LispReader'dispatchMacros ch)] (some? fn) => (.invoke fn, reader, ch, pendingForms)
-                (LispReader'unread (cast PushbackReader reader), ch)
-                (throw (RuntimeException. (str "No dispatch macro for: " (char ch))))
+    (defn #_"Fn" DispatchReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" hash, #_"Object" pendingForms]
+            (let-when-not [#_"int" ch (LispReader'read1 (cast Reader reader))] (= ch -1) => (throw (RuntimeException. "EOF while reading character"))
+                (let-when-not [#_"IFn" fn (aget LispReader'dispatchMacros ch)] (some? fn) => (.invoke fn, reader, ch, pendingForms)
+                    (LispReader'unread (cast PushbackReader reader), ch)
+                    (throw (RuntimeException. (str "No dispatch macro for: " (char ch))))
+                )
             )
         )
     )
 )
 
 (class-ns FnReader
-    (defn #_"Object" FnReader'fn [#_"Object" reader, #_"Object" lparen, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (when (some? (.deref LispReader'ARG_ENV))
-                (throw (IllegalStateException. "Nested #()s are not allowed"))
-            )
-            (try
-                (Var'pushThreadBindings (RT'map LispReader'ARG_ENV, PersistentTreeMap'EMPTY))
-                (LispReader'unread r, \()
-                (let [#_"Object" form (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))
-                      #_"PersistentVector" args PersistentVector'EMPTY
-                      #_"PersistentTreeMap" argsyms (cast PersistentTreeMap (.deref LispReader'ARG_ENV))
-                      args
-                        (let-when [#_"ISeq" rargs (.rseq argsyms)] (some? rargs) => args
-                            (let [args
-                                    (let-when [#_"int" higharg (cast Integer (.getKey (cast Map$Entry (.first rargs))))] (pos? higharg) => args
-                                        (loop-when [args args #_"int" i 1] (<= i higharg) => args
-                                            (let [#_"Object" sym (or (.valAt argsyms, i) (LispReader'garg i))]
-                                                (recur (.cons args, sym) (inc i))
-                                            )
-                                        )
-                                    )]
-                                (let-when [#_"Object" restsym (.valAt argsyms, -1)] (some? restsym) => args
-                                    (-> args (.cons Compiler'_AMP_) (.cons restsym))
-                                )
-                            )
-                        )]
-                    (RT'list-3 Compiler'FN, args, form)
+    (defn #_"Fn" FnReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" lparen, #_"Object" pendingForms]
+            (let [#_"PushbackReader" r (cast PushbackReader reader)]
+                (when (some? (.deref LispReader'ARG_ENV))
+                    (throw (IllegalStateException. "Nested #()s are not allowed"))
                 )
-                (finally
-                    (Var'popThreadBindings)
+                (try
+                    (Var'pushThreadBindings (RT'map LispReader'ARG_ENV, PersistentTreeMap'EMPTY))
+                    (LispReader'unread r, \()
+                    (let [#_"Object" form (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))
+                          #_"PersistentVector" args PersistentVector'EMPTY
+                          #_"PersistentTreeMap" argsyms (cast PersistentTreeMap (.deref LispReader'ARG_ENV))
+                          args
+                            (let-when [#_"ISeq" rargs (.rseq argsyms)] (some? rargs) => args
+                                (let [args
+                                        (let-when [#_"int" higharg (cast Integer (.getKey (cast Map$Entry (.first rargs))))] (pos? higharg) => args
+                                            (loop-when [args args #_"int" i 1] (<= i higharg) => args
+                                                (let [#_"Object" sym (or (.valAt argsyms, i) (LispReader'garg i))]
+                                                    (recur (.cons args, sym) (inc i))
+                                                )
+                                            )
+                                        )]
+                                    (let-when [#_"Object" restsym (.valAt argsyms, -1)] (some? restsym) => args
+                                        (-> args (.cons Compiler'_AMP_) (.cons restsym))
+                                    )
+                                )
+                            )]
+                        (RT'list-3 Compiler'FN, args, form)
+                    )
+                    (finally
+                        (Var'popThreadBindings)
+                    )
                 )
             )
         )
@@ -18101,18 +18061,20 @@
 )
 
 (class-ns ArgReader
-    (defn #_"Object" ArgReader'fn [#_"Object" reader, #_"Object" pct, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (when (some? (.deref LispReader'ARG_ENV)) => (LispReader'interpretToken (LispReader'readToken r, \%))
-                (let [#_"int" ch (LispReader'read1 r) _ (LispReader'unread r, ch)]
-                    ;; % alone is first arg
-                    (if (or (= ch -1) (LispReader'isWhitespace ch) (LispReader'isTerminatingMacro ch))
-                        (LispReader'registerArg 1)
-                        (let [#_"Object" n (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
-                            (cond
-                                (.equals n, Compiler'_AMP_) (LispReader'registerArg -1)
-                                (instance? Number n)        (LispReader'registerArg (.intValue (cast Number n)))
-                                :else                       (throw (IllegalStateException. "arg literal must be %, %& or %integer"))
+    (defn #_"Fn" ArgReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" pct, #_"Object" pendingForms]
+            (let [#_"PushbackReader" r (cast PushbackReader reader)]
+                (when (some? (.deref LispReader'ARG_ENV)) => (LispReader'interpretToken (LispReader'readToken r, \%))
+                    (let [#_"int" ch (LispReader'read1 r) _ (LispReader'unread r, ch)]
+                        ;; % alone is first arg
+                        (if (or (= ch -1) (LispReader'isWhitespace ch) (LispReader'isTerminatingMacro ch))
+                            (LispReader'registerArg 1)
+                            (let [#_"Object" n (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
+                                (cond
+                                    (.equals n, Compiler'_AMP_) (LispReader'registerArg -1)
+                                    (instance? Number n)        (LispReader'registerArg (.intValue (cast Number n)))
+                                    :else                       (throw (IllegalStateException. "arg literal must be %, %& or %integer"))
+                                )
                             )
                         )
                     )
@@ -18123,39 +18085,41 @@
 )
 
 (class-ns MetaReader
-    (defn #_"Object" MetaReader'fn [#_"Object" reader, #_"Object" caret, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)
-              [#_"int" line #_"int" column]
-                (when (instance? LineNumberingPushbackReader r) => [-1 -1]
-                    [(LineNumberingPushbackReader''getLineNumber (cast LineNumberingPushbackReader r)) (dec (LineNumberingPushbackReader''getColumnNumber (cast LineNumberingPushbackReader r)))]
-                )
-              pendingForms (LispReader'ensurePending pendingForms)
-              #_"Object" meta (LispReader'read-5 r, true, nil, true, pendingForms)
-              meta
-                (cond
-                    (or (instance? Symbol meta) (instance? String meta)) (RT'map RT'TAG_KEY, meta)
-                    (instance? Keyword meta)                             (RT'map meta, RT'T)
-                    (instance? IPersistentMap meta)                      meta
-                    :else (throw (IllegalArgumentException. "Metadata must be Symbol, Keyword, String or Map"))
-                )
-              #_"Object" o (LispReader'read-5 r, true, nil, true, pendingForms)]
-            (when (instance? IMeta o) => (throw (IllegalArgumentException. "Metadata can only be applied to IMetas"))
-                (let [meta
-                        (when (and (not= line -1) (instance? ISeq o)) => meta
-                            (-> (cast IPersistentMap meta) (.assoc RT'LINE_KEY, line) (.assoc RT'COLUMN_KEY, column))
-                        )]
-                    (if (instance? IReference o)
-                        (do
-                            (.resetMeta (cast IReference o), (cast IPersistentMap meta))
-                            o
-                        )
-                        (let [#_"Object" ometa
-                                (loop-when [ometa (RT'meta o) #_"ISeq" s (RT'seq meta)] (some? s) => ometa
-                                    (let [#_"IMapEntry" kv (cast IMapEntry (.first s))]
-                                        (recur (RT'assoc ometa, (.getKey kv), (.getValue kv)) (.next s))
-                                    )
-                                )]
-                            (.withMeta (cast IObj o), (cast IPersistentMap ometa))
+    (defn #_"Fn" MetaReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" caret, #_"Object" pendingForms]
+            (let [#_"PushbackReader" r (cast PushbackReader reader)
+                  [#_"int" line #_"int" column]
+                    (when (instance? LineNumberingPushbackReader r) => [-1 -1]
+                        [(LineNumberingPushbackReader''getLineNumber (cast LineNumberingPushbackReader r)) (dec (LineNumberingPushbackReader''getColumnNumber (cast LineNumberingPushbackReader r)))]
+                    )
+                  pendingForms (LispReader'ensurePending pendingForms)
+                  #_"Object" meta (LispReader'read-5 r, true, nil, true, pendingForms)
+                  meta
+                    (cond
+                        (or (instance? Symbol meta) (instance? String meta)) (RT'map RT'TAG_KEY, meta)
+                        (instance? Keyword meta)                             (RT'map meta, RT'T)
+                        (instance? IPersistentMap meta)                      meta
+                        :else (throw (IllegalArgumentException. "Metadata must be Symbol, Keyword, String or Map"))
+                    )
+                  #_"Object" o (LispReader'read-5 r, true, nil, true, pendingForms)]
+                (when (instance? IMeta o) => (throw (IllegalArgumentException. "Metadata can only be applied to IMetas"))
+                    (let [meta
+                            (when (and (not= line -1) (instance? ISeq o)) => meta
+                                (-> (cast IPersistentMap meta) (.assoc RT'LINE_KEY, line) (.assoc RT'COLUMN_KEY, column))
+                            )]
+                        (if (instance? IReference o)
+                            (do
+                                (.resetMeta (cast IReference o), (cast IPersistentMap meta))
+                                o
+                            )
+                            (let [#_"Object" ometa
+                                    (loop-when [ometa (RT'meta o) #_"ISeq" s (RT'seq meta)] (some? s) => ometa
+                                        (let [#_"IMapEntry" kv (cast IMapEntry (.first s))]
+                                            (recur (RT'assoc ometa, (.getKey kv), (.getValue kv)) (.next s))
+                                        )
+                                    )]
+                                (.withMeta (cast IObj o), (cast IPersistentMap ometa))
+                            )
                         )
                     )
                 )
@@ -18165,15 +18129,17 @@
 )
 
 (class-ns SyntaxQuoteReader
-    (defn #_"Object" SyntaxQuoteReader'fn [#_"Object" reader, #_"Object" backquote, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (try
-                (Var'pushThreadBindings (RT'map LispReader'GENSYM_ENV, PersistentHashMap'EMPTY))
-                (let [#_"Object" form (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
-                    (SyntaxQuoteReader'syntaxQuote form)
-                )
-                (finally
-                    (Var'popThreadBindings)
+    (defn #_"Fn" SyntaxQuoteReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" backquote, #_"Object" pendingForms]
+            (let [#_"PushbackReader" r (cast PushbackReader reader)]
+                (try
+                    (Var'pushThreadBindings (RT'map LispReader'GENSYM_ENV, PersistentHashMap'EMPTY))
+                    (let [#_"Object" form (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
+                        (SyntaxQuoteReader'syntaxQuote form)
+                    )
+                    (finally
+                        (Var'popThreadBindings)
+                    )
                 )
             )
         )
@@ -18276,18 +18242,20 @@
 )
 
 (class-ns UnquoteReader
-    (defn #_"Object" UnquoteReader'fn [#_"Object" reader, #_"Object" comma, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (let-when [#_"int" ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading character"))
-                (let [pendingForms (LispReader'ensurePending pendingForms)]
-                    (if (= ch \@)
-                        (let [#_"Object" o (LispReader'read-5 r, true, nil, true, pendingForms)]
-                            (RT'list-2 LispReader'UNQUOTE_SPLICING, o)
-                        )
-                        (do
-                            (LispReader'unread r, ch)
+    (defn #_"Fn" UnquoteReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" comma, #_"Object" pendingForms]
+            (let [#_"PushbackReader" r (cast PushbackReader reader)]
+                (let-when [#_"int" ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading character"))
+                    (let [pendingForms (LispReader'ensurePending pendingForms)]
+                        (if (= ch \@)
                             (let [#_"Object" o (LispReader'read-5 r, true, nil, true, pendingForms)]
-                                (RT'list-2 LispReader'UNQUOTE, o)
+                                (RT'list-2 LispReader'UNQUOTE_SPLICING, o)
+                            )
+                            (do
+                                (LispReader'unread r, ch)
+                                (let [#_"Object" o (LispReader'read-5 r, true, nil, true, pendingForms)]
+                                    (RT'list-2 LispReader'UNQUOTE, o)
+                                )
                             )
                         )
                     )
@@ -18298,40 +18266,42 @@
 )
 
 (class-ns CharacterReader
-    (defn #_"Object" CharacterReader'fn [#_"Object" reader, #_"Object" backslash, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader) #_"int" ch (LispReader'read1 r)]
-            (when-not (= ch -1) => (throw (RuntimeException. "EOF while reading character"))
-                (let [#_"String" token (LispReader'readToken r, (char ch))]
-                    (when-not (= (.length token) 1) => (Character/valueOf (.charAt token, 0))
-                        (case token
-                            "newline"   \newline
-                            "space"     \space
-                            "tab"       \tab
-                            "backspace" \backspace
-                            "formfeed"  \formfeed
-                            "return"    \return
-                            (cond
-                                (.startsWith token, "u")
-                                    (let [#_"char" c (char (LispReader'readUnicodeChar-4 token, 1, 4, 16))]
-                                        (when (<= (§ char "\ud800") c (§ char "\udfff")) ;; surrogate code unit?
-                                            (throw (RuntimeException. (str "Invalid character constant: \\u" (Integer/toString c, 16))))
-                                        )
-                                        c
-                                    )
-                                (.startsWith token, "o")
-                                    (let [#_"int" len (dec (.length token))]
-                                        (when (< 3 len)
-                                            (throw (RuntimeException. (str "Invalid octal escape sequence length: " len)))
-                                        )
-                                        (let [#_"int" uc (LispReader'readUnicodeChar-4 token, 1, len, 8)]
-                                            (when (< 0377 uc)
-                                                (throw (RuntimeException. "Octal escape sequence must be in range [0, 377]."))
+    (defn #_"Fn" CharacterReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" backslash, #_"Object" pendingForms]
+            (let [#_"PushbackReader" r (cast PushbackReader reader) #_"int" ch (LispReader'read1 r)]
+                (when-not (= ch -1) => (throw (RuntimeException. "EOF while reading character"))
+                    (let [#_"String" token (LispReader'readToken r, (char ch))]
+                        (when-not (= (.length token) 1) => (Character/valueOf (.charAt token, 0))
+                            (case token
+                                "newline"   \newline
+                                "space"     \space
+                                "tab"       \tab
+                                "backspace" \backspace
+                                "formfeed"  \formfeed
+                                "return"    \return
+                                (cond
+                                    (.startsWith token, "u")
+                                        (let [#_"char" c (char (LispReader'readUnicodeChar-4 token, 1, 4, 16))]
+                                            (when (<= (§ char "\ud800") c (§ char "\udfff")) ;; surrogate code unit?
+                                                (throw (RuntimeException. (str "Invalid character constant: \\u" (Integer/toString c, 16))))
                                             )
-                                            (char uc)
+                                            c
                                         )
-                                    )
-                                :else
-                                    (throw (RuntimeException. (str "Unsupported character: \\" token)))
+                                    (.startsWith token, "o")
+                                        (let [#_"int" len (dec (.length token))]
+                                            (when (< 3 len)
+                                                (throw (RuntimeException. (str "Invalid octal escape sequence length: " len)))
+                                            )
+                                            (let [#_"int" uc (LispReader'readUnicodeChar-4 token, 1, len, 8)]
+                                                (when (< 0377 uc)
+                                                    (throw (RuntimeException. "Octal escape sequence must be in range [0, 377]."))
+                                                )
+                                                (char uc)
+                                            )
+                                        )
+                                    :else
+                                        (throw (RuntimeException. (str "Unsupported character: \\" token)))
+                                )
                             )
                         )
                     )
@@ -18342,22 +18312,24 @@
 )
 
 (class-ns ListReader
-    (defn #_"Object" ListReader'fn [#_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)
-              [#_"int" line #_"int" column]
-                (when (instance? LineNumberingPushbackReader r) => [-1 -1]
-                    [(LineNumberingPushbackReader''getLineNumber (cast LineNumberingPushbackReader r)) (dec (LineNumberingPushbackReader''getColumnNumber (cast LineNumberingPushbackReader r)))]
-                )
-              #_"List" l (LispReader'readDelimitedList \), r, true, (LispReader'ensurePending pendingForms))]
-            (when-not (.isEmpty l) => PersistentList'EMPTY
-                (let [#_"IObj" s (cast IObj (PersistentList'create l))]
-                    (when-not (= line -1) => s
-                        (.withMeta s, (RT'map
-                            (object-array [
-                                RT'LINE_KEY   line
-                                RT'COLUMN_KEY column
-                            ])
-                        ))
+    (defn #_"Fn" ListReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
+            (let [#_"PushbackReader" r (cast PushbackReader reader)
+                  [#_"int" line #_"int" column]
+                    (when (instance? LineNumberingPushbackReader r) => [-1 -1]
+                        [(LineNumberingPushbackReader''getLineNumber (cast LineNumberingPushbackReader r)) (dec (LineNumberingPushbackReader''getColumnNumber (cast LineNumberingPushbackReader r)))]
+                    )
+                  #_"List" l (LispReader'readDelimitedList \), r, true, (LispReader'ensurePending pendingForms))]
+                (when-not (.isEmpty l) => PersistentList'EMPTY
+                    (let [#_"IObj" s (cast IObj (PersistentList'create l))]
+                        (when-not (= line -1) => s
+                            (.withMeta s, (RT'map
+                                (object-array [
+                                    RT'LINE_KEY   line
+                                    RT'COLUMN_KEY column
+                                ])
+                            ))
+                        )
                     )
                 )
             )
@@ -18366,42 +18338,44 @@
 )
 
 (class-ns VectorReader
-    (defn #_"Object" VectorReader'fn [#_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (LazilyPersistentVector'create (LispReader'readDelimitedList \], r, true, (LispReader'ensurePending pendingForms)))
+    (defn #_"Fn" VectorReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
+            (let [#_"PushbackReader" r (cast PushbackReader reader)]
+                (LazilyPersistentVector'create (LispReader'readDelimitedList \], r, true, (LispReader'ensurePending pendingForms)))
+            )
         )
     )
 )
 
 (class-ns MapReader
-    (defn #_"Object" MapReader'fn [#_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)
-              #_"Object[]" a (.toArray (LispReader'readDelimitedList \}, r, true, (LispReader'ensurePending pendingForms)))]
-            (when (= (& (alength a) 1) 1)
-                (throw (RuntimeException. "Map literal must contain an even number of forms"))
+    (defn #_"Fn" MapReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
+            (let [#_"PushbackReader" r (cast PushbackReader reader)
+                  #_"Object[]" a (.toArray (LispReader'readDelimitedList \}, r, true, (LispReader'ensurePending pendingForms)))]
+                (when (= (& (alength a) 1) 1)
+                    (throw (RuntimeException. "Map literal must contain an even number of forms"))
+                )
+                (RT'map a)
             )
-            (RT'map a)
         )
     )
 )
 
 (class-ns SetReader
-    (defn #_"Object" SetReader'fn [#_"Object" reader, #_"Object" leftbracket, #_"Object" pendingForms]
-        (let [#_"PushbackReader" r (cast PushbackReader reader)]
-            (PersistentHashSet'createWithCheck-1l (LispReader'readDelimitedList \}, r, true, (LispReader'ensurePending pendingForms)))
+    (defn #_"Fn" SetReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" leftbracket, #_"Object" pendingForms]
+            (let [#_"PushbackReader" r (cast PushbackReader reader)]
+                (PersistentHashSet'createWithCheck-1l (LispReader'readDelimitedList \}, r, true, (LispReader'ensurePending pendingForms)))
+            )
         )
     )
 )
 
 (class-ns UnmatchedDelimiterReader
-    (defn #_"Object" UnmatchedDelimiterReader'fn [#_"Object" reader, #_"Object" rightdelim, #_"Object" pendingForms]
-        (throw (RuntimeException. (str "Unmatched delimiter: " rightdelim)))
-    )
-)
-
-(class-ns UnreadableReader
-    (defn #_"Object" UnreadableReader'fn [#_"Object" reader, #_"Object" leftangle, #_"Object" pendingForms]
-        (throw (RuntimeException. "Unreadable form"))
+    (defn #_"Fn" UnmatchedDelimiterReader'new []
+        (fn #_"Object" [#_"Object" reader, #_"Object" rightdelim, #_"Object" pendingForms]
+            (throw (RuntimeException. (str "Unmatched delimiter: " rightdelim)))
+        )
     )
 )
 
@@ -18436,33 +18410,32 @@
     (§ def #_"Var" LispReader'ARG_ENV (Var''setDynamic (Var'create nil)))
 
     (§ static
-        (aset LispReader'macros \" StringReader'fn) ;; oops! "
-        (aset LispReader'macros \; CommentReader'fn)
+        (aset LispReader'macros \" (StringReader'new)) ;; oops! "
+        (aset LispReader'macros \; (CommentReader'new))
         (aset LispReader'macros \' (WrappingReader'new LispReader'QUOTE))
         (aset LispReader'macros \@ (WrappingReader'new LispReader'DEREF))
-        (aset LispReader'macros \^ MetaReader'fn)
-        (aset LispReader'macros \` SyntaxQuoteReader'fn)
-        (aset LispReader'macros \~ UnquoteReader'fn)
-        (aset LispReader'macros \( ListReader'fn)
-        (aset LispReader'macros \) UnmatchedDelimiterReader'fn)
-        (aset LispReader'macros \[ VectorReader'fn)
-        (aset LispReader'macros \] UnmatchedDelimiterReader'fn)
-        (aset LispReader'macros \{ MapReader'fn)
-        (aset LispReader'macros \} UnmatchedDelimiterReader'fn)
-        (aset LispReader'macros \\ CharacterReader'fn)
-        (aset LispReader'macros \% ArgReader'fn)
-        (aset LispReader'macros \# DispatchReader'fn)
+        (aset LispReader'macros \^ (MetaReader'new))
+        (aset LispReader'macros \` (SyntaxQuoteReader'new))
+        (aset LispReader'macros \~ (UnquoteReader'new))
+        (aset LispReader'macros \( (ListReader'new))
+        (aset LispReader'macros \) (UnmatchedDelimiterReader'new))
+        (aset LispReader'macros \[ (VectorReader'new))
+        (aset LispReader'macros \] (UnmatchedDelimiterReader'new))
+        (aset LispReader'macros \{ (MapReader'new))
+        (aset LispReader'macros \} (UnmatchedDelimiterReader'new))
+        (aset LispReader'macros \\ (CharacterReader'new))
+        (aset LispReader'macros \% (ArgReader'new))
+        (aset LispReader'macros \# (DispatchReader'new))
 
-        (aset LispReader'dispatchMacros \^ MetaReader'fn)
-        (aset LispReader'dispatchMacros \# SymbolicValueReader'fn)
-        (aset LispReader'dispatchMacros \' VarReader'fn)
-        (aset LispReader'dispatchMacros \" RegexReader'fn) ;; oops! "
-        (aset LispReader'dispatchMacros \( FnReader'fn)
-        (aset LispReader'dispatchMacros \{ SetReader'fn)
-        (aset LispReader'dispatchMacros \! CommentReader'fn)
-        (aset LispReader'dispatchMacros \< UnreadableReader'fn)
-        (aset LispReader'dispatchMacros \_ DiscardReader'fn)
-        (aset LispReader'dispatchMacros \: NamespaceMapReader'fn)
+        (aset LispReader'dispatchMacros \^ (MetaReader'new))
+        (aset LispReader'dispatchMacros \# (SymbolicValueReader'new))
+        (aset LispReader'dispatchMacros \' (VarReader'new))
+        (aset LispReader'dispatchMacros \" (RegexReader'new)) ;; oops! "
+        (aset LispReader'dispatchMacros \( (FnReader'new))
+        (aset LispReader'dispatchMacros \{ (SetReader'new))
+        (aset LispReader'dispatchMacros \! (CommentReader'new))
+        (aset LispReader'dispatchMacros \_ (DiscardReader'new))
+        (aset LispReader'dispatchMacros \: (NamespaceMapReader'new))
     )
 
     (defn #_"boolean" LispReader'isWhitespace [#_"int" ch]
@@ -18973,7 +18946,7 @@
     )
 
     #_method
-    (defn #_"void" LockingTransaction''abort [#_"LockingTransaction" this] #_(§ throws AbortException)
+    (defn #_"void" LockingTransaction''abort [#_"LockingTransaction" this] #_throws #_"AbortException"
         (LockingTransaction''stop this, LockingTransaction'KILLED)
         (throw (AbortException'new))
     )
@@ -19016,7 +18989,7 @@
         )
     )
 
-    (defn #_"Object" LockingTransaction'runInTransaction [#_"Callable" fn] #_(§ throws Exception)
+    (defn #_"Object" LockingTransaction'runInTransaction [#_"Callable" fn] #_throws #_"Exception"
         (let [#_"LockingTransaction" t (.get LockingTransaction'transaction)]
             (when (nil? t) => (if (some? (:info t)) (.call fn) (LockingTransaction''run t, fn))
                 (let [t (LockingTransaction'new)]
@@ -19033,7 +19006,7 @@
     )
 
     #_method
-    (defn #_"Object" LockingTransaction''run [#_"LockingTransaction" this, #_"Callable" fn] #_(§ throws Exception)
+    (defn #_"Object" LockingTransaction''run [#_"LockingTransaction" this, #_"Callable" fn] #_throws #_"Exception"
         (let [#_"List<Ref>" locked (ArrayList.) #_"List<Notify>" notify (ArrayList.)]
             (loop [#_"boolean" done false #_"Object" ret nil #_"int" i 0]
                 (if (and (not done) (< i LockingTransaction'RETRY_LIMIT))
@@ -23420,7 +23393,7 @@
                     (.add tasks,
                         (reify Callable
                             #_foreign
-                            (#_"Object" call [#_"Callable" _self] #_(§ throws Exception)
+                            (#_"Object" call [#_"Callable" _self] #_throws #_"Exception"
                                 (.fold node, combinef, reducef, fjtask, fjfork, fjjoin)
                             )
                         )
@@ -23444,7 +23417,7 @@
                         (.invoke fjfork, (.invoke fjtask,
                             (reify Callable
                                 #_foreign
-                                (#_"Object" call [#_"Callable" _self] #_(§ throws Exception)
+                                (#_"Object" call [#_"Callable" _self] #_throws #_"Exception"
                                     (ArrayNode'foldTasks t2, combinef, fjtask, fjfork, fjjoin)
                                 )
                             )
@@ -24392,7 +24365,7 @@
         (.invoke fjinvoke,
             (reify Callable
                 #_foreign
-                (#_"Object" call [#_"Callable" _self] #_(§ throws Exception)
+                (#_"Object" call [#_"Callable" _self] #_throws #_"Exception"
                     (let [#_"Object" ret (.invoke combinef)
                             ret (if (some? (:root this)) (.invoke combinef, ret, (.fold (:root this), combinef, reducef, fjtask, fjfork, fjjoin)) ret)
                             ret (if (:hasNull this) (.invoke combinef, ret, (.invoke reducef, (.invoke combinef), nil, (:nullValue this))) ret)]
@@ -26628,17 +26601,9 @@
 
     (§ def #_"PersistentVector" PersistentVector'EMPTY (PersistentVector'new-4 0, 5, PersistentVector'EMPTY_NODE, (object-array 0)))
 
-    (def- #_"IFn" PersistentVector'TRANSIENT_VECTOR_CONJ
-        (§ proxy AFn()
-            #_override
-            (defn #_"Object" IFn'''invoke-3--AFn [#_"AFn" this, #_"Object" coll, #_"Object" val]
-                (.conj (cast ITransientVector coll), val)
-            )
-            #_override
-            (defn #_"Object" IFn'''invoke-2--AFn [#_"AFn" this, #_"Object" coll]
-                coll
-            )
-        )
+    (defn- #_"Object" PersistentVector'TRANSIENT_VECTOR_CONJ
+        ([#_"Object" coll] coll)
+        ([#_"Object" coll, #_"Object" val] (.conj (cast ITransientVector coll), val))
     )
 
     (defn #_"PersistentVector" PersistentVector'adopt [#_"Object[]" items]
@@ -27032,7 +26997,7 @@
     )
 
     #_override
-    (defn #_"Object" IFn'''invoke-4--ProxyHandler [#_"ProxyHandler" this, #_"Object" proxy, #_"java.lang.reflect.Method" method, #_"Object[]" args] #_(§ throws Throwable)
+    (defn #_"Object" IFn'''invoke-4--ProxyHandler [#_"ProxyHandler" this, #_"Object" proxy, #_"java.lang.reflect.Method" method, #_"Object[]" args] #_throws #_"Throwable"
         (let [#_"IFn" fn (cast IFn (.valAt (:fns this), (.getName method))) #_"Class" rt (.getReturnType method)]
             (if (nil? fn)
                 (cond
@@ -28309,27 +28274,17 @@
     (§ def #_"Var" RT'PRINT_INITIALIZED (Var'intern RT'CLOIURE_NS, (Symbol'intern "print-initialized")))
     (§ def #_"Var" RT'PR_ON (Var'intern RT'CLOIURE_NS, (Symbol'intern "pr-on")))
 
-    (def #_"IFn" RT'inNamespace
-        (§ proxy AFn()
-            #_override
-            (defn #_"Object" IFn'''invoke-2--AFn [#_"AFn" this, #_"Object" arg1]
-                (let [#_"Namespace" ns (Namespace'findOrCreate (cast Symbol arg1))]
-                    (Var''set RT'CURRENT_NS, ns)
-                    ns
-                )
-            )
+    (defn #_"Object" RT'inNamespace [#_"Object" arg1]
+        (let [#_"Namespace" ns (Namespace'findOrCreate (cast Symbol arg1))]
+            (Var''set RT'CURRENT_NS, ns)
+            ns
         )
     )
 
-    (def #_"IFn" RT'bootNamespace
-        (§ proxy AFn()
-            #_override
-            (defn #_"Object" IFn'''invoke-4--AFn [#_"AFn" this, #_"Object" __form, #_"Object" __env, #_"Object" arg1]
-                (let [#_"Namespace" ns (Namespace'findOrCreate (cast Symbol arg1))]
-                    (Var''set RT'CURRENT_NS, ns)
-                    ns
-                )
-            )
+    (defn #_"Object" RT'bootNamespace [#_"Object" __form, #_"Object" __env, #_"Object" arg1]
+        (let [#_"Namespace" ns (Namespace'findOrCreate (cast Symbol arg1))]
+            (Var''set RT'CURRENT_NS, ns)
+            ns
         )
     )
 
@@ -28385,7 +28340,7 @@
         )
     )
 
-    (defn #_"void" RT'loadResourceScript [#_"String" name, #_"boolean" failIfNotFound] #_(§ throws IOException)
+    (defn #_"void" RT'loadResourceScript [#_"String" name, #_"boolean" failIfNotFound] #_throws #_"IOException"
         (let [#_"InputStream" ins (RT'resourceAsStream (RT'baseLoader), name)]
             (cond (some? ins)
                 (try
@@ -28401,7 +28356,7 @@
         nil
     )
 
-    (defn #_"long" RT'lastModified [#_"URL" url, #_"String" libfile] #_(§ throws IOException)
+    (defn #_"long" RT'lastModified [#_"URL" url, #_"String" libfile] #_throws #_"IOException"
         (let [#_"URLConnection" connection (.openConnection url)]
             (try
                 (if (= (.getProtocol url) "jar")
@@ -28419,12 +28374,12 @@
         )
     )
 
-    (defn #_"void" RT'load-1 [#_"String" scriptbase] #_(§ throws IOException, ClassNotFoundException)
+    (defn #_"void" RT'load-1 [#_"String" scriptbase] #_throws #_"IOException, ClassNotFoundException"
         (RT'load-2 scriptbase, true)
         nil
     )
 
-    (defn #_"void" RT'load-2 [#_"String" scriptbase, #_"boolean" failIfNotFound] #_(§ throws IOException, ClassNotFoundException)
+    (defn #_"void" RT'load-2 [#_"String" scriptbase, #_"boolean" failIfNotFound] #_throws #_"IOException, ClassNotFoundException"
         (let [#_"String" classfile (str scriptbase RT'LOADER_SUFFIX ".class") #_"String" cljfile (str scriptbase ".cli")
               #_"URL" classURL (RT'getResource (RT'baseLoader), classfile) #_"URL" cljURL (RT'getResource (RT'baseLoader), cljfile)
               #_"boolean" loaded false
@@ -28462,16 +28417,13 @@
     (defn #_"ISeq" RT'chunkIteratorSeq [#_"Iterator" it]
         (when (.hasNext it)
             (LazySeq'new-1
-                (§ proxy AFn()
-                    #_override
-                    (defn #_"Object" IFn'''invoke-1--AFn [#_"AFn" this]
-                        (let [#_"Object[]" a (make-array Object RT'CHUNK_SIZE)
-                              #_"int" n
-                                (loop-when-recur [n 0] (and (.hasNext it) (< n RT'CHUNK_SIZE)) [(inc n)] => n
-                                    (aset a n (.next it))
-                                )]
-                            (ChunkedCons'new-2 (ArrayChunk'new-3 a, 0, n), (RT'chunkIteratorSeq it))
-                        )
+                (fn #_"Object" []
+                    (let [#_"Object[]" a (make-array Object RT'CHUNK_SIZE)
+                          #_"int" n
+                            (loop-when-recur [n 0] (and (.hasNext it) (< n RT'CHUNK_SIZE)) [(inc n)] => n
+                                (aset a n (.next it))
+                            )]
+                        (ChunkedCons'new-2 (ArrayChunk'new-3 a, 0, n), (RT'chunkIteratorSeq it))
                     )
                 )
             )
@@ -28580,14 +28532,9 @@
     )
 
     (defn #_"int" RT'count [#_"Object" o]
-        (if (instance? Counted o)
-            (.count (cast Counted o))
-            (RT'countFrom o)
-        )
-    )
-
-    (defn #_"int" RT'countFrom [#_"Object" o]
         (cond
+            (instance? Counted o)
+                (.count (cast Counted o))
             (nil? o)
                 0
             (instance? IPersistentCollection o)
@@ -28803,37 +28750,24 @@
     )
 
     (defn #_"Object" RT'nth-2 [#_"Object" coll, #_"int" n]
-        (if (instance? Indexed coll)
-            (.nth (cast Indexed coll), n)
-            (RT'nthFrom-2 coll, n)
-        )
-    )
-
-    (defn #_"Object" RT'nthFrom-2 [#_"Object" coll, #_"int" n]
         (cond
+            (instance? Indexed coll)
+                (.nth (cast Indexed coll), n)
             (nil? coll)
                 nil
             (instance? CharSequence coll)
                 (Character/valueOf (.charAt (cast CharSequence coll), n))
             (.isArray (.getClass coll))
                 (Reflector'prepRet (.getComponentType (.getClass coll)), (Array/get coll, n))
-            (instance? RandomAccess coll)
-                (.get (cast List coll), n)
             (instance? Matcher coll)
                 (.group (cast Matcher coll), n)
             (instance? Map$Entry coll)
                 (let [#_"Map$Entry" e (cast Map$Entry coll)]
-                    (cond
-                        (zero? n) (.getKey e)
-                        (= n 1)   (.getValue e)
-                        :else     (throw (IndexOutOfBoundsException.))
-                    )
+                    (case n 0 (.getKey e) 1 (.getValue e) (throw (IndexOutOfBoundsException.)))
                 )
             (instance? Sequential coll)
                 (loop-when [#_"int" i 0 #_"ISeq" s (RT'seq coll)] (and (<= i n) (some? s)) => (throw (IndexOutOfBoundsException.))
-                    (when (= i n) => (recur (inc i) (.next s))
-                        (.first s)
-                    )
+                    (recur-if (< i n) [(inc i) (.next s)] => (.first s))
                 )
             :else
                 (throw (UnsupportedOperationException. (str "nth not supported on this type: " (.getSimpleName (.getClass coll)))))
@@ -28841,14 +28775,9 @@
     )
 
     (defn #_"Object" RT'nth-3 [#_"Object" coll, #_"int" n, #_"Object" notFound]
-        (if (instance? Indexed coll)
-            (.nth (cast Indexed coll), n, notFound)
-            (RT'nthFrom-3 coll, n, notFound)
-        )
-    )
-
-    (defn #_"Object" RT'nthFrom-3 [#_"Object" coll, #_"int" n, #_"Object" notFound]
         (cond
+            (instance? Indexed coll)
+                (.nth (cast Indexed coll), n, notFound)
             (nil? coll)
                 notFound
             (neg? n)
@@ -28858,31 +28787,20 @@
                     (if (< n (.length s)) (Character/valueOf (.charAt s, n)) notFound)
                 )
             (.isArray (.getClass coll))
-                (if (< n (Array/getLength coll))
+                (when (< n (Array/getLength coll)) => notFound
                     (Reflector'prepRet (.getComponentType (.getClass coll)), (Array/get coll, n))
-                    notFound
-                )
-            (instance? RandomAccess coll)
-                (let [#_"List" l (cast List coll)]
-                    (if (< n (.size l)) (.get l, n) notFound)
                 )
             (instance? Matcher coll)
-                (let [#_"Matcher" m (cast Matcher coll)]
-                    (if (< n (.groupCount m)) (.group m, n) notFound)
+                (let-when [#_"Matcher" m (cast Matcher coll)] (< n (.groupCount m)) => notFound
+                    (.group m, n)
                 )
             (instance? Map$Entry coll)
                 (let [#_"Map$Entry" e (cast Map$Entry coll)]
-                    (cond
-                        (zero? n) (.getKey e)
-                        (= n 1)   (.getValue e)
-                        :else     notFound
-                    )
+                    (case n 0 (.getKey e) 1 (.getValue e) notFound)
                 )
             (instance? Sequential coll)
                 (loop-when [#_"int" i 0 #_"ISeq" s (RT'seq coll)] (and (<= i n) (some? s)) => notFound
-                    (when (= i n) => (recur (inc i) (.next s))
-                        (.first s)
-                    )
+                    (recur-if (< i n) [(inc i) (.next s)] => (.first s))
                 )
             :else
                 (throw (UnsupportedOperationException. (str "nth not supported on this type: " (.getSimpleName (.getClass coll)))))
@@ -29480,13 +29398,13 @@
         )
     )
 
-    (defn #_"Character" RT'readChar [#_"Reader" r] #_(§ throws IOException)
+    (defn #_"Character" RT'readChar [#_"Reader" r] #_throws #_"IOException"
         (let [#_"int" ret (.read r)]
             (RT'readRet ret)
         )
     )
 
-    (defn #_"Character" RT'peekChar [#_"Reader" r] #_(§ throws IOException)
+    (defn #_"Character" RT'peekChar [#_"Reader" r] #_throws #_"IOException"
         (let [#_"int" ret
                 (if (instance? PushbackReader r)
                     (let [ret (.read r) _ (.unread (cast PushbackReader r), ret)]
@@ -29538,7 +29456,7 @@
         )
     )
 
-    (defn #_"void" RT'print [#_"Object" x, #_"Writer" w] #_(§ throws IOException)
+    (defn #_"void" RT'print [#_"Object" x, #_"Writer" w] #_throws #_"IOException"
         (if (and (Var''isBound RT'PRINT_INITIALIZED) (RT'booleanCast-1o (.deref RT'PRINT_INITIALIZED)))
             (.invoke RT'PR_ON, x, w) ;; call multimethod
             (let [#_"boolean" readably (RT'booleanCast-1o (.deref RT'PRINT_READABLY))]
@@ -29663,7 +29581,7 @@
         nil
     )
 
-    (defn- #_"void" RT'printInnerSeq [#_"ISeq" x, #_"Writer" w] #_(§ throws IOException)
+    (defn- #_"void" RT'printInnerSeq [#_"ISeq" x, #_"Writer" w] #_throws #_"IOException"
         (loop-when-recur [#_"ISeq" s x] (some? s) [(.next s)]
             (RT'print (.first s), w)
             (when (some? (.next s))
@@ -29810,7 +29728,7 @@
     )
 
     #_foreign
-    (defn #_"Object" next---SeqIterator [#_"SeqIterator" this] #_(§ throws NoSuchElementException)
+    (defn #_"Object" next---SeqIterator [#_"SeqIterator" this] #_throws #_"NoSuchElementException"
         (when (not (.hasNext this))
             (throw (NoSuchElementException.))
         )
@@ -30175,20 +30093,11 @@
         (let [this (TransformerIterator'init)
               #_"IFn" xf
                 (cast IFn (.invoke xform,
-                    (§ proxy AFn()
-                        #_override
-                        (defn #_"Object" IFn'''invoke-1--AFn [#_"AFn" this]
-                            nil
-                        )
-
-                        #_override
-                        (defn #_"Object" IFn'''invoke-2--AFn [#_"AFn" this, #_"Object" acc]
-                            acc
-                        )
-
-                        #_override
-                        (defn #_"Object" IFn'''invoke-3--AFn [#_"AFn" this, #_"Object" acc, #_"Object" o]
-                            (ß ass this (assoc this :buffer (.add (:buffer this), o)))
+                    (fn #_"Object"
+                        ([] nil)
+                        ([#_"Object" acc] acc)
+                        ([#_"Object" acc, #_"Object" o]
+                            (ß ass this (update this :buffer #(.add %, o)))
                             acc
                         )
                     )
@@ -30518,9 +30427,9 @@
 
 (class-ns Var
     (def #_"ThreadLocal<Frame>" Var'dvals
-        (§ proxy ThreadLocal<Frame>()
+        (proxy [ThreadLocal #_"<Frame>"] []
             #_foreign
-            (defn #_"Frame" initialValue---ThreadLocal<Frame> [#_"ThreadLocal<Frame>" this]
+            (#_"Frame" initialValue [#_"ThreadLocal<Frame>" #_this]
                 Frame'TOP
             )
         )
@@ -30701,7 +30610,7 @@
 
     #_method
     (defn #_"void" Var''setMacro [#_"Var" this]
-        (.alterMeta this, Var'assoc, (RT'list-2 Var'macroKey, RT'T))
+        (.alterMeta this, RT'assoc, (RT'list-2 Var'macroKey, RT'T))
         nil
     )
 
@@ -30727,7 +30636,7 @@
 
     #_method
     (defn #_"void" Var''setTag [#_"Var" this, #_"Symbol" tag]
-        (.alterMeta this, Var'assoc, (RT'list-2 RT'TAG_KEY, tag))
+        (.alterMeta this, RT'assoc, (RT'list-2 RT'TAG_KEY, tag))
         nil
     )
 
@@ -30744,7 +30653,7 @@
             (let [#_"Object" oldroot (:root this)]
                 (ß ass this (assoc this :root root))
                 (ß ass Var'rev (inc Var'rev))
-                (.alterMeta this, Var'dissoc, (RT'list-1 Var'macroKey))
+                (.alterMeta this, RT'dissoc, (RT'list-1 Var'macroKey))
                 (ARef''notifyWatches this, oldroot, (:root this))
             )
         )
@@ -30999,24 +30908,6 @@
     #_override
     (defn #_"Object" IFn'''applyTo--Var [#_"Var" this, #_"ISeq" args]
         (.applyTo (Var''fn this), args)
-    )
-
-    (def #_"IFn" Var'assoc
-        (§ proxy AFn()
-            #_override
-            (defn #_"Object" IFn'''invoke-4--AFn [#_"AFn" this, #_"Object" m, #_"Object" k, #_"Object" v]
-                (RT'assoc m, k, v)
-            )
-        )
-    )
-
-    (def #_"IFn" Var'dissoc
-        (§ proxy AFn()
-            #_override
-            (defn #_"Object" IFn'''invoke-3--AFn [#_"AFn" this, #_"Object" c, #_"Object" k]
-                (RT'dissoc c, k)
-            )
-        )
     )
 )
 )

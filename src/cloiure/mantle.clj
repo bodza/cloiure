@@ -7360,21 +7360,12 @@
 )
 
 (§ prefer-method print-method cloiure.lang.IPersistentCollection java.util.Collection)
-(§ prefer-method print-method cloiure.lang.IPersistentCollection java.util.RandomAccess)
-(§ prefer-method print-method java.util.RandomAccess java.util.List)
 (§ prefer-method print-method cloiure.lang.IPersistentCollection java.util.Map)
 
 (§ defmethod print-method java.util.List [c, ^Writer w]
     (if *print-readably*
         (print-sequential "(" pr-on " " ")" c w)
         (print-object c w)
-    )
-)
-
-(§ defmethod print-method java.util.RandomAccess [v, ^Writer w]
-    (if *print-readably*
-        (print-sequential "[" pr-on " " "]" v w)
-        (print-object v w)
     )
 )
 
@@ -8817,7 +8808,7 @@
         (cond
             (identical? this o)
                 true
-            (or (instance? cloiure.lang.IPersistentVector o) (instance? java.util.RandomAccess o))
+            (instance? cloiure.lang.IPersistentVector o)
                 (and (= cnt (count o))
                     (loop [i (int 0)]
                         (cond
@@ -8902,7 +8893,7 @@
     (empty [_] (Vec. am 0 5 EMPTY-NODE (.array am 0) nil))
     (equiv [this o]
         (cond
-            (or (instance? cloiure.lang.IPersistentVector o) (instance? java.util.RandomAccess o))
+            (instance? cloiure.lang.IPersistentVector o)
                 (and
                     (= cnt (count o))
                     (loop [i (int 0)]
