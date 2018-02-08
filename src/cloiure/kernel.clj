@@ -86,15 +86,15 @@
 (declare AReference'init AReference'new-0 AReference'new-1)
 (declare ArityException'init ArityException'new-2 ArityException'new-3)
 (declare ArrayChunk'init ArrayChunk'new-1 ArrayChunk'new-2 ArrayChunk'new-3)
-(declare ArrayIter_int'init ArrayIter_int'new)
-(declare ArrayIter_float'init ArrayIter_float'new)
-(declare ArrayIter_double'init ArrayIter_double'new)
-(declare ArrayIter_long'init ArrayIter_long'new)
-(declare ArrayIter_byte'init ArrayIter_byte'new)
-(declare ArrayIter_char'init ArrayIter_char'new)
-(declare ArrayIter_short'init ArrayIter_short'new)
-(declare ArrayIter_boolean'init ArrayIter_boolean'new)
-(declare ArrayIter'EMPTY_ITERATOR ArrayIter'create-0 ArrayIter'create-1 ArrayIter'createFromObject ArrayIter'init ArrayIter'new)
+(declare ArrayIter_int'new)
+(declare ArrayIter_float'new)
+(declare ArrayIter_double'new)
+(declare ArrayIter_long'new)
+(declare ArrayIter_byte'new)
+(declare ArrayIter_char'new)
+(declare ArrayIter_short'new)
+(declare ArrayIter_boolean'new)
+(declare ArrayIter'EMPTY_ITERATOR ArrayIter'create-0 ArrayIter'create-1 ArrayIter'createFromObject ArrayIter'new)
 (declare ArraySeq_int'init ArraySeq_int'new)
 (declare ArraySeq_float'init ArraySeq_float'new)
 (declare ArraySeq_double'init ArraySeq_double'new)
@@ -2932,18 +2932,6 @@
 
 (java-ns cloiure.lang.ArrayChunk
     (class! ArrayChunk [IChunk])
-)
-
-(java-ns cloiure.lang.ArrayIter
-    (class! ArrayIter_int [Iterator #_"<Long>"])
-    (class! ArrayIter_float [Iterator #_"<Double>"])
-    (class! ArrayIter_double [Iterator #_"<Double>"])
-    (class! ArrayIter_long [Iterator #_"<Long>"])
-    (class! ArrayIter_byte [Iterator #_"<Byte>"])
-    (class! ArrayIter_char [Iterator #_"<Character>"])
-    (class! ArrayIter_short [Iterator #_"<Long>"])
-    (class! ArrayIter_boolean [Iterator #_"<Boolean>"])
-    (class! ArrayIter [Iterator])
 )
 
 (java-ns cloiure.lang.ArraySeq
@@ -7105,240 +7093,184 @@
 (java-ns cloiure.lang.ArrayIter
 
 (class-ns ArrayIter_int
-    (defn- #_"ArrayIter_int" ArrayIter_int'init []
-        (hash-map
-            #_"int[]" :array nil
-            #_"int" :i 0
-        )
-    )
+    (defn #_"Iterator" ArrayIter_int'new [#_"int[]" a, #_"int" i]
+        (let [#_"int'" vi (volatile! i)]
+            (reify Iterator
+                #_foreign
+                (#_"boolean" hasNext [#_"Iterator" _self]
+                    (and (some? a) (< @vi (alength a)))
+                )
 
-    (defn #_"ArrayIter_int" ArrayIter_int'new [#_"int[]" array, #_"int" i]
-        (let [this (ArrayIter_int'init)]
-            (assoc this :array array :i i)
-        )
-    )
-
-    #_foreign
-    (defn #_"boolean" hasNext---ArrayIter_int [#_"ArrayIter_int" this]
-        (and (some? (:array this)) (< (:i this) (alength (:array this))))
-    )
-
-    #_foreign
-    (defn #_"Long" next---ArrayIter_int [#_"ArrayIter_int" this]
-        (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
-            (let [_ (Long/valueOf (aget (:array this) (:i this)))]
-                (ß ass this (update this :i inc))
-                _
+                #_foreign
+                (#_"Long" next [#_"Iterator" _self]
+                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
+                        (let [_ (Long/valueOf (aget a @vi))]
+                            (vswap! vi inc)
+                            _
+                        )
+                    )
+                )
             )
         )
     )
 )
 
 (class-ns ArrayIter_float
-    (defn- #_"ArrayIter_float" ArrayIter_float'init []
-        (hash-map
-            #_"float[]" :array nil
-            #_"int" :i 0
-        )
-    )
+    (defn #_"Iterator" ArrayIter_float'new [#_"float[]" a, #_"int" i]
+        (let [#_"int'" vi (volatile! i)]
+            (reify Iterator
+                #_foreign
+                (#_"boolean" hasNext [#_"Iterator" _self]
+                    (and (some? a) (< @vi (alength a)))
+                )
 
-    (defn #_"ArrayIter_float" ArrayIter_float'new [#_"float[]" array, #_"int" i]
-        (let [this (ArrayIter_float'init)]
-            (assoc this :array array :i i)
-        )
-    )
-
-    #_foreign
-    (defn #_"boolean" hasNext---ArrayIter_float [#_"ArrayIter_float" this]
-        (and (some? (:array this)) (< (:i this) (alength (:array this))))
-    )
-
-    #_foreign
-    (defn #_"Double" next---ArrayIter_float [#_"ArrayIter_float" this]
-        (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
-            (let [_ (Double/valueOf (aget (:array this) (:i this)))]
-                (ß ass this (update this :i inc))
-                _
+                #_foreign
+                (#_"Double" next [#_"Iterator" _self]
+                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
+                        (let [_ (Double/valueOf (aget a @vi))]
+                            (vswap! vi inc)
+                            _
+                        )
+                    )
+                )
             )
         )
     )
 )
 
 (class-ns ArrayIter_double
-    (defn- #_"ArrayIter_double" ArrayIter_double'init []
-        (hash-map
-            #_"double[]" :array nil
-            #_"int" :i 0
-        )
-    )
+    (defn #_"Iterator" ArrayIter_double'new [#_"double[]" a, #_"int" i]
+        (let [#_"int'" vi (volatile! i)]
+            (reify Iterator
+                #_foreign
+                (#_"boolean" hasNext [#_"Iterator" _self]
+                    (and (some? a) (< @vi (alength a)))
+                )
 
-    (defn #_"ArrayIter_double" ArrayIter_double'new [#_"double[]" array, #_"int" i]
-        (let [this (ArrayIter_double'init)]
-            (assoc this :array array :i i)
-        )
-    )
-
-    #_foreign
-    (defn #_"boolean" hasNext---ArrayIter_double [#_"ArrayIter_double" this]
-        (and (some? (:array this)) (< (:i this) (alength (:array this))))
-    )
-
-    #_foreign
-    (defn #_"Double" next---ArrayIter_double [#_"ArrayIter_double" this]
-        (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
-            (let [_ (aget (:array this) (:i this))]
-                (ß ass this (update this :i inc))
-                _
+                #_foreign
+                (#_"Double" next [#_"Iterator" _self]
+                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
+                        (let [_ (aget a @vi)]
+                            (vswap! vi inc)
+                            _
+                        )
+                    )
+                )
             )
         )
     )
 )
 
 (class-ns ArrayIter_long
-    (defn- #_"ArrayIter_long" ArrayIter_long'init []
-        (hash-map
-            #_"long[]" :array nil
-            #_"int" :i 0
-        )
-    )
+    (defn #_"Iterator" ArrayIter_long'new [#_"long[]" a, #_"int" i]
+        (let [#_"int'" vi (volatile! i)]
+            (reify Iterator
+                #_foreign
+                (#_"boolean" hasNext [#_"Iterator" _self]
+                    (and (some? a) (< @vi (alength a)))
+                )
 
-    (defn #_"ArrayIter_long" ArrayIter_long'new [#_"long[]" array, #_"int" i]
-        (let [this (ArrayIter_long'init)]
-            (assoc this :array array :i i)
-        )
-    )
-
-    #_foreign
-    (defn #_"boolean" hasNext---ArrayIter_long [#_"ArrayIter_long" this]
-        (and (some? (:array this)) (< (:i this) (alength (:array this))))
-    )
-
-    #_foreign
-    (defn #_"Long" next---ArrayIter_long [#_"ArrayIter_long" this]
-        (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
-            (let [_ (Long/valueOf (aget (:array this) (:i this)))]
-                (ß ass this (update this :i inc))
-                _
+                #_foreign
+                (#_"Long" next [#_"Iterator" _self]
+                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
+                        (let [_ (Long/valueOf (aget a @vi))]
+                            (vswap! vi inc)
+                            _
+                        )
+                    )
+                )
             )
         )
     )
 )
 
 (class-ns ArrayIter_byte
-    (defn- #_"ArrayIter_byte" ArrayIter_byte'init []
-        (hash-map
-            #_"byte[]" :array nil
-            #_"int" :i 0
-        )
-    )
+    (defn #_"Iterator" ArrayIter_byte'new [#_"byte[]" a, #_"int" i]
+        (let [#_"int'" vi (volatile! i)]
+            (reify Iterator
+                #_foreign
+                (#_"boolean" hasNext [#_"Iterator" _self]
+                    (and (some? a) (< @vi (alength a)))
+                )
 
-    (defn #_"ArrayIter_byte" ArrayIter_byte'new [#_"byte[]" array, #_"int" i]
-        (let [this (ArrayIter_byte'init)]
-            (assoc this :array array :i i)
-        )
-    )
-
-    #_foreign
-    (defn #_"boolean" hasNext---ArrayIter_byte [#_"ArrayIter_byte" this]
-        (and (some? (:array this)) (< (:i this) (alength (:array this))))
-    )
-
-    #_foreign
-    (defn #_"Byte" next---ArrayIter_byte [#_"ArrayIter_byte" this]
-        (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
-            (let [_ (aget (:array this) (:i this))]
-                (ß ass this (update this :i inc))
-                _
+                #_foreign
+                (#_"Byte" next [#_"Iterator" _self]
+                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
+                        (let [_ (aget a @vi)]
+                            (vswap! vi inc)
+                            _
+                        )
+                    )
+                )
             )
         )
     )
 )
 
 (class-ns ArrayIter_char
-    (defn- #_"ArrayIter_char" ArrayIter_char'init []
-        (hash-map
-            #_"char[]" :array nil
-            #_"int" :i 0
-        )
-    )
+    (defn #_"Iterator" ArrayIter_char'new [#_"char[]" a, #_"int" i]
+        (let [#_"int'" vi (volatile! i)]
+            (reify Iterator
+                #_foreign
+                (#_"boolean" hasNext [#_"Iterator" _self]
+                    (and (some? a) (< @vi (alength a)))
+                )
 
-    (defn #_"ArrayIter_char" ArrayIter_char'new [#_"char[]" array, #_"int" i]
-        (let [this (ArrayIter_char'init)]
-            (assoc this :array array :i i)
-        )
-    )
-
-    #_foreign
-    (defn #_"boolean" hasNext---ArrayIter_char [#_"ArrayIter_char" this]
-        (and (some? (:array this)) (< (:i this) (alength (:array this))))
-    )
-
-    #_foreign
-    (defn #_"Character" next---ArrayIter_char [#_"ArrayIter_char" this]
-        (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
-            (let [_ (aget (:array this) (:i this))]
-                (ß ass this (update this :i inc))
-                _
+                #_foreign
+                (#_"Character" next [#_"Iterator" _self]
+                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
+                        (let [_ (aget a @vi)]
+                            (vswap! vi inc)
+                            _
+                        )
+                    )
+                )
             )
         )
     )
 )
 
 (class-ns ArrayIter_short
-    (defn- #_"ArrayIter_short" ArrayIter_short'init []
-        (hash-map
-            #_"short[]" :array nil
-            #_"int" :i 0
-        )
-    )
+    (defn #_"Iterator" ArrayIter_short'new [#_"short[]" a, #_"int" i]
+        (let [#_"int'" vi (volatile! i)]
+            (reify Iterator
+                #_foreign
+                (#_"boolean" hasNext [#_"Iterator" _self]
+                    (and (some? a) (< @vi (alength a)))
+                )
 
-    (defn #_"ArrayIter_short" ArrayIter_short'new [#_"short[]" array, #_"int" i]
-        (let [this (ArrayIter_short'init)]
-            (assoc this :array array :i i)
-        )
-    )
-
-    #_foreign
-    (defn #_"boolean" hasNext---ArrayIter_short [#_"ArrayIter_short" this]
-        (and (some? (:array this)) (< (:i this) (alength (:array this))))
-    )
-
-    #_foreign
-    (defn #_"Long" next---ArrayIter_short [#_"ArrayIter_short" this]
-        (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
-            (let [_ (Long/valueOf (aget (:array this) (:i this)))]
-                (ß ass this (update this :i inc))
-                _
+                #_foreign
+                (#_"Long" next [#_"Iterator" _self]
+                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
+                        (let [_ (Long/valueOf (aget a @vi))]
+                            (vswap! vi inc)
+                            _
+                        )
+                    )
+                )
             )
         )
     )
 )
 
 (class-ns ArrayIter_boolean
-    (defn- #_"ArrayIter_boolean" ArrayIter_boolean'init []
-        (hash-map
-            #_"boolean[]" :array nil
-            #_"int" :i 0
-        )
-    )
+    (defn #_"Iterator" ArrayIter_boolean'new [#_"boolean[]" a, #_"int" i]
+        (let [#_"int'" vi (volatile! i)]
+            (reify Iterator
+                #_foreign
+                (#_"boolean" hasNext [#_"Iterator" _self]
+                    (and (some? a) (< @vi (alength a)))
+                )
 
-    (defn #_"ArrayIter_boolean" ArrayIter_boolean'new [#_"boolean[]" array, #_"int" i]
-        (let [this (ArrayIter_boolean'init)]
-            (assoc this :array array :i i)
-        )
-    )
-
-    #_foreign
-    (defn #_"boolean" hasNext---ArrayIter_boolean [#_"ArrayIter_boolean" this]
-        (and (some? (:array this)) (< (:i this) (alength (:array this))))
-    )
-
-    #_foreign
-    (defn #_"Boolean" next---ArrayIter_boolean [#_"ArrayIter_boolean" this]
-        (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
-            (let [_ (Boolean/valueOf (aget (:array this) (:i this)))]
-                (ß ass this (update this :i inc))
-                _
+                #_foreign
+                (#_"Boolean" next [#_"Iterator" _self]
+                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
+                        (let [_ (Boolean/valueOf (aget a @vi))]
+                            (vswap! vi inc)
+                            _
+                        )
+                    )
+                )
             )
         )
     )
@@ -7363,55 +7295,47 @@
         ArrayIter'EMPTY_ITERATOR
     )
 
-    (defn #_"Iterator" ArrayIter'create-1 [& #_"Object..." array]
-        (if (and (some? array) (pos? (alength array)))
-            (ArrayIter'new array, 0)
-            ArrayIter'EMPTY_ITERATOR
+    (defn #_"Iterator" ArrayIter'create-1 [& #_"Object..." a]
+        (when (and (some? a) (pos? (alength a))) => ArrayIter'EMPTY_ITERATOR
+            (ArrayIter'new a, 0)
         )
     )
 
-    (defn #_"Iterator" ArrayIter'createFromObject [#_"Object" array]
-        (when (and (some? array) (pos? (Array/getLength array))) => ArrayIter'EMPTY_ITERATOR
-            (let [#_"Class" c (.getClass array)]
+    (defn #_"Iterator" ArrayIter'createFromObject [#_"Object" a]
+        (when (and (some? a) (pos? (Array/getLength a))) => ArrayIter'EMPTY_ITERATOR
+            (let [#_"Class" c (.getClass a)]
                 (condp = c
-                    RT'INTS_CLASS     (ArrayIter_int'new     (cast c array), 0)
-                    RT'FLOATS_CLASS   (ArrayIter_float'new   (cast c array), 0)
-                    RT'DOUBLES_CLASS  (ArrayIter_double'new  (cast c array), 0)
-                    RT'LONGS_CLASS    (ArrayIter_long'new    (cast c array), 0)
-                    RT'BYTES_CLASS    (ArrayIter_byte'new    (cast c array), 0)
-                    RT'CHARS_CLASS    (ArrayIter_char'new    (cast c array), 0)
-                    RT'SHORTS_CLASS   (ArrayIter_short'new   (cast c array), 0)
-                    RT'BOOLEANS_CLASS (ArrayIter_boolean'new (cast c array), 0)
-                                      (ArrayIter'new                 array,  0)
+                    RT'INTS_CLASS     (ArrayIter_int'new     (cast c a), 0)
+                    RT'FLOATS_CLASS   (ArrayIter_float'new   (cast c a), 0)
+                    RT'DOUBLES_CLASS  (ArrayIter_double'new  (cast c a), 0)
+                    RT'LONGS_CLASS    (ArrayIter_long'new    (cast c a), 0)
+                    RT'BYTES_CLASS    (ArrayIter_byte'new    (cast c a), 0)
+                    RT'CHARS_CLASS    (ArrayIter_char'new    (cast c a), 0)
+                    RT'SHORTS_CLASS   (ArrayIter_short'new   (cast c a), 0)
+                    RT'BOOLEANS_CLASS (ArrayIter_boolean'new (cast c a), 0)
+                                      (ArrayIter'new                 a,  0)
                 )
             )
         )
     )
 
-    (defn- #_"ArrayIter" ArrayIter'init []
-        (hash-map
-            #_"Object[]" :array nil
-            #_"int" :i 0
-        )
-    )
+    (defn #_"Iterator" ArrayIter'new [#_"Object" array, #_"int" i]
+        (let [#_"Object[]" a (cast RT'OBJECTS_CLASS array) #_"int'" vi (volatile! i)]
+            (reify Iterator
+                #_foreign
+                (#_"boolean" hasNext [#_"Iterator" _self]
+                    (and (some? a) (< @vi (alength a)))
+                )
 
-    (defn #_"ArrayIter" ArrayIter'new [#_"Object" array, #_"int" i]
-        (let [this (ArrayIter'init)]
-            (assoc this :i i :array (cast RT'OBJECTS_CLASS array))
-        )
-    )
-
-    #_foreign
-    (defn #_"boolean" hasNext---ArrayIter [#_"ArrayIter" this]
-        (and (some? (:array this)) (< (:i this) (alength (:array this))))
-    )
-
-    #_foreign
-    (defn #_"Object" next---ArrayIter [#_"ArrayIter" this]
-        (when (and (some? (:array this)) (< (:i this) (alength (:array this)))) => (throw (NoSuchElementException.))
-            (let [_ (aget (:array this) (:i this))]
-                (ß ass this (update this :i inc))
-                _
+                #_foreign
+                (#_"Object" next [#_"Iterator" _self]
+                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
+                        (let [_ (aget a @vi)]
+                            (vswap! vi inc)
+                            _
+                        )
+                    )
+                )
             )
         )
     )
@@ -9181,8 +9105,6 @@
         (hash-map
             #_"Var" :var nil
             #_"Object" :tag nil
-
-            #_"Class" :jc nil
         )
     )
 
@@ -9211,12 +9133,10 @@
         (some? (:tag this))
     )
 
+    #_memoize!
     #_override
     (defn #_"Class" Expr'''getJavaClass--VarExpr [#_"VarExpr" this]
-        (when (nil? (:jc this))
-            (ß ass this (assoc this :jc (HostExpr'tagToClass (:tag this))))
-        )
-        (:jc this)
+        (HostExpr'tagToClass (:tag this))
     )
 
     #_override
@@ -9650,8 +9570,6 @@
             #_"int" :column 0
             #_"Symbol" :tag nil
             #_"boolean" :requireField false
-
-            #_"Class" :jc nil
         )
     )
 
@@ -9723,12 +9641,10 @@
         (or (some? (:field this)) (some? (:tag this)))
     )
 
+    #_memoize!
     #_override
     (defn #_"Class" Expr'''getJavaClass--InstanceFieldExpr [#_"InstanceFieldExpr" this]
-        (when (nil? (:jc this))
-            (ß ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getType (:field this)))))
-        )
-        (:jc this)
+        (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getType (:field this)))
     )
 
     #_override
@@ -9773,8 +9689,6 @@
 
             #_"int" :line 0
             #_"int" :column 0
-
-            #_"Class" :jc nil
         )
     )
 
@@ -9820,12 +9734,10 @@
         true
     )
 
+    #_memoize!
     #_override
     (defn #_"Class" Expr'''getJavaClass--StaticFieldExpr [#_"StaticFieldExpr" this]
-        (when (nil? (:jc this))
-            (ß ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getType (:field this)))))
-        )
-        (:jc this)
+        (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getType (:field this)))
     )
 
     #_override
@@ -9917,8 +9829,6 @@
             #_"Symbol" :tag nil
             #_"boolean" :tailPosition false
             #_"java.lang.reflect.Method" :method nil
-
-            #_"Class" :jc nil
         )
     )
 
@@ -10058,12 +9968,10 @@
         (or (some? (:method this)) (some? (:tag this)))
     )
 
+    #_memoize!
     #_override
     (defn #_"Class" Expr'''getJavaClass--InstanceMethodExpr [#_"InstanceMethodExpr" this]
-        (when (nil? (:jc this))
-            (ß ass this (assoc this :jc (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this))))))
-        )
-        (:jc this)
+        (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this))))
     )
 )
 
@@ -10081,8 +9989,6 @@
             #_"java.lang.reflect.Method" :method nil
             #_"Symbol" :tag nil
             #_"boolean" :tailPosition false
-
-            #_"Class" :jc nil
         )
     )
 
@@ -10235,12 +10141,10 @@
         (or (some? (:method this)) (some? (:tag this)))
     )
 
+    #_memoize!
     #_override
     (defn #_"Class" Expr'''getJavaClass--StaticMethodExpr [#_"StaticMethodExpr" this]
-        (when (nil? (:jc this))
-            (ß ass this (assoc this :jc (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this))))))
-        )
-        (:jc this)
+        (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this))))
     )
 )
 
@@ -11576,8 +11480,6 @@
             #_"int" :line 0
             #_"int" :column 0
             #_"int" :siteIndex 0
-
-            #_"Class" :jc nil
         )
     )
 
@@ -11637,12 +11539,10 @@
         (some? (:tag this))
     )
 
+    #_memoize!
     #_override
     (defn #_"Class" Expr'''getJavaClass--KeywordInvokeExpr [#_"KeywordInvokeExpr" this]
-        (when (nil? (:jc this))
-            (ß ass this (assoc this :jc (HostExpr'tagToClass (:tag this))))
-        )
-        (:jc this)
+        (HostExpr'tagToClass (:tag this))
     )
 )
 
@@ -11709,8 +11609,6 @@
             #_"boolean" :variadic false
             #_"boolean" :tailPosition false
             #_"Object" :tag nil
-
-            #_"Class" :jc nil
         )
     )
 
@@ -11745,12 +11643,10 @@
         true
     )
 
+    #_memoize!
     #_override
     (defn #_"Class" Expr'''getJavaClass--StaticInvokeExpr [#_"StaticInvokeExpr" this]
-        (when (nil? (:jc this))
-            (ß ass this (assoc this :jc (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (:retClass this))))
-        )
-        (:jc this)
+        (Compiler'retType (when (some? (:tag this)) (HostExpr'tagToClass (:tag this))), (:retClass this))
     )
 
     #_override
@@ -11850,8 +11746,6 @@
             #_"int" :siteIndex -1
             #_"Class" :protocolOn nil
             #_"java.lang.reflect.Method" :onMethod nil
-
-            #_"Class" :jc nil
         )
     )
 
@@ -12000,12 +11894,10 @@
         (some? (:tag this))
     )
 
+    #_memoize!
     #_override
     (defn #_"Class" Expr'''getJavaClass--InvokeExpr [#_"InvokeExpr" this]
-        (when (nil? (:jc this))
-            (ß ass this (assoc this :jc (HostExpr'tagToClass (:tag this))))
-        )
-        (:jc this)
+        (HostExpr'tagToClass (:tag this))
     )
 
     (defn #_"Expr" InvokeExpr'parse [#_"Context" context, #_"ISeq" form]
@@ -12110,8 +12002,6 @@
 
             #_"DynamicClassLoader" :loader nil
             #_"byte[]" :bytecode nil
-
-            #_"Class" :jc nil
         )
     )
 
@@ -12731,12 +12621,12 @@
         true
     )
 
+    #_memoize!
     #_override
     (defn #_"Class" Expr'''getJavaClass--ObjExpr [#_"ObjExpr" this]
-        (when (nil? (:jc this))
-            (ß ass this (assoc this :jc (cond (some? (:compiledClass this)) (:compiledClass this) (some? (:tag this)) (HostExpr'tagToClass (:tag this)) :else IFn)))
+        (or (:compiledClass this)
+            (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) IFn)
         )
-        (:jc this)
     )
 
     #_method
@@ -12953,8 +12843,6 @@
             #_"boolean" :hasPrimSigs false
             #_"boolean" :hasMeta false
             #_"boolean" :hasEnclosingMethod false
-
-            #_"Class" :jc nil
         )
     )
 
@@ -12972,12 +12860,10 @@
         (:hasMeta this)
     )
 
+    #_memoize!
     #_override
     (defn #_"Class" Expr'''getJavaClass--FnExpr [#_"FnExpr" this]
-        (when (nil? (:jc this))
-            (ß ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) AFunction)))
-        )
-        (:jc this)
+        (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) AFunction)
     )
 
     #_override
@@ -13700,39 +13586,33 @@
             #_"boolean" :canBeCleared true
             #_"boolean" :recurMistmatch false
             #_"boolean" :used false
-
-            #_"Boolean" :hjc nil
-
-            #_"Class" :jc nil
         )
     )
 
     (defn #_"LocalBinding" LocalBinding'new [#_"int" num, #_"Symbol" sym, #_"Symbol" tag, #_"Expr" init, #_"boolean" isArg, #_"PathNode" clearPathRoot]
-        (let [this (LocalBinding'init)]
-            (when (and (some? (Compiler'maybePrimitiveType init)) (some? tag))
-                (throw (UnsupportedOperationException. "Can't type hint a local with a primitive initializer"))
-            )
-            (assoc this :idx num :sym sym :tag tag :init init :isArg isArg :clearPathRoot clearPathRoot :name (Compiler'munge (:name sym)))
+        (when (and (some? (Compiler'maybePrimitiveType init)) (some? tag))
+            (throw (UnsupportedOperationException. "Can't type hint a local with a primitive initializer"))
+        )
+        (-> (LocalBinding'init)
+            (assoc :idx num :sym sym :tag tag :init init :isArg isArg :clearPathRoot clearPathRoot :name (Compiler'munge (:name sym)))
         )
     )
 
+    #_memoize!
     #_override
     (defn #_"boolean" Expr'''hasJavaClass--LocalBinding [#_"LocalBinding" this]
-        (when (nil? (:hjc this))
-            (if (and (some? (:init this)) (.hasJavaClass (:init this)) (Util'isPrimitive (.getJavaClass (:init this))) (not (instance? MaybePrimitiveExpr (:init this))))
-                (ß ass this (assoc this :hjc false))
-                (ß ass this (assoc this :hjc (or (some? (:tag this)) (and (some? (:init this)) (.hasJavaClass (:init this))))))
+        (let [? (and (some? (:init this)) (.hasJavaClass (:init this)))]
+            (if (and ? (Util'isPrimitive (.getJavaClass (:init this))) (not (instance? MaybePrimitiveExpr (:init this))))
+                false
+                (or (some? (:tag this)) ?)
             )
         )
-        (:hjc this)
     )
 
+    #_memoize!
     #_override
     (defn #_"Class" Expr'''getJavaClass--LocalBinding [#_"LocalBinding" this]
-        (when (nil? (:jc this))
-            (ß ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getJavaClass (:init this)))))
-        )
-        (:jc this)
+        (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getJavaClass (:init this)))
     )
 
     #_method
@@ -13750,8 +13630,6 @@
             #_"PathNode" :clearPath nil
             #_"PathNode" :clearRoot nil
             #_"boolean" :shouldClear false
-
-            #_"Class" :jc nil
         )
     )
 
@@ -13832,12 +13710,10 @@
         (or (some? (:tag this)) (.hasJavaClass (:lb this)))
     )
 
+    #_memoize!
     #_override
     (defn #_"Class" Expr'''getJavaClass--LocalBindingExpr [#_"LocalBindingExpr" this]
-        (when (nil? (:jc this))
-            (ß ass this (assoc this :jc (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getJavaClass (:lb this)))))
-        )
-        (:jc this)
+        (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) (.getJavaClass (:lb this)))
     )
 )
 
