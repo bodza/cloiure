@@ -9157,41 +9157,19 @@
 
     java.util.Collection
     (contains [this o] (boolean (some #(= % o) this)))
-    (isEmpty [_] (zero? cnt))
     (toArray [this] (into-array Object this))
     (toArray [this arr]
-        (if (>= (count arr) cnt)
-            (do
-                (dotimes [i cnt]
-                    (aset arr i (.nth this i))
-                )
-                arr
+        (when (<= cnt (count arr)) => (into-array Object this)
+            (dotimes [i cnt]
+                (aset arr i (.nth this i))
             )
-            (into-array Object this)
+            arr
         )
     )
     (size [_] cnt)
 
     java.util.List
     (get [this i] (.nth this i))
-    (indexOf [this o]
-        (loop [i (int 0)]
-            (cond
-                (== i cnt) -1
-                (= o (.nth this i)) i
-                :else (recur (inc i))
-            )
-        )
-    )
-    (lastIndexOf [this o]
-        (loop [i (dec cnt)]
-            (cond
-                (< i 0) -1
-                (= o (.nth this i)) i
-                :else (recur (dec i))
-            )
-        )
-    )
 )
 
 (§ defmethod print-method ::Vec [v w]
@@ -9603,15 +9581,15 @@
 (§ defn partition-by
     ([f]
         (fn [rf]
-            (let [a (java.util.ArrayList.) pv (volatile! ::none)]
+            (let [l (java.util.ArrayList.) pv (volatile! ::none)]
                 (fn
                     ([] (rf))
                     ([result]
                         (let [result
-                                (if (.isEmpty a)
+                                (if (.isEmpty l)
                                     result
-                                    (let [v (vec (.toArray a))]
-                                        (.clear a) ;; clear first!
+                                    (let [v (vec (.toArray l))]
+                                        (.clear l) ;; clear first!
                                         (unreduced (rf result v))
                                     )
                                 )]
@@ -9623,14 +9601,14 @@
                             (vreset! pv val)
                             (if (or (identical? pval ::none) (= val pval))
                                 (do
-                                    (.add a input)
+                                    (.add l input)
                                     result
                                 )
-                                (let [v (vec (.toArray a))]
-                                    (.clear a)
+                                (let [v (vec (.toArray l))]
+                                    (.clear l)
                                     (let [ret (rf result v)]
                                         (when-not (reduced? ret)
-                                            (.add a input)
+                                            (.add l input)
                                         )
                                         ret
                                     )
@@ -9712,15 +9690,15 @@
 (§ defn partition-all
     ([^long n]
         (fn [rf]
-            (let [a (java.util.ArrayList. n)]
+            (let [l (java.util.ArrayList. n)]
                 (fn
                     ([] (rf))
                     ([result]
                         (let [result
-                                (if (.isEmpty a)
+                                (if (.isEmpty l)
                                     result
-                                    (let [v (vec (.toArray a))]
-                                        (.clear a) ;; clear first!
+                                    (let [v (vec (.toArray l))]
+                                        (.clear l) ;; clear first!
                                         (unreduced (rf result v))
                                     )
                                 )]
@@ -9728,10 +9706,10 @@
                         )
                     )
                     ([result input]
-                        (.add a input)
-                        (if (= n (.size a))
-                            (let [v (vec (.toArray a))]
-                                (.clear a)
+                        (.add l input)
+                        (if (= n (.size l))
+                            (let [v (vec (.toArray l))]
+                                (.clear l)
                                 (rf result v)
                             )
                             result
