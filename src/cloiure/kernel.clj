@@ -296,9 +296,6 @@
 (declare SeqIterator'new)
 (declare StringSeq'create StringSeq'init StringSeq'new)
 (declare Symbol'create-2 Symbol'create-1 Symbol'intern Symbol'init Symbol'new-2 Symbol'new-3)
-(declare EmptyBuffer'new)
-(declare SingleBuffer'new)
-(declare ManyBuffer'new)
 (declare MultiIterator'new)
 (declare TransformerIterator'NONE TransformerIterator'new TransformerIterator'create TransformerIterator'createMulti)
 (declare Tuple'MAX_SIZE Tuple'create)
@@ -2728,17 +2725,6 @@
     (interface! LongRangeBoundsCheck []
         #_abstract
         (#_"boolean" exceededBounds [#_"LongRangeBoundsCheck" this, #_"long" val])
-    )
-)
-
-(java-ns cloiure.lang.TransformerIterator
-    (interface! Buffer []
-        #_abstract
-        (#_"Buffer" add [#_"Buffer" this, #_"Object" o])
-        #_abstract
-        (#_"Object" remove [#_"Buffer" this])
-        #_abstract
-        (#_"boolean" isEmpty [#_"Buffer" this])
     )
 )
 
@@ -9471,14 +9457,13 @@
                             )
                             (let [#_"int" methodidx
                                     (when (< 1 (.size methods)) => 0
-                                        (let [#_"List<Class[]>" params (ArrayList.) #_"List<Class>" rets (ArrayList.)]
-                                            (dotimes [#_"int" i (.size methods)]
-                                                (let [#_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (.get methods, i))]
-                                                    (.add params, (.getParameterTypes m))
-                                                    (.add rets, (.getReturnType m))
-                                                )
-                                            )
-                                            (Compiler'getMatchingParams methodName, params, args, rets)
+                                        (let [[#_"PersistentVector" pars #_"PersistentVector" rets]
+                                                (loop-when [pars PersistentVector'EMPTY rets PersistentVector'EMPTY #_"int" i 0] [< i (.size methods)] => [pars rets]
+                                                    (let [#_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (.get methods, i))]
+                                                        (recur (.cons pars, (.getParameterTypes m)) (.cons rets, (.getReturnType m)) (inc i))
+                                                    )
+                                                )]
+                                            (Compiler'getMatchingParams methodName, pars, args, rets)
                                         )
                                     )
                                 #_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (when (<= 0 methodidx) (.get methods, methodidx)))
@@ -9624,14 +9609,13 @@
                     (when-not (.isEmpty methods) => (throw (IllegalArgumentException. (str "No matching method: " methodName)))
                         (let [#_"int" methodidx
                                 (when (< 1 (.size methods)) => 0
-                                    (let [#_"List<Class[]>" params (ArrayList.) #_"List<Class>" rets (ArrayList.)]
-                                        (dotimes [#_"int" i (.size methods)]
-                                            (let [#_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (.get methods, i))]
-                                                (.add params, (.getParameterTypes m))
-                                                (.add rets, (.getReturnType m))
-                                            )
-                                        )
-                                        (Compiler'getMatchingParams methodName, params, args, rets)
+                                    (let [[#_"PersistentVector" pars #_"PersistentVector" rets]
+                                            (loop-when [pars PersistentVector'EMPTY rets PersistentVector'EMPTY #_"int" i 0] [< i (.size methods)] => [pars rets]
+                                                (let [#_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (.get methods, i))]
+                                                    (recur (.cons pars, (.getParameterTypes m)) (.cons rets, (.getReturnType m)) (inc i))
+                                                )
+                                            )]
+                                        (Compiler'getMatchingParams methodName, pars, args, rets)
                                     )
                                 )
                               #_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (when (<= 0 methodidx) (.get methods, methodidx)))]
@@ -10457,19 +10441,19 @@
     (defn #_"NewExpr" NewExpr'new [#_"Class" c, #_"IPersistentVector" args, #_"int" line, #_"int" column]
         (let [#_"Constructor" ctor
                 (let [#_"Constructor[]" allctors (.getConstructors c)
-                      #_"List" ctors (ArrayList.) #_"List<Class[]>" params (ArrayList.) #_"List<Class>" rets (ArrayList.)]
-                    (dotimes [#_"int" i (alength allctors)]
-                        (let [#_"Constructor" ctor (aget allctors i)]
-                            (when (= (alength (.getParameterTypes ctor)) (.count args))
-                                (.add ctors, ctor)
-                                (.add params, (.getParameterTypes ctor))
-                                (.add rets, c)
+                      [#_"PersistentVector" ctors #_"PersistentVector" pars #_"PersistentVector" rets]
+                        (loop-when [ctors PersistentVector'EMPTY pars PersistentVector'EMPTY rets PersistentVector'EMPTY #_"int" i 0] [< i (alength allctors)] => [ctors pars rets]
+                            (let [#_"Constructor" ctor (aget allctors i) #_"Class[]" types (.getParameterTypes ctor)
+                                  [ctors pars rets]
+                                    (when (= (alength types) (.count args)) => [ctors pars rets]
+                                        [(.cons ctors, ctor) (.cons pars, types) (.cons rets, c)]
+                                    )]
+                                (recur ctors pars rets (inc i))
                             )
-                        )
-                    )
-                    (let-when [#_"int" n (.size ctors)] (< 0 n) => (throw (IllegalArgumentException. (str "No matching ctor found for " c)))
-                        (let [#_"int" i (if (< 1 n) (Compiler'getMatchingParams (.getName c), params, args, rets) 0)
-                              #_"Constructor" ctor (when (<= 0 i) (cast Constructor (.get ctors, i)))]
+                        )]
+                    (let-when [#_"int" n (.count ctors)] (< 0 n) => (throw (IllegalArgumentException. (str "No matching ctor found for " c)))
+                        (let [#_"int" i (if (< 1 n) (Compiler'getMatchingParams (.getName c), pars, args, rets) 0)
+                              #_"Constructor" ctor (when (<= 0 i) (cast Constructor (.nth ctors, i)))]
                             (when (and (nil? ctor) (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION)))
                                 (.format (RT'errPrintWriter), "Reflection warning, %d:%d - call to %s ctor can't be resolved.\n", (object-array [ line, column, (.getName c) ]))
                             )
@@ -15304,14 +15288,14 @@
         )
     )
 
-    (defn #_"int" Compiler'getMatchingParams [#_"String" methodName, #_"List<Class[]>" pars, #_"IPersistentVector" args, #_"List<Class>" rets]
+    (defn #_"int" Compiler'getMatchingParams [#_"String" methodName, #_"IPersistentVector" pars, #_"IPersistentVector" args, #_"IPersistentVector" rets]
         ;; presumes matching lengths
         (let [[#_"int" matchIdx #_"boolean" tied]
-                (loop-when [matchIdx -1 tied false #_"boolean" foundExact false #_"int" i 0] (< i (.size pars)) => [matchIdx tied]
+                (loop-when [matchIdx -1 tied false #_"boolean" foundExact false #_"int" i 0] (< i (.count pars)) => [matchIdx tied]
                     (let [[#_"int" exact #_"boolean" match]
                             (loop-when [exact 0 match true #_"int" p 0 #_"ISeq" s (.seq args)] (and match (< p (.count args)) (some? s)) => [exact match]
                                 (let [#_"Expr" arg (cast Expr (.first s))
-                                      #_"Class" aclass (if (.hasJavaClass arg) (.getJavaClass arg) Object) #_"Class" pclass (aget (.get pars, i) p)
+                                      #_"Class" aclass (if (.hasJavaClass arg) (.getJavaClass arg) Object) #_"Class" pclass (aget (.nth pars, i) p)
                                       [exact match]
                                         (if (and (.hasJavaClass arg) (= aclass pclass))
                                             [(inc exact) match]
@@ -15323,7 +15307,7 @@
                           [matchIdx tied foundExact]
                             (cond (= exact (.count args))
                                 (let [matchIdx
-                                        (when (or (not foundExact) (= matchIdx -1) (.isAssignableFrom (.get rets, matchIdx), (.get rets, i))) => matchIdx
+                                        (when (or (not foundExact) (= matchIdx -1) (.isAssignableFrom (.nth rets, matchIdx), (.nth rets, i))) => matchIdx
                                             i
                                         )]
                                     [matchIdx false true]
@@ -15334,18 +15318,18 @@
                                             (do
                                                 [i tied]
                                             )
-                                            (Compiler'subsumes (.get pars, i), (.get pars, matchIdx))
+                                            (Compiler'subsumes (.nth pars, i), (.nth pars, matchIdx))
                                             (do
                                                 [i false]
                                             )
-                                            (Arrays/equals (.get pars, matchIdx), (.get pars, i))
+                                            (Arrays/equals (.nth pars, matchIdx), (.nth pars, i))
                                             (let [matchIdx
-                                                    (when (.isAssignableFrom (.get rets, matchIdx), (.get rets, i)) => matchIdx
+                                                    (when (.isAssignableFrom (.nth rets, matchIdx), (.nth rets, i)) => matchIdx
                                                         i
                                                     )]
                                                 [matchIdx tied]
                                             )
-                                            (not (Compiler'subsumes (.get pars, matchIdx), (.get pars, i)))
+                                            (not (Compiler'subsumes (.nth pars, matchIdx), (.nth pars, i)))
                                             (do
                                                 [matchIdx true]
                                             )
@@ -27248,7 +27232,9 @@
                 )
             )
             (when (.isEmpty methods)
-                (.addAll methods, bridgeMethods)
+                (dotimes [#_"int" i (.size bridgeMethods)]
+                    (.add methods, (.get bridgeMethods, i))
+                )
             )
             (when (and (not getStatics) (.isInterface c))
                 (let [allmethods (.getMethods Object)]
@@ -29235,83 +29221,6 @@
 
 (java-ns cloiure.lang.TransformerIterator
 
-(class-ns EmptyBuffer
-    (defn #_"Buffer" EmptyBuffer'new []
-        (reify Buffer
-            #_override
-            (#_"Buffer" add [#_"Buffer" _self, #_"Object" o]
-                (SingleBuffer'new o)
-            )
-
-            #_override
-            (#_"Object" remove [#_"Buffer" _self]
-                (throw (IllegalStateException. "Removing object from empty buffer"))
-            )
-
-            #_override
-            (#_"boolean" isEmpty [#_"Buffer" _self]
-                true
-            )
-        )
-    )
-)
-
-(class-ns SingleBuffer
-    (defn #_"Buffer" SingleBuffer'new [#_"Object" o]
-        #_volatile #_"val"
-        (let [#_"Object'" val (volatile! o)]
-            (reify Buffer
-                #_override
-                (#_"Buffer" add [#_"Buffer" self, #_"Object" o]
-                    (if (identical? @val TransformerIterator'NONE)
-                        (do (vreset! val o) self)
-                        (ManyBuffer'new @val, o)
-                    )
-                )
-
-                #_override
-                (#_"Object" remove [#_"Buffer" _self]
-                    (when-not (identical? @val TransformerIterator'NONE) => (throw (IllegalStateException. "Removing object from empty buffer"))
-                        (let [_ @val]
-                            (vreset! val TransformerIterator'NONE)
-                            _
-                        )
-                    )
-                )
-
-                #_override
-                (#_"boolean" isEmpty [#_"Buffer" _self]
-                    (identical? @val TransformerIterator'NONE)
-                )
-            )
-        )
-    )
-)
-
-(class-ns ManyBuffer
-    (defn #_"Buffer" ManyBuffer'new [#_"Object" o1, #_"Object" o2]
-        (let [#_"Queue" vals (LinkedList.) _ (.add vals, o1) _ (.add vals, o2)]
-            (reify Buffer
-                #_override
-                (#_"Buffer" add [#_"Buffer" self, #_"Object" o]
-                    (.add vals, o)
-                    self
-                )
-
-                #_override
-                (#_"Object" remove [#_"Buffer" _self]
-                    (.remove vals)
-                )
-
-                #_override
-                (#_"boolean" isEmpty [#_"Buffer" _self]
-                    (.isEmpty vals)
-                )
-            )
-        )
-    )
-)
-
 (class-ns MultiIterator
     (defn #_"Iterator" MultiIterator'new [#_"Iterator[]" iters]
         (reify Iterator
@@ -29336,21 +29245,17 @@
 )
 
 (class-ns TransformerIterator
-    (def- #_"Buffer" TransformerIterator'EMPTY (EmptyBuffer'new))
     (def- #_"Object" TransformerIterator'NONE (Object.))
 
     (defn- #_"Iterator" TransformerIterator'new [#_"IFn" xform, #_"Iterator" source, #_"boolean" multi?]
         #_volatile #_"buffer next completed"
-        (let [#_"Buffer" vb (volatile! TransformerIterator'EMPTY) #_"Object" vn (volatile! TransformerIterator'NONE) #_"boolean" vc (volatile! false)
+        (let [#_"Queue" q (LinkedList.) #_"Object" vn (volatile! TransformerIterator'NONE) #_"boolean" vc (volatile! false)
               #_"IFn" xf
                 (cast IFn (.invoke xform,
                     (fn #_"Object"
                         ([] nil)
                         ([#_"Object" r] r)
-                        ([#_"Object" r, #_"Object" o]
-                            (vswap! vb #(.add %, o))
-                            r
-                        )
+                        ([#_"Object" r, #_"Object" o] (.add q, o) r)
                     )
                 ))]
             (reify Iterator
@@ -29360,9 +29265,9 @@
                         (cond
                             (not (identical? @vn TransformerIterator'NONE))
                                 true
-                            (not (.isEmpty @vb))
+                            (not (.isEmpty q))
                                 (do
-                                    (vreset! vn (.remove @vb))
+                                    (vreset! vn (.remove q))
                                     (recur)
                                 )
                             @vc
