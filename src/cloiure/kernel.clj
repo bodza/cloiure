@@ -12855,11 +12855,11 @@
         )
     )
 
-    (defn #_"FnMethod" FnMethod'parse [#_"ObjExpr" objx, #_"ISeq" form, #_"Object" rettag]
+    (defn #_"FnMethod" FnMethod'parse [#_"ObjExpr" objx, #_"ISeq" form, #_"Object" retTag]
         ;; ([args] body...)
         (let [#_"IPersistentVector" parms (cast IPersistentVector (RT'first form)) #_"ISeq" body (RT'next form)]
             (try
-                (let [#_"FnMethod" method
+                (let [#_"FnMethod" fm
                         (-> (FnMethod'new objx, (cast ObjMethod (.deref Compiler'METHOD)))
                             (assoc :line (Compiler'lineDeref) :column (Compiler'columnDeref))
                         )
@@ -12867,7 +12867,7 @@
                       #_"PathNode" pnode (or (cast PathNode (Var''get Compiler'CLEAR_PATH)) (PathNode'new :PathType'PATH, nil))]
                     (Var'pushThreadBindings (RT'mapUniqueKeys
                         (object-array [
-                            Compiler'METHOD                method
+                            Compiler'METHOD                fm
                             Compiler'LOCAL_ENV             (.deref Compiler'LOCAL_ENV)
                             Compiler'LOOP_LOCALS           nil
                             Compiler'NEXT_LOCAL_NUM        0
@@ -12878,25 +12878,23 @@
                         ])
                     ))
                     (let [#_"String" prim (FnMethod'primInterface parms) prim (when (some? prim) (.replace prim, \., \/))
-                          method (assoc method :prim prim)
-                          rettag (if (instance? String rettag) (Symbol'intern nil, (cast String rettag)) rettag)
-                          rettag (when (and (instance? Symbol rettag) (any = (.getName (cast Symbol rettag)) "long" "double")) rettag)
-                          #_"Class" retClass (Compiler'tagClass (or (Compiler'tagOf parms) rettag))
-                          retClass
-                            (when (.isPrimitive retClass) => Object
+                          fm (assoc fm :prim prim)
+                          retTag (if (instance? String retTag) (Symbol'intern nil, (cast String retTag)) retTag)
+                          retTag (when (and (instance? Symbol retTag) (any = (.getName (cast Symbol retTag)) "long" "double")) retTag)
+                          #_"Class" retClass
+                            (let-when [retClass (Compiler'tagClass (or (Compiler'tagOf parms) retTag))] (.isPrimitive retClass) => Object
                                 (when-not (any = retClass Double/TYPE Long/TYPE) => retClass
                                     (throw (IllegalArgumentException. "Only long and double primitives are supported"))
                                 )
                             )
-                          method (assoc method :retClass retClass)]
+                          fm (assoc fm :retClass retClass)]
                         ;; register 'this' as local 0
                         (if (some? (:thisName objx))
                             (Compiler'registerLocal (Symbol'intern (:thisName objx)), nil, nil, false)
                             (Compiler'getAndIncLocalNum)
                         )
-                        (let [#_"PersistentVector" argTypes PersistentVector'EMPTY #_"PersistentVector" argClasses PersistentVector'EMPTY
-                              [#_"PersistentVector" reqParms #_"LocalBinding" restParm #_"PersistentVector" argLocals]
-                                (loop-when [#_"boolean" rest? false reqParms PersistentVector'EMPTY restParm nil argLocals PersistentVector'EMPTY #_"int" i 0] (< i (.count parms)) => [reqParms restParm argLocals]
+                        (let [[#_"PersistentVector" argTypes #_"PersistentVector" argClasses #_"PersistentVector" reqParms #_"LocalBinding" restParm #_"PersistentVector" argLocals]
+                                (loop-when [argTypes PersistentVector'EMPTY argClasses PersistentVector'EMPTY #_"boolean" rest? false reqParms PersistentVector'EMPTY restParm nil argLocals PersistentVector'EMPTY #_"int" i 0] (< i (.count parms)) => [argTypes argClasses reqParms restParm argLocals]
                                     (when (instance? Symbol (.nth parms, i)) => (throw (IllegalArgumentException. "fn params must be Symbols"))
                                         (let [#_"Symbol" p (cast Symbol (.nth parms, i))]
                                             (cond
@@ -12904,7 +12902,7 @@
                                                     (throw (RuntimeException. (str "Can't use qualified name as parameter: " p)))
                                                 (.equals p, Compiler'_AMP_)
                                                     (when-not rest? => (throw (RuntimeException. "Invalid parameter list"))
-                                                        (recur true reqParms restParm argLocals (inc i))
+                                                        (recur argTypes argClasses true reqParms restParm argLocals (inc i))
                                                     )
                                                 :else
                                                     (let [#_"Class" pc (Compiler'primClass-1c (Compiler'tagClass (Compiler'tagOf p)))]
@@ -12917,19 +12915,18 @@
                                                         (when (and rest? (some? prim))
                                                             (throw (RuntimeException. "fns taking primitives cannot be variadic"))
                                                         )
-                                                        (let [pc (if rest? ISeq pc)]
-                                                            (.add argTypes, (Type/getType pc))
-                                                            (.add argClasses, pc)
-                                                            (let [#_"LocalBinding" lb
-                                                                    (if (.isPrimitive pc)
-                                                                        (Compiler'registerLocal p, nil, (MethodParamExpr'new pc), true)
-                                                                        (Compiler'registerLocal p, (if rest? Compiler'ISEQ (Compiler'tagOf p)), nil, true)
-                                                                    )
-                                                                  argLocals (.cons argLocals, lb)]
-                                                                (if-not rest?
-                                                                    [(.cons reqParms, lb) restParm argLocals]
-                                                                    [reqParms lb argLocals]
+                                                        (let [pc (if rest? ISeq pc)
+                                                              argTypes (.cons argTypes, (Type/getType pc))
+                                                              argClasses (.cons argClasses, pc)
+                                                              #_"LocalBinding" lb
+                                                                (if (.isPrimitive pc)
+                                                                    (Compiler'registerLocal p, nil, (MethodParamExpr'new pc), true)
+                                                                    (Compiler'registerLocal p, (if rest? Compiler'ISEQ (Compiler'tagOf p)), nil, true)
                                                                 )
+                                                              argLocals (.cons argLocals, lb)]
+                                                            (if-not rest?
+                                                                [argTypes argClasses (.cons reqParms, lb) restParm argLocals]
+                                                                [argTypes argClasses reqParms lb argLocals]
                                                             )
                                                         )
                                                     )
@@ -12937,24 +12934,24 @@
                                         )
                                     )
                                 )]
-                            (when (< Compiler'MAX_POSITIONAL_ARITY (.count reqParms))
+                            (when (< Compiler'MAX_POSITIONAL_ARITY (.count reqParms))
                                 (throw (RuntimeException. (str "Can't specify more than " Compiler'MAX_POSITIONAL_ARITY " params")))
                             )
-                            (Var''set Compiler'LOOP_LOCALS, argLocals)
-                            (let [method
-                                    (assoc method
-                                        :reqParms reqParms :restParm restParm :argLocals argLocals
-                                        :argTypes (.toArray argTypes, (make-array Type (.count argTypes)))
-                                        :argClasses (.toArray argClasses, (make-array Class (.count argClasses)))
+                            (Var''set Compiler'LOOP_LOCALS, argLocals)
+                            (let [fm
+                                    (assoc fm
+                                        :reqParms reqParms :restParm restParm :argLocals argLocals
+                                        :argTypes (.toArray argTypes, (make-array Type (.count argTypes)))
+                                        :argClasses (.toArray argClasses, (make-array Class (.count argClasses)))
                                     )]
                                 (when (some? prim)
-                                    (dotimes [#_"int" i (alength (:argClasses method))]
-                                        (when (any = (aget (:argClasses method) i) Long/TYPE Double/TYPE)
+                                    (dotimes [#_"int" i (alength (:argClasses fm))]
+                                        (when (any = (aget (:argClasses fm) i) Long/TYPE Double/TYPE)
                                             (Compiler'getAndIncLocalNum)
                                         )
                                     )
                                 )
-                                (assoc method :body (.parse (BodyParser'new), :Context'RETURN, body))
+                                (assoc fm :body (.parse (BodyParser'new), :Context'RETURN, body))
                             )
                         )
                     )
