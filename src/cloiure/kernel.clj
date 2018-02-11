@@ -50,18 +50,17 @@
     (:use [cloiure slang]))
 
 (import
-    [java.io FileNotFoundException InputStreamReader IOException LineNumberReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
+    [java.io FileNotFoundException InputStreamReader LineNumberReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
   #_[java.lang Character Class Exception IllegalArgumentException IllegalStateException Integer Number NumberFormatException Object RuntimeException String StringBuilder Throwable UnsupportedOperationException]
     [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
     [java.lang.reflect Array Constructor Field InvocationHandler #_Method Modifier]
     [java.math BigDecimal BigInteger MathContext]
     [java.net JarURLConnection URL URLClassLoader URLConnection]
-    [java.nio ByteBuffer]
     [java.nio.charset Charset]
     [java.security AccessController PrivilegedAction]
     [java.util AbstractCollection AbstractSet ArrayList Arrays Collection Comparator EmptyStackException HashMap HashSet IdentityHashMap Iterator LinkedList List Map Map$Entry NoSuchElementException Queue Set Stack TreeMap]
-    [java.util.concurrent Callable ConcurrentHashMap ConcurrentMap CountDownLatch Executor ExecutorService Executors ThreadFactory TimeUnit]
-    [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicLong AtomicReference]
+    [java.util.concurrent Callable ConcurrentHashMap]
+    [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicReference]
     [java.util.concurrent.locks ReentrantReadWriteLock]
     [java.util.regex Matcher Pattern]
     [cloiure.asm Attribute ByteVector ClassVisitor ClassWriter FieldVisitor Label MethodVisitor Opcodes Type]
@@ -220,7 +219,7 @@
 (declare MapReader'new)
 (declare SetReader'new)
 (declare UnmatchedDelimiterReader'new)
-(declare LispReader'macros LispReader'dispatchMacros LispReader'symbolPat LispReader'intPat LispReader'ratioPat LispReader'floatPat LispReader'isWhitespace LispReader'unread LispReader'read1 LispReader'read-1 LispReader'read-4 LispReader'read-5 LispReader'ensurePending LispReader'read-7 LispReader'readToken LispReader'readNumber LispReader'readUnicodeChar-4 LispReader'readUnicodeChar-5 LispReader'interpretToken LispReader'matchSymbol LispReader'matchNumber LispReader'getMacro LispReader'isMacro LispReader'isTerminatingMacro LispReader'garg LispReader'registerArg LispReader'isUnquoteSplicing LispReader'isUnquote LispReader'READ_EOF LispReader'READ_FINISHED LispReader'readDelimitedForms)
+(declare LispReader'macros LispReader'dispatchMacros LispReader'symbolPat LispReader'intPat LispReader'ratioPat LispReader'floatPat LispReader'isWhitespace LispReader'unread LispReader'read1 LispReader'read-1 LispReader'read-4 LispReader'read-6 LispReader'readToken LispReader'readNumber LispReader'readUnicodeChar-4 LispReader'readUnicodeChar-5 LispReader'interpretToken LispReader'matchSymbol LispReader'matchNumber LispReader'getMacro LispReader'isMacro LispReader'isTerminatingMacro LispReader'garg LispReader'registerArg LispReader'isUnquoteSplicing LispReader'isUnquote LispReader'READ_EOF LispReader'READ_FINISHED LispReader'readDelimitedForms)
 (declare LongChunk'init LongChunk'new LongChunk''first)
 (declare LongRange'CHUNK_SIZE LongRange'positiveStep LongRange'negativeStep LongRange'init LongRange'new-4 LongRange'new-6 LongRange'new-7 LongRange'create-1 LongRange'create-2 LongRange'create-3 LongRange''forceChunk LongRange''steppingCount LongRange''rangeCount)
 (declare MapEntry'create MapEntry'init MapEntry'new)
@@ -16791,7 +16790,7 @@
 
 (class-ns RegexReader
     (defn #_"Fn" RegexReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" doublequote, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" doublequote]
             (let [#_"Reader" r (cast Reader reader) #_"StringBuilder" sb (StringBuilder.)]
                 (loop []
                     (let-when [#_"int" ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading regex"))
@@ -16814,7 +16813,7 @@
 
 (class-ns StringReader
     (defn #_"Fn" StringReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" doublequote, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" doublequote]
             (let [#_"StringBuilder" sb (StringBuilder.) #_"Reader" r (cast Reader reader)]
                 (loop-when-recur [#_"int" ch (LispReader'read1 r)] (not= ch \") [(LispReader'read1 r)] ;; oops! "
                     (when (not= ch -1) => (throw (RuntimeException. "EOF while reading string"))
@@ -16861,7 +16860,7 @@
 
 (class-ns CommentReader
     (defn #_"Fn" CommentReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" semicolon, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" semicolon]
             (let [#_"Reader" r (cast Reader reader)]
                 (while (not (any = (LispReader'read1 r) -1 \newline \return)))
                 r
@@ -16872,9 +16871,9 @@
 
 (class-ns DiscardReader
     (defn #_"Fn" DiscardReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" underscore, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" underscore]
             (let [#_"PushbackReader" r (cast PushbackReader reader)]
-                (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))
+                (LispReader'read-4 r, true, nil, true)
                 r
             )
         )
@@ -16886,7 +16885,7 @@
     ;; ::{:c 1}   => {:a.b/c 1}  (where *ns* = a.b)
     ;; ::a{:c 1}  => {:a.b/c 1}  (where a is aliased to a.b)
     (defn #_"Fn" NamespaceMapReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" colon, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" colon]
             (let [#_"PushbackReader" r (cast PushbackReader reader)
                   #_"boolean" auto
                     (let [#_"int" autoChar (LispReader'read1 r)]
@@ -16914,7 +16913,7 @@
                         (not= nextChar \{) ;; #:foo { } or #::foo { }
                         (do
                             (LispReader'unread r, nextChar)
-                            (let [sym (LispReader'read-5 r, true, nil, false, pendingForms)
+                            (let [sym (LispReader'read-4 r, true, nil, false)
                                   nextChar (LispReader'read1 r)
                                   nextChar (loop-when-recur nextChar (LispReader'isWhitespace nextChar) (LispReader'read1 r) => nextChar)]
                                 [sym nextChar]
@@ -16961,7 +16960,7 @@
                         )]
 
                     ;; read map
-                    (let [#_"PersistentVector" kvs (LispReader'readDelimitedForms \}, r, true, (LispReader'ensurePending pendingForms))]
+                    (let [#_"PersistentVector" kvs (LispReader'readDelimitedForms \}, r, true)]
                         (when (= (& (.count kvs) 1) 1)
                             (throw (RuntimeException. "Namespaced map literal must contain an even number of forms"))
                         )
@@ -17009,9 +17008,9 @@
     ))
 
     (defn #_"Fn" SymbolicValueReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" quote]
             (let [#_"PushbackReader" r (cast PushbackReader reader)
-                  #_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
+                  #_"Object" o (LispReader'read-4 r, true, nil, true)]
                 (when-not (instance? Symbol o)
                     (throw (RuntimeException. (str "Invalid token: ##" o)))
                 )
@@ -17026,9 +17025,9 @@
 
 (class-ns WrappingReader
     (defn #_"Fn" WrappingReader'new [#_"Symbol" sym]
-        (fn #_"Object" [#_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" quote]
             (let [#_"PushbackReader" r (cast PushbackReader reader)
-                  #_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
+                  #_"Object" o (LispReader'read-4 r, true, nil, true)]
                 (RT'list-2 sym, o)
             )
         )
@@ -17037,9 +17036,9 @@
 
 (class-ns VarReader
     (defn #_"Fn" VarReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" quote, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" quote]
             (let [#_"PushbackReader" r (cast PushbackReader reader)
-                  #_"Object" o (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
+                  #_"Object" o (LispReader'read-4 r, true, nil, true)]
                 (RT'list-2 LispReader'THE_VAR, o)
             )
         )
@@ -17048,9 +17047,9 @@
 
 (class-ns DispatchReader
     (defn #_"Fn" DispatchReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" hash, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" hash]
             (let-when-not [#_"int" ch (LispReader'read1 (cast Reader reader))] (= ch -1) => (throw (RuntimeException. "EOF while reading character"))
-                (let-when-not [#_"IFn" fn (aget LispReader'dispatchMacros ch)] (some? fn) => (.invoke fn, reader, ch, pendingForms)
+                (let-when-not [#_"IFn" fn (aget LispReader'dispatchMacros ch)] (some? fn) => (.invoke fn, reader, ch)
                     (LispReader'unread (cast PushbackReader reader), ch)
                     (throw (RuntimeException. (str "No dispatch macro for: " (char ch))))
                 )
@@ -17061,7 +17060,7 @@
 
 (class-ns FnReader
     (defn #_"Fn" FnReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" lparen, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" lparen]
             (let [#_"PushbackReader" r (cast PushbackReader reader)]
                 (when (some? (.deref LispReader'ARG_ENV))
                     (throw (IllegalStateException. "Nested #()s are not allowed"))
@@ -17069,7 +17068,7 @@
                 (try
                     (Var'pushThreadBindings (RT'map LispReader'ARG_ENV, PersistentTreeMap'EMPTY))
                     (LispReader'unread r, \()
-                    (let [#_"Object" form (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))
+                    (let [#_"Object" form (LispReader'read-4 r, true, nil, true)
                           #_"PersistentVector" args PersistentVector'EMPTY
                           #_"PersistentTreeMap" argsyms (cast PersistentTreeMap (.deref LispReader'ARG_ENV))
                           args
@@ -17100,14 +17099,14 @@
 
 (class-ns ArgReader
     (defn #_"Fn" ArgReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" pct, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" pct]
             (let [#_"PushbackReader" r (cast PushbackReader reader)]
                 (when (some? (.deref LispReader'ARG_ENV)) => (LispReader'interpretToken (LispReader'readToken r, \%))
                     (let [#_"int" ch (LispReader'read1 r) _ (LispReader'unread r, ch)]
                         ;; % alone is first arg
                         (if (or (= ch -1) (LispReader'isWhitespace ch) (LispReader'isTerminatingMacro ch))
                             (LispReader'registerArg 1)
-                            (let [#_"Object" n (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
+                            (let [#_"Object" n (LispReader'read-4 r, true, nil, true)]
                                 (cond
                                     (.equals n, Compiler'_AMP_) (LispReader'registerArg -1)
                                     (instance? Number n)        (LispReader'registerArg (.intValue (cast Number n)))
@@ -17124,14 +17123,13 @@
 
 (class-ns MetaReader
     (defn #_"Fn" MetaReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" caret, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" caret]
             (let [#_"PushbackReader" r (cast PushbackReader reader)
                   [#_"int" line #_"int" column]
                     (when (instance? LineNumberingPushbackReader r) => [-1 -1]
                         [(LineNumberingPushbackReader''getLineNumber (cast LineNumberingPushbackReader r)) (dec (LineNumberingPushbackReader''getColumnNumber (cast LineNumberingPushbackReader r)))]
                     )
-                  pendingForms (LispReader'ensurePending pendingForms)
-                  #_"Object" meta (LispReader'read-5 r, true, nil, true, pendingForms)
+                  #_"Object" meta (LispReader'read-4 r, true, nil, true)
                   meta
                     (cond
                         (or (instance? Symbol meta) (instance? String meta)) (RT'map RT'TAG_KEY, meta)
@@ -17139,7 +17137,7 @@
                         (instance? IPersistentMap meta)                      meta
                         :else (throw (IllegalArgumentException. "Metadata must be Symbol, Keyword, String or Map"))
                     )
-                  #_"Object" o (LispReader'read-5 r, true, nil, true, pendingForms)]
+                  #_"Object" o (LispReader'read-4 r, true, nil, true)]
                 (when (instance? IMeta o) => (throw (IllegalArgumentException. "Metadata can only be applied to IMetas"))
                     (let [meta
                             (when (and (not= line -1) (instance? ISeq o)) => meta
@@ -17168,11 +17166,11 @@
 
 (class-ns SyntaxQuoteReader
     (defn #_"Fn" SyntaxQuoteReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" backquote, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" backquote]
             (let [#_"PushbackReader" r (cast PushbackReader reader)]
                 (try
                     (Var'pushThreadBindings (RT'map LispReader'GENSYM_ENV, PersistentHashMap'EMPTY))
-                    (let [#_"Object" form (LispReader'read-5 r, true, nil, true, (LispReader'ensurePending pendingForms))]
+                    (let [#_"Object" form (LispReader'read-4 r, true, nil, true)]
                         (SyntaxQuoteReader'syntaxQuote form)
                     )
                     (finally
@@ -17281,19 +17279,17 @@
 
 (class-ns UnquoteReader
     (defn #_"Fn" UnquoteReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" comma, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" comma]
             (let [#_"PushbackReader" r (cast PushbackReader reader)]
                 (let-when [#_"int" ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading character"))
-                    (let [pendingForms (LispReader'ensurePending pendingForms)]
-                        (if (= ch \@)
-                            (let [#_"Object" o (LispReader'read-5 r, true, nil, true, pendingForms)]
-                                (RT'list-2 LispReader'UNQUOTE_SPLICING, o)
-                            )
-                            (do
-                                (LispReader'unread r, ch)
-                                (let [#_"Object" o (LispReader'read-5 r, true, nil, true, pendingForms)]
-                                    (RT'list-2 LispReader'UNQUOTE, o)
-                                )
+                    (if (= ch \@)
+                        (let [#_"Object" o (LispReader'read-4 r, true, nil, true)]
+                            (RT'list-2 LispReader'UNQUOTE_SPLICING, o)
+                        )
+                        (do
+                            (LispReader'unread r, ch)
+                            (let [#_"Object" o (LispReader'read-4 r, true, nil, true)]
+                                (RT'list-2 LispReader'UNQUOTE, o)
                             )
                         )
                     )
@@ -17305,7 +17301,7 @@
 
 (class-ns CharacterReader
     (defn #_"Fn" CharacterReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" backslash, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" backslash]
             (let [#_"PushbackReader" r (cast PushbackReader reader) #_"int" ch (LispReader'read1 r)]
                 (when-not (= ch -1) => (throw (RuntimeException. "EOF while reading character"))
                     (let [#_"String" token (LispReader'readToken r, (char ch))]
@@ -17351,13 +17347,13 @@
 
 (class-ns ListReader
     (defn #_"Fn" ListReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" leftparen]
             (let [#_"PushbackReader" r (cast PushbackReader reader)
                   [#_"int" line #_"int" column]
                     (when (instance? LineNumberingPushbackReader r) => [-1 -1]
                         [(LineNumberingPushbackReader''getLineNumber (cast LineNumberingPushbackReader r)) (dec (LineNumberingPushbackReader''getColumnNumber (cast LineNumberingPushbackReader r)))]
                     )
-                  #_"PersistentVector" v (LispReader'readDelimitedForms \), r, true, (LispReader'ensurePending pendingForms))]
+                  #_"PersistentVector" v (LispReader'readDelimitedForms \), r, true)]
                 (when (pos? (.count v)) => PersistentList'EMPTY
                     (let [#_"IObj" o (cast IObj (PersistentList'create (.toArray v)))]
                         (when-not (= line -1) => o
@@ -17372,9 +17368,9 @@
 
 (class-ns VectorReader
     (defn #_"Fn" VectorReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" leftparen]
             (let [#_"PushbackReader" r (cast PushbackReader reader)]
-                (#_LazilyPersistentVector'create identity (LispReader'readDelimitedForms \], r, true, (LispReader'ensurePending pendingForms)))
+                (#_LazilyPersistentVector'create identity (LispReader'readDelimitedForms \], r, true))
             )
         )
     )
@@ -17382,9 +17378,9 @@
 
 (class-ns MapReader
     (defn #_"Fn" MapReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" leftparen, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" leftparen]
             (let [#_"PushbackReader" r (cast PushbackReader reader)
-                  #_"Object[]" a (.toArray (LispReader'readDelimitedForms \}, r, true, (LispReader'ensurePending pendingForms)))]
+                  #_"Object[]" a (.toArray (LispReader'readDelimitedForms \}, r, true))]
                 (when (= (& (alength a) 1) 1)
                     (throw (RuntimeException. "Map literal must contain an even number of forms"))
                 )
@@ -17396,9 +17392,9 @@
 
 (class-ns SetReader
     (defn #_"Fn" SetReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" leftbracket, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" leftbracket]
             (let [#_"PushbackReader" r (cast PushbackReader reader)]
-                (PersistentHashSet'createWithCheck-1i (LispReader'readDelimitedForms \}, r, true, (LispReader'ensurePending pendingForms)))
+                (PersistentHashSet'createWithCheck-1i (LispReader'readDelimitedForms \}, r, true))
             )
         )
     )
@@ -17406,7 +17402,7 @@
 
 (class-ns UnmatchedDelimiterReader
     (defn #_"Fn" UnmatchedDelimiterReader'new []
-        (fn #_"Object" [#_"Object" reader, #_"Object" rightdelim, #_"Object" pendingForms]
+        (fn #_"Object" [#_"Object" reader, #_"Object" rightdelim]
             (throw (RuntimeException. (str "Unmatched delimiter: " rightdelim)))
         )
     )
@@ -17497,21 +17493,12 @@
     )
 
     (defn #_"Object" LispReader'read-4 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"boolean" isRecursive]
-        ;; start with pendingForms nil as reader conditional splicing is not allowed at top level
-        (LispReader'read-7 r, eofIsError, eofValue, nil, nil, isRecursive, nil)
+        (LispReader'read-6 r, eofIsError, eofValue, nil, nil, isRecursive)
     )
 
-    (defn- #_"Object" LispReader'read-5 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"boolean" isRecursive, #_"Object" pendingForms]
-        (LispReader'read-7 r, eofIsError, eofValue, nil, nil, isRecursive, (LispReader'ensurePending pendingForms))
-    )
-
-    (defn- #_"Object" LispReader'ensurePending [#_"Object" pendingForms]
-        (or pendingForms (LinkedList.))
-    )
-
-    (defn- #_"Object" LispReader'read-7 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"Character" returnOn, #_"Object" returnOnValue, #_"boolean" isRecursive, #_"Object" pendingForms]
+    (defn- #_"Object" LispReader'read-6 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"Character" returnOn, #_"Object" returnOnValue, #_"boolean" isRecursive]
         (try
-            (loop-when [] (or (not (instance? List pendingForms)) (.isEmpty (cast List pendingForms))) => (.remove (cast List pendingForms), 0)
+            (loop []
                 (let [#_"int" ch (loop-when-recur [ch (LispReader'read1 r)] (LispReader'isWhitespace ch) [(LispReader'read1 r)] => ch)]
                     (cond
                         (= ch -1)
@@ -17523,7 +17510,7 @@
                         :else
                             (let [#_"IFn" macroFn (LispReader'getMacro ch)]
                                 (if (some? macroFn)
-                                    (let [#_"Object" ret (.invoke macroFn, r, (char ch), pendingForms)]
+                                    (let [#_"Object" ret (.invoke macroFn, r, (char ch))]
                                         ;; no op macros return the reader
                                         (recur-if (= ret r) [] => ret)
                                     )
@@ -17749,10 +17736,10 @@
     (def- #_"Object" LispReader'READ_EOF (Object.))
     (def- #_"Object" LispReader'READ_FINISHED (Object.))
 
-    (defn #_"PersistentVector" LispReader'readDelimitedForms [#_"char" delim, #_"PushbackReader" r, #_"boolean" isRecursive, #_"Object" pendingForms]
+    (defn #_"PersistentVector" LispReader'readDelimitedForms [#_"char" delim, #_"PushbackReader" r, #_"boolean" isRecursive]
         (let [#_"int" firstline (if (instance? LineNumberingPushbackReader r) (LineNumberingPushbackReader''getLineNumber (cast LineNumberingPushbackReader r)) -1)]
             (loop [#_"PersistentVector" v PersistentVector'EMPTY]
-                (let [#_"Object" form (LispReader'read-7 r, false, LispReader'READ_EOF, delim, LispReader'READ_FINISHED, isRecursive, pendingForms)]
+                (let [#_"Object" form (LispReader'read-6 r, false, LispReader'READ_EOF, delim, LispReader'READ_FINISHED, isRecursive)]
                     (condp = form
                         LispReader'READ_EOF
                             (throw (RuntimeException. (if (neg? firstline) "EOF while reading" (str "EOF while reading, starting at line " firstline))))
@@ -21904,7 +21891,7 @@
                 0   (.invoke combinef)
                 1   (.call (.nth tasks, 0))
                     (let [#_"PersistentVector" t1 (RT'subvec tasks, 0, (quot n 2)) #_"PersistentVector" t2 (RT'subvec tasks, (quot n 2), n)
-                          #_"Object" forked (.invoke fjfork, (.invoke fjtask, (ArrayNode'foldTasks t2, combinef, fjtask, fjfork, fjjoin)))]
+                          #_"Object" forked (.invoke fjfork, (.invoke fjtask, #(ArrayNode'foldTasks t2, combinef, fjtask, fjfork, fjjoin)))]
                         (.invoke combinef, (ArrayNode'foldTasks t1, combinef, fjtask, fjfork, fjjoin), (.invoke fjjoin, forked))
                     )
             )
@@ -22833,15 +22820,10 @@
     (defn #_"Object" PersistentHashMap''fold [#_"PersistentHashMap" this, #_"long" n, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjinvoke, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
         ;; we are ignoring n for now
         (.invoke fjinvoke,
-            (reify Callable
-                #_foreign
-                (#_"Object" call [#_"Callable" _self]
-                    (let [#_"Object" ret (.invoke combinef)
-                            ret (if (some? (:root this)) (.invoke combinef, ret, (.fold (:root this), combinef, reducef, fjtask, fjfork, fjjoin)) ret)
-                            ret (if (:hasNull this) (.invoke combinef, ret, (.invoke reducef, (.invoke combinef), nil, (:nullValue this))) ret)]
-                        ret
-                    )
-                )
+            #(let [_ (.invoke combinef)
+                  _ (if (some? (:root this)) (.invoke combinef, _, (.fold (:root this), combinef, reducef, fjtask, fjfork, fjjoin)) _)
+                  _ (if (:hasNull this) (.invoke combinef, _, (.invoke reducef, (.invoke combinef), nil, (:nullValue this))) _)]
+                _
             )
         )
     )
