@@ -187,7 +187,7 @@
 (declare MethodParamExpr'init MethodParamExpr'new)
 (declare CaseParser'new)
 (declare CaseExpr'NUMBER_TYPE CaseExpr'intValueMethod CaseExpr'hashMethod CaseExpr'hashCodeMethod CaseExpr'equivMethod CaseExpr'new CaseExpr''doEmit CaseExpr''isShiftMasked CaseExpr''emitShiftMask CaseExpr''emitExprForInts CaseExpr''emitThenForInts CaseExpr''emitExprForHashes CaseExpr''emitThenForHashes CaseExpr'emitExpr)
-(declare Compiler'COMPILE_STUB_PREFIX Compiler'MAX_POSITIONAL_ARITY Compiler'CLASS_TYPE Compiler'OBJECT_TYPE Compiler'BOOLEAN_OBJECT_TYPE Compiler'THROWABLE_TYPE Compiler'KEYWORD_TYPE Compiler'VAR_TYPE Compiler'SYMBOL_TYPE Compiler'IFN_TYPE Compiler'AFUNCTION_TYPE Compiler'RT_TYPE Compiler'NUMBERS_TYPE Compiler'NS_TYPE Compiler'UTIL_TYPE Compiler'REFLECTOR_TYPE Compiler'IPERSISTENTMAP_TYPE Compiler'IOBJ_TYPE Compiler'TUPLE_TYPE Compiler'createTupleMethods Compiler'ARG_TYPES Compiler'EXCEPTION_TYPES Compiler'lineDeref Compiler'columnDeref Compiler'isSpecial Compiler'inTailCall Compiler'resolveSymbol Compiler'maybePrimitiveType Compiler'maybeJavaClass Compiler'subsumes Compiler'getTypeStringForArgs Compiler'getMatchingParams Compiler'DEMUNGE_MAP Compiler'DEMUNGE_PATTERN Compiler'munge Compiler'demunge Compiler'clearPathRoot Compiler'registerLocal Compiler'getAndIncLocalNum Compiler'analyze-2 Compiler'analyze-3 Compiler'isMacro Compiler'isInline Compiler'namesStaticMember Compiler'preserveTag Compiler'MACRO_CHECK Compiler'MACRO_CHECK_LOADING Compiler'MACRO_CHECK_LOCK Compiler'ensureMacroCheck Compiler'checkSpecs Compiler'macroexpand1 Compiler'macroexpand Compiler'analyzeSeq Compiler'eval-1 Compiler'eval-2 Compiler'registerConstant Compiler'registerKeyword Compiler'registerKeywordCallsite Compiler'registerProtocolCallsite Compiler'registerVarCallsite Compiler'fwdPath Compiler'commonPath Compiler'analyzeSymbol Compiler'destubClassName Compiler'getType Compiler'resolve-2 Compiler'resolve-1 Compiler'namespaceFor-1 Compiler'namespaceFor-2 Compiler'resolveIn Compiler'maybeResolveIn Compiler'lookupVar-3 Compiler'lookupVar-2 Compiler'registerVar Compiler'currentNS Compiler'closeOver Compiler'referenceLocal Compiler'tagOf Compiler'consumeWhitespaces Compiler'load Compiler'pushNS Compiler'pushNSandLoader Compiler'getLookupThunk Compiler'inty Compiler'retType Compiler'primClass-1s Compiler'tagClass Compiler'primClass-1c Compiler'boxClass Compiler'emptyVarCallSites)
+(declare Compiler'COMPILE_STUB_PREFIX Compiler'MAX_POSITIONAL_ARITY Compiler'CLASS_TYPE Compiler'OBJECT_TYPE Compiler'BOOLEAN_OBJECT_TYPE Compiler'THROWABLE_TYPE Compiler'KEYWORD_TYPE Compiler'VAR_TYPE Compiler'SYMBOL_TYPE Compiler'IFN_TYPE Compiler'AFUNCTION_TYPE Compiler'RT_TYPE Compiler'NUMBERS_TYPE Compiler'NS_TYPE Compiler'UTIL_TYPE Compiler'REFLECTOR_TYPE Compiler'IPERSISTENTMAP_TYPE Compiler'IOBJ_TYPE Compiler'TUPLE_TYPE Compiler'createTupleMethods Compiler'ARG_TYPES Compiler'EXCEPTION_TYPES Compiler'lineDeref Compiler'columnDeref Compiler'isSpecial Compiler'inTailCall Compiler'resolveSymbol Compiler'maybePrimitiveType Compiler'maybeJavaClass Compiler'subsumes Compiler'getTypeStringForArgs Compiler'getMatchingParams Compiler'DEMUNGE_MAP Compiler'DEMUNGE_PATTERN Compiler'munge Compiler'demunge Compiler'clearPathRoot Compiler'registerLocal Compiler'getAndIncLocalNum Compiler'analyze-2 Compiler'analyze-3 Compiler'isMacro Compiler'isInline Compiler'namesStaticMember Compiler'preserveTag Compiler'macroexpand1 Compiler'macroexpand Compiler'analyzeSeq Compiler'eval-1 Compiler'eval-2 Compiler'registerConstant Compiler'registerKeyword Compiler'registerKeywordCallsite Compiler'registerProtocolCallsite Compiler'registerVarCallsite Compiler'fwdPath Compiler'commonPath Compiler'analyzeSymbol Compiler'destubClassName Compiler'getType Compiler'resolve-2 Compiler'resolve-1 Compiler'namespaceFor-1 Compiler'namespaceFor-2 Compiler'resolveIn Compiler'maybeResolveIn Compiler'lookupVar-3 Compiler'lookupVar-2 Compiler'registerVar Compiler'currentNS Compiler'closeOver Compiler'referenceLocal Compiler'tagOf Compiler'consumeWhitespaces Compiler'load Compiler'pushNS Compiler'pushNSandLoader Compiler'getLookupThunk Compiler'inty Compiler'retType Compiler'primClass-1s Compiler'tagClass Compiler'primClass-1c Compiler'boxClass Compiler'emptyVarCallSites)
 (declare Cons'init Cons'new-2 Cons'new-3)
 (declare Cycle'init Cycle'new-3 Cycle'new-5 Cycle'create Cycle''current)
 (declare Delay'init Delay'new Delay'force)
@@ -292,7 +292,7 @@
 (declare Repeat'INFINITE Repeat'init Repeat'new-2 Repeat'new-3 Repeat'create-1 Repeat'create-2)
 (declare RestFn'new RestFn'ontoArrayPrepend RestFn'findKey)
 (declare RT'BOOLEANS_CLASS RT'BYTES_CLASS RT'SHORTS_CLASS RT'CHARS_CLASS RT'INTS_CLASS RT'LONGS_CLASS RT'FLOATS_CLASS RT'DOUBLES_CLASS RT'OBJECTS_CLASS)
-(declare RT'T RT'F RT'LOADER_SUFFIX RT'UTF8 RT'inNamespace RT'bootNamespace RT'errPrintWriter RT'EMPTY_ARRAY RT'ID RT'CHECK_SPEC_ASSERTS RT'INSTRUMENT_MACROS RT'CHECK_SPECS RT'keyword RT'var RT'loadResourceScript RT'lastModified RT'load-1 RT'load-2 RT'nextID RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nth-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1b RT'intCast-1s RT'intCast-1c RT'intCast-1i RT'intCast-1l RT'intCast-1f RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1l RT'longCast-1f RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1l RT'floatCast-1f RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1l RT'doubleCast-1f RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'printString RT'readString RT'print RT'printInnerSeq RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget_boolean RT'aget_byte RT'aget_short RT'aget_char RT'aget_int RT'aget_long RT'aget_float RT'aget_double RT'aget_object RT'aset_boolean RT'aset_byte RT'aset_short RT'aset_char RT'aset_int RT'aset_long RT'aset_float RT'aset_double RT'aset_object RT'alength_boolean RT'alength_byte RT'alength_short RT'alength_char RT'alength_int RT'alength_long RT'alength_float RT'alength_double RT'alength_object RT'aclone_boolean RT'aclone_byte RT'aclone_short RT'aclone_char RT'aclone_int RT'aclone_long RT'aclone_float RT'aclone_double RT'aclone_object)
+(declare RT'T RT'F RT'LOADER_SUFFIX RT'UTF8 RT'inNamespace RT'bootNamespace RT'errPrintWriter RT'EMPTY_ARRAY RT'ID RT'keyword RT'var RT'loadResourceScript RT'lastModified RT'load-1 RT'load-2 RT'nextID RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nth-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1b RT'intCast-1s RT'intCast-1c RT'intCast-1i RT'intCast-1l RT'intCast-1f RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1l RT'longCast-1f RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1l RT'floatCast-1f RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1l RT'doubleCast-1f RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'printString RT'readString RT'print RT'printInnerSeq RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget_boolean RT'aget_byte RT'aget_short RT'aget_char RT'aget_int RT'aget_long RT'aget_float RT'aget_double RT'aget_object RT'aset_boolean RT'aset_byte RT'aset_short RT'aset_char RT'aset_int RT'aset_long RT'aset_float RT'aset_double RT'aset_object RT'alength_boolean RT'alength_byte RT'alength_short RT'alength_char RT'alength_int RT'alength_long RT'alength_float RT'alength_double RT'alength_object RT'aclone_boolean RT'aclone_byte RT'aclone_short RT'aclone_char RT'aclone_int RT'aclone_long RT'aclone_float RT'aclone_double RT'aclone_object)
 (declare SeqIterator'new)
 (declare StringSeq'create StringSeq'init StringSeq'new)
 (declare Symbol'create-2 Symbol'create-1 Symbol'intern Symbol'init Symbol'new-2 Symbol'new-3)
@@ -15547,41 +15547,6 @@
         )
     )
 
-    #_volatile
-    (def- #_"Var" Compiler'MACRO_CHECK nil)
-    #_volatile
-    (def- #_"boolean" Compiler'MACRO_CHECK_LOADING false)
-    (def- #_"Object" Compiler'MACRO_CHECK_LOCK (Object.))
-
-    (defn- #_"Var" Compiler'ensureMacroCheck []
-        (or Compiler'MACRO_CHECK
-            (§ sync Compiler'MACRO_CHECK_LOCK
-                (or Compiler'MACRO_CHECK
-                    (do
-                        (ß ass Compiler'MACRO_CHECK_LOADING true)
-                        (RT'load-1 "cloiure/spec/alpha")
-                        (RT'load-1 "cloiure/core/specs/alpha")
-                        (ß ass Compiler'MACRO_CHECK (Var'find (Symbol'intern "cloiure.spec.alpha", "macroexpand-check")))
-                        (ß ass Compiler'MACRO_CHECK_LOADING false)
-                        Compiler'MACRO_CHECK
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"void" Compiler'checkSpecs [#_"Var" v, #_"ISeq" form]
-        (when (and RT'CHECK_SPECS (not Compiler'MACRO_CHECK_LOADING))
-            (try
-                (.applyTo (Compiler'ensureMacroCheck), (RT'cons v, (RT'list-1 (.next form))))
-                (catch Exception e
-                    (throw (CompilerException'new (Compiler'lineDeref), (Compiler'columnDeref), e))
-                )
-            )
-        )
-        nil
-    )
-
     (defn #_"Object" Compiler'macroexpand1 [#_"Object" x]
         (when (instance? ISeq x) => x
             (let [#_"ISeq" form (cast ISeq x) #_"Object" op (RT'first form)]
@@ -15589,14 +15554,11 @@
                     ;; macro expansion
                     (let [#_"Var" v (Compiler'isMacro op)]
                         (if (some? v)
-                            (do
-                                (Compiler'checkSpecs v, form)
-                                (try
-                                    (.applyTo v, (RT'cons form, (RT'cons (Var''get Compiler'LOCAL_ENV), (.next form))))
-                                    (§ catch ArityException e
-                                        ;; hide the 2 extra params for a macro
-                                        (throw (ArityException'new-2 (- (:actual e) 2), (:name e)))
-                                    )
+                            (try
+                                (.applyTo v, (RT'cons form, (RT'cons (Var''get Compiler'LOCAL_ENV), (.next form))))
+                                (§ catch ArityException e
+                                    ;; hide the 2 extra params for a macro
+                                    (throw (ArityException'new-2 (- (:actual e) 2), (:name e)))
                                 )
                             )
                             (when (instance? Symbol op) => x
@@ -27572,11 +27534,6 @@
 
     (def #_"AtomicInteger" RT'ID (AtomicInteger. 1))
 
-    (def #_"boolean" RT'CHECK_SPEC_ASSERTS false #_"cloiure.spec.check-asserts")
-    (def #_"boolean" RT'INSTRUMENT_MACROS true #_"cloiure.spec.skip-macros")
-    #_volatile
-    (def #_"boolean" RT'CHECK_SPECS false)
-
     (§ static
         (Var''setTag RT'OUT, (Symbol'intern "java.io.Writer"))
         (Var''setTag RT'CURRENT_NS, (Symbol'intern "cloiure.lang.Namespace"))
@@ -27588,7 +27545,6 @@
               v (Var'intern RT'CLOIURE_NS, RT'IN_NAMESPACE, inNamespace)
               _ (Var''setMeta v, (RT'map RT'DOC_KEY, "Sets *ns* to the namespace named by the symbol, creating it if needed."))]
             (RT'load-1 "cloiure/core")
-            (ß ass RT'CHECK_SPECS RT'INSTRUMENT_MACROS)
         )
     )
 
