@@ -2024,43 +2024,6 @@
 )
 
 ;;;
- ; Creates and returns a Ref with an initial value of x and zero or
- ; more options (in any order):
- ;
- ; :meta        metadata-map
- ; :validator   validate-fn
- ; :min-history (default 0)
- ; :max-history (default 10)
- ;
- ; If metadata-map is supplied, it will become the metadata on the
- ; ref. validate-fn must be nil or a side-effect-free fn of one
- ; argument, which will be passed the intended new state on any state
- ; change. If the new state is unacceptable, the validate-fn should
- ; return false or throw an exception. validate-fn will be called on
- ; transaction commit, when all refs have their final values.
- ;
- ; Normally refs accumulate history dynamically as needed to deal with
- ; read demands. If you know in advance you will need history you can
- ; set :min-history to ensure it will be available when first needed
- ; (instead of after a read fault). History is limited, and the limit
- ; can be set with :max-history.
- ;;
-(§ defn ref
-    ([x] (cloiure.lang.Ref. x))
-    ([x & options]
-        (let [r ^cloiure.lang.Ref (setup-reference (ref x) options) opts (apply hash-map options)]
-            (when (:max-history opts)
-                (.setMaxHistory r (:max-history opts))
-            )
-            (when (:min-history opts)
-                (.setMinHistory r (:min-history opts))
-            )
-            r
-        )
-    )
-)
-
-;;;
  ; Also reader macro: @ref/@var/@atom/@delay.
  ; Within a transaction, returns the in-transaction-value of ref, else
  ; returns the most-recently-committed value of ref. When applied to a var
@@ -2171,108 +2134,6 @@
  ;;
 (§ defn reset-meta! [^cloiure.lang.IReference iref metadata-map]
     (.resetMeta iref metadata-map)
-)
-
-;;;
- ; Must be called in a transaction.
- ; Sets the in-transaction-value of ref to:
- ;
- ; (apply fun in-transaction-value-of-ref args)
- ;
- ; and returns the in-transaction-value of ref.
- ;
- ; At the commit point of the transaction, sets the value of ref to be:
- ;
- ; (apply fun most-recently-committed-value-of-ref args)
- ;
- ; Thus fun should be commutative, or, failing that, you must accept
- ; last-one-in-wins behavior.
- ; commute allows for more concurrency than ref-set.
- ;;
-(§ defn commute [^cloiure.lang.Ref ref fun & args]
-    (.commute ref fun args)
-)
-
-;;;
- ; Must be called in a transaction.
- ; Sets the in-transaction-value of ref to:
- ;
- ; (apply fun in-transaction-value-of-ref args)
- ;
- ; and returns the in-transaction-value of ref.
- ;;
-(§ defn alter [^cloiure.lang.Ref ref fun & args]
-    (.alter ref fun args)
-)
-
-;;;
- ; Must be called in a transaction.
- ; Sets the value of ref, returns val.
- ;;
-(§ defn ref-set [^cloiure.lang.Ref ref val]
-    (.set ref val)
-)
-
-;;;
- ; Returns the history count of a ref.
- ;;
-(§ defn ref-history-count [^cloiure.lang.Ref ref]
-    (.getHistoryCount ref)
-)
-
-;;;
- ; Gets the min-history of a ref, or sets it and returns the ref.
- ;;
-(§ defn ref-min-history
-    ([^cloiure.lang.Ref ref  ] (.getMinHistory ref  ))
-    ([^cloiure.lang.Ref ref n] (.setMinHistory ref n))
-)
-
-;;;
- ; Gets the max-history of a ref, or sets it and returns the ref.
- ;;
-(§ defn ref-max-history
-    ([^cloiure.lang.Ref ref  ] (.getMaxHistory ref  ))
-    ([^cloiure.lang.Ref ref n] (.setMaxHistory ref n))
-)
-
-;;;
- ; Must be called in a transaction.
- ; Protects the ref from modification by other transactions.
- ; Returns the in-transaction-value of ref.
- ; Allows for more concurrency than (ref-set ref @ref)
- ;;
-(§ defn ensure [^cloiure.lang.Ref ref]
-    (.touch ref)
-    (.deref ref)
-)
-
-;;;
- ; transaction-flags => TBD, pass nil for now
- ;
- ; Runs the exprs (in an implicit do) in a transaction that encompasses
- ; exprs and any nested calls. Starts a transaction if none is already
- ; running on this thread. Any uncaught exception will abort the
- ; transaction and flow out of sync. The exprs may be run more than
- ; once, but any effects on Refs will be atomic.
- ;;
-(§ defmacro sync [flags-ignored-for-now & body]
-    `(cloiure.lang.LockingTransaction/runInTransaction (fn [] ~@body))
-)
-
-;;;
- ; If an io! block occurs in a transaction, throws an IllegalStateException,
- ; else runs body in an implicit do. If the first expression in body is a literal
- ; string, will use that as the exception message.
- ;;
-(§ defmacro io! [& body]
-    (let [message (when (string? (first body)) (first body))
-          body (if message (next body) body)]
-        `(if (cloiure.lang.LockingTransaction/isRunning)
-            (throw (IllegalStateException. ~(or message "I/O in transaction")))
-            (do ~@body)
-        )
-    )
 )
 
 ;;;
@@ -4872,15 +4733,6 @@
 )
 
 ;;;
- ; Runs the exprs (in an implicit do) in a transaction that encompasses
- ; exprs and any nested calls. Starts a transaction if none is already
- ; running on this thread. Any uncaught exception will abort the
- ; transaction and flow out of dosync. The exprs may be run more than
- ; once, but any effects on Refs will be atomic.
- ;;
-(§ defmacro dosync [& exprs] `(sync nil ~@exprs))
-
-;;;
  ; Sets the precision and rounding mode to be used for BigDecimal operations.
  ;
  ; Usage: (with-precision 10 (/ 1M 3))
@@ -5484,9 +5336,6 @@
                 )
                 ~@(map process-reference references)
             )
-            (when-not (.equals '~name 'cloiure.core)
-                (dosync (commute @#'*loaded-libs* conj '~name))
-            )
             nil
         )
     )
@@ -5510,11 +5359,6 @@
         )
     )
 )
-
-;;;
- ; A ref to a sorted set of symbols representing loaded libs.
- ;;
-(§ defonce ^:dynamic ^:private *loaded-libs* (ref (sorted-set)))
 
 ;;;
  ; A stack of paths currently being loaded by this thread.
@@ -5586,19 +5430,6 @@
 (§ defn- load-one [lib need-ns require]
     (load (root-resource lib))
     (throw-if (and need-ns (not (find-ns lib))) "namespace '%s' not found after loading '%s'" lib (root-resource lib))
-    (when require
-        (dosync (commute *loaded-libs* conj lib))
-    )
-)
-
-;;;
- ; Loads a lib given its name and forces a load of any libs it directly
- ; or indirectly loads. If need-ns, ensures that the associated namespace
- ; exists after loading. If require, records the load so any duplicate
- ; loads can be skipped.
- ;;
-(§ defn- load-all [lib need-ns require]
-    (dosync (commute *loaded-libs* #(reduce1 conj %1 %2) (binding [*loaded-libs* (ref (sorted-set))] (load-one lib need-ns require) @*loaded-libs*)))
 )
 
 ;;;
@@ -5611,24 +5442,19 @@
     )
     (let [lib (if prefix (symbol (str prefix \. lib)) lib)
           opts (apply hash-map options)
-          {:keys [as reload reload-all require use verbose]} opts
-          loaded (contains? @*loaded-libs* lib)
-          load (cond reload-all load-all (or reload (not require) (not loaded)) load-one)
+          {:keys [as reload require use verbose]} opts
           need-ns (or as use)
           filter-opts (select-keys opts '(:exclude :only :rename :refer))
           undefined-on-entry (not (find-ns lib))]
         (binding [*loading-verbosely* (or *loading-verbosely* verbose)]
-            (if load
-                (try
-                    (load lib need-ns require)
-                    (catch Exception e
-                        (when undefined-on-entry
-                            (remove-ns lib)
-                        )
-                        (throw e)
+            (try
+                (load-one lib need-ns require)
+                (catch Exception e
+                    (when undefined-on-entry
+                        (remove-ns lib)
                     )
+                    (throw e)
                 )
-                (throw-if (and need-ns (not (find-ns lib))) "namespace '%s' not found" lib)
             )
             (when (and need-ns *loading-verbosely*)
                 (printf "(cloiure.core/in-ns '%s)\n" (ns-name *ns*))
@@ -5661,7 +5487,7 @@
           opts (interleave flags (repeat true))
           args (filter (complement keyword?) args)]
         ;; check for unsupported options
-        (let [supported #{:as :reload :reload-all :require :use :verbose :refer} unsupported (seq (remove supported flags))]
+        (let [supported #{:as :reload :require :use :verbose :refer} unsupported (seq (remove supported flags))]
             (throw-if unsupported (apply str "Unsupported option(s) supplied: " (interpose \, unsupported)))
         )
         ;; check a load target was specified
@@ -5739,8 +5565,6 @@
  ; A flag is a keyword. Recognized flags:
  ;
  ; :reload forces loading of all the identified libs even if they are already loaded.
- ; :reload-all implies :reload and also forces loading of all libs that the identified libs
- ;             directly or indirectly load via require or use.
  ; :verbose triggers printing information about each load, alias, and refer.
  ;
  ; Example:
@@ -5760,11 +5584,6 @@
  ; as those documented for cloiure.core/refer.
  ;;
 (§ defn use [& args] (apply load-libs :require :use args))
-
-;;;
- ; Returns a sorted set of symbols naming the currently loaded libs.
- ;;
-(§ defn loaded-libs [] @*loaded-libs*)
 
 ;;;
  ; Loads Cloiure code from resources in classpath. A path is interpreted as
