@@ -70,9 +70,6 @@
 
 (declare AFn'new AFn'applyToHelper)
 (declare AFunction'init AFunction'new)
-(declare ActionQueue'init ActionQueue'new)
-(declare AgentAction'init AgentAction'new AgentAction''execute AgentAction'doRun)
-(declare Agent'sendThreadPoolCounter Agent'sendOffThreadPoolCounter Agent'createThreadFactory Agent'nested Agent'shutdown Agent'init Agent'new-1 Agent'new-2 Agent''setState Agent''getError Agent''setErrorMode Agent''getErrorMode Agent''setErrorHandler Agent''getErrorHandler Agent''restart Agent''dispatch Agent'dispatchAction Agent''enqueue Agent''getQueueCount Agent'releasePendingSends)
 (declare AMapEntry'new AMapEntry''asVector)
 (declare KeySeq'create KeySeq'createFromMap KeySeq'init KeySeq'new-2 KeySeq'new-3)
 (declare ValSeq'create ValSeq'createFromMap ValSeq'init ValSeq'new-2 ValSeq'new-3)
@@ -229,7 +226,7 @@
 (declare LockingTransactionInfo'init LockingTransactionInfo'new LockingTransactionInfo''running)
 (declare CFn'init CFn'new)
 (declare Notify'init Notify'new)
-(declare LockingTransaction'RETRY_LIMIT LockingTransaction'LOCK_WAIT_MSECS LockingTransaction'BARGE_WAIT_NANOS LockingTransaction'RUNNING LockingTransaction'COMMITTING LockingTransaction'RETRY LockingTransaction'KILLED LockingTransaction'COMMITTED LockingTransaction'transaction LockingTransaction'lastPoint LockingTransaction'init LockingTransaction'new LockingTransaction''getReadPoint LockingTransaction''getCommitPoint LockingTransaction''stop LockingTransaction''tryWriteLock LockingTransaction''lock LockingTransaction''blockAndBail LockingTransaction''releaseIfEnsured LockingTransaction''abort LockingTransaction''bargeTimeElapsed LockingTransaction''barge LockingTransaction'getEx LockingTransaction'isRunning LockingTransaction'getRunning LockingTransaction'runInTransaction LockingTransaction''run LockingTransaction''enqueue LockingTransaction''doGet LockingTransaction''doSet LockingTransaction''doEnsure LockingTransaction''doCommute)
+(declare LockingTransaction'RETRY_LIMIT LockingTransaction'LOCK_WAIT_MSECS LockingTransaction'BARGE_WAIT_NANOS LockingTransaction'RUNNING LockingTransaction'COMMITTING LockingTransaction'RETRY LockingTransaction'KILLED LockingTransaction'COMMITTED LockingTransaction'transaction LockingTransaction'lastPoint LockingTransaction'init LockingTransaction'new LockingTransaction''getReadPoint LockingTransaction''getCommitPoint LockingTransaction''stop LockingTransaction''tryWriteLock LockingTransaction''lock LockingTransaction''blockAndBail LockingTransaction''releaseIfEnsured LockingTransaction''abort LockingTransaction''bargeTimeElapsed LockingTransaction''barge LockingTransaction'getEx LockingTransaction'isRunning LockingTransaction'getRunning LockingTransaction'runInTransaction LockingTransaction''run LockingTransaction''doGet LockingTransaction''doSet LockingTransaction''doEnsure LockingTransaction''doCommute)
 (declare LongChunk'init LongChunk'new LongChunk''first)
 (declare LongRange'CHUNK_SIZE LongRange'positiveStep LongRange'negativeStep LongRange'init LongRange'new-4 LongRange'new-6 LongRange'new-7 LongRange'create-1 LongRange'create-2 LongRange'create-3 LongRange''forceChunk LongRange''steppingCount LongRange''rangeCount)
 (declare MapEntry'create MapEntry'init MapEntry'new)
@@ -303,11 +300,9 @@
 (declare TBox'init TBox'new)
 (declare Unbound'init Unbound'new)
 (declare Frame'init Frame'new)
-(declare Var'dvals Var'rev Var'getThreadBindingFrame Var'resetThreadBindingFrame Var'intern Var'internPrivate Var'find Var'create Var'init Var'new Var''setDynamic-1 Var''setDynamic-2 Var''isDynamic Var''isBound Var''get Var''alter Var''set Var''setMeta Var''setMacro Var''isMacro Var''isPublic Var''getRawRoot Var''getTag Var''setTag Var''hasRoot Var''bindRoot Var''swapRoot Var''unbindRoot Var''commuteRoot Var''alterRoot Var'pushThreadBindings Var'popThreadBindings Var'getThreadBindings Var''getThreadBinding Var''fn)
+(declare Var'dvals Var'rev Var'intern Var'internPrivate Var'find Var'create Var'init Var'new Var''setDynamic-1 Var''setDynamic-2 Var''isDynamic Var''isBound Var''get Var''alter Var''set Var''setMeta Var''setMacro Var''isMacro Var''isPublic Var''getRawRoot Var''getTag Var''setTag Var''hasRoot Var''bindRoot Var''swapRoot Var''unbindRoot Var''commuteRoot Var''alterRoot Var'pushThreadBindings Var'popThreadBindings Var'getThreadBindings Var''getThreadBinding Var''fn)
 (declare Volatile'init Volatile'new Volatile''reset)
 
-(declare ActionQueue'EMPTY)
-(declare Agent'CONTINUE Agent'FAIL Agent'pooledExecutor Agent'soloExecutor)
 (declare BigInt'ZERO BigInt'ONE)
 (declare ConstantParser'formKey)
 (declare InvokeExpr'onKey InvokeExpr'methodMapKey)
@@ -330,7 +325,7 @@
 (declare PersistentTreeMap'EMPTY)
 (declare PersistentTreeSet'EMPTY)
 (declare PersistentVector'EMPTY)
-(declare RT'DEFAULT_IMPORTS RT'CLOIURE_NS RT'IN RT'OUT RT'ERR RT'TAG_KEY RT'AGENT RT'ASSERT RT'MATH_CONTEXT RT'LINE_KEY RT'COLUMN_KEY RT'DECLARED_KEY RT'DOC_KEY RT'IN_NAMESPACE RT'NAMESPACE RT'IDENTICAL RT'CURRENT_NS RT'FLUSH_ON_NEWLINE RT'PRINT_READABLY RT'WARN_ON_REFLECTION RT'ALLOW_UNRESOLVED_VARS RT'IN_NS_VAR RT'NS_VAR RT'FN_LOADER_VAR RT'PRINT_INITIALIZED RT'PR_ON RT'DEFAULT_COMPARATOR)
+(declare RT'DEFAULT_IMPORTS RT'CLOIURE_NS RT'IN RT'OUT RT'ERR RT'TAG_KEY RT'ASSERT RT'MATH_CONTEXT RT'LINE_KEY RT'COLUMN_KEY RT'DECLARED_KEY RT'DOC_KEY RT'IN_NAMESPACE RT'NAMESPACE RT'IDENTICAL RT'CURRENT_NS RT'FLUSH_ON_NEWLINE RT'PRINT_READABLY RT'WARN_ON_REFLECTION RT'ALLOW_UNRESOLVED_VARS RT'IN_NS_VAR RT'NS_VAR RT'FN_LOADER_VAR RT'PRINT_INITIALIZED RT'PR_ON RT'DEFAULT_COMPARATOR)
 (declare Frame'TOP)
 (declare Var'privateKey Var'privateMeta Var'macroKey Var'nameKey Var'nsKey)
 (declare main'CLOIURE_MAIN main'REQUIRE main'MAIN)
@@ -2309,13 +2304,6 @@
     )
 )
 
-(java-ns cloiure.lang.IBlockingDeref
-    (interface! IBlockingDeref []
-        #_abstract
-        (#_"Object" deref [#_"IBlockingDeref" this, #_"long" ms, #_"Object" timeoutValue])
-    )
-)
-
 (java-ns cloiure.lang.IDeref
     (interface! IDeref []
         #_abstract
@@ -2890,12 +2878,6 @@
 (java-ns cloiure.lang.ARef
     #_abstract
     (class! ARef [#_"AReference" IRef])
-)
-
-(java-ns cloiure.lang.Agent
-    (class! ActionQueue [])
-    (class! AgentAction [Runnable])
-    (class! Agent [#_"ARef"])
 )
 
 (java-ns cloiure.lang.ArityException
@@ -6587,287 +6569,6 @@
             )
         )
         nil
-    )
-)
-)
-
-(java-ns cloiure.lang.Agent
-
-(class-ns ActionQueue
-    (§ def #_"ActionQueue" ActionQueue'EMPTY (ActionQueue'new PersistentQueue'EMPTY, nil))
-
-    (defn- #_"ActionQueue" ActionQueue'init []
-        (hash-map
-            #_"IPersistentStack" :q nil
-            #_"Throwable" :error nil ;; non-null indicates fail state
-        )
-    )
-
-    (defn #_"ActionQueue" ActionQueue'new [#_"IPersistentStack" q, #_"Throwable" error]
-        (let [this (ActionQueue'init)]
-            (assoc this :q q :error error)
-        )
-    )
-)
-
-(class-ns AgentAction
-    (defn- #_"AgentAction" AgentAction'init []
-        (hash-map
-            #_"Agent" :agent nil
-            #_"IFn" :fn nil
-            #_"ISeq" :args nil
-            #_"Executor" :exec nil
-        )
-    )
-
-    (defn #_"AgentAction" AgentAction'new [#_"Agent" agent, #_"IFn" fn, #_"ISeq" args, #_"Executor" exec]
-        (let [this (AgentAction'init)]
-            (assoc this :agent agent :args args :fn fn :exec exec)
-        )
-    )
-
-    #_method
-    (defn #_"void" AgentAction''execute [#_"AgentAction" this]
-        (try
-            (.execute (:exec this), this)
-            (catch Throwable error
-                (when (some? (:errorHandler (:agent this)))
-                    (try
-                        (.invoke (:errorHandler (:agent this)), (:agent this), error)
-                        (catch Throwable e
-                            ;; ignore errorHandler errors
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn #_"void" AgentAction'doRun [#_"AgentAction" action]
-        (try
-            (.set Agent'nested, PersistentVector'EMPTY)
-            (let [#_"Throwable" error
-                    (try
-                        (let [#_"Object" oldval (:state (:agent action))
-                              #_"Object" newval (.applyTo (:fn action), (RT'cons (:state (:agent action)), (:args action)))]
-                            (Agent''setState (:agent action), newval)
-                            (ARef''notifyWatches (:agent action), oldval, newval)
-                            nil
-                        )
-                        (catch Throwable error
-                            error
-                        )
-                    )
-                  error
-                    (when (some? error) => (do (Agent'releasePendingSends) nil)
-                        (.set Agent'nested, nil) ;; allow errorHandler to send
-                        (when (some? (:errorHandler (:agent action)))
-                            (try
-                                (.invoke (:errorHandler (:agent action)), (:agent action), error)
-                                (catch Throwable _
-                                    ;; ignore errorHandler errors
-                                )
-                            )
-                        )
-                        (when (= (:errorMode (:agent action)) Agent'CONTINUE) => error
-                            nil
-                        )
-                    )
-                  #_"ActionQueue" next
-                    (loop-when [next nil #_"boolean" popped false] (not popped) => next
-                        (let [#_"ActionQueue" prior (.get (:aq (:agent action))) next (ActionQueue'new (.pop (:q prior)), error)]
-                            (recur next (.compareAndSet (:aq (:agent action)), prior, next))
-                        )
-                    )]
-                (when (and (nil? error) (pos? (.count (:q next))))
-                    (AgentAction''execute (cast AgentAction (.peek (:q next))))
-                )
-            )
-            (finally
-                (.set Agent'nested, nil)
-            )
-        )
-        nil
-    )
-
-    #_foreign
-    (defn #_"void" run---AgentAction [#_"AgentAction" this]
-        (AgentAction'doRun this)
-        nil
-    )
-)
-
-(class-ns Agent
-    (§ def #_"Keyword" Agent'CONTINUE (Keyword'intern (Symbol'intern nil, "continue")))
-    (§ def #_"Keyword" Agent'FAIL (Keyword'intern (Symbol'intern nil, "fail")))
-
-    (def- #_"AtomicLong" Agent'sendThreadPoolCounter (AtomicLong. 0))
-    (def- #_"AtomicLong" Agent'sendOffThreadPoolCounter (AtomicLong. 0))
-
-    (defn- #_"ThreadFactory" Agent'createThreadFactory [#_"String" format, #_"AtomicLong" threadPoolCounter]
-        (reify ThreadFactory
-            #_foreign
-            (#_"Thread" newThread [#_"ThreadFactory" _self, #_"Runnable" runnable]
-                (let [#_"Thread" thread (Thread. runnable)]
-                    (.setName thread, (String/format format, (object-array [ (.getAndIncrement threadPoolCounter) ])))
-                    thread
-                )
-            )
-        )
-    )
-
-    #_volatile
-    (§ def #_"ExecutorService" Agent'pooledExecutor (Executors/newFixedThreadPool (+ 2 (.availableProcessors (Runtime/getRuntime))), (Agent'createThreadFactory "cloiure-agent-send-pool-%d", Agent'sendThreadPoolCounter)))
-
-    #_volatile
-    (§ def #_"ExecutorService" Agent'soloExecutor (Executors/newCachedThreadPool (Agent'createThreadFactory "cloiure-agent-send-off-pool-%d", Agent'sendOffThreadPoolCounter)))
-
-    (def #_"ThreadLocal<IPersistentVector>" Agent'nested (ThreadLocal.))
-
-    (defn #_"void" Agent'shutdown []
-        (.shutdown Agent'soloExecutor)
-        (.shutdown Agent'pooledExecutor)
-        nil
-    )
-
-    (defn- #_"Agent" Agent'init []
-        (hash-map
-            #_volatile
-            #_"Object" :state nil
-            #_"AtomicReference<ActionQueue>" :aq (AtomicReference. ActionQueue'EMPTY)
-
-            #_volatile
-            #_"Keyword" :errorMode Agent'CONTINUE
-            #_volatile
-            #_"IFn" :errorHandler nil
-        )
-    )
-
-    (defn #_"Agent" Agent'new-1 [#_"Object" state]
-        (Agent'new-2 state, nil)
-    )
-
-    (defn #_"Agent" Agent'new-2 [#_"Object" state, #_"IPersistentMap" meta]
-        (let [this (merge (ARef'new-1 meta) (Agent'init))]
-            (Agent''setState this, state)
-            this
-        )
-    )
-
-    #_method
-    (defn #_"boolean" Agent''setState [#_"Agent" this, #_"Object" newState]
-        (ARef''validate-2 this, newState)
-        (let [#_"boolean" ret (not= (:state this) newState)]
-            (ß ass this (assoc this :state newState))
-            ret
-        )
-    )
-
-    #_override
-    (defn #_"Object" IDeref'''deref--Agent [#_"Agent" this]
-        (:state this)
-    )
-
-    #_method
-    (defn #_"Throwable" Agent''getError [#_"Agent" this]
-        (:error (.get (:aq this)))
-    )
-
-    #_method
-    (defn #_"void" Agent''setErrorMode [#_"Agent" this, #_"Keyword" k]
-        (ß ass this (assoc this :errorMode k))
-        nil
-    )
-
-    #_method
-    (defn #_"Keyword" Agent''getErrorMode [#_"Agent" this]
-        (:errorMode this)
-    )
-
-    #_method
-    (defn #_"void" Agent''setErrorHandler [#_"Agent" this, #_"IFn" f]
-        (ß ass this (assoc this :errorHandler f))
-        nil
-    )
-
-    #_method
-    (defn #_"IFn" Agent''getErrorHandler [#_"Agent" this]
-        (:errorHandler this)
-    )
-
-    #_method
-    (defn #_"Object" Agent''restart [#_"Agent" this, #_"Object" newState, #_"boolean" clearActions]
-        (§ sync this
-            (when (some? (Agent''getError this)) => (throw (RuntimeException. "Agent does not need a restart"))
-                (ARef''validate-2 this, newState)
-                (ß ass this (assoc this :state newState))
-                (when-not clearActions => (.set (:aq this), ActionQueue'EMPTY)
-                    (let [#_"ActionQueue" prior
-                            (loop-when [prior nil #_"boolean" restarted false] (not restarted) => prior
-                                (let [prior (.get (:aq this))]
-                                    (recur prior (.compareAndSet (:aq this), prior, (ActionQueue'new (:q prior), nil)))
-                                )
-                            )]
-                        (when (pos? (.count (:q prior)))
-                            (AgentAction''execute (cast AgentAction (.peek (:q prior))))
-                        )
-                    )
-                )
-                newState
-            )
-        )
-    )
-
-    #_method
-    (defn #_"Object" Agent''dispatch [#_"Agent" this, #_"IFn" fn, #_"ISeq" args, #_"Executor" exec]
-        (let-when [#_"Throwable" e (Agent''getError this)] (nil? e) => (throw (RuntimeException. "Agent is failed, needs restart", e))
-            (Agent'dispatchAction (AgentAction'new this, fn, args, exec))
-            this
-        )
-    )
-
-    (defn #_"void" Agent'dispatchAction [#_"AgentAction" action]
-        (let [#_"LockingTransaction" trans (LockingTransaction'getRunning)]
-            (cond
-                (some? trans)               (LockingTransaction''enqueue trans, action)
-                (some? (.get Agent'nested)) (.set Agent'nested, (.cons (.get Agent'nested), action))
-                :else                       (Agent''enqueue (:agent action), action)
-            )
-        )
-        nil
-    )
-
-    #_method
-    (defn #_"void" Agent''enqueue [#_"Agent" this, #_"AgentAction" action]
-        (let [#_"ActionQueue" prior
-                (loop-when [prior nil #_"boolean" queued false] (not queued) => prior
-                    (let [prior (.get (:aq this))]
-                        (recur prior (.compareAndSet (:aq this), prior, (ActionQueue'new (cast IPersistentStack (.cons (:q prior), action)), (:error prior))))
-                    )
-                )]
-            (when (and (zero? (.count (:q prior))) (nil? (:error prior)))
-                (AgentAction''execute action)
-            )
-        )
-        nil
-    )
-
-    #_method
-    (defn #_"int" Agent''getQueueCount [#_"Agent" this]
-        (.count (:q (.get (:aq this))))
-    )
-
-    (defn #_"int" Agent'releasePendingSends []
-        (let-when [#_"IPersistentVector" sends (.get Agent'nested)] (some? sends) => 0
-            (dotimes [#_"int" i (.count sends)]
-                (let [#_"AgentAction" a (cast AgentAction (.valAt sends, i))]
-                    (Agent''enqueue (:agent a), a)
-                )
-            )
-            (.set Agent'nested, PersistentVector'EMPTY)
-            (.count sends)
-        )
     )
 )
 )
@@ -18181,7 +17882,6 @@
             #_"long" :startTime 0
 
             #_"RetryEx" :retryex (RetryEx'new)
-            #_"List<AgentAction>" :actions (ArrayList.)
             #_"HashMap<Ref, Object>" :vals (HashMap.)
             #_"HashSet<Ref>" :sets (HashSet.)
             #_"TreeMap<Ref, List<CFn>>" :commutes (TreeMap.)
@@ -18458,13 +18158,9 @@
                                             (doseq [#_"Notify" n notify]
                                                 (ARef''notifyWatches (:ref n), (:oldval n), (:newval n))
                                             )
-                                            (doseq [#_"AgentAction" action (:actions this)]
-                                                (Agent'dispatchAction action)
-                                            )
                                         )
                                         (finally
                                             (.clear notify)
-                                            (.clear (:actions this))
                                         )
                                     )
                                 )
@@ -18477,12 +18173,6 @@
                 )
             )
         )
-    )
-
-    #_method
-    (defn #_"void" LockingTransaction''enqueue [#_"LockingTransaction" this, #_"AgentAction" action]
-        (.add (:actions this), action)
-        nil
     )
 
     #_method
@@ -27474,8 +27164,6 @@
 
     (§ def #_"Keyword" RT'TAG_KEY (Keyword'intern (Symbol'intern nil, "tag")))
 
-    (§ def #_"Var" RT'AGENT (Var''setDynamic-1 (Var'intern RT'CLOIURE_NS, (Symbol'intern "*agent*"), nil)))
-
     (§ def #_"Var" RT'ASSERT (Var''setDynamic-1 (Var'intern RT'CLOIURE_NS, (Symbol'intern "*assert*"), RT'T)))
     (§ def #_"Var" RT'MATH_CONTEXT (Var''setDynamic-1 (Var'intern RT'CLOIURE_NS, (Symbol'intern "*math-context*"), nil)))
 
@@ -27537,8 +27225,6 @@
     (§ static
         (Var''setTag RT'OUT, (Symbol'intern "java.io.Writer"))
         (Var''setTag RT'CURRENT_NS, (Symbol'intern "cloiure.lang.Namespace"))
-        (Var''setMeta RT'AGENT, (RT'map RT'DOC_KEY, "The agent currently running an action on this thread, else nil."))
-        (Var''setTag RT'AGENT, (Symbol'intern "cloiure.lang.Agent"))
         (Var''setTag RT'MATH_CONTEXT, (Symbol'intern "java.math.MathContext"))
         (let [#_"Var" v (Var'intern RT'CLOIURE_NS, RT'NAMESPACE, bootNamespace)
               _ (Var''setMacro v)
@@ -29504,15 +29190,6 @@
     (§ def #_"Keyword" Var'macroKey (Keyword'intern (Symbol'intern nil, "macro")))
     (§ def #_"Keyword" Var'nameKey (Keyword'intern (Symbol'intern nil, "name")))
     (§ def #_"Keyword" Var'nsKey (Keyword'intern (Symbol'intern nil, "ns")))
-
-    (defn #_"Object" Var'getThreadBindingFrame []
-        (.get Var'dvals)
-    )
-
-    (defn #_"void" Var'resetThreadBindingFrame [#_"Object" frame]
-        (.set Var'dvals, (cast Frame frame))
-        nil
-    )
 
     (defn #_"Var" Var'intern
         ([#_"Namespace" ns, #_"Symbol" sym]

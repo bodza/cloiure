@@ -2011,18 +2011,6 @@
  ;;
 (§ defn find-var [sym] (cloiure.lang.Var/find sym))
 
-(§ defn ^:private binding-conveyor-fn [f]
-    (let [frame (cloiure.lang.Var/cloneThreadBindingFrame)]
-        (fn
-            ([] (cloiure.lang.Var/resetThreadBindingFrame frame) (f))
-            ([x] (cloiure.lang.Var/resetThreadBindingFrame frame) (f x))
-            ([x y] (cloiure.lang.Var/resetThreadBindingFrame frame) (f x y))
-            ([x y z] (cloiure.lang.Var/resetThreadBindingFrame frame) (f x y z))
-            ([x y z & args] (cloiure.lang.Var/resetThreadBindingFrame frame) (apply f x y z args))
-        )
-    )
-)
-
 (§ defn ^:private setup-reference [^cloiure.lang.ARef r options]
     (let [opts (apply hash-map options)]
         (when (:meta opts)
@@ -2034,191 +2022,6 @@
         r
     )
 )
-
-;;;
- ; Creates and returns an agent with an initial value of state and
- ; zero or more options (in any order):
- ;
- ; :meta          metadata-map
- ; :validator     validate-fn
- ; :error-handler handler-fn
- ; :error-mode    mode-keyword
- ;
- ; If metadata-map is supplied, it will become the metadata on the
- ; agent. validate-fn must be nil or a side-effect-free fn of one
- ; argument, which will be passed the intended new state on any state
- ; change. If the new state is unacceptable, the validate-fn should
- ; return false or throw an exception. handler-fn is called if an
- ; action throws an exception or if validate-fn rejects a new state --
- ; see set-error-handler! for details. The mode-keyword may be either
- ; :continue (the default if an error-handler is given) or :fail (the
- ; default if no error-handler is given) -- see set-error-mode! for
- ; details.
- ;;
-(§ defn agent [state & options]
-    (let [a (cloiure.lang.Agent. state) opts (apply hash-map options)]
-        (setup-reference a options)
-        (when (:error-handler opts)
-            (.setErrorHandler a (:error-handler opts))
-        )
-        (.setErrorMode a (or (:error-mode opts) (if (:error-handler opts) :continue :fail)))
-        a
-    )
-)
-
-;;;
- ; Sets the ExecutorService to be used by send.
- ;;
-(§ defn set-agent-send-executor! [executor]
-    (set! cloiure.lang.Agent/pooledExecutor executor)
-)
-
-;;;
- ; Sets the ExecutorService to be used by send-off.
- ;;
-(§ defn set-agent-send-off-executor! [executor]
-    (set! cloiure.lang.Agent/soloExecutor executor)
-)
-
-;;;
- ; Dispatch an action to an agent. Returns the agent immediately.
- ; Subsequently, in a thread supplied by executor, the state of the agent
- ; will be set to the value of:
- ;
- ; (apply action-fn state-of-agent args)
- ;;
-(§ defn send-via [executor ^cloiure.lang.Agent a f & args]
-    (.dispatch a (binding [*agent* a] (binding-conveyor-fn f)) args executor)
-)
-
-;;;
- ; Dispatch an action to an agent. Returns the agent immediately.
- ; Subsequently, in a thread from a thread pool, the state of the agent
- ; will be set to the value of:
- ;
- ; (apply action-fn state-of-agent args)
- ;;
-(§ defn send [^cloiure.lang.Agent a f & args]
-    (apply send-via cloiure.lang.Agent/pooledExecutor a f args)
-)
-
-;;;
- ; Dispatch a potentially blocking action to an agent. Returns the agent immediately.
- ; Subsequently, in a separate thread, the state of the agent will be set to the value of:
- ;
- ; (apply action-fn state-of-agent args)
- ;;
-(§ defn send-off [^cloiure.lang.Agent a f & args]
-    (apply send-via cloiure.lang.Agent/soloExecutor a f args)
-)
-
-;;;
- ; Normally, actions sent directly or indirectly during another action
- ; are held until the action completes (changes the agent's state).
- ; This function can be used to dispatch any pending sent actions immediately.
- ; This has no impact on actions sent during a transaction, which are still held until commit.
- ; If no action is occurring, does nothing. Returns the number of actions dispatched.
- ;;
-(§ defn release-pending-sends [] (cloiure.lang.Agent/releasePendingSends))
-
-;;;
- ; Adds a watch function to an agent/atom/var/ref reference. The watch
- ; fn must be a fn of 4 args: a key, the reference, its old-state, its
- ; new-state. Whenever the reference's state might have been changed,
- ; any registered watches will have their functions called. The watch fn
- ; will be called synchronously, on the agent's thread if an agent,
- ; before any pending sends if agent or ref. Note that an atom's or
- ; ref's state may have changed again prior to the fn call, so use
- ; old/new-state rather than derefing the reference. Note also that watch
- ; fns may be called from multiple threads simultaneously. Var watchers
- ; are triggered only by root binding changes, not thread-local
- ; set!s. Keys must be unique per reference, and can be used to remove
- ; the watch with remove-watch, but are otherwise considered opaque by
- ; the watch mechanism.
- ;;
-(§ defn add-watch [^cloiure.lang.IRef reference key fn]
-    (.addWatch reference key fn)
-)
-
-;;;
- ; Removes a watch (set by add-watch) from a reference.
- ;;
-(§ defn remove-watch [^cloiure.lang.IRef reference key]
-    (.removeWatch reference key)
-)
-
-;;;
- ; Returns the exception thrown during an asynchronous action of the agent
- ; if the agent is failed. Returns nil if the agent is not failed.
- ;;
-(§ defn agent-error [^cloiure.lang.Agent a]
-    (.getError a)
-)
-
-;;;
- ; When an agent is failed, changes the agent state to new-state and
- ; then un-fails the agent so that sends are allowed again. If
- ; a :clear-actions true option is given, any actions queued on the
- ; agent that were being held while it was failed will be discarded,
- ; otherwise those held actions will proceed. The new-state must pass
- ; the validator if any, or restart will throw an exception and the
- ; agent will remain failed with its old state and error. Watchers,
- ; if any, will NOT be notified of the new state. Throws an exception
- ; if the agent is not failed.
- ;;
-(§ defn restart-agent [^cloiure.lang.Agent a new-state & options]
-    (let [opts (apply hash-map options)]
-        (.restart a new-state (if (:clear-actions opts) true false))
-    )
-)
-
-;;;
- ; Sets the error-handler of agent a to handler-fn. If an action
- ; being run by the agent throws an exception or doesn't pass the
- ; validator fn, handler-fn will be called with two arguments:
- ; the agent and the exception.
- ;;
-(§ defn set-error-handler! [^cloiure.lang.Agent a handler-fn]
-    (.setErrorHandler a handler-fn)
-)
-
-;;;
- ; Returns the error-handler of agent a, or nil if there is none.
- ; See set-error-handler!
- ;;
-(§ defn error-handler [^cloiure.lang.Agent a]
-    (.getErrorHandler a)
-)
-
-;;;
- ; Sets the error-mode of agent a to mode-keyword, which must be
- ; either :fail or :continue. If an action being run by the agent
- ; throws an exception or doesn't pass the validator fn, an
- ; error-handler may be called (see set-error-handler!), after which,
- ; if the mode is :continue, the agent will continue as if neither the
- ; action that caused the error nor the error itself ever happened.
- ;
- ; If the mode is :fail, the agent will become failed and will stop
- ; accepting new 'send' and 'send-off' actions, and any previously
- ; queued actions will be held until a 'restart-agent'. Deref will
- ; still work, returning the state of the agent before the error.
- ;;
-(§ defn set-error-mode! [^cloiure.lang.Agent a mode-keyword]
-    (.setErrorMode a mode-keyword)
-)
-
-;;;
- ; Returns the error-mode of agent a. See set-error-mode!
- ;;
-(§ defn error-mode [^cloiure.lang.Agent a]
-    (.getErrorMode a)
-)
-
-;;;
- ; Initiates a shutdown of the thread pools that back the agent system.
- ; Running actions will complete, but no new actions will be accepted.
- ;;
-(§ defn shutdown-agents [] (cloiure.lang.Agent/shutdown))
 
 ;;;
  ; Creates and returns a Ref with an initial value of x and zero or
@@ -2257,43 +2060,14 @@
     )
 )
 
-(§ defn ^:private deref-future
-    ([^java.util.concurrent.Future fut] (.get fut))
-    ([^java.util.concurrent.Future fut timeout-ms timeout-val]
-        (try (.get fut timeout-ms java.util.concurrent.TimeUnit/MILLISECONDS)
-            (catch java.util.concurrent.TimeoutException e
-                timeout-val
-            )
-        )
-    )
-)
-
 ;;;
- ; Also reader macro: @ref/@agent/@var/@atom/@delay/@future/@promise.
+ ; Also reader macro: @ref/@var/@atom/@delay.
  ; Within a transaction, returns the in-transaction-value of ref, else
- ; returns the most-recently-committed value of ref. When applied to a var,
- ; agent or atom, returns its current state. When applied to a delay, forces
- ; it if not already forced. When applied to a future, will block if
- ; computation not complete. When applied to a promise, will block
- ; until a value is delivered. The variant taking a timeout can be
- ; used for blocking references (futures and promises), and will return
- ; timeout-val if the timeout (in milliseconds) is reached before a
- ; value is available. See also - realized?.
+ ; returns the most-recently-committed value of ref. When applied to a var
+ ; or atom, returns its current state. When applied to a delay, forces
+ ; it if not already forced. See also - realized?.
  ;;
-(§ defn deref
-    ([ref]
-        (if (instance? cloiure.lang.IDeref ref)
-            (.deref ^cloiure.lang.IDeref ref)
-            (deref-future ref)
-        )
-    )
-    ([ref timeout-ms timeout-val]
-        (if (instance? cloiure.lang.IBlockingDeref ref)
-            (.deref ^cloiure.lang.IBlockingDeref ref timeout-ms timeout-val)
-            (deref-future ref timeout-ms timeout-val)
-        )
-    )
-)
+(§ defn deref [ref] (.deref ^cloiure.lang.IDeref ref))
 
 ;;;
  ; Creates and returns an Atom with an initial value of x and zero or
@@ -2363,7 +2137,7 @@
 )
 
 ;;;
- ; Sets the validator-fn for a var/ref/agent/atom.
+ ; Sets the validator-fn for a var/ref/atom.
  ; validator-fn must be nil or a side-effect-free fn of one argument, which
  ; will be passed the intended new state on any state change. If the new state
  ; is unacceptable, the validator-fn should return false or throw an exception.
@@ -2375,14 +2149,14 @@
 )
 
 ;;;
- ; Gets the validator-fn for a var/ref/agent/atom.
+ ; Gets the validator-fn for a var/ref/atom.
  ;;
 (§ defn get-validator [^cloiure.lang.IRef iref]
     (.getValidator iref)
 )
 
 ;;;
- ; Atomically sets the metadata for a namespace/var/ref/agent/atom to be:
+ ; Atomically sets the metadata for a namespace/var/ref/atom to be:
  ;
  ; (apply f its-current-meta args)
  ;
@@ -2393,7 +2167,7 @@
 )
 
 ;;;
- ; Atomically resets the metadata for a namespace/var/ref/agent/atom.
+ ; Atomically resets the metadata for a namespace/var/ref/atom.
  ;;
 (§ defn reset-meta! [^cloiure.lang.IReference iref metadata-map]
     (.resetMeta iref metadata-map)
@@ -3367,54 +3141,6 @@
                 )
             )]
         (nth (step nil (seq seq-exprs)) 1)
-    )
-)
-
-;;;
- ; Blocks the current thread (indefinitely!) until all actions dispatched thus far,
- ; from this thread or agent, to the agent(s) have occurred. Will block on failed agents.
- ; Will never return if a failed agent is restarted with :clear-actions true or shutdown-agents was called.
- ;;
-(§ defn await [& agents]
-    (io! "await in transaction"
-        (when *agent*
-            (throw (Exception. "Can't await in agent action"))
-        )
-        (let [latch (java.util.concurrent.CountDownLatch. (count agents))
-              count-down (fn [agent] (.countDown latch) agent)]
-            (doseq [agent agents]
-                (send agent count-down)
-            )
-            (.await latch)
-        )
-    )
-)
-
-(§ defn await1 [^cloiure.lang.Agent a]
-    (when (pos? (.getQueueCount a))
-        (await a)
-    )
-    a
-)
-
-;;;
- ; Blocks the current thread until all actions dispatched thus
- ; far (from this thread or agent) to the agents have occurred,
- ; or the timeout (in milliseconds) has elapsed. Returns logical
- ; false if returning due to timeout, logical true otherwise.
- ;;
-(§ defn await-for [timeout-ms & agents]
-    (io! "await-for in transaction"
-        (when *agent*
-            (throw (Exception. "Can't await in agent action"))
-        )
-        (let [latch (java.util.concurrent.CountDownLatch. (count agents))
-              count-down (fn [agent] (.countDown latch) agent)]
-            (doseq [agent agents]
-                (send agent count-down)
-            )
-            (.await latch timeout-ms java.util.concurrent.TimeUnit/MILLISECONDS)
-        )
     )
 )
 
@@ -5450,68 +5176,6 @@
  ;;
 (§ defn bytes? [x] (if (nil? x) false (= (.getComponentType (class x)) Byte/TYPE)))
 
-(§ import [java.util.concurrent BlockingQueue LinkedBlockingQueue])
-
-;;;
- ; Creates a queued seq on another (presumably lazy) seq s. The queued
- ; seq will produce a concrete seq in the background, and can get up to
- ; n items ahead of the consumer. n-or-q can be an integer n buffer
- ; size, or an instance of java.util.concurrent BlockingQueue. Note
- ; that reading from a seque can block if the reader gets ahead of the
- ; producer.
- ;;
-(§ defn seque
-    ([s] (seque 100 s))
-    ([n-or-q s]
-        (let [^BlockingQueue q (if (instance? BlockingQueue n-or-q) n-or-q (LinkedBlockingQueue. (int n-or-q)))
-              NIL (Object.) ;; nil sentinel since LBQ doesn't support nils
-              agt (agent (lazy-seq s)) ;; never start with nil, that signifies we've already put eos
-              log-error (fn [q e] (if (.offer q q) (throw e) e))
-              fill
-                (fn [s]
-                    (when s
-                        (if (instance? Exception s) ;; we failed to .offer an error earlier
-                            (log-error q s)
-                            (try
-                                (loop [[x & xs :as s] (seq s)]
-                                    (if s
-                                        (if (.offer q (if (nil? x) NIL x))
-                                            (recur xs)
-                                            s
-                                        )
-                                        (when-not (.offer q q) ;; q itself is eos sentinel
-                                            () ;; empty seq, not nil, so we know to put eos next time
-                                        )
-                                    )
-                                )
-                                (catch Exception e
-                                    (log-error q e)
-                                )
-                            )
-                        )
-                    )
-                )
-              drain
-                (fn drain []
-                    (lazy-seq
-                        (let [x (.take q)]
-                            (if (identical? x q) ;; q itself is eos sentinel
-                                (do @agt nil) ;; touch agent just to propagate errors
-                                (do
-                                    (send-off agt fill)
-                                    (release-pending-sends)
-                                    (cons (if (identical? x NIL) nil x) (drain))
-                                )
-                            )
-                        )
-                    )
-                )]
-            (send-off agt fill)
-            (drain)
-        )
-    )
-)
-
 ;;;
  ; Returns true if x is an instance of Class.
  ;;
@@ -6429,16 +6093,6 @@
     non-alphanumeric characters converted to the appropriate escape sequences.
     Defaults to true."
 )
-
-;;;
- ; Returns true if x is a future.
- ;;
-(§ defn future? [x] (instance? java.util.concurrent.Future x))
-
-;;;
- ; Returns true if future f is done.
- ;;
-(§ defn future-done? [^java.util.concurrent.Future f] (.isDone f))
 
 ;;;
  ; fnspec => (fname [params*] exprs) or (fname ([params*] exprs)+)
@@ -7487,7 +7141,7 @@
         (hash-map
             :status
                 (cond
-                    (or ex (and (instance? cloiure.lang.Agent o) (agent-error o))) :failed
+                    ex :failed
                     pending :pending
                     :else :ready
                 )
@@ -9405,147 +9059,6 @@
     (-> (reduce (fn [v o] (if (pred o) (conj! v o) v)) (transient []) coll) persistent!)
 )
 
-;; futures (needs proxy)
-
-;;;
- ; Takes a function of no args and yields a future object that will
- ; invoke the function in another thread, and will cache the result and
- ; return it on all subsequent calls to deref/@. If the computation has
- ; not yet finished, calls to deref/@ will block, unless the variant
- ; of deref with timeout is used. See also - realized?.
- ;;
-(§ defn future-call [f]
-    (let [f (binding-conveyor-fn f)
-          fut (.submit cloiure.lang.Agent/soloExecutor ^Callable f)]
-        (reify
-            cloiure.lang.IDeref
-            (deref [_] (deref-future fut))
-
-            cloiure.lang.IBlockingDeref
-            (deref [_ timeout-ms timeout-val] (deref-future fut timeout-ms timeout-val))
-
-            cloiure.lang.IPending
-            (isRealized [_] (.isDone fut))
-
-            java.util.concurrent.Future
-            (get [_] (.get fut))
-            (get [_ timeout unit] (.get fut timeout unit))
-            (isCancelled [_] (.isCancelled fut))
-            (isDone [_] (.isDone fut))
-            (cancel [_ interrupt?] (.cancel fut interrupt?))
-        )
-    )
-)
-
-;;;
- ; Takes a body of expressions and yields a future object that will
- ; invoke the body in another thread, and will cache the result and
- ; return it on all subsequent calls to deref/@. If the computation has
- ; not yet finished, calls to deref/@ will block, unless the variant of
- ; deref with timeout is used. See also - realized?.
- ;;
-(§ defmacro future [& body] `(future-call (^{:once true} fn* [] ~@body)))
-
-;;;
- ; Cancels the future, if possible.
- ;;
-(§ defn future-cancel [^java.util.concurrent.Future f] (.cancel f true))
-
-;;;
- ; Returns true if future f is cancelled.
- ;;
-(§ defn future-cancelled? [^java.util.concurrent.Future f] (.isCancelled f))
-
-;;;
- ; Like map, except f is applied in parallel. Semi-lazy in that the
- ; parallel computation stays ahead of the consumption, but doesn't
- ; realize the entire result unless required. Only useful for
- ; computationally intensive functions where the time of f dominates
- ; the coordination overhead.
- ;;
-(§ defn pmap
-    ([f coll]
-        (let [n (+ 2 (.availableProcessors (Runtime/getRuntime)))
-              rets (map #(future (f %)) coll)
-              step
-                (fn step [[x & xs :as vs] fs]
-                    (lazy-seq
-                        (if-let [s (seq fs)]
-                            (cons (deref x) (step xs (rest s)))
-                            (map deref vs)
-                        )
-                    )
-                )]
-            (step rets (drop n rets))
-        )
-    )
-    ([f coll & colls]
-        (let [step
-                (fn step [cs]
-                    (lazy-seq
-                        (let [ss (map seq cs)]
-                            (when (every? identity ss)
-                                (cons (map first ss) (step (map rest ss)))
-                            )
-                        )
-                    )
-                )]
-            (pmap #(apply f %) (step (cons coll colls)))
-        )
-    )
-)
-
-;;;
- ; Executes the no-arg fns in parallel, returning a lazy sequence of their values.
- ;;
-(§ defn pcalls [& fns] (pmap #(%) fns))
-
-;;;
- ; Returns a lazy sequence of the values of the exprs, which are evaluated in parallel.
- ;;
-(§ defmacro pvalues [& exprs] `(pcalls ~@(map #(list `fn [] %) exprs)))
-
-;;;
- ; Returns a promise object that can be read with deref/@, and set,
- ; once only, with deliver. Calls to deref/@ prior to delivery will
- ; block, unless the variant of deref with timeout is used. All
- ; subsequent derefs will return the same delivered value without
- ; blocking. See also - realized?.
- ;;
-(§ defn promise []
-    (let [d (java.util.concurrent.CountDownLatch. 1) v (atom d)]
-        (reify
-            cloiure.lang.IDeref
-            (deref [_] (.await d) @v)
-
-            cloiure.lang.IBlockingDeref
-            (deref [_ timeout-ms timeout-val]
-                (if (.await d timeout-ms java.util.concurrent.TimeUnit/MILLISECONDS)
-                    @v
-                    timeout-val
-                )
-            )
-
-            cloiure.lang.IPending
-            (isRealized [this] (zero? (.getCount d)))
-
-            cloiure.lang.IFn
-            (invoke [this x]
-                (when (and (pos? (.getCount d)) (compare-and-set! v d x))
-                    (.countDown d)
-                    this
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; Delivers the supplied value to the promise, releasing any pending derefs.
- ; A subsequent call to deliver on a promise will have no effect.
- ;;
-(§ defn deliver [promise val] (promise val))
-
 ;;;
  ; Takes any nested combination of sequential things (lists, vectors, etc.)
  ; and returns their contents as a single, flat sequence.
@@ -10071,7 +9584,7 @@
 )
 
 ;;;
- ; Returns true if a value has been produced for a promise, delay, future or lazy sequence.
+ ; Returns true if a value has been produced for a delay or lazy sequence.
  ;;
 (§ defn realized? [^cloiure.lang.IPending x] (.isRealized x))
 
