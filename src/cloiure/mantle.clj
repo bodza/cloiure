@@ -2011,13 +2011,10 @@
  ;;
 (§ defn find-var [sym] (cloiure.lang.Var/find sym))
 
-(§ defn ^:private setup-reference [^cloiure.lang.ARef r options]
+(§ defn ^:private setup-reference [^cloiure.lang.IReference r options]
     (let [opts (apply hash-map options)]
         (when (:meta opts)
             (.resetMeta r (:meta opts))
-        )
-        (when (:validator opts)
-            (.setValidator r (:validator opts))
         )
         r
     )
@@ -2033,17 +2030,12 @@
 (§ defn deref [ref] (.deref ^cloiure.lang.IDeref ref))
 
 ;;;
- ; Creates and returns an Atom with an initial value of x and zero or
- ; more options (in any order):
+ ; Creates and returns an Atom with an initial value of x and zero or more
+ ; options (in any order):
  ;
  ; :meta      metadata-map
- ; :validator validate-fn
  ;
- ; If metadata-map is supplied, it will become the metadata on the
- ; atom. validate-fn must be nil or a side-effect-free fn of one
- ; argument, which will be passed the intended new state on any state
- ; change. If the new state is unacceptable, the validate-fn should
- ; return false or throw an exception.
+ ; If metadata-map is supplied, it will become the metadata on the atom.
  ;;
 (§ defn atom
     ([x] (cloiure.lang.Atom. x))
@@ -2097,25 +2089,6 @@
  ;;
 (§ defn ^cloiure.lang.IPersistentVector reset-vals! [^cloiure.lang.IAtom2 atom newval]
     (.resetVals atom newval)
-)
-
-;;;
- ; Sets the validator-fn for a var/ref/atom.
- ; validator-fn must be nil or a side-effect-free fn of one argument, which
- ; will be passed the intended new state on any state change. If the new state
- ; is unacceptable, the validator-fn should return false or throw an exception.
- ; If the current state (root value if var) is not acceptable to the new validator,
- ; an exception will be thrown and the validator will not be changed.
- ;;
-(§ defn set-validator! [^cloiure.lang.IRef iref validator-fn]
-    (.setValidator iref validator-fn)
-)
-
-;;;
- ; Gets the validator-fn for a var/ref/atom.
- ;;
-(§ defn get-validator [^cloiure.lang.IRef iref]
-    (.getValidator iref)
 )
 
 ;;;
