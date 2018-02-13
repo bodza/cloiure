@@ -35,6 +35,10 @@
     (let [x (if (vector? x) x [`_# x]) z (when (seq w) `(cond-let ~@w))]
         `(if-let ~x ~y ~z)))
 
+(def mutable! volatile!)
+(def mreset! vreset!)
+(defmacro mswap! [& _] `(vswap! ~@_))
+
 (def % rem)
 (def & bit-and)
 (def | bit-or)
@@ -189,8 +193,6 @@
 (declare ExceptionInfo'new)
 (declare Intrinsics'oa)
 (declare Iterate'UNREALIZED_SEED Iterate'new Iterate'create)
-(declare IteratorSeqState'new)
-(declare IteratorSeq'create IteratorSeq'new)
 (declare Keyword'TABLE Keyword'RQ Keyword'intern Keyword'new Keyword'find Keyword'find-2 Keyword'find-1 Keyword''throwArity)
 (declare KeywordLookupSite'new KeywordLookupSite''ilookupThunk KeywordLookupSite''install)
 (declare LazilyPersistentVector'createOwning LazilyPersistentVector'fcount LazilyPersistentVector'create)
@@ -289,7 +291,7 @@
 (declare TBox'new)
 (declare Unbound'new)
 (declare Frame'new)
-(declare Var'dvals Var'rev Var'intern Var'internPrivate Var'find Var'create Var'new Var''setDynamic-1 Var''setDynamic-2 Var''isDynamic Var''isBound Var''get Var''alter Var''set Var''setMeta Var''setMacro Var''isMacro Var''isPublic Var''getRawRoot Var''getTag Var''setTag Var''hasRoot Var''bindRoot Var''swapRoot Var''unbindRoot Var''commuteRoot Var''alterRoot Var'pushThreadBindings Var'popThreadBindings Var'getThreadBindings Var''getThreadBinding Var''fn)
+(declare Var'dvals Var'rev Var'intern Var'internPrivate Var'find Var'create Var'new Var''setDynamic Var''isDynamic Var''isBound Var''get Var''alter Var''set Var''setMeta Var''setMacro Var''isMacro Var''isPublic Var''getRawRoot Var''getTag Var''setTag Var''hasRoot Var''bindRoot Var''swapRoot Var''unbindRoot Var''commuteRoot Var''alterRoot Var'pushThreadBindings Var'popThreadBindings Var'getThreadBindings Var''getThreadBinding Var''fn)
 (declare Volatile'new Volatile''reset)
 
 (declare BigInt'ZERO BigInt'ONE)
@@ -3019,11 +3021,6 @@
 
 (java-ns cloiure.lang.Iterate
     (class! Iterate [#_"ASeq" IReduce IPending])
-)
-
-(java-ns cloiure.lang.IteratorSeq
-    (class! IteratorSeqState [])
-    (class! IteratorSeq [#_"ASeq"])
 )
 
 (java-ns cloiure.lang.Keyword
@@ -6065,7 +6062,7 @@
 
     #_override
     (defn #_"Iterator" APersistentVector'''rangedIterator--APersistentVector [#_"APersistentVector" this, #_"int" start, #_"int" end]
-        (let [#_"int'" vi (volatile! start)]
+        (let [#_"int'" vi (mutable! start)]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6076,7 +6073,7 @@
                 (#_"Object" next [#_"Iterator" _self]
                     (when (< @vi end) => (throw (NoSuchElementException.))
                         (let [_ (.nth this, @vi)]
-                            (vswap! vi inc)
+                            (mswap! vi inc)
                             _
                         )
                     )
@@ -6095,7 +6092,7 @@
 
     #_foreign
     (defn #_"Iterator" iterator---APersistentVector [#_"APersistentVector" this]
-        (let [#_"int'" vi (volatile! 0)]
+        (let [#_"int'" vi (mutable! 0)]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6106,7 +6103,7 @@
                 (#_"Object" next [#_"Iterator" _self]
                     (when (< @vi (.count this)) => (throw (NoSuchElementException.))
                         (let [_ (.nth this, @vi)]
-                            (vswap! vi inc)
+                            (mswap! vi inc)
                             _
                         )
                     )
@@ -6407,7 +6404,7 @@
 
 (class-ns ArrayIter_int
     (defn #_"Iterator" ArrayIter_int'new [#_"int[]" a, #_"int" i]
-        (let [#_"int'" vi (volatile! i)]
+        (let [#_"int'" vi (mutable! i)]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6418,7 +6415,7 @@
                 (#_"Long" next [#_"Iterator" _self]
                     (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
                         (let [_ (Long/valueOf (aget a @vi))]
-                            (vswap! vi inc)
+                            (mswap! vi inc)
                             _
                         )
                     )
@@ -6430,7 +6427,7 @@
 
 (class-ns ArrayIter_float
     (defn #_"Iterator" ArrayIter_float'new [#_"float[]" a, #_"int" i]
-        (let [#_"int'" vi (volatile! i)]
+        (let [#_"int'" vi (mutable! i)]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6441,7 +6438,7 @@
                 (#_"Double" next [#_"Iterator" _self]
                     (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
                         (let [_ (Double/valueOf (aget a @vi))]
-                            (vswap! vi inc)
+                            (mswap! vi inc)
                             _
                         )
                     )
@@ -6453,7 +6450,7 @@
 
 (class-ns ArrayIter_double
     (defn #_"Iterator" ArrayIter_double'new [#_"double[]" a, #_"int" i]
-        (let [#_"int'" vi (volatile! i)]
+        (let [#_"int'" vi (mutable! i)]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6464,7 +6461,7 @@
                 (#_"Double" next [#_"Iterator" _self]
                     (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
                         (let [_ (aget a @vi)]
-                            (vswap! vi inc)
+                            (mswap! vi inc)
                             _
                         )
                     )
@@ -6476,7 +6473,7 @@
 
 (class-ns ArrayIter_long
     (defn #_"Iterator" ArrayIter_long'new [#_"long[]" a, #_"int" i]
-        (let [#_"int'" vi (volatile! i)]
+        (let [#_"int'" vi (mutable! i)]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6487,7 +6484,7 @@
                 (#_"Long" next [#_"Iterator" _self]
                     (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
                         (let [_ (Long/valueOf (aget a @vi))]
-                            (vswap! vi inc)
+                            (mswap! vi inc)
                             _
                         )
                     )
@@ -6499,7 +6496,7 @@
 
 (class-ns ArrayIter_byte
     (defn #_"Iterator" ArrayIter_byte'new [#_"byte[]" a, #_"int" i]
-        (let [#_"int'" vi (volatile! i)]
+        (let [#_"int'" vi (mutable! i)]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6510,7 +6507,7 @@
                 (#_"Byte" next [#_"Iterator" _self]
                     (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
                         (let [_ (aget a @vi)]
-                            (vswap! vi inc)
+                            (mswap! vi inc)
                             _
                         )
                     )
@@ -6522,7 +6519,7 @@
 
 (class-ns ArrayIter_char
     (defn #_"Iterator" ArrayIter_char'new [#_"char[]" a, #_"int" i]
-        (let [#_"int'" vi (volatile! i)]
+        (let [#_"int'" vi (mutable! i)]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6533,7 +6530,7 @@
                 (#_"Character" next [#_"Iterator" _self]
                     (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
                         (let [_ (aget a @vi)]
-                            (vswap! vi inc)
+                            (mswap! vi inc)
                             _
                         )
                     )
@@ -6545,7 +6542,7 @@
 
 (class-ns ArrayIter_short
     (defn #_"Iterator" ArrayIter_short'new [#_"short[]" a, #_"int" i]
-        (let [#_"int'" vi (volatile! i)]
+        (let [#_"int'" vi (mutable! i)]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6556,7 +6553,7 @@
                 (#_"Long" next [#_"Iterator" _self]
                     (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
                         (let [_ (Long/valueOf (aget a @vi))]
-                            (vswap! vi inc)
+                            (mswap! vi inc)
                             _
                         )
                     )
@@ -6568,7 +6565,7 @@
 
 (class-ns ArrayIter_boolean
     (defn #_"Iterator" ArrayIter_boolean'new [#_"boolean[]" a, #_"int" i]
-        (let [#_"int'" vi (volatile! i)]
+        (let [#_"int'" vi (mutable! i)]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6579,7 +6576,7 @@
                 (#_"Boolean" next [#_"Iterator" _self]
                     (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
                         (let [_ (Boolean/valueOf (aget a @vi))]
-                            (vswap! vi inc)
+                            (mswap! vi inc)
                             _
                         )
                     )
@@ -6633,7 +6630,7 @@
     )
 
     (defn #_"Iterator" ArrayIter'new [#_"Object" array, #_"int" i]
-        (let [#_"Object[]" a (cast RT'OBJECTS_CLASS array) #_"int'" vi (volatile! i)]
+        (let [#_"Object[]" a (cast RT'OBJECTS_CLASS array) #_"int'" vi (mutable! i)]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6644,7 +6641,7 @@
                 (#_"Object" next [#_"Iterator" _self]
                     (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
                         (let [_ (aget a @vi)]
-                            (vswap! vi inc)
+                            (mswap! vi inc)
                             _
                         )
                     )
@@ -7896,7 +7893,7 @@
                                   #_"IPersistentMap" mm (.meta sym)
                                   #_"boolean" isDynamic (RT'booleanCast-1o (RT'get-2 mm, Compiler'dynamicKey))]
                                 (when isDynamic
-                                    (Var''setDynamic-1 v)
+                                    (Var''setDynamic v)
                                 )
                                 (when (and (not isDynamic) (.startsWith (:name sym), "*") (.endsWith (:name sym), "*") (< 2 (.length (:name sym))))
                                     (.format (RT'errPrintWriter), "Warning: %s not declared dynamic and thus is not dynamically rebindable, but its name suggests otherwise. Please either indicate ^:dynamic or change the name.\n", (object-array [ sym ]))
@@ -7957,7 +7954,7 @@
                     )
                 )
             )
-            (Var''setDynamic-2 (:var this), (:isDynamic this))
+            (Var''setDynamic (:var this), (:isDynamic this))
             (catch Throwable e
                 (throw (if (instance? CompilerException e) (cast CompilerException e) (CompilerException'new (:line this), (:column this), e)))
             )
@@ -14215,53 +14212,53 @@
     )
 
     ;; symbol->localbinding
-    (§ def #_"Var" Compiler'LOCAL_ENV (Var''setDynamic-1 (Var'create nil)))
+    (§ def #_"Var" Compiler'LOCAL_ENV (Var''setDynamic (Var'create nil)))
 
     ;; vector<localbinding>
-    (§ def #_"Var" Compiler'LOOP_LOCALS (Var''setDynamic-1 (Var'create)))
+    (§ def #_"Var" Compiler'LOOP_LOCALS (Var''setDynamic (Var'create)))
 
     ;; Label
-    (§ def #_"Var" Compiler'LOOP_LABEL (Var''setDynamic-1 (Var'create)))
+    (§ def #_"Var" Compiler'LOOP_LABEL (Var''setDynamic (Var'create)))
 
     ;; vector<object>
-    (§ def #_"Var" Compiler'CONSTANTS (Var''setDynamic-1 (Var'create)))
+    (§ def #_"Var" Compiler'CONSTANTS (Var''setDynamic (Var'create)))
 
     ;; IdentityHashMap
-    (§ def #_"Var" Compiler'CONSTANT_IDS (Var''setDynamic-1 (Var'create)))
+    (§ def #_"Var" Compiler'CONSTANT_IDS (Var''setDynamic (Var'create)))
 
     ;; vector<keyword>
-    (§ def #_"Var" Compiler'KEYWORD_CALLSITES (Var''setDynamic-1 (Var'create)))
+    (§ def #_"Var" Compiler'KEYWORD_CALLSITES (Var''setDynamic (Var'create)))
 
     ;; vector<var>
-    (§ def #_"Var" Compiler'PROTOCOL_CALLSITES (Var''setDynamic-1 (Var'create)))
+    (§ def #_"Var" Compiler'PROTOCOL_CALLSITES (Var''setDynamic (Var'create)))
 
     ;; set<var>
-    (§ def #_"Var" Compiler'VAR_CALLSITES (Var''setDynamic-1 (Var'create)))
+    (§ def #_"Var" Compiler'VAR_CALLSITES (Var''setDynamic (Var'create)))
 
     ;; keyword->constid
-    (§ def #_"Var" Compiler'KEYWORDS (Var''setDynamic-1 (Var'create)))
+    (§ def #_"Var" Compiler'KEYWORDS (Var''setDynamic (Var'create)))
 
     ;; var->constid
-    (§ def #_"Var" Compiler'VARS (Var''setDynamic-1 (Var'create)))
+    (§ def #_"Var" Compiler'VARS (Var''setDynamic (Var'create)))
 
     ;; FnFrame
-    (§ def #_"Var" Compiler'METHOD (Var''setDynamic-1 (Var'create nil)))
+    (§ def #_"Var" Compiler'METHOD (Var''setDynamic (Var'create nil)))
 
     ;; nil or not
-    (§ def #_"Var" Compiler'IN_CATCH_FINALLY (Var''setDynamic-1 (Var'create nil)))
+    (§ def #_"Var" Compiler'IN_CATCH_FINALLY (Var''setDynamic (Var'create nil)))
 
-    (§ def #_"Var" Compiler'METHOD_RETURN_CONTEXT (Var''setDynamic-1 (Var'create nil)))
+    (§ def #_"Var" Compiler'METHOD_RETURN_CONTEXT (Var''setDynamic (Var'create nil)))
 
-    (§ def #_"Var" Compiler'NO_RECUR (Var''setDynamic-1 (Var'create nil)))
+    (§ def #_"Var" Compiler'NO_RECUR (Var''setDynamic (Var'create nil)))
 
     ;; DynamicClassLoader
-    (§ def #_"Var" Compiler'LOADER (Var''setDynamic-1 (Var'create)))
+    (§ def #_"Var" Compiler'LOADER (Var''setDynamic (Var'create)))
 
     (§ def #_"Var" Compiler'INSTANCE (Var'intern (Namespace'findOrCreate (Symbol'intern "cloiure.core")), (Symbol'intern "instance?")))
 
     ;; Integer
-    (§ def #_"Var" Compiler'LINE (Var''setDynamic-1 (Var'create 0)))
-    (§ def #_"Var" Compiler'COLUMN (Var''setDynamic-1 (Var'create 0)))
+    (§ def #_"Var" Compiler'LINE (Var''setDynamic (Var'create 0)))
+    (§ def #_"Var" Compiler'COLUMN (Var''setDynamic (Var'create 0)))
 
     (defn #_"int" Compiler'lineDeref []
         (.intValue (cast Number (.deref Compiler'LINE)))
@@ -14272,22 +14269,22 @@
     )
 
     ;; Integer
-    (§ def #_"Var" Compiler'NEXT_LOCAL_NUM (Var''setDynamic-1 (Var'create 0)))
+    (§ def #_"Var" Compiler'NEXT_LOCAL_NUM (Var''setDynamic (Var'create 0)))
 
     ;; Integer
-    (§ def #_"Var" Compiler'RET_LOCAL_NUM (Var''setDynamic-1 (Var'create)))
+    (§ def #_"Var" Compiler'RET_LOCAL_NUM (Var''setDynamic (Var'create)))
 
-    (§ def #_"Var" Compiler'COMPILE_STUB_SYM (Var''setDynamic-1 (Var'create nil)))
-    (§ def #_"Var" Compiler'COMPILE_STUB_CLASS (Var''setDynamic-1 (Var'create nil)))
+    (§ def #_"Var" Compiler'COMPILE_STUB_SYM (Var''setDynamic (Var'create nil)))
+    (§ def #_"Var" Compiler'COMPILE_STUB_CLASS (Var''setDynamic (Var'create nil)))
 
     ;; PathNode chain
-    (§ def #_"Var" Compiler'CLEAR_PATH (Var''setDynamic-1 (Var'create nil)))
+    (§ def #_"Var" Compiler'CLEAR_PATH (Var''setDynamic (Var'create nil)))
 
     ;; tail of PathNode chain
-    (§ def #_"Var" Compiler'CLEAR_ROOT (Var''setDynamic-1 (Var'create nil)))
+    (§ def #_"Var" Compiler'CLEAR_ROOT (Var''setDynamic (Var'create nil)))
 
     ;; LocalBinding -> Set<LocalBindingExpr>
-    (§ def #_"Var" Compiler'CLEAR_SITES (Var''setDynamic-1 (Var'create nil)))
+    (§ def #_"Var" Compiler'CLEAR_SITES (Var''setDynamic (Var'create nil)))
 
     (defn #_"boolean" Compiler'isSpecial [#_"Object" sym]
         (.containsKey Compiler'specials, sym)
@@ -15131,7 +15128,7 @@
     (defn #_"void" Compiler'pushNS []
         (Var'pushThreadBindings (PersistentHashMap'create-1a
             (object-array [
-                (Var''setDynamic-1 (Var'intern (Namespace'findOrCreate (Symbol'intern "cloiure.core")), (Symbol'intern "*ns*"))) nil
+                (Var''setDynamic (Var'intern (Namespace'findOrCreate (Symbol'intern "cloiure.core")), (Symbol'intern "*ns*"))) nil
             ])
         ))
         nil
@@ -15140,7 +15137,7 @@
     (defn #_"void" Compiler'pushNSandLoader [#_"ClassLoader" loader]
         (Var'pushThreadBindings (RT'map
             (object-array [
-                (Var''setDynamic-1 (Var'intern (Namespace'findOrCreate (Symbol'intern "cloiure.core")), (Symbol'intern "*ns*"))) nil
+                (Var''setDynamic (Var'intern (Namespace'findOrCreate (Symbol'intern "cloiure.core")), (Symbol'intern "*ns*"))) nil
                 RT'FN_LOADER_VAR loader
             ])
         ))
@@ -15692,76 +15689,6 @@
                 )
             )
         )
-    )
-)
-)
-
-(java-ns cloiure.lang.IteratorSeq
-
-(class-ns IteratorSeqState
-    (defn #_"IteratorSeqState" IteratorSeqState'new []
-        (hash-map
-            #_volatile
-            #_"Object" :val nil
-            #_volatile
-            #_"Object" :_rest nil
-        )
-    )
-)
-
-(class-ns IteratorSeq
-    (defn #_"IteratorSeq" IteratorSeq'new
-        ([#_"Iterator" iter]
-            (let [this (IteratorSeq'new nil, iter, (IteratorSeqState'new))]
-                (ß ass (:val (:state this)) (:state this))
-                (ß ass (:_rest (:state this)) (:state this))
-                this
-            )
-        )
-        ([#_"IPersistentMap" meta, #_"Iterator" iter, #_"IteratorSeqState" state]
-            (merge (ASeq'new meta)
-                (hash-map
-                    #_"Iterator" :iter iter
-                    #_"IteratorSeqState" :state state
-                )
-            )
-        )
-    )
-
-    (defn #_"IteratorSeq" IteratorSeq'create [#_"Iterator" iter]
-        (when (.hasNext iter)
-            (IteratorSeq'new iter)
-        )
-    )
-
-    #_override
-    (defn #_"Object" ISeq'''first--IteratorSeq [#_"IteratorSeq" this]
-        (when (= (:val (:state this)) (:state this))
-            (§ sync (:state this)
-                (when (= (:val (:state this)) (:state this))
-                    (ß ass (:val (:state this)) (.next (:iter this)))
-                )
-            )
-        )
-        (:val (:state this))
-    )
-
-    #_override
-    (defn #_"ISeq" ISeq'''next--IteratorSeq [#_"IteratorSeq" this]
-        (when (= (:_rest (:state this)) (:state this))
-            (§ sync (:state this)
-                (when (= (:_rest (:state this)) (:state this))
-                    (.first this)
-                    (ß ass (:_rest (:state this)) (IteratorSeq'create (:iter this)))
-                )
-            )
-        )
-        (cast ISeq (:_rest (:state this)))
-    )
-
-    #_override
-    (defn #_"IteratorSeq" IObj'''withMeta--IteratorSeq [#_"IteratorSeq" this, #_"IPersistentMap" meta]
-        (IteratorSeq'new meta, (:iter this), (:state this))
     )
 )
 )
@@ -16814,9 +16741,9 @@
     (def #_"Pattern" LispReader'floatPat (Pattern/compile "([-+]?[0-9]+(\\.[0-9]*)?([eE][-+]?[0-9]+)?)(M)?"))
 
     ;; symbol->gensymbol
-    (§ def #_"Var" LispReader'GENSYM_ENV (Var''setDynamic-1 (Var'create nil)))
+    (§ def #_"Var" LispReader'GENSYM_ENV (Var''setDynamic (Var'create nil)))
     ;; sorted-map num->gensymbol
-    (§ def #_"Var" LispReader'ARG_ENV (Var''setDynamic-1 (Var'create nil)))
+    (§ def #_"Var" LispReader'ARG_ENV (Var''setDynamic (Var'create nil)))
 
     (§ static
         (aset LispReader'macros \" (StringReader'new)) ;; oops! "
@@ -17400,7 +17327,7 @@
 
     #_foreign
     (defn #_"Iterator" iterator---LongRange [#_"LongRange" this]
-        (let [#_"long'" vn (volatile! (:start this)) #_"boolean'" vm (volatile! true)]
+        (let [#_"long'" vn (mutable! (:start this)) #_"boolean'" vm (mutable! true)]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -17412,10 +17339,10 @@
                     (when @vm => (throw (NoSuchElementException.))
                         (let [_ @vn]
                             (try
-                                (vswap! vn Numbers'add-2ll (:step this))
-                                (vreset! vm (not (.exceededBounds (:boundsCheck this), @vn)))
+                                (mswap! vn Numbers'add-2ll (:step this))
+                                (mreset! vm (not (.exceededBounds (:boundsCheck this), @vn)))
                                 (catch ArithmeticException e
-                                    (vreset! vm false)
+                                    (mreset! vm false)
                                 )
                             )
                             _
@@ -20546,7 +20473,7 @@
 
 (class-ns MIter
     (defn #_"Iterator" MIter'new [#_"Object[]" a, #_"IFn" f]
-        (let [#_"int'" vi (volatile! -2)]
+        (let [#_"int'" vi (mutable! -2)]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -20555,7 +20482,7 @@
 
                 #_foreign
                 (#_"Object" next [#_"Iterator" _self]
-                    (vswap! vi + 2)
+                    (mswap! vi + 2)
                     (try
                         (.invoke f, (aget a @vi), (aget a (inc @vi)))
                         (catch IndexOutOfBoundsException _
@@ -21077,7 +21004,7 @@
 
 (class-ns HIter
     (defn #_"Iterator" HIter'new [#_"INode[]" a, #_"IFn" f]
-        (let [#_"int'" vi (volatile! 0) #_"Iterator'" vn (volatile! nil)]
+        (let [#_"int'" vi (mutable! 0) #_"Iterator'" vn (mutable! nil)]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -21085,14 +21012,14 @@
                         (or
                             (when (some? @vn)
                                 (or (.hasNext @vn)
-                                    (vreset! vn nil)
+                                    (mreset! vn nil)
                                 )
                             )
                             (and (< @vi (alength a))
                                 (let [#_"INode" ai (aget a @vi)]
-                                    (vswap! vi inc)
+                                    (mswap! vi inc)
                                     (when (some? ai)
-                                        (vreset! vn (.iterator ai, f))
+                                        (mreset! vn (.iterator ai, f))
                                     )
                                     (recur)
                                 )
@@ -21757,20 +21684,20 @@
     (def- #_"Object" NodeIter'NULL (Object.))
 
     (defn #_"Iterator" NodeIter'new [#_"Object[]" a, #_"IFn" f]
-        (let [#_"int'" vi (volatile! 0) #_"Object'" ve (volatile! NodeIter'NULL) #_"Iterator'" vn (volatile! nil)
+        (let [#_"int'" vi (mutable! 0) #_"Object'" ve (mutable! NodeIter'NULL) #_"Iterator'" vn (mutable! nil)
               step!
                 (fn #_"boolean" []
                     (loop-when [] (< @vi (alength a)) => false
-                        (let [#_"Object" key (aget a @vi) #_"Object" nodeOrVal (aget a (inc @vi)) _ (vswap! vi + 2)]
+                        (let [#_"Object" key (aget a @vi) #_"Object" nodeOrVal (aget a (inc @vi)) _ (mswap! vi + 2)]
                             (cond
                                 (some? key)
                                     (do
-                                        (vreset! ve (.invoke f, key, nodeOrVal))
+                                        (mreset! ve (.invoke f, key, nodeOrVal))
                                         true
                                     )
                                 (some? nodeOrVal)
                                     (let-when [#_"Iterator" it (.iterator (cast INode nodeOrVal), f)] (and (some? it) (.hasNext it)) => (recur)
-                                        (vreset! vn it)
+                                        (mreset! vn it)
                                         true
                                     )
                                 :else
@@ -21791,13 +21718,13 @@
                         (cond
                             (not (identical? e NodeIter'NULL))
                                 (do
-                                    (vreset! ve NodeIter'NULL)
+                                    (mreset! ve NodeIter'NULL)
                                     e
                                 )
                             (some? @vn)
                                 (let [e (.next @vn)]
                                     (when-not (.hasNext @vn)
-                                        (vreset! vn nil)
+                                        (mreset! vn nil)
                                     )
                                     e
                                 )
@@ -22068,7 +21995,7 @@
     (defn- #_"Iterator" PersistentHashMap''iterator [#_"PersistentHashMap" this, #_"IFn" f]
         (let [#_"Iterator" it (if (some? (:root this)) (.iterator (:root this), f) PersistentHashMap'EMPTY_ITER)]
             (when (:hasNull this) => it
-                (let [#_"boolean'" seen (volatile! false)]
+                (let [#_"boolean'" seen (mutable! false)]
                     (reify Iterator
                         #_foreign
                         (#_"boolean" hasNext [#_"Iterator" _self]
@@ -22078,7 +22005,7 @@
                         #_foreign
                         (#_"Object" next [#_"Iterator" _self]
                             (when (not @seen) => (.next it)
-                                (vreset! seen true)
+                                (mreset! seen true)
                                 (.invoke f, nil, (:nullValue this))
                             )
                         )
@@ -22812,7 +22739,7 @@
 
     #_foreign
     (defn #_"Iterator" iterator---PersistentQueue [#_"PersistentQueue" this]
-        (let [#_"ISeq'" vs (volatile! (:f this)) #_"Iterator" it (when (some? (:r this)) (.iterator (:r this)))]
+        (let [#_"ISeq'" vs (mutable! (:f this)) #_"Iterator" it (when (some? (:r this)) (.iterator (:r this)))]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -22823,7 +22750,7 @@
                 (#_"Object" next [#_"Iterator" _self]
                     (if (some? @vs)
                         (let [_ (.first @vs)]
-                            (vswap! vs #(.next %))
+                            (mswap! vs #(.next %))
                             _
                         )
                         (when (and (some? it) (.hasNext it)) => (throw (NoSuchElementException.))
@@ -24416,8 +24343,8 @@
 
     #_override
     (defn #_"Iterator" APersistentVector'''rangedIterator--PersistentVector [#_"PersistentVector" this, #_"int" start, #_"int" end]
-        (let [#_"int'" vi (volatile! start) #_"int'" vb (volatile! (- start (% start 32)))
-              #_"Object[]'" va (volatile! (when (< start (.count this)) (PersistentVector''arrayFor this, start)))]
+        (let [#_"int'" vi (mutable! start) #_"int'" vb (mutable! (- start (% start 32)))
+              #_"Object[]'" va (mutable! (when (< start (.count this)) (PersistentVector''arrayFor this, start)))]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -24428,11 +24355,11 @@
                 (#_"Object" next [#_"Iterator" _self]
                     (when (< @vi end) => (throw (NoSuchElementException.))
                         (when (= @vi (+ @vb 32))
-                            (vreset! va (PersistentVector''arrayFor this, @vi))
-                            (vreset! vb @vi)
+                            (mreset! va (PersistentVector''arrayFor this, @vi))
+                            (mreset! vb @vi)
                         )
                         (let [_ (aget @va (& @vi 0x01f))]
-                            (vswap! vi inc)
+                            (mswap! vi inc)
                             _
                         )
                     )
@@ -24770,7 +24697,7 @@
 
     #_foreign
     (defn #_"Iterator" iterator---Range [#_"Range" this]
-        (let [#_"Object'" vn (volatile! (:start this))]
+        (let [#_"Object'" vn (mutable! (:start this))]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -24781,7 +24708,7 @@
                 (#_"Object" next [#_"Iterator" self]
                     (when (.hasNext self) => (throw (NoSuchElementException.))
                         (let [_ @vn]
-                            (vswap! vn Numbers'addP-2oo (:step this))
+                            (mswap! vn Numbers'addP-2oo (:step this))
                             _
                         )
                     )
@@ -25464,14 +25391,14 @@
 
     (§ def #_"Namespace" RT'CLOIURE_NS (Namespace'findOrCreate (Symbol'intern "cloiure.core")))
 
-    (§ def #_"Var" RT'IN (Var''setDynamic-1 (Var'intern RT'CLOIURE_NS, (Symbol'intern "*in*"), (LineNumberingPushbackReader'new-1 (InputStreamReader. System/in)))))
-    (§ def #_"Var" RT'OUT (Var''setDynamic-1 (Var'intern RT'CLOIURE_NS, (Symbol'intern "*out*"), (OutputStreamWriter. System/out))))
-    (§ def #_"Var" RT'ERR (Var''setDynamic-1 (Var'intern RT'CLOIURE_NS, (Symbol'intern "*err*"), (PrintWriter. (OutputStreamWriter. System/err), true))))
+    (§ def #_"Var" RT'IN (Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*in*"), (LineNumberingPushbackReader'new-1 (InputStreamReader. System/in)))))
+    (§ def #_"Var" RT'OUT (Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*out*"), (OutputStreamWriter. System/out))))
+    (§ def #_"Var" RT'ERR (Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*err*"), (PrintWriter. (OutputStreamWriter. System/err), true))))
 
     (§ def #_"Keyword" RT'TAG_KEY (Keyword'intern (Symbol'intern nil, "tag")))
 
-    (§ def #_"Var" RT'ASSERT (Var''setDynamic-1 (Var'intern RT'CLOIURE_NS, (Symbol'intern "*assert*"), RT'T)))
-    (§ def #_"Var" RT'MATH_CONTEXT (Var''setDynamic-1 (Var'intern RT'CLOIURE_NS, (Symbol'intern "*math-context*"), nil)))
+    (§ def #_"Var" RT'ASSERT (Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*assert*"), RT'T)))
+    (§ def #_"Var" RT'MATH_CONTEXT (Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*math-context*"), nil)))
 
     (§ def #_"Keyword" RT'LINE_KEY (Keyword'intern (Symbol'intern nil, "line")))
     (§ def #_"Keyword" RT'COLUMN_KEY (Keyword'intern (Symbol'intern nil, "column")))
@@ -25482,16 +25409,16 @@
     (§ def #_"Symbol" RT'NAMESPACE (Symbol'intern "ns"))
     (§ def #_"Symbol" RT'IDENTICAL (Symbol'intern "identical?"))
 
-    (§ def #_"Var" RT'CURRENT_NS (Var''setDynamic-1 (Var'intern RT'CLOIURE_NS, (Symbol'intern "*ns*"), RT'CLOIURE_NS)))
+    (§ def #_"Var" RT'CURRENT_NS (Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*ns*"), RT'CLOIURE_NS)))
 
-    (§ def #_"Var" RT'FLUSH_ON_NEWLINE (Var''setDynamic-1 (Var'intern RT'CLOIURE_NS, (Symbol'intern "*flush-on-newline*"), RT'T)))
-    (§ def #_"Var" RT'PRINT_READABLY (Var''setDynamic-1 (Var'intern RT'CLOIURE_NS, (Symbol'intern "*print-readably*"), RT'T)))
-    (§ def #_"Var" RT'WARN_ON_REFLECTION (Var''setDynamic-1 (Var'intern RT'CLOIURE_NS, (Symbol'intern "*warn-on-reflection*"), RT'F)))
-    (§ def #_"Var" RT'ALLOW_UNRESOLVED_VARS (Var''setDynamic-1 (Var'intern RT'CLOIURE_NS, (Symbol'intern "*allow-unresolved-vars*"), RT'F)))
+    (§ def #_"Var" RT'FLUSH_ON_NEWLINE (Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*flush-on-newline*"), RT'T)))
+    (§ def #_"Var" RT'PRINT_READABLY (Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*print-readably*"), RT'T)))
+    (§ def #_"Var" RT'WARN_ON_REFLECTION (Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*warn-on-reflection*"), RT'F)))
+    (§ def #_"Var" RT'ALLOW_UNRESOLVED_VARS (Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*allow-unresolved-vars*"), RT'F)))
 
     (§ def #_"Var" RT'IN_NS_VAR (Var'intern RT'CLOIURE_NS, (Symbol'intern "in-ns"), RT'F))
     (§ def #_"Var" RT'NS_VAR (Var'intern RT'CLOIURE_NS, (Symbol'intern "ns"), RT'F))
-    (§ def #_"Var" RT'FN_LOADER_VAR (Var''setDynamic-1 (Var'intern RT'CLOIURE_NS, (Symbol'intern "*fn-loader*"), nil)))
+    (§ def #_"Var" RT'FN_LOADER_VAR (Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*fn-loader*"), nil)))
     (§ def #_"Var" RT'PRINT_INITIALIZED (Var'intern RT'CLOIURE_NS, (Symbol'intern "print-initialized")))
     (§ def #_"Var" RT'PR_ON (Var'intern RT'CLOIURE_NS, (Symbol'intern "pr-on")))
 
@@ -25695,7 +25622,7 @@
             (instance? Map coll)
                 (.iterator (.entrySet (cast Map coll)))
             (instance? String coll)
-                (let [#_"String" s (cast String coll) #_"int'" vi (volatile! 0)]
+                (let [#_"String" s (cast String coll) #_"int'" vi (mutable! 0)]
                     (reify Iterator
                         #_foreign
                         (#_"boolean" hasNext [#_"Iterator" _self]
@@ -25705,7 +25632,7 @@
                         #_foreign
                         (#_"Object" next [#_"Iterator" _self]
                             (let [_ (.charAt s, @vi)]
-                                (vswap! vi inc)
+                                (mswap! vi inc)
                                 _
                             )
                         )
@@ -26910,14 +26837,14 @@
     (def- #_"Object" SeqIterator'START (Object.))
 
     (defn #_"Iterator" SeqIterator'new [#_"Object" o]
-        (let [#_"Object'" vs (volatile! SeqIterator'START) #_"Object'" vn (volatile! o)]
+        (let [#_"Object'" vs (mutable! SeqIterator'START) #_"Object'" vn (mutable! o)]
             (reify Iterator
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
                     (some?
                         (condp identical? @vs
-                            SeqIterator'START (do (vreset! vs nil) (vswap! vn RT'seq))
-                            @vn (vswap! vn RT'next)
+                            SeqIterator'START (do (mreset! vs nil) (mswap! vn RT'seq))
+                            @vn (mswap! vn RT'next)
                             :else @vn
                         )
                     )
@@ -26926,7 +26853,7 @@
                 #_foreign
                 (#_"Object" next [#_"Iterator" self]
                     (when (.hasNext self) => (throw (NoSuchElementException.))
-                        (RT'first (vreset! vs @vn))
+                        (RT'first (mreset! vs @vn))
                     )
                 )
             )
@@ -27555,13 +27482,9 @@
     )
 
     #_method
-    (defn #_"Var" Var''setDynamic-1 [#_"Var" this]
-        (assoc this :dynamic true)
-    )
-
-    #_method
-    (defn #_"Var" Var''setDynamic-2 [#_"Var" this, #_"boolean" b]
-        (assoc this :dynamic b)
+    (defn #_"Var" Var''setDynamic
+        ([#_"Var" this] (Var''setDynamic this, true))
+        ([#_"Var" this, #_"boolean" b] (assoc this :dynamic b))
     )
 
     #_method
@@ -27726,7 +27649,7 @@
         (let [#_"Frame" f (.get Var'dvals)]
             (loop-when [#_"Associative" m (:bindings f) #_"ISeq" s (.seq bindings)] (some? s) => (.set Var'dvals, (Frame'new m, f))
                 (let [#_"IMapEntry" e (cast IMapEntry (.first s)) #_"Var" v (cast Var (.key e))]
-                    (when-not (:dynamic v)
+                    (when-not (Var''isDynamic v)
                         (throw (IllegalStateException. (str "Can't dynamically bind non-dynamic var: " (:ns v) "/" (:sym v))))
                     )
                     (.set (:threadBound v), true)
