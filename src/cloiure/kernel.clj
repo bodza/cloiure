@@ -69,255 +69,963 @@
     [cloiure.asm.commons GeneratorAdapter Method]
 )
 
-(declare AFn'new AFn'applyToHelper)
-(declare AFunction'new)
-(declare AMapEntry'new AMapEntry''asVector)
-(declare KeySeq'create KeySeq'createFromMap KeySeq'new)
-(declare ValSeq'create ValSeq'createFromMap ValSeq'new)
-(declare APersistentMap'new APersistentMap'mapEquals APersistentMap'mapHash APersistentMap'mapHasheq APersistentMap'MAKE_ENTRY APersistentMap'MAKE_KEY APersistentMap'MAKE_VAL APersistentMap''containsValue APersistentMap''keySet APersistentMap''values)
-(declare APersistentSet'new APersistentSet'setEquals)
-(declare VSeq'new)
-(declare RSeq'new)
-(declare SubVector'new)
-(declare APersistentVector'new APersistentVector'doEquals APersistentVector'doEquiv)
+(§ declare AFn'new)
+(declare AFn'applyToHelper)
+(§ declare AFunction'new)
+(§ declare AMapEntry'new)
+(§ declare KeySeq'create)
+(§ declare KeySeq'createFromMap)
+(§ declare ValSeq'create)
+(§ declare ValSeq'createFromMap)
+(§ declare APersistentMap'new)
+(declare APersistentMap'mapEquals)
+(§ declare APersistentMap'mapHash)
+(§ declare APersistentMap'MAKE_ENTRY)
+(§ declare APersistentMap'MAKE_KEY)
+(§ declare APersistentMap'MAKE_VAL)
+(declare APersistentMap''values)
+(§ declare APersistentSet'new)
+(declare APersistentSet'setEquals)
+(§ declare VSeq'new)
+(§ declare RSeq'new)
+(§ declare SubVector'new)
+(§ declare APersistentVector'new)
+(§ declare APersistentVector'doEquals)
+(§ declare APersistentVector'doEquiv)
 (declare ArityException'new)
-(declare ArrayChunk'new)
-(declare ArrayIter_int'new)
-(declare ArrayIter_float'new)
-(declare ArrayIter_double'new)
-(declare ArrayIter_long'new)
-(declare ArrayIter_byte'new)
-(declare ArrayIter_char'new)
-(declare ArrayIter_short'new)
-(declare ArrayIter_boolean'new)
-(declare ArrayIter'EMPTY_ITERATOR ArrayIter'create-0 ArrayIter'create-1 ArrayIter'createFromObject ArrayIter'new)
-(declare ArraySeq_int'new)
-(declare ArraySeq_float'new)
-(declare ArraySeq_double'new)
-(declare ArraySeq_long'new)
-(declare ArraySeq_byte'new)
-(declare ArraySeq_char'new)
-(declare ArraySeq_short'new)
-(declare ArraySeq_boolean'new)
-(declare ArraySeq'create-0 ArraySeq'create-1 ArraySeq'createFromObject ArraySeq'new)
-(declare ASeq'new)
-(declare Atom'new)
-(declare ATransientMap'new ATransientMap''conj ATransientMap'NOT_FOUND)
-(declare ATransientSet'new)
-(declare BigInt'new BigInt'fromBigInteger BigInt'fromLong BigInt''toBigInteger BigInt''toBigDecimal BigInt''intValue BigInt''longValue BigInt''floatValue BigInt''doubleValue BigInt''byteValue BigInt''shortValue BigInt'valueOf BigInt''bitLength BigInt''add BigInt''multiply BigInt''quotient BigInt''remainder BigInt''lt)
-(declare Binding'new)
-(declare Box'new)
-(declare ChunkBuffer'new ChunkBuffer''add ChunkBuffer''chunk)
-(declare ChunkedCons'new)
-(declare UntypedExpr'new)
-(declare DefParser'new)
-(declare DefExpr'bindRootMethod DefExpr'setTagMethod DefExpr'setMetaMethod DefExpr'setDynamicMethod DefExpr'internVar DefExpr'new DefExpr''includesExplicitMetadata)
-(declare AssignParser'new)
+(§ declare ArrayChunk'new)
+(§ declare ArrayIter_int'new)
+(§ declare ArrayIter_float'new)
+(§ declare ArrayIter_double'new)
+(§ declare ArrayIter_long'new)
+(§ declare ArrayIter_byte'new)
+(§ declare ArrayIter_char'new)
+(§ declare ArrayIter_short'new)
+(§ declare ArrayIter_boolean'new)
+(§ declare ArrayIter'EMPTY_ITERATOR)
+(§ declare ArrayIter'createFromObject)
+(declare ArrayIter'new)
+(§ declare ArraySeq_int'new)
+(§ declare ArraySeq_float'new)
+(§ declare ArraySeq_double'new)
+(§ declare ArraySeq_long'new)
+(§ declare ArraySeq_byte'new)
+(§ declare ArraySeq_char'new)
+(§ declare ArraySeq_short'new)
+(§ declare ArraySeq_boolean'new)
+(declare ArraySeq'create-1)
+(§ declare ArraySeq'createFromObject)
+(§ declare ArraySeq'new)
+(§ declare ASeq'new)
+(§ declare Atom'new)
+(§ declare ATransientMap'new)
+(§ declare ATransientSet'new)
+(§ declare BigInt'fromBigInteger)
+(§ declare BigInt'fromLong)
+(§ declare BigInt''toBigInteger)
+(§ declare BigInt'valueOf)
+(§ declare BigInt''add)
+(§ declare BigInt''multiply)
+(§ declare BigInt''quotient)
+(§ declare BigInt''remainder)
+(§ declare BigInt''lt)
+(§ declare Binding'new)
+(§ declare Box'new)
+(§ declare ChunkedCons'new)
+(§ declare UntypedExpr'new)
+(§ declare DefParser'new)
+(§ declare DefExpr'bindRootMethod)
+(§ declare DefExpr'setMetaMethod)
+(§ declare DefExpr'setDynamicMethod)
+(§ declare DefExpr'internVar)
+(declare DefExpr'new)
+(§ declare AssignParser'new)
 (declare AssignExpr'new)
-(declare VarExpr'getMethod VarExpr'setMethod VarExpr'new)
-(declare TheVarParser'new)
+(§ declare VarExpr'setMethod)
+(§ declare VarExpr'new)
+(§ declare TheVarParser'new)
 (declare TheVarExpr'new)
-(declare KeywordExpr'new)
-(declare ImportParser'new)
-(declare ImportExpr'forNameMethod ImportExpr'importClassMethod ImportExpr'derefMethod ImportExpr'new)
-(declare LiteralExpr'new)
-(declare HostParser'new)
-(declare HostExpr'new HostExpr'BOOLEAN_TYPE HostExpr'CHAR_TYPE HostExpr'INTEGER_TYPE HostExpr'LONG_TYPE HostExpr'FLOAT_TYPE HostExpr'DOUBLE_TYPE HostExpr'SHORT_TYPE HostExpr'BYTE_TYPE HostExpr'NUMBER_TYPE HostExpr'charValueMethod HostExpr'booleanValueMethod HostExpr'charValueOfMethod HostExpr'intValueOfMethod HostExpr'longValueOfMethod HostExpr'floatValueOfMethod HostExpr'doubleValueOfMethod HostExpr'shortValueOfMethod HostExpr'byteValueOfMethod HostExpr'intValueMethod HostExpr'longValueMethod HostExpr'floatValueMethod HostExpr'doubleValueMethod HostExpr'byteValueMethod HostExpr'shortValueMethod HostExpr'fromIntMethod HostExpr'fromLongMethod HostExpr'fromDoubleMethod HostExpr'emitBoxReturn HostExpr'emitUnboxArg HostExpr'maybeClass HostExpr'maybeSpecialTag HostExpr'tagToClass)
-(declare FieldExpr'new)
-(declare InstanceFieldExpr'invokeNoArgInstanceMember InstanceFieldExpr'setInstanceFieldMethod InstanceFieldExpr'new)
+(§ declare KeywordExpr'new)
+(§ declare ImportParser'new)
+(§ declare ImportExpr'forNameMethod)
+(§ declare ImportExpr'importClassMethod)
+(§ declare ImportExpr'derefMethod)
+(declare ImportExpr'new)
+(§ declare LiteralExpr'new)
+(§ declare HostParser'new)
+(§ declare HostExpr'new)
+(§ declare HostExpr'BOOLEAN_TYPE)
+(§ declare HostExpr'CHAR_TYPE)
+(§ declare HostExpr'INTEGER_TYPE)
+(§ declare HostExpr'FLOAT_TYPE)
+(§ declare HostExpr'DOUBLE_TYPE)
+(§ declare HostExpr'SHORT_TYPE)
+(§ declare HostExpr'BYTE_TYPE)
+(§ declare HostExpr'NUMBER_TYPE)
+(§ declare HostExpr'charValueMethod)
+(§ declare HostExpr'booleanValueMethod)
+(§ declare HostExpr'charValueOfMethod)
+(§ declare HostExpr'intValueOfMethod)
+(§ declare HostExpr'floatValueOfMethod)
+(§ declare HostExpr'doubleValueOfMethod)
+(§ declare HostExpr'shortValueOfMethod)
+(§ declare HostExpr'byteValueOfMethod)
+(§ declare HostExpr'intValueMethod)
+(§ declare HostExpr'emitBoxReturn)
+(§ declare HostExpr'emitUnboxArg)
+(declare HostExpr'maybeClass)
+(§ declare HostExpr'maybeSpecialTag)
+(declare HostExpr'tagToClass)
+(§ declare FieldExpr'new)
+(§ declare InstanceFieldExpr'invokeNoArgInstanceMember)
+(§ declare InstanceFieldExpr'setInstanceFieldMethod)
+(declare InstanceFieldExpr'new)
 (declare StaticFieldExpr'new)
-(declare MethodExpr'new MethodExpr'emitArgsAsArray MethodExpr'emitTypedArgs)
-(declare InstanceMethodExpr'invokeInstanceMethodMethod InstanceMethodExpr'new)
-(declare StaticMethodExpr'forNameMethod StaticMethodExpr'invokeStaticMethodMethod StaticMethodExpr'new StaticMethodExpr''canEmitIntrinsicPredicate StaticMethodExpr''emitIntrinsicPredicate)
-(declare UnresolvedVarExpr'new)
-(declare NumberExpr'new NumberExpr'parse)
-(declare ConstantParser'new)
+(§ declare MethodExpr'new)
+(§ declare MethodExpr'emitArgsAsArray)
+(§ declare MethodExpr'emitTypedArgs)
+(§ declare InstanceMethodExpr'invokeInstanceMethodMethod)
+(declare InstanceMethodExpr'new)
+(§ declare StaticMethodExpr'forNameMethod)
+(§ declare StaticMethodExpr'invokeStaticMethodMethod)
+(declare StaticMethodExpr'new)
+(§ declare StaticMethodExpr''canEmitIntrinsicPredicate)
+(§ declare StaticMethodExpr''emitIntrinsicPredicate)
+(§ declare UnresolvedVarExpr'new)
+(§ declare NumberExpr'new)
+(§ declare NumberExpr'parse)
+(§ declare ConstantParser'new)
 (declare ConstantExpr'new)
-(declare NilExpr'new)
-(declare BooleanExpr'new)
+(§ declare NilExpr'new)
+(§ declare BooleanExpr'new)
 (declare StringExpr'new)
-(declare MonitorEnterParser'new)
+(§ declare MonitorEnterParser'new)
 (declare MonitorEnterExpr'new)
-(declare MonitorExitParser'new)
+(§ declare MonitorExitParser'new)
 (declare MonitorExitExpr'new)
-(declare CatchClause'new)
-(declare TryParser'new)
+(§ declare CatchClause'new)
+(§ declare TryParser'new)
 (declare TryExpr'new)
-(declare ThrowParser'new)
+(§ declare ThrowParser'new)
 (declare ThrowExpr'new)
-(declare NewParser'new)
-(declare NewExpr'invokeConstructorMethod NewExpr'forNameMethod NewExpr'new)
-(declare MetaExpr'IOBJ_TYPE MetaExpr'withMetaMethod MetaExpr'new)
-(declare IfParser'new)
-(declare IfExpr'new IfExpr''doEmit)
-(declare EmptyExpr'HASHMAP_TYPE EmptyExpr'HASHSET_TYPE EmptyExpr'VECTOR_TYPE EmptyExpr'IVECTOR_TYPE EmptyExpr'TUPLE_TYPE EmptyExpr'LIST_TYPE EmptyExpr'EMPTY_LIST_TYPE EmptyExpr'new)
-(declare ListExpr'arrayToListMethod ListExpr'new)
-(declare MapExpr'mapMethod MapExpr'mapUniqueKeysMethod MapExpr'new MapExpr'parse)
-(declare SetExpr'setMethod SetExpr'new SetExpr'parse)
-(declare VectorExpr'vectorMethod VectorExpr'new VectorExpr'parse)
-(declare KeywordInvokeExpr'ILOOKUP_TYPE KeywordInvokeExpr'new)
-(declare InstanceOfExpr'new)
-(declare StaticInvokeExpr'new StaticInvokeExpr'parse)
-(declare InvokeExpr'new InvokeExpr''emitProto InvokeExpr''emitArgsAndCall InvokeExpr'parse)
-(declare FnExpr'aFnType FnExpr'restFnType FnExpr'new FnExpr'parse FnExpr''isVariadic FnExpr''emitForDefn)
-(declare ObjExpr'CONST_PREFIX ObjExpr'voidctor ObjExpr'DYNAMIC_CLASSLOADER_TYPE ObjExpr'getClassMethod ObjExpr'getClassLoaderMethod ObjExpr'getConstantsMethod ObjExpr'readStringMethod ObjExpr'ILOOKUP_SITE_TYPE ObjExpr'ILOOKUP_THUNK_TYPE ObjExpr'KEYWORD_LOOKUPSITE_TYPE ObjExpr'new ObjExpr'trimGenID ObjExpr''ctorTypes ObjExpr''compile ObjExpr''emitKeywordCallsites ObjExpr''emitObjectArray ObjExpr''emitValue ObjExpr''emitConstants ObjExpr''isMutable ObjExpr''isVolatile ObjExpr''isDeftype ObjExpr''emitClearCloses ObjExpr''getCompiledClass ObjExpr''emitLetFnInits ObjExpr''emitAssignLocal ObjExpr''emitLocal ObjExpr''emitUnboxedLocal ObjExpr''emitVar ObjExpr'varGetMethod ObjExpr'varGetRawMethod ObjExpr''emitVarValue ObjExpr''emitKeyword ObjExpr''emitConstant ObjExpr''constantName ObjExpr''siteName ObjExpr''siteNameStatic ObjExpr''thunkName ObjExpr''cachedClassName ObjExpr''cachedVarName ObjExpr''varCallsiteName ObjExpr''thunkNameStatic ObjExpr''constantType)
+(§ declare NewParser'new)
+(§ declare NewExpr'invokeConstructorMethod)
+(§ declare NewExpr'forNameMethod)
+(declare NewExpr'new)
+(§ declare MetaExpr'IOBJ_TYPE)
+(§ declare MetaExpr'withMetaMethod)
+(§ declare MetaExpr'new)
+(§ declare IfParser'new)
+(declare IfExpr'new)
+(declare IfExpr''doEmit)
+(§ declare EmptyExpr'HASHMAP_TYPE)
+(§ declare EmptyExpr'HASHSET_TYPE)
+(§ declare EmptyExpr'VECTOR_TYPE)
+(§ declare EmptyExpr'LIST_TYPE)
+(§ declare EmptyExpr'EMPTY_LIST_TYPE)
+(declare EmptyExpr'new)
+(§ declare ListExpr'arrayToListMethod)
+(§ declare MapExpr'mapMethod)
+(§ declare MapExpr'mapUniqueKeysMethod)
+(§ declare MapExpr'new)
+(§ declare MapExpr'parse)
+(§ declare SetExpr'setMethod)
+(§ declare SetExpr'new)
+(§ declare SetExpr'parse)
+(§ declare VectorExpr'vectorMethod)
+(§ declare VectorExpr'new)
+(§ declare VectorExpr'parse)
+(§ declare KeywordInvokeExpr'new)
+(§ declare InstanceOfExpr'new)
+(§ declare StaticInvokeExpr'new)
+(§ declare StaticInvokeExpr'parse)
+(§ declare InvokeExpr'new)
+(declare InvokeExpr''emitProto)
+(declare InvokeExpr''emitArgsAndCall)
+(§ declare InvokeExpr'parse)
+(§ declare FnExpr'new)
+(§ declare FnExpr'parse)
+(declare FnExpr''isVariadic)
+(declare FnExpr''emitForDefn)
+(§ declare ObjExpr'CONST_PREFIX)
+(§ declare ObjExpr'voidctor)
+(§ declare ObjExpr'readStringMethod)
+(declare ObjExpr'ILOOKUP_SITE_TYPE)
+(declare ObjExpr'ILOOKUP_THUNK_TYPE)
+(declare ObjExpr'KEYWORD_LOOKUPSITE_TYPE)
+(§ declare ObjExpr'new)
+(§ declare ObjExpr'trimGenID)
+(§ declare ObjExpr''ctorTypes)
+(§ declare ObjExpr''compile)
+(declare ObjExpr''emitKeywordCallsites)
+(§ declare ObjExpr''emitObjectArray)
+(declare ObjExpr''emitValue)
+(declare ObjExpr''emitConstants)
+(declare ObjExpr''isMutable)
+(declare ObjExpr''isVolatile)
+(declare ObjExpr''isDeftype)
+(§ declare ObjExpr''getCompiledClass)
+(§ declare ObjExpr''emitLetFnInits)
+(§ declare ObjExpr''emitAssignLocal)
+(declare ObjExpr''emitLocal)
+(declare ObjExpr''emitUnboxedLocal)
+(declare ObjExpr''emitVar)
+(§ declare ObjExpr'varGetMethod)
+(§ declare ObjExpr'varGetRawMethod)
+(declare ObjExpr''emitVarValue)
+(declare ObjExpr''emitKeyword)
+(declare ObjExpr''emitConstant)
+(declare ObjExpr''constantName)
+(§ declare ObjExpr''siteName)
+(declare ObjExpr''siteNameStatic)
+(§ declare ObjExpr''thunkName)
+(declare ObjExpr''cachedClassName)
+(declare ObjExpr''thunkNameStatic)
+(declare ObjExpr''constantType)
 (declare PathNode'new)
-(declare FnMethod'new FnMethod'classChar FnMethod'primInterface FnMethod'parse FnMethod''doEmitStatic FnMethod''doEmitPrim FnMethod''doEmit FnMethod''isVariadic)
-(declare ObjMethod'new ObjMethod'emitBody ObjMethod''emitClearLocals ObjMethod''emitClearLocalsOld ObjMethod''emitClearThis)
-(declare LocalBinding'new LocalBinding''getPrimitiveType)
+(§ declare FnMethod'new)
+(§ declare FnMethod'classChar)
+(§ declare FnMethod'primInterface)
+(declare FnMethod'parse)
+(declare FnMethod''doEmitStatic)
+(declare FnMethod''doEmitPrim)
+(declare FnMethod''doEmit)
+(declare FnMethod''isVariadic)
+(§ declare ObjMethod'new)
+(§ declare ObjMethod'emitBody)
+(declare ObjMethod''emitClearLocals)
+(declare ObjMethod''emitClearThis)
+(§ declare LocalBinding'new)
+(declare LocalBinding''getPrimitiveType)
 (declare LocalBindingExpr'new)
 (declare BodyParser'new)
-(declare BodyExpr'new BodyExpr''lastExpr)
-(declare BindingInit'new)
-(declare LetFnParser'new)
+(declare BodyExpr'new)
+(declare BodyExpr''lastExpr)
+(§ declare BindingInit'new)
+(§ declare LetFnParser'new)
 (declare LetFnExpr'new)
-(declare LetParser'new)
-(declare LetExpr'new LetExpr''doEmit)
-(declare RecurParser'new)
+(§ declare LetParser'new)
+(declare LetExpr'new)
+(declare LetExpr''doEmit)
+(§ declare RecurParser'new)
 (declare RecurExpr'new)
 (declare CompilerException'new)
-(declare DeftypeParser'new)
-(declare ReifyParser'new)
-(declare NewInstanceExpr'new NewInstanceExpr'build NewInstanceExpr'compileStub NewInstanceExpr'interfaceNames NewInstanceExpr'slashname NewInstanceExpr'msig NewInstanceExpr'considerMethod NewInstanceExpr'gatherMethods-2m NewInstanceExpr'gatherMethods-2s)
-(declare NewInstanceMethod'new NewInstanceMethod'msig NewInstanceMethod'parse NewInstanceMethod'findMethodsWithNameAndArity NewInstanceMethod'findMethodsWithName)
+(§ declare DeftypeParser'new)
+(§ declare ReifyParser'new)
+(§ declare NewInstanceExpr'new)
+(declare NewInstanceExpr'build)
+(declare NewInstanceExpr'compileStub)
+(declare NewInstanceExpr'interfaceNames)
+(declare NewInstanceExpr'slashname)
+(§ declare NewInstanceExpr'msig)
+(§ declare NewInstanceExpr'considerMethod)
+(§ declare NewInstanceExpr'gatherMethods-2m)
+(declare NewInstanceExpr'gatherMethods-2s)
+(§ declare NewInstanceMethod'new)
+(§ declare NewInstanceMethod'msig)
+(declare NewInstanceMethod'parse)
+(declare NewInstanceMethod'findMethodsWithNameAndArity)
 (declare MethodParamExpr'new)
-(declare CaseParser'new)
-(declare CaseExpr'NUMBER_TYPE CaseExpr'intValueMethod CaseExpr'hashMethod CaseExpr'hashCodeMethod CaseExpr'equivMethod CaseExpr'new CaseExpr''doEmit CaseExpr''isShiftMasked CaseExpr''emitShiftMask CaseExpr''emitExprForInts CaseExpr''emitThenForInts CaseExpr''emitExprForHashes CaseExpr''emitThenForHashes CaseExpr'emitExpr)
-(declare Compiler'COMPILE_STUB_PREFIX Compiler'MAX_POSITIONAL_ARITY Compiler'CLASS_TYPE Compiler'OBJECT_TYPE Compiler'BOOLEAN_OBJECT_TYPE Compiler'THROWABLE_TYPE Compiler'KEYWORD_TYPE Compiler'VAR_TYPE Compiler'SYMBOL_TYPE Compiler'IFN_TYPE Compiler'AFUNCTION_TYPE Compiler'RT_TYPE Compiler'NUMBERS_TYPE Compiler'NS_TYPE Compiler'UTIL_TYPE Compiler'REFLECTOR_TYPE Compiler'IPERSISTENTMAP_TYPE Compiler'IOBJ_TYPE Compiler'TUPLE_TYPE Compiler'createTupleMethods Compiler'ARG_TYPES Compiler'EXCEPTION_TYPES Compiler'lineDeref Compiler'columnDeref Compiler'isSpecial Compiler'inTailCall Compiler'resolveSymbol Compiler'maybePrimitiveType Compiler'maybeJavaClass Compiler'subsumes Compiler'getTypeStringForArgs Compiler'getMatchingParams Compiler'DEMUNGE_MAP Compiler'DEMUNGE_PATTERN Compiler'munge Compiler'demunge Compiler'clearPathRoot Compiler'registerLocal Compiler'getAndIncLocalNum Compiler'analyze-2 Compiler'analyze-3 Compiler'isMacro Compiler'isInline Compiler'namesStaticMember Compiler'preserveTag Compiler'macroexpand1 Compiler'macroexpand Compiler'analyzeSeq Compiler'eval-1 Compiler'eval-2 Compiler'registerConstant Compiler'registerKeyword Compiler'registerKeywordCallsite Compiler'registerProtocolCallsite Compiler'registerVarCallsite Compiler'fwdPath Compiler'commonPath Compiler'analyzeSymbol Compiler'destubClassName Compiler'getType Compiler'resolve-2 Compiler'resolve-1 Compiler'namespaceFor-1 Compiler'namespaceFor-2 Compiler'resolveIn Compiler'maybeResolveIn Compiler'lookupVar-3 Compiler'lookupVar-2 Compiler'registerVar Compiler'currentNS Compiler'closeOver Compiler'referenceLocal Compiler'tagOf Compiler'consumeWhitespaces Compiler'load Compiler'pushNS Compiler'pushNSandLoader Compiler'getLookupThunk Compiler'inty Compiler'retType Compiler'primClass-1s Compiler'tagClass Compiler'primClass-1c Compiler'boxClass Compiler'emptyVarCallSites)
+(§ declare CaseParser'new)
+(§ declare CaseExpr'NUMBER_TYPE)
+(§ declare CaseExpr'hashMethod)
+(§ declare CaseExpr'equivMethod)
+(declare CaseExpr'new)
+(declare CaseExpr''doEmit)
+(declare CaseExpr''emitExprForInts)
+(declare CaseExpr''emitThenForInts)
+(declare CaseExpr''emitExprForHashes)
+(declare CaseExpr''emitThenForHashes)
+(declare CaseExpr'emitExpr)
+(declare Compiler'COMPILE_STUB_PREFIX)
+(declare Compiler'MAX_POSITIONAL_ARITY)
+(declare Compiler'CLASS_TYPE)
+(declare Compiler'OBJECT_TYPE)
+(declare Compiler'BOOLEAN_OBJECT_TYPE)
+(declare Compiler'THROWABLE_TYPE)
+(declare Compiler'VAR_TYPE)
+(declare Compiler'SYMBOL_TYPE)
+(declare Compiler'IFN_TYPE)
+(declare Compiler'RT_TYPE)
+(declare Compiler'NUMBERS_TYPE)
+(declare Compiler'NS_TYPE)
+(declare Compiler'UTIL_TYPE)
+(declare Compiler'REFLECTOR_TYPE)
+(declare Compiler'IPERSISTENTMAP_TYPE)
+(declare Compiler'IOBJ_TYPE)
+(declare Compiler'TUPLE_TYPE)
+(declare Compiler'createTupleMethods)
+(declare Compiler'ARG_TYPES)
+(declare Compiler'EXCEPTION_TYPES)
+(declare Compiler'lineDeref)
+(declare Compiler'columnDeref)
+(§ declare Compiler'isSpecial)
+(declare Compiler'inTailCall)
+(§ declare Compiler'resolveSymbol)
+(declare Compiler'maybePrimitiveType)
+(declare Compiler'maybeJavaClass)
+(§ declare Compiler'subsumes)
+(declare Compiler'getTypeStringForArgs)
+(declare Compiler'getMatchingParams)
+(§ declare Compiler'DEMUNGE_MAP)
+(§ declare Compiler'DEMUNGE_PATTERN)
+(declare Compiler'munge)
+(declare Compiler'demunge)
+(§ declare Compiler'clearPathRoot)
+(declare Compiler'registerLocal)
+(declare Compiler'getAndIncLocalNum)
+(declare Compiler'analyze-2)
+(declare Compiler'analyze-3)
+(§ declare Compiler'isMacro)
+(§ declare Compiler'isInline)
+(§ declare Compiler'namesStaticMember)
+(§ declare Compiler'preserveTag)
+(§ declare Compiler'macroexpand1)
+(§ declare Compiler'macroexpand)
+(declare Compiler'analyzeSeq)
+(declare Compiler'eval-2)
+(declare Compiler'registerConstant)
+(declare Compiler'registerKeyword)
+(declare Compiler'registerKeywordCallsite)
+(declare Compiler'registerProtocolCallsite)
+(§ declare Compiler'fwdPath)
+(declare Compiler'commonPath)
+(declare Compiler'analyzeSymbol)
+(declare Compiler'destubClassName)
+(declare Compiler'getType)
+(declare Compiler'resolve-1)
+(declare Compiler'namespaceFor-1)
+(declare Compiler'namespaceFor-2)
+(declare Compiler'resolveIn)
+(declare Compiler'lookupVar-3)
+(declare Compiler'lookupVar-2)
+(declare Compiler'registerVar)
+(declare Compiler'currentNS)
+(§ declare Compiler'closeOver)
+(declare Compiler'referenceLocal)
+(declare Compiler'tagOf)
+(§ declare Compiler'consumeWhitespaces)
+(§ declare Compiler'load)
+(§ declare Compiler'inty)
+(declare Compiler'retType)
+(declare Compiler'primClass-1s)
+(declare Compiler'tagClass)
+(declare Compiler'primClass-1c)
+(declare Compiler'boxClass)
+(declare Compiler'emptyVarCallSites)
 (declare Cons'new)
-(declare Cycle'new Cycle'create Cycle''current)
-(declare Delay'new Delay'force)
-(declare DynamicClassLoader'classCache DynamicClassLoader'RQ DynamicClassLoader'new DynamicClassLoader'findInMemoryClass DynamicClassLoader''registerConstants DynamicClassLoader''getConstants)
+(§ declare DynamicClassLoader'classCache)
+(§ declare DynamicClassLoader'RQ)
+(§ declare DynamicClassLoader'new)
+(§ declare DynamicClassLoader'findInMemoryClass)
 (declare ExceptionInfo'new)
-(declare Intrinsics'oa)
-(declare Iterate'UNREALIZED_SEED Iterate'new Iterate'create)
-(declare Keyword'TABLE Keyword'RQ Keyword'intern Keyword'new Keyword'find Keyword'find-2 Keyword'find-1 Keyword''throwArity)
-(declare KeywordLookupSite'new KeywordLookupSite''ilookupThunk KeywordLookupSite''install)
-(declare LazilyPersistentVector'createOwning LazilyPersistentVector'fcount LazilyPersistentVector'create)
-(declare LazySeq'new LazySeq''sval)
-(declare LineNumberingPushbackReader'newline LineNumberingPushbackReader'new-1 LineNumberingPushbackReader'new-2 LineNumberingPushbackReader''getLineNumber LineNumberingPushbackReader''setLineNumber LineNumberingPushbackReader''getColumnNumber LineNumberingPushbackReader''readLine LineNumberingPushbackReader''atLineStart)
-(declare LispReaderException'new)
-(declare RegexReader'new)
-(declare StringReader'new)
-(declare CommentReader'new)
-(declare DiscardReader'new)
-(declare NamespaceMapReader'new)
-(declare SymbolicValueReader'new)
-(declare WrappingReader'new)
-(declare VarReader'new)
-(declare DispatchReader'new)
-(declare FnReader'new)
-(declare ArgReader'new)
-(declare MetaReader'new)
-(declare SyntaxQuoteReader'new SyntaxQuoteReader'syntaxQuote SyntaxQuoteReader'sqExpandList SyntaxQuoteReader'flattenMap)
-(declare UnquoteReader'new)
-(declare CharacterReader'new)
-(declare ListReader'new)
-(declare VectorReader'new)
-(declare MapReader'new)
-(declare SetReader'new)
-(declare UnmatchedDelimiterReader'new)
-(declare LispReader'macros LispReader'dispatchMacros LispReader'symbolPat LispReader'intPat LispReader'ratioPat LispReader'floatPat LispReader'isWhitespace LispReader'unread LispReader'read1 LispReader'read-1 LispReader'read-4 LispReader'read-6 LispReader'readToken LispReader'readNumber LispReader'readUnicodeChar-4 LispReader'readUnicodeChar-5 LispReader'interpretToken LispReader'matchSymbol LispReader'matchNumber LispReader'getMacro LispReader'isMacro LispReader'isTerminatingMacro LispReader'garg LispReader'registerArg LispReader'isUnquoteSplicing LispReader'isUnquote LispReader'READ_EOF LispReader'READ_FINISHED LispReader'readDelimitedForms)
-(declare LongChunk'new LongChunk''first)
-(declare LongRange'CHUNK_SIZE LongRange'positiveStep LongRange'negativeStep LongRange'new LongRange'create-1 LongRange'create-2 LongRange'create-3 LongRange''forceChunk LongRange''steppingCount LongRange''rangeCount)
-(declare MapEntry'create MapEntry'new)
-(declare Entry'new)
-(declare MethodImplCache'new MethodImplCache''fnFor MethodImplCache''findFnFor)
-(declare MultiFn'new MultiFn''reset MultiFn''addMethod MultiFn''removeMethod MultiFn''preferMethod MultiFn''prefers MultiFn''isA MultiFn''dominates MultiFn''resetCache MultiFn''getMethod MultiFn''getFn MultiFn''findAndCacheBestMethod)
-(declare Murmur3'seed Murmur3'C1 Murmur3'C2 Murmur3'hashInt Murmur3'hashLong Murmur3'hashUnencodedChars Murmur3'mixCollHash Murmur3'hashOrdered Murmur3'hashUnordered Murmur3'mixK1 Murmur3'mixH1 Murmur3'fmix)
-(declare Namespace'namespaces Namespace'new Namespace'all Namespace''getName Namespace''getMappings Namespace''warnOrFailOnReplace Namespace''intern Namespace''referenceVar Namespace'areDifferentInstancesOfSameClassName Namespace''referenceClass Namespace''unmap Namespace''importClass-2 Namespace''importClass-3 Namespace''refer Namespace'findOrCreate Namespace'remove Namespace'find Namespace''getMapping Namespace''findInternedVar Namespace''getAliases Namespace''lookupAlias Namespace''addAlias Namespace''removeAlias)
-(declare OpsP'new)
-(declare LongOps'new LongOps'gcd)
-(declare DoubleOps'new)
-(declare RatioOps'new RatioOps'normalizeRet)
-(declare BigIntOps'new)
-(declare BigDecimalOps'new)
-(declare Numbers'isZero-1o Numbers'isPos-1o Numbers'isNeg-1o Numbers'minus-1o Numbers'minusP-1o Numbers'inc-1o Numbers'incP-1o Numbers'dec-1o Numbers'decP-1o Numbers'add-2oo Numbers'addP-2oo Numbers'minus-2oo Numbers'minusP-2oo Numbers'multiply-2oo Numbers'multiplyP-2oo Numbers'divide-2oo Numbers'quotient-2oo Numbers'remainder-2oo Numbers'quotient-2dd Numbers'remainder-2dd Numbers'equiv-2oo Numbers'equiv-2nn Numbers'equal Numbers'lt-2oo Numbers'lte-2oo Numbers'gt-2oo Numbers'gte-2oo Numbers'compare Numbers'toBigInt Numbers'toBigInteger Numbers'toBigDecimal Numbers'toRatio Numbers'rationalize Numbers'reduceBigInt Numbers'divide-2ii Numbers'shiftLeftInt Numbers'shiftLeft-2oo Numbers'shiftLeft-2ol Numbers'shiftLeft-2lo Numbers'shiftLeft-2ll Numbers'shiftRightInt Numbers'shiftRight-2oo Numbers'shiftRight-2ol Numbers'shiftRight-2lo Numbers'shiftRight-2ll Numbers'unsignedShiftRightInt Numbers'unsignedShiftRight-2oo Numbers'unsignedShiftRight-2ol Numbers'unsignedShiftRight-2lo Numbers'unsignedShiftRight-2ll Numbers'ops Numbers'hasheqFrom Numbers'hasheq Numbers'category Numbers'bitOpsCast Numbers'float_array-2 Numbers'float_array-1 Numbers'double_array-2 Numbers'double_array-1 Numbers'int_array-2 Numbers'int_array-1 Numbers'long_array-2 Numbers'long_array-1 Numbers'short_array-2 Numbers'short_array-1 Numbers'char_array-2 Numbers'char_array-1 Numbers'byte_array-2 Numbers'byte_array-1 Numbers'boolean_array-2 Numbers'boolean_array-1 Numbers'booleans Numbers'bytes Numbers'chars Numbers'shorts Numbers'floats Numbers'doubles Numbers'ints Numbers'longs Numbers'num-1o Numbers'num-1f Numbers'num-1d Numbers'add-2dd Numbers'addP-2dd Numbers'minus-2dd Numbers'minusP-2dd Numbers'minus-1d Numbers'minusP-1d Numbers'inc-1d Numbers'incP-1d Numbers'dec-1d Numbers'decP-1d Numbers'multiply-2dd Numbers'multiplyP-2dd Numbers'divide-2dd Numbers'equiv-2dd Numbers'lt-2dd Numbers'lte-2dd Numbers'gt-2dd Numbers'gte-2dd Numbers'isPos-1d Numbers'isNeg-1d Numbers'isZero-1d Numbers'throwIntOverflow Numbers'unchecked_int_add Numbers'unchecked_int_subtract Numbers'unchecked_int_negate Numbers'unchecked_int_inc Numbers'unchecked_int_dec Numbers'unchecked_int_multiply Numbers'not-1o Numbers'not-1l Numbers'and-2oo Numbers'and-2ol Numbers'and-2lo Numbers'and-2ll Numbers'or-2oo Numbers'or-2ol Numbers'or-2lo Numbers'or-2ll Numbers'xor-2oo Numbers'xor-2ol Numbers'xor-2lo Numbers'xor-2ll Numbers'andNot-2oo Numbers'andNot-2ol Numbers'andNot-2lo Numbers'andNot-2ll Numbers'clearBit-2oo Numbers'clearBit-2ol Numbers'clearBit-2lo Numbers'clearBit-2ll Numbers'setBit-2oo Numbers'setBit-2ol Numbers'setBit-2lo Numbers'setBit-2ll Numbers'flipBit-2oo Numbers'flipBit-2ol Numbers'flipBit-2lo Numbers'flipBit-2ll Numbers'testBit-2oo Numbers'testBit-2ol Numbers'testBit-2lo Numbers'testBit-2ll Numbers'unchecked_int_divide Numbers'unchecked_int_remainder Numbers'num-1l Numbers'unchecked_add-2ll Numbers'unchecked_minus-2ll Numbers'unchecked_multiply-2ll Numbers'unchecked_minus-1l Numbers'unchecked_inc-1l Numbers'unchecked_dec-1l Numbers'unchecked_add-2oo Numbers'unchecked_minus-2oo Numbers'unchecked_multiply-2oo Numbers'unchecked_minus-1o Numbers'unchecked_inc-1o Numbers'unchecked_dec-1o Numbers'unchecked_add-2dd Numbers'unchecked_minus-2dd Numbers'unchecked_multiply-2dd Numbers'unchecked_minus-1d Numbers'unchecked_inc-1d Numbers'unchecked_dec-1d Numbers'unchecked_add-2do Numbers'unchecked_minus-2do Numbers'unchecked_multiply-2do Numbers'unchecked_add-2od Numbers'unchecked_minus-2od Numbers'unchecked_multiply-2od Numbers'unchecked_add-2dl Numbers'unchecked_minus-2dl Numbers'unchecked_multiply-2dl Numbers'unchecked_add-2ld Numbers'unchecked_minus-2ld Numbers'unchecked_multiply-2ld Numbers'unchecked_add-2lo Numbers'unchecked_minus-2lo Numbers'unchecked_multiply-2lo Numbers'unchecked_add-2ol Numbers'unchecked_minus-2ol Numbers'unchecked_multiply-2ol Numbers'quotient-2do Numbers'quotient-2od Numbers'quotient-2lo Numbers'quotient-2ol Numbers'quotient-2dl Numbers'quotient-2ld Numbers'remainder-2do Numbers'remainder-2od Numbers'remainder-2lo Numbers'remainder-2ol Numbers'remainder-2dl Numbers'remainder-2ld Numbers'add-2ll Numbers'addP-2ll Numbers'minus-2ll Numbers'minusP-2ll Numbers'minus-1l Numbers'minusP-1l Numbers'inc-1l Numbers'dec-1l Numbers'incP-1l Numbers'decP-1l Numbers'multiply-2ll Numbers'multiplyP-2ll Numbers'quotient-2ll Numbers'remainder-2ll Numbers'equiv-2ll Numbers'lt-2ll Numbers'lte-2ll Numbers'gt-2ll Numbers'gte-2ll Numbers'isPos-1l Numbers'isNeg-1l Numbers'isZero-1l Numbers'add-2lo Numbers'add-2ol Numbers'addP-2lo Numbers'addP-2ol Numbers'add-2do Numbers'add-2od Numbers'add-2dl Numbers'add-2ld Numbers'addP-2do Numbers'addP-2od Numbers'addP-2dl Numbers'addP-2ld Numbers'minus-2lo Numbers'minus-2ol Numbers'minusP-2lo Numbers'minusP-2ol Numbers'minus-2do Numbers'minus-2od Numbers'minus-2dl Numbers'minus-2ld Numbers'minusP-2do Numbers'minusP-2od Numbers'minusP-2dl Numbers'minusP-2ld Numbers'multiply-2lo Numbers'multiply-2ol Numbers'multiplyP-2lo Numbers'multiplyP-2ol Numbers'multiply-2do Numbers'multiply-2od Numbers'multiply-2dl Numbers'multiply-2ld Numbers'multiplyP-2do Numbers'multiplyP-2od Numbers'multiplyP-2dl Numbers'multiplyP-2ld Numbers'divide-2lo Numbers'divide-2ol Numbers'divide-2do Numbers'divide-2od Numbers'divide-2dl Numbers'divide-2ld Numbers'divide-2ll Numbers'lt-2lo Numbers'lt-2ol Numbers'lt-2do Numbers'lt-2od Numbers'lt-2dl Numbers'lt-2ld Numbers'lte-2lo Numbers'lte-2ol Numbers'lte-2do Numbers'lte-2od Numbers'lte-2dl Numbers'lte-2ld Numbers'gt-2lo Numbers'gt-2ol Numbers'gt-2do Numbers'gt-2od Numbers'gt-2dl Numbers'gt-2ld Numbers'gte-2lo Numbers'gte-2ol Numbers'gte-2do Numbers'gte-2od Numbers'gte-2dl Numbers'gte-2ld Numbers'equiv-2lo Numbers'equiv-2ol Numbers'equiv-2do Numbers'equiv-2od Numbers'equiv-2dl Numbers'equiv-2ld Numbers'isNaN Numbers'max-2ll Numbers'max-2dd Numbers'max-2ld Numbers'max-2dl Numbers'max-2lo Numbers'max-2ol Numbers'max-2do Numbers'max-2od Numbers'max-2oo Numbers'min-2ll Numbers'min-2dd Numbers'min-2ld Numbers'min-2dl Numbers'min-2lo Numbers'min-2ol Numbers'min-2do Numbers'min-2od Numbers'min-2oo)
-(declare MSeq'new)
-(declare MIter'new)
-(declare TransientArrayMap'new TransientArrayMap''indexOf)
-(declare PersistentArrayMap'HASHTABLE_THRESHOLD PersistentArrayMap'create PersistentArrayMap'new PersistentArrayMap''create PersistentArrayMap''createHT PersistentArrayMap'createWithCheck PersistentArrayMap'createAsIfByAssoc PersistentArrayMap''capacity PersistentArrayMap''indexOfObject PersistentArrayMap''indexOf PersistentArrayMap'equalKey)
-(declare TransientHashMap'new-1 TransientHashMap'new-5)
-(declare HSeq'create-1 HSeq'create-4 HSeq'new)
-(declare HIter'new)
-(declare ArrayNode'new ArrayNode'foldTasks ArrayNode''ensureEditable ArrayNode''editAndSet ArrayNode''pack)
-(declare BitmapIndexedNode'new BitmapIndexedNode''index BitmapIndexedNode''ensureEditable BitmapIndexedNode''editAndSet-4 BitmapIndexedNode''editAndSet-6 BitmapIndexedNode''editAndRemovePair)
-(declare HashCollisionNode'new HashCollisionNode''findIndex HashCollisionNode''ensureEditable-2 HashCollisionNode''ensureEditable-4 HashCollisionNode''editAndSet-4 HashCollisionNode''editAndSet-6)
+(§ declare Keyword'RQ)
+(§ declare Keyword'intern)
+(§ declare Keyword'new)
+(§ declare Keyword'find)
+(§ declare Keyword''throwArity)
+(declare KeywordLookupSite''ilookupThunk)
+(declare KeywordLookupSite''install)
+(declare LazilyPersistentVector'createOwning)
+(declare LazilyPersistentVector'create)
+(§ declare LazySeq''sval)
+(declare LineNumberingPushbackReader'new-1)
+(§ declare LineNumberingPushbackReader''getLineNumber)
+(§ declare LineNumberingPushbackReader''getColumnNumber)
+(§ declare LispReaderException'new)
+(§ declare RegexReader'new)
+(§ declare StringReader'new)
+(§ declare CommentReader'new)
+(§ declare DiscardReader'new)
+(§ declare NamespaceMapReader'new)
+(§ declare SymbolicValueReader'new)
+(§ declare WrappingReader'new)
+(§ declare VarReader'new)
+(§ declare DispatchReader'new)
+(§ declare FnReader'new)
+(§ declare ArgReader'new)
+(§ declare MetaReader'new)
+(§ declare SyntaxQuoteReader'new)
+(declare SyntaxQuoteReader'syntaxQuote)
+(declare SyntaxQuoteReader'sqExpandList)
+(declare SyntaxQuoteReader'flattenMap)
+(§ declare UnquoteReader'new)
+(§ declare CharacterReader'new)
+(§ declare ListReader'new)
+(§ declare VectorReader'new)
+(§ declare MapReader'new)
+(§ declare SetReader'new)
+(§ declare UnmatchedDelimiterReader'new)
+(§ declare LispReader'macros)
+(declare LispReader'dispatchMacros)
+(§ declare LispReader'symbolPat)
+(§ declare LispReader'intPat)
+(§ declare LispReader'ratioPat)
+(§ declare LispReader'floatPat)
+(declare LispReader'isWhitespace)
+(declare LispReader'unread)
+(declare LispReader'read1)
+(§ declare LispReader'read-1)
+(declare LispReader'read-4)
+(declare LispReader'read-6)
+(declare LispReader'readToken)
+(declare LispReader'readNumber)
+(declare LispReader'readUnicodeChar-4)
+(declare LispReader'readUnicodeChar-5)
+(declare LispReader'interpretToken)
+(declare LispReader'matchSymbol)
+(declare LispReader'matchNumber)
+(declare LispReader'getMacro)
+(declare LispReader'isMacro)
+(declare LispReader'isTerminatingMacro)
+(declare LispReader'garg)
+(declare LispReader'registerArg)
+(declare LispReader'isUnquoteSplicing)
+(declare LispReader'isUnquote)
+(declare LispReader'readDelimitedForms)
+(§ declare LongChunk'new)
+(§ declare LongChunk''first)
+(§ declare LongRange''forceChunk)
+(declare LongRange''steppingCount)
+(declare LongRange''rangeCount)
+(declare MapEntry'create)
+(declare MapEntry'new)
+(§ declare MethodImplCache'new)
+(declare MethodImplCache''findFnFor)
+(declare MultiFn''prefers)
+(declare MultiFn''resetCache)
+(§ declare MultiFn''getMethod)
+(declare MultiFn''findAndCacheBestMethod)
+(§ declare Murmur3'hashInt)
+(declare Murmur3'hashLong)
+(declare Murmur3'hashUnencodedChars)
+(declare Murmur3'mixCollHash)
+(declare Murmur3'hashOrdered)
+(declare Murmur3'hashUnordered)
+(declare Murmur3'mixK1)
+(declare Murmur3'mixH1)
+(declare Murmur3'fmix)
+(§ declare Namespace'namespaces)
+(§ declare Namespace'new)
+(declare Namespace''getName)
+(§ declare Namespace''getMappings)
+(declare Namespace''intern)
+(§ declare Namespace''referenceVar)
+(§ declare Namespace'areDifferentInstancesOfSameClassName)
+(§ declare Namespace''referenceClass)
+(declare Namespace''importClass-2)
+(§ declare Namespace''importClass-3)
+(declare Namespace'findOrCreate)
+(declare Namespace'find)
+(declare Namespace''getMapping)
+(declare Namespace''findInternedVar)
+(§ declare Namespace''getAliases)
+(declare Namespace''lookupAlias)
+(§ declare OpsP'new)
+(§ declare LongOps'new)
+(§ declare LongOps'gcd)
+(§ declare DoubleOps'new)
+(§ declare RatioOps'new)
+(§ declare RatioOps'normalizeRet)
+(§ declare BigIntOps'new)
+(§ declare BigDecimalOps'new)
+(§ declare Numbers'isZero-1o)
+(§ declare Numbers'isPos-1o)
+(§ declare Numbers'isNeg-1o)
+(§ declare Numbers'minus-1o)
+(§ declare Numbers'inc-1o)
+(§ declare Numbers'dec-1o)
+(§ declare Numbers'add-2oo)
+(§ declare Numbers'addP-2oo)
+(declare Numbers'minus-2oo)
+(§ declare Numbers'minusP-2oo)
+(declare Numbers'multiply-2oo)
+(§ declare Numbers'multiplyP-2oo)
+(declare Numbers'divide-2oo)
+(§ declare Numbers'quotient-2oo)
+(§ declare Numbers'remainder-2oo)
+(declare Numbers'quotient-2dd)
+(declare Numbers'remainder-2dd)
+(§ declare Numbers'equiv-2oo)
+(declare Numbers'equiv-2nn)
+(§ declare Numbers'equal)
+(declare Numbers'lt-2oo)
+(declare Numbers'lte-2oo)
+(§ declare Numbers'gt-2oo)
+(declare Numbers'gte-2oo)
+(§ declare Numbers'compare)
+(declare Numbers'toBigInt)
+(§ declare Numbers'toBigInteger)
+(declare Numbers'toRatio)
+(§ declare Numbers'rationalize)
+(declare Numbers'reduceBigInt)
+(declare Numbers'divide-2ii)
+(declare Numbers'shiftLeft-2ll)
+(declare Numbers'shiftRight-2ll)
+(declare Numbers'unsignedShiftRight-2ll)
+(declare Numbers'ops)
+(§ declare Numbers'hasheqFrom)
+(§ declare Numbers'hasheq)
+(declare Numbers'category)
+(declare Numbers'bitOpsCast)
+(declare Numbers'int_array-1)
+(declare Numbers'num-1f)
+(§ declare Numbers'add-2dd)
+(§ declare Numbers'addP-2dd)
+(§ declare Numbers'minus-2dd)
+(§ declare Numbers'minus-1d)
+(§ declare Numbers'inc-1d)
+(§ declare Numbers'dec-1d)
+(§ declare Numbers'multiply-2dd)
+(§ declare Numbers'multiplyP-2dd)
+(declare Numbers'throwIntOverflow)
+(declare Numbers'not-1l)
+(declare Numbers'and-2ll)
+(declare Numbers'or-2ll)
+(declare Numbers'xor-2ll)
+(declare Numbers'andNot-2ll)
+(declare Numbers'clearBit-2ll)
+(declare Numbers'setBit-2ll)
+(declare Numbers'flipBit-2ll)
+(declare Numbers'testBit-2ll)
+(declare Numbers'num-1l)
+(declare Numbers'add-2ll)
+(declare Numbers'minus-2ll)
+(declare Numbers'minus-1l)
+(declare Numbers'inc-1l)
+(declare Numbers'dec-1l)
+(declare Numbers'multiply-2ll)
+(declare Numbers'add-2lo)
+(declare Numbers'add-2ol)
+(declare Numbers'add-2do)
+(declare Numbers'add-2od)
+(declare Numbers'add-2dl)
+(declare Numbers'add-2ld)
+(declare Numbers'minus-2lo)
+(declare Numbers'minus-2ol)
+(declare Numbers'minus-2do)
+(declare Numbers'minus-2od)
+(declare Numbers'minus-2dl)
+(declare Numbers'minus-2ld)
+(declare Numbers'multiply-2lo)
+(declare Numbers'multiply-2ol)
+(declare Numbers'multiply-2do)
+(declare Numbers'multiply-2od)
+(declare Numbers'multiply-2dl)
+(declare Numbers'multiply-2ld)
+(§ declare Numbers'lt-2lo)
+(§ declare Numbers'lt-2ol)
+(declare Numbers'lte-2ol)
+(§ declare Numbers'gt-2lo)
+(§ declare Numbers'gt-2ol)
+(declare Numbers'gte-2ol)
+(declare Numbers'isNaN)
+(§ declare MSeq'new)
+(§ declare MIter'new)
+(§ declare TransientArrayMap'new)
+(declare PersistentArrayMap'HASHTABLE_THRESHOLD)
+(declare PersistentArrayMap'new)
+(§ declare PersistentArrayMap''create)
+(§ declare PersistentArrayMap''createHT)
+(§ declare PersistentArrayMap'createWithCheck)
+(declare PersistentArrayMap''indexOf)
+(declare PersistentArrayMap'equalKey)
+(§ declare TransientHashMap'new-1)
+(declare TransientHashMap'new-5)
+(§ declare HSeq'create-1)
+(declare HSeq'create-4)
+(declare HSeq'new)
+(§ declare HIter'new)
+(§ declare ArrayNode'new)
+(declare ArrayNode'foldTasks)
+(declare ArrayNode''pack)
+(declare BitmapIndexedNode'new)
+(§ declare BitmapIndexedNode''index)
+(§ declare HashCollisionNode'new)
+(declare HashCollisionNode''findIndex)
 (declare NodeIter'new)
-(declare NodeSeq'new NodeSeq'create-1 NodeSeq'kvreduce NodeSeq'create-3)
-(declare PersistentHashMap'NOT_FOUND PersistentHashMap'create-1m PersistentHashMap'create-1a PersistentHashMap'createWithCheck-1a PersistentHashMap'create-1s PersistentHashMap'createWithCheck-1s PersistentHashMap'create-2 PersistentHashMap'new PersistentHashMap'hash PersistentHashMap'EMPTY_ITER PersistentHashMap''iterator PersistentHashMap''fold PersistentHashMap'mask PersistentHashMap'cloneAndSet-3 PersistentHashMap'cloneAndSet-5 PersistentHashMap'removePair PersistentHashMap'createNode-6 PersistentHashMap'createNode-7 PersistentHashMap'bitpos)
-(declare TransientHashSet'new)
-(declare PersistentHashSet'create-1a PersistentHashSet'create-1l PersistentHashSet'create-1s PersistentHashSet'createWithCheck-1a PersistentHashSet'createWithCheck-1i PersistentHashSet'createWithCheck-1s PersistentHashSet'new)
-(declare Primordial'new Primordial'invokeStatic)
-(declare EmptyList'new EmptyList'hasheq)
-(declare PersistentList'new PersistentList'create)
-(declare QSeq'new)
-(declare PersistentQueue'new)
-(declare TNode'new)
-(declare Black'new)
-(declare BlackVal'new)
-(declare BlackBranch'new)
-(declare BlackBranchVal'new)
+(§ declare NodeSeq'new)
+(declare NodeSeq'create-1)
+(declare NodeSeq'kvreduce)
+(declare NodeSeq'create-3)
+(declare PersistentHashMap'create-1a)
+(§ declare PersistentHashMap'createWithCheck-1a)
+(declare PersistentHashMap'create-2)
+(declare PersistentHashMap'new)
+(declare PersistentHashMap'hash)
+(§ declare PersistentHashMap'EMPTY_ITER)
+(declare PersistentHashMap'mask)
+(declare PersistentHashMap'cloneAndSet-3)
+(declare PersistentHashMap'cloneAndSet-5)
+(declare PersistentHashMap'removePair)
+(declare PersistentHashMap'createNode-6)
+(declare PersistentHashMap'createNode-7)
+(declare PersistentHashMap'bitpos)
+(§ declare TransientHashSet'new)
+(§ declare PersistentHashSet'createWithCheck-1a)
+(declare PersistentHashSet'createWithCheck-1i)
+(declare PersistentHashSet'new)
+(§ declare Primordial'new)
+(§ declare EmptyList'new)
+(declare PersistentList'new)
+(declare PersistentList'create)
+(§ declare QSeq'new)
+(§ declare PersistentQueue'new)
+(§ declare TNode'new)
+(§ declare Black'new)
+(§ declare BlackVal'new)
+(§ declare BlackBranch'new)
+(§ declare BlackBranchVal'new)
 (declare Red'new)
 (declare RedVal'new)
 (declare RedBranch'new)
 (declare RedBranchVal'new)
-(declare TSeq'new TSeq'create TSeq'push)
-(declare NodeIterator'new)
-(declare PersistentTreeMap'create-1m PersistentTreeMap'new PersistentTreeMap'create-1s PersistentTreeMap'create-2 PersistentTreeMap''reverseIterator PersistentTreeMap''keys PersistentTreeMap''vals PersistentTreeMap''minKey PersistentTreeMap''min PersistentTreeMap''maxKey PersistentTreeMap''max PersistentTreeMap''depth-1 PersistentTreeMap''depth-2 PersistentTreeMap''capacity PersistentTreeMap''doCompare PersistentTreeMap''add PersistentTreeMap''remove PersistentTreeMap'append PersistentTreeMap'balanceLeftDel PersistentTreeMap'balanceRightDel PersistentTreeMap'leftBalance PersistentTreeMap'rightBalance PersistentTreeMap''replace PersistentTreeMap'red PersistentTreeMap'black)
-(declare PersistentTreeSet'create-1 PersistentTreeSet'create-2 PersistentTreeSet'new)
-(declare VNode'new)
-(declare ChunkedSeq'new)
-(declare TransientVector'new TransientVector''ensureEditable-1 TransientVector''ensureEditable-2 TransientVector'editableRoot TransientVector'editableTail TransientVector''pushTail TransientVector''tailoff TransientVector''arrayFor TransientVector''editableArrayFor TransientVector'NOT_FOUND TransientVector''doAssoc TransientVector''popTail)
-(declare PersistentVector'NOEDIT PersistentVector'EMPTY_NODE PersistentVector'adopt PersistentVector'create-1r PersistentVector'create-1s PersistentVector'create-1l PersistentVector'create-1i PersistentVector'create-1a PersistentVector'new PersistentVector''tailoff PersistentVector''arrayFor PersistentVector'doAssoc PersistentVector''pushTail PersistentVector'newPath PersistentVector''chunkedSeq PersistentVector''popTail)
-(declare ProxyHandler'new)
-(declare Range'CHUNK_SIZE Range'positiveStep Range'negativeStep Range'new Range'create-1 Range'create-2 Range'create-3 Range''forceChunk)
-(declare Ratio'new Ratio''intValue Ratio''longValue Ratio''floatValue Ratio''doubleValue Ratio''decimalValue-1 Ratio''decimalValue-2 Ratio''bigIntegerValue)
-(declare Reduced'new)
-(declare Reflector'invokeInstanceMethod Reflector'getCauseOrElse Reflector'noMethodReport Reflector'invokeMatchingMethod Reflector'getAsMethodOfPublicBase Reflector'isMatch Reflector'invokeConstructor Reflector'invokeStaticMethodVariadic Reflector'invokeStaticMethod-3s Reflector'invokeStaticMethod-3c Reflector'getStaticField-2s Reflector'getStaticField-2c Reflector'setStaticField-3s Reflector'setStaticField-3c Reflector'getInstanceField Reflector'setInstanceField Reflector'invokeNoArgInstanceMember Reflector'invokeInstanceMember-2 Reflector'invokeInstanceMember-3o Reflector'invokeInstanceMember-3a Reflector'getField Reflector'getMethods Reflector'boxArg Reflector'boxArgs Reflector'paramArgTypeMatch Reflector'isCongruent Reflector'prepRet)
-(declare Repeat'INFINITE Repeat'new Repeat'create-1 Repeat'create-2)
-(declare RestFn'new RestFn'ontoArrayPrepend RestFn'findKey)
-(declare RT'BOOLEANS_CLASS RT'BYTES_CLASS RT'SHORTS_CLASS RT'CHARS_CLASS RT'INTS_CLASS RT'LONGS_CLASS RT'FLOATS_CLASS RT'DOUBLES_CLASS RT'OBJECTS_CLASS)
-(declare RT'T RT'F RT'LOADER_SUFFIX RT'UTF8 RT'inNamespace RT'bootNamespace RT'errPrintWriter RT'EMPTY_ARRAY RT'ID RT'keyword RT'var RT'loadResourceScript RT'lastModified RT'load-1 RT'load-2 RT'nextID RT'CHUNK_SIZE RT'chunkIteratorSeq RT'seq RT'seqFrom RT'canSeq RT'iter RT'seqOrElse RT'keys RT'vals RT'meta RT'count RT'conj RT'cons RT'first RT'second RT'third RT'fourth RT'next RT'more RT'peek RT'pop RT'get-2 RT'getFrom-2 RT'get-3 RT'getFrom-3 RT'assoc RT'contains RT'find RT'findKey RT'dissoc RT'nth-2 RT'nth-3 RT'assocN RT'hasTag RT'box-1o RT'box-1c RT'box-1z RT'box-1Z RT'box-1b RT'box-1s RT'box-1i RT'box-1l RT'box-1f RT'box-1d RT'charCast-1o RT'charCast-1b RT'charCast-1s RT'charCast-1c RT'charCast-1i RT'charCast-1l RT'charCast-1f RT'charCast-1d RT'booleanCast-1o RT'booleanCast-1b RT'byteCast-1o RT'byteCast-1b RT'byteCast-1s RT'byteCast-1i RT'byteCast-1l RT'byteCast-1f RT'byteCast-1d RT'shortCast-1o RT'shortCast-1b RT'shortCast-1s RT'shortCast-1i RT'shortCast-1l RT'shortCast-1f RT'shortCast-1d RT'intCast-1o RT'intCast-1b RT'intCast-1s RT'intCast-1c RT'intCast-1i RT'intCast-1l RT'intCast-1f RT'intCast-1d RT'longCast-1o RT'longCast-1b RT'longCast-1s RT'longCast-1i RT'longCast-1l RT'longCast-1f RT'longCast-1d RT'floatCast-1o RT'floatCast-1b RT'floatCast-1s RT'floatCast-1i RT'floatCast-1l RT'floatCast-1f RT'floatCast-1d RT'doubleCast-1o RT'doubleCast-1b RT'doubleCast-1s RT'doubleCast-1i RT'doubleCast-1l RT'doubleCast-1f RT'doubleCast-1d RT'uncheckedByteCast-1o RT'uncheckedByteCast-1b RT'uncheckedByteCast-1s RT'uncheckedByteCast-1i RT'uncheckedByteCast-1l RT'uncheckedByteCast-1f RT'uncheckedByteCast-1d RT'uncheckedShortCast-1o RT'uncheckedShortCast-1b RT'uncheckedShortCast-1s RT'uncheckedShortCast-1i RT'uncheckedShortCast-1l RT'uncheckedShortCast-1f RT'uncheckedShortCast-1d RT'uncheckedCharCast-1o RT'uncheckedCharCast-1b RT'uncheckedCharCast-1s RT'uncheckedCharCast-1c RT'uncheckedCharCast-1i RT'uncheckedCharCast-1l RT'uncheckedCharCast-1f RT'uncheckedCharCast-1d RT'uncheckedIntCast-1o RT'uncheckedIntCast-1b RT'uncheckedIntCast-1s RT'uncheckedIntCast-1c RT'uncheckedIntCast-1i RT'uncheckedIntCast-1l RT'uncheckedIntCast-1f RT'uncheckedIntCast-1d RT'uncheckedLongCast-1o RT'uncheckedLongCast-1b RT'uncheckedLongCast-1s RT'uncheckedLongCast-1i RT'uncheckedLongCast-1l RT'uncheckedLongCast-1f RT'uncheckedLongCast-1d RT'uncheckedFloatCast-1o RT'uncheckedFloatCast-1b RT'uncheckedFloatCast-1s RT'uncheckedFloatCast-1i RT'uncheckedFloatCast-1l RT'uncheckedFloatCast-1f RT'uncheckedFloatCast-1d RT'uncheckedDoubleCast-1o RT'uncheckedDoubleCast-1b RT'uncheckedDoubleCast-1s RT'uncheckedDoubleCast-1i RT'uncheckedDoubleCast-1l RT'uncheckedDoubleCast-1f RT'uncheckedDoubleCast-1d RT'map RT'mapUniqueKeys RT'set RT'vector RT'subvec RT'list-0 RT'list-1 RT'list-2 RT'list-3 RT'list-4 RT'list-5 RT'listStar-2 RT'listStar-3 RT'listStar-4 RT'listStar-5 RT'listStar-6 RT'arrayToList RT'object_array RT'toArray RT'seqToArray RT'seqToPassedArray RT'seqToTypedArray-1 RT'seqToTypedArray-2 RT'length RT'boundedLength RT'readRet RT'readChar RT'peekChar RT'getLineNumber RT'getColumnNumber RT'getLineNumberingReader RT'isLineNumberingReader RT'isReduced RT'printString RT'readString RT'print RT'printInnerSeq RT'makeClassLoader RT'baseLoader RT'resourceAsStream RT'getResource RT'classForName-3 RT'classForName-1 RT'classForNameNonLoading RT'loadClassForName RT'aget_boolean RT'aget_byte RT'aget_short RT'aget_char RT'aget_int RT'aget_long RT'aget_float RT'aget_double RT'aget_object RT'aset_boolean RT'aset_byte RT'aset_short RT'aset_char RT'aset_int RT'aset_long RT'aset_float RT'aset_double RT'aset_object RT'alength_boolean RT'alength_byte RT'alength_short RT'alength_char RT'alength_int RT'alength_long RT'alength_float RT'alength_double RT'alength_object RT'aclone_boolean RT'aclone_byte RT'aclone_short RT'aclone_char RT'aclone_int RT'aclone_long RT'aclone_float RT'aclone_double RT'aclone_object)
+(§ declare TSeq'new)
+(§ declare TSeq'create)
+(declare TSeq'push)
+(§ declare NodeIterator'new)
+(§ declare PersistentTreeMap'new)
+(declare PersistentTreeMap''min)
+(declare PersistentTreeMap''max)
+(declare PersistentTreeMap''depth-2)
+(declare PersistentTreeMap''doCompare)
+(declare PersistentTreeMap''add)
+(declare PersistentTreeMap''remove)
+(declare PersistentTreeMap'append)
+(declare PersistentTreeMap'balanceLeftDel)
+(declare PersistentTreeMap'balanceRightDel)
+(declare PersistentTreeMap'leftBalance)
+(declare PersistentTreeMap'rightBalance)
+(declare PersistentTreeMap''replace)
+(declare PersistentTreeMap'red)
+(declare PersistentTreeMap'black)
+(§ declare PersistentTreeSet'new)
+(§ declare VNode'new)
+(§ declare ChunkedSeq'new)
+(§ declare TransientVector'new)
+(declare TransientVector''ensureEditable-1)
+(§ declare TransientVector''ensureEditable-2)
+(declare TransientVector''pushTail)
+(declare TransientVector''tailoff)
+(declare TransientVector''doAssoc)
+(declare TransientVector''popTail)
+(§ declare PersistentVector'NOEDIT)
+(declare PersistentVector'EMPTY_NODE)
+(declare PersistentVector'create-1r)
+(declare PersistentVector'create-1s)
+(§ declare PersistentVector'create-1l)
+(declare PersistentVector'create-1i)
+(declare PersistentVector'create-1a)
+(declare PersistentVector'new)
+(§ declare PersistentVector''tailoff)
+(declare PersistentVector''arrayFor)
+(declare PersistentVector'doAssoc)
+(declare PersistentVector''pushTail)
+(declare PersistentVector'newPath)
+(§ declare PersistentVector''chunkedSeq)
+(declare PersistentVector''popTail)
+(declare Range'create-3)
+(§ declare Range''forceChunk)
+(declare Ratio'new)
+(declare Ratio''doubleValue)
+(declare Ratio''decimalValue-2)
+(declare Ratio''bigIntegerValue)
+(declare Reflector'invokeInstanceMethod)
+(declare Reflector'invokeMatchingMethod)
+(declare Reflector'getAsMethodOfPublicBase)
+(declare Reflector'isMatch)
+(declare Reflector'invokeConstructor)
+(declare Reflector'invokeStaticMethod-3s)
+(declare Reflector'invokeStaticMethod-3c)
+(declare Reflector'getStaticField-2c)
+(declare Reflector'setStaticField-3c)
+(declare Reflector'getInstanceField)
+(declare Reflector'setInstanceField)
+(declare Reflector'invokeNoArgInstanceMember)
+(declare Reflector'getField)
+(declare Reflector'getMethods)
+(declare Reflector'boxArg)
+(declare Reflector'boxArgs)
+(declare Reflector'paramArgTypeMatch)
+(declare Reflector'isCongruent)
+(declare Reflector'prepRet)
+(declare Repeat'create-1)
+(§ declare RestFn'new)
+(declare RestFn'ontoArrayPrepend)
+(declare RT'BOOLEANS_CLASS)
+(declare RT'BYTES_CLASS)
+(declare RT'SHORTS_CLASS)
+(declare RT'CHARS_CLASS)
+(declare RT'INTS_CLASS)
+(declare RT'LONGS_CLASS)
+(declare RT'FLOATS_CLASS)
+(declare RT'DOUBLES_CLASS)
+(declare RT'OBJECTS_CLASS)
+(declare RT'T)
+(declare RT'F)
+(§ declare RT'LOADER_SUFFIX)
+(§ declare RT'UTF8)
+(declare RT'errPrintWriter)
+(declare RT'EMPTY_ARRAY)
+(§ declare RT'ID)
+(declare RT'var)
+(§ declare RT'loadResourceScript)
+(§ declare RT'lastModified)
+(declare RT'load-1)
+(declare RT'load-2)
+(declare RT'nextID)
+(§ declare RT'chunkIteratorSeq)
+(declare RT'seq)
+(declare RT'seqFrom)
+(§ declare RT'iter)
+(declare RT'keys)
+(declare RT'meta)
+(declare RT'count)
+(declare RT'conj)
+(declare RT'cons)
+(declare RT'first)
+(declare RT'second)
+(declare RT'third)
+(declare RT'fourth)
+(declare RT'next)
+(declare RT'get-2)
+(declare RT'getFrom-2)
+(declare RT'get-3)
+(declare RT'getFrom-3)
+(declare RT'assoc)
+(declare RT'contains)
+(§ declare RT'dissoc)
+(declare RT'nth-2)
+(§ declare RT'box-1c)
+(§ declare RT'charCast-1o)
+(declare RT'booleanCast-1o)
+(§ declare RT'byteCast-1o)
+(§ declare RT'shortCast-1o)
+(§ declare RT'intCast-1o)
+(declare RT'intCast-1l)
+(declare RT'longCast-1o)
+(declare RT'longCast-1l)
+(declare RT'longCast-1d)
+(§ declare RT'floatCast-1o)
+(declare RT'map)
+(declare RT'mapUniqueKeys)
+(declare RT'set)
+(declare RT'vector)
+(declare RT'subvec)
+(declare RT'list-1)
+(declare RT'list-2)
+(declare RT'list-3)
+(declare RT'listStar-3)
+(declare RT'listStar-4)
+(declare RT'listStar-5)
+(declare RT'listStar-6)
+(declare RT'toArray)
+(declare RT'seqToArray)
+(declare RT'seqToPassedArray)
+(declare RT'seqToTypedArray-2)
+(declare RT'length)
+(declare RT'boundedLength)
+(§ declare RT'readRet)
+(declare RT'isLineNumberingReader)
+(declare RT'isReduced)
+(declare RT'printString)
+(declare RT'print)
+(declare RT'printInnerSeq)
+(declare RT'makeClassLoader)
+(declare RT'baseLoader)
+(declare RT'resourceAsStream)
+(declare RT'getResource)
+(§ declare RT'classForName-3)
+(declare RT'classForName-1)
+(declare RT'classForNameNonLoading)
+(declare RT'loadClassForName)
 (declare SeqIterator'new)
-(declare StringSeq'create StringSeq'new)
-(declare Symbol'intern Symbol'new)
-(declare MultiIterator'new)
-(declare TransformerIterator'NONE TransformerIterator'new TransformerIterator'create TransformerIterator'createMulti)
-(declare Tuple'MAX_SIZE Tuple'create)
-(declare Util'equiv-2oo Util'equivNull Util'equivEquals Util'equivNumber Util'equivColl Util'equivPred Util'equiv-2ll Util'equiv-2ol Util'equiv-2lo Util'equiv-2dd Util'equiv-2od Util'equiv-2do Util'equiv-2bb Util'equiv-2ob Util'equiv-2bo Util'equiv-2cc Util'pcequiv Util'equals Util'identical Util'classOf Util'compare Util'hash Util'hasheq Util'hashCombine Util'isPrimitive Util'isInteger Util'clearCache)
-(declare TBox'new)
-(declare Unbound'new)
-(declare Frame'new)
-(declare Var'dvals Var'intern Var'internPrivate Var'find Var'create Var'new Var''setDynamic Var''isDynamic Var''isBound Var''get Var''alter Var''set Var''setMeta Var''setMacro Var''isMacro Var''isPublic Var''getRawRoot Var''getTag Var''setTag Var''hasRoot Var''bindRoot Var''swapRoot Var''unbindRoot Var''commuteRoot Var''alterRoot Var'pushThreadBindings Var'popThreadBindings Var'getThreadBindings Var''getThreadBinding Var''fn)
-(declare Volatile'new Volatile''reset)
+(declare StringSeq'create)
+(declare StringSeq'new)
+(§ declare Symbol'intern)
+(§ declare MultiIterator'new)
+(declare Tuple'MAX_SIZE)
+(declare Util'equiv-2oo)
+(§ declare Util'equivNull)
+(§ declare Util'equivEquals)
+(§ declare Util'equivNumber)
+(§ declare Util'equivColl)
+(declare Util'equivPred)
+(declare Util'pcequiv)
+(declare Util'equals)
+(declare Util'classOf)
+(declare Util'compare)
+(declare Util'hash)
+(declare Util'hasheq)
+(declare Util'hashCombine)
+(declare Util'isPrimitive)
+(declare Util'isInteger)
+(declare Util'clearCache)
+(§ declare TBox'new)
+(§ declare Unbound'new)
+(§ declare Frame'new)
+(§ declare Var'dvals)
+(declare Var'intern)
+(declare Var'create)
+(declare Var'new)
+(declare Var''setDynamic)
+(declare Var''isDynamic)
+(declare Var''isBound)
+(declare Var''get)
+(declare Var''set)
+(declare Var''setMeta)
+(declare Var''setMacro)
+(declare Var''isMacro)
+(declare Var''isPublic)
+(declare Var''getTag)
+(declare Var''setTag)
+(declare Var''hasRoot)
+(declare Var''bindRoot)
+(declare Var'pushThreadBindings)
+(declare Var'popThreadBindings)
+(declare Var''getThreadBinding)
+(§ declare Var''fn)
 
-(declare BigInt'ZERO BigInt'ONE)
+(§ declare BigInt'ZERO)
 (declare ConstantParser'formKey)
-(declare InvokeExpr'onKey InvokeExpr'methodMapKey)
+(declare InvokeExpr'methodMapKey)
 (declare NewInstanceMethod'dummyThis)
-(declare CaseExpr'compactKey CaseExpr'sparseKey CaseExpr'hashIdentityKey CaseExpr'hashEquivKey CaseExpr'intKey)
-(declare Compiler'DEF Compiler'LOOP Compiler'RECUR Compiler'IF Compiler'LET Compiler'LETFN Compiler'DO Compiler'FN Compiler'FNONCE Compiler'QUOTE Compiler'THE_VAR Compiler'DOT Compiler'ASSIGN Compiler'TRY Compiler'CATCH Compiler'FINALLY Compiler'THROW Compiler'MONITOR_ENTER Compiler'MONITOR_EXIT Compiler'IMPORT Compiler'DEFTYPE Compiler'CASE Compiler'CLASS Compiler'NEW Compiler'THIS Compiler'REIFY Compiler'LIST Compiler'HASHMAP Compiler'VECTOR Compiler'IDENTITY Compiler'_AMP_ Compiler'ISEQ Compiler'loadNs Compiler'inlineKey Compiler'inlineAritiesKey Compiler'volatileKey Compiler'implementsKey Compiler'protocolKey Compiler'onKey Compiler'dynamicKey Compiler'redefKey Compiler'NS Compiler'IN_NS Compiler'specials Compiler'LOCAL_ENV Compiler'LOOP_LOCALS Compiler'LOOP_LABEL Compiler'CONSTANTS Compiler'CONSTANT_IDS Compiler'KEYWORD_CALLSITES Compiler'PROTOCOL_CALLSITES Compiler'VAR_CALLSITES Compiler'KEYWORDS Compiler'VARS Compiler'METHOD Compiler'IN_CATCH_FINALLY Compiler'METHOD_RETURN_CONTEXT Compiler'NO_RECUR Compiler'LOADER Compiler'INSTANCE Compiler'LINE Compiler'COLUMN Compiler'NEXT_LOCAL_NUM Compiler'RET_LOCAL_NUM Compiler'COMPILE_STUB_SYM Compiler'COMPILE_STUB_CLASS Compiler'CLEAR_PATH Compiler'CLEAR_ROOT Compiler'CLEAR_SITES Compiler'NIL_EXPR Compiler'TRUE_EXPR Compiler'FALSE_EXPR Compiler'CHAR_MAP)
-(declare Intrinsics'ops Intrinsics'preds)
+(declare CaseExpr'compactKey)
+(declare CaseExpr'sparseKey)
+(declare CaseExpr'hashIdentityKey)
+(declare CaseExpr'hashEquivKey)
+(declare CaseExpr'intKey)
+(declare Compiler'DEF)
+(declare Compiler'LOOP)
+(declare Compiler'RECUR)
+(declare Compiler'IF)
+(declare Compiler'LET)
+(declare Compiler'LETFN)
+(declare Compiler'DO)
+(declare Compiler'FN)
+(declare Compiler'FNONCE)
+(declare Compiler'QUOTE)
+(declare Compiler'THE_VAR)
+(declare Compiler'DOT)
+(declare Compiler'ASSIGN)
+(declare Compiler'TRY)
+(declare Compiler'CATCH)
+(declare Compiler'FINALLY)
+(declare Compiler'THROW)
+(declare Compiler'MONITOR_ENTER)
+(declare Compiler'MONITOR_EXIT)
+(declare Compiler'IMPORT)
+(declare Compiler'DEFTYPE)
+(declare Compiler'CASE)
+(declare Compiler'CLASS)
+(declare Compiler'NEW)
+(declare Compiler'REIFY)
+(declare Compiler'IDENTITY)
+(declare Compiler'_AMP_)
+(declare Compiler'ISEQ)
+(declare Compiler'loadNs)
+(declare Compiler'inlineKey)
+(declare Compiler'inlineAritiesKey)
+(declare Compiler'implementsKey)
+(declare Compiler'protocolKey)
+(declare Compiler'onKey)
+(declare Compiler'dynamicKey)
+(declare Compiler'redefKey)
+(declare Compiler'NS)
+(declare Compiler'IN_NS)
+(declare Compiler'specials)
+(declare Compiler'LOCAL_ENV)
+(declare Compiler'LOOP_LOCALS)
+(declare Compiler'LOOP_LABEL)
+(declare Compiler'CONSTANTS)
+(declare Compiler'CONSTANT_IDS)
+(declare Compiler'KEYWORD_CALLSITES)
+(declare Compiler'PROTOCOL_CALLSITES)
+(declare Compiler'VAR_CALLSITES)
+(declare Compiler'KEYWORDS)
+(declare Compiler'VARS)
+(declare Compiler'METHOD)
+(declare Compiler'IN_CATCH_FINALLY)
+(declare Compiler'METHOD_RETURN_CONTEXT)
+(declare Compiler'NO_RECUR)
+(declare Compiler'LOADER)
+(declare Compiler'INSTANCE)
+(declare Compiler'LINE)
+(declare Compiler'COLUMN)
+(declare Compiler'NEXT_LOCAL_NUM)
+(declare Compiler'COMPILE_STUB_SYM)
+(declare Compiler'COMPILE_STUB_CLASS)
+(declare Compiler'CLEAR_PATH)
+(declare Compiler'CLEAR_ROOT)
+(declare Compiler'CLEAR_SITES)
+(declare Compiler'NIL_EXPR)
+(declare Compiler'TRUE_EXPR)
+(declare Compiler'FALSE_EXPR)
+(declare Compiler'CHAR_MAP)
+(declare Intrinsics'ops)
+(declare Intrinsics'preds)
 (declare SymbolicValueReader'specials)
-(declare LispReader'QUOTE LispReader'THE_VAR LispReader'UNQUOTE LispReader'UNQUOTE_SPLICING LispReader'CONCAT LispReader'SEQ LispReader'LIST LispReader'APPLY LispReader'HASHMAP LispReader'HASHSET LispReader'VECTOR LispReader'WITH_META LispReader'META LispReader'DEREF LispReader'GENSYM_ENV LispReader'ARG_ENV LispReader'OPT_EOF LispReader'EOFTHROW)
-(declare MultiFn'assoc MultiFn'dissoc MultiFn'isa MultiFn'parents)
+(declare LispReader'QUOTE)
+(declare LispReader'THE_VAR)
+(declare LispReader'UNQUOTE)
+(declare LispReader'UNQUOTE_SPLICING)
+(declare LispReader'CONCAT)
+(declare LispReader'SEQ)
+(declare LispReader'LIST)
+(declare LispReader'APPLY)
+(declare LispReader'HASHMAP)
+(declare LispReader'HASHSET)
+(declare LispReader'VECTOR)
+(declare LispReader'WITH_META)
+(declare LispReader'DEREF)
+(declare LispReader'GENSYM_ENV)
+(declare LispReader'ARG_ENV)
+(declare MultiFn'isa)
+(declare MultiFn'parents)
 (declare BigDecimalOps'MATH_CONTEXT)
-(declare Numbers'LONG_OPS Numbers'DOUBLE_OPS Numbers'RATIO_OPS Numbers'BIGINT_OPS Numbers'BIGDECIMAL_OPS)
+(declare Numbers'LONG_OPS)
+(declare Numbers'DOUBLE_OPS)
+(declare Numbers'RATIO_OPS)
+(declare Numbers'BIGINT_OPS)
+(declare Numbers'BIGDECIMAL_OPS)
 (declare PersistentArrayMap'EMPTY)
 (declare BitmapIndexedNode'EMPTY)
 (declare PersistentHashMap'EMPTY)
 (declare PersistentHashSet'EMPTY)
 (declare EmptyList'HASHEQ)
-(declare PersistentList'creator PersistentList'EMPTY)
-(declare PersistentQueue'EMPTY)
+(declare PersistentList'EMPTY)
+(§ declare PersistentQueue'EMPTY)
 (declare PersistentTreeMap'EMPTY)
-(declare PersistentTreeSet'EMPTY)
+(§ declare PersistentTreeSet'EMPTY)
 (declare PersistentVector'EMPTY)
-(declare RT'DEFAULT_IMPORTS RT'CLOIURE_NS RT'IN RT'OUT RT'ERR RT'TAG_KEY RT'ASSERT RT'MATH_CONTEXT RT'LINE_KEY RT'COLUMN_KEY RT'DECLARED_KEY RT'DOC_KEY RT'IN_NAMESPACE RT'NAMESPACE RT'IDENTICAL RT'CURRENT_NS RT'FLUSH_ON_NEWLINE RT'PRINT_READABLY RT'WARN_ON_REFLECTION RT'ALLOW_UNRESOLVED_VARS RT'IN_NS_VAR RT'NS_VAR RT'FN_LOADER_VAR RT'PRINT_INITIALIZED RT'PR_ON RT'DEFAULT_COMPARATOR)
-(declare Frame'TOP)
-(declare Var'privateKey Var'privateMeta Var'macroKey Var'nameKey Var'nsKey)
-(declare main'CLOIURE_MAIN main'REQUIRE main'MAIN)
+(declare RT'DEFAULT_IMPORTS)
+(declare RT'CLOIURE_NS)
+(declare RT'OUT)
+(declare RT'ERR)
+(declare RT'TAG_KEY)
+(declare RT'MATH_CONTEXT)
+(declare RT'LINE_KEY)
+(declare RT'COLUMN_KEY)
+(declare RT'DECLARED_KEY)
+(declare RT'DOC_KEY)
+(declare RT'IN_NAMESPACE)
+(declare RT'NAMESPACE)
+(declare RT'CURRENT_NS)
+(declare RT'PRINT_READABLY)
+(declare RT'WARN_ON_REFLECTION)
+(declare RT'ALLOW_UNRESOLVED_VARS)
+(declare RT'IN_NS_VAR)
+(declare RT'NS_VAR)
+(declare RT'FN_LOADER_VAR)
+(declare RT'PRINT_INITIALIZED)
+(declare RT'PR_ON)
+(declare RT'DEFAULT_COMPARATOR)
+(§ declare Frame'TOP)
+(declare Var'privateKey)
+(declare Var'privateMeta)
+(declare Var'macroKey)
+(declare Var'nameKey)
+(declare Var'nsKey)
 
 (defmacro interface! [name [& sups] & sigs]
     (let [tag- #(or (:tag (meta %)) Object)
@@ -2753,6 +3461,14 @@
     )
 )
 
+(java-ns cloiure.lang.Symbol
+    (class! Symbol [#_"AFn" IObj Comparable Named IHashEq])
+)
+
+(java-ns cloiure.lang.Keyword
+    (class! Keyword [IFn Comparable Named IHashEq])
+)
+
 (java-ns cloiure.lang.AFunction
     #_abstract
     (class! AFunction [#_"AFn" IObj Comparator Fn])
@@ -3021,10 +3737,6 @@
     (class! Iterate [#_"ASeq" IReduce IPending])
 )
 
-(java-ns cloiure.lang.Keyword
-    (class! Keyword [IFn Comparable Named IHashEq])
-)
-
 (java-ns cloiure.lang.KeywordLookupSite
     (class! KeywordLookupSite [ILookupSite ILookupThunk])
 )
@@ -3184,10 +3896,6 @@
 
 (java-ns cloiure.lang.StringSeq
     (class! StringSeq [#_"ASeq" IndexedSeq])
-)
-
-(java-ns cloiure.lang.Symbol
-    (class! Symbol [#_"AFn" IObj Comparable Named IHashEq])
 )
 
 (java-ns cloiure.lang.Tuple
@@ -3626,6 +4334,350 @@
     #_override
     (defn #_"Object" AFn'''throwArity--AFn [#_"AFn" this, #_"int" n]
         (throw (ArityException'new n, (Compiler'demunge (.getSimpleName (.getClass this)))))
+    )
+)
+)
+
+(java-ns cloiure.lang.Symbol
+
+(class-ns Symbol
+    (defn- #_"Symbol" Symbol'new
+        ([#_"String" ns, #_"String" name] (Symbol'new nil, ns, name))
+        ([#_"IPersistentMap" meta, #_"String" ns, #_"String" name]
+            (merge (AFn'new)
+                (hash-map
+                    #_"IPersistentMap" :_meta meta
+                    #_"String" :ns ns
+                    #_"String" :name name
+
+                    #_mutable #_"int" :_hasheq 0
+                    #_mutable #_"String" :_str nil
+                )
+            )
+        )
+    )
+
+    (defn #_"Symbol" Symbol'intern
+        ([#_"String" nsname]
+            (let [#_"int" i (.indexOf nsname, (int \/))]
+                (if (or (= i -1) (= nsname "/"))
+                    (Symbol'new nil, nsname)
+                    (Symbol'new (.substring nsname, 0, i), (.substring nsname, (inc i)))
+                )
+            )
+        )
+        ([#_"String" ns, #_"String" name]
+            (Symbol'new ns, name)
+        )
+    )
+
+    #_foreign
+    (defn #_"String" toString---Symbol [#_"Symbol" this]
+        (when (nil? (:_str this))
+            (§ set! (:_str this) (if (some? (:ns this)) (str (:ns this) "/" (:name this)) (:name this)))
+        )
+        (:_str this)
+    )
+
+    #_override
+    (defn #_"String" Named'''getNamespace--Symbol [#_"Symbol" this]
+        (:ns this)
+    )
+
+    #_override
+    (defn #_"String" Named'''getName--Symbol [#_"Symbol" this]
+        (:name this)
+    )
+
+    #_foreign
+    (defn #_"boolean" equals---Symbol [#_"Symbol" this, #_"Object" o]
+        (cond
+            (= this o)
+                true
+            (instance? Symbol o)
+                (let [#_"Symbol" symbol (cast Symbol o)]
+                    (and (Util'equals (:ns this), (:ns symbol)) (.equals (:name this), (:name symbol)))
+                )
+            :else
+                false
+        )
+    )
+
+    #_foreign
+    (defn #_"int" hashCode---Symbol [#_"Symbol" this]
+        (Util'hashCombine (.hashCode (:name this)), (Util'hash (:ns this)))
+    )
+
+    #_override
+    (defn #_"int" IHashEq'''hasheq--Symbol [#_"Symbol" this]
+        (when (zero? (:_hasheq this))
+            (§ set! (:_hasheq this) (Util'hashCombine (Murmur3'hashUnencodedChars (:name this)), (Util'hash (:ns this))))
+        )
+        (:_hasheq this)
+    )
+
+    #_override
+    (defn #_"Symbol" IObj'''withMeta--Symbol [#_"Symbol" this, #_"IPersistentMap" meta]
+        (Symbol'new meta, (:ns this), (:name this))
+    )
+
+    #_foreign
+    (defn #_"int" compareTo---Symbol [#_"Symbol" this, #_"Object" o]
+        (let [#_"Symbol" s (cast Symbol o)]
+            (cond
+                (.equals this, o)                       0
+                (and (nil? (:ns this)) (some? (:ns s))) -1
+                (nil? (:ns this))                       (.compareTo (:name this), (:name s))
+                (nil? (:ns s))                          1
+                :else
+                    (let-when [#_"int" nsc (.compareTo (:ns this), (:ns s))] (zero? nsc) => nsc
+                        (.compareTo (:name this), (:name s))
+                    )
+            )
+        )
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-2--Symbol [#_"Symbol" this, #_"Object" obj]
+        (RT'get-2 obj, this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-3--Symbol [#_"Symbol" this, #_"Object" obj, #_"Object" notFound]
+        (RT'get-3 obj, this, notFound)
+    )
+
+    #_override
+    (defn #_"IPersistentMap" IMeta'''meta--Symbol [#_"Symbol" this]
+        (:_meta this)
+    )
+)
+)
+
+(java-ns cloiure.lang.Keyword
+
+(class-ns Keyword
+    (def- #_"ConcurrentHashMap<Symbol, Reference<Keyword>>" Keyword'TABLE (ConcurrentHashMap.))
+
+    (def #_"ReferenceQueue" Keyword'RQ (ReferenceQueue.))
+
+    (defn- #_"Keyword" Keyword'new [#_"Symbol" sym]
+        (hash-map
+            #_"Symbol" :sym sym
+            #_"int" :hasheq (+ (.hasheq sym) 0x9e3779b9)
+
+            #_mutable #_"String" :_str nil
+        )
+    )
+
+    (defn #_"Keyword" Keyword'intern [#_"Symbol" sym]
+        (let [#_"Reference<Keyword>" r (.get Keyword'TABLE, sym)
+              [sym r #_"Keyword" k]
+                (when (nil? r) => [sym r nil]
+                    (Util'clearCache Keyword'RQ, Keyword'TABLE)
+                    (let [sym
+                            (when (some? (.meta sym)) => sym
+                                (cast Symbol (.withMeta sym, nil))
+                            )
+                          k (Keyword'new sym)
+                          r (.putIfAbsent Keyword'TABLE, sym, (WeakReference. #_"<Keyword>" k, Keyword'RQ))]
+                        [sym r k]
+                    )
+                )]
+            (when (some? r) => k
+                (or (.get r)
+                    (do ;; entry died in the interim, do over
+                        (.remove Keyword'TABLE, sym, r)
+                        (recur #_"Keyword'intern" sym)
+                    )
+                )
+            )
+        )
+    )
+
+    (defn #_"Keyword" Keyword'find [#_"Symbol" sym]
+        (let [#_"Reference<Keyword>" ref (.get Keyword'TABLE, sym)]
+            (when (some? ref)
+                (.get ref)
+            )
+        )
+    )
+
+    (defn #_"Keyword" Keyword'find-2 [#_"String" ns, #_"String" name]
+        (Keyword'find (Symbol'intern ns, name))
+    )
+
+    (defn #_"Keyword" Keyword'find-1 [#_"String" nsname]
+        (Keyword'find (Symbol'intern nsname))
+    )
+
+    #_foreign
+    (defn #_"int" hashCode---Keyword [#_"Keyword" this]
+        (+ (.hashCode (:sym this)) 0x9e3779b9)
+    )
+
+    #_override
+    (defn #_"int" IHashEq'''hasheq--Keyword [#_"Keyword" this]
+        (:hasheq this)
+    )
+
+    #_foreign
+    (defn #_"String" toString---Keyword [#_"Keyword" this]
+        (when (nil? (:_str this))
+            (§ set! (:_str this) (str ":" (:sym this)))
+        )
+        (:_str this)
+    )
+
+    #_method
+    (defn #_"Object" Keyword''throwArity [#_"Keyword" this]
+        (throw (IllegalArgumentException. (str "Wrong number of args passed to keyword: " this)))
+    )
+
+    #_foreign
+    (defn #_"Object" call---Keyword [#_"Keyword" this]
+        (Keyword''throwArity this)
+    )
+
+    #_foreign
+    (defn #_"void" run---Keyword [#_"Keyword" this]
+        (throw (UnsupportedOperationException.))
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-1--Keyword [#_"Keyword" this]
+        (Keyword''throwArity this)
+    )
+
+    #_foreign
+    (defn #_"int" compareTo---Keyword [#_"Keyword" this, #_"Object" o]
+        (.compareTo (:sym this), (:sym (cast Keyword o)))
+    )
+
+    #_override
+    (defn #_"String" Named'''getNamespace--Keyword [#_"Keyword" this]
+        (.getNamespace (:sym this))
+    )
+
+    #_override
+    (defn #_"String" Named'''getName--Keyword [#_"Keyword" this]
+        (.getName (:sym this))
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-2--Keyword [#_"Keyword" this, #_"Object" obj]
+        (if (instance? ILookup obj)
+            (.valAt (cast ILookup obj), this)
+            (RT'get-2 obj, this)
+        )
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-3--Keyword [#_"Keyword" this, #_"Object" obj, #_"Object" notFound]
+        (if (instance? ILookup obj)
+            (.valAt (cast ILookup obj), this, notFound)
+            (RT'get-3 obj, this, notFound)
+        )
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-4--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-5--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-6--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-7--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-8--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-9--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-10--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-11--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-12--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-13--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-14--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-15--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-16--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-17--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-18--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''invoke-19--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+  #_(defn #_"Object" IFn'''invoke-20--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+  #_(defn #_"Object" IFn'''invoke-21--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+  #_(defn #_"Object" IFn'''invoke-22--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args]
+        (Keyword''throwArity this)
+    )
+
+    #_override
+    (defn #_"Object" IFn'''applyTo--Keyword [#_"Keyword" this, #_"ISeq" args]
+        (AFn'applyToHelper this, args)
     )
 )
 )
@@ -8397,7 +9449,7 @@
                     (cond
                         (Util'equals sym, (Var''get Compiler'COMPILE_STUB_SYM))
                             (cast Class (Var''get Compiler'COMPILE_STUB_CLASS))
-                        (or (pos? (.indexOf (:name sym), \.)) (= (.charAt (:name sym), 0) \[))
+                        (or (pos? (.indexOf (:name sym), (int \.))) (= (.charAt (:name sym), 0) \[))
                             (RT'classForNameNonLoading (:name sym))
                         :else
                             (let [#_"Object" o (Namespace''getMapping (Compiler'currentNS), sym)]
@@ -14258,7 +15310,7 @@
     (defn #_"Symbol" Compiler'resolveSymbol [#_"Symbol" sym]
         ;; already qualified or classname?
         (cond
-            (pos? (.indexOf (:name sym), \.))
+            (pos? (.indexOf (:name sym), (int \.)))
                 sym
             (some? (:ns sym))
                 (let [#_"Namespace" ns (Compiler'namespaceFor-1 sym)]
@@ -14908,7 +15960,7 @@
                         )
                     )
                 )
-            (or (pos? (.indexOf (:name sym), \.)) (= (.charAt (:name sym), 0) \[)) (RT'classForName-1 (:name sym))
+            (or (pos? (.indexOf (:name sym), (int \.))) (= (.charAt (:name sym), 0) \[)) (RT'classForName-1 (:name sym))
             (.equals sym, Compiler'NS)                              RT'NS_VAR
             (.equals sym, Compiler'IN_NS)                           RT'IN_NS_VAR
             (Util'equals sym, (Var''get Compiler'COMPILE_STUB_SYM)) (Var''get Compiler'COMPILE_STUB_CLASS)
@@ -14930,7 +15982,7 @@
                         v
                     )
                 )
-            (or (and (pos? (.indexOf (:name sym), \.)) (not (.endsWith (:name sym), "."))) (= (.charAt (:name sym), 0) \[))
+            (or (and (pos? (.indexOf (:name sym), (int \.))) (not (.endsWith (:name sym), "."))) (= (.charAt (:name sym), 0) \[))
                 (RT'classForName-1 (:name sym))
             (.equals sym, Compiler'NS)
                 RT'NS_VAR
@@ -15643,234 +16695,6 @@
                 )
             )
         )
-    )
-)
-)
-
-(java-ns cloiure.lang.Keyword
-
-(class-ns Keyword
-    (def- #_"ConcurrentHashMap<Symbol, Reference<Keyword>>" Keyword'TABLE (ConcurrentHashMap.))
-
-    (def #_"ReferenceQueue" Keyword'RQ (ReferenceQueue.))
-
-    (defn #_"Keyword" Keyword'intern [#_"Symbol" sym]
-        (let [#_"Reference<Keyword>" r (.get Keyword'TABLE, sym)
-              [sym r #_"Keyword" k]
-                (when (nil? r) => [sym r nil]
-                    (Util'clearCache Keyword'RQ, Keyword'TABLE)
-                    (let [sym
-                            (when (some? (.meta sym)) => sym
-                                (cast Symbol (.withMeta sym, nil))
-                            )
-                          k (Keyword'new sym)
-                          r (.putIfAbsent Keyword'TABLE, sym, (WeakReference. #_"<Keyword>" k, Keyword'RQ))]
-                        [sym r k]
-                    )
-                )]
-            (when (some? r) => k
-                (or (.get r)
-                    (do ;; entry died in the interim, do over
-                        (.remove Keyword'TABLE, sym, r)
-                        (recur #_"Keyword'intern" sym)
-                    )
-                )
-            )
-        )
-    )
-
-    (defn- #_"Keyword" Keyword'new [#_"Symbol" sym]
-        (hash-map
-            #_"Symbol" :sym sym
-            #_"int" :hasheq (+ (.hasheq sym) 0x9e3779b9)
-
-            #_mutable #_"String" :_str nil
-        )
-    )
-
-    (defn #_"Keyword" Keyword'find [#_"Symbol" sym]
-        (let [#_"Reference<Keyword>" ref (.get Keyword'TABLE, sym)]
-            (when (some? ref)
-                (.get ref)
-            )
-        )
-    )
-
-    (defn #_"Keyword" Keyword'find-2 [#_"String" ns, #_"String" name]
-        (Keyword'find (Symbol'intern ns, name))
-    )
-
-    (defn #_"Keyword" Keyword'find-1 [#_"String" nsname]
-        (Keyword'find (Symbol'intern nsname))
-    )
-
-    #_foreign
-    (defn #_"int" hashCode---Keyword [#_"Keyword" this]
-        (+ (.hashCode (:sym this)) 0x9e3779b9)
-    )
-
-    #_override
-    (defn #_"int" IHashEq'''hasheq--Keyword [#_"Keyword" this]
-        (:hasheq this)
-    )
-
-    #_foreign
-    (defn #_"String" toString---Keyword [#_"Keyword" this]
-        (when (nil? (:_str this))
-            (§ set! (:_str this) (str ":" (:sym this)))
-        )
-        (:_str this)
-    )
-
-    #_method
-    (defn #_"Object" Keyword''throwArity [#_"Keyword" this]
-        (throw (IllegalArgumentException. (str "Wrong number of args passed to keyword: " this)))
-    )
-
-    #_foreign
-    (defn #_"Object" call---Keyword [#_"Keyword" this]
-        (Keyword''throwArity this)
-    )
-
-    #_foreign
-    (defn #_"void" run---Keyword [#_"Keyword" this]
-        (throw (UnsupportedOperationException.))
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-1--Keyword [#_"Keyword" this]
-        (Keyword''throwArity this)
-    )
-
-    #_foreign
-    (defn #_"int" compareTo---Keyword [#_"Keyword" this, #_"Object" o]
-        (.compareTo (:sym this), (:sym (cast Keyword o)))
-    )
-
-    #_override
-    (defn #_"String" Named'''getNamespace--Keyword [#_"Keyword" this]
-        (.getNamespace (:sym this))
-    )
-
-    #_override
-    (defn #_"String" Named'''getName--Keyword [#_"Keyword" this]
-        (.getName (:sym this))
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-2--Keyword [#_"Keyword" this, #_"Object" obj]
-        (if (instance? ILookup obj)
-            (.valAt (cast ILookup obj), this)
-            (RT'get-2 obj, this)
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-3--Keyword [#_"Keyword" this, #_"Object" obj, #_"Object" notFound]
-        (if (instance? ILookup obj)
-            (.valAt (cast ILookup obj), this, notFound)
-            (RT'get-3 obj, this, notFound)
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-5--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-6--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-7--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-8--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-9--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-10--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-11--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-12--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-13--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-14--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-15--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-16--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-17--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-18--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-19--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-20--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-21--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-22--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''applyTo--Keyword [#_"Keyword" this, #_"ISeq" args]
-        (AFn'applyToHelper this, args)
     )
 )
 )
@@ -26832,122 +27656,6 @@
 )
 )
 
-(java-ns cloiure.lang.Symbol
-
-(class-ns Symbol
-    (defn- #_"Symbol" Symbol'new
-        ([#_"String" ns, #_"String" name] (Symbol'new nil, ns, name))
-        ([#_"IPersistentMap" meta, #_"String" ns, #_"String" name]
-            (merge (AFn'new)
-                (hash-map
-                    #_"IPersistentMap" :_meta meta
-                    #_"String" :ns ns
-                    #_"String" :name name
-
-                    #_mutable #_"int" :_hasheq 0
-                    #_mutable #_"String" :_str nil
-                )
-            )
-        )
-    )
-
-    (defn #_"Symbol" Symbol'intern
-        ([#_"String" nsname]
-            (let [#_"int" i (.indexOf nsname, \/)]
-                (if (or (= i -1) (= nsname "/"))
-                    (Symbol'new nil, nsname)
-                    (Symbol'new (.substring nsname, 0, i), (.substring nsname, (inc i)))
-                )
-            )
-        )
-        ([#_"String" ns, #_"String" name]
-            (Symbol'new ns, name)
-        )
-    )
-
-    #_foreign
-    (defn #_"String" toString---Symbol [#_"Symbol" this]
-        (when (nil? (:_str this))
-            (§ set! (:_str this) (if (some? (:ns this)) (str (:ns this) "/" (:name this)) (:name this)))
-        )
-        (:_str this)
-    )
-
-    #_override
-    (defn #_"String" Named'''getNamespace--Symbol [#_"Symbol" this]
-        (:ns this)
-    )
-
-    #_override
-    (defn #_"String" Named'''getName--Symbol [#_"Symbol" this]
-        (:name this)
-    )
-
-    #_foreign
-    (defn #_"boolean" equals---Symbol [#_"Symbol" this, #_"Object" o]
-        (cond
-            (= this o)
-                true
-            (instance? Symbol o)
-                (let [#_"Symbol" symbol (cast Symbol o)]
-                    (and (Util'equals (:ns this), (:ns symbol)) (.equals (:name this), (:name symbol)))
-                )
-            :else
-                false
-        )
-    )
-
-    #_foreign
-    (defn #_"int" hashCode---Symbol [#_"Symbol" this]
-        (Util'hashCombine (.hashCode (:name this)), (Util'hash (:ns this)))
-    )
-
-    #_override
-    (defn #_"int" IHashEq'''hasheq--Symbol [#_"Symbol" this]
-        (when (zero? (:_hasheq this))
-            (§ set! (:_hasheq this) (Util'hashCombine (Murmur3'hashUnencodedChars (:name this)), (Util'hash (:ns this))))
-        )
-        (:_hasheq this)
-    )
-
-    #_override
-    (defn #_"Symbol" IObj'''withMeta--Symbol [#_"Symbol" this, #_"IPersistentMap" meta]
-        (Symbol'new meta, (:ns this), (:name this))
-    )
-
-    #_foreign
-    (defn #_"int" compareTo---Symbol [#_"Symbol" this, #_"Object" o]
-        (let [#_"Symbol" s (cast Symbol o)]
-            (cond
-                (.equals this, o)                       0
-                (and (nil? (:ns this)) (some? (:ns s))) -1
-                (nil? (:ns this))                       (.compareTo (:name this), (:name s))
-                (nil? (:ns s))                          1
-                :else
-                    (let-when [#_"int" nsc (.compareTo (:ns this), (:ns s))] (zero? nsc) => nsc
-                        (.compareTo (:name this), (:name s))
-                    )
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-2--Symbol [#_"Symbol" this, #_"Object" obj]
-        (RT'get-2 obj, this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-3--Symbol [#_"Symbol" this, #_"Object" obj, #_"Object" notFound]
-        (RT'get-3 obj, this, notFound)
-    )
-
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--Symbol [#_"Symbol" this]
-        (:_meta this)
-    )
-)
-)
-
 (java-ns cloiure.lang.TransformerIterator
 
 (class-ns MultiIterator
@@ -27766,7 +28474,7 @@
     (§ def- #_"Var" main'REQUIRE (RT'var "cloiure.core", "require"))
     (§ def- #_"Var" main'MAIN (RT'var "cloiure.main", "main"))
 
-    (defn #_"void" -main [#_"String[]" args]
+    (§ defn #_"void" -main [#_"String[]" args]
         (.invoke main'REQUIRE, main'CLOIURE_MAIN)
         (.applyTo main'MAIN, (RT'seq args))
         nil
