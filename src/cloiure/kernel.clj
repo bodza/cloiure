@@ -35,9 +35,7 @@
     (let [x (if (vector? x) x [`_# x]) z (when (seq w) `(cond-let ~@w))]
         `(if-let ~x ~y ~z)))
 
-(def mutable! volatile!)
-(def mreset! vreset!)
-(defmacro mswap! [& _] `(vswap! ~@_))
+(defmacro update! [x f & z] `(set! ~x (~f ~x ~@z)))
 
 (def % rem)
 (def & bit-and)
@@ -6062,20 +6060,20 @@
 
     #_override
     (defn #_"Iterator" APersistentVector'''rangedIterator--APersistentVector [#_"APersistentVector" this, #_"int" start, #_"int" end]
-        (let [#_"int'" vi (mutable! start)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (< @vi end)
-                )
+        (§ reify Iterator
+            [^:mutable #_"int" i start]
 
-                #_foreign
-                (#_"Object" next [#_"Iterator" _self]
-                    (when (< @vi end) => (throw (NoSuchElementException.))
-                        (let [_ (.nth this, @vi)]
-                            (mswap! vi inc)
-                            _
-                        )
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" _self]
+                (< i end)
+            )
+
+            #_foreign
+            (#_"Object" next [#_"Iterator" _self]
+                (when (< i end) => (throw (NoSuchElementException.))
+                    (let [_ (.nth this, i)]
+                        (update! i inc)
+                        _
                     )
                 )
             )
@@ -6092,20 +6090,20 @@
 
     #_foreign
     (defn #_"Iterator" iterator---APersistentVector [#_"APersistentVector" this]
-        (let [#_"int'" vi (mutable! 0)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (< @vi (.count this))
-                )
+        (§ reify Iterator
+            [^:mutable #_"int" i 0]
 
-                #_foreign
-                (#_"Object" next [#_"Iterator" _self]
-                    (when (< @vi (.count this)) => (throw (NoSuchElementException.))
-                        (let [_ (.nth this, @vi)]
-                            (mswap! vi inc)
-                            _
-                        )
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" _self]
+                (< i (.count this))
+            )
+
+            #_foreign
+            (#_"Object" next [#_"Iterator" _self]
+                (when (< i (.count this)) => (throw (NoSuchElementException.))
+                    (let [_ (.nth this, i)]
+                        (update! i inc)
+                        _
                     )
                 )
             )
@@ -6404,20 +6402,20 @@
 
 (class-ns ArrayIter_int
     (defn #_"Iterator" ArrayIter_int'new [#_"int[]" a, #_"int" i]
-        (let [#_"int'" vi (mutable! i)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (and (some? a) (< @vi (alength a)))
-                )
+        (§ reify Iterator
+            [^:mutable #_"int" i i]
 
-                #_foreign
-                (#_"Long" next [#_"Iterator" _self]
-                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
-                        (let [_ (Long/valueOf (aget a @vi))]
-                            (mswap! vi inc)
-                            _
-                        )
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" _self]
+                (and (some? a) (< i (alength a)))
+            )
+
+            #_foreign
+            (#_"Long" next [#_"Iterator" _self]
+                (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
+                    (let [_ (Long/valueOf (aget a i))]
+                        (update! i inc)
+                        _
                     )
                 )
             )
@@ -6427,20 +6425,20 @@
 
 (class-ns ArrayIter_float
     (defn #_"Iterator" ArrayIter_float'new [#_"float[]" a, #_"int" i]
-        (let [#_"int'" vi (mutable! i)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (and (some? a) (< @vi (alength a)))
-                )
+        (§ reify Iterator
+            [^:mutable #_"int" i i]
 
-                #_foreign
-                (#_"Double" next [#_"Iterator" _self]
-                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
-                        (let [_ (Double/valueOf (aget a @vi))]
-                            (mswap! vi inc)
-                            _
-                        )
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" _self]
+                (and (some? a) (< i (alength a)))
+            )
+
+            #_foreign
+            (#_"Double" next [#_"Iterator" _self]
+                (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
+                    (let [_ (Double/valueOf (aget a i))]
+                        (update! i inc)
+                        _
                     )
                 )
             )
@@ -6450,20 +6448,20 @@
 
 (class-ns ArrayIter_double
     (defn #_"Iterator" ArrayIter_double'new [#_"double[]" a, #_"int" i]
-        (let [#_"int'" vi (mutable! i)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (and (some? a) (< @vi (alength a)))
-                )
+        (§ reify Iterator
+            [^:mutable #_"int" i i]
 
-                #_foreign
-                (#_"Double" next [#_"Iterator" _self]
-                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
-                        (let [_ (aget a @vi)]
-                            (mswap! vi inc)
-                            _
-                        )
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" _self]
+                (and (some? a) (< i (alength a)))
+            )
+
+            #_foreign
+            (#_"Double" next [#_"Iterator" _self]
+                (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
+                    (let [_ (aget a i)]
+                        (update! i inc)
+                        _
                     )
                 )
             )
@@ -6473,20 +6471,20 @@
 
 (class-ns ArrayIter_long
     (defn #_"Iterator" ArrayIter_long'new [#_"long[]" a, #_"int" i]
-        (let [#_"int'" vi (mutable! i)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (and (some? a) (< @vi (alength a)))
-                )
+        (§ reify Iterator
+            [^:mutable #_"int" i i]
 
-                #_foreign
-                (#_"Long" next [#_"Iterator" _self]
-                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
-                        (let [_ (Long/valueOf (aget a @vi))]
-                            (mswap! vi inc)
-                            _
-                        )
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" _self]
+                (and (some? a) (< i (alength a)))
+            )
+
+            #_foreign
+            (#_"Long" next [#_"Iterator" _self]
+                (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
+                    (let [_ (Long/valueOf (aget a i))]
+                        (update! i inc)
+                        _
                     )
                 )
             )
@@ -6496,20 +6494,20 @@
 
 (class-ns ArrayIter_byte
     (defn #_"Iterator" ArrayIter_byte'new [#_"byte[]" a, #_"int" i]
-        (let [#_"int'" vi (mutable! i)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (and (some? a) (< @vi (alength a)))
-                )
+        (§ reify Iterator
+            [^:mutable #_"int" i i]
 
-                #_foreign
-                (#_"Byte" next [#_"Iterator" _self]
-                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
-                        (let [_ (aget a @vi)]
-                            (mswap! vi inc)
-                            _
-                        )
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" _self]
+                (and (some? a) (< i (alength a)))
+            )
+
+            #_foreign
+            (#_"Byte" next [#_"Iterator" _self]
+                (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
+                    (let [_ (aget a i)]
+                        (update! i inc)
+                        _
                     )
                 )
             )
@@ -6519,20 +6517,20 @@
 
 (class-ns ArrayIter_char
     (defn #_"Iterator" ArrayIter_char'new [#_"char[]" a, #_"int" i]
-        (let [#_"int'" vi (mutable! i)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (and (some? a) (< @vi (alength a)))
-                )
+        (§ reify Iterator
+            [^:mutable #_"int" i i]
 
-                #_foreign
-                (#_"Character" next [#_"Iterator" _self]
-                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
-                        (let [_ (aget a @vi)]
-                            (mswap! vi inc)
-                            _
-                        )
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" _self]
+                (and (some? a) (< i (alength a)))
+            )
+
+            #_foreign
+            (#_"Character" next [#_"Iterator" _self]
+                (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
+                    (let [_ (aget a i)]
+                        (update! i inc)
+                        _
                     )
                 )
             )
@@ -6542,20 +6540,20 @@
 
 (class-ns ArrayIter_short
     (defn #_"Iterator" ArrayIter_short'new [#_"short[]" a, #_"int" i]
-        (let [#_"int'" vi (mutable! i)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (and (some? a) (< @vi (alength a)))
-                )
+        (§ reify Iterator
+            [^:mutable #_"int" i i]
 
-                #_foreign
-                (#_"Long" next [#_"Iterator" _self]
-                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
-                        (let [_ (Long/valueOf (aget a @vi))]
-                            (mswap! vi inc)
-                            _
-                        )
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" _self]
+                (and (some? a) (< i (alength a)))
+            )
+
+            #_foreign
+            (#_"Long" next [#_"Iterator" _self]
+                (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
+                    (let [_ (Long/valueOf (aget a i))]
+                        (update! i inc)
+                        _
                     )
                 )
             )
@@ -6565,20 +6563,20 @@
 
 (class-ns ArrayIter_boolean
     (defn #_"Iterator" ArrayIter_boolean'new [#_"boolean[]" a, #_"int" i]
-        (let [#_"int'" vi (mutable! i)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (and (some? a) (< @vi (alength a)))
-                )
+        (§ reify Iterator
+            [^:mutable #_"int" i i]
 
-                #_foreign
-                (#_"Boolean" next [#_"Iterator" _self]
-                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
-                        (let [_ (Boolean/valueOf (aget a @vi))]
-                            (mswap! vi inc)
-                            _
-                        )
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" _self]
+                (and (some? a) (< i (alength a)))
+            )
+
+            #_foreign
+            (#_"Boolean" next [#_"Iterator" _self]
+                (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
+                    (let [_ (Boolean/valueOf (aget a i))]
+                        (update! i inc)
+                        _
                     )
                 )
             )
@@ -6630,18 +6628,20 @@
     )
 
     (defn #_"Iterator" ArrayIter'new [#_"Object" array, #_"int" i]
-        (let [#_"Object[]" a (cast RT'OBJECTS_CLASS array) #_"int'" vi (mutable! i)]
-            (reify Iterator
+        (let [#_"Object[]" a (cast RT'OBJECTS_CLASS array)]
+            (§ reify Iterator
+                [^:mutable #_"int" i i]
+
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
-                    (and (some? a) (< @vi (alength a)))
+                    (and (some? a) (< i (alength a)))
                 )
 
                 #_foreign
                 (#_"Object" next [#_"Iterator" _self]
-                    (when (and (some? a) (< @vi (alength a))) => (throw (NoSuchElementException.))
-                        (let [_ (aget a @vi)]
-                            (mswap! vi inc)
+                    (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
+                        (let [_ (aget a i)]
+                            (update! i inc)
                             _
                         )
                     )
@@ -17327,26 +17327,27 @@
 
     #_foreign
     (defn #_"Iterator" iterator---LongRange [#_"LongRange" this]
-        (let [#_"long'" vn (mutable! (:start this)) #_"boolean'" vm (mutable! true)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    @vm
-                )
+        (§ reify Iterator
+            [^:mutable #_"long" n (:start this)
+             ^:mutable #_"boolean" m true]
 
-                #_foreign
-                (#_"Object" next [#_"Iterator" _self]
-                    (when @vm => (throw (NoSuchElementException.))
-                        (let [_ @vn]
-                            (try
-                                (mswap! vn Numbers'add-2ll (:step this))
-                                (mreset! vm (not (.exceededBounds (:boundsCheck this), @vn)))
-                                (catch ArithmeticException e
-                                    (mreset! vm false)
-                                )
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" _self]
+                m
+            )
+
+            #_foreign
+            (#_"Object" next [#_"Iterator" _self]
+                (when m => (throw (NoSuchElementException.))
+                    (let [_ n]
+                        (try
+                            (update! n Numbers'add-2ll (:step this))
+                            (set! m (not (.exceededBounds (:boundsCheck this), n)))
+                            (catch ArithmeticException e
+                                (set! m false)
                             )
-                            _
                         )
+                        _
                     )
                 )
             )
@@ -20473,21 +20474,21 @@
 
 (class-ns MIter
     (defn #_"Iterator" MIter'new [#_"Object[]" a, #_"IFn" f]
-        (let [#_"int'" vi (mutable! -2)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (< (+ @vi 2) (alength a))
-                )
+        (§ reify Iterator
+            [^:mutable #_"int" i -2]
 
-                #_foreign
-                (#_"Object" next [#_"Iterator" _self]
-                    (mswap! vi + 2)
-                    (try
-                        (.invoke f, (aget a @vi), (aget a (inc @vi)))
-                        (catch IndexOutOfBoundsException _
-                            (throw (NoSuchElementException.))
-                        )
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" _self]
+                (< (+ i 2) (alength a))
+            )
+
+            #_foreign
+            (#_"Object" next [#_"Iterator" _self]
+                (update! i + 2)
+                (try
+                    (.invoke f, (aget a i), (aget a (inc i)))
+                    (catch IndexOutOfBoundsException _
+                        (throw (NoSuchElementException.))
                     )
                 )
             )
@@ -21004,35 +21005,36 @@
 
 (class-ns HIter
     (defn #_"Iterator" HIter'new [#_"INode[]" a, #_"IFn" f]
-        (let [#_"int'" vi (mutable! 0) #_"Iterator'" vn (mutable! nil)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (loop []
-                        (or
-                            (when (some? @vn)
-                                (or (.hasNext @vn)
-                                    (mreset! vn nil)
-                                )
+        (§ reify Iterator
+            [^:mutable #_"int" i 0
+             ^:mutable #_"Iterator" it nil]
+
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" _self]
+                (loop []
+                    (or
+                        (when (some? it)
+                            (or (.hasNext it)
+                                (set! it nil)
                             )
-                            (and (< @vi (alength a))
-                                (let [#_"INode" ai (aget a @vi)]
-                                    (mswap! vi inc)
-                                    (when (some? ai)
-                                        (mreset! vn (.iterator ai, f))
-                                    )
-                                    (recur)
+                        )
+                        (and (< i (alength a))
+                            (let [#_"INode" ai (aget a i)]
+                                (update! i inc)
+                                (when (some? ai)
+                                    (set! it (.iterator ai, f))
                                 )
+                                (recur)
                             )
                         )
                     )
                 )
+            )
 
-                #_foreign
-                (#_"Object" next [#_"Iterator" self]
-                    (when (.hasNext self) => (throw (NoSuchElementException.))
-                        (.next @vn)
-                    )
+            #_foreign
+            (#_"Object" next [#_"Iterator" self]
+                (when (.hasNext self) => (throw (NoSuchElementException.))
+                    (.next it)
                 )
             )
         )
@@ -21684,55 +21686,58 @@
     (def- #_"Object" NodeIter'NULL (Object.))
 
     (defn #_"Iterator" NodeIter'new [#_"Object[]" a, #_"IFn" f]
-        (let [#_"int'" vi (mutable! 0) #_"Object'" ve (mutable! NodeIter'NULL) #_"Iterator'" vn (mutable! nil)
-              step!
-                (fn #_"boolean" []
-                    (loop-when [] (< @vi (alength a)) => false
-                        (let [#_"Object" key (aget a @vi) #_"Object" nodeOrVal (aget a (inc @vi)) _ (mswap! vi + 2)]
-                            (cond
-                                (some? key)
-                                    (do
-                                        (mreset! ve (.invoke f, key, nodeOrVal))
-                                        true
-                                    )
-                                (some? nodeOrVal)
-                                    (let-when [#_"Iterator" it (.iterator (cast INode nodeOrVal), f)] (and (some? it) (.hasNext it)) => (recur)
-                                        (mreset! vn it)
-                                        true
-                                    )
-                                :else
-                                    (recur)
-                            )
+        (§ reify Iterator
+            [^:mutable #_"int" i 0
+             ^:mutable #_"Object" e NodeIter'NULL
+             ^:mutable #_"Iterator" it nil]
+
+            #_private
+            (#_"boolean" step [_self]
+                (loop-when [] (< i (alength a)) => false
+                    (let [#_"Object" key (aget a i) #_"Object" nodeOrVal (aget a (inc i)) _ (update! i + 2)]
+                        (cond
+                            (some? key)
+                                (do
+                                    (set! e (.invoke f, key, nodeOrVal))
+                                    true
+                                )
+                            (some? nodeOrVal)
+                                (let-when [#_"Iterator" it' (.iterator (cast INode nodeOrVal), f)] (and (some? it') (.hasNext it')) => (recur)
+                                    (set! it it')
+                                    true
+                                )
+                            :else
+                                (recur)
                         )
                     )
-                )]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (or (not (identical? @ve NodeIter'NULL)) (some? @vn) (step!))
                 )
+            )
 
-                #_foreign
-                (#_"Object" next [#_"Iterator" self]
-                    (let [#_"Object" e @ve]
-                        (cond
-                            (not (identical? e NodeIter'NULL))
-                                (do
-                                    (mreset! ve NodeIter'NULL)
-                                    e
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" self]
+                (or (not (identical? e NodeIter'NULL)) (some? it) (.step self))
+            )
+
+            #_foreign
+            (#_"Object" next [#_"Iterator" self]
+                (let [#_"Object" e' e]
+                    (cond
+                        (not (identical? e' NodeIter'NULL))
+                            (do
+                                (set! e NodeIter'NULL)
+                                e'
+                            )
+                        (some? it)
+                            (let [e' (.next it)]
+                                (when-not (.hasNext it)
+                                    (set! it nil)
                                 )
-                            (some? @vn)
-                                (let [e (.next @vn)]
-                                    (when-not (.hasNext @vn)
-                                        (mreset! vn nil)
-                                    )
-                                    e
-                                )
-                            (step!)
-                                (.next self)
-                            :else
-                                (throw (NoSuchElementException.))
-                        )
+                                e'
+                            )
+                        (.step self)
+                            (.next self)
+                        :else
+                            (throw (NoSuchElementException.))
                     )
                 )
             )
@@ -21993,22 +21998,20 @@
 
     #_method
     (defn- #_"Iterator" PersistentHashMap''iterator [#_"PersistentHashMap" this, #_"IFn" f]
-        (let [#_"Iterator" it (if (some? (:root this)) (.iterator (:root this), f) PersistentHashMap'EMPTY_ITER)]
-            (when (:hasNull this) => it
-                (let [#_"boolean'" seen (mutable! false)]
-                    (reify Iterator
-                        #_foreign
-                        (#_"boolean" hasNext [#_"Iterator" _self]
-                            (or (not @seen) (.hasNext it))
-                        )
+        (let-when [#_"Iterator" it (if (some? (:root this)) (.iterator (:root this), f) PersistentHashMap'EMPTY_ITER)] (:hasNull this) => it
+            (§ reify Iterator
+                [^:mutable #_"boolean" seen false]
 
-                        #_foreign
-                        (#_"Object" next [#_"Iterator" _self]
-                            (when (not @seen) => (.next it)
-                                (mreset! seen true)
-                                (.invoke f, nil, (:nullValue this))
-                            )
-                        )
+                #_foreign
+                (#_"boolean" hasNext [#_"Iterator" _self]
+                    (or (not seen) (.hasNext it))
+                )
+
+                #_foreign
+                (#_"Object" next [#_"Iterator" _self]
+                    (when (not seen) => (.next it)
+                        (set! seen true)
+                        (.invoke f, nil, (:nullValue this))
                     )
                 )
             )
@@ -22739,18 +22742,20 @@
 
     #_foreign
     (defn #_"Iterator" iterator---PersistentQueue [#_"PersistentQueue" this]
-        (let [#_"ISeq'" vs (mutable! (:f this)) #_"Iterator" it (when (some? (:r this)) (.iterator (:r this)))]
-            (reify Iterator
+        (let [#_"Iterator" it (when (some? (:r this)) (.iterator (:r this)))]
+            (§ reify Iterator
+                [^:mutable #_"ISeq" s (:f this)]
+
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
-                    (or (and (some? @vs) (some? (.seq @vs))) (and (some? it) (.hasNext it)))
+                    (or (and (some? s) (some? (.seq s))) (and (some? it) (.hasNext it)))
                 )
 
                 #_foreign
                 (#_"Object" next [#_"Iterator" _self]
-                    (if (some? @vs)
-                        (let [_ (.first @vs)]
-                            (mswap! vs #(.next %))
+                    (if (some? s)
+                        (let [_ (.first s)]
+                            (update! s #(.next %))
                             _
                         )
                         (when (and (some? it) (.hasNext it)) => (throw (NoSuchElementException.))
@@ -24343,25 +24348,26 @@
 
     #_override
     (defn #_"Iterator" APersistentVector'''rangedIterator--PersistentVector [#_"PersistentVector" this, #_"int" start, #_"int" end]
-        (let [#_"int'" vi (mutable! start) #_"int'" vb (mutable! (- start (% start 32)))
-              #_"Object[]'" va (mutable! (when (< start (.count this)) (PersistentVector''arrayFor this, start)))]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (< @vi end)
-                )
+        (§ reify Iterator
+            [^:mutable #_"int" i start
+             ^:mutable #_"int" base (- start (% start 32))
+             ^:mutable #_"Object[]" a (when (< start (.count this)) (PersistentVector''arrayFor this, start))]
 
-                #_foreign
-                (#_"Object" next [#_"Iterator" _self]
-                    (when (< @vi end) => (throw (NoSuchElementException.))
-                        (when (= @vi (+ @vb 32))
-                            (mreset! va (PersistentVector''arrayFor this, @vi))
-                            (mreset! vb @vi)
-                        )
-                        (let [_ (aget @va (& @vi 0x01f))]
-                            (mswap! vi inc)
-                            _
-                        )
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" _self]
+                (< i end)
+            )
+
+            #_foreign
+            (#_"Object" next [#_"Iterator" _self]
+                (when (< i end) => (throw (NoSuchElementException.))
+                    (when (= i (+ base 32))
+                        (set! a (PersistentVector''arrayFor this, i))
+                        (set! base i)
+                    )
+                    (let [_ (aget a (& i 0x01f))]
+                        (update! i inc)
+                        _
                     )
                 )
             )
@@ -24697,20 +24703,20 @@
 
     #_foreign
     (defn #_"Iterator" iterator---Range [#_"Range" this]
-        (let [#_"Object'" vn (mutable! (:start this))]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (not (.exceededBounds (:boundsCheck this), @vn))
-                )
+        (§ reify Iterator
+            [^:mutable #_"Object" n (:start this)]
 
-                #_foreign
-                (#_"Object" next [#_"Iterator" self]
-                    (when (.hasNext self) => (throw (NoSuchElementException.))
-                        (let [_ @vn]
-                            (mswap! vn Numbers'addP-2oo (:step this))
-                            _
-                        )
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" _self]
+                (not (.exceededBounds (:boundsCheck this), n))
+            )
+
+            #_foreign
+            (#_"Object" next [#_"Iterator" self]
+                (when (.hasNext self) => (throw (NoSuchElementException.))
+                    (let [_ n]
+                        (update! n Numbers'addP-2oo (:step this))
+                        _
                     )
                 )
             )
@@ -25622,17 +25628,19 @@
             (instance? Map coll)
                 (.iterator (.entrySet (cast Map coll)))
             (instance? String coll)
-                (let [#_"String" s (cast String coll) #_"int'" vi (mutable! 0)]
-                    (reify Iterator
+                (let [#_"String" s (cast String coll)]
+                    (§ reify Iterator
+                        [^:mutable #_"int" i 0]
+
                         #_foreign
                         (#_"boolean" hasNext [#_"Iterator" _self]
-                            (< @vi (.length s))
+                            (< i (.length s))
                         )
 
                         #_foreign
                         (#_"Object" next [#_"Iterator" _self]
-                            (let [_ (.charAt s, @vi)]
-                                (mswap! vi inc)
+                            (let [_ (.charAt s, i)]
+                                (update! i inc)
                                 _
                             )
                         )
@@ -26837,24 +26845,25 @@
     (def- #_"Object" SeqIterator'START (Object.))
 
     (defn #_"Iterator" SeqIterator'new [#_"Object" o]
-        (let [#_"Object'" vs (mutable! SeqIterator'START) #_"Object'" vn (mutable! o)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (some?
-                        (condp identical? @vs
-                            SeqIterator'START (do (mreset! vs nil) (mswap! vn RT'seq))
-                            @vn (mswap! vn RT'next)
-                            :else @vn
-                        )
+        (§ reify Iterator
+            [^:mutable #_"Object" s SeqIterator'START
+             ^:mutable #_"Object" n o]
+
+            #_foreign
+            (#_"boolean" hasNext [#_"Iterator" _self]
+                (some?
+                    (condp identical? s
+                        SeqIterator'START (do (set! s nil) (update! n RT'seq))
+                        n (update! n RT'next)
+                        :else n
                     )
                 )
+            )
 
-                #_foreign
-                (#_"Object" next [#_"Iterator" self]
-                    (when (.hasNext self) => (throw (NoSuchElementException.))
-                        (RT'first (mreset! vs @vn))
-                    )
+            #_foreign
+            (#_"Object" next [#_"Iterator" self]
+                (when (.hasNext self) => (throw (NoSuchElementException.))
+                    (RT'first (set! s n))
                 )
             )
         )
@@ -27059,8 +27068,7 @@
     (def- #_"Object" TransformerIterator'NONE (Object.))
 
     (defn- #_"Iterator" TransformerIterator'new [#_"IFn" xform, #_"Iterator" source, #_"boolean" multi?]
-        #_volatile #_"buffer next completed"
-        (let [#_"Queue" q (LinkedList.) #_"Object" vn (volatile! TransformerIterator'NONE) #_"boolean" vc (volatile! false)
+        (let [^:volatile #_"Queue" q (LinkedList.)
               #_"IFn" xf
                 (cast IFn (.invoke xform,
                     (fn #_"Object"
@@ -27069,19 +27077,22 @@
                         ([#_"Object" r, #_"Object" o] (.add q, o) r)
                     )
                 ))]
-            (reify Iterator
+            (§ reify Iterator
+                [^:volatile #_"Object" n TransformerIterator'NONE
+                 ^:volatile #_"boolean" completed? false]
+
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
                     (loop []
                         (cond
-                            (not (identical? @vn TransformerIterator'NONE))
+                            (not (identical? n TransformerIterator'NONE))
                                 true
                             (not (.isEmpty q))
                                 (do
-                                    (vreset! vn (.remove q))
+                                    (set! n (.remove q))
                                     (recur)
                                 )
-                            @vc
+                            completed?
                                 false
                             (.hasNext source)
                                 (let [#_"Object" r
@@ -27091,14 +27102,14 @@
                                         )]
                                     (when (RT'isReduced r)
                                         (.invoke xf, nil)
-                                        (vreset! vc true)
+                                        (set! completed? true)
                                     )
                                     (recur)
                                 )
                             :else
                                 (do
                                     (.invoke xf, nil)
-                                    (vreset! vc true)
+                                    (set! completed? true)
                                     (recur)
                                 )
                         )
@@ -27108,8 +27119,8 @@
                 #_foreign
                 (#_"Object" next [#_"Iterator" self]
                     (when (.hasNext self) => (throw (NoSuchElementException.))
-                        (let [_ @vn]
-                            (vreset! vn TransformerIterator'NONE)
+                        (let [_ n]
+                            (set! n TransformerIterator'NONE)
                             _
                         )
                     )
