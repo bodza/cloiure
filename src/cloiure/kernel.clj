@@ -289,7 +289,7 @@
 (declare TBox'new)
 (declare Unbound'new)
 (declare Frame'new)
-(declare Var'dvals Var'rev Var'intern Var'internPrivate Var'find Var'create Var'new Var''setDynamic Var''isDynamic Var''isBound Var''get Var''alter Var''set Var''setMeta Var''setMacro Var''isMacro Var''isPublic Var''getRawRoot Var''getTag Var''setTag Var''hasRoot Var''bindRoot Var''swapRoot Var''unbindRoot Var''commuteRoot Var''alterRoot Var'pushThreadBindings Var'popThreadBindings Var'getThreadBindings Var''getThreadBinding Var''fn)
+(declare Var'dvals Var'intern Var'internPrivate Var'find Var'create Var'new Var''setDynamic Var''isDynamic Var''isBound Var''get Var''alter Var''set Var''setMeta Var''setMacro Var''isMacro Var''isPublic Var''getRawRoot Var''getTag Var''setTag Var''hasRoot Var''bindRoot Var''swapRoot Var''unbindRoot Var''commuteRoot Var''alterRoot Var'pushThreadBindings Var'popThreadBindings Var'getThreadBindings Var''getThreadBinding Var''fn)
 (declare Volatile'new Volatile''reset)
 
 (declare BigInt'ZERO BigInt'ONE)
@@ -3636,8 +3636,7 @@
     (defn #_"AFunction" AFunction'new []
         (merge (AFn'new)
             (hash-map
-                #_volatile
-                #_"MethodImplCache" :__methodImplCache nil
+                #_volatile #_"MethodImplCache" :__methodImplCache nil
             )
         )
     )
@@ -5027,10 +5026,9 @@
     (defn #_"ASeq" ASeq'new [#_"IPersistentMap" meta]
         (hash-map
             #_"IPersistentMap" :_meta meta
-            #_transient
-            #_"int" :_hash 0
-            #_transient
-            #_"int" :_hasheq 0
+
+            #_mutable #_"int" :_hash 0
+            #_mutable #_"int" :_hasheq 0
         )
     )
 
@@ -5076,12 +5074,8 @@
     #_foreign
     (defn #_"int" hashCode---ASeq [#_"ASeq" this]
         (let-when [#_"int" hash (:_hash this)] (zero? hash) => hash
-            (let [hash
-                    (loop-when [hash 1 #_"ISeq" s (.seq this)] (some? s) => hash
-                        (recur (+ (* 31 hash) (if (some? (.first s)) (.hashCode (.first s)) 0)) (.next s))
-                    )]
-                (ß ass this (assoc this :_hash hash))
-                hash
+            (loop-when [hash 1 #_"ISeq" s (.seq this)] (some? s) => (§ set! (:_hash this) hash)
+                (recur (+ (* 31 hash) (if (some? (.first s)) (.hashCode (.first s)) 0)) (.next s))
             )
         )
     )
@@ -5089,10 +5083,7 @@
     #_override
     (defn #_"int" IHashEq'''hasheq--ASeq [#_"ASeq" this]
         (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
-            (let [cached (Murmur3'hashOrdered this)]
-                (ß ass this (assoc this :_hasheq cached))
-                cached
-            )
+            (§ set! (:_hasheq this) (Murmur3'hashOrdered this))
         )
     )
 
@@ -5158,10 +5149,10 @@
     (defn- #_"LazySeq" LazySeq'init [#_"IPersistentMap" meta, #_"ISeq" s, #_"IFn" fn]
         (hash-map
             #_"IPersistentMap" :_meta meta
-            #_"ISeq" :s s
-            #_"IFn" :fn fn
+            #_mutable #_"ISeq" :s s
+            #_mutable #_"IFn" :fn fn
 
-            #_"Object" :sv nil
+            #_mutable #_"Object" :sv nil
         )
     )
 
@@ -5184,8 +5175,8 @@
     (defn #_"Object" LazySeq''sval [#_"LazySeq" this]
         (§ sync this
             (when (some? (:fn this))
-                (ß ass this (assoc this :sv (.invoke (:fn this))))
-                (ß ass this (assoc this :fn nil))
+                (§ set! (:sv this) (.invoke (:fn this)))
+                (§ set! (:fn this) nil)
             )
             (or (:sv this) (:s this))
         )
@@ -5196,9 +5187,9 @@
         (§ sync this
             (LazySeq''sval this)
             (when (some? (:sv this))
-                (let [#_"Object" ls (:sv this) _ (ß ass this (assoc this :sv nil))
+                (let [#_"Object" ls (:sv this) _ (§ set! (:sv this) nil)
                       ls (loop-when-recur ls (instance? LazySeq ls) (LazySeq''sval (cast LazySeq ls)) => ls)]
-                    (ß ass this (assoc this :s (RT'seq ls)))
+                    (§ set! (:s this) (RT'seq ls))
                 )
             )
             (:s this)
@@ -5455,10 +5446,8 @@
     (defn #_"APersistentMap" APersistentMap'new []
         (merge (AFn'new)
             (hash-map
-                #_transient
-                #_"int" :_hash 0
-                #_transient
-                #_"int" :_hasheq 0
+                #_mutable #_"int" :_hash 0
+                #_mutable #_"int" :_hasheq 0
             )
         )
     )
@@ -5534,16 +5523,6 @@
         )
     )
 
-    #_foreign
-    (defn #_"int" hashCode---APersistentMap [#_"APersistentMap" this]
-        (let-when [#_"int" cached (:_hash this)] (zero? cached) => cached
-            (let [cached (APersistentMap'mapHash this)]
-                (ß ass this (assoc this :_hash cached))
-                cached
-            )
-        )
-    )
-
     (defn #_"int" APersistentMap'mapHash [#_"IPersistentMap" m]
         (loop-when [#_"int" hash 0 #_"ISeq" s (.seq m)] (some? s) => hash
             (let [#_"Map$Entry" e (cast Map$Entry (.first s)) #_"Object" k (.getKey e) #_"Object" v (.getValue e)]
@@ -5552,13 +5531,17 @@
         )
     )
 
+    #_foreign
+    (defn #_"int" hashCode---APersistentMap [#_"APersistentMap" this]
+        (let-when [#_"int" cached (:_hash this)] (zero? cached) => cached
+            (§ set! (:_hash this) (APersistentMap'mapHash this))
+        )
+    )
+
     #_override
     (defn #_"int" IHashEq'''hasheq--APersistentMap [#_"APersistentMap" this]
         (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
-            (let [cached (Murmur3'hashUnordered this)]
-                (ß ass this (assoc this :_hasheq cached))
-                cached
-            )
+            (§ set! (:_hasheq this) (Murmur3'hashUnordered this))
         )
     )
 
@@ -5701,10 +5684,8 @@
             (hash-map
                 #_"IPersistentMap" :impl impl
 
-                #_transient
-                #_"int" :_hash 0
-                #_transient
-                #_"int" :_hasheq 0
+                #_mutable #_"int" :_hash 0
+                #_mutable #_"int" :_hasheq 0
             )
         )
     )
@@ -5770,12 +5751,8 @@
     #_foreign
     (defn #_"int" hashCode---APersistentSet [#_"APersistentSet" this]
         (let-when [#_"int" hash (:_hash this)] (zero? hash) => hash
-            (let [hash
-                    (loop-when [hash 0 #_"ISeq" s (.seq this)] (some? s) => hash
-                        (recur (+ hash (Util'hash (.first s))) (.next s))
-                    )]
-                (ß ass this (assoc this :_hash hash))
-                hash
+            (loop-when [hash 0 #_"ISeq" s (.seq this)] (some? s) => (§ set! (:_hash this) hash)
+                (recur (+ hash (Util'hash (.first s))) (.next s))
             )
         )
     )
@@ -5783,10 +5760,7 @@
     #_override
     (defn #_"int" IHashEq'''hasheq--APersistentSet [#_"APersistentSet" this]
         (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
-            (let [cached (Murmur3'hashUnordered this)]
-                (ß ass this (assoc this :_hasheq cached))
-                cached
-            )
+            (§ set! (:_hasheq this) (Murmur3'hashUnordered this))
         )
     )
 
@@ -5937,10 +5911,8 @@
     (defn #_"APersistentVector" APersistentVector'new []
         (merge (AFn'new)
             (hash-map
-                #_transient
-                #_"int" :_hash 0
-                #_transient
-                #_"int" :_hasheq 0
+                #_mutable #_"int" :_hash 0
+                #_mutable #_"int" :_hasheq 0
             )
         )
     )
@@ -6025,12 +5997,11 @@
         (let-when [#_"int" hash (:_hash this)] (zero? hash) => hash
             (let [hash
                     (loop-when [hash 1 #_"int" i 0] (< i (.count this)) => hash
-                        (let [#_"Object" obj (.nth this, i)]
-                            (recur (+ (* 31 hash) (if (some? obj) (.hashCode obj) 0)) (inc i))
+                        (let [#_"Object" o (.nth this, i)]
+                            (recur (+ (* 31 hash) (if (some? o) (.hashCode o) 0)) (inc i))
                         )
                     )]
-                (ß ass this (assoc this :_hash hash))
-                hash
+                (§ set! (:_hash this) hash)
             )
         )
     )
@@ -6042,8 +6013,7 @@
                     (loop-when [hash 1 #_"int" i 0] (< i (.count this)) => (Murmur3'mixCollHash hash, i)
                         (recur (+ (* 31 hash) (Util'hasheq (.nth this, i))) (inc i))
                     )]
-                (ß ass this (assoc this :_hasheq hash))
-                hash
+                (§ set! (:_hasheq this) hash)
             )
         )
     )
@@ -6061,7 +6031,7 @@
     #_override
     (defn #_"Iterator" APersistentVector'''rangedIterator--APersistentVector [#_"APersistentVector" this, #_"int" start, #_"int" end]
         (§ reify Iterator
-            [^:mutable #_"int" i start]
+            [#_mutable #_"int" i start]
 
             #_foreign
             (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6091,7 +6061,7 @@
     #_foreign
     (defn #_"Iterator" iterator---APersistentVector [#_"APersistentVector" this]
         (§ reify Iterator
-            [^:mutable #_"int" i 0]
+            [#_mutable #_"int" i 0]
 
             #_foreign
             (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6403,7 +6373,7 @@
 (class-ns ArrayIter_int
     (defn #_"Iterator" ArrayIter_int'new [#_"int[]" a, #_"int" i]
         (§ reify Iterator
-            [^:mutable #_"int" i i]
+            [#_mutable #_"int" i i]
 
             #_foreign
             (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6426,7 +6396,7 @@
 (class-ns ArrayIter_float
     (defn #_"Iterator" ArrayIter_float'new [#_"float[]" a, #_"int" i]
         (§ reify Iterator
-            [^:mutable #_"int" i i]
+            [#_mutable #_"int" i i]
 
             #_foreign
             (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6449,7 +6419,7 @@
 (class-ns ArrayIter_double
     (defn #_"Iterator" ArrayIter_double'new [#_"double[]" a, #_"int" i]
         (§ reify Iterator
-            [^:mutable #_"int" i i]
+            [#_mutable #_"int" i i]
 
             #_foreign
             (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6472,7 +6442,7 @@
 (class-ns ArrayIter_long
     (defn #_"Iterator" ArrayIter_long'new [#_"long[]" a, #_"int" i]
         (§ reify Iterator
-            [^:mutable #_"int" i i]
+            [#_mutable #_"int" i i]
 
             #_foreign
             (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6495,7 +6465,7 @@
 (class-ns ArrayIter_byte
     (defn #_"Iterator" ArrayIter_byte'new [#_"byte[]" a, #_"int" i]
         (§ reify Iterator
-            [^:mutable #_"int" i i]
+            [#_mutable #_"int" i i]
 
             #_foreign
             (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6518,7 +6488,7 @@
 (class-ns ArrayIter_char
     (defn #_"Iterator" ArrayIter_char'new [#_"char[]" a, #_"int" i]
         (§ reify Iterator
-            [^:mutable #_"int" i i]
+            [#_mutable #_"int" i i]
 
             #_foreign
             (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6541,7 +6511,7 @@
 (class-ns ArrayIter_short
     (defn #_"Iterator" ArrayIter_short'new [#_"short[]" a, #_"int" i]
         (§ reify Iterator
-            [^:mutable #_"int" i i]
+            [#_mutable #_"int" i i]
 
             #_foreign
             (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6564,7 +6534,7 @@
 (class-ns ArrayIter_boolean
     (defn #_"Iterator" ArrayIter_boolean'new [#_"boolean[]" a, #_"int" i]
         (§ reify Iterator
-            [^:mutable #_"int" i i]
+            [#_mutable #_"int" i i]
 
             #_foreign
             (#_"boolean" hasNext [#_"Iterator" _self]
@@ -6630,7 +6600,7 @@
     (defn #_"Iterator" ArrayIter'new [#_"Object" array, #_"int" i]
         (let [#_"Object[]" a (cast RT'OBJECTS_CLASS array)]
             (§ reify Iterator
-                [^:mutable #_"int" i i]
+                [#_mutable #_"int" i i]
 
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -7222,7 +7192,7 @@
         ([#_"Object" state, #_"IPersistentMap" meta]
             (hash-map
                 #_"AtomicReference" :state (AtomicReference. state)
-                #_"IPersistentMap" :_meta meta
+                #_mutable #_"IPersistentMap" :_meta meta
             )
         )
     )
@@ -7237,18 +7207,14 @@
     #_override
     (defn #_"IPersistentMap" IReference'''alterMeta--Atom [#_"Atom" this, #_"IFn" alter, #_"ISeq" args]
         (§ sync this
-            (let [#_"IPersistentMap" m (cast IPersistentMap (.applyTo alter, (Cons'new (:_meta this), args)))]
-                (ß ass this (assoc this :_meta m))
-                (:_meta this)
-            )
+            (§ update! (:_meta this) #(cast IPersistentMap (.applyTo alter, (Cons'new %, args))))
         )
     )
 
     #_override
     (defn #_"IPersistentMap" IReference'''resetMeta--Atom [#_"Atom" this, #_"IPersistentMap" m]
         (§ sync this
-            (ß ass this (assoc this :_meta m))
-            m
+            (§ set! (:_meta this) m)
         )
     )
 
@@ -7470,7 +7436,6 @@
     (defn #_"ATransientSet" ATransientSet'new [#_"ITransientMap" impl]
         (merge (AFn'new)
             (hash-map
-                #_volatile
                 #_"ITransientMap" :impl impl
             )
         )
@@ -7739,7 +7704,7 @@
 (class-ns Box
     (defn #_"Box" Box'new [#_"Object" val]
         (hash-map
-            #_"Object" :val val
+            #_mutable #_"Object" :val val
         )
     )
 )
@@ -7750,22 +7715,22 @@
 (class-ns ChunkBuffer
     (defn #_"ChunkBuffer" ChunkBuffer'new [#_"int" capacity]
         (hash-map
-            #_"Object[]" :buffer (make-array Object capacity)
-            #_"int" :end 0
+            #_mutable #_"Object[]" :buffer (make-array Object capacity)
+            #_mutable #_"int" :end 0
         )
     )
 
     #_method
     (defn #_"void" ChunkBuffer''add [#_"ChunkBuffer" this, #_"Object" o]
         (aset (:buffer this) (:end this) o)
-        (ß ass this (update this :end inc))
+        (§ update! (:end this) inc)
         nil
     )
 
     #_method
     (defn #_"IChunk" ChunkBuffer''chunk [#_"ChunkBuffer" this]
         (let [_ (ArrayChunk'new (:buffer this), 0, (:end this))]
-            (ß ass this (assoc this :buffer nil))
+            (§ set! (:buffer this) nil)
             _
         )
     )
@@ -9397,8 +9362,8 @@
             #_"LocalBinding" :lb lb
             #_"Expr" :handler handler
 
-            #_"Label" :label nil
-            #_"Label" :endLabel nil
+            #_mutable #_"Label" :label nil
+            #_mutable #_"Label" :endLabel nil
         )
     )
 )
@@ -9541,8 +9506,8 @@
         (let [#_"Label" startTry (.newLabel gen) #_"Label" endTry (.newLabel gen) #_"Label" end (.newLabel gen) #_"Label" ret (.newLabel gen) #_"Label" finallyLabel (.newLabel gen)]
             (loop-when-recur [#_"int" i 0] (< i (.count (:catchExprs this))) [(inc i)]
                 (let [#_"CatchClause" clause (cast CatchClause (.nth (:catchExprs this), i))]
-                    (ß ass (:label clause) (.newLabel gen))
-                    (ß ass (:endLabel clause) (.newLabel gen))
+                    (§ set! (:label clause) (.newLabel gen))
+                    (§ set! (:endLabel clause) (.newLabel gen))
                 )
             )
 
@@ -10764,7 +10729,7 @@
             #_"Type" :objtype nil
             #_"Object" :tag tag
             ;; localbinding->itself
-            #_"IPersistentMap" :closes PersistentHashMap'EMPTY
+            #_mutable #_"IPersistentMap" :closes PersistentHashMap'EMPTY
             ;; localbndingexprs
             #_"IPersistentVector" :closesExprs PersistentVector'EMPTY
             ;; symbols
@@ -10779,11 +10744,11 @@
             ;; Keyword->KeywordExpr
             #_"IPersistentMap" :keywords PersistentHashMap'EMPTY
             #_"IPersistentMap" :vars PersistentHashMap'EMPTY
-            #_"Class" :compiledClass nil
+            #_mutable #_"Class" :compiledClass nil
             #_"int" :line 0
             #_"int" :column 0
             #_"PersistentVector" :constants nil
-            #_"IPersistentSet" :usedConstants PersistentHashSet'EMPTY
+            #_mutable #_"IPersistentSet" :usedConstants PersistentHashSet'EMPTY
 
             #_"int" :constantsID 0
             #_"int" :altCtorDrops 0
@@ -10800,7 +10765,7 @@
             #_"IPersistentMap" :classMeta nil
             #_"boolean" :canBeDirect false
 
-            #_"DynamicClassLoader" :loader nil
+            #_mutable #_"DynamicClassLoader" :loader nil
             #_"byte[]" :bytecode nil
         )
     )
@@ -10829,7 +10794,7 @@
     )
 
     #_method
-    (defn #_"void" ObjExpr''compile [#_"ObjExpr" this, #_"String" superName, #_"String[]" interfaceNames, #_"boolean" oneTimeUse]
+    (defn #_"ObjExpr" ObjExpr''compile [#_"ObjExpr" this, #_"String" superName, #_"String[]" interfaceNames, #_"boolean" oneTimeUse]
         ;; create bytecode for a class
         ;; with name current_ns.defname[$letname]+
         ;; anonymous fns get names fn__id
@@ -10890,8 +10855,8 @@
                     (.putField ctorgen, (:objtype this), "__meta", Compiler'IPERSISTENTMAP_TYPE)
                 )
 
-                (let [#_"int" a
-                        (loop-when [a (if (.supportsMeta this) 2 1) #_"ISeq" s (RT'keys (:closes this))] (some? s) => a
+                (let [[this #_"int" a]
+                        (loop-when [this this a (if (.supportsMeta this) 2 1) #_"ISeq" s (RT'keys (:closes this))] (some? s) => [this a]
                             (let [#_"LocalBinding" lb (cast LocalBinding (.first s))]
                                 (.loadThis ctorgen)
                                 (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)
@@ -10907,9 +10872,8 @@
                                                 a
                                             )
                                         )]
-                                    (ß ass this (assoc this :closesExprs (.cons (:closesExprs this), (LocalBindingExpr'new lb, nil))))
+                                    (recur (update this :closesExprs #(.cons %, (LocalBindingExpr'new lb, nil))) (inc a) (.next s))
                                 )
-                                (recur (inc a) (.next s))
                             )
                         )]
 
@@ -11065,12 +11029,11 @@
                         ;; end of class
                         (.visitEnd cv)
 
-                        (ß ass this (assoc this :bytecode (.toByteArray cw)))
+                        (assoc this :bytecode (.toByteArray cw))
                     )
                 )
             )
         )
-        nil
     )
 
     #_method
@@ -11343,8 +11306,8 @@
     (defn #_"Class" ObjExpr''getCompiledClass [#_"ObjExpr" this]
         (§ sync this
             (when (nil? (:compiledClass this))
-                (ß ass this (assoc this :loader (cast DynamicClassLoader (.deref Compiler'LOADER))))
-                (ß ass this (assoc this :compiledClass (.defineClass (:loader this), (:name this), (:bytecode this), (:src this))))
+                (§ set! (:loader this) (cast DynamicClassLoader (.deref Compiler'LOADER)))
+                (§ set! (:compiledClass this) (.defineClass (:loader this), (:name this), (:bytecode this), (:src this)))
             )
             (:compiledClass this)
         )
@@ -11560,7 +11523,7 @@
 
     #_method
     (defn #_"void" ObjExpr''emitConstant [#_"ObjExpr" this, #_"GeneratorAdapter" gen, #_"int" id]
-        (ß ass this (assoc this :usedConstants (cast IPersistentSet (.cons (:usedConstants this), id))))
+        (§ set! (:usedConstants this) (cast IPersistentSet (.cons (:usedConstants this), id)))
         (.getStatic gen, (:objtype this), (ObjExpr''constantName this, id), (ObjExpr''constantType this, id))
         nil
     )
@@ -11771,7 +11734,7 @@
                                     (let-when [#_"FnMethod" fm (.next fmi)] (some? (:locals fm))
                                         (loop-when-recur [#_"Iterator" lbi (.iterator (cast Collection #_"<LocalBinding>" (RT'keys (:locals fm))))] (.hasNext lbi) [lbi]
                                             (let-when [#_"LocalBinding" lb (.next lbi)] (:isArg lb)
-                                                (ß ass (:idx lb) (dec (:idx lb)))
+                                                (§ update! (:idx lb) dec)
                                             )
                                         )
                                     )
@@ -11844,16 +11807,16 @@
             ;; the closed over locals need to be propagated to the enclosing objx
             #_"ObjMethod" :parent parent
             ;; localbinding->localbinding
-            #_"IPersistentMap" :locals nil
+            #_mutable #_"IPersistentMap" :locals nil
             ;; num->localbinding
-            #_"IPersistentMap" :indexlocals nil
+            #_mutable #_"IPersistentMap" :indexlocals nil
             #_"Expr" :body nil
             #_"PersistentVector" :argLocals nil
-            #_"int" :maxLocal 0
+            #_mutable #_"int" :maxLocal 0
             #_"int" :line 0
             #_"int" :column 0
-            #_"boolean" :usesThis false
-            #_"PersistentHashSet" :localsUsedInCatchFinally PersistentHashSet'EMPTY
+            #_mutable #_"boolean" :usesThis false
+            #_mutable #_"PersistentHashSet" :localsUsedInCatchFinally PersistentHashSet'EMPTY
             #_"IPersistentMap" :methodMeta nil
         )
     )
@@ -12356,17 +12319,17 @@
             (throw (UnsupportedOperationException. "Can't type hint a local with a primitive initializer"))
         )
         (hash-map
-            #_"int" :idx idx
+            #_mutable #_"int" :idx idx
             #_"Symbol" :sym sym
             #_"Symbol" :tag tag
-            #_"Expr" :init init
+            #_mutable #_"Expr" :init init
             #_"boolean" :isArg isArg
             #_"PathNode" :clearPathRoot clearPathRoot
 
             #_"String" :name (Compiler'munge (:name sym))
-            #_"boolean" :canBeCleared true
-            #_"boolean" :recurMistmatch false
-            #_"boolean" :used false
+            #_mutable #_"boolean" :canBeCleared true
+            #_mutable #_"boolean" :recurMistmatch false
+            #_mutable #_"boolean" :used false
         )
     )
 
@@ -12403,9 +12366,9 @@
 
                         #_"PathNode" :clearPath (cast PathNode (Var''get Compiler'CLEAR_PATH))
                         #_"PathNode" :clearRoot (cast PathNode (Var''get Compiler'CLEAR_ROOT))
-                        #_"boolean" :shouldClear false
+                        #_mutable #_"boolean" :shouldClear false
                     )]
-                (ß ass (:used lb) true)
+                (§ set! (:used lb) true)
                 (when (pos? (:idx lb)) => this
                     (let [#_"IPersistentCollection" sites (cast IPersistentCollection (RT'get-2 (Var''get Compiler'CLEAR_SITES), lb))]
                         (when (some? sites)
@@ -12413,16 +12376,15 @@
                                 (let [#_"LocalBindingExpr" lbe (cast LocalBindingExpr (.first s))
                                       #_"PathNode" common (Compiler'commonPath (:clearPath this), (:clearPath lbe))]
                                     (when (and (some? common) (= (:type common) :PathType'PATH))
-                                        (ß ass (:shouldClear lbe) false)
+                                        (§ set! (:shouldClear lbe) false)
                                     )
                                 )
                             )
                         )
                         (when (= (:clearRoot this) (:clearPathRoot lb)) => this
-                            (let [this (assoc this :shouldClear true)]
-                                (Var''set Compiler'CLEAR_SITES, (RT'assoc (Var''get Compiler'CLEAR_SITES), lb, (RT'conj sites, this)))
-                                this
-                            )
+                            (§ set! (:shouldClear this) true)
+                            (Var''set Compiler'CLEAR_SITES, (RT'assoc (Var''get Compiler'CLEAR_SITES), lb, (RT'conj sites, this)))
+                            this
                         )
                     )
                 )
@@ -12594,7 +12556,7 @@
                                                     (let-when [#_"Object" o (.nth bindings, i)] (instance? Symbol o) => (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " o)))
                                                         (let-when [#_"Symbol" sym (cast Symbol o)] (nil? (.getNamespace sym)) => (throw (RuntimeException. (str "Can't let qualified name: " sym)))
                                                             (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (Compiler'tagOf sym), nil, false)]
-                                                                (ß ass (:canBeCleared lb) false)
+                                                                (§ set! (:canBeCleared lb) false)
                                                                 (recur (.cons lbs, lb) (+ i 2))
                                                             )
                                                         )
@@ -12605,7 +12567,7 @@
                                                     (let [#_"Symbol" sym (cast Symbol (.nth bindings, i))
                                                           #_"Expr" init (Compiler'analyze-3 :Context'EXPRESSION, (.nth bindings, (inc i)), (:name sym))
                                                           #_"LocalBinding" lb (cast LocalBinding (.nth lbs, (/ i 2)))]
-                                                        (ß ass (:init lb) init)
+                                                        (§ set! (:init lb) init)
                                                         (recur (.cons bis, (BindingInit'new lb, init)) (+ i 2))
                                                     )
                                                 )]
@@ -12723,8 +12685,8 @@
                                                     (when isLoop => dynamicBindings
                                                         (.assoc dynamicBindings, Compiler'LOOP_LOCALS, nil)
                                                     )
-                                                  _ (ß ass method (assoc method :locals backupMethodLocals))
-                                                  _ (ß ass method (assoc method :indexlocals backupMethodIndexLocals))
+                                                  _ (§ set! (:locals method) backupMethodLocals)
+                                                  _ (§ set! (:indexlocals method) backupMethodIndexLocals)
                                                   #_"PathNode" looproot (PathNode'new :PathType'PATH, (cast PathNode (Var''get Compiler'CLEAR_PATH)))
                                                   #_"PathNode" clearroot (PathNode'new :PathType'PATH, looproot)
                                                   #_"PathNode" clearpath (PathNode'new :PathType'PATH, looproot)]
@@ -12961,7 +12923,7 @@
                                                             false
                                             )]
                                         (when mismatch?
-                                            (ß ass (:recurMistmatch lb) true)
+                                            (§ set! (:recurMistmatch lb) true)
                                             (when (RT'booleanCast-1o (.deref RT'WARN_ON_REFLECTION))
                                                 (.println (RT'errPrintWriter), (str "line " line ": recur arg for primitive local: " (:name lb) " is not matching primitive, had: " (if (some? pc) (.getName pc) "Object") ", needed: " (.getName primc)))
                                             )
@@ -13135,7 +13097,7 @@
             (hash-map
                 #_"IPersistentCollection" :methods nil
 
-                #_"Map<IPersistentVector, java.lang.reflect.Method>" :mmap nil
+                #_"Map<IPersistentVector, java.lang.reflect.Method>" :overrideables nil
                 #_"Map<IPersistentVector, Set<Class>>" :covariants nil
             )
         )
@@ -13164,7 +13126,7 @@
                             )
                           ;; todo - inject __meta et al into closes - when?
                           ;; use array map to preserve ctor order
-                          ret (assoc ret :closes (PersistentArrayMap'new a))
+                          _ (§ set! (:closes ret) (PersistentArrayMap'new a))
                           ret (assoc ret :fields fmap)]
                         (loop-when-recur [ret ret #_"int" i (dec (.count fieldSyms))]
                                          (and (<= 0 i) (any = (:name (cast Symbol (.nth fieldSyms, i))) "__meta" "__extmap" "__hash" "__hasheq"))
@@ -13184,8 +13146,7 @@
               #_"Class" superClass Object
               #_"Map[]" mc (NewInstanceExpr'gatherMethods-2s superClass, (RT'seq ifaces))
               #_"Map" overrideables (aget mc 0) #_"Map" covariants (aget mc 1)
-              ret (assoc ret :mmap overrideables)
-              ret (assoc ret :covariants covariants)
+              ret (assoc ret :overrideables overrideables :covariants covariants)
               #_"String[]" inames (NewInstanceExpr'interfaceNames ifaces)
               #_"Class" stub (NewInstanceExpr'compileStub (NewInstanceExpr'slashname superClass), ret, inames, frm)
               #_"Symbol" thistag (Symbol'intern nil, (.getName stub))
@@ -13421,7 +13382,7 @@
         )
         ;; emit bridge methods
         (doseq [#_"Map$Entry<IPersistentVector, Set<Class>>" e (.entrySet (:covariants this))]
-            (let [#_"java.lang.reflect.Method" m (.get (:mmap this), (.getKey e))
+            (let [#_"java.lang.reflect.Method" m (.get (:overrideables this), (.getKey e))
                   #_"Class[]" params (.getParameterTypes m)
                   #_"Type[]" argTypes (make-array Type (alength params))
                   _ (dotimes [#_"int" i (alength params)]
@@ -13795,7 +13756,7 @@
                               #_"int" low (.intValue (cast Number (RT'first keys)))
                               #_"int" high (.intValue (cast Number (RT'nth-2 keys, (dec (RT'count keys)))))
                               #_"LocalBindingExpr" testexpr (cast LocalBindingExpr (Compiler'analyze-2 :Context'EXPRESSION, exprForm))
-                              testexpr (assoc testexpr :shouldClear false)
+                              _ (§ set! (:shouldClear testexpr) false)
                               #_"SortedMap<Integer, Expr>" tests (TreeMap.)
                               #_"HashMap<Integer, Expr>" thens (HashMap.)
                               #_"PathNode" branch (PathNode'new :PathType'BRANCH, (cast PathNode (Var''get Compiler'CLEAR_PATH)))
@@ -14556,8 +14517,8 @@
               #_"LocalBinding" lb (LocalBinding'new n, sym, tag, init, isArg, (Compiler'clearPathRoot))]
             (Var''set Compiler'LOCAL_ENV, (RT'assoc (cast IPersistentMap (.deref Compiler'LOCAL_ENV)), (:sym lb), lb))
             (let [#_"ObjMethod" method (cast ObjMethod (.deref Compiler'METHOD))]
-                (ß ass method (assoc method :locals (cast IPersistentMap (RT'assoc (:locals method), lb, lb))))
-                (ß ass method (assoc method :indexlocals (cast IPersistentMap (RT'assoc (:indexlocals method), n, lb))))
+                (§ set! (:locals method) (cast IPersistentMap (RT'assoc (:locals method), lb, lb)))
+                (§ set! (:indexlocals method) (cast IPersistentMap (RT'assoc (:indexlocals method), n, lb)))
                 lb
             )
         )
@@ -14567,7 +14528,7 @@
         (let [#_"int" n (.intValue (cast Number (.deref Compiler'NEXT_LOCAL_NUM)))
               #_"ObjMethod" m (cast ObjMethod (.deref Compiler'METHOD))]
             (when (< (:maxLocal m) n)
-                (ß ass m (assoc m :maxLocal n))
+                (§ set! (:maxLocal m) n)
             )
             (Var''set Compiler'NEXT_LOCAL_NUM, (inc n))
             n
@@ -15040,15 +15001,15 @@
             (let [#_"LocalBinding" lb (cast LocalBinding (RT'get-2 (:locals method), b))]
                 (if (nil? lb)
                     (do
-                        (ß ass method (update-in method [:objx :closes] #(cast IPersistentMap (RT'assoc %, b, b))))
+                        (§ update! (:closes (:objx method)) #(cast IPersistentMap (RT'assoc %, b, b)))
                         (Compiler'closeOver b, (:parent method))
                     )
                     (do
                         (when (zero? (:idx lb))
-                            (ß ass method (assoc method :usesThis true))
+                            (§ set! (:usesThis method) true)
                         )
                         (when (some? (.deref Compiler'IN_CATCH_FINALLY))
-                            (ß ass method (update method :localsUsedInCatchFinally #(cast PersistentHashSet (.cons %, (:idx b)))))
+                            (§ update! (:localsUsedInCatchFinally method) #(cast PersistentHashSet (.cons %, (:idx b))))
                         )
                     )
                 )
@@ -15059,13 +15020,13 @@
 
     (defn #_"LocalBinding" Compiler'referenceLocal [#_"Symbol" sym]
         (when (Var''isBound Compiler'LOCAL_ENV)
-            (when-let [#_"LocalBinding" b (cast LocalBinding (RT'get-2 (.deref Compiler'LOCAL_ENV), sym))]
+            (when-let [#_"LocalBinding" lb (cast LocalBinding (RT'get-2 (.deref Compiler'LOCAL_ENV), sym))]
                 (let [#_"ObjMethod" method (cast ObjMethod (.deref Compiler'METHOD))]
-                    (when (zero? (:idx b))
-                        (ß ass method (assoc method :usesThis true))
+                    (when (zero? (:idx lb))
+                        (§ set! (:usesThis method) true)
                     )
-                    (Compiler'closeOver b, method)
-                    b
+                    (Compiler'closeOver lb, method)
+                    lb
                 )
             )
         )
@@ -15272,10 +15233,8 @@
                 (hash-map
                     #_"ISeq" :all all ;; never nil
                     #_"ISeq" :prev prev
-                    #_volatile
-                    #_"ISeq" :_current current ;; lazily realized
-                    #_volatile
-                    #_"ISeq" :_next next ;; cached
+                    #_volatile #_"ISeq" :_current current ;; lazily realized
+                    #_volatile #_"ISeq" :_next next ;; cached
                 )
             )
         )
@@ -15290,7 +15249,7 @@
     (defn- #_"ISeq" Cycle''current [#_"Cycle" this]
         (when (nil? (:_current this))
             (let [#_"ISeq" current (.next (:prev this))]
-                (ß ass this (assoc this :_current (or current (:all this))))
+                (§ set! (:_current this) (or current (:all this)))
             )
         )
         (:_current this)
@@ -15309,7 +15268,7 @@
     #_override
     (defn #_"ISeq" ISeq'''next--Cycle [#_"Cycle" this]
         (when (nil? (:_next this))
-            (ß ass this (assoc this :_next (Cycle'new (:all this), (Cycle''current this), nil)))
+            (§ set! (:_next this) (Cycle'new (:all this), (Cycle''current this), nil))
         )
         (:_next this)
     )
@@ -15348,12 +15307,9 @@
 (class-ns Delay
     (defn #_"Delay" Delay'new [#_"IFn" fn]
         (hash-map
-            #_volatile
-            #_"Object" :val nil
-            #_volatile
-            #_"Throwable" :exception nil
-            #_volatile
-            #_"IFn" :fn fn
+            #_volatile #_"Object" :val nil
+            #_volatile #_"Throwable" :exception nil
+            #_volatile #_"IFn" :fn fn
         )
     )
 
@@ -15368,12 +15324,12 @@
                 ;; double check
                 (when (some? (:fn this))
                     (try
-                        (ß ass this (assoc this :val (.invoke (:fn this))))
+                        (§ set! (:val this) (.invoke (:fn this)))
                         (catch Throwable t
-                            (ß ass this (assoc this :exception t))
+                            (§ set! (:exception this) t)
                         )
                     )
-                    (ß ass this (assoc this :fn nil))
+                    (§ set! (:fn this) nil)
                 )
             )
         )
@@ -15630,10 +15586,8 @@
                 (hash-map
                     #_"IFn" :f f ;; never nil
                     #_"Object" :prevSeed prevSeed
-                    #_volatile
-                    #_"Object" :_seed seed ;; lazily realized
-                    #_volatile
-                    #_"ISeq" :_next next ;; cached
+                    #_volatile #_"Object" :_seed seed ;; lazily realized
+                    #_volatile #_"ISeq" :_next next ;; cached
                 )
             )
         )
@@ -15651,7 +15605,7 @@
     #_override
     (defn #_"Object" ISeq'''first--Iterate [#_"Iterate" this]
         (when (= (:_seed this) Iterate'UNREALIZED_SEED)
-            (ß ass this (assoc this :_seed (.invoke (:f this), (:prevSeed this))))
+            (§ set! (:_seed this) (.invoke (:f this), (:prevSeed this)))
         )
         (:_seed this)
     )
@@ -15659,7 +15613,7 @@
     #_override
     (defn #_"ISeq" ISeq'''next--Iterate [#_"Iterate" this]
         (when (nil? (:_next this))
-            (ß ass this (assoc this :_next (Iterate'new (:f this), (.first this), Iterate'UNREALIZED_SEED)))
+            (§ set! (:_next this) (Iterate'new (:f this), (.first this), Iterate'UNREALIZED_SEED))
         )
         (:_next this)
     )
@@ -15730,8 +15684,7 @@
             #_"Symbol" :sym sym
             #_"int" :hasheq (+ (.hasheq sym) 0x9e3779b9)
 
-            #_transient
-            #_"String" :_str nil
+            #_mutable #_"String" :_str nil
         )
     )
 
@@ -15764,7 +15717,7 @@
     #_foreign
     (defn #_"String" toString---Keyword [#_"Keyword" this]
         (when (nil? (:_str this))
-            (ß ass this (assoc this :_str (str ":" (:sym this))))
+            (§ set! (:_str this) (str ":" (:sym this)))
         )
         (:_str this)
     )
@@ -15999,17 +15952,16 @@
 (java-ns cloiure.lang.LineNumberingPushbackReader
 
 (class-ns LineNumberingPushbackReader
-    ;; This class is a PushbackReader that wraps a LineNumberReader. The code
-    ;; here to handle line terminators only mentions '\n' because
-    ;; LineNumberReader collapses all occurrences of CR, LF, and CRLF into a
-    ;; single '\n'.
+    ;; This class is a PushbackReader that wraps a LineNumberReader. The code here
+    ;; to handle line terminators only mentions '\n' because LineNumberReader
+    ;; collapses all occurrences of CR, LF, and CRLF into a single '\n'.
     (def- #_"int" LineNumberingPushbackReader'newline (int \newline))
 
     (defn- #_"LineNumberingPushbackReader" LineNumberingPushbackReader'init []
         (hash-map
-            #_"boolean" :_atLineStart true
-            #_"boolean" :_prev false
-            #_"int" :_columnNumber 1
+            #_mutable #_"boolean" :_atLineStart true
+            #_mutable #_"boolean" :_prev false
+            #_mutable #_"int" :_columnNumber 1
         )
     )
 
@@ -16040,15 +15992,15 @@
     #_foreign
     (defn #_"int" read---LineNumberingPushbackReader [#_"LineNumberingPushbackReader" this]
         (let [#_"int" c (.read (§ super ))]
-            (ß ass this (assoc this :_prev (:_atLineStart this)))
+            (§ set! (:_prev this) (:_atLineStart this))
             (if (or (= c LineNumberingPushbackReader'newline) (= c -1))
                 (do
-                    (ß ass this (assoc this :_atLineStart true))
-                    (ß ass this (assoc this :_columnNumber 1))
+                    (§ set! (:_atLineStart this) true)
+                    (§ set! (:_columnNumber this) 1)
                 )
                 (do
-                    (ß ass this (assoc this :_atLineStart false))
-                    (ß ass this (update this :_columnNumber inc))
+                    (§ set! (:_atLineStart this) false)
+                    (§ update! (:_columnNumber this) inc)
                 )
             )
             c
@@ -16058,8 +16010,8 @@
     #_foreign
     (defn #_"void" unread---LineNumberingPushbackReader [#_"LineNumberingPushbackReader" this, #_"int" c]
         (.unread (§ super ), c)
-        (ß ass this (assoc this :_atLineStart (:_prev this)))
-        (ß ass this (update this :_columnNumber dec))
+        (§ set! (:_atLineStart this) (:_prev this))
+        (§ update! (:_columnNumber this) dec)
         nil
     )
 
@@ -16068,7 +16020,9 @@
         (let [#_"int" c (.read this)]
             (condp = c -1 nil LineNumberingPushbackReader'newline ""
                 (let [#_"String" s (String/valueOf (char c)) #_"String" z (.readLine (cast LineNumberReader (§ foreign in)))]
-                    (ß ass this (assoc this :_prev false :_atLineStart true :_columnNumber 1))
+                    (§ set! (:_prev this) false)
+                    (§ set! (:_atLineStart this) true)
+                    (§ set! (:_columnNumber this) 1)
                     (if (nil? z) s (str s z))
                 )
             )
@@ -17149,12 +17103,9 @@
                     #_"long" :step step
                     #_"LongRangeBoundsCheck" :boundsCheck boundsCheck
 
-                    #_volatile
-                    #_"LongChunk" :_chunk chunk ;; lazy
-                    #_volatile
-                    #_"ISeq" :_chunkNext chunkNext ;; lazy
-                    #_volatile
-                    #_"ISeq" :_next nil ;; cached
+                    #_volatile #_"LongChunk" :_chunk chunk ;; lazy
+                    #_volatile #_"ISeq" :_chunkNext chunkNext ;; lazy
+                    #_volatile #_"ISeq" :_next nil ;; cached
                 )
             )
         )
@@ -17208,11 +17159,11 @@
                 (if (< LongRange'CHUNK_SIZE n)
                     ;; not last chunk
                     (let [#_"long" nextStart (+ (:start this) (* (:step this) LongRange'CHUNK_SIZE))] ;; cannot overflow, must be < end
-                        (ß ass this (assoc this :_chunkNext (LongRange'new nextStart, (:end this), (:step this), (:boundsCheck this))))
-                        (ß ass this (assoc this :_chunk (LongChunk'new (:start this), (:step this), LongRange'CHUNK_SIZE)))
+                        (§ set! (:_chunkNext this) (LongRange'new nextStart, (:end this), (:step this), (:boundsCheck this)))
+                        (§ set! (:_chunk this) (LongChunk'new (:start this), (:step this), LongRange'CHUNK_SIZE))
                     )
                     ;; last chunk
-                    (ß ass this (assoc this :_chunk (LongChunk'new (:start this), (:step this), (int n)))) ;; n must be <= CHUNK_SIZE
+                    (§ set! (:_chunk this) (LongChunk'new (:start this), (:step this), (int n))) ;; n must be <= CHUNK_SIZE
                 )
             )
         )
@@ -17224,10 +17175,8 @@
         (let-when [#_"ISeq" _next (:_next this)] (nil? _next) => _next
             (LongRange''forceChunk this)
             (when (< 1 (.count (:_chunk this))) => (.chunkedNext this)
-                (let [#_"LongChunk" _rest (.dropFirst (:_chunk this))
-                      _next (LongRange'new (LongChunk''first _rest), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this))]
-                    (ß ass this (assoc this :_next _next))
-                    _next
+                (let [#_"LongChunk" _rest (.dropFirst (:_chunk this))]
+                    (§ set! (:_next this) (LongRange'new (LongChunk''first _rest), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this)))
                 )
             )
         )
@@ -17328,8 +17277,8 @@
     #_foreign
     (defn #_"Iterator" iterator---LongRange [#_"LongRange" this]
         (§ reify Iterator
-            [^:mutable #_"long" n (:start this)
-             ^:mutable #_"boolean" m true]
+            [#_mutable #_"long" n (:start this)
+             #_mutable #_"boolean" m true]
 
             #_foreign
             (#_"boolean" hasNext [#_"Iterator" _self]
@@ -17415,7 +17364,7 @@
             #_"Object[]" :table table ;; [class, entry. class, entry ...]
             #_"Map" :map map
 
-            #_"Entry" :mre nil
+            #_mutable #_"Entry" :mre nil
         )
     )
 
@@ -17442,13 +17391,13 @@
     (defn #_"IFn" MethodImplCache''findFnFor [#_"MethodImplCache" this, #_"Class" c]
         (if (some? (:map this))
             (let [#_"Entry" e (cast Entry (.get (:map this), c))]
-                (ß ass this (assoc this :mre e))
+                (§ set! (:mre this) e)
                 (when (some? e) (:fn e))
             )
             (let [#_"int" idx (<< (& (>> (Util'hash c) (:shift this)) (:mask this)) 1)]
                 (when (and (< idx (alength (:table this))) (= (aget (:table this) idx) c))
                     (let [#_"Entry" e (cast Entry (aget (:table this) (inc idx)))]
-                        (ß ass this (assoc this :mre e))
+                        (§ set! (:mre this) e)
                         (when (some? e) (:fn e))
                     )
                 )
@@ -17476,14 +17425,10 @@
 
                 #_"ReentrantReadWriteLock" :rw (ReentrantReadWriteLock.)
 
-                #_volatile
-                #_"IPersistentMap" :methodTable PersistentHashMap'EMPTY
-                #_volatile
-                #_"IPersistentMap" :preferTable PersistentHashMap'EMPTY
-                #_volatile
-                #_"IPersistentMap" :methodCache PersistentHashMap'EMPTY
-                #_volatile
-                #_"Object" :cachedHierarchy nil
+                #_volatile #_"IPersistentMap" :methodTable PersistentHashMap'EMPTY
+                #_volatile #_"IPersistentMap" :preferTable PersistentHashMap'EMPTY
+                #_volatile #_"IPersistentMap" :methodCache PersistentHashMap'EMPTY
+                #_volatile #_"Object" :cachedHierarchy nil
             )
         )
     )
@@ -17492,7 +17437,11 @@
     (defn #_"MultiFn" MultiFn''reset [#_"MultiFn" this]
         (.lock (.writeLock (:rw this)))
         (try
-            (assoc this :methodTable PersistentHashMap'EMPTY :methodCache PersistentHashMap'EMPTY :preferTable PersistentHashMap'EMPTY :cachedHierarchy nil)
+            (§ set! (:methodTable this) PersistentHashMap'EMPTY)
+            (§ set! (:methodCache this) PersistentHashMap'EMPTY)
+            (§ set! (:preferTable this) PersistentHashMap'EMPTY)
+            (§ set! (:cachedHierarchy this) nil)
+            this
             (finally
                 (.unlock (.writeLock (:rw this)))
             )
@@ -17503,7 +17452,7 @@
     (defn #_"MultiFn" MultiFn''addMethod [#_"MultiFn" this, #_"Object" dispatchVal, #_"IFn" method]
         (.lock (.writeLock (:rw this)))
         (try
-            (let [this (update this :methodTable #(.assoc %, dispatchVal, method))]
+            (let [_ (§ update! (:methodTable this) #(.assoc %, dispatchVal, method))]
                 (MultiFn''resetCache this)
                 this
             )
@@ -17517,7 +17466,7 @@
     (defn #_"MultiFn" MultiFn''removeMethod [#_"MultiFn" this, #_"Object" dispatchVal]
         (.lock (.writeLock (:rw this)))
         (try
-            (let [this (update this :methodTable #(.without %, dispatchVal))]
+            (let [_ (§ update! (:methodTable this) #(.without %, dispatchVal))]
                 (MultiFn''resetCache this)
                 this
             )
@@ -17534,7 +17483,7 @@
             (when (MultiFn''prefers this, dispatchValY, dispatchValX)
                 (throw (IllegalStateException. (str "Preference conflict in multimethod '" (:name this) "': " dispatchValY " is already preferred to " dispatchValX)))
             )
-            (let [this (update this :preferTable #(.assoc %, dispatchValX, (RT'conj (cast IPersistentCollection (RT'get-3 %, dispatchValX, PersistentHashSet'EMPTY)), dispatchValY)))]
+            (let [_ (§ update! (:preferTable this) #(.assoc %, dispatchValX, (RT'conj (cast IPersistentCollection (RT'get-3 %, dispatchValX, PersistentHashSet'EMPTY)), dispatchValY)))]
                 (MultiFn''resetCache this)
                 this
             )
@@ -17573,8 +17522,8 @@
     (defn- #_"IPersistentMap" MultiFn''resetCache [#_"MultiFn" this]
         (.lock (.writeLock (:rw this)))
         (try
-            (ß ass this (assoc this :methodCache (:methodTable this)))
-            (ß ass this (assoc this :cachedHierarchy (.deref (:hierarchy this))))
+            (§ set! (:methodCache this) (:methodTable this))
+            (§ set! (:cachedHierarchy this) (.deref (:hierarchy this)))
             (:methodCache this)
             (finally
                 (.unlock (.writeLock (:rw this)))
@@ -17633,7 +17582,7 @@
                     (if (and (= mt (:methodTable this)) (= pt (:preferTable this)) (= ch (:cachedHierarchy this)) (= (:cachedHierarchy this) (.deref (:hierarchy this))))
                         (do
                             ;; place in cache
-                            (ß ass this (assoc this :methodCache (.assoc (:methodCache this), dispatchVal, bestValue)))
+                            (§ update! (:methodCache this) #(.assoc %, dispatchVal, bestValue))
                             (cast IFn bestValue)
                         )
                         (do
@@ -17887,12 +17836,10 @@
 
     (defn #_"Namespace" Namespace'new [#_"Symbol" name]
         (hash-map
-            #_"IPersistentMap" :_meta (.meta name)
+            #_mutable #_"IPersistentMap" :_meta (.meta name)
             #_"Symbol" :name name
 
-            #_transient
             #_"AtomicReference<IPersistentMap>" :mappings (AtomicReference. RT'DEFAULT_IMPORTS)
-            #_transient
             #_"AtomicReference<IPersistentMap>" :aliases (AtomicReference. (RT'map))
         )
     )
@@ -17907,18 +17854,14 @@
     #_override
     (defn #_"IPersistentMap" IReference'''alterMeta--Namespace [#_"Namespace" this, #_"IFn" alter, #_"ISeq" args]
         (§ sync this
-            (let [#_"IPersistentMap" m (cast IPersistentMap (.applyTo alter, (Cons'new (:_meta this), args)))]
-                (ß ass this (assoc this :_meta m))
-                (:_meta this)
-            )
+            (§ update! (:_meta this) #(cast IPersistentMap (.applyTo alter, (Cons'new %, args))))
         )
     )
 
     #_override
     (defn #_"IPersistentMap" IReference'''resetMeta--Namespace [#_"Namespace" this, #_"IPersistentMap" m]
         (§ sync this
-            (ß ass this (assoc this :_meta m))
-            m
+            (§ set! (:_meta this) m)
         )
     )
 
@@ -20475,7 +20418,7 @@
 (class-ns MIter
     (defn #_"Iterator" MIter'new [#_"Object[]" a, #_"IFn" f]
         (§ reify Iterator
-            [^:mutable #_"int" i -2]
+            [#_mutable #_"int" i -2]
 
             #_foreign
             (#_"boolean" hasNext [#_"Iterator" _self]
@@ -20503,10 +20446,8 @@
             (merge (ATransientMap'new)
                 (hash-map
                     #_"Object[]" :array a
-                    #_volatile
                     #_"int" :len (alength array)
-                    #_volatile
-                    #_"Thread" :owner (Thread/currentThread)
+                    #_volatile #_"Thread" :owner (Thread/currentThread)
                 )
             )
         )
@@ -20549,7 +20490,7 @@
                 (aset (:array this) i (aget (:array this) (- (:len this) 2)))
                 (aset (:array this) (inc i) (aget (:array this) (- (:len this) 1)))
             )
-            (assoc this :len (- (:len this) 2))
+            (update this :len - 2)
         )
     )
 
@@ -20568,7 +20509,7 @@
     #_override
     (defn #_"IPersistentMap" ATransientMap'''doPersistent--TransientArrayMap [#_"TransientArrayMap" this]
         (.ensureEditable this)
-        (ß ass this (assoc this :owner nil))
+        (§ set! (:owner this) nil)
         (let [#_"Object[]" a (make-array Object (:len this))]
             (System/arraycopy (:array this), 0, a, 0, (:len this))
             (PersistentArrayMap'new a)
@@ -20878,13 +20819,9 @@
         (merge (ATransientMap'new)
             (hash-map
                 #_"AtomicReference<Thread>" :edit edit
-                #_volatile
                 #_"INode" :root root
-                #_volatile
                 #_"int" :count count
-                #_volatile
                 #_"boolean" :hasNull hasNull
-                #_volatile
                 #_"Object" :nullValue nullValue
 
                 #_"Box" :leafFlag (Box'new nil)
@@ -20900,7 +20837,7 @@
                     (-> this (update :count inc) (assoc :hasNull true))
                 )
             )
-            (let [this (assoc-in this [:leafFlag :val] nil)
+            (let [_ (§ set! (:val (:leafFlag this)) nil)
                   #_"INode" n (.assoc (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (PersistentHashMap'hash key), key, val, (:leafFlag this))
                   this (if (= (:root this) n) this (assoc this :root n))]
                 (when (some? (:val (:leafFlag this))) => this
@@ -20917,7 +20854,7 @@
                 (-> this (assoc :hasNull false :nullValue nil) (update :count dec))
             )
             (when (some? (:root this)) => this
-                (let [this (assoc-in this [:leafFlag :val] nil)
+                (let [_ (§ set! (:val (:leafFlag this)) nil)
                       #_"INode" n (.without (:root this), (:edit this), 0, (PersistentHashMap'hash key), key, (:leafFlag this))
                       this (if (= (:root this) n) this (assoc this :root n))]
                     (when (some? (:val (:leafFlag this))) => this
@@ -21006,8 +20943,8 @@
 (class-ns HIter
     (defn #_"Iterator" HIter'new [#_"INode[]" a, #_"IFn" f]
         (§ reify Iterator
-            [^:mutable #_"int" i 0
-             ^:mutable #_"Iterator" it nil]
+            [#_mutable #_"int" i 0
+             #_mutable #_"Iterator" it nil]
 
             #_foreign
             (#_"boolean" hasNext [#_"Iterator" _self]
@@ -21259,7 +21196,7 @@
                                     (PersistentHashMap'cloneAndSet-3 (:array this), (inc (* 2 idx)), val)
                                 )
                             :else
-                                (let [_ (ß ass (:val addedLeaf) addedLeaf)]
+                                (let [_ (§ set! (:val addedLeaf) addedLeaf)]
                                     (PersistentHashMap'cloneAndSet-5 (:array this), (* 2 idx), nil, (inc (* 2 idx)), (PersistentHashMap'createNode-6 (+ shift 5), keyOrNull, valOrNode, hash, key, val))
                                 )
                         )]
@@ -21283,7 +21220,7 @@
                         (let [#_"Object[]" a (make-array Object (* 2 (inc n)))]
                             (System/arraycopy (:array this), 0, a, 0, (* 2 idx))
                             (aset a (* 2 idx) key)
-                            (ß ass (:val addedLeaf) addedLeaf)
+                            (§ set! (:val addedLeaf) addedLeaf)
                             (aset a (inc (* 2 idx)) val)
                             (System/arraycopy (:array this), (* 2 idx), a, (* 2 (inc idx)), (* 2 (- n idx)))
                             (BitmapIndexedNode'new nil, (| (:bitmap this) bit), a)
@@ -21429,7 +21366,7 @@
                                 (BitmapIndexedNode''editAndSet-4 this, edit, (inc (* 2 idx)), val)
                             )
                         :else
-                            (let [_ (ß ass (:val addedLeaf) addedLeaf)]
+                            (let [_ (§ set! (:val addedLeaf) addedLeaf)]
                                 (BitmapIndexedNode''editAndSet-6 this, edit, (* 2 idx), nil, (inc (* 2 idx)), (PersistentHashMap'createNode-7 edit, (+ shift 5), keyOrNull, valOrNode, hash, key, val))
                             )
                     )
@@ -21437,7 +21374,7 @@
                 (let [#_"int" n (Integer/bitCount (:bitmap this))]
                     (cond
                         (< (* n 2) (alength (:array this)))
-                            (let [_ (ß ass (:val addedLeaf) addedLeaf)
+                            (let [_ (§ set! (:val addedLeaf) addedLeaf)
                                   #_"BitmapIndexedNode" e (-> (BitmapIndexedNode''ensureEditable this, edit) (update :bitmap | bit))]
                                 (System/arraycopy (:array e), (* 2 idx), (:array e), (* 2 (inc idx)), (* 2 (- n idx)))
                                 (aset (:array e) (* 2 idx) key)
@@ -21462,7 +21399,7 @@
                             (let [#_"Object[]" a (make-array Object (* 2 (+ n 4)))]
                                 (System/arraycopy (:array this), 0, a, 0, (* 2 idx))
                                 (aset a (* 2 idx) key)
-                                (ß ass (:val addedLeaf) addedLeaf)
+                                (§ set! (:val addedLeaf) addedLeaf)
                                 (aset a (inc (* 2 idx)) val)
                                 (System/arraycopy (:array this), (* 2 idx), a, (* 2 (inc idx)), (* 2 (- n idx)))
                                 (-> (BitmapIndexedNode''ensureEditable this, edit)
@@ -21484,7 +21421,7 @@
                   #_"Object" valOrNode (aget (:array this) (inc ii))]
                 (if (some? keyOrNull)
                     (when (Util'equiv-2oo key, keyOrNull) => this
-                        (ß ass (:val removedLeaf) removedLeaf)
+                        (§ set! (:val removedLeaf) removedLeaf)
                         ;; TODO: collapse
                         (BitmapIndexedNode''editAndRemovePair this, edit, bit, i)
                     )
@@ -21528,7 +21465,7 @@
                         (System/arraycopy (:array this), 0, a, 0, (* 2 n))
                         (aset a (* 2 n) key)
                         (aset a (inc (* 2 n)) val)
-                        (ß ass (:val addedLeaf) addedLeaf)
+                        (§ set! (:val addedLeaf) addedLeaf)
                         (HashCollisionNode'new (:edit this), hash, (inc n), a)
                     )
                 )
@@ -21641,7 +21578,7 @@
                     )
                     (let [#_"int" n (:count this) #_"int" m (alength (:array this))]
                         (if (< (* 2 n) m)
-                            (let [_ (ß ass (:val addedLeaf) addedLeaf)]
+                            (let [_ (§ set! (:val addedLeaf) addedLeaf)]
                                 (-> (HashCollisionNode''editAndSet-6 this, edit, (* 2 n), key, (inc (* 2 n)), val)
                                     (update :count inc)
                                 )
@@ -21650,7 +21587,7 @@
                                 (System/arraycopy (:array this), 0, a, 0, m)
                                 (aset a m key)
                                 (aset a (inc m) val)
-                                (ß ass (:val addedLeaf) addedLeaf)
+                                (§ set! (:val addedLeaf) addedLeaf)
                                 (HashCollisionNode''ensureEditable-4 this, edit, (inc n), a)
                             )
                         )
@@ -21667,7 +21604,7 @@
     #_override
     (defn #_"INode" INode'''without-6--HashCollisionNode [#_"HashCollisionNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf]
         (let-when [#_"int" i (HashCollisionNode''findIndex this, key)] (<= 0 i) => this
-            (ß ass (:val removedLeaf) removedLeaf)
+            (§ set! (:val removedLeaf) removedLeaf)
             (let-when [#_"int" n (:count this)] (< 1 n)
                 (let [#_"HashCollisionNode" e (-> (HashCollisionNode''ensureEditable-2 this, edit) (update :count dec))
                       #_"int" m (* 2 n)]
@@ -21687,9 +21624,9 @@
 
     (defn #_"Iterator" NodeIter'new [#_"Object[]" a, #_"IFn" f]
         (§ reify Iterator
-            [^:mutable #_"int" i 0
-             ^:mutable #_"Object" e NodeIter'NULL
-             ^:mutable #_"Iterator" it nil]
+            [#_mutable #_"int" i 0
+             #_mutable #_"Object" e NodeIter'NULL
+             #_mutable #_"Iterator" it nil]
 
             #_private
             (#_"boolean" step [_self]
@@ -22000,7 +21937,7 @@
     (defn- #_"Iterator" PersistentHashMap''iterator [#_"PersistentHashMap" this, #_"IFn" f]
         (let-when [#_"Iterator" it (if (some? (:root this)) (.iterator (:root this), f) PersistentHashMap'EMPTY_ITER)] (:hasNull this) => it
             (§ reify Iterator
-                [^:mutable #_"boolean" seen false]
+                [#_mutable #_"boolean" seen false]
 
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -22601,8 +22538,6 @@
  ; so no reversing or suspensions required for persistent use.
  ;;
 (class-ns PersistentQueue
-    (§ def #_"PersistentQueue" PersistentQueue'EMPTY (PersistentQueue'new nil, 0, nil, nil))
-
     (defn #_"PersistentQueue" PersistentQueue'new [#_"IPersistentMap" meta, #_"int" cnt, #_"ISeq" f, #_"PersistentVector" r]
         (hash-map
             #_"IPersistentMap" :_meta meta
@@ -22610,12 +22545,12 @@
             #_"ISeq" :f f
             #_"PersistentVector" :r r
 
-            #_transient
-            #_"int" :_hash 0
-            #_transient
-            #_"int" :_hasheq 0
+            #_mutable #_"int" :_hash 0
+            #_mutable #_"int" :_hasheq 0
         )
     )
+
+    (def #_"PersistentQueue" PersistentQueue'EMPTY (PersistentQueue'new nil, 0, nil, nil))
 
     #_override
     (defn #_"boolean" IPersistentCollection'''equiv--PersistentQueue [#_"PersistentQueue" this, #_"Object" obj]
@@ -22642,12 +22577,8 @@
     #_foreign
     (defn #_"int" hashCode---PersistentQueue [#_"PersistentQueue" this]
         (let-when [#_"int" hash (:_hash this)] (zero? hash) => hash
-            (let [hash
-                    (loop-when [hash 1 #_"ISeq" s (.seq this)] (some? s) => hash
-                        (recur (+ (* 31 hash) (if (some? (.first s)) (.hashCode (.first s)) 0)) (.next s))
-                    )]
-                (ß ass this (assoc this :_hash hash))
-                hash
+            (loop-when [hash 1 #_"ISeq" s (.seq this)] (some? s) => (§ set! (:_hash this) hash)
+                (recur (+ (* 31 hash) (if (some? (.first s)) (.hashCode (.first s)) 0)) (.next s))
             )
         )
     )
@@ -22655,10 +22586,7 @@
     #_override
     (defn #_"int" IHashEq'''hasheq--PersistentQueue [#_"PersistentQueue" this]
         (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
-            (let [cached (Murmur3'hashOrdered this)]
-                (ß ass this (assoc this :_hasheq cached))
-                cached
-            )
+            (§ set! (:_hasheq this) (Murmur3'hashOrdered this))
         )
     )
 
@@ -22744,7 +22672,7 @@
     (defn #_"Iterator" iterator---PersistentQueue [#_"PersistentQueue" this]
         (let [#_"Iterator" it (when (some? (:r this)) (.iterator (:r this)))]
             (§ reify Iterator
-                [^:mutable #_"ISeq" s (:f this)]
+                [#_mutable #_"ISeq" s (:f this)]
 
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -23485,7 +23413,7 @@
             (let [#_"int" cmp (PersistentTreeMap''doCompare this, key, (:key t))]
                 (if (zero? cmp)
                     (do
-                        (ß ass (:val found) t)
+                        (§ set! (:val found) t)
                         nil
                     )
                     (let [#_"TNode" ins (if (neg? cmp) (PersistentTreeMap''add this, (.left t), key, val, found) (PersistentTreeMap''add this, (.right t), key, val, found))]
@@ -23506,7 +23434,7 @@
             (let [#_"int" cmp (PersistentTreeMap''doCompare this, key, (:key t))]
                 (if (zero? cmp)
                     (do
-                        (ß ass (:val found) t)
+                        (§ set! (:val found) t)
                         (PersistentTreeMap'append (.left t), (.right t))
                     )
                     (let [#_"TNode" del (if (neg? cmp) (PersistentTreeMap''remove this, (.left t), key, found) (PersistentTreeMap''remove this, (.right t), key, found))]
@@ -23647,7 +23575,15 @@
 (java-ns cloiure.lang.PersistentTreeSet
 
 (class-ns PersistentTreeSet
-    (§ def #_"PersistentTreeSet" PersistentTreeSet'EMPTY (PersistentTreeSet'new nil, PersistentTreeMap'EMPTY))
+    (defn #_"PersistentTreeSet" PersistentTreeSet'new [#_"IPersistentMap" meta, #_"IPersistentMap" impl]
+        (merge (APersistentSet'new impl)
+            (hash-map
+                #_"IPersistentMap" :_meta meta
+            )
+        )
+    )
+
+    (def #_"PersistentTreeSet" PersistentTreeSet'EMPTY (PersistentTreeSet'new nil, PersistentTreeMap'EMPTY))
 
     (defn #_"PersistentTreeSet" PersistentTreeSet'create-1 [#_"ISeq" s]
         (loop-when-recur [#_"PersistentTreeSet" t PersistentTreeSet'EMPTY s s]
@@ -23662,14 +23598,6 @@
                          (some? s)
                          [(cast PersistentTreeSet (.cons t, (.first s))) (.next s)]
                       => t
-        )
-    )
-
-    (defn #_"PersistentTreeSet" PersistentTreeSet'new [#_"IPersistentMap" meta, #_"IPersistentMap" impl]
-        (merge (APersistentSet'new impl)
-            (hash-map
-                #_"IPersistentMap" :_meta meta
-            )
         )
     )
 
@@ -23762,7 +23690,6 @@
         ([#_"AtomicReference<Thread>" edit] (VNode'new edit, (make-array Object 32)))
         ([#_"AtomicReference<Thread>" edit, #_"Object[]" array]
             (hash-map
-                #_transient
                 #_"AtomicReference<Thread>" :edit edit
                 #_"Object[]" :array array
             )
@@ -23835,13 +23762,9 @@
         ([#_"int" cnt, #_"int" shift, #_"VNode" root, #_"Object[]" tail]
             (merge (AFn'new)
                 (hash-map
-                    #_volatile
                     #_"int" :cnt cnt
-                    #_volatile
                     #_"int" :shift shift
-                    #_volatile
                     #_"VNode" :root root
-                    #_volatile
                     #_"Object[]" :tail tail
                 )
             )
@@ -24349,9 +24272,9 @@
     #_override
     (defn #_"Iterator" APersistentVector'''rangedIterator--PersistentVector [#_"PersistentVector" this, #_"int" start, #_"int" end]
         (§ reify Iterator
-            [^:mutable #_"int" i start
-             ^:mutable #_"int" base (- start (% start 32))
-             ^:mutable #_"Object[]" a (when (< start (.count this)) (PersistentVector''arrayFor this, start))]
+            [#_mutable #_"int" i start
+             #_mutable #_"int" base (- start (% start 32))
+             #_mutable #_"Object[]" a (when (< start (.count this)) (PersistentVector''arrayFor this, start))]
 
             #_foreign
             (#_"boolean" hasNext [#_"Iterator" _self]
@@ -24570,12 +24493,9 @@
                     #_"Object" :step step
                     #_"RangeBoundsCheck" :boundsCheck boundsCheck
 
-                    #_volatile
-                    #_"IChunk" :_chunk chunk ;; lazy
-                    #_volatile
-                    #_"ISeq" :_chunkNext chunkNext ;; lazy
-                    #_volatile
-                    #_"ISeq" :_next nil ;; cached
+                    #_volatile #_"IChunk" :_chunk chunk ;; lazy
+                    #_volatile #_"ISeq" :_chunkNext chunkNext ;; lazy
+                    #_volatile #_"ISeq" :_next nil ;; cached
                 )
             )
         )
@@ -24627,18 +24547,18 @@
                             (aset a i n)
                             (let-when [n (Numbers'addP-2oo n, (:step this))] (.exceededBounds (:boundsCheck this), n) => (recur n (inc i))
                                 ;; partial last chunk
-                                (ß ass this (assoc this :_chunk (ArrayChunk'new a, 0, (inc i))))
+                                (§ set! (:_chunk this) (ArrayChunk'new a, 0, (inc i)))
                             )
                         )
                         (if (.exceededBounds (:boundsCheck this), n)
                             (do
                                 ;; full last chunk
-                                (ß ass this (assoc this :_chunk (ArrayChunk'new a, 0, Range'CHUNK_SIZE)))
+                                (§ set! (:_chunk this) (ArrayChunk'new a, 0, Range'CHUNK_SIZE))
                             )
                             (do
                                 ;; full intermediate chunk
-                                (ß ass this (assoc this :_chunk (ArrayChunk'new a, 0, Range'CHUNK_SIZE)))
-                                (ß ass this (assoc this :_chunkNext (Range'new n, (:end this), (:step this), (:boundsCheck this))))
+                                (§ set! (:_chunk this) (ArrayChunk'new a, 0, Range'CHUNK_SIZE))
+                                (§ set! (:_chunkNext this) (Range'new n, (:end this), (:step this), (:boundsCheck this)))
                             )
                         )
                     )
@@ -24653,10 +24573,8 @@
         (let-when [#_"Range" _next (:_next this)] (nil? _next) => _next
             (Range''forceChunk this)
             (when (< 1 (.count (:_chunk this))) => (.chunkedNext this)
-                (let [#_"IChunk" _rest (.dropFirst (:_chunk this))
-                      _next (Range'new (.nth _rest, 0), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this))]
-                    (ß ass this (assoc this :_next _next))
-                    _next
+                (let [#_"IChunk" _rest (.dropFirst (:_chunk this))]
+                    (§ set! (:_next this) (Range'new (.nth _rest, 0), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this)))
                 )
             )
         )
@@ -24704,7 +24622,7 @@
     #_foreign
     (defn #_"Iterator" iterator---Range [#_"Range" this]
         (§ reify Iterator
-            [^:mutable #_"Object" n (:start this)]
+            [#_mutable #_"Object" n (:start this)]
 
             #_foreign
             (#_"boolean" hasNext [#_"Iterator" _self]
@@ -25196,8 +25114,7 @@
                     #_"long" :count count ;; always INFINITE or pos?
                     #_"Object" :val val
 
-                    #_volatile
-                    #_"ISeq" :_next nil ;; cached
+                    #_volatile #_"ISeq" :_next nil ;; cached
                 )
             )
         )
@@ -25219,14 +25136,9 @@
     #_override
     (defn #_"ISeq" ISeq'''next--Repeat [#_"Repeat" this]
         (when (nil? (:_next this))
-            (cond (< 1 (:count this))
-                (do
-                    (ß ass this (assoc this :_next (Repeat'new (dec (:count this)), (:val this))))
-                )
-                (= (:count this) Repeat'INFINITE)
-                (do
-                    (ß ass this (assoc this :_next this))
-                )
+            (cond
+                (< 1 (:count this))               (§ set! (:_next this) (Repeat'new (dec (:count this)), (:val this)))
+                (= (:count this) Repeat'INFINITE) (§ set! (:_next this) this)
             )
         )
         (:_next this)
@@ -25630,7 +25542,7 @@
             (instance? String coll)
                 (let [#_"String" s (cast String coll)]
                     (§ reify Iterator
-                        [^:mutable #_"int" i 0]
+                        [#_mutable #_"int" i 0]
 
                         #_foreign
                         (#_"boolean" hasNext [#_"Iterator" _self]
@@ -26846,8 +26758,8 @@
 
     (defn #_"Iterator" SeqIterator'new [#_"Object" o]
         (§ reify Iterator
-            [^:mutable #_"Object" s SeqIterator'START
-             ^:mutable #_"Object" n o]
+            [#_mutable #_"Object" s SeqIterator'START
+             #_mutable #_"Object" n o]
 
             #_foreign
             (#_"boolean" hasNext [#_"Iterator" _self]
@@ -26932,11 +26844,8 @@
                     #_"String" :ns ns
                     #_"String" :name name
 
-                    #_transient
-                    #_"int" :_hasheq 0
-
-                    #_transient
-                    #_"String" :_str nil
+                    #_mutable #_"int" :_hasheq 0
+                    #_mutable #_"String" :_str nil
                 )
             )
         )
@@ -26959,7 +26868,7 @@
     #_foreign
     (defn #_"String" toString---Symbol [#_"Symbol" this]
         (when (nil? (:_str this))
-            (ß ass this (assoc this :_str (if (some? (:ns this)) (str (:ns this) "/" (:name this)) (:name this))))
+            (§ set! (:_str this) (if (some? (:ns this)) (str (:ns this) "/" (:name this)) (:name this)))
         )
         (:_str this)
     )
@@ -26996,7 +26905,7 @@
     #_override
     (defn #_"int" IHashEq'''hasheq--Symbol [#_"Symbol" this]
         (when (zero? (:_hasheq this))
-            (ß ass this (assoc this :_hasheq (Util'hashCombine (Murmur3'hashUnencodedChars (:name this)), (Util'hash (:ns this)))))
+            (§ set! (:_hasheq this) (Util'hashCombine (Murmur3'hashUnencodedChars (:name this)), (Util'hash (:ns this))))
         )
         (:_hasheq this)
     )
@@ -27068,7 +26977,7 @@
     (def- #_"Object" TransformerIterator'NONE (Object.))
 
     (defn- #_"Iterator" TransformerIterator'new [#_"IFn" xform, #_"Iterator" source, #_"boolean" multi?]
-        (let [^:volatile #_"Queue" q (LinkedList.)
+        (let [#_volatile #_"Queue" q (LinkedList.)
               #_"IFn" xf
                 (cast IFn (.invoke xform,
                     (fn #_"Object"
@@ -27078,8 +26987,8 @@
                     )
                 ))]
             (§ reify Iterator
-                [^:volatile #_"Object" n TransformerIterator'NONE
-                 ^:volatile #_"boolean" completed? false]
+                [#_volatile #_"Object" n TransformerIterator'NONE
+                 #_volatile #_"boolean" completed? false]
 
                 #_foreign
                 (#_"boolean" hasNext [#_"Iterator" _self]
@@ -27343,8 +27252,7 @@
     (defn #_"TBox" TBox'new [#_"Thread" t, #_"Object" val]
         (hash-map
             #_"Thread" :thread t
-            #_volatile
-            #_"Object" :val val
+            #_volatile #_"Object" :val val
         )
     )
 )
@@ -27391,9 +27299,6 @@
             )
         )
     )
-
-    #_volatile
-    (def #_"int" Var'rev 0)
 
     (§ def #_"Keyword" Var'privateKey (Keyword'intern (Symbol'intern nil, "private")))
     (§ def #_"IPersistentMap" Var'privateMeta (PersistentArrayMap'new (object-array [ Var'privateKey, Boolean/TRUE ])))
@@ -27444,15 +27349,12 @@
         ([#_"Namespace" ns, #_"Symbol" sym]
             (let [this
                     (hash-map
-                        #_"IPersistentMap" :_meta nil
+                        #_mutable #_"IPersistentMap" :_meta nil
                         #_"Namespace" :ns ns
                         #_"Symbol" :sym sym
 
-                        #_volatile
-                        #_"Object" :root (Unbound'new (§ cyc this))
-                        #_volatile
-                        #_"boolean" :dynamic false
-                        #_transient
+                        #_volatile #_"Object" :root (Unbound'new (§ cyc this))
+                        #_volatile #_"boolean" :dynamic false
                         #_"AtomicBoolean" :threadBound (AtomicBoolean. false)
                     )]
                 (Var''setMeta this, PersistentHashMap'EMPTY)
@@ -27460,8 +27362,8 @@
             )
         )
         ([#_"Namespace" ns, #_"Symbol" sym, #_"Object" root]
-            (let [this (-> (Var'new ns, sym) (assoc :root root))]
-                (ß ass Var'rev (inc Var'rev))
+            (let [this (Var'new ns, sym)]
+                (§ set! (:root this) root)
                 this
             )
         )
@@ -27477,25 +27379,21 @@
     #_override
     (defn #_"IPersistentMap" IReference'''alterMeta--Var [#_"Var" this, #_"IFn" alter, #_"ISeq" args]
         (§ sync this
-            (let [#_"IPersistentMap" m (cast IPersistentMap (.applyTo alter, (Cons'new (:_meta this), args)))]
-                (ß ass this (assoc this :_meta m))
-                (:_meta this)
-            )
+            (§ update! (:_meta this) #(cast IPersistentMap (.applyTo alter, (Cons'new %, args))))
         )
     )
 
     #_override
     (defn #_"IPersistentMap" IReference'''resetMeta--Var [#_"Var" this, #_"IPersistentMap" m]
         (§ sync this
-            (ß ass this (assoc this :_meta m))
-            m
+            (§ set! (:_meta this) m)
         )
     )
 
     #_method
     (defn #_"Var" Var''setDynamic
         ([#_"Var" this] (Var''setDynamic this, true))
-        ([#_"Var" this, #_"boolean" b] (assoc this :dynamic b))
+        ([#_"Var" this, #_"boolean" b] (§ set! (:dynamic this) b) this)
     )
 
     #_method
@@ -27536,11 +27434,10 @@
 
     #_method
     (defn #_"Object" Var''set [#_"Var" this, #_"Object" val]
-        (let [#_"TBox" b (Var''getThreadBinding this)]
-            (when (some? b) => (throw (IllegalStateException. (str "Can't change/establish root binding of: " (:sym this) " with set")))
-                (when (= (Thread/currentThread) (:thread b)) => (throw (IllegalStateException. (str "Can't set!: " (:sym this) " from non-binding thread")))
-                    (ß ass b (assoc b :val val))
-                    val
+        (let [#_"TBox" tb (Var''getThreadBinding this)]
+            (when (some? tb) => (throw (IllegalStateException. (str "Can't change/establish root binding of: " (:sym this) " with set")))
+                (when (= (Thread/currentThread) (:thread tb)) => (throw (IllegalStateException. (str "Can't set!: " (:sym this) " from non-binding thread")))
+                    (§ set! (:val tb) val)
                 )
             )
         )
@@ -27605,11 +27502,8 @@
     #_method
     (defn #_"void" Var''bindRoot [#_"Var" this, #_"Object" root]
         (§ sync this
-            (let [#_"Object" oldroot (:root this)]
-                (ß ass this (assoc this :root root))
-                (ß ass Var'rev (inc Var'rev))
-                (.alterMeta this, RT'dissoc, (RT'list-1 Var'macroKey))
-            )
+            (§ set! (:root this) root)
+            (.alterMeta this, RT'dissoc, (RT'list-1 Var'macroKey))
         )
         nil
     )
@@ -27617,10 +27511,7 @@
     #_method
     (defn #_"void" Var''swapRoot [#_"Var" this, #_"Object" root]
         (§ sync this
-            (let [#_"Object" oldroot (:root this)]
-                (ß ass this (assoc this :root root))
-                (ß ass Var'rev (inc Var'rev))
-            )
+            (§ set! (:root this) root)
         )
         nil
     )
@@ -27628,8 +27519,7 @@
     #_method
     (defn #_"void" Var''unbindRoot [#_"Var" this]
         (§ sync this
-            (ß ass this (assoc this :root (Unbound'new this)))
-            (ß ass Var'rev (inc Var'rev))
+            (§ set! (:root this) (Unbound'new (§ cyc this)))
         )
         nil
     )
@@ -27637,10 +27527,7 @@
     #_method
     (defn #_"void" Var''commuteRoot [#_"Var" this, #_"IFn" fn]
         (§ sync this
-            (let [#_"Object" newRoot (.invoke fn, (:root this)) #_"Object" oldroot (:root this)]
-                (ß ass this (assoc this :root newRoot))
-                (ß ass Var'rev (inc Var'rev))
-            )
+            (§ set! (:root this) (.invoke fn, (:root this)))
         )
         nil
     )
@@ -27648,11 +27535,7 @@
     #_method
     (defn #_"Object" Var''alterRoot [#_"Var" this, #_"IFn" fn, #_"ISeq" args]
         (§ sync this
-            (let [#_"Object" newRoot (.applyTo fn, (RT'cons (:root this), args)) #_"Object" oldroot (:root this)]
-                (ß ass this (assoc this :root newRoot))
-                (ß ass Var'rev (inc Var'rev))
-                newRoot
-            )
+            (§ set! (:root this) (.applyTo fn, (RT'cons (:root this), args)))
         )
     )
 
@@ -27860,8 +27743,7 @@
 (class-ns Volatile
     (defn #_"Volatile" Volatile'new [#_"Object" val]
         (hash-map
-            #_volatile
-            #_"Object" :val val
+            #_volatile #_"Object" :val val
         )
     )
 
@@ -27872,8 +27754,7 @@
 
     #_method
     (defn #_"Object" Volatile''reset [#_"Volatile" this, #_"Object" newval]
-        (ß ass this (assoc this :val newval))
-        newval
+        (§ set! (:val this) newval)
     )
 )
 )
