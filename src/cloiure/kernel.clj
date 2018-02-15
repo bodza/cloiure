@@ -47,6 +47,18 @@
 (defmacro java-ns [name & _] #_(ensure symbol? name) `(do ~@_))
 (defmacro class-ns [name & _] #_(ensure symbol? name) `(do ~@_))
 
+(defmacro interface! [name [& sups] & sigs]
+    (let [tag- #(or (:tag (meta %)) Object)
+          sig- (fn [[name [this & args]]] (vector name (vec (map tag- args)) (tag- name) (map meta args)))
+          cname (with-meta (symbol (str (namespace-munge *ns*) "." name)) (meta name))]
+        `(do
+            (gen-interface :name ~cname :extends ~(vec (map resolve sups)) :methods ~(vec (map sig- sigs)))
+            (import ~cname)
+        )
+    )
+)
+(defmacro class! [& _] `(interface! ~@_))
+
 #_(ns cloiure.kernel
     (:refer-clojure :exclude [when when-not])
     (:use [cloiure slang]))
@@ -120,15 +132,6 @@
 (§ declare Atom'new)
 (§ declare ATransientMap'new)
 (§ declare ATransientSet'new)
-(§ declare BigInt'fromBigInteger)
-(§ declare BigInt'fromLong)
-(§ declare BigInt''toBigInteger)
-(§ declare BigInt'valueOf)
-(§ declare BigInt''add)
-(§ declare BigInt''multiply)
-(§ declare BigInt''quotient)
-(§ declare BigInt''remainder)
-(§ declare BigInt''lt)
 (§ declare Binding'new)
 (§ declare Box'new)
 (§ declare ChunkedCons'new)
@@ -496,15 +499,6 @@
 (declare MultiFn''resetCache)
 (§ declare MultiFn''getMethod)
 (declare MultiFn''findAndCacheBestMethod)
-(§ declare Murmur3'hashInt)
-(declare Murmur3'hashLong)
-(declare Murmur3'hashUnencodedChars)
-(declare Murmur3'mixCollHash)
-(declare Murmur3'hashOrdered)
-(declare Murmur3'hashUnordered)
-(declare Murmur3'mixK1)
-(declare Murmur3'mixH1)
-(declare Murmur3'fmix)
 (§ declare Namespace'namespaces)
 (§ declare Namespace'new)
 (declare Namespace''getName)
@@ -521,105 +515,6 @@
 (declare Namespace''findInternedVar)
 (§ declare Namespace''getAliases)
 (declare Namespace''lookupAlias)
-(§ declare OpsP'new)
-(§ declare LongOps'new)
-(§ declare LongOps'gcd)
-(§ declare DoubleOps'new)
-(§ declare RatioOps'new)
-(§ declare RatioOps'normalizeRet)
-(§ declare BigIntOps'new)
-(§ declare BigDecimalOps'new)
-(§ declare Numbers'isZero-1o)
-(§ declare Numbers'isPos-1o)
-(§ declare Numbers'isNeg-1o)
-(§ declare Numbers'minus-1o)
-(§ declare Numbers'inc-1o)
-(§ declare Numbers'dec-1o)
-(§ declare Numbers'add-2oo)
-(§ declare Numbers'addP-2oo)
-(declare Numbers'minus-2oo)
-(§ declare Numbers'minusP-2oo)
-(declare Numbers'multiply-2oo)
-(§ declare Numbers'multiplyP-2oo)
-(declare Numbers'divide-2oo)
-(§ declare Numbers'quotient-2oo)
-(§ declare Numbers'remainder-2oo)
-(declare Numbers'quotient-2dd)
-(declare Numbers'remainder-2dd)
-(§ declare Numbers'equiv-2oo)
-(declare Numbers'equiv-2nn)
-(§ declare Numbers'equal)
-(declare Numbers'lt-2oo)
-(declare Numbers'lte-2oo)
-(§ declare Numbers'gt-2oo)
-(declare Numbers'gte-2oo)
-(§ declare Numbers'compare)
-(declare Numbers'toBigInt)
-(§ declare Numbers'toBigInteger)
-(declare Numbers'toRatio)
-(§ declare Numbers'rationalize)
-(declare Numbers'reduceBigInt)
-(declare Numbers'divide-2ii)
-(declare Numbers'shiftLeft-2ll)
-(declare Numbers'shiftRight-2ll)
-(declare Numbers'unsignedShiftRight-2ll)
-(declare Numbers'ops)
-(§ declare Numbers'hasheqFrom)
-(§ declare Numbers'hasheq)
-(declare Numbers'category)
-(declare Numbers'bitOpsCast)
-(declare Numbers'int_array-1)
-(declare Numbers'num-1f)
-(§ declare Numbers'add-2dd)
-(§ declare Numbers'addP-2dd)
-(§ declare Numbers'minus-2dd)
-(§ declare Numbers'minus-1d)
-(§ declare Numbers'inc-1d)
-(§ declare Numbers'dec-1d)
-(§ declare Numbers'multiply-2dd)
-(§ declare Numbers'multiplyP-2dd)
-(declare Numbers'throwIntOverflow)
-(declare Numbers'not-1l)
-(declare Numbers'and-2ll)
-(declare Numbers'or-2ll)
-(declare Numbers'xor-2ll)
-(declare Numbers'andNot-2ll)
-(declare Numbers'clearBit-2ll)
-(declare Numbers'setBit-2ll)
-(declare Numbers'flipBit-2ll)
-(declare Numbers'testBit-2ll)
-(declare Numbers'num-1l)
-(declare Numbers'add-2ll)
-(declare Numbers'minus-2ll)
-(declare Numbers'minus-1l)
-(declare Numbers'inc-1l)
-(declare Numbers'dec-1l)
-(declare Numbers'multiply-2ll)
-(declare Numbers'add-2lo)
-(declare Numbers'add-2ol)
-(declare Numbers'add-2do)
-(declare Numbers'add-2od)
-(declare Numbers'add-2dl)
-(declare Numbers'add-2ld)
-(declare Numbers'minus-2lo)
-(declare Numbers'minus-2ol)
-(declare Numbers'minus-2do)
-(declare Numbers'minus-2od)
-(declare Numbers'minus-2dl)
-(declare Numbers'minus-2ld)
-(declare Numbers'multiply-2lo)
-(declare Numbers'multiply-2ol)
-(declare Numbers'multiply-2do)
-(declare Numbers'multiply-2od)
-(declare Numbers'multiply-2dl)
-(declare Numbers'multiply-2ld)
-(§ declare Numbers'lt-2lo)
-(§ declare Numbers'lt-2ol)
-(declare Numbers'lte-2ol)
-(§ declare Numbers'gt-2lo)
-(§ declare Numbers'gt-2ol)
-(declare Numbers'gte-2ol)
-(declare Numbers'isNaN)
 (§ declare MSeq'new)
 (§ declare MIter'new)
 (§ declare TransientArrayMap'new)
@@ -726,10 +621,6 @@
 (declare PersistentVector''popTail)
 (declare Range'create-3)
 (§ declare Range''forceChunk)
-(declare Ratio'new)
-(declare Ratio''doubleValue)
-(declare Ratio''decimalValue-2)
-(declare Ratio''bigIntegerValue)
 (declare Reflector'invokeInstanceMethod)
 (declare Reflector'invokeMatchingMethod)
 (declare Reflector'getAsMethodOfPublicBase)
@@ -845,22 +736,6 @@
 (§ declare Symbol'intern)
 (§ declare MultiIterator'new)
 (declare Tuple'MAX_SIZE)
-(declare Util'equiv-2oo)
-(§ declare Util'equivNull)
-(§ declare Util'equivEquals)
-(§ declare Util'equivNumber)
-(§ declare Util'equivColl)
-(declare Util'equivPred)
-(declare Util'pcequiv)
-(declare Util'equals)
-(declare Util'classOf)
-(declare Util'compare)
-(declare Util'hash)
-(declare Util'hasheq)
-(declare Util'hashCombine)
-(declare Util'isPrimitive)
-(declare Util'isInteger)
-(declare Util'clearCache)
 (§ declare TBox'new)
 (§ declare Unbound'new)
 (§ declare Frame'new)
@@ -886,53 +761,52 @@
 (declare Var''getThreadBinding)
 (§ declare Var''fn)
 
-(§ declare BigInt'ZERO)
-(declare ConstantParser'formKey)
-(declare InvokeExpr'methodMapKey)
-(declare NewInstanceMethod'dummyThis)
-(declare CaseExpr'compactKey)
-(declare CaseExpr'sparseKey)
-(declare CaseExpr'hashIdentityKey)
-(declare CaseExpr'hashEquivKey)
+(§ declare ConstantParser'formKey)
+(§ declare InvokeExpr'methodMapKey)
+(§ declare NewInstanceMethod'dummyThis)
+(§ declare CaseExpr'compactKey)
+(§ declare CaseExpr'sparseKey)
+(§ declare CaseExpr'hashIdentityKey)
+(§ declare CaseExpr'hashEquivKey)
 (declare CaseExpr'intKey)
-(declare Compiler'DEF)
+(§ declare Compiler'DEF)
 (declare Compiler'LOOP)
-(declare Compiler'RECUR)
-(declare Compiler'IF)
-(declare Compiler'LET)
-(declare Compiler'LETFN)
+(§ declare Compiler'RECUR)
+(§ declare Compiler'IF)
+(§ declare Compiler'LET)
+(§ declare Compiler'LETFN)
 (declare Compiler'DO)
 (declare Compiler'FN)
 (declare Compiler'FNONCE)
-(declare Compiler'QUOTE)
-(declare Compiler'THE_VAR)
-(declare Compiler'DOT)
-(declare Compiler'ASSIGN)
-(declare Compiler'TRY)
+(§ declare Compiler'QUOTE)
+(§ declare Compiler'THE_VAR)
+(§ declare Compiler'DOT)
+(§ declare Compiler'ASSIGN)
+(§ declare Compiler'TRY)
 (declare Compiler'CATCH)
 (declare Compiler'FINALLY)
-(declare Compiler'THROW)
-(declare Compiler'MONITOR_ENTER)
-(declare Compiler'MONITOR_EXIT)
-(declare Compiler'IMPORT)
-(declare Compiler'DEFTYPE)
-(declare Compiler'CASE)
-(declare Compiler'CLASS)
-(declare Compiler'NEW)
-(declare Compiler'REIFY)
-(declare Compiler'IDENTITY)
+(§ declare Compiler'THROW)
+(§ declare Compiler'MONITOR_ENTER)
+(§ declare Compiler'MONITOR_EXIT)
+(§ declare Compiler'IMPORT)
+(§ declare Compiler'DEFTYPE)
+(§ declare Compiler'CASE)
+(§ declare Compiler'CLASS)
+(§ declare Compiler'NEW)
+(§ declare Compiler'REIFY)
+(§ declare Compiler'IDENTITY)
 (declare Compiler'_AMP_)
 (declare Compiler'ISEQ)
 (declare Compiler'loadNs)
-(declare Compiler'inlineKey)
-(declare Compiler'inlineAritiesKey)
+(§ declare Compiler'inlineKey)
+(§ declare Compiler'inlineAritiesKey)
 (declare Compiler'implementsKey)
 (declare Compiler'protocolKey)
 (declare Compiler'onKey)
 (declare Compiler'dynamicKey)
 (declare Compiler'redefKey)
-(declare Compiler'NS)
-(declare Compiler'IN_NS)
+(§ declare Compiler'NS)
+(§ declare Compiler'IN_NS)
 (declare Compiler'specials)
 (declare Compiler'LOCAL_ENV)
 (declare Compiler'LOOP_LOCALS)
@@ -965,7 +839,7 @@
 (declare Intrinsics'ops)
 (declare Intrinsics'preds)
 (declare SymbolicValueReader'specials)
-(declare LispReader'QUOTE)
+(§ declare LispReader'QUOTE)
 (declare LispReader'THE_VAR)
 (declare LispReader'UNQUOTE)
 (declare LispReader'UNQUOTE_SPLICING)
@@ -977,17 +851,11 @@
 (declare LispReader'HASHSET)
 (declare LispReader'VECTOR)
 (declare LispReader'WITH_META)
-(declare LispReader'DEREF)
+(§ declare LispReader'DEREF)
 (declare LispReader'GENSYM_ENV)
 (declare LispReader'ARG_ENV)
 (declare MultiFn'isa)
 (declare MultiFn'parents)
-(declare BigDecimalOps'MATH_CONTEXT)
-(declare Numbers'LONG_OPS)
-(declare Numbers'DOUBLE_OPS)
-(declare Numbers'RATIO_OPS)
-(declare Numbers'BIGINT_OPS)
-(declare Numbers'BIGDECIMAL_OPS)
 (declare PersistentArrayMap'EMPTY)
 (declare BitmapIndexedNode'EMPTY)
 (declare PersistentHashMap'EMPTY)
@@ -1008,8 +876,8 @@
 (declare RT'COLUMN_KEY)
 (declare RT'DECLARED_KEY)
 (declare RT'DOC_KEY)
-(declare RT'IN_NAMESPACE)
-(declare RT'NAMESPACE)
+(§ declare RT'IN_NAMESPACE)
+(§ declare RT'NAMESPACE)
 (declare RT'CURRENT_NS)
 (declare RT'PRINT_READABLY)
 (declare RT'WARN_ON_REFLECTION)
@@ -1021,23 +889,110 @@
 (declare RT'PR_ON)
 (declare RT'DEFAULT_COMPARATOR)
 (§ declare Frame'TOP)
-(declare Var'privateKey)
+(§ declare Var'privateKey)
 (declare Var'privateMeta)
-(declare Var'macroKey)
-(declare Var'nameKey)
-(declare Var'nsKey)
+(§ declare Var'macroKey)
+(§ declare Var'nameKey)
+(§ declare Var'nsKey)
 
-(defmacro interface! [name [& sups] & sigs]
-    (let [tag- #(or (:tag (meta %)) Object)
-          sig- (fn [[name [this & args]]] (vector name (vec (map tag- args)) (tag- name) (map meta args)))
-          cname (with-meta (symbol (str (namespace-munge *ns*) "." name)) (meta name))]
-        `(do
-            (gen-interface :name ~cname :extends ~(vec (map resolve sups)) :methods ~(vec (map sig- sigs)))
-            (import ~cname)
+(java-ns cloiure.lang.Murmur3
+
+;;;
+ ; See http://smhasher.googlecode.com/svn/trunk/MurmurHash3.cpp
+ ; MurmurHash3_x86_32
+ ;
+ ; @author Austin Appleby
+ ; @author Dimitris Andreou
+ ; @author Kurt Alfred Kluever
+ ;;
+(class-ns Murmur3
+    (def- #_"int" Murmur3'seed 0)
+    (def- #_"int" Murmur3'C1 0xcc9e2d51)
+    (def- #_"int" Murmur3'C2 0x1b873593)
+
+    (defn- #_"int" Murmur3'mixK1 [#_"int" k1]
+        (-> k1 (* Murmur3'C1) (Integer/rotateLeft 15) (* Murmur3'C2))
+    )
+
+    (defn- #_"int" Murmur3'mixH1 [#_"int" h1, #_"int" k1]
+        (-> h1 (bit-xor k1) (Integer/rotateLeft 13) (* 5) (+ 0xe6546b64))
+    )
+
+    ;; finalization mix - force all bits of a hash block to avalanche
+    (defn- #_"int" Murmur3'fmix [#_"int" h1, #_"int" n]
+        (let [h1 (bit-xor h1 n)    h1 (bit-xor h1 (>>> h1 16))
+              h1 (* h1 0x85ebca6b) h1 (bit-xor h1 (>>> h1 13))
+              h1 (* h1 0xc2b2ae35) h1 (bit-xor h1 (>>> h1 16))]
+            h1
+        )
+    )
+
+    (defn #_"int" Murmur3'hashInt [#_"int" input]
+        (when-not (zero? input) => 0
+            (let [#_"int" k1 (Murmur3'mixK1 input)
+                  #_"int" h1 (Murmur3'mixH1 Murmur3'seed, k1)]
+                (Murmur3'fmix h1, 4)
+            )
+        )
+    )
+
+    (defn #_"int" Murmur3'hashLong [#_"long" input]
+        (when-not (zero? input) => 0
+            (let [#_"int" low (int input)
+                  #_"int" high (int (>>> input 32))
+                  #_"int" k1 (Murmur3'mixK1 low)
+                  #_"int" h1 (Murmur3'mixH1 Murmur3'seed, k1)
+                  k1 (Murmur3'mixK1 high)
+                  h1 (Murmur3'mixH1 h1, k1)]
+                (Murmur3'fmix h1, 8)
+            )
+        )
+    )
+
+    (defn #_"int" Murmur3'hashUnencodedChars [#_"CharSequence" input]
+        (let [#_"int" h1 ;; step through the input 2 chars at a time
+                (loop-when [h1 Murmur3'seed #_"int" i 1] (< i (.length input)) => h1
+                    (let [#_"int" k1 (| (.charAt input, (dec i)) (<< (.charAt input, i) 16))]
+                        (recur (Murmur3'mixH1 h1, (Murmur3'mixK1 k1)) (+ i 2))
+                    )
+                )
+              h1 ;; deal with any remaining characters
+                (when (= (& (.length input) 1) 1) => h1
+                    (let [#_"int" k1 (.charAt input, (dec (.length input)))]
+                        (bit-xor h1 (Murmur3'mixK1 k1))
+                    )
+                )]
+            (Murmur3'fmix h1, (* 2 (.length input)))
+        )
+    )
+
+    (defn #_"int" Murmur3'mixCollHash [#_"int" hash, #_"int" n]
+        (Murmur3'fmix (Murmur3'mixH1 Murmur3'seed, (Murmur3'mixK1 hash)), n)
+    )
+
+    (declare Util'hasheq)
+
+    (defn #_"int" Murmur3'hashOrdered [#_"Iterable" xs]
+        (let [#_"Iterator" it (.iterator xs)]
+            (loop-when-recur [#_"int" hash 1 #_"int" n 0]
+                             (.hasNext it)
+                             [(+ (* 31 hash) (Util'hasheq (.next it))) (inc n)]
+                          => (Murmur3'mixCollHash hash, n)
+            )
+        )
+    )
+
+    (defn #_"int" Murmur3'hashUnordered [#_"Iterable" xs]
+        (let [#_"Iterator" it (.iterator xs)]
+            (loop-when-recur [#_"int" hash 0 #_"int" n 0]
+                             (.hasNext it)
+                             [(+ hash (Util'hasheq (.next it))) (inc n)]
+                          => (Murmur3'mixCollHash hash, n)
+            )
         )
     )
 )
-(defmacro class! [& _] `(interface! ~@_))
+)
 
 (java-ns cloiure.lang.IFn
     (interface! L []
@@ -3301,6 +3256,112 @@
     )
 )
 
+(java-ns cloiure.lang.PersistentHashMap
+    (interface! INode []
+        #_abstract
+        (#_"INode" assoc [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf])
+        #_abstract
+        (#_"INode" without [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key])
+        #_abstract
+        (#_"IMapEntry" find [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key])
+        #_abstract
+        (#_"Object" find [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound])
+        #_abstract
+        (#_"ISeq" nodeSeq [#_"INode" this])
+        #_abstract
+        (#_"INode" assoc [#_"INode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf])
+        #_abstract
+        (#_"INode" without [#_"INode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf])
+        #_abstract
+        (#_"Object" kvreduce [#_"INode" this, #_"IFn" f, #_"Object" r])
+        #_abstract
+        (#_"Object" fold [#_"INode" this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin])
+        ;; returns the result of (f [k v]) for each iterated element
+        #_abstract
+        (#_"Iterator" iterator [#_"INode" this, #_"IFn" f])
+    )
+)
+
+(java-ns cloiure.lang.Range
+    (interface! RangeBoundsCheck []
+        #_abstract
+        (#_"boolean" exceededBounds [#_"RangeBoundsCheck" this, #_"Object" val])
+    )
+)
+
+(java-ns cloiure.lang.LongRange
+    (interface! LongRangeBoundsCheck []
+        #_abstract
+        (#_"boolean" exceededBounds [#_"LongRangeBoundsCheck" this, #_"long" val])
+    )
+)
+
+(java-ns cloiure.lang.IType
+    (interface! IType []
+    )
+)
+
+(java-ns cloiure.lang.IProxy
+    (interface! IProxy []
+        #_abstract
+        (#_"void" __initCloiureFnMappings [#_"IProxy" this, #_"IPersistentMap" m])
+        #_abstract
+        (#_"void" __updateCloiureFnMappings [#_"IProxy" this, #_"IPersistentMap" m])
+        #_abstract
+        (#_"IPersistentMap" __getCloiureFnMappings [#_"IProxy" this])
+    )
+)
+
+(java-ns cloiure.lang.Compiler
+    (interface! Expr []
+        #_abstract
+        (#_"Object" eval [#_"Expr" this])
+        #_abstract
+        (#_"void" emit [#_"Expr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen])
+        #_abstract
+        (#_"boolean" hasJavaClass [#_"Expr" this])
+        #_abstract
+        (#_"Class" getJavaClass [#_"Expr" this])
+    )
+
+    (interface! IParser []
+        #_abstract
+        (#_"Expr" parse [#_"IParser" this, #_"Context" context, #_"Object" form])
+    )
+
+    (interface! AssignableExpr []
+        #_abstract
+        (#_"Object" evalAssign [#_"AssignableExpr" this, #_"Expr" val])
+        #_abstract
+        (#_"void" emitAssign [#_"AssignableExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val])
+    )
+
+    (interface! MaybePrimitiveExpr [Expr]
+        #_abstract
+        (#_"boolean" canEmitPrimitive [#_"MaybePrimitiveExpr" this])
+        #_abstract
+        (#_"void" emitUnboxed [#_"MaybePrimitiveExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen])
+    )
+)
+
+(java-ns cloiure.lang.Util
+    (interface! EquivPred []
+        #_abstract
+        (#_"boolean" equiv [#_"EquivPred" this, #_"Object" k1, #_"Object" k2])
+    )
+
+    #_stateless
+    (class! Util [])
+)
+
+(java-ns cloiure.lang.BigInt
+    (class! BigInt [#_"Number" IHashEq])
+)
+
+(java-ns cloiure.lang.Ratio
+    (class! Ratio [#_"Number" Comparable])
+)
+
 (java-ns cloiure.lang.Numbers
     (interface! Ops []
         #_abstract
@@ -3356,101 +3417,16 @@
         #_abstract
         (#_"Number" decP [#_"Ops" this, #_"Number" x])
     )
-)
 
-(java-ns cloiure.lang.PersistentHashMap
-    (interface! INode []
-        #_abstract
-        (#_"INode" assoc [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf])
-        #_abstract
-        (#_"INode" without [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key])
-        #_abstract
-        (#_"IMapEntry" find [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key])
-        #_abstract
-        (#_"Object" find [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound])
-        #_abstract
-        (#_"ISeq" nodeSeq [#_"INode" this])
-        #_abstract
-        (#_"INode" assoc [#_"INode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf])
-        #_abstract
-        (#_"INode" without [#_"INode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf])
-        #_abstract
-        (#_"Object" kvreduce [#_"INode" this, #_"IFn" f, #_"Object" r])
-        #_abstract
-        (#_"Object" fold [#_"INode" this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin])
-        ;; returns the result of (f [k v]) for each iterated element
-        #_abstract
-        (#_"Iterator" iterator [#_"INode" this, #_"IFn" f])
-    )
-)
-
-(java-ns cloiure.lang.Range
-    (interface! RangeBoundsCheck []
-        #_abstract
-        (#_"boolean" exceededBounds [#_"RangeBoundsCheck" this, #_"Object" val])
-    )
-)
-
-(java-ns cloiure.lang.LongRange
-    (interface! LongRangeBoundsCheck []
-        #_abstract
-        (#_"boolean" exceededBounds [#_"LongRangeBoundsCheck" this, #_"long" val])
-    )
-)
-
-(java-ns cloiure.lang.Util
-    (interface! EquivPred []
-        #_abstract
-        (#_"boolean" equiv [#_"EquivPred" this, #_"Object" k1, #_"Object" k2])
-    )
-)
-
-(java-ns cloiure.lang.IType
-    (interface! IType []
-    )
-)
-
-(java-ns cloiure.lang.IProxy
-    (interface! IProxy []
-        #_abstract
-        (#_"void" __initCloiureFnMappings [#_"IProxy" this, #_"IPersistentMap" m])
-        #_abstract
-        (#_"void" __updateCloiureFnMappings [#_"IProxy" this, #_"IPersistentMap" m])
-        #_abstract
-        (#_"IPersistentMap" __getCloiureFnMappings [#_"IProxy" this])
-    )
-)
-
-(java-ns cloiure.lang.Compiler
-    (interface! Expr []
-        #_abstract
-        (#_"Object" eval [#_"Expr" this])
-        #_abstract
-        (#_"void" emit [#_"Expr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen])
-        #_abstract
-        (#_"boolean" hasJavaClass [#_"Expr" this])
-        #_abstract
-        (#_"Class" getJavaClass [#_"Expr" this])
-    )
-
-    (interface! IParser []
-        #_abstract
-        (#_"Expr" parse [#_"IParser" this, #_"Context" context, #_"Object" form])
-    )
-
-    (interface! AssignableExpr []
-        #_abstract
-        (#_"Object" evalAssign [#_"AssignableExpr" this, #_"Expr" val])
-        #_abstract
-        (#_"void" emitAssign [#_"AssignableExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val])
-    )
-
-    (interface! MaybePrimitiveExpr [Expr]
-        #_abstract
-        (#_"boolean" canEmitPrimitive [#_"MaybePrimitiveExpr" this])
-        #_abstract
-        (#_"void" emitUnboxed [#_"MaybePrimitiveExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen])
-    )
+    #_abstract
+    (class! OpsP [Ops])
+    (class! LongOps [Ops])
+    (class! DoubleOps [#_"OpsP"])
+    (class! RatioOps [#_"OpsP"])
+    (class! BigIntOps [#_"OpsP"])
+    (class! BigDecimalOps [#_"OpsP"])
+    #_stateless
+    (class! Numbers [])
 )
 
 (java-ns cloiure.lang.AFn
@@ -3606,10 +3582,6 @@
 (java-ns cloiure.lang.ATransientSet
     #_abstract
     (class! ATransientSet [#_"AFn" ITransientSet])
-)
-
-(java-ns cloiure.lang.BigInt
-    (class! BigInt [#_"Number" IHashEq])
 )
 
 (java-ns cloiure.lang.Binding
@@ -3771,18 +3743,6 @@
     (class! Namespace [IReference])
 )
 
-(java-ns cloiure.lang.Numbers
-    #_abstract
-    (class! OpsP [Ops])
-    (class! LongOps [Ops])
-    (class! DoubleOps [#_"OpsP"])
-    (class! RatioOps [#_"OpsP"])
-    (class! BigIntOps [#_"OpsP"])
-    (class! BigDecimalOps [#_"OpsP"])
-    #_stateless
-    (class! Numbers [])
-)
-
 (java-ns cloiure.lang.PersistentArrayMap
     (class! MSeq [#_"ASeq" Counted])
     (class! TransientArrayMap [#_"ATransientMap"])
@@ -3872,10 +3832,6 @@
     (class! Range [#_"ASeq" IChunkedSeq IReduce])
 )
 
-(java-ns cloiure.lang.Ratio
-    (class! Ratio [#_"Number" Comparable])
-)
-
 (java-ns cloiure.lang.Reduced
     (class! Reduced [IDeref])
 )
@@ -3903,11 +3859,6 @@
     (class! Tuple [])
 )
 
-(java-ns cloiure.lang.Util
-    #_stateless
-    (class! Util [])
-)
-
 (java-ns cloiure.lang.Var
     (class! TBox [])
     (class! Unbound [#_"AFn"])
@@ -3917,6 +3868,2188 @@
 
 (java-ns cloiure.lang.Volatile
     (class! Volatile [IDeref])
+)
+
+(java-ns cloiure.lang.Util
+
+(class-ns Util
+    (defn- #_"boolean" Util'pcequiv [#_"Object" k1, #_"Object" k2]
+        (if (instance? IPersistentCollection k1)
+            (.equiv (cast IPersistentCollection k1), k2)
+            (.equiv (cast IPersistentCollection k2), k1)
+        )
+    )
+
+    (declare Numbers'equal)
+
+    (defn #_"boolean" Util'equiv-2oo [#_"Object" k1, #_"Object" k2]
+        (cond
+            (= k1 k2) true
+            (nil? k1) false
+            (and (instance? Number k1) (instance? Number k2)) (Numbers'equal (cast Number k1), (cast Number k2))
+            (or (instance? IPersistentCollection k1) (instance? IPersistentCollection k2)) (Util'pcequiv k1, k2)
+            :else (.equals k1, k2)
+        )
+    )
+
+    (def #_"EquivPred" Util'equivNull
+        (reify EquivPred
+            #_override
+            (#_"boolean" equiv [#_"EquivPred" _self, #_"Object" k1, #_"Object" k2]
+                (nil? k2)
+            )
+        )
+    )
+
+    (def #_"EquivPred" Util'equivEquals
+        (reify EquivPred
+            #_override
+            (#_"boolean" equiv [#_"EquivPred" _self, #_"Object" k1, #_"Object" k2]
+                (.equals k1, k2)
+            )
+        )
+    )
+
+    (def #_"EquivPred" Util'equivNumber
+        (reify EquivPred
+            #_override
+            (#_"boolean" equiv [#_"EquivPred" _self, #_"Object" k1, #_"Object" k2]
+                (and (instance? Number k2) (Numbers'equal (cast Number k1), (cast Number k2)))
+            )
+        )
+    )
+
+    (def #_"EquivPred" Util'equivColl
+        (reify EquivPred
+            #_override
+            (#_"boolean" equiv [#_"EquivPred" _self, #_"Object" k1, #_"Object" k2]
+                (if (or (instance? IPersistentCollection k1) (instance? IPersistentCollection k2)) (Util'pcequiv k1, k2) (.equals k1, k2))
+            )
+        )
+    )
+
+    (defn #_"EquivPred" Util'equivPred [#_"Object" k1]
+        (cond
+            (nil? k1)                                         Util'equivNull
+            (instance? Number k1)                             Util'equivNumber
+            (or (instance? String k1) (instance? Symbol k1))  Util'equivEquals
+            (or (instance? Collection k1) (instance? Map k1)) Util'equivColl
+            :else                                             Util'equivEquals
+        )
+    )
+
+    (defn #_"boolean" Util'equiv-2ll [#_"long" k1, #_"long" k2]
+        (= k1 k2)
+    )
+
+    (defn #_"boolean" Util'equiv-2ol [#_"Object" k1, #_"long" k2]
+        (Util'equiv-2oo k1, (cast Object k2))
+    )
+
+    (defn #_"boolean" Util'equiv-2lo [#_"long" k1, #_"Object" k2]
+        (Util'equiv-2oo (cast Object k1), k2)
+    )
+
+    (defn #_"boolean" Util'equiv-2dd [#_"double" k1, #_"double" k2]
+        (= k1 k2)
+    )
+
+    (defn #_"boolean" Util'equiv-2od [#_"Object" k1, #_"double" k2]
+        (Util'equiv-2oo k1, (cast Object k2))
+    )
+
+    (defn #_"boolean" Util'equiv-2do [#_"double" k1, #_"Object" k2]
+        (Util'equiv-2oo (cast Object k1), k2)
+    )
+
+    (defn #_"boolean" Util'equiv-2bb [#_"boolean" k1, #_"boolean" k2]
+        (= k1 k2)
+    )
+
+    (defn #_"boolean" Util'equiv-2ob [#_"Object" k1, #_"boolean" k2]
+        (Util'equiv-2oo k1, (cast Object k2))
+    )
+
+    (defn #_"boolean" Util'equiv-2bo [#_"boolean" k1, #_"Object" k2]
+        (Util'equiv-2oo (cast Object k1), k2)
+    )
+
+    (defn #_"boolean" Util'equiv-2cc [#_"char" c1, #_"char" c2]
+        (= c1 c2)
+    )
+
+    (defn #_"boolean" Util'equals [#_"Object" k1, #_"Object" k2]
+        (or (= k1 k2) (and (some? k1) (.equals k1, k2)))
+    )
+
+    (defn #_"boolean" Util'identical [#_"Object" k1, #_"Object" k2]
+        (= k1 k2)
+    )
+
+    (defn #_"Class" Util'classOf [#_"Object" x]
+        (when (some? x)
+            (.getClass x)
+        )
+    )
+
+    (declare Numbers'compare)
+
+    (defn #_"int" Util'compare [#_"Object" k1, #_"Object" k2]
+        (cond
+            (= k1 k2)             0
+            (nil? k1)             -1
+            (nil? k2)             1
+            (instance? Number k1) (Numbers'compare (cast Number k1), (cast Number k2))
+            :else                 (.compareTo (cast Comparable k1), k2)
+        )
+    )
+
+    (defn #_"int" Util'hash [#_"Object" o]
+        (cond
+            (nil? o) 0
+            :else    (.hashCode o)
+        )
+    )
+
+    (declare Numbers'hasheq)
+
+    (defn #_"int" Util'hasheq [#_"Object" o]
+        (cond
+            (nil? o)              0
+            (instance? IHashEq o) (.hasheq (cast IHashEq o))
+            (instance? Number o)  (Numbers'hasheq (cast Number o))
+            (instance? String o)  (Murmur3'hashInt (.hashCode o))
+            :else                 (.hashCode o)
+        )
+    )
+
+    (defn #_"int" Util'hashCombine [#_"int" seed, #_"int" hash]
+        ;; a la boost
+        (bit-xor seed (+ hash 0x9e3779b9 (<< seed 6) (>> seed 2)))
+    )
+
+    (defn #_"boolean" Util'isPrimitive [#_"Class" c]
+        (and (some? c) (.isPrimitive c) (not (= c Void/TYPE)))
+    )
+
+    (defn #_"boolean" Util'isInteger [#_"Object" x]
+        (or (instance? Integer x) (instance? Long x) (instance? BigInt x) (instance? BigInteger x))
+    )
+
+    (defn #_"<K, V> void" Util'clearCache [#_"ReferenceQueue" rq, #_"ConcurrentHashMap<K, Reference<V>>" cache]
+        ;; cleanup any dead entries
+        (when (some? (.poll rq))
+            (while (some? (.poll rq))
+            )
+            (doseq [#_"Map$Entry<K, Reference<V>>" e (.entrySet cache)]
+                (let-when [#_"Reference<V>" r (.getValue e)] (and (some? r) (nil? (.get r)))
+                    (.remove cache, (.getKey e), r)
+                )
+            )
+        )
+        nil
+    )
+)
+)
+
+(java-ns cloiure.lang.BigInt
+
+(class-ns BigInt
+    (defn- #_"BigInt" BigInt'new [#_"long" lpart, #_"BigInteger" bipart]
+        (merge (§ foreign Number'new)
+            (hash-map
+                #_"long" :lpart lpart
+                #_"BigInteger" :bipart bipart
+            )
+        )
+    )
+
+    (def #_"BigInt" BigInt'ZERO (BigInt'new 0, nil))
+    (def #_"BigInt" BigInt'ONE (BigInt'new 1, nil))
+
+    ;; must follow Long
+    #_foreign
+    (defn #_"int" hashCode---BigInt [#_"BigInt" this]
+        (if (nil? (:bipart this))
+            (int (bit-xor (:lpart this) (>>> (:lpart this) 32)))
+            (.hashCode (:bipart this))
+        )
+    )
+
+    #_override
+    (defn #_"int" IHashEq'''hasheq--BigInt [#_"BigInt" this]
+        (if (nil? (:bipart this))
+            (Murmur3'hashLong (:lpart this))
+            (.hashCode (:bipart this))
+        )
+    )
+
+    #_foreign
+    (defn #_"boolean" equals---BigInt [#_"BigInt" this, #_"Object" obj]
+        (cond
+            (= this obj)
+                true
+            (instance? BigInt obj)
+                (let [#_"BigInt" o (cast BigInt obj)]
+                    (if (nil? (:bipart this))
+                        (and (nil? (:bipart o)) (= (:lpart this) (:lpart o)))
+                        (and (some? (:bipart o)) (.equals (:bipart this), (:bipart o)))
+                    )
+                )
+            :else
+                false
+        )
+    )
+
+    (defn #_"BigInt" BigInt'fromBigInteger [#_"BigInteger" val]
+        (if (< (.bitLength val) 64)
+            (BigInt'new (.longValue val), nil)
+            (BigInt'new 0, val)
+        )
+    )
+
+    (defn #_"BigInt" BigInt'fromLong [#_"long" val]
+        (BigInt'new val, nil)
+    )
+
+    #_method
+    (defn #_"BigInteger" BigInt''toBigInteger [#_"BigInt" this]
+        (if (nil? (:bipart this))
+            (BigInteger/valueOf (:lpart this))
+            (:bipart this)
+        )
+    )
+
+    #_method
+    (defn #_"BigDecimal" BigInt''toBigDecimal [#_"BigInt" this]
+        (if (nil? (:bipart this))
+            (BigDecimal/valueOf (:lpart this))
+            (BigDecimal. (:bipart this))
+        )
+    )
+
+    #_method
+    (defn #_"int" BigInt''intValue [#_"BigInt" this]
+        (if (nil? (:bipart this))
+            (int (:lpart this))
+            (.intValue (:bipart this))
+        )
+    )
+
+    #_method
+    (defn #_"long" BigInt''longValue [#_"BigInt" this]
+        (if (nil? (:bipart this))
+            (:lpart this)
+            (.longValue (:bipart this))
+        )
+    )
+
+    #_method
+    (defn #_"float" BigInt''floatValue [#_"BigInt" this]
+        (if (nil? (:bipart this))
+            (:lpart this)
+            (.floatValue (:bipart this))
+        )
+    )
+
+    #_method
+    (defn #_"double" BigInt''doubleValue [#_"BigInt" this]
+        (if (nil? (:bipart this))
+            (:lpart this)
+            (.doubleValue (:bipart this))
+        )
+    )
+
+    #_method
+    (defn #_"byte" BigInt''byteValue [#_"BigInt" this]
+        (if (nil? (:bipart this))
+            (byte (:lpart this))
+            (.byteValue (:bipart this))
+        )
+    )
+
+    #_method
+    (defn #_"short" BigInt''shortValue [#_"BigInt" this]
+        (if (nil? (:bipart this))
+            (short (:lpart this))
+            (.shortValue (:bipart this))
+        )
+    )
+
+    (defn #_"BigInt" BigInt'valueOf [#_"long" val]
+        (BigInt'new val, nil)
+    )
+
+    #_foreign
+    (defn #_"String" toString---BigInt [#_"BigInt" this]
+        (if (nil? (:bipart this))
+            (String/valueOf (:lpart this))
+            (.toString (:bipart this))
+        )
+    )
+
+    #_method
+    (defn #_"int" BigInt''bitLength [#_"BigInt" this]
+        (.bitLength (BigInt''toBigInteger this))
+    )
+
+    #_method
+    (defn #_"BigInt" BigInt''add [#_"BigInt" this, #_"BigInt" y]
+        (or
+            (when (and (nil? (:bipart this)) (nil? (:bipart y)))
+                (let [#_"long" ret (+ (:lpart this) (:lpart y))]
+                    (when (or (<= 0 (bit-xor ret (:lpart this))) (<= 0 (bit-xor ret (:lpart y))))
+                        (BigInt'valueOf ret)
+                    )
+                )
+            )
+            (BigInt'fromBigInteger (.add (BigInt''toBigInteger this), (BigInt''toBigInteger y)))
+        )
+    )
+
+    #_method
+    (defn #_"BigInt" BigInt''multiply [#_"BigInt" this, #_"BigInt" y]
+        (or
+            (when (and (nil? (:bipart this)) (nil? (:bipart y)))
+                (let [#_"long" ret (* (:lpart this) (:lpart y))]
+                    (when (or (zero? (:lpart y)) (and (= (/ ret (:lpart y)) (:lpart this)) (not= (:lpart this) Long/MIN_VALUE)))
+                        (BigInt'valueOf ret)
+                    )
+                )
+            )
+            (BigInt'fromBigInteger (.multiply (BigInt''toBigInteger this), (BigInt''toBigInteger y)))
+        )
+    )
+
+    #_method
+    (defn #_"BigInt" BigInt''quotient [#_"BigInt" this, #_"BigInt" y]
+        (if (and (nil? (:bipart this)) (nil? (:bipart y)))
+            (if (and (= (:lpart this) Long/MIN_VALUE) (= (:lpart y) -1))
+                (BigInt'fromBigInteger (.negate (BigInt''toBigInteger this)))
+                (BigInt'valueOf (/ (:lpart this) (:lpart y)))
+            )
+            (BigInt'fromBigInteger (.divide (BigInt''toBigInteger this), (BigInt''toBigInteger y)))
+        )
+    )
+
+    #_method
+    (defn #_"BigInt" BigInt''remainder [#_"BigInt" this, #_"BigInt" y]
+        (if (and (nil? (:bipart this)) (nil? (:bipart y)))
+            (BigInt'valueOf (% (:lpart this) (:lpart y)))
+            (BigInt'fromBigInteger (.remainder (BigInt''toBigInteger this), (BigInt''toBigInteger y)))
+        )
+    )
+
+    #_method
+    (defn #_"boolean" BigInt''lt [#_"BigInt" this, #_"BigInt" y]
+        (if (and (nil? (:bipart this)) (nil? (:bipart y)))
+            (< (:lpart this) (:lpart y))
+            (neg? (.compareTo (BigInt''toBigInteger this), (BigInt''toBigInteger y)))
+        )
+    )
+)
+)
+
+(java-ns cloiure.lang.Ratio
+
+(class-ns Ratio
+    (defn #_"Ratio" Ratio'new [#_"BigInteger" numerator, #_"BigInteger" denominator]
+        (merge (§ foreign Number'new)
+            (hash-map
+                #_"BigInteger" :numerator numerator
+                #_"BigInteger" :denominator denominator
+            )
+        )
+    )
+
+    #_foreign
+    (defn #_"boolean" equals---Ratio [#_"Ratio" this, #_"Object" arg0]
+        (and (some? arg0)
+             (instance? Ratio arg0)
+             (.equals (:numerator (cast Ratio arg0)), (:numerator this))
+             (.equals (:denominator (cast Ratio arg0)), (:denominator this))
+        )
+    )
+
+    #_foreign
+    (defn #_"int" hashCode---Ratio [#_"Ratio" this]
+        (bit-xor (.hashCode (:numerator this)) (.hashCode (:denominator this)))
+    )
+
+    #_foreign
+    (defn #_"String" toString---Ratio [#_"Ratio" this]
+        (str (:numerator this) "/" (:denominator this))
+    )
+
+    #_method
+    (defn #_"BigInteger" Ratio''bigIntegerValue [#_"Ratio" this]
+        (.divide (:numerator this), (:denominator this))
+    )
+
+    #_method
+    (defn #_"long" Ratio''longValue [#_"Ratio" this]
+        (.longValue (Ratio''bigIntegerValue this))
+    )
+
+    #_method
+    (defn #_"BigDecimal" Ratio''decimalValue
+        ([#_"Ratio" this] (Ratio''decimalValue this, MathContext/UNLIMITED))
+        ([#_"Ratio" this, #_"MathContext" mc]
+            (let [#_"BigDecimal" numerator (BigDecimal. (:numerator this))
+                  #_"BigDecimal" denominator (BigDecimal. (:denominator this))]
+                (.divide numerator, denominator, mc)
+            )
+        )
+    )
+
+    #_method
+    (defn #_"double" Ratio''doubleValue [#_"Ratio" this]
+        (.doubleValue (Ratio''decimalValue this, MathContext/DECIMAL64))
+    )
+
+    #_method
+    (defn #_"float" Ratio''floatValue [#_"Ratio" this]
+        (float (Ratio''doubleValue this))
+    )
+
+    #_method
+    (defn #_"int" Ratio''intValue [#_"Ratio" this]
+        (int (Ratio''doubleValue this))
+    )
+
+    #_foreign
+    (defn #_"int" compareTo---Ratio [#_"Ratio" this, #_"Object" o]
+        (Numbers'compare this, (cast Number o))
+    )
+)
+)
+
+(java-ns cloiure.lang.Numbers
+
+(class-ns OpsP
+    (defn #_"OpsP" OpsP'new []
+        (hash-map)
+    )
+
+    #_override
+    (defn #_"Number" Ops'''addP--OpsP [#_"OpsP" this, #_"Number" x, #_"Number" y]
+        (.add this, x, y)
+    )
+
+    #_override
+    (defn #_"Number" Ops'''multiplyP--OpsP [#_"OpsP" this, #_"Number" x, #_"Number" y]
+        (.multiply this, x, y)
+    )
+
+    #_override
+    (defn #_"Number" Ops'''negateP--OpsP [#_"OpsP" this, #_"Number" x]
+        (.negate this, x)
+    )
+
+    #_override
+    (defn #_"Number" Ops'''incP--OpsP [#_"OpsP" this, #_"Number" x]
+        (.inc this, x)
+    )
+
+    #_override
+    (defn #_"Number" Ops'''decP--OpsP [#_"OpsP" this, #_"Number" x]
+        (.dec this, x)
+    )
+)
+
+(class-ns LongOps
+    (defn #_"LongOps" LongOps'new []
+        (hash-map)
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''combine--LongOps [#_"LongOps" this, #_"Ops" y]
+        (.opsWithLong y, this)
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithLong--LongOps [#_"LongOps" this, #_"LongOps" x]
+        this
+    )
+
+    (declare Numbers'DOUBLE_OPS)
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithDouble--LongOps [#_"LongOps" this, #_"DoubleOps" x]
+        Numbers'DOUBLE_OPS
+    )
+
+    (declare Numbers'RATIO_OPS)
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithRatio--LongOps [#_"LongOps" this, #_"RatioOps" x]
+        Numbers'RATIO_OPS
+    )
+
+    (declare Numbers'BIGINT_OPS)
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithBigInt--LongOps [#_"LongOps" this, #_"BigIntOps" x]
+        Numbers'BIGINT_OPS
+    )
+
+    (declare Numbers'BIGDECIMAL_OPS)
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithBigDecimal--LongOps [#_"LongOps" this, #_"BigDecimalOps" x]
+        Numbers'BIGDECIMAL_OPS
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''isZero--LongOps [#_"LongOps" this, #_"Number" x]
+        (zero? (.longValue x))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''isPos--LongOps [#_"LongOps" this, #_"Number" x]
+        (pos? (.longValue x))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''isNeg--LongOps [#_"LongOps" this, #_"Number" x]
+        (neg? (.longValue x))
+    )
+
+    (declare Numbers'num-1l)
+    (declare Numbers'add-2ll)
+
+    #_override
+    (defn #_"Number" Ops'''add--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
+        (Numbers'num-1l (Numbers'add-2ll (.longValue x), (.longValue y)))
+    )
+
+    #_override
+    (defn #_"Number" Ops'''addP--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y) #_"long" lz (+ lx ly)]
+            (if (and (neg? (bit-xor lz lx)) (neg? (bit-xor lz ly)))
+                (.add Numbers'BIGINT_OPS, x, y)
+                (Numbers'num-1l lz)
+            )
+        )
+    )
+
+    (declare Numbers'multiply-2ll)
+
+    #_override
+    (defn #_"Number" Ops'''multiply--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
+        (Numbers'num-1l (Numbers'multiply-2ll (.longValue x), (.longValue y)))
+    )
+
+    #_override
+    (defn #_"Number" Ops'''multiplyP--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
+            (if (and (= lx Long/MIN_VALUE) (neg? ly))
+                (.multiply Numbers'BIGINT_OPS, x, y)
+                (let [#_"long" lz (* lx ly)]
+                    (if (and (not= ly 0) (not= (/ lz ly) lx))
+                        (.multiply Numbers'BIGINT_OPS, x, y)
+                        (Numbers'num-1l lz)
+                    )
+                )
+            )
+        )
+    )
+
+    (defn #_"long" LongOps'gcd [#_"long" u, #_"long" v] (if (zero? v) u (recur v (% u v))))
+
+    #_override
+    (defn #_"Number" Ops'''divide--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
+            (let-when-not [#_"long" gcd (LongOps'gcd lx, ly)] (zero? gcd) => (Numbers'num-1l 0)
+                (let-when-not [lx (/ lx gcd) ly (/ ly gcd)] (= ly 1) => (Numbers'num-1l lx)
+                    (let [[lx ly]
+                            (when (neg? ly) => [lx ly]
+                                [(- lx) (- ly)]
+                            )]
+                        (Ratio'new (BigInteger/valueOf lx), (BigInteger/valueOf ly))
+                    )
+                )
+            )
+        )
+    )
+
+    #_override
+    (defn #_"Number" Ops'''quotient--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
+        (Numbers'num-1l (/ (.longValue x) (.longValue y)))
+    )
+
+    #_override
+    (defn #_"Number" Ops'''remainder--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
+        (Numbers'num-1l (% (.longValue x) (.longValue y)))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''equiv--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
+        (= (.longValue x) (.longValue y))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''lt--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
+        (< (.longValue x) (.longValue y))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''lte--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
+        (<= (.longValue x) (.longValue y))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''gte--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
+        (>= (.longValue x) (.longValue y))
+    )
+
+    (declare Numbers'minus-1l)
+
+    #_override
+    (defn #_"Number" Ops'''negate--LongOps [#_"LongOps" this, #_"Number" x]
+        (let [#_"long" val (.longValue x)]
+            (Numbers'num-1l (Numbers'minus-1l val))
+        )
+    )
+
+    #_override
+    (defn #_"Number" Ops'''negateP--LongOps [#_"LongOps" this, #_"Number" x]
+        (let [#_"long" val (.longValue x)]
+            (if (< Long/MIN_VALUE val)
+                (Numbers'num-1l (- val))
+                (BigInt'fromBigInteger (.negate (BigInteger/valueOf val)))
+            )
+        )
+    )
+
+    (declare Numbers'inc-1l)
+
+    #_override
+    (defn #_"Number" Ops'''inc--LongOps [#_"LongOps" this, #_"Number" x]
+        (let [#_"long" val (.longValue x)]
+            (Numbers'num-1l (Numbers'inc-1l val))
+        )
+    )
+
+    #_override
+    (defn #_"Number" Ops'''incP--LongOps [#_"LongOps" this, #_"Number" x]
+        (let [#_"long" val (.longValue x)]
+            (if (< val Long/MAX_VALUE)
+                (Numbers'num-1l (inc val))
+                (.inc Numbers'BIGINT_OPS, x)
+            )
+        )
+    )
+
+    (declare Numbers'dec-1l)
+
+    #_override
+    (defn #_"Number" Ops'''dec--LongOps [#_"LongOps" this, #_"Number" x]
+        (let [#_"long" val (.longValue x)]
+            (Numbers'num-1l (Numbers'dec-1l val))
+        )
+    )
+
+    #_override
+    (defn #_"Number" Ops'''decP--LongOps [#_"LongOps" this, #_"Number" x]
+        (let [#_"long" val (.longValue x)]
+            (if (< Long/MIN_VALUE val)
+                (Numbers'num-1l (dec val))
+                (.dec Numbers'BIGINT_OPS, x)
+            )
+        )
+    )
+)
+
+(class-ns DoubleOps
+    (defn #_"DoubleOps" DoubleOps'new []
+        (OpsP'new)
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''combine--DoubleOps [#_"DoubleOps" this, #_"Ops" y]
+        (.opsWithDouble y, this)
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithLong--DoubleOps [#_"DoubleOps" this, #_"LongOps" x]
+        this
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithDouble--DoubleOps [#_"DoubleOps" this, #_"DoubleOps" x]
+        this
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithRatio--DoubleOps [#_"DoubleOps" this, #_"RatioOps" x]
+        this
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithBigInt--DoubleOps [#_"DoubleOps" this, #_"BigIntOps" x]
+        this
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithBigDecimal--DoubleOps [#_"DoubleOps" this, #_"BigDecimalOps" x]
+        this
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''isZero--DoubleOps [#_"DoubleOps" this, #_"Number" x]
+        (zero? (.doubleValue x))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''isPos--DoubleOps [#_"DoubleOps" this, #_"Number" x]
+        (pos? (.doubleValue x))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''isNeg--DoubleOps [#_"DoubleOps" this, #_"Number" x]
+        (neg? (.doubleValue x))
+    )
+
+    #_override
+    (defn #_"Number" Ops'''add--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
+        (Double/valueOf (+ (.doubleValue x) (.doubleValue y)))
+    )
+
+    #_override
+    (defn #_"Number" Ops'''multiply--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
+        (Double/valueOf (* (.doubleValue x) (.doubleValue y)))
+    )
+
+    #_override
+    (defn #_"Number" Ops'''divide--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
+        (Double/valueOf (/ (.doubleValue x) (.doubleValue y)))
+    )
+
+    (declare Numbers'quotient-2dd)
+
+    #_override
+    (defn #_"Number" Ops'''quotient--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
+        (Numbers'quotient-2dd (.doubleValue x), (.doubleValue y))
+    )
+
+    (declare Numbers'remainder-2dd)
+
+    #_override
+    (defn #_"Number" Ops'''remainder--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
+        (Numbers'remainder-2dd (.doubleValue x), (.doubleValue y))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''equiv--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
+        (= (.doubleValue x) (.doubleValue y))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''lt--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
+        (< (.doubleValue x) (.doubleValue y))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''lte--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
+        (<= (.doubleValue x) (.doubleValue y))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''gte--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
+        (>= (.doubleValue x) (.doubleValue y))
+    )
+
+    #_override
+    (defn #_"Number" Ops'''negate--DoubleOps [#_"DoubleOps" this, #_"Number" x]
+        (Double/valueOf (- (.doubleValue x)))
+    )
+
+    #_override
+    (defn #_"Number" Ops'''inc--DoubleOps [#_"DoubleOps" this, #_"Number" x]
+        (Double/valueOf (inc (.doubleValue x)))
+    )
+
+    #_override
+    (defn #_"Number" Ops'''dec--DoubleOps [#_"DoubleOps" this, #_"Number" x]
+        (Double/valueOf (dec (.doubleValue x)))
+    )
+)
+
+(class-ns RatioOps
+    (defn #_"RatioOps" RatioOps'new []
+        (OpsP'new)
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''combine--RatioOps [#_"RatioOps" this, #_"Ops" y]
+        (.opsWithRatio y, this)
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithLong--RatioOps [#_"RatioOps" this, #_"LongOps" x]
+        this
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithDouble--RatioOps [#_"RatioOps" this, #_"DoubleOps" x]
+        Numbers'DOUBLE_OPS
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithRatio--RatioOps [#_"RatioOps" this, #_"RatioOps" x]
+        this
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithBigInt--RatioOps [#_"RatioOps" this, #_"BigIntOps" x]
+        this
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithBigDecimal--RatioOps [#_"RatioOps" this, #_"BigDecimalOps" x]
+        Numbers'BIGDECIMAL_OPS
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''isZero--RatioOps [#_"RatioOps" this, #_"Number" x]
+        (zero? (.signum (:numerator (cast Ratio x))))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''isPos--RatioOps [#_"RatioOps" this, #_"Number" x]
+        (pos? (.signum (:numerator (cast Ratio x))))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''isNeg--RatioOps [#_"RatioOps" this, #_"Number" x]
+        (neg? (.signum (:numerator (cast Ratio x))))
+    )
+
+    (defn #_"Number" RatioOps'normalizeRet [#_"Number" ret, #_"Number" x, #_"Number" y]
+        ret
+    )
+
+    (declare Numbers'toRatio)
+
+    #_override
+    (defn #_"Number" Ops'''add--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
+              #_"Number" ret (.divide this, (.add (.multiply (:numerator ry), (:denominator rx)), (.multiply (:numerator rx), (:denominator ry))), (.multiply (:denominator ry), (:denominator rx)))]
+            (RatioOps'normalizeRet ret, x, y)
+        )
+    )
+
+    #_override
+    (defn #_"Number" Ops'''multiply--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
+              #_"Number" ret (.divide this, (.multiply (:numerator ry), (:numerator rx)), (.multiply (:denominator ry), (:denominator rx)))]
+            (RatioOps'normalizeRet ret, x, y)
+        )
+    )
+
+    #_override
+    (defn #_"Number" Ops'''divide--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
+              #_"Number" ret (.divide this, (.multiply (:denominator ry), (:numerator rx)), (.multiply (:numerator ry), (:denominator rx)))]
+            (RatioOps'normalizeRet ret, x, y)
+        )
+    )
+
+    #_override
+    (defn #_"Number" Ops'''quotient--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
+              #_"BigInteger" q (.divide (.multiply (:numerator rx), (:denominator ry)), (.multiply (:denominator rx), (:numerator ry)))]
+            (RatioOps'normalizeRet (BigInt'fromBigInteger q), x, y)
+        )
+    )
+
+    (declare Numbers'minus-2oo)
+    (declare Numbers'multiply-2oo)
+
+    #_override
+    (defn #_"Number" Ops'''remainder--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
+              #_"BigInteger" q (.divide (.multiply (:numerator rx), (:denominator ry)), (.multiply (:denominator rx), (:numerator ry)))
+              #_"Number" ret (Numbers'minus-2oo x, (Numbers'multiply-2oo q, y))]
+            (RatioOps'normalizeRet ret, x, y)
+        )
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''equiv--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
+            (and (.equals (:numerator rx), (:numerator ry)) (.equals (:denominator rx), (:denominator ry)))
+        )
+    )
+
+    (declare Numbers'lt-2oo)
+
+    #_override
+    (defn #_"boolean" Ops'''lt--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
+            (Numbers'lt-2oo (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
+        )
+    )
+
+    (declare Numbers'lte-2oo)
+
+    #_override
+    (defn #_"boolean" Ops'''lte--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
+            (Numbers'lte-2oo (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
+        )
+    )
+
+    (declare Numbers'gte-2oo)
+
+    #_override
+    (defn #_"boolean" Ops'''gte--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
+            (Numbers'gte-2oo (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
+        )
+    )
+
+    #_override
+    (defn #_"Number" Ops'''negate--RatioOps [#_"RatioOps" this, #_"Number" x]
+        (let [#_"Ratio" r (cast Ratio x)]
+            (Ratio'new (.negate (:numerator r)), (:denominator r))
+        )
+    )
+
+    (declare Numbers'add-2ol)
+
+    #_override
+    (defn #_"Number" Ops'''inc--RatioOps [#_"RatioOps" this, #_"Number" x]
+        (Numbers'add-2ol x, 1)
+    )
+
+    #_override
+    (defn #_"Number" Ops'''dec--RatioOps [#_"RatioOps" this, #_"Number" x]
+        (Numbers'add-2ol x, -1)
+    )
+)
+
+(class-ns BigIntOps
+    (defn #_"BigIntOps" BigIntOps'new []
+        (OpsP'new)
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''combine--BigIntOps [#_"BigIntOps" this, #_"Ops" y]
+        (.opsWithBigInt y, this)
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithLong--BigIntOps [#_"BigIntOps" this, #_"LongOps" x]
+        this
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithDouble--BigIntOps [#_"BigIntOps" this, #_"DoubleOps" x]
+        Numbers'DOUBLE_OPS
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithRatio--BigIntOps [#_"BigIntOps" this, #_"RatioOps" x]
+        Numbers'RATIO_OPS
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithBigInt--BigIntOps [#_"BigIntOps" this, #_"BigIntOps" x]
+        this
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithBigDecimal--BigIntOps [#_"BigIntOps" this, #_"BigDecimalOps" x]
+        Numbers'BIGDECIMAL_OPS
+    )
+
+    (declare Numbers'toBigInt)
+
+    #_override
+    (defn #_"boolean" Ops'''isZero--BigIntOps [#_"BigIntOps" this, #_"Number" x]
+        (let [#_"BigInt" bx (Numbers'toBigInt x)]
+            (zero? (if (some? (:bipart bx)) (.signum (:bipart bx)) (:lpart bx)))
+        )
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''isPos--BigIntOps [#_"BigIntOps" this, #_"Number" x]
+        (let [#_"BigInt" bx (Numbers'toBigInt x)]
+            (pos? (if (some? (:bipart bx)) (.signum (:bipart bx)) (:lpart bx)))
+        )
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''isNeg--BigIntOps [#_"BigIntOps" this, #_"Number" x]
+        (let [#_"BigInt" bx (Numbers'toBigInt x)]
+            (neg? (if (some? (:bipart bx)) (.signum (:bipart bx)) (:lpart bx)))
+        )
+    )
+
+    #_override
+    (defn #_"Number" Ops'''add--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+        (BigInt''add (Numbers'toBigInt x), (Numbers'toBigInt y))
+    )
+
+    #_override
+    (defn #_"Number" Ops'''multiply--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+        (BigInt''multiply (Numbers'toBigInt x), (Numbers'toBigInt y))
+    )
+
+    (declare Numbers'divide-2ii)
+
+    #_override
+    (defn #_"Number" Ops'''divide--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+        (Numbers'divide-2ii (.toBigInteger this, x), (.toBigInteger this, y))
+    )
+
+    #_override
+    (defn #_"Number" Ops'''quotient--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+        (BigInt''quotient (Numbers'toBigInt x), (Numbers'toBigInt y))
+    )
+
+    #_override
+    (defn #_"Number" Ops'''remainder--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+        (BigInt''remainder (Numbers'toBigInt x), (Numbers'toBigInt y))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''equiv--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+        (.equals (Numbers'toBigInt x), (Numbers'toBigInt y))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''lt--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+        (BigInt''lt (Numbers'toBigInt x), (Numbers'toBigInt y))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''lte--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+        (<= (.compareTo (.toBigInteger this, x), (.toBigInteger this, y)) 0)
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''gte--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+        (>= (.compareTo (.toBigInteger this, x), (.toBigInteger this, y)) 0)
+    )
+
+    #_override
+    (defn #_"Number" Ops'''negate--BigIntOps [#_"BigIntOps" this, #_"Number" x]
+        (BigInt'fromBigInteger (.negate (.toBigInteger this, x)))
+    )
+
+    #_override
+    (defn #_"Number" Ops'''inc--BigIntOps [#_"BigIntOps" this, #_"Number" x]
+        (BigInt'fromBigInteger (.add (.toBigInteger this, x), BigInteger/ONE))
+    )
+
+    #_override
+    (defn #_"Number" Ops'''dec--BigIntOps [#_"BigIntOps" this, #_"Number" x]
+        (BigInt'fromBigInteger (.subtract (.toBigInteger this, x), BigInteger/ONE))
+    )
+)
+
+(class-ns BigDecimalOps
+    (def #_"Var" BigDecimalOps'MATH_CONTEXT RT'MATH_CONTEXT)
+
+    (defn #_"BigDecimalOps" BigDecimalOps'new []
+        (OpsP'new)
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''combine--BigDecimalOps [#_"BigDecimalOps" this, #_"Ops" y]
+        (.opsWithBigDecimal y, this)
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithLong--BigDecimalOps [#_"BigDecimalOps" this, #_"LongOps" x]
+        this
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithDouble--BigDecimalOps [#_"BigDecimalOps" this, #_"DoubleOps" x]
+        Numbers'DOUBLE_OPS
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithRatio--BigDecimalOps [#_"BigDecimalOps" this, #_"RatioOps" x]
+        this
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithBigInt--BigDecimalOps [#_"BigDecimalOps" this, #_"BigIntOps" x]
+        this
+    )
+
+    #_override
+    (defn #_"Ops" Ops'''opsWithBigDecimal--BigDecimalOps [#_"BigDecimalOps" this, #_"BigDecimalOps" x]
+        this
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''isZero--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
+        (let [#_"BigDecimal" bx (cast BigDecimal x)]
+            (zero? (.signum bx))
+        )
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''isPos--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
+        (let [#_"BigDecimal" bx (cast BigDecimal x)]
+            (pos? (.signum bx))
+        )
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''isNeg--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
+        (let [#_"BigDecimal" bx (cast BigDecimal x)]
+            (neg? (.signum bx))
+        )
+    )
+
+    #_override
+    (defn #_"Number" Ops'''add--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"MathContext" mc (cast MathContext (.deref BigDecimalOps'MATH_CONTEXT))]
+            (if (nil? mc) (.add (.toBigDecimal this, x), (.toBigDecimal this, y)) (.add (.toBigDecimal this, x), (.toBigDecimal this, y), mc))
+        )
+    )
+
+    #_override
+    (defn #_"Number" Ops'''multiply--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"MathContext" mc (cast MathContext (.deref BigDecimalOps'MATH_CONTEXT))]
+            (if (nil? mc) (.multiply (.toBigDecimal this, x), (.toBigDecimal this, y)) (.multiply (.toBigDecimal this, x), (.toBigDecimal this, y), mc))
+        )
+    )
+
+    #_override
+    (defn #_"Number" Ops'''divide--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"MathContext" mc (cast MathContext (.deref BigDecimalOps'MATH_CONTEXT))]
+            (if (nil? mc) (.divide (.toBigDecimal this, x), (.toBigDecimal this, y)) (.divide (.toBigDecimal this, x), (.toBigDecimal this, y), mc))
+        )
+    )
+
+    #_override
+    (defn #_"Number" Ops'''quotient--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"MathContext" mc (cast MathContext (.deref BigDecimalOps'MATH_CONTEXT))]
+            (if (nil? mc) (.divideToIntegralValue (.toBigDecimal this, x), (.toBigDecimal this, y)) (.divideToIntegralValue (.toBigDecimal this, x), (.toBigDecimal this, y), mc))
+        )
+    )
+
+    #_override
+    (defn #_"Number" Ops'''remainder--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
+        (let [#_"MathContext" mc (cast MathContext (.deref BigDecimalOps'MATH_CONTEXT))]
+            (if (nil? mc) (.remainder (.toBigDecimal this, x), (.toBigDecimal this, y)) (.remainder (.toBigDecimal this, x), (.toBigDecimal this, y), mc))
+        )
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''equiv--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
+        (zero? (.compareTo (.toBigDecimal this, x), (.toBigDecimal this, y)))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''lt--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
+        (neg? (.compareTo (.toBigDecimal this, x), (.toBigDecimal this, y)))
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''lte--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
+        (<= (.compareTo (.toBigDecimal this, x), (.toBigDecimal this, y)) 0)
+    )
+
+    #_override
+    (defn #_"boolean" Ops'''gte--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
+        (>= (.compareTo (.toBigDecimal this, x), (.toBigDecimal this, y)) 0)
+    )
+
+    #_override
+    (defn #_"Number" Ops'''negate--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
+        (let [#_"MathContext" mc (cast MathContext (.deref BigDecimalOps'MATH_CONTEXT))]
+            (if (nil? mc) (.negate (cast BigDecimal x)) (.negate (cast BigDecimal x), mc))
+        )
+    )
+
+    #_override
+    (defn #_"Number" Ops'''inc--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
+        (let [#_"MathContext" mc (cast MathContext (.deref BigDecimalOps'MATH_CONTEXT))
+              #_"BigDecimal" bx (cast BigDecimal x)]
+            (if (nil? mc) (.add bx, BigDecimal/ONE) (.add bx, BigDecimal/ONE, mc))
+        )
+    )
+
+    #_override
+    (defn #_"Number" Ops'''dec--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
+        (let [#_"MathContext" mc (cast MathContext (.deref BigDecimalOps'MATH_CONTEXT))
+              #_"BigDecimal" bx (cast BigDecimal x)]
+            (if (nil? mc) (.subtract bx, BigDecimal/ONE) (.subtract bx, BigDecimal/ONE, mc))
+        )
+    )
+)
+
+(def Category'enum-set
+    (hash-set
+        :Category'INTEGER
+        :Category'FLOATING
+        :Category'DECIMAL
+        :Category'RATIO
+    )
+)
+
+(class-ns Numbers
+    (def #_"LongOps"       Numbers'LONG_OPS       (LongOps'new)      )
+    (def #_"DoubleOps"     Numbers'DOUBLE_OPS     (DoubleOps'new)    )
+    (def #_"RatioOps"      Numbers'RATIO_OPS      (RatioOps'new)     )
+    (def #_"BigIntOps"     Numbers'BIGINT_OPS     (BigIntOps'new)    )
+    (def #_"BigDecimalOps" Numbers'BIGDECIMAL_OPS (BigDecimalOps'new))
+
+    (defn #_"Ops" Numbers'ops [#_"Object" x]
+        (condp = (.getClass x)
+            Integer    Numbers'LONG_OPS
+            Long       Numbers'LONG_OPS
+            BigInt     Numbers'BIGINT_OPS
+            BigInteger Numbers'BIGINT_OPS
+            Ratio      Numbers'RATIO_OPS
+            Float      Numbers'DOUBLE_OPS
+            Double     Numbers'DOUBLE_OPS
+            BigDecimal Numbers'BIGDECIMAL_OPS
+                       Numbers'LONG_OPS
+        )
+    )
+
+    (defn #_"Category" Numbers'category [#_"Object" x]
+        (condp = (.getClass x)
+            Integer    :Category'INTEGER
+            Long       :Category'INTEGER
+            BigInt     :Category'INTEGER
+            Ratio      :Category'RATIO
+            Float      :Category'FLOATING
+            Double     :Category'FLOATING
+            BigDecimal :Category'DECIMAL
+                       :Category'INTEGER
+        )
+    )
+
+    (defn #_"boolean" Numbers'isNaN [#_"Object" x]
+        (or (and (instance? Double x) (.isNaN (cast Double x))) (and (instance? Float x) (.isNaN (cast Float x))))
+    )
+
+    (defn #_"Number" Numbers'num-1l [#_"long"   x] (Long/valueOf   x))
+    (defn #_"Number" Numbers'num-1f [#_"float"  x] (Float/valueOf  x))
+    (defn #_"Number" Numbers'num-1d [#_"double" x] (Double/valueOf x))
+    (defn #_"Number" Numbers'num-1o [#_"Object" x] (cast Number    x))
+
+    (defn #_"boolean" Numbers'isZero-1o [#_"Object" x] (.isZero (Numbers'ops x), (cast Number x)))
+    (defn #_"boolean" Numbers'isPos-1o  [#_"Object" x] (.isPos  (Numbers'ops x), (cast Number x)))
+    (defn #_"boolean" Numbers'isNeg-1o  [#_"Object" x] (.isNeg  (Numbers'ops x), (cast Number x)))
+
+    (defn #_"Number" Numbers'minus-1o  [#_"Object" x] (.negate  (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'minusP-1o [#_"Object" x] (.negateP (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'inc-1o    [#_"Object" x] (.inc     (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'incP-1o   [#_"Object" x] (.incP    (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'dec-1o    [#_"Object" x] (.dec     (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'decP-1o   [#_"Object" x] (.decP    (Numbers'ops x), (cast Number x)))
+
+    (defn #_"Number" Numbers'add-2oo [#_"Object" x, #_"Object" y]
+        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.add (cast Number x), (cast Number y)))
+    )
+
+    (defn #_"Number" Numbers'addP-2oo [#_"Object" x, #_"Object" y]
+        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.addP (cast Number x), (cast Number y)))
+    )
+
+    (defn #_"Number" Numbers'minus-2oo [#_"Object" x, #_"Object" y]
+        (let [#_"Ops" yops (Numbers'ops y)]
+            (-> (.combine (Numbers'ops x), yops) (.add (cast Number x), (.negate yops, (cast Number y))))
+        )
+    )
+
+    (defn #_"Number" Numbers'minusP-2oo [#_"Object" x, #_"Object" y]
+        (let [#_"Ops" yops (Numbers'ops y)
+              #_"Number" negativeY (.negateP yops, (cast Number y))
+              #_"Ops" negativeYOps (Numbers'ops negativeY)]
+            (-> (.combine (Numbers'ops x), negativeYOps) (.addP (cast Number x), negativeY))
+        )
+    )
+
+    (defn #_"Number" Numbers'multiply-2oo [#_"Object" x, #_"Object" y]
+        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.multiply (cast Number x), (cast Number y)))
+    )
+
+    (defn #_"Number" Numbers'multiplyP-2oo [#_"Object" x, #_"Object" y]
+        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.multiplyP (cast Number x), (cast Number y)))
+    )
+
+    (defn #_"Number" Numbers'divide-2oo [#_"Object" x, #_"Object" y]
+        (cond
+            (Numbers'isNaN x) (cast Number x)
+            (Numbers'isNaN y) (cast Number y)
+            :else
+                (let [#_"Ops" yops (Numbers'ops y)]
+                    (when (.isZero yops, (cast Number y))
+                        (throw (ArithmeticException. "Divide by zero"))
+                    )
+                    (-> (.combine (Numbers'ops x), yops) (.divide (cast Number x), (cast Number y)))
+                )
+        )
+    )
+
+    (defn #_"Number" Numbers'quotient-2oo [#_"Object" x, #_"Object" y]
+        (let [#_"Ops" yops (Numbers'ops y)]
+            (when (.isZero yops, (cast Number y))
+                (throw (ArithmeticException. "Divide by zero"))
+            )
+            (-> (.combine (Numbers'ops x), yops) (.quotient (cast Number x), (cast Number y)))
+        )
+    )
+
+    (defn #_"Number" Numbers'remainder-2oo [#_"Object" x, #_"Object" y]
+        (let [#_"Ops" yops (Numbers'ops y)]
+            (when (.isZero yops, (cast Number y))
+                (throw (ArithmeticException. "Divide by zero"))
+            )
+            (-> (.combine (Numbers'ops x), yops) (.remainder (cast Number x), (cast Number y)))
+        )
+    )
+
+    (defn #_"double" Numbers'quotient-2dd [#_"double" n, #_"double" d]
+        (when (zero? d)
+            (throw (ArithmeticException. "Divide by zero"))
+        )
+
+        (let [#_"double" q (/ n d)]
+            (cond (<= Long/MIN_VALUE q Long/MAX_VALUE)
+                (do
+                    (double (long q))
+                )
+                :else ;; bigint quotient
+                (do
+                    (.doubleValue (.toBigInteger (BigDecimal. q)))
+                )
+            )
+        )
+    )
+
+    (defn #_"double" Numbers'remainder-2dd [#_"double" n, #_"double" d]
+        (when (zero? d)
+            (throw (ArithmeticException. "Divide by zero"))
+        )
+
+        (let [#_"double" q (/ n d)]
+            (cond (<= Long/MIN_VALUE q Long/MAX_VALUE)
+                (do
+                    (- n (* (long q) d))
+                )
+                :else ;; bigint quotient
+                (let [#_"Number" bq (.toBigInteger (BigDecimal. q))]
+                    (- n (* (.doubleValue bq) d))
+                )
+            )
+        )
+    )
+
+    (defn #_"boolean" Numbers'equiv-2nn [#_"Number" x, #_"Number" y]
+        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.equiv x, y))
+    )
+
+    (defn #_"boolean" Numbers'equiv-2oo [#_"Object" x, #_"Object" y]
+        (Numbers'equiv-2nn (cast Number x), (cast Number y))
+    )
+
+    (defn #_"boolean" Numbers'equal [#_"Number" x, #_"Number" y]
+        (and (= (Numbers'category x) (Numbers'category y)) (.equiv (.combine (Numbers'ops x), (Numbers'ops y)), x, y))
+    )
+
+    (defn #_"boolean" Numbers'lt-2oo [#_"Object" x, #_"Object" y]
+        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.lt (cast Number x), (cast Number y)))
+    )
+
+    (defn #_"boolean" Numbers'lte-2oo [#_"Object" x, #_"Object" y]
+        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.lte (cast Number x), (cast Number y)))
+    )
+
+    (defn #_"boolean" Numbers'gt-2oo [#_"Object" x, #_"Object" y]
+        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.lt (cast Number y), (cast Number x)))
+    )
+
+    (defn #_"boolean" Numbers'gte-2oo [#_"Object" x, #_"Object" y]
+        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.gte (cast Number x), (cast Number y)))
+    )
+
+    (defn #_"int" Numbers'compare [#_"Number" x, #_"Number" y]
+        (let [#_"Ops" ops (.combine (Numbers'ops x), (Numbers'ops y))]
+            (cond (.lt ops, x, y) -1 (.lt ops, y, x) 1 :else 0)
+        )
+    )
+
+    (defn #_"BigInt" Numbers'toBigInt [#_"Object" x]
+        (cond
+            (instance? BigInt x)     (cast BigInt x)
+            (instance? BigInteger x) (BigInt'fromBigInteger (cast BigInteger x))
+            :else                    (BigInt'fromLong (.longValue (cast Number x)))
+        )
+    )
+
+    (defn #_"BigInteger" Numbers'toBigInteger [#_"Object" x]
+        (cond
+            (instance? BigInteger x) (cast BigInteger x)
+            (instance? BigInt x)     (BigInt''toBigInteger (cast BigInt x))
+            :else                    (BigInteger/valueOf (.longValue (cast Number x)))
+        )
+    )
+
+    (defn #_"BigDecimal" Numbers'toBigDecimal [#_"Object" x]
+        (cond
+            (instance? BigDecimal x)
+                (cast BigDecimal x)
+            (instance? BigInt x)
+                (let [#_"BigInt" bi (cast BigInt x)]
+                    (if (nil? (:bipart bi))
+                        (BigDecimal/valueOf (:lpart bi))
+                        (BigDecimal. (:bipart bi))
+                    )
+                )
+            (instance? BigInteger x)
+                (BigDecimal. (cast BigInteger x))
+            (instance? Double x)
+                (BigDecimal. (.doubleValue (cast Number x)))
+            (instance? Float x)
+                (BigDecimal. (.doubleValue (cast Number x)))
+            (instance? Ratio x)
+                (let [#_"Ratio" r (cast Ratio x)]
+                    (cast BigDecimal (Numbers'divide-2oo (BigDecimal. (:numerator r)), (:denominator r)))
+                )
+            :else
+                (BigDecimal/valueOf (.longValue (cast Number x)))
+        )
+    )
+
+    (defn #_"Ratio" Numbers'toRatio [#_"Object" x]
+        (cond
+            (instance? Ratio x)
+                (cast Ratio x)
+            (instance? BigDecimal x)
+                (let [#_"BigDecimal" bx (cast BigDecimal x) #_"BigInteger" bv (.unscaledValue bx) #_"int" scale (.scale bx)]
+                    (if (neg? scale)
+                        (Ratio'new (.multiply bv, (.pow BigInteger/TEN, (- scale))), BigInteger/ONE)
+                        (Ratio'new bv, (.pow BigInteger/TEN, scale))
+                    )
+                )
+            :else
+                (Ratio'new (Numbers'toBigInteger x), BigInteger/ONE)
+        )
+    )
+
+    (defn #_"Number" Numbers'rationalize [#_"Number" x]
+        (cond
+            (or (instance? Float x) (instance? Double x))
+                (Numbers'rationalize (BigDecimal/valueOf (.doubleValue x)))
+            (instance? BigDecimal x)
+                (let [#_"BigDecimal" bx (cast BigDecimal x) #_"BigInteger" bv (.unscaledValue bx) #_"int" scale (.scale bx)]
+                    (if (neg? scale)
+                        (BigInt'fromBigInteger (.multiply bv, (.pow BigInteger/TEN, (- scale))))
+                        (Numbers'divide-2ii bv, (.pow BigInteger/TEN, scale))
+                    )
+                )
+            :else
+                x
+        )
+    )
+
+    (defn #_"Number" Numbers'reduceBigInt [#_"BigInt" val]
+        (or (:bipart val) (Numbers'num-1l (:lpart val)))
+    )
+
+    (defn #_"Number" Numbers'divide-2ii [#_"BigInteger" n, #_"BigInteger" d]
+        (when-not (.equals d, BigInteger/ZERO) => (throw (ArithmeticException. "Divide by zero"))
+            (let [#_"BigInteger" gcd (.gcd n, d)]
+                (when-not (.equals gcd, BigInteger/ZERO) => BigInt'ZERO
+                    (let [n (.divide n, gcd) d (.divide d, gcd)]
+                        (cond
+                            (.equals d, BigInteger/ONE)
+                                (BigInt'fromBigInteger n)
+                            (.equals d, (.negate BigInteger/ONE))
+                                (BigInt'fromBigInteger (.negate n))
+                            :else
+                                (Ratio'new (if (neg? (.signum d)) (.negate n) n), (if (neg? (.signum d)) (.negate d) d))
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    (defn #_"long" Numbers'bitOpsCast [#_"Object" x]
+        (let [#_"Class" xc (.getClass x)]               ;; no bignums, no decimals
+            (when (any = xc Long Integer Short Byte) => (throw (IllegalArgumentException. (str "bit operation not supported for: " xc)))
+                (RT'longCast-1o x)
+            )
+        )
+    )
+
+    (defn #_"int" Numbers'shiftLeftInt [#_"int" x, #_"int" n]
+        (<< x n)
+    )
+
+    (defn #_"long" Numbers'shiftLeft-2ll [#_"long"   x, #_"long"   n] (<< x n))
+    (defn #_"long" Numbers'shiftLeft-2oo [#_"Object" x, #_"Object" n] (Numbers'shiftLeft-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'shiftLeft-2ol [#_"Object" x, #_"long"   n] (Numbers'shiftLeft-2ll (Numbers'bitOpsCast x),                     n ))
+    (defn #_"long" Numbers'shiftLeft-2lo [#_"long"   x, #_"Object" n] (Numbers'shiftLeft-2ll                     x , (Numbers'bitOpsCast n)))
+
+    (defn #_"int" Numbers'shiftRightInt [#_"int" x, #_"int" n]
+        (>> x n)
+    )
+
+    (defn #_"long" Numbers'shiftRight-2ll [#_"long"   x, #_"long"   n] (>> x n))
+    (defn #_"long" Numbers'shiftRight-2oo [#_"Object" x, #_"Object" n] (Numbers'shiftRight-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'shiftRight-2ol [#_"Object" x, #_"long"   n] (Numbers'shiftRight-2ll (Numbers'bitOpsCast x),                     n ))
+    (defn #_"long" Numbers'shiftRight-2lo [#_"long"   x, #_"Object" n] (Numbers'shiftRight-2ll                     x , (Numbers'bitOpsCast n)))
+
+    (defn #_"int" Numbers'unsignedShiftRightInt [#_"int" x, #_"int" n]
+        (>>> x n)
+    )
+
+    (defn #_"long" Numbers'unsignedShiftRight-2ll [#_"long"   x, #_"long"   n] (>>> x n))
+    (defn #_"long" Numbers'unsignedShiftRight-2oo [#_"Object" x, #_"Object" n] (Numbers'unsignedShiftRight-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'unsignedShiftRight-2ol [#_"Object" x, #_"long"   n] (Numbers'unsignedShiftRight-2ll (Numbers'bitOpsCast x),                     n ))
+    (defn #_"long" Numbers'unsignedShiftRight-2lo [#_"long"   x, #_"Object" n] (Numbers'unsignedShiftRight-2ll                     x , (Numbers'bitOpsCast n)))
+
+    (defn #_"float[]" Numbers'float_array-2 [#_"int" size, #_"Object" init]
+        (let [#_"float[]" ret (.float-array size)]
+            (if (instance? Number init)
+                (let [#_"float" f (.floatValue (cast Number init))]
+                    (dotimes [#_"int" i (alength ret)]
+                        (aset ret i f)
+                    )
+                )
+                (let [#_"ISeq" s (RT'seq init)]
+                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
+                        (aset ret i (.floatValue (cast Number (.first s))))
+                    )
+                )
+            )
+            ret
+        )
+    )
+
+    (defn #_"float[]" Numbers'float_array-1 [#_"Object" sizeOrSeq]
+        (if (instance? Number sizeOrSeq)
+            (.float-array (.intValue (cast Number sizeOrSeq)))
+            (let [#_"ISeq" s (RT'seq sizeOrSeq)
+                  #_"int" size (RT'count s)
+                  #_"float[]" ret (.float-array size)]
+                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
+                    (aset ret i (.floatValue (cast Number (.first s))))
+                )
+                ret
+            )
+        )
+    )
+
+    (defn #_"double[]" Numbers'double_array-2 [#_"int" size, #_"Object" init]
+        (let [#_"double[]" ret (.double-array size)]
+            (if (instance? Number init)
+                (let [#_"double" f (.doubleValue (cast Number init))]
+                    (dotimes [#_"int" i (alength ret)]
+                        (aset ret i f)
+                    )
+                )
+                (let [#_"ISeq" s (RT'seq init)]
+                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
+                        (aset ret i (.doubleValue (cast Number (.first s))))
+                    )
+                )
+            )
+            ret
+        )
+    )
+
+    (defn #_"double[]" Numbers'double_array-1 [#_"Object" sizeOrSeq]
+        (if (instance? Number sizeOrSeq)
+            (.double-array (.intValue (cast Number sizeOrSeq)))
+            (let [#_"ISeq" s (RT'seq sizeOrSeq)
+                  #_"int" size (RT'count s)
+                  #_"double[]" ret (.double-array size)]
+                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
+                    (aset ret i (.doubleValue (cast Number (.first s))))
+                )
+                ret
+            )
+        )
+    )
+
+    (defn #_"int[]" Numbers'int_array-2 [#_"int" size, #_"Object" init]
+        (let [#_"int[]" ret (.int-array size)]
+            (if (instance? Number init)
+                (let [#_"int" f (.intValue (cast Number init))]
+                    (dotimes [#_"int" i (alength ret)]
+                        (aset ret i f)
+                    )
+                )
+                (let [#_"ISeq" s (RT'seq init)]
+                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
+                        (aset ret i (.intValue (cast Number (.first s))))
+                    )
+                )
+            )
+            ret
+        )
+    )
+
+    (defn #_"int[]" Numbers'int_array-1 [#_"Object" sizeOrSeq]
+        (if (instance? Number sizeOrSeq)
+            (.int-array (.intValue (cast Number sizeOrSeq)))
+            (let [#_"ISeq" s (RT'seq sizeOrSeq)
+                  #_"int" size (RT'count s)
+                  #_"int[]" ret (.int-array size)]
+                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
+                    (aset ret i (.intValue (cast Number (.first s))))
+                )
+                ret
+            )
+        )
+    )
+
+    (defn #_"long[]" Numbers'long_array-2 [#_"int" size, #_"Object" init]
+        (let [#_"long[]" ret (.long-array size)]
+            (if (instance? Number init)
+                (let [#_"long" f (.longValue (cast Number init))]
+                    (dotimes [#_"int" i (alength ret)]
+                        (aset ret i f)
+                    )
+                )
+                (let [#_"ISeq" s (RT'seq init)]
+                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
+                        (aset ret i (.longValue (cast Number (.first s))))
+                    )
+                )
+            )
+            ret
+        )
+    )
+
+    (defn #_"long[]" Numbers'long_array-1 [#_"Object" sizeOrSeq]
+        (if (instance? Number sizeOrSeq)
+            (.long-array (.intValue (cast Number sizeOrSeq)))
+            (let [#_"ISeq" s (RT'seq sizeOrSeq)
+                  #_"int" size (RT'count s)
+                  #_"long[]" ret (.long-array size)]
+                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
+                    (aset ret i (.longValue (cast Number (.first s))))
+                )
+                ret
+            )
+        )
+    )
+
+    (defn #_"short[]" Numbers'short_array-2 [#_"int" size, #_"Object" init]
+        (let [#_"short[]" ret (.short-array size)]
+            (if (instance? Short init)
+                (let [#_"short" s (cast Short init)]
+                    (dotimes [#_"int" i (alength ret)]
+                        (aset ret i s)
+                    )
+                )
+                (let [#_"ISeq" s (RT'seq init)]
+                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
+                        (aset ret i (.shortValue (cast Number (.first s))))
+                    )
+                )
+            )
+            ret
+        )
+    )
+
+    (defn #_"short[]" Numbers'short_array-1 [#_"Object" sizeOrSeq]
+        (if (instance? Number sizeOrSeq)
+            (.short-array (.intValue (cast Number sizeOrSeq)))
+            (let [#_"ISeq" s (RT'seq sizeOrSeq)
+                  #_"int" size (RT'count s)
+                  #_"short[]" ret (.short-array size)]
+                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
+                    (aset ret i (.shortValue (cast Number (.first s))))
+                )
+                ret
+            )
+        )
+    )
+
+    (defn #_"char[]" Numbers'char_array-2 [#_"int" size, #_"Object" init]
+        (let [#_"char[]" ret (.char-array size)]
+            (if (instance? Character init)
+                (let [#_"char" c (cast Character init)]
+                    (dotimes [#_"int" i (alength ret)]
+                        (aset ret i c)
+                    )
+                )
+                (let [#_"ISeq" s (RT'seq init)]
+                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
+                        (aset ret i (cast Character (.first s)))
+                    )
+                )
+            )
+            ret
+        )
+    )
+
+    (defn #_"char[]" Numbers'char_array-1 [#_"Object" sizeOrSeq]
+        (if (instance? Number sizeOrSeq)
+            (.char-array (.intValue (cast Number sizeOrSeq)))
+            (let [#_"ISeq" s (RT'seq sizeOrSeq)
+                  #_"int" size (RT'count s)
+                  #_"char[]" ret (.char-array size)]
+                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
+                    (aset ret i (cast Character (.first s)))
+                )
+                ret
+            )
+        )
+    )
+
+    (defn #_"byte[]" Numbers'byte_array-2 [#_"int" size, #_"Object" init]
+        (let [#_"byte[]" ret (.byte-array size)]
+            (if (instance? Byte init)
+                (let [#_"byte" b (cast Byte init)]
+                    (dotimes [#_"int" i (alength ret)]
+                        (aset ret i b)
+                    )
+                )
+                (let [#_"ISeq" s (RT'seq init)]
+                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
+                        (aset ret i (.byteValue (cast Number (.first s))))
+                    )
+                )
+            )
+            ret
+        )
+    )
+
+    (defn #_"byte[]" Numbers'byte_array-1 [#_"Object" sizeOrSeq]
+        (if (instance? Number sizeOrSeq)
+            (.byte-array (.intValue (cast Number sizeOrSeq)))
+            (let [#_"ISeq" s (RT'seq sizeOrSeq)
+                  #_"int" size (RT'count s)
+                  #_"byte[]" ret (.byte-array size)]
+                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
+                    (aset ret i (.byteValue (cast Number (.first s))))
+                )
+                ret
+            )
+        )
+    )
+
+    (defn #_"boolean[]" Numbers'boolean_array-2 [#_"int" size, #_"Object" init]
+        (let [#_"boolean[]" ret (.boolean-array size)]
+            (if (instance? Boolean init)
+                (let [#_"boolean" b (cast Boolean init)]
+                    (dotimes [#_"int" i (alength ret)]
+                        (aset ret i b)
+                    )
+                )
+                (let [#_"ISeq" s (RT'seq init)]
+                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
+                        (aset ret i (cast Boolean (.first s)))
+                    )
+                )
+            )
+            ret
+        )
+    )
+
+    (defn #_"boolean[]" Numbers'boolean_array-1 [#_"Object" sizeOrSeq]
+        (if (instance? Number sizeOrSeq)
+            (.boolean-array (.intValue (cast Number sizeOrSeq)))
+            (let [#_"ISeq" s (RT'seq sizeOrSeq)
+                  #_"int" size (RT'count s)
+                  #_"boolean[]" ret (.boolean-array size)]
+                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
+                    (aset ret i (cast Boolean (.first s)))
+                )
+                ret
+            )
+        )
+    )
+
+    (defn #_"boolean[]" Numbers'booleans [#_"Object" array] (cast RT'BOOLEANS_CLASS array))
+    (defn #_"byte[]"    Numbers'bytes    [#_"Object" array] (cast RT'BYTES_CLASS    array))
+    (defn #_"short[]"   Numbers'shorts   [#_"Object" array] (cast RT'SHORTS_CLASS   array))
+    (defn #_"char[]"    Numbers'chars    [#_"Object" array] (cast RT'CHARS_CLASS    array))
+    (defn #_"int[]"     Numbers'ints     [#_"Object" array] (cast RT'INTS_CLASS     array))
+    (defn #_"long[]"    Numbers'longs    [#_"Object" array] (cast RT'LONGS_CLASS    array))
+    (defn #_"float[]"   Numbers'floats   [#_"Object" array] (cast RT'FLOATS_CLASS   array))
+    (defn #_"double[]"  Numbers'doubles  [#_"Object" array] (cast RT'DOUBLES_CLASS  array))
+
+    (defn #_"double" Numbers'add-2dd    [#_"double" x, #_"double" y] (+ x y))
+    (defn #_"double" Numbers'addP-2dd   [#_"double" x, #_"double" y] (+ x y))
+    (defn #_"double" Numbers'minus-2dd  [#_"double" x, #_"double" y] (- x y))
+    (defn #_"double" Numbers'minusP-2dd [#_"double" x, #_"double" y] (- x y))
+
+    (defn #_"double" Numbers'minus-1d  [#_"double" x] (- x))
+    (defn #_"double" Numbers'minusP-1d [#_"double" x] (- x))
+    (defn #_"double" Numbers'inc-1d    [#_"double" x] (inc x))
+    (defn #_"double" Numbers'incP-1d   [#_"double" x] (inc x))
+    (defn #_"double" Numbers'dec-1d    [#_"double" x] (dec x))
+    (defn #_"double" Numbers'decP-1d   [#_"double" x] (dec x))
+
+    (defn #_"double" Numbers'multiply-2dd  [#_"double" x, #_"double" y] (* x y))
+    (defn #_"double" Numbers'multiplyP-2dd [#_"double" x, #_"double" y] (* x y))
+    (defn #_"double" Numbers'divide-2dd    [#_"double" x, #_"double" y] (/ x y))
+
+    (defn #_"boolean" Numbers'equiv-2dd [#_"double" x, #_"double" y] (= x y))
+    (defn #_"boolean" Numbers'lt-2dd    [#_"double" x, #_"double" y] (< x y))
+    (defn #_"boolean" Numbers'lte-2dd   [#_"double" x, #_"double" y] (<= x y))
+    (defn #_"boolean" Numbers'gt-2dd    [#_"double" x, #_"double" y] (> x y))
+    (defn #_"boolean" Numbers'gte-2dd   [#_"double" x, #_"double" y] (>= x y))
+
+    (defn #_"boolean" Numbers'isPos-1d  [#_"double" x] (> x 0))
+    (defn #_"boolean" Numbers'isNeg-1d  [#_"double" x] (< x 0))
+    (defn #_"boolean" Numbers'isZero-1d [#_"double" x] (zero? x))
+
+    (defn #_"int" Numbers'unchecked_int_add       [#_"int" x, #_"int" y] (+ x y))
+    (defn #_"int" Numbers'unchecked_int_subtract  [#_"int" x, #_"int" y] (- x y))
+    (defn #_"int" Numbers'unchecked_int_multiply  [#_"int" x, #_"int" y] (* x y))
+    (defn #_"int" Numbers'unchecked_int_divide    [#_"int" x, #_"int" y] (/ x y))
+    (defn #_"int" Numbers'unchecked_int_remainder [#_"int" x, #_"int" y] (% x y))
+
+    (defn #_"int" Numbers'unchecked_int_inc    [#_"int" x] (inc x))
+    (defn #_"int" Numbers'unchecked_int_dec    [#_"int" x] (dec x))
+    (defn #_"int" Numbers'unchecked_int_negate [#_"int" x] (- x)  )
+
+    (defn #_"long" Numbers'not-1l [#_"long"   x] (bit-not x))
+    (defn #_"long" Numbers'not-1o [#_"Object" x] (Numbers'not-1l (Numbers'bitOpsCast x)))
+
+    (defn #_"long" Numbers'and-2ll [#_"long"   x, #_"long"   y] (& x y))
+    (defn #_"long" Numbers'and-2oo [#_"Object" x, #_"Object" y] (Numbers'and-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y)))
+    (defn #_"long" Numbers'and-2ol [#_"Object" x, #_"long"   y] (Numbers'and-2ll (Numbers'bitOpsCast x),                     y ))
+    (defn #_"long" Numbers'and-2lo [#_"long"   x, #_"Object" y] (Numbers'and-2ll                     x , (Numbers'bitOpsCast y)))
+
+    (defn #_"long" Numbers'or-2ll [#_"long"   x, #_"long"   y] (| x y))
+    (defn #_"long" Numbers'or-2oo [#_"Object" x, #_"Object" y] (Numbers'or-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y)))
+    (defn #_"long" Numbers'or-2ol [#_"Object" x, #_"long"   y] (Numbers'or-2ll (Numbers'bitOpsCast x),                     y ))
+    (defn #_"long" Numbers'or-2lo [#_"long"   x, #_"Object" y] (Numbers'or-2ll                     x , (Numbers'bitOpsCast y)))
+
+    (defn #_"long" Numbers'xor-2ll [#_"long"   x, #_"long"   y] (bit-xor x y))
+    (defn #_"long" Numbers'xor-2oo [#_"Object" x, #_"Object" y] (Numbers'xor-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y)))
+    (defn #_"long" Numbers'xor-2ol [#_"Object" x, #_"long"   y] (Numbers'xor-2ll (Numbers'bitOpsCast x),                     y ))
+    (defn #_"long" Numbers'xor-2lo [#_"long"   x, #_"Object" y] (Numbers'xor-2ll                     x , (Numbers'bitOpsCast y)))
+
+    (defn #_"long" Numbers'andNot-2ll [#_"long"   x, #_"long"   y] (& x (bit-not y)))
+    (defn #_"long" Numbers'andNot-2oo [#_"Object" x, #_"Object" y] (Numbers'andNot-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y)))
+    (defn #_"long" Numbers'andNot-2ol [#_"Object" x, #_"long"   y] (Numbers'andNot-2ll (Numbers'bitOpsCast x),                     y ))
+    (defn #_"long" Numbers'andNot-2lo [#_"long"   x, #_"Object" y] (Numbers'andNot-2ll                     x , (Numbers'bitOpsCast y)))
+
+    (defn #_"long" Numbers'clearBit-2ll [#_"long"   x, #_"long"   n] (& x (bit-not (<< 1 n))))
+    (defn #_"long" Numbers'clearBit-2oo [#_"Object" x, #_"Object" n] (Numbers'clearBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'clearBit-2ol [#_"Object" x, #_"long"   n] (Numbers'clearBit-2ll (Numbers'bitOpsCast x),                     n ))
+    (defn #_"long" Numbers'clearBit-2lo [#_"long"   x, #_"Object" n] (Numbers'clearBit-2ll                     x , (Numbers'bitOpsCast n)))
+
+    (defn #_"long" Numbers'setBit-2ll [#_"long"   x, #_"long"   n] (| x (<< 1 n)))
+    (defn #_"long" Numbers'setBit-2oo [#_"Object" x, #_"Object" n] (Numbers'setBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'setBit-2ol [#_"Object" x, #_"long"   n] (Numbers'setBit-2ll (Numbers'bitOpsCast x),                     n ))
+    (defn #_"long" Numbers'setBit-2lo [#_"long"   x, #_"Object" n] (Numbers'setBit-2ll                     x , (Numbers'bitOpsCast n)))
+
+    (defn #_"long" Numbers'flipBit-2ll [#_"long"   x, #_"long"   n] (bit-xor x (<< 1 n)))
+    (defn #_"long" Numbers'flipBit-2oo [#_"Object" x, #_"Object" n] (Numbers'flipBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'flipBit-2ol [#_"Object" x, #_"long"   n] (Numbers'flipBit-2ll (Numbers'bitOpsCast x),                     n ))
+    (defn #_"long" Numbers'flipBit-2lo [#_"long"   x, #_"Object" n] (Numbers'flipBit-2ll                     x , (Numbers'bitOpsCast n)))
+
+    (defn #_"boolean" Numbers'testBit-2ll [#_"long"   x, #_"long"   n] (not= (& x (<< 1 n)) 0))
+    (defn #_"boolean" Numbers'testBit-2oo [#_"Object" x, #_"Object" n] (Numbers'testBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
+    (defn #_"boolean" Numbers'testBit-2ol [#_"Object" x, #_"long"   n] (Numbers'testBit-2ll (Numbers'bitOpsCast x),                     n ))
+    (defn #_"boolean" Numbers'testBit-2lo [#_"long"   x, #_"Object" n] (Numbers'testBit-2ll                     x , (Numbers'bitOpsCast n)))
+
+    (defn #_"Number" Numbers'quotient-2do [#_"double" x, #_"Object" y] (Numbers'quotient-2oo (cast Object x),              y ))
+    (defn #_"Number" Numbers'quotient-2od [#_"Object" x, #_"double" y] (Numbers'quotient-2oo              x , (cast Object y)))
+    (defn #_"Number" Numbers'quotient-2lo [#_"long"   x, #_"Object" y] (Numbers'quotient-2oo (cast Object x),              y ))
+    (defn #_"Number" Numbers'quotient-2ol [#_"Object" x, #_"long"   y] (Numbers'quotient-2oo              x , (cast Object y)))
+    (defn #_"double" Numbers'quotient-2dl [#_"double" x, #_"long"   y] (Numbers'quotient-2dd              x ,      (double y)))
+    (defn #_"double" Numbers'quotient-2ld [#_"long"   x, #_"double" y] (Numbers'quotient-2dd      (double x),              y ))
+
+    (defn #_"Number" Numbers'remainder-2do [#_"double" x, #_"Object" y] (Numbers'remainder-2oo (cast Object x),              y ))
+    (defn #_"Number" Numbers'remainder-2od [#_"Object" x, #_"double" y] (Numbers'remainder-2oo              x , (cast Object y)))
+    (defn #_"Number" Numbers'remainder-2lo [#_"long"   x, #_"Object" y] (Numbers'remainder-2oo (cast Object x),              y ))
+    (defn #_"Number" Numbers'remainder-2ol [#_"Object" x, #_"long"   y] (Numbers'remainder-2oo              x , (cast Object y)))
+    (defn #_"double" Numbers'remainder-2dl [#_"double" x, #_"long"   y] (Numbers'remainder-2dd              x ,      (double y)))
+    (defn #_"double" Numbers'remainder-2ld [#_"long"   x, #_"double" y] (Numbers'remainder-2dd      (double x),              y ))
+
+    (defn #_"int" Numbers'throwIntOverflow []
+        (throw (ArithmeticException. "integer overflow"))
+    )
+
+    (defn #_"long" Numbers'add-2ll [#_"long" x, #_"long" y]
+        (let [#_"long" ret (+ x y)]
+            (when-not (and (neg? (bit-xor ret x)) (neg? (bit-xor ret y))) => (Numbers'throwIntOverflow)
+                ret
+            )
+        )
+    )
+
+    (defn #_"Number" Numbers'addP-2ll [#_"long" x, #_"long" y]
+        (let [#_"long" ret (+ x y)]
+            (if (and (neg? (bit-xor ret x)) (neg? (bit-xor ret y)))
+                (Numbers'addP-2oo (cast Number x), (cast Number y))
+                (Numbers'num-1l ret)
+            )
+        )
+    )
+
+    (defn #_"long" Numbers'minus-2ll [#_"long" x, #_"long" y]
+        (let [#_"long" ret (- x y)]
+            (when-not (and (neg? (bit-xor ret x)) (neg? (bit-xor ret (bit-not y)))) => (Numbers'throwIntOverflow)
+                ret
+            )
+        )
+    )
+
+    (defn #_"Number" Numbers'minusP-2ll [#_"long" x, #_"long" y]
+        (let [#_"long" ret (- x y)]
+            (if (and (neg? (bit-xor ret x)) (neg? (bit-xor ret (bit-not y))))
+                (Numbers'minusP-2oo (cast Number x), (cast Number y))
+                (Numbers'num-1l ret)
+            )
+        )
+    )
+
+    (defn #_"long" Numbers'minus-1l [#_"long" x]
+        (when-not (= x Long/MIN_VALUE) => (Numbers'throwIntOverflow)
+            (- x)
+        )
+    )
+
+    (defn #_"Number" Numbers'minusP-1l [#_"long" x]
+        (if (= x Long/MIN_VALUE)
+            (BigInt'fromBigInteger (.negate (BigInteger/valueOf x)))
+            (Numbers'num-1l (- x))
+        )
+    )
+
+    (defn #_"long" Numbers'inc-1l [#_"long" x] (if (= x Long/MAX_VALUE) (Numbers'throwIntOverflow) (inc x)))
+    (defn #_"long" Numbers'dec-1l [#_"long" x] (if (= x Long/MIN_VALUE) (Numbers'throwIntOverflow) (dec x)))
+
+    (defn #_"Number" Numbers'incP-1l [#_"long" x] (if (= x Long/MAX_VALUE) (.inc Numbers'BIGINT_OPS, x) (Numbers'num-1l (inc x))))
+    (defn #_"Number" Numbers'decP-1l [#_"long" x] (if (= x Long/MIN_VALUE) (.dec Numbers'BIGINT_OPS, x) (Numbers'num-1l (dec x))))
+
+    (defn #_"long" Numbers'multiply-2ll [#_"long" x, #_"long" y]
+        (when-not (and (= x Long/MIN_VALUE) (neg? y)) => (Numbers'throwIntOverflow)
+            (let [#_"long" ret (* x y)]
+                (when (or (zero? y) (= (/ ret y) x)) => (Numbers'throwIntOverflow)
+                    ret
+                )
+            )
+        )
+    )
+
+    (defn #_"Number" Numbers'multiplyP-2ll [#_"long" x, #_"long" y]
+        (when-not (and (= x Long/MIN_VALUE) (neg? y)) => (Numbers'multiplyP-2oo (cast Number x), (cast Number y))
+            (let [#_"long" ret (* x y)]
+                (when (or (zero? y) (= (/ ret y) x)) => (Numbers'multiplyP-2oo (cast Number x), (cast Number y))
+                    (Numbers'num-1l ret)
+                )
+            )
+        )
+    )
+
+    (defn #_"long" Numbers'quotient-2ll  [#_"long" x, #_"long" y] (/ x y))
+    (defn #_"long" Numbers'remainder-2ll [#_"long" x, #_"long" y] (% x y))
+
+    (defn #_"boolean" Numbers'equiv-2ll [#_"long" x, #_"long" y] (= x y))
+    (defn #_"boolean" Numbers'lt-2ll    [#_"long" x, #_"long" y] (< x y))
+    (defn #_"boolean" Numbers'lte-2ll   [#_"long" x, #_"long" y] (<= x y))
+    (defn #_"boolean" Numbers'gt-2ll    [#_"long" x, #_"long" y] (> x y))
+    (defn #_"boolean" Numbers'gte-2ll   [#_"long" x, #_"long" y] (>= x y))
+
+    (defn #_"boolean" Numbers'isPos-1l  [#_"long" x] (> x 0))
+    (defn #_"boolean" Numbers'isNeg-1l  [#_"long" x] (< x 0))
+    (defn #_"boolean" Numbers'isZero-1l [#_"long" x] (zero? x))
+
+    (defn #_"Number" Numbers'add-2lo [#_"long"   x, #_"Object" y] (Numbers'add-2oo (cast Object x), y))
+    (defn #_"Number" Numbers'add-2ol [#_"Object" x, #_"long"   y] (Numbers'add-2oo x, (cast Object y)))
+    (defn #_"double" Numbers'add-2do [#_"double" x, #_"Object" y] (Numbers'add-2dd x, (.doubleValue (cast Number y))))
+    (defn #_"double" Numbers'add-2od [#_"Object" x, #_"double" y] (Numbers'add-2dd (.doubleValue (cast Number x)), y))
+    (defn #_"double" Numbers'add-2dl [#_"double" x, #_"long"   y] (+ x y))
+    (defn #_"double" Numbers'add-2ld [#_"long"   x, #_"double" y] (+ x y))
+
+    (defn #_"Number" Numbers'addP-2lo [#_"long"   x, #_"Object" y] (Numbers'addP-2oo (cast Object x), y))
+    (defn #_"Number" Numbers'addP-2ol [#_"Object" x, #_"long"   y] (Numbers'addP-2oo x, (cast Object y)))
+    (defn #_"double" Numbers'addP-2do [#_"double" x, #_"Object" y] (Numbers'addP-2dd x, (.doubleValue (cast Number y))))
+    (defn #_"double" Numbers'addP-2od [#_"Object" x, #_"double" y] (Numbers'addP-2dd (.doubleValue (cast Number x)), y))
+    (defn #_"double" Numbers'addP-2dl [#_"double" x, #_"long"   y] (+ x y))
+    (defn #_"double" Numbers'addP-2ld [#_"long"   x, #_"double" y] (+ x y))
+
+    (defn #_"Number" Numbers'minus-2lo [#_"long"   x, #_"Object" y] (Numbers'minus-2oo (cast Object x), y))
+    (defn #_"Number" Numbers'minus-2ol [#_"Object" x, #_"long"   y] (Numbers'minus-2oo x, (cast Object y)))
+    (defn #_"double" Numbers'minus-2do [#_"double" x, #_"Object" y] (Numbers'minus-2dd x, (.doubleValue (cast Number y))))
+    (defn #_"double" Numbers'minus-2od [#_"Object" x, #_"double" y] (Numbers'minus-2dd (.doubleValue (cast Number x)), y))
+    (defn #_"double" Numbers'minus-2dl [#_"double" x, #_"long"   y] (- x y))
+    (defn #_"double" Numbers'minus-2ld [#_"long"   x, #_"double" y] (- x y))
+
+    (defn #_"Number" Numbers'minusP-2lo [#_"long"   x, #_"Object" y] (Numbers'minusP-2oo (cast Object x), y))
+    (defn #_"Number" Numbers'minusP-2ol [#_"Object" x, #_"long"   y] (Numbers'minusP-2oo x, (cast Object y)))
+    (defn #_"double" Numbers'minusP-2do [#_"double" x, #_"Object" y] (Numbers'minusP-2dd x, (.doubleValue (cast Number y))))
+    (defn #_"double" Numbers'minusP-2od [#_"Object" x, #_"double" y] (Numbers'minusP-2dd (.doubleValue (cast Number x)), y))
+    (defn #_"double" Numbers'minusP-2dl [#_"double" x, #_"long"   y] (- x y))
+    (defn #_"double" Numbers'minusP-2ld [#_"long"   x, #_"double" y] (- x y))
+
+    (defn #_"Number" Numbers'multiply-2lo [#_"long"   x, #_"Object" y] (Numbers'multiply-2oo (cast Object x), y))
+    (defn #_"Number" Numbers'multiply-2ol [#_"Object" x, #_"long"   y] (Numbers'multiply-2oo x, (cast Object y)))
+    (defn #_"double" Numbers'multiply-2do [#_"double" x, #_"Object" y] (Numbers'multiply-2dd x, (.doubleValue (cast Number y))))
+    (defn #_"double" Numbers'multiply-2od [#_"Object" x, #_"double" y] (Numbers'multiply-2dd (.doubleValue (cast Number x)), y))
+    (defn #_"double" Numbers'multiply-2dl [#_"double" x, #_"long"   y] (* x y))
+    (defn #_"double" Numbers'multiply-2ld [#_"long"   x, #_"double" y] (* x y))
+
+    (defn #_"Number" Numbers'multiplyP-2lo [#_"long"   x, #_"Object" y] (Numbers'multiplyP-2oo (cast Object x), y))
+    (defn #_"Number" Numbers'multiplyP-2ol [#_"Object" x, #_"long"   y] (Numbers'multiplyP-2oo x, (cast Object y)))
+    (defn #_"double" Numbers'multiplyP-2do [#_"double" x, #_"Object" y] (Numbers'multiplyP-2dd x, (.doubleValue (cast Number y))))
+    (defn #_"double" Numbers'multiplyP-2od [#_"Object" x, #_"double" y] (Numbers'multiplyP-2dd (.doubleValue (cast Number x)), y))
+    (defn #_"double" Numbers'multiplyP-2dl [#_"double" x, #_"long"   y] (* x y))
+    (defn #_"double" Numbers'multiplyP-2ld [#_"long"   x, #_"double" y] (* x y))
+
+    (defn #_"Number" Numbers'divide-2lo [#_"long"   x, #_"Object" y] (Numbers'divide-2oo (cast Object x), y))
+    (defn #_"Number" Numbers'divide-2ol [#_"Object" x, #_"long"   y] (Numbers'divide-2oo x, (cast Object y)))
+    (defn #_"double" Numbers'divide-2do [#_"double" x, #_"Object" y] (/ x (.doubleValue (cast Number y))))
+    (defn #_"double" Numbers'divide-2od [#_"Object" x, #_"double" y] (/ (.doubleValue (cast Number x)) y))
+    (defn #_"double" Numbers'divide-2dl [#_"double" x, #_"long"   y] (/ x y))
+    (defn #_"double" Numbers'divide-2ld [#_"long"   x, #_"double" y] (/ x y))
+    (defn #_"Number" Numbers'divide-2ll [#_"long"   x, #_"long"   y] (Numbers'divide-2oo (cast Number x), (cast Number y)))
+
+    (defn #_"boolean" Numbers'lt-2lo [#_"long"   x, #_"Object" y] (Numbers'lt-2oo (cast Object x), y))
+    (defn #_"boolean" Numbers'lt-2ol [#_"Object" x, #_"long"   y] (Numbers'lt-2oo x, (cast Object y)))
+    (defn #_"boolean" Numbers'lt-2do [#_"double" x, #_"Object" y] (< x (.doubleValue (cast Number y))))
+    (defn #_"boolean" Numbers'lt-2od [#_"Object" x, #_"double" y] (< (.doubleValue (cast Number x)) y))
+    (defn #_"boolean" Numbers'lt-2dl [#_"double" x, #_"long"   y] (< x y))
+    (defn #_"boolean" Numbers'lt-2ld [#_"long"   x, #_"double" y] (< x y))
+
+    (defn #_"boolean" Numbers'lte-2lo [#_"long"   x, #_"Object" y] (Numbers'lte-2oo (cast Object x), y))
+    (defn #_"boolean" Numbers'lte-2ol [#_"Object" x, #_"long"   y] (Numbers'lte-2oo x, (cast Object y)))
+    (defn #_"boolean" Numbers'lte-2do [#_"double" x, #_"Object" y] (<= x (.doubleValue (cast Number y))))
+    (defn #_"boolean" Numbers'lte-2od [#_"Object" x, #_"double" y] (<= (.doubleValue (cast Number x)) y))
+    (defn #_"boolean" Numbers'lte-2dl [#_"double" x, #_"long"   y] (<= x y))
+    (defn #_"boolean" Numbers'lte-2ld [#_"long"   x, #_"double" y] (<= x y))
+
+    (defn #_"boolean" Numbers'gt-2lo [#_"long"   x, #_"Object" y] (Numbers'gt-2oo (cast Object x), y))
+    (defn #_"boolean" Numbers'gt-2ol [#_"Object" x, #_"long"   y] (Numbers'gt-2oo x, (cast Object y)))
+    (defn #_"boolean" Numbers'gt-2do [#_"double" x, #_"Object" y] (> x (.doubleValue (cast Number y))))
+    (defn #_"boolean" Numbers'gt-2od [#_"Object" x, #_"double" y] (> (.doubleValue (cast Number x)) y))
+    (defn #_"boolean" Numbers'gt-2dl [#_"double" x, #_"long"   y] (> x y))
+    (defn #_"boolean" Numbers'gt-2ld [#_"long"   x, #_"double" y] (> x y))
+
+    (defn #_"boolean" Numbers'gte-2lo [#_"long"   x, #_"Object" y] (Numbers'gte-2oo (cast Object x), y))
+    (defn #_"boolean" Numbers'gte-2ol [#_"Object" x, #_"long"   y] (Numbers'gte-2oo x, (cast Object y)))
+    (defn #_"boolean" Numbers'gte-2do [#_"double" x, #_"Object" y] (>= x (.doubleValue (cast Number y))))
+    (defn #_"boolean" Numbers'gte-2od [#_"Object" x, #_"double" y] (>= (.doubleValue (cast Number x)) y))
+    (defn #_"boolean" Numbers'gte-2dl [#_"double" x, #_"long"   y] (>= x y))
+    (defn #_"boolean" Numbers'gte-2ld [#_"long"   x, #_"double" y] (>= x y))
+
+    (defn #_"boolean" Numbers'equiv-2lo [#_"long"   x, #_"Object" y] (Numbers'equiv-2oo (cast Object x), y))
+    (defn #_"boolean" Numbers'equiv-2ol [#_"Object" x, #_"long"   y] (Numbers'equiv-2oo x, (cast Object y)))
+    (defn #_"boolean" Numbers'equiv-2do [#_"double" x, #_"Object" y] (= x (.doubleValue (cast Number y))))
+    (defn #_"boolean" Numbers'equiv-2od [#_"Object" x, #_"double" y] (= (.doubleValue (cast Number x)) y))
+    (defn #_"boolean" Numbers'equiv-2dl [#_"double" x, #_"long"   y] (= x y))
+    (defn #_"boolean" Numbers'equiv-2ld [#_"long"   x, #_"double" y] (= x y))
+
+    (defn #_"long" Numbers'max-2ll [#_"long" x, #_"long" y] (if (> x y) x y))
+    (defn #_"long" Numbers'min-2ll [#_"long" x, #_"long" y] (if (< x y) x y))
+
+    (defn #_"double" Numbers'max-2dd [#_"double" x, #_"double" y] (Math/max x, y))
+    (defn #_"double" Numbers'min-2dd [#_"double" x, #_"double" y] (Math/min x, y))
+
+    (defn #_"Object" Numbers'max-2ld [#_"long" x, #_"double" y] (cond (Double/isNaN y) y (> x y) x :else y))
+    (defn #_"Object" Numbers'max-2dl [#_"double" x, #_"long" y] (cond (Double/isNaN x) x (> x y) x :else y))
+    (defn #_"Object" Numbers'min-2ld [#_"long" x, #_"double" y] (cond (Double/isNaN y) y (< x y) x :else y))
+    (defn #_"Object" Numbers'min-2dl [#_"double" x, #_"long" y] (cond (Double/isNaN x) x (< x y) x :else y))
+
+    (defn #_"Object" Numbers'max-2lo [#_"long" x, #_"Object" y] (cond (Numbers'isNaN y) y (Numbers'gt-2lo x, y) x :else y))
+    (defn #_"Object" Numbers'max-2ol [#_"Object" x, #_"long" y] (cond (Numbers'isNaN x) x (Numbers'gt-2ol x, y) x :else y))
+    (defn #_"Object" Numbers'min-2lo [#_"long" x, #_"Object" y] (cond (Numbers'isNaN y) y (Numbers'lt-2lo x, y) x :else y))
+    (defn #_"Object" Numbers'min-2ol [#_"Object" x, #_"long" y] (cond (Numbers'isNaN x) x (Numbers'lt-2ol x, y) x :else y))
+
+    (defn #_"Object" Numbers'max-2do [#_"double" x, #_"Object" y] (cond (Double/isNaN x) x (Numbers'isNaN y) y (> x (.doubleValue (cast Number y))) x :else y))
+    (defn #_"Object" Numbers'max-2od [#_"Object" x, #_"double" y] (cond (Numbers'isNaN x) x (Double/isNaN y) y (> (.doubleValue (cast Number x)) y) x :else y))
+    (defn #_"Object" Numbers'min-2do [#_"double" x, #_"Object" y] (cond (Double/isNaN x) x (Numbers'isNaN y) y (< x (.doubleValue (cast Number y))) x :else y))
+    (defn #_"Object" Numbers'min-2od [#_"Object" x, #_"double" y] (cond (Numbers'isNaN x) x (Double/isNaN y) y (< (.doubleValue (cast Number x)) y) x :else y))
+
+    (defn #_"Object" Numbers'max-2oo [#_"Object" x, #_"Object" y] (cond (Numbers'isNaN x) x (Numbers'isNaN y) y (Numbers'gt-2oo x, y) x :else y))
+    (defn #_"Object" Numbers'min-2oo [#_"Object" x, #_"Object" y] (cond (Numbers'isNaN x) x (Numbers'isNaN y) y (Numbers'lt-2oo x, y) x :else y))
+
+    (defn #_"long" Numbers'unchecked_add-2ll      [#_"long" x, #_"long" y] (+ x y))
+    (defn #_"long" Numbers'unchecked_minus-2ll    [#_"long" x, #_"long" y] (- x y))
+    (defn #_"long" Numbers'unchecked_multiply-2ll [#_"long" x, #_"long" y] (* x y))
+
+    (defn #_"long" Numbers'unchecked_minus-1l [#_"long" x] (- x))
+    (defn #_"long" Numbers'unchecked_inc-1l   [#_"long" x] (inc x))
+    (defn #_"long" Numbers'unchecked_dec-1l   [#_"long" x] (dec x))
+
+    (defn #_"Number" Numbers'unchecked_add-2oo      [#_"Object" x, #_"Object" y] (Numbers'add-2oo      x, y))
+    (defn #_"Number" Numbers'unchecked_minus-2oo    [#_"Object" x, #_"Object" y] (Numbers'minus-2oo    x, y))
+    (defn #_"Number" Numbers'unchecked_multiply-2oo [#_"Object" x, #_"Object" y] (Numbers'multiply-2oo x, y))
+
+    (defn #_"Number" Numbers'unchecked_inc-1o   [#_"Object" x] (Numbers'inc-1o   x))
+    (defn #_"Number" Numbers'unchecked_dec-1o   [#_"Object" x] (Numbers'dec-1o   x))
+    (defn #_"Number" Numbers'unchecked_minus-1o [#_"Object" x] (Numbers'minus-1o x))
+
+    (defn #_"double" Numbers'unchecked_add-2dd      [#_"double" x, #_"double" y] (Numbers'add-2dd      x, y))
+    (defn #_"double" Numbers'unchecked_minus-2dd    [#_"double" x, #_"double" y] (Numbers'minus-2dd    x, y))
+    (defn #_"double" Numbers'unchecked_multiply-2dd [#_"double" x, #_"double" y] (Numbers'multiply-2dd x, y))
+
+    (defn #_"double" Numbers'unchecked_inc-1d   [#_"double" x] (Numbers'inc-1d   x))
+    (defn #_"double" Numbers'unchecked_dec-1d   [#_"double" x] (Numbers'dec-1d   x))
+    (defn #_"double" Numbers'unchecked_minus-1d [#_"double" x] (Numbers'minus-1d x))
+
+    (defn #_"double" Numbers'unchecked_add-2do      [#_"double" x, #_"Object" y] (Numbers'add-2do      x, y))
+    (defn #_"double" Numbers'unchecked_minus-2do    [#_"double" x, #_"Object" y] (Numbers'minus-2do    x, y))
+    (defn #_"double" Numbers'unchecked_multiply-2do [#_"double" x, #_"Object" y] (Numbers'multiply-2do x, y))
+
+    (defn #_"double" Numbers'unchecked_add-2od      [#_"Object" x, #_"double" y] (Numbers'add-2od      x, y))
+    (defn #_"double" Numbers'unchecked_minus-2od    [#_"Object" x, #_"double" y] (Numbers'minus-2od    x, y))
+    (defn #_"double" Numbers'unchecked_multiply-2od [#_"Object" x, #_"double" y] (Numbers'multiply-2od x, y))
+
+    (defn #_"double" Numbers'unchecked_add-2dl      [#_"double" x, #_"long" y] (Numbers'add-2dl      x, y))
+    (defn #_"double" Numbers'unchecked_minus-2dl    [#_"double" x, #_"long" y] (Numbers'minus-2dl    x, y))
+    (defn #_"double" Numbers'unchecked_multiply-2dl [#_"double" x, #_"long" y] (Numbers'multiply-2dl x, y))
+
+    (defn #_"double" Numbers'unchecked_add-2ld      [#_"long" x, #_"double" y] (Numbers'add-2ld      x, y))
+    (defn #_"double" Numbers'unchecked_minus-2ld    [#_"long" x, #_"double" y] (Numbers'minus-2ld    x, y))
+    (defn #_"double" Numbers'unchecked_multiply-2ld [#_"long" x, #_"double" y] (Numbers'multiply-2ld x, y))
+
+    (defn #_"Number" Numbers'unchecked_add-2lo      [#_"long" x, #_"Object" y] (Numbers'add-2lo      x, y))
+    (defn #_"Number" Numbers'unchecked_minus-2lo    [#_"long" x, #_"Object" y] (Numbers'minus-2lo    x, y))
+    (defn #_"Number" Numbers'unchecked_multiply-2lo [#_"long" x, #_"Object" y] (Numbers'multiply-2lo x, y))
+
+    (defn #_"Number" Numbers'unchecked_add-2ol      [#_"Object" x, #_"long" y] (Numbers'add-2ol      x, y))
+    (defn #_"Number" Numbers'unchecked_minus-2ol    [#_"Object" x, #_"long" y] (Numbers'minus-2ol    x, y))
+    (defn #_"Number" Numbers'unchecked_multiply-2ol [#_"Object" x, #_"long" y] (Numbers'multiply-2ol x, y))
+
+    (defn- #_"int" Numbers'hasheqFrom [#_"Number" x, #_"Class" xc]
+        (cond
+            (or (any = xc Integer Short Byte) (and (= xc BigInteger) (Numbers'lte-2ol x, Long/MAX_VALUE) (Numbers'gte-2ol x, Long/MIN_VALUE)))
+                (Murmur3'hashLong (.longValue x))
+            (= xc BigDecimal)
+                ;; stripTrailingZeros() to make all numerically equal BigDecimal values come out the same before calling hashCode.
+                ;; Special check for 0 because stripTrailingZeros() does not do anything to values equal to 0 with different scales.
+                (.hashCode (if (Numbers'isZero-1o x) BigDecimal/ZERO (.stripTrailingZeros (cast BigDecimal x))))
+            (and (= xc Float) (.equals x, (float -0.0)))
+                0 ;; match 0.0f
+            :else
+                (.hashCode x)
+        )
+    )
+
+    (defn #_"int" Numbers'hasheq [#_"Number" x]
+        (let [#_"Class" xc (.getClass x)]
+            (condp = xc
+                Long
+                    (Murmur3'hashLong (.longValue x))
+                Double
+                    (if (.equals x, -0.0)
+                        0 ;; match 0.0
+                        (.hashCode x)
+                    )
+                (Numbers'hasheqFrom x, xc)
+            )
+        )
+    )
+)
 )
 
 (java-ns cloiure.lang.AFn
@@ -8538,204 +10671,6 @@
 )
 )
 
-(java-ns cloiure.lang.BigInt
-
-(class-ns BigInt
-    (defn- #_"BigInt" BigInt'new [#_"long" lpart, #_"BigInteger" bipart]
-        (merge (§ foreign Number'new)
-            (hash-map
-                #_"long" :lpart lpart
-                #_"BigInteger" :bipart bipart
-            )
-        )
-    )
-
-    (def #_"BigInt" BigInt'ZERO (BigInt'new 0, nil))
-    (def #_"BigInt" BigInt'ONE (BigInt'new 1, nil))
-
-    ;; must follow Long
-    #_foreign
-    (defn #_"int" hashCode---BigInt [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (int (bit-xor (:lpart this) (>>> (:lpart this) 32)))
-            (.hashCode (:bipart this))
-        )
-    )
-
-    #_override
-    (defn #_"int" IHashEq'''hasheq--BigInt [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (Murmur3'hashLong (:lpart this))
-            (.hashCode (:bipart this))
-        )
-    )
-
-    #_foreign
-    (defn #_"boolean" equals---BigInt [#_"BigInt" this, #_"Object" obj]
-        (cond
-            (= this obj)
-                true
-            (instance? BigInt obj)
-                (let [#_"BigInt" o (cast BigInt obj)]
-                    (if (nil? (:bipart this))
-                        (and (nil? (:bipart o)) (= (:lpart this) (:lpart o)))
-                        (and (some? (:bipart o)) (.equals (:bipart this), (:bipart o)))
-                    )
-                )
-            :else
-                false
-        )
-    )
-
-    (defn #_"BigInt" BigInt'fromBigInteger [#_"BigInteger" val]
-        (if (< (.bitLength val) 64)
-            (BigInt'new (.longValue val), nil)
-            (BigInt'new 0, val)
-        )
-    )
-
-    (defn #_"BigInt" BigInt'fromLong [#_"long" val]
-        (BigInt'new val, nil)
-    )
-
-    #_method
-    (defn #_"BigInteger" BigInt''toBigInteger [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (BigInteger/valueOf (:lpart this))
-            (:bipart this)
-        )
-    )
-
-    #_method
-    (defn #_"BigDecimal" BigInt''toBigDecimal [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (BigDecimal/valueOf (:lpart this))
-            (BigDecimal. (:bipart this))
-        )
-    )
-
-    #_method
-    (defn #_"int" BigInt''intValue [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (int (:lpart this))
-            (.intValue (:bipart this))
-        )
-    )
-
-    #_method
-    (defn #_"long" BigInt''longValue [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (:lpart this)
-            (.longValue (:bipart this))
-        )
-    )
-
-    #_method
-    (defn #_"float" BigInt''floatValue [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (:lpart this)
-            (.floatValue (:bipart this))
-        )
-    )
-
-    #_method
-    (defn #_"double" BigInt''doubleValue [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (:lpart this)
-            (.doubleValue (:bipart this))
-        )
-    )
-
-    #_method
-    (defn #_"byte" BigInt''byteValue [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (byte (:lpart this))
-            (.byteValue (:bipart this))
-        )
-    )
-
-    #_method
-    (defn #_"short" BigInt''shortValue [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (short (:lpart this))
-            (.shortValue (:bipart this))
-        )
-    )
-
-    (defn #_"BigInt" BigInt'valueOf [#_"long" val]
-        (BigInt'new val, nil)
-    )
-
-    #_foreign
-    (defn #_"String" toString---BigInt [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (String/valueOf (:lpart this))
-            (.toString (:bipart this))
-        )
-    )
-
-    #_method
-    (defn #_"int" BigInt''bitLength [#_"BigInt" this]
-        (.bitLength (BigInt''toBigInteger this))
-    )
-
-    #_method
-    (defn #_"BigInt" BigInt''add [#_"BigInt" this, #_"BigInt" y]
-        (or
-            (when (and (nil? (:bipart this)) (nil? (:bipart y)))
-                (let [#_"long" ret (+ (:lpart this) (:lpart y))]
-                    (when (or (<= 0 (bit-xor ret (:lpart this))) (<= 0 (bit-xor ret (:lpart y))))
-                        (BigInt'valueOf ret)
-                    )
-                )
-            )
-            (BigInt'fromBigInteger (.add (BigInt''toBigInteger this), (BigInt''toBigInteger y)))
-        )
-    )
-
-    #_method
-    (defn #_"BigInt" BigInt''multiply [#_"BigInt" this, #_"BigInt" y]
-        (or
-            (when (and (nil? (:bipart this)) (nil? (:bipart y)))
-                (let [#_"long" ret (* (:lpart this) (:lpart y))]
-                    (when (or (zero? (:lpart y)) (and (= (/ ret (:lpart y)) (:lpart this)) (not= (:lpart this) Long/MIN_VALUE)))
-                        (BigInt'valueOf ret)
-                    )
-                )
-            )
-            (BigInt'fromBigInteger (.multiply (BigInt''toBigInteger this), (BigInt''toBigInteger y)))
-        )
-    )
-
-    #_method
-    (defn #_"BigInt" BigInt''quotient [#_"BigInt" this, #_"BigInt" y]
-        (if (and (nil? (:bipart this)) (nil? (:bipart y)))
-            (if (and (= (:lpart this) Long/MIN_VALUE) (= (:lpart y) -1))
-                (BigInt'fromBigInteger (.negate (BigInt''toBigInteger this)))
-                (BigInt'valueOf (/ (:lpart this) (:lpart y)))
-            )
-            (BigInt'fromBigInteger (.divide (BigInt''toBigInteger this), (BigInt''toBigInteger y)))
-        )
-    )
-
-    #_method
-    (defn #_"BigInt" BigInt''remainder [#_"BigInt" this, #_"BigInt" y]
-        (if (and (nil? (:bipart this)) (nil? (:bipart y)))
-            (BigInt'valueOf (% (:lpart this) (:lpart y)))
-            (BigInt'fromBigInteger (.remainder (BigInt''toBigInteger this), (BigInt''toBigInteger y)))
-        )
-    )
-
-    #_method
-    (defn #_"boolean" BigInt''lt [#_"BigInt" this, #_"BigInt" y]
-        (if (and (nil? (:bipart this)) (nil? (:bipart y)))
-            (< (:lpart this) (:lpart y))
-            (neg? (.compareTo (BigInt''toBigInteger this), (BigInt''toBigInteger y)))
-        )
-    )
-)
-)
-
 (java-ns cloiure.lang.Binding
 
 (class-ns Binding
@@ -10171,7 +12106,7 @@
 )
 
 (class-ns ConstantParser
-    (§ def #_"Keyword" ConstantParser'formKey (Keyword'intern (Symbol'intern "form")))
+    (def #_"Keyword" ConstantParser'formKey (Keyword'intern (Symbol'intern "form")))
 
     (defn #_"IParser" ConstantParser'new []
         (reify IParser
@@ -11552,8 +13487,8 @@
 )
 
 (class-ns InvokeExpr
-    (§ def #_"Keyword" InvokeExpr'onKey (Keyword'intern (Symbol'intern "on")))
-    (§ def #_"Keyword" InvokeExpr'methodMapKey (Keyword'intern (Symbol'intern "method-map")))
+    (def #_"Keyword" InvokeExpr'onKey (Keyword'intern (Symbol'intern "on")))
+    (def #_"Keyword" InvokeExpr'methodMapKey (Keyword'intern (Symbol'intern "method-map")))
 
     (defn #_"InvokeExpr" InvokeExpr'new [#_"int" line, #_"int" column, #_"Symbol" tag, #_"Expr" fexpr, #_"IPersistentVector" args, #_"boolean" tailPosition]
         (let [this
@@ -14519,7 +16454,7 @@
 )
 
 (class-ns NewInstanceMethod
-    (§ def #_"Symbol" NewInstanceMethod'dummyThis (Symbol'intern nil, "dummy_this_dlskjsdfower"))
+    (def #_"Symbol" NewInstanceMethod'dummyThis (Symbol'intern nil, "dummy_this_dlskjsdfower"))
 
     (defn #_"NewInstanceMethod" NewInstanceMethod'new [#_"ObjExpr" objx, #_"ObjMethod" parent]
         (merge (ObjMethod'new objx, parent)
@@ -14860,11 +16795,11 @@
     (def #_"Method" CaseExpr'hashMethod (Method/getMethod "int hash(Object)"))
     (def #_"Method" CaseExpr'hashCodeMethod (Method/getMethod "int hashCode()"))
     (def #_"Method" CaseExpr'equivMethod (Method/getMethod "boolean equiv(Object, Object)"))
-    (§ def #_"Keyword" CaseExpr'compactKey (Keyword'intern (Symbol'intern nil, "compact")))
-    (§ def #_"Keyword" CaseExpr'sparseKey (Keyword'intern (Symbol'intern nil, "sparse")))
-    (§ def #_"Keyword" CaseExpr'hashIdentityKey (Keyword'intern (Symbol'intern nil, "hash-identity")))
-    (§ def #_"Keyword" CaseExpr'hashEquivKey (Keyword'intern (Symbol'intern nil, "hash-equiv")))
-    (§ def #_"Keyword" CaseExpr'intKey (Keyword'intern (Symbol'intern nil, "int")))
+    (def #_"Keyword" CaseExpr'compactKey (Keyword'intern (Symbol'intern nil, "compact")))
+    (def #_"Keyword" CaseExpr'sparseKey (Keyword'intern (Symbol'intern nil, "sparse")))
+    (def #_"Keyword" CaseExpr'hashIdentityKey (Keyword'intern (Symbol'intern nil, "hash-identity")))
+    (def #_"Keyword" CaseExpr'hashEquivKey (Keyword'intern (Symbol'intern nil, "hash-equiv")))
+    (def #_"Keyword" CaseExpr'intKey (Keyword'intern (Symbol'intern nil, "int")))
 
     ;; (case* expr shift mask default map<minhash, [test then]> table-type test-type skip-check?)
     (defn #_"CaseExpr" CaseExpr'new [#_"int" line, #_"int" column, #_"LocalBindingExpr" expr, #_"int" shift, #_"int" mask, #_"int" low, #_"int" high, #_"Expr" defaultExpr, #_"SortedMap<Integer, Expr>" tests, #_"HashMap<Integer, Expr>" thens, #_"Keyword" switchType, #_"Keyword" testType, #_"Set<Integer>" skipCheck]
@@ -15088,56 +17023,56 @@
 )
 
 (class-ns Compiler
-    (§ def #_"Symbol" Compiler'DEF (Symbol'intern "def"))
-    (§ def #_"Symbol" Compiler'LOOP (Symbol'intern "loop*"))
-    (§ def #_"Symbol" Compiler'RECUR (Symbol'intern "recur"))
-    (§ def #_"Symbol" Compiler'IF (Symbol'intern "if"))
-    (§ def #_"Symbol" Compiler'LET (Symbol'intern "let*"))
-    (§ def #_"Symbol" Compiler'LETFN (Symbol'intern "letfn*"))
-    (§ def #_"Symbol" Compiler'DO (Symbol'intern "do"))
-    (§ def #_"Symbol" Compiler'FN (Symbol'intern "fn*"))
+    (def #_"Symbol" Compiler'DEF (Symbol'intern "def"))
+    (def #_"Symbol" Compiler'LOOP (Symbol'intern "loop*"))
+    (def #_"Symbol" Compiler'RECUR (Symbol'intern "recur"))
+    (def #_"Symbol" Compiler'IF (Symbol'intern "if"))
+    (def #_"Symbol" Compiler'LET (Symbol'intern "let*"))
+    (def #_"Symbol" Compiler'LETFN (Symbol'intern "letfn*"))
+    (def #_"Symbol" Compiler'DO (Symbol'intern "do"))
+    (def #_"Symbol" Compiler'FN (Symbol'intern "fn*"))
     (§ def #_"Symbol" Compiler'FNONCE (cast Symbol (.withMeta (Symbol'intern "fn*"), (RT'map (Keyword'intern (Symbol'intern nil, "once")), RT'T))))
-    (§ def #_"Symbol" Compiler'QUOTE (Symbol'intern "quote"))
-    (§ def #_"Symbol" Compiler'THE_VAR (Symbol'intern "var"))
-    (§ def #_"Symbol" Compiler'DOT (Symbol'intern "."))
-    (§ def #_"Symbol" Compiler'ASSIGN (Symbol'intern "set!"))
-    (§ def #_"Symbol" Compiler'TRY (Symbol'intern "try"))
-    (§ def #_"Symbol" Compiler'CATCH (Symbol'intern "catch"))
-    (§ def #_"Symbol" Compiler'FINALLY (Symbol'intern "finally"))
-    (§ def #_"Symbol" Compiler'THROW (Symbol'intern "throw"))
-    (§ def #_"Symbol" Compiler'MONITOR_ENTER (Symbol'intern "monitor-enter"))
-    (§ def #_"Symbol" Compiler'MONITOR_EXIT (Symbol'intern "monitor-exit"))
-    (§ def #_"Symbol" Compiler'IMPORT (Symbol'intern "cloiure.core", "import*"))
-    (§ def #_"Symbol" Compiler'DEFTYPE (Symbol'intern "deftype*"))
-    (§ def #_"Symbol" Compiler'CASE (Symbol'intern "case*"))
+    (def #_"Symbol" Compiler'QUOTE (Symbol'intern "quote"))
+    (def #_"Symbol" Compiler'THE_VAR (Symbol'intern "var"))
+    (def #_"Symbol" Compiler'DOT (Symbol'intern "."))
+    (def #_"Symbol" Compiler'ASSIGN (Symbol'intern "set!"))
+    (def #_"Symbol" Compiler'TRY (Symbol'intern "try"))
+    (def #_"Symbol" Compiler'CATCH (Symbol'intern "catch"))
+    (def #_"Symbol" Compiler'FINALLY (Symbol'intern "finally"))
+    (def #_"Symbol" Compiler'THROW (Symbol'intern "throw"))
+    (def #_"Symbol" Compiler'MONITOR_ENTER (Symbol'intern "monitor-enter"))
+    (def #_"Symbol" Compiler'MONITOR_EXIT (Symbol'intern "monitor-exit"))
+    (def #_"Symbol" Compiler'IMPORT (Symbol'intern "cloiure.core", "import*"))
+    (def #_"Symbol" Compiler'DEFTYPE (Symbol'intern "deftype*"))
+    (def #_"Symbol" Compiler'CASE (Symbol'intern "case*"))
 
-    (§ def #_"Symbol" Compiler'CLASS (Symbol'intern "Class"))
-    (§ def #_"Symbol" Compiler'NEW (Symbol'intern "new"))
-    (§ def #_"Symbol" Compiler'THIS (Symbol'intern "this"))
-    (§ def #_"Symbol" Compiler'REIFY (Symbol'intern "reify*"))
-    (§ def #_"Symbol" Compiler'LIST (Symbol'intern "cloiure.core", "list"))
-    (§ def #_"Symbol" Compiler'HASHMAP (Symbol'intern "cloiure.core", "hash-map"))
-    (§ def #_"Symbol" Compiler'VECTOR (Symbol'intern "cloiure.core", "vector"))
-    (§ def #_"Symbol" Compiler'IDENTITY (Symbol'intern "cloiure.core", "identity"))
+    (def #_"Symbol" Compiler'CLASS (Symbol'intern "Class"))
+    (def #_"Symbol" Compiler'NEW (Symbol'intern "new"))
+    (def #_"Symbol" Compiler'THIS (Symbol'intern "this"))
+    (def #_"Symbol" Compiler'REIFY (Symbol'intern "reify*"))
+    (def #_"Symbol" Compiler'LIST (Symbol'intern "cloiure.core", "list"))
+    (def #_"Symbol" Compiler'HASHMAP (Symbol'intern "cloiure.core", "hash-map"))
+    (def #_"Symbol" Compiler'VECTOR (Symbol'intern "cloiure.core", "vector"))
+    (def #_"Symbol" Compiler'IDENTITY (Symbol'intern "cloiure.core", "identity"))
 
-    (§ def #_"Symbol" Compiler'_AMP_ (Symbol'intern "&"))
-    (§ def #_"Symbol" Compiler'ISEQ (Symbol'intern "cloiure.lang.ISeq"))
+    (def #_"Symbol" Compiler'_AMP_ (Symbol'intern "&"))
+    (def #_"Symbol" Compiler'ISEQ (Symbol'intern "cloiure.lang.ISeq"))
 
-    (§ def #_"Keyword" Compiler'loadNs (Keyword'intern (Symbol'intern nil, "load-ns")))
-    (§ def #_"Keyword" Compiler'inlineKey (Keyword'intern (Symbol'intern nil, "inline")))
-    (§ def #_"Keyword" Compiler'inlineAritiesKey (Keyword'intern (Symbol'intern nil, "inline-arities")))
+    (def #_"Keyword" Compiler'loadNs (Keyword'intern (Symbol'intern nil, "load-ns")))
+    (def #_"Keyword" Compiler'inlineKey (Keyword'intern (Symbol'intern nil, "inline")))
+    (def #_"Keyword" Compiler'inlineAritiesKey (Keyword'intern (Symbol'intern nil, "inline-arities")))
 
-    (§ def #_"Keyword" Compiler'volatileKey (Keyword'intern (Symbol'intern nil, "volatile")))
-    (§ def #_"Keyword" Compiler'implementsKey (Keyword'intern (Symbol'intern nil, "implements")))
+    (def #_"Keyword" Compiler'volatileKey (Keyword'intern (Symbol'intern nil, "volatile")))
+    (def #_"Keyword" Compiler'implementsKey (Keyword'intern (Symbol'intern nil, "implements")))
     (def #_"String" Compiler'COMPILE_STUB_PREFIX "compile__stub")
 
-    (§ def #_"Keyword" Compiler'protocolKey (Keyword'intern (Symbol'intern nil, "protocol")))
-    (§ def #_"Keyword" Compiler'onKey (Keyword'intern (Symbol'intern nil, "on")))
-    (§ def #_"Keyword" Compiler'dynamicKey (Keyword'intern (Symbol'intern "dynamic")))
-    (§ def #_"Keyword" Compiler'redefKey (Keyword'intern (Symbol'intern nil, "redef")))
+    (def #_"Keyword" Compiler'protocolKey (Keyword'intern (Symbol'intern nil, "protocol")))
+    (def #_"Keyword" Compiler'onKey (Keyword'intern (Symbol'intern nil, "on")))
+    (def #_"Keyword" Compiler'dynamicKey (Keyword'intern (Symbol'intern "dynamic")))
+    (def #_"Keyword" Compiler'redefKey (Keyword'intern (Symbol'intern nil, "redef")))
 
-    (§ def #_"Symbol" Compiler'NS (Symbol'intern "ns"))
-    (§ def #_"Symbol" Compiler'IN_NS (Symbol'intern "in-ns"))
+    (def #_"Symbol" Compiler'NS (Symbol'intern "ns"))
+    (def #_"Symbol" Compiler'IN_NS (Symbol'intern "in-ns"))
 
     (§ def #_"IPersistentMap" Compiler'specials (PersistentHashMap'create-1a
         (object-array [
@@ -15712,7 +17647,7 @@
                                             ;; (s.substring ...) => (. s substring ...)
                                             ;; (package.class.name ...) => (. package.class name ...)
                                             ;; (StringBuilder. ...) => (new StringBuilder ...)
-                                            (let-when [#_"int" i (.lastIndexOf sname, \.)] (= i (dec (.length sname))) => x
+                                            (let-when [#_"int" i (.lastIndexOf sname, (int \.))] (= i (dec (.length sname))) => x
                                                 (RT'listStar-3 Compiler'NEW, (Symbol'intern (.substring sname, 0, i)), (.next form))
                                             )
                                     )
@@ -17494,21 +19429,21 @@
 )
 
 (class-ns LispReader
-    (§ def #_"Symbol" LispReader'QUOTE (Symbol'intern "quote"))
-    (§ def #_"Symbol" LispReader'THE_VAR (Symbol'intern "var"))
+    (def #_"Symbol" LispReader'QUOTE (Symbol'intern "quote"))
+    (def #_"Symbol" LispReader'THE_VAR (Symbol'intern "var"))
 
-    (§ def #_"Symbol" LispReader'UNQUOTE (Symbol'intern "cloiure.core", "unquote"))
-    (§ def #_"Symbol" LispReader'UNQUOTE_SPLICING (Symbol'intern "cloiure.core", "unquote-splicing"))
-    (§ def #_"Symbol" LispReader'CONCAT (Symbol'intern "cloiure.core", "concat"))
-    (§ def #_"Symbol" LispReader'SEQ (Symbol'intern "cloiure.core", "seq"))
-    (§ def #_"Symbol" LispReader'LIST (Symbol'intern "cloiure.core", "list"))
-    (§ def #_"Symbol" LispReader'APPLY (Symbol'intern "cloiure.core", "apply"))
-    (§ def #_"Symbol" LispReader'HASHMAP (Symbol'intern "cloiure.core", "hash-map"))
-    (§ def #_"Symbol" LispReader'HASHSET (Symbol'intern "cloiure.core", "hash-set"))
-    (§ def #_"Symbol" LispReader'VECTOR (Symbol'intern "cloiure.core", "vector"))
-    (§ def #_"Symbol" LispReader'WITH_META (Symbol'intern "cloiure.core", "with-meta"))
-    (§ def #_"Symbol" LispReader'META (Symbol'intern "cloiure.core", "meta"))
-    (§ def #_"Symbol" LispReader'DEREF (Symbol'intern "cloiure.core", "deref"))
+    (def #_"Symbol" LispReader'UNQUOTE (Symbol'intern "cloiure.core", "unquote"))
+    (def #_"Symbol" LispReader'UNQUOTE_SPLICING (Symbol'intern "cloiure.core", "unquote-splicing"))
+    (def #_"Symbol" LispReader'CONCAT (Symbol'intern "cloiure.core", "concat"))
+    (def #_"Symbol" LispReader'SEQ (Symbol'intern "cloiure.core", "seq"))
+    (def #_"Symbol" LispReader'LIST (Symbol'intern "cloiure.core", "list"))
+    (def #_"Symbol" LispReader'APPLY (Symbol'intern "cloiure.core", "apply"))
+    (def #_"Symbol" LispReader'HASHMAP (Symbol'intern "cloiure.core", "hash-map"))
+    (def #_"Symbol" LispReader'HASHSET (Symbol'intern "cloiure.core", "hash-set"))
+    (def #_"Symbol" LispReader'VECTOR (Symbol'intern "cloiure.core", "vector"))
+    (def #_"Symbol" LispReader'WITH_META (Symbol'intern "cloiure.core", "with-meta"))
+    (def #_"Symbol" LispReader'META (Symbol'intern "cloiure.core", "meta"))
+    (def #_"Symbol" LispReader'DEREF (Symbol'intern "cloiure.core", "deref"))
 
     (def #_"IFn[]" LispReader'macros (make-array #_"IFn" Object 256))
     (def #_"IFn[]" LispReader'dispatchMacros (make-array #_"IFn" Object 256))
@@ -17568,10 +19503,10 @@
     )
 
     ;; Reader opts
-    (§ def #_"Keyword" LispReader'OPT_EOF (Keyword'intern (Symbol'intern nil, "eof")))
+    (def #_"Keyword" LispReader'OPT_EOF (Keyword'intern (Symbol'intern nil, "eof")))
 
     ;; EOF special value to throw on eof
-    (§ def #_"Keyword" LispReader'EOFTHROW (Keyword'intern (Symbol'intern nil, "eofthrow")))
+    (def #_"Keyword" LispReader'EOFTHROW (Keyword'intern (Symbol'intern nil, "eofthrow")))
 
     (defn #_"Object" LispReader'read-1 [#_"PushbackReader" r]
         (LispReader'read-4 r, true, nil, false)
@@ -18556,103 +20491,6 @@
 )
 )
 
-(java-ns cloiure.lang.Murmur3
-
-;;;
- ; See http://smhasher.googlecode.com/svn/trunk/MurmurHash3.cpp
- ; MurmurHash3_x86_32
- ;
- ; @author Austin Appleby
- ; @author Dimitris Andreou
- ; @author Kurt Alfred Kluever
- ;;
-(class-ns Murmur3
-    (def- #_"int" Murmur3'seed 0)
-    (def- #_"int" Murmur3'C1 0xcc9e2d51)
-    (def- #_"int" Murmur3'C2 0x1b873593)
-
-    (defn #_"int" Murmur3'hashInt [#_"int" input]
-        (when-not (zero? input) => 0
-            (let [#_"int" k1 (Murmur3'mixK1 input)
-                  #_"int" h1 (Murmur3'mixH1 Murmur3'seed, k1)]
-                (Murmur3'fmix h1, 4)
-            )
-        )
-    )
-
-    (defn #_"int" Murmur3'hashLong [#_"long" input]
-        (when-not (zero? input) => 0
-            (let [#_"int" low (int input)
-                  #_"int" high (int (>>> input 32))
-                  #_"int" k1 (Murmur3'mixK1 low)
-                  #_"int" h1 (Murmur3'mixH1 Murmur3'seed, k1)
-                  k1 (Murmur3'mixK1 high)
-                  h1 (Murmur3'mixH1 h1, k1)]
-                (Murmur3'fmix h1, 8)
-            )
-        )
-    )
-
-    (defn #_"int" Murmur3'hashUnencodedChars [#_"CharSequence" input]
-        (let [#_"int" h1 ;; step through the input 2 chars at a time
-                (loop-when [h1 Murmur3'seed #_"int" i 1] (< i (.length input)) => h1
-                    (let [#_"int" k1 (| (.charAt input, (dec i)) (<< (.charAt input, i) 16))]
-                        (recur (Murmur3'mixH1 h1, (Murmur3'mixK1 k1)) (+ i 2))
-                    )
-                )
-              h1 ;; deal with any remaining characters
-                (when (= (& (.length input) 1) 1) => h1
-                    (let [#_"int" k1 (.charAt input, (dec (.length input)))]
-                        (bit-xor h1 (Murmur3'mixK1 k1))
-                    )
-                )]
-            (Murmur3'fmix h1, (* 2 (.length input)))
-        )
-    )
-
-    (defn #_"int" Murmur3'mixCollHash [#_"int" hash, #_"int" n]
-        (Murmur3'fmix (Murmur3'mixH1 Murmur3'seed, (Murmur3'mixK1 hash)), n)
-    )
-
-    (defn #_"int" Murmur3'hashOrdered [#_"Iterable" xs]
-        (let [#_"Iterator" it (.iterator xs)]
-            (loop-when-recur [#_"int" hash 1 #_"int" n 0]
-                             (.hasNext it)
-                             [(+ (* 31 hash) (Util'hasheq (.next it))) (inc n)]
-                          => (Murmur3'mixCollHash hash, n)
-            )
-        )
-    )
-
-    (defn #_"int" Murmur3'hashUnordered [#_"Iterable" xs]
-        (let [#_"Iterator" it (.iterator xs)]
-            (loop-when-recur [#_"int" hash 0 #_"int" n 0]
-                             (.hasNext it)
-                             [(+ hash (Util'hasheq (.next it))) (inc n)]
-                          => (Murmur3'mixCollHash hash, n)
-            )
-        )
-    )
-
-    (defn- #_"int" Murmur3'mixK1 [#_"int" k1]
-        (-> k1 (* Murmur3'C1) (Integer/rotateLeft 15) (* Murmur3'C2))
-    )
-
-    (defn- #_"int" Murmur3'mixH1 [#_"int" h1, #_"int" k1]
-        (-> h1 (bit-xor k1) (Integer/rotateLeft 13) (* 5) (+ 0xe6546b64))
-    )
-
-    ;; finalization mix - force all bits of a hash block to avalanche
-    (defn- #_"int" Murmur3'fmix [#_"int" h1, #_"int" n]
-        (let [h1 (bit-xor h1 n)    h1 (bit-xor h1 (>>> h1 16))
-              h1 (* h1 0x85ebca6b) h1 (bit-xor h1 (>>> h1 13))
-              h1 (* h1 0xc2b2ae35) h1 (bit-xor h1 (>>> h1 16))]
-            h1
-        )
-    )
-)
-)
-
 (java-ns cloiure.lang.Namespace
 
 (class-ns Namespace
@@ -18808,7 +20646,7 @@
     #_method
     (defn #_"Class" Namespace''importClass-2 [#_"Namespace" this, #_"Class" cls]
         (let [#_"String" s (.getName cls)]
-            (Namespace''importClass-3 this, (Symbol'intern (.substring s, (inc (.lastIndexOf s, \.)))), cls)
+            (Namespace''importClass-3 this, (Symbol'intern (.substring s, (inc (.lastIndexOf s, (int \.))))), cls)
         )
     )
 
@@ -18882,2321 +20720,6 @@
             (.compareAndSet (:aliases this), m, (.without m, alias))
         )
         nil
-    )
-)
-)
-
-(java-ns cloiure.lang.Numbers
-
-(class-ns OpsP
-    (defn #_"OpsP" OpsP'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Number" Ops'''addP--OpsP [#_"OpsP" this, #_"Number" x, #_"Number" y]
-        (.add this, x, y)
-    )
-
-    #_override
-    (defn #_"Number" Ops'''multiplyP--OpsP [#_"OpsP" this, #_"Number" x, #_"Number" y]
-        (.multiply this, x, y)
-    )
-
-    #_override
-    (defn #_"Number" Ops'''negateP--OpsP [#_"OpsP" this, #_"Number" x]
-        (.negate this, x)
-    )
-
-    #_override
-    (defn #_"Number" Ops'''incP--OpsP [#_"OpsP" this, #_"Number" x]
-        (.inc this, x)
-    )
-
-    #_override
-    (defn #_"Number" Ops'''decP--OpsP [#_"OpsP" this, #_"Number" x]
-        (.dec this, x)
-    )
-)
-
-(class-ns LongOps
-    (defn #_"LongOps" LongOps'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''combine--LongOps [#_"LongOps" this, #_"Ops" y]
-        (.opsWithLong y, this)
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithLong--LongOps [#_"LongOps" this, #_"LongOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithDouble--LongOps [#_"LongOps" this, #_"DoubleOps" x]
-        Numbers'DOUBLE_OPS
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithRatio--LongOps [#_"LongOps" this, #_"RatioOps" x]
-        Numbers'RATIO_OPS
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigInt--LongOps [#_"LongOps" this, #_"BigIntOps" x]
-        Numbers'BIGINT_OPS
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigDecimal--LongOps [#_"LongOps" this, #_"BigDecimalOps" x]
-        Numbers'BIGDECIMAL_OPS
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isZero--LongOps [#_"LongOps" this, #_"Number" x]
-        (zero? (.longValue x))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isPos--LongOps [#_"LongOps" this, #_"Number" x]
-        (pos? (.longValue x))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isNeg--LongOps [#_"LongOps" this, #_"Number" x]
-        (neg? (.longValue x))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''add--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (Numbers'num-1l (Numbers'add-2ll (.longValue x), (.longValue y)))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''addP--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y) #_"long" lz (+ lx ly)]
-            (if (and (neg? (bit-xor lz lx)) (neg? (bit-xor lz ly)))
-                (.add Numbers'BIGINT_OPS, x, y)
-                (Numbers'num-1l lz)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''multiply--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (Numbers'num-1l (Numbers'multiply-2ll (.longValue x), (.longValue y)))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''multiplyP--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
-            (if (and (= lx Long/MIN_VALUE) (neg? ly))
-                (.multiply Numbers'BIGINT_OPS, x, y)
-                (let [#_"long" lz (* lx ly)]
-                    (if (and (not= ly 0) (not= (/ lz ly) lx))
-                        (.multiply Numbers'BIGINT_OPS, x, y)
-                        (Numbers'num-1l lz)
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"long" LongOps'gcd [#_"long" u, #_"long" v] (if (zero? v) u (recur v (% u v))))
-
-    #_override
-    (defn #_"Number" Ops'''divide--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
-            (let-when-not [#_"long" gcd (LongOps'gcd lx, ly)] (zero? gcd) => (Numbers'num-1l 0)
-                (let-when-not [lx (/ lx gcd) ly (/ ly gcd)] (= ly 1) => (Numbers'num-1l lx)
-                    (let [[lx ly]
-                            (when (neg? ly) => [lx ly]
-                                [(- lx) (- ly)]
-                            )]
-                        (Ratio'new (BigInteger/valueOf lx), (BigInteger/valueOf ly))
-                    )
-                )
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''quotient--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (Numbers'num-1l (/ (.longValue x) (.longValue y)))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''remainder--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (Numbers'num-1l (% (.longValue x) (.longValue y)))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''equiv--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (= (.longValue x) (.longValue y))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''lt--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (< (.longValue x) (.longValue y))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''lte--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (<= (.longValue x) (.longValue y))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''gte--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (>= (.longValue x) (.longValue y))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''negate--LongOps [#_"LongOps" this, #_"Number" x]
-        (let [#_"long" val (.longValue x)]
-            (Numbers'num-1l (Numbers'minus-1l val))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''negateP--LongOps [#_"LongOps" this, #_"Number" x]
-        (let [#_"long" val (.longValue x)]
-            (if (< Long/MIN_VALUE val)
-                (Numbers'num-1l (- val))
-                (BigInt'fromBigInteger (.negate (BigInteger/valueOf val)))
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''inc--LongOps [#_"LongOps" this, #_"Number" x]
-        (let [#_"long" val (.longValue x)]
-            (Numbers'num-1l (Numbers'inc-1l val))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''incP--LongOps [#_"LongOps" this, #_"Number" x]
-        (let [#_"long" val (.longValue x)]
-            (if (< val Long/MAX_VALUE)
-                (Numbers'num-1l (inc val))
-                (.inc Numbers'BIGINT_OPS, x)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''dec--LongOps [#_"LongOps" this, #_"Number" x]
-        (let [#_"long" val (.longValue x)]
-            (Numbers'num-1l (Numbers'dec-1l val))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''decP--LongOps [#_"LongOps" this, #_"Number" x]
-        (let [#_"long" val (.longValue x)]
-            (if (< Long/MIN_VALUE val)
-                (Numbers'num-1l (dec val))
-                (.dec Numbers'BIGINT_OPS, x)
-            )
-        )
-    )
-)
-
-(class-ns DoubleOps
-    (defn #_"DoubleOps" DoubleOps'new []
-        (OpsP'new)
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''combine--DoubleOps [#_"DoubleOps" this, #_"Ops" y]
-        (.opsWithDouble y, this)
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithLong--DoubleOps [#_"DoubleOps" this, #_"LongOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithDouble--DoubleOps [#_"DoubleOps" this, #_"DoubleOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithRatio--DoubleOps [#_"DoubleOps" this, #_"RatioOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigInt--DoubleOps [#_"DoubleOps" this, #_"BigIntOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigDecimal--DoubleOps [#_"DoubleOps" this, #_"BigDecimalOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isZero--DoubleOps [#_"DoubleOps" this, #_"Number" x]
-        (zero? (.doubleValue x))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isPos--DoubleOps [#_"DoubleOps" this, #_"Number" x]
-        (pos? (.doubleValue x))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isNeg--DoubleOps [#_"DoubleOps" this, #_"Number" x]
-        (neg? (.doubleValue x))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''add--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (Double/valueOf (+ (.doubleValue x) (.doubleValue y)))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''multiply--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (Double/valueOf (* (.doubleValue x) (.doubleValue y)))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''divide--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (Double/valueOf (/ (.doubleValue x) (.doubleValue y)))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''quotient--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (Numbers'quotient-2dd (.doubleValue x), (.doubleValue y))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''remainder--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (Numbers'remainder-2dd (.doubleValue x), (.doubleValue y))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''equiv--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (= (.doubleValue x) (.doubleValue y))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''lt--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (< (.doubleValue x) (.doubleValue y))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''lte--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (<= (.doubleValue x) (.doubleValue y))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''gte--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (>= (.doubleValue x) (.doubleValue y))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''negate--DoubleOps [#_"DoubleOps" this, #_"Number" x]
-        (Double/valueOf (- (.doubleValue x)))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''inc--DoubleOps [#_"DoubleOps" this, #_"Number" x]
-        (Double/valueOf (inc (.doubleValue x)))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''dec--DoubleOps [#_"DoubleOps" this, #_"Number" x]
-        (Double/valueOf (dec (.doubleValue x)))
-    )
-)
-
-(class-ns RatioOps
-    (defn #_"RatioOps" RatioOps'new []
-        (OpsP'new)
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''combine--RatioOps [#_"RatioOps" this, #_"Ops" y]
-        (.opsWithRatio y, this)
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithLong--RatioOps [#_"RatioOps" this, #_"LongOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithDouble--RatioOps [#_"RatioOps" this, #_"DoubleOps" x]
-        Numbers'DOUBLE_OPS
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithRatio--RatioOps [#_"RatioOps" this, #_"RatioOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigInt--RatioOps [#_"RatioOps" this, #_"BigIntOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigDecimal--RatioOps [#_"RatioOps" this, #_"BigDecimalOps" x]
-        Numbers'BIGDECIMAL_OPS
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isZero--RatioOps [#_"RatioOps" this, #_"Number" x]
-        (zero? (.signum (:numerator (cast Ratio x))))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isPos--RatioOps [#_"RatioOps" this, #_"Number" x]
-        (pos? (.signum (:numerator (cast Ratio x))))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isNeg--RatioOps [#_"RatioOps" this, #_"Number" x]
-        (neg? (.signum (:numerator (cast Ratio x))))
-    )
-
-    (defn #_"Number" RatioOps'normalizeRet [#_"Number" ret, #_"Number" x, #_"Number" y]
-        ret
-    )
-
-    #_override
-    (defn #_"Number" Ops'''add--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
-              #_"Number" ret (.divide this, (.add (.multiply (:numerator ry), (:denominator rx)), (.multiply (:numerator rx), (:denominator ry))), (.multiply (:denominator ry), (:denominator rx)))]
-            (RatioOps'normalizeRet ret, x, y)
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''multiply--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
-              #_"Number" ret (.divide this, (.multiply (:numerator ry), (:numerator rx)), (.multiply (:denominator ry), (:denominator rx)))]
-            (RatioOps'normalizeRet ret, x, y)
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''divide--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
-              #_"Number" ret (.divide this, (.multiply (:denominator ry), (:numerator rx)), (.multiply (:numerator ry), (:denominator rx)))]
-            (RatioOps'normalizeRet ret, x, y)
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''quotient--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
-              #_"BigInteger" q (.divide (.multiply (:numerator rx), (:denominator ry)), (.multiply (:denominator rx), (:numerator ry)))]
-            (RatioOps'normalizeRet (BigInt'fromBigInteger q), x, y)
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''remainder--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
-              #_"BigInteger" q (.divide (.multiply (:numerator rx), (:denominator ry)), (.multiply (:denominator rx), (:numerator ry)))
-              #_"Number" ret (Numbers'minus-2oo x, (Numbers'multiply-2oo q, y))]
-            (RatioOps'normalizeRet ret, x, y)
-        )
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''equiv--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-            (and (.equals (:numerator rx), (:numerator ry)) (.equals (:denominator rx), (:denominator ry)))
-        )
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''lt--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-            (Numbers'lt-2oo (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
-        )
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''lte--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-            (Numbers'lte-2oo (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
-        )
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''gte--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-            (Numbers'gte-2oo (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''negate--RatioOps [#_"RatioOps" this, #_"Number" x]
-        (let [#_"Ratio" r (cast Ratio x)]
-            (Ratio'new (.negate (:numerator r)), (:denominator r))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''inc--RatioOps [#_"RatioOps" this, #_"Number" x]
-        (Numbers'add-2ol x, 1)
-    )
-
-    #_override
-    (defn #_"Number" Ops'''dec--RatioOps [#_"RatioOps" this, #_"Number" x]
-        (Numbers'add-2ol x, -1)
-    )
-)
-
-(class-ns BigIntOps
-    (defn #_"BigIntOps" BigIntOps'new []
-        (OpsP'new)
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''combine--BigIntOps [#_"BigIntOps" this, #_"Ops" y]
-        (.opsWithBigInt y, this)
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithLong--BigIntOps [#_"BigIntOps" this, #_"LongOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithDouble--BigIntOps [#_"BigIntOps" this, #_"DoubleOps" x]
-        Numbers'DOUBLE_OPS
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithRatio--BigIntOps [#_"BigIntOps" this, #_"RatioOps" x]
-        Numbers'RATIO_OPS
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigInt--BigIntOps [#_"BigIntOps" this, #_"BigIntOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigDecimal--BigIntOps [#_"BigIntOps" this, #_"BigDecimalOps" x]
-        Numbers'BIGDECIMAL_OPS
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isZero--BigIntOps [#_"BigIntOps" this, #_"Number" x]
-        (let [#_"BigInt" bx (Numbers'toBigInt x)]
-            (zero? (if (some? (:bipart bx)) (.signum (:bipart bx)) (:lpart bx)))
-        )
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isPos--BigIntOps [#_"BigIntOps" this, #_"Number" x]
-        (let [#_"BigInt" bx (Numbers'toBigInt x)]
-            (pos? (if (some? (:bipart bx)) (.signum (:bipart bx)) (:lpart bx)))
-        )
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isNeg--BigIntOps [#_"BigIntOps" this, #_"Number" x]
-        (let [#_"BigInt" bx (Numbers'toBigInt x)]
-            (neg? (if (some? (:bipart bx)) (.signum (:bipart bx)) (:lpart bx)))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''add--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (BigInt''add (Numbers'toBigInt x), (Numbers'toBigInt y))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''multiply--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (BigInt''multiply (Numbers'toBigInt x), (Numbers'toBigInt y))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''divide--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (Numbers'divide-2ii (.toBigInteger this, x), (.toBigInteger this, y))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''quotient--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (BigInt''quotient (Numbers'toBigInt x), (Numbers'toBigInt y))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''remainder--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (BigInt''remainder (Numbers'toBigInt x), (Numbers'toBigInt y))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''equiv--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (.equals (Numbers'toBigInt x), (Numbers'toBigInt y))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''lt--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (BigInt''lt (Numbers'toBigInt x), (Numbers'toBigInt y))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''lte--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (<= (.compareTo (.toBigInteger this, x), (.toBigInteger this, y)) 0)
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''gte--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (>= (.compareTo (.toBigInteger this, x), (.toBigInteger this, y)) 0)
-    )
-
-    #_override
-    (defn #_"Number" Ops'''negate--BigIntOps [#_"BigIntOps" this, #_"Number" x]
-        (BigInt'fromBigInteger (.negate (.toBigInteger this, x)))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''inc--BigIntOps [#_"BigIntOps" this, #_"Number" x]
-        (BigInt'fromBigInteger (.add (.toBigInteger this, x), BigInteger/ONE))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''dec--BigIntOps [#_"BigIntOps" this, #_"Number" x]
-        (BigInt'fromBigInteger (.subtract (.toBigInteger this, x), BigInteger/ONE))
-    )
-)
-
-(class-ns BigDecimalOps
-    (§ def #_"Var" BigDecimalOps'MATH_CONTEXT RT'MATH_CONTEXT)
-
-    (defn #_"BigDecimalOps" BigDecimalOps'new []
-        (OpsP'new)
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''combine--BigDecimalOps [#_"BigDecimalOps" this, #_"Ops" y]
-        (.opsWithBigDecimal y, this)
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithLong--BigDecimalOps [#_"BigDecimalOps" this, #_"LongOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithDouble--BigDecimalOps [#_"BigDecimalOps" this, #_"DoubleOps" x]
-        Numbers'DOUBLE_OPS
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithRatio--BigDecimalOps [#_"BigDecimalOps" this, #_"RatioOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigInt--BigDecimalOps [#_"BigDecimalOps" this, #_"BigIntOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigDecimal--BigDecimalOps [#_"BigDecimalOps" this, #_"BigDecimalOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isZero--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
-        (let [#_"BigDecimal" bx (cast BigDecimal x)]
-            (zero? (.signum bx))
-        )
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isPos--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
-        (let [#_"BigDecimal" bx (cast BigDecimal x)]
-            (pos? (.signum bx))
-        )
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isNeg--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
-        (let [#_"BigDecimal" bx (cast BigDecimal x)]
-            (neg? (.signum bx))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''add--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"MathContext" mc (cast MathContext (.deref BigDecimalOps'MATH_CONTEXT))]
-            (if (nil? mc) (.add (.toBigDecimal this, x), (.toBigDecimal this, y)) (.add (.toBigDecimal this, x), (.toBigDecimal this, y), mc))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''multiply--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"MathContext" mc (cast MathContext (.deref BigDecimalOps'MATH_CONTEXT))]
-            (if (nil? mc) (.multiply (.toBigDecimal this, x), (.toBigDecimal this, y)) (.multiply (.toBigDecimal this, x), (.toBigDecimal this, y), mc))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''divide--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"MathContext" mc (cast MathContext (.deref BigDecimalOps'MATH_CONTEXT))]
-            (if (nil? mc) (.divide (.toBigDecimal this, x), (.toBigDecimal this, y)) (.divide (.toBigDecimal this, x), (.toBigDecimal this, y), mc))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''quotient--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"MathContext" mc (cast MathContext (.deref BigDecimalOps'MATH_CONTEXT))]
-            (if (nil? mc) (.divideToIntegralValue (.toBigDecimal this, x), (.toBigDecimal this, y)) (.divideToIntegralValue (.toBigDecimal this, x), (.toBigDecimal this, y), mc))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''remainder--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"MathContext" mc (cast MathContext (.deref BigDecimalOps'MATH_CONTEXT))]
-            (if (nil? mc) (.remainder (.toBigDecimal this, x), (.toBigDecimal this, y)) (.remainder (.toBigDecimal this, x), (.toBigDecimal this, y), mc))
-        )
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''equiv--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (zero? (.compareTo (.toBigDecimal this, x), (.toBigDecimal this, y)))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''lt--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (neg? (.compareTo (.toBigDecimal this, x), (.toBigDecimal this, y)))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''lte--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (<= (.compareTo (.toBigDecimal this, x), (.toBigDecimal this, y)) 0)
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''gte--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (>= (.compareTo (.toBigDecimal this, x), (.toBigDecimal this, y)) 0)
-    )
-
-    #_override
-    (defn #_"Number" Ops'''negate--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
-        (let [#_"MathContext" mc (cast MathContext (.deref BigDecimalOps'MATH_CONTEXT))]
-            (if (nil? mc) (.negate (cast BigDecimal x)) (.negate (cast BigDecimal x), mc))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''inc--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
-        (let [#_"MathContext" mc (cast MathContext (.deref BigDecimalOps'MATH_CONTEXT))
-              #_"BigDecimal" bx (cast BigDecimal x)]
-            (if (nil? mc) (.add bx, BigDecimal/ONE) (.add bx, BigDecimal/ONE, mc))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''dec--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
-        (let [#_"MathContext" mc (cast MathContext (.deref BigDecimalOps'MATH_CONTEXT))
-              #_"BigDecimal" bx (cast BigDecimal x)]
-            (if (nil? mc) (.subtract bx, BigDecimal/ONE) (.subtract bx, BigDecimal/ONE, mc))
-        )
-    )
-)
-
-(def Category'enum-set
-    (hash-set
-        :Category'INTEGER
-        :Category'FLOATING
-        :Category'DECIMAL
-        :Category'RATIO
-    )
-)
-
-(class-ns Numbers
-    (defn #_"boolean" Numbers'isZero-1o [#_"Object" x]
-        (.isZero (Numbers'ops x), (cast Number x))
-    )
-
-    (defn #_"boolean" Numbers'isPos-1o [#_"Object" x]
-        (.isPos (Numbers'ops x), (cast Number x))
-    )
-
-    (defn #_"boolean" Numbers'isNeg-1o [#_"Object" x]
-        (.isNeg (Numbers'ops x), (cast Number x))
-    )
-
-    (defn #_"Number" Numbers'minus-1o [#_"Object" x]
-        (.negate (Numbers'ops x), (cast Number x))
-    )
-
-    (defn #_"Number" Numbers'minusP-1o [#_"Object" x]
-        (.negateP (Numbers'ops x), (cast Number x))
-    )
-
-    (defn #_"Number" Numbers'inc-1o [#_"Object" x]
-        (.inc (Numbers'ops x), (cast Number x))
-    )
-
-    (defn #_"Number" Numbers'incP-1o [#_"Object" x]
-        (.incP (Numbers'ops x), (cast Number x))
-    )
-
-    (defn #_"Number" Numbers'dec-1o [#_"Object" x]
-        (.dec (Numbers'ops x), (cast Number x))
-    )
-
-    (defn #_"Number" Numbers'decP-1o [#_"Object" x]
-        (.decP (Numbers'ops x), (cast Number x))
-    )
-
-    (defn #_"Number" Numbers'add-2oo [#_"Object" x, #_"Object" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.add (cast Number x), (cast Number y)))
-    )
-
-    (defn #_"Number" Numbers'addP-2oo [#_"Object" x, #_"Object" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.addP (cast Number x), (cast Number y)))
-    )
-
-    (defn #_"Number" Numbers'minus-2oo [#_"Object" x, #_"Object" y]
-        (let [#_"Ops" yops (Numbers'ops y)]
-            (-> (.combine (Numbers'ops x), yops) (.add (cast Number x), (.negate yops, (cast Number y))))
-        )
-    )
-
-    (defn #_"Number" Numbers'minusP-2oo [#_"Object" x, #_"Object" y]
-        (let [#_"Ops" yops (Numbers'ops y)
-              #_"Number" negativeY (.negateP yops, (cast Number y))
-              #_"Ops" negativeYOps (Numbers'ops negativeY)]
-            (-> (.combine (Numbers'ops x), negativeYOps) (.addP (cast Number x), negativeY))
-        )
-    )
-
-    (defn #_"Number" Numbers'multiply-2oo [#_"Object" x, #_"Object" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.multiply (cast Number x), (cast Number y)))
-    )
-
-    (defn #_"Number" Numbers'multiplyP-2oo [#_"Object" x, #_"Object" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.multiplyP (cast Number x), (cast Number y)))
-    )
-
-    (defn #_"Number" Numbers'divide-2oo [#_"Object" x, #_"Object" y]
-        (cond
-            (Numbers'isNaN x) (cast Number x)
-            (Numbers'isNaN y) (cast Number y)
-            :else
-                (let [#_"Ops" yops (Numbers'ops y)]
-                    (when (.isZero yops, (cast Number y))
-                        (throw (ArithmeticException. "Divide by zero"))
-                    )
-                    (-> (.combine (Numbers'ops x), yops) (.divide (cast Number x), (cast Number y)))
-                )
-        )
-    )
-
-    (defn #_"Number" Numbers'quotient-2oo [#_"Object" x, #_"Object" y]
-        (let [#_"Ops" yops (Numbers'ops y)]
-            (when (.isZero yops, (cast Number y))
-                (throw (ArithmeticException. "Divide by zero"))
-            )
-            (-> (.combine (Numbers'ops x), yops) (.quotient (cast Number x), (cast Number y)))
-        )
-    )
-
-    (defn #_"Number" Numbers'remainder-2oo [#_"Object" x, #_"Object" y]
-        (let [#_"Ops" yops (Numbers'ops y)]
-            (when (.isZero yops, (cast Number y))
-                (throw (ArithmeticException. "Divide by zero"))
-            )
-            (-> (.combine (Numbers'ops x), yops) (.remainder (cast Number x), (cast Number y)))
-        )
-    )
-
-    (defn #_"double" Numbers'quotient-2dd [#_"double" n, #_"double" d]
-        (when (zero? d)
-            (throw (ArithmeticException. "Divide by zero"))
-        )
-
-        (let [#_"double" q (/ n d)]
-            (cond (<= Long/MIN_VALUE q Long/MAX_VALUE)
-                (do
-                    (double (long q))
-                )
-                :else ;; bigint quotient
-                (do
-                    (.doubleValue (.toBigInteger (BigDecimal. q)))
-                )
-            )
-        )
-    )
-
-    (defn #_"double" Numbers'remainder-2dd [#_"double" n, #_"double" d]
-        (when (zero? d)
-            (throw (ArithmeticException. "Divide by zero"))
-        )
-
-        (let [#_"double" q (/ n d)]
-            (cond (<= Long/MIN_VALUE q Long/MAX_VALUE)
-                (do
-                    (- n (* (long q) d))
-                )
-                :else ;; bigint quotient
-                (let [#_"Number" bq (.toBigInteger (BigDecimal. q))]
-                    (- n (* (.doubleValue bq) d))
-                )
-            )
-        )
-    )
-
-    (defn #_"boolean" Numbers'equiv-2oo [#_"Object" x, #_"Object" y]
-        (Numbers'equiv-2nn (cast Number x), (cast Number y))
-    )
-
-    (defn #_"boolean" Numbers'equiv-2nn [#_"Number" x, #_"Number" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.equiv x, y))
-    )
-
-    (defn #_"boolean" Numbers'equal [#_"Number" x, #_"Number" y]
-        (and (= (Numbers'category x) (Numbers'category y)) (.equiv (.combine (Numbers'ops x), (Numbers'ops y)), x, y))
-    )
-
-    (defn #_"boolean" Numbers'lt-2oo [#_"Object" x, #_"Object" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.lt (cast Number x), (cast Number y)))
-    )
-
-    (defn #_"boolean" Numbers'lte-2oo [#_"Object" x, #_"Object" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.lte (cast Number x), (cast Number y)))
-    )
-
-    (defn #_"boolean" Numbers'gt-2oo [#_"Object" x, #_"Object" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.lt (cast Number y), (cast Number x)))
-    )
-
-    (defn #_"boolean" Numbers'gte-2oo [#_"Object" x, #_"Object" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.gte (cast Number x), (cast Number y)))
-    )
-
-    (defn #_"int" Numbers'compare [#_"Number" x, #_"Number" y]
-        (let [#_"Ops" ops (.combine (Numbers'ops x), (Numbers'ops y))]
-            (cond (.lt ops, x, y) -1 (.lt ops, y, x) 1 :else 0)
-        )
-    )
-
-    (defn #_"BigInt" Numbers'toBigInt [#_"Object" x]
-        (cond
-            (instance? BigInt x)     (cast BigInt x)
-            (instance? BigInteger x) (BigInt'fromBigInteger (cast BigInteger x))
-            :else                    (BigInt'fromLong (.longValue (cast Number x)))
-        )
-    )
-
-    (defn #_"BigInteger" Numbers'toBigInteger [#_"Object" x]
-        (cond
-            (instance? BigInteger x) (cast BigInteger x)
-            (instance? BigInt x)     (BigInt''toBigInteger (cast BigInt x))
-            :else                    (BigInteger/valueOf (.longValue (cast Number x)))
-        )
-    )
-
-    (defn #_"BigDecimal" Numbers'toBigDecimal [#_"Object" x]
-        (cond
-            (instance? BigDecimal x)
-                (cast BigDecimal x)
-            (instance? BigInt x)
-                (let [#_"BigInt" bi (cast BigInt x)]
-                    (if (nil? (:bipart bi))
-                        (BigDecimal/valueOf (:lpart bi))
-                        (BigDecimal. (:bipart bi))
-                    )
-                )
-            (instance? BigInteger x)
-                (BigDecimal. (cast BigInteger x))
-            (instance? Double x)
-                (BigDecimal. (.doubleValue (cast Number x)))
-            (instance? Float x)
-                (BigDecimal. (.doubleValue (cast Number x)))
-            (instance? Ratio x)
-                (let [#_"Ratio" r (cast Ratio x)]
-                    (cast BigDecimal (Numbers'divide-2oo (BigDecimal. (:numerator r)), (:denominator r)))
-                )
-            :else
-                (BigDecimal/valueOf (.longValue (cast Number x)))
-        )
-    )
-
-    (defn #_"Ratio" Numbers'toRatio [#_"Object" x]
-        (cond
-            (instance? Ratio x)
-                (cast Ratio x)
-            (instance? BigDecimal x)
-                (let [#_"BigDecimal" bx (cast BigDecimal x) #_"BigInteger" bv (.unscaledValue bx) #_"int" scale (.scale bx)]
-                    (if (neg? scale)
-                        (Ratio'new (.multiply bv, (.pow BigInteger/TEN, (- scale))), BigInteger/ONE)
-                        (Ratio'new bv, (.pow BigInteger/TEN, scale))
-                    )
-                )
-            :else
-                (Ratio'new (Numbers'toBigInteger x), BigInteger/ONE)
-        )
-    )
-
-    (defn #_"Number" Numbers'rationalize [#_"Number" x]
-        (cond
-            (or (instance? Float x) (instance? Double x))
-                (Numbers'rationalize (BigDecimal/valueOf (.doubleValue x)))
-            (instance? BigDecimal x)
-                (let [#_"BigDecimal" bx (cast BigDecimal x) #_"BigInteger" bv (.unscaledValue bx) #_"int" scale (.scale bx)]
-                    (if (neg? scale)
-                        (BigInt'fromBigInteger (.multiply bv, (.pow BigInteger/TEN, (- scale))))
-                        (Numbers'divide-2ii bv, (.pow BigInteger/TEN, scale))
-                    )
-                )
-            :else
-                x
-        )
-    )
-
-    (defn #_"Number" Numbers'reduceBigInt [#_"BigInt" val]
-        (or (:bipart val) (Numbers'num-1l (:lpart val)))
-    )
-
-    (defn #_"Number" Numbers'divide-2ii [#_"BigInteger" n, #_"BigInteger" d]
-        (when-not (.equals d, BigInteger/ZERO) => (throw (ArithmeticException. "Divide by zero"))
-            (let [#_"BigInteger" gcd (.gcd n, d)]
-                (when-not (.equals gcd, BigInteger/ZERO) => BigInt'ZERO
-                    (let [n (.divide n, gcd) d (.divide d, gcd)]
-                        (cond
-                            (.equals d, BigInteger/ONE)
-                                (BigInt'fromBigInteger n)
-                            (.equals d, (.negate BigInteger/ONE))
-                                (BigInt'fromBigInteger (.negate n))
-                            :else
-                                (Ratio'new (if (neg? (.signum d)) (.negate n) n), (if (neg? (.signum d)) (.negate d) d))
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"int" Numbers'shiftLeftInt [#_"int" x, #_"int" n]
-        (<< x n)
-    )
-
-    (defn #_"long" Numbers'shiftLeft-2oo [#_"Object" x, #_"Object" y]
-        (Numbers'shiftLeft-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y))
-    )
-    (defn #_"long" Numbers'shiftLeft-2ol [#_"Object" x, #_"long" y]
-        (Numbers'shiftLeft-2ll (Numbers'bitOpsCast x), y)
-    )
-    (defn #_"long" Numbers'shiftLeft-2lo [#_"long" x, #_"Object" y]
-        (Numbers'shiftLeft-2ll x, (Numbers'bitOpsCast y))
-    )
-    (defn #_"long" Numbers'shiftLeft-2ll [#_"long" x, #_"long" n]
-        (<< x n)
-    )
-
-    (defn #_"int" Numbers'shiftRightInt [#_"int" x, #_"int" n]
-        (>> x n)
-    )
-
-    (defn #_"long" Numbers'shiftRight-2oo [#_"Object" x, #_"Object" y]
-        (Numbers'shiftRight-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y))
-    )
-    (defn #_"long" Numbers'shiftRight-2ol [#_"Object" x, #_"long" y]
-        (Numbers'shiftRight-2ll (Numbers'bitOpsCast x), y)
-    )
-    (defn #_"long" Numbers'shiftRight-2lo [#_"long" x, #_"Object" y]
-        (Numbers'shiftRight-2ll x, (Numbers'bitOpsCast y))
-    )
-    (defn #_"long" Numbers'shiftRight-2ll [#_"long" x, #_"long" n]
-        (>> x n)
-    )
-
-    (defn #_"int" Numbers'unsignedShiftRightInt [#_"int" x, #_"int" n]
-        (>>> x n)
-    )
-
-    (defn #_"long" Numbers'unsignedShiftRight-2oo [#_"Object" x, #_"Object" y]
-        (Numbers'unsignedShiftRight-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y))
-    )
-    (defn #_"long" Numbers'unsignedShiftRight-2ol [#_"Object" x, #_"long" y]
-        (Numbers'unsignedShiftRight-2ll (Numbers'bitOpsCast x), y)
-    )
-    (defn #_"long" Numbers'unsignedShiftRight-2lo [#_"long" x, #_"Object" y]
-        (Numbers'unsignedShiftRight-2ll x, (Numbers'bitOpsCast y))
-    )
-    (defn #_"long" Numbers'unsignedShiftRight-2ll [#_"long" x, #_"long" n]
-        (>>> x n)
-    )
-
-    (§ def #_"LongOps"       Numbers'LONG_OPS       (LongOps'new)      )
-    (§ def #_"DoubleOps"     Numbers'DOUBLE_OPS     (DoubleOps'new)    )
-    (§ def #_"RatioOps"      Numbers'RATIO_OPS      (RatioOps'new)     )
-    (§ def #_"BigIntOps"     Numbers'BIGINT_OPS     (BigIntOps'new)    )
-    (§ def #_"BigDecimalOps" Numbers'BIGDECIMAL_OPS (BigDecimalOps'new))
-
-    (defn #_"Ops" Numbers'ops [#_"Object" x]
-        (condp = (.getClass x)
-            Integer    Numbers'LONG_OPS
-            Long       Numbers'LONG_OPS
-            BigInt     Numbers'BIGINT_OPS
-            BigInteger Numbers'BIGINT_OPS
-            Ratio      Numbers'RATIO_OPS
-            Float      Numbers'DOUBLE_OPS
-            Double     Numbers'DOUBLE_OPS
-            BigDecimal Numbers'BIGDECIMAL_OPS
-                       Numbers'LONG_OPS
-        )
-    )
-
-    (defn #_"int" Numbers'hasheqFrom [#_"Number" x, #_"Class" xc]
-        (cond
-            (or (any = xc Integer Short Byte) (and (= xc BigInteger) (Numbers'lte-2ol x, Long/MAX_VALUE) (Numbers'gte-2ol x, Long/MIN_VALUE)))
-                (Murmur3'hashLong (.longValue x))
-            (= xc BigDecimal)
-                ;; stripTrailingZeros() to make all numerically equal BigDecimal values come out the same before calling hashCode.
-                ;; Special check for 0 because stripTrailingZeros() does not do anything to values equal to 0 with different scales.
-                (.hashCode (if (Numbers'isZero-1o x) BigDecimal/ZERO (.stripTrailingZeros (cast BigDecimal x))))
-            (and (= xc Float) (.equals x, (float -0.0)))
-                0 ;; match 0.0f
-            :else
-                (.hashCode x)
-        )
-    )
-
-    (defn #_"int" Numbers'hasheq [#_"Number" x]
-        (let [#_"Class" xc (.getClass x)]
-            (condp = xc
-                Long
-                    (Murmur3'hashLong (.longValue x))
-                Double
-                    (if (.equals x, -0.0)
-                        0 ;; match 0.0
-                        (.hashCode x)
-                    )
-                (Numbers'hasheqFrom x, xc)
-            )
-        )
-    )
-
-    (defn #_"Category" Numbers'category [#_"Object" x]
-        (condp = (.getClass x)
-            Integer    :Category'INTEGER
-            Long       :Category'INTEGER
-            BigInt     :Category'INTEGER
-            Ratio      :Category'RATIO
-            Float      :Category'FLOATING
-            Double     :Category'FLOATING
-            BigDecimal :Category'DECIMAL
-                       :Category'INTEGER
-        )
-    )
-
-    (defn #_"long" Numbers'bitOpsCast [#_"Object" x]
-        (let [#_"Class" xc (.getClass x)]               ;; no bignums, no decimals
-            (when (any = xc Long Integer Short Byte) => (throw (IllegalArgumentException. (str "bit operation not supported for: " xc)))
-                (RT'longCast-1o x)
-            )
-        )
-    )
-
-    (defn #_"float[]" Numbers'float_array-2 [#_"int" size, #_"Object" init]
-        (let [#_"float[]" ret (.float-array size)]
-            (if (instance? Number init)
-                (let [#_"float" f (.floatValue (cast Number init))]
-                    (dotimes [#_"int" i (alength ret)]
-                        (aset ret i f)
-                    )
-                )
-                (let [#_"ISeq" s (RT'seq init)]
-                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                        (aset ret i (.floatValue (cast Number (.first s))))
-                    )
-                )
-            )
-            ret
-        )
-    )
-
-    (defn #_"float[]" Numbers'float_array-1 [#_"Object" sizeOrSeq]
-        (if (instance? Number sizeOrSeq)
-            (.float-array (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq)
-                  #_"int" size (RT'count s)
-                  #_"float[]" ret (.float-array size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                    (aset ret i (.floatValue (cast Number (.first s))))
-                )
-                ret
-            )
-        )
-    )
-
-    (defn #_"double[]" Numbers'double_array-2 [#_"int" size, #_"Object" init]
-        (let [#_"double[]" ret (.double-array size)]
-            (if (instance? Number init)
-                (let [#_"double" f (.doubleValue (cast Number init))]
-                    (dotimes [#_"int" i (alength ret)]
-                        (aset ret i f)
-                    )
-                )
-                (let [#_"ISeq" s (RT'seq init)]
-                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                        (aset ret i (.doubleValue (cast Number (.first s))))
-                    )
-                )
-            )
-            ret
-        )
-    )
-
-    (defn #_"double[]" Numbers'double_array-1 [#_"Object" sizeOrSeq]
-        (if (instance? Number sizeOrSeq)
-            (.double-array (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq)
-                  #_"int" size (RT'count s)
-                  #_"double[]" ret (.double-array size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                    (aset ret i (.doubleValue (cast Number (.first s))))
-                )
-                ret
-            )
-        )
-    )
-
-    (defn #_"int[]" Numbers'int_array-2 [#_"int" size, #_"Object" init]
-        (let [#_"int[]" ret (.int-array size)]
-            (if (instance? Number init)
-                (let [#_"int" f (.intValue (cast Number init))]
-                    (dotimes [#_"int" i (alength ret)]
-                        (aset ret i f)
-                    )
-                )
-                (let [#_"ISeq" s (RT'seq init)]
-                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                        (aset ret i (.intValue (cast Number (.first s))))
-                    )
-                )
-            )
-            ret
-        )
-    )
-
-    (defn #_"int[]" Numbers'int_array-1 [#_"Object" sizeOrSeq]
-        (if (instance? Number sizeOrSeq)
-            (.int-array (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq)
-                  #_"int" size (RT'count s)
-                  #_"int[]" ret (.int-array size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                    (aset ret i (.intValue (cast Number (.first s))))
-                )
-                ret
-            )
-        )
-    )
-
-    (defn #_"long[]" Numbers'long_array-2 [#_"int" size, #_"Object" init]
-        (let [#_"long[]" ret (.long-array size)]
-            (if (instance? Number init)
-                (let [#_"long" f (.longValue (cast Number init))]
-                    (dotimes [#_"int" i (alength ret)]
-                        (aset ret i f)
-                    )
-                )
-                (let [#_"ISeq" s (RT'seq init)]
-                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                        (aset ret i (.longValue (cast Number (.first s))))
-                    )
-                )
-            )
-            ret
-        )
-    )
-
-    (defn #_"long[]" Numbers'long_array-1 [#_"Object" sizeOrSeq]
-        (if (instance? Number sizeOrSeq)
-            (.long-array (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq)
-                  #_"int" size (RT'count s)
-                  #_"long[]" ret (.long-array size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                    (aset ret i (.longValue (cast Number (.first s))))
-                )
-                ret
-            )
-        )
-    )
-
-    (defn #_"short[]" Numbers'short_array-2 [#_"int" size, #_"Object" init]
-        (let [#_"short[]" ret (.short-array size)]
-            (if (instance? Short init)
-                (let [#_"short" s (cast Short init)]
-                    (dotimes [#_"int" i (alength ret)]
-                        (aset ret i s)
-                    )
-                )
-                (let [#_"ISeq" s (RT'seq init)]
-                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                        (aset ret i (.shortValue (cast Number (.first s))))
-                    )
-                )
-            )
-            ret
-        )
-    )
-
-    (defn #_"short[]" Numbers'short_array-1 [#_"Object" sizeOrSeq]
-        (if (instance? Number sizeOrSeq)
-            (.short-array (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq)
-                  #_"int" size (RT'count s)
-                  #_"short[]" ret (.short-array size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                    (aset ret i (.shortValue (cast Number (.first s))))
-                )
-                ret
-            )
-        )
-    )
-
-    (defn #_"char[]" Numbers'char_array-2 [#_"int" size, #_"Object" init]
-        (let [#_"char[]" ret (.char-array size)]
-            (if (instance? Character init)
-                (let [#_"char" c (cast Character init)]
-                    (dotimes [#_"int" i (alength ret)]
-                        (aset ret i c)
-                    )
-                )
-                (let [#_"ISeq" s (RT'seq init)]
-                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                        (aset ret i (cast Character (.first s)))
-                    )
-                )
-            )
-            ret
-        )
-    )
-
-    (defn #_"char[]" Numbers'char_array-1 [#_"Object" sizeOrSeq]
-        (if (instance? Number sizeOrSeq)
-            (.char-array (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq)
-                  #_"int" size (RT'count s)
-                  #_"char[]" ret (.char-array size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                    (aset ret i (cast Character (.first s)))
-                )
-                ret
-            )
-        )
-    )
-
-    (defn #_"byte[]" Numbers'byte_array-2 [#_"int" size, #_"Object" init]
-        (let [#_"byte[]" ret (.byte-array size)]
-            (if (instance? Byte init)
-                (let [#_"byte" b (cast Byte init)]
-                    (dotimes [#_"int" i (alength ret)]
-                        (aset ret i b)
-                    )
-                )
-                (let [#_"ISeq" s (RT'seq init)]
-                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                        (aset ret i (.byteValue (cast Number (.first s))))
-                    )
-                )
-            )
-            ret
-        )
-    )
-
-    (defn #_"byte[]" Numbers'byte_array-1 [#_"Object" sizeOrSeq]
-        (if (instance? Number sizeOrSeq)
-            (.byte-array (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq)
-                  #_"int" size (RT'count s)
-                  #_"byte[]" ret (.byte-array size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                    (aset ret i (.byteValue (cast Number (.first s))))
-                )
-                ret
-            )
-        )
-    )
-
-    (defn #_"boolean[]" Numbers'boolean_array-2 [#_"int" size, #_"Object" init]
-        (let [#_"boolean[]" ret (.boolean-array size)]
-            (if (instance? Boolean init)
-                (let [#_"boolean" b (cast Boolean init)]
-                    (dotimes [#_"int" i (alength ret)]
-                        (aset ret i b)
-                    )
-                )
-                (let [#_"ISeq" s (RT'seq init)]
-                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                        (aset ret i (cast Boolean (.first s)))
-                    )
-                )
-            )
-            ret
-        )
-    )
-
-    (defn #_"boolean[]" Numbers'boolean_array-1 [#_"Object" sizeOrSeq]
-        (if (instance? Number sizeOrSeq)
-            (.boolean-array (.intValue (cast Number sizeOrSeq)))
-            (let [#_"ISeq" s (RT'seq sizeOrSeq)
-                  #_"int" size (RT'count s)
-                  #_"boolean[]" ret (.boolean-array size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (.next s)]
-                    (aset ret i (cast Boolean (.first s)))
-                )
-                ret
-            )
-        )
-    )
-
-    (defn #_"boolean[]" Numbers'booleans [#_"Object" array] (cast RT'BOOLEANS_CLASS array))
-    (defn #_"byte[]"    Numbers'bytes    [#_"Object" array] (cast RT'BYTES_CLASS    array))
-    (defn #_"short[]"   Numbers'shorts   [#_"Object" array] (cast RT'SHORTS_CLASS   array))
-    (defn #_"char[]"    Numbers'chars    [#_"Object" array] (cast RT'CHARS_CLASS    array))
-    (defn #_"int[]"     Numbers'ints     [#_"Object" array] (cast RT'INTS_CLASS     array))
-    (defn #_"long[]"    Numbers'longs    [#_"Object" array] (cast RT'LONGS_CLASS    array))
-    (defn #_"float[]"   Numbers'floats   [#_"Object" array] (cast RT'FLOATS_CLASS   array))
-    (defn #_"double[]"  Numbers'doubles  [#_"Object" array] (cast RT'DOUBLES_CLASS  array))
-
-    (defn #_"Number" Numbers'num-1o [#_"Object" x]
-        (cast Number x)
-    )
-
-    (defn #_"Number" Numbers'num-1f [#_"float" x]
-        (Float/valueOf x)
-    )
-
-    (defn #_"Number" Numbers'num-1d [#_"double" x]
-        (Double/valueOf x)
-    )
-
-    (defn #_"double" Numbers'add-2dd [#_"double" x, #_"double" y]
-        (+ x y)
-    )
-
-    (defn #_"double" Numbers'addP-2dd [#_"double" x, #_"double" y]
-        (+ x y)
-    )
-
-    (defn #_"double" Numbers'minus-2dd [#_"double" x, #_"double" y]
-        (- x y)
-    )
-
-    (defn #_"double" Numbers'minusP-2dd [#_"double" x, #_"double" y]
-        (- x y)
-    )
-
-    (defn #_"double" Numbers'minus-1d [#_"double" x]
-        (- x)
-    )
-
-    (defn #_"double" Numbers'minusP-1d [#_"double" x]
-        (- x)
-    )
-
-    (defn #_"double" Numbers'inc-1d [#_"double" x]
-        (inc x)
-    )
-
-    (defn #_"double" Numbers'incP-1d [#_"double" x]
-        (inc x)
-    )
-
-    (defn #_"double" Numbers'dec-1d [#_"double" x]
-        (dec x)
-    )
-
-    (defn #_"double" Numbers'decP-1d [#_"double" x]
-        (dec x)
-    )
-
-    (defn #_"double" Numbers'multiply-2dd [#_"double" x, #_"double" y]
-        (* x y)
-    )
-
-    (defn #_"double" Numbers'multiplyP-2dd [#_"double" x, #_"double" y]
-        (* x y)
-    )
-
-    (defn #_"double" Numbers'divide-2dd [#_"double" x, #_"double" y]
-        (/ x y)
-    )
-
-    (defn #_"boolean" Numbers'equiv-2dd [#_"double" x, #_"double" y]
-        (= x y)
-    )
-
-    (defn #_"boolean" Numbers'lt-2dd [#_"double" x, #_"double" y]
-        (< x y)
-    )
-
-    (defn #_"boolean" Numbers'lte-2dd [#_"double" x, #_"double" y]
-        (<= x y)
-    )
-
-    (defn #_"boolean" Numbers'gt-2dd [#_"double" x, #_"double" y]
-        (> x y)
-    )
-
-    (defn #_"boolean" Numbers'gte-2dd [#_"double" x, #_"double" y]
-        (>= x y)
-    )
-
-    (defn #_"boolean" Numbers'isPos-1d [#_"double" x]
-        (> x 0)
-    )
-
-    (defn #_"boolean" Numbers'isNeg-1d [#_"double" x]
-        (< x 0)
-    )
-
-    (defn #_"boolean" Numbers'isZero-1d [#_"double" x]
-        (zero? x)
-    )
-
-    (defn #_"int" Numbers'throwIntOverflow []
-        (throw (ArithmeticException. "integer overflow"))
-    )
-
-    (defn #_"int" Numbers'unchecked_int_add [#_"int" x, #_"int" y]
-        (+ x y)
-    )
-
-    (defn #_"int" Numbers'unchecked_int_subtract [#_"int" x, #_"int" y]
-        (- x y)
-    )
-
-    (defn #_"int" Numbers'unchecked_int_negate [#_"int" x]
-        (- x)
-    )
-
-    (defn #_"int" Numbers'unchecked_int_inc [#_"int" x]
-        (inc x)
-    )
-
-    (defn #_"int" Numbers'unchecked_int_dec [#_"int" x]
-        (dec x)
-    )
-
-    (defn #_"int" Numbers'unchecked_int_multiply [#_"int" x, #_"int" y]
-        (* x y)
-    )
-
-    (defn #_"long" Numbers'not-1o [#_"Object" x]
-        (Numbers'not-1l (Numbers'bitOpsCast x))
-    )
-
-    (defn #_"long" Numbers'not-1l [#_"long" x]
-        (bit-not x)
-    )
-
-    (defn #_"long" Numbers'and-2oo [#_"Object" x, #_"Object" y]
-        (Numbers'and-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y))
-    )
-
-    (defn #_"long" Numbers'and-2ol [#_"Object" x, #_"long" y]
-        (Numbers'and-2ll (Numbers'bitOpsCast x), y)
-    )
-
-    (defn #_"long" Numbers'and-2lo [#_"long" x, #_"Object" y]
-        (Numbers'and-2ll x, (Numbers'bitOpsCast y))
-    )
-
-    (defn #_"long" Numbers'and-2ll [#_"long" x, #_"long" y]
-        (& x y)
-    )
-
-    (defn #_"long" Numbers'or-2oo [#_"Object" x, #_"Object" y]
-        (Numbers'or-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y))
-    )
-
-    (defn #_"long" Numbers'or-2ol [#_"Object" x, #_"long" y]
-        (Numbers'or-2ll (Numbers'bitOpsCast x), y)
-    )
-
-    (defn #_"long" Numbers'or-2lo [#_"long" x, #_"Object" y]
-        (Numbers'or-2ll x, (Numbers'bitOpsCast y))
-    )
-
-    (defn #_"long" Numbers'or-2ll [#_"long" x, #_"long" y]
-        (| x y)
-    )
-
-    (defn #_"long" Numbers'xor-2oo [#_"Object" x, #_"Object" y]
-        (Numbers'xor-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y))
-    )
-
-    (defn #_"long" Numbers'xor-2ol [#_"Object" x, #_"long" y]
-        (Numbers'xor-2ll (Numbers'bitOpsCast x), y)
-    )
-
-    (defn #_"long" Numbers'xor-2lo [#_"long" x, #_"Object" y]
-        (Numbers'xor-2ll x, (Numbers'bitOpsCast y))
-    )
-
-    (defn #_"long" Numbers'xor-2ll [#_"long" x, #_"long" y]
-        (bit-xor x y)
-    )
-
-    (defn #_"long" Numbers'andNot-2oo [#_"Object" x, #_"Object" y]
-        (Numbers'andNot-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y))
-    )
-
-    (defn #_"long" Numbers'andNot-2ol [#_"Object" x, #_"long" y]
-        (Numbers'andNot-2ll (Numbers'bitOpsCast x), y)
-    )
-
-    (defn #_"long" Numbers'andNot-2lo [#_"long" x, #_"Object" y]
-        (Numbers'andNot-2ll x, (Numbers'bitOpsCast y))
-    )
-
-    (defn #_"long" Numbers'andNot-2ll [#_"long" x, #_"long" y]
-        (& x (bit-not y))
-    )
-
-    (defn #_"long" Numbers'clearBit-2oo [#_"Object" x, #_"Object" y]
-        (Numbers'clearBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y))
-    )
-
-    (defn #_"long" Numbers'clearBit-2ol [#_"Object" x, #_"long" y]
-        (Numbers'clearBit-2ll (Numbers'bitOpsCast x), y)
-    )
-
-    (defn #_"long" Numbers'clearBit-2lo [#_"long" x, #_"Object" y]
-        (Numbers'clearBit-2ll x, (Numbers'bitOpsCast y))
-    )
-
-    (defn #_"long" Numbers'clearBit-2ll [#_"long" x, #_"long" n]
-        (& x (bit-not (<< 1 n)))
-    )
-
-    (defn #_"long" Numbers'setBit-2oo [#_"Object" x, #_"Object" y]
-        (Numbers'setBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y))
-    )
-
-    (defn #_"long" Numbers'setBit-2ol [#_"Object" x, #_"long" y]
-        (Numbers'setBit-2ll (Numbers'bitOpsCast x), y)
-    )
-
-    (defn #_"long" Numbers'setBit-2lo [#_"long" x, #_"Object" y]
-        (Numbers'setBit-2ll x, (Numbers'bitOpsCast y))
-    )
-
-    (defn #_"long" Numbers'setBit-2ll [#_"long" x, #_"long" n]
-        (| x (<< 1 n))
-    )
-
-    (defn #_"long" Numbers'flipBit-2oo [#_"Object" x, #_"Object" y]
-        (Numbers'flipBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y))
-    )
-
-    (defn #_"long" Numbers'flipBit-2ol [#_"Object" x, #_"long" y]
-        (Numbers'flipBit-2ll (Numbers'bitOpsCast x), y)
-    )
-
-    (defn #_"long" Numbers'flipBit-2lo [#_"long" x, #_"Object" y]
-        (Numbers'flipBit-2ll x, (Numbers'bitOpsCast y))
-    )
-
-    (defn #_"long" Numbers'flipBit-2ll [#_"long" x, #_"long" n]
-        (bit-xor x (<< 1 n))
-    )
-
-    (defn #_"boolean" Numbers'testBit-2oo [#_"Object" x, #_"Object" y]
-        (Numbers'testBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y))
-    )
-
-    (defn #_"boolean" Numbers'testBit-2ol [#_"Object" x, #_"long" y]
-        (Numbers'testBit-2ll (Numbers'bitOpsCast x), y)
-    )
-
-    (defn #_"boolean" Numbers'testBit-2lo [#_"long" x, #_"Object" y]
-        (Numbers'testBit-2ll x, (Numbers'bitOpsCast y))
-    )
-
-    (defn #_"boolean" Numbers'testBit-2ll [#_"long" x, #_"long" n]
-        (not= (& x (<< 1 n)) 0)
-    )
-
-    (defn #_"int" Numbers'unchecked_int_divide [#_"int" x, #_"int" y]
-        (/ x y)
-    )
-
-    (defn #_"int" Numbers'unchecked_int_remainder [#_"int" x, #_"int" y]
-        (% x y)
-    )
-
-    (defn #_"Number" Numbers'num-1l [#_"long" x]
-        (Long/valueOf x)
-    )
-
-    (defn #_"long" Numbers'unchecked_add-2ll [#_"long" x, #_"long" y]
-        (+ x y)
-    )
-
-    (defn #_"long" Numbers'unchecked_minus-2ll [#_"long" x, #_"long" y]
-        (- x y)
-    )
-
-    (defn #_"long" Numbers'unchecked_multiply-2ll [#_"long" x, #_"long" y]
-        (* x y)
-    )
-
-    (defn #_"long" Numbers'unchecked_minus-1l [#_"long" x]
-        (- x)
-    )
-
-    (defn #_"long" Numbers'unchecked_inc-1l [#_"long" x]
-        (inc x)
-    )
-
-    (defn #_"long" Numbers'unchecked_dec-1l [#_"long" x]
-        (dec x)
-    )
-
-    (defn #_"Number" Numbers'unchecked_add-2oo [#_"Object" x, #_"Object" y]
-        (Numbers'add-2oo x, y)
-    )
-
-    (defn #_"Number" Numbers'unchecked_minus-2oo [#_"Object" x, #_"Object" y]
-        (Numbers'minus-2oo x, y)
-    )
-
-    (defn #_"Number" Numbers'unchecked_multiply-2oo [#_"Object" x, #_"Object" y]
-        (Numbers'multiply-2oo x, y)
-    )
-
-    (defn #_"Number" Numbers'unchecked_minus-1o [#_"Object" x]
-        (Numbers'minus-1o x)
-    )
-
-    (defn #_"Number" Numbers'unchecked_inc-1o [#_"Object" x]
-        (Numbers'inc-1o x)
-    )
-
-    (defn #_"Number" Numbers'unchecked_dec-1o [#_"Object" x]
-        (Numbers'dec-1o x)
-    )
-
-    (defn #_"double" Numbers'unchecked_add-2dd [#_"double" x, #_"double" y]
-        (Numbers'add-2dd x, y)
-    )
-
-    (defn #_"double" Numbers'unchecked_minus-2dd [#_"double" x, #_"double" y]
-        (Numbers'minus-2dd x, y)
-    )
-
-    (defn #_"double" Numbers'unchecked_multiply-2dd [#_"double" x, #_"double" y]
-        (Numbers'multiply-2dd x, y)
-    )
-
-    (defn #_"double" Numbers'unchecked_minus-1d [#_"double" x]
-        (Numbers'minus-1d x)
-    )
-
-    (defn #_"double" Numbers'unchecked_inc-1d [#_"double" x]
-        (Numbers'inc-1d x)
-    )
-
-    (defn #_"double" Numbers'unchecked_dec-1d [#_"double" x]
-        (Numbers'dec-1d x)
-    )
-
-    (defn #_"double" Numbers'unchecked_add-2do [#_"double" x, #_"Object" y]
-        (Numbers'add-2do x, y)
-    )
-
-    (defn #_"double" Numbers'unchecked_minus-2do [#_"double" x, #_"Object" y]
-        (Numbers'minus-2do x, y)
-    )
-
-    (defn #_"double" Numbers'unchecked_multiply-2do [#_"double" x, #_"Object" y]
-        (Numbers'multiply-2do x, y)
-    )
-
-    (defn #_"double" Numbers'unchecked_add-2od [#_"Object" x, #_"double" y]
-        (Numbers'add-2od x, y)
-    )
-
-    (defn #_"double" Numbers'unchecked_minus-2od [#_"Object" x, #_"double" y]
-        (Numbers'minus-2od x, y)
-    )
-
-    (defn #_"double" Numbers'unchecked_multiply-2od [#_"Object" x, #_"double" y]
-        (Numbers'multiply-2od x, y)
-    )
-
-    (defn #_"double" Numbers'unchecked_add-2dl [#_"double" x, #_"long" y]
-        (Numbers'add-2dl x, y)
-    )
-
-    (defn #_"double" Numbers'unchecked_minus-2dl [#_"double" x, #_"long" y]
-        (Numbers'minus-2dl x, y)
-    )
-
-    (defn #_"double" Numbers'unchecked_multiply-2dl [#_"double" x, #_"long" y]
-        (Numbers'multiply-2dl x, y)
-    )
-
-    (defn #_"double" Numbers'unchecked_add-2ld [#_"long" x, #_"double" y]
-        (Numbers'add-2ld x, y)
-    )
-
-    (defn #_"double" Numbers'unchecked_minus-2ld [#_"long" x, #_"double" y]
-        (Numbers'minus-2ld x, y)
-    )
-
-    (defn #_"double" Numbers'unchecked_multiply-2ld [#_"long" x, #_"double" y]
-        (Numbers'multiply-2ld x, y)
-    )
-
-    (defn #_"Number" Numbers'unchecked_add-2lo [#_"long" x, #_"Object" y]
-        (Numbers'add-2lo x, y)
-    )
-
-    (defn #_"Number" Numbers'unchecked_minus-2lo [#_"long" x, #_"Object" y]
-        (Numbers'minus-2lo x, y)
-    )
-
-    (defn #_"Number" Numbers'unchecked_multiply-2lo [#_"long" x, #_"Object" y]
-        (Numbers'multiply-2lo x, y)
-    )
-
-    (defn #_"Number" Numbers'unchecked_add-2ol [#_"Object" x, #_"long" y]
-        (Numbers'add-2ol x, y)
-    )
-
-    (defn #_"Number" Numbers'unchecked_minus-2ol [#_"Object" x, #_"long" y]
-        (Numbers'minus-2ol x, y)
-    )
-
-    (defn #_"Number" Numbers'unchecked_multiply-2ol [#_"Object" x, #_"long" y]
-        (Numbers'multiply-2ol x, y)
-    )
-
-    (defn #_"Number" Numbers'quotient-2do [#_"double" x, #_"Object" y]
-        (Numbers'quotient-2oo (cast Object x), y)
-    )
-
-    (defn #_"Number" Numbers'quotient-2od [#_"Object" x, #_"double" y]
-        (Numbers'quotient-2oo x, (cast Object y))
-    )
-
-    (defn #_"Number" Numbers'quotient-2lo [#_"long" x, #_"Object" y]
-        (Numbers'quotient-2oo (cast Object x), y)
-    )
-
-    (defn #_"Number" Numbers'quotient-2ol [#_"Object" x, #_"long" y]
-        (Numbers'quotient-2oo x, (cast Object y))
-    )
-
-    (defn #_"double" Numbers'quotient-2dl [#_"double" x, #_"long" y]
-        (Numbers'quotient-2dd x, (double y))
-    )
-
-    (defn #_"double" Numbers'quotient-2ld [#_"long" x, #_"double" y]
-        (Numbers'quotient-2dd (double x), y)
-    )
-
-    (defn #_"Number" Numbers'remainder-2do [#_"double" x, #_"Object" y]
-        (Numbers'remainder-2oo (cast Object x), y)
-    )
-
-    (defn #_"Number" Numbers'remainder-2od [#_"Object" x, #_"double" y]
-        (Numbers'remainder-2oo x, (cast Object y))
-    )
-
-    (defn #_"Number" Numbers'remainder-2lo [#_"long" x, #_"Object" y]
-        (Numbers'remainder-2oo (cast Object x), y)
-    )
-
-    (defn #_"Number" Numbers'remainder-2ol [#_"Object" x, #_"long" y]
-        (Numbers'remainder-2oo x, (cast Object y))
-    )
-
-    (defn #_"double" Numbers'remainder-2dl [#_"double" x, #_"long" y]
-        (Numbers'remainder-2dd x, (double y))
-    )
-
-    (defn #_"double" Numbers'remainder-2ld [#_"long" x, #_"double" y]
-        (Numbers'remainder-2dd (double x), y)
-    )
-
-    (defn #_"long" Numbers'add-2ll [#_"long" x, #_"long" y]
-        (let [#_"long" ret (+ x y)]
-            (when-not (and (neg? (bit-xor ret x)) (neg? (bit-xor ret y))) => (Numbers'throwIntOverflow)
-                ret
-            )
-        )
-    )
-
-    (defn #_"Number" Numbers'addP-2ll [#_"long" x, #_"long" y]
-        (let [#_"long" ret (+ x y)]
-            (if (and (neg? (bit-xor ret x)) (neg? (bit-xor ret y)))
-                (Numbers'addP-2oo (cast Number x), (cast Number y))
-                (Numbers'num-1l ret)
-            )
-        )
-    )
-
-    (defn #_"long" Numbers'minus-2ll [#_"long" x, #_"long" y]
-        (let [#_"long" ret (- x y)]
-            (when-not (and (neg? (bit-xor ret x)) (neg? (bit-xor ret (bit-not y)))) => (Numbers'throwIntOverflow)
-                ret
-            )
-        )
-    )
-
-    (defn #_"Number" Numbers'minusP-2ll [#_"long" x, #_"long" y]
-        (let [#_"long" ret (- x y)]
-            (if (and (neg? (bit-xor ret x)) (neg? (bit-xor ret (bit-not y))))
-                (Numbers'minusP-2oo (cast Number x), (cast Number y))
-                (Numbers'num-1l ret)
-            )
-        )
-    )
-
-    (defn #_"long" Numbers'minus-1l [#_"long" x]
-        (when-not (= x Long/MIN_VALUE) => (Numbers'throwIntOverflow)
-            (- x)
-        )
-    )
-
-    (defn #_"Number" Numbers'minusP-1l [#_"long" x]
-        (if (= x Long/MIN_VALUE)
-            (BigInt'fromBigInteger (.negate (BigInteger/valueOf x)))
-            (Numbers'num-1l (- x))
-        )
-    )
-
-    (defn #_"long" Numbers'inc-1l [#_"long" x] (if (= x Long/MAX_VALUE) (Numbers'throwIntOverflow) (inc x)))
-    (defn #_"long" Numbers'dec-1l [#_"long" x] (if (= x Long/MIN_VALUE) (Numbers'throwIntOverflow) (dec x)))
-
-    (defn #_"Number" Numbers'incP-1l [#_"long" x] (if (= x Long/MAX_VALUE) (.inc Numbers'BIGINT_OPS, x) (Numbers'num-1l (inc x))))
-    (defn #_"Number" Numbers'decP-1l [#_"long" x] (if (= x Long/MIN_VALUE) (.dec Numbers'BIGINT_OPS, x) (Numbers'num-1l (dec x))))
-
-    (defn #_"long" Numbers'multiply-2ll [#_"long" x, #_"long" y]
-        (when-not (and (= x Long/MIN_VALUE) (neg? y)) => (Numbers'throwIntOverflow)
-            (let [#_"long" ret (* x y)]
-                (when (or (zero? y) (= (/ ret y) x)) => (Numbers'throwIntOverflow)
-                    ret
-                )
-            )
-        )
-    )
-
-    (defn #_"Number" Numbers'multiplyP-2ll [#_"long" x, #_"long" y]
-        (when-not (and (= x Long/MIN_VALUE) (neg? y)) => (Numbers'multiplyP-2oo (cast Number x), (cast Number y))
-            (let [#_"long" ret (* x y)]
-                (when (or (zero? y) (= (/ ret y) x)) => (Numbers'multiplyP-2oo (cast Number x), (cast Number y))
-                    (Numbers'num-1l ret)
-                )
-            )
-        )
-    )
-
-    (defn #_"long" Numbers'quotient-2ll [#_"long" x, #_"long" y]
-        (/ x y)
-    )
-
-    (defn #_"long" Numbers'remainder-2ll [#_"long" x, #_"long" y]
-        (% x y)
-    )
-
-    (defn #_"boolean" Numbers'equiv-2ll [#_"long" x, #_"long" y]
-        (= x y)
-    )
-
-    (defn #_"boolean" Numbers'lt-2ll [#_"long" x, #_"long" y]
-        (< x y)
-    )
-
-    (defn #_"boolean" Numbers'lte-2ll [#_"long" x, #_"long" y]
-        (<= x y)
-    )
-
-    (defn #_"boolean" Numbers'gt-2ll [#_"long" x, #_"long" y]
-        (> x y)
-    )
-
-    (defn #_"boolean" Numbers'gte-2ll [#_"long" x, #_"long" y]
-        (>= x y)
-    )
-
-    (defn #_"boolean" Numbers'isPos-1l [#_"long" x]
-        (> x 0)
-    )
-
-    (defn #_"boolean" Numbers'isNeg-1l [#_"long" x]
-        (< x 0)
-    )
-
-    (defn #_"boolean" Numbers'isZero-1l [#_"long" x]
-        (zero? x)
-    )
-
-    ;; overload resolution
-
-    (defn #_"Number" Numbers'add-2lo [#_"long" x, #_"Object" y]
-        (Numbers'add-2oo (cast Object x), y)
-    )
-
-    (defn #_"Number" Numbers'add-2ol [#_"Object" x, #_"long" y]
-        (Numbers'add-2oo x, (cast Object y))
-    )
-
-    (defn #_"Number" Numbers'addP-2lo [#_"long" x, #_"Object" y]
-        (Numbers'addP-2oo (cast Object x), y)
-    )
-
-    (defn #_"Number" Numbers'addP-2ol [#_"Object" x, #_"long" y]
-        (Numbers'addP-2oo x, (cast Object y))
-    )
-
-    (defn #_"double" Numbers'add-2do [#_"double" x, #_"Object" y]
-        (Numbers'add-2dd x, (.doubleValue (cast Number y)))
-    )
-
-    (defn #_"double" Numbers'add-2od [#_"Object" x, #_"double" y]
-        (Numbers'add-2dd (.doubleValue (cast Number x)), y)
-    )
-
-    (defn #_"double" Numbers'add-2dl [#_"double" x, #_"long" y]
-        (+ x y)
-    )
-
-    (defn #_"double" Numbers'add-2ld [#_"long" x, #_"double" y]
-        (+ x y)
-    )
-
-    (defn #_"double" Numbers'addP-2do [#_"double" x, #_"Object" y]
-        (Numbers'addP-2dd x, (.doubleValue (cast Number y)))
-    )
-
-    (defn #_"double" Numbers'addP-2od [#_"Object" x, #_"double" y]
-        (Numbers'addP-2dd (.doubleValue (cast Number x)), y)
-    )
-
-    (defn #_"double" Numbers'addP-2dl [#_"double" x, #_"long" y]
-        (+ x y)
-    )
-
-    (defn #_"double" Numbers'addP-2ld [#_"long" x, #_"double" y]
-        (+ x y)
-    )
-
-    (defn #_"Number" Numbers'minus-2lo [#_"long" x, #_"Object" y]
-        (Numbers'minus-2oo (cast Object x), y)
-    )
-
-    (defn #_"Number" Numbers'minus-2ol [#_"Object" x, #_"long" y]
-        (Numbers'minus-2oo x, (cast Object y))
-    )
-
-    (defn #_"Number" Numbers'minusP-2lo [#_"long" x, #_"Object" y]
-        (Numbers'minusP-2oo (cast Object x), y)
-    )
-
-    (defn #_"Number" Numbers'minusP-2ol [#_"Object" x, #_"long" y]
-        (Numbers'minusP-2oo x, (cast Object y))
-    )
-
-    (defn #_"double" Numbers'minus-2do [#_"double" x, #_"Object" y]
-        (Numbers'minus-2dd x, (.doubleValue (cast Number y)))
-    )
-
-    (defn #_"double" Numbers'minus-2od [#_"Object" x, #_"double" y]
-        (Numbers'minus-2dd (.doubleValue (cast Number x)), y)
-    )
-
-    (defn #_"double" Numbers'minus-2dl [#_"double" x, #_"long" y]
-        (- x y)
-    )
-
-    (defn #_"double" Numbers'minus-2ld [#_"long" x, #_"double" y]
-        (- x y)
-    )
-
-    (defn #_"double" Numbers'minusP-2do [#_"double" x, #_"Object" y]
-        (Numbers'minus-2dd x, (.doubleValue (cast Number y)))
-    )
-
-    (defn #_"double" Numbers'minusP-2od [#_"Object" x, #_"double" y]
-        (Numbers'minus-2dd (.doubleValue (cast Number x)), y)
-    )
-
-    (defn #_"double" Numbers'minusP-2dl [#_"double" x, #_"long" y]
-        (- x y)
-    )
-
-    (defn #_"double" Numbers'minusP-2ld [#_"long" x, #_"double" y]
-        (- x y)
-    )
-
-    (defn #_"Number" Numbers'multiply-2lo [#_"long" x, #_"Object" y]
-        (Numbers'multiply-2oo (cast Object x), y)
-    )
-
-    (defn #_"Number" Numbers'multiply-2ol [#_"Object" x, #_"long" y]
-        (Numbers'multiply-2oo x, (cast Object y))
-    )
-
-    (defn #_"Number" Numbers'multiplyP-2lo [#_"long" x, #_"Object" y]
-        (Numbers'multiplyP-2oo (cast Object x), y)
-    )
-
-    (defn #_"Number" Numbers'multiplyP-2ol [#_"Object" x, #_"long" y]
-        (Numbers'multiplyP-2oo x, (cast Object y))
-    )
-
-    (defn #_"double" Numbers'multiply-2do [#_"double" x, #_"Object" y]
-        (Numbers'multiply-2dd x, (.doubleValue (cast Number y)))
-    )
-
-    (defn #_"double" Numbers'multiply-2od [#_"Object" x, #_"double" y]
-        (Numbers'multiply-2dd (.doubleValue (cast Number x)), y)
-    )
-
-    (defn #_"double" Numbers'multiply-2dl [#_"double" x, #_"long" y]
-        (* x y)
-    )
-
-    (defn #_"double" Numbers'multiply-2ld [#_"long" x, #_"double" y]
-        (* x y)
-    )
-
-    (defn #_"double" Numbers'multiplyP-2do [#_"double" x, #_"Object" y]
-        (Numbers'multiplyP-2dd x, (.doubleValue (cast Number y)))
-    )
-
-    (defn #_"double" Numbers'multiplyP-2od [#_"Object" x, #_"double" y]
-        (Numbers'multiplyP-2dd (.doubleValue (cast Number x)), y)
-    )
-
-    (defn #_"double" Numbers'multiplyP-2dl [#_"double" x, #_"long" y]
-        (* x y)
-    )
-
-    (defn #_"double" Numbers'multiplyP-2ld [#_"long" x, #_"double" y]
-        (* x y)
-    )
-
-    (defn #_"Number" Numbers'divide-2lo [#_"long" x, #_"Object" y]
-        (Numbers'divide-2oo (cast Object x), y)
-    )
-
-    (defn #_"Number" Numbers'divide-2ol [#_"Object" x, #_"long" y]
-        (Numbers'divide-2oo x, (cast Object y))
-    )
-
-    (defn #_"double" Numbers'divide-2do [#_"double" x, #_"Object" y]
-        (/ x (.doubleValue (cast Number y)))
-    )
-
-    (defn #_"double" Numbers'divide-2od [#_"Object" x, #_"double" y]
-        (/ (.doubleValue (cast Number x)) y)
-    )
-
-    (defn #_"double" Numbers'divide-2dl [#_"double" x, #_"long" y]
-        (/ x y)
-    )
-
-    (defn #_"double" Numbers'divide-2ld [#_"long" x, #_"double" y]
-        (/ x y)
-    )
-
-    (defn #_"Number" Numbers'divide-2ll [#_"long" x, #_"long" y]
-        (Numbers'divide-2oo (cast Number x), (cast Number y))
-    )
-
-    (defn #_"boolean" Numbers'lt-2lo [#_"long" x, #_"Object" y]
-        (Numbers'lt-2oo (cast Object x), y)
-    )
-
-    (defn #_"boolean" Numbers'lt-2ol [#_"Object" x, #_"long" y]
-        (Numbers'lt-2oo x, (cast Object y))
-    )
-
-    (defn #_"boolean" Numbers'lt-2do [#_"double" x, #_"Object" y]
-        (< x (.doubleValue (cast Number y)))
-    )
-
-    (defn #_"boolean" Numbers'lt-2od [#_"Object" x, #_"double" y]
-        (< (.doubleValue (cast Number x)) y)
-    )
-
-    (defn #_"boolean" Numbers'lt-2dl [#_"double" x, #_"long" y]
-        (< x y)
-    )
-
-    (defn #_"boolean" Numbers'lt-2ld [#_"long" x, #_"double" y]
-        (< x y)
-    )
-
-    (defn #_"boolean" Numbers'lte-2lo [#_"long" x, #_"Object" y]
-        (Numbers'lte-2oo (cast Object x), y)
-    )
-
-    (defn #_"boolean" Numbers'lte-2ol [#_"Object" x, #_"long" y]
-        (Numbers'lte-2oo x, (cast Object y))
-    )
-
-    (defn #_"boolean" Numbers'lte-2do [#_"double" x, #_"Object" y]
-        (<= x (.doubleValue (cast Number y)))
-    )
-
-    (defn #_"boolean" Numbers'lte-2od [#_"Object" x, #_"double" y]
-        (<= (.doubleValue (cast Number x)) y)
-    )
-
-    (defn #_"boolean" Numbers'lte-2dl [#_"double" x, #_"long" y]
-        (<= x y)
-    )
-
-    (defn #_"boolean" Numbers'lte-2ld [#_"long" x, #_"double" y]
-        (<= x y)
-    )
-
-    (defn #_"boolean" Numbers'gt-2lo [#_"long" x, #_"Object" y]
-        (Numbers'gt-2oo (cast Object x), y)
-    )
-
-    (defn #_"boolean" Numbers'gt-2ol [#_"Object" x, #_"long" y]
-        (Numbers'gt-2oo x, (cast Object y))
-    )
-
-    (defn #_"boolean" Numbers'gt-2do [#_"double" x, #_"Object" y]
-        (> x (.doubleValue (cast Number y)))
-    )
-
-    (defn #_"boolean" Numbers'gt-2od [#_"Object" x, #_"double" y]
-        (> (.doubleValue (cast Number x)) y)
-    )
-
-    (defn #_"boolean" Numbers'gt-2dl [#_"double" x, #_"long" y]
-        (> x y)
-    )
-
-    (defn #_"boolean" Numbers'gt-2ld [#_"long" x, #_"double" y]
-        (> x y)
-    )
-
-    (defn #_"boolean" Numbers'gte-2lo [#_"long" x, #_"Object" y]
-        (Numbers'gte-2oo (cast Object x), y)
-    )
-
-    (defn #_"boolean" Numbers'gte-2ol [#_"Object" x, #_"long" y]
-        (Numbers'gte-2oo x, (cast Object y))
-    )
-
-    (defn #_"boolean" Numbers'gte-2do [#_"double" x, #_"Object" y]
-        (>= x (.doubleValue (cast Number y)))
-    )
-
-    (defn #_"boolean" Numbers'gte-2od [#_"Object" x, #_"double" y]
-        (>= (.doubleValue (cast Number x)) y)
-    )
-
-    (defn #_"boolean" Numbers'gte-2dl [#_"double" x, #_"long" y]
-        (>= x y)
-    )
-
-    (defn #_"boolean" Numbers'gte-2ld [#_"long" x, #_"double" y]
-        (>= x y)
-    )
-
-    (defn #_"boolean" Numbers'equiv-2lo [#_"long" x, #_"Object" y]
-        (Numbers'equiv-2oo (cast Object x), y)
-    )
-
-    (defn #_"boolean" Numbers'equiv-2ol [#_"Object" x, #_"long" y]
-        (Numbers'equiv-2oo x, (cast Object y))
-    )
-
-    (defn #_"boolean" Numbers'equiv-2do [#_"double" x, #_"Object" y]
-        (= x (.doubleValue (cast Number y)))
-    )
-
-    (defn #_"boolean" Numbers'equiv-2od [#_"Object" x, #_"double" y]
-        (= (.doubleValue (cast Number x)) y)
-    )
-
-    (defn #_"boolean" Numbers'equiv-2dl [#_"double" x, #_"long" y]
-        (= x y)
-    )
-
-    (defn #_"boolean" Numbers'equiv-2ld [#_"long" x, #_"double" y]
-        (= x y)
-    )
-
-    (defn #_"boolean" Numbers'isNaN [#_"Object" x]
-        (or (and (instance? Double x) (.isNaN (cast Double x))) (and (instance? Float x) (.isNaN (cast Float x))))
-    )
-
-    (defn #_"long" Numbers'max-2ll [#_"long" x, #_"long" y]
-        (if (> x y) x y)
-    )
-
-    (defn #_"double" Numbers'max-2dd [#_"double" x, #_"double" y]
-        (Math/max x, y)
-    )
-
-    (defn #_"Object" Numbers'max-2ld [#_"long" x, #_"double" y] (cond (Double/isNaN y) y (> x y) x :else y))
-    (defn #_"Object" Numbers'max-2dl [#_"double" x, #_"long" y] (cond (Double/isNaN x) x (> x y) x :else y))
-
-    (defn #_"Object" Numbers'max-2lo [#_"long" x, #_"Object" y] (cond (Numbers'isNaN y) y (Numbers'gt-2lo x, y) x :else y))
-    (defn #_"Object" Numbers'max-2ol [#_"Object" x, #_"long" y] (cond (Numbers'isNaN x) x (Numbers'gt-2ol x, y) x :else y))
-
-    (defn #_"Object" Numbers'max-2do [#_"double" x, #_"Object" y]
-        (cond (Double/isNaN x) x (Numbers'isNaN y) y (> x (.doubleValue (cast Number y))) x :else y)
-    )
-
-    (defn #_"Object" Numbers'max-2od [#_"Object" x, #_"double" y]
-        (cond (Numbers'isNaN x) x (Double/isNaN y) y (< y (.doubleValue (cast Number x))) x :else y)
-    )
-
-    (defn #_"Object" Numbers'max-2oo [#_"Object" x, #_"Object" y]
-        (cond (Numbers'isNaN x) x (Numbers'isNaN y) y (Numbers'gt-2oo x, y) x :else y)
-    )
-
-    (defn #_"long" Numbers'min-2ll [#_"long" x, #_"long" y]
-        (if (< x y) x y)
-    )
-
-    (defn #_"double" Numbers'min-2dd [#_"double" x, #_"double" y]
-        (Math/min x, y)
-    )
-
-    (defn #_"Object" Numbers'min-2ld [#_"long" x, #_"double" y] (cond (Double/isNaN y) y (< x y) x :else y))
-    (defn #_"Object" Numbers'min-2dl [#_"double" x, #_"long" y] (cond (Double/isNaN x) x (< x y) x :else y))
-
-    (defn #_"Object" Numbers'min-2lo [#_"long" x, #_"Object" y] (cond (Numbers'isNaN y) y (Numbers'lt-2lo x, y) x :else y))
-    (defn #_"Object" Numbers'min-2ol [#_"Object" x, #_"long" y] (cond (Numbers'isNaN x) x (Numbers'lt-2ol x, y) x :else y))
-
-    (defn #_"Object" Numbers'min-2do [#_"double" x, #_"Object" y]
-        (cond (Double/isNaN x) x (Numbers'isNaN y) y (< x (.doubleValue (cast Number y))) x :else y)
-    )
-
-    (defn #_"Object" Numbers'min-2od [#_"Object" x, #_"double" y]
-        (cond (Numbers'isNaN x) x (Double/isNaN y) y (< (.doubleValue (cast Number x)) y) x :else y)
-    )
-
-    (defn #_"Object" Numbers'min-2oo [#_"Object" x, #_"Object" y]
-        (cond (Numbers'isNaN x) x (Numbers'isNaN y) y (Numbers'lt-2oo x, y) x :else y)
     )
 )
 )
@@ -25467,78 +24990,6 @@
 )
 )
 
-(java-ns cloiure.lang.Ratio
-
-(class-ns Ratio
-    (defn #_"Ratio" Ratio'new [#_"BigInteger" numerator, #_"BigInteger" denominator]
-        (merge (§ foreign Number'new)
-            (hash-map
-                #_"BigInteger" :numerator numerator
-                #_"BigInteger" :denominator denominator
-            )
-        )
-    )
-
-    #_foreign
-    (defn #_"boolean" equals---Ratio [#_"Ratio" this, #_"Object" arg0]
-        (and (some? arg0) (instance? Ratio arg0) (.equals (:numerator (cast Ratio arg0)), (:numerator this)) (.equals (:denominator (cast Ratio arg0)), (:denominator this)))
-    )
-
-    #_foreign
-    (defn #_"int" hashCode---Ratio [#_"Ratio" this]
-        (bit-xor (.hashCode (:numerator this)) (.hashCode (:denominator this)))
-    )
-
-    #_foreign
-    (defn #_"String" toString---Ratio [#_"Ratio" this]
-        (str (:numerator this) "/" (:denominator this))
-    )
-
-    #_method
-    (defn #_"int" Ratio''intValue [#_"Ratio" this]
-        (int (Ratio''doubleValue this))
-    )
-
-    #_method
-    (defn #_"long" Ratio''longValue [#_"Ratio" this]
-        (.longValue (Ratio''bigIntegerValue this))
-    )
-
-    #_method
-    (defn #_"float" Ratio''floatValue [#_"Ratio" this]
-        (float (Ratio''doubleValue this))
-    )
-
-    #_method
-    (defn #_"double" Ratio''doubleValue [#_"Ratio" this]
-        (.doubleValue (Ratio''decimalValue-2 this, MathContext/DECIMAL64))
-    )
-
-    #_method
-    (defn #_"BigDecimal" Ratio''decimalValue-1 [#_"Ratio" this]
-        (Ratio''decimalValue-2 this, MathContext/UNLIMITED)
-    )
-
-    #_method
-    (defn #_"BigDecimal" Ratio''decimalValue-2 [#_"Ratio" this, #_"MathContext" mc]
-        (let [#_"BigDecimal" numerator (BigDecimal. (:numerator this))
-              #_"BigDecimal" denominator (BigDecimal. (:denominator this))]
-            (.divide numerator, denominator, mc)
-        )
-    )
-
-    #_method
-    (defn #_"BigInteger" Ratio''bigIntegerValue [#_"Ratio" this]
-        (.divide (:numerator this), (:denominator this))
-    )
-
-    #_foreign
-    (defn #_"int" compareTo---Ratio [#_"Ratio" this, #_"Object" o]
-        (Numbers'compare this, (cast Number o))
-    )
-)
-)
-
 (java-ns cloiure.lang.Reduced
 
 (class-ns Reduced
@@ -26137,19 +25588,19 @@
     (§ def #_"Var" RT'OUT (Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*out*"), (OutputStreamWriter. System/out))))
     (§ def #_"Var" RT'ERR (Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*err*"), (PrintWriter. (OutputStreamWriter. System/err), true))))
 
-    (§ def #_"Keyword" RT'TAG_KEY (Keyword'intern (Symbol'intern nil, "tag")))
+    (def #_"Keyword" RT'TAG_KEY (Keyword'intern (Symbol'intern nil, "tag")))
 
     (§ def #_"Var" RT'ASSERT (Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*assert*"), RT'T)))
     (§ def #_"Var" RT'MATH_CONTEXT (Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*math-context*"), nil)))
 
-    (§ def #_"Keyword" RT'LINE_KEY (Keyword'intern (Symbol'intern nil, "line")))
-    (§ def #_"Keyword" RT'COLUMN_KEY (Keyword'intern (Symbol'intern nil, "column")))
-    (§ def #_"Keyword" RT'DECLARED_KEY (Keyword'intern (Symbol'intern nil, "declared")))
-    (§ def #_"Keyword" RT'DOC_KEY (Keyword'intern (Symbol'intern nil, "doc")))
+    (def #_"Keyword" RT'LINE_KEY (Keyword'intern (Symbol'intern nil, "line")))
+    (def #_"Keyword" RT'COLUMN_KEY (Keyword'intern (Symbol'intern nil, "column")))
+    (def #_"Keyword" RT'DECLARED_KEY (Keyword'intern (Symbol'intern nil, "declared")))
+    (def #_"Keyword" RT'DOC_KEY (Keyword'intern (Symbol'intern nil, "doc")))
 
-    (§ def #_"Symbol" RT'IN_NAMESPACE (Symbol'intern "in-ns"))
-    (§ def #_"Symbol" RT'NAMESPACE (Symbol'intern "ns"))
-    (§ def #_"Symbol" RT'IDENTICAL (Symbol'intern "identical?"))
+    (def #_"Symbol" RT'IN_NAMESPACE (Symbol'intern "in-ns"))
+    (def #_"Symbol" RT'NAMESPACE (Symbol'intern "ns"))
+    (def #_"Symbol" RT'IDENTICAL (Symbol'intern "identical?"))
 
     (§ def #_"Var" RT'CURRENT_NS (Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*ns*"), RT'CLOIURE_NS)))
 
@@ -27778,182 +27229,6 @@
 )
 )
 
-(java-ns cloiure.lang.Util
-
-(class-ns Util
-    (defn #_"boolean" Util'equiv-2oo [#_"Object" k1, #_"Object" k2]
-        (cond
-            (= k1 k2) true
-            (nil? k1) false
-            (and (instance? Number k1) (instance? Number k2)) (Numbers'equal (cast Number k1), (cast Number k2))
-            (or (instance? IPersistentCollection k1) (instance? IPersistentCollection k2)) (Util'pcequiv k1, k2)
-            :else (.equals k1, k2)
-        )
-    )
-
-    (def #_"EquivPred" Util'equivNull
-        (reify EquivPred
-            #_override
-            (#_"boolean" equiv [#_"EquivPred" _self, #_"Object" k1, #_"Object" k2]
-                (nil? k2)
-            )
-        )
-    )
-
-    (def #_"EquivPred" Util'equivEquals
-        (reify EquivPred
-            #_override
-            (#_"boolean" equiv [#_"EquivPred" _self, #_"Object" k1, #_"Object" k2]
-                (.equals k1, k2)
-            )
-        )
-    )
-
-    (def #_"EquivPred" Util'equivNumber
-        (reify EquivPred
-            #_override
-            (#_"boolean" equiv [#_"EquivPred" _self, #_"Object" k1, #_"Object" k2]
-                (and (instance? Number k2) (Numbers'equal (cast Number k1), (cast Number k2)))
-            )
-        )
-    )
-
-    (def #_"EquivPred" Util'equivColl
-        (reify EquivPred
-            #_override
-            (#_"boolean" equiv [#_"EquivPred" _self, #_"Object" k1, #_"Object" k2]
-                (if (or (instance? IPersistentCollection k1) (instance? IPersistentCollection k2)) (Util'pcequiv k1, k2) (.equals k1, k2))
-            )
-        )
-    )
-
-    (defn #_"EquivPred" Util'equivPred [#_"Object" k1]
-        (cond
-            (nil? k1)                                         Util'equivNull
-            (instance? Number k1)                             Util'equivNumber
-            (or (instance? String k1) (instance? Symbol k1))  Util'equivEquals
-            (or (instance? Collection k1) (instance? Map k1)) Util'equivColl
-            :else                                             Util'equivEquals
-        )
-    )
-
-    (defn #_"boolean" Util'equiv-2ll [#_"long" k1, #_"long" k2]
-        (= k1 k2)
-    )
-
-    (defn #_"boolean" Util'equiv-2ol [#_"Object" k1, #_"long" k2]
-        (Util'equiv-2oo k1, (cast Object k2))
-    )
-
-    (defn #_"boolean" Util'equiv-2lo [#_"long" k1, #_"Object" k2]
-        (Util'equiv-2oo (cast Object k1), k2)
-    )
-
-    (defn #_"boolean" Util'equiv-2dd [#_"double" k1, #_"double" k2]
-        (= k1 k2)
-    )
-
-    (defn #_"boolean" Util'equiv-2od [#_"Object" k1, #_"double" k2]
-        (Util'equiv-2oo k1, (cast Object k2))
-    )
-
-    (defn #_"boolean" Util'equiv-2do [#_"double" k1, #_"Object" k2]
-        (Util'equiv-2oo (cast Object k1), k2)
-    )
-
-    (defn #_"boolean" Util'equiv-2bb [#_"boolean" k1, #_"boolean" k2]
-        (= k1 k2)
-    )
-
-    (defn #_"boolean" Util'equiv-2ob [#_"Object" k1, #_"boolean" k2]
-        (Util'equiv-2oo k1, (cast Object k2))
-    )
-
-    (defn #_"boolean" Util'equiv-2bo [#_"boolean" k1, #_"Object" k2]
-        (Util'equiv-2oo (cast Object k1), k2)
-    )
-
-    (defn #_"boolean" Util'equiv-2cc [#_"char" c1, #_"char" c2]
-        (= c1 c2)
-    )
-
-    (defn #_"boolean" Util'pcequiv [#_"Object" k1, #_"Object" k2]
-        (if (instance? IPersistentCollection k1)
-            (.equiv (cast IPersistentCollection k1), k2)
-            (.equiv (cast IPersistentCollection k2), k1)
-        )
-    )
-
-    (defn #_"boolean" Util'equals [#_"Object" k1, #_"Object" k2]
-        (or (= k1 k2) (and (some? k1) (.equals k1, k2)))
-    )
-
-    (defn #_"boolean" Util'identical [#_"Object" k1, #_"Object" k2]
-        (= k1 k2)
-    )
-
-    (defn #_"Class" Util'classOf [#_"Object" x]
-        (when (some? x)
-            (.getClass x)
-        )
-    )
-
-    (defn #_"int" Util'compare [#_"Object" k1, #_"Object" k2]
-        (cond
-            (= k1 k2)             0
-            (nil? k1)             -1
-            (nil? k2)             1
-            (instance? Number k1) (Numbers'compare (cast Number k1), (cast Number k2))
-            :else                 (.compareTo (cast Comparable k1), k2)
-        )
-    )
-
-    (defn #_"int" Util'hash [#_"Object" o]
-        (cond
-            (nil? o) 0
-            :else    (.hashCode o)
-        )
-    )
-
-    (defn #_"int" Util'hasheq [#_"Object" o]
-        (cond
-            (nil? o)              0
-            (instance? IHashEq o) (.hasheq (cast IHashEq o))
-            (instance? Number o)  (Numbers'hasheq (cast Number o))
-            (instance? String o)  (Murmur3'hashInt (.hashCode o))
-            :else                 (.hashCode o)
-        )
-    )
-
-    (defn #_"int" Util'hashCombine [#_"int" seed, #_"int" hash]
-        ;; a la boost
-        (bit-xor seed (+ hash 0x9e3779b9 (<< seed 6) (>> seed 2)))
-    )
-
-    (defn #_"boolean" Util'isPrimitive [#_"Class" c]
-        (and (some? c) (.isPrimitive c) (not (= c Void/TYPE)))
-    )
-
-    (defn #_"boolean" Util'isInteger [#_"Object" x]
-        (or (instance? Integer x) (instance? Long x) (instance? BigInt x) (instance? BigInteger x))
-    )
-
-    (defn #_"<K, V> void" Util'clearCache [#_"ReferenceQueue" rq, #_"ConcurrentHashMap<K, Reference<V>>" cache]
-        ;; cleanup any dead entries
-        (when (some? (.poll rq))
-            (while (some? (.poll rq))
-            )
-            (doseq [#_"Map$Entry<K, Reference<V>>" e (.entrySet cache)]
-                (let-when [#_"Reference<V>" r (.getValue e)] (and (some? r) (nil? (.get r)))
-                    (.remove cache, (.getKey e), r)
-                )
-            )
-        )
-        nil
-    )
-)
-)
-
 (java-ns cloiure.lang.Var
 
 (class-ns TBox
@@ -28008,11 +27283,11 @@
         )
     )
 
-    (§ def #_"Keyword" Var'privateKey (Keyword'intern (Symbol'intern nil, "private")))
+    (def #_"Keyword" Var'privateKey (Keyword'intern (Symbol'intern nil, "private")))
     (§ def #_"IPersistentMap" Var'privateMeta (PersistentArrayMap'new (object-array [ Var'privateKey, Boolean/TRUE ])))
-    (§ def #_"Keyword" Var'macroKey (Keyword'intern (Symbol'intern nil, "macro")))
-    (§ def #_"Keyword" Var'nameKey (Keyword'intern (Symbol'intern nil, "name")))
-    (§ def #_"Keyword" Var'nsKey (Keyword'intern (Symbol'intern nil, "ns")))
+    (def #_"Keyword" Var'macroKey (Keyword'intern (Symbol'intern nil, "macro")))
+    (def #_"Keyword" Var'nameKey (Keyword'intern (Symbol'intern nil, "name")))
+    (def #_"Keyword" Var'nsKey (Keyword'intern (Symbol'intern nil, "ns")))
 
     (defn #_"Var" Var'intern
         ([#_"Namespace" ns, #_"Symbol" sym]
@@ -28470,7 +27745,7 @@
 (java-ns cloiure.main
 
 (class-ns main
-    (§ def- #_"Symbol" main'CLOIURE_MAIN (Symbol'intern "cloiure.main"))
+    (def- #_"Symbol" main'CLOIURE_MAIN (Symbol'intern "cloiure.main"))
     (§ def- #_"Var" main'REQUIRE (RT'var "cloiure.core", "require"))
     (§ def- #_"Var" main'MAIN (RT'var "cloiure.main", "main"))
 
