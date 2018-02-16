@@ -67,7 +67,7 @@
     [java.io FileNotFoundException InputStreamReader LineNumberReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
   #_[java.lang Character Class Exception IllegalArgumentException IllegalStateException Integer Number NumberFormatException Object RuntimeException String StringBuilder Throwable UnsupportedOperationException]
     [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
-    [java.lang.reflect Array Constructor Field InvocationHandler #_Method Modifier]
+    [java.lang.reflect Array Constructor Field #_Method Modifier]
     [java.math BigDecimal BigInteger MathContext]
     [java.net JarURLConnection URL URLClassLoader URLConnection]
     [java.nio.charset Charset]
@@ -195,9 +195,9 @@
 (declare PersistentVector'new)
 (declare PersistentVector'newPath)
 (declare RT'ALLOW_UNRESOLVED_VARS)
-(declare RT'BOOLEANS_CLASS)
-(declare RT'BYTES_CLASS)
-(declare RT'CHARS_CLASS)
+(declare Compiler'BOOLEANS_CLASS)
+(declare Compiler'BYTES_CLASS)
+(declare Compiler'CHARS_CLASS)
 (declare RT'CLOIURE_NS)
 (declare RT'COLUMN_KEY)
 (declare RT'CURRENT_NS)
@@ -205,18 +205,18 @@
 (declare RT'DEFAULT_COMPARATOR)
 (declare RT'DEFAULT_IMPORTS)
 (declare RT'DOC_KEY)
-(declare RT'DOUBLES_CLASS)
+(declare Compiler'DOUBLES_CLASS)
 (declare RT'EMPTY_ARRAY)
 (declare RT'F)
-(declare RT'FLOATS_CLASS)
+(declare Compiler'FLOATS_CLASS)
 (declare RT'FN_LOADER_VAR)
-(declare RT'INTS_CLASS)
+(declare Compiler'INTS_CLASS)
 (declare RT'IN_NS_VAR)
 (declare RT'LINE_KEY)
-(declare RT'LONGS_CLASS)
+(declare Compiler'LONGS_CLASS)
 (declare RT'NS_VAR)
-(declare RT'OBJECTS_CLASS)
-(declare RT'SHORTS_CLASS)
+(declare Compiler'OBJECTS_CLASS)
+(declare Compiler'SHORTS_CLASS)
 (declare RT'T)
 (declare RT'TAG_KEY)
 (declare RT'WARN_ON_REFLECTION)
@@ -3105,10 +3105,6 @@
     (class! PersistentVector [#_"APersistentVector" IObj IEditableCollection IReduce IKVReduce])
 )
 
-(java-ns cloiure.lang.ProxyHandler
-    (class! ProxyHandler [InvocationHandler])
-)
-
 (java-ns cloiure.lang.Range
     (class! Range [#_"ASeq" IChunkedSeq IReduce])
 )
@@ -5135,14 +5131,14 @@
         )
     )
 
-    (defn #_"boolean[]" Numbers'booleans [#_"Object" array] (cast RT'BOOLEANS_CLASS array))
-    (defn #_"byte[]"    Numbers'bytes    [#_"Object" array] (cast RT'BYTES_CLASS    array))
-    (defn #_"short[]"   Numbers'shorts   [#_"Object" array] (cast RT'SHORTS_CLASS   array))
-    (defn #_"char[]"    Numbers'chars    [#_"Object" array] (cast RT'CHARS_CLASS    array))
-    (defn #_"int[]"     Numbers'ints     [#_"Object" array] (cast RT'INTS_CLASS     array))
-    (defn #_"long[]"    Numbers'longs    [#_"Object" array] (cast RT'LONGS_CLASS    array))
-    (defn #_"float[]"   Numbers'floats   [#_"Object" array] (cast RT'FLOATS_CLASS   array))
-    (defn #_"double[]"  Numbers'doubles  [#_"Object" array] (cast RT'DOUBLES_CLASS  array))
+    (defn #_"boolean[]" Numbers'booleans [#_"Object" array] (cast Compiler'BOOLEANS_CLASS array))
+    (defn #_"byte[]"    Numbers'bytes    [#_"Object" array] (cast Compiler'BYTES_CLASS    array))
+    (defn #_"short[]"   Numbers'shorts   [#_"Object" array] (cast Compiler'SHORTS_CLASS   array))
+    (defn #_"char[]"    Numbers'chars    [#_"Object" array] (cast Compiler'CHARS_CLASS    array))
+    (defn #_"int[]"     Numbers'ints     [#_"Object" array] (cast Compiler'INTS_CLASS     array))
+    (defn #_"long[]"    Numbers'longs    [#_"Object" array] (cast Compiler'LONGS_CLASS    array))
+    (defn #_"float[]"   Numbers'floats   [#_"Object" array] (cast Compiler'FLOATS_CLASS   array))
+    (defn #_"double[]"  Numbers'doubles  [#_"Object" array] (cast Compiler'DOUBLES_CLASS  array))
 
     (defn #_"double" Numbers'add-2dd    [#_"double" x, #_"double" y] (+ x y))
     (defn #_"double" Numbers'addP-2dd   [#_"double" x, #_"double" y] (+ x y))
@@ -9278,7 +9274,7 @@
     )
 
     (defn #_"Iterator" ArrayIter'new [#_"Object" array, #_"int" i]
-        (let [#_"Object[]" a (cast RT'OBJECTS_CLASS array)]
+        (let [#_"Object[]" a (cast Compiler'OBJECTS_CLASS array)]
             (§ reify Iterator
                 [#_mutable #_"int" i i]
 
@@ -9314,15 +9310,15 @@
         (when (and (some? a) (pos? (Array/getLength a))) => ArrayIter'EMPTY_ITERATOR
             (let [#_"Class" c (.getClass a)]
                 (condp = c
-                    RT'INTS_CLASS     (ArrayIter_int'new     (cast c a), 0)
-                    RT'FLOATS_CLASS   (ArrayIter_float'new   (cast c a), 0)
-                    RT'DOUBLES_CLASS  (ArrayIter_double'new  (cast c a), 0)
-                    RT'LONGS_CLASS    (ArrayIter_long'new    (cast c a), 0)
-                    RT'BYTES_CLASS    (ArrayIter_byte'new    (cast c a), 0)
-                    RT'CHARS_CLASS    (ArrayIter_char'new    (cast c a), 0)
-                    RT'SHORTS_CLASS   (ArrayIter_short'new   (cast c a), 0)
-                    RT'BOOLEANS_CLASS (ArrayIter_boolean'new (cast c a), 0)
-                                      (ArrayIter'new                 a,  0)
+                    Compiler'INTS_CLASS     (ArrayIter_int'new     (cast c a), 0)
+                    Compiler'FLOATS_CLASS   (ArrayIter_float'new   (cast c a), 0)
+                    Compiler'DOUBLES_CLASS  (ArrayIter_double'new  (cast c a), 0)
+                    Compiler'LONGS_CLASS    (ArrayIter_long'new    (cast c a), 0)
+                    Compiler'BYTES_CLASS    (ArrayIter_byte'new    (cast c a), 0)
+                    Compiler'CHARS_CLASS    (ArrayIter_char'new    (cast c a), 0)
+                    Compiler'SHORTS_CLASS   (ArrayIter_short'new   (cast c a), 0)
+                    Compiler'BOOLEANS_CLASS (ArrayIter_boolean'new (cast c a), 0)
+                                            (ArrayIter'new                 a,  0)
                 )
             )
         )
@@ -9802,7 +9798,7 @@
         ([#_"IPersistentMap" meta, #_"Object" array, #_"int" i]
             (merge (ASeq'new meta)
                 (hash-map
-                    #_"Object[]" :array (cast RT'OBJECTS_CLASS array)
+                    #_"Object[]" :array (cast Compiler'OBJECTS_CLASS array)
                     #_"int" :i i
                 )
             )
@@ -9823,15 +9819,15 @@
         (when (and (some? array) (pos? (Array/getLength array)))
             (let [#_"Class" c (.getClass array)]
                 (condp = c
-                    RT'INTS_CLASS     (ArraySeq_int'new     nil, (cast c array), 0)
-                    RT'FLOATS_CLASS   (ArraySeq_float'new   nil, (cast c array), 0)
-                    RT'DOUBLES_CLASS  (ArraySeq_double'new  nil, (cast c array), 0)
-                    RT'LONGS_CLASS    (ArraySeq_long'new    nil, (cast c array), 0)
-                    RT'BYTES_CLASS    (ArraySeq_byte'new    nil, (cast c array), 0)
-                    RT'CHARS_CLASS    (ArraySeq_char'new    nil, (cast c array), 0)
-                    RT'SHORTS_CLASS   (ArraySeq_short'new   nil, (cast c array), 0)
-                    RT'BOOLEANS_CLASS (ArraySeq_boolean'new nil, (cast c array), 0)
-                                      (ArraySeq'new                      array,  0)
+                    Compiler'INTS_CLASS     (ArraySeq_int'new     nil, (cast c array), 0)
+                    Compiler'FLOATS_CLASS   (ArraySeq_float'new   nil, (cast c array), 0)
+                    Compiler'DOUBLES_CLASS  (ArraySeq_double'new  nil, (cast c array), 0)
+                    Compiler'LONGS_CLASS    (ArraySeq_long'new    nil, (cast c array), 0)
+                    Compiler'BYTES_CLASS    (ArraySeq_byte'new    nil, (cast c array), 0)
+                    Compiler'CHARS_CLASS    (ArraySeq_char'new    nil, (cast c array), 0)
+                    Compiler'SHORTS_CLASS   (ArraySeq_short'new   nil, (cast c array), 0)
+                    Compiler'BOOLEANS_CLASS (ArraySeq_boolean'new nil, (cast c array), 0)
+                                            (ArraySeq'new                      array,  0)
                 )
             )
         )
@@ -15811,51 +15807,6 @@
 )
 )
 
-(java-ns cloiure.lang.ProxyHandler
-
-(class-ns ProxyHandler
-    (defn #_"ProxyHandler" ProxyHandler'new [#_"IPersistentMap" fns]
-        (hash-map
-            ;; method-name-string->fn
-            #_"IPersistentMap" :fns fns
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--ProxyHandler [#_"ProxyHandler" this, #_"Object" proxy, #_"java.lang.reflect.Method" method, #_"Object[]" args]
-        (let [#_"IFn" fn (cast IFn (.valAt (:fns this), (.getName method))) #_"Class" rt (.getReturnType method)]
-            (if (nil? fn)
-                (cond
-                    (= rt Void/TYPE)                 nil
-                    (= (.getName method) "equals")   (= proxy (aget args 0))
-                    (= (.getName method) "hashCode") (System/identityHashCode proxy)
-                    (= (.getName method) "toString") (str "Proxy: " (System/identityHashCode proxy))
-                    :else                            (throw (UnsupportedOperationException.))
-                )
-                (let [#_"Object" ret (.applyTo fn, (ArraySeq'create-1 args))]
-                    (cond
-                        (= rt Void/TYPE) nil
-                        (.isPrimitive rt)
-                            (cond
-                                (= rt Character/TYPE) ret
-                                (= rt Integer/TYPE)   (.intValue (cast Number ret))
-                                (= rt Long/TYPE)      (.longValue (cast Number ret))
-                                (= rt Float/TYPE)     (.floatValue (cast Number ret))
-                                (= rt Double/TYPE)    (.doubleValue (cast Number ret))
-                                (and (= rt Boolean/TYPE) (not (instance? Boolean ret))) (if (nil? ret) Boolean/FALSE Boolean/TRUE)
-                                (= rt Byte/TYPE)      (byte (.intValue (cast Number ret)))
-                                (= rt Short/TYPE)     (short (.intValue (cast Number ret)))
-                                :else ret
-                            )
-                        :else ret
-                    )
-                )
-            )
-        )
-    )
-)
-)
-
 (java-ns cloiure.lang.Range
 
 ;;;
@@ -16821,7 +16772,7 @@
     #_override
   #_(defn #_"Object" IFn'''invoke-22--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args]
         (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20,
-            (cast RT'OBJECTS_CLASS args)
+            (cast Compiler'OBJECTS_CLASS args)
         )
     )
 
@@ -18241,6 +18192,16 @@
 (java-ns cloiure.lang.Compiler
 
 (class-ns Compiler
+    (def #_"Class" Compiler'BOOLEANS_CLASS (Class/forName "[Z"))
+    (def #_"Class" Compiler'BYTES_CLASS    (Class/forName "[B"))
+    (def #_"Class" Compiler'SHORTS_CLASS   (Class/forName "[S"))
+    (def #_"Class" Compiler'CHARS_CLASS    (Class/forName "[C"))
+    (def #_"Class" Compiler'INTS_CLASS     (Class/forName "[I"))
+    (def #_"Class" Compiler'LONGS_CLASS    (Class/forName "[J"))
+    (def #_"Class" Compiler'FLOATS_CLASS   (Class/forName "[F"))
+    (def #_"Class" Compiler'DOUBLES_CLASS  (Class/forName "[D"))
+    (def #_"Class" Compiler'OBJECTS_CLASS  (Class/forName "[Ljava.lang.Object;"))
+
     (def #_"Symbol" Compiler'DEF           (Symbol'intern "def"))
     (def #_"Symbol" Compiler'LOOP          (Symbol'intern "loop*"))
     (def #_"Symbol" Compiler'RECUR         (Symbol'intern "recur"))
@@ -18989,15 +18950,15 @@
     (defn #_"Class" HostExpr'maybeSpecialTag [#_"Symbol" sym]
         (or (Compiler'primClass-1s sym)
             (case (:name sym)
-                "booleans" RT'BOOLEANS_CLASS
-                "bytes"    RT'BYTES_CLASS
-                "shorts"   RT'SHORTS_CLASS
-                "chars"    RT'CHARS_CLASS
-                "ints"     RT'INTS_CLASS
-                "longs"    RT'LONGS_CLASS
-                "floats"   RT'FLOATS_CLASS
-                "doubles"  RT'DOUBLES_CLASS
-                "objects"  RT'OBJECTS_CLASS
+                "booleans" Compiler'BOOLEANS_CLASS
+                "bytes"    Compiler'BYTES_CLASS
+                "shorts"   Compiler'SHORTS_CLASS
+                "chars"    Compiler'CHARS_CLASS
+                "ints"     Compiler'INTS_CLASS
+                "longs"    Compiler'LONGS_CLASS
+                "floats"   Compiler'FLOATS_CLASS
+                "doubles"  Compiler'DOUBLES_CLASS
+                "objects"  Compiler'OBJECTS_CLASS
                            nil
             )
         )
@@ -19509,7 +19470,7 @@
             (when (= context :Context'RETURN)
                 (ObjMethod''emitClearLocals (cast ObjMethod (.deref Compiler'METHOD)), gen)
             )
-            (let [#_"Object[]" predOps (cast RT'OBJECTS_CLASS (RT'get-2 Intrinsics'preds, (.toString (:method this))))]
+            (let [#_"Object[]" predOps (cast Compiler'OBJECTS_CLASS (RT'get-2 Intrinsics'preds, (.toString (:method this))))]
                 (dotimes [#_"int" i (dec (alength predOps))]
                     (.visitInsn gen, (cast Integer (aget predOps i)))
                 )
@@ -19529,8 +19490,8 @@
             )
             (let [#_"Object" ops (RT'get-2 Intrinsics'ops, (.toString (:method this)))]
                 (if (some? ops)
-                    (if (instance? RT'OBJECTS_CLASS ops)
-                        (doseq [#_"Object" op (cast RT'OBJECTS_CLASS ops)]
+                    (if (instance? Compiler'OBJECTS_CLASS ops)
+                        (doseq [#_"Object" op (cast Compiler'OBJECTS_CLASS ops)]
                             (.visitInsn gen, (cast Integer op))
                         )
                         (.visitInsn gen, (cast Integer ops))
@@ -25635,16 +25596,6 @@
 (java-ns cloiure.lang.RT
 
 (class-ns RT
-    (def #_"Class" RT'BOOLEANS_CLASS (Class/forName "[Z"))
-    (def #_"Class" RT'BYTES_CLASS (Class/forName "[B"))
-    (def #_"Class" RT'SHORTS_CLASS (Class/forName "[S"))
-    (def #_"Class" RT'CHARS_CLASS (Class/forName "[C"))
-    (def #_"Class" RT'INTS_CLASS (Class/forName "[I"))
-    (def #_"Class" RT'LONGS_CLASS (Class/forName "[J"))
-    (def #_"Class" RT'FLOATS_CLASS (Class/forName "[F"))
-    (def #_"Class" RT'DOUBLES_CLASS (Class/forName "[D"))
-    (def #_"Class" RT'OBJECTS_CLASS (Class/forName "[Ljava.lang.Object;"))
-
     (def #_"Boolean" RT'T Boolean/TRUE)
     (def #_"Boolean" RT'F Boolean/FALSE)
     (def #_"String" RT'LOADER_SUFFIX "__init")
@@ -26310,9 +26261,9 @@
                 nil
             (instance? IPersistentVector coll)
                 (.assocN (cast IPersistentVector coll), n, val)
-            (instance? RT'OBJECTS_CLASS coll)
+            (instance? Compiler'OBJECTS_CLASS coll)
                 ;; hmm... this is not persistent
-                (let [#_"Object[]" array (cast RT'OBJECTS_CLASS coll)]
+                (let [#_"Object[]" array (cast Compiler'OBJECTS_CLASS coll)]
                     (aset array n val)
                     array
                 )
@@ -26784,8 +26735,8 @@
         (cond
             (nil? coll)
                 RT'EMPTY_ARRAY
-            (instance? RT'OBJECTS_CLASS coll)
-                (cast RT'OBJECTS_CLASS coll)
+            (instance? Compiler'OBJECTS_CLASS coll)
+                (cast Compiler'OBJECTS_CLASS coll)
             (instance? Collection coll)
                 (.toArray (cast Collection coll))
             (instance? Iterable coll)
@@ -26829,7 +26780,7 @@
 
     (defn #_"Object[]" RT'seqToPassedArray [#_"ISeq" s, #_"Object[]" passed]
         (let [#_"Object[]" a passed #_"int" n (RT'count s)
-              a (if (< (alength a) n) (cast RT'OBJECTS_CLASS (Array/newInstance (.getComponentType (.getClass passed)), n)) a)]
+              a (if (< (alength a) n) (cast Compiler'OBJECTS_CLASS (Array/newInstance (.getComponentType (.getClass passed)), n)) a)]
             (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (.next s)]
                 (aset a i (.first s))
             )
