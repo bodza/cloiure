@@ -3342,12 +3342,6 @@
         (= k1 k2)
     )
 
-    (defn #_"Class" Util'classOf [#_"Object" x]
-        (when (some? x)
-            (.getClass x)
-        )
-    )
-
     (declare Numbers'compare)
 
     (defn #_"int" Util'compare [#_"Object" k1, #_"Object" k2]
@@ -3382,14 +3376,6 @@
     (defn #_"int" Util'hashCombine [#_"int" seed, #_"int" hash]
         ;; a la boost
         (bit-xor seed (+ hash 0x9e3779b9 (<< seed 6) (>> seed 2)))
-    )
-
-    (defn #_"boolean" Util'isPrimitive [#_"Class" c]
-        (and (some? c) (.isPrimitive c) (not (= c Void/TYPE)))
-    )
-
-    (defn #_"boolean" Util'isInteger [#_"Object" x]
-        (or (instance? Integer x) (instance? Long x) (instance? BigInt x) (instance? BigInteger x))
     )
 
     (defn #_"<K, V> void" Util'clearCache [#_"ReferenceQueue" rq, #_"ConcurrentHashMap<K, Reference<V>>" cache]
@@ -4583,6 +4569,10 @@
             BigDecimal :Category'DECIMAL
                        :Category'INTEGER
         )
+    )
+
+    (defn #_"boolean" Numbers'isInteger [#_"Object" x]
+        (or (instance? Integer x) (instance? Long x) (instance? BigInt x) (instance? BigInteger x))
     )
 
     (defn #_"boolean" Numbers'isNaN [#_"Object" x]
@@ -8725,9 +8715,8 @@
 
     #_override
     (defn #_"Object" IFn'''invoke-2--APersistentVector [#_"APersistentVector" this, #_"Object" arg1]
-        (if (Util'isInteger arg1)
+        (when (Numbers'isInteger arg1) => (throw (IllegalArgumentException. "Key must be integer"))
             (.nth this, (.intValue (cast Number arg1)))
-            (throw (IllegalArgumentException. "Key must be integer"))
         )
     )
 
@@ -8762,12 +8751,12 @@
 
     #_override
     (defn #_"boolean" Associative'''containsKey--APersistentVector [#_"APersistentVector" this, #_"Object" key]
-        (and (Util'isInteger key) (< -1 (.intValue (cast Number key)) (.count this)))
+        (and (Numbers'isInteger key) (< -1 (.intValue (cast Number key)) (.count this)))
     )
 
     #_override
     (defn #_"IMapEntry" Associative'''entryAt--APersistentVector [#_"APersistentVector" this, #_"Object" key]
-        (when (Util'isInteger key)
+        (when (Numbers'isInteger key)
             (let-when [#_"int" i (.intValue (cast Number key))] (< -1 i (.count this))
                 (cast IMapEntry (MapEntry'create key, (.nth this, i)))
             )
@@ -8776,14 +8765,14 @@
 
     #_override
     (defn #_"IPersistentVector" Associative'''assoc--APersistentVector [#_"APersistentVector" this, #_"Object" key, #_"Object" val]
-        (when (Util'isInteger key) => (throw (IllegalArgumentException. "Key must be integer"))
+        (when (Numbers'isInteger key) => (throw (IllegalArgumentException. "Key must be integer"))
             (.assocN this, (.intValue (cast Number key)), val)
         )
     )
 
     #_override
     (defn #_"Object" ILookup'''valAt-3--APersistentVector [#_"APersistentVector" this, #_"Object" key, #_"Object" notFound]
-        (when (Util'isInteger key) => notFound
+        (when (Numbers'isInteger key) => notFound
             (let-when [#_"int" i (.intValue (cast Number key))] (< -1 i (.count this)) => notFound
                 (.nth this, i)
             )
@@ -11632,14 +11621,9 @@
     )
 
     #_method
-    (defn #_"Class" Namespace''importClass-3 [#_"Namespace" this, #_"Symbol" sym, #_"Class" cls]
-        (Namespace''referenceClass this, sym, cls)
-    )
-
-    #_method
-    (defn #_"Class" Namespace''importClass-2 [#_"Namespace" this, #_"Class" cls]
+    (defn #_"Class" Namespace''importClass [#_"Namespace" this, #_"Class" cls]
         (let [#_"String" s (.getName cls)]
-            (Namespace''importClass-3 this, (Symbol'intern (.substring s, (inc (.lastIndexOf s, (int \.))))), cls)
+            (Namespace''referenceClass this, (Symbol'intern (.substring s, (inc (.lastIndexOf s, (int \.))))), cls)
         )
     )
 
@@ -15270,7 +15254,7 @@
     #_override
     (defn #_"Object" ILookup'''valAt-3--TransientVector [#_"TransientVector" this, #_"Object" key, #_"Object" notFound]
         (TransientVector''ensureEditable this)
-        (when (Util'isInteger key) => notFound
+        (when (Numbers'isInteger key) => notFound
             (let-when [#_"int" i (.intValue (cast Number key))] (< -1 i (:cnt this)) => notFound
                 (.nth this, i)
             )
@@ -15296,7 +15280,7 @@
     #_override
     (defn #_"Object" IFn'''invoke-2--TransientVector [#_"TransientVector" this, #_"Object" arg1]
         ;; note - relies on ensureEditable in nth
-        (when (Util'isInteger arg1) => (throw (IllegalArgumentException. "Key must be integer"))
+        (when (Numbers'isInteger arg1) => (throw (IllegalArgumentException. "Key must be integer"))
             (.nth this, (.intValue (cast Number arg1)))
         )
     )
@@ -15351,7 +15335,7 @@
     #_override
     (defn #_"TransientVector" ITransientAssociative'''assoc--TransientVector [#_"TransientVector" this, #_"Object" key, #_"Object" val]
         ;; note - relies on ensureEditable in assocN
-        (when (Util'isInteger key) => (throw (IllegalArgumentException. "Key must be integer"))
+        (when (Numbers'isInteger key) => (throw (IllegalArgumentException. "Key must be integer"))
             (.assocN this, (.intValue (cast Number key)), val)
         )
     )
@@ -17812,6 +17796,16 @@
 (java-ns cloiure.lang.Reflector
 
 (class-ns Reflector
+    (defn #_"Class" Reflector'classOf [#_"Object" x]
+        (when (some? x)
+            (.getClass x)
+        )
+    )
+
+    (defn #_"boolean" Reflector'isPrimitive [#_"Class" c]
+        (and (some? c) (.isPrimitive c) (not (= c Void/TYPE)))
+    )
+
     (defn- #_"Throwable" Reflector'getCauseOrElse [#_"Exception" e]
         (or (.getCause e) e)
     )
@@ -18437,7 +18431,7 @@
     #_override
     (defn #_"Object" Expr'''eval--ImportExpr [#_"ImportExpr" this]
         (let [#_"Namespace" ns (cast Namespace (.deref RT'CURRENT_NS))]
-            (Namespace''importClass-2 ns, (RT'classForNameNonLoading (:c this)))
+            (Namespace''importClass ns, (RT'classForNameNonLoading (:c this)))
             nil
         )
     )
@@ -19011,7 +19005,7 @@
 
     #_override
     (defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive--InstanceFieldExpr [#_"InstanceFieldExpr" this]
-        (and (some? (:targetClass this)) (some? (:field this)) (Util'isPrimitive (.getType (:field this))))
+        (and (some? (:targetClass this)) (some? (:field this)) (Reflector'isPrimitive (.getType (:field this))))
     )
 
     #_override
@@ -19117,7 +19111,7 @@
 
     #_override
     (defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive--StaticFieldExpr [#_"StaticFieldExpr" this]
-        (Util'isPrimitive (.getType (:field this)))
+        (Reflector'isPrimitive (.getType (:field this)))
     )
 
     #_override
@@ -19306,7 +19300,7 @@
 
     #_override
     (defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive--InstanceMethodExpr [#_"InstanceMethodExpr" this]
-        (and (some? (:method this)) (Util'isPrimitive (.getReturnType (:method this))))
+        (and (some? (:method this)) (Reflector'isPrimitive (.getReturnType (:method this))))
     )
 
     (declare ObjMethod''emitClearThis)
@@ -19446,7 +19440,7 @@
 
     #_override
     (defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive--StaticMethodExpr [#_"StaticMethodExpr" this]
-        (and (some? (:method this)) (Util'isPrimitive (.getReturnType (:method this))))
+        (and (some? (:method this)) (Reflector'isPrimitive (.getReturnType (:method this))))
     )
 
     #_method
@@ -21014,7 +21008,7 @@
               #_"Expr" e (cast Expr (.nth (:args this), 0))]
             (.emit e, :Context'EXPRESSION, objx, gen)
             (.dup gen) ;; target, target
-            (.invokeStatic gen, Compiler'UTIL_TYPE, (Method/getMethod "Class classOf(Object)")) ;; target, class
+            (.invokeStatic gen, Compiler'REFLECTOR_TYPE, (Method/getMethod "Class classOf(Object)")) ;; target, class
             (.getStatic gen, (:objtype objx), (ObjExpr''cachedClassName objx, (:siteIndex this)), Compiler'CLASS_TYPE) ;; target, class, cached-class
             (.visitJumpInsn gen, Opcodes/IF_ACMPEQ, callLabel) ;; target
             (when (some? (:protocolOn this))
@@ -21024,7 +21018,7 @@
             )
 
             (.dup gen) ;; target, target
-            (.invokeStatic gen, Compiler'UTIL_TYPE, (Method/getMethod "Class classOf(Object)")) ;; target, class
+            (.invokeStatic gen, Compiler'REFLECTOR_TYPE, (Method/getMethod "Class classOf(Object)")) ;; target, class
             (.putStatic gen, (:objtype objx), (ObjExpr''cachedClassName objx, (:siteIndex this)), Compiler'CLASS_TYPE) ;; target
 
             (.mark gen, callLabel) ;; target
@@ -21147,7 +21141,7 @@
     #_override
     (defn #_"boolean" Expr'''hasJavaClass--LocalBinding [#_"LocalBinding" this]
         (let [? (and (some? (:init this)) (.hasJavaClass (:init this)))]
-            (if (and ? (Util'isPrimitive (.getJavaClass (:init this))) (not (instance? MaybePrimitiveExpr (:init this))))
+            (if (and ? (Reflector'isPrimitive (.getJavaClass (:init this))) (not (instance? MaybePrimitiveExpr (:init this))))
                 false
                 (or (some? (:tag this)) ?)
             )
@@ -21278,7 +21272,7 @@
 
     (defn #_"void" ObjMethod'emitBody [#_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Class" retClass, #_"Expr" body]
         (let [#_"MaybePrimitiveExpr" be (cast MaybePrimitiveExpr body)]
-            (if (and (Util'isPrimitive retClass) (.canEmitPrimitive be))
+            (if (and (Reflector'isPrimitive retClass) (.canEmitPrimitive be))
                 (let [#_"Class" bc (Compiler'maybePrimitiveType be)]
                     (cond (= bc retClass)
                         (do
@@ -21426,7 +21420,7 @@
 
     #_override
     (defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive--MethodParamExpr [#_"MethodParamExpr" this]
-        (Util'isPrimitive (:c this))
+        (Reflector'isPrimitive (:c this))
     )
 
     #_override
@@ -21912,7 +21906,7 @@
 
     #_method
     (defn #_"Type" ObjExpr''constantType [#_"ObjExpr" this, #_"int" id]
-        (let [#_"Object" o (.nth (:constants this), id) #_"Class" c (Util'classOf o)]
+        (let [#_"Object" o (.nth (:constants this), id) #_"Class" c (Reflector'classOf o)]
             (or
                 (when (and (some? c) (Modifier/isPublic (.getModifiers c)))
                     ;; can't emit derived fn types due to visibility
@@ -24235,7 +24229,7 @@
 
     #_override
     (defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive--CaseExpr [#_"CaseExpr" this]
-        (Util'isPrimitive (:returnType this))
+        (Reflector'isPrimitive (:returnType this))
     )
 
     #_override
@@ -24684,10 +24678,8 @@
 
     (defn #_"Class" Compiler'maybePrimitiveType [#_"Expr" e]
         (when (and (instance? MaybePrimitiveExpr e) (.hasJavaClass e) (.canEmitPrimitive (cast MaybePrimitiveExpr e)))
-            (let [#_"Class" c (.getJavaClass e)]
-                (when (Util'isPrimitive c)
-                    c
-                )
+            (let-when [#_"Class" c (.getJavaClass e)] (Reflector'isPrimitive c)
+                c
             )
         )
     )

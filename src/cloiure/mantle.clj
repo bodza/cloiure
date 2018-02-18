@@ -7557,7 +7557,7 @@
                             (let [gargs (map #(gensym (str "gf__" % "__")) args) target (first gargs)]
                                 `([~@gargs]
                                     (let [cache# (.__methodImplCache ~gthis)
-                                          f# (.fnFor cache# (cloiure.lang.Util/classOf ~target))]
+                                          f# (.fnFor cache# (cloiure.lang.Reflector/classOf ~target))]
                                         (if f#
                                             (f# ~@gargs)
                                             ((-cache-protocol-fn ~gthis ~target ~on-interface ~ginterf) ~@gargs)
@@ -8418,13 +8418,13 @@
 
     cloiure.lang.Associative
     (assoc [this k v]
-        (if (cloiure.lang.Util/isInteger k)
+        (if (cloiure.lang.Numbers/isInteger k)
             (.assocN this k v)
             (throw (IllegalArgumentException. "Key must be integer"))
         )
     )
     (containsKey [this k]
-        (and (cloiure.lang.Util/isInteger k)
+        (and (cloiure.lang.Numbers/isInteger k)
             (<= 0 (int k))
             (< (int k) cnt)
         )
@@ -8438,7 +8438,7 @@
 
     cloiure.lang.ILookup
     (valAt [this k not-found]
-        (if (cloiure.lang.Util/isInteger k)
+        (if (cloiure.lang.Numbers/isInteger k)
             (let [i (int k)]
                 (if (and (>= i 0) (< i cnt))
                     (.nth this i)
@@ -8452,7 +8452,7 @@
 
     cloiure.lang.IFn
     (invoke [this k]
-        (if (cloiure.lang.Util/isInteger k)
+        (if (cloiure.lang.Numbers/isInteger k)
             (let [i (int k)]
                 (if (and (>= i 0) (< i cnt))
                     (.nth this i)
