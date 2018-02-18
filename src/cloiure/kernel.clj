@@ -2531,8 +2531,6 @@
 (java-ns cloiure.lang.IPersistentVector
     (interface! IPersistentVector [Associative Sequential IPersistentStack Reversible Indexed]
         #_abstract
-        (#_"int" length [#_"IPersistentVector" this])
-        #_abstract
         (#_"IPersistentVector" assocN [#_"IPersistentVector" this, #_"int" i, #_"Object" val])
         #_abstract
         (#_"IPersistentVector" cons [#_"IPersistentVector" this, #_"Object" o])
@@ -8809,11 +8807,6 @@
         (loop-when [#_"ISeq" s (.seq this)] (some? s) => false
             (or (Util'equiv-2oo (.first s), o) (recur (.next s)))
         )
-    )
-
-    #_override
-    (defn #_"int" IPersistentVector'''length--APersistentVector [#_"APersistentVector" this]
-        (.count this)
     )
 
     #_foreign
@@ -20520,7 +20513,7 @@
                         (when allConstantKeysUnique => (throw (IllegalArgumentException. "Duplicate constant keys in map"))
                             (when valsConstant => e
                                 (loop-when-recur [#_"IPersistentMap" m PersistentArrayMap'EMPTY #_"int" i 0]
-                                                 (< i (.length keyvals))
+                                                 (< i (.count keyvals))
                                                  [(.assoc m, (.val (cast LiteralExpr (.nth keyvals, i))), (.val (cast LiteralExpr (.nth keyvals, (inc i))))) (+ i 2)]
                                               => (ConstantExpr'new m)
                                 )

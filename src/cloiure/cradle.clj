@@ -35,6 +35,9 @@
     (let [x (if (vector? x) x [`_# x]) z (when (seq w) `(cond-let ~@w))]
         `(if-let ~x ~y ~z)))
 
+(defn third [x] (first (next (next x))))
+(defn fourth [x] (first (next (next (next x)))))
+
 (defmacro update! [x f & z] `(set! ~x (~f ~x ~@z)))
 
 (def % rem)
@@ -477,9 +480,9 @@
     (defn #_"Object" Reflector'boxArg [#_"Class" paramType, #_"Object" arg]
         (let [unexpected! #(throw (IllegalArgumentException. (str "Unexpected param type, expected: " paramType ", given: " (.getName (.getClass arg)))))]
             (cond
-                (not (.isPrimitive paramType)) (.cast paramType, arg)
-                (= paramType Boolean/TYPE)     (.cast Boolean, arg)
-                (= paramType Character/TYPE)   (.cast Character, arg)
+                (not (.isPrimitive paramType)) (cast paramType arg)
+                (= paramType Boolean/TYPE)     (cast Boolean arg)
+                (= paramType Character/TYPE)   (cast Character arg)
                 (number? arg)
                     (let [#_"Number" n (cast Number arg)]
                         (condp = paramType
@@ -767,7 +770,7 @@
     (def #_"Class" Compiler'DOUBLES_CLASS  (Class/forName "[D"))
     (def #_"Class" Compiler'OBJECTS_CLASS  (Class/forName "[Ljava.lang.Object;"))
 
-    (def #_"Symbol" Compiler'FNONCE (§ soon cast Symbol (.withMeta 'fn*, { :once true })))
+    (def #_"Symbol" Compiler'FNONCE (with-meta 'fn* { :once true }))
 
     (def #_"String" Compiler'COMPILE_STUB_PREFIX "compile__stub")
 
@@ -986,7 +989,7 @@
                     (when (= (RT/length s) 3) => (throw (IllegalArgumentException. "Malformed assignment, expecting (set! target val)"))
                         (let [#_"Expr" target (Compiler'analyze-2 :Context'EXPRESSION, (second s))]
                             (when (instance? AssignableExpr target) => (throw (IllegalArgumentException. "Invalid assignment target"))
-                                (AssignExpr'new (cast AssignableExpr target), (Compiler'analyze-2 :Context'EXPRESSION, (RT/third s)))
+                                (AssignExpr'new (cast AssignableExpr target), (Compiler'analyze-2 :Context'EXPRESSION, (third s)))
                             )
                         )
                     )
@@ -1141,7 +1144,7 @@
         nil
     )
 
-    (def #_"NilExpr" Compiler'NIL_EXPR (§ soon NilExpr'new))
+    (def #_"NilExpr" Compiler'NIL_EXPR (NilExpr'new))
 )
 
 (class-ns BooleanExpr
@@ -1177,8 +1180,8 @@
         Boolean
     )
 
-    (def #_"BooleanExpr" Compiler'TRUE_EXPR (§ soon BooleanExpr'new true))
-    (def #_"BooleanExpr" Compiler'FALSE_EXPR (§ soon BooleanExpr'new false))
+    (def #_"BooleanExpr" Compiler'TRUE_EXPR (BooleanExpr'new true))
+    (def #_"BooleanExpr" Compiler'FALSE_EXPR (BooleanExpr'new false))
 )
 
 (class-ns ConstantExpr
@@ -1487,7 +1490,7 @@
                                 (cond
                                     (instance? Class o)
                                         (cast Class o)
-                                    (and (some? *local-env*) (.containsKey (cast Map *local-env*), form))
+                                    (contains? *local-env* form)
                                         nil
                                     :else
                                         (try
@@ -2132,10 +2135,10 @@
                         (let [#_"int" line (Compiler'lineDeref) #_"int" column (Compiler'columnDeref) #_"Class" c (HostExpr'maybeClass (second form), false)
                               ;; at this point c will be non-null if static
                               #_"Expr" instance (when (nil? c) (Compiler'analyze-2 (if (= context :Context'EVAL) context :Context'EXPRESSION), (second form)))
-                              #_"boolean" maybeField (and (= (RT/length form) 3) (symbol? (RT/third form)))
+                              #_"boolean" maybeField (and (= (RT/length form) 3) (symbol? (third form)))
                               maybeField
-                                (when (and maybeField (not= (.charAt (:name (cast Symbol (RT/third form))), 0) \-)) => maybeField
-                                    (let [#_"Symbol" sym (cast Symbol (RT/third form))]
+                                (when (and maybeField (not= (.charAt (:name (cast Symbol (third form))), 0) \-)) => maybeField
+                                    (let [#_"Symbol" sym (cast Symbol (third form))]
                                         (cond
                                             (some? c)
                                                 (zero? (count (Reflector'getMethods c, 0, (Compiler'munge (:name sym)), true)))
@@ -2147,15 +2150,15 @@
                                     )
                                 )]
                             (if maybeField
-                                (let [? (= (.charAt (:name (cast Symbol (RT/third form))), 0) \-)
-                                      #_"Symbol" sym (if ? (symbol (.substring (:name (cast Symbol (RT/third form))), 1)) (cast Symbol (RT/third form)))
+                                (let [? (= (.charAt (:name (cast Symbol (third form))), 0) \-)
+                                      #_"Symbol" sym (if ? (symbol (.substring (:name (cast Symbol (third form))), 1)) (cast Symbol (third form)))
                                       #_"Symbol" tag (Compiler'tagOf form)]
                                     (if (some? c)
                                         (StaticFieldExpr'new line, column, c, (Compiler'munge (:name sym)), tag)
                                         (InstanceFieldExpr'new line, column, instance, (Compiler'munge (:name sym)), tag, ?)
                                     )
                                 )
-                                (let [#_"ISeq" call (cast ISeq (if (instance? ISeq (RT/third form)) (RT/third form) (next (next form))))]
+                                (let [#_"ISeq" call (cast ISeq (if (instance? ISeq (third form)) (third form) (next (next form))))]
                                     (when (symbol? (first call)) => (throw (IllegalArgumentException. "Malformed member expression"))
                                         (let [#_"Symbol" sym (cast Symbol (first call))
                                               #_"Symbol" tag (Compiler'tagOf form)
@@ -2223,7 +2226,7 @@
 
     #_override
     (defn #_"Object" Expr'''eval--VarExpr [#_"VarExpr" this]
-        (.deref (:var this))
+        (deref (:var this))
     )
 
     #_override
@@ -2536,11 +2539,11 @@
                                                     (when (nil? c)
                                                         (throw (IllegalArgumentException. (str "Unable to resolve classname: " (second f))))
                                                     )
-                                                    (when (not (symbol? (RT/third f)))
-                                                        (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " (RT/third f))))
+                                                    (when (not (symbol? (third f)))
+                                                        (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " (third f))))
                                                     )
-                                                    (let [#_"Symbol" sym (cast Symbol (RT/third f))]
-                                                        (when (some? (.getNamespace sym))
+                                                    (let [#_"Symbol" sym (cast Symbol (third f))]
+                                                        (when (some? (namespace sym))
                                                             (throw (RuntimeException. (str "Can't bind qualified name:" sym)))
                                                         )
                                                         (binding [*local-env* *local-env*, *next-local-num* *next-local-num*, *in-catch-finally* true]
@@ -2740,7 +2743,7 @@
 
     #_override
     (defn #_"Object" Expr'''eval--MetaExpr [#_"MetaExpr" this]
-        (.withMeta (cast IObj (.eval (:expr this))), (cast IPersistentMap (.eval (:meta this))))
+        (with-meta (.eval (:expr this)) (.eval (:meta this)))
     )
 
     #_override
@@ -2893,11 +2896,11 @@
                           #_"Expr" testexpr (Compiler'analyze-2 (if (= context :Context'EVAL) context :Context'EXPRESSION), (second form))
                           #_"Expr" thenexpr
                             (binding [*clear-path* (PathNode'new :PathType'PATH, branch)]
-                                (Compiler'analyze-2 context, (RT/third form))
+                                (Compiler'analyze-2 context, (third form))
                             )
                           #_"Expr" elseexpr
                             (binding [*clear-path* (PathNode'new :PathType'PATH, branch)]
-                                (Compiler'analyze-2 context, (RT/fourth form))
+                                (Compiler'analyze-2 context, (fourth form))
                             )]
                         (IfExpr'new (Compiler'lineDeref), (Compiler'columnDeref), testexpr, thenexpr, elseexpr)
                     )
@@ -2921,7 +2924,7 @@
         (loop-when-recur [#_"IPersistentVector" v [] #_"int" i 0]
                          (< i (count (:args this)))
                          [(conj v (.eval (cast Expr (nth (:args this) i)))) (inc i)]
-                      => (.seq v)
+                      => (seq v)
         )
     )
 
@@ -2973,7 +2976,7 @@
                     (let [#_"Expr" k (cast Expr (nth (:keyvals this) i))
                           [constant? unique? keys]
                             (when (instance? LiteralExpr k) => [false unique? keys]
-                                (let-when-not [#_"Object" v (.eval k)] (.contains keys, v) => [constant? false keys]
+                                (let-when-not [#_"Object" v (.eval k)] (contains? keys v) => [constant? false keys]
                                     [constant? unique? (conj keys v)]
                                 )
                             )]
@@ -3012,7 +3015,7 @@
                     (ß ass keyvals (conj keyvals k v))
                     (if (instance? LiteralExpr k)
                         (let [#_"Object" kval (.eval k)]
-                            (if (.contains constantKeys, kval)
+                            (if (contains? constantKeys kval)
                                 (ß ass allConstantKeysUnique false)
                                 (ß ass constantKeys (conj constantKeys kval))
                             )
@@ -3027,14 +3030,14 @@
 
             (let [#_"Expr" e (MapExpr'new keyvals)]
                 (cond
-                    (and (instance? IObj form) (some? (.meta (cast IObj form))))
-                        (MetaExpr'new e, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (.meta (cast IObj form))))
+                    (and (instance? IObj form) (some? (meta (cast IObj form))))
+                        (MetaExpr'new e, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (meta (cast IObj form))))
                     keysConstant
                         ;; TBD: Add more detail to exception thrown below.
                         (when allConstantKeysUnique => (throw (IllegalArgumentException. "Duplicate constant keys in map"))
                             (when valsConstant => e
                                 (loop-when-recur [#_"IPersistentMap" m {} #_"int" i 0]
-                                                 (< i (.length keyvals))
+                                                 (< i (count keyvals))
                                                  [(assoc m (.val (cast LiteralExpr (nth keyvals i))) (.val (cast LiteralExpr (nth keyvals (inc i))))) (+ i 2)]
                                               => (ConstantExpr'new m)
                                 )
@@ -3095,8 +3098,8 @@
                     )
                 )]
             (cond
-                (and (instance? IObj form) (some? (.meta (cast IObj form))))
-                    (MetaExpr'new (SetExpr'new keys), (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (.meta (cast IObj form))))
+                (and (instance? IObj form) (some? (meta (cast IObj form))))
+                    (MetaExpr'new (SetExpr'new keys), (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (meta (cast IObj form))))
                 constant?
                     (loop-when-recur [#_"IPersistentSet" s #{} #_"int" i 0]
                                      (< i (count keys))
@@ -3167,8 +3170,8 @@
                     )
                 )]
             (cond
-                (and (instance? IObj form) (some? (.meta (cast IObj form))))
-                    (MetaExpr'new (VectorExpr'new args), (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (.meta (cast IObj form))))
+                (and (instance? IObj form) (some? (meta (cast IObj form))))
+                    (MetaExpr'new (VectorExpr'new args), (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (meta (cast IObj form))))
                 constant?
                     (loop-when-recur [#_"IPersistentVector" v [] #_"int" i 0]
                                      (< i (count args))
@@ -3449,7 +3452,7 @@
                               this (assoc this :protocolOn (HostExpr'maybeClass (get (var-get pvar) :on), false))]
                             (when (some? (:protocolOn this)) => this
                                 (let [#_"IPersistentMap" mmap (cast IPersistentMap (get (var-get pvar) :method-map))
-                                      #_"Keyword" mmapVal (cast Keyword (.valAt mmap, (keyword (:sym fvar))))]
+                                      #_"Keyword" mmapVal (cast Keyword (get mmap (keyword (:sym fvar))))]
                                     (when (some? mmapVal) => (throw (IllegalArgumentException. (str "No method of interface: " (.getName (:protocolOn this)) " found for function: " (:sym fvar) " of protocol: " (:sym pvar) " (The protocol method may have been defined before and removed.)")))
                                         (let [#_"String" mname (Compiler'munge (.toString (:sym mmapVal)))
                                               #_"PersistentVector" methods (Reflector'getMethods (:protocolOn this), (dec (count args)), mname, false)]
@@ -3594,7 +3597,7 @@
                 (when (and (instance? VarExpr fexpr) (= (:var (cast VarExpr fexpr)) #'instance?) (= (count form) 3))
                     (let-when [#_"Expr" sexpr (Compiler'analyze-2 :Context'EXPRESSION, (second form))] (instance? ConstantExpr sexpr)
                         (let-when [#_"Object" val (.val (cast ConstantExpr sexpr))] (instance? Class val)
-                            (InstanceOfExpr'new (cast Class val), (Compiler'analyze-2 context, (RT/third form)))
+                            (InstanceOfExpr'new (cast Class val), (Compiler'analyze-2 context, (third form)))
                         )
                     )
                 )
@@ -3687,7 +3690,7 @@
                 (when (pos? (:idx lb)) => this
                     (let [#_"IPersistentCollection" sites (cast IPersistentCollection (get *clear-sites* lb))]
                         (when (some? sites)
-                            (loop-when-recur [#_"ISeq" s (.seq sites)] (some? s) [(next s)]
+                            (loop-when-recur [#_"ISeq" s (seq sites)] (some? s) [(next s)]
                                 (let [#_"LocalBindingExpr" lbe (cast LocalBindingExpr (first s))
                                       #_"PathNode" common (Compiler'commonPath (:clearPath this), (:clearPath lbe))]
                                     (when (and (some? common) (= (:type common) :PathType'PATH))
@@ -3839,7 +3842,7 @@
                     (.emit (:body this), :Context'RETURN, fn, gen)
                     (let [#_"Label" end (.mark gen)]
                         (.visitLocalVariable gen, "this", "Ljava/lang/Object;", nil, loopLabel, end, 0)
-                        (loop-when-recur [#_"ISeq" lbs (.seq (:argLocals this))] (some? lbs) [(next lbs)]
+                        (loop-when-recur [#_"ISeq" lbs (seq (:argLocals this))] (some? lbs) [(next lbs)]
                             (let [#_"LocalBinding" lb (cast LocalBinding (first lbs))]
                                 (.visitLocalVariable gen, (:name lb), "Ljava/lang/Object;", nil, loopLabel, end, (:idx lb))
                             )
@@ -3862,14 +3865,14 @@
     (defn #_"void" ObjMethod''emitClearLocalsOld [#_"ObjMethod" this, #_"GeneratorAdapter" gen]
         (dotimes [#_"int" i (count (:argLocals this))]
             (let [#_"LocalBinding" lb (cast LocalBinding (nth (:argLocals this) i))]
-                (when (and (not (.contains (:localsUsedInCatchFinally this), (:idx lb))) (nil? (LocalBinding''getPrimitiveType lb)))
+                (when (and (not (contains? (:localsUsedInCatchFinally this) (:idx lb))) (nil? (LocalBinding''getPrimitiveType lb)))
                     (.visitInsn gen, Opcodes/ACONST_NULL)
                     (.storeArg gen, (dec (:idx lb)))
                 )
             )
         )
         (loop-when-recur [#_"int" i (inc (.numParams this))] (< i (inc (:maxLocal this))) [(inc i)]
-            (when (not (.contains (:localsUsedInCatchFinally this), i))
+            (when (not (contains? (:localsUsedInCatchFinally this) i))
                 (let [#_"LocalBinding" b (cast LocalBinding (get (:indexlocals this) i))]
                     (when (or (nil? b) (nil? (Compiler'maybePrimitiveType (:init b))))
                         (.visitInsn gen, Opcodes/ACONST_NULL)
@@ -4011,7 +4014,7 @@
                                 (when (symbol? (nth parms i)) => (throw (IllegalArgumentException. "fn params must be Symbols"))
                                     (let [#_"Symbol" p (cast Symbol (nth parms i))]
                                         (cond
-                                            (some? (.getNamespace p))
+                                            (some? (namespace p))
                                                 (throw (RuntimeException. (str "Can't use qualified name as parameter: " p)))
                                             (= p '&)
                                                 (when-not rest? => (throw (RuntimeException. "Invalid parameter list"))
@@ -4081,7 +4084,7 @@
                 (binding [*loop-label* loopLabel, *method* this]
                     (ObjMethod'emitBody (:objx this), gen, (:retClass this), (:body this))
                     (let [#_"Label" end (.mark gen)]
-                        (loop-when-recur [#_"ISeq" lbs (.seq (:argLocals this))] (some? lbs) [(next lbs)]
+                        (loop-when-recur [#_"ISeq" lbs (seq (:argLocals this))] (some? lbs) [(next lbs)]
                             (let [#_"LocalBinding" lb (cast LocalBinding (first lbs))]
                                 (.visitLocalVariable gen, (:name lb), (.getDescriptor (aget (:argTypes this) (:idx lb))), nil, loopLabel, end, (:idx lb))
                             )
@@ -4148,7 +4151,7 @@
                     (ObjMethod'emitBody (:objx this), gen, (:retClass this), (:body this))
                     (let [#_"Label" end (.mark gen)]
                         (.visitLocalVariable gen, "this", "Ljava/lang/Object;", nil, loopLabel, end, 0)
-                        (loop-when-recur [#_"ISeq" lbs (.seq (:argLocals this))] (some? lbs) [(next lbs)]
+                        (loop-when-recur [#_"ISeq" lbs (seq (:argLocals this))] (some? lbs) [(next lbs)]
                             (let [#_"LocalBinding" lb (cast LocalBinding (first lbs))]
                                 (.visitLocalVariable gen, (:name lb), (.getDescriptor (aget (:argTypes this) (dec (:idx lb)))), nil, loopLabel, end, (:idx lb))
                             )
@@ -4189,7 +4192,7 @@
                     (.emit (:body this), :Context'RETURN, fn, gen)
                     (let [#_"Label" end (.mark gen)]
                         (.visitLocalVariable gen, "this", "Ljava/lang/Object;", nil, loopLabel, end, 0)
-                        (loop-when-recur [#_"ISeq" lbs (.seq (:argLocals this))] (some? lbs) [(next lbs)]
+                        (loop-when-recur [#_"ISeq" lbs (seq (:argLocals this))] (some? lbs) [(next lbs)]
                             (let [#_"LocalBinding" lb (cast LocalBinding (first lbs))]
                                 (.visitLocalVariable gen, (:name lb), "Ljava/lang/Object;", nil, loopLabel, end, (:idx lb))
                             )
@@ -4441,7 +4444,7 @@
     #_method
     (defn #_"void" ObjExpr''emitConstants [#_"ObjExpr" this, #_"GeneratorAdapter" clinitgen]
         (dotimes [#_"int" i (count (:constants this))]
-            (when (.contains (:usedConstants this), i)
+            (when (contains? (:usedConstants this) i)
                 (ObjExpr''emitValue this, (nth (:constants this) i), clinitgen)
                 (.checkCast clinitgen, (ObjExpr''constantType this, i))
                 (.putStatic clinitgen, (:objtype this), (ObjExpr''constantName this, i), (ObjExpr''constantType this, i))
@@ -4500,7 +4503,7 @@
 
         (loop-when-recur [#_"ISeq" s (keys (:closes this))] (some? s) [(next s)]
             (let [#_"LocalBinding" lb (cast LocalBinding (first s))]
-                (when (.contains letFnLocals, lb)
+                (when (contains? letFnLocals lb)
                     (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
                         (.dup gen)
                         (if (some? primc)
@@ -4587,7 +4590,7 @@
 
     #_method
     (defn- #_"void" ObjExpr''emitLocal [#_"ObjExpr" this, #_"GeneratorAdapter" gen, #_"LocalBinding" lb, #_"boolean" clear?]
-        (if (.containsKey (:closes this), lb)
+        (if (contains? (:closes this) lb)
             (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
                 (.loadThis gen)
                 (if (some? primc)
@@ -4641,7 +4644,7 @@
 
     #_method
     (defn- #_"void" ObjExpr''emitUnboxedLocal [#_"ObjExpr" this, #_"GeneratorAdapter" gen, #_"LocalBinding" lb]
-        (cond (.containsKey (:closes this), lb)
+        (cond (contains? (:closes this) lb)
             (do
                 (.loadThis gen)
                 (.getField gen, (:objtype this), (:name lb), (Type/getType (LocalBinding''getPrimitiveType lb)))
@@ -4660,7 +4663,7 @@
 
     #_method
     (defn #_"void" ObjExpr''emitVar [#_"ObjExpr" this, #_"GeneratorAdapter" gen, #_"Var" var]
-        (let [#_"Integer" i (cast Integer (.valAt (:vars this), var))]
+        (let [#_"Integer" i (cast Integer (get (:vars this) var))]
             (ObjExpr''emitConstant this, gen, i)
         )
         nil
@@ -4671,7 +4674,7 @@
 
     #_method
     (defn #_"void" ObjExpr''emitVarValue [#_"ObjExpr" this, #_"GeneratorAdapter" gen, #_"Var" v]
-        (let [#_"Integer" i (cast Integer (.valAt (:vars this), v))]
+        (let [#_"Integer" i (cast Integer (get (:vars this) v))]
             (if (not (.isDynamic v))
                 (do
                     (ObjExpr''emitConstant this, gen, i)
@@ -4688,7 +4691,7 @@
 
     #_method
     (defn #_"void" ObjExpr''emitKeyword [#_"ObjExpr" this, #_"GeneratorAdapter" gen, #_"Keyword" k]
-        (let [#_"Integer" i (cast Integer (.valAt (:keywords this), k))]
+        (let [#_"Integer" i (cast Integer (get (:keywords this) k))]
             (ObjExpr''emitConstant this, gen, i)
         )
         nil
@@ -4812,7 +4815,7 @@
                           #_"PersistentVector" v
                             (loop-when [v []] (.hasNext it) => v
                                 (let [#_"Map$Entry" e (.next it)]
-                                    (recur (conj v (.getKey e) (.getValue e)))
+                                    (recur (conj v (key e) (val e)))
                                 )
                             )]
                         (ObjExpr''emitObjectArray this, (.toArray v), gen)
@@ -4880,9 +4883,9 @@
                     )
                 )]
             (when partial?
-                (when (and (instance? IObj value) (pos? (count (.meta (cast IObj value)))))
+                (when (and (instance? IObj value) (pos? (count (meta (cast IObj value)))))
                     (.checkCast gen, Compiler'IOBJ_TYPE)
-                    (ObjExpr''emitValue this, (.meta (cast IObj value)), gen)
+                    (ObjExpr''emitValue this, (meta (cast IObj value)), gen)
                     (.checkCast gen, Compiler'IPERSISTENTMAP_TYPE)
                     (.invokeInterface gen, Compiler'IOBJ_TYPE, (Method/getMethod "clojure.lang.IObj withMeta(clojure.lang.IPersistentMap)"))
                 )
@@ -5082,7 +5085,7 @@
 
                     ;; static fields for constants
                     (dotimes [#_"int" i (count (:constants this))]
-                        (when (.contains (:usedConstants this), i)
+                        (when (contains? (:usedConstants this) i)
                             (.visitField cv, (+ Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL Opcodes/ACC_STATIC), (ObjExpr''constantName this, i), (.getDescriptor (ObjExpr''constantType this, i)), nil, nil)
                         )
                     )
@@ -5107,7 +5110,7 @@
                         )
 
                         (when (and (ObjExpr''isDeftype this) (get (:opts this) :load-ns))
-                            (let [#_"String" nsname (.getNamespace (cast Symbol (second (:src this))))]
+                            (let [#_"String" nsname (namespace (cast Symbol (second (:src this))))]
                                 (when (not (= nsname "clojure.core"))
                                     (.push clinitgen, "clojure.core")
                                     (.push clinitgen, "require")
@@ -5198,7 +5201,7 @@
                 (-> (FnExpr'new (Compiler'tagOf form))
                     (assoc :src form :hasEnclosingMethod (some? owner) :line (Compiler'lineDeref) :column (Compiler'columnDeref))
                 )
-              fn (when (some? (.meta (cast IMeta (first form)))) => fn
+              fn (when (some? (meta (cast IMeta (first form)))) => fn
                     (assoc fn :onceOnly (boolean (get (meta (first form)) :once)))
                 )
               #_"String" basename (if (some? owner) (:name (:objx owner)) (Compiler'munge (:name (:name *ns*))))
@@ -5216,7 +5219,7 @@
               fn (assoc fn :name (str basename "$" (.replace (Compiler'munge name), ".", "_DOT_")))
               fn (assoc fn :internalName (.replace (:name fn), \., \/))
               fn (assoc fn :objtype (Type/getObjectType (:internalName fn)))
-              #_"Keyword" retkey :rettag #_"Object" rettag (get fmeta retkey)
+              #_"Object" rettag (get fmeta :rettag)
               #_"PersistentVector" prims []
               [fn prims]
                 (binding [*constants*          []
@@ -5303,7 +5306,7 @@
               fn (assoc fn :hasPrimSigs (pos? (count prims)))
               fmeta
                 (when (some? fmeta)
-                    (-> fmeta (.without :line) (.without :column) (.without retkey))
+                    (dissoc fmeta :line :column :rettag)
                 )
               fn (assoc fn :hasMeta (pos? (count fmeta)))]
             (ObjExpr''compile fn, (if (FnExpr''isVariadic fn) "clojure/lang/RestFn" "clojure/lang/AFunction"), (when (pos? (count prims)) (.toArray prims, (make-array String (count prims)))), (:onceOnly fn))
@@ -5424,8 +5427,8 @@
             #_override
             (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"Object" form]
                 (let [[#_"String" docstring form]
-                        (when (and (= (count form) 4) (string? (RT/third form))) => [nil form]
-                            [(cast String (RT/third form)) (list (first form) (second form) (RT/fourth form))]
+                        (when (and (= (count form) 4) (string? (third form))) => [nil form]
+                            [(cast String (third form)) (list (first form) (second form) (fourth form))]
                         )]
                     (cond
                         (< 3 (count form))            (throw (RuntimeException. "Too many arguments to def"))
@@ -5451,10 +5454,9 @@
                                 (when (and (not isDynamic) (.startsWith (:name sym), "*") (.endsWith (:name sym), "*") (< 2 (.length (:name sym))))
                                     (.format (RT/errPrintWriter), "Warning: %s not declared dynamic and thus is not dynamically rebindable, but its name suggests otherwise. Please either indicate ^:dynamic or change the name.\n", (object-array [ sym ]))
                                 )
-                                (let [mm (cast IPersistentMap (assoc mm :line *line*, :column *column*))
-                                      mm (if (some? docstring) (cast IPersistentMap (assoc mm :doc docstring)) mm)
+                                (let [mm (assoc mm :line *line*, :column *column*) mm (if (some? docstring) (assoc mm :doc docstring) mm)
                                       #_"Expr" meta (when (pos? (count mm)) (Compiler'analyze-2 (if (= context :Context'EVAL) context :Context'EXPRESSION), mm))]
-                                    (DefExpr'new (Compiler'lineDeref), (Compiler'columnDeref), v, (Compiler'analyze-3 (if (= context :Context'EVAL) context :Context'EXPRESSION), (RT/third form), (:name (:sym v))), meta, (= (count form) 3), isDynamic, shadowsCoreMapping)
+                                    (DefExpr'new (Compiler'lineDeref), (Compiler'columnDeref), v, (Compiler'analyze-3 (if (= context :Context'EVAL) context :Context'EXPRESSION), (third form), (:name (:sym v))), meta, (= (count form) 3), isDynamic, shadowsCoreMapping)
                                 )
                             )
                         )
@@ -5512,7 +5514,7 @@
             (let [#_"Label" loopLabel (.mark gen)]
                 (.emit (:body this), context, objx, gen)
                 (let [#_"Label" end (.mark gen)]
-                    (loop-when-recur [#_"ISeq" bis (.seq (:bindingInits this))] (some? bis) [(next bis)]
+                    (loop-when-recur [#_"ISeq" bis (seq (:bindingInits this))] (some? bis) [(next bis)]
                         (let [#_"BindingInit" bi (cast BindingInit (first bis))
                               #_"String" lname (:name (:binding bi)) lname (if (.endsWith lname, "__auto__") (str lname (RT/nextID)) lname)
                               #_"Class" primc (Compiler'maybePrimitiveType (:init bi))]
@@ -5553,7 +5555,7 @@
                                         (let [#_"PersistentVector" lbs
                                                 (loop-when [lbs [] #_"int" i 0] (< i (count bindings)) => lbs
                                                     (let-when [#_"Object" o (nth bindings i)] (symbol? o) => (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " o)))
-                                                        (let-when [#_"Symbol" sym (cast Symbol o)] (nil? (.getNamespace sym)) => (throw (RuntimeException. (str "Can't let qualified name: " sym)))
+                                                        (let-when [#_"Symbol" sym (cast Symbol o)] (nil? (namespace sym)) => (throw (RuntimeException. (str "Can't let qualified name: " sym)))
                                                             (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (Compiler'tagOf sym), nil, false)]
                                                                 (§ set! (:canBeCleared lb) false)
                                                                 (recur (conj lbs lb) (+ i 2))
@@ -5633,11 +5635,11 @@
                     )
                 )
                 (let [#_"Label" end (.mark gen)]
-                    (loop-when-recur [#_"ISeq" bis (.seq (:bindingInits this))] (some? bis) [(next bis)]
+                    (loop-when-recur [#_"ISeq" bis (seq (:bindingInits this))] (some? bis) [(next bis)]
                         (let [#_"BindingInit" bi (cast BindingInit (first bis))
                               #_"String" lname (:name (:binding bi)) lname (if (.endsWith lname, "__auto__") (str lname (RT/nextID)) lname)
                               #_"Class" primc (Compiler'maybePrimitiveType (:init bi))]
-                            (.visitLocalVariable gen, lname, (if (some? primc) (Type/getDescriptor primc) "Ljava/lang/Object;"), nil, (.get bindingLabels, bi), end, (:idx (:binding bi)))
+                            (.visitLocalVariable gen, lname, (if (some? primc) (Type/getDescriptor primc) "Ljava/lang/Object;"), nil, (get bindingLabels bi), end, (:idx (:binding bi)))
                         )
                     )
                 )
@@ -5719,7 +5721,7 @@
                                                           _ (loop-when-recur [#_"int" i 0] (< i (count bindings)) [(+ i 2)]
                                                                 (when (symbol? (nth bindings i)) => (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " (nth bindings i))))
                                                                     (let [#_"Symbol" sym (cast Symbol (nth bindings i))]
-                                                                        (when (nil? (.getNamespace sym)) => (throw (RuntimeException. (str "Can't let qualified name: " sym)))
+                                                                        (when (nil? (namespace sym)) => (throw (RuntimeException. (str "Can't let qualified name: " sym)))
                                                                             (let [#_"Expr" init (Compiler'analyze-3 :Context'EXPRESSION, (nth bindings (inc i)), (:name sym))
                                                                                   init
                                                                                     (when isLoop => init
@@ -5787,7 +5789,7 @@
                                                                             (pop-thread-bindings)
                                                                             (loop-when-recur [#_"int" i 0] (< i (count loopLocals)) [(inc i)]
                                                                                 (when (:recurMistmatch (cast LocalBinding (nth loopLocals i)))
-                                                                                    (ß ass recurMismatches (cast IPersistentVector (assoc recurMismatches i true)))
+                                                                                    (ß ass recurMismatches (assoc recurMismatches i true))
                                                                                     (ß ass moreMismatches true)
                                                                                 )
                                                                             )
@@ -6002,9 +6004,9 @@
         (let [#_"Map" found (HashMap.)]
             (doseq [#_"Object" o (.entrySet mm)]
                 (let [#_"Map$Entry" e (cast Map$Entry o)
-                      #_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (.getValue e))]
+                      #_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (val e))]
                     (when (and (= name (.getName m)) (= (alength (.getParameterTypes m)) arity))
-                        (.put found, (.getKey e), (.getValue e))
+                        (.put found, (key e), (val e))
                     )
                 )
             )
@@ -6016,9 +6018,9 @@
         (let [#_"Map" found (HashMap.)]
             (doseq [#_"Object" o (.entrySet mm)]
                 (let [#_"Map$Entry" e (cast Map$Entry o)
-                      #_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (.getValue e))]
+                      #_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (val e))]
                     (when (= name (.getName m))
-                        (.put found, (.getKey e), (.getValue e))
+                        (.put found, (key e), (val e))
                     )
                 )
             )
@@ -6031,7 +6033,7 @@
         ;; this-name might be nil
         (let [#_"NewInstanceMethod" method (NewInstanceMethod'new objx, (cast ObjMethod *method*))
               #_"Symbol" dotname (cast Symbol (first form))
-              #_"Symbol" name (cast Symbol (.withMeta (symbol (Compiler'munge (:name dotname))), (meta dotname)))
+              #_"Symbol" name (with-meta (symbol (Compiler'munge (:name dotname))) (meta dotname))
               #_"IPersistentVector" parms (cast IPersistentVector (second form))]
             (when (pos? (count parms)) => (throw (IllegalArgumentException. (str "Must supply at least one argument for 'this' in: " dotname)))
                 (let [#_"Symbol" thisName (cast Symbol (nth parms 0))
@@ -6063,7 +6065,7 @@
                                         (let [#_"Symbol" p (cast Symbol (nth parms i))
                                                 #_"Object" tag (Compiler'tagOf p)
                                                 hinted? (or hinted? (some? tag))
-                                                p (if (some? (.getNamespace p)) (symbol (:name p)) p)]
+                                                p (if (some? (namespace p)) (symbol (:name p)) p)]
                                             (aset pclasses i (Compiler'tagClass tag))
                                             (aset psyms i p)
                                             (recur hinted? (inc i))
@@ -6073,10 +6075,10 @@
                               #_"Map" matches (NewInstanceMethod'findMethodsWithNameAndArity (:name name), (count parms), overrideables)
                               #_"Object" mk (NewInstanceMethod'msig (:name name), pclasses)
                               [method pclasses #_"java.lang.reflect.Method" m]
-                                (case (.size matches)
+                                (case (count matches)
                                     0   (throw (IllegalArgumentException. (str "Can't define method not in interfaces: " (:name name))))
                                     1   (if hinted? ;; validate match
-                                            (let [m (cast java.lang.reflect.Method (.get matches, mk))]
+                                            (let [m (cast java.lang.reflect.Method (get matches mk))]
                                                 (when (nil? m)
                                                     (throw (IllegalArgumentException. (str "Can't find matching method: " (:name name) ", leave off hints for auto match.")))
                                                 )
@@ -6092,7 +6094,7 @@
                                         )
                                         ;; must be hinted and match one method
                                         (when hinted? => (throw (IllegalArgumentException. (str "Must hint overloaded method: " (:name name))))
-                                            (let [m (cast java.lang.reflect.Method (.get matches, mk))]
+                                            (let [m (cast java.lang.reflect.Method (get matches mk))]
                                                 (when (nil? m)
                                                     (throw (IllegalArgumentException. (str "Can't find matching overloaded method: " (:name name))))
                                                 )
@@ -6110,7 +6112,7 @@
                                 (loop-when [argLocals [] #_"int" i 0] (< i (count parms)) => argLocals
                                     (let [#_"LocalBinding" lb (Compiler'registerLocal (aget psyms i), nil, (MethodParamExpr'new (aget pclasses i)), true)]
                                         (aset (:argTypes method) i (Type/getType (aget pclasses i)))
-                                        (recur (.assocN argLocals, i, lb) (inc i))
+                                        (recur (conj argLocals lb) (inc i))
                                     )
                                 )]
                             (dotimes [#_"int" i (count parms)]
@@ -6153,7 +6155,7 @@
                     (ObjMethod'emitBody (:objx this), gen, (:retClass this), (:body this))
                     (let [#_"Label" end (.mark gen)]
                         (.visitLocalVariable gen, "this", (.getDescriptor (:objtype obj)), nil, loopLabel, end, 0)
-                        (loop-when-recur [#_"ISeq" lbs (.seq (:argLocals this))] (some? lbs) [(next lbs)]
+                        (loop-when-recur [#_"ISeq" lbs (seq (:argLocals this))] (some? lbs) [(next lbs)]
                             (let [#_"LocalBinding" lb (cast LocalBinding (first lbs))]
                                 (.visitLocalVariable gen, (:name lb), (.getDescriptor (aget (:argTypes this) (dec (:idx lb)))), nil, loopLabel, end, (:idx lb))
                             )
@@ -6354,14 +6356,14 @@
         )
         ;; emit bridge methods
         (doseq [#_"Map$Entry<IPersistentVector, Set<Class>>" e (.entrySet (:covariants this))]
-            (let [#_"java.lang.reflect.Method" m (.get (:overrideables this), (.getKey e))
+            (let [#_"java.lang.reflect.Method" m (get (:overrideables this) (key e))
                   #_"Class[]" params (.getParameterTypes m)
                   #_"Type[]" argTypes (make-array Type (alength params))
                   _ (dotimes [#_"int" i (alength params)]
                         (aset argTypes i (Type/getType (aget params i)))
                     )
                   #_"Method" target (Method. (.getName m), (Type/getType (.getReturnType m)), argTypes)]
-                (doseq [#_"Class" retType (.getValue e)]
+                (doseq [#_"Class" retType (val e)]
                     (let [#_"Method" meth (Method. (.getName m), (Type/getType retType), argTypes)
                           ;; todo don't hardwire EXCEPTION_TYPES
                           #_"GeneratorAdapter" gen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_BRIDGE), meth, nil, Compiler'EXCEPTION_TYPES, cv)]
@@ -6384,7 +6386,7 @@
 
     (defn #_"void" NewInstanceExpr'considerMethod [#_"java.lang.reflect.Method" m, #_"Map" mm]
         (let [#_"IPersistentVector" mk (NewInstanceExpr'msig m) #_"int" mods (.getModifiers m)]
-            (when (not (or (.containsKey mm, mk) (not (or (Modifier/isPublic mods) (Modifier/isProtected mods))) (Modifier/isStatic mods) (Modifier/isFinal mods)))
+            (when (not (or (contains? mm mk) (not (or (Modifier/isPublic mods) (Modifier/isProtected mods))) (Modifier/isStatic mods) (Modifier/isFinal mods)))
                 (.put mm, mk, m)
             )
         )
@@ -6413,17 +6415,17 @@
               #_"Map<IPersistentVector, Set<Class>>" covariants (HashMap.)]
             (loop-when-recur [#_"Iterator" it (.iterator (.entrySet allm))] (.hasNext it) [it]
                 (let [#_"Map$Entry" e (cast Map$Entry (.next it))
-                      #_"IPersistentVector" mk (cast IPersistentVector (.pop (cast IPersistentVector (.getKey e))))
-                      #_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (.getValue e))]
-                    (if (.containsKey methods, mk) ;; covariant return
+                      #_"IPersistentVector" mk (pop (cast IPersistentVector (key e)))
+                      #_"java.lang.reflect.Method" m (cast java.lang.reflect.Method (val e))]
+                    (if (contains? methods mk) ;; covariant return
                         (let [#_"Set<Class>" cvs
-                                (or (.get covariants, mk)
+                                (or (get covariants mk)
                                     (let [cvs (HashSet.)]
                                         (.put covariants, mk, cvs)
                                         cvs
                                     )
                                 )
-                              #_"Class" tk (.getReturnType (.get methods, mk)) #_"Class" t (.getReturnType m)]
+                              #_"Class" tk (.getReturnType (get methods mk)) #_"Class" t (.getReturnType m)]
                             (when (.isAssignableFrom tk, t) => (.add cvs, t)
                                 (.add cvs, tk)
                                 (.put methods, mk, m)
@@ -6553,8 +6555,8 @@
                       #_"IPersistentVector" ifaces (conj (cast IPersistentVector (first s)) 'clojure.lang.IObj)
                       s (next s)
                       #_"ObjExpr" ret (NewInstanceExpr'build ifaces, nil, nil, classname, (symbol classname), nil, s, form, nil)]
-                    (when (and (instance? IObj form) (some? (.meta (cast IObj form)))) => ret
-                        (MetaExpr'new ret, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (.meta (cast IObj form))))
+                    (when (and (instance? IObj form) (some? (meta (cast IObj form)))) => ret
+                        (MetaExpr'new ret, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (meta (cast IObj form))))
                     )
                 )
             )
@@ -6768,25 +6770,25 @@
                     (CaseExpr''emitExprForHashes this, objx, gen)
                 )
                 (if (= (:switchType this) :sparse)
-                    (let [#_"Label[]" la (make-array Label (.size labels)) la (.toArray (.values labels), la)]
+                    (let [#_"Label[]" la (make-array Label (count labels)) la (.toArray (.values labels), la)]
                         (.visitLookupSwitchInsn gen, defaultLabel, (Numbers/int_array (.keySet (:tests this))), la)
                     )
                     (let [#_"Label[]" la (make-array Label (inc (- (:high this) (:low this))))]
                         (loop-when-recur [#_"int" i (:low this)] (<= i (:high this)) [(inc i)]
-                            (aset la (- i (:low this)) (if (.containsKey labels, i) (.get labels, i) defaultLabel))
+                            (aset la (- i (:low this)) (if (contains? labels i) (get labels i) defaultLabel))
                         )
                         (.visitTableSwitchInsn gen, (:low this), (:high this), defaultLabel, la)
                     )
                 )
                 (doseq [#_"Integer" i (.keySet labels)]
-                    (.mark gen, (.get labels, i))
+                    (.mark gen, (get labels i))
                     (cond
                         (= (:testType this) :int)
-                            (CaseExpr''emitThenForInts this, objx, gen, primExprType, (.get (:tests this), i), (.get (:thens this), i), defaultLabel, emitUnboxed)
+                            (CaseExpr''emitThenForInts this, objx, gen, primExprType, (get (:tests this) i), (get (:thens this) i), defaultLabel, emitUnboxed)
                         (= (contains? (:skipCheck this) i) true)
-                            (CaseExpr'emitExpr objx, gen, (.get (:thens this), i), emitUnboxed)
+                            (CaseExpr'emitExpr objx, gen, (get (:thens this) i), emitUnboxed)
                         :else
-                            (CaseExpr''emitThenForHashes this, objx, gen, (.get (:tests this), i), (.get (:thens this), i), defaultLabel, emitUnboxed)
+                            (CaseExpr''emitThenForHashes this, objx, gen, (get (:tests this) i), (get (:thens this) i), defaultLabel, emitUnboxed)
                     )
                     (.goTo gen, endLabel)
                 )
@@ -6845,8 +6847,8 @@
                               #_"PathNode" branch (PathNode'new :PathType'BRANCH, (cast PathNode *clear-path*))
                               _ (doseq [#_"Object" o (.entrySet caseMap)]
                                     (let [#_"Map$Entry" e (cast Map$Entry o)
-                                          #_"Integer" minhash (.intValue (cast Number (.getKey e)))
-                                          #_"Object" pair (.getValue e) ;; [test-val then-expr]
+                                          #_"Integer" minhash (.intValue (cast Number (key e)))
+                                          #_"Object" pair (val e) ;; [test-val then-expr]
                                           #_"Expr" testExpr
                                             (if (= testType :int)
                                                 (NumberExpr'parse (.intValue (cast Number (first pair))))
@@ -6941,7 +6943,7 @@
     )
 
     (defn #_"boolean" Compiler'isSpecial [#_"Object" sym]
-        (.containsKey Compiler'specials, sym)
+        (contains? Compiler'specials sym)
     )
 
     (defn #_"boolean" Compiler'inTailCall [#_"Context" context]
@@ -7034,7 +7036,7 @@
         (let [[#_"int" matchIdx #_"boolean" tied]
                 (loop-when [matchIdx -1 tied false #_"boolean" foundExact false #_"int" i 0] (< i (count pars)) => [matchIdx tied]
                     (let [[#_"int" exact #_"boolean" match]
-                            (loop-when [exact 0 match true #_"int" p 0 #_"ISeq" s (.seq args)] (and match (< p (count args)) (some? s)) => [exact match]
+                            (loop-when [exact 0 match true #_"int" p 0 #_"ISeq" s (seq args)] (and match (< p (count args)) (some? s)) => [exact match]
                                 (let [#_"Expr" arg (cast Expr (first s))
                                       #_"Class" aclass (if (.hasJavaClass arg) (.getJavaClass arg) Object) #_"Class" pclass (aget (nth pars i) p)
                                       [exact match]
@@ -7169,7 +7171,7 @@
     (defn #_"String" Compiler'munge [#_"String" name]
         (let [#_"StringBuilder" sb (StringBuilder.)]
             (doseq [#_"char" c (.toCharArray name)]
-                (.append sb, (or (cast String (.valAt Compiler'CHAR_MAP, c)) c))
+                (.append sb, (or (cast String (get Compiler'CHAR_MAP c)) c))
             )
             (.toString sb)
         )
@@ -7184,7 +7186,7 @@
                         ;; keep everything before the match
                         (.append sb, (.substring mungedName, lastMatchEnd, start))
                         ;; replace the match with DEMUNGE_MAP result
-                        (.append sb, (cast Character (.valAt Compiler'DEMUNGE_MAP, (.group m))))
+                        (.append sb, (cast Character (get Compiler'DEMUNGE_MAP (.group m))))
                         (recur end)
                     )
                 )]
@@ -7203,8 +7205,8 @@
               #_"LocalBinding" lb (LocalBinding'new n, sym, tag, init, isArg, (Compiler'clearPathRoot))]
             (update! *local-env* assoc (:sym lb) lb)
             (let [#_"ObjMethod" method (cast ObjMethod *method*)]
-                (§ set! (:locals method) (cast IPersistentMap (assoc (:locals method) lb lb)))
-                (§ set! (:indexlocals method) (cast IPersistentMap (assoc (:indexlocals method) n lb)))
+                (§ update! (:locals method) assoc lb lb)
+                (§ update! (:indexlocals method) assoc n lb)
                 lb
             )
         )
@@ -7230,7 +7232,7 @@
         (try
             (let [form
                     (when (instance? LazySeq form) => form
-                        (.withMeta (cast IObj (or (seq form) ())), (meta form))
+                        (with-meta (or (seq form) ()) (meta form))
                     )]
                 (cond
                     (nil? form)    Compiler'NIL_EXPR
@@ -7245,7 +7247,7 @@
                                 (= c String)                       (StringExpr'new (.intern (cast String form)))
                                 (and (instance? IPersistentCollection form) (not (instance? IType form)) (zero? (count (cast IPersistentCollection form))))
                                     (let-when [#_"Expr" e (EmptyExpr'new form)] (some? (meta form)) => e
-                                        (MetaExpr'new e, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (.meta (cast IObj form))))
+                                        (MetaExpr'new e, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (meta (cast IObj form))))
                                     )
                                 (instance? ISeq form)              (Compiler'analyzeSeq context, (cast ISeq form), name)
                                 (instance? IPersistentVector form) (VectorExpr'parse context, (cast IPersistentVector form))
@@ -7303,7 +7305,7 @@
 
     (defn #_"Object" Compiler'preserveTag [#_"ISeq" src, #_"Object" dst]
         (let-when [#_"Symbol" tag (Compiler'tagOf src)] (and (some? tag) (instance? IObj dst)) => dst
-            (.withMeta (cast IObj dst), (cast IPersistentMap (assoc (meta dst) :tag tag)))
+            (vary-meta dst assoc :tag tag)
         )
     )
 
@@ -7331,7 +7333,7 @@
                                                       #_"Object" target (second form)
                                                       target
                                                         (when (some? (HostExpr'maybeClass target, false)) => target
-                                                            (.withMeta (cast IObj (list 'clojure.core/identity target)), { :tag 'Class })
+                                                            (with-meta (list 'clojure.core/identity target) { :tag 'Class })
                                                         )]
                                                     (Compiler'preserveTag form, (list* '. target meth (next (next form))))
                                                 )
@@ -7367,8 +7369,8 @@
 
     (defn- #_"Expr" Compiler'analyzeSeq [#_"Context" context, #_"ISeq" form, #_"String" name]
         (let [#_"IPersistentMap" meta (meta form)]
-            (binding [*line*   (if (and (some? meta) (.containsKey meta, :line))   (.valAt meta, :line)   (Compiler'lineDeref))
-                      *column* (if (and (some? meta) (.containsKey meta, :column)) (.valAt meta, :column) (Compiler'columnDeref))]
+            (binding [*line*   (if (contains? meta :line)   (get meta :line)   (Compiler'lineDeref))
+                      *column* (if (contains? meta :column) (get meta :column) (Compiler'columnDeref))]
                 (try
                     (let-when [#_"Object" me (Compiler'macroexpand1 form)] (= me form) => (Compiler'analyze-3 context, me, name)
                         (let-when [#_"Object" op (first form)] (some? op) => (throw (IllegalArgumentException. (str "Can't call nil, form: " form)))
@@ -7379,7 +7381,7 @@
                                     (= op 'fn*)
                                         (FnExpr'parse context, form, name)
                                     :else
-                                        (let [#_"IParser" p (cast IParser (.valAt Compiler'specials, op))]
+                                        (let [#_"IParser" p (cast IParser (get Compiler'specials op))]
                                             (if (some? p)
                                                 (.parse p, context, form)
                                                 (InvokeExpr'parse context, form)
@@ -7400,8 +7402,8 @@
     (defn #_"Object" Compiler'eval-2 [#_"Object" form, #_"boolean" freshLoader]
         (binding [*loader* (RT/makeClassLoader)]
             (let [#_"IPersistentMap" meta (meta form)]
-                (binding [*line*   (if (and (some? meta) (.containsKey meta, :line))   (.valAt meta, :line)   (Compiler'lineDeref))
-                          *column* (if (and (some? meta) (.containsKey meta, :column)) (.valAt meta, :column) (Compiler'columnDeref))]
+                (binding [*line*   (if (contains? meta :line)   (get meta :line)   (Compiler'lineDeref))
+                          *column* (if (contains? meta :column) (get meta :column) (Compiler'columnDeref))]
                     (let [form (Compiler'macroexpand form)]
                         (cond
                             (and (instance? ISeq form) (= (first form) 'do))
@@ -7432,7 +7434,7 @@
         (when (bound? #'*constants*) => -1
             (let [#_"PersistentVector" v (cast PersistentVector *constants*)
                   #_"IdentityHashMap<Object, Integer>" ids (cast IdentityHashMap #_"<Object, Integer>" *constant-ids*)]
-                (or (.get ids, o)
+                (or (get ids o)
                     (do
                         (set! *constants* (conj v o))
                         (.put ids, o, (count v))
@@ -7666,7 +7668,7 @@
             (let [#_"LocalBinding" lb (cast LocalBinding (get (:locals method) b))]
                 (if (nil? lb)
                     (do
-                        (§ update! (:closes (:objx method)) #(cast IPersistentMap (assoc % b b)))
+                        (§ update! (:closes (:objx method)) assoc b b)
                         (Compiler'closeOver b, (:parent method))
                     )
                     (do
@@ -7674,7 +7676,7 @@
                             (§ set! (:usesThis method) true)
                         )
                         (when (some? *in-catch-finally*)
-                            (§ update! (:localsUsedInCatchFinally method) #(cast PersistentHashSet (conj % (:idx b))))
+                            (§ update! (:localsUsedInCatchFinally method) conj (:idx b))
                         )
                     )
                 )
