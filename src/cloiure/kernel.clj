@@ -2265,13 +2265,6 @@
     )
 )
 
-(java-ns cloiure.lang.IKeywordLookup
-    (interface! IKeywordLookup []
-        #_abstract
-        (#_"ILookupThunk" getLookupThunk [#_"IKeywordLookup" this, #_"Keyword" k])
-    )
-)
-
 (java-ns cloiure.lang.ILookup
     (interface! ILookup []
         #_abstract
@@ -10329,23 +10322,17 @@
         )
     )
 
-    #_method
-    (defn- #_"ILookupThunk" KeywordLookupSite''install [#_"KeywordLookupSite" this, #_"Object" target]
-        (or (.getLookupThunk (cast IKeywordLookup target), (:k this)) (KeywordLookupSite''ilookupThunk this, (.getClass target)))
-    )
-
     #_override
     (defn #_"ILookupThunk" ILookupSite'''fault--KeywordLookupSite [#_"KeywordLookupSite" this, #_"Object" target]
-        (cond
-            (instance? IKeywordLookup target) (KeywordLookupSite''install this, target)
-            (instance? ILookup target)        (KeywordLookupSite''ilookupThunk this, (.getClass target))
-            :else                             this
+        (if (instance? ILookup target)
+            (KeywordLookupSite''ilookupThunk this, (.getClass target))
+            this
         )
     )
 
     #_override
     (defn #_"Object" ILookupThunk'''get--KeywordLookupSite [#_"KeywordLookupSite" this, #_"Object" target]
-        (if (or (instance? IKeywordLookup target) (instance? ILookup target))
+        (if (instance? ILookup target)
             this
             (RT'get target, (:k this))
         )
