@@ -711,17 +711,10 @@
     )
 )
 
-(def PathType'enum-set
-    (hash-set
-        :PathType'PATH
-        :PathType'BRANCH
-    )
-)
-
 (class-ns PathNode
-    (defn #_"PathNode" PathNode'new [#_"PathType" type, #_"PathNode" parent]
+    (defn #_"PathNode" PathNode'new [#_"boolean" branch, #_"PathNode" parent]
         (hash-map
-            #_"PathType" :type type
+            #_"boolean" :branch branch
             #_"PathNode" :parent parent
         )
     )
@@ -1134,9 +1127,9 @@
     )
 
     (defn- #_"int" Compiler'getAndIncLocalNum []
-        (let [#_"ObjMethod" m *method* #_"int" n (.intValue *next-local-num*)]
-            (when (< (:maxLocal m) n)
-                (§ set! (:maxLocal m) n)
+        (let [#_"int" n (.intValue *next-local-num*)]
+            (when (< (:maxLocal *method*) n)
+                (§ set! (:maxLocal *method*) n)
             )
             (set! *next-local-num* (inc n))
             n
@@ -1149,34 +1142,33 @@
         (let [#_"int" n (Compiler'getAndIncLocalNum)
               #_"LocalBinding" lb (LocalBinding'new n, sym, tag, init, isArg, *clear-root*)]
             (update! *local-env* assoc (:sym lb) lb)
-            (let [#_"ObjMethod" method *method*]
-                (§ update! (:locals method) assoc lb lb)
-                (§ update! (:indexlocals method) assoc n lb)
-                lb
-            )
+            (§ update! (:locals *method*) assoc lb lb)
+            (§ update! (:indexlocals *method*) assoc n lb)
+            lb
         )
     )
 
-    (defn #_"void" Compiler'closeOver [#_"LocalBinding" b, #_"ObjMethod" method]
-        (when (and (some? b) (some? method))
-            (let [#_"LocalBinding" lb (get (:locals method) b)]
+    (defn #_"ObjMethod" Compiler'closeOver [#_"ObjMethod" m, #_"LocalBinding" b]
+        (when (and (some? b) (some? m)) => m
+            (let [#_"LocalBinding" lb (get (:locals m) b)]
                 (if (nil? lb)
                     (do
-                        (§ update! (:closes (:objx method)) assoc b b)
-                        (Compiler'closeOver b, (:parent method))
+                        (§ update! (:closes (:objx m)) assoc b b)
+                        (§ ass (:parent m) (Compiler'closeOver (:parent m), b))
+                        m
                     )
                     (do
                         (when (zero? (:idx lb))
-                            (§ set! (:usesThis method) true)
+                            (§ set! (:usesThis m) true)
                         )
                         (when *in-catch-finally*
-                            (§ update! (:localsUsedInCatchFinally method) conj (:idx b))
+                            (§ update! (:localsUsedInCatchFinally m) conj (:idx b))
                         )
+                        m
                     )
                 )
             )
         )
-        nil
     )
 
     (defn #_"LocalBinding" Compiler'referenceLocal [#_"Symbol" sym]
@@ -1184,7 +1176,7 @@
             (when (zero? (:idx lb))
                 (§ set! (:usesThis *method*) true)
             )
-            (Compiler'closeOver lb, *method*)
+            (update! *method* Compiler'closeOver lb)
             lb
         )
     )
@@ -3111,21 +3103,25 @@
                                                 (let-when [#_"Class" c (HostExpr'maybeClass (second f), false)] (some? c) => (throw (IllegalArgumentException. (str "Unable to resolve classname: " (second f))))
                                                     (let-when [#_"Symbol" sym (third f)] (symbol? sym) => (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " sym)))
                                                         (when (nil? (namespace sym)) => (throw (RuntimeException. (str "Can't bind qualified name: " sym)))
-                                                            (binding [*local-env* *local-env*, *next-local-num* *next-local-num*, *in-catch-finally* true]
-                                                                (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (when (symbol? (second f)) (second f)), nil, false)
-                                                                    #_"Expr" handler (.parse (BodyParser'new), :Context'EXPRESSION, (next (next (next f))))]
-                                                                    (ß ass catches (conj catches (CatchClause'new c, lb, handler)))
-                                                                )
+                                                            (let [catches
+                                                                    (binding [*local-env* *local-env*, *next-local-num* *next-local-num*, *in-catch-finally* true]
+                                                                        (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (when (symbol? (second f)) (second f)), nil, false)
+                                                                              #_"Expr" handler (.parse (BodyParser'new), :Context'EXPRESSION, (next (next (next f))))]
+                                                                            (conj catches (CatchClause'new c, lb, handler))
+                                                                        )
+                                                                    )]
+                                                                (recur bodyExpr catches finallyExpr body true (next fs))
                                                             )
-                                                            (recur bodyExpr catches finallyExpr body true (next fs))
                                                         )
                                                     )
                                                 )
                                                 (when (nil? (next fs)) => (throw (RuntimeException. "finally clause must be last in try expression"))
-                                                    (binding [*in-catch-finally* true]
-                                                        (ß ass finallyExpr (.parse (BodyParser'new), :Context'STATEMENT, (next f)))
+                                                    (let [finallyExpr
+                                                            (binding [*in-catch-finally* true]
+                                                                (.parse (BodyParser'new), :Context'STATEMENT, (next f))
+                                                            )]
+                                                        (recur bodyExpr catches finallyExpr body caught? (next fs))
                                                     )
-                                                    (recur bodyExpr catches finallyExpr body caught? (next fs))
                                                 )
                                             )
                                         )
@@ -3448,14 +3444,14 @@
                     (< 4 (count form)) (throw (IllegalArgumentException. "Too many arguments to if"))
                     (< (count form) 3) (throw (IllegalArgumentException. "Too few arguments to if"))
                 )
-                (let [#_"PathNode" branch (PathNode'new :PathType'BRANCH, *clear-path*)
+                (let [#_"PathNode" branch (PathNode'new true, *clear-path*)
                       #_"Expr" testexpr (Compiler'analyze (if (= context :Context'EVAL) context :Context'EXPRESSION), (second form))
                       #_"Expr" thenexpr
-                        (binding [*clear-path* (PathNode'new :PathType'PATH, branch)]
+                        (binding [*clear-path* (PathNode'new false, branch)]
                             (Compiler'analyze context, (third form))
                         )
                       #_"Expr" elseexpr
-                        (binding [*clear-path* (PathNode'new :PathType'PATH, branch)]
+                        (binding [*clear-path* (PathNode'new false, branch)]
                             (Compiler'analyze context, (fourth form))
                         )]
                     (IfExpr'new *line*, testexpr, thenexpr, elseexpr)
@@ -3556,46 +3552,38 @@
     )
 
     (defn #_"Expr" MapExpr'parse [#_"Context" context, #_"IPersistentMap" form]
-        (let [#_"IPersistentVector" keyvals []
-              #_"boolean" keysConstant true #_"boolean" valsConstant true #_"boolean" allConstantKeysUnique true
-              #_"IPersistentSet" constantKeys #{}]
-            (loop-when-recur [#_"ISeq" s (seq form)] (some? s) [(next s)]
-                (let [#_"Context" c (if (= context :Context'EVAL) context :Context'EXPRESSION)
-                      #_"IMapEntry" e (first s) #_"Expr" k (Compiler'analyze c, (key e)) #_"Expr" v (Compiler'analyze c, (val e))]
-                    (ß ass keyvals (conj keyvals k v))
-                    (if (instance? LiteralExpr k)
-                        (let [#_"Object" kval (.eval k)]
-                            (if (contains? constantKeys kval)
-                                (ß ass allConstantKeysUnique false)
-                                (ß ass constantKeys (conj constantKeys kval))
-                            )
-                        )
-                        (ß ass keysConstant false)
-                    )
-                    (when (not (instance? LiteralExpr v))
-                        (ß ass valsConstant false)
-                    )
-                )
-            )
-
-            (let [#_"Expr" e (MapExpr'new keyvals)]
-                (cond
-                    (and (instance? IObj form) (some? (meta form)))
-                        (MetaExpr'new e, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (meta form)))
-                    keysConstant
-                        ;; TBD: Add more detail to exception thrown below.
-                        (when allConstantKeysUnique => (throw (IllegalArgumentException. "Duplicate constant keys in map"))
-                            (when valsConstant => e
-                                (loop-when-recur [#_"IPersistentMap" m {} #_"int" i 0]
-                                                 (< i (count keyvals))
-                                                 [(assoc m (.literal (nth keyvals i)) (.literal (nth keyvals (inc i)))) (+ i 2)]
-                                              => (ConstantExpr'new m)
+        (let [#_"Context" c (if (= context :Context'EVAL) context :Context'EXPRESSION)
+              [#_"IPersistentVector" keyvals #_"boolean" keysConstant #_"boolean" allConstantKeysUnique #_"boolean" valsConstant]
+                (loop-when [keyvals [], keysConstant true, allConstantKeysUnique true, #_"IPersistentSet" constantKeys #{}, valsConstant true, #_"ISeq" s (seq form)] (some? s) => [keyvals keysConstant allConstantKeysUnique valsConstant]
+                    (let [#_"IMapEntry" e (first s) #_"Expr" k (Compiler'analyze c, (key e)) #_"Expr" v (Compiler'analyze c, (val e))
+                          [keysConstant allConstantKeysUnique constantKeys]
+                            (when (instance? LiteralExpr k) => [false allConstantKeysUnique constantKeys]
+                                (let [#_"Object" kval (.eval k)]
+                                    (if (contains? constantKeys kval)
+                                        [keysConstant false constantKeys]
+                                        [keysConstant allConstantKeysUnique (conj constantKeys kval)]
+                                    )
                                 )
+                            )]
+                        (recur (conj keyvals k v) keysConstant allConstantKeysUnique constantKeys (and valsConstant (instance? LiteralExpr v)) (next s))
+                    )
+                )
+              #_"Expr" e (MapExpr'new keyvals)]
+            (cond
+                (and (instance? IObj form) (some? (meta form)))
+                    (MetaExpr'new e, (MapExpr'parse c, (meta form)))
+                keysConstant
+                    (when allConstantKeysUnique => (throw (IllegalArgumentException. "Duplicate constant keys in map"))
+                        (when valsConstant => e
+                            (loop-when-recur [#_"IPersistentMap" m {} #_"int" i 0]
+                                             (< i (count keyvals))
+                                             [(assoc m (.literal (nth keyvals i)) (.literal (nth keyvals (inc i)))) (+ i 2)]
+                                          => (ConstantExpr'new m)
                             )
                         )
-                    :else
-                        e
-                )
+                    )
+                :else
+                    e
             )
         )
     )
@@ -3752,7 +3740,7 @@
     (defn #_"void" Expr'''emit--KeywordInvokeExpr [#_"KeywordInvokeExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (let [#_"Label" endLabel (.newLabel gen) #_"Label" faultLabel (.newLabel gen)]
             (.visitLineNumber gen, (:line this), (.mark gen))
-            (.getStatic gen, (:objtype objx), (Compiler'thunkNameStatic (:siteIndex this)), (Type/getType ILookupThunk))
+            (.getStatic gen, (:objType objx), (Compiler'thunkNameStatic (:siteIndex this)), (Type/getType ILookupThunk))
             (.dup gen) ;; thunk, thunk
             (.emit (:target this), :Context'EXPRESSION, objx, gen) ;; thunk, thunk, target
             (.visitLineNumber gen, (:line this), (.mark gen))
@@ -3767,11 +3755,11 @@
             (.swap gen) ;; target, result
             (.pop gen) ;; target
             (.dup gen) ;; target, target
-            (.getStatic gen, (:objtype objx), (Compiler'siteNameStatic (:siteIndex this)), (Type/getType KeywordLookupSite)) ;; target, target, site
+            (.getStatic gen, (:objType objx), (Compiler'siteNameStatic (:siteIndex this)), (Type/getType KeywordLookupSite)) ;; target, target, site
             (.swap gen) ;; target, site, target
             (.invokeInterface gen, (Type/getType ILookupSite), (Method/getMethod "clojure.lang.ILookupThunk fault(Object)")) ;; target, new-thunk
             (.dup gen) ;; target, new-thunk, new-thunk
-            (.putStatic gen, (:objtype objx), (Compiler'thunkNameStatic (:siteIndex this)), (Type/getType ILookupThunk)) ;; target, new-thunk
+            (.putStatic gen, (:objType objx), (Compiler'thunkNameStatic (:siteIndex this)), (Type/getType ILookupThunk)) ;; target, new-thunk
             (.swap gen) ;; new-thunk, target
             (.invokeInterface gen, (Type/getType ILookupThunk), (Method/getMethod "Object get(Object)")) ;; result
 
@@ -4046,7 +4034,7 @@
             (.emit (nth (:args this) 0), :Context'EXPRESSION, objx, gen)
             (.dup gen) ;; target, target
             (.invokeStatic gen, (Type/getType Reflector), (Method/getMethod "Class classOf(Object)")) ;; target, class
-            (.getStatic gen, (:objtype objx), (Compiler'cachedClassName (:siteIndex this)), (Type/getType Class)) ;; target, class, cached-class
+            (.getStatic gen, (:objType objx), (Compiler'cachedClassName (:siteIndex this)), (Type/getType Class)) ;; target, class, cached-class
             (.visitJumpInsn gen, Opcodes/IF_ACMPEQ, callLabel) ;; target
             (when (some? (:protocolOn this))
                 (.dup gen) ;; target, target
@@ -4055,7 +4043,7 @@
             )
             (.dup gen) ;; target, target
             (.invokeStatic gen, (Type/getType Reflector), (Method/getMethod "Class classOf(Object)")) ;; target, class
-            (.putStatic gen, (:objtype objx), (Compiler'cachedClassName (:siteIndex this)), (Type/getType Class)) ;; target
+            (.putStatic gen, (:objType objx), (Compiler'cachedClassName (:siteIndex this)), (Type/getType Class)) ;; target
             (.mark gen, callLabel) ;; target
             (ObjExpr''emitVar objx, gen, (:var (:fexpr this)))
             (.invokeVirtual gen, (Type/getType Var), (Method/getMethod "Object getRawRoot()")) ;; target, proto-fn
@@ -4213,7 +4201,7 @@
                             (loop-when-recur [#_"ISeq" s (seq sites)] (some? s) [(next s)]
                                 (let [#_"LocalBindingExpr" lbe (first s)
                                       #_"PathNode" common (Compiler'commonPath (:clearPath this), (:clearPath lbe))]
-                                    (when (and (some? common) (= (:type common) :PathType'PATH))
+                                    (when (and (some? common) (not (:branch common)))
                                         (§ set! (:shouldClear lbe) false)
                                     )
                                 )
@@ -4378,7 +4366,7 @@
                     (assoc :line *line*)
                 )
               ;; register as the current method and set up a new env frame
-              #_"PathNode" pnode (or *clear-path* (PathNode'new :PathType'PATH, nil))]
+              #_"PathNode" pnode (or *clear-path* (PathNode'new false, nil))]
             (binding [*method*            fm
                       *local-env*         *local-env*
                       *next-local-num*    0
@@ -4500,7 +4488,7 @@
                     )
                     (let [#_"Label" callLabel (.mark gen)]
                         (.visitLineNumber gen, (:line this), callLabel)
-                        (.invokeStatic gen, (:objtype (:objx this)), ms)
+                        (.invokeStatic gen, (:objType (:objx this)), ms)
                         (.box gen, returnType)
                         (.returnValue gen)
                         (.endMethod gen)
@@ -4517,7 +4505,7 @@
                                         (.storeArg gen, i)
                                     )
                                 )
-                                (.invokeStatic gen, (:objtype (:objx this)), ms)
+                                (.invokeStatic gen, (:objType (:objx this)), ms)
                                 (.returnValue gen)
                                 (.endMethod gen)
                             )
@@ -4644,48 +4632,29 @@
 (class-ns ObjExpr
     (defn #_"ObjExpr" ObjExpr'new [#_"Object" tag]
         (hash-map
+            #_"Object" :tag tag
             #_"String" :name nil
             #_"String" :internalName nil
             #_"String" :thisName nil
-            #_"Type" :objtype nil
-            #_"Object" :tag tag
-            ;; localbinding->itself
+            #_"Type" :objType nil
             #_mutable #_"IPersistentMap" :closes {}
-            ;; localbndingexprs
             #_"IPersistentVector" :closesExprs []
-            ;; symbols
-            #_"IPersistentSet" :volatiles #{}
-
-            ;; symbol->lb
             #_"IPersistentMap" :fields nil
-
-            ;; hinted fields
             #_"IPersistentVector" :hintedFields []
-
-            ;; Keyword->KeywordExpr
             #_"IPersistentMap" :keywords {}
             #_"IPersistentMap" :vars {}
-            #_mutable #_"Class" :compiledClass nil
             #_"int" :line 0
             #_"PersistentVector" :constants nil
             #_mutable #_"IPersistentSet" :usedConstants #{}
-
-            #_"int" :constantsID 0
             #_"int" :altCtorDrops 0
-
             #_"IPersistentVector" :keywordCallsites nil
             #_"IPersistentVector" :protocolCallsites nil
             #_"boolean" :onceOnly false
-
             #_"Object" :src nil
-
             #_"IPersistentMap" :opts {}
-
-            #_"IPersistentMap" :classMeta nil
             #_"boolean" :canBeDirect false
 
-            #_mutable #_"DynamicClassLoader" :loader nil
-            #_"byte[]" :bytecode nil
+            #_"Class" :compiledClass nil
         )
     )
 
@@ -4743,8 +4712,8 @@
                 (ObjExpr''emitValue this, k, clinitgen)
                 (.invokeConstructor clinitgen, (Type/getType KeywordLookupSite), (Method/getMethod "void <init>(clojure.lang.Keyword)"))
                 (.dup clinitgen)
-                (.putStatic clinitgen, (:objtype this), (Compiler'siteNameStatic i), (Type/getType KeywordLookupSite))
-                (.putStatic clinitgen, (:objtype this), (Compiler'thunkNameStatic i), (Type/getType ILookupThunk))
+                (.putStatic clinitgen, (:objType this), (Compiler'siteNameStatic i), (Type/getType KeywordLookupSite))
+                (.putStatic clinitgen, (:objType this), (Compiler'thunkNameStatic i), (Type/getType ILookupThunk))
             )
         )
         nil
@@ -4779,7 +4748,7 @@
             (when (contains? (:usedConstants this) i)
                 (ObjExpr''emitValue this, (nth (:constants this) i), clinitgen)
                 (.checkCast clinitgen, (ObjExpr''constantType this, i))
-                (.putStatic clinitgen, (:objtype this), (Compiler'constantName i), (ObjExpr''constantType this, i))
+                (.putStatic clinitgen, (:objType this), (Compiler'constantName i), (ObjExpr''constantType this, i))
             )
         )
         nil
@@ -4810,28 +4779,17 @@
         nil
     )
 
-    #_method
-    (defn #_"Class" ObjExpr''getCompiledClass [#_"ObjExpr" this]
-        (§ sync this
-            (when (nil? (:compiledClass this))
-                (§ set! (:loader this) *loader*)
-                (§ set! (:compiledClass this) (.defineClass (:loader this), (:name this), (:bytecode this), (:src this)))
-            )
-            (:compiledClass this)
-        )
-    )
-
     #_override
     (defn #_"Object" Expr'''eval--ObjExpr [#_"ObjExpr" this]
         (when-not (ObjExpr''isDeftype this)
-            (.newInstance (ObjExpr''getCompiledClass this))
+            (.newInstance (:compiledClass this))
         )
     )
 
     #_method
     (defn #_"void" ObjExpr''emitLetFnInits [#_"ObjExpr" this, #_"GeneratorAdapter" gen, #_"ObjExpr" objx, #_"IPersistentSet" letFnLocals]
         ;; objx arg is enclosing objx, not this
-        (.checkCast gen, (:objtype this))
+        (.checkCast gen, (:objType this))
 
         (loop-when-recur [#_"ISeq" s (keys (:closes this))] (some? s) [(next s)]
             (let [#_"LocalBinding" lb (first s)]
@@ -4841,11 +4799,11 @@
                         (if (some? primc)
                             (do
                                 (ObjExpr''emitUnboxedLocal objx, gen, lb)
-                                (.putField gen, (:objtype this), (:name lb), (Type/getType primc))
+                                (.putField gen, (:objType this), (:name lb), (Type/getType primc))
                             )
                             (do
                                 (ObjExpr''emitLocal objx, gen, lb, false)
-                                (.putField gen, (:objtype this), (:name lb), (Type/getType Object))
+                                (.putField gen, (:objType this), (:name lb), (Type/getType Object))
                             )
                         )
                     )
@@ -4861,7 +4819,7 @@
         ;; emitting a Fn means constructing an instance, feeding closed-overs from enclosing scope, if any
         ;; objx arg is enclosing objx, not this
         (when-not (ObjExpr''isDeftype this) => (.visitInsn gen, Opcodes/ACONST_NULL)
-            (.newInstance gen, (:objtype this))
+            (.newInstance gen, (:objType this))
             (.dup gen)
             (when (.supportsMeta this)
                 (.visitInsn gen, Opcodes/ACONST_NULL)
@@ -4874,7 +4832,7 @@
                     )
                 )
             )
-            (.invokeConstructor gen, (:objtype this), (Method. "<init>", Type/VOID_TYPE, (ObjExpr''ctorTypes this)))
+            (.invokeConstructor gen, (:objType this), (Method. "<init>", Type/VOID_TYPE, (ObjExpr''ctorTypes this)))
         )
         (when (= context :Context'STATEMENT)
             (.pop gen)
@@ -4906,11 +4864,11 @@
                             (throw (IllegalArgumentException. (str "Must assign primitive to primitive mutable: " (:name lb))))
                         )
                         (.emitUnboxed val, :Context'EXPRESSION, this, gen)
-                        (.putField gen, (:objtype this), (:name lb), (Type/getType primc))
+                        (.putField gen, (:objType this), (:name lb), (Type/getType primc))
                     )
                     (do
                         (.emit val, :Context'EXPRESSION, this, gen)
-                        (.putField gen, (:objtype this), (:name lb), (Type/getType Object))
+                        (.putField gen, (:objType this), (:name lb), (Type/getType Object))
                     )
                 )
             )
@@ -4925,15 +4883,15 @@
                 (.loadThis gen)
                 (if (some? primc)
                     (do
-                        (.getField gen, (:objtype this), (:name lb), (Type/getType primc))
+                        (.getField gen, (:objType this), (:name lb), (Type/getType primc))
                         (HostExpr'emitBoxReturn this, gen, primc)
                     )
                     (do
-                        (.getField gen, (:objtype this), (:name lb), (Type/getType Object))
+                        (.getField gen, (:objType this), (:name lb), (Type/getType Object))
                         (when (and (:onceOnly this) clear? (:canBeCleared lb))
                             (.loadThis gen)
                             (.visitInsn gen, Opcodes/ACONST_NULL)
-                            (.putField gen, (:objtype this), (:name lb), (Type/getType Object))
+                            (.putField gen, (:objType this), (:name lb), (Type/getType Object))
                         )
                     )
                 )
@@ -4977,7 +4935,7 @@
         (cond (contains? (:closes this) lb)
             (do
                 (.loadThis gen)
-                (.getField gen, (:objtype this), (:name lb), (Type/getType (LocalBinding''getPrimitiveType lb)))
+                (.getField gen, (:objType this), (:name lb), (Type/getType (LocalBinding''getPrimitiveType lb)))
             )
             (:isArg lb)
             (do
@@ -5013,7 +4971,7 @@
     #_method
     (defn #_"void" ObjExpr''emitConstant [#_"ObjExpr" this, #_"GeneratorAdapter" gen, #_"int" id]
         (§ update! (:usedConstants this) conj id)
-        (.getStatic gen, (:objtype this), (Compiler'constantName id), (ObjExpr''constantType this, id))
+        (.getStatic gen, (:objType this), (Compiler'constantName id), (ObjExpr''constantType this, id))
         nil
     )
 
@@ -5266,7 +5224,7 @@
                 (when (.supportsMeta this)
                     (.loadThis ctorgen)
                     (.visitVarInsn ctorgen, (.getOpcode (Type/getType IPersistentMap), Opcodes/ILOAD), 1)
-                    (.putField ctorgen, (:objtype this), "__meta", (Type/getType IPersistentMap))
+                    (.putField ctorgen, (:objType this), "__meta", (Type/getType IPersistentMap))
                 )
 
                 (let [[this #_"int" a]
@@ -5277,12 +5235,12 @@
                                       a (if (some? primc)
                                             (do
                                                 (.visitVarInsn ctorgen, (.getOpcode (Type/getType primc), Opcodes/ILOAD), a)
-                                                (.putField ctorgen, (:objtype this), (:name lb), (Type/getType primc))
+                                                (.putField ctorgen, (:objType this), (:name lb), (Type/getType primc))
                                                 (if (any = primc Long/TYPE Double/TYPE) (inc a) a)
                                             )
                                             (do
                                                 (.visitVarInsn ctorgen, (.getOpcode (Type/getType Object), Opcodes/ILOAD), a)
-                                                (.putField ctorgen, (:objtype this), (:name lb), (Type/getType Object))
+                                                (.putField ctorgen, (:objType this), (:name lb), (Type/getType Object))
                                                 a
                                             )
                                         )]
@@ -5314,7 +5272,7 @@
                                 (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hash
                                 (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hasheq
 
-                                (.invokeConstructor ctorgen, (:objtype this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
+                                (.invokeConstructor ctorgen, (:objType this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
 
                                 (.returnValue ctorgen)
                                 (.endMethod ctorgen)
@@ -5334,7 +5292,7 @@
                                 (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hash
                                 (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hasheq
 
-                                (.invokeConstructor ctorgen, (:objtype this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
+                                (.invokeConstructor ctorgen, (:objType this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
 
                                 (.returnValue ctorgen)
                                 (.endMethod ctorgen)
@@ -5356,7 +5314,7 @@
                                 (.loadThis ctorgen)
                                 (.visitInsn ctorgen, Opcodes/ACONST_NULL) ;; nil meta
                                 (.loadArgs ctorgen)
-                                (.invokeConstructor ctorgen, (:objtype this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
+                                (.invokeConstructor ctorgen, (:objType this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
                                 (.returnValue ctorgen)
                                 (.endMethod ctorgen)
                             )
@@ -5366,7 +5324,7 @@
                                   #_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, meth, nil, nil, cv)]
                                 (.visitCode gen)
                                 (.loadThis gen)
-                                (.getField gen, (:objtype this), "__meta", (Type/getType IPersistentMap))
+                                (.getField gen, (:objType this), "__meta", (Type/getType IPersistentMap))
                                 (.returnValue gen)
                                 (.endMethod gen)
                             )
@@ -5375,18 +5333,18 @@
                             (let [#_"Method" meth (Method/getMethod "clojure.lang.IObj withMeta(clojure.lang.IPersistentMap)")
                                   #_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, meth, nil, nil, cv)]
                                 (.visitCode gen)
-                                (.newInstance gen, (:objtype this))
+                                (.newInstance gen, (:objType this))
                                 (.dup gen)
                                 (.loadArg gen, 0)
                                 (loop-when-recur [a a #_"ISeq" s (keys (:closes this))] (some? s) [(inc a) (next s)]
                                     (let [#_"LocalBinding" lb (first s)]
                                         (.loadThis gen)
                                         (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
-                                            (.getField gen, (:objtype this), (:name lb), (if (some? primc) (Type/getType primc) (Type/getType Object)))
+                                            (.getField gen, (:objType this), (:name lb), (if (some? primc) (Type/getType primc) (Type/getType Object)))
                                         )
                                     )
                                 )
-                                (.invokeConstructor gen, (:objtype this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
+                                (.invokeConstructor gen, (:objType this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
                                 (.returnValue gen)
                                 (.endMethod gen)
                             )
@@ -5443,7 +5401,7 @@
                         ;; end of class
                         (.visitEnd cv)
 
-                        (assoc this :bytecode (.toByteArray cw))
+                        (assoc this :compiledClass (.defineClass *loader*, (:name this), (.toByteArray cw), (:src this)))
                     )
                 )
             )
@@ -5528,7 +5486,7 @@
                 )
               fn (assoc fn :name (str basename "$" (.replace (Compiler'munge name), ".", "_DOT_")))
               fn (assoc fn :internalName (.replace (:name fn), \., \/))
-              fn (assoc fn :objtype (Type/getObjectType (:internalName fn)))
+              fn (assoc fn :objType (Type/getObjectType (:internalName fn)))
               #_"Object" rettag (get fmeta :rettag)
               #_"PersistentVector" prims []
               [fn prims]
@@ -5606,7 +5564,6 @@
                                 :constants *constants*
                                 :keywordCallsites *keyword-callsites*
                                 :protocolCallsites *protocol-callsites*
-                                :constantsID (RT/nextID)
                             ) prims]
                         )
                     )
@@ -5616,9 +5573,8 @@
                 (when (some? fmeta)
                     (dissoc fmeta :line :column :rettag)
                 )
-              fn (assoc fn :hasMeta (pos? (count fmeta)))]
-            (ObjExpr''compile fn, (if (FnExpr''isVariadic fn) "clojure/lang/RestFn" "clojure/lang/AFunction"), (when (pos? (count prims)) (.toArray prims, (make-array String (count prims)))), (:onceOnly fn))
-            (ObjExpr''getCompiledClass fn)
+              fn (assoc fn :hasMeta (pos? (count fmeta)))
+              fn (ObjExpr''compile fn, (if (FnExpr''isVariadic fn) "clojure/lang/RestFn" "clojure/lang/AFunction"), (when (pos? (count prims)) (.toArray prims, (make-array String (count prims)))), (:onceOnly fn))]
             (when (.supportsMeta fn) => fn
                 (MetaExpr'new fn, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), fmeta))
             )
@@ -5979,17 +5935,10 @@
                                 (if (or (= context :Context'EVAL) (and (= context :Context'EXPRESSION) isLoop))
                                     (Compiler'analyze context, (list (list Compiler'FNONCE [] form)))
                                     (let [#_"ISeq" body (next (next form))
-                                          #_"ObjMethod" method *method*
-                                          #_"IPersistentMap" locals' (:locals method)
-                                          #_"IPersistentMap" indexLocals' (:indexlocals method)
-                                          #_"IPersistentVector" recurMismatches
-                                            (loop-when-recur [recurMismatches [] #_"int" i 0]
-                                                             (< i (/ (count bindings) 2))
-                                                             [(conj recurMismatches false) (inc i)]
-                                                          => recurMismatches
-                                            )]
+                                          #_"IPersistentMap" locals' (:locals *method*)
+                                          #_"IPersistentMap" indexLocals' (:indexlocals *method*)]
                                         ;; may repeat once for each binding with a mismatch, return breaks
-                                        (while true
+                                        (loop [#_"IPersistentVector" rms (vec (repeat (/ (count bindings) 2) false))]
                                             (let [#_"IPersistentMap" dynamicBindings
                                                     (hash-map
                                                         #'*local-env*      *local-env*
@@ -5999,100 +5948,100 @@
                                                     (when isLoop => dynamicBindings
                                                         (assoc dynamicBindings #'*loop-locals* nil)
                                                     )
-                                                  _ (§ set! (:locals method) locals')
-                                                  _ (§ set! (:indexlocals method) indexLocals')
-                                                  #_"PathNode" looproot (PathNode'new :PathType'PATH, *clear-path*)
-                                                  #_"PathNode" clearroot (PathNode'new :PathType'PATH, looproot)
-                                                  #_"PathNode" clearpath (PathNode'new :PathType'PATH, looproot)]
-                                                (try
-                                                    (push-thread-bindings dynamicBindings)
-                                                    (let [#_"PersistentVector" bindingInits []
-                                                          #_"PersistentVector" loopLocals []
-                                                          _ (loop-when-recur [#_"int" i 0] (< i (count bindings)) [(+ i 2)]
-                                                                (let-when [#_"Object" sym (nth bindings i)] (symbol? sym) => (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " sym)))
-                                                                    (when (nil? (namespace sym)) => (throw (RuntimeException. (str "Can't let qualified name: " sym)))
-                                                                        (let [#_"Expr" init (Compiler'analyze :Context'EXPRESSION, (nth bindings (inc i)), (:name sym))
-                                                                              init
-                                                                                (when isLoop => init
-                                                                                    (if (and (some? recurMismatches) (nth recurMismatches (/ i 2)))
-                                                                                        (do
-                                                                                            (when *warn-on-reflection*
-                                                                                                (.println *err*, (str "Auto-boxing loop arg: " sym))
+                                                  _ (§ set! (:locals *method*) locals')
+                                                  _ (§ set! (:indexlocals *method*) indexLocals')
+                                                  #_"PathNode" looproot (PathNode'new false, *clear-path*)
+                                                  #_"PathNode" clearroot (PathNode'new false, looproot)
+                                                  #_"PathNode" clearpath (PathNode'new false, looproot)
+                                                  [rms #_"LetExpr" letExpr]
+                                                    (try
+                                                        (push-thread-bindings dynamicBindings)
+                                                        (let [[#_"PersistentVector" bindingInits #_"PersistentVector" loopLocals]
+                                                                (loop-when [bindingInits [] loopLocals [] #_"int" i 0] (< i (count bindings)) => [bindingInits loopLocals]
+                                                                    (let-when [#_"Object" sym (nth bindings i)] (symbol? sym) => (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " sym)))
+                                                                        (when (nil? (namespace sym)) => (throw (RuntimeException. (str "Can't let qualified name: " sym)))
+                                                                            (let [#_"Expr" init (Compiler'analyze :Context'EXPRESSION, (nth bindings (inc i)), (:name sym))
+                                                                                  init
+                                                                                    (when isLoop => init
+                                                                                        (if (and (some? rms) (nth rms (/ i 2)))
+                                                                                            (do
+                                                                                                (when *warn-on-reflection*
+                                                                                                    (.println *err*, (str "Auto-boxing loop arg: " sym))
+                                                                                                )
+                                                                                                (StaticMethodExpr'new 0, nil, RT, "box", [init], false)
                                                                                             )
-                                                                                            (StaticMethodExpr'new 0, nil, RT, "box", [init], false)
+                                                                                            (condp = (Compiler'maybePrimitiveType init)
+                                                                                                Integer/TYPE (StaticMethodExpr'new 0, nil, RT, "longCast", [init], false)
+                                                                                                Float/TYPE   (StaticMethodExpr'new 0, nil, RT, "doubleCast", [init], false)
+                                                                                                             init
+                                                                                            )
                                                                                         )
-                                                                                        (condp = (Compiler'maybePrimitiveType init)
-                                                                                            Integer/TYPE (StaticMethodExpr'new 0, nil, RT, "longCast", [init], false)
-                                                                                            Float/TYPE   (StaticMethodExpr'new 0, nil, RT, "doubleCast", [init], false)
-                                                                                                         init
-                                                                                        )
-                                                                                    )
-                                                                                )]
-                                                                            ;; sequential enhancement of env (like Lisp let*)
-                                                                            (try
-                                                                                (when isLoop
-                                                                                    (push-thread-bindings
-                                                                                        (hash-map
-                                                                                            #'*clear-path* clearpath
-                                                                                            #'*clear-root* clearroot
-                                                                                            #'*no-recur*   false
-                                                                                        )
-                                                                                    )
-                                                                                )
-                                                                                (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (Compiler'tagOf sym), init, false)]
-                                                                                    (ß ass bindingInits (conj bindingInits (BindingInit'new lb, init)))
+                                                                                    )]
+                                                                                ;; sequential enhancement of env (like Lisp let*)
+                                                                                (try
                                                                                     (when isLoop
-                                                                                        (ß ass loopLocals (conj loopLocals lb))
+                                                                                        (push-thread-bindings
+                                                                                            (hash-map
+                                                                                                #'*clear-path* clearpath
+                                                                                                #'*clear-root* clearroot
+                                                                                                #'*no-recur*   false
+                                                                                            )
+                                                                                        )
                                                                                     )
-                                                                                )
-                                                                                (finally
-                                                                                    (when isLoop
-                                                                                        (pop-thread-bindings)
+                                                                                    (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (Compiler'tagOf sym), init, false)]
+                                                                                        (§ soon recur (conj bindingInits (BindingInit'new lb, init)) (if isLoop (conj loopLocals lb) loopLocals) (+ i 2))
                                                                                     )
-                                                                                )
-                                                                            )
-                                                                        )
-                                                                    )
-                                                                )
-                                                            )]
-                                                        (when isLoop
-                                                            (set! *loop-locals* loopLocals)
-                                                        )
-                                                        (let [#_"boolean" moreMismatches false
-                                                              #_"Expr" bodyExpr
-                                                                (try
-                                                                    (when isLoop
-                                                                        (push-thread-bindings
-                                                                            (hash-map
-                                                                                #'*clear-path*        clearpath
-                                                                                #'*clear-root*        clearroot
-                                                                                #'*no-recur*          false
-                                                                                #'*in-return-context* (and (= context :Context'RETURN) *in-return-context*)
-                                                                            )
-                                                                        )
-                                                                    )
-                                                                    (.parse (BodyParser'new), (if isLoop :Context'RETURN context), body)
-                                                                    (finally
-                                                                        (when isLoop
-                                                                            (pop-thread-bindings)
-                                                                            (loop-when-recur [#_"int" i 0] (< i (count loopLocals)) [(inc i)]
-                                                                                (when (:recurMistmatch (nth loopLocals i))
-                                                                                    (ß ass recurMismatches (assoc recurMismatches i true))
-                                                                                    (ß ass moreMismatches true)
+                                                                                    (finally
+                                                                                        (when isLoop
+                                                                                            (pop-thread-bindings)
+                                                                                        )
+                                                                                    )
                                                                                 )
                                                                             )
                                                                         )
                                                                     )
                                                                 )]
-                                                            (when-not moreMismatches
-                                                                (ß return (LetExpr'new bindingInits, bodyExpr, isLoop))
+                                                            (when isLoop
+                                                                (set! *loop-locals* loopLocals)
+                                                            )
+                                                            (let [#_"Expr" bodyExpr
+                                                                    (try
+                                                                        (when isLoop
+                                                                            (push-thread-bindings
+                                                                                (hash-map
+                                                                                    #'*clear-path*        clearpath
+                                                                                    #'*clear-root*        clearroot
+                                                                                    #'*no-recur*          false
+                                                                                    #'*in-return-context* (and (= context :Context'RETURN) *in-return-context*)
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                        (.parse (BodyParser'new), (if isLoop :Context'RETURN context), body)
+                                                                        (finally
+                                                                            (when isLoop
+                                                                                (pop-thread-bindings)
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                  [rms #_"boolean" more?]
+                                                                    (when isLoop => [rms false]
+                                                                        (loop-when [rms rms more? false #_"int" i 0] (< i (count loopLocals)) => [rms more?]
+                                                                            (let [[rms more?]
+                                                                                    (when (:recurMistmatch (nth loopLocals i)) => [rms more?]
+                                                                                        [(assoc rms i true) true]
+                                                                                    )]
+                                                                                (recur rms more? (inc i))
+                                                                            )
+                                                                        )
+                                                                    )]
+                                                                [rms (when-not more? (LetExpr'new bindingInits, bodyExpr, isLoop))]
                                                             )
                                                         )
-                                                    )
-                                                    (finally
-                                                        (pop-thread-bindings)
-                                                    )
-                                                )
+                                                        (finally
+                                                            (pop-thread-bindings)
+                                                        )
+                                                    )]
+                                                (recur-if (nil? letExpr) [rms] => letExpr)
                                             )
                                         )
                                     )
@@ -6326,7 +6275,7 @@
                       parms (subvec parms 1 (count parms))
                       #_"ISeq" body (next (next form))
                       ;; register as the current method and set up a new env frame
-                      #_"PathNode" pnode (PathNode'new :PathType'PATH, *clear-path*)]
+                      #_"PathNode" pnode (PathNode'new false, *clear-path*)]
                     (binding [*method*            nim
                               *local-env*         *local-env*
                               *next-local-num*    0
@@ -6436,7 +6385,7 @@
                 (binding [*loop-label* loopLabel, *method* this]
                     (ObjMethod'emitBody (:objx this), gen, (:retClass this), (:body this))
                     (let [#_"Label" end (.mark gen)]
-                        (.visitLocalVariable gen, "this", (.getDescriptor (:objtype obj)), nil, loopLabel, end, 0)
+                        (.visitLocalVariable gen, "this", (.getDescriptor (:objType obj)), nil, loopLabel, end, 0)
                         (loop-when-recur [#_"ISeq" lbs (seq (:argLocals this))] (some? lbs) [(next lbs)]
                             (let [#_"LocalBinding" lb (first lbs)]
                                 (.visitLocalVariable gen, (:name lb), (.getDescriptor (aget (:argTypes this) (dec (:idx lb)))), nil, loopLabel, end, (:idx lb))
@@ -6671,7 +6620,7 @@
         nil
     )
 
-    (defn #_"Map[]" NewInstanceExpr'gatherMethods [#_"Class" sc, #_"ISeq" ifaces]
+    (defn #_"[Map Map]" NewInstanceExpr'gatherMethods [#_"Class" sc, #_"ISeq" ifaces]
         (let [#_"Map" allm (HashMap.)
               game-
                 (fn #_"void" [#_"Class" c, #_"Map" mm]
@@ -6711,7 +6660,7 @@
                     )
                 )
             )
-            (ß new Map[] (object-array [ methods, covariants ]))
+            [methods covariants]
         )
     )
 
@@ -6719,7 +6668,7 @@
         (let [#_"String" name (.toString className) #_"String" name' (.replace name, \., \/)
               #_"NewInstanceExpr" nie
                 (-> (NewInstanceExpr'new nil)
-                    (assoc :src form :name name :classMeta (meta className) :internalName name' :objtype (Type/getObjectType name') :opts opts)
+                    (assoc :src form :name name :internalName name' :objType (Type/getObjectType name') :opts opts)
                 )
               nie (if (some? thisSym) (assoc nie :thisName (:name thisSym)) nie)
               nie
@@ -6754,8 +6703,7 @@
                     )
                 )
               #_"Class" super Object
-              #_"Map[]" mc (NewInstanceExpr'gatherMethods super, (seq ifaces))
-              #_"Map" overrideables (aget mc 0) #_"Map" covariants (aget mc 1)
+              [#_"Map" overrideables #_"Map" covariants] (NewInstanceExpr'gatherMethods super, (seq ifaces))
               nie (assoc nie :overrideables overrideables :covariants covariants)
               #_"String[]" inames (NewInstanceExpr'interfaceNames ifaces)
               #_"Class" stub (NewInstanceExpr'compileStub (NewInstanceExpr'slashname super), nie, inames, form)
@@ -6794,7 +6742,6 @@
                                 :keywords *keywords*
                                 :vars *vars*
                                 :constants *constants*
-                                :constantsID (RT/nextID)
                                 :keywordCallsites *keyword-callsites*
                                 :protocolCallsites *protocol-callsites*
                             )
@@ -6807,8 +6754,6 @@
                     )
                 )]
             (ObjExpr''compile nie, (NewInstanceExpr'slashname super), inames, false)
-            (ObjExpr''getCompiledClass nie)
-            nie
         )
     )
 )
@@ -7107,7 +7052,7 @@
                           _ (§ set! (:shouldClear testexpr) false)
                           #_"SortedMap<Integer, Expr>" tests (TreeMap.)
                           #_"HashMap<Integer, Expr>" thens (HashMap.)
-                          #_"PathNode" branch (PathNode'new :PathType'BRANCH, *clear-path*)
+                          #_"PathNode" branch (PathNode'new true, *clear-path*)
                           _ (doseq [#_"Map$Entry" e (.entrySet caseMap)]
                                 (let [#_"Integer" minhash (.intValue (key e)) #_"Object" pair (val e) ;; [test-val then-expr]
                                       #_"Expr" testExpr
@@ -7117,7 +7062,7 @@
                                         )]
                                     (.put tests, minhash, testExpr)
                                     (let [#_"Expr" thenExpr
-                                            (binding [*clear-path* (PathNode'new :PathType'PATH, branch)]
+                                            (binding [*clear-path* (PathNode'new false, branch)]
                                                 (Compiler'analyze context, (second pair))
                                             )]
                                         (.put thens, minhash, thenExpr)
@@ -7125,7 +7070,7 @@
                                 )
                             )
                           #_"Expr" defaultExpr
-                            (binding [*clear-path* (PathNode'new :PathType'PATH, branch)]
+                            (binding [*clear-path* (PathNode'new false, branch)]
                                 (Compiler'analyze context, (nth args 3))
                             )]
                         (CaseExpr'new *line*, testexpr, shift, mask, low, high, defaultExpr, tests, thens, switchType, testType, skipCheck)
