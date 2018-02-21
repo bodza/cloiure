@@ -5393,7 +5393,7 @@
     )
 )
 
-(§ def ^:declared ^:redef load)
+(§ def ^:declared load)
 
 ;;;
  ; Loads a lib given its name. If need-ns, ensures that the associated
@@ -5563,7 +5563,7 @@
  ; classpath-relative if it begins with a slash or relative to the root
  ; directory for the current namespace otherwise.
  ;;
-(§ defn load {:redef true} [& paths]
+(§ defn load [& paths]
     (doseq [^String path paths]
         (let [^String path (if (.startsWith path "/") path (str (root-directory (ns-name *ns*)) \/ path))]
             (when *loading-verbosely*
