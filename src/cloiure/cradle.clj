@@ -813,24 +813,26 @@
 )
 
 (class-ns Compiler
-    (def #_"Var" ^:dynamic *loader*                  ) ;; DynamicClassLoader
-    (def #_"Var" ^:dynamic *line*                    ) ;; Integer
-    (def #_"Var" ^:dynamic *method*                  ) ;; FnFrame
-    (def #_"Var" ^:dynamic *local-env*               ) ;; symbol->localbinding
-    (def #_"Var" ^:dynamic *next-local-num*          ) ;; Integer
-    (def #_"Var" ^:dynamic *loop-locals*             ) ;; vector<localbinding>
-    (def #_"Var" ^:dynamic *loop-label*              ) ;; Label
-    (def #_"Var" ^:dynamic *constants*               ) ;; vector<object>
-    (def #_"Var" ^:dynamic *constant-ids*            ) ;; IdentityHashMap
-    (def #_"Var" ^:dynamic *keyword-callsites*       ) ;; vector<keyword>
-    (def #_"Var" ^:dynamic *protocol-callsites*      ) ;; vector<var>
-    (def #_"Var" ^:dynamic *keywords*                ) ;; keyword->constid
-    (def #_"Var" ^:dynamic *vars*                    ) ;; var->constid
-    (def #_"Var" ^:dynamic *in-catch-finally*   false)
-    (def #_"Var" ^:dynamic *in-return-context*  false)
-    (def #_"Var" ^:dynamic *no-recur*           false)
-    (def #_"Var" ^:dynamic *compile-stub-sym*     nil)
-    (def #_"Var" ^:dynamic *compile-stub-class*   nil)
+    (def #_"Var" ^:dynamic *loader*            ) ;; DynamicClassLoader
+    (def #_"Var" ^:dynamic *line*              ) ;; Integer
+    (def #_"Var" ^:dynamic *last-unique-id*    ) ;; Integer
+    (def #_"Var" ^:dynamic *method*            ) ;; FnFrame
+    (def #_"Var" ^:dynamic *local-env*         ) ;; symbol->localbinding
+    (def #_"Var" ^:dynamic *last-local-num*    ) ;; Integer
+    (def #_"Var" ^:dynamic *loop-locals*       ) ;; vector<localbinding>
+    (def #_"Var" ^:dynamic *loop-label*        ) ;; Label
+    (def #_"Var" ^:dynamic *constants*         ) ;; vector<object>
+    (def #_"Var" ^:dynamic *constant-ids*      ) ;; IdentityHashMap
+    (def #_"Var" ^:dynamic *used-constants*    ) ;; IPersistentSet
+    (def #_"Var" ^:dynamic *keyword-callsites* ) ;; vector<keyword>
+    (def #_"Var" ^:dynamic *protocol-callsites*) ;; vector<var>
+    (def #_"Var" ^:dynamic *keywords*          ) ;; keyword->constid
+    (def #_"Var" ^:dynamic *vars*              ) ;; var->constid
+    (def #_"Var" ^:dynamic *no-recur*          ) ;; Boolean
+    (def #_"Var" ^:dynamic *in-catch-finally*  ) ;; Boolean
+    (def #_"Var" ^:dynamic *in-return-context* ) ;; Boolean
+    (def #_"Var" ^:dynamic *compile-stub-sym*  ) ;; Symbol
+    (def #_"Var" ^:dynamic *compile-stub-class*) ;; Class
 
     (def #_"Method[]" Compiler'createTupleMethods
         (object-array [
@@ -1112,84 +1114,70 @@
         )
     )
 
-    (defn- #_"int" Compiler'getAndIncLocalNum []
-        (let [#_"int" n (.intValue *next-local-num*)]
-            (when (< (:maxLocal *method*) n)
-                (§ set! (:maxLocal *method*) n)
-            )
-            (set! *next-local-num* (inc n))
-            n
-        )
+    (defn #_"int" Compiler'nextUniqueId []
+        (update! *last-unique-id* inc)
+    )
+
+    (defn- #_"int" Compiler'nextLocalNum []
+        (update! *last-local-num* inc)
     )
 
     (declare LocalBinding'new)
 
-    (defn- #_"LocalBinding" Compiler'registerLocal [#_"Symbol" sym, #_"Symbol" tag, #_"Expr" init, #_"boolean" isArg]
-        (let [#_"int" n (Compiler'getAndIncLocalNum)
-              #_"LocalBinding" lb (LocalBinding'new n, sym, tag, init, isArg)]
+    (defn #_"LocalBinding" Compiler'registerLocal [#_"Symbol" sym, #_"Symbol" tag, #_"Expr" init, #_"boolean" isArg]
+        (let [#_"LocalBinding" lb (LocalBinding'new (Compiler'nextLocalNum), sym, tag, init, isArg)]
             (update! *local-env* assoc (:sym lb) lb)
-            (§ update! (:locals *method*) assoc lb lb)
-            (§ update! (:indexlocals *method*) assoc n lb)
+            (update! *method* update :locals assoc (:uid lb) lb)
             lb
         )
     )
 
-    (defn #_"ObjMethod" Compiler'closeOver [#_"ObjMethod" m, #_"LocalBinding" b]
-        (when (and (some? b) (some? m)) => m
-            (let [#_"LocalBinding" lb (get (:locals m) b)]
-                (if (nil? lb)
-                    (do
-                        (§ update! (:closes (:objx m)) assoc b b)
-                        (§ ass (:parent m) (Compiler'closeOver (:parent m), b))
-                        m
-                    )
-                    (do
-                        (when *in-catch-finally*
-                            (§ update! (:localsUsedInCatchFinally m) conj (:idx b))
-                        )
-                        m
-                    )
-                )
-            )
+    (defn #_"LocalBinding" Compiler'complementLocalInit [#_"LocalBinding" lb, #_"Expr" init]
+        (let [lb (assoc lb :init init)]
+            (update! *local-env* assoc (:sym lb) lb)
+            (update! *method* update :locals assoc (:uid lb) lb)
+            lb
         )
+    )
+
+    (defn- #_"void" Compiler'closeOver [#_"LocalBinding" lb, #_"ObjMethod" m]
+        (when (and (some? lb) (some? m) (not (contains? (:locals m) (:uid lb))))
+            (swap! (:a'closes (:objx m)) assoc (:uid lb) lb)
+            (Compiler'closeOver lb, (:parent m))
+        )
+        nil
     )
 
     (defn #_"LocalBinding" Compiler'referenceLocal [#_"Symbol" sym]
         (when-let [#_"LocalBinding" lb (get *local-env* sym)]
-            (update! *method* Compiler'closeOver lb)
+            (Compiler'closeOver lb, *method*)
             lb
         )
     )
 
     (defn- #_"int" Compiler'registerConstant [#_"Object" o]
-        (when (bound? #'*constants*) => -1
-            (let [#_"IdentityHashMap<Object, Integer>" ids *constant-ids*]
-                (or (get ids o)
-                    (let [#_"PersistentVector" v *constants*]
-                        (set! *constants* (conj v o))
-                        (.put ids, o, (count v))
-                        (count v)
-                    )
+        (let [#_"IdentityHashMap<Object, Integer>" ids *constant-ids*]
+            (or (get ids o)
+                (let [#_"PersistentVector" v *constants*]
+                    (set! *constants* (conj v o))
+                    (.put ids, o, (count v))
+                    (count v)
                 )
             )
         )
     )
 
     (defn- #_"int" Compiler'registerKeywordCallsite [#_"Keyword" k]
-        (when (bound? #'*keyword-callsites*) => (throw (IllegalAccessError. "KEYWORD_CALLSITES is not bound"))
-            (let [#_"IPersistentVector" v (conj *keyword-callsites* k)]
-                (set! *keyword-callsites* v)
-                (dec (count v))
-            )
+        (let [#_"IPersistentVector" v (conj *keyword-callsites* k)]
+            (set! *keyword-callsites* v)
+            (dec (count v))
         )
     )
 
     (defn- #_"int" Compiler'registerProtocolCallsite [#_"Var" v]
-        (when (bound? #'*protocol-callsites*) => (throw (IllegalAccessError. "PROTOCOL_CALLSITES is not bound"))
-            (let [#_"IPersistentVector" v (conj *protocol-callsites* v)]
-                (set! *protocol-callsites* v)
-                (dec (count v))
-            )
+        (let [#_"IPersistentVector" v (conj *protocol-callsites* v)]
+            (set! *protocol-callsites* v)
+            (dec (count v))
         )
     )
 
@@ -2239,15 +2227,11 @@
             ;; when closures are defined inside other closures,
             ;; the closed over locals need to be propagated to the enclosing objx
             #_"ObjMethod" :parent parent
-            ;; localbinding->localbinding
-            #_mutable #_"IPersistentMap" :locals nil
-            ;; num->localbinding
-            #_mutable #_"IPersistentMap" :indexlocals nil
+            ;; uid->localbinding
+            #_"IPersistentMap" :locals {}
             #_"Expr" :body nil
             #_"PersistentVector" :argLocals nil
-            #_mutable #_"int" :maxLocal 0
             #_"int" :line 0
-            #_mutable #_"PersistentHashSet" :localsUsedInCatchFinally #{}
             #_"IPersistentMap" :methodMeta nil
         )
     )
@@ -2323,31 +2307,6 @@
 
     #_method
     (defn #_"void" ObjMethod''emitClearLocals [#_"ObjMethod" this, #_"GeneratorAdapter" gen]
-        nil
-    )
-
-    (declare LocalBinding''getPrimitiveType)
-
-    #_method
-    (defn #_"void" ObjMethod''emitClearLocalsOld [#_"ObjMethod" this, #_"GeneratorAdapter" gen]
-        (dotimes [#_"int" i (count (:argLocals this))]
-            (let [#_"LocalBinding" lb (nth (:argLocals this) i)]
-                (when (and (not (contains? (:localsUsedInCatchFinally this) (:idx lb))) (nil? (LocalBinding''getPrimitiveType lb)))
-                    (.visitInsn gen, Opcodes/ACONST_NULL)
-                    (.storeArg gen, (dec (:idx lb)))
-                )
-            )
-        )
-        (loop-when-recur [#_"int" i (inc (.numParams this))] (< i (inc (:maxLocal this))) [(inc i)]
-            (when (not (contains? (:localsUsedInCatchFinally this) i))
-                (let [#_"LocalBinding" b (get (:indexlocals this) i)]
-                    (when (or (nil? b) (nil? (Compiler'maybePrimitiveType (:init b))))
-                        (.visitInsn gen, Opcodes/ACONST_NULL)
-                        (.visitVarInsn gen, (.getOpcode (Type/getType Object), Opcodes/ISTORE), i)
-                    )
-                )
-            )
-        )
         nil
     )
 
@@ -2935,21 +2894,19 @@
             #_"Class" :c c
             #_"LocalBinding" :lb lb
             #_"Expr" :handler handler
-
-            #_mutable #_"Label" :label nil
-            #_mutable #_"Label" :endLabel nil
         )
     )
 )
 
 (class-ns TryExpr
-    (defn #_"TryExpr" TryExpr'new [#_"Expr" tryExpr, #_"PersistentVector" catchExprs, #_"Expr" finallyExpr, #_"int" retLocal, #_"int" finallyLocal]
+    (defn #_"TryExpr" TryExpr'new [#_"Expr" tryExpr, #_"PersistentVector" catchExprs, #_"Expr" finallyExpr]
         (hash-map
             #_"Expr" :tryExpr tryExpr
             #_"PersistentVector" :catchExprs catchExprs
             #_"Expr" :finallyExpr finallyExpr
-            #_"int" :retLocal retLocal
-            #_"int" :finallyLocal finallyLocal
+
+            #_"int" :retLocal (Compiler'nextLocalNum)
+            #_"int" :finallyLocal (Compiler'nextLocalNum)
         )
     )
 
@@ -2960,17 +2917,16 @@
 
     #_override
     (defn #_"void" Expr'''emit--TryExpr [#_"TryExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-        (let [#_"Label" startTry (.newLabel gen) #_"Label" endTry (.newLabel gen) #_"Label" end (.newLabel gen) #_"Label" ret (.newLabel gen) #_"Label" finallyLabel (.newLabel gen)]
-            (loop-when-recur [#_"int" i 0] (< i (count (:catchExprs this))) [(inc i)]
-                (let [#_"CatchClause" clause (nth (:catchExprs this) i)]
-                    (§ set! (:label clause) (.newLabel gen))
-                    (§ set! (:endLabel clause) (.newLabel gen))
-                )
+        (let [#_"Label" startTry (.newLabel gen) #_"Label" endTry (.newLabel gen) #_"Label" end (.newLabel gen) #_"Label" ret (.newLabel gen) #_"Label" finallyLabel (.newLabel gen)
+              #_"int" n (count (:catchExprs this)) #_"Label[]" labels (make-array Label n) #_"Label[]" endLabels (make-array Label n)]
+            (dotimes [#_"int" i n]
+                (aset labels i (.newLabel gen))
+                (aset endLabels i (.newLabel gen))
             )
 
             (.mark gen, startTry)
             (.emit (:tryExpr this), context, objx, gen)
-            (when (not= context :Context'STATEMENT)
+            (when-not (= context :Context'STATEMENT)
                 (.visitVarInsn gen, (.getOpcode (Type/getType Object), Opcodes/ISTORE), (:retLocal this))
             )
             (.mark gen, endTry)
@@ -2979,17 +2935,17 @@
             )
             (.goTo gen, ret)
 
-            (dotimes [#_"int" i (count (:catchExprs this))]
+            (dotimes [#_"int" i n]
                 (let [#_"CatchClause" clause (nth (:catchExprs this) i)]
-                    (.mark gen, (:label clause))
+                    (.mark gen, (aget labels i))
                     ;; exception should be on stack
                     ;; put in clause local
                     (.visitVarInsn gen, (.getOpcode (Type/getType Object), Opcodes/ISTORE), (:idx (:lb clause)))
                     (.emit (:handler clause), context, objx, gen)
-                    (when (not= context :Context'STATEMENT)
+                    (when-not (= context :Context'STATEMENT)
                         (.visitVarInsn gen, (.getOpcode (Type/getType Object), Opcodes/ISTORE), (:retLocal this))
                     )
-                    (.mark gen, (:endLabel clause))
+                    (.mark gen, (aget endLabels i))
 
                     (when (some? (:finallyExpr this))
                         (.emit (:finallyExpr this), :Context'STATEMENT, objx, gen)
@@ -3006,26 +2962,26 @@
                 (.throwException gen)
             )
             (.mark gen, ret)
-            (when (not= context :Context'STATEMENT)
+            (when-not (= context :Context'STATEMENT)
                 (.visitVarInsn gen, (.getOpcode (Type/getType Object), Opcodes/ILOAD), (:retLocal this))
             )
             (.mark gen, end)
-            (dotimes [#_"int" i (count (:catchExprs this))]
+            (dotimes [#_"int" i n]
                 (let [#_"CatchClause" clause (nth (:catchExprs this) i)]
-                    (.visitTryCatchBlock gen, startTry, endTry, (:label clause), (.replace (.getName (:c clause)), \., \/))
+                    (.visitTryCatchBlock gen, startTry, endTry, (aget labels i), (.replace (.getName (:c clause)), \., \/))
                 )
             )
             (when (some? (:finallyExpr this))
                 (.visitTryCatchBlock gen, startTry, endTry, finallyLabel, nil)
-                (dotimes [#_"int" i (count (:catchExprs this))]
-                    (let [#_"CatchClause" clause (nth (:catchExprs this) i)]
-                        (.visitTryCatchBlock gen, (:label clause), (:endLabel clause), finallyLabel, nil)
+                (dotimes [#_"int" i n]
+                    (let [#_"CatchClause" _clause (nth (:catchExprs this) i)]
+                        (.visitTryCatchBlock gen, (aget labels i), (aget endLabels i), finallyLabel, nil)
                     )
                 )
             )
-            (dotimes [#_"int" i (count (:catchExprs this))]
+            (dotimes [#_"int" i n]
                 (let [#_"CatchClause" clause (nth (:catchExprs this) i)]
-                    (.visitLocalVariable gen, (:name (:lb clause)), "Ljava/lang/Object;", nil, (:label clause), (:endLabel clause), (:idx (:lb clause)))
+                    (.visitLocalVariable gen, (:name (:lb clause)), "Ljava/lang/Object;", nil, (aget labels i), (aget endLabels i), (:idx (:lb clause)))
                 )
             )
         )
@@ -3067,7 +3023,7 @@
                                                     (let-when [#_"Symbol" sym (third f)] (symbol? sym) => (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " sym)))
                                                         (when (nil? (namespace sym)) => (throw (RuntimeException. (str "Can't bind qualified name: " sym)))
                                                             (let [catches
-                                                                    (binding [*local-env* *local-env*, *next-local-num* *next-local-num*, *in-catch-finally* true]
+                                                                    (binding [*local-env* *local-env*, *last-local-num* *last-local-num*, *in-catch-finally* true]
                                                                         (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (when (symbol? (second f)) (second f)), nil, false)
                                                                               #_"Expr" handler (.parse (BodyParser'new), :Context'EXPRESSION, (next (next (next f))))]
                                                                             (conj catches (CatchClause'new c, lb, handler))
@@ -3094,7 +3050,7 @@
                                     )
                                 )
                             )]
-                        (when (nil? bodyExpr) => (TryExpr'new bodyExpr, catches, finallyExpr, (Compiler'getAndIncLocalNum), (Compiler'getAndIncLocalNum))
+                        (when (nil? bodyExpr) => (TryExpr'new bodyExpr, catches, finallyExpr)
                             ;; when there is neither catch nor finally, e.g. (try (expr)) return a body expr directly
                             (binding [*no-recur* true]
                                 (.parse (BodyParser'new), context, (seq body))
@@ -3966,14 +3922,15 @@
             (throw (UnsupportedOperationException. "Can't type hint a local with a primitive initializer"))
         )
         (hash-map
+            #_"int" :uid (Compiler'nextUniqueId)
             #_"int" :idx idx
             #_"Symbol" :sym sym
             #_"Symbol" :tag tag
-            #_mutable #_"Expr" :init init
+            #_"Expr" :init init
             #_"boolean" :isArg isArg
 
             #_"String" :name (Compiler'munge (:name sym))
-            #_mutable #_"boolean" :recurMistmatch false
+            #_"boolean" :recurMistmatch false
         )
     )
 
@@ -4128,7 +4085,7 @@
             ;; register as the current method and set up a new env frame
             (binding [*method*            fm
                       *local-env*         *local-env*
-                      *next-local-num*    0
+                      *last-local-num*    -1
                       *loop-locals*       nil
                       *in-return-context* true]
                 (let [retTag (if (string? retTag) (symbol retTag) retTag)
@@ -4143,7 +4100,7 @@
                     ;; register 'this' as local 0
                     (if (some? (:thisName objx))
                         (Compiler'registerLocal (symbol (:thisName objx)), nil, nil, false)
-                        (Compiler'getAndIncLocalNum)
+                        (Compiler'nextLocalNum)
                     )
                     (let [fm (assoc fm #_"PersistentVector" :argTypes [] #_"PersistentVector" :argClasses [] :reqParms [] :restParm nil :argLocals [])
                           fm (loop-when [fm fm #_"boolean" rest? false #_"int" i 0] (< i (count parms)) => fm
@@ -4264,7 +4221,6 @@
             #_"String" :internalName nil
             #_"String" :thisName nil
             #_"Type" :objType nil
-            #_mutable #_"IPersistentMap" :closes {}
             #_"IPersistentVector" :closesExprs []
             #_"IPersistentMap" :fields nil
             #_"IPersistentVector" :hintedFields []
@@ -4272,13 +4228,14 @@
             #_"IPersistentMap" :vars {}
             #_"int" :line 0
             #_"PersistentVector" :constants nil
-            #_mutable #_"IPersistentSet" :usedConstants #{}
             #_"int" :altCtorDrops 0
             #_"IPersistentVector" :keywordCallsites nil
             #_"IPersistentVector" :protocolCallsites nil
             #_"boolean" :onceOnly false
             #_"Object" :src nil
             #_"IPersistentMap" :opts {}
+
+            #_"IPersistentMap'" :a'closes (atom {})
 
             #_"Class" :compiledClass nil
         )
@@ -4313,7 +4270,7 @@
     #_method
     (defn #_"Type[]" ObjExpr''ctorTypes [#_"ObjExpr" this]
         (let [#_"IPersistentVector" v (if (.supportsMeta this) [(Type/getType IPersistentMap)] [])
-              v (loop-when [v v #_"ISeq" s (keys (:closes this))] (some? s) => v
+              v (loop-when [v v #_"ISeq" s (vals @(:a'closes this))] (some? s) => v
                     (let [#_"Class" c (LocalBinding''getPrimitiveType (first s))]
                         (recur (conj v (if (some? c) (Type/getType c) (Type/getType Object))) (next s))
                     )
@@ -4371,7 +4328,7 @@
     #_method
     (defn #_"void" ObjExpr''emitConstants [#_"ObjExpr" this, #_"GeneratorAdapter" clinitgen]
         (dotimes [#_"int" i (count (:constants this))]
-            (when (contains? (:usedConstants this) i)
+            (when (contains? *used-constants* i)
                 (ObjExpr''emitValue this, (nth (:constants this) i), clinitgen)
                 (.checkCast clinitgen, (ObjExpr''constantType this, i))
                 (.putStatic clinitgen, (:objType this), (Compiler'constantName i), (ObjExpr''constantType this, i))
@@ -4417,7 +4374,7 @@
         ;; objx arg is enclosing objx, not this
         (.checkCast gen, (:objType this))
 
-        (loop-when-recur [#_"ISeq" s (keys (:closes this))] (some? s) [(next s)]
+        (loop-when-recur [#_"ISeq" s (vals @(:a'closes this))] (some? s) [(next s)]
             (let [#_"LocalBinding" lb (first s)]
                 (when (contains? letFnLocals lb)
                     (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
@@ -4505,7 +4462,7 @@
     #_method
     (defn- #_"void" ObjExpr''emitLocal [#_"ObjExpr" this, #_"GeneratorAdapter" gen, #_"LocalBinding" lb]
         (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
-            (if (contains? (:closes this) lb)
+            (if (contains? @(:a'closes this) (:uid lb))
                 (do
                     (.loadThis gen)
                     (.getField gen, (:objType this), (:name lb), (Type/getType (or primc Object)))
@@ -4525,7 +4482,7 @@
     #_method
     (defn- #_"void" ObjExpr''emitUnboxedLocal [#_"ObjExpr" this, #_"GeneratorAdapter" gen, #_"LocalBinding" lb]
         (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
-            (if (contains? (:closes this) lb)
+            (if (contains? @(:a'closes this) (:uid lb))
                 (do
                     (.loadThis gen)
                     (.getField gen, (:objType this), (:name lb), (Type/getType primc))
@@ -4560,7 +4517,7 @@
 
     #_method
     (defn #_"void" ObjExpr''emitConstant [#_"ObjExpr" this, #_"GeneratorAdapter" gen, #_"int" id]
-        (§ update! (:usedConstants this) conj id)
+        (update! *used-constants* conj id)
         (.getStatic gen, (:objType this), (Compiler'constantName id), (ObjExpr''constantType this, id))
         nil
     )
@@ -4757,241 +4714,243 @@
 
     #_method
     (defn #_"ObjExpr" ObjExpr''compile [#_"ObjExpr" this, #_"String" superName, #_"String[]" interfaceNames, #_"boolean" oneTimeUse]
-        ;; create bytecode for a class
-        ;; with name current_ns.defname[$letname]+
-        ;; anonymous fns get names fn__id
-        ;; derived from AFn'RestFn
-        (let [#_"ClassWriter" cw (ClassWriter. ClassWriter/COMPUTE_MAXS) #_"ClassVisitor" cv cw]
-            (.visit cv, Opcodes/V1_5, (| Opcodes/ACC_PUBLIC Opcodes/ACC_SUPER Opcodes/ACC_FINAL), (:internalName this), nil, superName, interfaceNames)
-            (when (.supportsMeta this)
-                (.visitField cv, Opcodes/ACC_FINAL, "__meta", (.getDescriptor (Type/getType IPersistentMap)), nil, nil)
-            )
-            ;; instance fields for closed-overs
-            (loop-when-recur [#_"ISeq" s (keys (:closes this))] (some? s) [(next s)]
-                (let [#_"LocalBinding" lb (first s)
-                      #_"String" fd
-                        (if (some? (LocalBinding''getPrimitiveType lb))
-                            (.getDescriptor (Type/getType (LocalBinding''getPrimitiveType lb)))
-                            ;; todo - when closed-overs are fields, use more specific types here and in ctor and emitLocal?
-                            (.getDescriptor (Type/getType Object))
-                        )]
-                    (if (ObjExpr''isDeftype this)
-                        (let [#_"int" access
-                                (cond
-                                    (ObjExpr''isVolatile this, lb) Opcodes/ACC_VOLATILE
-                                    (ObjExpr''isMutable this, lb) 0
-                                    :else (| Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL)
-                                )]
-                            (.visitField cv, access, (:name lb), fd, nil, nil)
-                        )
-                        ;; todo - only enable this non-private+writability for letfns where we need it
-                        (let [#_"int" access
-                                (if (some? (LocalBinding''getPrimitiveType lb))
-                                    (if (ObjExpr''isVolatile this, lb) Opcodes/ACC_VOLATILE 0)
-                                    0
-                                )]
-                            (.visitField cv, access, (:name lb), fd, nil, nil)
-                        )
-                    )
-                )
-            )
-
-            ;; static fields for callsites and thunks
-            (dotimes [#_"int" i (count (:protocolCallsites this))]
-                (.visitField cv, (| Opcodes/ACC_PRIVATE Opcodes/ACC_STATIC), (Compiler'cachedClassName i), (.getDescriptor (Type/getType Class)), nil, nil)
-            )
-
-            ;; ctor that takes closed-overs and inits base + fields
-            (let [#_"Method" m (Method. "<init>", Type/VOID_TYPE, (ObjExpr''ctorTypes this))
-                  #_"GeneratorAdapter" ctorgen (GeneratorAdapter. Opcodes/ACC_PUBLIC, m, nil, nil, cv)
-                  #_"Label" start (.newLabel ctorgen) #_"Label" end (.newLabel ctorgen)]
-                (.visitCode ctorgen)
-                (.visitLineNumber ctorgen, (:line this), (.mark ctorgen))
-                (.visitLabel ctorgen, start)
-                (.loadThis ctorgen)
-                (.invokeConstructor ctorgen, (Type/getObjectType superName), (Method/getMethod "void <init>()"))
-
+        (binding [*used-constants* #{}]
+            ;; create bytecode for a class
+            ;; with name current_ns.defname[$letname]+
+            ;; anonymous fns get names fn__id
+            ;; derived from AFn'RestFn
+            (let [#_"ClassWriter" cw (ClassWriter. ClassWriter/COMPUTE_MAXS) #_"ClassVisitor" cv cw]
+                (.visit cv, Opcodes/V1_5, (| Opcodes/ACC_PUBLIC Opcodes/ACC_SUPER Opcodes/ACC_FINAL), (:internalName this), nil, superName, interfaceNames)
                 (when (.supportsMeta this)
-                    (.loadThis ctorgen)
-                    (.visitVarInsn ctorgen, (.getOpcode (Type/getType IPersistentMap), Opcodes/ILOAD), 1)
-                    (.putField ctorgen, (:objType this), "__meta", (Type/getType IPersistentMap))
+                    (.visitField cv, Opcodes/ACC_FINAL, "__meta", (.getDescriptor (Type/getType IPersistentMap)), nil, nil)
                 )
-
-                (let [[this #_"int" a]
-                        (loop-when [this this a (if (.supportsMeta this) 2 1) #_"ISeq" s (keys (:closes this))] (some? s) => [this a]
-                            (let [#_"LocalBinding" lb (first s)]
-                                (.loadThis ctorgen)
-                                (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)
-                                      a (if (some? primc)
-                                            (do
-                                                (.visitVarInsn ctorgen, (.getOpcode (Type/getType primc), Opcodes/ILOAD), a)
-                                                (.putField ctorgen, (:objType this), (:name lb), (Type/getType primc))
-                                                (if (any = primc Long/TYPE Double/TYPE) (inc a) a)
-                                            )
-                                            (do
-                                                (.visitVarInsn ctorgen, (.getOpcode (Type/getType Object), Opcodes/ILOAD), a)
-                                                (.putField ctorgen, (:objType this), (:name lb), (Type/getType Object))
-                                                a
-                                            )
-                                        )]
-                                    (recur (update this :closesExprs conj (LocalBindingExpr'new lb, nil)) (inc a) (next s))
-                                )
+                ;; instance fields for closed-overs
+                (loop-when-recur [#_"ISeq" s (vals @(:a'closes this))] (some? s) [(next s)]
+                    (let [#_"LocalBinding" lb (first s)
+                          #_"String" fd
+                            (if (some? (LocalBinding''getPrimitiveType lb))
+                                (.getDescriptor (Type/getType (LocalBinding''getPrimitiveType lb)))
+                                ;; todo - when closed-overs are fields, use more specific types here and in ctor and emitLocal?
+                                (.getDescriptor (Type/getType Object))
+                            )]
+                        (if (ObjExpr''isDeftype this)
+                            (let [#_"int" access
+                                    (cond
+                                        (ObjExpr''isVolatile this, lb) Opcodes/ACC_VOLATILE
+                                        (ObjExpr''isMutable this, lb) 0
+                                        :else (| Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL)
+                                    )]
+                                (.visitField cv, access, (:name lb), fd, nil, nil)
                             )
-                        )]
-
-                    (.visitLabel ctorgen, end)
-                    (.returnValue ctorgen)
-                    (.endMethod ctorgen)
-
-                    (when (pos? (:altCtorDrops this))
-                        (let [#_"Type[]" ctorTypes (ObjExpr''ctorTypes this)]
-
-                            ;; ctor that takes closed-overs and inits base + fields
-                            (let [#_"Type[]" altCtorTypes (make-array Type (- (alength ctorTypes) (:altCtorDrops this)))
-                                  _ (dotimes [#_"int" i (alength altCtorTypes)]
-                                        (aset altCtorTypes i (aget ctorTypes i))
-                                    )
-                                  #_"Method" alt (Method. "<init>", Type/VOID_TYPE, altCtorTypes)
-                                  #_"GeneratorAdapter" ctorgen (GeneratorAdapter. Opcodes/ACC_PUBLIC, alt, nil, nil, cv)]
-                                (.visitCode ctorgen)
-                                (.loadThis ctorgen)
-                                (.loadArgs ctorgen)
-
-                                (.visitInsn ctorgen, Opcodes/ACONST_NULL) ;; __meta
-                                (.visitInsn ctorgen, Opcodes/ACONST_NULL) ;; __extmap
-                                (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hash
-                                (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hasheq
-
-                                (.invokeConstructor ctorgen, (:objType this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
-
-                                (.returnValue ctorgen)
-                                (.endMethod ctorgen)
-                            )
-
-                            ;; alt ctor no __hash, __hasheq
-                            (let [#_"Type[]" altCtorTypes (make-array Type (- (alength ctorTypes) 2))
-                                  _ (dotimes [#_"int" i (alength altCtorTypes)]
-                                        (aset altCtorTypes i (aget ctorTypes i))
-                                    )
-                                  #_"Method" alt (Method. "<init>", Type/VOID_TYPE, altCtorTypes)
-                                  #_"GeneratorAdapter" ctorgen (GeneratorAdapter. Opcodes/ACC_PUBLIC, alt, nil, nil, cv)]
-                                (.visitCode ctorgen)
-                                (.loadThis ctorgen)
-                                (.loadArgs ctorgen)
-
-                                (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hash
-                                (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hasheq
-
-                                (.invokeConstructor ctorgen, (:objType this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
-
-                                (.returnValue ctorgen)
-                                (.endMethod ctorgen)
+                            ;; todo - only enable this non-private+writability for letfns where we need it
+                            (let [#_"int" access
+                                    (if (some? (LocalBinding''getPrimitiveType lb))
+                                        (if (ObjExpr''isVolatile this, lb) Opcodes/ACC_VOLATILE 0)
+                                        0
+                                    )]
+                                (.visitField cv, access, (:name lb), fd, nil, nil)
                             )
                         )
                     )
+                )
+
+                ;; static fields for callsites and thunks
+                (dotimes [#_"int" i (count (:protocolCallsites this))]
+                    (.visitField cv, (| Opcodes/ACC_PRIVATE Opcodes/ACC_STATIC), (Compiler'cachedClassName i), (.getDescriptor (Type/getType Class)), nil, nil)
+                )
+
+                ;; ctor that takes closed-overs and inits base + fields
+                (let [#_"Method" m (Method. "<init>", Type/VOID_TYPE, (ObjExpr''ctorTypes this))
+                      #_"GeneratorAdapter" ctorgen (GeneratorAdapter. Opcodes/ACC_PUBLIC, m, nil, nil, cv)
+                      #_"Label" start (.newLabel ctorgen) #_"Label" end (.newLabel ctorgen)]
+                    (.visitCode ctorgen)
+                    (.visitLineNumber ctorgen, (:line this), (.mark ctorgen))
+                    (.visitLabel ctorgen, start)
+                    (.loadThis ctorgen)
+                    (.invokeConstructor ctorgen, (Type/getObjectType superName), (Method/getMethod "void <init>()"))
 
                     (when (.supportsMeta this)
-                        (let [#_"Type[]" ctorTypes (ObjExpr''ctorTypes this)]
+                        (.loadThis ctorgen)
+                        (.visitVarInsn ctorgen, (.getOpcode (Type/getType IPersistentMap), Opcodes/ILOAD), 1)
+                        (.putField ctorgen, (:objType this), "__meta", (Type/getType IPersistentMap))
+                    )
 
-                            ;; ctor that takes closed-overs but not meta
-                            (let [#_"Type[]" noMetaCtorTypes (make-array Type (dec (alength ctorTypes)))
-                                  _ (loop-when-recur [#_"int" i 1] (< i (alength ctorTypes)) [(inc i)]
-                                        (aset noMetaCtorTypes (dec i) (aget ctorTypes i))
+                    (let [[this #_"int" a]
+                            (loop-when [this this a (if (.supportsMeta this) 2 1) #_"ISeq" s (vals @(:a'closes this))] (some? s) => [this a]
+                                (let [#_"LocalBinding" lb (first s)]
+                                    (.loadThis ctorgen)
+                                    (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)
+                                          a (if (some? primc)
+                                                (do
+                                                    (.visitVarInsn ctorgen, (.getOpcode (Type/getType primc), Opcodes/ILOAD), a)
+                                                    (.putField ctorgen, (:objType this), (:name lb), (Type/getType primc))
+                                                    (if (any = primc Long/TYPE Double/TYPE) (inc a) a)
+                                                )
+                                                (do
+                                                    (.visitVarInsn ctorgen, (.getOpcode (Type/getType Object), Opcodes/ILOAD), a)
+                                                    (.putField ctorgen, (:objType this), (:name lb), (Type/getType Object))
+                                                    a
+                                                )
+                                            )]
+                                        (recur (update this :closesExprs conj (LocalBindingExpr'new lb, nil)) (inc a) (next s))
                                     )
-                                  #_"Method" alt (Method. "<init>", Type/VOID_TYPE, noMetaCtorTypes)
-                                  #_"GeneratorAdapter" ctorgen (GeneratorAdapter. Opcodes/ACC_PUBLIC, alt, nil, nil, cv)]
-                                (.visitCode ctorgen)
-                                (.loadThis ctorgen)
-                                (.visitInsn ctorgen, Opcodes/ACONST_NULL) ;; nil meta
-                                (.loadArgs ctorgen)
-                                (.invokeConstructor ctorgen, (:objType this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
-                                (.returnValue ctorgen)
-                                (.endMethod ctorgen)
-                            )
+                                )
+                            )]
 
-                            ;; meta()
-                            (let [#_"Method" meth (Method/getMethod "clojure.lang.IPersistentMap meta()")
-                                  #_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, meth, nil, nil, cv)]
-                                (.visitCode gen)
-                                (.loadThis gen)
-                                (.getField gen, (:objType this), "__meta", (Type/getType IPersistentMap))
-                                (.returnValue gen)
-                                (.endMethod gen)
-                            )
+                        (.visitLabel ctorgen, end)
+                        (.returnValue ctorgen)
+                        (.endMethod ctorgen)
 
-                            ;; withMeta()
-                            (let [#_"Method" meth (Method/getMethod "clojure.lang.IObj withMeta(clojure.lang.IPersistentMap)")
-                                  #_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, meth, nil, nil, cv)]
-                                (.visitCode gen)
-                                (.newInstance gen, (:objType this))
-                                (.dup gen)
-                                (.loadArg gen, 0)
-                                (loop-when-recur [a a #_"ISeq" s (keys (:closes this))] (some? s) [(inc a) (next s)]
-                                    (let [#_"LocalBinding" lb (first s)]
-                                        (.loadThis gen)
-                                        (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
-                                            (.getField gen, (:objType this), (:name lb), (if (some? primc) (Type/getType primc) (Type/getType Object)))
+                        (when (pos? (:altCtorDrops this))
+                            (let [#_"Type[]" ctorTypes (ObjExpr''ctorTypes this)]
+
+                                ;; ctor that takes closed-overs and inits base + fields
+                                (let [#_"Type[]" altCtorTypes (make-array Type (- (alength ctorTypes) (:altCtorDrops this)))
+                                      _ (dotimes [#_"int" i (alength altCtorTypes)]
+                                            (aset altCtorTypes i (aget ctorTypes i))
+                                        )
+                                      #_"Method" alt (Method. "<init>", Type/VOID_TYPE, altCtorTypes)
+                                      #_"GeneratorAdapter" ctorgen (GeneratorAdapter. Opcodes/ACC_PUBLIC, alt, nil, nil, cv)]
+                                    (.visitCode ctorgen)
+                                    (.loadThis ctorgen)
+                                    (.loadArgs ctorgen)
+
+                                    (.visitInsn ctorgen, Opcodes/ACONST_NULL) ;; __meta
+                                    (.visitInsn ctorgen, Opcodes/ACONST_NULL) ;; __extmap
+                                    (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hash
+                                    (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hasheq
+
+                                    (.invokeConstructor ctorgen, (:objType this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
+
+                                    (.returnValue ctorgen)
+                                    (.endMethod ctorgen)
+                                )
+
+                                ;; alt ctor no __hash, __hasheq
+                                (let [#_"Type[]" altCtorTypes (make-array Type (- (alength ctorTypes) 2))
+                                      _ (dotimes [#_"int" i (alength altCtorTypes)]
+                                            (aset altCtorTypes i (aget ctorTypes i))
+                                        )
+                                      #_"Method" alt (Method. "<init>", Type/VOID_TYPE, altCtorTypes)
+                                      #_"GeneratorAdapter" ctorgen (GeneratorAdapter. Opcodes/ACC_PUBLIC, alt, nil, nil, cv)]
+                                    (.visitCode ctorgen)
+                                    (.loadThis ctorgen)
+                                    (.loadArgs ctorgen)
+
+                                    (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hash
+                                    (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hasheq
+
+                                    (.invokeConstructor ctorgen, (:objType this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
+
+                                    (.returnValue ctorgen)
+                                    (.endMethod ctorgen)
+                                )
+                            )
+                        )
+
+                        (when (.supportsMeta this)
+                            (let [#_"Type[]" ctorTypes (ObjExpr''ctorTypes this)]
+
+                                ;; ctor that takes closed-overs but not meta
+                                (let [#_"Type[]" noMetaCtorTypes (make-array Type (dec (alength ctorTypes)))
+                                      _ (loop-when-recur [#_"int" i 1] (< i (alength ctorTypes)) [(inc i)]
+                                            (aset noMetaCtorTypes (dec i) (aget ctorTypes i))
+                                        )
+                                      #_"Method" alt (Method. "<init>", Type/VOID_TYPE, noMetaCtorTypes)
+                                      #_"GeneratorAdapter" ctorgen (GeneratorAdapter. Opcodes/ACC_PUBLIC, alt, nil, nil, cv)]
+                                    (.visitCode ctorgen)
+                                    (.loadThis ctorgen)
+                                    (.visitInsn ctorgen, Opcodes/ACONST_NULL) ;; nil meta
+                                    (.loadArgs ctorgen)
+                                    (.invokeConstructor ctorgen, (:objType this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
+                                    (.returnValue ctorgen)
+                                    (.endMethod ctorgen)
+                                )
+
+                                ;; meta()
+                                (let [#_"Method" meth (Method/getMethod "clojure.lang.IPersistentMap meta()")
+                                      #_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, meth, nil, nil, cv)]
+                                    (.visitCode gen)
+                                    (.loadThis gen)
+                                    (.getField gen, (:objType this), "__meta", (Type/getType IPersistentMap))
+                                    (.returnValue gen)
+                                    (.endMethod gen)
+                                )
+
+                                ;; withMeta()
+                                (let [#_"Method" meth (Method/getMethod "clojure.lang.IObj withMeta(clojure.lang.IPersistentMap)")
+                                      #_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, meth, nil, nil, cv)]
+                                    (.visitCode gen)
+                                    (.newInstance gen, (:objType this))
+                                    (.dup gen)
+                                    (.loadArg gen, 0)
+                                    (loop-when-recur [a a #_"ISeq" s (vals @(:a'closes this))] (some? s) [(inc a) (next s)]
+                                        (let [#_"LocalBinding" lb (first s)]
+                                            (.loadThis gen)
+                                            (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
+                                                (.getField gen, (:objType this), (:name lb), (if (some? primc) (Type/getType primc) (Type/getType Object)))
+                                            )
                                         )
                                     )
-                                )
-                                (.invokeConstructor gen, (:objType this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
-                                (.returnValue gen)
-                                (.endMethod gen)
-                            )
-                        )
-                    )
-
-                    (.emitStatics this, cv)
-                    (.emitMethods this, cv)
-
-                    ;; static fields for constants
-                    (dotimes [#_"int" i (count (:constants this))]
-                        (when (contains? (:usedConstants this) i)
-                            (.visitField cv, (| Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL Opcodes/ACC_STATIC), (Compiler'constantName i), (.getDescriptor (ObjExpr''constantType this, i)), nil, nil)
-                        )
-                    )
-
-                    ;; static fields for lookup sites
-                    (dotimes [#_"int" i (count (:keywordCallsites this))]
-                        (.visitField cv, (| Opcodes/ACC_FINAL Opcodes/ACC_STATIC), (Compiler'siteNameStatic i), (.getDescriptor (Type/getType KeywordLookupSite)), nil, nil)
-                        (.visitField cv, Opcodes/ACC_STATIC, (Compiler'thunkNameStatic i), (.getDescriptor (Type/getType ILookupThunk)), nil, nil)
-                    )
-
-                    ;; static init for constants, keywords and vars
-                    (let [#_"GeneratorAdapter" clinitgen (GeneratorAdapter. (| Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), (Method/getMethod "void <clinit> ()"), nil, nil, cv)]
-                        (.visitCode clinitgen)
-                        (.visitLineNumber clinitgen, (:line this), (.mark clinitgen))
-
-                        (when (pos? (count (:constants this)))
-                            (ObjExpr''emitConstants this, clinitgen)
-                        )
-
-                        (when (pos? (count (:keywordCallsites this)))
-                            (ObjExpr''emitKeywordCallsites this, clinitgen)
-                        )
-
-                        (when (and (ObjExpr''isDeftype this) (get (:opts this) :load-ns))
-                            (let [#_"String" nsname (namespace (second (:src this)))]
-                                (when (not (= nsname "clojure.core"))
-                                    (.push clinitgen, "clojure.core")
-                                    (.push clinitgen, "require")
-                                    (.invokeStatic clinitgen, (Type/getType RT), (Method/getMethod "clojure.lang.Var var(String, String)"))
-                                    (.invokeVirtual clinitgen, (Type/getType Var), (Method/getMethod "Object getRawRoot()"))
-                                    (.checkCast clinitgen, (Type/getType IFn))
-                                    (.push clinitgen, nsname)
-                                    (.invokeStatic clinitgen, (Type/getType Symbol), (Method/getMethod "clojure.lang.Symbol intern(String)"))
-                                    (.invokeInterface clinitgen, (Type/getType IFn), (Method/getMethod "Object invoke(Object)"))
-                                    (.pop clinitgen)
+                                    (.invokeConstructor gen, (:objType this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
+                                    (.returnValue gen)
+                                    (.endMethod gen)
                                 )
                             )
                         )
 
-                        (.returnValue clinitgen)
-                        (.endMethod clinitgen)
-                        ;; end of class
-                        (.visitEnd cv)
+                        (.emitStatics this, cv)
+                        (.emitMethods this, cv)
 
-                        (assoc this :compiledClass (.defineClass *loader*, (:name this), (.toByteArray cw), (:src this)))
+                        ;; static fields for constants
+                        (dotimes [#_"int" i (count (:constants this))]
+                            (when (contains? *used-constants* i)
+                                (.visitField cv, (| Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL Opcodes/ACC_STATIC), (Compiler'constantName i), (.getDescriptor (ObjExpr''constantType this, i)), nil, nil)
+                            )
+                        )
+
+                        ;; static fields for lookup sites
+                        (dotimes [#_"int" i (count (:keywordCallsites this))]
+                            (.visitField cv, (| Opcodes/ACC_FINAL Opcodes/ACC_STATIC), (Compiler'siteNameStatic i), (.getDescriptor (Type/getType KeywordLookupSite)), nil, nil)
+                            (.visitField cv, Opcodes/ACC_STATIC, (Compiler'thunkNameStatic i), (.getDescriptor (Type/getType ILookupThunk)), nil, nil)
+                        )
+
+                        ;; static init for constants, keywords and vars
+                        (let [#_"GeneratorAdapter" clinitgen (GeneratorAdapter. (| Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), (Method/getMethod "void <clinit> ()"), nil, nil, cv)]
+                            (.visitCode clinitgen)
+                            (.visitLineNumber clinitgen, (:line this), (.mark clinitgen))
+
+                            (when (pos? (count (:constants this)))
+                                (ObjExpr''emitConstants this, clinitgen)
+                            )
+
+                            (when (pos? (count (:keywordCallsites this)))
+                                (ObjExpr''emitKeywordCallsites this, clinitgen)
+                            )
+
+                            (when (and (ObjExpr''isDeftype this) (get (:opts this) :load-ns))
+                                (let [#_"String" nsname (namespace (second (:src this)))]
+                                    (when (not (= nsname "clojure.core"))
+                                        (.push clinitgen, "clojure.core")
+                                        (.push clinitgen, "require")
+                                        (.invokeStatic clinitgen, (Type/getType RT), (Method/getMethod "clojure.lang.Var var(String, String)"))
+                                        (.invokeVirtual clinitgen, (Type/getType Var), (Method/getMethod "Object getRawRoot()"))
+                                        (.checkCast clinitgen, (Type/getType IFn))
+                                        (.push clinitgen, nsname)
+                                        (.invokeStatic clinitgen, (Type/getType Symbol), (Method/getMethod "clojure.lang.Symbol intern(String)"))
+                                        (.invokeInterface clinitgen, (Type/getType IFn), (Method/getMethod "Object invoke(Object)"))
+                                        (.pop clinitgen)
+                                    )
+                                )
+                            )
+
+                            (.returnValue clinitgen)
+                            (.endMethod clinitgen)
+                            ;; end of class
+                            (.visitEnd cv)
+
+                            (assoc this :compiledClass (.defineClass *loader*, (:name this), (.toByteArray cw), (:src this)))
+                        )
                     )
                 )
             )
@@ -5369,7 +5328,7 @@
                         (when (zero? (% (count bindings) 2)) => (throw (IllegalArgumentException. "Bad binding form, expected matched symbol expression pairs"))
                             (if (= context :Context'EVAL)
                                 (Compiler'analyze context, (list (list Compiler'FNONCE [] form)))
-                                (binding [*local-env* *local-env*, *next-local-num* *next-local-num*]
+                                (binding [*local-env* *local-env*, *last-local-num* *last-local-num*]
                                     ;; pre-seed env (like Lisp labels)
                                     (let [#_"PersistentVector" lbs
                                             (loop-when [lbs [] #_"int" i 0] (< i (count bindings)) => lbs
@@ -5382,8 +5341,7 @@
                                           #_"PersistentVector" bis
                                             (loop-when [bis [] #_"int" i 0] (< i (count bindings)) => bis
                                                 (let [#_"Expr" init (Compiler'analyze :Context'EXPRESSION, (nth bindings (inc i)), (:name (nth bindings i)))
-                                                      #_"LocalBinding" lb (nth lbs (/ i 2))]
-                                                    (§ set! (:init lb) init)
+                                                      #_"LocalBinding" lb (Compiler'complementLocalInit (nth lbs (/ i 2)), init)]
                                                     (recur (conj bis (BindingInit'new lb, init)) (+ i 2))
                                                 )
                                             )]
@@ -5500,21 +5458,19 @@
                                 (if (or (= context :Context'EVAL) (and (= context :Context'EXPRESSION) isLoop))
                                     (Compiler'analyze context, (list (list Compiler'FNONCE [] form)))
                                     (let [#_"ISeq" body (next (next form))
-                                          #_"IPersistentMap" locals' (:locals *method*)
-                                          #_"IPersistentMap" indexLocals' (:indexlocals *method*)]
+                                          #_"IPersistentMap" locals' (:locals *method*)]
                                         ;; may repeat once for each binding with a mismatch, return breaks
                                         (loop [#_"IPersistentVector" rms (vec (repeat (/ (count bindings) 2) false))]
                                             (let [#_"IPersistentMap" dynamicBindings
                                                     (hash-map
                                                         #'*local-env*      *local-env*
-                                                        #'*next-local-num* *next-local-num*
+                                                        #'*last-local-num* *last-local-num*
                                                     )
                                                   dynamicBindings
                                                     (when isLoop => dynamicBindings
                                                         (assoc dynamicBindings #'*loop-locals* nil)
                                                     )
-                                                  _ (§ set! (:locals *method*) locals')
-                                                  _ (§ set! (:indexlocals *method*) indexLocals')
+                                                  _ (update! *method* assoc :locals locals')
                                                   [rms #_"LetExpr" letExpr]
                                                     (try
                                                         (push-thread-bindings dynamicBindings)
@@ -5538,21 +5494,23 @@
                                                                                                              init
                                                                                             )
                                                                                         )
-                                                                                    )]
-                                                                                ;; sequential enhancement of env (like Lisp let*)
-                                                                                (try
-                                                                                    (when isLoop
-                                                                                        (push-thread-bindings (hash-map #'*no-recur* false))
                                                                                     )
-                                                                                    (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (Compiler'tagOf sym), init, false)]
-                                                                                        (§ soon recur (conj bindingInits (BindingInit'new lb, init)) (if isLoop (conj loopLocals lb) loopLocals) (+ i 2))
-                                                                                    )
-                                                                                    (finally
+                                                                                  ;; sequential enhancement of env (like Lisp let*)
+                                                                                  [bindingInits loopLocals]
+                                                                                    (try
                                                                                         (when isLoop
-                                                                                            (pop-thread-bindings)
+                                                                                            (push-thread-bindings (hash-map #'*no-recur* false))
                                                                                         )
-                                                                                    )
-                                                                                )
+                                                                                        (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (Compiler'tagOf sym), init, false)]
+                                                                                            [(conj bindingInits (BindingInit'new lb, init)) (if isLoop (conj loopLocals lb) loopLocals)]
+                                                                                        )
+                                                                                        (finally
+                                                                                            (when isLoop
+                                                                                                (pop-thread-bindings)
+                                                                                            )
+                                                                                        )
+                                                                                    )]
+                                                                                (recur bindingInits loopLocals (+ i 2))
                                                                             )
                                                                         )
                                                                     )
@@ -5579,9 +5537,9 @@
                                                                     )
                                                                   [rms #_"boolean" more?]
                                                                     (when isLoop => [rms false]
-                                                                        (loop-when [rms rms more? false #_"int" i 0] (< i (count loopLocals)) => [rms more?]
+                                                                        (loop-when [rms rms more? false #_"int" i 0] (< i (count *loop-locals*)) => [rms more?]
                                                                             (let [[rms more?]
-                                                                                    (when (:recurMistmatch (nth loopLocals i)) => [rms more?]
+                                                                                    (when (:recurMistmatch (nth *loop-locals* i)) => [rms more?]
                                                                                         [(assoc rms i true) true]
                                                                                     )]
                                                                                 (recur rms more? (inc i))
@@ -5703,45 +5661,43 @@
         (reify IParser
             #_override
             (#_"Expr" parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
-                (let [#_"IPersistentVector" loopLocals *loop-locals*]
-                    (when-not (and (= context :Context'RETURN) (some? loopLocals))
-                        (throw (UnsupportedOperationException. "Can only recur from tail position"))
+                (when-not (and (= context :Context'RETURN) (some? *loop-locals*))
+                    (throw (UnsupportedOperationException. "Can only recur from tail position"))
+                )
+                (when *no-recur*
+                    (throw (UnsupportedOperationException. "Cannot recur across try"))
+                )
+                (let [#_"int" line *line*
+                      #_"PersistentVector" args
+                        (loop-when-recur [args [] #_"ISeq" s (seq (next form))]
+                                         (some? s)
+                                         [(conj args (Compiler'analyze :Context'EXPRESSION, (first s))) (next s)]
+                                      => args
+                        )]
+                    (when-not (= (count args) (count *loop-locals*))
+                        (throw (IllegalArgumentException. (str "Mismatched argument count to recur, expected: " (count *loop-locals*) " args, got: " (count args))))
                     )
-                    (when *no-recur*
-                        (throw (UnsupportedOperationException. "Cannot recur across try"))
-                    )
-                    (let [#_"int" line *line*
-                          #_"PersistentVector" args
-                            (loop-when-recur [args [] #_"ISeq" s (seq (next form))]
-                                             (some? s)
-                                             [(conj args (Compiler'analyze :Context'EXPRESSION, (first s))) (next s)]
-                                          => args
-                            )]
-                        (when-not (= (count args) (count loopLocals))
-                            (throw (IllegalArgumentException. (str "Mismatched argument count to recur, expected: " (count loopLocals) " args, got: " (count args))))
-                        )
-                        (dotimes [#_"int" i (count loopLocals)]
-                            (let [#_"LocalBinding" lb (nth loopLocals i)]
-                                (when-let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
-                                    (let [#_"Class" pc (Compiler'maybePrimitiveType (nth args i))
-                                          #_"boolean" mismatch?
-                                            (condp = primc
-                                                Long/TYPE   (not (any = pc Long/TYPE Integer/TYPE Short/TYPE Character/TYPE Byte/TYPE))
-                                                Double/TYPE (not (any = pc Double/TYPE Float/TYPE))
-                                                            false
-                                            )]
-                                        (when mismatch?
-                                            (§ set! (:recurMistmatch lb) true)
-                                            (when *warn-on-reflection*
-                                                (.println *err*, (str "line " line ": recur arg for primitive local: " (:name lb) " is not matching primitive, had: " (if (some? pc) (.getName pc) "Object") ", needed: " (.getName primc)))
-                                            )
+                    (dotimes [#_"int" i (count *loop-locals*)]
+                        (let [#_"LocalBinding" lb (nth *loop-locals* i)]
+                            (when-let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
+                                (let [#_"Class" pc (Compiler'maybePrimitiveType (nth args i))
+                                      #_"boolean" mismatch?
+                                        (condp = primc
+                                            Long/TYPE   (not (any = pc Long/TYPE Integer/TYPE Short/TYPE Character/TYPE Byte/TYPE))
+                                            Double/TYPE (not (any = pc Double/TYPE Float/TYPE))
+                                                        false
+                                        )]
+                                    (when mismatch?
+                                        (update! *loop-locals* update i assoc :recurMistmatch true)
+                                        (when *warn-on-reflection*
+                                            (.println *err*, (str "line " line ": recur arg for primitive local: " (:name lb) " is not matching primitive, had: " (if (some? pc) (.getName pc) "Object") ", needed: " (.getName primc)))
                                         )
                                     )
                                 )
                             )
                         )
-                        (RecurExpr'new loopLocals, args, line)
                     )
+                    (RecurExpr'new *loop-locals*, args, line)
                 )
             )
         )
@@ -5749,8 +5705,6 @@
 )
 
 (class-ns NewInstanceMethod
-    (def #_"Symbol" NewInstanceMethod'dummyThis 'dummy_this_dlskjsdfower)
-
     (defn #_"NewInstanceMethod" NewInstanceMethod'new [#_"ObjExpr" objx, #_"ObjMethod" parent]
         (merge (ObjMethod'new objx, parent)
             (hash-map
@@ -5830,13 +5784,13 @@
                     ;; register as the current method and set up a new env frame
                     (binding [*method*            nim
                               *local-env*         *local-env*
-                              *next-local-num*    0
+                              *last-local-num*    -1
                               *loop-locals*       nil
                               *in-return-context* true]
                         ;; register 'this' as local 0
                         (if (some? thisName)
-                            (Compiler'registerLocal (or thisName NewInstanceMethod'dummyThis), thistag, nil, false)
-                            (Compiler'getAndIncLocalNum)
+                            (Compiler'registerLocal thisName, thistag, nil, false)
+                            (Compiler'nextLocalNum)
                         )
                         (let [nim (assoc nim :retClass (HostExpr'tagClass (Compiler'tagOf name)))
                               nim (assoc nim :argTypes (make-array Type (count parms)))
@@ -5897,7 +5851,7 @@
                                 )]
                             (dotimes [#_"int" i (count parms)]
                                 (when (any = (aget pclasses i) Long/TYPE Double/TYPE)
-                                    (Compiler'getAndIncLocalNum)
+                                    (Compiler'nextLocalNum)
                                 )
                             )
                             (set! *loop-locals* argLocals)
@@ -5974,7 +5928,7 @@
             (.visit cv, Opcodes/V1_5, (| Opcodes/ACC_PUBLIC Opcodes/ACC_SUPER), (str Compiler'COMPILE_STUB_PREFIX "/" (:internalName ret)), nil, superName, interfaceNames)
 
             ;; instance fields for closed-overs
-            (loop-when-recur [#_"ISeq" s (keys (:closes ret))] (some? s) [(next s)]
+            (loop-when-recur [#_"ISeq" s (vals @(:a'closes ret))] (some? s) [(next s)]
                 (let [#_"LocalBinding" lb (first s)
                       #_"int" access (| Opcodes/ACC_PUBLIC (if (ObjExpr''isVolatile ret, lb) Opcodes/ACC_VOLATILE (if (ObjExpr''isMutable ret, lb) 0 Opcodes/ACC_FINAL)))]
                     (if (some? (LocalBinding''getPrimitiveType lb))
@@ -6227,14 +6181,14 @@
                             (loop-when [fmap {} #_"int" i 0] (< i (count fieldSyms)) => fmap
                                 (let [#_"Symbol" sym (nth fieldSyms i)
                                       #_"LocalBinding" lb (LocalBinding'new -1, sym, nil, (MethodParamExpr'new (HostExpr'tagClass (Compiler'tagOf sym))), false)]
-                                    (aset a (* i 2) lb)
+                                    (aset a (* i 2) (:uid lb))
                                     (aset a (inc (* i 2)) lb)
                                     (recur (assoc fmap sym lb) (inc i))
                                 )
                             )
                           ;; todo - inject __meta et al into closes - when?
                           ;; use array map to preserve ctor order
-                          _ (§ set! (:closes nie) (PersistentArrayMap'new a))
+                          _ (reset! (:a'closes nie) (PersistentArrayMap. a))
                           nie (assoc nie :fields fmap)]
                         (loop-when-recur [nie nie #_"int" i (dec (count fieldSyms))]
                                          (and (<= 0 i) (any = (:name (nth fieldSyms i)) "__meta" "__extmap" "__hash" "__hasheq"))
@@ -6833,7 +6787,15 @@
 
     (defn #_"Object" Compiler'load [#_"Reader" reader]
         (let [#_"LineNumberingPushbackReader" r (if (instance? LineNumberingPushbackReader reader) reader (LineNumberingPushbackReader. reader))]
-            (binding [*ns* *ns*, *warn-on-reflection* *warn-on-reflection*, *line* 0]
+            (binding [*ns*                 *ns*
+                      *warn-on-reflection* *warn-on-reflection*
+                      *line*               0
+                      *last-unique-id*     -1
+                      *no-recur*           false
+                      *in-catch-finally*   false
+                      *in-return-context*  false
+                      *compile-stub-sym*   nil
+                      *compile-stub-class* nil]
                 (let [#_"Object" EOF (Object.)]
                     (loop [#_"Object" val nil]
                         (Compiler'consumeWhitespaces r)
