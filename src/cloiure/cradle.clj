@@ -816,6 +816,7 @@
     (def #_"Var" ^:dynamic *loader*            ) ;; DynamicClassLoader
     (def #_"Var" ^:dynamic *line*              ) ;; Integer
     (def #_"Var" ^:dynamic *last-unique-id*    ) ;; Integer
+    (def #_"Var" ^:dynamic *closes*            ) ;; IPersistentMap
     (def #_"Var" ^:dynamic *method*            ) ;; FnFrame
     (def #_"Var" ^:dynamic *local-env*         ) ;; symbol->localbinding
     (def #_"Var" ^:dynamic *last-local-num*    ) ;; Integer
@@ -1142,7 +1143,7 @@
 
     (defn- #_"void" Compiler'closeOver [#_"LocalBinding" lb, #_"ObjMethod" m]
         (when (and (some? lb) (some? m) (not (contains? (:locals m) (:uid lb))))
-            (swap! (:a'closes (:objx m)) assoc (:uid lb) lb)
+            (update! *closes* update (:uid (:objx m)) assoc (:uid lb) lb)
             (Compiler'closeOver lb, (:parent m))
         )
         nil
@@ -1672,7 +1673,7 @@
 
     #_override
     (defn #_"void" Expr'''emit--NumberExpr [#_"NumberExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-        (when (not= context :Context'STATEMENT)
+        (when-not (= context :Context'STATEMENT)
             (ObjExpr''emitConstant objx, gen, (:id this))
         )
         nil
@@ -1732,7 +1733,7 @@
 
     #_override
     (defn #_"void" Expr'''emit--StringExpr [#_"StringExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-        (when (not= context :Context'STATEMENT)
+        (when-not (= context :Context'STATEMENT)
             (.push gen, (:str this))
         )
         nil
@@ -3989,7 +3990,7 @@
 
     #_override
     (defn #_"void" Expr'''emit--LocalBindingExpr [#_"LocalBindingExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
-        (when (not= context :Context'STATEMENT)
+        (when-not (= context :Context'STATEMENT)
             (ObjExpr''emitLocal objx, gen, (:lb this))
         )
         nil
@@ -4005,7 +4006,7 @@
     #_override
     (defn #_"void" AssignableExpr'''emitAssign--LocalBindingExpr [#_"LocalBindingExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Expr" val]
         (ObjExpr''emitAssignLocal objx, gen, (:lb this), val)
-        (when (not= context :Context'STATEMENT)
+        (when-not (= context :Context'STATEMENT)
             (ObjExpr''emitLocal objx, gen, (:lb this))
         )
         nil
@@ -4216,6 +4217,7 @@
 (class-ns ObjExpr
     (defn #_"ObjExpr" ObjExpr'new [#_"Object" tag]
         (hash-map
+            #_"int" :uid (Compiler'nextUniqueId)
             #_"Object" :tag tag
             #_"String" :name nil
             #_"String" :internalName nil
@@ -4234,8 +4236,6 @@
             #_"boolean" :onceOnly false
             #_"Object" :src nil
             #_"IPersistentMap" :opts {}
-
-            #_"IPersistentMap'" :a'closes (atom {})
 
             #_"Class" :compiledClass nil
         )
@@ -4270,7 +4270,7 @@
     #_method
     (defn #_"Type[]" ObjExpr''ctorTypes [#_"ObjExpr" this]
         (let [#_"IPersistentVector" v (if (.supportsMeta this) [(Type/getType IPersistentMap)] [])
-              v (loop-when [v v #_"ISeq" s (vals @(:a'closes this))] (some? s) => v
+              v (loop-when [v v #_"ISeq" s (vals (get *closes* (:uid this)))] (some? s) => v
                     (let [#_"Class" c (LocalBinding''getPrimitiveType (first s))]
                         (recur (conj v (if (some? c) (Type/getType c) (Type/getType Object))) (next s))
                     )
@@ -4374,7 +4374,7 @@
         ;; objx arg is enclosing objx, not this
         (.checkCast gen, (:objType this))
 
-        (loop-when-recur [#_"ISeq" s (vals @(:a'closes this))] (some? s) [(next s)]
+        (loop-when-recur [#_"ISeq" s (vals (get *closes* (:uid this)))] (some? s) [(next s)]
             (let [#_"LocalBinding" lb (first s)]
                 (when (contains? letFnLocals lb)
                     (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
@@ -4443,7 +4443,7 @@
                 (.loadThis gen)
                 (if (some? primc)
                     (do
-                        (when (not (and (instance? MaybePrimitiveExpr val) (.canEmitPrimitive val)))
+                        (when-not (and (instance? MaybePrimitiveExpr val) (.canEmitPrimitive val))
                             (throw (IllegalArgumentException. (str "Must assign primitive to primitive mutable: " (:name lb))))
                         )
                         (.emitUnboxed val, :Context'EXPRESSION, this, gen)
@@ -4462,7 +4462,7 @@
     #_method
     (defn- #_"void" ObjExpr''emitLocal [#_"ObjExpr" this, #_"GeneratorAdapter" gen, #_"LocalBinding" lb]
         (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
-            (if (contains? @(:a'closes this) (:uid lb))
+            (if (contains? (get *closes* (:uid this)) (:uid lb))
                 (do
                     (.loadThis gen)
                     (.getField gen, (:objType this), (:name lb), (Type/getType (or primc Object)))
@@ -4482,7 +4482,7 @@
     #_method
     (defn- #_"void" ObjExpr''emitUnboxedLocal [#_"ObjExpr" this, #_"GeneratorAdapter" gen, #_"LocalBinding" lb]
         (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
-            (if (contains? @(:a'closes this) (:uid lb))
+            (if (contains? (get *closes* (:uid this)) (:uid lb))
                 (do
                     (.loadThis gen)
                     (.getField gen, (:objType this), (:name lb), (Type/getType primc))
@@ -4725,7 +4725,7 @@
                     (.visitField cv, Opcodes/ACC_FINAL, "__meta", (.getDescriptor (Type/getType IPersistentMap)), nil, nil)
                 )
                 ;; instance fields for closed-overs
-                (loop-when-recur [#_"ISeq" s (vals @(:a'closes this))] (some? s) [(next s)]
+                (loop-when-recur [#_"ISeq" s (vals (get *closes* (:uid this)))] (some? s) [(next s)]
                     (let [#_"LocalBinding" lb (first s)
                           #_"String" fd
                             (if (some? (LocalBinding''getPrimitiveType lb))
@@ -4776,7 +4776,7 @@
                     )
 
                     (let [[this #_"int" a]
-                            (loop-when [this this a (if (.supportsMeta this) 2 1) #_"ISeq" s (vals @(:a'closes this))] (some? s) => [this a]
+                            (loop-when [this this a (if (.supportsMeta this) 2 1) #_"ISeq" s (vals (get *closes* (:uid this)))] (some? s) => [this a]
                                 (let [#_"LocalBinding" lb (first s)]
                                     (.loadThis ctorgen)
                                     (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)
@@ -4884,7 +4884,7 @@
                                     (.newInstance gen, (:objType this))
                                     (.dup gen)
                                     (.loadArg gen, 0)
-                                    (loop-when-recur [a a #_"ISeq" s (vals @(:a'closes this))] (some? s) [(inc a) (next s)]
+                                    (loop-when-recur [a a #_"ISeq" s (vals (get *closes* (:uid this)))] (some? s) [(inc a) (next s)]
                                         (let [#_"LocalBinding" lb (first s)]
                                             (.loadThis gen)
                                             (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
@@ -4930,7 +4930,7 @@
 
                             (when (and (ObjExpr''isDeftype this) (get (:opts this) :load-ns))
                                 (let [#_"String" nsname (namespace (second (:src this)))]
-                                    (when (not (= nsname "clojure.core"))
+                                    (when-not (= nsname "clojure.core")
                                         (.push clinitgen, "clojure.core")
                                         (.push clinitgen, "require")
                                         (.invokeStatic clinitgen, (Type/getType RT), (Method/getMethod "clojure.lang.Var var(String, String)"))
@@ -5218,7 +5218,7 @@
                     (let [#_"Symbol" sym (second form) #_"Var" v (Compiler'lookupVar sym, true)]
                         (when (some? v) => (throw (RuntimeException. "Can't refer to qualified var that doesn't exist"))
                             (let [[v #_"boolean" shadowsCoreMapping]
-                                    (when (not (= (:ns v) *ns*)) => [v false]
+                                    (when-not (= (:ns v) *ns*) => [v false]
                                         (when (nil? (:ns sym)) => (throw (RuntimeException. "Can't create defs outside of current ns"))
                                             (let [v (.intern *ns*, sym)]
                                                 (Compiler'registerVar v)
@@ -5928,7 +5928,7 @@
             (.visit cv, Opcodes/V1_5, (| Opcodes/ACC_PUBLIC Opcodes/ACC_SUPER), (str Compiler'COMPILE_STUB_PREFIX "/" (:internalName ret)), nil, superName, interfaceNames)
 
             ;; instance fields for closed-overs
-            (loop-when-recur [#_"ISeq" s (vals @(:a'closes ret))] (some? s) [(next s)]
+            (loop-when-recur [#_"ISeq" s (vals (get *closes* (:uid ret)))] (some? s) [(next s)]
                 (let [#_"LocalBinding" lb (first s)
                       #_"int" access (| Opcodes/ACC_PUBLIC (if (ObjExpr''isVolatile ret, lb) Opcodes/ACC_VOLATILE (if (ObjExpr''isMutable ret, lb) 0 Opcodes/ACC_FINAL)))]
                     (if (some? (LocalBinding''getPrimitiveType lb))
@@ -6188,7 +6188,7 @@
                             )
                           ;; todo - inject __meta et al into closes - when?
                           ;; use array map to preserve ctor order
-                          _ (reset! (:a'closes nie) (PersistentArrayMap. a))
+                          _ (update! *closes* assoc (:uid nie) (PersistentArrayMap. a))
                           nie (assoc nie :fields fmap)]
                         (loop-when-recur [nie nie #_"int" i (dec (count fieldSyms))]
                                          (and (<= 0 i) (any = (:name (nth fieldSyms i)) "__meta" "__extmap" "__hash" "__hasheq"))
@@ -6786,21 +6786,22 @@
     )
 
     (defn #_"Object" Compiler'load [#_"Reader" reader]
-        (let [#_"LineNumberingPushbackReader" r (if (instance? LineNumberingPushbackReader reader) reader (LineNumberingPushbackReader. reader))]
-            (binding [*ns*                 *ns*
-                      *warn-on-reflection* *warn-on-reflection*
-                      *line*               0
-                      *last-unique-id*     -1
-                      *no-recur*           false
-                      *in-catch-finally*   false
-                      *in-return-context*  false
-                      *compile-stub-sym*   nil
-                      *compile-stub-class* nil]
-                (let [#_"Object" EOF (Object.)]
-                    (loop [#_"Object" val nil]
-                        (Compiler'consumeWhitespaces r)
-                        (let-when [#_"Object" form (LispReader/read r, false, EOF, false, (§ obsolete nil))] (not= form EOF) => val
-                            (recur (Compiler'eval form))
+        (let [#_"LineNumberingPushbackReader" r (if (instance? LineNumberingPushbackReader reader) reader (LineNumberingPushbackReader. reader))
+              #_"Object" EOF (Object.)]
+            (binding [*ns* *ns*, *warn-on-reflection* *warn-on-reflection*, *line* 0]
+                (loop [#_"Object" val nil]
+                    (Compiler'consumeWhitespaces r)
+                    (let-when [#_"Object" form (LispReader/read r, false, EOF, false, (§ obsolete nil))] (not= form EOF) => val
+                        (recur
+                            (binding [*last-unique-id*     -1
+                                        *closes*             {}
+                                        *no-recur*           false
+                                        *in-catch-finally*   false
+                                        *in-return-context*  false
+                                        *compile-stub-sym*   nil
+                                        *compile-stub-class* nil]
+                                (Compiler'eval form)
+                            )
                         )
                     )
                 )
