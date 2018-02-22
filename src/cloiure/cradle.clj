@@ -112,11 +112,6 @@
         (#_"Class" getJavaClass [#_"Expr" this])
     )
 
-    (interface! IParser []
-        #_abstract
-        (#_"Expr" parse [#_"IParser" this, #_"Context" context, #_"ISeq" form])
-    )
-
     (interface! AssignableExpr []
         #_abstract
         (#_"Object" evalAssign [#_"AssignableExpr" this, #_"Expr" val])
@@ -130,6 +125,44 @@
         #_abstract
         (#_"void" emitUnboxed [#_"MaybePrimitiveExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen])
     )
+
+    (interface! LiteralExpr [Expr]
+        #_abstract
+        (#_"Object" literal [#_"LiteralExpr" this])
+    )
+
+    (interface! UntypedExpr [Expr])
+
+    (interface! HostExpr [Expr MaybePrimitiveExpr])
+    (interface! FieldExpr [HostExpr])
+    (interface! MethodExpr [HostExpr])
+
+    (interface! ObjMethod []
+        #_abstract
+        (#_"int" numParams [#_"ObjMethod" this])
+        #_abstract
+        (#_"String" getMethodName [#_"ObjMethod" this])
+        #_abstract
+        (#_"Type" getReturnType [#_"ObjMethod" this])
+        #_abstract
+        (#_"Type[]" getArgTypes [#_"ObjMethod" this])
+    )
+
+    (interface! ObjExpr [Expr]
+        #_abstract
+        (#_"boolean" supportsMeta [#_"ObjExpr" this])
+        #_abstract
+        (#_"void" emitStatics [#_"ObjExpr" this, #_"ClassVisitor" gen])
+        #_abstract
+        (#_"void" emitMethods [#_"ObjExpr" this, #_"ClassVisitor" gen])
+    )
+
+    (interface! IParser []
+        #_abstract
+        (#_"Expr" parse [#_"IParser" this, #_"Context" context, #_"ISeq" form])
+    )
+
+    (interface! Recur [])
 )
 
 (java-ns cloiure.lang.Reflector
@@ -138,43 +171,28 @@
 )
 
 (java-ns cloiure.lang.Compiler
-    #_stateless
-    (class! Recur [])
-    #_abstract
-    (class! UntypedExpr [Expr])
-    (class! MonitorEnterExpr [#_"UntypedExpr"])
-    (class! MonitorExitExpr [#_"UntypedExpr"])
+    (class! NilExpr [LiteralExpr])
+    (class! BooleanExpr [LiteralExpr])
+    (class! MonitorEnterExpr [UntypedExpr])
+    (class! MonitorExitExpr [UntypedExpr])
     (class! AssignExpr [Expr])
     (class! ImportExpr [Expr])
     (class! EmptyExpr [Expr])
-    #_abstract
-    (class! LiteralExpr [Expr]
-        #_abstract
-        (#_"Object" literal [#_"LiteralExpr" this])
-    )
-    (class! NilExpr [#_"LiteralExpr"])
-    (class! BooleanExpr [#_"LiteralExpr"])
-    (class! ConstantExpr [#_"LiteralExpr"])
-    (class! NumberExpr [#_"LiteralExpr" MaybePrimitiveExpr])
-    (class! StringExpr [#_"LiteralExpr"])
-    (class! KeywordExpr [#_"LiteralExpr"])
-    #_abstract
-    (class! HostExpr [Expr MaybePrimitiveExpr])
-    #_abstract
-    (class! FieldExpr [#_"HostExpr"])
-    (class! InstanceFieldExpr [#_"FieldExpr" AssignableExpr])
-    (class! StaticFieldExpr [#_"FieldExpr" AssignableExpr])
-    #_abstract
-    (class! MethodExpr [#_"HostExpr"])
-    (class! InstanceMethodExpr [#_"MethodExpr"])
-    (class! StaticMethodExpr [#_"MethodExpr"])
+    (class! ConstantExpr [LiteralExpr])
+    (class! NumberExpr [LiteralExpr MaybePrimitiveExpr])
+    (class! StringExpr [LiteralExpr])
+    (class! KeywordExpr [LiteralExpr])
+    (class! InstanceFieldExpr [FieldExpr AssignableExpr])
+    (class! StaticFieldExpr [FieldExpr AssignableExpr])
+    (class! InstanceMethodExpr [MethodExpr])
+    (class! StaticMethodExpr [MethodExpr])
     (class! UnresolvedVarExpr [Expr])
     (class! VarExpr [Expr AssignableExpr])
     (class! TheVarExpr [Expr])
     (class! BodyExpr [Expr MaybePrimitiveExpr])
     (class! CatchClause [])
     (class! TryExpr [Expr])
-    (class! ThrowExpr [#_"UntypedExpr"])
+    (class! ThrowExpr [UntypedExpr])
     (class! NewExpr [Expr])
     (class! MetaExpr [Expr])
     (class! IfExpr [Expr MaybePrimitiveExpr])
@@ -187,35 +205,16 @@
     (class! InvokeExpr [Expr])
     (class! LocalBinding [])
     (class! LocalBindingExpr [Expr MaybePrimitiveExpr AssignableExpr])
-    #_abstract
-    (class! ObjMethod []
-        #_abstract
-        (#_"int" numParams [#_"ObjMethod" this])
-        #_abstract
-        (#_"String" getMethodName [#_"ObjMethod" this])
-        #_abstract
-        (#_"Type" getReturnType [#_"ObjMethod" this])
-        #_abstract
-        (#_"Type[]" getArgTypes [#_"ObjMethod" this])
-    )
     (class! MethodParamExpr [Expr MaybePrimitiveExpr])
-    (class! FnMethod [#_"ObjMethod"])
-    (class! ObjExpr [Expr]
-        #_abstract
-        (#_"void" emitStatics [#_"ObjExpr" this, #_"ClassVisitor" gen])
-        #_abstract
-        (#_"void" emitMethods [#_"ObjExpr" this, #_"ClassVisitor" gen])
-        #_abstract
-        (#_"boolean" supportsMeta [#_"ObjExpr" this])
-    )
-    (class! FnExpr [#_"ObjExpr"])
+    (class! FnMethod [ObjMethod])
+    (class! FnExpr [ObjExpr])
     (class! DefExpr [Expr])
     (class! BindingInit [])
     (class! LetFnExpr [Expr])
     (class! LetExpr [Expr MaybePrimitiveExpr])
     (class! RecurExpr [Expr MaybePrimitiveExpr])
-    (class! NewInstanceMethod [#_"ObjMethod"])
-    (class! NewInstanceExpr [#_"ObjExpr"])
+    (class! NewInstanceMethod [ObjMethod])
+    (class! NewInstanceExpr [ObjExpr])
     (class! CaseExpr [Expr MaybePrimitiveExpr])
 )
 
@@ -732,25 +731,19 @@
     (defn #_"String" Compiler'thunkNameStatic [#_"int" n] (str "__thunk__" n "__"))
 )
 
-(class-ns LiteralExpr
-    (defn #_"LiteralExpr" LiteralExpr'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Object" Expr'''eval--LiteralExpr [#_"LiteralExpr" this]
-        (.literal this)
-    )
-)
-
 (class-ns NilExpr
     (defn #_"NilExpr" NilExpr'new []
-        (LiteralExpr'new)
+        (hash-map)
     )
 
     #_override
     (defn #_"Object" LiteralExpr'''literal--NilExpr [#_"NilExpr" this]
         nil
+    )
+
+    #_override
+    (defn #_"Object" Expr'''eval--NilExpr [#_"NilExpr" this]
+        (.literal this)
     )
 
     #_override
@@ -777,16 +770,19 @@
 
 (class-ns BooleanExpr
     (defn #_"BooleanExpr" BooleanExpr'new [#_"boolean" val]
-        (merge (LiteralExpr'new)
-            (hash-map
-                #_"boolean" :val val
-            )
+        (hash-map
+            #_"boolean" :val val
         )
     )
 
     #_override
     (defn #_"Object" LiteralExpr'''literal--BooleanExpr [#_"BooleanExpr" this]
         (if (:val this) true false)
+    )
+
+    #_override
+    (defn #_"Object" Expr'''eval--BooleanExpr [#_"BooleanExpr" this]
+        (.literal this)
     )
 
     #_override
@@ -1386,29 +1382,21 @@
     )
 )
 
-(class-ns UntypedExpr
-    (defn #_"UntypedExpr" UntypedExpr'new []
-        (hash-map)
-    )
-
-    #_override
-    (defn #_"Class" Expr'''getJavaClass--UntypedExpr [#_"UntypedExpr" this]
-        (throw (IllegalArgumentException. "Has no Java class"))
-    )
-
-    #_override
-    (defn #_"boolean" Expr'''hasJavaClass--UntypedExpr [#_"UntypedExpr" this]
-        false
-    )
-)
-
 (class-ns MonitorEnterExpr
     (defn #_"MonitorEnterExpr" MonitorEnterExpr'new [#_"Expr" target]
-        (merge (UntypedExpr'new)
-            (hash-map
-                #_"Expr" :target target
-            )
+        (hash-map
+            #_"Expr" :target target
         )
+    )
+
+    #_override
+    (defn #_"boolean" Expr'''hasJavaClass--MonitorEnterExpr [#_"MonitorEnterExpr" this]
+        false
+    )
+
+    #_override
+    (defn #_"Class" Expr'''getJavaClass--MonitorEnterExpr [#_"MonitorEnterExpr" this]
+        (throw (UnsupportedOperationException. "Has no Java class"))
     )
 
     #_override
@@ -1440,11 +1428,19 @@
 
 (class-ns MonitorExitExpr
     (defn #_"MonitorExitExpr" MonitorExitExpr'new [#_"Expr" target]
-        (merge (UntypedExpr'new)
-            (hash-map
-                #_"Expr" :target target
-            )
+        (hash-map
+            #_"Expr" :target target
         )
+    )
+
+    #_override
+    (defn #_"boolean" Expr'''hasJavaClass--MonitorExitExpr [#_"MonitorExitExpr" this]
+        false
+    )
+
+    #_override
+    (defn #_"Class" Expr'''getJavaClass--MonitorExitExpr [#_"MonitorExitExpr" this]
+        (throw (UnsupportedOperationException. "Has no Java class"))
     )
 
     #_override
@@ -1614,19 +1610,22 @@
 
 (class-ns ConstantExpr
     (defn #_"ConstantExpr" ConstantExpr'new [#_"Object" v]
-        (merge (LiteralExpr'new)
-            (hash-map
-                ;; stuff quoted vals in classloader at compile time, pull out at runtime
-                ;; this won't work for static compilation...
-                #_"Object" :v v
-                #_"int" :id (Compiler'registerConstant v)
-            )
+        (hash-map
+            ;; stuff quoted vals in classloader at compile time, pull out at runtime
+            ;; this won't work for static compilation...
+            #_"Object" :v v
+            #_"int" :id (Compiler'registerConstant v)
         )
     )
 
     #_override
     (defn #_"Object" LiteralExpr'''literal--ConstantExpr [#_"ConstantExpr" this]
         (:v this)
+    )
+
+    #_override
+    (defn #_"Object" Expr'''eval--ConstantExpr [#_"ConstantExpr" this]
+        (.literal this)
     )
 
     (declare ObjExpr''emitConstant)
@@ -1658,17 +1657,20 @@
 
 (class-ns NumberExpr
     (defn #_"NumberExpr" NumberExpr'new [#_"Number" n]
-        (merge (LiteralExpr'new)
-            (hash-map
-                #_"Number" :n n
-                #_"int" :id (Compiler'registerConstant n)
-            )
+        (hash-map
+            #_"Number" :n n
+            #_"int" :id (Compiler'registerConstant n)
         )
     )
 
     #_override
     (defn #_"Object" LiteralExpr'''literal--NumberExpr [#_"NumberExpr" this]
         (:n this)
+    )
+
+    #_override
+    (defn #_"Object" Expr'''eval--NumberExpr [#_"NumberExpr" this]
+        (.literal this)
     )
 
     #_override
@@ -1719,16 +1721,19 @@
 
 (class-ns StringExpr
     (defn #_"StringExpr" StringExpr'new [#_"String" str]
-        (merge (LiteralExpr'new)
-            (hash-map
-                #_"String" :str str
-            )
+        (hash-map
+            #_"String" :str str
         )
     )
 
     #_override
     (defn #_"Object" LiteralExpr'''literal--StringExpr [#_"StringExpr" this]
         (:str this)
+    )
+
+    #_override
+    (defn #_"Object" Expr'''eval--StringExpr [#_"StringExpr" this]
+        (.literal this)
     )
 
     #_override
@@ -1752,10 +1757,8 @@
 
 (class-ns KeywordExpr
     (defn #_"KeywordExpr" KeywordExpr'new [#_"Keyword" k]
-        (merge (LiteralExpr'new)
-            (hash-map
-                #_"Keyword" :k k
-            )
+        (hash-map
+            #_"Keyword" :k k
         )
     )
 
@@ -1766,7 +1769,7 @@
 
     #_override
     (defn #_"Object" Expr'''eval--KeywordExpr [#_"KeywordExpr" this]
-        (:k this)
+        (.literal this)
     )
 
     (declare ObjExpr''emitKeyword)
@@ -1817,10 +1820,6 @@
 )
 
 (class-ns HostExpr
-    (defn #_"HostExpr" HostExpr'new []
-        (hash-map)
-    )
-
     (defn #_"void" HostExpr'emitBoxReturn [#_"ObjExpr" objx, #_"GeneratorAdapter" gen, #_"Class" returnType]
         (when (.isPrimitive returnType)
             (condp = returnType
@@ -1969,13 +1968,6 @@
     )
 )
 
-(class-ns FieldExpr
-    (defn #_"FieldExpr" FieldExpr'new []
-        (HostExpr'new)
-    )
-
-)
-
 (class-ns InstanceFieldExpr
     (defn #_"InstanceFieldExpr" InstanceFieldExpr'new [#_"int" line, #_"Expr" target, #_"String" fieldName, #_"Symbol" tag, #_"boolean" requireField]
         (let [#_"Class" c (when (.hasJavaClass target) (.getJavaClass target))
@@ -1986,16 +1978,14 @@
                     (.println *err*, (str "Reflection warning, line " line " - reference to field " fieldName " on " (.getName c) " can't be resolved."))
                 )
             )
-            (merge (FieldExpr'new)
-                (hash-map
-                    #_"Expr" :target target
-                    #_"Class" :targetClass c
-                    #_"java.lang.reflect.Field" :field f
-                    #_"String" :fieldName fieldName
-                    #_"int" :line line
-                    #_"Symbol" :tag tag
-                    #_"boolean" :requireField requireField
-                )
+            (hash-map
+                #_"Expr" :target target
+                #_"Class" :targetClass c
+                #_"java.lang.reflect.Field" :field f
+                #_"String" :fieldName fieldName
+                #_"int" :line line
+                #_"Symbol" :tag tag
+                #_"boolean" :requireField requireField
             )
         )
     )
@@ -2093,15 +2083,13 @@
 
 (class-ns StaticFieldExpr
     (defn #_"StaticFieldExpr" StaticFieldExpr'new [#_"int" line, #_"Class" c, #_"String" fieldName, #_"Symbol" tag]
-        (merge (FieldExpr'new)
-            (hash-map
-                #_"int" :line line
-                #_"Class" :c c
-                #_"String" :fieldName fieldName
-                #_"Symbol" :tag tag
+        (hash-map
+            #_"int" :line line
+            #_"Class" :c c
+            #_"String" :fieldName fieldName
+            #_"Symbol" :tag tag
 
-                #_"java.lang.reflect.Field" :field (.getField c, fieldName)
-            )
+            #_"java.lang.reflect.Field" :field (.getField c, fieldName)
         )
     )
 
@@ -2165,10 +2153,6 @@
 )
 
 (class-ns MethodExpr
-    (defn #_"MethodExpr" MethodExpr'new []
-        (HostExpr'new)
-    )
-
     (defn #_"void" MethodExpr'emitArgsAsArray [#_"IPersistentVector" args, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         (.push gen, (count args))
         (.newArray gen, (Type/getType Object))
@@ -2281,31 +2265,6 @@
         nil
     )
 
-    #_override
-    (defn #_"void" Expr'''emit--ObjMethod [#_"ObjMethod" this, #_"ObjExpr" fn, #_"ClassVisitor" cv]
-        (let [#_"Method" m (Method. (.getMethodName this), (.getReturnType this), (.getArgTypes this))
-              #_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, m, nil, Compiler'EXCEPTION_TYPES, cv)]
-            (.visitCode gen)
-            (let [#_"Label" loopLabel (.mark gen)]
-                (.visitLineNumber gen, (:line this), loopLabel)
-                (binding [*loop-label* loopLabel, *method* this]
-                    (.emit (:body this), :Context'RETURN, fn, gen)
-                    (let [#_"Label" end (.mark gen)]
-                        (.visitLocalVariable gen, "this", "Ljava/lang/Object;", nil, loopLabel, end, 0)
-                        (loop-when-recur [#_"ISeq" lbs (seq (:argLocals this))] (some? lbs) [(next lbs)]
-                            (let [#_"LocalBinding" lb (first lbs)]
-                                (.visitLocalVariable gen, (:name lb), "Ljava/lang/Object;", nil, loopLabel, end, (:idx lb))
-                            )
-                        )
-                    )
-                )
-                (.returnValue gen)
-                (.endMethod gen)
-            )
-        )
-        nil
-    )
-
     #_method
     (defn #_"void" ObjMethod''emitClearLocals [#_"ObjMethod" this, #_"GeneratorAdapter" gen]
         nil
@@ -2361,17 +2320,15 @@
                         nil
                     )
                 )]
-            (merge (MethodExpr'new)
-                (hash-map
-                    #_"int" :line line
-                    #_"Symbol" :tag tag
-                    #_"Expr" :target target
-                    #_"String" :methodName methodName
-                    #_"IPersistentVector" :args args
-                    #_"boolean" :tailPosition tailPosition
+            (hash-map
+                #_"int" :line line
+                #_"Symbol" :tag tag
+                #_"Expr" :target target
+                #_"String" :methodName methodName
+                #_"IPersistentVector" :args args
+                #_"boolean" :tailPosition tailPosition
 
-                    #_"java.lang.reflect.Method" :method method
-                )
+                #_"java.lang.reflect.Method" :method method
             )
         )
     )
@@ -2488,17 +2445,15 @@
                         )
                     )
                 )]
-            (merge (MethodExpr'new)
-                (hash-map
-                    #_"int" :line line
-                    #_"Symbol" :tag tag
-                    #_"Class" :c c
-                    #_"String" :methodName methodName
-                    #_"IPersistentVector" :args args
-                    #_"boolean" :tailPosition tailPosition
+            (hash-map
+                #_"int" :line line
+                #_"Symbol" :tag tag
+                #_"Class" :c c
+                #_"String" :methodName methodName
+                #_"IPersistentVector" :args args
+                #_"boolean" :tailPosition tailPosition
 
-                    #_"java.lang.reflect.Method" :method method
-                )
+                #_"java.lang.reflect.Method" :method method
             )
         )
     )
@@ -3066,11 +3021,19 @@
 
 (class-ns ThrowExpr
     (defn #_"ThrowExpr" ThrowExpr'new [#_"Expr" excExpr]
-        (merge (UntypedExpr'new)
-            (hash-map
-                #_"Expr" :excExpr excExpr
-            )
+        (hash-map
+            #_"Expr" :excExpr excExpr
         )
+    )
+
+    #_override
+    (defn #_"boolean" Expr'''hasJavaClass--ThrowExpr [#_"ThrowExpr" this]
+        false
+    )
+
+    #_override
+    (defn #_"Class" Expr'''getJavaClass--ThrowExpr [#_"ThrowExpr" this]
+        (throw (UnsupportedOperationException. "Has no Java class"))
     )
 
     #_override
@@ -4242,6 +4205,21 @@
     )
 
     #_method
+    (defn #_"boolean" ObjExpr''isVolatile [#_"ObjExpr" this, #_"LocalBinding" lb]
+        (and (contains? (:fields this) (:sym lb)) (get (meta (:sym lb)) :volatile-mutable))
+    )
+
+    #_method
+    (defn #_"boolean" ObjExpr''isMutable [#_"ObjExpr" this, #_"LocalBinding" lb]
+        (or (ObjExpr''isVolatile this, lb) (and (contains? (:fields this) (:sym lb)) (get (meta (:sym lb)) :unsynchronized-mutable)))
+    )
+
+    #_method
+    (defn #_"boolean" ObjExpr''isDeftype [#_"ObjExpr" this]
+        (some? (:fields this))
+    )
+
+    #_method
     (defn #_"Type" ObjExpr''constantType [#_"ObjExpr" this, #_"int" id]
         (let [#_"Object" o (nth (:constants this) id) #_"Class" c (Reflector'classOf o)]
             (or
@@ -4258,12 +4236,6 @@
                 )
                 (Type/getType Object)
             )
-        )
-    )
-
-    (defn #_"String" ObjExpr'trimGenID [#_"String" name]
-        (let [#_"int" i (.lastIndexOf name, "__")]
-            (if (= i -1) name (.substring name, 0, i))
         )
     )
 
@@ -4284,6 +4256,13 @@
         )
     )
 
+    #_method
+    (defn #_"Object" ObjExpr''doEval [#_"ObjExpr" this]
+        (when-not (ObjExpr''isDeftype this)
+            (.newInstance (:compiledClass this))
+        )
+    )
+
     (declare ObjExpr''emitValue)
 
     #_method
@@ -4299,16 +4278,6 @@
                 (.putStatic clinitgen, (:objType this), (Compiler'thunkNameStatic i), (Type/getType ILookupThunk))
             )
         )
-        nil
-    )
-
-    #_override
-    (defn #_"void" ObjExpr'''emitStatics--ObjExpr [#_"ObjExpr" this, #_"ClassVisitor" gen]
-        nil
-    )
-
-    #_override
-    (defn #_"void" ObjExpr'''emitMethods--ObjExpr [#_"ObjExpr" this, #_"ClassVisitor" gen]
         nil
     )
 
@@ -4338,35 +4307,8 @@
     )
 
     #_method
-    (defn #_"boolean" ObjExpr''isVolatile [#_"ObjExpr" this, #_"LocalBinding" lb]
-        (and (contains? (:fields this) (:sym lb)) (get (meta (:sym lb)) :volatile-mutable))
-    )
-
-    #_method
-    (defn #_"boolean" ObjExpr''isMutable [#_"ObjExpr" this, #_"LocalBinding" lb]
-        (or (ObjExpr''isVolatile this, lb) (and (contains? (:fields this) (:sym lb)) (get (meta (:sym lb)) :unsynchronized-mutable)))
-    )
-
-    #_method
-    (defn #_"boolean" ObjExpr''isDeftype [#_"ObjExpr" this]
-        (some? (:fields this))
-    )
-
-    #_override
-    (defn #_"boolean" ObjExpr'''supportsMeta--ObjExpr [#_"ObjExpr" this]
-        (not (ObjExpr''isDeftype this))
-    )
-
-    #_method
     (defn #_"void" ObjExpr''emitClearCloses [#_"ObjExpr" this, #_"GeneratorAdapter" gen]
         nil
-    )
-
-    #_override
-    (defn #_"Object" Expr'''eval--ObjExpr [#_"ObjExpr" this]
-        (when-not (ObjExpr''isDeftype this)
-            (.newInstance (:compiledClass this))
-        )
     )
 
     #_method
@@ -4397,8 +4339,8 @@
         nil
     )
 
-    #_override
-    (defn #_"void" Expr'''emit--ObjExpr [#_"ObjExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+    #_method
+    (defn #_"void" ObjExpr''doEmit [#_"ObjExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
         ;; emitting a Fn means constructing an instance, feeding closed-overs from enclosing scope, if any
         ;; objx arg is enclosing objx, not this
         (when-not (ObjExpr''isDeftype this) => (.visitInsn gen, Opcodes/ACONST_NULL)
@@ -4421,19 +4363,6 @@
             (.pop gen)
         )
         nil
-    )
-
-    #_override
-    (defn #_"boolean" Expr'''hasJavaClass--ObjExpr [#_"ObjExpr" this]
-        true
-    )
-
-    #_memoize!
-    #_override
-    (defn #_"Class" Expr'''getJavaClass--ObjExpr [#_"ObjExpr" this]
-        (or (:compiledClass this)
-            (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) IFn)
-        )
     )
 
     #_method
@@ -4956,6 +4885,12 @@
             )
         )
     )
+
+    (defn #_"String" ObjExpr'trimGenID [#_"String" name]
+        (let [#_"int" i (.lastIndexOf name, "__")]
+            (if (= i -1) name (.substring name, 0, i))
+        )
+    )
 )
 
 (class-ns FnExpr
@@ -4971,14 +4906,25 @@
         )
     )
 
-    #_override
-    (defn #_"boolean" Expr'''hasJavaClass--FnExpr [#_"FnExpr" this]
-        true
+    #_method
+    (defn #_"boolean" FnExpr''isVariadic [#_"FnExpr" this]
+        (some? (:variadicMethod this))
     )
 
     #_override
-    (defn #_"boolean" ObjExpr'''supportsMeta--FnExpr [#_"FnExpr" this]
-        (:hasMeta this)
+    (defn #_"Object" Expr'''eval--FnExpr [#_"FnExpr" this]
+        (ObjExpr''doEval this)
+    )
+
+    #_override
+    (defn #_"void" Expr'''emit--FnExpr [#_"FnExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+        (ObjExpr''doEmit this, context, objx, gen)
+        nil
+    )
+
+    #_override
+    (defn #_"boolean" Expr'''hasJavaClass--FnExpr [#_"FnExpr" this]
+        true
     )
 
     #_memoize!
@@ -4987,9 +4933,14 @@
         (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) AFunction)
     )
 
-    #_method
-    (defn #_"boolean" FnExpr''isVariadic [#_"FnExpr" this]
-        (some? (:variadicMethod this))
+    #_override
+    (defn #_"boolean" ObjExpr'''supportsMeta--FnExpr [#_"FnExpr" this]
+        (:hasMeta this)
+    )
+
+    #_override
+    (defn #_"void" ObjExpr'''emitStatics--FnExpr [#_"FnExpr" this, #_"ClassVisitor" gen]
+        nil
     )
 
     #_override
@@ -6017,6 +5968,35 @@
     )
 
     #_override
+    (defn #_"Object" Expr'''eval--NewInstanceExpr [#_"NewInstanceExpr" this]
+        (ObjExpr''doEval this)
+    )
+
+    #_override
+    (defn #_"void" Expr'''emit--NewInstanceExpr [#_"NewInstanceExpr" this, #_"Context" context, #_"ObjExpr" objx, #_"GeneratorAdapter" gen]
+        (ObjExpr''doEmit this, context, objx, gen)
+        nil
+    )
+
+    #_override
+    (defn #_"boolean" Expr'''hasJavaClass--NewInstanceExpr [#_"NewInstanceExpr" this]
+        true
+    )
+
+    #_memoize!
+    #_override
+    (defn #_"Class" Expr'''getJavaClass--NewInstanceExpr [#_"NewInstanceExpr" this]
+        (or (:compiledClass this)
+            (if (some? (:tag this)) (HostExpr'tagToClass (:tag this)) IFn)
+        )
+    )
+
+    #_override
+    (defn #_"boolean" ObjExpr'''supportsMeta--NewInstanceExpr [#_"NewInstanceExpr" this]
+        (not (ObjExpr''isDeftype this))
+    )
+
+    #_override
     (defn #_"void" ObjExpr'''emitStatics--NewInstanceExpr [#_"NewInstanceExpr" this, #_"ClassVisitor" cv]
         (when (ObjExpr''isDeftype this)
             ;; getBasis()
@@ -6342,11 +6322,6 @@
     )
 
     #_override
-    (defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive--CaseExpr [#_"CaseExpr" this]
-        (Reflector'isPrimitive (:returnType this))
-    )
-
-    #_override
     (defn #_"Class" Expr'''getJavaClass--CaseExpr [#_"CaseExpr" this]
         (:returnType this)
     )
@@ -6354,6 +6329,11 @@
     #_override
     (defn #_"Object" Expr'''eval--CaseExpr [#_"CaseExpr" this]
         (throw (UnsupportedOperationException. "Can't eval case"))
+    )
+
+    #_override
+    (defn #_"boolean" MaybePrimitiveExpr'''canEmitPrimitive--CaseExpr [#_"CaseExpr" this]
+        (Reflector'isPrimitive (:returnType this))
     )
 
     #_method
