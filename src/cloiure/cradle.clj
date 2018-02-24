@@ -65,6 +65,10 @@
     [cloiure.asm.commons GeneratorAdapter Method]
 )
 
+(defn- ßsym  [x] (condp instance? x                      Keyword (.sym x)                          Var (.sym x)  (:sym x) ))
+(defn- ßns   [x] (condp instance? x Symbol (namespace x) Keyword (namespace x)                     Var (.ns x)   (:ns x)  ))
+(defn- ßname [x] (condp instance? x Symbol (name x)                            Namespace (.name x)               (:name x)))
+
 (java-ns cloiure.lang.LispReader
 
 (class-ns LispReader
@@ -89,7 +93,7 @@
 )
 
 (java-ns cloiure.lang.Reflector
-    (definterface Reflector)
+    (§ soon definterface Reflector) (import [clojure.lang Reflector])
 )
 
 (java-ns cloiure.lang.Compiler
@@ -356,7 +360,7 @@
         (let [matches- #(and (= name (.getName %)) (= (Modifier/isStatic (.getModifiers %)) static?) (= (alength (.getParameterTypes %)) arity))
               #_"java.lang.reflect.Method[]" allmethods (.getMethods c)
               [#_"PersistentVector" methods #_"PersistentVector" bridges]
-                (loop-when [methods [] bridges [] #_"int" i 0] [< i (alength allmethods)] => [methods bridges]
+                (loop-when [methods [] bridges [] #_"int" i 0] (< i (alength allmethods)) => [methods bridges]
                     (let [#_"java.lang.reflect.Method" m (aget allmethods i)
                           [methods bridges]
                             (when (matches- m) => [methods bridges]
@@ -375,14 +379,14 @@
                 )
               methods
                 (when (zero? (count methods)) => methods
-                    (loop-when [methods methods #_"int" i 0] [< i (count bridges)] => methods
+                    (loop-when [methods methods #_"int" i 0] (< i (count bridges)) => methods
                         (recur (conj methods (nth bridges i)) (inc i))
                     )
                 )
               methods
                 (when (and (not static?) (.isInterface c)) => methods
                     (let [allmethods (.getMethods Object)]
-                        (loop-when [methods methods #_"int" i 0] [< i (alength allmethods)] => methods
+                        (loop-when [methods methods #_"int" i 0] (< i (alength allmethods)) => methods
                             (let [#_"java.lang.reflect.Method" m (aget allmethods i)]
                                 (recur (if (matches- m) (conj methods m) methods) (inc i))
                             )
@@ -570,7 +574,7 @@
         (try
             (let [#_"Constructor[]" allctors (.getConstructors c)
                   #_"PersistentVector" ctors
-                    (loop-when [ctors [] #_"int" i 0] [< i (alength allctors)] => ctors
+                    (loop-when [ctors [] #_"int" i 0] (< i (alength allctors)) => ctors
                         (let [#_"Constructor" ctor (aget allctors i)
                               ctors
                                 (when (= (alength (.getParameterTypes ctor)) (alength args)) => ctors
@@ -835,7 +839,7 @@
         )
     )
 
-    (def- #_"Type[]" Compiler'EXCEPTION_TYPES (object-array 0))
+    (def- #_"Type[]" Compiler'EXCEPTION_TYPES (make-array Type 0))
 
     (declare Compiler'specials)
 
@@ -851,7 +855,7 @@
         ([#_"Symbol" sym] (Compiler'namespaceFor *ns*, sym))
         ([#_"Namespace" inns, #_"Symbol" sym]
             ;; note, presumes non-nil sym.ns
-            (let [#_"Symbol" nsSym (symbol (:ns sym))]
+            (let [#_"Symbol" nsSym (symbol (ßns sym))]
                 ;; first check against currentNS' aliases, otherwise check the Namespaces map
                 (or (.lookupAlias inns, nsSym) (find-ns nsSym))
             )
@@ -861,21 +865,21 @@
     (defn #_"Symbol" Compiler'resolveSymbol [#_"Symbol" sym]
         ;; already qualified or classname?
         (cond
-            (pos? (.indexOf (:name sym), (int \.)))
+            (pos? (.indexOf (ßname sym), (int \.)))
                 sym
-            (some? (:ns sym))
+            (some? (ßns sym))
                 (let [#_"Namespace" ns (Compiler'namespaceFor sym)]
-                    (if (and (some? ns) (not (and (some? (:name (:name ns))) (= (:name (:name ns)) (:ns sym)))))
-                        (symbol (:name (:name ns)), (:name sym))
+                    (if (and (some? ns) (not (and (some? (ßname (ßname ns))) (= (ßname (ßname ns)) (ßns sym)))))
+                        (symbol (ßname (ßname ns)), (ßname sym))
                         sym
                     )
                 )
             :else
                 (let [#_"Object" o (.getMapping *ns*, sym)]
                     (cond
-                        (nil? o)            (symbol (:name (:name *ns*)), (:name sym))
+                        (nil? o)            (symbol (ßname (ßname *ns*)), (ßname sym))
                         (instance? Class o) (symbol (.getName o))
-                        (var? o)            (symbol (:name (:name (:ns o))), (:name (:sym o)))
+                        (var? o)            (symbol (ßname (ßname (ßns o))), (ßname (ßsym o)))
                     )
                 )
         )
@@ -1122,12 +1126,14 @@
     )
 
     (defn- #_"int" Compiler'registerConstant [#_"Object" o]
-        (let [#_"IdentityHashMap<Object, Integer>" ids *constant-ids*]
-            (or (get ids o)
-                (let [#_"PersistentVector" v *constants*]
-                    (set! *constants* (conj v o))
-                    (.put ids, o, (count v))
-                    (count v)
+        (when (bound? #'*constants*) => -1
+            (let [#_"IdentityHashMap<Object, Integer>" ids *constant-ids*]
+                (or (get ids o)
+                    (let [#_"PersistentVector" v *constants*]
+                        (set! *constants* (conj v o))
+                        (.put ids, o, (count v))
+                        (count v)
+                    )
                 )
             )
         )
@@ -1160,9 +1166,9 @@
             ;; note - ns-qualified vars in other namespaces must already exist
             (let [#_"Var" var
                     (cond
-                        (some? (:ns sym))
+                        (some? (ßns sym))
                             (when-let [#_"Namespace" ns (Compiler'namespaceFor sym)]
-                                (let [#_"Symbol" name (symbol (:name sym))]
+                                (let [#_"Symbol" name (symbol (ßname sym))]
                                     (if (and internNew (= ns *ns*))
                                         (.intern ns, name)
                                         (.findInternedVar ns, name)
@@ -1176,7 +1182,7 @@
                                 (cond
                                     (nil? o) ;; introduce a new var in the current ns
                                         (when internNew
-                                            (.intern *ns*, (symbol (:name sym)))
+                                            (.intern *ns*, (symbol (ßname sym)))
                                         )
                                     (var? o)
                                         o
@@ -1199,7 +1205,7 @@
             (when (or (symbol? op) (var? op))
                 (let [#_"Var" v (if (var? op) op (Compiler'lookupVar op, false, false))]
                     (when (and (some? v) (get (meta v) :macro))
-                        (when (or (= (:ns v) *ns*) (not (get (meta v) :private))) => (throw (IllegalStateException. (str "var: " v " is private")))
+                        (when (or (= (ßns v) *ns*) (not (get (meta v) :private))) => (throw (IllegalStateException. (str "var: " v " is private")))
                             v
                         )
                     )
@@ -1213,7 +1219,7 @@
         (when-not (and (symbol? op) (some? (Compiler'referenceLocal op)))
             (when (or (symbol? op) (var? op))
                 (when-let [#_"Var" v (if (var? op) op (Compiler'lookupVar op, false))]
-                    (when (or (= (:ns v) *ns*) (not (get (meta v) :private))) => (throw (IllegalStateException. (str "var: " v " is private")))
+                    (when (or (= (ßns v) *ns*) (not (get (meta v) :private))) => (throw (IllegalStateException. (str "var: " v " is private")))
                         (when-let [#_"IFn" f (get (meta v) :inline)]
                             (let [#_"IFn" arityPred (get (meta v) :inline-arities)]
                                 (when (or (nil? arityPred) (.invoke arityPred, arity))
@@ -1228,7 +1234,7 @@
     )
 
     (defn #_"boolean" Compiler'namesStaticMember [#_"Symbol" sym]
-        (and (some? (:ns sym)) (nil? (Compiler'namespaceFor sym)))
+        (and (some? (ßns sym)) (nil? (Compiler'namespaceFor sym)))
     )
 
     (defn- #_"Symbol" Compiler'tagOf [#_"Object" o]
@@ -1266,15 +1272,15 @@
     (defn #_"Object" Compiler'resolveIn [#_"Namespace" n, #_"Symbol" sym, #_"boolean" allowPrivate]
         ;; note - ns-qualified vars must already exist
         (cond
-            (some? (:ns sym))
-                (let-when [#_"Namespace" ns (Compiler'namespaceFor n, sym)] (some? ns)          => (throw (RuntimeException. (str "No such namespace: " (:ns sym))))
-                    (let-when [#_"Var" v (.findInternedVar ns, (symbol (:name sym)))] (some? v) => (throw (RuntimeException. (str "No such var: " sym)))
-                        (when (or (= (:ns v) *ns*) (not (get (meta v) :private)) allowPrivate)  => (throw (IllegalStateException. (str "var: " sym " is private")))
+            (some? (ßns sym))
+                (let-when [#_"Namespace" ns (Compiler'namespaceFor n, sym)] (some? ns)          => (throw (RuntimeException. (str "No such namespace: " (ßns sym))))
+                    (let-when [#_"Var" v (.findInternedVar ns, (symbol (ßname sym)))] (some? v) => (throw (RuntimeException. (str "No such var: " sym)))
+                        (when (or (= (ßns v) *ns*) (not (get (meta v) :private)) allowPrivate)  => (throw (IllegalStateException. (str "var: " sym " is private")))
                             v
                         )
                     )
                 )
-            (or (pos? (.indexOf (:name sym), (int \.))) (= (.charAt (:name sym), 0) \[)) (RT/classForName (:name sym))
+            (or (pos? (.indexOf (ßname sym), (int \.))) (= (.charAt (ßname sym), 0) \[)) (RT/classForName (ßname sym))
             (= sym 'ns)                #'ns
             (= sym 'in-ns)             #'in-ns
             (= sym *compile-stub-sym*) *compile-stub-class*
@@ -1295,14 +1301,14 @@
     (defn #_"Object" Compiler'maybeResolveIn [#_"Namespace" n, #_"Symbol" sym]
         ;; note - ns-qualified vars must already exist
         (cond
-            (some? (:ns sym))
+            (some? (ßns sym))
                 (when-let [#_"Namespace" ns (Compiler'namespaceFor n, sym)]
-                    (when-let [#_"Var" v (.findInternedVar ns, (symbol (:name sym)))]
+                    (when-let [#_"Var" v (.findInternedVar ns, (symbol (ßname sym)))]
                         v
                     )
                 )
-            (or (and (pos? (.indexOf (:name sym), (int \.))) (not (.endsWith (:name sym), "."))) (= (.charAt (:name sym), 0) \[))
-                (RT/classForName (:name sym))
+            (or (and (pos? (.indexOf (ßname sym), (int \.))) (not (.endsWith (ßname sym), "."))) (= (.charAt (ßname sym), 0) \[))
+                (RT/classForName (ßname sym))
             (= sym 'ns)
                 #'ns
             (= sym 'in-ns)
@@ -1856,12 +1862,12 @@
             (instance? Class form)
                 form
             (symbol? form)
-                (when (nil? (:ns form)) ;; if ns-qualified can't be classname
+                (when (nil? (ßns form)) ;; if ns-qualified can't be classname
                     (cond
                         (= form *compile-stub-sym*)
                             *compile-stub-class*
-                        (or (pos? (.indexOf (:name form), (int \.))) (= (.charAt (:name form), 0) \[))
-                            (RT/classForNameNonLoading (:name form))
+                        (or (pos? (.indexOf (ßname form), (int \.))) (= (.charAt (ßname form), 0) \[))
+                            (RT/classForNameNonLoading (ßname form))
                         :else
                             (let [#_"Object" o (.getMapping *ns*, form)]
                                 (cond
@@ -1871,7 +1877,7 @@
                                         nil
                                     :else
                                         (try
-                                            (RT/classForNameNonLoading (:name form))
+                                            (RT/classForNameNonLoading (ßname form))
                                             (catch Exception _
                                                 nil
                                             )
@@ -1887,7 +1893,7 @@
 
     (defn #_"Class" Interop'primClassForName [#_"Symbol" sym]
         (when (some? sym)
-            (case (:name sym)
+            (case (ßname sym)
                 "boolean" Boolean/TYPE
                 "byte"    Byte/TYPE
                 "short"   Short/TYPE
@@ -1904,7 +1910,7 @@
 
     (defn #_"Class" Interop'maybeSpecialTag [#_"Symbol" sym]
         (or (Interop'primClassForName sym)
-            (case (:name sym)
+            (case (ßname sym)
                 "booleans" Compiler'BOOLEANS_CLASS
                 "bytes"    Compiler'BYTES_CLASS
                 "shorts"   Compiler'SHORTS_CLASS
@@ -1921,7 +1927,7 @@
 
     (defn #_"Class" Interop'tagToClass [#_"Object" tag]
         (or
-            (when (and (symbol? tag) (nil? (:ns tag))) ;; if ns-qualified can't be classname
+            (when (and (symbol? tag) (nil? (ßns tag))) ;; if ns-qualified can't be classname
                 (Interop'maybeSpecialTag tag)
             )
             (Interop'maybeClass tag, true)
@@ -2266,7 +2272,7 @@
                             (let [#_"int" methodidx
                                     (when (< 1 (count methods)) => 0
                                         (let [[#_"PersistentVector" pars #_"PersistentVector" rets]
-                                                (loop-when [pars [] rets [] #_"int" i 0] [< i (count methods)] => [pars rets]
+                                                (loop-when [pars [] rets [] #_"int" i 0] (< i (count methods)) => [pars rets]
                                                     (let [#_"java.lang.reflect.Method" m (nth methods i)]
                                                         (recur (conj pars (.getParameterTypes m)) (conj rets (.getReturnType m)) (inc i))
                                                     )
@@ -2402,7 +2408,7 @@
                         (let [#_"int" methodidx
                                 (when (< 1 (count methods)) => 0
                                     (let [[#_"PersistentVector" pars #_"PersistentVector" rets]
-                                            (loop-when [pars [] rets [] #_"int" i 0] [< i (count methods)] => [pars rets]
+                                            (loop-when [pars [] rets [] #_"int" i 0] (< i (count methods)) => [pars rets]
                                                 (let [#_"java.lang.reflect.Method" m (nth methods i)]
                                                     (recur (conj pars (.getParameterTypes m)) (conj rets (.getReturnType m)) (inc i))
                                                 )
@@ -2567,8 +2573,8 @@
                           #_"Expr" instance (when (nil? c) (Compiler'analyze (if (= context :Context'EVAL) context :Context'EXPRESSION), (second form)))
                           #_"boolean" maybeField (and (= (count form) 3) (symbol? (third form)))
                           maybeField
-                            (when (and maybeField (not= (.charAt (:name (third form)), 0) \-)) => maybeField
-                                (let [#_"String" name (:name (third form))]
+                            (when (and maybeField (not= (.charAt (ßname (third form)), 0) \-)) => maybeField
+                                (let [#_"String" name (ßname (third form))]
                                     (cond
                                         (some? c)
                                             (zero? (count (Reflector'getMethods c, 0, (Compiler'munge name), true)))
@@ -2580,12 +2586,12 @@
                                 )
                             )]
                         (if maybeField
-                            (let [? (= (.charAt (:name (third form)), 0) \-)
-                                  #_"Symbol" sym (if ? (symbol (.substring (:name (third form)), 1)) (third form))
+                            (let [? (= (.charAt (ßname (third form)), 0) \-)
+                                  #_"Symbol" sym (if ? (symbol (.substring (ßname (third form)), 1)) (third form))
                                   #_"Symbol" tag (Compiler'tagOf form)]
                                 (if (some? c)
-                                    (StaticFieldExpr'new line, c, (Compiler'munge (:name sym)), tag)
-                                    (InstanceFieldExpr'new line, instance, (Compiler'munge (:name sym)), tag, ?)
+                                    (StaticFieldExpr'new line, c, (Compiler'munge (ßname sym)), tag)
+                                    (InstanceFieldExpr'new line, instance, (Compiler'munge (ßname sym)), tag, ?)
                                 )
                             )
                             (let [#_"ISeq" call (if (instance? ISeq (third form)) (third form) (next (next form)))]
@@ -2600,8 +2606,8 @@
                                                           => args
                                             )]
                                         (if (some? c)
-                                            (StaticMethodExpr'new line, tag, c, (Compiler'munge (:name sym)), args, tailPosition)
-                                            (InstanceMethodExpr'new line, tag, instance, (Compiler'munge (:name sym)), args, tailPosition)
+                                            (StaticMethodExpr'new line, tag, c, (Compiler'munge (ßname sym)), args, tailPosition)
+                                            (InstanceMethodExpr'new line, tag, instance, (Compiler'munge (ßname sym)), args, tailPosition)
                                         )
                                     )
                                 )
@@ -3046,7 +3052,7 @@
         (let [#_"Constructor" ctor
                 (let [#_"Constructor[]" allctors (.getConstructors c)
                       [#_"PersistentVector" ctors #_"PersistentVector" pars #_"PersistentVector" rets]
-                        (loop-when [ctors [] pars [] rets [] #_"int" i 0] [< i (alength allctors)] => [ctors pars rets]
+                        (loop-when [ctors [] pars [] rets [] #_"int" i 0] (< i (alength allctors)) => [ctors pars rets]
                             (let [#_"Constructor" ctor (aget allctors i) #_"Class[]" types (.getParameterTypes ctor)
                                   [ctors pars rets]
                                     (when (= (alength types) (count args)) => [ctors pars rets]
@@ -3709,11 +3715,11 @@
                               this (assoc this :protocolOn (Interop'maybeClass (get (var-get pvar) :on), false))]
                             (when (some? (:protocolOn this)) => this
                                 (let [#_"IPersistentMap" mmap (get (var-get pvar) :method-map)
-                                      #_"Keyword" mmapVal (get mmap (keyword (:sym fvar)))]
-                                    (when (some? mmapVal) => (throw (IllegalArgumentException. (str "No method of interface: " (.getName (:protocolOn this)) " found for function: " (:sym fvar) " of protocol: " (:sym pvar) " (The protocol method may have been defined before and removed.)")))
-                                        (let [#_"String" mname (Compiler'munge (.toString (:sym mmapVal)))
+                                      #_"Keyword" mmapVal (get mmap (keyword (ßsym fvar)))]
+                                    (when (some? mmapVal) => (throw (IllegalArgumentException. (str "No method of interface: " (.getName (:protocolOn this)) " found for function: " (ßsym fvar) " of protocol: " (ßsym pvar) " (The protocol method may have been defined before and removed.)")))
+                                        (let [#_"String" mname (Compiler'munge (.toString (ßsym mmapVal)))
                                               #_"PersistentVector" methods (Reflector'getMethods (:protocolOn this), (dec (count args)), mname, false)]
-                                            (when (= (count methods) 1) => (throw (IllegalArgumentException. (str "No single method: " mname " of interface: " (.getName (:protocolOn this)) " found for function: " (:sym fvar) " of protocol: " (:sym pvar))))
+                                            (when (= (count methods) 1) => (throw (IllegalArgumentException. (str "No single method: " mname " of interface: " (.getName (:protocolOn this)) " found for function: " (ßsym fvar) " of protocol: " (ßsym pvar))))
                                                 (assoc this :onMethod (nth methods 0))
                                             )
                                         )
@@ -3757,7 +3763,7 @@
         (let [#_"Label" onLabel (.newLabel gen) #_"Label" callLabel (.newLabel gen) #_"Label" endLabel (.newLabel gen)]
             (Expr'''emit (nth (:args this) 0), :Context'EXPRESSION, objx, gen)
             (.dup gen) ;; target, target
-            (.invokeStatic gen, (Type/getType Reflector), (Method/getMethod "Class classOf(Object)")) ;; target, class
+            (.invokeStatic gen, (Type/getType #_"Reflector" Util), (Method/getMethod "Class classOf(Object)")) ;; target, class
             (.getStatic gen, (:objType objx), (Compiler'cachedClassName (:siteIndex this)), (Type/getType Class)) ;; target, class, cached-class
             (.visitJumpInsn gen, Opcodes/IF_ACMPEQ, callLabel) ;; target
             (when (some? (:protocolOn this))
@@ -3766,7 +3772,7 @@
                 (.ifZCmp gen, GeneratorAdapter/NE, onLabel)
             )
             (.dup gen) ;; target, target
-            (.invokeStatic gen, (Type/getType Reflector), (Method/getMethod "Class classOf(Object)")) ;; target, class
+            (.invokeStatic gen, (Type/getType #_"Reflector" Util), (Method/getMethod "Class classOf(Object)")) ;; target, class
             (.putStatic gen, (:objType objx), (Compiler'cachedClassName (:siteIndex this)), (Type/getType Class)) ;; target
             (.mark gen, callLabel) ;; target
             (IopObject''emitVar objx, gen, (:var (:fexpr this)))
@@ -3873,7 +3879,7 @@
                 #_"Expr" :init init
                 #_"boolean" :isArg isArg
 
-                #_"String" :name (Compiler'munge (:name sym))
+                #_"String" :name (Compiler'munge (ßname sym))
                 #_"boolean" :recurMistmatch false
             )
         )
@@ -4495,22 +4501,22 @@
                     )
                     (symbol? value)
                     (do
-                        (.push gen, (:ns value))
-                        (.push gen, (:name value))
+                        (.push gen, (ßns value))
+                        (.push gen, (ßname value))
                         (.invokeStatic gen, (Type/getType Symbol), (Method/getMethod "clojure.lang.Symbol intern(String, String)"))
                         true
                     )
                     (keyword? value)
                     (do
-                        (.push gen, (:ns (:sym value)))
-                        (.push gen, (:name (:sym value)))
+                        (.push gen, (ßns (ßsym value)))
+                        (.push gen, (ßname (ßsym value)))
                         (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.Keyword keyword(String, String)"))
                         true
                     )
                     (var? value)
                     (do
-                        (.push gen, (.toString (:name (:ns value))))
-                        (.push gen, (.toString (:sym value)))
+                        (.push gen, (.toString (ßname (ßns value))))
+                        (.push gen, (.toString (ßsym value)))
                         (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.Var var(String, String)"))
                         true
                     )
@@ -4521,7 +4527,7 @@
                         (let [#_"IPersistentVector" fields (Reflector'invokeStaticMethod (.getClass value), "getBasis", (object-array 0))]
                             (loop-when-recur [#_"ISeq" s (seq fields)] (some? s) [(next s)]
                                 (let [#_"Symbol" field (first s)]
-                                    (IopObject''emitValue this, (Reflector'getInstanceField value, (Compiler'munge (:name field))), gen)
+                                    (IopObject''emitValue this, (Reflector'getInstanceField value, (Compiler'munge (ßname field))), gen)
                                     (let-when [#_"Class" k (Interop'tagClass (Compiler'tagOf field))] (.isPrimitive k)
                                         (let [#_"Type" b (Type/getType (Compiler'boxClass k))]
                                             (.invokeVirtual gen, b, (Method. (str (.getName k) "Value"), (str "()" (.getDescriptor (Type/getType k)))))
@@ -4944,11 +4950,11 @@
               fn (when (some? (meta (first form))) => fn
                     (assoc fn :onceOnly (boolean (get (meta (first form)) :once)))
                 )
-              #_"String" basename (if (some? owner) (:name (:objx owner)) (Compiler'munge (:name (:name *ns*))))
+              #_"String" basename (if (some? owner) (:name (:objx owner)) (Compiler'munge (ßname (ßname *ns*))))
               [#_"Symbol" nm name]
                 (if (symbol? (second form))
                     (let [nm (second form)]
-                        [nm (str (:name nm) "__" (RT/nextID))]
+                        [nm (str (ßname nm) "__" (RT/nextID))]
                     )
                     (cond
                         (nil? name)   [nil (str "fn__" (RT/nextID))]
@@ -4971,7 +4977,7 @@
                     ;; arglist might be preceded by symbol naming this fn
                     (let [[fn form]
                             (when (some? nm) => [fn form]
-                                [(assoc fn :thisName (:name nm)) (cons 'fn* (next (next form)))]
+                                [(assoc fn :thisName (ßname nm)) (cons 'fn* (next (next form)))]
                             )
                           ;; now (fn [args] body...) or (fn ([args] body...) ([args2] body2...) ...)
                           ;; turn former into latter
@@ -5142,8 +5148,8 @@
                     (let [#_"Symbol" sym (second form) #_"Var" v (Compiler'lookupVar sym, true)]
                         (when (some? v) => (throw (RuntimeException. "Can't refer to qualified var that doesn't exist"))
                             (let [[v #_"boolean" shadowsCoreMapping]
-                                    (when-not (= (:ns v) *ns*) => [v false]
-                                        (when (nil? (:ns sym)) => (throw (RuntimeException. "Can't create defs outside of current ns"))
+                                    (when-not (= (ßns v) *ns*) => [v false]
+                                        (when (nil? (ßns sym)) => (throw (RuntimeException. "Can't create defs outside of current ns"))
                                             (let [v (.intern *ns*, sym)]
                                                 (Compiler'registerVar v)
                                                 [v true]
@@ -5154,12 +5160,12 @@
                                 (when dynamic?
                                     (.setDynamic v)
                                 )
-                                (when (and (not dynamic?) (.startsWith (:name sym), "*") (.endsWith (:name sym), "*") (< 2 (.length (:name sym))))
+                                (when (and (not dynamic?) (.startsWith (ßname sym), "*") (.endsWith (ßname sym), "*") (< 2 (.length (ßname sym))))
                                     (.println *err*, (str "Warning: " sym " not declared dynamic and thus is not dynamically rebindable, but its name suggests otherwise. Please either indicate ^:dynamic or change the name."))
                                 )
                                 (let [#_"Context" c (if (= context :Context'EVAL) context :Context'EXPRESSION)
                                       m (assoc m :line *line*) m (if (some? docstring) (assoc m :doc docstring) m)]
-                                    (DefExpr'new *line*, v, (Compiler'analyze c, (third form), (:name (:sym v))), (Compiler'analyze c, m), (= (count form) 3), dynamic?, shadowsCoreMapping)
+                                    (DefExpr'new *line*, v, (Compiler'analyze c, (third form), (ßname (ßsym v))), (Compiler'analyze c, m), (= (count form) 3), dynamic?, shadowsCoreMapping)
                                 )
                             )
                         )
@@ -5404,7 +5410,7 @@
                                                                 (loop-when [bindingInits [] loopLocals [] #_"int" i 0] (< i (count bindings)) => [bindingInits loopLocals]
                                                                     (let-when [#_"Object" sym (nth bindings i)] (symbol? sym) => (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " sym)))
                                                                         (when (nil? (namespace sym)) => (throw (RuntimeException. (str "Can't let qualified name: " sym)))
-                                                                            (let [#_"Expr" init (Compiler'analyze :Context'EXPRESSION, (nth bindings (inc i)), (:name sym))
+                                                                            (let [#_"Expr" init (Compiler'analyze :Context'EXPRESSION, (nth bindings (inc i)), (ßname sym))
                                                                                   init
                                                                                     (when isLoop => init
                                                                                         (if (and (some? rms) (nth rms (/ i 2)))
@@ -5733,7 +5739,7 @@
                 (-> (NewInstanceMethod'new objx, *method*)
                     (assoc :line *line*)
                 )
-              #_"Symbol" dotname (first form) #_"Symbol" name (with-meta (symbol (Compiler'munge (:name dotname))) (meta dotname))
+              #_"Symbol" dotname (first form) #_"Symbol" name (with-meta (symbol (Compiler'munge (ßname dotname))) (meta dotname))
               #_"IPersistentVector" parms (second form)]
             (when (pos? (count parms)) => (throw (IllegalArgumentException. (str "Must supply at least one argument for 'this' in: " dotname)))
                 (let [#_"Symbol" thisName (nth parms 0) parms (subvec parms 1 (count parms))
@@ -5758,23 +5764,23 @@
                                     (let-when [#_"Object" sym (nth parms i)] (symbol? sym) => (throw (IllegalArgumentException. "params must be Symbols"))
                                         (let [#_"Object" tag (Compiler'tagOf sym) hinted? (or hinted? (some? tag))]
                                             (aset pclasses i (Interop'tagClass tag))
-                                            (aset psyms i (if (some? (namespace sym)) (symbol (:name sym)) sym))
+                                            (aset psyms i (if (some? (namespace sym)) (symbol (ßname sym)) sym))
                                             (recur hinted? (inc i))
                                         )
                                     )
                                 )
-                              #_"Map" matches (NewInstanceMethod'findMethodsWithNameAndArity (:name name), (count parms), overrideables)
-                              #_"Object" mk (NewInstanceMethod'msig (:name name), pclasses)
+                              #_"Map" matches (NewInstanceMethod'findMethodsWithNameAndArity (ßname name), (count parms), overrideables)
+                              #_"Object" mk (NewInstanceMethod'msig (ßname name), pclasses)
                               [nim pclasses #_"java.lang.reflect.Method" m]
                                 (case (count matches)
-                                    0   (throw (IllegalArgumentException. (str "Can't define method not in interfaces: " (:name name))))
+                                    0   (throw (IllegalArgumentException. (str "Can't define method not in interfaces: " (ßname name))))
                                     1   (if hinted? ;; validate match
                                             (let [m (get matches mk)]
                                                 (when (nil? m)
-                                                    (throw (IllegalArgumentException. (str "Can't find matching method: " (:name name) ", leave off hints for auto match.")))
+                                                    (throw (IllegalArgumentException. (str "Can't find matching method: " (ßname name) ", leave off hints for auto match.")))
                                                 )
                                                 (when-not (= (.getReturnType m) (:retClass nim))
-                                                    (throw (IllegalArgumentException. (str "Mismatched return type: " (:name name) ", expected: " (.getName (.getReturnType m)) ", had: " (.getName (:retClass nim)))))
+                                                    (throw (IllegalArgumentException. (str "Mismatched return type: " (ßname name) ", expected: " (.getName (.getReturnType m)) ", had: " (.getName (:retClass nim)))))
                                                 )
                                                 [nim pclasses m]
                                             )
@@ -5784,13 +5790,13 @@
                                             )
                                         )
                                         ;; must be hinted and match one method
-                                        (when hinted? => (throw (IllegalArgumentException. (str "Must hint overloaded method: " (:name name))))
+                                        (when hinted? => (throw (IllegalArgumentException. (str "Must hint overloaded method: " (ßname name))))
                                             (let [m (get matches mk)]
                                                 (when (nil? m)
-                                                    (throw (IllegalArgumentException. (str "Can't find matching overloaded method: " (:name name))))
+                                                    (throw (IllegalArgumentException. (str "Can't find matching overloaded method: " (ßname name))))
                                                 )
                                                 (when-not (= (.getReturnType m) (:retClass nim))
-                                                    (throw (IllegalArgumentException. (str "Mismatched return type: " (:name name) ", expected: " (.getName (.getReturnType m)) ", had: " (.getName (:retClass nim)))))
+                                                    (throw (IllegalArgumentException. (str "Mismatched return type: " (ßname name) ", expected: " (.getName (.getReturnType m)) ", had: " (.getName (:retClass nim)))))
                                                 )
                                                 [nim pclasses m]
                                             )
@@ -5813,7 +5819,7 @@
                             )
                             (set! *loop-locals* argLocals)
                             (assoc nim
-                                :name (:name name)
+                                :name (ßname name)
                                 :methodMeta (meta name)
                                 :parms parms
                                 :argLocals argLocals
@@ -5982,7 +5988,7 @@
                             (.visitCode mv)
 
                             (loop-when-recur [#_"ISeq" s (seq (:hintedFields this)) #_"int" i 1] (some? s) [(next s) (inc i)]
-                                (let [#_"String" bName (:name (first s))
+                                (let [#_"String" bName (ßname (first s))
                                     #_"Class" k (Interop'tagClass (Compiler'tagOf (first s)))]
                                     (.visitVarInsn mv, Opcodes/ALOAD, 0)
                                     (.visitLdcInsn mv, bName)
@@ -6122,7 +6128,7 @@
                 (-> (NewInstanceExpr'new nil)
                     (assoc :src form :name name :internalName name' :objType (Type/getObjectType name') :opts opts)
                 )
-              nie (if (some? thisSym) (assoc nie :thisName (:name thisSym)) nie)
+              nie (if (some? thisSym) (assoc nie :thisName (ßname thisSym)) nie)
               nie
                 (when (some? fieldSyms) => nie
                     (let [#_"Object[]" a (make-array Object (* 2 (count fieldSyms)))
@@ -6140,7 +6146,7 @@
                           _ (update! *closes* assoc (:uid nie) (PersistentArrayMap. a))
                           nie (assoc nie :fields fmap)]
                         (loop-when-recur [nie nie #_"int" i (dec (count fieldSyms))]
-                                         (and (<= 0 i) (any = (:name (nth fieldSyms i)) "__meta" "__extmap" "__hash" "__hasheq"))
+                                         (and (<= 0 i) (any = (ßname (nth fieldSyms i)) "__meta" "__extmap" "__hash" "__hasheq"))
                                          [(update nie :altCtorDrops inc) (dec i)]
                                       => nie
                         )
@@ -6220,7 +6226,7 @@
                       #_"IPersistentVector" ifaces (conj (first s) 'clojure.lang.IObj) s (next s)
                       #_"String" classname
                         (let [#_"IopMethod" owner *method*
-                              #_"String" basename (if (some? owner) (IopObject'trimGenID (:name (:objx owner))) (Compiler'munge (:name (:name *ns*))))]
+                              #_"String" basename (if (some? owner) (IopObject'trimGenID (:name (:objx owner))) (Compiler'munge (ßname (ßname *ns*))))]
                             (str basename "$" "reify__" (RT/nextID))
                         )
                       #_"IopObject" nie (NewInstanceExpr'build ifaces, nil, nil, classname, (symbol classname), nil, s, form, nil)]
@@ -6567,7 +6573,7 @@
                             )
                         )
                         (when (symbol? op) => form
-                            (let [#_"String" name (:name op)]
+                            (let [#_"String" name (ßname op)]
                                 ;; (.substring s 2 5) => (. s substring 2 5)
                                 (cond
                                     (= (.charAt name, 0) \.)
@@ -6581,7 +6587,7 @@
                                             )
                                         )
                                     (Compiler'namesStaticMember op)
-                                        (let-when [#_"Symbol" target (symbol (:ns op))] (some? (Interop'maybeClass target, false)) => form
+                                        (let-when [#_"Symbol" target (symbol (ßns op))] (some? (Interop'maybeClass target, false)) => form
                                             (Compiler'preserveTag form, (list* '. target (symbol name) (next form)))
                                         )
                                     :else
@@ -6610,14 +6616,14 @@
         (let [#_"Symbol" tag (Compiler'tagOf sym)]
             (or
                 (cond
-                    (nil? (:ns sym)) ;; ns-qualified syms are always Vars
+                    (nil? (ßns sym)) ;; ns-qualified syms are always Vars
                         (when-let [#_"LocalBinding" b (Compiler'referenceLocal sym)]
                             (LocalBindingExpr'new b, tag)
                         )
                     (nil? (Compiler'namespaceFor sym))
-                        (when-let [#_"Class" c (Interop'maybeClass (symbol (:ns sym)), false)]
-                            (when (some? (Reflector'getField c, (:name sym), true)) => (throw (RuntimeException. (str "Unable to find static field: " (:name sym) " in " c)))
-                                (StaticFieldExpr'new *line*, c, (:name sym), tag)
+                        (when-let [#_"Class" c (Interop'maybeClass (symbol (ßns sym)), false)]
+                            (when (some? (Reflector'getField c, (ßname sym), true)) => (throw (RuntimeException. (str "Unable to find static field: " (ßname sym) " in " c)))
+                                (StaticFieldExpr'new *line*, c, (ßname sym), tag)
                             )
                         )
                 )
@@ -6715,7 +6721,7 @@
                             (loop-when-recur [#_"ISeq" s (next form)] (some? (next s)) [(next s)] => (Compiler'eval (first s))
                                 (Compiler'eval (first s))
                             )
-                        (or (instance? IType form) (and (instance? IPersistentCollection form) (not (and (symbol? (first form)) (.startsWith (:name (first form)), "def")))))
+                        (or (instance? IType form) (and (instance? IPersistentCollection form) (not (and (symbol? (first form)) (.startsWith (ßname (first form)), "def")))))
                             (let [#_"IopObject" fexpr (Compiler'analyze :Context'EXPRESSION, (list 'fn* [] form), (str "eval" (RT/nextID)))]
                                 (.invoke (Expr'''eval fexpr))
                             )
