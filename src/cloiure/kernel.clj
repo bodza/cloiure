@@ -64,13 +64,12 @@
     (:use [cloiure slang]))
 
 (import
-    [java.io FileNotFoundException InputStreamReader LineNumberReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
+    [java.io InputStreamReader LineNumberReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
   #_[java.lang Character Class Exception IllegalArgumentException IllegalStateException Integer Number NumberFormatException Object RuntimeException String StringBuilder Throwable UnsupportedOperationException]
     [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
     [java.lang.reflect Array]
     [java.math BigDecimal BigInteger MathContext]
-    [java.net JarURLConnection URL URLClassLoader URLConnection]
-    [java.nio.charset Charset]
+    [java.net URL URLClassLoader]
     [java.security AccessController PrivilegedAction]
     [java.util AbstractCollection AbstractSet ArrayList Collection Comparator EmptyStackException HashMap Iterator LinkedList List Map Map$Entry NoSuchElementException Queue Set Stack]
     [java.util.concurrent Callable ConcurrentHashMap]
@@ -117,7 +116,6 @@
 (declare RT'DECLARED_KEY)
 (declare RT'DEFAULT_COMPARATOR)
 (declare RT'DEFAULT_IMPORTS)
-(declare RT'DOC_KEY)
 (declare RT'EMPTY_ARRAY)
 (declare RT'F)
 (declare RT'IN_NS_VAR)
@@ -138,15 +136,12 @@
 (declare RT'errPrintWriter)
 (declare RT'first)
 (declare RT'fourth)
-(declare RT'getResource)
 (declare RT'isLineNumberingReader)
 (declare RT'isReduced)
 (declare RT'keys)
 (declare RT'length)
 (declare RT'list)
 (declare RT'listStar)
-(declare RT'load-1)
-(declare RT'load-2)
 (declare RT'loadClassForName)
 (declare RT'longCast-1o)
 (declare RT'makeClassLoader)
@@ -159,7 +154,6 @@
 (declare RT'print)
 (declare RT'printInnerSeq)
 (declare RT'printString)
-(declare RT'resourceAsStream)
 (declare RT'second)
 (declare RT'seq)
 (declare RT'seqFrom)
@@ -1395,8 +1389,8 @@
         )
     )
 
-    #_foreign
-    (defn #_"Class" defineClass---DynamicClassLoader [#_"DynamicClassLoader" this, #_"String" name, #_"byte[]" bytes, #_"Object" srcForm]
+    #_method
+    (defn #_"Class" DynamicClassLoader''defineClass [#_"DynamicClassLoader" this, #_"String" name, #_"byte[]" bytes]
         (Util'clearCache DynamicClassLoader'RQ, DynamicClassLoader'classCache)
         (let [#_"Class" c (.defineClass this, name, bytes, 0, (alength bytes))]
             (.put DynamicClassLoader'classCache, name, (SoftReference. c, DynamicClassLoader'RQ))
@@ -8333,7 +8327,6 @@
         (if (some? vals) (Cycle'new vals, nil, vals) PersistentList'EMPTY)
     )
 
-    ;; realization for use of current
     #_method
     (defn- #_"ISeq" Cycle''current [#_"Cycle" this]
         (when (nil? (:_current this))
@@ -15645,7 +15638,6 @@
 (class-ns RT
     (def #_"Boolean" RT'T Boolean/TRUE)
     (def #_"Boolean" RT'F Boolean/FALSE)
-    (def #_"String" RT'LOADER_SUFFIX "__init")
 
     ;; simple-symbol->class
     (def #_"IPersistentMap" RT'DEFAULT_IMPORTS (§ soon RT'map
@@ -15749,13 +15741,22 @@
         ])
     ))
 
-    ;; single instance of UTF-8 Charset, so as to avoid catching UnsupportedCharsetExceptions everywhere
-    (def #_"Charset" RT'UTF8 (Charset/forName "UTF-8"))
-
     (def #_"Namespace" RT'CLOIURE_NS (§ soon Namespace'findOrCreate (Symbol'intern "cloiure.core")))
 
+    ;;;
+     ; A java.io.Reader object representing standard input for read operations.
+     ; Defaults to System/in, wrapped in a LineNumberingPushbackReader.
+     ;;
     (def #_"Var" RT'IN (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*in*"), (LineNumberingPushbackReader'new-1 (InputStreamReader. System/in)))))
+    ;;;
+     ; A java.io.Writer object representing standard output for print operations.
+     ; Defaults to System/out, wrapped in an OutputStreamWriter.
+     ;;
     (def #_"Var" RT'OUT (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*out*"), (OutputStreamWriter. System/out))))
+    ;;;
+     ; A java.io.Writer object representing standard error for print operations.
+     ; Defaults to System/err, wrapped in a PrintWriter.
+     ;;
     (def #_"Var" RT'ERR (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*err*"), (PrintWriter. (OutputStreamWriter. System/err), true))))
 
     (def #_"Keyword" RT'TAG_KEY (Keyword'intern (Symbol'intern "tag")))
@@ -15766,16 +15767,27 @@
     (def #_"Keyword" RT'LINE_KEY (Keyword'intern (Symbol'intern "line")))
     (def #_"Keyword" RT'COLUMN_KEY (Keyword'intern (Symbol'intern "column")))
     (def #_"Keyword" RT'DECLARED_KEY (Keyword'intern (Symbol'intern "declared")))
-    (def #_"Keyword" RT'DOC_KEY (Keyword'intern (Symbol'intern "doc")))
 
-    (def #_"Symbol" RT'IN_NAMESPACE (Symbol'intern "in-ns"))
-    (def #_"Symbol" RT'NAMESPACE (Symbol'intern "ns"))
-    (def #_"Symbol" RT'IDENTICAL (Symbol'intern "identical?"))
-
+    ;;;
+     ; A cloiure.lang.Namespace object representing the current namespace.
+     ;;
     (def #_"Var" RT'CURRENT_NS (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*ns*"), RT'CLOIURE_NS)))
-
+    ;;;
+     ; When set to true, output will be flushed whenever a newline is printed.
+     ; Defaults to true.
+     ;;
     (def #_"Var" RT'FLUSH_ON_NEWLINE (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*flush-on-newline*"), RT'T)))
+    ;;;
+     ; When set to logical false, strings and characters will be printed with
+     ; non-alphanumeric characters converted to the appropriate escape sequences.
+     ; Defaults to true.
+     ;;
     (def #_"Var" RT'PRINT_READABLY (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*print-readably*"), RT'T)))
+    ;;;
+     ; When set to true, the compiler will emit warnings when reflection
+     ; is needed to resolve Java method calls or field accesses.
+     ; Defaults to false.
+     ;;
     (def #_"Var" RT'WARN_ON_REFLECTION (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*warn-on-reflection*"), RT'F)))
     (def #_"Var" RT'ALLOW_UNRESOLVED_VARS (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*allow-unresolved-vars*"), RT'F)))
 
@@ -15822,12 +15834,6 @@
         (Var''setTag RT'OUT, (Symbol'intern "java.io.Writer"))
         (Var''setTag RT'CURRENT_NS, (Symbol'intern "cloiure.lang.Namespace"))
         (Var''setTag RT'MATH_CONTEXT, (Symbol'intern "java.math.MathContext"))
-        (let [#_"Var" v (Var'intern RT'CLOIURE_NS, RT'NAMESPACE, bootNamespace)
-              _ (Var''setMacro v)
-              v (Var'intern RT'CLOIURE_NS, RT'IN_NAMESPACE, inNamespace)
-              _ (Var''setMeta v, (RT'map RT'DOC_KEY, "Sets *ns* to the namespace named by the symbol, creating it if needed."))]
-            (RT'load-1 "cloiure/core")
-        )
     )
 
     (defn #_"Keyword" RT'keyword [#_"String" ns, #_"String" name]
@@ -15841,74 +15847,6 @@
         ([#_"String" ns, #_"String" name, #_"Object" init]
             (Var'intern (Namespace'findOrCreate (Symbol'intern nil, ns)), (Symbol'intern nil, name), init)
         )
-    )
-
-    (defn #_"void" RT'loadResourceScript [#_"String" name, #_"boolean" failIfNotFound]
-        (let [#_"InputStream" ins (RT'resourceAsStream (RT'baseLoader), name)]
-            (cond (some? ins)
-                (try
-                    (Compiler'load (InputStreamReader. ins, RT'UTF8))
-                    (finally
-                        (.close ins)
-                    )
-                )
-                failIfNotFound
-                    (throw (FileNotFoundException. (str "Could not locate Cloiure resource on classpath: " name)))
-            )
-        )
-        nil
-    )
-
-    (defn #_"long" RT'lastModified [#_"URL" url, #_"String" libfile]
-        (let [#_"URLConnection" connection (.openConnection url)]
-            (try
-                (if (= (.getProtocol url) "jar")
-                    (.getTime (.getEntry (.getJarFile (cast JarURLConnection connection)), libfile))
-                    (.getLastModified connection)
-                )
-                (finally
-                    (let [#_"InputStream" ins (.getInputStream connection)]
-                        (when (some? ins)
-                            (.close ins)
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"void" RT'load-1 [#_"String" scriptbase]
-        (RT'load-2 scriptbase, true)
-        nil
-    )
-
-    (defn #_"void" RT'load-2 [#_"String" scriptbase, #_"boolean" failIfNotFound]
-        (let [#_"String" classfile (str scriptbase RT'LOADER_SUFFIX ".class") #_"String" cljfile (str scriptbase ".cli")
-              #_"URL" classURL (RT'getResource (RT'baseLoader), classfile) #_"URL" cljURL (RT'getResource (RT'baseLoader), cljfile)
-              #_"boolean" loaded false
-              loaded
-                (when (or (and (some? classURL) (or (nil? cljURL) (< (RT'lastModified cljURL, cljfile) (RT'lastModified classURL, classfile)))) (nil? classURL)) => loaded
-                    (try
-                        (Var'pushThreadBindings (RT'mapUniqueKeys
-                            (object-array [
-                                RT'CURRENT_NS         (.deref RT'CURRENT_NS)
-                                RT'WARN_ON_REFLECTION (.deref RT'WARN_ON_REFLECTION)
-                            ])
-                        ))
-                        (some? (RT'loadClassForName (str (.replace scriptbase, \/, \.) RT'LOADER_SUFFIX)))
-                        (finally
-                            (Var'popThreadBindings)
-                        )
-                    )
-                )]
-            (cond
-                (and (not loaded) (some? cljURL))
-                    (RT'loadResourceScript cljfile, true)
-                (and (not loaded) failIfNotFound)
-                    (throw (FileNotFoundException. (str "Could not locate " classfile " or " cljfile " on classpath." (when (.contains scriptbase, "_") " Please check that namespaces with dashes use underscores in the Cloiure file name."))))
-            )
-        )
-        nil
     )
 
     (defn #_"int" RT'nextID []
@@ -17078,28 +17016,14 @@
         )
     )
 
-    (defn #_"InputStream" RT'resourceAsStream [#_"ClassLoader" loader, #_"String" name]
-        (if (nil? loader)
-            (ClassLoader/getSystemResourceAsStream name)
-            (.getResourceAsStream loader, name)
-        )
-    )
-
-    (defn #_"URL" RT'getResource [#_"ClassLoader" loader, #_"String" name]
-        (if (nil? loader)
-            (ClassLoader/getSystemResource name)
-            (.getResource loader, name)
-        )
-    )
-
     (defn #_"Class" RT'classForName
         ([#_"String" name] (RT'classForName name, true, (RT'baseLoader)))
-        ([#_"String" name, #_"boolean" load, #_"ClassLoader" loader]
+        ([#_"String" name, #_"boolean" load?, #_"ClassLoader" loader]
             (let [#_"Class" c
                     (when-not (instance? DynamicClassLoader loader)
                         (DynamicClassLoader'findInMemoryClass name)
                     )]
-                (or c (Class/forName name, load, loader))
+                (or c (Class/forName name, load?, loader))
             )
         )
     )
@@ -17157,20 +17081,5 @@
     (defn #_"float[]"   RT'aclone_float   [#_"float[]"   a] (.clone a))
     (defn #_"double[]"  RT'aclone_double  [#_"double[]"  a] (.clone a))
     (defn #_"Object[]"  RT'aclone_object  [#_"Object[]"  a] (.clone a))
-)
-)
-
-(java-ns cloiure.main
-
-(class-ns main
-    (def- #_"Symbol" main'CLOIURE_MAIN (Symbol'intern "cloiure.main"))
-    (def- #_"Var" main'REQUIRE (§ soon RT'var "cloiure.core", "require"))
-    (def- #_"Var" main'MAIN (§ soon RT'var "cloiure.main", "main"))
-
-    (defn #_"void" -main [#_"String[]" args]
-        (.invoke main'REQUIRE, main'CLOIURE_MAIN)
-        (.applyTo main'MAIN, (RT'seq args))
-        nil
-    )
 )
 )

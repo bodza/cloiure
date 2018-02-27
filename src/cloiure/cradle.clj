@@ -58,7 +58,7 @@
     [java.io Reader]
   #_[java.lang Character Class Exception IllegalArgumentException IllegalStateException Integer Number Object RuntimeException String StringBuilder Throwable UnsupportedOperationException]
     [java.lang.reflect Constructor Field #_Method Modifier]
-    [java.util Arrays Comparator HashMap HashSet IdentityHashMap Iterator Map Map$Entry Set TreeMap]
+    [java.util Arrays HashMap HashSet IdentityHashMap Iterator Map Map$Entry Set TreeMap]
     [java.util.regex Matcher Pattern]
     [clojure.lang AFn AFunction APersistentMap APersistentSet APersistentVector ArraySeq DynamicClassLoader PersistentList$EmptyList IFn ILookup ILookupSite ILookupThunk IMapEntry IMeta IObj IPersistentCollection IPersistentList IPersistentMap IPersistentSet IPersistentVector ISeq IType Keyword KeywordLookupSite LazySeq LineNumberingPushbackReader LispReader Namespace Numbers PersistentArrayMap PersistentHashSet PersistentList PersistentVector RestFn RT Symbol Tuple Util Var]
     [cloiure.asm ClassVisitor ClassWriter Label MethodVisitor Opcodes Type]
@@ -1587,8 +1587,6 @@
     (defn #_"ConstantExpr" ConstantExpr'new [#_"Object" v]
         (merge (ConstantExpr.)
             (hash-map
-                ;; stuff quoted vals in classloader at compile time, pull out at runtime
-                ;; this won't work for static compilation...
                 #_"Object" :v v
                 #_"int" :id (Compiler'registerConstant v)
             )
@@ -4179,7 +4177,6 @@
             #_"IPersistentVector" :keywordCallsites nil
             #_"IPersistentVector" :protocolCallsites nil
             #_"boolean" :onceOnly false
-            #_"Object" :src nil
             #_"IPersistentMap" :opts {}
 
             #_"Class" :compiledClass nil
@@ -4839,28 +4836,12 @@
                                 (IopObject''emitKeywordCallsites this, clinitgen)
                             )
 
-                            (when (and (IopObject''isDeftype this) (get (:opts this) :load-ns))
-                                (let [#_"String" nsname (namespace (second (:src this)))]
-                                    (when-not (= nsname "clojure.core")
-                                        (.push clinitgen, "clojure.core")
-                                        (.push clinitgen, "require")
-                                        (.invokeStatic clinitgen, (Type/getType RT), (Method/getMethod "clojure.lang.Var var(String, String)"))
-                                        (.invokeVirtual clinitgen, (Type/getType Var), (Method/getMethod "Object getRawRoot()"))
-                                        (.checkCast clinitgen, (Type/getType IFn))
-                                        (.push clinitgen, nsname)
-                                        (.invokeStatic clinitgen, (Type/getType Symbol), (Method/getMethod "clojure.lang.Symbol intern(String)"))
-                                        (.invokeInterface clinitgen, (Type/getType IFn), (Method/getMethod "Object invoke(Object)"))
-                                        (.pop clinitgen)
-                                    )
-                                )
-                            )
-
                             (.returnValue clinitgen)
                             (.endMethod clinitgen)
                             ;; end of class
                             (.visitEnd cv)
 
-                            (assoc this :compiledClass (.defineClass *loader*, (:name this), (.toByteArray cw), (:src this)))
+                            (assoc this :compiledClass (.defineClass *loader*, (:name this), (.toByteArray cw)))
                         )
                     )
                 )
@@ -4945,7 +4926,7 @@
               #_"IopMethod" owner *method*
               #_"FnExpr" fn
                 (-> (FnExpr'new (Compiler'tagOf form))
-                    (assoc :src form :hasEnclosingMethod (some? owner) :line *line*)
+                    (assoc :hasEnclosingMethod (some? owner) :line *line*)
                 )
               fn (when (some? (meta (first form))) => fn
                     (assoc fn :onceOnly (boolean (get (meta (first form)) :once)))
@@ -5133,40 +5114,35 @@
 (class-ns DefParser
     (defn #_"IParser" DefParser'new []
         (reify IParser
-            ;; (def x) or (def x initexpr) or (def x "docstring" initexpr)
+            ;; (def x) or (def x initexpr)
             #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
-                (let [[#_"String" docstring form]
-                        (when (and (= (count form) 4) (string? (third form))) => [nil form]
-                            [(third form) (list (first form) (second form) (fourth form))]
-                        )]
-                    (cond
-                        (< 3 (count form))            (throw (IllegalArgumentException. "Too many arguments to def"))
-                        (< (count form) 2)            (throw (IllegalArgumentException. "Too few arguments to def"))
-                        (not (symbol? (second form))) (throw (IllegalArgumentException. "First argument to def must be a Symbol"))
-                    )
-                    (let [#_"Symbol" sym (second form) #_"Var" v (Compiler'lookupVar sym, true)]
-                        (when (some? v) => (throw (RuntimeException. "Can't refer to qualified var that doesn't exist"))
-                            (let [[v #_"boolean" shadowsCoreMapping]
-                                    (when-not (= (ßns v) *ns*) => [v false]
-                                        (when (nil? (ßns sym)) => (throw (RuntimeException. "Can't create defs outside of current ns"))
-                                            (let [v (.intern *ns*, sym)]
-                                                (Compiler'registerVar v)
-                                                [v true]
-                                            )
+                (cond
+                    (< 3 (count form))            (throw (IllegalArgumentException. "Too many arguments to def"))
+                    (< (count form) 2)            (throw (IllegalArgumentException. "Too few arguments to def"))
+                    (not (symbol? (second form))) (throw (IllegalArgumentException. "First argument to def must be a Symbol"))
+                )
+                (let [#_"Symbol" sym (second form) #_"Var" v (Compiler'lookupVar sym, true)]
+                    (when (some? v) => (throw (RuntimeException. "Can't refer to qualified var that doesn't exist"))
+                        (let [[v #_"boolean" shadowsCoreMapping]
+                                (when-not (= (ßns v) *ns*) => [v false]
+                                    (when (nil? (ßns sym)) => (throw (RuntimeException. "Can't create defs outside of current ns"))
+                                        (let [v (.intern *ns*, sym)]
+                                            (Compiler'registerVar v)
+                                            [v true]
                                         )
                                     )
-                                  #_"IPersistentMap" m (meta sym) #_"boolean" dynamic? (boolean (get m :dynamic))]
-                                (when dynamic?
-                                    (.setDynamic v)
                                 )
-                                (when (and (not dynamic?) (.startsWith (ßname sym), "*") (.endsWith (ßname sym), "*") (< 2 (.length (ßname sym))))
-                                    (.println *err*, (str "Warning: " sym " not declared dynamic and thus is not dynamically rebindable, but its name suggests otherwise. Please either indicate ^:dynamic or change the name."))
-                                )
-                                (let [#_"Context" c (if (= context :Context'EVAL) context :Context'EXPRESSION)
-                                      m (assoc m :line *line*) m (if (some? docstring) (assoc m :doc docstring) m)]
-                                    (DefExpr'new *line*, v, (Compiler'analyze c, (third form), (ßname (ßsym v))), (Compiler'analyze c, m), (= (count form) 3), dynamic?, shadowsCoreMapping)
-                                )
+                              #_"IPersistentMap" m (meta sym) #_"boolean" dynamic? (boolean (get m :dynamic))]
+                            (when dynamic?
+                                (.setDynamic v)
+                            )
+                            (when (and (not dynamic?) (.startsWith (ßname sym), "*") (.endsWith (ßname sym), "*") (< 2 (.length (ßname sym))))
+                                (.println *err*, (str "Warning: " sym " not declared dynamic and thus is not dynamically rebindable, but its name suggests otherwise. Please either indicate ^:dynamic or change the name."))
+                            )
+                            (let [#_"Context" c (if (= context :Context'EVAL) context :Context'EXPRESSION)
+                                  m (assoc m :line *line*)]
+                                (DefExpr'new *line*, v, (Compiler'analyze c, (third form), (ßname (ßsym v))), (Compiler'analyze c, m), (= (count form) 3), dynamic?, shadowsCoreMapping)
                             )
                         )
                     )
@@ -5927,7 +5903,7 @@
             ;; end of class
             (.visitEnd cv)
 
-            (.defineClass *loader*, (str Compiler'COMPILE_STUB_PREFIX "." (:name ret)), (.toByteArray cw), form)
+            (.defineClass *loader*, (str Compiler'COMPILE_STUB_PREFIX "." (:name ret)), (.toByteArray cw))
         )
     )
 
@@ -6126,7 +6102,7 @@
         (let [#_"String" name (.toString className) #_"String" name' (.replace name, \., \/)
               #_"NewInstanceExpr" nie
                 (-> (NewInstanceExpr'new nil)
-                    (assoc :src form :name name :internalName name' :objType (Type/getObjectType name') :opts opts)
+                    (assoc :name name :internalName name' :objType (Type/getObjectType name') :opts opts)
                 )
               nie (if (some? thisSym) (assoc nie :thisName (ßname thisSym)) nie)
               nie

@@ -215,19 +215,17 @@
 (§ def butlast (fn butlast [s] (loop [ret [] s s] (if (next s) (recur (conj ret (first s)) (next s)) (seq ret)))))
 
 ;;;
- ; Same as (def name (fn [params* ] exprs*)) or (def name (fn ([params* ] exprs*)+)) with any doc-string or attrs added to the var metadata.
+ ; Same as (def name (fn [params*] exprs*)) or (def name (fn ([params*] exprs*)+)) with any attrs added to the var metadata.
  ;;
 (§ def defn
     (fn defn [&form &env name & fdecl]
         ;; note: cannot delegate this check to def because of the call to (with-meta name ..)
         (if (instance? cloiure.lang.Symbol name) nil (throw (IllegalArgumentException. "first argument to defn must be a symbol")))
-        (let [m     (if (string? (first fdecl)) {:doc (first fdecl)}   {})
-              fdecl (if (string? (first fdecl)) (next fdecl)           fdecl)
-              m     (if (map?    (first fdecl)) (conj m (first fdecl)) m)
-              fdecl (if (map?    (first fdecl)) (next fdecl)           fdecl)
-              fdecl (if (vector? (first fdecl)) (list fdecl)           fdecl)
-              m     (if (map?    (last fdecl))  (conj m (last fdecl))  m)
-              fdecl (if (map?    (last fdecl))  (butlast fdecl)        fdecl)
+        (let [m     (if (map?    (first fdecl)) (first fdecl)         {})
+              fdecl (if (map?    (first fdecl)) (next fdecl)          fdecl)
+              fdecl (if (vector? (first fdecl)) (list fdecl)          fdecl)
+              m     (if (map?    (last fdecl))  (conj m (last fdecl)) m)
+              fdecl (if (map?    (last fdecl))  (butlast fdecl)       fdecl)
               m     (conj {:arglists (list 'quote (sigs fdecl))} m)
               m     (let [inline (:inline m) ifn (first inline) iname (second inline)]
                         ;; same as: (if (and (= 'fn ifn) (not (symbol? iname))) ...)
@@ -1710,7 +1708,7 @@
 
 ;;;
  ; Creates a new multimethod with the associated dispatch function.
- ; The docstring and attr-map are optional.
+ ; The attr-map is optional.
  ;
  ; Options are key-value pairs and may be one of:
  ;
@@ -1733,13 +1731,10 @@
  ; or the var special form).
  ;;
 (§ defmacro defmulti [mm-name & options]
-    (let [docstring   (if (string? (first options)) (first options) nil)
-          options     (if (string? (first options)) (next options) options)
-          m           (if (map? (first options)) (first options) {})
+    (let [m           (if (map? (first options)) (first options) {})
           options     (if (map? (first options)) (next options) options)
           dispatch-fn (first options)
           options     (next options)
-          m           (if docstring (assoc m :doc docstring) m)
           m           (if (meta mm-name) (conj (meta mm-name) m) m)
           mm-name     (with-meta mm-name m)]
         (when (= (count options) 1)
@@ -3684,18 +3679,14 @@
 )
 
 ;;;
- ; Sequentially read and evaluate the set of forms contained in the stream/file.
+ ; Sequentially read and evaluate the set of forms contained in the stream.
  ;;
-(§ defn load-reader [rdr] (cloiure.lang.Compiler/load rdr))
+(§ defn load-reader [r] (cloiure.lang.Compiler/load r))
 
 ;;;
  ; Sequentially read and evaluate the set of forms contained in the string.
  ;;
-(§ defn load-string [s]
-    (let [rdr (-> s (java.io.StringReader.) (cloiure.lang.LineNumberingPushbackReader.))]
-        (load-reader rdr)
-    )
-)
+(§ defn load-string [s] (load-reader (-> s (java.io.StringReader.) (cloiure.lang.LineNumberingPushbackReader.))))
 
 ;;;
  ; Returns true if x implements IPersistentSet.
@@ -3829,7 +3820,6 @@
  ; if name is already mapped to something else in the current namespace. Filters can
  ; be used to select a subset, via inclusion or exclusion, or to provide a mapping
  ; to a symbol different from the var's name, in order to prevent clashes.
- ; Use :use in the ns macro in preference to calling this directly.
  ;;
 (§ defn refer [ns-sym & filters]
     (let [ns (or (find-ns ns-sym) (throw (Exception. (str "No namespace: " ns-sym))))
@@ -5274,25 +5264,20 @@
  ; Sets *ns* to the namespace named by name (unevaluated), creating it if needed.
  ;
  ; references can be zero or more of:
- ; (:refer-cloiure ...) (:require ...) (:use ...) (:import ...) (:load ...)
- ; with the syntax of refer-cloiure/require/use/import/load respectively,
+ ; (:refer-cloiure ...) (:import ...)
+ ; with the syntax of refer-cloiure/import respectively,
  ; except the arguments are unevaluated and need not be quoted.
  ;
  ; If :refer-cloiure is not used, a default (refer 'cloiure.core) is used.
- ; Use of ns is preferred to individual calls to in-ns/require/use/import:
+ ; Use of ns is preferred to individual calls to in-ns/import:
  ;
  ; (ns foo.bar
  ;   (:refer-cloiure :exclude [ancestors printf])
- ;   (:require (cloiure.contrib sql combinatorics))
- ;   (:use (my.lib this that))
  ;   (:import (java.util Date Timer Random)
  ;            (java.sql Connection Statement)))
  ;;
 (§ defmacro ns [name & references]
     (let [process-reference (fn [[kname & args]] `(~(symbol "cloiure.core" (cloiure.core/name kname)) ~@(map #(list 'quote %) args)))
-          docstring         (when (string? (first references)) (first references))
-          references        (if docstring (next references) references)
-          name              (if docstring (vary-meta name assoc :doc docstring) name)
           metadata          (when (map? (first references)) (first references))
           references        (if metadata (next references) references)
           name              (if metadata (vary-meta name merge metadata) name)
@@ -5329,253 +5314,6 @@
     `(let [v# (def ~name)]
         (when-not (.hasRoot v#)
             (def ~name ~expr)
-        )
-    )
-)
-
-;;;
- ; A stack of paths currently being loaded by this thread.
- ;;
-(§ defonce ^:dynamic ^:private *pending-paths* ())
-
-;;;
- ; True while a verbose load is pending.
- ;;
-(§ defonce ^:dynamic ^:private *loading-verbosely* false)
-
-;;;
- ; Throws a CompilerException with a message if pred is true.
- ;;
-(§ defn- throw-if [pred fmt & args]
-    (when pred
-        (let [^String message (apply format fmt args)
-              exception (Exception. message)
-              raw-trace (.getStackTrace exception)
-              boring? #(not= (.getMethodName ^StackTraceElement %) "doInvoke")
-              trace (into-array StackTraceElement (drop 2 (drop-while boring? raw-trace)))]
-            (.setStackTrace exception trace)
-            (throw (cloiure.lang.Compiler$CompilerException.
-                (.deref cloiure.lang.Compiler/LINE)
-                (.deref cloiure.lang.Compiler/COLUMN)
-                exception
-            ))
-        )
-    )
-)
-
-;;;
- ; Returns true if x is a libspec.
- ;;
-(§ defn- libspec? [x]
-    (or (symbol? x) (and (vector? x) (or (nil? (second x)) (keyword? (second x)))))
-)
-
-;;;
- ; Prepends a symbol or a seq to coll.
- ;;
-(§ defn- prependss [x coll]
-    (if (symbol? x) (cons x coll) (concat x coll))
-)
-
-;;;
- ; Returns the root directory path for a lib.
- ;;
-(§ defn- ^String root-resource [lib]
-    (str \/ (.. (name lib) (replace \- \_) (replace \. \/)))
-)
-
-;;;
- ; Returns the root resource path for a lib.
- ;;
-(§ defn- root-directory [lib]
-    (let [d (root-resource lib)]
-        (subs d 0 (.lastIndexOf d "/"))
-    )
-)
-
-(§ def ^:declared load)
-
-;;;
- ; Loads a lib given its name. If need-ns, ensures that the associated
- ; namespace exists after loading. If require, records the load so any
- ; duplicate loads can be skipped.
- ;;
-(§ defn- load-one [lib need-ns require]
-    (load (root-resource lib))
-    (throw-if (and need-ns (not (find-ns lib))) "namespace '%s' not found after loading '%s'" lib (root-resource lib))
-)
-
-;;;
- ; Loads a lib with options.
- ;;
-(§ defn- load-lib [prefix lib & options]
-    (throw-if (and prefix (pos? (.indexOf (name lib) (int \.))))
-        "Found lib name '%s' containing period with prefix '%s'.  lib names inside prefix lists must not contain periods"
-        (name lib) prefix
-    )
-    (let [lib (if prefix (symbol (str prefix \. lib)) lib)
-          opts (apply hash-map options)
-          {:keys [as reload require use verbose]} opts
-          need-ns (or as use)
-          filter-opts (select-keys opts '(:exclude :only :rename :refer))
-          undefined-on-entry (not (find-ns lib))]
-        (binding [*loading-verbosely* (or *loading-verbosely* verbose)]
-            (try
-                (load-one lib need-ns require)
-                (catch Exception e
-                    (when undefined-on-entry
-                        (remove-ns lib)
-                    )
-                    (throw e)
-                )
-            )
-            (when (and need-ns *loading-verbosely*)
-                (printf "(cloiure.core/in-ns '%s)\n" (ns-name *ns*))
-            )
-            (when as
-                (when *loading-verbosely*
-                    (printf "(cloiure.core/alias '%s '%s)\n" as lib)
-                )
-                (alias as lib)
-            )
-            (when (or use (:refer filter-opts))
-                (when *loading-verbosely*
-                    (printf "(cloiure.core/refer '%s" lib)
-                    (doseq [opt filter-opts]
-                        (printf " %s '%s" (key opt) (print-str (val opt)))
-                    )
-                    (printf ")\n")
-                )
-                (apply refer lib (mapcat seq filter-opts))
-            )
-        )
-    )
-)
-
-;;;
- ; Loads libs, interpreting libspecs, prefix lists, and flags for forwarding to load-lib.
- ;;
-(§ defn- load-libs [& args]
-    (let [flags (filter keyword? args)
-          opts (interleave flags (repeat true))
-          args (filter (complement keyword?) args)]
-        ;; check for unsupported options
-        (let [supported #{:as :reload :require :use :verbose :refer} unsupported (seq (remove supported flags))]
-            (throw-if unsupported (apply str "Unsupported option(s) supplied: " (interpose \, unsupported)))
-        )
-        ;; check a load target was specified
-        (throw-if (not (seq args)) "Nothing specified to load")
-        (doseq [arg args]
-            (if (libspec? arg)
-                (apply load-lib nil (prependss arg opts))
-                (let [[prefix & args] arg]
-                    (throw-if (nil? prefix) "prefix cannot be nil")
-                    (doseq [arg args]
-                        (apply load-lib prefix (prependss arg opts))
-                    )
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; Detects and rejects non-trivial cyclic load dependencies. The exception
- ; message shows the dependency chain with the cycle highlighted. Ignores
- ; the trivial case of a file attempting to load itself.
- ;;
-(§ defn- check-cyclic-dependency [path]
-    (when (some #{path} (rest *pending-paths*))
-        (let [pending (map #(if (= % path) (str "[ " % " ]") %) (cons path *pending-paths*))
-              chain (apply str (interpose "->" pending))]
-            (throw-if true "Cyclic load dependency: %s" chain)
-        )
-    )
-)
-
-;;;
- ; Loads libs, skipping any that are already loaded. Each argument is either
- ; a libspec that identifies a lib, a prefix list that identifies multiple libs
- ; whose names share a common prefix, or a flag that modifies how all the identified
- ; libs are loaded. Use :require in the ns macro in preference to calling this directly.
- ;
- ; Libs
- ;
- ; A 'lib' is a named set of resources in classpath whose contents define a library of
- ; Cloiure code. Lib names are symbols and each lib is associated with a Cloiure namespace
- ; and a Java package that share its name. A lib's name also locates its root directory
- ; within classpath using Java's package name to classpath-relative path mapping. All
- ; resources in a lib should be contained in the directory structure under its root
- ; directory. All definitions a lib makes should be in its associated namespace.
- ;
- ; 'require loads a lib by loading its root resource. The root resource path is derived
- ; from the lib name in the following manner:
- ;
- ; Consider a lib named by the symbol 'x.y.z; it has the root directory <classpath>/x/y/,
- ; and its root resource is <classpath>/x/y/z.cli. The root resource should contain code
- ; to create the lib's namespace (usually by using the ns macro) and load any additional
- ; lib resources.
- ;
- ; Libspecs
- ;
- ; A libspec is a lib name or a vector containing a lib name followed by options expressed
- ; as sequential keywords and arguments.
- ;
- ; Recognized options:
- ;
- ; :as takes a symbol as its argument and makes that symbol an alias to the lib's namespace in the current namespace.
- ; :refer takes a list of symbols to refer from the namespace or the :all keyword to bring in all public vars.
- ;
- ; Prefix Lists
- ;
- ; It's common for Cloiure code to depend on several libs whose names have the same prefix.
- ; When specifying libs, prefix lists can be used to reduce repetition. A prefix list contains
- ; the shared prefix followed by libspecs with the shared prefix removed from the lib names.
- ; After removing the prefix, the names that remain must not contain any periods.
- ;
- ; Flags
- ;
- ; A flag is a keyword. Recognized flags:
- ;
- ; :reload forces loading of all the identified libs even if they are already loaded.
- ; :verbose triggers printing information about each load, alias, and refer.
- ;
- ; Example:
- ;
- ; The following would load the libraries cloiure.zip and cloiure.set abbreviated as 's'.
- ;
- ; (require '(cloiure zip [set :as s]))
- ;;
-(§ defn require [& args] (apply load-libs :require args))
-
-;;;
- ; Like 'require, but also refers to each lib's namespace using cloiure.core/refer.
- ; Use :use in the ns macro in preference to calling this directly.
- ;
- ; 'use accepts additional options in libspecs: :exclude, :only, :rename.
- ; The arguments and semantics for :exclude, :only, and :rename are the same
- ; as those documented for cloiure.core/refer.
- ;;
-(§ defn use [& args] (apply load-libs :require :use args))
-
-;;;
- ; Loads Cloiure code from resources in classpath. A path is interpreted as
- ; classpath-relative if it begins with a slash or relative to the root
- ; directory for the current namespace otherwise.
- ;;
-(§ defn load [& paths]
-    (doseq [^String path paths]
-        (let [^String path (if (.startsWith path "/") path (str (root-directory (ns-name *ns*)) \/ path))]
-            (when *loading-verbosely*
-                (printf "(cloiure.core/load \"%s\")\n" path)
-                (flush)
-            )
-            (check-cyclic-dependency path)
-            (when-not (= path (first *pending-paths*))
-                (binding [*pending-paths* (conj *pending-paths* path)]
-                    (cloiure.lang.RT/load (.substring path 1))
-                )
-            )
         )
     )
 )
@@ -5844,46 +5582,6 @@
             ~(emit gpred gexpr clauses)
         )
     )
-)
-
-(§ defmacro ^:private add-doc-and-meta [name docstring meta]
-    `(alter-meta! (var ~name) merge (assoc ~meta :doc ~docstring))
-)
-
-(§ add-doc-and-meta *warn-on-reflection*
-    "When set to true, the compiler will emit warnings when reflection
-    is needed to resolve Java method calls or field accesses.
-    Defaults to false."
-)
-
-(§ add-doc-and-meta *ns*
-    "A cloiure.lang.Namespace object representing the current namespace."
-)
-
-(§ add-doc-and-meta *in*
-    "A java.io.Reader object representing standard input for read operations.
-    Defaults to System/in, wrapped in a LineNumberingPushbackReader."
-)
-
-(§ add-doc-and-meta *out*
-    "A java.io.Writer object representing standard output for print operations.
-    Defaults to System/out, wrapped in an OutputStreamWriter."
-)
-
-(§ add-doc-and-meta *err*
-    "A java.io.Writer object representing standard error for print operations.
-    Defaults to System/err, wrapped in a PrintWriter."
-)
-
-(§ add-doc-and-meta *flush-on-newline*
-    "When set to true, output will be flushed whenever a newline is printed.
-    Defaults to true."
-)
-
-(§ add-doc-and-meta *print-readably*
-    "When set to logical false, strings and characters will be printed with
-    non-alphanumeric characters converted to the appropriate escape sequences.
-    Defaults to true."
 )
 
 ;;;
@@ -6447,7 +6145,7 @@
     (let [[super interfaces] (get-super-and-interfaces bases) pname (proxy-name super interfaces)]
         (or (RT/loadClassForName pname)
             (let [[cname bytecode] (generate-proxy super interfaces)]
-                (.defineClass ^DynamicClassLoader (deref cloiure.lang.Compiler/LOADER) pname bytecode [super interfaces])
+                (.defineClass ^DynamicClassLoader (deref cloiure.lang.Compiler/LOADER) pname bytecode)
             )
         )
     )
@@ -7135,7 +6833,7 @@
  ;;
 (§ defmacro gen-interface [& options]
     (let [options-map (apply hash-map options) [cname bytecode] (generate-interface options-map)]
-        (.defineClass ^DynamicClassLoader (deref cloiure.lang.Compiler/LOADER) (str (:name options-map)) bytecode options)
+        (.defineClass ^DynamicClassLoader (deref cloiure.lang.Compiler/LOADER) (str (:name options-map)) bytecode)
     )
 )
 
@@ -7195,7 +6893,7 @@
             )
           methods
             (map (fn [[name params & body]] (cons name (maybe-destructured params body))) (apply concat (vals impls)))]
-        (when-let [bad-opts (seq (remove #{:no-print :load-ns} (keys opts)))]
+        (when-let [bad-opts (seq (keys opts))]
             (throw (IllegalArgumentException. (apply print-str "Unsupported option(s) -" bad-opts)))
         )
         [interfaces methods opts]
@@ -7302,10 +7000,8 @@
           [field-args over] (split-at 20 fields)
           field-count       (count fields)
           arg-count         (count field-args)
-          over-count        (count over)
-          docstring         (str "Positional factory function for class " classname ".")]
+          over-count        (count over)]
         `(defn ~fn-name
-            ~docstring
             [~@field-args ~@(if (seq over) '[& overage] [])]
             ~(if (seq over)
                 `(if (= (count ~'overage) ~over-count)
@@ -7362,11 +7058,6 @@
  ; (deftype name [fields*] options* specs*)
  ;
  ; Options are expressed as sequential keywords and arguments (in any order).
- ;
- ; Supported options:
-
- ; :load-ns - if true, importing the type class will cause the namespace
- ;            in which the type was defined to be loaded. Defaults to false.
  ;
  ; Each spec consists of a protocol or interface name followed by zero
  ; or more method bodies:
@@ -7602,41 +7293,52 @@
 
 (§ defn- emit-protocol [name opts+sigs]
     (let [iname (symbol (str (munge (namespace-munge *ns*)) "." (munge name)))
-                [opts sigs]
-                (loop [opts {:on (list 'quote iname) :on-interface iname} sigs opts+sigs]
+          [opts sigs]
+            (loop [opts {:on (list 'quote iname) :on-interface iname} sigs opts+sigs]
                 (condp #(%1 %2) (first sigs)
-                    string? (recur (assoc opts :doc (first sigs)) (next sigs))
                     keyword? (recur (assoc opts (first sigs) (second sigs)) (nnext sigs))
-                    [opts sigs]))
-                sigs (when sigs
-                    (reduce1 (fn [m s]
-                                (let [name-meta (meta (first s))
-                                        mname (with-meta (first s) nil)
-                                        [arglists doc]
-                                        (loop [as [] rs (rest s)]
-                                        (if (vector? (first rs))
-                                            (recur (conj as (first rs)) (next rs))
-                                            [(seq as) (first rs)]))]
-                                    (when (some #{0} (map count arglists))
-                                    (throw (IllegalArgumentException. (str "Definition of function " mname " in protocol " name " must take at least one arg."))))
-                                    (when (m (keyword mname))
-                                    (throw (IllegalArgumentException. (str "Function " mname " in protocol " name " was redefined. Specify all arities in single definition."))))
-                                    (assoc m (keyword mname)
-                                        (merge name-meta
-                                                {:name (vary-meta mname assoc :doc doc :arglists arglists)
-                                                :arglists arglists
-                                                :doc doc}))))
-                                {} sigs))
-                meths (mapcat (fn [sig]
-                                (let [m (munge (:name sig))]
-                                (map #(vector m (vec (repeat (dec (count %))'Object)) 'Object)
-                                    (:arglists sig))))
-                            (vals sigs))
-    ]
+                    [opts sigs]
+                )
+            )
+          sigs
+            (when sigs
+                (reduce1
+                    (fn [m s]
+                        (let [name-meta (meta (first s))
+                              mname (with-meta (first s) nil)
+                              arglists
+                                (loop [as [] rs (rest s)]
+                                    (if (vector? (first rs))
+                                        (recur (conj as (first rs)) (next rs))
+                                        (seq as)
+                                    )
+                                )]
+                            (when (some #{0} (map count arglists))
+                                (throw (IllegalArgumentException. (str "Definition of function " mname " in protocol " name " must take at least one arg.")))
+                            )
+                            (when (m (keyword mname))
+                                (throw (IllegalArgumentException. (str "Function " mname " in protocol " name " was redefined. Specify all arities in single definition.")))
+                            )
+                            (assoc m (keyword mname)
+                                (merge name-meta {:name (vary-meta mname assoc :arglists arglists) :arglists arglists})
+                            )
+                        )
+                    )
+                    {} sigs
+                )
+            )
+          meths
+            (mapcat
+                (fn [sig]
+                    (let [m (munge (:name sig))]
+                        (map #(vector m (vec (repeat (dec (count %))'Object)) 'Object) (:arglists sig))
+                    )
+                )
+                (vals sigs)
+            )]
         `(do
             (defonce ~name {})
             (gen-interface :name ~iname :methods ~meths)
-            (alter-meta! (var ~name) assoc :doc ~(:doc opts))
             ~(when sigs
                 `(#'assert-same-protocol (var ~name) '~(map :name (vals sigs)))
             )
@@ -7676,15 +7378,11 @@
  ;
  ; (defprotocol AProtocolName
  ;
- ;  ;; optional doc string
- ;  "A doc string for AProtocol abstraction"
- ;
  ;  ;; method signatures
- ;  (bar [this a b] "bar docs")
- ;  (baz [this a] [this a b] [this a b c] "baz docs"))
+ ;  (bar [this a b])
+ ;  (baz [this a] [this a b] [this a b c]))
  ;
- ; No implementations are provided. Docs can be specified for the protocol
- ; overall and for each method. The above yields a set of polymorphic
+ ; No implementations are provided. The above yields a set of polymorphic
  ; functions and a protocol object. All are namespace-qualified by the ns
  ; enclosing the definition The resulting functions dispatch on the type of
  ; their first argument, which is required and corresponds to the implicit
@@ -8150,8 +7848,6 @@
 )
 
 (§ deftype VecSeq [^cloiure.core.ArrayManager am ^cloiure.core.IVecImpl vec anode ^int i ^int offset]
-    :no-print true
-
     cloiure.core.protocols.InternalReduce
     (internal-reduce [_ f val]
         (loop [result val aidx (+ i offset)]
@@ -9925,13 +9621,7 @@
 ;;;
  ; Cloiure String utilities
  ;
- ; It is poor form to (:use cloiure.string). Instead, use require with :as
- ; to specify a prefix, e.g.
- ;
- ; (ns your.namespace.here
- ;  (:require [cloiure.string :as str]))
- ;
- ; Design notes for cloiure.string:
+ ; Design notes:
  ;
  ; 1. Strings are objects (as opposed to sequences). As such, the string being
  ; manipulated is the first argument to a function; passing nil will result in
@@ -10548,9 +10238,9 @@
     )
 )
 
-(§ defn- do-curried [name doc meta args body]
+(§ defn- do-curried [name meta args body]
     (let [cargs (vec (butlast args))]
-        `(defn ~name ~doc ~meta
+        `(defn ~name ~meta
             (~cargs (fn [x#] (~name ~@cargs x#)))
             (~args ~@body)
         )
@@ -10560,8 +10250,8 @@
 ;;;
  ; Builds another arity of the fn that returns a fn awaiting the last param.
  ;;
-(§ defmacro ^:private defcurried [name doc meta args & body]
-    (do-curried name doc meta args body)
+(§ defmacro ^:private defcurried [name meta args & body]
+    (do-curried name meta args body)
 )
 
 (§ defn- do-rfn [f1 k fkv]
@@ -10913,90 +10603,6 @@
     (:import [java.io LineNumberReader InputStreamReader PushbackReader]
              [cloiure.lang RT Reflector]))
 
-(§ def ^:private special-doc-map
-    (hash-map
-        '.              {:forms ['(.instanceMember instance args*) '(.instanceMember Classname args*) '(Classname/staticMethod args*) 'Classname/staticField]
-                         :doc "The instance member form works for both fields and methods.
-                               They all expand into calls to the dot operator at macroexpansion time."}
-        'def            {:forms ['(def symbol doc-string? init?)]
-                         :doc "Creates and interns a global var with the name of symbol in the current namespace (*ns*) or locates such a var if
-                               it already exists. If init is supplied, it is evaluated, and the root binding of the var is set to the resulting value.
-                               If init is not supplied, the root binding of the var is unaffected."}
-        'do             {:forms ['(do exprs*)]
-                         :doc "Evaluates the expressions in order and returns the value of the last. If no expressions are supplied, returns nil."}
-        'if             {:forms ['(if test then else?)]
-                         :doc "Evaluates test. If not the singular values nil or false,
-                               evaluates and yields then, otherwise, evaluates and yields else.
-                               If else is not supplied it defaults to nil."}
-        'monitor-enter  {:forms ['(monitor-enter x)]
-                         :doc "Synchronization primitive that should be avoided in user code. Use the 'locking' macro."}
-        'monitor-exit   {:forms ['(monitor-exit x)]
-                         :doc "Synchronization primitive that should be avoided in user code. Use the 'locking' macro."}
-        'new            {:forms ['(Classname. args*) '(new Classname args*)]
-                         :doc "The args, if any, are evaluated from left to right, and passed to the constructor of the class named by Classname.
-                               The constructed object is returned."}
-        'quote          {:forms ['(quote form)]
-                         :doc "Yields the unevaluated form."}
-        'recur          {:forms ['(recur exprs*)]
-                         :doc "Evaluates the exprs in order, then, in parallel, rebinds the bindings of the recursion point to the values of the exprs.
-                               Execution then jumps back to the recursion point, a loop or fn method."}
-        'set!           {:forms ['(set! var-symbol expr) '(set! (. instance-expr instanceFieldName-symbol) expr) '(set! (. Classname-symbol staticFieldName-symbol) expr)]
-                         :doc "Used to set thread-local-bound vars, Java object instance fields, and Java class static fields."}
-        'throw          {:forms ['(throw expr)]
-                         :doc "The expr is evaluated and thrown, therefore it should yield an instance of some derivee of Throwable."}
-        'try            {:forms ['(try expr* catch-clause* finally-clause?)]
-                         :doc "catch-clause => (catch classname name expr*)
-                               finally-clause => (finally expr*)
-                               Catches and handles Java exceptions."}
-        'var            {:forms ['(var symbol)]
-                         :doc "The symbol must resolve to a var, and the Var object itself (not its value) is returned.
-                               The reader macro #'x expands to (var x)."}
-    )
-)
-
-(§ defn- special-doc [name-symbol]
-    (assoc (or (special-doc-map name-symbol) (meta (resolve name-symbol))) :name name-symbol :special-form true)
-)
-
-(§ defn- namespace-doc [nspace]
-    (assoc (meta nspace) :name (ns-name nspace))
-)
-
-(§ defn- print-doc [{n :ns nm :name :keys [forms arglists special-form doc macro] :as m}]
-    (println "-------------------------")
-    (println (str (when n (str (ns-name n) "/")) nm))
-    (when forms
-        (doseq [f forms]
-            (print "  ")
-            (prn f)
-        )
-    )
-    (when arglists
-        (prn arglists)
-    )
-    (cond
-        special-form (println "Special Form")
-        macro        (println "Macro")
-    )
-    (when doc
-        (println " " doc)
-    )
-)
-
-;;;
- ; Prints documentation for a var or special form given its name.
- ;;
-(§ defmacro doc [name]
-    (if-let [special-name ('{& fn catch try finally try} name)]
-        `(#'print-doc (#'special-doc '~special-name))
-        (cond
-            (special-doc-map name) `(#'print-doc (#'special-doc '~name))
-            (find-ns name)         `(#'print-doc (#'namespace-doc (find-ns '~name)))
-            (resolve name)         `(#'print-doc (meta (var ~name)))
-        )
-    )
-)
-
 ;;;
  ; Given a string representation of a fn class,
  ; as in a stack trace element, returns a readable version.
@@ -11088,7 +10694,7 @@
 
 #_(ns cloiure.main
     (:refer-cloiure :exclude [with-bindings])
-    (:import [cloiure.lang Compiler Compiler$CompilerException LineNumberingPushbackReader RT])
+    (:import [cloiure.lang Compiler Compiler$CompilerException LineNumberingPushbackReader])
 ;;  (:use [cloiure.repl :only [demunge root-cause stack-element-str]])
 )
 
@@ -11237,11 +10843,6 @@
 )
 
 ;;;
- ; A sequence of lib specs that are applied to `require` by default when a new command-line REPL is started.
- ;;
-(def repl-requires [['cloiure.repl :refer ['doc 'pst]]])
-
-;;;
  ; Generic, reusable, read-eval-print loop. By default, reads from *in*, writes
  ; to *out*, and prints exception summaries to *err*. If you use the default
  ; :read hook, *in* must either be an instance of LineNumberingPushbackReader or
@@ -11336,7 +10937,7 @@
 
 (§ defn main [& _args]
     (try
-        (repl :init (fn [] (in-ns 'user) (apply require repl-requires)))
+        (repl)
         (prn)
         (finally
             (flush)
