@@ -55,12 +55,12 @@
     (:use [cloiure slang]))
 
 (import
-    [java.io Reader]
+    [java.io PushbackReader Reader]
   #_[java.lang Character Class Exception IllegalArgumentException IllegalStateException Integer Number Object RuntimeException String StringBuilder Throwable UnsupportedOperationException]
     [java.lang.reflect Constructor Field #_Method Modifier]
     [java.util Arrays HashMap HashSet IdentityHashMap Iterator Map Map$Entry Set TreeMap]
     [java.util.regex Matcher Pattern]
-    [clojure.lang AFn AFunction APersistentMap APersistentSet APersistentVector ArraySeq DynamicClassLoader PersistentList$EmptyList IFn ILookup ILookupSite ILookupThunk IMapEntry IMeta IObj IPersistentCollection IPersistentList IPersistentMap IPersistentSet IPersistentVector ISeq IType Keyword KeywordLookupSite LazySeq LineNumberingPushbackReader LispReader Namespace Numbers PersistentArrayMap PersistentHashSet PersistentList PersistentVector RestFn RT Symbol Tuple Util Var]
+    [clojure.lang AFn AFunction APersistentMap APersistentSet APersistentVector ArraySeq DynamicClassLoader PersistentList$EmptyList IFn ILookup ILookupSite ILookupThunk IMapEntry IMeta IObj IPersistentCollection IPersistentList IPersistentMap IPersistentSet IPersistentVector ISeq IType Keyword KeywordLookupSite LazySeq LispReader Namespace Numbers PersistentArrayMap PersistentHashSet PersistentList PersistentVector RestFn RT Symbol Tuple Util Var]
     [cloiure.asm ClassVisitor ClassWriter Label MethodVisitor Opcodes Type]
     [cloiure.asm.commons GeneratorAdapter Method]
 )
@@ -6711,18 +6711,18 @@
         )
     )
 
-    (defn- #_"void" Compiler'consumeWhitespaces [#_"LineNumberingPushbackReader" r]
+    (defn- #_"void" Compiler'consumeWhitespaces [#_"PushbackReader" r]
         (loop-when-recur [#_"int" ch (LispReader/read1 r)] (LispReader'isWhitespace ch) [(LispReader/read1 r)] => (LispReader'unread r, ch))
         nil
     )
 
     (defn #_"Object" Compiler'load [#_"Reader" reader]
-        (let [#_"LineNumberingPushbackReader" r (if (instance? LineNumberingPushbackReader reader) reader (LineNumberingPushbackReader. reader))
+        (let [#_"PushbackReader" r (if (instance? PushbackReader reader) reader (PushbackReader. reader))
               #_"Object" EOF (Object.)]
             (binding [*ns* *ns*, *warn-on-reflection* *warn-on-reflection*, *line* 0]
                 (loop [#_"Object" val nil]
                     (Compiler'consumeWhitespaces r)
-                    (let-when [#_"Object" form (LispReader/read r, false, EOF, false, (§ obsolete nil))] (not= form EOF) => val
+                    (let-when [#_"Object" form (LispReader/read r, false, EOF, (§ obsolete false), (§ obsolete nil))] (not= form EOF) => val
                         (recur
                             (binding [*last-unique-id*     -1
                                         *closes*             {}

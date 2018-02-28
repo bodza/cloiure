@@ -64,7 +64,7 @@
     (:use [cloiure slang]))
 
 (import
-    [java.io InputStreamReader LineNumberReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
+    [java.io InputStreamReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
   #_[java.lang Character Class Exception IllegalArgumentException IllegalStateException Integer Number NumberFormatException Object RuntimeException String StringBuilder Throwable UnsupportedOperationException]
     [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
     [java.lang.reflect Array]
@@ -136,7 +136,6 @@
 (declare RT'errPrintWriter)
 (declare RT'first)
 (declare RT'fourth)
-(declare RT'isLineNumberingReader)
 (declare RT'isReduced)
 (declare RT'keys)
 (declare RT'length)
@@ -1056,14 +1055,6 @@
 
 (java-ns cloiure.lang.KeywordLookupSite
     (class! KeywordLookupSite [ILookupSite ILookupThunk])
-)
-
-(java-ns cloiure.lang.LineNumberingPushbackReader
-    (class! LineNumberingPushbackReader [#_"PushbackReader"])
-)
-
-(java-ns cloiure.lang.LispReader
-    (class! LispReaderException [#_"RuntimeException"])
 )
 
 (java-ns cloiure.lang.LongRange
@@ -8543,93 +8534,6 @@
 )
 )
 
-(java-ns cloiure.lang.LineNumberingPushbackReader
-
-(class-ns LineNumberingPushbackReader
-    ;; This class is a PushbackReader that wraps a LineNumberReader. The code here
-    ;; to handle line terminators only mentions '\n' because LineNumberReader
-    ;; collapses all occurrences of CR, LF, and CRLF into a single '\n'.
-    (def- #_"int" LineNumberingPushbackReader'newline (int \newline))
-
-    (defn- #_"LineNumberingPushbackReader" LineNumberingPushbackReader'init []
-        (hash-map
-            #_mutable #_"boolean" :_atLineStart true
-            #_mutable #_"boolean" :_prev false
-            #_mutable #_"int" :_columnNumber 1
-        )
-    )
-
-    (defn #_"LineNumberingPushbackReader" LineNumberingPushbackReader'new-1 [#_"Reader" r]
-        (merge (§ foreign PushbackReader'new (LineNumberReader. r)) (LineNumberingPushbackReader'init))
-    )
-
-    (defn #_"LineNumberingPushbackReader" LineNumberingPushbackReader'new-2 [#_"Reader" r, #_"int" size]
-        (merge (§ foreign PushbackReader'new (LineNumberReader. r, size)) (LineNumberingPushbackReader'init))
-    )
-
-    #_method
-    (defn #_"int" LineNumberingPushbackReader''getLineNumber [#_"LineNumberingPushbackReader" this]
-        (inc (.getLineNumber (cast LineNumberReader (§ foreign in))))
-    )
-
-    #_method
-    (defn #_"void" LineNumberingPushbackReader''setLineNumber [#_"LineNumberingPushbackReader" this, #_"int" line]
-        (.setLineNumber (cast LineNumberReader (§ foreign in)), (dec line))
-        nil
-    )
-
-    #_method
-    (defn #_"int" LineNumberingPushbackReader''getColumnNumber [#_"LineNumberingPushbackReader" this]
-        (:_columnNumber this)
-    )
-
-    #_foreign
-    (defn #_"int" read---LineNumberingPushbackReader [#_"LineNumberingPushbackReader" this]
-        (let [#_"int" c (.read (§ super ))]
-            (§ set! (:_prev this) (:_atLineStart this))
-            (if (or (= c LineNumberingPushbackReader'newline) (= c -1))
-                (do
-                    (§ set! (:_atLineStart this) true)
-                    (§ set! (:_columnNumber this) 1)
-                )
-                (do
-                    (§ set! (:_atLineStart this) false)
-                    (§ update! (:_columnNumber this) inc)
-                )
-            )
-            c
-        )
-    )
-
-    #_foreign
-    (defn #_"void" unread---LineNumberingPushbackReader [#_"LineNumberingPushbackReader" this, #_"int" c]
-        (.unread (§ super ), c)
-        (§ set! (:_atLineStart this) (:_prev this))
-        (§ update! (:_columnNumber this) dec)
-        nil
-    )
-
-    #_method
-    (defn #_"String" LineNumberingPushbackReader''readLine [#_"LineNumberingPushbackReader" this]
-        (let [#_"int" c (.read this)]
-            (condp = c -1 nil LineNumberingPushbackReader'newline ""
-                (let [#_"String" s (String/valueOf (char c)) #_"String" z (.readLine (cast LineNumberReader (§ foreign in)))]
-                    (§ set! (:_prev this) false)
-                    (§ set! (:_atLineStart this) true)
-                    (§ set! (:_columnNumber this) 1)
-                    (if (nil? z) s (str s z))
-                )
-            )
-        )
-    )
-
-    #_method
-    (defn #_"boolean" LineNumberingPushbackReader''atLineStart [#_"LineNumberingPushbackReader" this]
-        (:_atLineStart this)
-    )
-)
-)
-
 (java-ns cloiure.lang.LongRange
 
 (class-ns LongChunk
@@ -14645,17 +14549,6 @@
     (def #_"Var" LispReader'ARG_ENV (Var''setDynamic (Var'create nil)))
 )
 
-(class-ns LispReaderException
-    (defn #_"LispReaderException" LispReaderException'new [#_"int" line, #_"int" column, #_"Throwable" cause]
-        (merge (§ foreign RuntimeException'new cause)
-            (hash-map
-                #_"int" :line line
-                #_"int" :column column
-            )
-        )
-    )
-)
-
 (declare LispReader'read1)
 
 (class-ns RegexReader
@@ -14741,13 +14634,13 @@
     )
 )
 
-(declare LispReader'read-4)
+(declare LispReader'read)
 
 (class-ns DiscardReader
     (defn #_"Fn" DiscardReader'new []
         (fn #_"Object" [#_"Object" reader, #_"Object" underscore]
             (let [#_"PushbackReader" r (cast PushbackReader reader)]
-                (LispReader'read-4 r, true, nil, true)
+                (LispReader'read r)
                 r
             )
         )
@@ -14792,7 +14685,7 @@
                         (not= nextChar \{) ;; #:foo { } or #::foo { }
                         (do
                             (LispReader'unread r, nextChar)
-                            (let [sym (LispReader'read-4 r, true, nil, false)
+                            (let [sym (LispReader'read r)
                                   nextChar (LispReader'read1 r)
                                   nextChar (loop-when-recur nextChar (LispReader'isWhitespace nextChar) (LispReader'read1 r) => nextChar)]
                                 [sym nextChar]
@@ -14839,7 +14732,7 @@
                         )]
 
                     ;; read map
-                    (let [#_"PersistentVector" kvs (LispReader'readDelimitedForms \}, r, true)]
+                    (let [#_"PersistentVector" kvs (LispReader'readDelimitedForms r, \})]
                         (when (= (& (.count kvs) 1) 1)
                             (throw (RuntimeException. "Namespaced map literal must contain an even number of forms"))
                         )
@@ -14889,7 +14782,7 @@
     (defn #_"Fn" SymbolicValueReader'new []
         (fn #_"Object" [#_"Object" reader, #_"Object" quote]
             (let [#_"PushbackReader" r (cast PushbackReader reader)
-                  #_"Object" o (LispReader'read-4 r, true, nil, true)]
+                  #_"Object" o (LispReader'read r)]
                 (when-not (instance? Symbol o)
                     (throw (RuntimeException. (str "Invalid token: ##" o)))
                 )
@@ -14906,7 +14799,7 @@
     (defn #_"Fn" WrappingReader'new [#_"Symbol" sym]
         (fn #_"Object" [#_"Object" reader, #_"Object" quote]
             (let [#_"PushbackReader" r (cast PushbackReader reader)
-                  #_"Object" o (LispReader'read-4 r, true, nil, true)]
+                  #_"Object" o (LispReader'read r)]
                 (RT'list sym, o)
             )
         )
@@ -14917,7 +14810,7 @@
     (defn #_"Fn" VarReader'new []
         (fn #_"Object" [#_"Object" reader, #_"Object" quote]
             (let [#_"PushbackReader" r (cast PushbackReader reader)
-                  #_"Object" o (LispReader'read-4 r, true, nil, true)]
+                  #_"Object" o (LispReader'read r)]
                 (RT'list LispReader'THE_VAR, o)
             )
         )
@@ -14953,7 +14846,7 @@
                 (try
                     (Var'pushThreadBindings (RT'map LispReader'ARG_ENV, PersistentTreeMap'EMPTY))
                     (LispReader'unread r, \()
-                    (let [#_"Object" form (LispReader'read-4 r, true, nil, true)
+                    (let [#_"Object" form (LispReader'read r)
                           #_"PersistentVector" args PersistentVector'EMPTY
                           #_"PersistentTreeMap" argsyms (cast PersistentTreeMap (.deref LispReader'ARG_ENV))
                           args
@@ -14996,7 +14889,7 @@
                         ;; % alone is first arg
                         (if (or (= ch -1) (LispReader'isWhitespace ch) (LispReader'isTerminatingMacro ch))
                             (LispReader'registerArg 1)
-                            (let [#_"Object" n (LispReader'read-4 r, true, nil, true)]
+                            (let [#_"Object" n (LispReader'read r)]
                                 (cond
                                     (.equals n, Compiler'_AMP_) (LispReader'registerArg -1)
                                     (instance? Number n)        (LispReader'registerArg (.intValue (cast Number n)))
@@ -15015,11 +14908,8 @@
     (defn #_"Fn" MetaReader'new []
         (fn #_"Object" [#_"Object" reader, #_"Object" caret]
             (let [#_"PushbackReader" r (cast PushbackReader reader)
-                  [#_"int" line #_"int" column]
-                    (when (instance? LineNumberingPushbackReader r) => [-1 -1]
-                        [(LineNumberingPushbackReader''getLineNumber (cast LineNumberingPushbackReader r)) (dec (LineNumberingPushbackReader''getColumnNumber (cast LineNumberingPushbackReader r)))]
-                    )
-                  #_"Object" meta (LispReader'read-4 r, true, nil, true)
+                  [#_"int" line #_"int" column] [-1 -1]
+                  #_"Object" meta (LispReader'read r)
                   meta
                     (cond
                         (or (instance? Symbol meta) (instance? String meta)) (RT'map RT'TAG_KEY, meta)
@@ -15027,7 +14917,7 @@
                         (instance? IPersistentMap meta)                      meta
                         :else (throw (IllegalArgumentException. "Metadata must be Symbol, Keyword, String or Map"))
                     )
-                  #_"Object" o (LispReader'read-4 r, true, nil, true)]
+                  #_"Object" o (LispReader'read r)]
                 (when (instance? IMeta o) => (throw (IllegalArgumentException. "Metadata can only be applied to IMetas"))
                     (let [meta
                             (when (and (not= line -1) (instance? ISeq o)) => meta
@@ -15163,7 +15053,7 @@
             (let [#_"PushbackReader" r (cast PushbackReader reader)]
                 (try
                     (Var'pushThreadBindings (RT'map LispReader'GENSYM_ENV, PersistentHashMap'EMPTY))
-                    (let [#_"Object" form (LispReader'read-4 r, true, nil, true)]
+                    (let [#_"Object" form (LispReader'read r)]
                         (SyntaxQuoteReader'syntaxQuote form)
                     )
                     (finally
@@ -15181,12 +15071,12 @@
             (let [#_"PushbackReader" r (cast PushbackReader reader)]
                 (let-when [#_"int" ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading character"))
                     (if (= ch \@)
-                        (let [#_"Object" o (LispReader'read-4 r, true, nil, true)]
+                        (let [#_"Object" o (LispReader'read r)]
                             (RT'list LispReader'UNQUOTE_SPLICING, o)
                         )
                         (do
                             (LispReader'unread r, ch)
-                            (let [#_"Object" o (LispReader'read-4 r, true, nil, true)]
+                            (let [#_"Object" o (LispReader'read r)]
                                 (RT'list LispReader'UNQUOTE, o)
                             )
                         )
@@ -15249,11 +15139,8 @@
     (defn #_"Fn" ListReader'new []
         (fn #_"Object" [#_"Object" reader, #_"Object" leftparen]
             (let [#_"PushbackReader" r (cast PushbackReader reader)
-                  [#_"int" line #_"int" column]
-                    (when (instance? LineNumberingPushbackReader r) => [-1 -1]
-                        [(LineNumberingPushbackReader''getLineNumber (cast LineNumberingPushbackReader r)) (dec (LineNumberingPushbackReader''getColumnNumber (cast LineNumberingPushbackReader r)))]
-                    )
-                  #_"PersistentVector" v (LispReader'readDelimitedForms \), r, true)]
+                  [#_"int" line #_"int" column] [-1 -1]
+                  #_"PersistentVector" v (LispReader'readDelimitedForms r, \))]
                 (when (pos? (.count v)) => PersistentList'EMPTY
                     (let [#_"IObj" o (cast IObj (PersistentList'create (.toArray v)))]
                         (when-not (= line -1) => o
@@ -15270,7 +15157,7 @@
     (defn #_"Fn" VectorReader'new []
         (fn #_"Object" [#_"Object" reader, #_"Object" leftparen]
             (let [#_"PushbackReader" r (cast PushbackReader reader)]
-                (#_LazilyPersistentVector'create identity (LispReader'readDelimitedForms \], r, true))
+                (#_LazilyPersistentVector'create identity (LispReader'readDelimitedForms r, \]))
             )
         )
     )
@@ -15280,7 +15167,7 @@
     (defn #_"Fn" MapReader'new []
         (fn #_"Object" [#_"Object" reader, #_"Object" leftparen]
             (let [#_"PushbackReader" r (cast PushbackReader reader)
-                  #_"Object[]" a (.toArray (LispReader'readDelimitedForms \}, r, true))]
+                  #_"Object[]" a (.toArray (LispReader'readDelimitedForms r, \}))]
                 (when (= (& (alength a) 1) 1)
                     (throw (RuntimeException. "Map literal must contain an even number of forms"))
                 )
@@ -15294,7 +15181,7 @@
     (defn #_"Fn" SetReader'new []
         (fn #_"Object" [#_"Object" reader, #_"Object" leftbracket]
             (let [#_"PushbackReader" r (cast PushbackReader reader)]
-                (PersistentHashSet'createWithCheck-1i (LispReader'readDelimitedForms \}, r, true))
+                (PersistentHashSet'createWithCheck-1i (LispReader'readDelimitedForms r, \}))
             )
         )
     )
@@ -15497,8 +15384,10 @@
     ;; EOF special value to throw on eof
     (def #_"Keyword" LispReader'EOFTHROW (Keyword'intern (Symbol'intern "eofthrow")))
 
-    (defn- #_"Object" LispReader'read-6 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"Character" returnOn, #_"Object" returnOnValue, #_"boolean" isRecursive]
-        (try
+    (defn #_"Object" LispReader'read
+        ([#_"PushbackReader" r] (LispReader'read r, true, nil))
+        ([#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue] (LispReader'read r, eofIsError, eofValue, nil, nil))
+        ([#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"Character" returnOn, #_"Object" returnOnValue]
             (loop []
                 (let [#_"int" ch (loop-when-recur [ch (LispReader'read1 r)] (LispReader'isWhitespace ch) [(LispReader'read1 r)] => ch)]
                     (cond
@@ -15532,22 +15421,7 @@
                     )
                 )
             )
-            (catch Exception e
-                (when (and (not isRecursive) (instance? LineNumberingPushbackReader r)) => (throw e)
-                    (let [#_"LineNumberingPushbackReader" rdr (cast LineNumberingPushbackReader r)]
-                        (throw (LispReaderException'new (LineNumberingPushbackReader''getLineNumber rdr), (LineNumberingPushbackReader''getColumnNumber rdr), e))
-                    )
-                )
-            )
         )
-    )
-
-    (defn #_"Object" LispReader'read-4 [#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"boolean" isRecursive]
-        (LispReader'read-6 r, eofIsError, eofValue, nil, nil, isRecursive)
-    )
-
-    (defn #_"Object" LispReader'read-1 [#_"PushbackReader" r]
-        (LispReader'read-4 r, true, nil, false)
     )
 
     (defn- #_"int" LispReader'readUnicodeChar-4 [#_"String" token, #_"int" offset, #_"int" n, #_"int" base]
@@ -15615,10 +15489,10 @@
     (def- #_"Object" LispReader'READ_EOF (Object.))
     (def- #_"Object" LispReader'READ_FINISHED (Object.))
 
-    (defn #_"PersistentVector" LispReader'readDelimitedForms [#_"char" delim, #_"PushbackReader" r, #_"boolean" isRecursive]
-        (let [#_"int" firstline (if (instance? LineNumberingPushbackReader r) (LineNumberingPushbackReader''getLineNumber (cast LineNumberingPushbackReader r)) -1)]
+    (defn #_"PersistentVector" LispReader'readDelimitedForms [#_"PushbackReader" r, #_"char" delim]
+        (let [#_"int" firstline -1]
             (loop [#_"PersistentVector" v PersistentVector'EMPTY]
-                (let [#_"Object" form (LispReader'read-6 r, false, LispReader'READ_EOF, delim, LispReader'READ_FINISHED, isRecursive)]
+                (let [#_"Object" form (LispReader'read r, false, LispReader'READ_EOF, delim, LispReader'READ_FINISHED)]
                     (condp = form
                         LispReader'READ_EOF
                             (throw (RuntimeException. (if (neg? firstline) "EOF while reading" (str "EOF while reading, starting at line " firstline))))
@@ -15745,9 +15619,9 @@
 
     ;;;
      ; A java.io.Reader object representing standard input for read operations.
-     ; Defaults to System/in, wrapped in a LineNumberingPushbackReader.
+     ; Defaults to System/in, wrapped in a PushbackReader.
      ;;
-    (def #_"Var" RT'IN (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*in*"), (LineNumberingPushbackReader'new-1 (InputStreamReader. System/in)))))
+    (def #_"Var" RT'IN (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*in*"), (PushbackReader. (InputStreamReader. System/in)))))
     ;;;
      ; A java.io.Writer object representing standard output for print operations.
      ; Defaults to System/out, wrapped in an OutputStreamWriter.
@@ -16823,29 +16697,6 @@
         )
     )
 
-    (defn #_"int" RT'getLineNumber [#_"Reader" r]
-        (if (instance? LineNumberingPushbackReader r)
-            (LineNumberingPushbackReader''getLineNumber (cast LineNumberingPushbackReader r))
-            0
-        )
-    )
-
-    (defn #_"int" RT'getColumnNumber [#_"Reader" r]
-        (if (instance? LineNumberingPushbackReader r)
-            (LineNumberingPushbackReader''getColumnNumber (cast LineNumberingPushbackReader r))
-            0
-        )
-    )
-
-    (defn #_"LineNumberingPushbackReader" RT'getLineNumberingReader [#_"Reader" r]
-        (if (RT'isLineNumberingReader r)
-            (cast LineNumberingPushbackReader r)
-            (LineNumberingPushbackReader'new-1 r)
-        )
-    )
-
-    (defn #_"boolean" RT'isLineNumberingReader [#_"Reader" r] (instance? LineNumberingPushbackReader r))
-
     (defn #_"boolean" RT'isReduced [#_"Object" r] (instance? Reduced r))
 
     (defn #_"String" RT'printString [#_"Object" x]
@@ -16857,7 +16708,7 @@
 
     (defn #_"Object" RT'readString [#_"String" s]
         (let [#_"PushbackReader" r (PushbackReader. (java.io.StringReader. s))]
-            (LispReader'read-1 r)
+            (LispReader'read r)
         )
     )
 
