@@ -4384,27 +4384,6 @@
 (§ defn ^String print-str   [& xs] (with-out-str (apply print   xs)))
 (§ defn ^String println-str [& xs] (with-out-str (apply println xs)))
 
-(§ import [cloiure.lang ExceptionInfo IExceptionInfo])
-
-;;;
- ; Create an instance of ExceptionInfo, a RuntimeException subclass
- ; that carries a map of additional data.
- ;;
-(§ defn ex-info
-    ([msg map      ] (ExceptionInfo. msg map      ))
-    ([msg map cause] (ExceptionInfo. msg map cause))
-)
-
-;;;
- ; Returns exception data (a map) if ex is an IExceptionInfo.
- ; Otherwise returns nil.
- ;;
-(§ defn ex-data [ex]
-    (when (instance? IExceptionInfo ex)
-        (.getData ^IExceptionInfo ex)
-    )
-)
-
 ;;;
  ; Evaluates expr and throws an exception if it does not evaluate to logical true.
  ;;
@@ -5839,7 +5818,6 @@
 (§ in-ns 'cloiure.core)
 
 (§ import
-    [java.io NotSerializableException Serializable]
     [java.lang.reflect Constructor Modifier]
     [cloiure.asm ClassVisitor ClassWriter Opcodes Type]
     [cloiure.asm.commons GeneratorAdapter Method]
@@ -5989,25 +5967,6 @@
                     (.returnValue gen)
                     (.endMethod gen)
                 )
-            )
-        )
-        ;; disable serialization
-        (when (some #(isa? % Serializable) (cons super interfaces))
-            (let [m (Method/getMethod "void writeObject(java.io.ObjectOutputStream)")
-                  gen (GeneratorAdapter. Opcodes/ACC_PRIVATE m nil nil cv)]
-                (.visitCode gen)
-                (.loadThis gen)
-                (.loadArgs gen)
-                (.throwException gen (totype NotSerializableException) pname)
-                (.endMethod gen)
-            )
-            (let [m (Method/getMethod "void readObject(java.io.ObjectInputStream)")
-                  gen (GeneratorAdapter. Opcodes/ACC_PRIVATE m nil nil cv)]
-                (.visitCode gen)
-                (.loadThis gen)
-                (.loadArgs gen)
-                (.throwException gen (totype NotSerializableException) pname)
-                (.endMethod gen)
             )
         )
         ;; add IProxy methods
@@ -6649,44 +6608,33 @@
     (let [base
             (fn [^Throwable t]
                 (merge {:type (symbol (.getName (class t))) :message (.getLocalizedMessage t)}
-                    (when-let [ed (ex-data t)]
-                        {:data ed}
-                    )
-                    (let [st (.getStackTrace t)]
-                        (when (pos? (alength st))
-                            {:at (StackTraceElement->vec (aget st 0))}
-                        )
+                    (let-when [st (.getStackTrace t)] (pos? (alength st))
+                        {:at (StackTraceElement->vec (aget st 0))}
                     )
                 )
             )
           via
-            (loop [via [], ^Throwable t o]
+            (loop [via [] ^Throwable t o]
                 (if t (recur (conj via t) (.getCause t)) via)
             )
-          ^Throwable root (peek via)
-          m {
-                :cause (.getLocalizedMessage root)
-                :via (vec (map base via))
-                :trace (vec (map StackTraceElement->vec (.getStackTrace ^Throwable (or root o))))
-            }
-          data (ex-data root)]
-        (if data (assoc m :data data) m)
+          ^Throwable root (peek via)]
+        (hash-map
+            :cause (.getLocalizedMessage root)
+            :via (vec (map base via))
+            :trace (vec (map StackTraceElement->vec (.getStackTrace ^Throwable (or root o))))
+        )
     )
 )
 
 (§ defn- print-throwable [^Throwable o ^Writer w]
     (.write w "#error {\n :cause ")
-    (let [{:keys [cause data via trace]} (Throwable->map o)
+    (let [{:keys [cause via trace]} (Throwable->map o)
           print-via
             #(do
                 (.write w "{:type ")
                 (print-method (:type %) w)
                 (.write w "\n   :message ")
                 (print-method (:message %) w)
-                (when-let [data (:data %)]
-                    (.write w "\n   :data ")
-                    (print-method data w)
-                )
                 (when-let [at (:at %)]
                     (.write w "\n   :at ")
                     (print-method (:at %) w)
@@ -6694,10 +6642,6 @@
                 (.write w "}")
             )]
         (print-method cause w)
-        (when data
-            (.write w "\n :data ")
-            (print-method data w)
-        )
         (when via
             (.write w "\n :via\n [")
             (when-let [fv (first via)]
@@ -6973,39 +6917,6 @@
     )
 )
 
-;;;
- ; Used to build a positional factory for a given type. Because of the
- ; limitation of 20 arguments to Cloiure functions, this factory needs to be
- ; constructed to deal with more arguments. It does this by building a straight
- ; forward type ctor call in the <=20 case, and a call to the same
- ; ctor pulling the extra args out of the & overage parameter. Finally, the
- ; arity is constrained to the number of expected fields and an ArityException
- ; will be thrown at runtime if the actual arg count does not match.
- ;;
-(§ defn- build-positional-factory [nom classname fields]
-    (let [fn-name           (symbol (str '-> nom))
-          [field-args over] (split-at 20 fields)
-          field-count       (count fields)
-          arg-count         (count field-args)
-          over-count        (count over)]
-        `(defn ~fn-name
-            [~@field-args ~@(if (seq over) '[& overage] [])]
-            ~(if (seq over)
-                `(if (= (count ~'overage) ~over-count)
-                    (new ~classname
-                        ~@field-args
-                        ~@(for [i (range 0 (count over))]
-                            (list `nth 'overage i)
-                        )
-                    )
-                    (throw (cloiure.lang.ArityException. (+ ~arg-count (count ~'overage)) (name '~fn-name)))
-                )
-                `(new ~classname ~@field-args)
-            )
-        )
-    )
-)
-
 (§ defn- validate-fields [fields name]
     (when-not (vector? fields)
         (throw (AssertionError. "No fields vector given."))
@@ -7087,24 +6998,16 @@
  ; One constructor will be defined, taking the designated fields. Note
  ; that the field names __meta, __extmap, __hash and __hasheq are currently
  ; reserved and should not be used when defining your own types.
- ;
- ; Given (deftype TypeName ...), a factory function called ->TypeName
- ; will be defined, taking positional parameters for the fields.
  ;;
 (§ defmacro deftype [name fields & opts+specs]
     (validate-fields fields name)
     (let [gname                     name
           [interfaces methods opts] (parse-opts+specs opts+specs)
           ns-part                   (namespace-munge *ns*)
-          classname                 (symbol (str ns-part "." gname))
-          hinted-fields             fields
-          fields                    (vec (map #(with-meta % nil) fields))
-          [field-args over]         (split-at 20 fields)]
+          classname                 (symbol (str ns-part "." gname))]
         `(let []
-            ~(emit-deftype* name gname (vec hinted-fields) (vec interfaces) methods opts)
+            ~(emit-deftype* name gname (vec fields) (vec interfaces) methods opts)
             (import ~classname)
-            ~(build-positional-factory gname classname fields)
-            ~classname
         )
     )
 )

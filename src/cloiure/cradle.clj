@@ -6520,43 +6520,33 @@
 
     (defn #_"Object" Compiler'macroexpand1 [#_"Object" form]
         (when (instance? ISeq form) => form
-            (let-when-not [#_"Object" op (first form)] (Compiler'isSpecial op) => form
-                ;; macro expansion
-                (let [#_"Var" v (Compiler'isMacro op)]
-                    (if (some? v)
-                        (try
-                            (.applyTo v, (cons form (cons *local-env* (next form))))
-                            (§ catch ArityException e
-                                ;; hide the 2 extra params for a macro
-                                (throw (ArityException'new (- (:actual e) 2), (:name e)))
-                            )
-                        )
-                        (when (symbol? op) => form
-                            (let [#_"String" name (ßname op)]
-                                ;; (.substring s 2 5) => (. s substring 2 5)
-                                (cond
-                                    (= (.charAt name, 0) \.)
-                                        (when (< 1 (count form)) => (throw (IllegalArgumentException. "Malformed member expression, expecting (.member target ...)"))
-                                            (let [#_"Object" target (second form)
-                                                  target
-                                                    (when (some? (Interop'maybeClass target, false)) => target
-                                                        (with-meta (list 'clojure.core/identity target) { :tag 'Class })
-                                                    )]
-                                                (Compiler'preserveTag form, (list* '. target (symbol (.substring name, 1)) (next (next form))))
-                                            )
+            (let-when [#_"Object" op (first form)] (not (Compiler'isSpecial op)) => form
+                (let-when [#_"Var" v (Compiler'isMacro op)] (nil? v) => (apply v form *local-env* (next form)) ;; macro expansion
+                    (when (symbol? op) => form
+                        (let [#_"String" n (ßname op)]
+                            ;; (.substring s 2 5) => (. s substring 2 5)
+                            (cond
+                                (= (.charAt n, 0) \.)
+                                    (when (< 1 (count form)) => (throw (IllegalArgumentException. "Malformed member expression, expecting (.member target ...)"))
+                                        (let [#_"Object" target (second form)
+                                              target
+                                                (when (some? (Interop'maybeClass target, false)) => target
+                                                    (with-meta (list 'clojure.core/identity target) { :tag 'Class })
+                                                )]
+                                            (Compiler'preserveTag form, (list* '. target (symbol (.substring n, 1)) (next (next form))))
                                         )
-                                    (Compiler'namesStaticMember op)
-                                        (let-when [#_"Symbol" target (symbol (ßns op))] (some? (Interop'maybeClass target, false)) => form
-                                            (Compiler'preserveTag form, (list* '. target (symbol name) (next form)))
-                                        )
-                                    :else
-                                        ;; (s.substring ...) => (. s substring ...)
-                                        ;; (package.class.name ...) => (. package.class name ...)
-                                        ;; (StringBuilder. ...) => (new StringBuilder ...)
-                                        (let-when [#_"int" i (.lastIndexOf name, (int \.))] (= i (dec (.length name))) => form
-                                            (list* 'new (symbol (.substring name, 0, i)) (next form))
-                                        )
-                                )
+                                    )
+                                (Compiler'namesStaticMember op)
+                                    (let-when [#_"Symbol" target (symbol (ßns op))] (some? (Interop'maybeClass target, false)) => form
+                                        (Compiler'preserveTag form, (list* '. target (symbol n) (next form)))
+                                    )
+                                :else
+                                    ;; (s.substring ...) => (. s substring ...)
+                                    ;; (package.class.name ...) => (. package.class name ...)
+                                    ;; (StringBuilder. ...) => (new StringBuilder ...)
+                                    (let-when [#_"int" i (.lastIndexOf n, (int \.))] (= i (dec (.length n))) => form
+                                        (list* 'new (symbol (.substring n, 0, i)) (next form))
+                                    )
                             )
                         )
                     )

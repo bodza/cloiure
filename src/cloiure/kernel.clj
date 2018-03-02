@@ -65,13 +65,12 @@
 
 (import
     [java.io InputStreamReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
-  #_[java.lang Character Class Exception IllegalArgumentException IllegalStateException Integer Number NumberFormatException Object RuntimeException String StringBuilder Throwable UnsupportedOperationException]
+  #_[java.lang Character Class ClassLoader ClassNotFoundException Exception IllegalArgumentException IllegalStateException Integer Number NumberFormatException Object RuntimeException String StringBuilder Throwable UnsupportedOperationException]
     [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
     [java.lang.reflect Array]
     [java.math BigDecimal BigInteger MathContext]
-    [java.net URL URLClassLoader]
     [java.security AccessController PrivilegedAction]
-    [java.util AbstractCollection AbstractSet ArrayList Collection Comparator EmptyStackException HashMap Iterator LinkedList List Map Map$Entry NoSuchElementException Queue Set Stack]
+    [java.util AbstractCollection AbstractSet ArrayList Collection Comparator EmptyStackException Iterator LinkedList List Map Map$Entry NoSuchElementException Queue Set Stack]
     [java.util.concurrent Callable ConcurrentHashMap]
     [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicReference]
     [java.util.concurrent.locks ReentrantReadWriteLock]
@@ -429,13 +428,6 @@
     )
 )
 
-(java-ns cloiure.lang.IExceptionInfo
-    (interface! IExceptionInfo []
-        #_abstract
-        (#_"IPersistentMap" getData [#_"IExceptionInfo" this])
-    )
-)
-
 (java-ns cloiure.lang.IHashEq
     (interface! IHashEq []
         #_abstract
@@ -764,11 +756,7 @@
 )
 
 (java-ns cloiure.lang.DynamicClassLoader
-    (class! DynamicClassLoader [#_"URLClassLoader"])
-)
-
-(java-ns cloiure.lang.ExceptionInfo
-    (class! ExceptionInfo [#_"RuntimeException" IExceptionInfo])
+    (class! DynamicClassLoader [#_"ClassLoader"])
 )
 
 (java-ns cloiure.lang.BigInt
@@ -844,10 +832,6 @@
     (class! BigDecimalOps [#_"OpsP"])
     #_stateless
     (class! Numbers [])
-)
-
-(java-ns cloiure.lang.ArityException
-    (class! ArityException [#_"IllegalArgumentException"])
 )
 
 (java-ns cloiure.lang.AFn
@@ -1349,15 +1333,10 @@
 
 (class-ns DynamicClassLoader
     (def #_"ConcurrentHashMap<String, Reference<Class>>" DynamicClassLoader'classCache (ConcurrentHashMap.))
-
     (def #_"ReferenceQueue" DynamicClassLoader'RQ (ReferenceQueue.))
 
     (defn #_"DynamicClassLoader" DynamicClassLoader'new [#_"ClassLoader" parent]
-        (merge (§ foreign URLClassLoader'new (make-array URL 0), parent)
-            (hash-map
-                #_"HashMap<Integer, Object[]>" :constantVals (HashMap.)
-            )
-        )
+        (§ foreign ClassLoader'new parent)
     )
 
     #_method
@@ -1377,68 +1356,7 @@
 
     #_foreign
     (defn #_"Class<?>" findClass---DynamicClassLoader [#_"DynamicClassLoader" this, #_"String" name]
-        (or (DynamicClassLoader'findInMemoryClass name) (.findClass (§ super ), name))
-    )
-
-    #_foreign
-    (defn #_"Class<?>" loadClass---DynamicClassLoader [#_"DynamicClassLoader" this, #_"String" name, #_"boolean" resolve]
-        (§ sync this
-            (let [#_"Class" c
-                    (or (.findLoadedClass this, name)
-                        (DynamicClassLoader'findInMemoryClass name)
-                        (.loadClass (§ super ), name, false)
-                    )]
-                (when resolve
-                    (.resolveClass this, c)
-                )
-                c
-            )
-        )
-    )
-
-    #_method
-    (defn #_"void" DynamicClassLoader''registerConstants [#_"DynamicClassLoader" this, #_"int" id, #_"Object[]" val]
-        (.put (:constantVals this), id, val)
-        nil
-    )
-
-    #_method
-    (defn #_"Object[]" DynamicClassLoader''getConstants [#_"DynamicClassLoader" this, #_"int" id]
-        (.get (:constantVals this), id)
-    )
-)
-)
-
-(java-ns cloiure.lang.ExceptionInfo
-
-;;;
- ; Exception that carries data (a map) as additional payload. Cloiure programs that need
- ; richer semantics for exceptions should use this in lieu of defining project-specific
- ; exception classes.
- ;;
-(class-ns ExceptionInfo
-    (defn #_"ExceptionInfo" ExceptionInfo'new
-        ([#_"String" s, #_"IPersistentMap" data] (ExceptionInfo'new s, data, nil))
-        ([#_"String" s, #_"IPersistentMap" data, #_"Throwable" t]
-            ;; nil cause is equivalent to not passing a cause
-            (when (some? data) => (throw (IllegalArgumentException. "Additional data must be non-nil."))
-                (merge (§ foreign RuntimeException'new s, t)
-                    (hash-map
-                        #_"IPersistentMap" :data data
-                    )
-                )
-            )
-        )
-    )
-
-    #_override
-    (defn #_"IPersistentMap" IExceptionInfo'''getData--ExceptionInfo [#_"ExceptionInfo" this]
-        (:data this)
-    )
-
-    #_foreign
-    (defn #_"String" toString---ExceptionInfo [#_"ExceptionInfo" this]
-        (str "cloiure.lang.ExceptionInfo: " (.getMessage this) " " (:data this))
+        (or (DynamicClassLoader'findInMemoryClass name) (throw (ClassNotFoundException. name)))
     )
 )
 )
@@ -3447,23 +3365,6 @@
 )
 )
 
-(java-ns cloiure.lang.ArityException
-
-(class-ns ArityException
-    (defn #_"ArityException" ArityException'new
-        ([#_"int" actual, #_"String" name] (ArityException'new actual, name, nil))
-        ([#_"int" actual, #_"String" name, #_"Throwable" cause]
-            (merge (§ foreign IllegalArgumentException'new (str "Wrong number of args (" actual ") passed to: " name), cause)
-                (hash-map
-                    #_"int" :actual actual
-                    #_"String" :name name
-                )
-            )
-        )
-    )
-)
-)
-
 (java-ns cloiure.lang.AFn
 
 (class-ns AFn
@@ -3885,7 +3786,7 @@
 
     #_override
     (defn #_"Object" AFn'''throwArity--AFn [#_"AFn" this, #_"int" n]
-        (throw (ArityException'new n, (Compiler'demunge (.getSimpleName (.getClass this)))))
+        (throw (IllegalArgumentException. (str "Wrong number of args (" n ") passed to: " (Compiler'demunge (.getSimpleName (.getClass this))))))
     )
 )
 )
