@@ -15668,32 +15668,6 @@
         (loop-when-recur [#_"int" i 0 s s] (and (some? s) (<= i limit)) [(inc i) (.next s)] => i)
     )
 
-    (defn #_"Character" RT'readRet [#_"int" ret]
-        (when-not (= ret -1)
-            (RT'box-1c (char ret))
-        )
-    )
-
-    (defn #_"Character" RT'readChar [#_"Reader" r]
-        (let [#_"int" ret (.read r)]
-            (RT'readRet ret)
-        )
-    )
-
-    (defn #_"Character" RT'peekChar [#_"Reader" r]
-        (let [#_"int" ret
-                (if (instance? PushbackReader r)
-                    (let [ret (.read r) _ (.unread (cast PushbackReader r), ret)]
-                        ret
-                    )
-                    (let [_ (.mark r, 1) ret (.read r) _ (.reset r)]
-                        ret
-                    )
-                )]
-            (RT'readRet ret)
-        )
-    )
-
     (defn #_"boolean" RT'isReduced [#_"Object" r] (instance? Reduced r))
 
     (defn #_"String" RT'printString [#_"Object" x]

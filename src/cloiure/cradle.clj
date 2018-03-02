@@ -1042,8 +1042,8 @@
 
     (defn #_"String" Compiler'munge [#_"String" name]
         (let [#_"StringBuilder" sb (StringBuilder.)]
-            (doseq [#_"char" c (.toCharArray name)]
-                (.append sb, (or (get Compiler'CHAR_MAP c) c))
+            (doseq [#_"char" ch (.toCharArray name)]
+                (.append sb, (or (get Compiler'CHAR_MAP ch) ch))
             )
             (.toString sb)
         )
@@ -4450,7 +4450,7 @@
                         (.invokeStatic gen, (Type/getType Double), (Method/getMethod "Double valueOf(double)"))
                         true
                     )
-                    (instance? Character value)
+                    (char? value)
                     (do
                         (.push gen, (.charValue value))
                         (.invokeStatic gen, (Type/getType Character), (Method/getMethod "Character valueOf(char)"))
@@ -6101,7 +6101,6 @@
                                     (recur (assoc fmap sym lb) (inc i))
                                 )
                             )
-                          ;; todo - inject __meta et al into closes - when?
                           ;; use array map to preserve ctor order
                           _ (update! *closes* assoc (:uid nie) (PersistentArrayMap. a))
                           nie (assoc nie :fields fmap)]
@@ -6694,33 +6693,6 @@
             )
         )
     )
-
-    (declare LispReader'consumeWhitespaces)
-    (declare LispReader'read)
-
-    (defn #_"Object" Compiler'load [#_"Reader" reader]
-        (let [#_"PushbackReader" r (if (instance? PushbackReader reader) reader (PushbackReader. reader))
-              #_"Object" EOF (Object.)]
-            (binding [*ns* *ns*, *warn-on-reflection* *warn-on-reflection*, *line* 0]
-                (loop [#_"Object" val nil]
-                    (LispReader'consumeWhitespaces r)
-                    (let-when [#_"Object" form (LispReader'read r, false, EOF)] (not= form EOF) => val
-                        (recur
-                            (binding [*last-unique-id*     -1
-                                      *closes*             {}
-                                      *no-recur*           false
-                                      *in-catch-finally*   false
-                                      *in-return-context*  false
-                                      *compile-stub-sym*   nil
-                                      *compile-stub-class* nil]
-                                (Compiler'eval form)
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
 )
 )
 
@@ -6758,31 +6730,39 @@
 
     (declare LispReader'macros)
 
-    (defn- #_"boolean" LispReader'isMacro [#_"int" ch]
-        (contains? LispReader'macros (char ch))
+    (defn- #_"boolean" LispReader'isMacro [#_"char" ch]
+        (contains? LispReader'macros ch)
     )
 
-    (defn- #_"boolean" LispReader'isTerminatingMacro [#_"int" ch]
+    (defn- #_"boolean" LispReader'isTerminatingMacro [#_"char" ch]
         (and (LispReader'isMacro ch) (not (any = ch \# \' \%)))
     )
 
-    (defn #_"boolean" LispReader'isWhitespace [#_"int" ch]
+    (defn #_"boolean" LispReader'isDigit [#_"char" ch, #_"int" base]
+        (not= (Character/digit ch, base) -1)
+    )
+
+    (defn #_"boolean" LispReader'isWhitespace [#_"char" ch]
         (or (Character/isWhitespace ch) (= ch \,))
     )
 
-    (defn #_"int" LispReader'read1 [#_"Reader" r]
-        (.read r)
+    (defn #_"Character" LispReader'read1 [#_"Reader" r]
+        (let [#_"int" c (.read r)]
+            (when-not (= c -1)
+                (char c)
+            )
+        )
     )
 
-    (defn #_"void" LispReader'unread [#_"PushbackReader" r, #_"int" ch]
-        (when-not (= ch -1)
-            (.unread r, ch)
+    (defn #_"void" LispReader'unread [#_"PushbackReader" r, #_"Character" ch]
+        (when (some? ch)
+            (.unread r, (int ch))
         )
         nil
     )
 
     (defn- #_"void" LispReader'consumeWhitespaces [#_"PushbackReader" r]
-        (loop-when-recur [#_"int" ch (LispReader'read1 r)] (LispReader'isWhitespace ch) [(LispReader'read1 r)] => (LispReader'unread r, ch))
+        (loop-when-recur [#_"char" ch (LispReader'read1 r)] (LispReader'isWhitespace ch) [(LispReader'read1 r)] => (LispReader'unread r, ch))
         nil
     )
 
@@ -6841,13 +6821,13 @@
                 (let [#_"StringBuilder" sb (StringBuilder.) _ (.append sb, ch)]
                     (loop []
                         (let [ch (LispReader'read1 r)]
-                            (if (or (= ch -1) (LispReader'isWhitespace ch) (LispReader'isMacro ch))
+                            (if (or (nil? ch) (LispReader'isWhitespace ch) (LispReader'isMacro ch))
                                 (do
                                     (LispReader'unread r, ch)
                                     (.toString sb)
                                 )
                                 (do
-                                    (.append sb, (char ch))
+                                    (.append sb, ch)
                                     (recur)
                                 )
                             )
@@ -6862,13 +6842,13 @@
         (let [#_"StringBuilder" sb (StringBuilder.) _ (.append sb, ch)]
             (loop []
                 (let [ch (LispReader'read1 r)]
-                    (if (or (= ch -1) (LispReader'isWhitespace ch) (LispReader'isTerminatingMacro ch))
+                    (if (or (nil? ch) (LispReader'isWhitespace ch) (LispReader'isTerminatingMacro ch))
                         (do
                             (LispReader'unread r, ch)
                             (.toString sb)
                         )
                         (do
-                            (.append sb, (char ch))
+                            (.append sb, ch)
                             (recur)
                         )
                     )
@@ -6913,32 +6893,32 @@
         ([#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue] (LispReader'read r, eofIsError, eofValue, nil, nil))
         ([#_"PushbackReader" r, #_"boolean" eofIsError, #_"Object" eofValue, #_"Character" returnOn, #_"Object" returnOnValue]
             (loop []
-                (let [#_"int" ch (loop-when-recur [ch (LispReader'read1 r)] (LispReader'isWhitespace ch) [(LispReader'read1 r)] => ch)]
+                (let [#_"char" ch (loop-when-recur [ch (LispReader'read1 r)] (LispReader'isWhitespace ch) [(LispReader'read1 r)] => ch)]
                     (cond
-                        (= ch -1)
+                        (nil? ch)
                             (if eofIsError (throw (RuntimeException. "EOF while reading")) eofValue)
-                        (and (some? returnOn) (= (.charValue returnOn) (char ch)))
+                        (and (some? returnOn) (= returnOn ch))
                             returnOnValue
-                        (Character/isDigit ch)
-                            (LispReader'readNumber r, (char ch))
+                        (LispReader'isDigit ch, 10)
+                            (LispReader'readNumber r, ch)
                         :else
-                            (let [#_"IFn" fn (get LispReader'macros (char ch))]
+                            (let [#_"IFn" fn (get LispReader'macros ch)]
                                 (if (some? fn)
-                                    (let [#_"Object" o (.invoke fn, r, (char ch))]
+                                    (let [#_"Object" o (.invoke fn, r, ch)]
                                         ;; no op macros return the reader
                                         (recur-if (identical? o r) [] => o)
                                     )
                                     (do
-                                        (when (any = (char ch) \+ \-)
-                                            (let [#_"int" ch2 (LispReader'read1 r)]
-                                                (when (Character/isDigit ch2)
+                                        (when (any = ch \+ \-)
+                                            (let [#_"char" ch2 (LispReader'read1 r)]
+                                                (when (LispReader'isDigit ch2, 10)
                                                     (LispReader'unread r, ch2)
-                                                    (ß return (LispReader'readNumber r, (char ch)))
+                                                    (ß return (LispReader'readNumber r, ch))
                                                 )
                                                 (LispReader'unread r, ch2)
                                             )
                                         )
-                                        (LispReader'interpretToken (LispReader'readToken r, (char ch)))
+                                        (LispReader'interpretToken (LispReader'readToken r, ch))
                                     )
                                 )
                             )
@@ -6949,10 +6929,10 @@
     )
 
     (defn- #_"int" LispReader'scanDigits [#_"String" token, #_"int" offset, #_"int" n, #_"int" base]
-        (when (= (.length token) (+ offset n)) => (throw (IllegalArgumentException. (str "Invalid unicode character: \\" token)))
-            (loop-when [#_"int" c 0 #_"int" i offset] (< i (+ offset n)) => (char c)
-                (let [#_"int" d (Character/digit (.charAt token, i), base)]
-                    (when-not (= d -1) => (throw (IllegalArgumentException. (str "Invalid digit: " (.charAt token, i))))
+        (when (= (+ offset n) (.length token)) => (throw (IllegalArgumentException. (str "Invalid unicode character: \\" token)))
+            (loop-when [#_"int" c 0 #_"int" i 0] (< i n) => c
+                (let [#_"char" ch (.charAt token, (+ offset i)) #_"int" d (Character/digit ch, base)]
+                    (when-not (= d -1) => (throw (IllegalArgumentException. (str "Invalid digit: " ch)))
                         (recur (+ (* c base) d) (inc i))
                     )
                 )
@@ -6960,18 +6940,18 @@
         )
     )
 
-    (defn- #_"int" LispReader'readDigits [#_"PushbackReader" r, #_"int" ch, #_"int" base, #_"int" n, #_"boolean" exact?]
-        (let-when-not [#_"int" c (Character/digit ch, base)] (= c -1) => (throw (IllegalArgumentException. (str "Invalid digit: " (char ch))))
+    (defn- #_"int" LispReader'readDigits [#_"PushbackReader" r, #_"char" ch, #_"int" base, #_"int" n, #_"boolean" exact?]
+        (let-when-not [#_"int" c (Character/digit ch, base)] (= c -1) => (throw (IllegalArgumentException. (str "Invalid digit: " ch)))
             (let [[c #_"int" i]
                     (loop-when [c c i 1] (< i n) => [c i]
                         (let [ch (LispReader'read1 r)]
-                            (if (or (= ch -1) (LispReader'isWhitespace ch) (LispReader'isMacro ch))
+                            (if (or (nil? ch) (LispReader'isWhitespace ch) (LispReader'isMacro ch))
                                 (do
                                     (LispReader'unread r, ch)
                                     [c i]
                                 )
                                 (let [#_"int" d (Character/digit ch, base)]
-                                    (when-not (= d -1) => (throw (IllegalArgumentException. (str "Invalid digit: " (char ch))))
+                                    (when-not (= d -1) => (throw (IllegalArgumentException. (str "Invalid digit: " ch)))
                                         (recur (+ (* c base) d) (inc i))
                                     )
                                 )
@@ -7007,12 +6987,12 @@
     (defn #_"Object" regex-reader [#_"PushbackReader" r, #_"char" _delim]
         (let [#_"StringBuilder" sb (StringBuilder.)]
             (loop []
-                (let-when [#_"int" ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading regex"))
+                (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw (RuntimeException. "EOF while reading regex"))
                     (when-not (= ch \") ;; oops! "
-                        (.append sb, (char ch))
+                        (.append sb, ch)
                         (when (= ch \\) ;; escape
-                            (let-when [ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading regex"))
-                                (.append sb, (char ch))
+                            (let-when [ch (LispReader'read1 r)] (some? ch) => (throw (RuntimeException. "EOF while reading regex"))
+                                (.append sb, ch)
                             )
                         )
                         (recur)
@@ -7025,41 +7005,40 @@
 )
 
 (class-ns StringReader
+    (defn- #_"char" StringReader'escape [#_"PushbackReader" r]
+        (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw (RuntimeException. "EOF while reading string"))
+            (case ch
+                \t  \tab
+                \r  \return
+                \n  \newline
+                \\  ch
+                \"  ch ;; oops! "
+                \b  \backspace
+                \f  \formfeed
+                \u  (let [ch (LispReader'read1 r)]
+                        (when (LispReader'isDigit ch, 16) => (throw (RuntimeException. (str "Invalid unicode escape: \\u" ch)))
+                            (char (LispReader'readDigits r, ch, 16, 4, true))
+                        )
+                    )
+                (when (LispReader'isDigit ch, #_8 4) => (throw (RuntimeException. (str "Unsupported escape character: \\" ch)))
+                    (let [#_"int" c (LispReader'readDigits r, ch, 8, 3, false)]
+                      #_(when (< 0377 c)
+                            (throw (RuntimeException. "Octal escape sequence must be in range [0, 377]."))
+                        )
+                        (char c)
+                    )
+                )
+            )
+        )
+    )
+
     (defn #_"Object" string-reader [#_"PushbackReader" r, #_"char" _delim]
         (let [#_"StringBuilder" sb (StringBuilder.)]
-            (loop-when-recur [#_"int" ch (LispReader'read1 r)] (not= ch \") [(LispReader'read1 r)] ;; oops! "
-                (when-not (= ch -1) => (throw (RuntimeException. "EOF while reading string"))
-                    (let [ch ;; escape
-                            (when (= ch \\) => ch
-                                (let [ch (LispReader'read1 r)]
-                                    (when-not (= ch -1) => (throw (RuntimeException. "EOF while reading string"))
-                                        (case ch
-                                            \t  \tab
-                                            \r  \return
-                                            \n  \newline
-                                            \\  ch
-                                            \"  ch ;; oops! "
-                                            \b  \backspace
-                                            \f  \formfeed
-                                            \u  (let [ch (LispReader'read1 r)]
-                                                    (when (= (Character/digit ch, 16) -1)
-                                                        (throw (RuntimeException. (str "Invalid unicode escape: \\u" (char ch))))
-                                                    )
-                                                    (LispReader'readDigits r, ch, 16, 4, true)
-                                                )
-                                            (when (Character/isDigit ch) => (throw (RuntimeException. (str "Unsupported escape character: \\" (char ch))))
-                                                (let [ch (LispReader'readDigits r, ch, 8, 3, false)]
-                                                    (when (< 0377 ch)
-                                                        (throw (RuntimeException. "Octal escape sequence must be in range [0, 377]."))
-                                                    )
-                                                    ch
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            )]
-                        (.append sb, (char ch))
+            (loop []
+                (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw (RuntimeException. "EOF while reading string"))
+                    (when-not (= ch \") ;; oops! "
+                        (.append sb, (if (= ch \\) (StringReader'escape r) ch))
+                        (recur)
                     )
                 )
             )
@@ -7070,7 +7049,7 @@
 
 (class-ns CommentReader
     (defn #_"Object" comment-reader [#_"PushbackReader" r, #_"char" _delim]
-        (while (not (any = (LispReader'read1 r) -1 \newline \return)))
+        (while (not (any = (LispReader'read1 r) nil \newline \return)))
         r
     )
 )
@@ -7079,117 +7058,6 @@
     (defn #_"Object" discard-reader [#_"PushbackReader" r, #_"char" _delim]
         (LispReader'read r)
         r
-    )
-)
-
-(class-ns NamespaceMapReader
-    ;; :a.b{:c 1} => {:a.b/c 1}
-    ;; ::{:c 1}   => {:a.b/c 1}  (where *ns* = a.b)
-    ;; ::a{:c 1}  => {:a.b/c 1}  (where a is aliased to a.b)
-    (defn #_"Object" namespace-map-reader [#_"PushbackReader" r, #_"char" _delim]
-        (let [#_"boolean" auto?
-                (let [#_"int" autoChar (LispReader'read1 r)]
-                    (or (= autoChar \:)
-                        (do (LispReader'unread r, autoChar) false)
-                    )
-                )
-              #_"int" nextChar (LispReader'read1 r)
-              [#_"Object" sym nextChar]
-                (cond
-                    (LispReader'isWhitespace nextChar) ;; the #:: { } case or an error
-                    (if auto?
-                        (let [nextChar (loop-when-recur nextChar (LispReader'isWhitespace nextChar) (LispReader'read1 r) => nextChar)]
-                            (when-not (= nextChar \{)
-                                (LispReader'unread r, nextChar)
-                                (throw (RuntimeException. "Namespaced map must specify a namespace"))
-                            )
-                            [nil nextChar]
-                        )
-                        (do
-                            (LispReader'unread r, nextChar)
-                            (throw (RuntimeException. "Namespaced map must specify a namespace"))
-                        )
-                    )
-                    (not= nextChar \{) ;; #:foo { } or #::foo { }
-                    (do
-                        (LispReader'unread r, nextChar)
-                        (let [sym (LispReader'read r)
-                              nextChar (LispReader'read1 r)
-                              nextChar (loop-when-recur nextChar (LispReader'isWhitespace nextChar) (LispReader'read1 r) => nextChar)]
-                            [sym nextChar]
-                        )
-                    )
-                    :else
-                    (do
-                        [nil nextChar]
-                    )
-                )]
-            (when-not (= nextChar \{)
-                (throw (RuntimeException. "Namespaced map must specify a map"))
-            )
-
-            ;; resolve autoresolved ns
-            (let [#_"String" ns
-                    (cond auto?
-                        (cond (nil? sym)
-                            (do
-                                (ßname (ßname *ns*))
-                            )
-                            (or (not (symbol? sym)) (some? (namespace sym)))
-                            (do
-                                (throw (RuntimeException. (str "Namespaced map must specify a valid namespace: " sym)))
-                            )
-                            :else
-                            (let [#_"Symbol" resolved
-                                    (when-let [#_"Namespace" rns (.lookupAlias *ns*, sym)]
-                                        (ßname rns)
-                                    )]
-                                (when (some? resolved) => (throw (RuntimeException. (str "Unknown auto-resolved namespace alias: " sym)))
-                                    (ßname resolved)
-                                )
-                            )
-                        )
-                        (or (not (symbol? sym)) (some? (namespace sym)))
-                        (do
-                            (throw (RuntimeException. (str "Namespaced map must specify a valid namespace: " sym)))
-                        )
-                        :else
-                        (do
-                            (ßname sym)
-                        )
-                    )]
-
-                ;; read map
-                (let [#_"PersistentVector" kvs (LispReader'readDelimitedForms r, \})]
-                    (when (= (& (count kvs) 1) 1)
-                        (throw (RuntimeException. "Namespaced map literal must contain an even number of forms"))
-                    )
-
-                    ;; construct output map
-                    (let [#_"Object[]" a (make-array Object (count kvs)) #_"Iterator" it (.iterator kvs)]
-                        (loop-when-recur [#_"int" i 0] (.hasNext it) [(+ i 2)]
-                            (let [#_"Object" key (.next it) #_"Object" val (.next it)
-                                    _ (cond
-                                        (keyword? key)
-                                            (cond
-                                                (nil? (namespace key))  (keyword ns (ßname key))
-                                                (= (namespace key) "_") (keyword (ßname key))
-                                            )
-                                        (symbol? key)
-                                            (cond
-                                                (nil? (namespace key))  (symbol ns (ßname key))
-                                                (= (namespace key) "_") (symbol (ßname key))
-                                            )
-                                    )]
-                                (aset a i (or _ key))
-                                (aset a (inc i) val)
-                            )
-                        )
-                        (RT/map a)
-                    )
-                )
-            )
-        )
     )
 )
 
@@ -7233,10 +7101,10 @@
     (declare LispReader'dispatchMacros)
 
     (defn #_"Object" dispatch-reader [#_"PushbackReader" r, #_"char" _delim]
-        (let-when [#_"int" ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading character"))
-            (let-when [#_"IFn" fn (get LispReader'dispatchMacros (char ch))] (nil? fn) => (.invoke fn, r, ch)
+        (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw (RuntimeException. "EOF while reading character"))
+            (let-when [#_"IFn" fn (get LispReader'dispatchMacros ch)] (nil? fn) => (.invoke fn, r, ch)
                 (LispReader'unread r, ch)
-                (throw (RuntimeException. (str "No dispatch macro for: " (char ch))))
+                (throw (RuntimeException. (str "No dispatch macro for: " ch)))
             )
         )
     )
@@ -7273,9 +7141,9 @@
 (class-ns ArgReader
     (defn #_"Object" arg-reader [#_"PushbackReader" r, #_"char" _delim]
         (when (bound? #'*arg-env*) => (LispReader'interpretToken (LispReader'readToken r, \%))
-            (let [#_"int" ch (LispReader'read1 r) _ (LispReader'unread r, ch)]
+            (let [#_"char" ch (LispReader'read1 r) _ (LispReader'unread r, ch)]
                 ;; % alone is first arg
-                (if (or (= ch -1) (LispReader'isWhitespace ch) (LispReader'isTerminatingMacro ch))
+                (if (or (nil? ch) (LispReader'isWhitespace ch) (LispReader'isTerminatingMacro ch))
                     (LispReader'registerArg 1)
                     (let [#_"Object" n (LispReader'read r)]
                         (cond
@@ -7395,7 +7263,7 @@
                             :else
                                 (throw (UnsupportedOperationException. "Unknown collection type"))
                         )
-                    (or (keyword? form) (number? form) (instance? Character form) (string? form))
+                    (or (keyword? form) (number? form) (char? form) (string? form))
                         form
                     :else
                         (list 'quote form)
@@ -7415,7 +7283,7 @@
 
 (class-ns UnquoteReader
     (defn #_"Object" unquote-reader [#_"PushbackReader" r, #_"char" _delim]
-        (let-when [#_"int" ch (LispReader'read1 r)] (not= ch -1) => (throw (RuntimeException. "EOF while reading character"))
+        (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw (RuntimeException. "EOF while reading character"))
             (if (= ch \@)
                 (list 'clojure.core/unquote-splicing (LispReader'read r))
                 (do
@@ -7429,37 +7297,35 @@
 
 (class-ns CharacterReader
     (defn #_"Object" character-reader [#_"PushbackReader" r, #_"char" _delim]
-        (let [#_"int" ch (LispReader'read1 r)]
-            (when-not (= ch -1) => (throw (RuntimeException. "EOF while reading character"))
-                (let [#_"String" token (LispReader'readToken r, (char ch))]
-                    (when-not (= (.length token) 1) => (Character/valueOf (.charAt token, 0))
-                        (case token
-                            "newline"   \newline
-                            "space"     \space
-                            "tab"       \tab
-                            "backspace" \backspace
-                            "formfeed"  \formfeed
-                            "return"    \return
-                            (case (.charAt token, 0)
-                                \u  (let [#_"int" c (LispReader'scanDigits token, 1, 4, 16)]
-                                        (when (<= 0xd800 c 0xdfff) ;; surrogate code unit?
-                                            (throw (RuntimeException. (str "Invalid character constant: \\u" (Integer/toString c, 16))))
+        (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw (RuntimeException. "EOF while reading character"))
+            (let [#_"String" token (LispReader'readToken r, ch)]
+                (when-not (= (.length token) 1) => (Character/valueOf (.charAt token, 0))
+                    (case token
+                        "newline"   \newline
+                        "space"     \space
+                        "tab"       \tab
+                        "backspace" \backspace
+                        "formfeed"  \formfeed
+                        "return"    \return
+                        (case (.charAt token, 0)
+                            \u  (let [#_"int" c (LispReader'scanDigits token, 1, 4, 16)]
+                                    (when (<= 0xd800 c 0xdfff) ;; surrogate code unit?
+                                        (throw (RuntimeException. (str "Invalid character constant: \\u" (Integer/toString c, 16))))
+                                    )
+                                    (char c)
+                                )
+                            \o  (let [#_"int" n (dec (.length token))]
+                                    (when (< 3 n)
+                                        (throw (RuntimeException. (str "Invalid octal escape sequence length: " n)))
+                                    )
+                                    (let [#_"int" c (LispReader'scanDigits token, 1, n, 8)]
+                                        (when (< 0377 c)
+                                            (throw (RuntimeException. "Octal escape sequence must be in range [0, 377]."))
                                         )
                                         (char c)
                                     )
-                                \o  (let [#_"int" n (dec (.length token))]
-                                        (when (< 3 n)
-                                            (throw (RuntimeException. (str "Invalid octal escape sequence length: " n)))
-                                        )
-                                        (let [#_"int" c (LispReader'scanDigits token, 1, n, 8)]
-                                            (when (< 0377 c)
-                                                (throw (RuntimeException. "Octal escape sequence must be in range [0, 377]."))
-                                            )
-                                            (char c)
-                                        )
-                                    )
-                                (throw (RuntimeException. (str "Unsupported character: \\" token)))
-                            )
+                                )
+                            (throw (RuntimeException. (str "Unsupported character: \\" token)))
                         )
                     )
                 )
@@ -7533,7 +7399,35 @@
             \{  set-reader
             \!  comment-reader
             \_  discard-reader
-            \:  namespace-map-reader
+        )
+    )
+)
+)
+
+(java-ns cloiure.lang.Compiler
+
+(class-ns Compiler
+    (defn #_"Object" Compiler'load [#_"Reader" reader]
+        (let [#_"PushbackReader" r (if (instance? PushbackReader reader) reader (PushbackReader. reader))
+              #_"Object" EOF (Object.)]
+            (binding [*ns* *ns*, *warn-on-reflection* *warn-on-reflection*, *line* 0]
+                (loop [#_"Object" val nil]
+                    (LispReader'consumeWhitespaces r)
+                    (let-when-not [#_"Object" form (LispReader'read r, false, EOF)] (identical? form EOF) => val
+                        (recur
+                            (binding [*last-unique-id*     -1
+                                      *closes*             {}
+                                      *no-recur*           false
+                                      *in-catch-finally*   false
+                                      *in-return-context*  false
+                                      *compile-stub-sym*   nil
+                                      *compile-stub-class* nil]
+                                (Compiler'eval form)
+                            )
+                        )
+                    )
+                )
+            )
         )
     )
 )
