@@ -44,6 +44,8 @@
 (def >> bit-shift-right)
 (def >>> unsigned-bit-shift-right)
 
+(defmacro throw! [^String s] `(throw (RuntimeException. ~s)))
+
 (defmacro java-ns [name & _] #_(ensure symbol? name) `(do ~@_))
 (defmacro class-ns [name & _] #_(ensure symbol? name) `(do ~@_))
 
@@ -65,11 +67,10 @@
 
 (import
     [java.io InputStreamReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
-  #_[java.lang Character Class ClassLoader ClassNotFoundException Exception IllegalArgumentException IllegalStateException Integer Number NumberFormatException Object RuntimeException String StringBuilder Throwable UnsupportedOperationException]
+  #_[java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Number Object RuntimeException String StringBuilder Thread Throwable]
     [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
     [java.lang.reflect Array]
     [java.math BigDecimal BigInteger MathContext]
-    [java.security AccessController PrivilegedAction]
     [java.util AbstractCollection AbstractSet ArrayList Collection Comparator EmptyStackException Iterator LinkedList List Map Map$Entry NoSuchElementException Queue Set Stack]
     [java.util.concurrent Callable ConcurrentHashMap]
     [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicReference]
@@ -83,11 +84,10 @@
 (declare Compiler'DOUBLES_CLASS)
 (declare Compiler'FLOATS_CLASS)
 (declare Compiler'INTS_CLASS)
-(declare Compiler'LOADER)
 (declare Compiler'LONGS_CLASS)
 (declare Compiler'OBJECTS_CLASS)
 (declare Compiler'SHORTS_CLASS)
-(declare Compiler'load)
+(declare Compiler'baseLoader)
 (declare PersistentHashMap'EMPTY)
 (declare PersistentHashMap'bitpos)
 (declare PersistentHashMap'cloneAndSet-3)
@@ -110,12 +110,8 @@
 (declare Reflector'prepRet)
 (declare RT'CLOIURE_NS)
 (declare RT'DEFAULT_COMPARATOR)
-(declare RT'DEFAULT_IMPORTS)
 (declare RT'EMPTY_ARRAY)
-(declare RT'T)
-(declare RT'TAG_KEY)
 (declare RT'assoc)
-(declare RT'baseLoader)
 (declare RT'booleanCast-1o)
 (declare RT'conj)
 (declare RT'cons)
@@ -2414,7 +2410,7 @@
     (def #_"BigDecimalOps" Numbers'BIGDECIMAL_OPS (BigDecimalOps'new))
 
     (defn #_"Ops" Numbers'ops [#_"Object" x]
-        (condp = (.getClass x)
+        (condp = (class x)
             Integer    Numbers'LONG_OPS
             Long       Numbers'LONG_OPS
             BigInt     Numbers'BIGINT_OPS
@@ -2428,7 +2424,7 @@
     )
 
     (defn #_"Category" Numbers'category [#_"Object" x]
-        (condp = (.getClass x)
+        (condp = (class x)
             Integer    :Category'INTEGER
             Long       :Category'INTEGER
             BigInt     :Category'INTEGER
@@ -2694,8 +2690,8 @@
     )
 
     (defn #_"long" Numbers'bitOpsCast [#_"Object" x]
-        (let [#_"Class" xc (.getClass x)]               ;; no bignums, no decimals
-            (when (any = xc Long Integer Short Byte) => (throw (IllegalArgumentException. (str "bit operation not supported for: " xc)))
+        (let [#_"Class" xc (class x)]                   ;; no bignums, no decimals
+            (when (any = xc Long Integer Short Byte) => (throw! (str "bit operation not supported for: " xc))
                 (RT'longCast-1o x)
             )
         )
@@ -3349,7 +3345,7 @@
     )
 
     (defn #_"int" Numbers'hasheq [#_"Number" x]
-        (let [#_"Class" xc (.getClass x)]
+        (let [#_"Class" xc (class x)]
             (condp = xc
                 Long
                     (Murmur3'hashLong (.longValue x))
@@ -3786,7 +3782,7 @@
 
     #_override
     (defn #_"Object" AFn'''throwArity--AFn [#_"AFn" this, #_"int" n]
-        (throw (IllegalArgumentException. (str "Wrong number of args (" n ") passed to: " (Compiler'demunge (.getSimpleName (.getClass this))))))
+        (throw! (str "wrong number of args (" n ") passed to: " (Compiler'demunge (.getSimpleName (class this)))))
     )
 )
 )
@@ -3986,7 +3982,7 @@
 
     #_method
     (defn #_"Object" Keyword''throwArity [#_"Keyword" this]
-        (throw (IllegalArgumentException. (str "Wrong number of args passed to keyword: " this)))
+        (throw! (str "wrong number of args passed to keyword: " this))
     )
 
     #_foreign
@@ -3996,7 +3992,7 @@
 
     #_foreign
     (defn #_"void" run---Keyword [#_"Keyword" this]
-        (throw (UnsupportedOperationException.))
+        (throw! "unsupported operation")
     )
 
     #_override
@@ -5979,7 +5975,7 @@
                 )
             (instance? IPersistentVector o)
                 (let [#_"IPersistentVector" v (cast IPersistentVector o)]
-                    (when (= (.count v) 2) => (throw (IllegalArgumentException. "Vector arg to map conj must be a pair"))
+                    (when (= (.count v) 2) => (throw! "vector arg to map conj must be a pair")
                         (.assoc this, (.nth v, 0), (.nth v, 1))
                     )
                 )
@@ -6567,7 +6563,7 @@
 
     #_override
     (defn #_"Object" IFn'''invoke-2--APersistentVector [#_"APersistentVector" this, #_"Object" arg1]
-        (when (Numbers'isInteger arg1) => (throw (IllegalArgumentException. "Key must be integer"))
+        (when (Numbers'isInteger arg1) => (throw! "key must be integer")
             (.nth this, (.intValue (cast Number arg1)))
         )
     )
@@ -6617,7 +6613,7 @@
 
     #_override
     (defn #_"IPersistentVector" Associative'''assoc--APersistentVector [#_"APersistentVector" this, #_"Object" key, #_"Object" val]
-        (when (Numbers'isInteger key) => (throw (IllegalArgumentException. "Key must be integer"))
+        (when (Numbers'isInteger key) => (throw! "key must be integer")
             (.assocN this, (.intValue (cast Number key)), val)
         )
     )
@@ -6878,7 +6874,7 @@
 
     #_override
     (defn #_"IChunk" IChunk'''dropFirst--ArrayChunk [#_"ArrayChunk" this]
-        (when-not (= (:off this) (:end this)) => (throw (IllegalStateException. "dropFirst of empty chunk"))
+        (when-not (= (:off this) (:end this)) => (throw! "dropFirst of empty chunk")
             (ArrayChunk'new (:array this), (inc (:off this)), (:end this))
         )
     )
@@ -7136,7 +7132,7 @@
 
     (defn #_"Iterator" ArrayIter'createFromObject [#_"Object" a]
         (when (and (some? a) (pos? (Array/getLength a))) => ArrayIter'EMPTY_ITERATOR
-            (let [#_"Class" c (.getClass a)]
+            (let [#_"Class" c (class a)]
                 (condp = c
                     Compiler'INTS_CLASS     (ArrayIter_int'new     (cast c a), 0)
                     Compiler'FLOATS_CLASS   (ArrayIter_float'new   (cast c a), 0)
@@ -7645,7 +7641,7 @@
 
     (defn #_"ISeq" ArraySeq'createFromObject [#_"Object" array]
         (when (and (some? array) (pos? (Array/getLength array)))
-            (let [#_"Class" c (.getClass array)]
+            (let [#_"Class" c (class array)]
                 (condp = c
                     Compiler'INTS_CLASS     (ArraySeq_int'new     nil, (cast c array), 0)
                     Compiler'FLOATS_CLASS   (ArraySeq_float'new   nil, (cast c array), 0)
@@ -7886,7 +7882,7 @@
                 )
             (instance? IPersistentVector o)
                 (let [#_"IPersistentVector" v (cast IPersistentVector o)]
-                    (when (= (.count v) 2) => (throw (IllegalArgumentException. "Vector arg to map conj must be a pair"))
+                    (when (= (.count v) 2) => (throw! "vector arg to map conj must be a pair")
                         (.assoc this, (.nth v, 0), (.nth v, 1))
                     )
                 )
@@ -8389,7 +8385,7 @@
         (reify ILookupThunk
             #_override
             (#_"Object" get [#_"ILookupThunk" self, #_"Object" target]
-                (if (and (some? target) (= (.getClass target) c))
+                (if (and (some? target) (= (class target) c))
                     (.valAt (cast ILookup target), (:k this))
                     self
                 )
@@ -8400,7 +8396,7 @@
     #_override
     (defn #_"ILookupThunk" ILookupSite'''fault--KeywordLookupSite [#_"KeywordLookupSite" this, #_"Object" target]
         (if (instance? ILookup target)
-            (KeywordLookupSite''ilookupThunk this, (.getClass target))
+            (KeywordLookupSite''ilookupThunk this, (class target))
             this
         )
     )
@@ -8448,7 +8444,7 @@
 
     #_override
     (defn #_"LongChunk" IChunk'''dropFirst--LongChunk [#_"LongChunk" this]
-        (when (< 1 (:count this)) => (throw (IllegalStateException. "dropFirst of empty chunk"))
+        (when (< 1 (:count this)) => (throw! "dropFirst of empty chunk")
             (LongChunk'new (+ (:start this) (:step this)), (:step this), (dec (:count this)))
         )
     )
@@ -8604,7 +8600,7 @@
             (let [#_"long" n
                     (try
                         (LongRange''rangeCount this, (:start this), (:end this), (:step this))
-                        (catch ArithmeticException e
+                        (catch ArithmeticException _
                             ;; size of total range is > Long.MAX_VALUE, so must step to count
                             ;; this only happens in pathological range cases like:
                             ;; (range -9223372036854775808 9223372036854775807 9223372036854775807)
@@ -8694,7 +8690,7 @@
                         (try
                             (update! n Numbers'add-2ll (:step this))
                             (set! m (not (.exceededBounds (:boundsCheck this), n)))
-                            (catch ArithmeticException e
+                            (catch ArithmeticException _
                                 (set! m false)
                             )
                         )
@@ -8873,7 +8869,7 @@
         (.lock (.writeLock (:rw this)))
         (try
             (when (MultiFn''prefers this, dispatchValY, dispatchValX)
-                (throw (IllegalStateException. (str "Preference conflict in multimethod '" (:name this) "': " dispatchValY " is already preferred to " dispatchValX)))
+                (throw! (str "preference conflict in multimethod '" (:name this) "': " dispatchValY " is already preferred to " dispatchValX))
             )
             (let [_ (§ update! (:preferTable this) #(.assoc %, dispatchValX, (RT'conj (cast IPersistentCollection (RT'get %, dispatchValX, PersistentHashSet'EMPTY)), dispatchValY)))]
                 (MultiFn''resetCache this)
@@ -8910,7 +8906,7 @@
                                                 e
                                             )]
                                         (when-not (MultiFn''dominates this, (.getKey bestEntry), (.getKey e))
-                                            (throw (IllegalArgumentException. (str "Multiple methods in multimethod '" (:name this) "' match dispatch value: " dispatchVal " -> " (.getKey e) " and " (.getKey bestEntry) ", and neither is preferred")))
+                                            (throw! (str "multiple methods in multimethod '" (:name this) "' match dispatch value: " dispatchVal " -> " (.getKey e) " and " (.getKey bestEntry) ", and neither is preferred"))
                                         )
                                         (recur bestEntry)
                                     )
@@ -8958,7 +8954,7 @@
     #_method
     (defn- #_"IFn" MultiFn''getFn [#_"MultiFn" this, #_"Object" dispatchVal]
         (let [#_"IFn" targetFn (MultiFn''getMethod this, dispatchVal)]
-            (or targetFn (throw (IllegalArgumentException. (str "No method in multimethod '" (:name this) "' for dispatch value: " dispatchVal))))
+            (or targetFn (throw! (str "no method in multimethod '" (:name this) "' for dispatch value: " dispatchVal)))
         )
     )
 
@@ -9106,7 +9102,7 @@
             #_mutable #_"IPersistentMap" :_meta (.meta name)
             #_"Symbol" :name name
 
-            #_"AtomicReference<IPersistentMap>" :mappings (AtomicReference. RT'DEFAULT_IMPORTS)
+            #_"AtomicReference<IPersistentMap>" :mappings (AtomicReference. (RT'map))
             #_"AtomicReference<IPersistentMap>" :aliases (AtomicReference. (RT'map))
         )
     )
@@ -9158,7 +9154,7 @@
                 (let [#_"Namespace" ns (:ns (cast Var o))]
                     (when-not (or (= ns this) (= (:ns var) RT'CLOIURE_NS)) => :ok
                         (when-not (= ns RT'CLOIURE_NS)
-                            (throw (IllegalStateException. (str sym " already refers to: " o " in namespace: " (:name this))))
+                            (throw! (str sym " already refers to: " o " in namespace: " (:name this)))
                         )
                     )
                 )
@@ -9172,7 +9168,7 @@
 
     #_method
     (defn #_"Var" Namespace''intern [#_"Namespace" this, #_"Symbol" sym]
-        (when (nil? (:ns sym)) => (throw (IllegalArgumentException. "Can't intern namespace-qualified symbol"))
+        (when (nil? (:ns sym)) => (throw! "can't intern namespace-qualified symbol")
             (let [[#_"IPersistentMap" m #_"Object" o #_"Var" v]
                     (loop [v nil]
                         (let-when [m (Namespace''getMappings this) o (.valAt m, sym)] (nil? o) => [m o v]
@@ -9195,7 +9191,7 @@
 
     #_method
     (defn #_"Var" Namespace''referenceVar [#_"Namespace" this, #_"Symbol" sym, #_"Var" var]
-        (when (nil? (:ns sym)) => (throw (IllegalArgumentException. "Can't intern namespace-qualified symbol"))
+        (when (nil? (:ns sym)) => (throw! "can't intern namespace-qualified symbol")
             (let [[#_"IPersistentMap" m #_"Object" o]
                     (loop []
                         (let-when [m (Namespace''getMappings this) o (.valAt m, sym)] (nil? o) => [m o]
@@ -9218,7 +9214,7 @@
 
     #_method
     (defn #_"Class" Namespace''referenceClass [#_"Namespace" this, #_"Symbol" sym, #_"Class" cls]
-        (when (nil? (:ns sym)) => (throw (IllegalArgumentException. "Can't intern namespace-qualified symbol"))
+        (when (nil? (:ns sym)) => (throw! "can't intern namespace-qualified symbol")
             (let [#_"Class" c
                     (loop []
                         (let [#_"IPersistentMap" m (Namespace''getMappings this) c (cast Class (.valAt m, sym))]
@@ -9228,7 +9224,7 @@
                             )
                         )
                     )]
-                (when (= c cls) => (throw (IllegalStateException. (str sym " already refers to: " c " in namespace: " (:name this))))
+                (when (= c cls) => (throw! (str sym " already refers to: " c " in namespace: " (:name this)))
                     c
                 )
             )
@@ -9237,7 +9233,7 @@
 
     #_method
     (defn #_"void" Namespace''unmap [#_"Namespace" this, #_"Symbol" sym]
-        (when (nil? (:ns sym)) => (throw (IllegalArgumentException. "Can't unintern namespace-qualified symbol"))
+        (when (nil? (:ns sym)) => (throw! "can't unintern namespace-qualified symbol")
             (loop-when-recur [#_"IPersistentMap" m (Namespace''getMappings this)] (.containsKey m, sym) [(Namespace''getMappings this)]
                 (.compareAndSet (:mappings this), m, (.without m, sym))
             )
@@ -9267,7 +9263,7 @@
 
     (defn #_"Namespace" Namespace'remove [#_"Symbol" name]
         (when (= name (:name RT'CLOIURE_NS))
-            (throw (IllegalArgumentException. "Cannot remove cloiure namespace"))
+            (throw! "cannot remove cloiure namespace")
         )
         (.remove Namespace'namespaces, name)
     )
@@ -9302,14 +9298,14 @@
 
     #_method
     (defn #_"void" Namespace''addAlias [#_"Namespace" this, #_"Symbol" alias, #_"Namespace" ns]
-        (when (and (some? alias) (some? ns)) => (throw (NullPointerException. "Expecting Symbol + Namespace"))
+        (when (and (some? alias) (some? ns)) => (throw! "expecting Symbol + Namespace")
             (let [#_"IPersistentMap" m
                     (loop-when-recur [m (Namespace''getAliases this)] (not (.containsKey m, alias)) [(Namespace''getAliases this)] => m
                         (.compareAndSet (:aliases this), m, (.assoc m, alias, ns))
                     )]
                 ;; you can rebind an alias, but only to the initially-aliased namespace
                 (when-not (.equals (.valAt m, alias), ns)
-                    (throw (IllegalStateException. (str "Alias " alias " already exists in namespace " (:name this) ", aliasing " (.valAt m, alias))))
+                    (throw! (str "alias " alias " already exists in namespace " (:name this) ", aliasing " (.valAt m, alias)))
                 )
             )
         )
@@ -9447,7 +9443,7 @@
         (loop-when-recur [#_"int" i 0] (< i (alength init)) [(+ i 2)]
             (loop-when-recur [#_"int" j (+ i 2)] (< j (alength init)) [(+ j 2)]
                 (when (PersistentArrayMap'equalKey (aget init i), (aget init j))
-                    (throw (IllegalArgumentException. (str "Duplicate key: " (aget init i))))
+                    (throw! (str "duplicate key: " (aget init i)))
                 )
             )
         )
@@ -9456,7 +9452,7 @@
 
     (defn #_"PersistentArrayMap" PersistentArrayMap'createAsIfByAssoc [#_"Object[]" init]
         (when (= (& (alength init) 1) 1)
-            (throw (IllegalArgumentException. (str "No value supplied for key: " (aget init (dec (alength init))))))
+            (throw! (str "no value supplied for key: " (aget init (dec (alength init)))))
         )
         ;; If this looks like it is doing busy-work, it is because it is achieving these goals: O(n^2) run time
         ;; like createWithCheck(), never modify init arg, and only allocate memory if there are duplicate keys.
@@ -9501,7 +9497,7 @@
                                     (recur m (+ i 2))
                                 )
                             )]
-                        (when (= m n) => (throw (IllegalArgumentException. (str "Internal error: m=" m)))
+                        (when (= m n) => (throw! (str "internal error: m=" m))
                             nodups
                         )
                     )
@@ -9548,7 +9544,7 @@
     #_override
     (defn #_"IPersistentMap" IPersistentMap'''assocEx--PersistentArrayMap [#_"PersistentArrayMap" this, #_"Object" key, #_"Object" val]
         (let [#_"int" i (PersistentArrayMap''indexOf this, key)]
-            (when-not (<= 0 i) => (throw (RuntimeException. "Key already present"))
+            (when-not (<= 0 i) => (throw! "key already present")
                 ;; didn't have key, grow
                 (if (< PersistentArrayMap'HASHTABLE_THRESHOLD (alength (:array this)))
                     (.assocEx (PersistentArrayMap''createHT this, (:array this)), key, val)
@@ -10762,7 +10758,7 @@
         (let [#_"ITransientMap" m (.asTransient PersistentHashMap'EMPTY)
               m (loop-when [m m #_"int" i 0] (< i (alength a)) => m
                     (let [m (.assoc m, (aget a i), (aget a (inc i)))]
-                        (when (= (.count m) (inc (/ i 2))) => (throw (IllegalArgumentException. (str "Duplicate key: " (aget a i))))
+                        (when (= (.count m) (inc (/ i 2))) => (throw! (str "duplicate key: " (aget a i)))
                             (recur m (+ i 2))
                         )
                     )
@@ -10774,7 +10770,7 @@
     (defn #_"PersistentHashMap" PersistentHashMap'create-1s [#_"ISeq" s]
         (let [#_"ITransientMap" m (.asTransient PersistentHashMap'EMPTY)
               m (loop-when [m m s s] (some? s) => m
-                    (when (some? (.next s)) => (throw (IllegalArgumentException. (str "No value supplied for key: " (.first s))))
+                    (when (some? (.next s)) => (throw! (str "no value supplied for key: " (.first s)))
                         (recur (.assoc m, (.first s), (RT'second s)) (.next (.next s)))
                     )
                 )]
@@ -10785,9 +10781,9 @@
     (defn #_"PersistentHashMap" PersistentHashMap'createWithCheck-1s [#_"ISeq" s]
         (let [#_"ITransientMap" m (.asTransient PersistentHashMap'EMPTY)
               m (loop-when [m m s s #_"int" i 0] (some? s) => m
-                    (when (some? (.next s)) => (throw (IllegalArgumentException. (str "No value supplied for key: " (.first s))))
+                    (when (some? (.next s)) => (throw! (str "no value supplied for key: " (.first s)))
                         (let [m (.assoc m, (.first s), (RT'second s))]
-                            (when (= (.count m) (inc i)) => (throw (IllegalArgumentException. (str "Duplicate key: " (.first s))))
+                            (when (= (.count m) (inc i)) => (throw! (str "duplicate key: " (.first s)))
                                 (recur m (.next (.next s)) (inc i))
                             )
                         )
@@ -10854,7 +10850,7 @@
     #_override
     (defn #_"IPersistentMap" IPersistentMap'''assocEx--PersistentHashMap [#_"PersistentHashMap" this, #_"Object" key, #_"Object" val]
         (when (.containsKey this, key)
-            (throw (RuntimeException. "Key already present"))
+            (throw! "key already present")
         )
         (.assoc this, key, val)
     )
@@ -11100,7 +11096,7 @@
         (let [#_"ITransientSet" s (cast ITransientSet (.asTransient PersistentHashSet'EMPTY))
               s (loop-when [s s #_"int" i 0] (< i (alength items)) => s
                     (let [s (cast ITransientSet (.conj s, (aget items i)))]
-                        (when (= (.count s) (inc i)) => (throw (IllegalArgumentException. (str "Duplicate key: " (aget items i))))
+                        (when (= (.count s) (inc i)) => (throw! (str "duplicate key: " (aget items i)))
                             (recur s (inc i))
                         )
                     )
@@ -11114,7 +11110,7 @@
               #_"ITransientSet" s (cast ITransientSet (.asTransient PersistentHashSet'EMPTY))
               s (loop-when [s s #_"int" i 0] (.hasNext it) => s
                     (let [#_"Object" key (.next it) s (cast ITransientSet (.conj s, key))]
-                        (when (= (.count s) (inc i)) => (throw (IllegalArgumentException. (str "Duplicate key: " key)))
+                        (when (= (.count s) (inc i)) => (throw! (str "duplicate key: " key))
                             (recur s (inc i))
                         )
                     )
@@ -11127,7 +11123,7 @@
         (let [#_"ITransientSet" s (cast ITransientSet (.asTransient PersistentHashSet'EMPTY))
               s (loop-when [s s items items #_"int" i 0] (some? items) => s
                     (let [s (cast ITransientSet (.conj s, (.first items)))]
-                        (when (= (.count s) (inc i)) => (throw (IllegalArgumentException. (str "Duplicate key: " (.first items))))
+                        (when (= (.count s) (inc i)) => (throw! (str "duplicate key: " (.first items)))
                             (recur s (.next items) (inc i))
                         )
                     )
@@ -11215,7 +11211,7 @@
 
     #_override
     (defn #_"Primordial" IObj'''withMeta--Primordial [#_"Primordial" this, #_"IPersistentMap" meta]
-        (throw (UnsupportedOperationException.))
+        (throw! "unsupported operation")
     )
 
     #_override
@@ -11302,7 +11298,7 @@
 
     #_override
     (defn #_"IPersistentList" IPersistentStack'''pop--EmptyList [#_"EmptyList" this]
-        (throw (IllegalStateException. "Can't pop empty list"))
+        (throw! "can't pop empty list")
     )
 
     #_override
@@ -11882,7 +11878,7 @@
 
     #_override
     (defn #_"TNode" TNode'''redden--Red [#_"Red" this]
-        (throw (UnsupportedOperationException. "Invariant violation"))
+        (throw! "invariant violation")
     )
 
     #_override
@@ -12120,7 +12116,7 @@
 
     (defn #_"PersistentTreeMap" PersistentTreeMap'create-1s [#_"ISeq" s]
         (loop-when [#_"IPersistentMap" m PersistentTreeMap'EMPTY s s] (some? s) => (cast PersistentTreeMap m)
-            (when (some? (.next s)) => (throw (IllegalArgumentException. (str "No value supplied for key: " (.first s))))
+            (when (some? (.next s)) => (throw! (str "no value supplied for key: " (.first s)))
                 (recur (.assoc m, (.first s), (RT'second s)) (.next (.next s)))
             )
         )
@@ -12128,7 +12124,7 @@
 
     (defn #_"PersistentTreeMap" PersistentTreeMap'create-2 [#_"Comparator" comp, #_"ISeq" s]
         (loop-when [#_"IPersistentMap" m (PersistentTreeMap'new comp) s s] (some? s) => (cast PersistentTreeMap m)
-            (when (some? (.next s)) => (throw (IllegalArgumentException. (str "No value supplied for key: " (.first s))))
+            (when (some? (.next s)) => (throw! (str "no value supplied for key: " (.first s)))
                 (recur (.assoc m, (.first s), (RT'second s)) (.next (.next s)))
             )
         )
@@ -12361,7 +12357,7 @@
             (and (instance? Red right) (instance? Black (.left right)))
                 (PersistentTreeMap'red (:key (.left right)), (.val (.left right)), (PersistentTreeMap'black key, val, del, (.left (.left right))), (PersistentTreeMap'rightBalance (:key right), (.val right), (.right (.left right)), (.redden (.right right))))
             :else
-                (throw (UnsupportedOperationException. "Invariant violation"))
+                (throw! "invariant violation")
         )
     )
 
@@ -12385,7 +12381,7 @@
             (and (instance? Red left) (instance? Black (.right left)))
                 (PersistentTreeMap'red (:key (.right left)), (.val (.right left)), (PersistentTreeMap'leftBalance (:key left), (.val left), (.redden (.left left)), (.left (.right left))), (PersistentTreeMap'black key, val, (.right (.right left)), del))
             :else
-                (throw (UnsupportedOperationException. "Invariant violation"))
+                (throw! "invariant violation")
         )
     )
 
@@ -12512,7 +12508,7 @@
     (defn #_"PersistentTreeMap" IPersistentMap'''assocEx--PersistentTreeMap [#_"PersistentTreeMap" this, #_"Object" key, #_"Object" val]
         (let [#_"Box" found (Box'new nil) #_"TNode" t (PersistentTreeMap''add this, (:tree this), key, val, found)]
             (when (nil? t) ;; nil == already contains key
-                (throw (RuntimeException. "Key already present"))
+                (throw! "key already present")
             )
             (PersistentTreeMap'new (.meta this), (:comp this), (.blacken t), (inc (:_count this)))
         )
@@ -12905,7 +12901,7 @@
     #_override
     (defn #_"Object" IFn'''invoke-2--TransientVector [#_"TransientVector" this, #_"Object" arg1]
         ;; note - relies on ensureEditable in nth
-        (when (Numbers'isInteger arg1) => (throw (IllegalArgumentException. "Key must be integer"))
+        (when (Numbers'isInteger arg1) => (throw! "key must be integer")
             (.nth this, (.intValue (cast Number arg1)))
         )
     )
@@ -12960,7 +12956,7 @@
     #_override
     (defn #_"TransientVector" ITransientAssociative'''assoc--TransientVector [#_"TransientVector" this, #_"Object" key, #_"Object" val]
         ;; note - relies on ensureEditable in assocN
-        (when (Numbers'isInteger key) => (throw (IllegalArgumentException. "Key must be integer"))
+        (when (Numbers'isInteger key) => (throw! "key must be integer")
             (.assocN this, (.intValue (cast Number key)), val)
         )
     )
@@ -12990,7 +12986,7 @@
     (defn #_"TransientVector" ITransientVector'''pop--TransientVector [#_"TransientVector" this]
         (TransientVector''ensureEditable this)
         (let [#_"int" n (:cnt this)]
-            (when-not (zero? n) => (throw (IllegalStateException. "Can't pop empty vector"))
+            (when-not (zero? n) => (throw! "can't pop empty vector")
                 (when (and (not= n 1) (zero? (& (dec n) 0x01f))) => (assoc this :cnt (dec n))
                     (let [#_"Object[]" tail (TransientVector''editableArrayFor this, (- n 2))
                           #_"int" shift (:shift this) #_"VNode" root (:root this)
@@ -13357,7 +13353,7 @@
     (defn #_"PersistentVector" IPersistentStack'''pop--PersistentVector [#_"PersistentVector" this]
         (cond
             (zero? (:cnt this))
-                (throw (IllegalStateException. "Can't pop empty vector"))
+                (throw! "can't pop empty vector")
             (= (:cnt this) 1)
                 (.withMeta PersistentVector'EMPTY, (.meta this))
             (< 1 (- (:cnt this) (PersistentVector''tailoff this)))
@@ -13930,7 +13926,7 @@
 
     #_override
     (defn #_"Object" AFn'''throwArity--Unbound [#_"Unbound" this, #_"int" n]
-        (throw (IllegalStateException. (str "Attempting to call unbound fn: " (:v this))))
+        (throw! (str "attempting to call unbound fn: " (:v this)))
     )
 )
 
@@ -13964,9 +13960,9 @@
     (def #_"Keyword" Var'nsKey (Keyword'intern (Symbol'intern "ns")))
 
     (defn #_"Var" Var'find [#_"Symbol" nsQualifiedSym]
-        (when (some? (:ns nsQualifiedSym)) => (throw (IllegalArgumentException. "Symbol must be namespace-qualified"))
+        (when (some? (:ns nsQualifiedSym)) => (throw! "symbol must be namespace-qualified")
             (let [#_"Namespace" ns (Namespace'find (Symbol'intern (:ns nsQualifiedSym)))]
-                (when (some? ns) => (throw (IllegalArgumentException. (str "No such namespace: " (:ns nsQualifiedSym))))
+                (when (some? ns) => (throw! (str "no such namespace: " (:ns nsQualifiedSym)))
                     (Namespace''findInternedVar ns, (Symbol'intern (:name nsQualifiedSym)))
                 )
             )
@@ -14083,8 +14079,8 @@
     #_method
     (defn #_"Object" Var''set [#_"Var" this, #_"Object" val]
         (let [#_"TBox" tb (Var''getThreadBinding this)]
-            (when (some? tb) => (throw (IllegalStateException. (str "Can't change/establish root binding of: " (:sym this) " with set")))
-                (when (= (Thread/currentThread) (:thread tb)) => (throw (IllegalStateException. (str "Can't set!: " (:sym this) " from non-binding thread")))
+            (when (some? tb) => (throw! (str "can't change/establish root binding of: " (:sym this) " with set"))
+                (when (= (Thread/currentThread) (:thread tb)) => (throw! (str "can't set!: " (:sym this) " from non-binding thread"))
                     (§ set! (:val tb) val)
                 )
             )
@@ -14099,7 +14095,7 @@
 
     #_method
     (defn #_"void" Var''setMacro [#_"Var" this]
-        (.alterMeta this, RT'assoc, (RT'list Var'macroKey, RT'T))
+        (.alterMeta this, RT'assoc, (RT'list Var'macroKey, true))
         nil
     )
 
@@ -14120,12 +14116,12 @@
 
     #_method
     (defn #_"Object" Var''getTag [#_"Var" this]
-        (.valAt (.meta this), RT'TAG_KEY)
+        (.valAt (.meta this), :tag)
     )
 
     #_method
     (defn #_"void" Var''setTag [#_"Var" this, #_"Symbol" tag]
-        (.alterMeta this, RT'assoc, (RT'list RT'TAG_KEY, tag))
+        (.alterMeta this, RT'assoc, (RT'list :tag, tag))
         nil
     )
 
@@ -14199,7 +14195,7 @@
             (loop-when [#_"Associative" m (:bindings f) #_"ISeq" s (.seq bindings)] (some? s) => (.set Var'dvals, (Frame'new m, f))
                 (let [#_"IMapEntry" e (cast IMapEntry (.first s)) #_"Var" v (cast Var (.key e))]
                     (when-not (Var''isDynamic v)
-                        (throw (IllegalStateException. (str "Can't dynamically bind non-dynamic var: " (:ns v) "/" (:sym v))))
+                        (throw! (str "can't dynamically bind non-dynamic var: " (:ns v) "/" (:sym v)))
                     )
                     (.set (:threadBound v), true)
                     (recur (.assoc m, v, (TBox'new (Thread/currentThread), (.val e))) (.next s))
@@ -14212,7 +14208,7 @@
     (defn #_"void" Var'popThreadBindings []
         (let [#_"Frame" f (:prev (.get Var'dvals))]
             (cond
-                (nil? f)        (throw (IllegalStateException. "Pop without matching push"))
+                (nil? f)        (throw! "pop without matching push")
                 (= f Frame'TOP) (.remove Var'dvals)
                 :else           (.set Var'dvals, f)
             )
@@ -14408,111 +14404,6 @@
 (java-ns cloiure.lang.RT
 
 (class-ns RT
-    (def #_"Boolean" RT'T Boolean/TRUE)
-    (def #_"Boolean" RT'F Boolean/FALSE)
-
-    ;; simple-symbol->class
-    (def #_"IPersistentMap" RT'DEFAULT_IMPORTS (§ soon RT'map
-        (object-array [
-            (Symbol'intern "Boolean")                         Boolean
-            (Symbol'intern "Byte")                            Byte
-            (Symbol'intern "Character")                       Character
-            (Symbol'intern "Class")                           Class
-            (Symbol'intern "ClassLoader")                     ClassLoader
-            (Symbol'intern "Compiler")                        Compiler
-            (Symbol'intern "Double")                          Double
-            (Symbol'intern "Enum")                            Enum
-            (Symbol'intern "Float")                           Float
-            (Symbol'intern "InheritableThreadLocal")          InheritableThreadLocal
-            (Symbol'intern "Integer")                         Integer
-            (Symbol'intern "Long")                            Long
-            (Symbol'intern "Math")                            Math
-            (Symbol'intern "Number")                          Number
-            (Symbol'intern "Object")                          Object
-            (Symbol'intern "Package")                         Package
-            (Symbol'intern "Process")                         Process
-            (Symbol'intern "ProcessBuilder")                  ProcessBuilder
-            (Symbol'intern "Runtime")                         Runtime
-            (Symbol'intern "RuntimePermission")               RuntimePermission
-            (Symbol'intern "SecurityManager")                 SecurityManager
-            (Symbol'intern "Short")                           Short
-            (Symbol'intern "StackTraceElement")               StackTraceElement
-            (Symbol'intern "StrictMath")                      StrictMath
-            (Symbol'intern "String")                          String
-            (Symbol'intern "StringBuffer")                    StringBuffer
-            (Symbol'intern "StringBuilder")                   StringBuilder
-            (Symbol'intern "System")                          System
-            (Symbol'intern "Thread")                          Thread
-            (Symbol'intern "ThreadGroup")                     ThreadGroup
-            (Symbol'intern "ThreadLocal")                     ThreadLocal
-            (Symbol'intern "Throwable")                       Throwable
-            (Symbol'intern "Void")                            Void
-            (Symbol'intern "Appendable")                      Appendable
-            (Symbol'intern "CharSequence")                    CharSequence
-            (Symbol'intern "Cloneable")                       Cloneable
-            (Symbol'intern "Comparable")                      Comparable
-            (Symbol'intern "Iterable")                        Iterable
-            (Symbol'intern "Readable")                        Readable
-            (Symbol'intern "Runnable")                        Runnable
-            (Symbol'intern "Callable")                        Callable
-            (Symbol'intern "BigInteger")                      BigInteger
-            (Symbol'intern "BigDecimal")                      BigDecimal
-            (Symbol'intern "ArithmeticException")             ArithmeticException
-            (Symbol'intern "ArrayIndexOutOfBoundsException")  ArrayIndexOutOfBoundsException
-            (Symbol'intern "ArrayStoreException")             ArrayStoreException
-            (Symbol'intern "ClassCastException")              ClassCastException
-            (Symbol'intern "ClassNotFoundException")          ClassNotFoundException
-            (Symbol'intern "CloneNotSupportedException")      CloneNotSupportedException
-            (Symbol'intern "EnumConstantNotPresentException") EnumConstantNotPresentException
-            (Symbol'intern "Exception")                       Exception
-            (Symbol'intern "IllegalAccessException")          IllegalAccessException
-            (Symbol'intern "IllegalArgumentException")        IllegalArgumentException
-            (Symbol'intern "IllegalMonitorStateException")    IllegalMonitorStateException
-            (Symbol'intern "IllegalStateException")           IllegalStateException
-            (Symbol'intern "IllegalThreadStateException")     IllegalThreadStateException
-            (Symbol'intern "IndexOutOfBoundsException")       IndexOutOfBoundsException
-            (Symbol'intern "InstantiationException")          InstantiationException
-            (Symbol'intern "InterruptedException")            InterruptedException
-            (Symbol'intern "NegativeArraySizeException")      NegativeArraySizeException
-            (Symbol'intern "NoSuchFieldException")            NoSuchFieldException
-            (Symbol'intern "NoSuchMethodException")           NoSuchMethodException
-            (Symbol'intern "NullPointerException")            NullPointerException
-            (Symbol'intern "NumberFormatException")           NumberFormatException
-            (Symbol'intern "RuntimeException")                RuntimeException
-            (Symbol'intern "SecurityException")               SecurityException
-            (Symbol'intern "StringIndexOutOfBoundsException") StringIndexOutOfBoundsException
-            (Symbol'intern "TypeNotPresentException")         TypeNotPresentException
-            (Symbol'intern "UnsupportedOperationException")   UnsupportedOperationException
-            (Symbol'intern "AbstractMethodError")             AbstractMethodError
-            (Symbol'intern "AssertionError")                  AssertionError
-            (Symbol'intern "ClassCircularityError")           ClassCircularityError
-            (Symbol'intern "ClassFormatError")                ClassFormatError
-            (Symbol'intern "Error")                           Error
-            (Symbol'intern "ExceptionInInitializerError")     ExceptionInInitializerError
-            (Symbol'intern "IllegalAccessError")              IllegalAccessError
-            (Symbol'intern "IncompatibleClassChangeError")    IncompatibleClassChangeError
-            (Symbol'intern "InstantiationError")              InstantiationError
-            (Symbol'intern "InternalError")                   InternalError
-            (Symbol'intern "LinkageError")                    LinkageError
-            (Symbol'intern "NoClassDefFoundError")            NoClassDefFoundError
-            (Symbol'intern "NoSuchFieldError")                NoSuchFieldError
-            (Symbol'intern "NoSuchMethodError")               NoSuchMethodError
-            (Symbol'intern "OutOfMemoryError")                OutOfMemoryError
-            (Symbol'intern "StackOverflowError")              StackOverflowError
-            (Symbol'intern "ThreadDeath")                     ThreadDeath
-            (Symbol'intern "UnknownError")                    UnknownError
-            (Symbol'intern "UnsatisfiedLinkError")            UnsatisfiedLinkError
-            (Symbol'intern "UnsupportedClassVersionError")    UnsupportedClassVersionError
-            (Symbol'intern "VerifyError")                     VerifyError
-            (Symbol'intern "VirtualMachineError")             VirtualMachineError
-            (Symbol'intern "Thread$UncaughtExceptionHandler") Thread$UncaughtExceptionHandler
-            (Symbol'intern "Thread$State")                    Thread$State
-            (Symbol'intern "Deprecated")                      Deprecated
-            (Symbol'intern "Override")                        Override
-            (Symbol'intern "SuppressWarnings")                SuppressWarnings
-        ])
-    ))
-
     (def #_"Namespace" RT'CLOIURE_NS (§ soon Namespace'findOrCreate (Symbol'intern "cloiure.core")))
 
     ;;;
@@ -14531,14 +14422,8 @@
      ;;
     (def #_"Var" RT'ERR (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*err*"), (PrintWriter. (OutputStreamWriter. System/err), true))))
 
-    (def #_"Keyword" RT'TAG_KEY (Keyword'intern (Symbol'intern "tag")))
-
-    (def #_"Var" RT'ASSERT (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*assert*"), RT'T)))
+    (def #_"Var" RT'ASSERT (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*assert*"), true)))
     (def #_"Var" RT'MATH_CONTEXT (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*math-context*"), nil)))
-
-    (def #_"Keyword" RT'LINE_KEY (Keyword'intern (Symbol'intern "line")))
-    (def #_"Keyword" RT'COLUMN_KEY (Keyword'intern (Symbol'intern "column")))
-    (def #_"Keyword" RT'DECLARED_KEY (Keyword'intern (Symbol'intern "declared")))
 
     ;;;
      ; A cloiure.lang.Namespace object representing the current namespace.
@@ -14548,23 +14433,22 @@
      ; When set to true, output will be flushed whenever a newline is printed.
      ; Defaults to true.
      ;;
-    (def #_"Var" RT'FLUSH_ON_NEWLINE (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*flush-on-newline*"), RT'T)))
+    (def #_"Var" RT'FLUSH_ON_NEWLINE (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*flush-on-newline*"), true)))
     ;;;
      ; When set to logical false, strings and characters will be printed with
      ; non-alphanumeric characters converted to the appropriate escape sequences.
      ; Defaults to true.
      ;;
-    (def #_"Var" RT'PRINT_READABLY (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*print-readably*"), RT'T)))
+    (def #_"Var" RT'PRINT_READABLY (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*print-readably*"), true)))
     ;;;
      ; When set to true, the compiler will emit warnings when reflection
      ; is needed to resolve Java method calls or field accesses.
      ; Defaults to false.
      ;;
-    (def #_"Var" RT'WARN_ON_REFLECTION (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*warn-on-reflection*"), RT'F)))
-    (def #_"Var" RT'ALLOW_UNRESOLVED_VARS (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*allow-unresolved-vars*"), RT'F)))
+    (def #_"Var" RT'WARN_ON_REFLECTION (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*warn-on-reflection*"), false)))
 
-    (def #_"Var" RT'IN_NS_VAR (§ soon Var'intern RT'CLOIURE_NS, (Symbol'intern "in-ns"), RT'F))
-    (def #_"Var" RT'NS_VAR (§ soon Var'intern RT'CLOIURE_NS, (Symbol'intern "ns"), RT'F))
+    (def #_"Var" RT'IN_NS_VAR (§ soon Var'intern RT'CLOIURE_NS, (Symbol'intern "in-ns"), false))
+    (def #_"Var" RT'NS_VAR (§ soon Var'intern RT'CLOIURE_NS, (Symbol'intern "ns"), false))
     (def #_"Var" RT'PRINT_INITIALIZED (§ soon Var'intern RT'CLOIURE_NS, (Symbol'intern "print-initialized")))
     (def #_"Var" RT'PR_ON (§ soon Var'intern RT'CLOIURE_NS, (Symbol'intern "pr-on")))
 
@@ -14657,10 +14541,10 @@
             (instance? Seqable coll)      (.seq (cast Seqable coll))
             (nil? coll)                   nil
             (instance? Iterable coll)     (RT'chunkIteratorSeq (.iterator (cast Iterable coll)))
-            (.isArray (.getClass coll))   (ArraySeq'createFromObject coll)
+            (.isArray (class coll))       (ArraySeq'createFromObject coll)
             (instance? CharSequence coll) (StringSeq'create (cast CharSequence coll))
             (instance? Map coll)          (RT'seq (.entrySet (cast Map coll)))
-            :else (throw (IllegalArgumentException. (str "Don't know how to create ISeq from: " (.getName (.getClass coll)))))
+            :else (throw! (str "don't know how to create ISeq from: " (.getName (class coll))))
         )
     )
 
@@ -14670,7 +14554,7 @@
             (instance? Seqable coll)
             (nil? coll)
             (instance? Iterable coll)
-            (.isArray (.getClass coll))
+            (.isArray (class coll))
             (instance? CharSequence coll)
             (instance? Map coll)
         )
@@ -14713,7 +14597,7 @@
                         )
                     )
                 )
-            (.isArray (.getClass coll))
+            (.isArray (class coll))
                 (ArrayIter'createFromObject coll)
             :else
                 (RT'iter (RT'seq coll))
@@ -14766,10 +14650,10 @@
                 (.size (cast Map o))
             (instance? Map$Entry o)
                 2
-            (.isArray (.getClass o))
+            (.isArray (class o))
                 (Array/getLength o)
             :else
-                (throw (UnsupportedOperationException. (str "count not supported on this type: " (.getSimpleName (.getClass o)))))
+                (throw! (str "count not supported on this type: " (.getSimpleName (class o))))
         )
     )
 
@@ -14851,7 +14735,7 @@
                     (.get (cast Map coll), key)
                 (instance? IPersistentSet coll)
                     (.get (cast IPersistentSet coll), key)
-                (and (instance? Number key) (or (instance? String coll) (.isArray (.getClass coll))))
+                (and (instance? Number key) (or (instance? String coll) (.isArray (class coll))))
                     (let-when [#_"int" n (.intValue (cast Number key))] (< -1 n (RT'count coll))
                         (RT'nth coll, n)
                     )
@@ -14873,7 +14757,7 @@
                     (let [#_"IPersistentSet" s (cast IPersistentSet coll)]
                         (if (.contains s, key) (.get s, key) notFound)
                     )
-                (and (instance? Number key) (or (instance? String coll) (.isArray (.getClass coll))))
+                (and (instance? Number key) (or (instance? String coll) (.isArray (class coll))))
                     (let [#_"int" n (.intValue (cast Number key))]
                         (if (< -1 n (RT'count coll)) (RT'nth coll, n) notFound)
                     )
@@ -14897,25 +14781,25 @@
     (defn #_"Object" RT'contains [#_"Object" coll, #_"Object" key]
         (cond
             (nil? coll)
-                RT'F
+                false
             (instance? Associative coll)
-                (if (.containsKey (cast Associative coll), key) RT'T RT'F)
+                (if (.containsKey (cast Associative coll), key) true false)
             (instance? IPersistentSet coll)
-                (if (.contains (cast IPersistentSet coll), key) RT'T RT'F)
+                (if (.contains (cast IPersistentSet coll), key) true false)
             (instance? Map coll)
-                (if (.containsKey (cast Map coll), key) RT'T RT'F)
+                (if (.containsKey (cast Map coll), key) true false)
             (instance? Set coll)
-                (if (.contains (cast Set coll), key) RT'T RT'F)
-            (and (instance? Number key) (or (instance? String coll) (.isArray (.getClass coll))))
+                (if (.contains (cast Set coll), key) true false)
+            (and (instance? Number key) (or (instance? String coll) (.isArray (class coll))))
                 (let [#_"int" n (.intValue (cast Number key))]
-                    (if (< -1 n (RT'count coll)) RT'T RT'F)
+                    (if (< -1 n (RT'count coll)) true false)
                 )
             (instance? ITransientSet coll)
-                (if (.contains (cast ITransientSet coll), key) RT'T RT'F)
+                (if (.contains (cast ITransientSet coll), key) true false)
             (instance? ITransientAssociative2 coll)
-                (if (.containsKey (cast ITransientAssociative2 coll), key) RT'T RT'F)
+                (if (.containsKey (cast ITransientAssociative2 coll), key) true false)
             :else
-                (throw (IllegalArgumentException. (str "contains? not supported on type: " (.getName (.getClass coll)))))
+                (throw! (str "contains? not supported on type: " (.getName (class coll))))
         )
     )
 
@@ -14932,7 +14816,7 @@
             (instance? ITransientAssociative2 coll)
                 (.entryAt (cast ITransientAssociative2 coll), key)
             :else
-                (throw (IllegalArgumentException. (str "find not supported on type: " (.getName (.getClass coll)))))
+                (throw! (str "find not supported on type: " (.getName (class coll))))
         )
     )
 
@@ -14941,7 +14825,7 @@
 
     (defn #_"ISeq" RT'findKey [#_"Keyword" key, #_"ISeq" keyvals]
         (loop-when keyvals (some? keyvals)
-            (let-when [#_"ISeq" r (.next keyvals)] (some? r) => (throw (RuntimeException. "Malformed keyword argslist"))
+            (let-when [#_"ISeq" r (.next keyvals)] (some? r) => (throw! "malformed keyword argslist")
                 (when-not (= (.first keyvals) key) => r
                     (recur (.next r))
                 )
@@ -14964,8 +14848,8 @@
                     nil
                 (instance? CharSequence coll)
                     (Character/valueOf (.charAt (cast CharSequence coll), n))
-                (.isArray (.getClass coll))
-                    (Reflector'prepRet (.getComponentType (.getClass coll)), (Array/get coll, n))
+                (.isArray (class coll))
+                    (Reflector'prepRet (.getComponentType (class coll)), (Array/get coll, n))
                 (instance? Matcher coll)
                     (.group (cast Matcher coll), n)
                 (instance? Map$Entry coll)
@@ -14977,7 +14861,7 @@
                         (recur-if (< i n) [(inc i) (.next s)] => (.first s))
                     )
                 :else
-                    (throw (UnsupportedOperationException. (str "nth not supported on this type: " (.getSimpleName (.getClass coll)))))
+                    (throw! (str "nth not supported on this type: " (.getSimpleName (class coll))))
             )
         )
         ([#_"Object" coll, #_"int" n, #_"Object" notFound]
@@ -14992,9 +14876,9 @@
                     (let [#_"CharSequence" s (cast CharSequence coll)]
                         (if (< n (.length s)) (Character/valueOf (.charAt s, n)) notFound)
                     )
-                (.isArray (.getClass coll))
+                (.isArray (class coll))
                     (when (< n (Array/getLength coll)) => notFound
-                        (Reflector'prepRet (.getComponentType (.getClass coll)), (Array/get coll, n))
+                        (Reflector'prepRet (.getComponentType (class coll)), (Array/get coll, n))
                     )
                 (instance? Matcher coll)
                     (let-when [#_"Matcher" m (cast Matcher coll)] (< n (.groupCount m)) => notFound
@@ -15009,7 +14893,7 @@
                         (recur-if (< i n) [(inc i) (.next s)] => (.first s))
                     )
                 :else
-                    (throw (UnsupportedOperationException. (str "nth not supported on this type: " (.getSimpleName (.getClass coll)))))
+                    (throw! (str "nth not supported on this type: " (.getSimpleName (class coll))))
             )
         )
     )
@@ -15030,12 +14914,12 @@
     )
 
     (defn #_"boolean" RT'hasTag [#_"Object" o, #_"Object" tag]
-        (Util'equals tag, (RT'get (RT'meta o), RT'TAG_KEY))
+        (Util'equals tag, (RT'get (RT'meta o), :tag))
     )
 
     (defn #_"Object"    RT'box-1o [#_"Object"  x] x)
     (defn #_"Character" RT'box-1c [#_"char"    x] (Character/valueOf x))
-    (defn #_"Object"    RT'box-1z [#_"boolean" x] (if x RT'T RT'F))
+    (defn #_"Object"    RT'box-1z [#_"boolean" x] (if x true false))
     (defn #_"Object"    RT'box-1Z [#_"Boolean" x] x)
     (defn #_"Number"    RT'box-1b [#_"byte"    x] x)
     (defn #_"Number"    RT'box-1s [#_"short"   x] x)
@@ -15046,7 +14930,7 @@
 
     (defn #_"char" RT'charCast-1b [#_"byte" x]
         (let [#_"char" i (char x)]
-            (when (= i x) => (throw (IllegalArgumentException. (str "Value out of range for char: " x)))
+            (when (= i x) => (throw! (str "value out of range for char: " x))
                 i
             )
         )
@@ -15054,7 +14938,7 @@
 
     (defn #_"char" RT'charCast-1s [#_"short" x]
         (let [#_"char" i (char x)]
-            (when (= i x) => (throw (IllegalArgumentException. (str "Value out of range for char: " x)))
+            (when (= i x) => (throw! (str "value out of range for char: " x))
                 i
             )
         )
@@ -15066,7 +14950,7 @@
 
     (defn #_"char" RT'charCast-1i [#_"int" x]
         (let [#_"char" i (char x)]
-            (when (= i x) => (throw (IllegalArgumentException. (str "Value out of range for char: " x)))
+            (when (= i x) => (throw! (str "value out of range for char: " x))
                 i
             )
         )
@@ -15074,20 +14958,20 @@
 
     (defn #_"char" RT'charCast-1l [#_"long" x]
         (let [#_"char" i (char x)]
-            (when (= i x) => (throw (IllegalArgumentException. (str "Value out of range for char: " x)))
+            (when (= i x) => (throw! (str "value out of range for char: " x))
                 i
             )
         )
     )
 
     (defn #_"char" RT'charCast-1f [#_"float" x]
-        (when (<= Character/MIN_VALUE x Character/MAX_VALUE) => (throw (IllegalArgumentException. (str "Value out of range for char: " x)))
+        (when (<= Character/MIN_VALUE x Character/MAX_VALUE) => (throw! (str "value out of range for char: " x))
             (char x)
         )
     )
 
     (defn #_"char" RT'charCast-1d [#_"double" x]
-        (when (<= Character/MIN_VALUE x Character/MAX_VALUE) => (throw (IllegalArgumentException. (str "Value out of range for char: " x)))
+        (when (<= Character/MIN_VALUE x Character/MAX_VALUE) => (throw! (str "value out of range for char: " x))
             (char x)
         )
     )
@@ -15096,7 +14980,7 @@
         (if (instance? Character x)
             (.charValue (cast Character x))
             (let [#_"long" n (.longValue (cast Number x))]
-                (when (<= Character/MIN_VALUE n Character/MAX_VALUE) => (throw (IllegalArgumentException. (str "Value out of range for char: " x)))
+                (when (<= Character/MIN_VALUE n Character/MAX_VALUE) => (throw! (str "value out of range for char: " x))
                     (char n)
                 )
             )
@@ -15117,7 +15001,7 @@
 
     (defn #_"byte" RT'byteCast-1s [#_"short" x]
         (let [#_"byte" i (byte x)]
-            (when (= i x) => (throw (IllegalArgumentException. (str "Value out of range for byte: " x)))
+            (when (= i x) => (throw! (str "value out of range for byte: " x))
                 i
             )
         )
@@ -15125,7 +15009,7 @@
 
     (defn #_"byte" RT'byteCast-1i [#_"int" x]
         (let [#_"byte" i (byte x)]
-            (when (= i x) => (throw (IllegalArgumentException. (str "Value out of range for byte: " x)))
+            (when (= i x) => (throw! (str "value out of range for byte: " x))
                 i
             )
         )
@@ -15133,20 +15017,20 @@
 
     (defn #_"byte" RT'byteCast-1l [#_"long" x]
         (let [#_"byte" i (byte x)]
-            (when (= i x) => (throw (IllegalArgumentException. (str "Value out of range for byte: " x)))
+            (when (= i x) => (throw! (str "value out of range for byte: " x))
                 i
             )
         )
     )
 
     (defn #_"byte" RT'byteCast-1f [#_"float" x]
-        (when (<= Byte/MIN_VALUE x Byte/MAX_VALUE) => (throw (IllegalArgumentException. (str "Value out of range for byte: " x)))
+        (when (<= Byte/MIN_VALUE x Byte/MAX_VALUE) => (throw! (str "value out of range for byte: " x))
             (byte x)
         )
     )
 
     (defn #_"byte" RT'byteCast-1d [#_"double" x]
-        (when (<= Byte/MIN_VALUE x Byte/MAX_VALUE) => (throw (IllegalArgumentException. (str "Value out of range for byte: " x)))
+        (when (<= Byte/MIN_VALUE x Byte/MAX_VALUE) => (throw! (str "value out of range for byte: " x))
             (byte x)
         )
     )
@@ -15155,7 +15039,7 @@
         (if (instance? Byte x)
             (.byteValue (cast Byte x))
             (let [#_"long" n (RT'longCast-1o x)]
-                (when (<= Byte/MIN_VALUE n Byte/MAX_VALUE) => (throw (IllegalArgumentException. (str "Value out of range for byte: " x)))
+                (when (<= Byte/MIN_VALUE n Byte/MAX_VALUE) => (throw! (str "value out of range for byte: " x))
                     (byte n)
                 )
             )
@@ -15167,7 +15051,7 @@
 
     (defn #_"short" RT'shortCast-1i [#_"int" x]
         (let [#_"short" i (short x)]
-            (when (= i x) => (throw (IllegalArgumentException. (str "Value out of range for short: " x)))
+            (when (= i x) => (throw! (str "value out of range for short: " x))
                 i
             )
         )
@@ -15175,20 +15059,20 @@
 
     (defn #_"short" RT'shortCast-1l [#_"long" x]
         (let [#_"short" i (short x)]
-            (when (= i x) => (throw (IllegalArgumentException. (str "Value out of range for short: " x)))
+            (when (= i x) => (throw! (str "value out of range for short: " x))
                 i
             )
         )
     )
 
     (defn #_"short" RT'shortCast-1f [#_"float" x]
-        (when (<= Short/MIN_VALUE x Short/MAX_VALUE) => (throw (IllegalArgumentException. (str "Value out of range for short: " x)))
+        (when (<= Short/MIN_VALUE x Short/MAX_VALUE) => (throw! (str "value out of range for short: " x))
             (short x)
         )
     )
 
     (defn #_"short" RT'shortCast-1d [#_"double" x]
-        (when (<= Short/MIN_VALUE x Short/MAX_VALUE) => (throw (IllegalArgumentException. (str "Value out of range for short: " x)))
+        (when (<= Short/MIN_VALUE x Short/MAX_VALUE) => (throw! (str "value out of range for short: " x))
             (short x)
         )
     )
@@ -15197,7 +15081,7 @@
         (if (instance? Short x)
             (.shortValue (cast Short x))
             (let [#_"long" n (RT'longCast-1o x)]
-                (when (<= Short/MIN_VALUE n Short/MAX_VALUE) => (throw (IllegalArgumentException. (str "Value out of range for short: " x)))
+                (when (<= Short/MIN_VALUE n Short/MAX_VALUE) => (throw! (str "value out of range for short: " x))
                     (short n)
                 )
             )
@@ -15211,20 +15095,20 @@
 
     (defn #_"int" RT'intCast-1l [#_"long" x]
         (let [#_"int" i (int x)]
-            (when (= i x) => (throw (IllegalArgumentException. (str "Value out of range for int: " x)))
+            (when (= i x) => (throw! (str "value out of range for int: " x))
                 i
             )
         )
     )
 
     (defn #_"int" RT'intCast-1f [#_"float" x]
-        (when (<= Integer/MIN_VALUE x Integer/MAX_VALUE) => (throw (IllegalArgumentException. (str "Value out of range for int: " x)))
+        (when (<= Integer/MIN_VALUE x Integer/MAX_VALUE) => (throw! (str "value out of range for int: " x))
             (int x)
         )
     )
 
     (defn #_"int" RT'intCast-1d [#_"double" x]
-        (when (<= Integer/MIN_VALUE x Integer/MAX_VALUE) => (throw (IllegalArgumentException. (str "Value out of range for int: " x)))
+        (when (<= Integer/MIN_VALUE x Integer/MAX_VALUE) => (throw! (str "value out of range for int: " x))
             (int x)
         )
     )
@@ -15243,13 +15127,13 @@
     (defn #_"long" RT'longCast-1l [#_"long"  x] x)
 
     (defn #_"long" RT'longCast-1f [#_"float" x]
-        (when (<= Long/MIN_VALUE x Long/MAX_VALUE) => (throw (IllegalArgumentException. (str "Value out of range for long: " x)))
+        (when (<= Long/MIN_VALUE x Long/MAX_VALUE) => (throw! (str "value out of range for long: " x))
             (long x)
         )
     )
 
     (defn #_"long" RT'longCast-1d [#_"double" x]
-        (when (<= Long/MIN_VALUE x Long/MAX_VALUE) => (throw (IllegalArgumentException. (str "Value out of range for long: " x)))
+        (when (<= Long/MIN_VALUE x Long/MAX_VALUE) => (throw! (str "value out of range for long: " x))
             (long x)
         )
     )
@@ -15260,13 +15144,13 @@
                 (.longValue (cast Number x))
             (instance? BigInt x)
                 (let [#_"BigInt" bi (cast BigInt x)]
-                    (when (nil? (:bipart bi)) => (throw (IllegalArgumentException. (str "Value out of range for long: " x)))
+                    (when (nil? (:bipart bi)) => (throw! (str "value out of range for long: " x))
                         (:lpart bi)
                     )
                 )
             (instance? BigInteger x)
                 (let [#_"BigInteger" bi (cast BigInteger x)]
-                    (when (< (.bitLength bi) 64) => (throw (IllegalArgumentException. (str "Value out of range for long: " x)))
+                    (when (< (.bitLength bi) 64) => (throw! (str "value out of range for long: " x))
                         (.longValue bi)
                     )
                 )
@@ -15288,7 +15172,7 @@
     (defn #_"float" RT'floatCast-1f [#_"float" x] x)
 
     (defn #_"float" RT'floatCast-1d [#_"double" x]
-        (when (<= (- Float/MAX_VALUE) x Float/MAX_VALUE) => (throw (IllegalArgumentException. (str "Value out of range for float: " x)))
+        (when (<= (- Float/MAX_VALUE) x Float/MAX_VALUE) => (throw! (str "value out of range for float: " x))
             (float x)
         )
     )
@@ -15297,7 +15181,7 @@
         (if (instance? Float x)
             (.floatValue (cast Float x))
             (let [#_"double" n (.doubleValue (cast Number x))]
-                (when (<= (- Float/MAX_VALUE) n Float/MAX_VALUE) => (throw (IllegalArgumentException. (str "Value out of range for float: " x)))
+                (when (<= (- Float/MAX_VALUE) n Float/MAX_VALUE) => (throw! (str "value out of range for float: " x))
                     (float n)
                 )
             )
@@ -15488,7 +15372,7 @@
                     )
                     a
                 )
-            (.isArray (.getClass coll))
+            (.isArray (class coll))
                 (let [#_"ISeq" s (RT'seq coll)
                       #_"Object[]" a (make-array Object (RT'count s))]
                     (loop-when-recur [#_"int" i 0 s s] (< i (alength a)) [(inc i) (.next s)]
@@ -15497,7 +15381,7 @@
                     a
                 )
             :else
-                (throw (RuntimeException. (str "Unable to convert: " (.getClass coll) " to Object[]")))
+                (throw! (str "unable to convert: " (class coll) " to Object[]"))
         )
     )
 
@@ -15512,7 +15396,7 @@
 
     (defn #_"Object[]" RT'seqToPassedArray [#_"ISeq" s, #_"Object[]" passed]
         (let [#_"Object[]" a passed #_"int" n (RT'count s)
-              a (if (< (alength a) n) (cast Compiler'OBJECTS_CLASS (Array/newInstance (.getComponentType (.getClass passed)), n)) a)]
+              a (if (< (alength a) n) (cast Compiler'OBJECTS_CLASS (Array/newInstance (.getComponentType (class passed)), n)) a)]
             (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (.next s)]
                 (aset a i (.first s))
             )
@@ -15556,7 +15440,7 @@
     )
 
     (defn #_"Object" RT'seqToTypedArray-1 [#_"ISeq" s]
-        (let [#_"Class" type (if (and (some? s) (some? (.first s))) (.getClass (.first s)) Object)]
+        (let [#_"Class" type (if (and (some? s) (some? (.first s))) (class (.first s)) Object)]
             (RT'seqToTypedArray-2 type, s)
         )
     )
@@ -15721,30 +15605,11 @@
         nil
     )
 
-    (defn #_"ClassLoader" RT'makeClassLoader []
-        (cast ClassLoader
-            (AccessController/doPrivileged
-                (reify PrivilegedAction
-                    #_foreign
-                    (#_"Object" run [#_"PrivilegedAction" _self]
-                        (DynamicClassLoader'new (RT'baseLoader))
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"ClassLoader" RT'baseLoader []
-        (if (Var''isBound Compiler'LOADER)
-            (cast ClassLoader (.deref Compiler'LOADER))
-            (.getContextClassLoader (Thread/currentThread))
-        )
-    )
-
     (defn #_"Class" RT'classForName
-        ([#_"String" name] (RT'classForName name, true, (RT'baseLoader)))
-        ([#_"String" name, #_"boolean" load?, #_"ClassLoader" loader]
-            (let [#_"Class" c
+        ([#_"String" name] (RT'classForName name, true))
+        ([#_"String" name, #_"boolean" load?]
+            (let [#_"ClassLoader" loader (Compiler'baseLoader)
+                  #_"Class" c
                     (when-not (instance? DynamicClassLoader loader)
                         (DynamicClassLoader'findInMemoryClass name)
                     )]
@@ -15754,7 +15619,7 @@
     )
 
     (defn #_"Class" RT'classForNameNonLoading [#_"String" name]
-        (RT'classForName name, false, (RT'baseLoader))
+        (RT'classForName name, false)
     )
 
     (defn #_"Class" RT'loadClassForName [#_"String" name]

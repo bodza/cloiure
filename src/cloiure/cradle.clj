@@ -47,6 +47,8 @@
 (def >> bit-shift-right)
 (def >>> unsigned-bit-shift-right)
 
+(defmacro throw! [^String s] `(throw (RuntimeException. ~s)))
+
 (defmacro java-ns [name & _] #_(ensure symbol? name) `(do ~@_))
 (defmacro class-ns [name & _] #_(ensure symbol? name) `(do ~@_))
 
@@ -56,8 +58,9 @@
 
 (import
     [java.io PushbackReader Reader]
-  #_[java.lang Character Class Exception IllegalArgumentException IllegalStateException Integer Number Object RuntimeException String StringBuilder Throwable UnsupportedOperationException]
+  #_[java.lang Character Class ClassLoader Exception Integer Number Object RuntimeException String StringBuilder Thread Throwable]
     [java.lang.reflect Constructor Field #_Method Modifier]
+    [java.security AccessController PrivilegedAction]
     [java.util Arrays HashMap HashSet IdentityHashMap Iterator Map Map$Entry Set TreeMap]
     [java.util.regex Matcher Pattern]
     [clojure.lang AFn AFunction APersistentMap APersistentSet APersistentVector ArraySeq BigInt DynamicClassLoader PersistentList$EmptyList IFn ILookup ILookupSite ILookupThunk IMapEntry IMeta IObj IPersistentCollection IPersistentList IPersistentMap IPersistentSet IPersistentVector IReference ISeq IType Keyword KeywordLookupSite LazySeq Namespace Numbers PersistentArrayMap PersistentHashSet PersistentList PersistentVector RestFn RT Symbol Tuple Util Var]
@@ -309,22 +312,12 @@
 (java-ns cloiure.lang.Reflector
 
 (class-ns Reflector
-    (defn #_"Class" Reflector'classOf [#_"Object" x]
-        (when (some? x)
-            (.getClass x)
-        )
+    (defn #_"Class" Reflector'classOf [#_"Object" o]
+        (class o)
     )
 
     (defn #_"boolean" Reflector'isPrimitive [#_"Class" c]
         (and (some? c) (.isPrimitive c) (not (= c Void/TYPE)))
-    )
-
-    (defn- #_"Throwable" Reflector'getCauseOrElse [#_"Exception" e]
-        (or (.getCause e) e)
-    )
-
-    (defn- #_"String" Reflector'noMethodReport [#_"String" methodName, #_"Object" target]
-        (str "No matching method found: " methodName (when (some? target) (str " for " (.getClass target))))
     )
 
     (defn #_"Field" Reflector'getField [#_"Class" c, #_"String" name, #_"boolean" static?]
@@ -382,7 +375,7 @@
     )
 
     (defn #_"Object" Reflector'boxArg [#_"Class" c, #_"Object" arg]
-        (let [unexpected! #(throw (IllegalArgumentException. (str "Unexpected param type, expected: " c ", given: " (.getName (.getClass arg)))))]
+        (let [unexpected! #(throw! (str "unexpected param type, expected: " c ", given: " (.getName (class arg))))]
             (cond
                 (not (.isPrimitive c)) (cast c arg)
                 (= c Boolean/TYPE)     (cast Boolean arg)
@@ -438,10 +431,10 @@
     (defn #_"boolean" Reflector'isCongruent [#_"Class[]" params, #_"Object[]" args]
         (when (some? args) => (zero? (alength params))
             (and (= (alength params) (alength args))
-                (loop-when [#_"boolean" ? true #_"int" i 0] (and ? (< i (alength params)))
-                    (let [#_"Object" arg (aget args i)]
-                        (recur (Reflector'paramArgTypeMatch (aget params i), (when (some? arg) (.getClass arg))) (inc i))
-                    )
+                (loop-when-recur [#_"boolean" ? true #_"int" i 0]
+                                 (and ? (< i (alength params)))
+                                 [(Reflector'paramArgTypeMatch (aget params i), (class (aget args i))) (inc i)]
+                              => ?
                 )
             )
         )
@@ -509,7 +502,7 @@
     )
 
     (defn #_"Object" Reflector'invokeMatchingMethod [#_"String" methodName, #_"PersistentVector" methods, #_"Object" target, #_"Object[]" args]
-        (let-when [#_"int" n (count methods)] (pos? n) => (throw (IllegalArgumentException. (Reflector'noMethodReport methodName, target)))
+        (let-when [#_"int" n (count methods)] (pos? n) => (throw! (str "no matching method found: " methodName (when (some? target) (str " for " (class target)))))
             (let [[#_"java.lang.reflect.Method" m #_"Object[]" boxedArgs]
                     (if (= n 1)
                         (let [m (nth methods 0)]
@@ -529,17 +522,17 @@
                             )
                         )
                     )]
-                (when (some? m) => (throw (IllegalArgumentException. (Reflector'noMethodReport methodName, target)))
+                (when (some? m) => (throw! (str "no matching method found: " methodName (when (some? target) (str " for " (class target)))))
                     (let [m (when-not (Modifier/isPublic (.getModifiers (.getDeclaringClass m))) => m
                                 ;; public method of non-public class, try to find it in hierarchy
-                                (or (Reflector'getAsMethodOfPublicBase (.getClass target), m)
-                                    (throw (IllegalArgumentException. (str "Can't call public method of non-public class: " m)))
+                                (or (Reflector'getAsMethodOfPublicBase (class target), m)
+                                    (throw! (str "can't call public method of non-public class: " m))
                                 )
                             )]
                         (try
                             (Reflector'prepRet (.getReturnType m), (.invoke m, target, boxedArgs))
                             (catch Exception e
-                                (throw (Reflector'getCauseOrElse e))
+                                (throw (or (.getCause e) e))
                             )
                         )
                     )
@@ -549,7 +542,7 @@
     )
 
     (defn #_"Object" Reflector'invokeInstanceMethod [#_"Object" target, #_"String" methodName, #_"Object[]" args]
-        (let [#_"PersistentVector" methods (Reflector'getMethods (.getClass target), (alength args), methodName, false)]
+        (let [#_"PersistentVector" methods (Reflector'getMethods (class target), (alength args), methodName, false)]
             (Reflector'invokeMatchingMethod methodName, methods, target, args)
         )
     )
@@ -568,7 +561,7 @@
                         )
                     )]
                 (condp = (count ctors)
-                    0   (throw (IllegalArgumentException. (str "No matching ctor found for " c)))
+                    0   (throw! (str "no matching ctor found for " c))
                     1   (let [#_"Constructor" ctor (nth ctors 0)]
                             (.newInstance ctor, (Reflector'boxArgs (.getParameterTypes ctor), args))
                         )
@@ -580,12 +573,12 @@
                                 )
                             )
                         )
-                        (throw (IllegalArgumentException. (str "No matching ctor found for " c)))
+                        (throw! (str "no matching ctor found for " c))
                     )
                 )
             )
             (catch Exception e
-                (throw (Reflector'getCauseOrElse e))
+                (throw (or (.getCause e) e))
             )
         )
     )
@@ -601,7 +594,7 @@
 
     (defn #_"Object" Reflector'getStaticField [#_"Class" c, #_"String" fieldName]
         (let [#_"Field" f (Reflector'getField c, fieldName, true)]
-            (when (some? f) => (throw (IllegalArgumentException. (str "No matching field found: " fieldName " for " c)))
+            (when (some? f) => (throw! (str "no matching field found: " fieldName " for " c))
                 (Reflector'prepRet (.getType f), (.get f, nil))
             )
         )
@@ -609,7 +602,7 @@
 
     (defn #_"Object" Reflector'setStaticField [#_"Class" c, #_"String" fieldName, #_"Object" val]
         (let [#_"Field" f (Reflector'getField c, fieldName, true)]
-            (when (some? f) => (throw (IllegalArgumentException. (str "No matching field found: " fieldName " for " c)))
+            (when (some? f) => (throw! (str "no matching field found: " fieldName " for " c))
                 (.set f, nil, (Reflector'boxArg (.getType f), val))
                 val
             )
@@ -617,16 +610,16 @@
     )
 
     (defn #_"Object" Reflector'getInstanceField [#_"Object" target, #_"String" fieldName]
-        (let [#_"Class" c (.getClass target) #_"Field" f (Reflector'getField c, fieldName, false)]
-            (when (some? f) => (throw (IllegalArgumentException. (str "No matching field found: " fieldName " for " c)))
+        (let [#_"Class" c (class target) #_"Field" f (Reflector'getField c, fieldName, false)]
+            (when (some? f) => (throw! (str "no matching field found: " fieldName " for " c))
                 (Reflector'prepRet (.getType f), (.get f, target))
             )
         )
     )
 
     (defn #_"Object" Reflector'setInstanceField [#_"Object" target, #_"String" fieldName, #_"Object" val]
-        (let [#_"Class" c (.getClass target) #_"Field" f (Reflector'getField c, fieldName, false)]
-            (when (some? f) => (throw (IllegalArgumentException. (str "No matching field found: " fieldName " for " (.getClass target))))
+        (let [#_"Class" c (class target) #_"Field" f (Reflector'getField c, fieldName, false)]
+            (when (some? f) => (throw! (str "no matching field found: " fieldName " for " (class target)))
                 (.set f, target, (Reflector'boxArg (.getType f), val))
                 val
             )
@@ -634,12 +627,12 @@
     )
 
     (defn #_"Object" Reflector'invokeNoArgInstanceMember [#_"Object" target, #_"String" name, #_"boolean" requireField]
-        (let [#_"Class" c (.getClass target)]
+        (let [#_"Class" c (class target)]
             (if requireField
                 (let [#_"Field" f (Reflector'getField c, name, false)]
                     (if (some? f)
                         (Reflector'getInstanceField target, name)
-                        (throw (IllegalArgumentException. (str "No matching field found: " name " for " (.getClass target))))
+                        (throw! (str "no matching field found: " name " for " (class target)))
                     )
                 )
                 (let [#_"PersistentVector" methods (Reflector'getMethods c, 0, name, false)]
@@ -766,7 +759,7 @@
 )
 
 (class-ns Compiler
-    (def #_"Var" ^:dynamic *loader*            ) ;; DynamicClassLoader
+    (def #_"Var" ^:dynamic *class-loader*      ) ;; DynamicClassLoader
     (def #_"Var" ^:dynamic *line*              ) ;; Integer
     (def #_"Var" ^:dynamic *last-unique-id*    ) ;; Integer
     (def #_"Var" ^:dynamic *closes*            ) ;; IPersistentMap
@@ -977,7 +970,7 @@
                     )
                 )]
             (when tied
-                (throw (IllegalArgumentException. (str "More than one matching method found: " methodName)))
+                (throw! (str "more than one matching method found: " methodName))
             )
             matchIdx
         )
@@ -1171,7 +1164,7 @@
                                     (var? o)
                                         o
                                     :else
-                                        (throw (RuntimeException. (str "Expecting var, but " sym " is mapped to " o)))
+                                        (throw! (str "expecting var, but " sym " is mapped to " o))
                                 )
                             )
                     )]
@@ -1189,7 +1182,7 @@
             (when (or (symbol? op) (var? op))
                 (let [#_"Var" v (if (var? op) op (Compiler'lookupVar op, false, false))]
                     (when (and (some? v) (get (meta v) :macro))
-                        (when (or (= (ßns v) *ns*) (not (get (meta v) :private))) => (throw (IllegalStateException. (str "var: " v " is private")))
+                        (when (or (= (ßns v) *ns*) (not (get (meta v) :private))) => (throw! (str "var: " v " is private"))
                             v
                         )
                     )
@@ -1203,7 +1196,7 @@
         (when-not (and (symbol? op) (some? (Compiler'referenceLocal op)))
             (when (or (symbol? op) (var? op))
                 (when-let [#_"Var" v (if (var? op) op (Compiler'lookupVar op, false))]
-                    (when (or (= (ßns v) *ns*) (not (get (meta v) :private))) => (throw (IllegalStateException. (str "var: " v " is private")))
+                    (when (or (= (ßns v) *ns*) (not (get (meta v) :private))) => (throw! (str "var: " v " is private"))
                         (when-let [#_"IFn" f (get (meta v) :inline)]
                             (let [#_"IFn" arityPred (get (meta v) :inline-arities)]
                                 (when (or (nil? arityPred) (.invoke arityPred, arity))
@@ -1257,9 +1250,9 @@
         ;; note - ns-qualified vars must already exist
         (cond
             (some? (ßns sym))
-                (let-when [#_"Namespace" ns (Compiler'namespaceFor n, sym)] (some? ns)          => (throw (RuntimeException. (str "No such namespace: " (ßns sym))))
-                    (let-when [#_"Var" v (.findInternedVar ns, (symbol (ßname sym)))] (some? v) => (throw (RuntimeException. (str "No such var: " sym)))
-                        (when (or (= (ßns v) *ns*) (not (get (meta v) :private)) allowPrivate)  => (throw (IllegalStateException. (str "var: " sym " is private")))
+                (let-when [#_"Namespace" ns (Compiler'namespaceFor n, sym)] (some? ns)          => (throw! (str "no such namespace: " (ßns sym)))
+                    (let-when [#_"Var" v (.findInternedVar ns, (symbol (ßname sym)))] (some? v) => (throw! (str "no such var: " sym))
+                        (when (or (= (ßns v) *ns*) (not (get (meta v) :private)) allowPrivate)  => (throw! (str "var: " sym " is private"))
                             v
                         )
                     )
@@ -1268,12 +1261,7 @@
             (= sym 'ns)                #'ns
             (= sym 'in-ns)             #'in-ns
             (= sym *compile-stub-sym*) *compile-stub-class*
-            :else
-                (or (.getMapping n, sym)
-                    (when *allow-unresolved-vars* => (throw (RuntimeException. (str "Unable to resolve symbol: " sym " in this context")))
-                        sym
-                    )
-                )
+            :else (or (.getMapping n, sym) (throw! (str "unable to resolve symbol: " sym " in this context")))
         )
     )
 
@@ -1311,9 +1299,8 @@
             (nil? ret)
                 tc
             (and (.isPrimitive ret) (.isPrimitive tc))
-                (if (or (and (Compiler'inty ret) (Compiler'inty tc)) (= ret tc))
+                (when (or (and (Compiler'inty ret) (Compiler'inty tc)) (= ret tc)) => (throw! (str "cannot coerce " ret " to " tc ": use a cast instead"))
                     tc
-                    (throw (UnsupportedOperationException. (str "Cannot coerce " ret " to " tc ", use a cast instead")))
                 )
             :else
                 tc
@@ -1352,7 +1339,7 @@
 
     (extend-type MonitorEnterExpr Expr
         (#_"Object" Expr'''eval [#_"MonitorEnterExpr" this]
-            (throw (UnsupportedOperationException. "Can't eval monitor-enter"))
+            (throw! "can't eval monitor-enter")
         )
 
         (#_"void" Expr'''emit [#_"MonitorEnterExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
@@ -1367,7 +1354,7 @@
         )
 
         (#_"Class" Expr'''getJavaClass [#_"MonitorEnterExpr" this]
-            (throw (UnsupportedOperationException. "Has no Java class"))
+            nil
         )
     )
 )
@@ -1396,7 +1383,7 @@
 
     (extend-type MonitorExitExpr Expr
         (#_"Object" Expr'''eval [#_"MonitorExitExpr" this]
-            (throw (UnsupportedOperationException. "Can't eval monitor-exit"))
+            (throw! "can't eval monitor-exit")
         )
 
         (#_"void" Expr'''emit [#_"MonitorExitExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
@@ -1411,7 +1398,7 @@
         )
 
         (#_"Class" Expr'''getJavaClass [#_"MonitorExitExpr" this]
-            (throw (UnsupportedOperationException. "Has no Java class"))
+            nil
         )
     )
 )
@@ -1462,9 +1449,9 @@
         (reify IParser
             #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
-                (when (= (count form) 3) => (throw (IllegalArgumentException. "Malformed assignment, expecting (set! target val)"))
+                (when (= (count form) 3) => (throw! "malformed assignment, expecting (set! target val)")
                     (let [#_"Expr" target (Compiler'analyze :Context'EXPRESSION, (second form))]
-                        (when (satisfies? Assignable target) => (throw (IllegalArgumentException. "Invalid assignment target"))
+                        (when (satisfies? Assignable target) => (throw! "invalid assignment target")
                             (AssignExpr'new target, (Compiler'analyze :Context'EXPRESSION, (third form)))
                         )
                     )
@@ -1507,7 +1494,7 @@
         )
 
         (#_"Class" Expr'''getJavaClass [#_"ImportExpr" this]
-            (throw (IllegalArgumentException. "ImportExpr has no Java class"))
+            nil
         )
     )
 )
@@ -1538,12 +1525,12 @@
         )
 
         (#_"void" Expr'''emit [#_"EmptyExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
-            (cond
-                (instance? IPersistentList (:coll this))   (.getStatic gen, (Type/getType PersistentList),     "EMPTY", (Type/getType PersistentList$EmptyList))
-                (instance? IPersistentVector (:coll this)) (.getStatic gen, (Type/getType PersistentVector),   "EMPTY", (Type/getType PersistentVector))
-                (instance? IPersistentMap (:coll this))    (.getStatic gen, (Type/getType PersistentArrayMap), "EMPTY", (Type/getType PersistentArrayMap))
-                (instance? IPersistentSet (:coll this))    (.getStatic gen, (Type/getType PersistentHashSet),  "EMPTY", (Type/getType PersistentHashSet))
-                :else                                      (throw (UnsupportedOperationException. "Unknown collection type"))
+            (condp instance? (:coll this)
+                IPersistentList   (.getStatic gen, (Type/getType PersistentList),     "EMPTY", (Type/getType PersistentList$EmptyList))
+                IPersistentVector (.getStatic gen, (Type/getType PersistentVector),   "EMPTY", (Type/getType PersistentVector))
+                IPersistentMap    (.getStatic gen, (Type/getType PersistentArrayMap), "EMPTY", (Type/getType PersistentArrayMap))
+                IPersistentSet    (.getStatic gen, (Type/getType PersistentHashSet),  "EMPTY", (Type/getType PersistentHashSet))
+                (throw! "unknown collection type")
             )
             (when (= context :Context'STATEMENT)
                 (.pop gen)
@@ -1556,12 +1543,12 @@
         )
 
         (#_"Class" Expr'''getJavaClass [#_"EmptyExpr" this]
-            (cond
-                (instance? IPersistentList (:coll this))   IPersistentList
-                (instance? IPersistentVector (:coll this)) IPersistentVector
-                (instance? IPersistentMap (:coll this))    IPersistentMap
-                (instance? IPersistentSet (:coll this))    IPersistentSet
-                :else                                      (throw (UnsupportedOperationException. "Unknown collection type"))
+            (condp instance? (:coll this)
+                IPersistentList   IPersistentList
+                IPersistentVector IPersistentVector
+                IPersistentMap    IPersistentMap
+                IPersistentSet    IPersistentSet
+                (throw! "unknown collection type")
             )
         )
     )
@@ -1599,7 +1586,7 @@
         )
 
         (#_"boolean" Expr'''hasJavaClass [#_"ConstantExpr" this]
-            (Modifier/isPublic (.getModifiers (.getClass (:v this))))
+            (Modifier/isPublic (.getModifiers (class (:v this))))
         )
 
         (#_"Class" Expr'''getJavaClass [#_"ConstantExpr" this]
@@ -1607,7 +1594,7 @@
                 (instance? APersistentMap (:v this))    APersistentMap
                 (instance? APersistentSet (:v this))    APersistentSet
                 (instance? APersistentVector (:v this)) APersistentVector
-                :else                                   (.getClass (:v this))
+                :else                                   (class (:v this))
             )
         )
     )
@@ -1646,11 +1633,11 @@
         )
 
         (#_"Class" Expr'''getJavaClass [#_"NumberExpr" this]
-            (cond
-                (instance? Integer (:n this)) Long/TYPE
-                (instance? Double (:n this))  Double/TYPE
-                (instance? Long (:n this))    Long/TYPE
-                :else                         (throw (IllegalStateException. (str "Unsupported Number type: " (.getName (.getClass (:n this))))))
+            (condp instance? (:n this)
+                Integer Long/TYPE
+                Long    Long/TYPE
+                Double  Double/TYPE
+                (throw! (str "unsupported Number type: " (.getName (class (:n this)))))
             )
         )
     )
@@ -1761,7 +1748,7 @@
             #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (let [#_"int" n (dec (count form))]
-                    (when (= n 1) => (throw (IllegalArgumentException. (str "Wrong number of arguments passed to quote: " n)))
+                    (when (= n 1) => (throw! (str "wrong number of arguments passed to quote: " n))
                         (let [#_"Object" v (second form)]
                             (cond
                                 (nil? v)                                                    Compiler'NIL_EXPR
@@ -1913,7 +1900,7 @@
                 (Interop'maybeSpecialTag tag)
             )
             (Interop'maybeClass tag, true)
-            (throw (IllegalArgumentException. (str "Unable to resolve classname: " tag)))
+            (throw! (str "unable to resolve classname: " tag))
         )
     )
 
@@ -2000,7 +1987,7 @@
         )
 
         (#_"void" MaybePrimitive'''emitUnboxed [#_"InstanceFieldExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
-            (when (and (some? (:targetClass this)) (some? (:field this))) => (throw (UnsupportedOperationException. "Unboxed emit of unknown member"))
+            (when (and (some? (:targetClass this)) (some? (:field this))) => (throw! "unboxed emit of unknown member")
                 (Expr'''emit (:target this), :Context'EXPRESSION, objx, gen)
                 (.visitLineNumber gen, (:line this), (.mark gen))
                 (.checkCast gen, (Compiler'getType (:targetClass this)))
@@ -2211,7 +2198,7 @@
                     )
                     :else
                     (do
-                        (throw (IllegalArgumentException. (str "Mismatched primitive return, expected: " retClass ", had: " (Expr'''getJavaClass body))))
+                        (throw! (str "mismatched primitive return, expected: " retClass ", had: " (Expr'''getJavaClass body)))
                     )
                 )
             )
@@ -2360,7 +2347,7 @@
         )
 
         (#_"void" MaybePrimitive'''emitUnboxed [#_"InstanceMethodExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
-            (when (some? (:method this)) => (throw (UnsupportedOperationException. "Unboxed emit of unknown member"))
+            (when (some? (:method this)) => (throw! "unboxed emit of unknown member")
                 (let [#_"Type" type (Type/getType (.getDeclaringClass (:method this)))]
                     (Expr'''emit (:target this), :Context'EXPRESSION, objx, gen)
                     (.checkCast gen, type)
@@ -2386,7 +2373,7 @@
     (defn #_"StaticMethodExpr" StaticMethodExpr'new [#_"int" line, #_"Symbol" tag, #_"Class" c, #_"String" methodName, #_"IPersistentVector" args, #_"boolean" tailPosition]
         (let [#_"java.lang.reflect.Method" method
                 (let [#_"PersistentVector" methods (Reflector'getMethods c, (count args), methodName, true)]
-                    (when-not (zero? (count methods)) => (throw (IllegalArgumentException. (str "No matching method: " methodName)))
+                    (when-not (zero? (count methods)) => (throw! (str "no matching method: " methodName))
                         (let [#_"int" methodidx
                                 (when (< 1 (count methods)) => 0
                                     (let [[#_"PersistentVector" pars #_"PersistentVector" rets]
@@ -2429,7 +2416,7 @@
     #_method
     (defn #_"void" StaticMethodExpr''emitIntrinsicPredicate [#_"StaticMethodExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen, #_"Label" falseLabel]
         (.visitLineNumber gen, (:line this), (.mark gen))
-        (when (some? (:method this)) => (throw (UnsupportedOperationException. "Unboxed emit of unknown member"))
+        (when (some? (:method this)) => (throw! "unboxed emit of unknown member")
             (MethodExpr'emitTypedArgs objx, gen, (.getParameterTypes (:method this)), (:args this))
             (when (= context :Context'RETURN)
                 (IopMethod''emitClearLocals *method*, gen)
@@ -2513,7 +2500,7 @@
         )
 
         (#_"void" MaybePrimitive'''emitUnboxed [#_"StaticMethodExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
-            (when (some? (:method this)) => (throw (UnsupportedOperationException. "Unboxed emit of unknown member"))
+            (when (some? (:method this)) => (throw! "unboxed emit of unknown member")
                 (MethodExpr'emitTypedArgs objx, gen, (.getParameterTypes (:method this)), (:args this))
                 (.visitLineNumber gen, (:line this), (.mark gen))
                 (when (= context :Context'RETURN)
@@ -2547,7 +2534,7 @@
             ;; (. x (methodname-sym args?))
             #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
-                (when-not (< (count form) 3) => (throw (IllegalArgumentException. "Malformed member expression, expecting (. target member ...)"))
+                (when-not (< (count form) 3) => (throw! "malformed member expression, expecting (. target member ...)")
                     ;; determine static or instance
                     ;; static target must be symbol, either fully.qualified.Classname or Classname that has been imported
                     (let [#_"int" line *line* #_"Class" c (Interop'maybeClass (second form), false)
@@ -2577,7 +2564,7 @@
                                 )
                             )
                             (let [#_"ISeq" call (if (instance? ISeq (third form)) (third form) (next (next form)))]
-                                (when (symbol? (first call)) => (throw (IllegalArgumentException. "Malformed member expression"))
+                                (when (symbol? (first call)) => (throw! "malformed member expression")
                                     (let [#_"Symbol" sym (first call)
                                           #_"Symbol" tag (Compiler'tagOf form)
                                           #_"boolean" tailPosition (Compiler'inTailCall context)
@@ -2613,7 +2600,7 @@
 
     (extend-type UnresolvedVarExpr Expr
         (#_"Object" Expr'''eval [#_"UnresolvedVarExpr" this]
-            (throw (IllegalArgumentException. "UnresolvedVarExpr cannot be evalled"))
+            (throw! "can't eval")
         )
 
         (#_"void" Expr'''emit [#_"UnresolvedVarExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
@@ -2625,7 +2612,7 @@
         )
 
         (#_"Class" Expr'''getJavaClass [#_"UnresolvedVarExpr" this]
-            (throw (IllegalArgumentException. "UnresolvedVarExpr has no Java class"))
+            nil
         )
     )
 )
@@ -2722,7 +2709,7 @@
             #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (let [#_"Symbol" sym (second form) #_"Var" v (Compiler'lookupVar sym, false)]
-                    (when (some? v) => (throw (RuntimeException. (str "Unable to resolve var: " sym " in this context")))
+                    (when (some? v) => (throw! (str "unable to resolve var: " sym " in this context"))
                         (TheVarExpr'new v)
                     )
                 )
@@ -2833,7 +2820,7 @@
 
     (extend-type TryExpr Expr
         (#_"Object" Expr'''eval [#_"TryExpr" this]
-            (throw (UnsupportedOperationException. "Can't eval try"))
+            (throw! "can't eval try")
         )
 
         (#_"void" Expr'''emit [#_"TryExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
@@ -2938,9 +2925,9 @@
                                                     )
                                                 )]
                                             (if (= op 'catch)
-                                                (let-when [#_"Class" c (Interop'maybeClass (second f), false)] (some? c) => (throw (IllegalArgumentException. (str "Unable to resolve classname: " (second f))))
-                                                    (let-when [#_"Symbol" sym (third f)] (symbol? sym) => (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " sym)))
-                                                        (when (nil? (namespace sym)) => (throw (RuntimeException. (str "Can't bind qualified name: " sym)))
+                                                (let-when [#_"Class" c (Interop'maybeClass (second f), false)] (some? c) => (throw! (str "unable to resolve classname: " (second f)))
+                                                    (let-when [#_"Symbol" sym (third f)] (symbol? sym) => (throw! (str "bad binding form, expected symbol, got: " sym))
+                                                        (when (nil? (namespace sym)) => (throw! (str "can't bind qualified name: " sym))
                                                             (let [catches
                                                                     (binding [*local-env* *local-env*, *last-local-num* *last-local-num*, *in-catch-finally* true]
                                                                         (let [#_"LocalBinding" lb (Compiler'registerLocal sym, (when (symbol? (second f)) (second f)), nil, false)
@@ -2953,7 +2940,7 @@
                                                         )
                                                     )
                                                 )
-                                                (when (nil? (next fs)) => (throw (RuntimeException. "finally clause must be last in try expression"))
+                                                (when (nil? (next fs)) => (throw! "finally clause must be last in try expression")
                                                     (let [finallyExpr
                                                             (binding [*in-catch-finally* true]
                                                                 (IParser'''parse (BodyParser'new), :Context'STATEMENT, (next f))
@@ -2963,7 +2950,7 @@
                                                 )
                                             )
                                         )
-                                        (when-not caught? => (throw (RuntimeException. "Only catch or finally clause can follow catch in try expression"))
+                                        (when-not caught? => (throw! "only catch or finally clause can follow catch in try expression")
                                             (recur bodyExpr catches finallyExpr (conj body f) caught? (next fs))
                                         )
                                     )
@@ -2993,7 +2980,7 @@
 
     (extend-type ThrowExpr Expr
         (#_"Object" Expr'''eval [#_"ThrowExpr" this]
-            (throw (RuntimeException. "Can't eval throw"))
+            (throw! "can't eval throw")
         )
 
         (#_"void" Expr'''emit [#_"ThrowExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
@@ -3008,7 +2995,7 @@
         )
 
         (#_"Class" Expr'''getJavaClass [#_"ThrowExpr" this]
-            (throw (UnsupportedOperationException. "Has no Java class"))
+            nil
         )
     )
 )
@@ -3020,8 +3007,8 @@
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (cond
                     (= context :Context'EVAL) (Compiler'analyze context, (list (list Compiler'FNONCE [] form)))
-                    (= (count form) 1)        (throw (IllegalArgumentException. "Too few arguments to throw, throw expects a single Throwable instance"))
-                    (< 2 (count form))        (throw (IllegalArgumentException. "Too many arguments to throw, throw expects a single Throwable instance"))
+                    (= (count form) 1)        (throw! "too few arguments to throw: single Throwable expected")
+                    (< 2 (count form))        (throw! "too many arguments to throw: single Throwable expected")
                     :else                     (ThrowExpr'new (Compiler'analyze :Context'EXPRESSION, (second form)))
                 )
             )
@@ -3043,7 +3030,7 @@
                                 (recur ctors pars rets (inc i))
                             )
                         )]
-                    (let-when [#_"int" n (count ctors)] (< 0 n) => (throw (IllegalArgumentException. (str "No matching ctor found for " c)))
+                    (let-when [#_"int" n (count ctors)] (< 0 n) => (throw! (str "no matching ctor found for " c))
                         (let [#_"int" i (if (< 1 n) (Compiler'getMatchingParams (.getName c), pars, args, rets) 0)
                               #_"Constructor" ctor (when (<= 0 i) (nth ctors i))]
                             (when (and (nil? ctor) *warn-on-reflection*)
@@ -3113,9 +3100,9 @@
             #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (let [#_"int" line *line*]
-                    (when (< 1 (count form)) => (throw (IllegalArgumentException. "Wrong number of arguments, expecting: (new Classname args...)"))
+                    (when (< 1 (count form)) => (throw! "wrong number of arguments, expecting: (new Classname args...)")
                         (let [#_"Class" c (Interop'maybeClass (second form), false)]
-                            (when (some? c) => (throw (IllegalArgumentException. (str "Unable to resolve classname: " (second form))))
+                            (when (some? c) => (throw! (str "unable to resolve classname: " (second form)))
                                 (let [#_"PersistentVector" args
                                         (loop-when-recur [args [] #_"ISeq" s (next (next form))]
                                                          (some? s)
@@ -3291,8 +3278,8 @@
             #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (cond
-                    (< 4 (count form)) (throw (IllegalArgumentException. "Too many arguments to if"))
-                    (< (count form) 3) (throw (IllegalArgumentException. "Too few arguments to if"))
+                    (< 4 (count form)) (throw! "too many arguments to if")
+                    (< (count form) 3) (throw! "too few arguments to if")
                 )
                 (let [#_"Expr" test (Compiler'analyze (if (= context :Context'EVAL) context :Context'EXPRESSION), (second form))
                       #_"Expr" then (Compiler'analyze context, (third form))
@@ -3416,7 +3403,7 @@
                 (and (instance? IObj form) (some? (meta form)))
                     (MetaExpr'new e, (MapExpr'parse c, (meta form)))
                 keysConstant
-                    (when allConstantKeysUnique => (throw (IllegalArgumentException. "Duplicate constant keys in map"))
+                    (when allConstantKeysUnique => (throw! "duplicate constant keys in map")
                         (when valsConstant => e
                             (loop-when-recur [#_"IPersistentMap" m {} #_"int" i 0]
                                              (< i (count keyvals))
@@ -3698,10 +3685,10 @@
                             (when (some? (:protocolOn this)) => this
                                 (let [#_"IPersistentMap" mmap (get (var-get pvar) :method-map)
                                       #_"Keyword" mmapVal (get mmap (keyword (ßsym fvar)))]
-                                    (when (some? mmapVal) => (throw (IllegalArgumentException. (str "No method of interface: " (.getName (:protocolOn this)) " found for function: " (ßsym fvar) " of protocol: " (ßsym pvar) " (The protocol method may have been defined before and removed.)")))
+                                    (when (some? mmapVal) => (throw! (str "no method of interface: " (.getName (:protocolOn this)) " found for function: " (ßsym fvar) " of protocol: " (ßsym pvar)))
                                         (let [#_"String" mname (Compiler'munge (.toString (ßsym mmapVal)))
                                               #_"PersistentVector" methods (Reflector'getMethods (:protocolOn this), (dec (count args)), mname, false)]
-                                            (when (= (count methods) 1) => (throw (IllegalArgumentException. (str "No single method: " mname " of interface: " (.getName (:protocolOn this)) " found for function: " (ßsym fvar) " of protocol: " (ßsym pvar))))
+                                            (when (= (count methods) 1) => (throw! (str "no single method: " mname " of interface: " (.getName (:protocolOn this)) " found for function: " (ßsym fvar) " of protocol: " (ßsym pvar)))
                                                 (assoc this :onMethod (nth methods 0))
                                             )
                                         )
@@ -3850,7 +3837,7 @@
 (class-ns LocalBinding
     (defn #_"LocalBinding" LocalBinding'new [#_"int" idx, #_"Symbol" sym, #_"Symbol" tag, #_"Expr" init, #_"boolean" isArg]
         (when (and (some? (Compiler'maybePrimitiveType init)) (some? tag))
-            (throw (UnsupportedOperationException. "Can't type hint a local with a primitive initializer"))
+            (throw! "can't type hint a local with a primitive initializer")
         )
         (merge (LocalBinding.)
             (hash-map
@@ -3890,7 +3877,7 @@
 
 (class-ns LocalBindingExpr
     (defn #_"LocalBindingExpr" LocalBindingExpr'new [#_"LocalBinding" lb, #_"Symbol" tag]
-        (when (or (nil? (LocalBinding''getPrimitiveType lb)) (nil? tag)) => (throw (UnsupportedOperationException. "Can't type hint a primitive local"))
+        (when (or (nil? (LocalBinding''getPrimitiveType lb)) (nil? tag)) => (throw! "can't type hint a primitive local")
             (merge (LocalBindingExpr.)
                 (hash-map
                     #_"LocalBinding" :lb lb
@@ -3904,7 +3891,7 @@
 
     (extend-type LocalBindingExpr Expr
         (#_"Object" Expr'''eval [#_"LocalBindingExpr" this]
-            (throw (UnsupportedOperationException. "Can't eval locals"))
+            (throw! "can't eval locals")
         )
 
         (#_"void" Expr'''emit [#_"LocalBindingExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
@@ -3941,7 +3928,7 @@
 
     (extend-type LocalBindingExpr Assignable
         (#_"Object" Assignable'''evalAssign [#_"LocalBindingExpr" this, #_"Expr" val]
-            (throw (UnsupportedOperationException. "Can't eval locals"))
+            (throw! "can't eval locals")
         )
 
         (#_"void" Assignable'''emitAssign [#_"LocalBindingExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen, #_"Expr" val]
@@ -3965,11 +3952,11 @@
 
     (extend-type MethodParamExpr Expr
         (#_"Object" Expr'''eval [#_"MethodParamExpr" this]
-            (throw (RuntimeException. "Can't eval"))
+            (throw! "can't eval")
         )
 
         (#_"void" Expr'''emit [#_"MethodParamExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
-            (throw (RuntimeException. "Can't emit"))
+            (throw! "can't emit")
         )
 
         (#_"boolean" Expr'''hasJavaClass [#_"MethodParamExpr" this]
@@ -3987,7 +3974,7 @@
         )
 
         (#_"void" MaybePrimitive'''emitUnboxed [#_"MethodParamExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
-            (throw (RuntimeException. "Can't emit"))
+            (throw! "can't emit")
         )
     )
 )
@@ -4079,7 +4066,7 @@
                       #_"Class" retClass
                         (let-when [retClass (Interop'tagClass (or (Compiler'tagOf parms) retTag))] (.isPrimitive retClass) => Object
                             (when-not (any = retClass Double/TYPE Long/TYPE) => retClass
-                                (throw (IllegalArgumentException. "Only long and double primitives are supported"))
+                                (throw! "only long and double primitives are supported")
                             )
                         )
                       fm (assoc fm :retClass retClass)]
@@ -4090,22 +4077,22 @@
                     )
                     (let [fm (assoc fm #_"PersistentVector" :argTypes [] #_"PersistentVector" :argClasses [] :reqParms [] :restParm nil :argLocals [])
                           fm (loop-when [fm fm #_"boolean" rest? false #_"int" i 0] (< i (count parms)) => fm
-                                (when (symbol? (nth parms i)) => (throw (IllegalArgumentException. "fn params must be Symbols"))
+                                (when (symbol? (nth parms i)) => (throw! "fn params must be Symbols")
                                     (let [#_"Symbol" p (nth parms i)]
                                         (cond
                                             (some? (namespace p))
-                                                (throw (RuntimeException. (str "Can't use qualified name as parameter: " p)))
+                                                (throw! (str "can't use qualified name as parameter: " p))
                                             (= p '&)
-                                                (when-not rest? => (throw (RuntimeException. "Invalid parameter list"))
+                                                (when-not rest? => (throw! "invalid parameter list")
                                                     (recur fm true (inc i))
                                                 )
                                             :else
                                                 (let [#_"Class" c (Compiler'primClass (Interop'tagClass (Compiler'tagOf p)))]
                                                     (when (and (.isPrimitive c) (not (any = c Double/TYPE Long/TYPE)))
-                                                        (throw (IllegalArgumentException. (str "Only long and double primitives are supported: " p)))
+                                                        (throw! (str "only long and double primitives are supported: " p))
                                                     )
                                                     (when (and rest? (some? (Compiler'tagOf p)))
-                                                        (throw (RuntimeException. "& arg cannot have type hint"))
+                                                        (throw! "& arg cannot have type hint")
                                                     )
                                                     (let [c (if rest? ISeq c)
                                                           fm (-> fm (update :argTypes conj (Type/getType c)) (update :argClasses conj c))
@@ -4126,7 +4113,7 @@
                                 )
                             )]
                         (when (< Compiler'MAX_POSITIONAL_ARITY (count (:reqParms fm)))
-                            (throw (RuntimeException. (str "Can't specify more than " Compiler'MAX_POSITIONAL_ARITY " params")))
+                            (throw! (str "can't specify more than " Compiler'MAX_POSITIONAL_ARITY " params"))
                         )
                         (set! *loop-locals* (:argLocals fm))
                         (-> fm
@@ -4330,13 +4317,13 @@
 
     #_method
     (defn #_"void" IopObject''emitAssignLocal [#_"IopObject" this, #_"GeneratorAdapter" gen, #_"LocalBinding" lb, #_"Expr" val]
-        (when (IopObject''isMutable this, lb) => (throw (IllegalArgumentException. (str "Cannot assign to non-mutable: " (:name lb))))
+        (when (IopObject''isMutable this, lb) => (throw! (str "cannot assign to non-mutable: " (:name lb)))
             (let [#_"Class" primc (LocalBinding''getPrimitiveType lb)]
                 (.loadThis gen)
                 (if (some? primc)
                     (do
                         (when-not (and (satisfies? MaybePrimitive val) (MaybePrimitive'''canEmitPrimitive val))
-                            (throw (IllegalArgumentException. (str "Must assign primitive to primitive mutable: " (:name lb))))
+                            (throw! (str "must assign primitive to primitive mutable: " (:name lb)))
                         )
                         (MaybePrimitive'''emitUnboxed val, :Context'EXPRESSION, this, gen)
                         (.putField gen, (:objType this), (:name lb), (Type/getType primc))
@@ -4469,7 +4456,7 @@
                                         Integer/TYPE   (Type/getType Integer)
                                         Long/TYPE      (Type/getType Long)
                                         Short/TYPE     (Type/getType Short)
-                                        (throw (RuntimeException. (str "Can't embed unknown primitive in code: " value)))
+                                        (throw! (str "can't embed unknown primitive in code: " value))
                                     )]
                                 (.getStatic gen, t, "TYPE", (Type/getType Class))
                             )
@@ -4502,10 +4489,10 @@
                         true
                     )
                     (instance? IType value)
-                    (let [#_"Method" ctor (Method. "<init>", (Type/getConstructorDescriptor (aget (.getConstructors (.getClass value)) 0)))]
-                        (.newInstance gen, (Type/getType (.getClass value)))
+                    (let [#_"Method" ctor (Method. "<init>", (Type/getConstructorDescriptor (aget (.getConstructors (class value)) 0)))]
+                        (.newInstance gen, (Type/getType (class value)))
                         (.dup gen)
-                        (let [#_"IPersistentVector" fields (Reflector'invokeStaticMethod (.getClass value), "getBasis", (object-array 0))]
+                        (let [#_"IPersistentVector" fields (Reflector'invokeStaticMethod (class value), "getBasis", (object-array 0))]
                             (loop-when-recur [#_"ISeq" s (seq fields)] (some? s) [(next s)]
                                 (let [#_"Symbol" field (first s)]
                                     (IopObject''emitValue this, (Reflector'getInstanceField value, (Compiler'munge (ßname field))), gen)
@@ -4516,7 +4503,7 @@
                                     )
                                 )
                             )
-                            (.invokeConstructor gen, (Type/getType (.getClass value)), ctor)
+                            (.invokeConstructor gen, (Type/getType (class value)), ctor)
                         )
                         true
                     )
@@ -4577,15 +4564,15 @@
                     (let [#_"String" cs
                             (try
                                 (RT/printString value)
-                                (catch Exception e
-                                    (throw (RuntimeException. (str "Can't embed object in code: " value)))
+                                (catch Exception _
+                                    (throw! (str "can't embed object in code: " value))
                                 )
                             )]
                         (when (zero? (.length cs))
-                            (throw (RuntimeException. (str "Can't embed unreadable object in code: " value)))
+                            (throw! (str "can't embed unreadable object in code: " value))
                         )
                         (when (.startsWith cs, "#<")
-                            (throw (RuntimeException. (str "Can't embed unreadable object in code: " cs)))
+                            (throw! (str "can't embed unreadable object in code: " cs))
                         )
                         (.push gen, cs)
                         (.invokeStatic gen, (Type/getType RT), (Method/getMethod "Object readString(String)"))
@@ -4825,7 +4812,7 @@
                             ;; end of class
                             (.visitEnd cv)
 
-                            (assoc this :compiledClass (.defineClass *loader*, (:name this), (.toByteArray cw), (§ obsolete nil)))
+                            (assoc this :compiledClass (.defineClass *class-loader*, (:name this), (.toByteArray cw), (§ obsolete nil)))
                         )
                     )
                 )
@@ -4956,11 +4943,11 @@
                                 (let [#_"FnMethod" f (FnMethod'parse fn, (first s), rettag)
                                       variadic
                                         (if (FnMethod''isVariadic f)
-                                            (when (nil? variadic) => (throw (RuntimeException. "Can't have more than 1 variadic overload"))
+                                            (when (nil? variadic) => (throw! "can't have more than 1 variadic overload")
                                                 f
                                             )
                                             (let [#_"int" n (count (:reqParms f))]
-                                                (when (nil? (aget a n)) => (throw (RuntimeException. "Can't have 2 overloads with same arity"))
+                                                (when (nil? (aget a n)) => (throw! "can't have 2 overloads with same arity")
                                                     (aset a n f)
                                                     variadic
                                                 )
@@ -4972,7 +4959,7 @@
                         (when (some? variadic)
                             (loop-when-recur [#_"int" i (inc (count (:reqParms variadic)))] (<= i Compiler'MAX_POSITIONAL_ARITY) [(inc i)]
                                 (when (some? (aget a i))
-                                    (throw (RuntimeException. "Can't have fixed arity function with more params than variadic function"))
+                                    (throw! "can't have fixed arity function with more params than variadic function")
                                 )
                             )
                         )
@@ -5102,15 +5089,15 @@
             #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (cond
-                    (< 3 (count form))            (throw (IllegalArgumentException. "Too many arguments to def"))
-                    (< (count form) 2)            (throw (IllegalArgumentException. "Too few arguments to def"))
-                    (not (symbol? (second form))) (throw (IllegalArgumentException. "First argument to def must be a Symbol"))
+                    (< 3 (count form))            (throw! "too many arguments to def")
+                    (< (count form) 2)            (throw! "too few arguments to def")
+                    (not (symbol? (second form))) (throw! "first argument to def must be a Symbol")
                 )
                 (let [#_"Symbol" sym (second form) #_"Var" v (Compiler'lookupVar sym, true)]
-                    (when (some? v) => (throw (RuntimeException. "Can't refer to qualified var that doesn't exist"))
+                    (when (some? v) => (throw! "can't refer to qualified var that doesn't exist")
                         (let [[v #_"boolean" shadowsCoreMapping]
                                 (when-not (= (ßns v) *ns*) => [v false]
-                                    (when (nil? (ßns sym)) => (throw (RuntimeException. "Can't create defs outside of current ns"))
+                                    (when (nil? (ßns sym)) => (throw! "can't create defs outside of current ns")
                                         (let [v (.intern *ns*, sym)]
                                             (Compiler'registerVar v)
                                             [v true]
@@ -5159,7 +5146,7 @@
 
     (extend-type LetFnExpr Expr
         (#_"Object" Expr'''eval [#_"LetFnExpr" this]
-            (throw (UnsupportedOperationException. "Can't eval letfns"))
+            (throw! "can't eval letfns")
         )
 
         (#_"void" Expr'''emit [#_"LetFnExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
@@ -5215,17 +5202,17 @@
             ;; (letfns* [var (fn [args] body) ...] body...)
             #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
-                (when (instance? IPersistentVector (second form)) => (throw (IllegalArgumentException. "Bad binding form, expected vector"))
+                (when (instance? IPersistentVector (second form)) => (throw! "bad binding form, expected vector")
                     (let [#_"IPersistentVector" bindings (second form)]
-                        (when (zero? (% (count bindings) 2)) => (throw (IllegalArgumentException. "Bad binding form, expected matched symbol expression pairs"))
+                        (when (zero? (% (count bindings) 2)) => (throw! "bad binding form, expected matched symbol expression pairs")
                             (if (= context :Context'EVAL)
                                 (Compiler'analyze context, (list (list Compiler'FNONCE [] form)))
                                 (binding [*local-env* *local-env*, *last-local-num* *last-local-num*]
                                     ;; pre-seed env (like Lisp labels)
                                     (let [#_"PersistentVector" lbs
                                             (loop-when [lbs [] #_"int" i 0] (< i (count bindings)) => lbs
-                                                (let-when [#_"Object" sym (nth bindings i)] (symbol? sym) => (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " sym)))
-                                                    (when (nil? (namespace sym)) => (throw (RuntimeException. (str "Can't let qualified name: " sym)))
+                                                (let-when [#_"Object" sym (nth bindings i)] (symbol? sym) => (throw! (str "bad binding form, expected symbol, got: " sym))
+                                                    (when (nil? (namespace sym)) => (throw! (str "can't let qualified name: " sym))
                                                         (recur (conj lbs (Compiler'registerLocal sym, (Compiler'tagOf sym), nil, false)) (+ i 2))
                                                     )
                                                 )
@@ -5308,7 +5295,7 @@
 
     (extend-type LetExpr Expr
         (#_"Object" Expr'''eval [#_"LetExpr" this]
-            (throw (UnsupportedOperationException. "Can't eval let/loop"))
+            (throw! "can't eval let/loop")
         )
 
         (#_"void" Expr'''emit [#_"LetExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
@@ -5344,9 +5331,9 @@
             #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (let [#_"boolean" isLoop (= (first form) 'loop*)]
-                    (when (instance? IPersistentVector (second form)) => (throw (IllegalArgumentException. "Bad binding form, expected vector"))
+                    (when (instance? IPersistentVector (second form)) => (throw! "bad binding form, expected vector")
                         (let [#_"IPersistentVector" bindings (second form)]
-                            (when (zero? (% (count bindings) 2)) => (throw (IllegalArgumentException. "Bad binding form, expected matched symbol expression pairs"))
+                            (when (zero? (% (count bindings) 2)) => (throw! "bad binding form, expected matched symbol expression pairs")
                                 (if (or (= context :Context'EVAL) (and (= context :Context'EXPRESSION) isLoop))
                                     (Compiler'analyze context, (list (list Compiler'FNONCE [] form)))
                                     (let [#_"ISeq" body (next (next form))
@@ -5368,8 +5355,8 @@
                                                         (push-thread-bindings dynamicBindings)
                                                         (let [[#_"PersistentVector" bindingInits #_"PersistentVector" loopLocals]
                                                                 (loop-when [bindingInits [] loopLocals [] #_"int" i 0] (< i (count bindings)) => [bindingInits loopLocals]
-                                                                    (let-when [#_"Object" sym (nth bindings i)] (symbol? sym) => (throw (IllegalArgumentException. (str "Bad binding form, expected symbol, got: " sym)))
-                                                                        (when (nil? (namespace sym)) => (throw (RuntimeException. (str "Can't let qualified name: " sym)))
+                                                                    (let-when [#_"Object" sym (nth bindings i)] (symbol? sym) => (throw! (str "bad binding form, expected symbol, got: " sym))
+                                                                        (when (nil? (namespace sym)) => (throw! (str "can't let qualified name: " sym))
                                                                             (let [#_"Expr" init (Compiler'analyze :Context'EXPRESSION, (nth bindings (inc i)), (ßname sym))
                                                                                   init
                                                                                     (when isLoop => init
@@ -5472,11 +5459,11 @@
 
     (extend-type RecurExpr Expr
         (#_"Object" Expr'''eval [#_"RecurExpr" this]
-            (throw (UnsupportedOperationException. "Can't eval recur"))
+            (throw! "can't eval recur")
         )
 
         (#_"void" Expr'''emit [#_"RecurExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
-            (let-when [#_"Label" loopLabel *loop-label*] (some? loopLabel) => (throw (IllegalStateException.))
+            (let-when [#_"Label" loopLabel *loop-label*] (some? loopLabel) => (throw! "recur misses loop label")
                 (dotimes [#_"int" i (count (:loopLocals this))]
                     (let [#_"LocalBinding" lb (nth (:loopLocals this) i) #_"Expr" arg (nth (:args this) i)]
                         (when (some? (LocalBinding''getPrimitiveType lb)) => (Expr'''emit arg, :Context'EXPRESSION, objx, gen)
@@ -5507,7 +5494,7 @@
                                     )
                                     :else
                                     (do
-                                        (throw (IllegalArgumentException. (str "recur arg for primitive local: " (:name lb) " is not matching primitive, had: " (if (Expr'''hasJavaClass arg) (.getName (Expr'''getJavaClass arg)) "Object") ", needed: " (.getName primc))))
+                                        (throw! (str "recur arg for primitive local: " (:name lb) " is not matching primitive, had: " (if (Expr'''hasJavaClass arg) (.getName (Expr'''getJavaClass arg)) "Object") ", needed: " (.getName primc)))
                                     )
                                 )
                             )
@@ -5554,10 +5541,10 @@
             #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (when-not (and (= context :Context'RETURN) (some? *loop-locals*))
-                    (throw (UnsupportedOperationException. "Can only recur from tail position"))
+                    (throw! "can only recur from tail position")
                 )
                 (when *no-recur*
-                    (throw (UnsupportedOperationException. "Cannot recur across try"))
+                    (throw! "cannot recur across try")
                 )
                 (let [#_"int" line *line*
                       #_"PersistentVector" args
@@ -5567,7 +5554,7 @@
                                       => args
                         )]
                     (when-not (= (count args) (count *loop-locals*))
-                        (throw (IllegalArgumentException. (str "Mismatched argument count to recur, expected: " (count *loop-locals*) " args, got: " (count args))))
+                        (throw! (str "mismatched argument count to recur, expected: " (count *loop-locals*) " args, got: " (count args)))
                     )
                     (dotimes [#_"int" i (count *loop-locals*)]
                         (let [#_"LocalBinding" lb (nth *loop-locals* i)]
@@ -5701,7 +5688,7 @@
                 )
               #_"Symbol" dotname (first form) #_"Symbol" name (with-meta (symbol (Compiler'munge (ßname dotname))) (meta dotname))
               #_"IPersistentVector" parms (second form)]
-            (when (pos? (count parms)) => (throw (IllegalArgumentException. (str "Must supply at least one argument for 'this' in: " dotname)))
+            (when (pos? (count parms)) => (throw! (str "must supply at least one argument for 'this' in: " dotname))
                 (let [#_"Symbol" thisName (nth parms 0) parms (subvec parms 1 (count parms))
                       #_"ISeq" body (next (next form))]
                     ;; register as the current method and set up a new env frame
@@ -5721,7 +5708,7 @@
                               #_"Symbol[]" psyms (make-array #_"Symbol" Object (count parms))
                               #_"boolean" hinted?
                                 (loop-when [hinted? (some? (Compiler'tagOf name)) #_"int" i 0] (< i (count parms)) => hinted?
-                                    (let-when [#_"Object" sym (nth parms i)] (symbol? sym) => (throw (IllegalArgumentException. "params must be Symbols"))
+                                    (let-when [#_"Object" sym (nth parms i)] (symbol? sym) => (throw! "params must be Symbols")
                                         (let [#_"Object" tag (Compiler'tagOf sym) hinted? (or hinted? (some? tag))]
                                             (aset pclasses i (Interop'tagClass tag))
                                             (aset psyms i (if (some? (namespace sym)) (symbol (ßname sym)) sym))
@@ -5733,14 +5720,14 @@
                               #_"Object" mk (NewInstanceMethod'msig (ßname name), pclasses)
                               [nim pclasses #_"java.lang.reflect.Method" m]
                                 (case (count matches)
-                                    0   (throw (IllegalArgumentException. (str "Can't define method not in interfaces: " (ßname name))))
+                                    0   (throw! (str "can't define method not in interfaces: " (ßname name)))
                                     1   (if hinted? ;; validate match
                                             (let [m (get matches mk)]
                                                 (when (nil? m)
-                                                    (throw (IllegalArgumentException. (str "Can't find matching method: " (ßname name) ", leave off hints for auto match.")))
+                                                    (throw! (str "can't find matching method: " (ßname name) ", leave off hints for auto match."))
                                                 )
                                                 (when-not (= (.getReturnType m) (:retClass nim))
-                                                    (throw (IllegalArgumentException. (str "Mismatched return type: " (ßname name) ", expected: " (.getName (.getReturnType m)) ", had: " (.getName (:retClass nim)))))
+                                                    (throw! (str "mismatched return type: " (ßname name) ", expected: " (.getName (.getReturnType m)) ", had: " (.getName (:retClass nim))))
                                                 )
                                                 [nim pclasses m]
                                             )
@@ -5750,13 +5737,13 @@
                                             )
                                         )
                                         ;; must be hinted and match one method
-                                        (when hinted? => (throw (IllegalArgumentException. (str "Must hint overloaded method: " (ßname name))))
+                                        (when hinted? => (throw! (str "must hint overloaded method: " (ßname name)))
                                             (let [m (get matches mk)]
                                                 (when (nil? m)
-                                                    (throw (IllegalArgumentException. (str "Can't find matching overloaded method: " (ßname name))))
+                                                    (throw! (str "can't find matching overloaded method: " (ßname name)))
                                                 )
                                                 (when-not (= (.getReturnType m) (:retClass nim))
-                                                    (throw (IllegalArgumentException. (str "Mismatched return type: " (ßname name) ", expected: " (.getName (.getReturnType m)) ", had: " (.getName (:retClass nim)))))
+                                                    (throw! (str "mismatched return type: " (ßname name) ", expected: " (.getName (.getReturnType m)) ", had: " (.getName (:retClass nim))))
                                                 )
                                                 [nim pclasses m]
                                             )
@@ -5887,7 +5874,7 @@
             ;; end of class
             (.visitEnd cv)
 
-            (.defineClass *loader*, (str Compiler'COMPILE_STUB_PREFIX "." (:name ret)), (.toByteArray cw), (§ obsolete nil))
+            (.defineClass *class-loader*, (str Compiler'COMPILE_STUB_PREFIX "." (:name ret)), (.toByteArray cw), (§ obsolete nil))
         )
     )
 
@@ -6114,7 +6101,7 @@
               #_"PersistentVector" ifaces
                 (loop-when [ifaces [] #_"ISeq" s (seq interfaceSyms)] (some? s) => ifaces
                     (let [#_"Class" c (Compiler'resolve (first s))]
-                        (when (.isInterface c) => (throw (IllegalArgumentException. (str "only interfaces are supported, had: " (.getName c))))
+                        (when (.isInterface c) => (throw! (str "only interfaces are supported, had: " (.getName c)))
                             (recur (conj ifaces c) (next s))
                         )
                     )
@@ -6225,10 +6212,10 @@
     ;; (case* expr shift mask default map<minhash, [test then]> table-type test-type skip-check?)
     (defn #_"CaseExpr" CaseExpr'new [#_"int" line, #_"LocalBindingExpr" expr, #_"int" shift, #_"int" mask, #_"int" low, #_"int" high, #_"Expr" defaultExpr, #_"SortedMap<Integer, Expr>" tests, #_"HashMap<Integer, Expr>" thens, #_"Keyword" switchType, #_"Keyword" testType, #_"Set<Integer>" skipCheck]
         (when-not (any = switchType :compact :sparse)
-            (throw (IllegalArgumentException. (str "Unexpected switch type: " switchType)))
+            (throw! (str "unexpected switch type: " switchType))
         )
         (when-not (any = testType :int :hash-equiv :hash-identity)
-            (throw (IllegalArgumentException. (str "Unexpected test type: " testType)))
+            (throw! (str "unexpected test type: " testType))
         )
         (when (and (pos? (count skipCheck)) *warn-on-reflection*)
             (.println *err*, (str "Performance warning, line " line " - hash collision of some case test constants; if selected, those entries will be tested sequentially."))
@@ -6412,7 +6399,7 @@
 
     (extend-type CaseExpr Expr
         (#_"Object" Expr'''eval [#_"CaseExpr" this]
-            (throw (UnsupportedOperationException. "Can't eval case"))
+            (throw! "can't eval case")
         )
 
         (#_"void" Expr'''emit [#_"CaseExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
@@ -6527,7 +6514,7 @@
                             ;; (.substring s 2 5) => (. s substring 2 5)
                             (cond
                                 (= (.charAt n, 0) \.)
-                                    (when (< 1 (count form)) => (throw (IllegalArgumentException. "Malformed member expression, expecting (.member target ...)"))
+                                    (when (< 1 (count form)) => (throw! "malformed member expression, expecting (.member target ...)")
                                         (let [#_"Object" target (second form)
                                               target
                                                 (when (some? (Interop'maybeClass target, false)) => target
@@ -6571,7 +6558,7 @@
                         )
                     (nil? (Compiler'namespaceFor sym))
                         (when-let [#_"Class" c (Interop'maybeClass (symbol (ßns sym)), false)]
-                            (when (some? (Reflector'getField c, (ßname sym), true)) => (throw (RuntimeException. (str "Unable to find static field: " (ßname sym) " in " c)))
+                            (when (some? (Reflector'getField c, (ßname sym), true)) => (throw! (str "unable to find static field: " (ßname sym) " in " c))
                                 (StaticFieldExpr'new *line*, c, (ßname sym), tag)
                             )
                         )
@@ -6579,7 +6566,7 @@
                 (let [#_"Object" o (Compiler'resolve sym)]
                     (cond
                         (var? o)
-                            (when (nil? (Compiler'isMacro o)) => (throw (RuntimeException. (str "Can't take value of a macro: " o)))
+                            (when (nil? (Compiler'isMacro o)) => (throw! (str "can't take value of a macro: " o))
                                 (Compiler'registerVar o)
                                 (VarExpr'new o, tag)
                             )
@@ -6588,7 +6575,7 @@
                         (symbol? o)
                             (UnresolvedVarExpr'new o)
                         :else
-                            (throw (RuntimeException. (str "Unable to resolve symbol: " sym " in this context")))
+                            (throw! (str "unable to resolve symbol: " sym " in this context"))
                     )
                 )
             )
@@ -6608,7 +6595,7 @@
         (let [#_"IPersistentMap" meta (meta form)]
             (binding [*line* (if (contains? meta :line) (get meta :line) *line*)]
                 (let-when [#_"Object" me (Compiler'macroexpand1 form)] (= me form) => (Compiler'analyze context, me, name)
-                    (let-when [#_"Object" op (first form)] (some? op) => (throw (IllegalArgumentException. (str "Can't call nil, form: " form)))
+                    (let-when [#_"Object" op (first form)] (some? op) => (throw! (str "can't call nil, form: " form))
                         (let [#_"IFn" inline (Compiler'isInline op, (count (next form)))]
                             (cond
                                 (some? inline)
@@ -6661,9 +6648,29 @@
         )
     )
 
+    (defn #_"ClassLoader" Compiler'baseLoader []
+        (if (bound? #'*class-loader*)
+            *class-loader*
+            (.getContextClassLoader (Thread/currentThread))
+        )
+    )
+
+    (defn #_"ClassLoader" Compiler'makeClassLoader []
+        (cast ClassLoader
+            (AccessController/doPrivileged
+                (reify PrivilegedAction
+                    #_foreign
+                    (#_"Object" run [#_"PrivilegedAction" _self]
+                        (DynamicClassLoader. (Compiler'baseLoader))
+                    )
+                )
+            )
+        )
+    )
+
     (defn #_"Object" Compiler'eval [#_"Object" form]
         (let [#_"IPersistentMap" meta (meta form)]
-            (binding [*loader* (RT/makeClassLoader), *line* (if (contains? meta :line) (get meta :line) *line*)]
+            (binding [*class-loader* (Compiler'makeClassLoader), *line* (if (contains? meta :line) (get meta :line) *line*)]
                 (let [form (Compiler'macroexpand form)]
                     (cond
                         (and (instance? ISeq form) (= (first form) 'do))
@@ -6697,7 +6704,7 @@
     )
 
     (defn #_"Symbol" LispReader'registerArg [#_"int" n]
-        (when (bound? #'*arg-env*) => (throw (IllegalStateException. "arg literal not in #()"))
+        (when (bound? #'*arg-env*) => (throw! "arg literal not in #()")
             (or (get *arg-env* n)
                 (let [#_"Symbol" sym (LispReader'garg n)]
                     (update! *arg-env* assoc n sym)
@@ -6708,7 +6715,7 @@
     )
 
     (defn #_"Symbol" LispReader'registerGensym [#_"Symbol" sym]
-        (when (bound? #'*gensym-env*) => (throw (IllegalStateException. "Gensym literal not in syntax-quote"))
+        (when (bound? #'*gensym-env*) => (throw! "gensym literal not in syntax-quote")
             (or (get *gensym-env* sym)
                 (let [#_"Symbol" gsym (symbol (str (ßname sym) "__" (RT/nextID) "__auto__"))]
                     (update! *gensym-env* assoc sym gsym)
@@ -6824,7 +6831,7 @@
                         )
                     )
                 )]
-            (or (LispReader'matchNumber s) (throw (NumberFormatException. (str "Invalid number: " s))))
+            (or (LispReader'matchNumber s) (throw! (str "invalid number: " s)))
         )
     )
 
@@ -6874,7 +6881,7 @@
 
     (defn- #_"Object" LispReader'interpretToken [#_"String" s]
         (case s "nil" nil "true" true "false" false
-            (or (LispReader'matchSymbol s) (throw (RuntimeException. (str "Invalid token: " s))))
+            (or (LispReader'matchSymbol s) (throw! (str "invalid token: " s)))
         )
     )
 
@@ -6886,7 +6893,7 @@
                 (let [#_"char" ch (loop-when-recur [ch (LispReader'read1 r)] (LispReader'isWhitespace ch) [(LispReader'read1 r)] => ch)]
                     (cond
                         (nil? ch)
-                            (if eofIsError (throw (RuntimeException. "EOF while reading")) eofValue)
+                            (if eofIsError (throw! "EOF while reading") eofValue)
                         (and (some? returnOn) (= returnOn ch))
                             returnOnValue
                         (LispReader'isDigit ch, 10)
@@ -6919,10 +6926,10 @@
     )
 
     (defn- #_"int" LispReader'scanDigits [#_"String" token, #_"int" offset, #_"int" n, #_"int" base]
-        (when (= (+ offset n) (.length token)) => (throw (IllegalArgumentException. (str "Invalid unicode character: \\" token)))
+        (when (= (+ offset n) (.length token)) => (throw! (str "invalid unicode character: \\" token))
             (loop-when [#_"int" c 0 #_"int" i 0] (< i n) => c
                 (let [#_"char" ch (.charAt token, (+ offset i)) #_"int" d (Character/digit ch, base)]
-                    (when-not (= d -1) => (throw (IllegalArgumentException. (str "Invalid digit: " ch)))
+                    (when-not (= d -1) => (throw! (str "invalid digit: " ch))
                         (recur (+ (* c base) d) (inc i))
                     )
                 )
@@ -6931,7 +6938,7 @@
     )
 
     (defn- #_"int" LispReader'readDigits [#_"PushbackReader" r, #_"char" ch, #_"int" base, #_"int" n, #_"boolean" exact?]
-        (let-when-not [#_"int" c (Character/digit ch, base)] (= c -1) => (throw (IllegalArgumentException. (str "Invalid digit: " ch)))
+        (let-when-not [#_"int" c (Character/digit ch, base)] (= c -1) => (throw! (str "invalid digit: " ch))
             (let [[c #_"int" i]
                     (loop-when [c c i 1] (< i n) => [c i]
                         (let [ch (LispReader'read1 r)]
@@ -6941,14 +6948,14 @@
                                     [c i]
                                 )
                                 (let [#_"int" d (Character/digit ch, base)]
-                                    (when-not (= d -1) => (throw (IllegalArgumentException. (str "Invalid digit: " ch)))
+                                    (when-not (= d -1) => (throw! (str "invalid digit: " ch))
                                         (recur (+ (* c base) d) (inc i))
                                     )
                                 )
                             )
                         )
                     )]
-                (when (or (= i n) (not exact?)) => (throw (IllegalArgumentException. (str "Invalid character length: " i ", should be: " n)))
+                (when (or (= i n) (not exact?)) => (throw! (str "invalid character length: " i ", should be: " n))
                     c
                 )
             )
@@ -6963,7 +6970,7 @@
             (let [#_"Object" form (LispReader'read r, false, LispReader'READ_EOF, delim, LispReader'READ_FINISHED)]
                 (condp identical? form
                     LispReader'READ_EOF
-                        (throw (RuntimeException. "EOF while reading"))
+                        (throw! "EOF while reading")
                     LispReader'READ_FINISHED
                         v
                     (recur (conj v form))
@@ -6977,11 +6984,11 @@
     (defn #_"Object" regex-reader [#_"PushbackReader" r, #_"char" _delim]
         (let [#_"StringBuilder" sb (StringBuilder.)]
             (loop []
-                (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw (RuntimeException. "EOF while reading regex"))
+                (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw! "EOF while reading regex")
                     (when-not (= ch \") ;; oops! "
                         (.append sb, ch)
                         (when (= ch \\) ;; escape
-                            (let-when [ch (LispReader'read1 r)] (some? ch) => (throw (RuntimeException. "EOF while reading regex"))
+                            (let-when [ch (LispReader'read1 r)] (some? ch) => (throw! "EOF while reading regex")
                                 (.append sb, ch)
                             )
                         )
@@ -6996,7 +7003,7 @@
 
 (class-ns StringReader
     (defn- #_"char" StringReader'escape [#_"PushbackReader" r]
-        (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw (RuntimeException. "EOF while reading string"))
+        (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw! "EOF while reading string")
             (case ch
                 \t  \tab
                 \r  \return
@@ -7006,14 +7013,14 @@
                 \b  \backspace
                 \f  \formfeed
                 \u  (let [ch (LispReader'read1 r)]
-                        (when (LispReader'isDigit ch, 16) => (throw (RuntimeException. (str "Invalid unicode escape: \\u" ch)))
+                        (when (LispReader'isDigit ch, 16) => (throw! (str "invalid unicode escape: \\u" ch))
                             (char (LispReader'readDigits r, ch, 16, 4, true))
                         )
                     )
-                (when (LispReader'isDigit ch, #_8 4) => (throw (RuntimeException. (str "Unsupported escape character: \\" ch)))
+                (when (LispReader'isDigit ch, #_8 4) => (throw! (str "unsupported escape character: \\" ch))
                     (let [#_"int" c (LispReader'readDigits r, ch, 8, 3, false)]
                       #_(when (< 0377 c)
-                            (throw (RuntimeException. "Octal escape sequence must be in range [0, 377]."))
+                            (throw! "octal escape sequence must be in range [0, 377]")
                         )
                         (char c)
                     )
@@ -7025,7 +7032,7 @@
     (defn #_"Object" string-reader [#_"PushbackReader" r, #_"char" _delim]
         (let [#_"StringBuilder" sb (StringBuilder.)]
             (loop []
-                (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw (RuntimeException. "EOF while reading string"))
+                (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw! "EOF while reading string")
                     (when-not (= ch \") ;; oops! "
                         (.append sb, (if (= ch \\) (StringReader'escape r) ch))
                         (recur)
@@ -7061,8 +7068,8 @@
     )
 
     (defn #_"Object" symbolic-value-reader [#_"PushbackReader" r, #_"char" _delim]
-        (let-when [#_"Object" o (LispReader'read r)] (symbol? o) => (throw (RuntimeException. (str "Invalid token: ##" o)))
-            (when (contains? SymbolicValueReader'specials o) => (throw (RuntimeException. (str "Unknown symbolic value: ##" o)))
+        (let-when [#_"Object" o (LispReader'read r)] (symbol? o) => (throw! (str "invalid token: ##" o))
+            (when (contains? SymbolicValueReader'specials o) => (throw! (str "unknown symbolic value: ##" o))
                 (get SymbolicValueReader'specials o)
             )
         )
@@ -7091,10 +7098,10 @@
     (declare LispReader'dispatchMacros)
 
     (defn #_"Object" dispatch-reader [#_"PushbackReader" r, #_"char" _delim]
-        (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw (RuntimeException. "EOF while reading character"))
+        (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw! "EOF while reading character")
             (let-when [#_"IFn" fn (get LispReader'dispatchMacros ch)] (nil? fn) => (.invoke fn, r, ch)
                 (LispReader'unread r, ch)
-                (throw (RuntimeException. (str "No dispatch macro for: " ch)))
+                (throw! (str "no dispatch macro for: " ch))
             )
         )
     )
@@ -7102,7 +7109,7 @@
 
 (class-ns FnReader
     (defn #_"Object" fn-reader [#_"PushbackReader" r, #_"char" _delim]
-        (when-not (bound? #'*arg-env*) => (throw (IllegalStateException. "Nested #()s are not allowed"))
+        (when-not (bound? #'*arg-env*) => (throw! "nested #()s are not allowed")
             (binding [*arg-env* (sorted-map)]
                 (LispReader'unread r, \()
                 (let [#_"PersistentVector" args []
@@ -7139,7 +7146,7 @@
                         (cond
                             (= n '&)    (LispReader'registerArg -1)
                             (number? n) (LispReader'registerArg (.intValue n))
-                            :else       (throw (IllegalStateException. "arg literal must be %, %& or %integer"))
+                            :else       (throw! "arg literal must be %, %& or %integer")
                         )
                     )
                 )
@@ -7156,10 +7163,10 @@
                     (or (symbol? meta) (string? meta)) {:tag meta}
                     (keyword? meta)                         {meta true}
                     (instance? IPersistentMap meta)          meta
-                    :else (throw (IllegalArgumentException. "Metadata must be Symbol, Keyword, String or Map"))
+                    :else (throw! "metadata must be Symbol, Keyword, String or Map")
                 )
               #_"Object" o (LispReader'read r)]
-            (when (instance? IMeta o) => (throw (IllegalArgumentException. "Metadata can only be applied to IMetas"))
+            (when (instance? IMeta o) => (throw! "metadata can only be applied to IMetas")
                 (if (instance? IReference o)
                     (do
                         (reset-meta! o meta)
@@ -7237,7 +7244,7 @@
                     (SyntaxQuoteReader'isUnquote form)
                         (ß return (second form))
                     (SyntaxQuoteReader'isUnquoteSplicing form)
-                        (throw (IllegalStateException. "splice not in list"))
+                        (throw! "splice not in list")
                     (instance? IPersistentCollection form)
                         (cond
                             (instance? IPersistentMap form)
@@ -7251,7 +7258,7 @@
                                     (list 'clojure.core/seq (cons 'clojure.core/concat (SyntaxQuoteReader'sqExpandList s)))
                                 )
                             :else
-                                (throw (UnsupportedOperationException. "Unknown collection type"))
+                                (throw! "unknown collection type")
                         )
                     (or (keyword? form) (number? form) (char? form) (string? form))
                         form
@@ -7273,7 +7280,7 @@
 
 (class-ns UnquoteReader
     (defn #_"Object" unquote-reader [#_"PushbackReader" r, #_"char" _delim]
-        (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw (RuntimeException. "EOF while reading character"))
+        (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw! "EOF while reading character")
             (if (= ch \@)
                 (list 'clojure.core/unquote-splicing (LispReader'read r))
                 (do
@@ -7287,7 +7294,7 @@
 
 (class-ns CharacterReader
     (defn #_"Object" character-reader [#_"PushbackReader" r, #_"char" _delim]
-        (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw (RuntimeException. "EOF while reading character"))
+        (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw! "EOF while reading character")
             (let [#_"String" token (LispReader'readToken r, ch)]
                 (when-not (= (.length token) 1) => (Character/valueOf (.charAt token, 0))
                     (case token
@@ -7300,22 +7307,22 @@
                         (case (.charAt token, 0)
                             \u  (let [#_"int" c (LispReader'scanDigits token, 1, 4, 16)]
                                     (when (<= 0xd800 c 0xdfff) ;; surrogate code unit?
-                                        (throw (RuntimeException. (str "Invalid character constant: \\u" (Integer/toString c, 16))))
+                                        (throw! (str "invalid character constant: \\u" (Integer/toString c, 16)))
                                     )
                                     (char c)
                                 )
                             \o  (let [#_"int" n (dec (.length token))]
                                     (when (< 3 n)
-                                        (throw (RuntimeException. (str "Invalid octal escape sequence length: " n)))
+                                        (throw! (str "invalid octal escape sequence length: " n))
                                     )
                                     (let [#_"int" c (LispReader'scanDigits token, 1, n, 8)]
                                         (when (< 0377 c)
-                                            (throw (RuntimeException. "Octal escape sequence must be in range [0, 377]."))
+                                            (throw! "octal escape sequence must be in range [0, 377]")
                                         )
                                         (char c)
                                     )
                                 )
-                            (throw (RuntimeException. (str "Unsupported character: \\" token)))
+                            (throw! (str "unsupported character: \\" token))
                         )
                     )
                 )
@@ -7341,7 +7348,7 @@
 (class-ns MapReader
     (defn #_"Object" map-reader [#_"PushbackReader" r, #_"char" _delim]
         (let [#_"PersistentVector" v (LispReader'readDelimitedForms r, \})]
-            (when (zero? (% (count v) 2)) => (throw (RuntimeException. "Map literal must contain an even number of forms"))
+            (when (zero? (% (count v) 2)) => (throw! "map literal must contain an even number of forms")
                 (RT/map (.toArray v))
             )
         )
@@ -7356,7 +7363,7 @@
 
 (class-ns UnmatchedDelimiterReader
     (defn #_"Object" unmatched-delimiter-reader [#_"PushbackReader" _r, #_"char" delim]
-        (throw (RuntimeException. (str "Unmatched delimiter: " delim)))
+        (throw! (str "unmatched delimiter: " delim))
     )
 )
 

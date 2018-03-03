@@ -31,6 +31,8 @@
         (w' [w] (if (= '=> (first w)) (second w)))]
     (defmacro recur-if [y z & w] (let [z (z' z) _ (w' w)] `(if ~y ~z ~_))))
 
+(defmacro throw! [^String s] `(throw (RuntimeException. ~s)))
+
 #_(ns cloiure.mantle
     (:refer-clojure :exclude [when when-not])
     (:use [cloiure slang]))
@@ -128,7 +130,7 @@
                 (if kvs
                     (if (next kvs)
                         (recur ret (first kvs) (second kvs) (nnext kvs))
-                        (throw (IllegalArgumentException. "assoc expects even number of arguments after map/vector, found odd number"))
+                        (throw! "assoc expects even number of arguments after map/vector, found odd number")
                     )
                     ret
                 )
@@ -220,7 +222,7 @@
 (§ def defn
     (fn defn [&form &env name & fdecl]
         ;; note: cannot delegate this check to def because of the call to (with-meta name ..)
-        (if (instance? cloiure.lang.Symbol name) nil (throw (IllegalArgumentException. "first argument to defn must be a symbol")))
+        (if (instance? cloiure.lang.Symbol name) nil (throw! "first argument to defn must be a symbol"))
         (let [m     (if (map?    (first fdecl)) (first fdecl)         {})
               fdecl (if (map?    (first fdecl)) (next fdecl)          fdecl)
               fdecl (if (vector? (first fdecl)) (list fdecl)          fdecl)
@@ -512,7 +514,7 @@
         (list 'if (first clauses)
             (if (next clauses)
                 (second clauses)
-                (throw (IllegalArgumentException. "cond requires an even number of forms"))
+                (throw! "cond requires an even number of forms")
             )
             (cons 'cloiure.core/cond (next (next clauses)))
         )
@@ -1370,7 +1372,7 @@
 (§ defn even? [n]
     (if (integer? n)
         (zero? (bit-and (cloiure.lang.RT/uncheckedLongCast n) 1))
-        (throw (IllegalArgumentException. (str "Argument must be an integer: " n)))
+        (throw! (str "argument must be an integer: " n))
     )
 )
 
@@ -1698,7 +1700,7 @@
  ;;
 (§ defn ^:private check-valid-options [options & valid-keys]
     (when (seq (apply disj (apply hash-set (keys options)) valid-keys))
-        (throw (IllegalArgumentException. (apply str "Only these options are valid: " (first valid-keys) (map #(str ", " %) (rest valid-keys)))))
+        (throw! (apply str "only these options are valid: " (first valid-keys) (map #(str ", " %) (rest valid-keys))))
     )
 )
 
@@ -1738,7 +1740,7 @@
           m           (if (meta mm-name) (conj (meta mm-name) m) m)
           mm-name     (with-meta mm-name m)]
         (when (= (count options) 1)
-            (throw (Exception. "The syntax for defmulti has changed. Example: (defmulti name dispatch-fn :default dispatch-value)"))
+            (throw! "the syntax for defmulti has changed: (defmulti name dispatch-fn :default dispatch-value)")
         )
         (let [options   (apply hash-map options)
               default   (get options :default :default)
@@ -1808,7 +1810,7 @@
 (§ defmacro ^:private assert-args [& pairs]
     `(do
         (when-not ~(first pairs)
-            (throw (IllegalArgumentException. (str (first ~'&form) " requires " ~(second pairs) " in " ~'*ns* ":" (:line (meta ~'&form)))))
+            (throw! (str (first ~'&form) " requires " ~(second pairs) " in " ~'*ns* ":" (:line (meta ~'&form))))
         )
         ~(let [more (nnext pairs)]
             (when more
@@ -3144,7 +3146,7 @@
 ;;;
  ; Returns the Class of x.
  ;;
-(§ defn ^Class class [^Object x] (if (nil? x) x (.getClass x)))
+(§ defn ^Class class [^Object x] (when (some? x) (.getClass x)))
 
 ;;;
  ; Returns the :type metadata of x, or its Class if none.
@@ -3487,7 +3489,7 @@
                     )
                 )
             )
-        :else (throw (IllegalArgumentException. "with-open only allows Symbols in bindings"))
+        :else (throw! "with-open only allows Symbols in bindings")
     )
 )
 
@@ -3734,7 +3736,7 @@
 (§ defn ^cloiure.lang.Namespace the-ns [x]
     (if (instance? cloiure.lang.Namespace x)
         x
-        (or (find-ns x) (throw (Exception. (str "No namespace: " x " found"))))
+        (or (find-ns x) (throw! (str "no namespace: " x " found")))
     )
 )
 
@@ -3809,7 +3811,7 @@
  ; to a symbol different from the var's name, in order to prevent clashes.
  ;;
 (§ defn refer [ns-sym & filters]
-    (let [ns (or (find-ns ns-sym) (throw (Exception. (str "No namespace: " ns-sym))))
+    (let [ns (or (find-ns ns-sym) (throw! (str "no namespace: " ns-sym)))
           fs (apply hash-map filters)
           nspublics (ns-publics ns)
           rename (or (:rename fs) {})
@@ -3820,7 +3822,7 @@
                 (or (:refer fs) (:only fs) (keys nspublics))
             )]
         (when (and to-do (not (instance? cloiure.lang.Sequential to-do)))
-            (throw (Exception. ":only/:refer value must be a sequential collection of symbols"))
+            (throw! "the value of :only/:refer must be a sequential collection of symbols")
         )
         (doseq [sym to-do]
             (when-not (exclude sym)
@@ -3960,11 +3962,11 @@
         (even? (count name-vals-vec)) "an even number of forms in binding vector"
     )
     `(let [~@(interleave (take-nth 2 name-vals-vec) (repeat '(.setDynamic (cloiure.lang.Var/create))))]
-        (cloiure.lang.Var/pushThreadBindings (hash-map ~@name-vals-vec))
+        (push-thread-bindings (hash-map ~@name-vals-vec))
         (try
             ~@body
             (finally
-                (cloiure.lang.Var/popThreadBindings)
+                (pop-thread-bindings)
             )
         )
     )
@@ -4013,7 +4015,7 @@
                                                 (= firstb '&)   (recur (pb ret (second bs) gseq) n (nnext bs) true)
                                                 (= firstb :as)  (pb ret (second bs) gvec)
                                                 :else           (if seen-rest?
-                                                                    (throw (Exception. "Unsupported binding form, only :as can follow & parameter"))
+                                                                    (throw! "unsupported binding form, only :as can follow & parameter")
                                                                     (recur
                                                                         (pb (if has-rest (conj ret gfirst `(first ~gseq) gseq `(next ~gseq)) ret)
                                                                             firstb
@@ -4075,7 +4077,7 @@
                         (symbol? b) (conj bvec b v)
                         (vector? b) (pvec bvec b v)
                         (map? b) (pmap bvec b v)
-                        :else (throw (Exception. (str "Unsupported binding form: " b)))
+                        :else (throw! (str "unsupported binding form: " b))
                     )
                 )
             )
@@ -4137,28 +4139,28 @@
                 (if (seq? (first sigs))
                     sigs
                     ;; assume single arity syntax
-                    (throw (IllegalArgumentException.
+                    (throw!
                         (if (seq sigs)
-                            (str "Parameter declaration " (first sigs) " should be a vector")
-                            (str "Parameter declaration missing")
+                            (str "parameter declaration " (first sigs) " should be a vector")
+                            (str "parameter declaration missing")
                         )
-                    ))
+                    )
                 )
             )
           psig
             (fn* [sig]
                 ;; ensure correct type before destructuring sig
                 (when (not (seq? sig))
-                    (throw (IllegalArgumentException. (str "Invalid signature " sig " should be a list")))
+                    (throw! (str "invalid signature " sig " should be a list"))
                 )
                 (let [[params & body] sig
                       _ (when (not (vector? params))
-                            (throw (IllegalArgumentException.
+                            (throw!
                                 (if (seq? (first sigs))
-                                    (str "Parameter declaration " params " should be a vector")
-                                    (str "Invalid signature " sig " should be a list")
+                                    (str "parameter declaration " params " should be a vector")
+                                    (str "invalid signature " sig " should be a list")
                                 )
-                            ))
+                            )
                         )
                       conds (when (and (next body) (map? (first body))) (first body))
                       body (if conds (next body) body)
@@ -4266,7 +4268,7 @@
                     [] (partition 2 seq-exprs)
                 )
             )
-          err (fn [& msg] (throw (IllegalArgumentException. ^String (apply str msg))))
+          err (fn [& msg] (throw! ^String (apply str msg)))
           emit-bind
             (fn emit-bind [[[bind expr & mod-pairs] & [[_ next-expr] :as next-groups]]]
                 (let [giter (gensym "iter__") gxs (gensym "s__")
@@ -5092,7 +5094,7 @@
     ([tag] (descendants global-hierarchy tag))
     ([h tag]
         (if (class? tag)
-            (throw (UnsupportedOperationException. "Can't get descendants of classes"))
+            (throw! "can't get descendants of classes")
             (not-empty (get (:descendants h) tag))
         )
     )
@@ -5131,16 +5133,16 @@
             (or
                 (when-not (contains? (tp tag) parent)
                     (when (contains? (ta tag) parent)
-                        (throw (Exception. (print-str tag "already has" parent "as ancestor")))
+                        (throw! (print-str tag "already has" parent "as ancestor"))
                     )
                     (when (contains? (ta parent) tag)
-                        (throw (Exception. (print-str "Cyclic derivation:" parent "has" tag "as ancestor")))
+                        (throw! (print-str "cyclic derivation:" parent "has" tag "as ancestor"))
                     )
-                    {
+                    (hash-map
                         :parents (assoc (:parents h) tag (conj (get tp tag #{}) parent))
                         :ancestors (tf (:ancestors h) tag td parent ta)
                         :descendants (tf (:descendants h) parent ta tag td)
-                    }
+                    )
                 )
                 h
             )
@@ -5216,12 +5218,8 @@
 
 (§ defmacro with-loading-context [& body]
     `((fn loading# []
-        (cloiure.lang.Var/pushThreadBindings {cloiure.lang.Compiler/LOADER (.getClassLoader (.getClass ^Object loading#))})
-        (try
+        (binding [*class-loader* (.getClassLoader (.getClass ^Object loading#))]
             ~@body
-            (finally
-                (cloiure.lang.Var/popThreadBindings)
-            )
         )
     ))
 )
@@ -5531,7 +5529,7 @@
             (fn emit [pred expr args]
                 (let [[[a b c :as clause] more] (split-at (if (= :>> (second args)) 3 2) args) n (count clause)]
                     (cond
-                        (= 0 n) `(throw (IllegalArgumentException. (str "No matching clause: " ~expr)))
+                        (= 0 n) `(throw! (str "no matching clause: " ~expr))
                         (= 1 n) a
                         (= 2 n) `(if (~pred ~a ~expr)
                                     ~b
@@ -5766,7 +5764,7 @@
           default
             (if (odd? (count clauses))
                 (last clauses)
-                `(throw (IllegalArgumentException. (str "No matching clause: " ~ge)))
+                `(throw! (str "no matching clause: " ~ge))
             )]
         (if (> 2 (count clauses))
             `(let [~ge ~e] ~default)
@@ -5774,7 +5772,7 @@
                   assoc-test
                     (fn assoc-test [m test expr]
                         (if (contains? m test)
-                            (throw (IllegalArgumentException. (str "Duplicate case test constant: " test)))
+                            (throw! (str "duplicate case test constant: " test))
                             (assoc m test expr)
                         )
                     )
@@ -5829,7 +5827,7 @@
 )
 
 (§ defn- most-specific [rtypes]
-    (or (some (fn [t] (when (every? #(isa? t %) rtypes) t)) rtypes) (throw (Exception. "Incompatible return types")))
+    (or (some (fn [t] (when (every? #(isa? t %) rtypes) t)) rtypes) (throw! "incompatible return types"))
 )
 
 ;;;
@@ -6091,7 +6089,7 @@
     (let [[super interfaces] (get-super-and-interfaces bases) pname (proxy-name super interfaces)]
         (or (RT/loadClassForName pname)
             (let [[cname bytecode] (generate-proxy super interfaces)]
-                (.defineClass ^DynamicClassLoader (deref cloiure.lang.Compiler/LOADER) pname bytecode)
+                (.defineClass ^DynamicClassLoader *class-loader* pname bytecode)
             )
         )
     )
@@ -6157,7 +6155,7 @@
  ; protected members, nor to super, as these capabilities cannot be proxied.
  ;;
 (§ defmacro proxy [class-and-interfaces args & fs]
-    (let [bases (map #(or (resolve %) (throw (Exception. (str "Can't resolve: " %)))) class-and-interfaces)
+    (let [bases (map #(or (resolve %) (throw! (str "can't resolve: " %))) class-and-interfaces)
           [super interfaces] (get-super-and-interfaces bases)
           pc-effect (apply get-proxy-class bases)
           pname (proxy-name super interfaces)]
@@ -6173,7 +6171,7 @@
                               meths (map (fn [[params & body]] (cons (apply vector 'this params) body)) meths)]
                             (if-not (contains? fmap (name sym))
                                 (recur (assoc fmap (name sym) (cons `fn meths)) (next fs))
-                                (throw (IllegalArgumentException. (str "Method '" (name sym) "' redefined")))
+                                (throw! (str "method '" (name sym) "' redefined"))
                             )
                         )
                         fmap
@@ -6721,7 +6719,7 @@
 
 (§ defn- generate-interface [{:keys [name extends methods]}]
     (when (some #(-> % first cloiure.core/name (.contains "-")) methods)
-        (throw (IllegalArgumentException. "Interface methods must not contain '-'"))
+        (throw! "interface methods must not contain '-'")
     )
     (let [iname (.replace (str name) "." "/") cv (ClassWriter. ClassWriter/COMPUTE_MAXS)]
         (.visit cv Opcodes/V1_5 (+ Opcodes/ACC_PUBLIC Opcodes/ACC_ABSTRACT Opcodes/ACC_INTERFACE) iname nil "java/lang/Object"
@@ -6764,7 +6762,7 @@
  ;;
 (§ defmacro gen-interface [& options]
     (let [options-map (apply hash-map options) [cname bytecode] (generate-interface options-map)]
-        (.defineClass ^DynamicClassLoader (deref cloiure.lang.Compiler/LOADER) (str (:name options-map)) bytecode)
+        (.defineClass ^DynamicClassLoader *class-loader* (str (:name options-map)) bytecode)
     )
 )
 
@@ -6825,7 +6823,7 @@
           methods
             (map (fn [[name params & body]] (cons name (maybe-destructured params body))) (apply concat (vals impls)))]
         (when-let [bad-opts (seq (keys opts))]
-            (throw (IllegalArgumentException. (apply print-str "Unsupported option(s) -" bad-opts)))
+            (throw! (apply print-str "unsupported option(s) -" bad-opts))
         )
         [interfaces methods opts]
     )
@@ -7105,11 +7103,11 @@
     (let [cache (.__methodImplCache pf)
           f (if (.isInstance c x) interf (find-protocol-method (.protocol cache) (.methodk cache) x))]
         (when-not f
-            (throw (IllegalArgumentException.
-                (str "No implementation of method: " (.methodk cache)
+            (throw!
+                (str "no implementation of method: " (.methodk cache)
                      " of protocol: " (:var (.protocol cache))
-                     " found for class: " (if (nil? x) "nil" (.getName (class x))))
-            ))
+                     " found for class: " (if (some? x) (.getName (class x)) "nil"))
+            )
         )
         (set! (.__methodImplCache pf) (expand-method-impl-cache cache (class x) f))
         f
@@ -7200,10 +7198,10 @@
                                     )
                                 )]
                             (when (some #{0} (map count arglists))
-                                (throw (IllegalArgumentException. (str "Definition of function " mname " in protocol " name " must take at least one arg.")))
+                                (throw! (str "definition of function " mname " in protocol " name " must take at least one arg."))
                             )
                             (when (m (keyword mname))
-                                (throw (IllegalArgumentException. (str "Function " mname " in protocol " name " was redefined. Specify all arities in single definition.")))
+                                (throw! (str "function " mname " in protocol " name " was redefined: specify all arities in single definition"))
                             )
                             (assoc m (keyword mname)
                                 (merge name-meta {:name (vary-meta mname assoc :arglists arglists) :arglists arglists})
@@ -7349,10 +7347,10 @@
 (§ defn extend [atype & proto+mmaps]
     (doseq [[proto mmap] (partition 2 proto+mmaps)]
         (when-not (protocol? proto)
-            (throw (IllegalArgumentException. (str proto " is not a protocol")))
+            (throw! (str proto " is not a protocol"))
         )
         (when (implements? proto atype)
-            (throw (IllegalArgumentException. (str atype " already directly implements " (:on-interface proto) " for protocol:" (:var proto))))
+            (throw! (str atype " already directly implements " (:on-interface proto) " for protocol:" (:var proto)))
         )
         (-reset-methods (alter-var-root (:var proto) assoc-in [:impls atype] mmap))
     )
@@ -7714,7 +7712,7 @@
     cloiure.lang.IChunk
     (dropFirst [_]
         (if (= off end)
-            (throw (IllegalStateException. "dropFirst of empty chunk"))
+            (throw! "dropFirst of empty chunk")
             (ArrayChunk. am arr (inc off) end)
         )
     )
@@ -7948,7 +7946,7 @@
     (pop [this]
         (cond
             (zero? cnt)
-                (throw (IllegalStateException. "Can't pop empty vector"))
+                (throw! "can't pop empty vector")
             (= 1 cnt)
                 (Vec. am 0 5 EMPTY-NODE (.array am 0) (meta this))
             (> (- cnt (.tailoff this)) 1)
@@ -8002,7 +8000,7 @@
     (assoc [this k v]
         (if (cloiure.lang.Numbers/isInteger k)
             (.assocN this k v)
-            (throw (IllegalArgumentException. "Key must be integer"))
+            (throw! "key must be integer")
         )
     )
     (containsKey [this k]
@@ -8041,7 +8039,7 @@
                     (throw (IndexOutOfBoundsException.))
                 )
             )
-            (throw (IllegalArgumentException. "Key must be integer"))
+            (throw! "key must be integer")
         )
     )
 
@@ -8233,7 +8231,7 @@
     `(let [am# (ams ~t)]
         (if am#
             am#
-            (throw (IllegalArgumentException. (str "Unrecognized type " ~t)))
+            (throw! (str "unrecognized type " ~t))
         )
     )
 )
@@ -8890,24 +8888,24 @@
  ;;
 (§ defn- ^:dynamic assert-valid-fdecl [fdecl]
     (when (empty? fdecl)
-        (throw (IllegalArgumentException. "Parameter declaration missing"))
+        (throw! "parameter declaration missing")
     )
     (let [argdecls
             (map
                 #(if (seq? %)
                     (first %)
-                    (throw (IllegalArgumentException.
+                    (throw!
                         (if (seq? (first fdecl))
-                            (str "Invalid signature \"" % "\" should be a list")
-                            (str "Parameter declaration \"" % "\" should be a vector")
+                            (str "invalid signature \"" % "\" should be a list")
+                            (str "parameter declaration \"" % "\" should be a vector")
                         )
-                    ))
+                    )
                 )
                 fdecl
             )
           bad-args (seq (remove #(vector? %) argdecls))]
         (when bad-args
-            (throw (IllegalArgumentException. (str "Parameter declaration \"" (first bad-args) "\" should be a vector")))
+            (throw! (str "parameter declaration \"" (first bad-args) "\" should be a vector"))
         )
     )
 )
@@ -9610,7 +9608,7 @@
                     (replace-by s match replacement)
                 )
             :else
-                (throw (IllegalArgumentException. (str "Invalid match arg: " match)))
+                (throw! (str "invalid match arg: " match))
         )
     )
 )
@@ -9686,7 +9684,7 @@
                     (replace-first-by s match replacement)
                 )
             :else
-                (throw (IllegalArgumentException. (str "Invalid match arg: " match)))
+                (throw! (str "invalid match arg: " match))
         )
     )
 )
