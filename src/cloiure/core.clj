@@ -1,6 +1,10 @@
 (ns #_cloiure.slang cloiure.core
     (:refer-clojure :exclude [when when-not]))
 
+(import
+    [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Number Object RuntimeException String StringBuilder Thread Throwable]
+)
+
 (defmacro § [& _])
 (defmacro ß [& _])
 
@@ -70,7 +74,6 @@
 
 (import
     [java.io InputStreamReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
-  #_[java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Number Object RuntimeException String StringBuilder Thread Throwable]
     [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
     [java.lang.reflect Array Constructor Field #_Method Modifier]
     [java.math BigDecimal BigInteger MathContext]
@@ -80,9 +83,12 @@
     [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicReference]
     [java.util.concurrent.locks ReentrantReadWriteLock]
     [java.util.regex Matcher Pattern]
-    [clojure.lang AFn AFunction APersistentMap APersistentSet APersistentVector ArraySeq BigInt DynamicClassLoader PersistentList$EmptyList IFn ILookup ILookupSite ILookupThunk IMapEntry IMeta IObj IPersistentCollection IPersistentList IPersistentMap IPersistentSet IPersistentVector IReference ISeq IType Keyword KeywordLookupSite LazySeq Namespace Numbers PersistentArrayMap PersistentHashSet PersistentList PersistentVector RestFn RT Symbol Tuple Util Var]
     [cloiure.asm ClassVisitor ClassWriter Label MethodVisitor Opcodes Type]
     [cloiure.asm.commons GeneratorAdapter Method]
+)
+
+(import
+    [clojure.lang AFn AFunction APersistentMap APersistentSet APersistentVector ArraySeq BigInt DynamicClassLoader PersistentList$EmptyList IFn ILookup ILookupSite ILookupThunk IMapEntry IMeta IObj IPersistentCollection IPersistentList IPersistentMap IPersistentSet IPersistentVector IReference ISeq IType Keyword KeywordLookupSite LazySeq Namespace Numbers PersistentArrayMap PersistentHashSet PersistentList PersistentVector RestFn RT Symbol Tuple Util Var]
 )
 
 (defn- ßsym  [x] (condp instance? x                      Keyword (.sym x)                          Var (.sym x)  (:sym x) ))
@@ -138,13 +144,7 @@
 (declare RT'toArray)
 (declare RT'var)
 (declare RT'vector)
-
-(java-ns cloiure.lang.Tuple
-
-(class-ns Tuple
-    (def #_"int" Tuple'MAX_SIZE 6)
-)
-)
+(declare Tuple'MAX_SIZE)
 
 (java-ns cloiure.lang.Reflector
     (§ soon definterface Reflector) (import [clojure.lang Reflector])
@@ -154,8 +154,7 @@
     (defprotocol Expr
         (#_"Object" Expr'''eval [#_"Expr" this])
         (#_"void" Expr'''emit [#_"Expr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen])
-        (#_"boolean" Expr'''hasJavaClass [#_"Expr" this])
-        (#_"Class" Expr'''getJavaClass [#_"Expr" this])
+        (#_"Class" Expr'''getClass [#_"Expr" this])
     )
 
     (defprotocol Assignable
@@ -772,11 +771,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"NilExpr" this]
-            true
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"NilExpr" this]
+        (#_"Class" Expr'''getClass [#_"NilExpr" this]
             nil
         )
     )
@@ -812,11 +807,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"BooleanExpr" this]
-            true
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"BooleanExpr" this]
+        (#_"Class" Expr'''getClass [#_"BooleanExpr" this]
             Boolean
         )
     )
@@ -848,8 +839,8 @@
     (def #_"Var" ^:dynamic *compile-stub-sym*  ) ;; Symbol
     (def #_"Var" ^:dynamic *compile-stub-class*) ;; Class
 
-    (def #_"Method[]" Compiler'createTupleMethods
-        (object-array [
+    (def #_"[Method]" Compiler'createTupleMethods
+        (vector
             (Method/getMethod "clojure.lang.IPersistentVector create()")
             (Method/getMethod "clojure.lang.IPersistentVector create(Object)")
             (Method/getMethod "clojure.lang.IPersistentVector create(Object, Object)")
@@ -857,7 +848,7 @@
             (Method/getMethod "clojure.lang.IPersistentVector create(Object, Object, Object, Object)")
             (Method/getMethod "clojure.lang.IPersistentVector create(Object, Object, Object, Object, Object)")
             (Method/getMethod "clojure.lang.IPersistentVector create(Object, Object, Object, Object, Object, Object)")
-        ])
+        )
     )
 
     (def- #_"Type[][]" Compiler'ARG_TYPES
@@ -930,28 +921,24 @@
     )
 
     (defn #_"Class" Compiler'maybePrimitiveType [#_"Expr" e]
-        (when (and (satisfies? MaybePrimitive e) (Expr'''hasJavaClass e) (MaybePrimitive'''canEmitPrimitive e))
-            (let-when [#_"Class" c (Expr'''getJavaClass e)] (Reflector'isPrimitive c)
+        (let-when [#_"Class" c (Expr'''getClass e)] (Reflector'isPrimitive c)
+            (when (and (satisfies? MaybePrimitive e) (MaybePrimitive'''canEmitPrimitive e))
                 c
             )
         )
     )
 
-    (defn #_"Class" Compiler'maybeJavaClass [#_"Iterable" exprs]
+    (defn #_"Class" Compiler'maybeClass [#_"Iterable" exprs]
         (try
             (let [#_"Iterator" it (.iterator exprs)]
                 (loop-when [#_"Class" match nil] (.hasNext it) => match
                     (let [#_"Expr" e (.next it)]
-                        (cond
-                            (instance? ThrowExpr e)
-                                (recur match)
-                            (Expr'''hasJavaClass e)
-                                (let [#_"Class" c (Expr'''getJavaClass e)]
-                                    (cond
-                                        (nil? match) (recur c)
-                                        (= match c) (recur match)
-                                    )
-                                )
+                        (condp instance? e
+                            NilExpr (recur-if (nil? match) match)
+                            ThrowExpr (recur match)
+                            (let [#_"Class" c (Expr'''getClass e)]
+                                (recur-if (and (some? c) (any = match nil c)) c)
+                            )
                         )
                     )
                 )
@@ -965,11 +952,11 @@
     (defn #_"String" Compiler'getTypeStringForArgs [#_"IPersistentVector" args]
         (let [#_"StringBuilder" sb (StringBuilder.)]
             (dotimes [#_"int" i (count args)]
-                (let [#_"Expr" arg (nth args i)]
+                (let [#_"Class" c (Expr'''getClass (nth args i))]
                     (when (pos? i)
                         (.append sb, ", ")
                     )
-                    (.append sb, (if (and (Expr'''hasJavaClass arg) (some? (Expr'''getJavaClass arg))) (.getName (Expr'''getJavaClass arg)) "unknown"))
+                    (.append sb, (if (some? c) (.getName c) "unknown"))
                 )
             )
             (.toString sb)
@@ -982,12 +969,11 @@
                 (loop-when [matchIdx -1 tied false #_"boolean" foundExact false #_"int" i 0] (< i (count pars)) => [matchIdx tied]
                     (let [[#_"int" exact #_"boolean" match]
                             (loop-when [exact 0 match true #_"int" p 0 #_"ISeq" s (seq args)] (and match (< p (count args)) (some? s)) => [exact match]
-                                (let [#_"Expr" arg (first s)
-                                      #_"Class" aclass (if (Expr'''hasJavaClass arg) (Expr'''getJavaClass arg) Object) #_"Class" pclass (aget (nth pars i) p)
+                                (let [#_"Class" aclass (Expr'''getClass (first s)) #_"Class" pclass (aget (nth pars i) p)
                                       [exact match]
-                                        (if (and (Expr'''hasJavaClass arg) (= aclass pclass))
+                                        (if (and (some? aclass) (= aclass pclass))
                                             [(inc exact) match]
-                                            [exact (Reflector'paramArgTypeMatch pclass, aclass)]
+                                            [exact (Reflector'paramArgTypeMatch pclass, (or aclass Object))]
                                         )]
                                     (recur exact match (inc p) (next s))
                                 )
@@ -1416,11 +1402,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"MonitorEnterExpr" this]
-            false
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"MonitorEnterExpr" this]
+        (#_"Class" Expr'''getClass [#_"MonitorEnterExpr" this]
             nil
         )
     )
@@ -1460,11 +1442,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"MonitorExitExpr" this]
-            false
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"MonitorExitExpr" this]
+        (#_"Class" Expr'''getClass [#_"MonitorExitExpr" this]
             nil
         )
     )
@@ -1501,12 +1479,8 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"AssignExpr" this]
-            (Expr'''hasJavaClass (:val this))
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"AssignExpr" this]
-            (Expr'''getJavaClass (:val this))
+        (#_"Class" Expr'''getClass [#_"AssignExpr" this]
+            (Expr'''getClass (:val this))
         )
     )
 )
@@ -1556,11 +1530,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"ImportExpr" this]
-            false
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"ImportExpr" this]
+        (#_"Class" Expr'''getClass [#_"ImportExpr" this]
             nil
         )
     )
@@ -1597,7 +1567,7 @@
                 IPersistentVector (.getStatic gen, (Type/getType PersistentVector),   "EMPTY", (Type/getType PersistentVector))
                 IPersistentMap    (.getStatic gen, (Type/getType PersistentArrayMap), "EMPTY", (Type/getType PersistentArrayMap))
                 IPersistentSet    (.getStatic gen, (Type/getType PersistentHashSet),  "EMPTY", (Type/getType PersistentHashSet))
-                (throw! "unknown collection type")
+                                  (throw! "unknown collection type")
             )
             (when (= context :Context'STATEMENT)
                 (.pop gen)
@@ -1605,17 +1575,13 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"EmptyExpr" this]
-            true
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"EmptyExpr" this]
+        (#_"Class" Expr'''getClass [#_"EmptyExpr" this]
             (condp instance? (:coll this)
                 IPersistentList   IPersistentList
                 IPersistentVector IPersistentVector
                 IPersistentMap    IPersistentMap
                 IPersistentSet    IPersistentSet
-                (throw! "unknown collection type")
+                                  (throw! "unknown collection type")
             )
         )
     )
@@ -1652,16 +1618,14 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"ConstantExpr" this]
-            (Modifier/isPublic (.getModifiers (class (:v this))))
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"ConstantExpr" this]
-            (cond
-                (instance? APersistentMap (:v this))    APersistentMap
-                (instance? APersistentSet (:v this))    APersistentSet
-                (instance? APersistentVector (:v this)) APersistentVector
-                :else                                   (class (:v this))
+        (#_"Class" Expr'''getClass [#_"ConstantExpr" this]
+            (when (Modifier/isPublic (.getModifiers (class (:v this))))
+                (condp instance? (:v this)
+                    APersistentMap    APersistentMap
+                    APersistentSet    APersistentSet
+                    APersistentVector APersistentVector
+                                      (class (:v this))
+                )
             )
         )
     )
@@ -1695,16 +1659,12 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"NumberExpr" this]
-            true
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"NumberExpr" this]
+        (#_"Class" Expr'''getClass [#_"NumberExpr" this]
             (condp instance? (:n this)
                 Integer Long/TYPE
                 Long    Long/TYPE
                 Double  Double/TYPE
-                (throw! (str "unsupported Number type: " (.getName (class (:n this)))))
+                        (throw! (str "unsupported Number type: " (.getName (class (:n this)))))
             )
         )
     )
@@ -1759,11 +1719,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"StringExpr" this]
-            true
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"StringExpr" this]
+        (#_"Class" Expr'''getClass [#_"StringExpr" this]
             String
         )
     )
@@ -1799,11 +1755,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"KeywordExpr" this]
-            true
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"KeywordExpr" this]
+        (#_"Class" Expr'''getClass [#_"KeywordExpr" this]
             Keyword
         )
     )
@@ -1985,7 +1937,7 @@
 
 (class-ns InstanceFieldExpr
     (defn #_"InstanceFieldExpr" InstanceFieldExpr'new [#_"int" line, #_"Expr" target, #_"String" fieldName, #_"Symbol" tag, #_"boolean" requireField]
-        (let [#_"Class" c (when (Expr'''hasJavaClass target) (Expr'''getJavaClass target))
+        (let [#_"Class" c (Expr'''getClass target)
               #_"java.lang.reflect.Field" f (when (some? c) (Reflector'getField c, fieldName, false))]
             (when (and (nil? f) *warn-on-reflection*)
                 (if (nil? c)
@@ -2038,13 +1990,9 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"InstanceFieldExpr" this]
-            (or (some? (:field this)) (some? (:tag this)))
-        )
-
         #_memoize!
-        (#_"Class" Expr'''getJavaClass [#_"InstanceFieldExpr" this]
-            (if (some? (:tag this)) (Interop'tagToClass (:tag this)) (.getType (:field this)))
+        (#_"Class" Expr'''getClass [#_"InstanceFieldExpr" this]
+            (cond (some? (:tag this)) (Interop'tagToClass (:tag this)) (some? (:field this)) (.getType (:field this)))
         )
     )
 
@@ -2126,12 +2074,8 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"StaticFieldExpr" this]
-            true
-        )
-
         #_memoize!
-        (#_"Class" Expr'''getJavaClass [#_"StaticFieldExpr" this]
+        (#_"Class" Expr'''getClass [#_"StaticFieldExpr" this]
             (if (some? (:tag this)) (Interop'tagToClass (:tag this)) (.getType (:field this)))
         )
     )
@@ -2265,7 +2209,7 @@
                     )
                     :else
                     (do
-                        (throw! (str "mismatched primitive return, expected: " retClass ", had: " (Expr'''getJavaClass body)))
+                        (throw! (str "mismatched primitive return, expected: " retClass ", had: " (Expr'''getClass body)))
                     )
                 )
             )
@@ -2296,12 +2240,12 @@
 (class-ns InstanceMethodExpr
     (defn #_"InstanceMethodExpr" InstanceMethodExpr'new [#_"int" line, #_"Symbol" tag, #_"Expr" target, #_"String" methodName, #_"IPersistentVector" args, #_"boolean" tailPosition]
         (let [#_"java.lang.reflect.Method" method
-                (if (and (Expr'''hasJavaClass target) (some? (Expr'''getJavaClass target)))
-                    (let [#_"PersistentVector" methods (Reflector'getMethods (Expr'''getJavaClass target), (count args), methodName, false)]
+                (if (some? (Expr'''getClass target))
+                    (let [#_"PersistentVector" methods (Reflector'getMethods (Expr'''getClass target), (count args), methodName, false)]
                         (if (zero? (count methods))
                             (do
                                 (when *warn-on-reflection*
-                                    (.println *err*, (str "Reflection warning, line " line " - call to method " methodName " on " (.getName (Expr'''getJavaClass target)) " can't be resolved (no such method)."))
+                                    (.println *err*, (str "Reflection warning, line " line " - call to method " methodName " on " (.getName (Expr'''getClass target)) " can't be resolved (no such method)."))
                                 )
                                 nil
                             )
@@ -2322,7 +2266,7 @@
                                         (Reflector'getAsMethodOfPublicBase (.getDeclaringClass m), m)
                                     )]
                                 (when (and (nil? m) *warn-on-reflection*)
-                                    (.println *err*, (str "Reflection warning, line " line " - call to method " methodName " on " (.getName (Expr'''getJavaClass target)) " can't be resolved (argument types: " (Compiler'getTypeStringForArgs args) ")."))
+                                    (.println *err*, (str "Reflection warning, line " line " - call to method " methodName " on " (.getName (Expr'''getClass target)) " can't be resolved (argument types: " (Compiler'getTypeStringForArgs args) ")."))
                                 )
                                 m
                             )
@@ -2398,12 +2342,8 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"InstanceMethodExpr" this]
-            (or (some? (:method this)) (some? (:tag this)))
-        )
-
         #_memoize!
-        (#_"Class" Expr'''getJavaClass [#_"InstanceMethodExpr" this]
+        (#_"Class" Expr'''getClass [#_"InstanceMethodExpr" this]
             (Compiler'retType (when (some? (:tag this)) (Interop'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this))))
         )
     )
@@ -2551,12 +2491,8 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"StaticMethodExpr" this]
-            (or (some? (:method this)) (some? (:tag this)))
-        )
-
         #_memoize!
-        (#_"Class" Expr'''getJavaClass [#_"StaticMethodExpr" this]
+        (#_"Class" Expr'''getClass [#_"StaticMethodExpr" this]
             (Compiler'retType (when (some? (:tag this)) (Interop'tagToClass (:tag this))), (when (some? (:method this)) (.getReturnType (:method this))))
         )
     )
@@ -2614,8 +2550,8 @@
                                     (cond
                                         (some? c)
                                             (zero? (count (Reflector'getMethods c, 0, (Compiler'munge name), true)))
-                                        (and (some? instance) (Expr'''hasJavaClass instance) (some? (Expr'''getJavaClass instance)))
-                                            (zero? (count (Reflector'getMethods (Expr'''getJavaClass instance), 0, (Compiler'munge name), false)))
+                                        (and (some? instance) (some? (Expr'''getClass instance)))
+                                            (zero? (count (Reflector'getMethods (Expr'''getClass instance), 0, (Compiler'munge name), false)))
                                         :else
                                             maybeField
                                     )
@@ -2674,11 +2610,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"UnresolvedVarExpr" this]
-            false
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"UnresolvedVarExpr" this]
+        (#_"Class" Expr'''getClass [#_"UnresolvedVarExpr" this]
             nil
         )
     )
@@ -2709,13 +2641,9 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"VarExpr" this]
-            (some? (:tag this))
-        )
-
         #_memoize!
-        (#_"Class" Expr'''getJavaClass [#_"VarExpr" this]
-            (Interop'tagToClass (:tag this))
+        (#_"Class" Expr'''getClass [#_"VarExpr" this]
+            (when (some? (:tag this)) (Interop'tagToClass (:tag this)))
         )
     )
 
@@ -2760,11 +2688,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"TheVarExpr" this]
-            true
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"TheVarExpr" this]
+        (#_"Class" Expr'''getClass [#_"TheVarExpr" this]
             Var
         )
     )
@@ -2814,12 +2738,8 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"BodyExpr" this]
-            (Expr'''hasJavaClass (BodyExpr''lastExpr this))
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"BodyExpr" this]
-            (Expr'''getJavaClass (BodyExpr''lastExpr this))
+        (#_"Class" Expr'''getClass [#_"BodyExpr" this]
+            (Expr'''getClass (BodyExpr''lastExpr this))
         )
     )
 
@@ -2962,12 +2882,8 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"TryExpr" this]
-            (Expr'''hasJavaClass (:tryExpr this))
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"TryExpr" this]
-            (Expr'''getJavaClass (:tryExpr this))
+        (#_"Class" Expr'''getClass [#_"TryExpr" this]
+            (Expr'''getClass (:tryExpr this))
         )
     )
 )
@@ -3057,11 +2973,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"ThrowExpr" this]
-            false
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"ThrowExpr" this]
+        (#_"Class" Expr'''getClass [#_"ThrowExpr" this]
             nil
         )
     )
@@ -3150,11 +3062,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"NewExpr" this]
-            true
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"NewExpr" this]
+        (#_"Class" Expr'''getClass [#_"NewExpr" this]
             (:c this)
         )
     )
@@ -3214,12 +3122,8 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"MetaExpr" this]
-            (Expr'''hasJavaClass (:expr this))
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"MetaExpr" this]
-            (Expr'''getJavaClass (:expr this))
+        (#_"Class" Expr'''getClass [#_"MetaExpr" this]
+            (Expr'''getClass (:expr this))
         )
     )
 )
@@ -3278,12 +3182,7 @@
 
     (extend-type IfExpr Expr
         (#_"Object" Expr'''eval [#_"IfExpr" this]
-            (let [#_"Object" t (Expr'''eval (:testExpr this))]
-                (if (and (some? t) (not= t false))
-                    (Expr'''eval (:thenExpr this))
-                    (Expr'''eval (:elseExpr this))
-                )
-            )
+            (Expr'''eval (if (any = (Expr'''eval (:testExpr this)) nil false) (:elseExpr this) (:thenExpr this)))
         )
 
         (#_"void" Expr'''emit [#_"IfExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
@@ -3291,23 +3190,16 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"IfExpr" this]
-            (let [#_"Expr" then (:thenExpr this) #_"Expr" else (:elseExpr this)]
-                (and (Expr'''hasJavaClass then)
-                    (Expr'''hasJavaClass else)
-                    (or (= (Expr'''getJavaClass then) (Expr'''getJavaClass else))
-                        (= (Expr'''getJavaClass then) Recur)
-                        (= (Expr'''getJavaClass else) Recur)
-                        (and (nil? (Expr'''getJavaClass then)) (not (.isPrimitive (Expr'''getJavaClass else))))
-                        (and (nil? (Expr'''getJavaClass else)) (not (.isPrimitive (Expr'''getJavaClass then))))))
-            )
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"IfExpr" this]
-            (let [#_"Class" thenClass (Expr'''getJavaClass (:thenExpr this))]
-                (if (and (some? thenClass) (not= thenClass Recur))
-                    thenClass
-                    (Expr'''getJavaClass (:elseExpr this))
+        (#_"Class" Expr'''getClass [#_"IfExpr" this]
+            (let [#_"Expr" then (:thenExpr this) #_"Class" t (Expr'''getClass then)
+                  #_"Expr" else (:elseExpr this) #_"Class" e (Expr'''getClass else)]
+                (when (and (or (some? t) (instance? NilExpr then))
+                           (or (some? e) (instance? NilExpr else))
+                           (or (= t e)
+                               (any = Recur t e)
+                               (and (nil? t) (not (.isPrimitive e)))
+                               (and (nil? e) (not (.isPrimitive t)))))
+                    (if (any = t nil Recur) e t)
                 )
             )
         )
@@ -3318,12 +3210,12 @@
             (try
                 (let [#_"Expr" then (:thenExpr this) #_"Expr" else (:elseExpr this)]
                     (and (satisfies? MaybePrimitive then)
-                        (satisfies? MaybePrimitive else)
-                        (or (= (Expr'''getJavaClass then) (Expr'''getJavaClass else))
-                            (= (Expr'''getJavaClass then) Recur)
-                            (= (Expr'''getJavaClass else) Recur))
-                        (MaybePrimitive'''canEmitPrimitive then)
-                        (MaybePrimitive'''canEmitPrimitive else))
+                         (satisfies? MaybePrimitive else)
+                         (let [#_"Class" t (Expr'''getClass then) #_"Class" e (Expr'''getClass else)]
+                            (or (= t e)
+                                (any = Recur t e)))
+                         (MaybePrimitive'''canEmitPrimitive then)
+                         (MaybePrimitive'''canEmitPrimitive else))
                 )
                 (catch Exception _
                     false
@@ -3370,9 +3262,9 @@
     (extend-type ListExpr Expr
         (#_"Object" Expr'''eval [#_"ListExpr" this]
             (loop-when-recur [#_"IPersistentVector" v [] #_"int" i 0]
-                            (< i (count (:args this)))
-                            [(conj v (Expr'''eval (nth (:args this) i))) (inc i)]
-                        => (seq v)
+                             (< i (count (:args this)))
+                             [(conj v (Expr'''eval (nth (:args this) i))) (inc i)]
+                          => (seq v)
             )
         )
 
@@ -3385,11 +3277,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"ListExpr" this]
-            true
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"ListExpr" this]
+        (#_"Class" Expr'''getClass [#_"ListExpr" this]
             IPersistentList
         )
     )
@@ -3439,11 +3327,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"MapExpr" this]
-            true
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"MapExpr" this]
+        (#_"Class" Expr'''getClass [#_"MapExpr" this]
             IPersistentMap
         )
     )
@@ -3514,11 +3398,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"SetExpr" this]
-            true
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"SetExpr" this]
+        (#_"Class" Expr'''getClass [#_"SetExpr" this]
             IPersistentSet
         )
     )
@@ -3558,9 +3438,9 @@
     (extend-type VectorExpr Expr
         (#_"Object" Expr'''eval [#_"VectorExpr" this]
             (loop-when-recur [#_"IPersistentVector" v [] #_"int" i 0]
-                            (< i (count (:args this)))
-                            [(conj v (Expr'''eval (nth (:args this) i))) (inc i)]
-                        => v
+                             (< i (count (:args this)))
+                             [(conj v (Expr'''eval (nth (:args this) i))) (inc i)]
+                          => v
             )
         )
 
@@ -3570,7 +3450,7 @@
                     (dotimes [#_"int" i (count (:args this))]
                         (Expr'''emit (nth (:args this) i), :Context'EXPRESSION, objx, gen)
                     )
-                    (.invokeStatic gen, (Type/getType Tuple), (aget Compiler'createTupleMethods (count (:args this))))
+                    (.invokeStatic gen, (Type/getType Tuple), (nth Compiler'createTupleMethods (count (:args this))))
                 )
                 (do
                     (MethodExpr'emitArgsAsArray (:args this), objx, gen)
@@ -3584,11 +3464,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"VectorExpr" this]
-            true
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"VectorExpr" this]
+        (#_"Class" Expr'''getClass [#_"VectorExpr" this]
             IPersistentVector
         )
     )
@@ -3669,13 +3545,9 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"KeywordInvokeExpr" this]
-            (some? (:tag this))
-        )
-
         #_memoize!
-        (#_"Class" Expr'''getJavaClass [#_"KeywordInvokeExpr" this]
-            (Interop'tagToClass (:tag this))
+        (#_"Class" Expr'''getClass [#_"KeywordInvokeExpr" this]
+            (when (some? (:tag this)) (Interop'tagToClass (:tag this)))
         )
     )
 )
@@ -3704,11 +3576,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"InstanceOfExpr" this]
-            true
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"InstanceOfExpr" this]
+        (#_"Class" Expr'''getClass [#_"InstanceOfExpr" this]
             Boolean/TYPE
         )
     )
@@ -3860,13 +3728,9 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"InvokeExpr" this]
-            (some? (:tag this))
-        )
-
         #_memoize!
-        (#_"Class" Expr'''getJavaClass [#_"InvokeExpr" this]
-            (Interop'tagToClass (:tag this))
+        (#_"Class" Expr'''getClass [#_"InvokeExpr" this]
+            (when (some? (:tag this)) (Interop'tagToClass (:tag this)))
         )
     )
 
@@ -3922,18 +3786,17 @@
     )
 
     #_memoize!
-    (defn #_"boolean" LocalBinding''hasJavaClass [#_"LocalBinding" this]
-        (let [? (and (some? (:init this)) (Expr'''hasJavaClass (:init this)))]
-            (if (and ? (Reflector'isPrimitive (Expr'''getJavaClass (:init this))) (not (satisfies? MaybePrimitive (:init this))))
-                false
-                (or (some? (:tag this)) ?)
+    (defn #_"Class" LocalBinding''getClass [#_"LocalBinding" this]
+        (let [#_"Expr" e (:init this)]
+            (if (some? (:tag this))
+                (when-not (and (some? e) (Reflector'isPrimitive (Expr'''getClass e)) (not (satisfies? MaybePrimitive e)))
+                    (Interop'tagToClass (:tag this))
+                )
+                (when (and (some? e) (not (and (Reflector'isPrimitive (Expr'''getClass e)) (not (satisfies? MaybePrimitive e)))))
+                    (Expr'''getClass e)
+                )
             )
         )
-    )
-
-    #_memoize!
-    (defn #_"Class" LocalBinding''getJavaClass [#_"LocalBinding" this]
-        (if (some? (:tag this)) (Interop'tagToClass (:tag this)) (Expr'''getJavaClass (:init this)))
     )
 
     #_method
@@ -3968,13 +3831,9 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"LocalBindingExpr" this]
-            (or (some? (:tag this)) (LocalBinding''hasJavaClass (:lb this)))
-        )
-
         #_memoize!
-        (#_"Class" Expr'''getJavaClass [#_"LocalBindingExpr" this]
-            (if (some? (:tag this)) (Interop'tagToClass (:tag this)) (LocalBinding''getJavaClass (:lb this)))
+        (#_"Class" Expr'''getClass [#_"LocalBindingExpr" this]
+            (if (some? (:tag this)) (Interop'tagToClass (:tag this)) (LocalBinding''getClass (:lb this)))
         )
     )
 
@@ -4026,11 +3885,7 @@
             (throw! "can't emit")
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"MethodParamExpr" this]
-            (some? (:c this))
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"MethodParamExpr" this]
+        (#_"Class" Expr'''getClass [#_"MethodParamExpr" this]
             (:c this)
         )
     )
@@ -4593,7 +4448,7 @@
                                 (dotimes [#_"int" i (count args)]
                                     (IopObject''emitValue this, (nth args i), gen)
                                 )
-                                (.invokeStatic gen, (Type/getType Tuple), (aget Compiler'createTupleMethods (count args)))
+                                (.invokeStatic gen, (Type/getType Tuple), (nth Compiler'createTupleMethods (count args)))
                             )
                             (do
                                 (IopObject''emitObjectArray this, (.toArray args), gen)
@@ -4922,12 +4777,8 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"FnExpr" this]
-            true
-        )
-
         #_memoize!
-        (#_"Class" Expr'''getJavaClass [#_"FnExpr" this]
+        (#_"Class" Expr'''getClass [#_"FnExpr" this]
             (if (some? (:tag this)) (Interop'tagToClass (:tag this)) AFunction)
         )
     )
@@ -5139,11 +4990,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"DefExpr" this]
-            true
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"DefExpr" this]
+        (#_"Class" Expr'''getClass [#_"DefExpr" this]
             Var
         )
     )
@@ -5253,12 +5100,8 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"LetFnExpr" this]
-            (Expr'''hasJavaClass (:body this))
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"LetFnExpr" this]
-            (Expr'''getJavaClass (:body this))
+        (#_"Class" Expr'''getClass [#_"LetFnExpr" this]
+            (Expr'''getClass (:body this))
         )
     )
 )
@@ -5370,12 +5213,8 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"LetExpr" this]
-            (Expr'''hasJavaClass (:body this))
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"LetExpr" this]
-            (Expr'''getJavaClass (:body this))
+        (#_"Class" Expr'''getClass [#_"LetExpr" this]
+            (Expr'''getClass (:body this))
         )
     )
 
@@ -5561,7 +5400,7 @@
                                     )
                                     :else
                                     (do
-                                        (throw! (str "recur arg for primitive local: " (:name lb) " is not matching primitive, had: " (if (Expr'''hasJavaClass arg) (.getName (Expr'''getJavaClass arg)) "Object") ", needed: " (.getName primc)))
+                                        (throw! (str "recur arg for primitive local: " (:name lb) " is not matching primitive, had: " (.getName (or (Expr'''getClass arg) Object)) ", needed: " (.getName primc)))
                                     )
                                 )
                             )
@@ -5581,11 +5420,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"RecurExpr" this]
-            true
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"RecurExpr" this]
+        (#_"Class" Expr'''getClass [#_"RecurExpr" this]
             Recur
         )
     )
@@ -5969,12 +5804,8 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"NewInstanceExpr" this]
-            true
-        )
-
         #_memoize!
-        (#_"Class" Expr'''getJavaClass [#_"NewInstanceExpr" this]
+        (#_"Class" Expr'''getClass [#_"NewInstanceExpr" this]
             (or (:compiledClass this)
                 (if (some? (:tag this)) (Interop'tagToClass (:tag this)) IFn)
             )
@@ -6300,7 +6131,7 @@
                 #_"Keyword" :switchType switchType
                 #_"Keyword" :testType testType
                 #_"Set<Integer>" :skipCheck skipCheck
-                #_"Class" :returnType (Compiler'maybeJavaClass (conj (vec (.values thens)) defaultExpr))
+                #_"Class" :returnType (Compiler'maybeClass (conj (vec (.values thens)) defaultExpr))
                 #_"int" :line line
             )
         )
@@ -6474,11 +6305,7 @@
             nil
         )
 
-        (#_"boolean" Expr'''hasJavaClass [#_"CaseExpr" this]
-            (some? (:returnType this))
-        )
-
-        (#_"Class" Expr'''getJavaClass [#_"CaseExpr" this]
+        (#_"Class" Expr'''getClass [#_"CaseExpr" this]
             (:returnType this)
         )
     )
@@ -20752,11 +20579,11 @@
     )
 
     (defn #_"IPersistentVector" LazilyPersistentVector'create [#_"Object" obj]
-        (cond
-            (instance? IReduceInit obj) (PersistentVector'create-1r (cast IReduceInit obj))
-            (instance? ISeq obj)        (PersistentVector'create-1s (RT'seq obj))
-            (instance? Iterable obj)    (PersistentVector'create-1i (cast Iterable obj))
-            :else                       (LazilyPersistentVector'createOwning (RT'toArray obj))
+        (condp instance? obj
+            IReduceInit (PersistentVector'create-1r (cast IReduceInit obj))
+            ISeq        (PersistentVector'create-1s (RT'seq obj))
+            Iterable    (PersistentVector'create-1i (cast Iterable obj))
+                        (LazilyPersistentVector'createOwning (RT'toArray obj))
         )
     )
 )
@@ -21886,10 +21713,10 @@
     )
 
     (defn #_"ISeq" RT'seq [#_"Object" coll]
-        (cond
-            (instance? ASeq coll)    (cast ASeq coll)
-            (instance? LazySeq coll) (.seq (cast LazySeq coll))
-            :else                    (RT'seqFrom coll)
+        (condp instance? coll
+            ASeq    (cast ASeq coll)
+            LazySeq (.seq (cast LazySeq coll))
+                    (RT'seqFrom coll)
         )
     )
 
@@ -33403,3 +33230,10 @@
     cloiure.lang.PersistentHashMap
     (coll-fold [m n combinef reducef] (.fold m n combinef reducef fjinvoke fjtask fjfork fjjoin))
 )
+
+#_(ns cloiure.core
+    (:refer-clojure :exclude [when when-not])
+    (:use [cloiure slang]))
+
+(defn -main [& args]
+    )
