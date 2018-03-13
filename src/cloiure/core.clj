@@ -2,7 +2,7 @@
     (:refer-clojure :exclude [when when-not]))
 
 (import
-    [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Number Object RuntimeException String StringBuilder Thread Throwable]
+    [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Iterable Number Object RuntimeException String StringBuilder Thread Throwable]
 )
 
 (defmacro § [& _])
@@ -42,6 +42,11 @@
 (defn third [s] (first (next (next s))))
 (defn fourth [s] (first (next (next (next s)))))
 
+(defn reduce!
+    ([f coll] (reduce! f (f) coll))
+    ([f init coll] (persistent! (reduce f (transient init) coll)))
+)
+
 (defmacro update! [x f & z] `(set! ~x (~f ~x ~@z)))
 
 (def % rem)
@@ -78,7 +83,7 @@
     [java.lang.reflect Array Constructor Field #_Method Modifier]
     [java.math BigDecimal BigInteger MathContext]
     [java.security AccessController PrivilegedAction]
-    [java.util AbstractCollection AbstractSet ArrayList Arrays Collection Comparator EmptyStackException HashMap HashSet IdentityHashMap Iterator LinkedList List Map Map$Entry NoSuchElementException Queue Set Stack TreeMap]
+    [java.util AbstractCollection AbstractSet ArrayList Arrays Collection Comparator EmptyStackException HashMap IdentityHashMap Iterator LinkedList List Map Map$Entry NoSuchElementException Queue Set Stack TreeMap]
     [java.util.concurrent Callable ConcurrentHashMap]
     [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicReference]
     [java.util.concurrent.locks ReentrantReadWriteLock]
@@ -5494,37 +5499,19 @@
         )
     )
 
-    (defn #_"IPersistentVector" NewInstanceMethod'msig [#_"String" name, #_"Class[]" paramTypes]
-        [name (seq paramTypes)]
-    )
-
-    (defn- #_"Map" NewInstanceMethod'findMethodsWithNameAndArity [#_"String" name, #_"int" arity, #_"Map" mm]
-        (let [#_"Map" found (HashMap.)]
-            (doseq [#_"Map$Entry" e mm]
-                (let [#_"java.lang.reflect.Method" m (val e)]
-                    (when (and (= name (.getName m)) (= (alength (.getParameterTypes m)) arity))
-                        (.put found, (key e), (val e))
-                    )
-                )
+    (defn- #_"IPersistentMap" NewInstanceMethod'findMethodsWithNameAndArity [#_"String" name, #_"int" arity, #_"IPersistentMap" overrideables]
+        (loop-when [#_"IPersistentMap" found {} #_"ISeq" s (seq overrideables)] (some? s) => found
+            (let [#_"Map$Entry" e (first s) #_"java.lang.reflect.Method" m (val e)
+                  found
+                    (when (and (= name (.getName m)) (= (alength (.getParameterTypes m)) arity)) => found
+                        (assoc found (key e) m)
+                    )]
+                (recur found (next s))
             )
-            found
         )
     )
 
-    (defn- #_"Map" NewInstanceMethod'findMethodsWithName [#_"String" name, #_"Map" mm]
-        (let [#_"Map" found (HashMap.)]
-            (doseq [#_"Map$Entry" e mm]
-                (let [#_"java.lang.reflect.Method" m (val e)]
-                    (when (= name (.getName m))
-                        (.put found, (key e), (val e))
-                    )
-                )
-            )
-            found
-        )
-    )
-
-    (defn #_"NewInstanceMethod" NewInstanceMethod'parse [#_"IopObject" objx, #_"ISeq" form, #_"Symbol" thistag, #_"Map" overrideables]
+    (defn #_"NewInstanceMethod" NewInstanceMethod'parse [#_"IopObject" objx, #_"ISeq" form, #_"Symbol" thistag, #_"IPersistentMap" overrideables]
         ;; (methodname [this-name args*] body...)
         ;; this-name might be nil
         (let [#_"NewInstanceMethod" nim
@@ -5561,8 +5548,8 @@
                                         )
                                     )
                                 )
-                              #_"Map" matches (NewInstanceMethod'findMethodsWithNameAndArity (ßname name), (count parms), overrideables)
-                              #_"Object" mk (NewInstanceMethod'msig (ßname name), pclasses)
+                              #_"IPersistentMap" matches (NewInstanceMethod'findMethodsWithNameAndArity (ßname name), (count parms), overrideables)
+                              #_"IPersistentVector" mk [(ßname name) (seq pclasses)]
                               [nim pclasses #_"java.lang.reflect.Method" m]
                                 (case (count matches)
                                     0   (throw! (str "can't define method not in interfaces: " (ßname name)))
@@ -5577,7 +5564,7 @@
                                                 [nim pclasses m]
                                             )
                                             ;; adopt found method sig
-                                            (let [m (.next (.iterator (.values matches)))]
+                                            (let [m (val (first matches))]
                                                 [(assoc nim :retClass (.getReturnType m)) (.getParameterTypes m) m]
                                             )
                                         )
@@ -5631,8 +5618,8 @@
             (hash-map
                 #_"IPersistentCollection" :methods nil
 
-                #_"Map<IPersistentVector, java.lang.reflect.Method>" :overrideables nil
-                #_"Map<IPersistentVector, Set<Class>>" :covariants nil
+                #_"{IPersistentVector java.lang.reflect.Method}" :overrideables nil
+                #_"{IPersistentVector {Class}}" :covariants nil
             )
         )
     )
@@ -5828,14 +5815,14 @@
                 (IopMethod'''emit (first s), this, cv)
             )
             ;; emit bridge methods
-            (doseq [#_"Map$Entry<IPersistentVector, Set<Class>>" e (:covariants this)]
+            (doseq [#_"Map$Entry" e (:covariants this)]
                 (let [#_"java.lang.reflect.Method" m (get (:overrideables this) (key e))
-                    #_"Class[]" params (.getParameterTypes m)
-                    #_"Type[]" argTypes (make-array Type (alength params))
-                    _ (dotimes [#_"int" i (alength params)]
+                      #_"Class[]" params (.getParameterTypes m)
+                      #_"Type[]" argTypes (make-array Type (alength params))
+                      _ (dotimes [#_"int" i (alength params)]
                             (aset argTypes i (Type/getType (aget params i)))
                         )
-                    #_"Method" target (Method. (.getName m), (Type/getType (.getReturnType m)), argTypes)]
+                      #_"Method" target (Method. (.getName m), (Type/getType (.getReturnType m)), argTypes)]
                     (doseq [#_"Class" retType (val e)]
                         (let [#_"Method" meth (Method. (.getName m), (Type/getType retType), argTypes)
                             #_"GeneratorAdapter" gen (GeneratorAdapter. (| Opcodes/ACC_PUBLIC Opcodes/ACC_BRIDGE), meth, nil, Compiler'EXCEPTION_TYPES, cv)]
@@ -5853,60 +5840,41 @@
         )
     )
 
-    (defn #_"IPersistentVector" NewInstanceExpr'msig [#_"java.lang.reflect.Method" m]
-        [(.getName m) (seq (.getParameterTypes m)) (.getReturnType m)]
-    )
-
-    (defn #_"void" NewInstanceExpr'considerMethod [#_"java.lang.reflect.Method" m, #_"Map" mm]
-        (let [#_"IPersistentVector" mk (NewInstanceExpr'msig m) #_"int" mods (.getModifiers m)]
-            (when (not (or (contains? mm mk) (not (or (Modifier/isPublic mods) (Modifier/isProtected mods))) (Modifier/isStatic mods) (Modifier/isFinal mods)))
-                (.put mm, mk, m)
+    (defn- #_"IPersistentVector" NewInstanceExpr'considerMethod [#_"java.lang.reflect.Method" m]
+        (let [#_"int" mods (.getModifiers m)]
+            (when (and (or (Modifier/isPublic mods) (Modifier/isProtected mods)) (not (Modifier/isStatic mods)) (not (Modifier/isFinal mods)))
+                [(.getName m) (seq (.getParameterTypes m)) (.getReturnType m)]
             )
         )
-        nil
     )
 
-    (defn #_"[Map Map]" NewInstanceExpr'gatherMethods [#_"Class" sc, #_"ISeq" ifaces]
-        (let [#_"Map" allm (HashMap.)
-              game-
-                (fn #_"void" [#_"Class" c, #_"Map" mm]
-                    (loop-when-recur c (some? c) (.getSuperclass c)
-                        (doseq [#_"java.lang.reflect.Method" m (.getDeclaredMethods c)]
-                            (NewInstanceExpr'considerMethod m, mm)
-                        )
-                        (doseq [#_"java.lang.reflect.Method" m (.getMethods c)]
-                            (NewInstanceExpr'considerMethod m, mm)
-                        )
-                    )
-                    nil
-                )
-              _ (game- sc allm)
-              _ (loop-when-recur ifaces (some? ifaces) (next ifaces)
-                    (game- (first ifaces) allm)
-                )
-              #_"Map<IPersistentVector, java.lang.reflect.Method>" methods (HashMap.)
-              #_"Map<IPersistentVector, Set<Class>>" covariants (HashMap.)]
-            (loop-when-recur [#_"ISeq" s (seq allm)] (some? s) [(next s)]
+    (defn- #_"ITransientMap" NewInstanceExpr'harvestMethods [#_"ITransientMap" m, #_"Class" c]
+        (when (some? c) => m
+            (let [m (reduce #(if-let [#_"IPersistentVector" v (NewInstanceExpr'considerMethod %2)] (assoc! %1 v %2) %1)
+                            m
+                            (concat (.getMethods c) (.getDeclaredMethods c))
+                    )]
+                (recur m (.getSuperclass c))
+            )
+        )
+    )
+
+    (defn #_"[{IPersistentVector java.lang.reflect.Method} {IPersistentVector {Class}}]" NewInstanceExpr'gatherMethods [#_"Class" super, #_"ISeq" ifaces]
+        (let [#_"IPersistentMap" all (reduce! NewInstanceExpr'harvestMethods {} (cons super ifaces))]
+            (loop-when [#_"IPersistentMap" methods {} #_"IPersistentMap" covariants {} #_"ISeq" s (seq all)] (some? s) => [methods covariants]
                 (let [#_"Map$Entry" e (first s) #_"IPersistentVector" mk (pop (key e)) #_"java.lang.reflect.Method" m (val e)]
                     (if (contains? methods mk) ;; covariant return
-                        (let [#_"Set<Class>" cvs
-                                (or (get covariants mk)
-                                    (let [cvs (HashSet.)]
-                                        (.put covariants, mk, cvs)
-                                        cvs
-                                    )
-                                )
-                              #_"Class" tk (.getReturnType (get methods mk)) #_"Class" t (.getReturnType m)]
-                            (when (.isAssignableFrom tk, t) => (.add cvs, t)
-                                (.add cvs, tk)
-                                (.put methods, mk, m)
+                        (let [#_"Class" tk (.getReturnType (get methods mk)) #_"Class" t (.getReturnType m)
+                              senj- #(conj (or %1 #{}) %2)]
+                            (if (.isAssignableFrom tk, t)
+                                (recur (assoc methods mk m) (update covariants mk senj- tk) (next s))
+                                (recur        methods       (update covariants mk senj- t)  (next s))
                             )
                         )
-                        (.put methods, mk, m)
+                        (recur (assoc methods mk m) covariants (next s))
                     )
                 )
             )
-            [methods covariants]
         )
     )
 
@@ -5948,7 +5916,7 @@
                     )
                 )
               #_"Class" super Object
-              [#_"Map" overrideables #_"Map" covariants] (NewInstanceExpr'gatherMethods super, (seq ifaces))
+              [#_"IPersistentMap" overrideables #_"IPersistentMap" covariants] (NewInstanceExpr'gatherMethods super, (seq ifaces))
               nie (assoc nie :overrideables overrideables :covariants covariants)
               #_"String[]" inames (NewInstanceExpr'interfaceNames ifaces)
               #_"Class" stub (NewInstanceExpr'compileStub (NewInstanceExpr'slashname super), nie, inames, form)
