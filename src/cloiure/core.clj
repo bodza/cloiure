@@ -83,7 +83,7 @@
     [java.lang.reflect Array Constructor Field #_Method Modifier]
     [java.math BigDecimal BigInteger MathContext]
     [java.security AccessController PrivilegedAction]
-    [java.util AbstractCollection AbstractSet ArrayList Arrays Collection Comparator EmptyStackException HashMap IdentityHashMap Iterator LinkedList List Map Map$Entry NoSuchElementException Queue Set Stack TreeMap]
+    [java.util ArrayList Arrays Collection Comparator EmptyStackException IdentityHashMap Iterator LinkedList List Map Map$Entry NoSuchElementException Queue Set Stack]
     [java.util.concurrent Callable ConcurrentHashMap]
     [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicReference]
     [java.util.concurrent.locks ReentrantReadWriteLock]
@@ -5107,43 +5107,42 @@
 
     #_method
     (defn- #_"void" LetExpr''doEmit [#_"LetExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen, #_"boolean" emitUnboxed]
-        (let [#_"HashMap<BindingInit, Label>" bindingLabels (HashMap.)]
-            (dotimes [#_"int" i (count (:bindingInits this))]
-                (let [#_"BindingInit" bi (nth (:bindingInits this) i)
-                      #_"Class" primc (Compiler'maybePrimitiveType (:init bi))]
-                    (if (some? primc)
-                        (do
-                            (MaybePrimitive'''emitUnboxed (:init bi), :Context'EXPRESSION, objx, gen)
-                            (.visitVarInsn gen, (.getOpcode (Type/getType primc), Opcodes/ISTORE), (:idx (:binding bi)))
+        (let [#_"{BindingInit Label}" bindingLabels
+                (loop-when [bindingLabels {} #_"int" i 0] (< i (count (:bindingInits this))) => bindingLabels
+                    (let [#_"BindingInit" bi (nth (:bindingInits this) i)
+                          #_"Class" primc (Compiler'maybePrimitiveType (:init bi))]
+                        (if (some? primc)
+                            (do
+                                (MaybePrimitive'''emitUnboxed (:init bi), :Context'EXPRESSION, objx, gen)
+                                (.visitVarInsn gen, (.getOpcode (Type/getType primc), Opcodes/ISTORE), (:idx (:binding bi)))
+                            )
+                            (do
+                                (Expr'''emit (:init bi), :Context'EXPRESSION, objx, gen)
+                                (.visitVarInsn gen, (.getOpcode (Type/getType Object), Opcodes/ISTORE), (:idx (:binding bi)))
+                            )
                         )
-                        (do
-                            (Expr'''emit (:init bi), :Context'EXPRESSION, objx, gen)
-                            (.visitVarInsn gen, (.getOpcode (Type/getType Object), Opcodes/ISTORE), (:idx (:binding bi)))
-                        )
+                        (recur (assoc bindingLabels bi (.mark gen)) (inc i))
                     )
-                    (.put bindingLabels, bi, (.mark gen))
                 )
-            )
-            (let [#_"Label" loopLabel (.mark gen)]
-                (if (:isLoop this)
-                    (binding [*loop-label* loopLabel]
-                        (if emitUnboxed
-                            (MaybePrimitive'''emitUnboxed (:body this), context, objx, gen)
-                            (Expr'''emit (:body this), context, objx, gen)
-                        )
-                    )
+              #_"Label" loopLabel (.mark gen)]
+            (if (:isLoop this)
+                (binding [*loop-label* loopLabel]
                     (if emitUnboxed
                         (MaybePrimitive'''emitUnboxed (:body this), context, objx, gen)
                         (Expr'''emit (:body this), context, objx, gen)
                     )
                 )
-                (let [#_"Label" end (.mark gen)]
-                    (loop-when-recur [#_"ISeq" bis (seq (:bindingInits this))] (some? bis) [(next bis)]
-                        (let [#_"BindingInit" bi (first bis)
-                              #_"String" lname (:name (:binding bi)) lname (if (.endsWith lname, "__auto__") (str lname (RT/nextID)) lname)
-                              #_"Class" primc (Compiler'maybePrimitiveType (:init bi))]
-                            (.visitLocalVariable gen, lname, (if (some? primc) (Type/getDescriptor primc) "Ljava/lang/Object;"), nil, (get bindingLabels bi), end, (:idx (:binding bi)))
-                        )
+                (if emitUnboxed
+                    (MaybePrimitive'''emitUnboxed (:body this), context, objx, gen)
+                    (Expr'''emit (:body this), context, objx, gen)
+                )
+            )
+            (let [#_"Label" end (.mark gen)]
+                (loop-when-recur [#_"ISeq" bis (seq (:bindingInits this))] (some? bis) [(next bis)]
+                    (let [#_"BindingInit" bi (first bis)
+                          #_"String" lname (:name (:binding bi)) lname (if (.endsWith lname, "__auto__") (str lname (RT/nextID)) lname)
+                          #_"Class" primc (Compiler'maybePrimitiveType (:init bi))]
+                        (.visitLocalVariable gen, lname, (if (some? primc) (Type/getDescriptor primc) "Ljava/lang/Object;"), nil, (get bindingLabels bi), end, (:idx (:binding bi)))
                     )
                 )
             )
@@ -6019,7 +6018,7 @@
 
 (class-ns CaseExpr
     ;; (case* expr shift mask default map<minhash, [test then]> table-type test-type skip-check?)
-    (defn #_"CaseExpr" CaseExpr'new [#_"int" line, #_"LocalBindingExpr" expr, #_"int" shift, #_"int" mask, #_"int" low, #_"int" high, #_"Expr" defaultExpr, #_"SortedMap<Integer, Expr>" tests, #_"HashMap<Integer, Expr>" thens, #_"Keyword" switchType, #_"Keyword" testType, #_"Set<Integer>" skipCheck]
+    (defn #_"CaseExpr" CaseExpr'new [#_"int" line, #_"LocalBindingExpr" expr, #_"int" shift, #_"int" mask, #_"int" low, #_"int" high, #_"Expr" defaultExpr, #_"sorted {Integer Expr}" tests, #_"{Integer Expr}" thens, #_"Keyword" switchType, #_"Keyword" testType, #_"Set<Integer>" skipCheck]
         (when-not (any = switchType :compact :sparse)
             (throw! (str "unexpected switch type: " switchType))
         )
@@ -6037,12 +6036,12 @@
                 #_"int" :low low
                 #_"int" :high high
                 #_"Expr" :defaultExpr defaultExpr
-                #_"SortedMap<Integer, Expr>" :tests tests
-                #_"HashMap<Integer, Expr>" :thens thens
+                #_"sorted {Integer Expr}" :tests tests
+                #_"{Integer Expr}" :thens thens
                 #_"Keyword" :switchType switchType
                 #_"Keyword" :testType testType
                 #_"Set<Integer>" :skipCheck skipCheck
-                #_"Class" :returnType (Compiler'maybeClass (conj (vec (.values thens)) defaultExpr))
+                #_"Class" :returnType (Compiler'maybeClass (conj (vec (vals thens)) defaultExpr))
                 #_"int" :line line
             )
         )
@@ -6164,7 +6163,7 @@
     #_method
     (defn- #_"void" CaseExpr''doEmit [#_"CaseExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen, #_"boolean" emitUnboxed]
         (let [#_"Label" defaultLabel (.newLabel gen) #_"Label" endLabel (.newLabel gen)
-              #_"SortedMap<Integer, Label>" labels (TreeMap.) _ (doseq [#_"Integer" i (.keySet (:tests this))] (.put labels, i, (.newLabel gen)))]
+              #_"sorted {Integer Label}" labels (reduce! #(assoc! %1 %2 (.newLabel gen)) (sorted-map) (keys (:tests this)))]
             (.visitLineNumber gen, (:line this), (.mark gen))
             (let [#_"Class" primExprClass (Compiler'maybePrimitiveType (:expr this))
                   #_"Type" primExprType (when (some? primExprClass) (Type/getType primExprClass))]
@@ -6173,8 +6172,8 @@
                     (CaseExpr''emitExprForHashes this, objx, gen)
                 )
                 (if (= (:switchType this) :sparse)
-                    (let [#_"Label[]" la (make-array Label (count labels)) la (.toArray (.values labels), la)]
-                        (.visitLookupSwitchInsn gen, defaultLabel, (Numbers/int_array (.keySet (:tests this))), la)
+                    (let [#_"Label[]" la (make-array Label (count labels)) la (.toArray (vals labels), la)]
+                        (.visitLookupSwitchInsn gen, defaultLabel, (Numbers/int_array (keys (:tests this))), la)
                     )
                     (let [#_"Label[]" la (make-array Label (inc (- (:high this) (:low this))))]
                         (loop-when-recur [#_"int" i (:low this)] (<= i (:high this)) [(inc i)]
@@ -6183,7 +6182,7 @@
                         (.visitTableSwitchInsn gen, (:low this), (:high this), defaultLabel, la)
                     )
                 )
-                (doseq [#_"Integer" i (.keySet labels)]
+                (doseq [#_"Integer" i (keys labels)]
                     (.mark gen, (get labels i))
                     (cond
                         (= (:testType this) :int)
@@ -6257,18 +6256,13 @@
                           #_"int" low (.intValue (first keys))
                           #_"int" high (.intValue (nth keys (dec (count keys))))
                           #_"LocalBindingExpr" testExpr (Compiler'analyze :Context'EXPRESSION, exprForm)
-                          #_"SortedMap<Integer, Expr>" tests (TreeMap.)
-                          #_"HashMap<Integer, Expr>" thens (HashMap.)
-                          _ (doseq [#_"Map$Entry" e caseMap]
-                                (let [#_"Integer" minhash (.intValue (key e)) #_"Object" pair (val e) ;; [test-val then-expr]
-                                      #_"Expr" test
-                                        (if (= testType :int)
-                                            (NumberExpr'parse (.intValue (first pair)))
-                                            (ConstantExpr'new (first pair))
-                                        )
+                          [#_"sorted {Integer Expr}" tests #_"{Integer Expr}" thens]
+                            (loop-when [tests (sorted-map) thens {} #_"ISeq" s (seq caseMap)] (some? s) => [tests thens]
+                                (let [#_"Map$Entry" e (first s)
+                                      #_"Integer" minhash (.intValue (key e)) #_"Object" pair (val e) ;; [test-val then-expr]
+                                      #_"Expr" test (if (= testType :int) (NumberExpr'parse (.intValue (first pair))) (ConstantExpr'new (first pair)))
                                       #_"Expr" then (Compiler'analyze context, (second pair))]
-                                    (.put tests, minhash, test)
-                                    (.put thens, minhash, then)
+                                    (recur (assoc tests minhash test) (assoc thens minhash then) (next s))
                                 )
                             )
                           #_"Expr" defaultExpr (Compiler'analyze context, (nth args 3))]
@@ -13109,106 +13103,13 @@
     )
 
     #_foreign
-    (defn #_"Set" entrySet---APersistentMap [#_"APersistentMap" this!]
-        (proxy [AbstractSet] []
-            #_foreign
-            (#_"Iterator" iterator [#_"AbstractSet" #_this]
-                (.iterator this!)
-            )
-
-            #_foreign
-            (#_"int" size [#_"AbstractSet" #_this]
-                (count this!)
-            )
-
-            #_foreign
-            (#_"int" hashCode [#_"AbstractSet" #_this]
-                (.hashCode this!)
-            )
-
-            #_foreign
-            (#_"boolean" contains [#_"AbstractSet" #_this, #_"Object" o]
-                (and (instance? Map$Entry o)
-                    (let [#_"Map$Entry" e o #_"Map$Entry" found (find this! (key e))]
-                        (and (some? found) (Util'equals (val found), (val e)))
-                    )
-                )
-            )
-        )
-    )
-
-    #_foreign
     (defn #_"Object" get---APersistentMap [#_"APersistentMap" this, #_"Object" key]
         (get this key)
-    )
-
-    #_method
-    (defn #_"Set" APersistentMap''keySet [#_"APersistentMap" this!]
-        (proxy [AbstractSet] []
-            #_foreign
-            (#_"Iterator" iterator [#_"AbstractSet" #_this]
-                (let [#_"Iterator" it (.iterator this!)]
-                    (reify Iterator
-                        #_foreign
-                        (#_"boolean" hasNext [#_"Iterator" _self]
-                            (.hasNext it)
-                        )
-
-                        #_foreign
-                        (#_"Object" next [#_"Iterator" _self]
-                            (key (.next it))
-                        )
-                    )
-                )
-            )
-
-            #_foreign
-            (#_"int" size [#_"AbstractSet" #_this]
-                (count this!)
-            )
-
-            #_foreign
-            (#_"boolean" contains [#_"AbstractSet" #_this, #_"Object" o]
-                (contains? this! o)
-            )
-        )
     )
 
     #_foreign
     (defn #_"int" size---APersistentMap [#_"APersistentMap" this]
         (count this)
-    )
-
-    #_method
-    (defn #_"Collection" APersistentMap''values [#_"APersistentMap" this!]
-        (proxy [AbstractCollection] []
-            #_foreign
-            (#_"Iterator" iterator [#_"AbstractCollection" #_this]
-                (let [#_"Iterator" it (.iterator this!)]
-                    (reify Iterator
-                        #_foreign
-                        (#_"boolean" hasNext [#_"Iterator" _self]
-                            (.hasNext it)
-                        )
-
-                        #_foreign
-                        (#_"Object" next [#_"Iterator" _self]
-                            (val (.next it))
-                        )
-                    )
-                )
-            )
-
-            #_foreign
-            (#_"int" size [#_"AbstractCollection" #_this]
-                (count this!)
-            )
-        )
-    )
-
-    #_method
-    (defn #_"boolean" APersistentMap''containsValue [#_"APersistentMap" this, #_"Object" value]
-        (.contains (APersistentMap''values this), value)
     )
 )
 )
@@ -16134,7 +16035,7 @@
     )
 
     (defn #_"ISeq" Namespace'all []
-        (seq (.values Namespace'namespaces))
+        (vals Namespace'namespaces)
     )
 
     #_method
