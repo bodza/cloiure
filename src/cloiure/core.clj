@@ -6248,7 +6248,7 @@
                           #_"int" shift (.intValue (nth args 1))
                           #_"int" mask (.intValue (nth args 2))
                           #_"Object" defaultForm (nth args 3)
-                          #_"Map" caseMap (nth args 4)
+                          #_"IPersistentMap" caseMap (nth args 4)
                           #_"Keyword" switchType (nth args 5)
                           #_"Keyword" testType (nth args 6)
                           #_"Set" skipCheck (when (< 7 (count args)) (nth args 7))
@@ -7156,7 +7156,7 @@
 
 (class-ns SetReader
     (defn #_"Object" set-reader [#_"PushbackReader" r, #_"char" _delim]
-        (PersistentHashSet/createWithCheck #_"-1i" (LispReader'readDelimitedForms r, \}))
+        (PersistentHashSet/createWithCheck #_"-1s" (LispReader'readDelimitedForms r, \}))
     )
 )
 
@@ -7471,32 +7471,27 @@
 (java-ns cloiure.lang.IAtom
     (interface! IAtom []
         #_abstract
+        (#_"boolean" compareAndSet [#_"IAtom" this, #_"Object" v, #_"Object" v'])
+        #_abstract
         (#_"Object" swap [#_"IAtom" this, #_"IFn" f])
         #_abstract
-        (#_"Object" swap [#_"IAtom" this, #_"IFn" f, #_"Object" arg])
+        (#_"Object" swap [#_"IAtom" this, #_"IFn" f, #_"Object" x])
         #_abstract
-        (#_"Object" swap [#_"IAtom" this, #_"IFn" f, #_"Object" arg1, #_"Object" arg2])
+        (#_"Object" swap [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y])
         #_abstract
-        (#_"Object" swap [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" args])
+        (#_"Object" swap [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" z])
         #_abstract
-        (#_"boolean" compareAndSet [#_"IAtom" this, #_"Object" oldv, #_"Object" newv])
+        (#_"Object" reset [#_"IAtom" this, #_"Object" v'])
         #_abstract
-        (#_"Object" reset [#_"IAtom" this, #_"Object" newval])
-    )
-)
-
-(java-ns cloiure.lang.IAtom2
-    (interface! IAtom2 [IAtom]
+        (#_"IPersistentVector" swapVals [#_"IAtom" this, #_"IFn" f])
         #_abstract
-        (#_"IPersistentVector" swapVals [#_"IAtom2" this, #_"IFn" f])
+        (#_"IPersistentVector" swapVals [#_"IAtom" this, #_"IFn" f, #_"Object" x])
         #_abstract
-        (#_"IPersistentVector" swapVals [#_"IAtom2" this, #_"IFn" f, #_"Object" arg])
+        (#_"IPersistentVector" swapVals [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y])
         #_abstract
-        (#_"IPersistentVector" swapVals [#_"IAtom2" this, #_"IFn" f, #_"Object" arg1, #_"Object" arg2])
+        (#_"IPersistentVector" swapVals [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" z])
         #_abstract
-        (#_"IPersistentVector" swapVals [#_"IAtom2" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" args])
-        #_abstract
-        (#_"IPersistentVector" resetVals [#_"IAtom2" this, #_"Object" newv])
+        (#_"IPersistentVector" resetVals [#_"IAtom" this, #_"Object" v'])
     )
 )
 
@@ -8043,7 +8038,7 @@
 )
 
 (java-ns cloiure.lang.Atom
-    (class! Atom [IReference IDeref IAtom2])
+    (class! Atom [IReference IDeref IAtom])
 )
 
 (java-ns cloiure.lang.ATransientMap
@@ -12594,7 +12589,7 @@
 
     #_override
     (defn #_"boolean" IPersistentCollection'''equiv--ASeq [#_"ASeq" this, #_"Object" that]
-        (and (or (instance? Sequential that) (instance? List that))
+        (and (or (sequential? that) (instance? List that))
             (let [#_"ISeq" ms (seq that)]
                 (loop-when [#_"ISeq" s (seq this) ms ms] (some? s) => (nil? ms)
                     (and (some? ms) (Util'equiv-2oo (first s), (first ms)) (recur (next s) (next ms)))
@@ -12606,7 +12601,7 @@
     #_foreign
     (defn #_"boolean" equals---ASeq [#_"ASeq" this, #_"Object" that]
         (or (identical? this that)
-            (and (or (instance? Sequential that) (instance? List that))
+            (and (or (sequential? that) (instance? List that))
                 (let [#_"ISeq" ms (seq that)]
                     (loop-when [#_"ISeq" s (seq this) ms ms] (some? s) => (nil? ms)
                         (and (some? ms) (Util'equals (first s), (first ms)) (recur (next s) (next ms)))
@@ -12787,7 +12782,7 @@
         (let [#_"ISeq" s (seq this)]
             (if (some? s)
                 (.equals s, that)
-                (and (or (instance? Sequential that) (instance? List that)) (nil? (seq that)))
+                (and (or (sequential? that) (instance? List that)) (nil? (seq that)))
             )
         )
     )
@@ -12797,7 +12792,7 @@
         (let [#_"ISeq" s (seq this)]
             (if (some? s)
                 (.equiv s, that)
-                (and (or (instance? Sequential that) (instance? List that)) (nil? (seq that)))
+                (and (or (sequential? that) (instance? List that)) (nil? (seq that)))
             )
         )
     )
@@ -14650,9 +14645,9 @@
     )
 
     #_override
-    (defn #_"IPersistentMap" IReference'''alterMeta--Atom [#_"Atom" this, #_"IFn" f, #_"ISeq" args]
+    (defn #_"IPersistentMap" IReference'''alterMeta--Atom [#_"Atom" this, #_"IFn" f, #_"ISeq" z]
         (§ sync this
-            (§ update! (:_meta this) #(apply f % args))
+            (§ update! (:_meta this) #(apply f % z))
         )
     )
 
@@ -14669,112 +14664,110 @@
     )
 
     #_override
+    (defn #_"boolean" IAtom'''compareAndSet--Atom [#_"Atom" this, #_"Object" v, #_"Object" v']
+        (.compareAndSet (:state this), v, v')
+    )
+
+    #_override
     (defn #_"Object" IAtom'''swap-2--Atom [#_"Atom" this, #_"IFn" f]
         (loop []
-            (let [#_"Object" v (deref this) #_"Object" newv (.invoke f, v)]
-                (when (.compareAndSet (:state this), v, newv) => (recur)
-                    newv
+            (let [#_"Object" v (deref this) #_"Object" v' (f v)]
+                (when (compare-and-set! this v v') => (recur)
+                    v'
                 )
             )
         )
     )
 
     #_override
-    (defn #_"Object" IAtom'''swap-3--Atom [#_"Atom" this, #_"IFn" f, #_"Object" arg]
+    (defn #_"Object" IAtom'''swap-3--Atom [#_"Atom" this, #_"IFn" f, #_"Object" x]
         (loop []
-            (let [#_"Object" v (deref this) #_"Object" newv (.invoke f, v, arg)]
-                (when (.compareAndSet (:state this), v, newv) => (recur)
-                    newv
+            (let [#_"Object" v (deref this) #_"Object" v' (f v x)]
+                (when (compare-and-set! this v v') => (recur)
+                    v'
                 )
             )
         )
     )
 
     #_override
-    (defn #_"Object" IAtom'''swap-4--Atom [#_"Atom" this, #_"IFn" f, #_"Object" arg1, #_"Object" arg2]
+    (defn #_"Object" IAtom'''swap-4--Atom [#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y]
         (loop []
-            (let [#_"Object" v (deref this) #_"Object" newv (.invoke f, v, arg1, arg2)]
-                (when (.compareAndSet (:state this), v, newv) => (recur)
-                    newv
+            (let [#_"Object" v (deref this) #_"Object" v' (f v x y)]
+                (when (compare-and-set! this v v') => (recur)
+                    v'
                 )
             )
         )
     )
 
     #_override
-    (defn #_"Object" IAtom'''swap-5--Atom [#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" args]
+    (defn #_"Object" IAtom'''swap-5--Atom [#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" z]
         (loop []
-            (let [#_"Object" v (deref this) #_"Object" newv (.applyTo f, (list* v x y args))]
-                (when (.compareAndSet (:state this), v, newv) => (recur)
-                    newv
+            (let [#_"Object" v (deref this) #_"Object" v' (apply f v x y z)]
+                (when (compare-and-set! this v v') => (recur)
+                    v'
                 )
             )
         )
     )
 
     #_override
-    (defn #_"IPersistentVector" IAtom2'''swapVals-2--Atom [#_"Atom" this, #_"IFn" f]
+    (defn #_"IPersistentVector" IAtom'''swapVals-2--Atom [#_"Atom" this, #_"IFn" f]
         (loop []
-            (let [#_"Object" oldv (deref this) #_"Object" newv (.invoke f, oldv)]
-                (when (.compareAndSet (:state this), oldv, newv) => (recur)
-                    (LazilyPersistentVector'createOwning oldv, newv)
+            (let [#_"Object" v (deref this) #_"Object" v' (f v)]
+                (when (compare-and-set! this v v') => (recur)
+                    (LazilyPersistentVector'createOwning v, v')
                 )
             )
         )
     )
 
     #_override
-    (defn #_"IPersistentVector" IAtom2'''swapVals-3--Atom [#_"Atom" this, #_"IFn" f, #_"Object" arg]
+    (defn #_"IPersistentVector" IAtom'''swapVals-3--Atom [#_"Atom" this, #_"IFn" f, #_"Object" x]
         (loop []
-            (let [#_"Object" oldv (deref this) #_"Object" newv (.invoke f, oldv, arg)]
-                (when (.compareAndSet (:state this), oldv, newv) => (recur)
-                    (LazilyPersistentVector'createOwning oldv, newv)
+            (let [#_"Object" v (deref this) #_"Object" v' (f v x)]
+                (when (compare-and-set! this v v') => (recur)
+                    (LazilyPersistentVector'createOwning v, v')
                 )
             )
         )
     )
 
     #_override
-    (defn #_"IPersistentVector" IAtom2'''swapVals-4--Atom [#_"Atom" this, #_"IFn" f, #_"Object" arg1, #_"Object" arg2]
+    (defn #_"IPersistentVector" IAtom'''swapVals-4--Atom [#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y]
         (loop []
-            (let [#_"Object" oldv (deref this) #_"Object" newv (.invoke f, oldv, arg1, arg2)]
-                (when (.compareAndSet (:state this), oldv, newv) => (recur)
-                    (LazilyPersistentVector'createOwning oldv, newv)
+            (let [#_"Object" v (deref this) #_"Object" v' (f v x y)]
+                (when (compare-and-set! this v v') => (recur)
+                    (LazilyPersistentVector'createOwning v, v')
                 )
             )
         )
     )
 
     #_override
-    (defn #_"IPersistentVector" IAtom2'''swapVals-5--Atom [#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" args]
+    (defn #_"IPersistentVector" IAtom'''swapVals-5--Atom [#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" z]
         (loop []
-            (let [#_"Object" oldv (deref this) #_"Object" newv (.applyTo f, (list* oldv x y args))]
-                (when (.compareAndSet (:state this), oldv, newv) => (recur)
-                    (LazilyPersistentVector'createOwning oldv, newv)
+            (let [#_"Object" v (deref this) #_"Object" v' (apply f v x y z)]
+                (when (compare-and-set! this v v') => (recur)
+                    (LazilyPersistentVector'createOwning v, v')
                 )
             )
         )
     )
 
     #_override
-    (defn #_"boolean" IAtom'''compareAndSet--Atom [#_"Atom" this, #_"Object" oldv, #_"Object" newv]
-        (.compareAndSet (:state this), oldv, newv)
+    (defn #_"Object" IAtom'''reset--Atom [#_"Atom" this, #_"Object" v']
+        (.set (:state this), v')
+        v'
     )
 
     #_override
-    (defn #_"Object" IAtom'''reset--Atom [#_"Atom" this, #_"Object" newval]
-        (let [#_"Object" oldval (.get (:state this))]
-            (.set (:state this), newval)
-            newval
-        )
-    )
-
-    #_override
-    (defn #_"IPersistentVector" IAtom2'''resetVals--Atom [#_"Atom" this, #_"Object" newv]
+    (defn #_"IPersistentVector" IAtom'''resetVals--Atom [#_"Atom" this, #_"Object" v']
         (loop []
-            (let [#_"Object" oldv (deref this)]
-                (when (.compareAndSet (:state this), oldv, newv) => (recur)
-                    (LazilyPersistentVector'createOwning oldv, newv)
+            (let [#_"Object" v (deref this)]
+                (when (compare-and-set! this v v') => (recur)
+                    (LazilyPersistentVector'createOwning v, v')
                 )
             )
         )
@@ -15622,16 +15615,14 @@
 )
 
 (class-ns MethodImplCache
-    (defn- #_"MethodImplCache" MethodImplCache'init [#_"IPersistentMap" protocol, #_"Keyword" methodk, #_"int" shift, #_"int" mask, #_"Object[]" table, #_"Map" map]
+    (defn- #_"MethodImplCache" MethodImplCache'init [#_"IPersistentMap" protocol, #_"Keyword" methodk, #_"int" shift, #_"int" mask, #_"Object[]" table, #_"IPersistentMap" map]
         (hash-map
             #_"IPersistentMap" :protocol protocol
             #_"Keyword" :methodk methodk
             #_"int" :shift shift
             #_"int" :mask mask
             #_"Object[]" :table table ;; [class, entry. class, entry ...]
-            #_"Map" :map map
-
-            #_mutable #_"Entry" :mre nil
+            #_"IPersistentMap" :map map
         )
     )
 
@@ -15642,33 +15633,24 @@
         ([#_"IPersistentMap" protocol, #_"Keyword" methodk, #_"int" shift, #_"int" mask, #_"Object[]" table]
             (MethodImplCache'init protocol, methodk, shift, mask, table, nil)
         )
-        ([#_"IPersistentMap" protocol, #_"Keyword" methodk, #_"Map" map]
+        ([#_"IPersistentMap" protocol, #_"Keyword" methodk, #_"IPersistentMap" map]
             (MethodImplCache'init protocol, methodk, 0, 0, nil, map)
         )
     )
 
     #_method
-    (defn #_"IFn" MethodImplCache''findFnFor [#_"MethodImplCache" this, #_"Class" c]
+    (defn #_"IFn" MethodImplCache''fnFor [#_"MethodImplCache" this, #_"Class" c]
         (if (some? (:map this))
-            (let [#_"Entry" e (cast Entry (.get (:map this), c))]
-                (§ set! (:mre this) e)
-                (when (some? e) (:fn e))
+            (when-let [#_"Entry" e (get (:map this) c)]
+                (:fn e)
             )
-            (let [#_"int" idx (<< (& (>> (Util'hash c) (:shift this)) (:mask this)) 1)]
-                (when (and (< idx (alength (:table this))) (= (aget (:table this) idx) c))
-                    (let [#_"Entry" e (cast Entry (aget (:table this) (inc idx)))]
-                        (§ set! (:mre this) e)
-                        (when (some? e) (:fn e))
+            (let [#_"int" i (<< (& (>> (Util'hash c) (:shift this)) (:mask this)) 1)]
+                (let-when [#_"Object[]" t (:table this)] (and (< i (alength t)) (= (aget t i) c))
+                    (when-let [#_"Entry" e (aget t (inc i))]
+                        (:fn e)
                     )
                 )
             )
-        )
-    )
-
-    #_method
-    (defn #_"IFn" MethodImplCache''fnFor [#_"MethodImplCache" this, #_"Class" c]
-        (let [#_"Entry" last (:mre this)]
-            (if (and (some? last) (= (:c last) c)) (:fn last) (MethodImplCache''findFnFor this, c))
         )
     )
 )
@@ -16309,14 +16291,6 @@
 
     (def #_"PersistentArrayMap" PersistentArrayMap'EMPTY (PersistentArrayMap'new))
 
-    (defn #_"IPersistentMap" PersistentArrayMap'create [#_"Map" other]
-        (loop-when [#_"ITransientMap" m (transient PersistentArrayMap'EMPTY) #_"ISeq" s (seq other)] (some? s) => (persistent! m)
-            (let [#_"Map$Entry" e (first s)]
-                (recur (assoc m (key e) (val e)) (next s))
-            )
-        )
-    )
-
     #_override
     (defn #_"PersistentArrayMap" IObj'''withMeta--PersistentArrayMap [#_"PersistentArrayMap" this, #_"IPersistentMap" meta]
         (PersistentArrayMap'new meta, (:array this))
@@ -16433,7 +16407,7 @@
         )
     )
 
-    (declare PersistentHashMap'create-2)
+    (declare PersistentHashMap'create-1a)
 
     #_override
     (defn #_"IPersistentMap" IPersistentMap'''assoc--PersistentArrayMap [#_"PersistentArrayMap" this, #_"Object" key, #_"Object" val]
@@ -16448,7 +16422,7 @@
                 )
                 ;; didn't have key, grow
                 (if (< PersistentArrayMap'HASHTABLE_THRESHOLD (alength (:array this)))
-                    (-> (PersistentHashMap'create-2 (meta this), (:array this)) (assoc key val))
+                    (-> (PersistentHashMap'create-1a (:array this)) (assoc key val) (with-meta (meta this)))
                     (let [#_"int" n (alength (:array this)) #_"Object[]" a (make-array Object (+ n 2))]
                         (when (pos? n)
                             (System/arraycopy (:array this), 0, a, 0, n)
@@ -16562,8 +16536,6 @@
             (if (PersistentArrayMap'equalKey (aget (:array this) i), key) i (recur (+ i 2)))
         )
     )
-
-    (declare PersistentHashMap'create-1a)
 
     #_override
     (defn #_"ITransientMap" ATransientMap'''doAssoc--TransientArrayMap [#_"TransientArrayMap" this, #_"Object" key, #_"Object" val]
@@ -17680,26 +17652,29 @@
 
     (def #_"PersistentHashMap" PersistentHashMap'EMPTY (PersistentHashMap'new 0, nil, false, nil))
 
-    (defn #_"IPersistentMap" PersistentHashMap'create-1m [#_"Map" other]
-        (loop-when [#_"ITransientMap" m (transient PersistentHashMap'EMPTY) #_"ISeq" s (seq other)] (some? s) => (persistent! m)
-            (let [#_"Map$Entry" e (first s)]
-                (recur (assoc m (key e) (val e)) (next s))
-            )
-        )
-    )
-
     (defn #_"PersistentHashMap" PersistentHashMap'create-1a [& #_"Object..." a]
         (loop-when-recur [#_"ITransientMap" m (transient PersistentHashMap'EMPTY) #_"int" i 0]
                          (< i (alength a))
-                         [(assoc m (aget a i) (aget a (inc i))) (+ i 2)]
+                         [(assoc! m (aget a i) (aget a (inc i))) (+ i 2)]
                       => (persistent! m)
+        )
+    )
+
+    (defn #_"PersistentHashMap" PersistentHashMap'create-1s [#_"Seqable" keyvals]
+        (let [#_"ITransientMap" m (transient PersistentHashMap'EMPTY)
+              m (loop-when [m m #_"ISeq" s (seq keyvals)] (some? s) => m
+                    (when (some? (next s)) => (throw! (str "no value supplied for key: " (first s)))
+                        (recur (assoc! m (first s) (second s)) (next (next s)))
+                    )
+                )]
+            (persistent! m)
         )
     )
 
     (defn #_"PersistentHashMap" PersistentHashMap'createWithCheck-1a [& #_"Object..." a]
         (let [#_"ITransientMap" m (transient PersistentHashMap'EMPTY)
               m (loop-when [m m #_"int" i 0] (< i (alength a)) => m
-                    (let [m (assoc m (aget a i) (aget a (inc i)))]
+                    (let [m (assoc! m (aget a i) (aget a (inc i)))]
                         (when (= (count m) (inc (/ i 2))) => (throw! (str "duplicate key: " (aget a i)))
                             (recur m (+ i 2))
                         )
@@ -17709,22 +17684,11 @@
         )
     )
 
-    (defn #_"PersistentHashMap" PersistentHashMap'create-1s [#_"ISeq" s]
+    (defn #_"PersistentHashMap" PersistentHashMap'createWithCheck-1s [#_"Seqable" keyvals]
         (let [#_"ITransientMap" m (transient PersistentHashMap'EMPTY)
-              m (loop-when [m m s s] (some? s) => m
+              m (loop-when [m m #_"ISeq" s (seq keyvals) #_"int" i 0] (some? s) => m
                     (when (some? (next s)) => (throw! (str "no value supplied for key: " (first s)))
-                        (recur (assoc m (first s) (second s)) (next (next s)))
-                    )
-                )]
-            (persistent! m)
-        )
-    )
-
-    (defn #_"PersistentHashMap" PersistentHashMap'createWithCheck-1s [#_"ISeq" s]
-        (let [#_"ITransientMap" m (transient PersistentHashMap'EMPTY)
-              m (loop-when [m m s s #_"int" i 0] (some? s) => m
-                    (when (some? (next s)) => (throw! (str "no value supplied for key: " (first s)))
-                        (let [m (assoc m (first s) (second s))]
+                        (let [m (assoc! m (first s) (second s))]
                             (when (= (count m) (inc i)) => (throw! (str "duplicate key: " (first s)))
                                 (recur m (next (next s)) (inc i))
                             )
@@ -17733,10 +17697,6 @@
                 )]
             (persistent! m)
         )
-    )
-
-    (defn #_"PersistentHashMap" PersistentHashMap'create-2 [#_"IPersistentMap" meta & #_"Object..." init]
-        (-> (PersistentHashMap'create-1a init) (with-meta meta))
     )
 
     #_override
@@ -17947,20 +17907,10 @@
         )
     )
 
-    (defn #_"PersistentHashSet" PersistentHashSet'create-1l [#_"List" items]
-        (let [#_"Iterator" it (.iterator items)]
-            (loop-when-recur [#_"ITransientSet" s (transient PersistentHashSet'EMPTY)]
-                             (.hasNext it)
-                             [(conj! s (.next it))]
-                          => (persistent! s)
-            )
-        )
-    )
-
-    (defn #_"PersistentHashSet" PersistentHashSet'create-1s [#_"ISeq" items]
-        (loop-when-recur [#_"ITransientSet" s (transient PersistentHashSet'EMPTY) items items]
-                         (some? items)
-                         [(conj! s (first items)) (next items)]
+    (defn #_"PersistentHashSet" PersistentHashSet'create-1s [#_"Seqable" items]
+        (loop-when-recur [#_"ITransientSet" s (transient PersistentHashSet'EMPTY) #_"ISeq" q (seq items)]
+                         (some? q)
+                         [(conj! s (first q)) (next q)]
                       => (persistent! s)
         )
     )
@@ -17978,26 +17928,12 @@
         )
     )
 
-    (defn #_"PersistentHashSet" PersistentHashSet'createWithCheck-1i [#_"Iterable" items]
-        (let [#_"Iterator" it (.iterator items)
-              #_"ITransientSet" s (transient PersistentHashSet'EMPTY)
-              s (loop-when [s s #_"int" i 0] (.hasNext it) => s
-                    (let [#_"Object" key (.next it) s (conj! s key)]
-                        (when (= (count s) (inc i)) => (throw! (str "duplicate key: " key))
-                            (recur s (inc i))
-                        )
-                    )
-                )]
-            (persistent! s)
-        )
-    )
-
-    (defn #_"PersistentHashSet" PersistentHashSet'createWithCheck-1s [#_"ISeq" items]
+    (defn #_"PersistentHashSet" PersistentHashSet'createWithCheck-1s [#_"Seqable" items]
         (let [#_"ITransientSet" s (transient PersistentHashSet'EMPTY)
-              s (loop-when [s s items items #_"int" i 0] (some? items) => s
-                    (let [s (conj! s (first items))]
-                        (when (= (count s) (inc i)) => (throw! (str "duplicate key: " (first items)))
-                            (recur s (next items) (inc i))
+              s (loop-when [s s #_"ISeq" q (seq items) #_"int" i 0] (some? q) => s
+                    (let [#_"Object" key (first q) s (conj! s key)]
+                        (when (= (count s) (inc i)) => (throw! (str "duplicate key: " key))
+                            (recur s (next q) (inc i))
                         )
                     )
                 )]
@@ -18122,7 +18058,7 @@
 
     #_foreign
     (defn #_"boolean" equals---EmptyList [#_"EmptyList" this, #_"Object" that]
-        (and (or (instance? Sequential that) (instance? List that)) (nil? (seq that)))
+        (and (or (sequential? that) (instance? List that)) (nil? (seq that)))
     )
 
     #_override
@@ -18386,7 +18322,7 @@
 
     #_override
     (defn #_"boolean" IPersistentCollection'''equiv--PersistentQueue [#_"PersistentQueue" this, #_"Object" that]
-        (and (instance? Sequential that)
+        (and (sequential? that)
             (loop-when [#_"ISeq" s (seq this) #_"ISeq" ms (seq that)] (some? s) => (nil? ms)
                 (and (some? ms) (Util'equiv-2oo (first s), (first ms))
                     (recur (next s) (next ms))
@@ -18397,7 +18333,7 @@
 
     #_foreign
     (defn #_"boolean" equals---PersistentQueue [#_"PersistentQueue" this, #_"Object" that]
-        (and (instance? Sequential that)
+        (and (sequential? that)
             (loop-when [#_"ISeq" s (seq this) #_"ISeq" ms (seq that)] (some? s) => (nil? ms)
                 (and (some? ms) (Util'equals (first s), (first ms))
                     (recur (next s) (next ms))
@@ -18977,31 +18913,24 @@
 
     (def #_"PersistentTreeMap" PersistentTreeMap'EMPTY (PersistentTreeMap'new))
 
-    (defn #_"IPersistentMap" PersistentTreeMap'create-1m [#_"Map" other]
-        (loop-when [#_"IPersistentMap" m PersistentTreeMap'EMPTY #_"ISeq" s (seq other)] (some? s) => m
-            (let [#_"Map$Entry" e (first s)]
-                (recur (assoc m (key e) (val e)) (next s))
-            )
-        )
-    )
-
     #_override
     (defn #_"PersistentTreeMap" IObj'''withMeta--PersistentTreeMap [#_"PersistentTreeMap" this, #_"IPersistentMap" meta]
         (PersistentTreeMap'new meta, (:comp this), (:tree this), (:_count this))
     )
 
-    (defn #_"PersistentTreeMap" PersistentTreeMap'create-1s [#_"ISeq" s]
-        (loop-when [#_"IPersistentMap" m PersistentTreeMap'EMPTY s s] (some? s) => m
-            (when (some? (next s)) => (throw! (str "no value supplied for key: " (first s)))
-                (recur (assoc m (first s) (second s)) (next (next s)))
+    (defn #_"PersistentTreeMap" PersistentTreeMap'create
+        ([#_"Seqable" keyvals]
+            (loop-when [#_"IPersistentMap" m PersistentTreeMap'EMPTY #_"ISeq" s (seq keyvals)] (some? s) => m
+                (when (some? (next s)) => (throw! (str "no value supplied for key: " (first s)))
+                    (recur (assoc m (first s) (second s)) (next (next s)))
+                )
             )
         )
-    )
-
-    (defn #_"PersistentTreeMap" PersistentTreeMap'create-2 [#_"Comparator" comp, #_"ISeq" s]
-        (loop-when [#_"IPersistentMap" m (PersistentTreeMap'new comp) s s] (some? s) => m
-            (when (some? (next s)) => (throw! (str "no value supplied for key: " (first s)))
-                (recur (assoc m (first s) (second s)) (next (next s)))
+        ([#_"Comparator" comp, #_"Seqable" keyvals]
+            (loop-when [#_"IPersistentMap" m (PersistentTreeMap'new comp) #_"ISeq" s (seq keyvals)] (some? s) => m
+                (when (some? (next s)) => (throw! (str "no value supplied for key: " (first s)))
+                    (recur (assoc m (first s) (second s)) (next (next s)))
+                )
             )
         )
     )
@@ -19421,20 +19350,9 @@
 
     (def #_"PersistentTreeSet" PersistentTreeSet'EMPTY (PersistentTreeSet'new nil, PersistentTreeMap'EMPTY))
 
-    (defn #_"PersistentTreeSet" PersistentTreeSet'create-1 [#_"ISeq" s]
-        (loop-when-recur [#_"PersistentTreeSet" t PersistentTreeSet'EMPTY s s]
-                         (some? s)
-                         [(conj t (first s)) (next s)]
-                      => t
-        )
-    )
-
-    (defn #_"PersistentTreeSet" PersistentTreeSet'create-2 [#_"Comparator" comp, #_"ISeq" s]
-        (loop-when-recur [#_"PersistentTreeSet" t (PersistentTreeSet'new nil, (PersistentTreeMap'new nil, comp)) s s]
-                         (some? s)
-                         [(conj t (first s)) (next s)]
-                      => t
-        )
+    (defn #_"PersistentTreeSet" PersistentTreeSet'create
+        ([                     #_"Seqable" items] (reduce conj PersistentTreeSet'EMPTY                                        items))
+        ([#_"Comparator" comp, #_"Seqable" items] (reduce conj (PersistentTreeSet'new nil, (PersistentTreeMap'new nil, comp)) items))
     )
 
     #_foreign
@@ -21302,7 +21220,7 @@
                 (.size o)
             (instance? Map o)
                 (.size o)
-            (instance? Map$Entry o)
+            (map-entry? o)
                 2
             (.isArray (class o))
                 (Array/getLength o)
@@ -21388,21 +21306,15 @@
                 (nil? coll)
                     notFound
                 (instance? Map coll)
-                    (let [#_"Map" m coll]
-                        (if (contains? m key) (.get m, key) notFound)
-                    )
+                    (if (contains? coll key) (.get coll, key) notFound)
                 (instance? IPersistentSet coll)
-                    (let [#_"IPersistentSet" s coll]
-                        (if (contains? s key) (.get s, key) notFound)
-                    )
+                    (if (contains? coll key) (.get coll, key) notFound)
                 (and (number? key) (or (string? coll) (.isArray (class coll))))
                     (let [#_"int" n (.intValue key)]
                         (if (< -1 n (count coll)) (nth coll n) notFound)
                     )
                 (instance? ITransientSet coll)
-                    (let [#_"ITransientSet" s coll]
-                        (if (contains? s key) (.get s, key) notFound)
-                    )
+                    (if (contains? coll key) (.get coll, key) notFound)
                 :else
                     notFound
             )
@@ -21448,8 +21360,8 @@
             (instance? Associative coll)
                 (.entryAt coll, key)
             (instance? Map coll)
-                (let-when [#_"Map" m coll] (contains? m key)
-                    (MapEntry'create key, (.get m, key))
+                (when (contains? coll key)
+                    (MapEntry'create key, (.get coll, key))
                 )
             (instance? ITransientAssociative2 coll)
                 (.entryAt coll, key)
@@ -21490,11 +21402,11 @@
                     (Reflector'prepRet (.getComponentType (class coll)), (Array/get coll, n))
                 (instance? Matcher coll)
                     (.group coll, n)
-                (instance? Map$Entry coll)
+                (map-entry? coll)
                     (let [#_"Map$Entry" e coll]
                         (case n 0 (key e) 1 (val e) (throw (IndexOutOfBoundsException.)))
                     )
-                (instance? Sequential coll)
+                (sequential? coll)
                     (loop-when [#_"int" i 0 #_"ISeq" s (seq coll)] (and (<= i n) (some? s)) => (throw (IndexOutOfBoundsException.))
                         (recur-if (< i n) [(inc i) (next s)] => (first s))
                     )
@@ -21522,11 +21434,11 @@
                     (let-when [#_"Matcher" m coll] (< n (.groupCount m)) => notFound
                         (.group m, n)
                     )
-                (instance? Map$Entry coll)
+                (map-entry? coll)
                     (let [#_"Map$Entry" e coll]
                         (case n 0 (key e) 1 (val e) notFound)
                     )
-                (instance? Sequential coll)
+                (sequential? coll)
                     (loop-when [#_"int" i 0 #_"ISeq" s (seq coll)] (and (<= i n) (some? s)) => notFound
                         (recur-if (< i n) [(inc i) (next s)] => (first s))
                     )
@@ -23593,7 +23505,7 @@
 ;; map stuff
 
 ;;;
- ; Return true if x is a map entry
+ ; Return true if x is a map entry.
  ;;
 (§ defn map-entry? [x] (instance? java.util.Map$Entry x))
 
@@ -24196,16 +24108,16 @@
  ; Returns [old new], the value of the atom before and after the swap.
  ;;
 (§ defn ^cloiure.lang.IPersistentVector swap-vals!
-    ([^cloiure.lang.IAtom2 atom f] (.swapVals atom f))
-    ([^cloiure.lang.IAtom2 atom f x] (.swapVals atom f x))
-    ([^cloiure.lang.IAtom2 atom f x y] (.swapVals atom f x y))
-    ([^cloiure.lang.IAtom2 atom f x y & args] (.swapVals atom f x y args))
+    ([^cloiure.lang.IAtom atom f] (.swapVals atom f))
+    ([^cloiure.lang.IAtom atom f x] (.swapVals atom f x))
+    ([^cloiure.lang.IAtom atom f x y] (.swapVals atom f x y))
+    ([^cloiure.lang.IAtom atom f x y & args] (.swapVals atom f x y args))
 )
 
 ;;;
  ; Atomically sets the value of atom to newval if and only if the
  ; current value of the atom is identical to oldval. Returns true if
- ; set happened, else false
+ ; set happened, else false.
  ;;
 (§ defn compare-and-set! [^cloiure.lang.IAtom atom oldval newval]
     (.compareAndSet atom oldval newval)
@@ -24223,7 +24135,7 @@
  ; Sets the value of atom to newval. Returns [old new], the value of the
  ; atom before and after the reset.
  ;;
-(§ defn ^cloiure.lang.IPersistentVector reset-vals! [^cloiure.lang.IAtom2 atom newval]
+(§ defn ^cloiure.lang.IPersistentVector reset-vals! [^cloiure.lang.IAtom atom newval]
     (.resetVals atom newval)
 )
 
@@ -26151,7 +26063,7 @@
                         (fn [bvec b v]
                             (let [gmap (gensym "map__") gmapseq (with-meta gmap {:tag 'cloiure.lang.ISeq}) defaults (:or b)]
                                 (loop [ret (-> (conj bvec gmap v gmap)
-                                            (conj `(if (seq? ~gmap) (cloiure.lang.PersistentHashMap/create (seq ~gmapseq)) ~gmap))
+                                            (conj `(if (seq? ~gmap) (cloiure.lang.PersistentHashMap/create ~gmapseq) ~gmap))
                                             ((fn [ret] (if (:as b) (conj ret (:as b) gmap) ret)))
                                         )
                                        bes (let [trafos (reduce1
