@@ -83,7 +83,7 @@
     [java.lang.reflect Array Constructor Field #_Method Modifier]
     [java.math BigDecimal BigInteger MathContext]
     [java.security AccessController PrivilegedAction]
-    [java.util ArrayList Arrays Collection Comparator EmptyStackException IdentityHashMap Iterator List NoSuchElementException Stack]
+    [java.util ArrayList Arrays Collection Collections Comparator EmptyStackException IdentityHashMap Iterator List NoSuchElementException Stack]
     [java.util.concurrent Callable]
     [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicReference]
     [java.util.concurrent.locks ReentrantReadWriteLock]
@@ -102,7 +102,6 @@
 
 (declare RT'CLOIURE_NS)
 (declare RT'printString)
-(declare RT'seqToPassedArray)
 
 (java-ns cloiure.lang.Reflector
     (§ soon definterface Reflector) (import [clojure.lang Reflector])
@@ -3980,8 +3979,8 @@
                         )
                         (set! *loop-locals* (:argLocals fm))
                         (-> fm
-                            (update #_"Type[]" :argTypes #(.toArray %, (make-array Type (count %))))
-                            (update #_"Class[]" :argClasses #(.toArray %, (make-array Class (count %))))
+                            (update #_"Type[]" :argTypes #(into-array Type %))
+                            (update #_"Class[]" :argClasses #(into-array Class %))
                             (assoc :body (IParser'''parse (BodyParser'new), :Context'RETURN, body))
                         )
                     )
@@ -4377,7 +4376,7 @@
                                     (recur (conj v (key e) (val e)) (next s))
                                 )
                             )]
-                        (IopObject''emitObjectArray this, (.toArray v), gen)
+                        (IopObject''emitObjectArray this, (to-array v), gen)
                         (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.IPersistentMap map(Object[])"))
                         true
                     )
@@ -4391,7 +4390,7 @@
                                 (.invokeStatic gen, (Type/getType Tuple), (nth Compiler'createTupleMethods (count args)))
                             )
                             (do
-                                (IopObject''emitObjectArray this, (.toArray args), gen)
+                                (IopObject''emitObjectArray this, (to-array args), gen)
                                 (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.IPersistentVector vector(Object[])"))
                             )
                         )
@@ -6164,7 +6163,7 @@
                     (CaseExpr''emitExprForHashes this, objx, gen)
                 )
                 (if (= (:switchType this) :sparse)
-                    (let [#_"Label[]" la (make-array Label (count labels)) la (.toArray (vals labels), la)]
+                    (let [#_"Label[]" la (into-array Label (vals labels))]
                         (.visitLookupSwitchInsn gen, defaultLabel, (Numbers/int_array (keys (:tests this))), la)
                     )
                     (let [#_"Label[]" la (make-array Label (inc (- (:high this) (:low this))))]
@@ -7125,7 +7124,7 @@
 (class-ns ListReader
     (defn #_"Object" list-reader [#_"PushbackReader" r, #_"char" _delim]
         (let-when [#_"PersistentVector" v (LispReader'readDelimitedForms r, \))] (seq v) => ()
-            (PersistentList/create #_(.toArray v) v)
+            (PersistentList/create #_(to-array v) v)
         )
     )
 )
@@ -7140,7 +7139,7 @@
     (defn #_"Object" map-reader [#_"PushbackReader" r, #_"char" _delim]
         (let [#_"PersistentVector" v (LispReader'readDelimitedForms r, \})]
             (when (zero? (% (count v) 2)) => (throw! "map literal must contain an even number of forms")
-                (RT/map (.toArray v))
+                (RT/map (to-array v))
             )
         )
     )
@@ -12637,16 +12636,6 @@
     )
 
     #_foreign
-    (defn #_"Object[]" toArray---ASeq [#_"ASeq" this]
-        (RT'seqToArray (seq this))
-    )
-
-    #_foreign
-    (defn #_"Object[]" toArray---ASeq [#_"ASeq" this, #_"Object[]" a]
-        (RT'seqToPassedArray (seq this), a)
-    )
-
-    #_foreign
     (defn #_"boolean" contains---ASeq [#_"ASeq" this, #_"Object" o]
         (loop-when [#_"ISeq" s (seq this)] (some? s) => false
             (or (Util'equiv-2oo (first s), o) (recur (next s)))
@@ -12787,16 +12776,6 @@
     #_override
     (defn #_"int" IHashEq'''hasheq--LazySeq [#_"LazySeq" this]
         (Murmur3'hashOrdered this)
-    )
-
-    #_foreign
-    (defn #_"Object[]" toArray---LazySeq [#_"LazySeq" this]
-        (RT'seqToArray (seq this))
-    )
-
-    #_foreign
-    (defn #_"Object[]" toArray---LazySeq [#_"LazySeq" this, #_"Object[]" a]
-        (RT'seqToPassedArray (seq this), a)
     )
 
     #_foreign
@@ -13159,16 +13138,6 @@
     )
 
     #_foreign
-    (defn #_"Object[]" toArray---APersistentSet [#_"APersistentSet" this]
-        (RT'seqToArray (seq this))
-    )
-
-    #_foreign
-    (defn #_"Object[]" toArray---APersistentSet [#_"APersistentSet" this, #_"Object[]" a]
-        (RT'seqToPassedArray (seq this), a)
-    )
-
-    #_foreign
     (defn #_"Iterator" iterator---APersistentSet [#_"APersistentSet" this]
         (if (instance? IMapIterable (:impl this))
             (.keyIterator (:impl this))
@@ -13333,12 +13302,6 @@
                         (recur-if (Util'equals (nth v i), (nth obj i)) [(inc i)] => false)
                     )
                 )
-            List
-                (when (and (= (count obj) (count v)) (= (.hashCode obj) (.hashCode v))) => false
-                    (loop-when [#_"Iterator" i1 (.iterator v) #_"Iterator" i2 (.iterator obj)] (.hasNext i1) => true
-                        (recur-if (Util'equals (.next i1), (.next i2)) [i1 i2] => false)
-                    )
-                )
             Sequential
                 (loop-when [#_"int" i 0 #_"ISeq" s (seq obj)] (< i (count v)) => (nil? s)
                     (recur-if (and (some? s) (Util'equals (nth v i), (first s))) [(inc i) (next s)] => false)
@@ -13353,12 +13316,6 @@
                 (when (= (count obj) (count v)) => false
                     (loop-when [#_"int" i 0] (< i (count v)) => true
                         (recur-if (Util'equiv-2oo (nth v i), (nth obj i)) [(inc i)] => false)
-                    )
-                )
-            List
-                (when (= (count obj) (count v)) => false
-                    (loop-when [#_"Iterator" i1 (.iterator v) #_"Iterator" i2 (.iterator obj)] (.hasNext i1) => true
-                        (recur-if (Util'equiv-2oo (.next i1), (.next i2)) [i1 i2] => false)
                     )
                 )
             Sequential
@@ -13506,21 +13463,6 @@
     #_override
     (defn #_"Object" ILookup'''valAt-2--APersistentVector [#_"APersistentVector" this, #_"Object" key]
         (.valAt this, key, nil)
-    )
-
-    #_foreign
-    (defn #_"Object[]" toArray---APersistentVector [#_"APersistentVector" this]
-        (let [#_"Object[]" a (make-array Object (count this))]
-            (dotimes [#_"int" i (count this)]
-                (aset a i (nth this i))
-            )
-            a
-        )
-    )
-
-    #_foreign
-    (defn #_"Object[]" toArray---APersistentVector [#_"APersistentVector" this, #_"Object[]" a]
-        (RT'seqToPassedArray (seq this), a)
     )
 
     #_foreign
@@ -18095,19 +18037,6 @@
     )
 
     #_foreign
-    (defn #_"Object[]" toArray---EmptyList [#_"EmptyList" this]
-        (make-array Object 0)
-    )
-
-    #_foreign
-    (defn #_"Object[]" toArray---EmptyList [#_"EmptyList" this, #_"Object[]" objects]
-        (when (pos? (alength objects))
-            (aset objects 0 nil)
-        )
-        objects
-    )
-
-    #_foreign
     (defn #_"Object" get---EmptyList [#_"EmptyList" this, #_"int" index]
         (nth this index)
     )
@@ -18356,16 +18285,6 @@
     #_override
     (defn #_"PersistentQueue" IObj'''withMeta--PersistentQueue [#_"PersistentQueue" this, #_"IPersistentMap" meta]
         (PersistentQueue'new meta, (:cnt this), (:f this), (:r this))
-    )
-
-    #_foreign
-    (defn #_"Object[]" toArray---PersistentQueue [#_"PersistentQueue" this]
-        (RT'seqToArray (seq this))
-    )
-
-    #_foreign
-    (defn #_"Object[]" toArray---PersistentQueue [#_"PersistentQueue" this, #_"Object[]" a]
-        (RT'seqToPassedArray (seq this), a)
     )
 
     #_foreign
@@ -19772,16 +19691,6 @@
         )
     )
 
-    (defn #_"PersistentVector" PersistentVector'create-1i [#_"Iterable" items]
-        (let [#_"Iterator" it (.iterator items)]
-            (loop-when-recur [#_"TransientVector" v (transient PersistentVector'EMPTY)]
-                                (.hasNext it)
-                                [(conj! v (.next it))]
-                            => (persistent! v)
-            )
-        )
-    )
-
     (defn #_"PersistentVector" PersistentVector'create-1a [& #_"Object..." items]
         (loop-when-recur [#_"TransientVector" v (transient PersistentVector'EMPTY) #_"int" i 0]
                          (< i (alength items))
@@ -20077,14 +19986,11 @@
         )
     )
 
-    (declare RT'toArray)
-
     (defn #_"IPersistentVector" LazilyPersistentVector'create [#_"Object" obj]
         (condp instance? obj
             IReduceInit (PersistentVector'create-1r obj)
             Seqable     (PersistentVector'create-1s obj)
-            Iterable    (PersistentVector'create-1i obj)
-                        (LazilyPersistentVector'createOwning (RT'toArray obj))
+                        (LazilyPersistentVector'createOwning (to-array obj))
         )
     )
 )
@@ -21013,24 +20919,6 @@
         (.getAndIncrement RT'ID)
     )
 
-    (def- #_"int" RT'CHUNK_SIZE 32)
-
-    (defn #_"ISeq" RT'chunkIteratorSeq [#_"Iterator" it]
-        (when (.hasNext it)
-            (LazySeq'new
-                (fn #_"Object" []
-                    (let [#_"Object[]" a (make-array Object RT'CHUNK_SIZE)
-                          #_"int" n
-                            (loop-when-recur [n 0] (and (.hasNext it) (< n RT'CHUNK_SIZE)) [(inc n)] => n
-                                (aset a n (.next it))
-                            )]
-                        (ChunkedCons'new (ArrayChunk'new a, 0, n), (RT'chunkIteratorSeq it))
-                    )
-                )
-            )
-        )
-    )
-
     (declare RT'seqFrom)
 
     (defn #_"ISeq" RT'seq [#_"Object" coll]
@@ -21046,7 +20934,6 @@
         (cond
             (instance? Seqable coll)      (.seq coll)
             (nil? coll)                   nil
-            (instance? Iterable coll)     (RT'chunkIteratorSeq (.iterator coll))
             (.isArray (class coll))       (ArraySeq'createFromObject coll)
             (instance? CharSequence coll) (StringSeq'create coll)
             :else (throw! (str "don't know how to create ISeq from: " (.getName (class coll))))
@@ -21058,7 +20945,6 @@
             (seq? coll)
             (instance? Seqable coll)
             (nil? coll)
-            (instance? Iterable coll)
             (.isArray (class coll))
             (instance? CharSequence coll)
         )
@@ -21760,59 +21646,10 @@
         )
     )
 
-    (defn #_"Object[]" RT'toArray [#_"Object" coll]
-        (cond
-            (nil? coll)
-                (make-array Object 0)
-            (instance? Compiler'OBJECTS_CLASS coll)
-                coll
-            (instance? Collection coll)
-                (.toArray coll)
-            (instance? Iterable coll)
-                (let [#_"List" l (ArrayList.)]
-                    (doseq [#_"Object" o coll]
-                        (.add l, o)
-                    )
-                    (.toArray l)
-                )
-            (string? coll)
-                (let [#_"char[]" chars (.toCharArray coll)
-                      #_"Object[]" a (make-array Object (alength chars))]
-                    (dotimes [#_"int" i (alength chars)]
-                        (aset a i (aget chars i))
-                    )
-                    a
-                )
-            (.isArray (class coll))
-                (let [#_"ISeq" s (seq coll)
-                      #_"Object[]" a (make-array Object (count s))]
-                    (loop-when-recur [#_"int" i 0 s s] (< i (alength a)) [(inc i) (next s)]
-                        (aset a i (first s))
-                    )
-                    a
-                )
-            :else
-                (throw! (str "unable to convert: " (class coll) " to Object[]"))
-        )
-    )
-
     (defn #_"Object[]" RT'seqToArray [#_"ISeq" s]
         (let [#_"Object[]" a (make-array Object (count s))]
             (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
                 (aset a i (first s))
-            )
-            a
-        )
-    )
-
-    (defn #_"Object[]" RT'seqToPassedArray [#_"ISeq" s, #_"Object[]" passed]
-        (let [#_"Object[]" a passed #_"int" n (count s)
-              a (if (< (alength a) n) (cast Compiler'OBJECTS_CLASS (Array/newInstance (.getComponentType (class passed)), n)) a)]
-            (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
-                (aset a i (first s))
-            )
-            (when (< n (alength passed))
-                (aset a n nil)
             )
             a
         )
@@ -21854,6 +21691,42 @@
                 )
                 a
             )
+        )
+    )
+
+    (defn #_"Object[]" RT'toArray [#_"Object" coll]
+        (cond
+            (nil? coll)
+                (make-array Object 0)
+            (instance? Compiler'OBJECTS_CLASS coll)
+                coll
+            (indexed? coll)
+                (let [#_"int" n (count coll) #_"Object[]" a (make-array Object n)]
+                    (dotimes [#_"int" i n]
+                        (aset a i (nth coll i))
+                    )
+                    a
+                )
+            (instance? Seqable coll)
+                (RT'seqToArray (seq coll))
+            (string? coll)
+                (let [#_"char[]" chars (.toCharArray coll)
+                      #_"Object[]" a (make-array Object (alength chars))]
+                    (dotimes [#_"int" i (alength chars)]
+                        (aset a i (aget chars i))
+                    )
+                    a
+                )
+            (.isArray (class coll))
+                (let [#_"ISeq" s (seq coll)
+                      #_"Object[]" a (make-array Object (count s))]
+                    (loop-when-recur [#_"int" i 0 s s] (< i (alength a)) [(inc i) (next s)]
+                        (aset a i (first s))
+                    )
+                    a
+                )
+            :else
+                (throw! (str "unable to convert: " (class coll) " to Object[]"))
         )
     )
 
@@ -22174,8 +22047,7 @@
 (§ .setMacro (var defn))
 
 ;;;
- ; Returns an array of Objects containing the contents of coll, which
- ; can be any Collection. Maps to java.util.Collection.toArray().
+ ; Returns an array of Objects containing the contents of coll.
  ;;
 (§ defn ^"[Ljava.lang.Object;" to-array [coll] (cloiure.lang.RT/toArray coll))
 
@@ -27086,14 +26958,6 @@
 )
 
 ;;;
- ; Returns a seq on a java.util.Iterator. Note that most collections
- ; providing iterators implement Iterable and thus support seq directly.
- ; Seqs cache values, thus iterator-seq should not be used on any
- ; iterator that repeatedly returns the same mutable object.
- ;;
-(§ defn iterator-seq [iter] (cloiure.lang.RT/chunkIteratorSeq iter))
-
-;;;
  ; Formats a string using String/format.
  ; See java.util.Formatter for format string syntax.
  ;;
@@ -29310,7 +29174,6 @@
 ;;;
  ; Protocol for collection types that can implement reduce faster
  ; than first/next recursion. Called by cloiure.core/reduce.
- ; Baseline implementation defined in terms of Iterable.
  ;;
 (§ defprotocol CollReduce
     (coll-reduce [coll f] [coll f val])
@@ -29334,42 +29197,6 @@
     ([coll f val]
         (let [s (seq coll)]
             (internal-reduce s f val)
-        )
-    )
-)
-
-(§ defn- iter-reduce
-    ([^java.lang.Iterable coll f]
-        (let [iter (.iterator coll)]
-            (if (.hasNext iter)
-                (loop [ret (.next iter)]
-                    (if (.hasNext iter)
-                        (let [ret (f ret (.next iter))]
-                            (if (reduced? ret)
-                                @ret
-                                (recur ret)
-                            )
-                        )
-                        ret
-                    )
-                )
-                (f)
-            )
-        )
-    )
-    ([^java.lang.Iterable coll f val]
-        (let [iter (.iterator coll)]
-            (loop [ret val]
-                (if (.hasNext iter)
-                    (let [ret (f ret (.next iter))]
-                        (if (reduced? ret)
-                            @ret
-                            (recur ret)
-                        )
-                    )
-                    ret
-                )
-            )
         )
     )
 )
@@ -29440,24 +29267,6 @@
     (coll-reduce
         ([coll f] (seq-reduce coll f))
         ([coll f val] (seq-reduce coll f val))
-    )
-
-    Iterable
-    (coll-reduce
-        ([coll f] (iter-reduce coll f))
-        ([coll f val] (iter-reduce coll f val))
-    )
-
-    cloiure.lang.APersistentMap$KeySeq
-    (coll-reduce
-        ([coll f] (iter-reduce coll f))
-        ([coll f val] (iter-reduce coll f val))
-    )
-
-    cloiure.lang.APersistentMap$ValSeq
-    (coll-reduce
-        ([coll f] (iter-reduce coll f))
-        ([coll f val] (iter-reduce coll f val))
     )
 )
 
@@ -30019,16 +29828,6 @@
 
     java.util.Collection
     (contains [this o] (boolean (some #(= % o) this)))
-    (toArray [this] (into-array Object this))
-    (toArray [this arr]
-        (when (<= cnt (count arr)) => (into-array Object this)
-            (dotimes [i cnt]
-                (aset arr i (nth this i))
-            )
-            arr
-        )
-    )
-    (size [_] cnt)
 
     java.util.List
     (get [this i] (nth this i))
@@ -30302,7 +30101,7 @@
 (§ defn partition-by
     ([f]
         (fn [rf]
-            (let [l (java.util.ArrayList.) pv (volatile! ::none)]
+            (let [l (ArrayList.) pv (volatile! ::none)]
                 (fn
                     ([] (rf))
                     ([result]
@@ -30411,7 +30210,7 @@
 (§ defn partition-all
     ([^long n]
         (fn [rf]
-            (let [l (java.util.ArrayList. n)]
+            (let [l (ArrayList. n)]
                 (fn
                     ([] (rf))
                     ([result]
@@ -30451,16 +30250,6 @@
                 )
             )
         )
-    )
-)
-
-;;;
- ; Return a random permutation of coll.
- ;;
-(§ defn shuffle [^java.util.Collection coll]
-    (let [al (java.util.ArrayList. coll)]
-        (java.util.Collections/shuffle al)
-        (cloiure.lang.RT/vector (.toArray al))
     )
 )
 
@@ -31691,7 +31480,7 @@
  ; with (zero? (count x)). See also foldcat.
  ;;
 (§ defn cat
-    ([] (java.util.ArrayList.))
+    ([] (ArrayList.))
     ([ctor]
         (fn
             ([] (ctor))
