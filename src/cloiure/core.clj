@@ -83,8 +83,8 @@
     [java.lang.reflect Array Constructor Field #_Method Modifier]
     [java.math BigDecimal BigInteger MathContext]
     [java.security AccessController PrivilegedAction]
-    [java.util ArrayList Arrays Collection Comparator EmptyStackException IdentityHashMap Iterator LinkedList List Map Map$Entry NoSuchElementException Queue Set Stack]
-    [java.util.concurrent Callable ConcurrentHashMap]
+    [java.util ArrayList Arrays Collection Comparator EmptyStackException IdentityHashMap Iterator List NoSuchElementException Stack]
+    [java.util.concurrent Callable]
     [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicReference]
     [java.util.concurrent.locks ReentrantReadWriteLock]
     [java.util.regex Matcher Pattern]
@@ -1106,30 +1106,22 @@
 
     (defn- #_"int" Compiler'registerConstant [#_"Object" o]
         (when (bound? #'*constants*) => -1
-            (let [#_"IdentityHashMap<Object, Integer>" ids *constant-ids*]
-                (or (get ids o)
-                    (let [#_"PersistentVector" v *constants*]
-                        (set! *constants* (conj v o))
-                        (.put ids, o, (count v))
-                        (count v)
-                    )
+            (or (.get *constant-ids*, o)
+                (let [#_"int" n (count *constants*)]
+                    (update! *constants* conj o)
+                    (.put *constant-ids*, o, n)
+                    n
                 )
             )
         )
     )
 
     (defn- #_"int" Compiler'registerKeywordCallsite [#_"Keyword" k]
-        (let [#_"IPersistentVector" v (conj *keyword-callsites* k)]
-            (set! *keyword-callsites* v)
-            (dec (count v))
-        )
+        (dec (count (update! *keyword-callsites* conj k)))
     )
 
     (defn- #_"int" Compiler'registerProtocolCallsite [#_"Var" v]
-        (let [#_"IPersistentVector" v (conj *protocol-callsites* v)]
-            (set! *protocol-callsites* v)
-            (dec (count v))
-        )
+        (dec (count (update! *protocol-callsites* conj v)))
     )
 
     (defn- #_"void" Compiler'registerVar [#_"Var" var]
@@ -1719,13 +1711,13 @@
                     (when (= n 1) => (throw! (str "wrong number of arguments passed to quote: " n))
                         (let [#_"Object" v (second form)]
                             (cond
-                                (nil? v)                                                    Compiler'NIL_EXPR
-                                (= v true)                                                  Compiler'TRUE_EXPR
-                                (= v false)                                                 Compiler'FALSE_EXPR
-                                (number? v)                                                 (NumberExpr'parse v)
-                                (string? v)                                                 (StringExpr'new v)
-                                (and (instance? IPersistentCollection v) (zero? (count v))) (EmptyExpr'new v)
-                                :else                                                       (ConstantExpr'new v)
+                                (nil? v)                          Compiler'NIL_EXPR
+                                (= v true)                        Compiler'TRUE_EXPR
+                                (= v false)                       Compiler'FALSE_EXPR
+                                (number? v)                       (NumberExpr'parse v)
+                                (string? v)                       (StringExpr'new v)
+                                (and (coll? v) (zero? (count v))) (EmptyExpr'new v)
+                                :else                             (ConstantExpr'new v)
                             )
                         )
                     )
@@ -2515,7 +2507,7 @@
                                     (InstanceFieldExpr'new line, instance, (Compiler'munge (ßname sym)), tag, ?)
                                 )
                             )
-                            (let [#_"ISeq" call (if (instance? ISeq (third form)) (third form) (next (next form)))]
+                            (let [#_"ISeq" call (if (seq? (third form)) (third form) (next (next form)))]
                                 (when (symbol? (first call)) => (throw! "malformed member expression")
                                     (let [#_"Symbol" sym (first call)
                                           #_"Symbol" tag (Compiler'tagOf form)
@@ -2846,7 +2838,7 @@
                 (when (= context :Context'RETURN) => (Compiler'analyze context, (list (list Compiler'FNONCE [] form)))
                     (let [[#_"Expr" bodyExpr #_"PersistentVector" catches #_"Expr" finallyExpr #_"PersistentVector" body]
                             (loop-when [bodyExpr nil catches [] finallyExpr nil body [] #_"boolean" caught? false #_"ISeq" fs (next form)] (some? fs) => [bodyExpr catches finallyExpr body]
-                                (let [#_"Object" f (first fs) #_"Object" op (when (instance? ISeq f) (first f))]
+                                (let [#_"Object" f (first fs) #_"Object" op (when (seq? f) (first f))]
                                     (if (any = op 'catch 'finally)
                                         (let [bodyExpr
                                                 (when (nil? bodyExpr) => bodyExpr
@@ -4378,10 +4370,10 @@
                         )
                         true
                     )
-                    (instance? IPersistentMap value)
+                    (map? value)
                     (let [#_"PersistentVector" v
                             (loop-when [v [] #_"ISeq" s (seq value)] (some? s) => v
-                                (let [#_"Map$Entry" e (first s)]
+                                (let [#_"IMapEntry" e (first s)]
                                     (recur (conj v (key e) (val e)) (next s))
                                 )
                             )]
@@ -4389,7 +4381,7 @@
                         (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.IPersistentMap map(Object[])"))
                         true
                     )
-                    (instance? IPersistentVector value)
+                    (vector? value)
                     (let [#_"IPersistentVector" args value]
                         (if (<= (count args) Tuple'MAX_SIZE)
                             (do
@@ -4418,7 +4410,7 @@
                         )
                         true
                     )
-                    (or (instance? ISeq value) (instance? IPersistentList value))
+                    (or (seq? value) (list? value))
                     (let [#_"ISeq" vs (seq value)]
                         (IopObject''emitObjectArray this, (RT/seqToArray vs), gen)
                         (.invokeStatic gen, (Type/getType PersistentList), (Method/getMethod "clojure.lang.IPersistentList create(Object[])"))
@@ -4800,7 +4792,7 @@
                           ;; now (fn [args] body...) or (fn ([args] body...) ([args2] body2...) ...)
                           ;; turn former into latter
                           form
-                            (when (instance? IPersistentVector (second form)) => form
+                            (when (vector? (second form)) => form
                                 (list 'fn* (next form))
                             )
                           #_"FnMethod[]" a (make-array #_"FnMethod" Object (inc Compiler'MAX_POSITIONAL_ARITY))
@@ -5060,7 +5052,7 @@
             ;; (letfns* [var (fn [args] body) ...] body...)
             #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
-                (when (instance? IPersistentVector (second form)) => (throw! "bad binding form, expected vector")
+                (when (vector? (second form)) => (throw! "bad binding form, expected vector")
                     (let [#_"IPersistentVector" bindings (second form)]
                         (when (zero? (% (count bindings) 2)) => (throw! "bad binding form, expected matched symbol expression pairs")
                             (if (= context :Context'EVAL)
@@ -5184,7 +5176,7 @@
             #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (let [#_"boolean" isLoop (= (first form) 'loop*)]
-                    (when (instance? IPersistentVector (second form)) => (throw! "bad binding form, expected vector")
+                    (when (vector? (second form)) => (throw! "bad binding form, expected vector")
                         (let [#_"IPersistentVector" bindings (second form)]
                             (when (zero? (% (count bindings) 2)) => (throw! "bad binding form, expected matched symbol expression pairs")
                                 (if (or (= context :Context'EVAL) (and (= context :Context'EXPRESSION) isLoop))
@@ -5500,7 +5492,7 @@
 
     (defn- #_"IPersistentMap" NewInstanceMethod'findMethodsWithNameAndArity [#_"String" name, #_"int" arity, #_"IPersistentMap" overrideables]
         (loop-when [#_"IPersistentMap" found {} #_"ISeq" s (seq overrideables)] (some? s) => found
-            (let [#_"Map$Entry" e (first s) #_"java.lang.reflect.Method" m (val e)
+            (let [#_"IMapEntry" e (first s) #_"java.lang.reflect.Method" m (val e)
                   found
                     (when (and (= name (.getName m)) (= (alength (.getParameterTypes m)) arity)) => found
                         (assoc found (key e) m)
@@ -5814,7 +5806,7 @@
                 (IopMethod'''emit (first s), this, cv)
             )
             ;; emit bridge methods
-            (doseq [#_"Map$Entry" e (:covariants this)]
+            (doseq [#_"IMapEntry" e (:covariants this)]
                 (let [#_"java.lang.reflect.Method" m (get (:overrideables this) (key e))
                       #_"Class[]" params (.getParameterTypes m)
                       #_"Type[]" argTypes (make-array Type (alength params))
@@ -5861,7 +5853,7 @@
     (defn #_"[{IPersistentVector java.lang.reflect.Method} {IPersistentVector {Class}}]" NewInstanceExpr'gatherMethods [#_"Class" super, #_"ISeq" ifaces]
         (let [#_"IPersistentMap" all (reduce! NewInstanceExpr'harvestMethods {} (cons super ifaces))]
             (loop-when [#_"IPersistentMap" methods {} #_"IPersistentMap" covariants {} #_"ISeq" s (seq all)] (some? s) => [methods covariants]
-                (let [#_"Map$Entry" e (first s) #_"IPersistentVector" mk (pop (key e)) #_"java.lang.reflect.Method" m (val e)]
+                (let [#_"IMapEntry" e (first s) #_"IPersistentVector" mk (pop (key e)) #_"java.lang.reflect.Method" m (val e)]
                     (if (contains? methods mk) ;; covariant return
                         (let [#_"Class" tk (.getReturnType (get methods mk)) #_"Class" t (.getReturnType m)
                               senj- #(conj (or %1 #{}) %2)]
@@ -6018,7 +6010,7 @@
 
 (class-ns CaseExpr
     ;; (case* expr shift mask default map<minhash, [test then]> table-type test-type skip-check?)
-    (defn #_"CaseExpr" CaseExpr'new [#_"int" line, #_"LocalBindingExpr" expr, #_"int" shift, #_"int" mask, #_"int" low, #_"int" high, #_"Expr" defaultExpr, #_"sorted {Integer Expr}" tests, #_"{Integer Expr}" thens, #_"Keyword" switchType, #_"Keyword" testType, #_"Set<Integer>" skipCheck]
+    (defn #_"CaseExpr" CaseExpr'new [#_"int" line, #_"LocalBindingExpr" expr, #_"int" shift, #_"int" mask, #_"int" low, #_"int" high, #_"Expr" defaultExpr, #_"sorted {Integer Expr}" tests, #_"{Integer Expr}" thens, #_"Keyword" switchType, #_"Keyword" testType, #_"{Integer}" skipCheck]
         (when-not (any = switchType :compact :sparse)
             (throw! (str "unexpected switch type: " switchType))
         )
@@ -6040,7 +6032,7 @@
                 #_"{Integer Expr}" :thens thens
                 #_"Keyword" :switchType switchType
                 #_"Keyword" :testType testType
-                #_"Set<Integer>" :skipCheck skipCheck
+                #_"{Integer}" :skipCheck skipCheck
                 #_"Class" :returnType (Compiler'maybeClass (conj (vec (vals thens)) defaultExpr))
                 #_"int" :line line
             )
@@ -6187,7 +6179,7 @@
                     (cond
                         (= (:testType this) :int)
                             (CaseExpr''emitThenForInts this, objx, gen, primExprType, (get (:tests this) i), (get (:thens this) i), defaultLabel, emitUnboxed)
-                        (= (contains? (:skipCheck this) i) true)
+                        (contains? (:skipCheck this) i)
                             (CaseExpr'emitExpr objx, gen, (get (:thens this) i), emitUnboxed)
                         :else
                             (CaseExpr''emitThenForHashes this, objx, gen, (get (:tests this) i), (get (:thens this) i), defaultLabel, emitUnboxed)
@@ -6251,14 +6243,14 @@
                           #_"IPersistentMap" caseMap (nth args 4)
                           #_"Keyword" switchType (nth args 5)
                           #_"Keyword" testType (nth args 6)
-                          #_"Set" skipCheck (when (< 7 (count args)) (nth args 7))
+                          #_"IPersistentSet" skipCheck (when (< 7 (count args)) (nth args 7))
                           #_"ISeq" keys (keys caseMap)
                           #_"int" low (.intValue (first keys))
                           #_"int" high (.intValue (nth keys (dec (count keys))))
                           #_"LocalBindingExpr" testExpr (Compiler'analyze :Context'EXPRESSION, exprForm)
                           [#_"sorted {Integer Expr}" tests #_"{Integer Expr}" thens]
                             (loop-when [tests (sorted-map) thens {} #_"ISeq" s (seq caseMap)] (some? s) => [tests thens]
-                                (let [#_"Map$Entry" e (first s)
+                                (let [#_"IMapEntry" e (first s)
                                       #_"Integer" minhash (.intValue (key e)) #_"Object" pair (val e) ;; [test-val then-expr]
                                       #_"Expr" test (if (= testType :int) (NumberExpr'parse (.intValue (first pair))) (ConstantExpr'new (first pair)))
                                       #_"Expr" then (Compiler'analyze context, (second pair))]
@@ -6305,7 +6297,7 @@
     )
 
     (defn #_"Object" Compiler'macroexpand1 [#_"Object" form]
-        (when (instance? ISeq form) => form
+        (when (seq? form) => form
             (let-when [#_"Object" op (first form)] (not (Compiler'isSpecial op)) => form
                 (let-when [#_"Var" v (Compiler'isMacro op)] (nil? v) => (apply v form *local-env* (next form)) ;; macro expansion
                     (when (symbol? op) => form
@@ -6424,23 +6416,23 @@
                         (with-meta (or (seq form) ()) (meta form))
                     )]
                 (case form
-                    nil                                    Compiler'NIL_EXPR
-                    true                                   Compiler'TRUE_EXPR
-                    false                                  Compiler'FALSE_EXPR
+                    nil                 Compiler'NIL_EXPR
+                    true                Compiler'TRUE_EXPR
+                    false               Compiler'FALSE_EXPR
                     (cond
-                        (symbol? form)                     (Compiler'analyzeSymbol form)
-                        (keyword? form)                    (Compiler'registerKeyword form)
-                        (number? form)                     (NumberExpr'parse form)
-                        (string? form)                     (StringExpr'new (.intern form))
-                        (and (instance? IPersistentCollection form) (not (instance? IType form)) (zero? (count form)))
+                        (symbol? form)  (Compiler'analyzeSymbol form)
+                        (keyword? form) (Compiler'registerKeyword form)
+                        (number? form)  (NumberExpr'parse form)
+                        (string? form)  (StringExpr'new (.intern form))
+                        (and (coll? form) (not (instance? IType form)) (zero? (count form)))
                             (let-when [#_"Expr" e (EmptyExpr'new form)] (some? (meta form)) => e
                                 (MetaExpr'new e, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (meta form)))
                             )
-                        (instance? ISeq form)              (Compiler'analyzeSeq context, form, name)
-                        (instance? IPersistentVector form) (VectorExpr'parse context, form)
-                        (instance? IPersistentMap form)    (MapExpr'parse context, form)
-                        (instance? IPersistentSet form)    (SetExpr'parse context, form)
-                        :else                              (ConstantExpr'new form)
+                        (seq? form)     (Compiler'analyzeSeq context, form, name)
+                        (vector? form)  (VectorExpr'parse context, form)
+                        (map? form)     (MapExpr'parse context, form)
+                        (set? form)     (SetExpr'parse context, form)
+                        :else           (ConstantExpr'new form)
                     )
                 )
             )
@@ -6472,11 +6464,11 @@
             (binding [*class-loader* (Compiler'makeClassLoader), *line* (if (contains? meta :line) (get meta :line) *line*)]
                 (let [form (Compiler'macroexpand form)]
                     (cond
-                        (and (instance? ISeq form) (= (first form) 'do))
+                        (and (seq? form) (= (first form) 'do))
                             (loop-when-recur [#_"ISeq" s (next form)] (some? (next s)) [(next s)] => (Compiler'eval (first s))
                                 (Compiler'eval (first s))
                             )
-                        (or (instance? IType form) (and (instance? IPersistentCollection form) (not (and (symbol? (first form)) (.startsWith (ßname (first form)), "def")))))
+                        (or (instance? IType form) (and (coll? form) (not (and (symbol? (first form)) (.startsWith (ßname (first form)), "def")))))
                             (let [#_"IopObject" fexpr (Compiler'analyze :Context'EXPRESSION, (list 'fn* [] form), (str "eval" (RT/nextID)))]
                                 (.invoke (Expr'''eval fexpr))
                             )
@@ -6961,7 +6953,7 @@
                 (cond
                     (or (symbol? meta) (string? meta)) {:tag meta}
                     (keyword? meta)                         {meta true}
-                    (instance? IPersistentMap meta)          meta
+                    (map? meta)                              meta
                     :else (throw! "metadata must be Symbol, Keyword, String or Map")
                 )
               #_"Object" o (LispReader'read r)]
@@ -6995,11 +6987,11 @@
     )
 
     (defn #_"boolean" SyntaxQuoteReader'isUnquote [#_"Object" form]
-        (and (instance? ISeq form) (= (first form) 'clojure.core/unquote))
+        (and (seq? form) (= (first form) 'clojure.core/unquote))
     )
 
     (defn #_"boolean" SyntaxQuoteReader'isUnquoteSplicing [#_"Object" form]
-        (and (instance? ISeq form) (= (first form) 'clojure.core/unquote-splicing))
+        (and (seq? form) (= (first form) 'clojure.core/unquote-splicing))
     )
 
     (declare SyntaxQuoteReader'syntaxQuote)
@@ -7044,15 +7036,15 @@
                         (ß return (second form))
                     (SyntaxQuoteReader'isUnquoteSplicing form)
                         (throw! "splice not in list")
-                    (instance? IPersistentCollection form)
+                    (coll? form)
                         (cond
-                            (instance? IPersistentMap form)
+                            (map? form)
                                 (list 'clojure.core/apply 'clojure.core/hash-map (list 'clojure.core/seq (cons 'clojure.core/concat (SyntaxQuoteReader'sqExpandList (seq (SyntaxQuoteReader'flattened form))))))
-                            (instance? IPersistentVector form)
+                            (vector? form)
                                 (list 'clojure.core/apply 'clojure.core/vector (list 'clojure.core/seq (cons 'clojure.core/concat (SyntaxQuoteReader'sqExpandList (seq form)))))
-                            (instance? IPersistentSet form)
+                            (set? form)
                                 (list 'clojure.core/apply 'clojure.core/hash-set (list 'clojure.core/seq (cons 'clojure.core/concat (SyntaxQuoteReader'sqExpandList (seq form)))))
-                            (or (instance? ISeq form) (instance? IPersistentList form))
+                            (or (seq? form) (list? form))
                                 (let-when [#_"ISeq" s (seq form)] (some? s) => (cons 'clojure.core/list nil)
                                     (list 'clojure.core/seq (cons 'clojure.core/concat (SyntaxQuoteReader'sqExpandList s)))
                                 )
@@ -7516,11 +7508,6 @@
     )
 )
 
-(java-ns cloiure.lang.MapEquivalence
-    (interface! MapEquivalence []
-    )
-)
-
 (java-ns cloiure.lang.ILookup
     (§ soon interface! ILookup []
         #_abstract
@@ -7545,7 +7532,7 @@
 )
 
 (java-ns cloiure.lang.IMapEntry
-    (§ soon interface! IMapEntry [Map$Entry]
+    (§ soon interface! IMapEntry []
         #_abstract
         (#_"Object" key [#_"IMapEntry" this])
         #_abstract
@@ -7997,12 +7984,12 @@
     (class! KeySeq [#_"ASeq"])
     (class! ValSeq [#_"ASeq"])
     #_abstract
-    (§ soon class! APersistentMap [#_"AFn" IPersistentMap Map Iterable MapEquivalence IHashEq])
+    (§ soon class! APersistentMap [#_"AFn" IPersistentMap Iterable IHashEq])
 )
 
 (java-ns cloiure.lang.APersistentSet
     #_abstract
-    (§ soon class! APersistentSet [#_"AFn" IPersistentSet Collection Set IHashEq])
+    (§ soon class! APersistentSet [#_"AFn" IPersistentSet Iterable Collection IHashEq])
 )
 
 (java-ns cloiure.lang.APersistentVector
@@ -8244,7 +8231,7 @@
 
 (class-ns Util
     (defn- #_"boolean" Util'pcequiv [#_"Object" k1, #_"Object" k2]
-        (if (instance? IPersistentCollection k1)
+        (if (coll? k1)
             (.equiv k1, k2)
             (.equiv k2, k1)
         )
@@ -8257,7 +8244,7 @@
             (identical? k1 k2) true
             (nil? k1) false
             (and (number? k1) (number? k2)) (Numbers'equal k1, k2)
-            (or (instance? IPersistentCollection k1) (instance? IPersistentCollection k2)) (Util'pcequiv k1, k2)
+            (or (coll? k1) (coll? k2)) (Util'pcequiv k1, k2)
             :else (.equals k1, k2)
         )
     )
@@ -8293,18 +8280,18 @@
         (reify EquivPred
             #_override
             (#_"boolean" equiv [#_"EquivPred" _self, #_"Object" k1, #_"Object" k2]
-                (if (or (instance? IPersistentCollection k1) (instance? IPersistentCollection k2)) (Util'pcequiv k1, k2) (.equals k1, k2))
+                (if (or (coll? k1) (coll? k2)) (Util'pcequiv k1, k2) (.equals k1, k2))
             )
         )
     )
 
     (defn #_"EquivPred" Util'equivPred [#_"Object" k1]
         (cond
-            (nil? k1)                                         Util'equivNull
-            (number? k1)                                      Util'equivNumber
-            (or (string? k1) (symbol? k1))                    Util'equivEquals
-            (or (instance? Collection k1) (instance? Map k1)) Util'equivColl
-            :else                                             Util'equivEquals
+            (nil? k1)                                Util'equivNull
+            (number? k1)                             Util'equivNumber
+            (or (string? k1) (symbol? k1))           Util'equivEquals
+            (or (instance? Collection k1) (map? k1)) Util'equivColl
+            :else                                    Util'equivEquals
         )
     )
 
@@ -8392,14 +8379,14 @@
         (bit-xor seed (+ hash 0x9e3779b9 (<< seed 6) (>> seed 2)))
     )
 
-    (defn #_"<K, V> void" Util'clearCache [#_"ReferenceQueue" rq, #_"ConcurrentHashMap<K, Reference<V>>" cache]
+    (defn #_"<K, V> void" Util'clearCache [#_"ReferenceQueue" rq, #_"{K Reference<V>}'" cache]
         ;; cleanup any dead entries
         (when (some? (.poll rq))
             (while (some? (.poll rq))
             )
-            (doseq [#_"Map$Entry<K, Reference<V>>" e cache]
+            (doseq [#_"IMapEntry<K, Reference<V>>" e @cache]
                 (let-when [#_"Reference<V>" r (val e)] (and (some? r) (nil? (.get r)))
-                    (.remove cache, (key e), r)
+                    (swap! cache #(if (identical? (get % (key e)) r) (dissoc % (key e)) %))
                 )
             )
         )
@@ -8411,7 +8398,7 @@
 (java-ns cloiure.lang.DynamicClassLoader
 
 (class-ns DynamicClassLoader
-    (def #_"ConcurrentHashMap<String, Reference<Class>>" DynamicClassLoader'classCache (ConcurrentHashMap.))
+    (def #_"{String Reference<Class>}'" DynamicClassLoader'classCache (atom {}))
     (def #_"ReferenceQueue" DynamicClassLoader'RQ (ReferenceQueue.))
 
     (defn #_"DynamicClassLoader" DynamicClassLoader'new [#_"ClassLoader" parent]
@@ -8422,14 +8409,14 @@
     (defn #_"Class" DynamicClassLoader''defineClass [#_"DynamicClassLoader" this, #_"String" name, #_"byte[]" bytes]
         (Util'clearCache DynamicClassLoader'RQ, DynamicClassLoader'classCache)
         (let [#_"Class" c (.defineClass this, name, bytes, 0, (alength bytes))]
-            (.put DynamicClassLoader'classCache, name, (SoftReference. c, DynamicClassLoader'RQ))
+            (swap! DynamicClassLoader'classCache assoc name (SoftReference. c, DynamicClassLoader'RQ))
             c
         )
     )
 
     (defn #_"Class<?>" DynamicClassLoader'findInMemoryClass [#_"String" name]
-        (when-let [#_"Reference<Class>" r (.get DynamicClassLoader'classCache, name)]
-            (or (.get r) (do (.remove DynamicClassLoader'classCache, name, r) nil))
+        (when-let [#_"Reference<Class>" r (get @DynamicClassLoader'classCache name)]
+            (or (.get r) (do (swap! DynamicClassLoader'classCache #(if (identical? (get % name) r) (dissoc % name) %)) nil))
         )
     )
 
@@ -10950,7 +10937,7 @@
 (java-ns cloiure.lang.Keyword
 
 (class-ns Keyword
-    (def- #_"ConcurrentHashMap<Symbol, Reference<Keyword>>" Keyword'TABLE (ConcurrentHashMap.))
+    (def- #_"{Symbol Reference<Keyword>}'" Keyword'TABLE (atom {}))
 
     (def #_"ReferenceQueue" Keyword'RQ (ReferenceQueue.))
 
@@ -10964,7 +10951,7 @@
     )
 
     (defn #_"Keyword" Keyword'intern [#_"Symbol" sym]
-        (let [#_"Reference<Keyword>" r (.get Keyword'TABLE, sym)
+        (let [#_"Reference<Keyword>" r (get @Keyword'TABLE sym)
               [sym r #_"Keyword" k]
                 (when (nil? r) => [sym r nil]
                     (Util'clearCache Keyword'RQ, Keyword'TABLE)
@@ -10972,15 +10959,15 @@
                             (when (some? (meta sym)) => sym
                                 (with-meta sym nil)
                             )
-                          k (Keyword'new sym)
-                          r (.putIfAbsent Keyword'TABLE, sym, (WeakReference. #_"<Keyword>" k, Keyword'RQ))]
+                          k (Keyword'new sym) r (WeakReference. #_"<Keyword>" k, Keyword'RQ)
+                          _ (swap! Keyword'TABLE assoc sym r)]
                         [sym r k]
                     )
                 )]
             (when (some? r) => k
                 (or (.get r)
                     (do ;; entry died in the interim, do over
-                        (.remove Keyword'TABLE, sym, r)
+                        (swap! Keyword'TABLE #(if (identical? (get % sym) r) (dissoc % sym) %))
                         (recur #_"Keyword'intern" sym)
                     )
                 )
@@ -10989,10 +10976,8 @@
     )
 
     (defn #_"Keyword" Keyword'find [#_"Symbol" sym]
-        (let [#_"Reference<Keyword>" ref (.get Keyword'TABLE, sym)]
-            (when (some? ref)
-                (.get ref)
-            )
+        (when-let [#_"Reference<Keyword>" ref (get @Keyword'TABLE sym)]
+            (.get ref)
         )
     )
 
@@ -12630,7 +12615,7 @@
     #_override
     (defn #_"int" Counted'''count--ASeq [#_"ASeq" this]
         (loop-when [#_"ISeq" s (next this) #_"int" i 1] (some? s) => i
-            (if (instance? Counted s) (+ i (.count s)) (recur (next s) (inc i)))
+            (if (counted? s) (+ i (.count s)) (recur (next s) (inc i)))
         )
     )
 
@@ -12659,11 +12644,6 @@
     #_foreign
     (defn #_"Object[]" toArray---ASeq [#_"ASeq" this, #_"Object[]" a]
         (RT'seqToPassedArray (seq this), a)
-    )
-
-    #_foreign
-    (defn #_"int" size---ASeq [#_"ASeq" this]
-        (count this)
     )
 
     #_foreign
@@ -12817,11 +12797,6 @@
     #_foreign
     (defn #_"Object[]" toArray---LazySeq [#_"LazySeq" this, #_"Object[]" a]
         (RT'seqToPassedArray (seq this), a)
-    )
-
-    #_foreign
-    (defn #_"int" size---LazySeq [#_"LazySeq" this]
-        (count this)
     )
 
     #_foreign
@@ -13004,7 +12979,7 @@
     #_override
     (defn #_"IPersistentCollection" IPersistentCollection'''conj--APersistentMap [#_"APersistentMap" this, #_"Object" o]
         (condp instance? o
-            Map$Entry
+            IMapEntry
                 (assoc this (key o) (val o))
             IPersistentVector
                 (when (= (count o) 2) => (throw! "vector arg to map conj must be a pair")
@@ -13012,7 +12987,7 @@
                 )
             #_else
                 (loop-when [this this #_"ISeq" s (seq o)] (some? s) => this
-                    (let [#_"Map$Entry" e (first s)]
+                    (let [#_"IMapEntry" e (first s)]
                         (recur (assoc this (key e) (val e)) (next s))
                     )
                 )
@@ -13022,10 +12997,10 @@
     #_foreign
     (defn #_"boolean" equals---APersistentMap [#_"APersistentMap" this, #_"Object" that]
         (or (identical? this that)
-            (and (instance? Map that) (= (count that) (count this))
+            (and (map? that) (= (count that) (count this))
                 (loop-when [#_"ISeq" s (seq this)] (some? s) => true
-                    (let [#_"Map$Entry" e (first s) #_"Object" k (key e)]
-                        (and (contains? that k) (Util'equals (val e), (.get that, k))
+                    (let [#_"IMapEntry" e (first s) #_"Object" k (key e)]
+                        (and (contains? that k) (Util'equals (val e), (get that k))
                             (recur (next s))
                         )
                     )
@@ -13036,11 +13011,13 @@
 
     #_override
     (defn #_"boolean" IPersistentCollection'''equiv--APersistentMap [#_"APersistentMap" this, #_"Object" that]
-        (and (instance? Map that) (not (and (instance? IPersistentMap that) (not (instance? MapEquivalence that)))) (= (count that) (count this))
-            (loop-when [#_"ISeq" s (seq this)] (some? s) => true
-                (let [#_"Map$Entry" e (first s) #_"Object" k (key e)]
-                    (and (contains? that k) (Util'equiv-2oo (val e), (.get that, k))
-                        (recur (next s))
+        (or (identical? this that)
+            (and (map? that) (= (count that) (count this))
+                (loop-when [#_"ISeq" s (seq this)] (some? s) => true
+                    (let [#_"IMapEntry" e (first s) #_"Object" k (key e)]
+                        (and (contains? that k) (Util'equiv-2oo (val e), (get that k))
+                            (recur (next s))
+                        )
                     )
                 )
             )
@@ -13049,7 +13026,7 @@
 
     (defn #_"int" APersistentMap'mapHash [#_"IPersistentMap" m]
         (loop-when [#_"int" hash 0 #_"ISeq" s (seq m)] (some? s) => hash
-            (let [#_"Map$Entry" e (first s) #_"Object" k (key e) #_"Object" v (val e)]
+            (let [#_"IMapEntry" e (first s) #_"Object" k (key e) #_"Object" v (val e)]
                 (recur (+ hash (bit-xor (if (some? k) (.hashCode k) 0) (if (some? v) (.hashCode v) 0))) (next s))
             )
         )
@@ -13096,16 +13073,6 @@
     (defn #_"Object" IFn'''invoke-3--APersistentMap [#_"APersistentMap" this, #_"Object" arg1, #_"Object" notFound]
         (get this arg1 notFound)
     )
-
-    #_foreign
-    (defn #_"Object" get---APersistentMap [#_"APersistentMap" this, #_"Object" key]
-        (get this key)
-    )
-
-    #_foreign
-    (defn #_"int" size---APersistentMap [#_"APersistentMap" this]
-        (count this)
-    )
 )
 )
 
@@ -13150,13 +13117,13 @@
 
     #_override
     (defn #_"Object" IFn'''invoke-2--APersistentSet [#_"APersistentSet" this, #_"Object" arg1]
-        (.get this, arg1)
+        (get this arg1)
     )
 
     #_foreign
     (defn #_"boolean" equals---APersistentSet [#_"APersistentSet" this, #_"Object" that]
         (or (identical? this that)
-            (and (instance? Set that) (= (count this) (count that))
+            (and (set? that) (= (count this) (count that))
                 (loop-when [#_"ISeq" s (seq that)] (some? s) => true
                     (and (contains? this (first s)) (recur (next s)))
                 )
@@ -13166,9 +13133,11 @@
 
     #_override
     (defn #_"boolean" IPersistentCollection'''equiv--APersistentSet [#_"APersistentSet" this, #_"Object" that]
-        (and (instance? Set that) (= (count this) (count that))
-            (loop-when [#_"ISeq" s (seq that)] (some? s) => true
-                (and (contains? this (first s)) (recur (next s)))
+        (or (identical? this that)
+            (and (set? that) (= (count this) (count that))
+                (loop-when [#_"ISeq" s (seq that)] (some? s) => true
+                    (and (contains? this (first s)) (recur (next s)))
+                )
             )
         )
     )
@@ -13197,11 +13166,6 @@
     #_foreign
     (defn #_"Object[]" toArray---APersistentSet [#_"APersistentSet" this, #_"Object[]" a]
         (RT'seqToPassedArray (seq this), a)
-    )
-
-    #_foreign
-    (defn #_"int" size---APersistentSet [#_"APersistentSet" this]
-        (count this)
     )
 
     #_foreign
@@ -13407,12 +13371,12 @@
 
     #_foreign
     (defn #_"boolean" equals---APersistentVector [#_"APersistentVector" this, #_"Object" that]
-        (or (= this that) (APersistentVector'doEquals this, that))
+        (or (identical? this that) (APersistentVector'doEquals this, that))
     )
 
     #_override
     (defn #_"boolean" IPersistentCollection'''equiv--APersistentVector [#_"APersistentVector" this, #_"Object" that]
-        (or (= this that) (APersistentVector'doEquiv this, that))
+        (or (identical? this that) (APersistentVector'doEquiv this, that))
     )
 
     #_foreign
@@ -13557,11 +13521,6 @@
     #_foreign
     (defn #_"Object[]" toArray---APersistentVector [#_"APersistentVector" this, #_"Object[]" a]
         (RT'seqToPassedArray (seq this), a)
-    )
-
-    #_foreign
-    (defn #_"int" size---APersistentVector [#_"APersistentVector" this]
-        (count this)
     )
 
     #_foreign
@@ -13740,16 +13699,6 @@
     #_override
     (defn #_"Object" IMapEntry'''val--MapEntry [#_"MapEntry" this]
         (:_val this)
-    )
-
-    #_foreign
-    (defn #_"Object" getKey---MapEntry [#_"MapEntry" this]
-        (.key this)
-    )
-
-    #_foreign
-    (defn #_"Object" getValue---MapEntry [#_"MapEntry" this]
-        (.val this)
     )
 )
 )
@@ -14786,7 +14735,7 @@
     (defn #_"ITransientMap" ATransientMap''conj [#_"ATransientMap" this, #_"Object" o]
         (.ensureEditable this)
         (condp instance? o
-            Map$Entry
+            IMapEntry
                 (assoc this (key o) (val o))
             IPersistentVector
                 (when (= (count o) 2) => (throw! "vector arg to map conj must be a pair")
@@ -14794,7 +14743,7 @@
                 )
             #_else
                 (loop-when [this this #_"ISeq" s (seq o)] (some? s) => this
-                    (let [#_"Map$Entry" e (first s)]
+                    (let [#_"IMapEntry" e (first s)]
                         (recur (assoc this (key e) (val e)) (next s))
                     )
                 )
@@ -15781,9 +15730,9 @@
         (let [#_"IPersistentMap" mt (:methodTable this) #_"IPersistentMap" pt (:preferTable this) #_"Object" ch (:cachedHierarchy this)
               #_"Object" bestValue
                 (try
-                    (let [#_"Map$Entry" bestEntry
+                    (let [#_"IMapEntry" bestEntry
                             (loop-when [bestEntry nil #_"ISeq" s (seq (:methodTable this))] (some? s) => bestEntry
-                                (let-when [#_"Map$Entry" e (first s)] (MultiFn''isA this, dispatchVal, (key e)) => (recur bestEntry (next s))
+                                (let-when [#_"IMapEntry" e (first s)] (MultiFn''isA this, dispatchVal, (key e)) => (recur bestEntry (next s))
                                     (let [bestEntry
                                             (when (or (nil? bestEntry) (MultiFn''dominates this, (key e), (key bestEntry))) => bestEntry
                                                 e
@@ -15978,7 +15927,7 @@
 (java-ns cloiure.lang.Namespace
 
 (class-ns Namespace
-    (def #_"ConcurrentHashMap<Symbol, Namespace>" Namespace'namespaces (ConcurrentHashMap.))
+    (def #_"{Symbol Namespace}'" Namespace'namespaces (atom {}))
 
     (defn #_"Namespace" Namespace'new [#_"Symbol" name]
         (hash-map
@@ -16017,7 +15966,7 @@
     )
 
     (defn #_"ISeq" Namespace'all []
-        (vals Namespace'namespaces)
+        (vals @Namespace'namespaces)
     )
 
     #_method
@@ -16134,23 +16083,23 @@
         (Namespace''referenceVar this, sym, var)
     )
 
+    (defn #_"Namespace" Namespace'find [#_"Symbol" name]
+        (get @Namespace'namespaces name)
+    )
+
     (defn #_"Namespace" Namespace'findOrCreate [#_"Symbol" name]
-        (or (.get Namespace'namespaces, name)
+        (or (Namespace'find name)
             (let [#_"Namespace" ns (Namespace'new name)]
-                (or (.putIfAbsent Namespace'namespaces, name, ns) ns)
+                (swap! Namespace'namespaces assoc name ns)
+                ns
             )
         )
     )
 
     (defn #_"Namespace" Namespace'remove [#_"Symbol" name]
-        (when (= name (:name RT'CLOIURE_NS))
-            (throw! "cannot remove cloiure namespace")
+        (when-not (= name (:name RT'CLOIURE_NS)) => (throw! "cannot remove core namespace")
+            (get (first (swap-vals! Namespace'namespaces dissoc name)) name)
         )
-        (.remove Namespace'namespaces, name)
-    )
-
-    (defn #_"Namespace" Namespace'find [#_"Symbol" name]
-        (.get Namespace'namespaces, name)
     )
 
     #_method
@@ -18126,11 +18075,6 @@
     )
 
     #_foreign
-    (defn #_"int" size---EmptyList [#_"EmptyList" this]
-        0
-    )
-
-    #_foreign
     (defn #_"boolean" contains---EmptyList [#_"EmptyList" this, #_"Object" o]
         false
     )
@@ -18425,11 +18369,6 @@
     )
 
     #_foreign
-    (defn #_"int" size---PersistentQueue [#_"PersistentQueue" this]
-        (count this)
-    )
-
-    #_foreign
     (defn #_"boolean" contains---PersistentQueue [#_"PersistentQueue" this, #_"Object" o]
         (loop-when [#_"ISeq" s (seq this)] (some? s) => false
             (or (Util'equiv-2oo (first s), o) (recur (next s)))
@@ -18484,16 +18423,6 @@
     #_override
     (defn #_"Object" IMapEntry'''val--TNode [#_"TNode" this]
         nil
-    )
-
-    #_foreign
-    (defn #_"Object" getKey---TNode [#_"TNode" this]
-        (.key this)
-    )
-
-    #_foreign
-    (defn #_"Object" getValue---TNode [#_"TNode" this]
-        (.val this)
     )
 
     #_override
@@ -19272,7 +19201,7 @@
     )
 
     #_method
-    (defn #_"TNode" PersistentTreeMap''replace [#_"PersistentTreeMap" this, #_"TNode" t, #_"Object" key, #_"Object" val]
+    (defn- #_"TNode" PersistentTreeMap''replace [#_"PersistentTreeMap" this, #_"TNode" t, #_"Object" key, #_"Object" val]
         (let [#_"int" cmp (PersistentTreeMap''doCompare this, key, (:key t))]
             (.replace t, (:key t), (if (zero? cmp) val (.val t)), (if (neg? cmp) (PersistentTreeMap''replace this, (.left t), key, val) (.left t)), (if (pos? cmp) (PersistentTreeMap''replace this, (.right t), key, val) (.right t)))
         )
@@ -19820,24 +19749,18 @@
     )
 
     (defn #_"PersistentVector" PersistentVector'create-1r [#_"IReduceInit" items]
-        (persistent! (reduce conj! (transient PersistentVector'EMPTY) items))
+        (into PersistentVector'EMPTY items)
     )
 
-    (defn #_"PersistentVector" PersistentVector'create-1s [#_"ISeq" items]
+    (defn #_"PersistentVector" PersistentVector'create-1s [#_"Seqable" items]
         (let [#_"Object[]" a (make-array Object 32)
-              #_"int" i
-                (loop-when-recur [items items i 0] (and (some? items) (< i 32)) [(next items) (inc i)] => i
-                    (aset a i (first items))
+              [#_"ISeq" s #_"int" i]
+                (loop-when-recur [s (seq items) i 0] (and (some? s) (< i 32)) [(next s) (inc i)] => [s i]
+                    (aset a i (first s))
                 )]
             (cond
-                (some? items) ;; >32, construct with array directly
-                    (let [#_"PersistentVector" v0 (PersistentVector'new 32, 5, PersistentVector'EMPTY_NODE, a)]
-                        (loop-when-recur [#_"TransientVector" v (transient v0) items items]
-                                         (some? items)
-                                         [(conj! v (first items)) (next items)]
-                                      => (persistent! v)
-                        )
-                    )
+                (some? s) ;; >32, construct with array directly
+                    (into (PersistentVector'new 32, 5, PersistentVector'EMPTY_NODE, a) s)
                 (= i 32) ;; exactly 32, skip copy
                     (PersistentVector'new 32, 5, PersistentVector'EMPTY_NODE, a)
                 :else ;; <32, copy to minimum array and construct
@@ -19849,24 +19772,12 @@
         )
     )
 
-    (defn #_"PersistentVector" PersistentVector'create-1l [#_"List" items]
-        (let-when [#_"int" n (count items)] (< 32 n) => (PersistentVector'new n, 5, PersistentVector'EMPTY_NODE, (.toArray items))
-            (loop-when-recur [#_"TransientVector" v (transient PersistentVector'EMPTY) #_"int" i 0]
-                             (< i n)
-                             [(conj! v (.get items, i)) (inc i)]
-                          => (persistent! v)
-            )
-        )
-    )
-
     (defn #_"PersistentVector" PersistentVector'create-1i [#_"Iterable" items]
-        (when-not (instance? ArrayList items) => (PersistentVector'create-1l items) ;; optimize common case
-            (let [#_"Iterator" it (.iterator items)]
-                (loop-when-recur [#_"TransientVector" v (transient PersistentVector'EMPTY)]
-                                 (.hasNext it)
-                                 [(conj! v (.next it))]
-                              => (persistent! v)
-                )
+        (let [#_"Iterator" it (.iterator items)]
+            (loop-when-recur [#_"TransientVector" v (transient PersistentVector'EMPTY)]
+                                (.hasNext it)
+                                [(conj! v (.next it))]
+                            => (persistent! v)
             )
         )
     )
@@ -20171,7 +20082,7 @@
     (defn #_"IPersistentVector" LazilyPersistentVector'create [#_"Object" obj]
         (condp instance? obj
             IReduceInit (PersistentVector'create-1r obj)
-            ISeq        (PersistentVector'create-1s (seq obj))
+            Seqable     (PersistentVector'create-1s obj)
             Iterable    (PersistentVector'create-1i obj)
                         (LazilyPersistentVector'createOwning (RT'toArray obj))
         )
@@ -20918,123 +20829,102 @@
 
     #_override
     (defn #_"Object" IFn'''invoke-3--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2]
-        (.invoke (Var''fn this), arg1, arg2
-        )
+        (.invoke (Var''fn this), arg1, arg2)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-4--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
-        (.invoke (Var''fn this), arg1, arg2, arg3
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-5--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-6--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-7--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-8--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-9--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-10--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-11--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-12--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-13--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-14--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-15--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-16--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-17--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-18--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-19--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18)
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-20--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19)
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-21--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20)
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-22--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20,
-            (cast Compiler'OBJECTS_CLASS args)
-        )
+        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, (cast Compiler'OBJECTS_CLASS args))
     )
 
     #_override
@@ -21159,20 +21049,18 @@
             (instance? Iterable coll)     (RT'chunkIteratorSeq (.iterator coll))
             (.isArray (class coll))       (ArraySeq'createFromObject coll)
             (instance? CharSequence coll) (StringSeq'create coll)
-            (instance? Map coll)          (seq (.entrySet coll))
             :else (throw! (str "don't know how to create ISeq from: " (.getName (class coll))))
         )
     )
 
     (defn #_"boolean" RT'canSeq [#_"Object" coll]
         (or
-            (instance? ISeq coll)
+            (seq? coll)
             (instance? Seqable coll)
             (nil? coll)
             (instance? Iterable coll)
             (.isArray (class coll))
             (instance? CharSequence coll)
-            (instance? Map coll)
         )
     )
 
@@ -21183,14 +21071,14 @@
     )
 
     (defn #_"ISeq" RT'keys [#_"Object" coll]
-        (if (instance? IPersistentMap coll)
+        (if (map? coll)
             (KeySeq'createFromMap coll)
             (KeySeq'create (seq coll))
         )
     )
 
     (defn #_"ISeq" RT'vals [#_"Object" coll]
-        (if (instance? IPersistentMap coll)
+        (if (map? coll)
             (ValSeq'createFromMap coll)
             (ValSeq'create (seq coll))
         )
@@ -21204,22 +21092,18 @@
 
     (defn #_"int" RT'count [#_"Object" o]
         (cond
-            (instance? Counted o)
+            (counted? o)
                 (.count o)
             (nil? o)
                 0
-            (instance? IPersistentCollection o)
+            (coll? o)
                 (loop-when [#_"int" i 0 #_"ISeq" s (seq o)] (some? s) => i
-                    (when (instance? Counted s) => (recur (inc i) (next s))
+                    (when (counted? s) => (recur (inc i) (next s))
                         (+ i (.count s))
                     )
                 )
             (instance? CharSequence o)
                 (.length o)
-            (instance? Collection o)
-                (.size o)
-            (instance? Map o)
-                (.size o)
             (map-entry? o)
                 2
             (.isArray (class o))
@@ -21235,14 +21119,14 @@
 
     (defn #_"ISeq" RT'cons [#_"Object" x, #_"Object" coll]
         (cond
-            (nil? coll)           (PersistentList'new x)
-            (instance? ISeq coll) (Cons'new x, coll)
-            :else                 (Cons'new x, (seq coll))
+            (nil? coll) (PersistentList'new x)
+            (seq? coll) (Cons'new x, coll)
+            :else       (Cons'new x, (seq coll))
         )
     )
 
     (defn #_"Object" RT'first [#_"Object" x]
-        (if (instance? ISeq x)
+        (if (seq? x)
             (.first x)
             (when-let [#_"ISeq" s (seq x)]
                 (.first s)
@@ -21251,7 +21135,7 @@
     )
 
     (defn #_"ISeq" RT'next [#_"Object" x]
-        (if (instance? ISeq x)
+        (if (seq? x)
             (.next x)
             (when-let [#_"ISeq" s (seq x)]
                 (.next s)
@@ -21260,7 +21144,7 @@
     )
 
     (defn #_"ISeq" RT'rest [#_"Object" x]
-        (if (instance? ISeq x)
+        (if (seq? x)
             (.rest x)
             (let [#_"ISeq" s (seq x)]
                 (if (some? s) (.rest s) ())
@@ -21287,9 +21171,7 @@
                     (.valAt coll, key)
                 (nil? coll)
                     nil
-                (instance? Map coll)
-                    (.get coll, key)
-                (instance? IPersistentSet coll)
+                (set? coll)
                     (.get coll, key)
                 (and (number? key) (or (string? coll) (.isArray (class coll))))
                     (let-when [#_"int" n (.intValue key)] (< -1 n (count coll))
@@ -21305,9 +21187,7 @@
                     (.valAt coll, key, notFound)
                 (nil? coll)
                     notFound
-                (instance? Map coll)
-                    (if (contains? coll key) (.get coll, key) notFound)
-                (instance? IPersistentSet coll)
+                (set? coll)
                     (if (contains? coll key) (.get coll, key) notFound)
                 (and (number? key) (or (string? coll) (.isArray (class coll))))
                     (let [#_"int" n (.intValue key)]
@@ -21332,13 +21212,9 @@
         (cond
             (nil? coll)
                 false
-            (instance? Associative coll)
+            (associative? coll)
                 (if (.containsKey coll, key) true false)
-            (instance? IPersistentSet coll)
-                (if (.contains coll, key) true false)
-            (instance? Map coll)
-                (if (.containsKey coll, key) true false)
-            (instance? Set coll)
+            (set? coll)
                 (if (.contains coll, key) true false)
             (and (number? key) (or (string? coll) (.isArray (class coll))))
                 (let [#_"int" n (.intValue key)]
@@ -21357,12 +21233,8 @@
         (cond
             (nil? coll)
                 nil
-            (instance? Associative coll)
+            (associative? coll)
                 (.entryAt coll, key)
-            (instance? Map coll)
-                (when (contains? coll key)
-                    (MapEntry'create key, (.get coll, key))
-                )
             (instance? ITransientAssociative2 coll)
                 (.entryAt coll, key)
             :else
@@ -21392,7 +21264,7 @@
     (defn #_"Object" RT'nth
         ([#_"Object" coll, #_"int" n]
             (cond
-                (instance? Indexed coll)
+                (indexed? coll)
                     (.nth coll, n)
                 (nil? coll)
                     nil
@@ -21403,7 +21275,7 @@
                 (instance? Matcher coll)
                     (.group coll, n)
                 (map-entry? coll)
-                    (let [#_"Map$Entry" e coll]
+                    (let [#_"IMapEntry" e coll]
                         (case n 0 (key e) 1 (val e) (throw (IndexOutOfBoundsException.)))
                     )
                 (sequential? coll)
@@ -21416,7 +21288,7 @@
         )
         ([#_"Object" coll, #_"int" n, #_"Object" notFound]
             (cond
-                (instance? Indexed coll)
+                (indexed? coll)
                     (.nth coll, n, notFound)
                 (nil? coll)
                     notFound
@@ -21435,7 +21307,7 @@
                         (.group m, n)
                     )
                 (map-entry? coll)
-                    (let [#_"Map$Entry" e coll]
+                    (let [#_"IMapEntry" e coll]
                         (case n 0 (key e) 1 (val e) notFound)
                     )
                 (sequential? coll)
@@ -21903,8 +21775,6 @@
                     )
                     (.toArray l)
                 )
-            (instance? Map coll)
-                (.toArray (.entrySet coll))
             (string? coll)
                 (let [#_"char[]" chars (.toCharArray coll)
                       #_"Object[]" a (make-array Object (alength chars))]
@@ -23507,7 +23377,7 @@
 ;;;
  ; Return true if x is a map entry.
  ;;
-(§ defn map-entry? [x] (instance? java.util.Map$Entry x))
+(§ defn map-entry? [x] (instance? cloiure.lang.IMapEntry x))
 
 ;;;
  ; Returns true if key is present in the given collection, otherwise
@@ -23595,16 +23465,6 @@
  ; Returns a sequence of the map's values, in the same order as (seq map).
  ;;
 (§ defn vals [map] (cloiure.lang.RT/vals map))
-
-;;;
- ; Returns the key of the map entry.
- ;;
-(§ defn key [^java.util.Map$Entry e] (.getKey e))
-
-;;;
- ; Returns the value in the map entry.
- ;;
-(§ defn val [^java.util.Map$Entry e] (.getValue e))
 
 ;;;
  ; Returns, in constant time, a seq of the items in rev (which can be a vector or sorted-map), in reverse order.
@@ -28476,26 +28336,11 @@
 )
 
 (§ prefer-method print-method cloiure.lang.IPersistentCollection java.util.Collection)
-(§ prefer-method print-method cloiure.lang.IPersistentCollection java.util.Map)
 
 (§ defmethod print-method java.util.List [c, ^Writer w]
     (if *print-readably*
         (print-sequential "(" pr-on " " ")" c w)
         (print-object c w)
-    )
-)
-
-(§ defmethod print-method java.util.Map [m, ^Writer w]
-    (if *print-readably*
-        (print-map m pr-on w)
-        (print-object m w)
-    )
-)
-
-(§ defmethod print-method java.util.Set [s, ^Writer w]
-    (if *print-readably*
-        (print-sequential "#{" pr-on " " "}" (seq s) w)
-        (print-object s w)
     )
 )
 
@@ -30005,8 +29850,7 @@
     )
     (containsKey [this k]
         (and (cloiure.lang.Numbers/isInteger k)
-            (<= 0 (int k))
-            (< (int k) cnt)
+            (< -1 (int k) cnt)
         )
     )
     (entryAt [this k]
@@ -31388,20 +31232,20 @@
     nil
     (equality-partition [x] :atom)
 
-    java.util.Set
+    IPersistentSet
     (equality-partition [x] :set)
 
     java.util.List
     (equality-partition [x] :sequential)
 
-    java.util.Map
+    IPersistentMap
     (equality-partition [x] :map)
 )
 
 (§ defn- as-set-value [s] (if (set? s) s (into #{} s)))
 
 (§ extend-protocol Diff
-    java.util.Set
+    IPersistentSet
     (diff-similar [a b]
         (let [aval (as-set-value a) bval (as-set-value b)]
             [
@@ -31415,7 +31259,7 @@
     java.util.List
     (diff-similar [a b] (diff-sequential a b))
 
-    java.util.Map
+    IPersistentMap
     (diff-similar [a b] (diff-associative a b (set/union (keys a) (keys b))))
 )
 
@@ -31460,11 +31304,11 @@
  ;;
 (§ defn walk [inner outer form]
     (cond
-        (list? form)                            (outer (apply list (map inner form)))
-        (instance? cloiure.lang.IMapEntry form) (outer (vec (map inner form)))
-        (seq? form)                             (outer (doall (map inner form)))
-        (coll? form)                            (outer (into (empty form) (map inner form)))
-        :else                                   (outer form)
+        (list? form)      (outer (apply list (map inner form)))
+        (map-entry? form) (outer (vec (map inner form)))
+        (seq? form)       (outer (doall (map inner form)))
+        (coll? form)      (outer (into (empty form) (map inner form)))
+        :else             (outer form)
     )
 )
 
@@ -31566,7 +31410,7 @@
 (§ defn reduce
     ([f coll] (reduce f (f) coll))
     ([f init coll]
-        (if (instance? java.util.Map coll)
+        (if (map? coll)
             (cloiure.core.protocols/kv-reduce coll f init)
             (cloiure.core.protocols/coll-reduce coll f init)
         )
