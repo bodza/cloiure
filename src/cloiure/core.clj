@@ -2,7 +2,7 @@
     (:refer-clojure :exclude [when when-not]))
 
 (import
-    [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Iterable Number Object RuntimeException String StringBuilder Thread Throwable]
+    [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Number Object RuntimeException String StringBuilder Thread Throwable]
 )
 
 (defmacro § [& _])
@@ -83,7 +83,7 @@
     [java.lang.reflect Array Constructor Field #_Method Modifier]
     [java.math BigDecimal BigInteger MathContext]
     [java.security AccessController PrivilegedAction]
-    [java.util ArrayList Arrays Collection Collections Comparator EmptyStackException IdentityHashMap Iterator List NoSuchElementException Stack]
+    [java.util ArrayList Arrays Collection Comparator IdentityHashMap List]
     [java.util.concurrent Callable]
     [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicReference]
     [java.util.concurrent.locks ReentrantReadWriteLock]
@@ -7297,23 +7297,19 @@
 
     (declare Util'hasheq)
 
-    (defn #_"int" Murmur3'hashOrdered [#_"Iterable" xs]
-        (let [#_"Iterator" it (.iterator xs)]
-            (loop-when-recur [#_"int" hash 1 #_"int" n 0]
-                             (.hasNext it)
-                             [(+ (* 31 hash) (Util'hasheq (.next it))) (inc n)]
-                          => (Murmur3'mixCollHash hash, n)
-            )
+    (defn #_"int" Murmur3'hashOrdered [#_"Seqable" items]
+        (loop-when-recur [#_"int" hash 1 #_"int" n 0 #_"ISeq" s (seq items)]
+                         (some? s)
+                         [(+ (* 31 hash) (Util'hasheq (first s))) (inc n) (next s)]
+                      => (Murmur3'mixCollHash hash, n)
         )
     )
 
-    (defn #_"int" Murmur3'hashUnordered [#_"Iterable" xs]
-        (let [#_"Iterator" it (.iterator xs)]
-            (loop-when-recur [#_"int" hash 0 #_"int" n 0]
-                             (.hasNext it)
-                             [(+ hash (Util'hasheq (.next it))) (inc n)]
-                          => (Murmur3'mixCollHash hash, n)
-            )
+    (defn #_"int" Murmur3'hashUnordered [#_"Seqable" items]
+        (loop-when-recur [#_"int" hash 0 #_"int" n 0 #_"ISeq" s (seq items)]
+                         (some? s)
+                         [(+ hash (Util'hasheq (first s))) (inc n) (next s)]
+                      => (Murmur3'mixCollHash hash, n)
         )
     )
 )
@@ -7539,15 +7535,6 @@
     )
 )
 
-(java-ns cloiure.lang.IMapIterable
-    (interface! IMapIterable []
-        #_abstract
-        (#_"Iterator" keyIterator [#_"IMapIterable" this])
-        #_abstract
-        (#_"Iterator" valIterator [#_"IMapIterable" this])
-    )
-)
-
 (java-ns cloiure.lang.Named
     (interface! Named []
         #_abstract
@@ -7635,7 +7622,7 @@
 )
 
 (java-ns cloiure.lang.IPersistentMap
-    (§ soon interface! IPersistentMap [Iterable Associative Counted]
+    (§ soon interface! IPersistentMap [Associative Counted]
         #_abstract
         (#_"IPersistentMap" assoc [#_"IPersistentMap" this, #_"Object" key, #_"Object" val])
         #_abstract
@@ -7774,9 +7761,6 @@
         (#_"Object" kvreduce [#_"INode" this, #_"IFn" f, #_"Object" r])
         #_abstract
         (#_"Object" fold [#_"INode" this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin])
-        ;; returns the result of (f [k v]) for each iterated element
-        #_abstract
-        (#_"Iterator" iterator [#_"INode" this, #_"IFn" f])
     )
 )
 
@@ -7980,25 +7964,20 @@
 )
 
 (java-ns cloiure.lang.APersistentMap
-    (class! KeySeq [#_"ASeq"])
-    (class! ValSeq [#_"ASeq"])
     #_abstract
-    (§ soon class! APersistentMap [#_"AFn" IPersistentMap Iterable IHashEq])
+    (§ soon class! APersistentMap [#_"AFn" IPersistentMap IHashEq])
 )
 
 (java-ns cloiure.lang.APersistentSet
     #_abstract
-    (§ soon class! APersistentSet [#_"AFn" IPersistentSet Iterable Collection IHashEq])
+    (§ soon class! APersistentSet [#_"AFn" IPersistentSet Collection IHashEq])
 )
 
 (java-ns cloiure.lang.APersistentVector
     (class! VSeq [#_"ASeq" IndexedSeq IReduce])
     (class! RSeq [#_"ASeq" IndexedSeq Counted])
     #_abstract
-    (§ soon class! APersistentVector [#_"AFn" IPersistentVector Iterable List Comparable IHashEq]
-        #_abstract
-        (#_"Iterator" rangedIterator [#_"APersistentVector" this, #_"int" start, #_"int" end])
-    )
+    (§ soon class! APersistentVector [#_"AFn" IPersistentVector List Comparable IHashEq])
     (class! SubVector [#_"APersistentVector" IObj])
 )
 
@@ -8111,7 +8090,7 @@
 (java-ns cloiure.lang.PersistentArrayMap
     (class! MSeq [#_"ASeq" Counted])
     (class! TransientArrayMap [#_"ATransientMap"])
-    (§ soon class! PersistentArrayMap [#_"APersistentMap" IObj IEditableCollection IMapIterable IKVReduce])
+    (§ soon class! PersistentArrayMap [#_"APersistentMap" IObj IEditableCollection IKVReduce])
 )
 
 (java-ns cloiure.lang.PersistentHashMap
@@ -8121,7 +8100,7 @@
     (class! BitmapIndexedNode [INode])
     (class! HashCollisionNode [INode])
     (class! NodeSeq [#_"ASeq"])
-    (class! PersistentHashMap [#_"APersistentMap" IEditableCollection IObj IMapIterable IKVReduce])
+    (class! PersistentHashMap [#_"APersistentMap" IEditableCollection IObj IKVReduce])
 )
 
 (java-ns cloiure.lang.PersistentHashSet
@@ -12642,13 +12621,6 @@
         )
     )
 
-    (declare SeqIterator'new)
-
-    #_foreign
-    (defn #_"Iterator" iterator---ASeq [#_"ASeq" this]
-        (SeqIterator'new this)
-    )
-
     #_foreign
     (defn #_"Object" get---ASeq [#_"ASeq" this, #_"int" index]
         (nth this index)
@@ -12786,11 +12758,6 @@
     )
 
     #_foreign
-    (defn #_"Iterator" iterator---LazySeq [#_"LazySeq" this]
-        (SeqIterator'new this)
-    )
-
-    #_foreign
     (defn #_"Object" get---LazySeq [#_"LazySeq" this, #_"int" index]
         (nth this index)
     )
@@ -12805,140 +12772,6 @@
 )
 
 (java-ns cloiure.lang.APersistentMap
-
-(class-ns KeySeq
-    (defn- #_"KeySeq" KeySeq'new
-        ([#_"ISeq" seq, #_"Iterable" iterable] (KeySeq'new nil, seq, iterable))
-        ([#_"IPersistentMap" meta, #_"ISeq" seq, #_"Iterable" iterable]
-            (merge (ASeq'new meta)
-                (hash-map
-                    #_"ISeq" :seq seq
-                    #_"Iterable" :iterable iterable
-                )
-            )
-        )
-    )
-
-    (defn #_"KeySeq" KeySeq'create [#_"ISeq" seq]
-        (when (some? seq)
-            (KeySeq'new seq, nil)
-        )
-    )
-
-    (defn #_"KeySeq" KeySeq'createFromMap [#_"IPersistentMap" map]
-        (when (some? map)
-            (when-let [#_"ISeq" seq (seq map)]
-                (KeySeq'new seq, map)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" ISeq'''first--KeySeq [#_"KeySeq" this]
-        (key (first (:seq this)))
-    )
-
-    #_override
-    (defn #_"ISeq" ISeq'''next--KeySeq [#_"KeySeq" this]
-        (KeySeq'create this, (next (:seq this)))
-    )
-
-    #_override
-    (defn #_"KeySeq" IObj'''withMeta--KeySeq [#_"KeySeq" this, #_"IPersistentMap" meta]
-        (KeySeq'new meta, (:seq this), (:iterable this))
-    )
-
-    #_foreign
-    (defn #_"Iterator" iterator---KeySeq [#_"KeySeq" this]
-        (cond
-            (nil? (:iterable this))
-                (.iterator (§ super ))
-            (instance? IMapIterable (:iterable this))
-                (.keyIterator (:iterable this))
-            :else
-                (let [#_"Iterator" it (.iterator (:iterable this))]
-                    (reify Iterator
-                        #_foreign
-                        (#_"boolean" hasNext [#_"Iterator" _self]
-                            (.hasNext it)
-                        )
-
-                        #_foreign
-                        (#_"Object" next [#_"Iterator" _self]
-                            (key (.next it))
-                        )
-                    )
-                )
-        )
-    )
-)
-
-(class-ns ValSeq
-    (defn- #_"ValSeq" ValSeq'new
-        ([#_"ISeq" seq, #_"Iterable" iterable] (ValSeq'new nil, seq, iterable))
-        ([#_"IPersistentMap" meta, #_"ISeq" seq, #_"Iterable" iterable]
-            (merge (ASeq'new meta)
-                (hash-map
-                    #_"ISeq" :seq seq
-                    #_"Iterable" :iterable iterable
-                )
-            )
-        )
-    )
-
-    (defn #_"ValSeq" ValSeq'create [#_"ISeq" seq]
-        (when (some? seq)
-            (ValSeq'new seq, nil)
-        )
-    )
-
-    (defn #_"ValSeq" ValSeq'createFromMap [#_"IPersistentMap" map]
-        (when (some? map)
-            (when-let [#_"ISeq" seq (seq map)]
-                (ValSeq'new seq, map)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" ISeq'''first--ValSeq [#_"ValSeq" this]
-        (val (first (:seq this)))
-    )
-
-    #_override
-    (defn #_"ISeq" ISeq'''next--ValSeq [#_"ValSeq" this]
-        (ValSeq'create this, (next (:seq this)))
-    )
-
-    #_override
-    (defn #_"ValSeq" IObj'''withMeta--ValSeq [#_"ValSeq" this, #_"IPersistentMap" meta]
-        (ValSeq'new meta, (:seq this), (:iterable this))
-    )
-
-    #_foreign
-    (defn #_"Iterator" iterator---ValSeq [#_"ValSeq" this]
-        (cond
-            (nil? (:iterable this))
-                (.iterator (§ super ))
-            (instance? IMapIterable (:iterable this))
-                (.valIterator (:iterable this))
-            :else
-                (let [#_"Iterator" it (.iterator (:iterable this))]
-                    (reify Iterator
-                        #_foreign
-                        (#_"boolean" hasNext [#_"Iterator" _self]
-                            (.hasNext it)
-                        )
-
-                        #_foreign
-                        (#_"Object" next [#_"Iterator" _self]
-                            (val (.next it))
-                        )
-                    )
-                )
-        )
-    )
-)
 
 (class-ns APersistentMap
     (defn #_"APersistentMap" APersistentMap'new []
@@ -13018,29 +12851,15 @@
         )
     )
 
-    #_override
-    (defn #_"int" IHashEq'''hasheq--APersistentMap [#_"APersistentMap" this]
-        (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
-            (§ set! (:_hasheq this) (Murmur3'hashUnordered this))
-        )
-    )
-
     (defn #_"int" APersistentMap'mapHasheq [#_"IPersistentMap" m]
         (Murmur3'hashUnordered m)
     )
 
-    (declare MapEntry'create)
-
-    (defn #_"Object" APersistentMap'MAKE_ENTRY [#_"Object" key, #_"Object" val]
-        (MapEntry'create key, val)
-    )
-
-    (defn #_"Object" APersistentMap'MAKE_KEY [#_"Object" key, #_"Object" val]
-        key
-    )
-
-    (defn #_"Object" APersistentMap'MAKE_VAL [#_"Object" key, #_"Object" val]
-        val
+    #_override
+    (defn #_"int" IHashEq'''hasheq--APersistentMap [#_"APersistentMap" this]
+        (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
+            (§ set! (:_hasheq this) (APersistentMap'mapHasheq this))
+        )
     )
 
     #_override
@@ -13134,26 +12953,6 @@
     (defn #_"int" IHashEq'''hasheq--APersistentSet [#_"APersistentSet" this]
         (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
             (§ set! (:_hasheq this) (Murmur3'hashUnordered this))
-        )
-    )
-
-    #_foreign
-    (defn #_"Iterator" iterator---APersistentSet [#_"APersistentSet" this]
-        (if (instance? IMapIterable (:impl this))
-            (.keyIterator (:impl this))
-            (let [#_"Iterator" it (.iterator (:impl this))]
-                (reify Iterator
-                    #_foreign
-                    (#_"boolean" hasNext [#_"Iterator" _self]
-                        (.hasNext it)
-                    )
-
-                    #_foreign
-                    (#_"Object" next [#_"Iterator" _self]
-                        (key (.next it))
-                    )
-                )
-            )
         )
     )
 )
@@ -13373,53 +13172,9 @@
     )
 
     #_override
-    (defn #_"Iterator" APersistentVector'''rangedIterator--APersistentVector [#_"APersistentVector" this, #_"int" start, #_"int" end]
-        (§ reify Iterator
-            [#_mutable #_"int" i start]
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                (< i end)
-            )
-
-            #_foreign
-            (#_"Object" next [#_"Iterator" _self]
-                (when (< i end) => (throw (NoSuchElementException.))
-                    (let [_ (nth this i)]
-                        (update! i inc)
-                        _
-                    )
-                )
-            )
-        )
-    )
-
-    #_override
     (defn #_"Object" IFn'''invoke-2--APersistentVector [#_"APersistentVector" this, #_"Object" arg1]
         (when (Numbers'isInteger arg1) => (throw! "key must be integer")
             (nth this (.intValue arg1))
-        )
-    )
-
-    #_foreign
-    (defn #_"Iterator" iterator---APersistentVector [#_"APersistentVector" this]
-        (§ reify Iterator
-            [#_mutable #_"int" i 0]
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                (< i (count this))
-            )
-
-            #_foreign
-            (#_"Object" next [#_"Iterator" _self]
-                (when (< i (count this)) => (throw (NoSuchElementException.))
-                    (let [_ (nth this i)]
-                        (update! i inc)
-                        _
-                    )
-                )
-            )
         )
     )
 
@@ -13434,6 +13189,8 @@
     (defn #_"boolean" Associative'''containsKey--APersistentVector [#_"APersistentVector" this, #_"Object" key]
         (and (Numbers'isInteger key) (< -1 (.intValue key) (count this)))
     )
+
+    (declare MapEntry'create)
 
     #_override
     (defn #_"IMapEntry" Associative'''entryAt--APersistentVector [#_"APersistentVector" this, #_"Object" key]
@@ -13503,13 +13260,6 @@
                     #_"int" :end end
                 )
             )
-        )
-    )
-
-    #_foreign
-    (defn #_"Iterator" iterator---SubVector [#_"SubVector" this]
-        (when (instance? APersistentVector (:v this)) => (.iterator (§ super ))
-            (.rangedIterator (:v this), (:start this), (:end this))
         )
     )
 
@@ -13692,260 +13442,6 @@
                             (recur (inc i))
                         )
                     )
-                )
-            )
-        )
-    )
-)
-)
-
-(java-ns cloiure.lang.ArrayIter
-
-(class-ns ArrayIter_int
-    (defn #_"Iterator" ArrayIter_int'new [#_"int[]" a, #_"int" i]
-        (§ reify Iterator
-            [#_mutable #_"int" i i]
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                (and (some? a) (< i (alength a)))
-            )
-
-            #_foreign
-            (#_"Long" next [#_"Iterator" _self]
-                (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
-                    (let [_ (Long/valueOf (aget a i))]
-                        (update! i inc)
-                        _
-                    )
-                )
-            )
-        )
-    )
-)
-
-(class-ns ArrayIter_float
-    (defn #_"Iterator" ArrayIter_float'new [#_"float[]" a, #_"int" i]
-        (§ reify Iterator
-            [#_mutable #_"int" i i]
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                (and (some? a) (< i (alength a)))
-            )
-
-            #_foreign
-            (#_"Double" next [#_"Iterator" _self]
-                (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
-                    (let [_ (Double/valueOf (aget a i))]
-                        (update! i inc)
-                        _
-                    )
-                )
-            )
-        )
-    )
-)
-
-(class-ns ArrayIter_double
-    (defn #_"Iterator" ArrayIter_double'new [#_"double[]" a, #_"int" i]
-        (§ reify Iterator
-            [#_mutable #_"int" i i]
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                (and (some? a) (< i (alength a)))
-            )
-
-            #_foreign
-            (#_"Double" next [#_"Iterator" _self]
-                (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
-                    (let [_ (aget a i)]
-                        (update! i inc)
-                        _
-                    )
-                )
-            )
-        )
-    )
-)
-
-(class-ns ArrayIter_long
-    (defn #_"Iterator" ArrayIter_long'new [#_"long[]" a, #_"int" i]
-        (§ reify Iterator
-            [#_mutable #_"int" i i]
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                (and (some? a) (< i (alength a)))
-            )
-
-            #_foreign
-            (#_"Long" next [#_"Iterator" _self]
-                (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
-                    (let [_ (Long/valueOf (aget a i))]
-                        (update! i inc)
-                        _
-                    )
-                )
-            )
-        )
-    )
-)
-
-(class-ns ArrayIter_byte
-    (defn #_"Iterator" ArrayIter_byte'new [#_"byte[]" a, #_"int" i]
-        (§ reify Iterator
-            [#_mutable #_"int" i i]
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                (and (some? a) (< i (alength a)))
-            )
-
-            #_foreign
-            (#_"Byte" next [#_"Iterator" _self]
-                (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
-                    (let [_ (aget a i)]
-                        (update! i inc)
-                        _
-                    )
-                )
-            )
-        )
-    )
-)
-
-(class-ns ArrayIter_char
-    (defn #_"Iterator" ArrayIter_char'new [#_"char[]" a, #_"int" i]
-        (§ reify Iterator
-            [#_mutable #_"int" i i]
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                (and (some? a) (< i (alength a)))
-            )
-
-            #_foreign
-            (#_"Character" next [#_"Iterator" _self]
-                (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
-                    (let [_ (aget a i)]
-                        (update! i inc)
-                        _
-                    )
-                )
-            )
-        )
-    )
-)
-
-(class-ns ArrayIter_short
-    (defn #_"Iterator" ArrayIter_short'new [#_"short[]" a, #_"int" i]
-        (§ reify Iterator
-            [#_mutable #_"int" i i]
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                (and (some? a) (< i (alength a)))
-            )
-
-            #_foreign
-            (#_"Long" next [#_"Iterator" _self]
-                (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
-                    (let [_ (Long/valueOf (aget a i))]
-                        (update! i inc)
-                        _
-                    )
-                )
-            )
-        )
-    )
-)
-
-(class-ns ArrayIter_boolean
-    (defn #_"Iterator" ArrayIter_boolean'new [#_"boolean[]" a, #_"int" i]
-        (§ reify Iterator
-            [#_mutable #_"int" i i]
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                (and (some? a) (< i (alength a)))
-            )
-
-            #_foreign
-            (#_"Boolean" next [#_"Iterator" _self]
-                (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
-                    (let [_ (Boolean/valueOf (aget a i))]
-                        (update! i inc)
-                        _
-                    )
-                )
-            )
-        )
-    )
-)
-
-(class-ns ArrayIter
-    (def #_"Iterator" ArrayIter'EMPTY_ITERATOR
-        (reify Iterator
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                false
-            )
-
-            #_foreign
-            (#_"Object" next [#_"Iterator" _self]
-                (throw (NoSuchElementException.))
-            )
-        )
-    )
-
-    (defn #_"Iterator" ArrayIter'new [#_"Object" array, #_"int" i]
-        (let [#_"Object[]" a (cast Compiler'OBJECTS_CLASS array)]
-            (§ reify Iterator
-                [#_mutable #_"int" i i]
-
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (and (some? a) (< i (alength a)))
-                )
-
-                #_foreign
-                (#_"Object" next [#_"Iterator" _self]
-                    (when (and (some? a) (< i (alength a))) => (throw (NoSuchElementException.))
-                        (let [_ (aget a i)]
-                            (update! i inc)
-                            _
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"Iterator" ArrayIter'create-0 []
-        ArrayIter'EMPTY_ITERATOR
-    )
-
-    (defn #_"Iterator" ArrayIter'create-1 [& #_"Object..." a]
-        (when (and (some? a) (pos? (alength a))) => ArrayIter'EMPTY_ITERATOR
-            (ArrayIter'new a, 0)
-        )
-    )
-
-    (defn #_"Iterator" ArrayIter'createFromObject [#_"Object" a]
-        (when (and (some? a) (pos? (Array/getLength a))) => ArrayIter'EMPTY_ITERATOR
-            (let [#_"Class" c (class a)]
-                (condp = c
-                    Compiler'INTS_CLASS     (ArrayIter_int'new     (cast c a), 0)
-                    Compiler'FLOATS_CLASS   (ArrayIter_float'new   (cast c a), 0)
-                    Compiler'DOUBLES_CLASS  (ArrayIter_double'new  (cast c a), 0)
-                    Compiler'LONGS_CLASS    (ArrayIter_long'new    (cast c a), 0)
-                    Compiler'BYTES_CLASS    (ArrayIter_byte'new    (cast c a), 0)
-                    Compiler'CHARS_CLASS    (ArrayIter_char'new    (cast c a), 0)
-                    Compiler'SHORTS_CLASS   (ArrayIter_short'new   (cast c a), 0)
-                    Compiler'BOOLEANS_CLASS (ArrayIter_boolean'new (cast c a), 0)
-                                            (ArrayIter'new                 a,  0)
                 )
             )
         )
@@ -14988,8 +14484,8 @@
         )
     )
 
-    (defn #_"ISeq" Cycle'create [#_"ISeq" vals]
-        (if (some? vals) (Cycle'new vals, nil, vals) ())
+    (defn #_"ISeq" Cycle'create [#_"ISeq" s]
+        (if (some? s) (Cycle'new s, nil, s) ())
     )
 
     #_method
@@ -15368,10 +14864,7 @@
             )
             (catch ArithmeticException _
                 ;; rare case from large range or step, fall back to iterating and counting
-                (let [#_"long" n
-                        (loop-when-recur [#_"Iterator" it (.iterator this) n 0] (.hasNext it) [it (inc n)] => n
-                            (.next it)
-                        )]
+                (let [#_"long" n (loop-when-recur [n 0 #_"ISeq" s (seq this)] (some? s) [(inc n) (next s)] => n)]
                     (when (<= n Integer/MAX_VALUE) => (Numbers'throwIntOverflow)
                         (int n)
                     )
@@ -15458,35 +14951,6 @@
             (let-when-not [r (.invoke f, r, n)] (reduced? r) => (deref r)
                 (let-when-not [n (+ n (:step this))] (.exceededBounds (:boundsCheck this), n) => r
                     (recur r n)
-                )
-            )
-        )
-    )
-
-    #_foreign
-    (defn #_"Iterator" iterator---LongRange [#_"LongRange" this]
-        (§ reify Iterator
-            [#_mutable #_"long" n (:start this)
-             #_mutable #_"boolean" m true]
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                m
-            )
-
-            #_foreign
-            (#_"Object" next [#_"Iterator" _self]
-                (when m => (throw (NoSuchElementException.))
-                    (let [_ n]
-                        (try
-                            (update! n Numbers'add-2ll (:step this))
-                            (set! m (not (.exceededBounds (:boundsCheck this), n)))
-                            (catch ArithmeticException _
-                                (set! m false)
-                            )
-                        )
-                        _
-                    )
                 )
             )
         )
@@ -16132,30 +15596,6 @@
     )
 )
 
-(class-ns MIter
-    (defn #_"Iterator" MIter'new [#_"Object[]" a, #_"IFn" f]
-        (§ reify Iterator
-            [#_mutable #_"int" i -2]
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                (< (+ i 2) (alength a))
-            )
-
-            #_foreign
-            (#_"Object" next [#_"Iterator" _self]
-                (update! i + 2)
-                (try
-                    (.invoke f, (aget a i), (aget a (inc i)))
-                    (catch IndexOutOfBoundsException _
-                        (throw (NoSuchElementException.))
-                    )
-                )
-            )
-        )
-    )
-)
-
 ;;;
  ; Simple implementation of persistent map on an array.
  ;
@@ -16363,21 +15803,6 @@
         (count this)
     )
 
-    #_foreign
-    (defn #_"Iterator" iterator---PersistentArrayMap [#_"PersistentArrayMap" this]
-        (MIter'new (:array this), APersistentMap'MAKE_ENTRY)
-    )
-
-    #_override
-    (defn #_"Iterator" IMapIterable'''keyIterator--PersistentArrayMap [#_"PersistentArrayMap" this]
-        (MIter'new (:array this), APersistentMap'MAKE_KEY)
-    )
-
-    #_override
-    (defn #_"Iterator" IMapIterable'''valIterator--PersistentArrayMap [#_"PersistentArrayMap" this]
-        (MIter'new (:array this), APersistentMap'MAKE_VAL)
-    )
-
     #_override
     (defn #_"ISeq" Seqable'''seq--PersistentArrayMap [#_"PersistentArrayMap" this]
         (when (pos? (alength (:array this)))
@@ -16536,107 +15961,6 @@
     #_override
     (defn #_"ISeq" ISeq'''next--HSeq [#_"HSeq" this]
         (HSeq'create-4 nil, (:nodes this), (:i this), (next (:s this)))
-    )
-)
-
-(class-ns HIter
-    (defn #_"Iterator" HIter'new [#_"INode[]" a, #_"IFn" f]
-        (§ reify Iterator
-            [#_mutable #_"int" i 0
-             #_mutable #_"Iterator" it nil]
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                (loop []
-                    (or
-                        (when (some? it)
-                            (or (.hasNext it)
-                                (set! it nil)
-                            )
-                        )
-                        (and (< i (alength a))
-                            (let [#_"INode" ai (aget a i)]
-                                (update! i inc)
-                                (when (some? ai)
-                                    (set! it (.iterator ai, f))
-                                )
-                                (recur)
-                            )
-                        )
-                    )
-                )
-            )
-
-            #_foreign
-            (#_"Object" next [#_"Iterator" self]
-                (when (.hasNext self) => (throw (NoSuchElementException.))
-                    (.next it)
-                )
-            )
-        )
-    )
-)
-
-(class-ns NodeIter
-    (def- #_"Object" NodeIter'NULL (Object.))
-
-    (defn #_"Iterator" NodeIter'new [#_"Object[]" a, #_"IFn" f]
-        (§ reify Iterator
-            [#_mutable #_"int" i 0
-             #_mutable #_"Object" e NodeIter'NULL
-             #_mutable #_"Iterator" it nil]
-
-            #_private
-            (#_"boolean" step [_self]
-                (loop-when [] (< i (alength a)) => false
-                    (let [#_"Object" key (aget a i) #_"Object" nodeOrVal (aget a (inc i)) _ (update! i + 2)]
-                        (cond
-                            (some? key)
-                                (do
-                                    (set! e (.invoke f, key, nodeOrVal))
-                                    true
-                                )
-                            (some? nodeOrVal)
-                                (let-when [#_"Iterator" it' (.iterator (cast INode nodeOrVal), f)] (and (some? it') (.hasNext it')) => (recur)
-                                    (set! it it')
-                                    true
-                                )
-                            :else
-                                (recur)
-                        )
-                    )
-                )
-            )
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" self]
-                (or (not (identical? e NodeIter'NULL)) (some? it) (.step self))
-            )
-
-            #_foreign
-            (#_"Object" next [#_"Iterator" self]
-                (let [#_"Object" e' e]
-                    (cond
-                        (not (identical? e' NodeIter'NULL))
-                            (do
-                                (set! e NodeIter'NULL)
-                                e'
-                            )
-                        (some? it)
-                            (let [e' (.next it)]
-                                (when-not (.hasNext it)
-                                    (set! it nil)
-                                )
-                                e'
-                            )
-                        (.step self)
-                            (.next self)
-                        :else
-                            (throw (NoSuchElementException.))
-                    )
-                )
-            )
-        )
     )
 )
 
@@ -16840,11 +16164,6 @@
     #_override
     (defn #_"ISeq" INode'''nodeSeq--ArrayNode [#_"ArrayNode" this]
         (HSeq'create-1 (:array this))
-    )
-
-    #_override
-    (defn #_"Iterator" INode'''iterator--ArrayNode [#_"ArrayNode" this, #_"IFn" f]
-        (HIter'new (:array this), f)
     )
 
     #_override
@@ -17085,11 +16404,6 @@
     )
 
     #_override
-    (defn #_"Iterator" INode'''iterator--BitmapIndexedNode [#_"BitmapIndexedNode" this, #_"IFn" f]
-        (NodeIter'new (:array this), f)
-    )
-
-    #_override
     (defn #_"Object" INode'''kvreduce--BitmapIndexedNode [#_"BitmapIndexedNode" this, #_"IFn" f, #_"Object" r]
         (NodeSeq'kvreduce (:array this), f, r)
     )
@@ -17320,11 +16634,6 @@
     #_override
     (defn #_"ISeq" INode'''nodeSeq--HashCollisionNode [#_"HashCollisionNode" this]
         (NodeSeq'create-1 (:array this))
-    )
-
-    #_override
-    (defn #_"Iterator" INode'''iterator--HashCollisionNode [#_"HashCollisionNode" this, #_"IFn" f]
-        (NodeIter'new (:array this), f)
     )
 
     #_override
@@ -17652,57 +16961,6 @@
         )
     )
 
-    (def #_"Iterator" PersistentHashMap'EMPTY_ITER
-        (reify Iterator
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                false
-            )
-
-            #_foreign
-            (#_"Object" next [#_"Iterator" _self]
-                (throw (NoSuchElementException.))
-            )
-        )
-    )
-
-    #_method
-    (defn- #_"Iterator" PersistentHashMap''iterator [#_"PersistentHashMap" this, #_"IFn" f]
-        (let-when [#_"Iterator" it (if (some? (:root this)) (.iterator (:root this), f) PersistentHashMap'EMPTY_ITER)] (:hasNull this) => it
-            (§ reify Iterator
-                [#_mutable #_"boolean" seen false]
-
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (or (not seen) (.hasNext it))
-                )
-
-                #_foreign
-                (#_"Object" next [#_"Iterator" _self]
-                    (when (not seen) => (.next it)
-                        (set! seen true)
-                        (.invoke f, nil, (:nullValue this))
-                    )
-                )
-            )
-        )
-    )
-
-    #_foreign
-    (defn #_"Iterator" iterator---PersistentHashMap [#_"PersistentHashMap" this]
-        (PersistentHashMap''iterator this, APersistentMap'MAKE_ENTRY)
-    )
-
-    #_override
-    (defn #_"Iterator" IMapIterable'''keyIterator--PersistentHashMap [#_"PersistentHashMap" this]
-        (PersistentHashMap''iterator this, APersistentMap'MAKE_KEY)
-    )
-
-    #_override
-    (defn #_"Iterator" IMapIterable'''valIterator--PersistentHashMap [#_"PersistentHashMap" this]
-        (PersistentHashMap''iterator this, APersistentMap'MAKE_VAL)
-    )
-
     #_override
     (defn #_"Object" IKVReduce'''kvreduce--PersistentHashMap [#_"PersistentHashMap" this, #_"IFn" f, #_"Object" r]
         (let [r (if (:hasNull this) (.invoke f, r, nil, (:nullValue this)) r)]
@@ -17924,7 +17182,7 @@
 )
 
 (class-ns EmptyList
-    (def #_"int" EmptyList'HASHEQ (§ soon Murmur3'hashOrdered Collections/EMPTY_LIST))
+    (def #_"int" EmptyList'HASHEQ (§ soon Murmur3'hashOrdered nil))
 
     (defn #_"EmptyList" EmptyList'new [#_"IPersistentMap" meta]
         (hash-map
@@ -18019,21 +17277,6 @@
     #_foreign
     (defn #_"boolean" contains---EmptyList [#_"EmptyList" this, #_"Object" o]
         false
-    )
-
-    #_foreign
-    (defn #_"Iterator" iterator---EmptyList [#_"EmptyList" this]
-        (reify Iterator
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                false
-            )
-
-            #_foreign
-            (#_"Object" next [#_"Iterator" _self]
-                (throw (NoSuchElementException.))
-            )
-        )
     )
 
     #_foreign
@@ -18291,33 +17534,6 @@
     (defn #_"boolean" contains---PersistentQueue [#_"PersistentQueue" this, #_"Object" o]
         (loop-when [#_"ISeq" s (seq this)] (some? s) => false
             (or (Util'equiv-2oo (first s), o) (recur (next s)))
-        )
-    )
-
-    #_foreign
-    (defn #_"Iterator" iterator---PersistentQueue [#_"PersistentQueue" this]
-        (let [#_"Iterator" it (when (some? (:r this)) (.iterator (:r this)))]
-            (§ reify Iterator
-                [#_mutable #_"ISeq" s (:f this)]
-
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (or (and (some? s) (some? (seq s))) (and (some? it) (.hasNext it)))
-                )
-
-                #_foreign
-                (#_"Object" next [#_"Iterator" _self]
-                    (if (some? s)
-                        (let [_ (first s)]
-                            (update! s next)
-                            _
-                        )
-                        (when (and (some? it) (.hasNext it)) => (throw (NoSuchElementException.))
-                            (.next it)
-                        )
-                    )
-                )
-            )
         )
     )
 )
@@ -18701,39 +17917,6 @@
     )
 )
 
-(class-ns NodeIterator
-    (defn #_"Iterator" NodeIterator'new [#_"TNode" t, #_"boolean" asc?]
-        (let [#_"Stack" s (Stack.)
-              push!
-                (fn #_"void" [#_"TNode" t]
-                    (loop-when-recur t (some? t) (if asc? (.left t) (.right t)) => nil
-                        (.push s, t)
-                    )
-                )
-              _ (push! t)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (not (.isEmpty s))
-                )
-
-                #_foreign
-                (#_"Object" next [#_"Iterator" _self]
-                    (try
-                        (let [#_"TNode" t (cast TNode (.pop s))]
-                            (push! (if asc? (.right t) (.left t)))
-                            t
-                        )
-                        (catch EmptyStackException _
-                            (throw (NoSuchElementException.))
-                        )
-                    )
-                )
-            )
-        )
-    )
-)
-
 ;;;
  ; Persistent Red Black Tree.
  ;
@@ -18864,54 +18047,10 @@
         )
     )
 
-    #_foreign
-    (defn #_"Iterator" iterator---PersistentTreeMap [#_"PersistentTreeMap" this]
-        (NodeIterator'new (:tree this), true)
-    )
-
     #_override
     (defn #_"Object" IKVReduce'''kvreduce--PersistentTreeMap [#_"PersistentTreeMap" this, #_"IFn" f, #_"Object" r]
         (let [r (if (some? (:tree this)) (.kvreduce (:tree this), f, r) r)]
             (if (reduced? r) (deref r) r)
-        )
-    )
-
-    #_method
-    (defn #_"Iterator" PersistentTreeMap''reverseIterator [#_"PersistentTreeMap" this]
-        (NodeIterator'new (:tree this), false)
-    )
-
-    #_method
-    (defn #_"Iterator" PersistentTreeMap''keys [#_"PersistentTreeMap" this]
-        (let [#_"Iterator" it (.iterator this)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (.hasNext it)
-                )
-
-                #_foreign
-                (#_"Object" next [#_"Iterator" _self]
-                    (:key (cast TNode (.next it)))
-                )
-            )
-        )
-    )
-
-    #_method
-    (defn #_"Iterator" PersistentTreeMap''vals [#_"PersistentTreeMap" this]
-        (let [#_"Iterator" it (.iterator this)]
-            (reify Iterator
-                #_foreign
-                (#_"boolean" hasNext [#_"Iterator" _self]
-                    (.hasNext it)
-                )
-
-                #_foreign
-                (#_"Object" next [#_"Iterator" _self]
-                    (.val (cast TNode (.next it)))
-                )
-            )
         )
     )
 
@@ -19246,7 +18385,7 @@
 
     #_override
     (defn #_"ISeq" Reversible'''rseq--PersistentTreeSet [#_"PersistentTreeSet" this]
-        (KeySeq'create (.rseq (:impl this)))
+        (map key (rseq (:impl this)))
     )
 
     #_override
@@ -19840,39 +18979,6 @@
     )
 
     #_override
-    (defn #_"Iterator" APersistentVector'''rangedIterator--PersistentVector [#_"PersistentVector" this, #_"int" start, #_"int" end]
-        (§ reify Iterator
-            [#_mutable #_"int" i start
-             #_mutable #_"int" base (- start (% start 32))
-             #_mutable #_"Object[]" a (when (< start (count this)) (PersistentVector''arrayFor this, start))]
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                (< i end)
-            )
-
-            #_foreign
-            (#_"Object" next [#_"Iterator" _self]
-                (when (< i end) => (throw (NoSuchElementException.))
-                    (when (= i (+ base 32))
-                        (set! a (PersistentVector''arrayFor this, i))
-                        (set! base i)
-                    )
-                    (let [_ (aget a (& i 0x01f))]
-                        (update! i inc)
-                        _
-                    )
-                )
-            )
-        )
-    )
-
-    #_foreign
-    (defn #_"Iterator" iterator---PersistentVector [#_"PersistentVector" this]
-        (.rangedIterator this, 0, (count this))
-    )
-
-    #_override
     (defn #_"Object" IReduce'''reduce--PersistentVector [#_"PersistentVector" this, #_"IFn" f]
         (when (pos? (:cnt this)) => (.invoke f)
             (loop-when [#_"Object" r (aget (PersistentVector''arrayFor this, 0) 0) #_"int" i 0] (< i (:cnt this)) => r
@@ -20163,28 +19269,6 @@
             )
         )
     )
-
-    #_foreign
-    (defn #_"Iterator" iterator---Range [#_"Range" this]
-        (§ reify Iterator
-            [#_mutable #_"Object" n (:start this)]
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                (not (.exceededBounds (:boundsCheck this), n))
-            )
-
-            #_foreign
-            (#_"Object" next [#_"Iterator" self]
-                (when (.hasNext self) => (throw (NoSuchElementException.))
-                    (let [_ n]
-                        (update! n Numbers'addP-2oo (:step this))
-                        _
-                    )
-                )
-            )
-        )
-    )
 )
 )
 
@@ -20281,38 +19365,6 @@
             (loop-when [r r #_"long" i 0] (< i (:count this)) => r
                 (let [r (.invoke f, r, (:val this))]
                     (if (reduced? r) (deref r) (recur r (inc i)))
-                )
-            )
-        )
-    )
-)
-)
-
-(java-ns cloiure.lang.SeqIterator
-
-(class-ns SeqIterator
-    (def- #_"Object" SeqIterator'START (Object.))
-
-    (defn #_"Iterator" SeqIterator'new [#_"Object" o]
-        (§ reify Iterator
-            [#_mutable #_"Object" s SeqIterator'START
-             #_mutable #_"Object" n o]
-
-            #_foreign
-            (#_"boolean" hasNext [#_"Iterator" _self]
-                (some?
-                    (condp identical? s
-                        SeqIterator'START (do (set! s nil) (update! n seq))
-                        n (update! n next)
-                        :else n
-                    )
-                )
-            )
-
-            #_foreign
-            (#_"Object" next [#_"Iterator" self]
-                (when (.hasNext self) => (throw (NoSuchElementException.))
-                    (first (set! s n))
                 )
             )
         )
@@ -20956,19 +20008,8 @@
         )
     )
 
-    (defn #_"ISeq" RT'keys [#_"Object" coll]
-        (if (map? coll)
-            (KeySeq'createFromMap coll)
-            (KeySeq'create (seq coll))
-        )
-    )
-
-    (defn #_"ISeq" RT'vals [#_"Object" coll]
-        (if (map? coll)
-            (ValSeq'createFromMap coll)
-            (ValSeq'create (seq coll))
-        )
-    )
+    (defn #_"ISeq" RT'keys [#_"Object" coll] (map key coll))
+    (defn #_"ISeq" RT'vals [#_"Object" coll] (map val coll))
 
     (defn #_"IPersistentMap" RT'meta [#_"Object" x]
         (when (instance? IMeta x)
@@ -21894,9 +20935,7 @@
 
 ;;;
  ; Returns a seq on the collection. If the collection is empty, returns nil.
- ; (seq nil) returns nil. seq also works on Strings, native Java arrays (of reference types)
- ; and any objects that implement Iterable. Note that seqs cache values, thus seq should not
- ; be used on any Iterable whose iterator repeatedly returns the same mutable object.
+ ; (seq nil) returns nil. seq also works on strings, arrays (of reference types).
  ;;
 (§ def ^cloiure.lang.ISeq seq (fn seq [coll] (cloiure.lang.RT/seq coll)))
 
@@ -22600,7 +21639,7 @@
 
 ;;;
  ; Returns the number of items in the collection. (count nil) returns 0.
- ; Also works on strings, arrays, and Java Collections and Maps.
+ ; Also works on strings, arrays, collections and maps.
  ;;
 (§ defn count
     {:inline (fn [coll] `(cloiure.lang.RT/count ~coll))}
@@ -25991,9 +25030,8 @@
 )
 
 ;;;
- ; Expands to code which yields a lazy sequence of the concatenation
- ; of the supplied colls. Each coll expr is not evaluated until it is
- ; needed.
+ ; Expands to code which yields a lazy sequence of the concatenation of
+ ; the supplied colls. Each coll expr is not evaluated until it is needed.
  ;
  ; (lazy-cat xs ys zs) === (concat (lazy-seq xs) (lazy-seq ys) (lazy-seq zs))
  ;;
@@ -26003,6 +25041,7 @@
 
 ;;;
  ; List comprehension.
+ ;
  ; Takes a vector of one or more binding-form/collection-expr pairs, each followed
  ; by zero or more modifiers, and yields a lazy sequence of evaluations of expr.
  ; Collections are iterated in a nested fashion, rightmost fastest, and nested
@@ -26525,15 +25564,15 @@
 
 ;;;
  ; Returns the hash code, consistent with =, for an external ordered
- ; collection implementing Iterable.
+ ; collection implementing Seqable.
  ; See http://clojure.org/data_structures#hash for full algorithms.
  ;;
 (§ defn ^long hash-ordered-coll [coll] (cloiure.lang.Murmur3/hashOrdered coll))
 
 ;;;
- ; Returns the hash code, consistent with =, for an external unordered
- ; collection implementing Iterable. For maps, the iterator should return
- ; map entries whose hash is computed as (hash-ordered-coll [k v]).
+ ; Returns the hash code, consistent with =, for an external, unordered
+ ; collection implementing Seqable. For maps, it should return
+ ; map entries, whose hash is computed as (hash-ordered-coll [k v]).
  ; See http://clojure.org/data_structures#hash for full algorithms.
  ;;
 (§ defn ^long hash-unordered-coll [coll] (cloiure.lang.Murmur3/hashUnordered coll))
@@ -29248,7 +28287,7 @@
         ([coll f val] (.reduce coll f val))
     )
 
-    ;; aseqs are iterable, masking internal-reducers
+    ;; aseqs were iterable, masking internal-reducers
     cloiure.lang.ASeq
     (coll-reduce
         ([coll f] (seq-reduce coll f))
@@ -29804,23 +28843,6 @@
                                 )
                             )
                         )
-                )
-            )
-        )
-    )
-
-    java.lang.Iterable
-    (iterator [this]
-        (let [i (java.util.concurrent.atomic.AtomicInteger. 0)]
-            (reify java.util.Iterator
-                (hasNext [_] (< (.get i) cnt))
-                (next [_]
-                    (try
-                        (nth this (dec (.incrementAndGet i)))
-                        (catch IndexOutOfBoundsException _
-                            (throw (java.util.NoSuchElementException.))
-                        )
-                    )
                 )
             )
         )
