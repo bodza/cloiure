@@ -83,7 +83,7 @@
     [java.lang.reflect Array Constructor Field #_Method Modifier]
     [java.math BigDecimal BigInteger MathContext]
     [java.security AccessController PrivilegedAction]
-    [java.util ArrayList Arrays Collection Comparator IdentityHashMap List]
+    [java.util ArrayList Arrays Comparator IdentityHashMap]
     [java.util.concurrent Callable]
     [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicReference]
     [java.util.concurrent.locks ReentrantReadWriteLock]
@@ -7390,6 +7390,11 @@
     )
 )
 
+(java-ns cloiure.lang.ICollection
+    (interface! ICollection []
+    )
+)
+
 (java-ns cloiure.lang.Sequential
     (interface! Sequential []
     )
@@ -7437,8 +7442,6 @@
         (#_"IPersistentCollection" conj [#_"IPersistentCollection" this, #_"Object" o])
         #_abstract
         (#_"IPersistentCollection" empty [#_"IPersistentCollection" this])
-        #_abstract
-        (#_"boolean" equiv [#_"IPersistentCollection" this, #_"Object" o])
     )
 )
 
@@ -7795,11 +7798,6 @@
 )
 
 (java-ns cloiure.lang.Util
-    (interface! EquivPred []
-        #_abstract
-        (#_"boolean" equiv [#_"EquivPred" this, #_"Object" k1, #_"Object" k2])
-    )
-
     #_stateless
     (§ soon class! Util [])
 )
@@ -7956,11 +7954,11 @@
 
 (java-ns cloiure.lang.ASeq
     #_abstract
-    (class! ASeq [IObj ISeq Sequential List IHashEq])
+    (class! ASeq [IObj ISeq Sequential ICollection IHashEq])
 )
 
 (java-ns cloiure.lang.LazySeq
-    (§ soon class! LazySeq [IObj ISeq Sequential List IPending IHashEq])
+    (§ soon class! LazySeq [IObj ISeq Sequential ICollection IPending IHashEq])
 )
 
 (java-ns cloiure.lang.APersistentMap
@@ -7970,14 +7968,14 @@
 
 (java-ns cloiure.lang.APersistentSet
     #_abstract
-    (§ soon class! APersistentSet [#_"AFn" IPersistentSet Collection IHashEq])
+    (§ soon class! APersistentSet [#_"AFn" IPersistentSet ICollection IHashEq])
 )
 
 (java-ns cloiure.lang.APersistentVector
     (class! VSeq [#_"ASeq" IndexedSeq IReduce])
     (class! RSeq [#_"ASeq" IndexedSeq Counted])
     #_abstract
-    (§ soon class! APersistentVector [#_"AFn" IPersistentVector List Comparable IHashEq])
+    (§ soon class! APersistentVector [#_"AFn" IPersistentVector ICollection Comparable IHashEq])
     (class! SubVector [#_"APersistentVector" IObj])
 )
 
@@ -8110,13 +8108,13 @@
 
 (java-ns cloiure.lang.PersistentList
     (class! Primordial [#_"RestFn"])
-    (class! EmptyList [IObj IPersistentList List ISeq Counted IHashEq])
-    (§ soon class! PersistentList [#_"ASeq" IPersistentList IReduce List Counted])
+    (class! EmptyList [IObj IPersistentList ICollection ISeq Counted IHashEq])
+    (§ soon class! PersistentList [#_"ASeq" IPersistentList IReduce ICollection Counted])
 )
 
 (java-ns cloiure.lang.PersistentQueue
     (class! QSeq [#_"ASeq"])
-    (class! PersistentQueue [IObj IPersistentList Collection Counted IHashEq])
+    (class! PersistentQueue [IObj IPersistentList ICollection Counted IHashEq])
 )
 
 (java-ns cloiure.lang.PersistentTreeMap
@@ -8208,114 +8206,29 @@
 (java-ns cloiure.lang.Util
 
 (class-ns Util
-    (defn- #_"boolean" Util'pcequiv [#_"Object" k1, #_"Object" k2]
-        (if (coll? k1)
-            (.equiv k1, k2)
-            (.equiv k2, k1)
-        )
-    )
-
     (declare Numbers'equal)
 
-    (defn #_"boolean" Util'equiv-2oo [#_"Object" k1, #_"Object" k2]
+    (defn #_"boolean" Util'equiv [#_"Object" k1, #_"Object" k2]
         (cond
-            (identical? k1 k2) true
-            (nil? k1) false
+            (identical? k1 k2)              true
+            (nil? k1)                       false
             (and (number? k1) (number? k2)) (Numbers'equal k1, k2)
-            (or (coll? k1) (coll? k2)) (Util'pcequiv k1, k2)
-            :else (.equals k1, k2)
+            (coll? k1)                      (.equals k1, k2)
+            (coll? k2)                      (.equals k2, k1)
+            :else                           (.equals k1, k2)
         )
     )
 
-    (def #_"EquivPred" Util'equivNull
-        (reify EquivPred
-            #_override
-            (#_"boolean" equiv [#_"EquivPred" _self, #_"Object" k1, #_"Object" k2]
-                (nil? k2)
-            )
-        )
-    )
-
-    (def #_"EquivPred" Util'equivEquals
-        (reify EquivPred
-            #_override
-            (#_"boolean" equiv [#_"EquivPred" _self, #_"Object" k1, #_"Object" k2]
-                (.equals k1, k2)
-            )
-        )
-    )
-
-    (def #_"EquivPred" Util'equivNumber
-        (reify EquivPred
-            #_override
-            (#_"boolean" equiv [#_"EquivPred" _self, #_"Object" k1, #_"Object" k2]
-                (and (number? k2) (Numbers'equal k1, k2))
-            )
-        )
-    )
-
-    (def #_"EquivPred" Util'equivColl
-        (reify EquivPred
-            #_override
-            (#_"boolean" equiv [#_"EquivPred" _self, #_"Object" k1, #_"Object" k2]
-                (if (or (coll? k1) (coll? k2)) (Util'pcequiv k1, k2) (.equals k1, k2))
-            )
-        )
-    )
-
-    (defn #_"EquivPred" Util'equivPred [#_"Object" k1]
-        (cond
-            (nil? k1)                                Util'equivNull
-            (number? k1)                             Util'equivNumber
-            (or (string? k1) (symbol? k1))           Util'equivEquals
-            (or (instance? Collection k1) (map? k1)) Util'equivColl
-            :else                                    Util'equivEquals
-        )
-    )
-
-    (defn #_"boolean" Util'equiv-2ll [#_"long" k1, #_"long" k2]
-        (= k1 k2)
-    )
-
-    (defn #_"boolean" Util'equiv-2ol [#_"Object" k1, #_"long" k2]
-        (Util'equiv-2oo k1, (cast Object k2))
-    )
-
-    (defn #_"boolean" Util'equiv-2lo [#_"long" k1, #_"Object" k2]
-        (Util'equiv-2oo (cast Object k1), k2)
-    )
-
-    (defn #_"boolean" Util'equiv-2dd [#_"double" k1, #_"double" k2]
-        (= k1 k2)
-    )
-
-    (defn #_"boolean" Util'equiv-2od [#_"Object" k1, #_"double" k2]
-        (Util'equiv-2oo k1, (cast Object k2))
-    )
-
-    (defn #_"boolean" Util'equiv-2do [#_"double" k1, #_"Object" k2]
-        (Util'equiv-2oo (cast Object k1), k2)
-    )
-
-    (defn #_"boolean" Util'equiv-2bb [#_"boolean" k1, #_"boolean" k2]
-        (= k1 k2)
-    )
-
-    (defn #_"boolean" Util'equiv-2ob [#_"Object" k1, #_"boolean" k2]
-        (Util'equiv-2oo k1, (cast Object k2))
-    )
-
-    (defn #_"boolean" Util'equiv-2bo [#_"boolean" k1, #_"Object" k2]
-        (Util'equiv-2oo (cast Object k1), k2)
-    )
-
-    (defn #_"boolean" Util'equiv-2cc [#_"char" c1, #_"char" c2]
-        (= c1 c2)
-    )
-
-    (defn #_"boolean" Util'equals [#_"Object" k1, #_"Object" k2]
-        (or (identical? k1 k2) (and (some? k1) (.equals k1, k2)))
-    )
+    (defn #_"boolean" Util'equiv-2ll [   #_"long" k1,    #_"long" k2] (= k1 k2))
+    (defn #_"boolean" Util'equiv-2ol [ #_"Object" k1,    #_"long" k2] (= k1 (cast Object k2)))
+    (defn #_"boolean" Util'equiv-2lo [   #_"long" k1,  #_"Object" k2] (= (cast Object k1) k2))
+    (defn #_"boolean" Util'equiv-2dd [ #_"double" k1,  #_"double" k2] (= k1 k2))
+    (defn #_"boolean" Util'equiv-2od [ #_"Object" k1,  #_"double" k2] (= k1 (cast Object k2)))
+    (defn #_"boolean" Util'equiv-2do [ #_"double" k1,  #_"Object" k2] (= (cast Object k1) k2))
+    (defn #_"boolean" Util'equiv-2bb [#_"boolean" k1, #_"boolean" k2] (= k1 k2))
+    (defn #_"boolean" Util'equiv-2ob [ #_"Object" k1, #_"boolean" k2] (= k1 (cast Object k2)))
+    (defn #_"boolean" Util'equiv-2bo [#_"boolean" k1,  #_"Object" k2] (= (cast Object k1) k2))
+    (defn #_"boolean" Util'equiv-2cc [   #_"char" c1,    #_"char" c2] (= c1 c2))
 
     (defn #_"boolean" Util'identical [#_"Object" k1, #_"Object" k2]
         (identical? k1 k2)
@@ -8443,7 +8356,7 @@
             (and (instance? BigInt that)
                 (if (nil? (:bipart this))
                     (and (nil? (:bipart that)) (= (:lpart this) (:lpart that)))
-                    (and (some? (:bipart that)) (.equals (:bipart this), (:bipart that)))
+                    (and (some? (:bipart that)) (= (:bipart this) (:bipart that)))
                 )
             )
         )
@@ -8612,7 +8525,7 @@
 
     #_foreign
     (defn #_"boolean" equals---Ratio [#_"Ratio" this, #_"Object" that]
-        (and (instance? Ratio that) (.equals (:numerator that), (:numerator this)) (.equals (:denominator that), (:denominator this)))
+        (and (instance? Ratio that) (= (:numerator that) (:numerator this)) (= (:denominator that) (:denominator this)))
     )
 
     #_foreign
@@ -9123,7 +9036,7 @@
     #_override
     (defn #_"boolean" Ops'''equiv--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
         (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-            (and (.equals (:numerator rx), (:numerator ry)) (.equals (:denominator rx), (:denominator ry)))
+            (and (= (:numerator rx) (:numerator ry)) (= (:denominator rx) (:denominator ry)))
         )
     )
 
@@ -9261,7 +9174,7 @@
 
     #_override
     (defn #_"boolean" Ops'''equiv--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (.equals (Numbers'toBigInt x), (Numbers'toBigInt y))
+        (= (Numbers'toBigInt x) (Numbers'toBigInt y))
     )
 
     #_override
@@ -9593,7 +9506,7 @@
         (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.equiv x, y))
     )
 
-    (defn #_"boolean" Numbers'equiv-2oo [#_"Object" x, #_"Object" y]
+    (defn #_"boolean" Numbers'equiv [#_"Object" x, #_"Object" y]
         (Numbers'equiv-2nn (cast Number x), (cast Number y))
     )
 
@@ -10265,8 +10178,8 @@
     (defn #_"boolean" Numbers'gte-2dl [#_"double" x, #_"long"   y] (>= x y))
     (defn #_"boolean" Numbers'gte-2ld [#_"long"   x, #_"double" y] (>= x y))
 
-    (defn #_"boolean" Numbers'equiv-2lo [#_"long"   x, #_"Object" y] (Numbers'equiv-2oo (cast Object x), y))
-    (defn #_"boolean" Numbers'equiv-2ol [#_"Object" x, #_"long"   y] (Numbers'equiv-2oo x, (cast Object y)))
+    (defn #_"boolean" Numbers'equiv-2lo [#_"long"   x, #_"Object" y] (Numbers'equiv (cast Object x), y))
+    (defn #_"boolean" Numbers'equiv-2ol [#_"Object" x, #_"long"   y] (Numbers'equiv x, (cast Object y)))
     (defn #_"boolean" Numbers'equiv-2do [#_"double" x, #_"Object" y] (= x (.doubleValue (cast Number y))))
     (defn #_"boolean" Numbers'equiv-2od [#_"Object" x, #_"double" y] (= (.doubleValue (cast Number x)) y))
     (defn #_"boolean" Numbers'equiv-2dl [#_"double" x, #_"long"   y] (= x y))
@@ -10854,13 +10767,8 @@
 
     #_foreign
     (defn #_"boolean" equals---Symbol [#_"Symbol" this, #_"Object" that]
-        (cond
-            (identical? this that)
-                true
-            (symbol? that)
-                (and (= (:ns this) (:ns that)) (= (:name this) (:name that)))
-            :else
-                false
+        (or (identical? this that)
+            (and (symbol? that) (= (:ns this) (:ns that)) (= (:name this) (:name that)))
         )
     )
 
@@ -10884,7 +10792,7 @@
     #_foreign
     (defn #_"int" compareTo---Symbol [#_"Symbol" this, #_"Symbol" that]
         (cond
-            (.equals this, that)                       0
+            (= this that)                              0
             (and (nil? (:ns this)) (some? (:ns that))) -1
             (nil? (:ns this))                          (compare (:name this) (:name that))
             (nil? (:ns that))                          1
@@ -12550,25 +12458,12 @@
         ()
     )
 
-    #_override
-    (defn #_"boolean" IPersistentCollection'''equiv--ASeq [#_"ASeq" this, #_"Object" that]
-        (and (or (sequential? that) (instance? List that))
-            (let [#_"ISeq" ms (seq that)]
-                (loop-when [#_"ISeq" s (seq this) ms ms] (some? s) => (nil? ms)
-                    (and (some? ms) (Util'equiv-2oo (first s), (first ms)) (recur (next s) (next ms)))
-                )
-            )
-        )
-    )
-
     #_foreign
     (defn #_"boolean" equals---ASeq [#_"ASeq" this, #_"Object" that]
         (or (identical? this that)
-            (and (or (sequential? that) (instance? List that))
-                (let [#_"ISeq" ms (seq that)]
-                    (loop-when [#_"ISeq" s (seq this) ms ms] (some? s) => (nil? ms)
-                        (and (some? ms) (Util'equals (first s), (first ms)) (recur (next s) (next ms)))
-                    )
+            (and (sequential? that)
+                (loop-when [#_"ISeq" s (seq this) #_"ISeq" z (seq that)] (some? s) => (nil? z)
+                    (and (some? z) (= (first s) (first z)) (recur (next s) (next z)))
                 )
             )
         )
@@ -12612,18 +12507,6 @@
     #_override
     (defn #_"ISeq" ISeq'''rest--ASeq [#_"ASeq" this]
         (or (next this) ())
-    )
-
-    #_foreign
-    (defn #_"boolean" contains---ASeq [#_"ASeq" this, #_"Object" o]
-        (loop-when [#_"ISeq" s (seq this)] (some? s) => false
-            (or (Util'equiv-2oo (first s), o) (recur (next s)))
-        )
-    )
-
-    #_foreign
-    (defn #_"Object" get---ASeq [#_"ASeq" this, #_"int" index]
-        (nth this index)
     )
 )
 )
@@ -12720,46 +12603,23 @@
 
     #_foreign
     (defn #_"boolean" equals---LazySeq [#_"LazySeq" this, #_"Object" that]
-        (let [#_"ISeq" s (seq this)]
-            (if (some? s)
-                (.equals s, that)
-                (and (or (sequential? that) (instance? List that)) (nil? (seq that)))
-            )
-        )
-    )
-
-    #_override
-    (defn #_"boolean" IPersistentCollection'''equiv--LazySeq [#_"LazySeq" this, #_"Object" that]
-        (let [#_"ISeq" s (seq this)]
-            (if (some? s)
-                (.equiv s, that)
-                (and (or (sequential? that) (instance? List that)) (nil? (seq that)))
-            )
+        (if-let [#_"ISeq" s (seq this)]
+            (= s that)
+            (and (sequential? that) (nil? (seq that)))
         )
     )
 
     #_foreign
     (defn #_"int" hashCode---LazySeq [#_"LazySeq" this]
-        (let [#_"ISeq" s (seq this)]
-            (if (some? s) (Util'hash s) 1)
+        (if-let [#_"ISeq" s (seq this)]
+            (Util'hash s)
+            1
         )
     )
 
     #_override
     (defn #_"int" IHashEq'''hasheq--LazySeq [#_"LazySeq" this]
         (Murmur3'hashOrdered this)
-    )
-
-    #_foreign
-    (defn #_"boolean" contains---LazySeq [#_"LazySeq" this, #_"Object" o]
-        (loop-when [#_"ISeq" s (seq this)] (some? s) => false
-            (or (Util'equiv-2oo (first s), o) (recur (next s)))
-        )
-    )
-
-    #_foreign
-    (defn #_"Object" get---LazySeq [#_"LazySeq" this, #_"int" index]
-        (nth this index)
     )
 
     #_override
@@ -12812,22 +12672,7 @@
             (and (map? that) (= (count that) (count this))
                 (loop-when [#_"ISeq" s (seq this)] (some? s) => true
                     (let [#_"IMapEntry" e (first s) #_"Object" k (key e)]
-                        (and (contains? that k) (Util'equals (val e), (get that k))
-                            (recur (next s))
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    #_override
-    (defn #_"boolean" IPersistentCollection'''equiv--APersistentMap [#_"APersistentMap" this, #_"Object" that]
-        (or (identical? this that)
-            (and (map? that) (= (count that) (count this))
-                (loop-when [#_"ISeq" s (seq this)] (some? s) => true
-                    (let [#_"IMapEntry" e (first s) #_"Object" k (key e)]
-                        (and (contains? that k) (Util'equiv-2oo (val e), (get that k))
+                        (and (contains? that k) (= (val e) (get that k))
                             (recur (next s))
                         )
                     )
@@ -12920,17 +12765,6 @@
 
     #_foreign
     (defn #_"boolean" equals---APersistentSet [#_"APersistentSet" this, #_"Object" that]
-        (or (identical? this that)
-            (and (set? that) (= (count this) (count that))
-                (loop-when [#_"ISeq" s (seq that)] (some? s) => true
-                    (and (contains? this (first s)) (recur (next s)))
-                )
-            )
-        )
-    )
-
-    #_override
-    (defn #_"boolean" IPersistentCollection'''equiv--APersistentSet [#_"APersistentSet" this, #_"Object" that]
         (or (identical? this that)
             (and (set? that) (= (count this) (count that))
                 (loop-when [#_"ISeq" s (seq that)] (some? s) => true
@@ -13093,46 +12927,24 @@
         )
     )
 
-    (defn #_"boolean" APersistentVector'doEquals [#_"IPersistentVector" v, #_"Object" obj]
-        (condp instance? obj
-            IPersistentVector
-                (when (= (count obj) (count v)) => false
-                    (loop-when [#_"int" i 0] (< i (count v)) => true
-                        (recur-if (Util'equals (nth v i), (nth obj i)) [(inc i)] => false)
-                    )
-                )
-            Sequential
-                (loop-when [#_"int" i 0 #_"ISeq" s (seq obj)] (< i (count v)) => (nil? s)
-                    (recur-if (and (some? s) (Util'equals (nth v i), (first s))) [(inc i) (next s)] => false)
-                )
-            false
-        )
-    )
-
-    (defn #_"boolean" APersistentVector'doEquiv [#_"IPersistentVector" v, #_"Object" obj]
-        (condp instance? obj
-            IPersistentVector
-                (when (= (count obj) (count v)) => false
-                    (loop-when [#_"int" i 0] (< i (count v)) => true
-                        (recur-if (Util'equiv-2oo (nth v i), (nth obj i)) [(inc i)] => false)
-                    )
-                )
-            Sequential
-                (loop-when [#_"int" i 0 #_"ISeq" s (seq obj)] (< i (count v)) => (nil? s)
-                    (recur-if (and (some? s) (Util'equiv-2oo (nth v i), (first s))) [(inc i) (next s)] => false)
-                )
-            false
-        )
-    )
-
     #_foreign
     (defn #_"boolean" equals---APersistentVector [#_"APersistentVector" this, #_"Object" that]
-        (or (identical? this that) (APersistentVector'doEquals this, that))
-    )
-
-    #_override
-    (defn #_"boolean" IPersistentCollection'''equiv--APersistentVector [#_"APersistentVector" this, #_"Object" that]
-        (or (identical? this that) (APersistentVector'doEquiv this, that))
+        (or (identical? this that)
+            (cond
+                (vector? that)
+                    (when (= (count this) (count that)) => false
+                        (loop-when [#_"int" i 0] (< i (count this)) => true
+                            (recur-if (= (nth this i) (nth that i)) [(inc i)] => false)
+                        )
+                    )
+                (sequential? that)
+                    (loop-when [#_"int" i 0 #_"ISeq" s (seq that)] (< i (count this)) => (nil? s)
+                        (recur-if (and (some? s) (= (nth this i) (first s))) [(inc i) (next s)] => false)
+                    )
+                :else
+                    false
+            )
+        )
     )
 
     #_foreign
@@ -13159,11 +12971,6 @@
                 (§ set! (:_hasheq this) hash)
             )
         )
-    )
-
-    #_foreign
-    (defn #_"Object" get---APersistentVector [#_"APersistentVector" this, #_"int" index]
-        (nth this index)
     )
 
     #_override
@@ -13220,13 +13027,6 @@
     #_override
     (defn #_"Object" ILookup'''valAt-2--APersistentVector [#_"APersistentVector" this, #_"Object" key]
         (.valAt this, key, nil)
-    )
-
-    #_foreign
-    (defn #_"boolean" contains---APersistentVector [#_"APersistentVector" this, #_"Object" o]
-        (loop-when [#_"ISeq" s (seq this)] (some? s) => false
-            (or (Util'equiv-2oo (first s), o) (recur (next s)))
-        )
     )
 
     #_foreign
@@ -15540,7 +15340,7 @@
                         (.compareAndSet (:aliases this), m, (assoc m alias ns))
                     )]
                 ;; you can rebind an alias, but only to the initially-aliased namespace
-                (when-not (.equals (get m alias), ns)
+                (when-not (= (get m alias) ns)
                     (throw! (str "alias " alias " already exists in namespace " (:name this) ", aliasing " (get m alias)))
                 )
             )
@@ -15633,7 +15433,7 @@
     )
 
     (defn #_"boolean" PersistentArrayMap'equalKey [#_"Object" k1, #_"Object" k2]
-        (if (keyword? k1) (= k1 k2) (Util'equiv-2oo k1, k2))
+        (if (keyword? k1) (identical? k1 k2) (= k1 k2))
     )
 
     (defn #_"PersistentArrayMap" PersistentArrayMap'createWithCheck [#_"Object[]" init]
@@ -15709,20 +15509,9 @@
     )
 
     #_method
-    (defn- #_"int" PersistentArrayMap''indexOfObject [#_"PersistentArrayMap" this, #_"Object" key]
-        (let [#_"EquivPred" ep (Util'equivPred key)]
-            (loop-when [#_"int" i 0] (< i (alength (:array this))) => -1
-                (if (.equiv ep, key, (aget (:array this) i)) i (recur (+ i 2)))
-            )
-        )
-    )
-
-    #_method
     (defn- #_"int" PersistentArrayMap''indexOf [#_"PersistentArrayMap" this, #_"Object" key]
-        (when (keyword? key) => (PersistentArrayMap''indexOfObject this, key)
-            (loop-when [#_"int" i 0] (< i (alength (:array this))) => -1
-                (if (= key (aget (:array this) i)) i (recur (+ i 2)))
-            )
+        (loop-when [#_"int" i 0] (< i (alength (:array this))) => -1
+            (if (= key (aget (:array this) i)) i (recur (+ i 2)))
         )
     )
 
@@ -16301,7 +16090,7 @@
                                         (PersistentHashMap'cloneAndSet (:array this), (inc (* 2 idx)), n)
                                     )
                                 )
-                            (Util'equiv-2oo key, keyOrNull)
+                            (= key keyOrNull)
                                 (when-not (= val valOrNode)
                                     (PersistentHashMap'cloneAndSet (:array this), (inc (* 2 idx)), val)
                                 )
@@ -16348,7 +16137,7 @@
                   #_"Object" keyOrNull (aget (:array this) ii)
                   #_"Object" valOrNode (aget (:array this) (inc ii))]
                 (if (some? keyOrNull)
-                    (when (Util'equiv-2oo key, keyOrNull) => this
+                    (when (= key keyOrNull) => this
                         ;; TODO: collapse
                         (BitmapIndexedNode'new nil, (bit-xor (:bitmap this) bit), (PersistentHashMap'removePair (:array this), i))
                     )
@@ -16376,8 +16165,8 @@
                   #_"Object" keyOrNull (aget (:array this) (* 2 i))
                   #_"Object" valOrNode (aget (:array this) (inc (* 2 i)))]
                 (cond
-                    (nil? keyOrNull)                (.find (cast INode valOrNode), (+ shift 5), hash, key)
-                    (Util'equiv-2oo key, keyOrNull) (MapEntry'create keyOrNull, valOrNode)
+                    (nil? keyOrNull)  (.find (cast INode valOrNode), (+ shift 5), hash, key)
+                    (= key keyOrNull) (MapEntry'create keyOrNull, valOrNode)
                 )
             )
         )
@@ -16390,9 +16179,9 @@
                   #_"Object" keyOrNull (aget (:array this) (* 2 i))
                   #_"Object" valOrNode (aget (:array this) (inc (* 2 i)))]
                 (cond
-                    (nil? keyOrNull)                (.find (cast INode valOrNode), (+ shift 5), hash, key, notFound)
-                    (Util'equiv-2oo key, keyOrNull) valOrNode
-                    :else                           notFound
+                    (nil? keyOrNull)  (.find (cast INode valOrNode), (+ shift 5), hash, key, notFound)
+                    (= key keyOrNull) valOrNode
+                    :else             notFound
                 )
             )
         )
@@ -16479,7 +16268,7 @@
                                     (BitmapIndexedNode''editAndSet-4 this, edit, (inc (* 2 idx)), n)
                                 )
                             )
-                        (Util'equiv-2oo key, keyOrNull)
+                        (= key keyOrNull)
                             (when-not (= val valOrNode) => this
                                 (BitmapIndexedNode''editAndSet-4 this, edit, (inc (* 2 idx)), val)
                             )
@@ -16538,7 +16327,7 @@
                   #_"Object" keyOrNull (aget (:array this) ii)
                   #_"Object" valOrNode (aget (:array this) (inc ii))]
                 (if (some? keyOrNull)
-                    (when (Util'equiv-2oo key, keyOrNull) => this
+                    (when (= key keyOrNull) => this
                         (§ set! (:val removedLeaf) removedLeaf)
                         ;; TODO: collapse
                         (BitmapIndexedNode''editAndRemovePair this, edit, bit, i)
@@ -16575,7 +16364,7 @@
     (defn #_"int" HashCollisionNode''findIndex [#_"HashCollisionNode" this, #_"Object" key]
         (let [#_"int" n (* 2 (:count this))]
             (loop-when [#_"int" i 0] (< i n) => -1
-                (if (Util'equiv-2oo key, (aget (:array this) i)) i (recur (+ i 2)))
+                (if (= key (aget (:array this) i)) i (recur (+ i 2)))
             )
         )
     )
@@ -16616,7 +16405,7 @@
     #_override
     (defn #_"IMapEntry" INode'''find-4--HashCollisionNode [#_"HashCollisionNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
         (let-when [#_"int" i (HashCollisionNode''findIndex this, key)] (<= 0 i)
-            (let-when [#_"Object" ai (aget (:array this) i)] (Util'equiv-2oo key, ai)
+            (let-when [#_"Object" ai (aget (:array this) i)] (= key ai)
                 (MapEntry'create ai, (aget (:array this) (inc i)))
             )
         )
@@ -16625,7 +16414,7 @@
     #_override
     (defn #_"Object" INode'''find-5--HashCollisionNode [#_"HashCollisionNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound]
         (let-when [#_"int" i (HashCollisionNode''findIndex this, key)] (<= 0 i) => notFound
-            (when (Util'equiv-2oo key, (aget (:array this) i)) => notFound
+            (when (= key (aget (:array this) i)) => notFound
                 (aget (:array this) (inc i))
             )
         )
@@ -17207,12 +16996,7 @@
 
     #_foreign
     (defn #_"boolean" equals---EmptyList [#_"EmptyList" this, #_"Object" that]
-        (and (or (sequential? that) (instance? List that)) (nil? (seq that)))
-    )
-
-    #_override
-    (defn #_"boolean" IPersistentCollection'''equiv--EmptyList [#_"EmptyList" this, #_"Object" that]
-        (.equals this, that)
+        (and (sequential? that) (nil? (seq that)))
     )
 
     #_override
@@ -17272,16 +17056,6 @@
     #_override
     (defn #_"ISeq" Seqable'''seq--EmptyList [#_"EmptyList" this]
         nil
-    )
-
-    #_foreign
-    (defn #_"boolean" contains---EmptyList [#_"EmptyList" this, #_"Object" o]
-        false
-    )
-
-    #_foreign
-    (defn #_"Object" get---EmptyList [#_"EmptyList" this, #_"int" index]
-        (nth this index)
     )
 )
 
@@ -17436,23 +17210,14 @@
 
     (def #_"PersistentQueue" PersistentQueue'EMPTY (PersistentQueue'new nil, 0, nil, nil))
 
-    #_override
-    (defn #_"boolean" IPersistentCollection'''equiv--PersistentQueue [#_"PersistentQueue" this, #_"Object" that]
-        (and (sequential? that)
-            (loop-when [#_"ISeq" s (seq this) #_"ISeq" ms (seq that)] (some? s) => (nil? ms)
-                (and (some? ms) (Util'equiv-2oo (first s), (first ms))
-                    (recur (next s) (next ms))
-                )
-            )
-        )
-    )
-
     #_foreign
     (defn #_"boolean" equals---PersistentQueue [#_"PersistentQueue" this, #_"Object" that]
-        (and (sequential? that)
-            (loop-when [#_"ISeq" s (seq this) #_"ISeq" ms (seq that)] (some? s) => (nil? ms)
-                (and (some? ms) (Util'equals (first s), (first ms))
-                    (recur (next s) (next ms))
+        (or (identical? this that)
+            (and (sequential? that)
+                (loop-when [#_"ISeq" s (seq this) #_"ISeq" z (seq that)] (some? s) => (nil? z)
+                    (and (some? z) (= (first s) (first z))
+                        (recur (next s) (next z))
+                    )
                 )
             )
         )
@@ -17528,13 +17293,6 @@
     #_override
     (defn #_"PersistentQueue" IObj'''withMeta--PersistentQueue [#_"PersistentQueue" this, #_"IPersistentMap" meta]
         (PersistentQueue'new meta, (:cnt this), (:f this), (:r this))
-    )
-
-    #_foreign
-    (defn #_"boolean" contains---PersistentQueue [#_"PersistentQueue" this, #_"Object" o]
-        (loop-when [#_"ISeq" s (seq this)] (some? s) => false
-            (or (Util'equiv-2oo (first s), o) (recur (next s)))
-        )
     )
 )
 )
@@ -17971,26 +17729,6 @@
         (some? (find this key))
     )
 
-    #_foreign
-    (defn #_"boolean" equals---PersistentTreeMap [#_"PersistentTreeMap" this, #_"Object" that]
-        (try
-            (.equals (§ super ), that)
-            (catch ClassCastException _
-                false
-            )
-        )
-    )
-
-    #_override
-    (defn #_"boolean" IPersistentCollection'''equiv--PersistentTreeMap [#_"PersistentTreeMap" this, #_"Object" that]
-        (try
-            (.equiv (§ super ), that)
-            (catch ClassCastException _
-                false
-            )
-        )
-    )
-
     #_override
     (defn #_"ISeq" Seqable'''seq--PersistentTreeMap [#_"PersistentTreeMap" this]
         (when (pos? (:_count this))
@@ -18340,26 +18078,6 @@
     (defn #_"PersistentTreeSet" PersistentTreeSet'create
         ([                     #_"Seqable" items] (reduce conj PersistentTreeSet'EMPTY                                        items))
         ([#_"Comparator" comp, #_"Seqable" items] (reduce conj (PersistentTreeSet'new nil, (PersistentTreeMap'new nil, comp)) items))
-    )
-
-    #_foreign
-    (defn #_"boolean" equals---PersistentTreeSet [#_"PersistentTreeSet" this, #_"Object" that]
-        (try
-            (.equals (§ super ), that)
-            (catch ClassCastException _
-                false
-            )
-        )
-    )
-
-    #_override
-    (defn #_"boolean" IPersistentCollection'''equiv--PersistentTreeSet [#_"PersistentTreeSet" this, #_"Object" that]
-        (try
-            (.equiv (§ super ), that)
-            (catch ClassCastException _
-                false
-            )
-        )
     )
 
     #_override
@@ -19165,7 +18883,7 @@
             (cond
                 (or (and (Numbers'isPos-1o step) (Numbers'gt-2oo start, end))
                     (and (Numbers'isNeg-1o step) (Numbers'gt-2oo end, start))
-                    (Numbers'equiv-2oo start, end)
+                    (Numbers'equiv start, end)
                 )
                     ()
                 (Numbers'isZero-1o step)
@@ -21009,7 +20727,7 @@
               resolve-tag
                 (fn [argvec]
                     (let [m (meta argvec) ^cloiure.lang.Symbol tag (:tag m)]
-                        (if (instance? cloiure.lang.Symbol tag)
+                        (if (symbol? tag)
                             (if (cloiure.lang.Util/equiv (.indexOf (.getName tag) ".") -1)
                                 (if (cloiure.lang.Util/equals nil (cloiure.lang.Compiler$HostExpr/maybeSpecialTag tag))
                                     (let [c (cloiure.lang.Compiler$HostExpr/maybeClass tag false)]
@@ -21055,7 +20773,7 @@
 (§ def defn
     (fn defn [&form &env name & fdecl]
         ;; note: cannot delegate this check to def because of the call to (with-meta name ..)
-        (if (instance? cloiure.lang.Symbol name) nil (throw! "first argument to defn must be a symbol"))
+        (if (symbol? name) nil (throw! "first argument to defn must be a symbol"))
         (let [m     (if (map?    (first fdecl)) (first fdecl)         {})
               fdecl (if (map?    (first fdecl)) (next fdecl)          fdecl)
               fdecl (if (vector? (first fdecl)) (list fdecl)          fdecl)
@@ -21064,7 +20782,7 @@
               m     (conj {:arglists (list 'quote (sigs fdecl))} m)
               m     (let [inline (:inline m) ifn (first inline) iname (second inline)]
                         ;; same as: (if (and (= 'fn ifn) (not (symbol? iname))) ...)
-                        (if (if (cloiure.lang.Util/equiv 'fn ifn) (if (instance? cloiure.lang.Symbol iname) false true))
+                        (if (if (cloiure.lang.Util/equiv 'fn ifn) (if (symbol? iname) false true))
                             ;; inserts the same fn name to the inline fn if it does not have one
                             (assoc m :inline
                                 (cons ifn (cons (cloiure.lang.Symbol/intern (.concat (.getName ^cloiure.lang.Symbol name) "__inliner")) (next inline)))
@@ -21543,8 +21261,6 @@
     ([x y] (cloiure.lang.Util/identical x y))
 )
 
-;; equiv-based
-
 ;;;
  ; Equality. Returns true if x equals y, false if not. Same as Java x.equals(y) except it also
  ; works for nil, and compares numbers and collections in a type-independent manner. Cloiure's
@@ -21554,28 +21270,6 @@
     {:inline (fn [x y] `(cloiure.lang.Util/equiv ~x ~y)) :inline-arities #{2}}
     ([x] true)
     ([x y] (cloiure.lang.Util/equiv x y))
-    ([x y & more]
-        (if (cloiure.lang.Util/equiv x y)
-            (if (next more)
-                (recur y (first more) (next more))
-                (cloiure.lang.Util/equiv y (first more))
-            )
-            false
-        )
-    )
-)
-
-;; equals-based
-
-;;;
- ; Equality. Returns true if x equals y, false if not. Same as Java x.equals(y) except it also
- ; works for nil. Boxed numbers must have same type. Cloiure's immutable data structures define
- ; equals() (and thus =) as a value, not an identity, comparison.
- ;;
-#_(defn =
-    {:inline (fn [x y] `(cloiure.lang.Util/equals ~x ~y)) :inline-arities #{2}}
-    ([x] true)
-    ([x y] (cloiure.lang.Util/equals x y))
     ([x y & more]
         (if (= x y)
             (if (next more)
@@ -21657,7 +21351,7 @@
 ;;;
  ; Returns the value at the index.
  ; get returns nil if index out of bounds, nth throws an exception unless not-found is supplied.
- ; nth also works for strings, Java arrays, regex Matchers and Lists, and, in O(n) time, for sequences.
+ ; nth also works for strings, arrays, regex matchers and lists, and, in O(n) time, for sequences.
  ;;
 (§ defn nth
     {:inline (fn [c i & nf] `(cloiure.lang.RT/nth ~c ~i ~@nf)) :inline-arities #{2 3}}
@@ -24620,7 +24314,7 @@
                 (keys nspublics)
                 (or (:refer fs) (:only fs) (keys nspublics))
             )]
-        (when (and to-do (not (instance? cloiure.lang.Sequential to-do)))
+        (when (and to-do (not (sequential? to-do)))
             (throw! "the value of :only/:refer must be a sequential collection of symbols")
         )
         (doseq [sym to-do]
@@ -25626,7 +25320,7 @@
  ; Returns an empty collection of the same category as coll, or nil.
  ;;
 (§ defn empty [coll]
-    (when (instance? cloiure.lang.IPersistentCollection coll)
+    (when (coll? coll)
         (.empty ^cloiure.lang.IPersistentCollection coll)
     )
 )
@@ -27148,7 +26842,6 @@
 )
 
 (§ prefer-method print-method cloiure.lang.ISeq cloiure.lang.IPersistentCollection)
-(§ prefer-method print-method cloiure.lang.ISeq java.util.Collection)
 
 ;;;
  ; Returns escape string for char or nil if none.
@@ -27235,15 +26928,6 @@
             (print-prefix-map (str "#:" ns) lift-map pr-on w)
             (print-map m pr-on w)
         )
-    )
-)
-
-(§ prefer-method print-method cloiure.lang.IPersistentCollection java.util.Collection)
-
-(§ defmethod print-method java.util.List [c, ^Writer w]
-    (if *print-readably*
-        (print-sequential "(" pr-on " " ")" c w)
-        (print-object c w)
     )
 )
 
@@ -28429,6 +28113,25 @@
 )
 
 (§ deftype VecSeq [^cloiure.core.ArrayManager am ^cloiure.core.IVecImpl vec anode ^int i ^int offset]
+    Object
+    (equals [this o]
+        (cond
+            (identical? this o)
+                true
+            (sequential? o)
+                (loop [me this you (seq o)]
+                    (if (nil? me)
+                        (nil? you)
+                        (and (= (first me) (first you))
+                            (recur (next me) (next you))
+                        )
+                    )
+                )
+            :else
+                false
+        )
+    )
+
     cloiure.core.protocols.InternalReduce
     (internal-reduce [_ f val]
         (loop [result val aidx (+ i offset)]
@@ -28477,23 +28180,6 @@
             )
         )
     )
-    (equiv [this o]
-        (cond
-            (identical? this o)
-                true
-            (or (instance? cloiure.lang.Sequential o) (instance? java.util.List o))
-                (loop [me this you (seq o)]
-                    (if (nil? me)
-                        (nil? you)
-                        (and (cloiure.lang.Util/equiv (first me) (first you))
-                            (recur (next me) (next you))
-                        )
-                    )
-                )
-            :else
-                false
-        )
-    )
     (empty [_] cloiure.lang.PersistentList/EMPTY)
 
     cloiure.lang.Seqable
@@ -28527,26 +28213,23 @@
         (cond
             (identical? this o)
                 true
-            (instance? cloiure.lang.IPersistentVector o)
-                (and (= cnt (count o))
+            (vector? o)
+                (and
+                    (= cnt (count o))
                     (loop [i (int 0)]
                         (cond
                             (= i cnt) true
-                            (.equals (nth this i) (nth o i)) (recur (inc i))
+                            (= (nth this i) (nth o i)) (recur (inc i))
                             :else false
                         )
                     )
                 )
-            (or (instance? cloiure.lang.Sequential o) (instance? java.util.List o))
-                (if-let [st (seq this)]
-                    (.equals st (seq o))
-                    (nil? (seq o))
-                )
+            (sequential? o)
+                (= (seq this) (seq o))
             :else
                 false
         )
     )
-
     ;; todo - cache
     (hashCode [this]
         (loop [hash (int 1) i (int 0)]
@@ -28559,8 +28242,8 @@
         )
     )
 
-    ;; todo - cache
     cloiure.lang.IHashEq
+    ;; todo - cache
     (hasheq [this] (Murmur3/hashOrdered this))
 
     cloiure.lang.Counted
@@ -28610,25 +28293,6 @@
         )
     )
     (empty [_] (Vec. am 0 5 EMPTY-NODE (.array am 0) nil))
-    (equiv [this o]
-        (cond
-            (instance? cloiure.lang.IPersistentVector o)
-                (and
-                    (= cnt (count o))
-                    (loop [i (int 0)]
-                        (cond
-                            (= i cnt) true
-                            (= (nth this i) (nth o i)) (recur (inc i))
-                            :else false
-                        )
-                    )
-                )
-            (or (instance? cloiure.lang.Sequential o) (instance? java.util.List o))
-                (cloiure.lang.Util/equiv (seq this) (seq o))
-            :else
-                false
-        )
-    )
 
     cloiure.lang.IPersistentStack
     (peek [this]
@@ -28847,12 +28511,6 @@
             )
         )
     )
-
-    java.util.Collection
-    (contains [this o] (boolean (some #(= % o) this)))
-
-    java.util.List
-    (get [this i] (nth this i))
 )
 
 (§ defmethod print-method ::Vec [v w]
@@ -30046,7 +29704,7 @@
     IPersistentSet
     (equality-partition [x] :set)
 
-    java.util.List
+    Sequential
     (equality-partition [x] :sequential)
 
     IPersistentMap
@@ -30067,7 +29725,7 @@
         )
     )
 
-    java.util.List
+    Sequential
     (diff-similar [a b] (diff-sequential a b))
 
     IPersistentMap
