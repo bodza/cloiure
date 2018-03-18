@@ -1,9 +1,25 @@
-(ns #_cloiure.slang cloiure.core
-    (:refer-clojure :exclude [when when-not]))
+(ns cloiure.core
+    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + - -> .. / < <= = > >= aget alength alter-meta! and apply aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case cast char char? class class? coll? compare compare-and-set! concat cond condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defn- defprotocol defrecord deref dissoc doseq dotimes double extend-type find find-ns first float fn gen-interface get hash-map hash-set identical? identity if-let if-not import inc indexed? instance? int intern into into-array isa? key keys keyword keyword? let letfn list list* list? long loop make-array map map-entry? map? merge meta name namespace namespace-munge neg? next nil? not not= nth number? object-array or parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot reduce reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? second seq seq? sequential? set? short some? sorted-map str string? subvec swap! swap-vals! symbol symbol? to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector vector? when-let while with-meta zero?]))
 
 (import
-    [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Number Object RuntimeException String StringBuilder Thread Throwable]
-)
+    [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Number Object RuntimeException String StringBuilder Thread Throwable UnsupportedOperationException])
+
+(import
+    [java.io BufferedReader InputStreamReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
+    [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
+    [java.lang.reflect Array Constructor Field #_Method Modifier]
+    [java.math BigDecimal BigInteger MathContext]
+    [java.security AccessController PrivilegedAction]
+    [java.util ArrayList Arrays Collection Comparator IdentityHashMap]
+    [java.util.concurrent Callable ForkJoinPool ForkJoinTask]
+    [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicReference]
+    [java.util.concurrent.locks ReentrantReadWriteLock]
+    [java.util.regex Matcher Pattern]
+    [cloiure.asm ClassVisitor ClassWriter Label MethodVisitor Opcodes Type]
+    [cloiure.asm.commons GeneratorAdapter Method])
+
+(import
+    [clojure.lang AFn AFunction APersistentMap APersistentSet APersistentVector ArraySeq BigInt DynamicClassLoader PersistentList$EmptyList IFn ILookup ILookupSite ILookupThunk IMapEntry IMeta IObj IPersistentCollection IPersistentList IPersistentMap IPersistentSet IPersistentVector IReference ISeq IType Keyword KeywordLookupSite LazySeq Namespace Numbers PersistentArrayMap PersistentHashMap PersistentHashSet PersistentList PersistentVector RestFn RT Symbol Tuple Util Var])
 
 (defmacro § [& _])
 (defmacro ß [& _])
@@ -60,6 +76,7 @@
 
 (defmacro java-ns [name & _] #_(ensure symbol? name) `(do ~@_))
 (defmacro class-ns [name & _] #_(ensure symbol? name) `(do ~@_))
+(defmacro clojure-ns [name & _] #_(ensure symbol? name) `(do ~@_))
 
 (defmacro interface! [name [& sups] & sigs]
     (let [tag- #(or (:tag (meta %)) Object)
@@ -72,29 +89,6 @@
     )
 )
 (defmacro class! [& _] `(interface! ~@_))
-
-#_(ns cloiure.core
-    (:refer-clojure :exclude [when when-not])
-    (:use [cloiure slang]))
-
-(import
-    [java.io InputStreamReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
-    [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
-    [java.lang.reflect Array Constructor Field #_Method Modifier]
-    [java.math BigDecimal BigInteger MathContext]
-    [java.security AccessController PrivilegedAction]
-    [java.util ArrayList Arrays Comparator IdentityHashMap]
-    [java.util.concurrent Callable]
-    [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicReference]
-    [java.util.concurrent.locks ReentrantReadWriteLock]
-    [java.util.regex Matcher Pattern]
-    [cloiure.asm ClassVisitor ClassWriter Label MethodVisitor Opcodes Type]
-    [cloiure.asm.commons GeneratorAdapter Method]
-)
-
-(import
-    [clojure.lang AFn AFunction APersistentMap APersistentSet APersistentVector ArraySeq BigInt DynamicClassLoader PersistentList$EmptyList IFn ILookup ILookupSite ILookupThunk IMapEntry IMeta IObj IPersistentCollection IPersistentList IPersistentMap IPersistentSet IPersistentVector IReference ISeq IType Keyword KeywordLookupSite LazySeq Namespace Numbers PersistentArrayMap PersistentHashSet PersistentList PersistentVector RestFn RT Symbol Tuple Util Var]
-)
 
 (defn- ßsym  [x] (condp instance? x                      Keyword (.sym x)                          Var (.sym x)  (:sym x) ))
 (defn- ßns   [x] (condp instance? x Symbol (namespace x) Keyword (namespace x)                     Var (.ns x)   (:ns x)  ))
@@ -247,25 +241,25 @@
             "public static double clojure.lang.Numbers.unchecked_inc(double)"             [ Opcodes/DCONST_1 Opcodes/DADD ]
             "public static double clojure.lang.Numbers.unchecked_dec(double)"             [ Opcodes/DCONST_1 Opcodes/DSUB ]
 
-            "public static boolean clojure.lang.RT.aget_boolean(boolean[],int)"                  Opcodes/BALOAD
-            "public static byte clojure.lang.RT.aget_byte(byte[],int)"                           Opcodes/BALOAD
-            "public static short clojure.lang.RT.aget_short(short[],int)"                        Opcodes/SALOAD
-            "public static char clojure.lang.RT.aget_char(char[],int)"                           Opcodes/CALOAD
-            "public static int clojure.lang.RT.aget_int(int[],int)"                              Opcodes/IALOAD
-            "public static long clojure.lang.RT.aget_long(long[],int)"                           Opcodes/LALOAD
-            "public static float clojure.lang.RT.aget_float(float[],int)"                        Opcodes/FALOAD
-            "public static double clojure.lang.RT.aget_double(double[],int)"                     Opcodes/DALOAD
-            "public static java.lang.Object clojure.lang.RT.aget_object(java.lang.Object[],int)" Opcodes/AALOAD
+            "public static boolean clojure.lang.RT.aget(boolean[],int)"                     Opcodes/BALOAD
+            "public static byte clojure.lang.RT.aget(byte[],int)"                           Opcodes/BALOAD
+            "public static short clojure.lang.RT.aget(short[],int)"                         Opcodes/SALOAD
+            "public static char clojure.lang.RT.aget(char[],int)"                           Opcodes/CALOAD
+            "public static int clojure.lang.RT.aget(int[],int)"                             Opcodes/IALOAD
+            "public static long clojure.lang.RT.aget(long[],int)"                           Opcodes/LALOAD
+            "public static float clojure.lang.RT.aget(float[],int)"                         Opcodes/FALOAD
+            "public static double clojure.lang.RT.aget(double[],int)"                       Opcodes/DALOAD
+            "public static java.lang.Object clojure.lang.RT.aget(java.lang.Object[],int)"   Opcodes/AALOAD
 
-            "public static int clojure.lang.RT.alength_boolean(boolean[])"         Opcodes/ARRAYLENGTH
-            "public static int clojure.lang.RT.alength_byte(byte[])"               Opcodes/ARRAYLENGTH
-            "public static int clojure.lang.RT.alength_short(short[])"             Opcodes/ARRAYLENGTH
-            "public static int clojure.lang.RT.alength_char(char[])"               Opcodes/ARRAYLENGTH
-            "public static int clojure.lang.RT.alength_int(int[])"                 Opcodes/ARRAYLENGTH
-            "public static int clojure.lang.RT.alength_long(long[])"               Opcodes/ARRAYLENGTH
-            "public static int clojure.lang.RT.alength_float(float[])"             Opcodes/ARRAYLENGTH
-            "public static int clojure.lang.RT.alength_double(double[])"           Opcodes/ARRAYLENGTH
-            "public static int clojure.lang.RT.alength_object(java.lang.Object[])" Opcodes/ARRAYLENGTH
+            "public static int clojure.lang.RT.alength(boolean[])"             Opcodes/ARRAYLENGTH
+            "public static int clojure.lang.RT.alength(byte[])"                Opcodes/ARRAYLENGTH
+            "public static int clojure.lang.RT.alength(short[])"               Opcodes/ARRAYLENGTH
+            "public static int clojure.lang.RT.alength(char[])"                Opcodes/ARRAYLENGTH
+            "public static int clojure.lang.RT.alength(int[])"                 Opcodes/ARRAYLENGTH
+            "public static int clojure.lang.RT.alength(long[])"                Opcodes/ARRAYLENGTH
+            "public static int clojure.lang.RT.alength(float[])"               Opcodes/ARRAYLENGTH
+            "public static int clojure.lang.RT.alength(double[])"              Opcodes/ARRAYLENGTH
+            "public static int clojure.lang.RT.alength(java.lang.Object[])"    Opcodes/ARRAYLENGTH
 
             "public static long clojure.lang.RT.longCast(byte)"                Opcodes/I2L
             "public static long clojure.lang.RT.longCast(short)"               Opcodes/I2L
@@ -6268,30 +6262,30 @@
 (class-ns Compiler
     (def #_"IPersistentMap" Compiler'specials
         (hash-map
-            'def                  (DefParser'new)
-            'loop*                (LetParser'new)
-            'recur                (RecurParser'new)
-            'if                   (IfParser'new)
-            'case*                (CaseParser'new)
-            'let*                 (LetParser'new)
-            'letfn*               (LetFnParser'new)
-            'do                   (BodyParser'new)
-            'fn*                  nil
-            'quote                (ConstantParser'new)
-            'var                  (TheVarParser'new)
-            'clojure.core/import* (ImportParser'new)
-            '.                    (HostParser'new)
-            'set!                 (AssignParser'new)
-            'deftype*             (DeftypeParser'new)
-            'reify*               (ReifyParser'new)
-            'try                  (TryParser'new)
-            'throw                (ThrowParser'new)
-            'monitor-enter        (MonitorEnterParser'new)
-            'monitor-exit         (MonitorExitParser'new)
-            'catch                nil
-            'finally              nil
-            'new                  (NewParser'new)
-            '&                    nil
+            'def           (DefParser'new)
+            'loop*         (LetParser'new)
+            'recur         (RecurParser'new)
+            'if            (IfParser'new)
+            'case*         (CaseParser'new)
+            'let*          (LetParser'new)
+            'letfn*        (LetFnParser'new)
+            'do            (BodyParser'new)
+            'fn*           nil
+            'quote         (ConstantParser'new)
+            'var           (TheVarParser'new)
+            'import*       (ImportParser'new)
+            '.             (HostParser'new)
+            'set!          (AssignParser'new)
+            'deftype*      (DeftypeParser'new)
+            'reify*        (ReifyParser'new)
+            'try           (TryParser'new)
+            'throw         (ThrowParser'new)
+            'monitor-enter (MonitorEnterParser'new)
+            'monitor-exit  (MonitorExitParser'new)
+            'catch         nil
+            'finally       nil
+            'new           (NewParser'new)
+            '&             nil
         )
     )
 
@@ -6308,7 +6302,7 @@
                                         (let [#_"Object" target (second form)
                                               target
                                                 (when (some? (Interop'maybeClass target, false)) => target
-                                                    (with-meta (list 'clojure.core/identity target) {:tag 'Class})
+                                                    (with-meta (list 'clojure.core/identity target) {:tag 'java.lang.Class})
                                                 )]
                                             (Compiler'preserveTag form, (list* '. target (symbol (.substring n, 1)) (next (next form))))
                                         )
@@ -7390,11 +7384,6 @@
     )
 )
 
-(java-ns cloiure.lang.ICollection
-    (interface! ICollection []
-    )
-)
-
 (java-ns cloiure.lang.Sequential
     (interface! Sequential []
     )
@@ -7954,11 +7943,11 @@
 
 (java-ns cloiure.lang.ASeq
     #_abstract
-    (class! ASeq [IObj ISeq Sequential ICollection IHashEq])
+    (class! ASeq [IObj ISeq Sequential IHashEq])
 )
 
 (java-ns cloiure.lang.LazySeq
-    (§ soon class! LazySeq [IObj ISeq Sequential ICollection IPending IHashEq])
+    (§ soon class! LazySeq [IObj ISeq Sequential IPending IHashEq])
 )
 
 (java-ns cloiure.lang.APersistentMap
@@ -7968,14 +7957,14 @@
 
 (java-ns cloiure.lang.APersistentSet
     #_abstract
-    (§ soon class! APersistentSet [#_"AFn" IPersistentSet ICollection IHashEq])
+    (§ soon class! APersistentSet [#_"AFn" IPersistentSet IHashEq])
 )
 
 (java-ns cloiure.lang.APersistentVector
     (class! VSeq [#_"ASeq" IndexedSeq IReduce])
     (class! RSeq [#_"ASeq" IndexedSeq Counted])
     #_abstract
-    (§ soon class! APersistentVector [#_"AFn" IPersistentVector ICollection Comparable IHashEq])
+    (§ soon class! APersistentVector [#_"AFn" IPersistentVector Comparable IHashEq])
     (class! SubVector [#_"APersistentVector" IObj])
 )
 
@@ -8098,7 +8087,7 @@
     (class! BitmapIndexedNode [INode])
     (class! HashCollisionNode [INode])
     (class! NodeSeq [#_"ASeq"])
-    (class! PersistentHashMap [#_"APersistentMap" IEditableCollection IObj IKVReduce])
+    (§ soon class! PersistentHashMap [#_"APersistentMap" IEditableCollection IObj IKVReduce])
 )
 
 (java-ns cloiure.lang.PersistentHashSet
@@ -8108,13 +8097,13 @@
 
 (java-ns cloiure.lang.PersistentList
     (class! Primordial [#_"RestFn"])
-    (class! EmptyList [IObj IPersistentList ICollection ISeq Counted IHashEq])
-    (§ soon class! PersistentList [#_"ASeq" IPersistentList IReduce ICollection Counted])
+    (class! EmptyList [IObj IPersistentList ISeq Counted IHashEq])
+    (§ soon class! PersistentList [#_"ASeq" IPersistentList IReduce Counted])
 )
 
 (java-ns cloiure.lang.PersistentQueue
     (class! QSeq [#_"ASeq"])
-    (class! PersistentQueue [IObj IPersistentList ICollection Counted IHashEq])
+    (class! PersistentQueue [IObj IPersistentList Counted IHashEq])
 )
 
 (java-ns cloiure.lang.PersistentTreeMap
@@ -8229,10 +8218,6 @@
     (defn #_"boolean" Util'equiv-2ob [ #_"Object" k1, #_"boolean" k2] (= k1 (cast Object k2)))
     (defn #_"boolean" Util'equiv-2bo [#_"boolean" k1,  #_"Object" k2] (= (cast Object k1) k2))
     (defn #_"boolean" Util'equiv-2cc [   #_"char" c1,    #_"char" c2] (= c1 c2))
-
-    (defn #_"boolean" Util'identical [#_"Object" k1, #_"Object" k2]
-        (identical? k1 k2)
-    )
 
     (declare Numbers'compare)
 
@@ -15432,14 +15417,10 @@
         (PersistentArrayMap'new (meta this), init)
     )
 
-    (defn #_"boolean" PersistentArrayMap'equalKey [#_"Object" k1, #_"Object" k2]
-        (if (keyword? k1) (identical? k1 k2) (= k1 k2))
-    )
-
     (defn #_"PersistentArrayMap" PersistentArrayMap'createWithCheck [#_"Object[]" init]
         (loop-when-recur [#_"int" i 0] (< i (alength init)) [(+ i 2)]
             (loop-when-recur [#_"int" j (+ i 2)] (< j (alength init)) [(+ j 2)]
-                (when (PersistentArrayMap'equalKey (aget init i), (aget init j))
+                (when (= (aget init i) (aget init j))
                     (throw! (str "duplicate key: " (aget init i)))
                 )
             )
@@ -15457,7 +15438,7 @@
                 (loop-when [n 0 #_"int" i 0] (< i (alength init)) => n
                     (let [#_"boolean" dup?
                             (loop-when [dup? false #_"int" j 0] (< j i) => dup?
-                                (or (PersistentArrayMap'equalKey (aget init i), (aget init j))
+                                (or (= (aget init i) (aget init j))
                                     (recur dup? (+ j 2))
                                 )
                             )]
@@ -15474,14 +15455,14 @@
                             (loop-when [m 0 #_"int" i 0] (< i (alength init)) => m
                                 (let [#_"boolean" dup?
                                         (loop-when [dup? false #_"int" j 0] (< j m) => dup?
-                                            (or (PersistentArrayMap'equalKey (aget init i), (aget nodups j))
+                                            (or (= (aget init i) (aget nodups j))
                                                 (recur dup? (+ j 2))
                                             )
                                         )
                                       m (when-not dup? => m
                                             (let [#_"int" j
                                                     (loop-when [j (- (alength init) 2)] (<= i j) => j
-                                                        (if (PersistentArrayMap'equalKey (aget init i), (aget init j))
+                                                        (if (= (aget init i) (aget init j))
                                                             j
                                                             (recur (- j 2))
                                                         )
@@ -15638,7 +15619,7 @@
     #_method
     (defn- #_"int" TransientArrayMap''indexOf [#_"TransientArrayMap" this, #_"Object" key]
         (loop-when [#_"int" i 0] (< i (:len this)) => -1
-            (if (PersistentArrayMap'equalKey (aget (:array this) i), key) i (recur (+ i 2)))
+            (if (= (aget (:array this) i) key) i (recur (+ i 2)))
         )
     )
 
@@ -15701,7 +15682,7 @@
     #_override
     (defn #_"void" ATransientMap'''ensureEditable--TransientArrayMap [#_"TransientArrayMap" this]
         (when (nil? (:owner this))
-            (throw (IllegalAccessError. "Transient used after persistent! call"))
+            (throw! "transient used after persistent! call")
         )
         nil
     )
@@ -16605,7 +16586,7 @@
     #_override
     (defn #_"void" ATransientMap'''ensureEditable--TransientHashMap [#_"TransientHashMap" this]
         (when (nil? (.get (:edit this)))
-            (throw (IllegalAccessError. "Transient used after persistent! call"))
+            (throw! "transient used after persistent! call")
         )
         nil
     )
@@ -18241,7 +18222,7 @@
     (defn TransientVector''ensureEditable
         (#_"void" [#_"TransientVector" this]
             (when-not (some? (.get (:edit (:root this)))) => nil
-                (throw (IllegalAccessError. "Transient used after persistent! call"))
+                (throw! "transient used after persistent! call")
             )
         )
         (#_"VNode" [#_"TransientVector" this, #_"VNode" node]
@@ -19656,7 +19637,7 @@
     (def #_"Var" RT'MATH_CONTEXT (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*math-context*"), nil)))
 
     ;;;
-     ; A cloiure.lang.Namespace object representing the current namespace.
+     ; A Namespace object representing the current namespace.
      ;;
     (def #_"Var" RT'CURRENT_NS (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*ns*"), RT'CLOIURE_NS)))
     ;;;
@@ -19679,7 +19660,7 @@
 
     (§ static
         (Var''setTag RT'OUT, (Symbol'intern "java.io.Writer"))
-        (Var''setTag RT'CURRENT_NS, (Symbol'intern "cloiure.lang.Namespace"))
+        (Var''setTag RT'CURRENT_NS, (Symbol'intern "cloiure.core.Namespace"))
         (Var''setTag RT'MATH_CONTEXT, (Symbol'intern "java.math.MathContext"))
     )
 
@@ -20547,50 +20528,10 @@
             )
         )
     )
-
-    (defn #_"boolean" RT'aget_boolean [#_"boolean[]" a, #_"int" i] (aget a i))
-    (defn #_"byte"    RT'aget_byte    [#_"byte[]"    a, #_"int" i] (aget a i))
-    (defn #_"short"   RT'aget_short   [#_"short[]"   a, #_"int" i] (aget a i))
-    (defn #_"char"    RT'aget_char    [#_"char[]"    a, #_"int" i] (aget a i))
-    (defn #_"int"     RT'aget_int     [#_"int[]"     a, #_"int" i] (aget a i))
-    (defn #_"long"    RT'aget_long    [#_"long[]"    a, #_"int" i] (aget a i))
-    (defn #_"float"   RT'aget_float   [#_"float[]"   a, #_"int" i] (aget a i))
-    (defn #_"double"  RT'aget_double  [#_"double[]"  a, #_"int" i] (aget a i))
-    (defn #_"Object"  RT'aget_object  [#_"Object[]"  a, #_"int" i] (aget a i))
-
-    (defn #_"boolean" RT'aset_boolean [#_"boolean[]" a, #_"int" i, #_"boolean" v] (aset a i v) v)
-    (defn #_"byte"    RT'aset_byte    [#_"byte[]"    a, #_"int" i, #_"byte"    v] (aset a i v) v)
-    (defn #_"short"   RT'aset_short   [#_"short[]"   a, #_"int" i, #_"short"   v] (aset a i v) v)
-    (defn #_"char"    RT'aset_char    [#_"char[]"    a, #_"int" i, #_"char"    v] (aset a i v) v)
-    (defn #_"int"     RT'aset_int     [#_"int[]"     a, #_"int" i, #_"int"     v] (aset a i v) v)
-    (defn #_"long"    RT'aset_long    [#_"long[]"    a, #_"int" i, #_"long"    v] (aset a i v) v)
-    (defn #_"float"   RT'aset_float   [#_"float[]"   a, #_"int" i, #_"float"   v] (aset a i v) v)
-    (defn #_"double"  RT'aset_double  [#_"double[]"  a, #_"int" i, #_"double"  v] (aset a i v) v)
-    (defn #_"Object"  RT'aset_object  [#_"Object[]"  a, #_"int" i, #_"Object"  v] (aset a i v) v)
-
-    (defn #_"int" RT'alength_boolean [#_"boolean[]" a] (alength a))
-    (defn #_"int" RT'alength_byte    [#_"byte[]"    a] (alength a))
-    (defn #_"int" RT'alength_short   [#_"short[]"   a] (alength a))
-    (defn #_"int" RT'alength_char    [#_"char[]"    a] (alength a))
-    (defn #_"int" RT'alength_int     [#_"int[]"     a] (alength a))
-    (defn #_"int" RT'alength_long    [#_"long[]"    a] (alength a))
-    (defn #_"int" RT'alength_float   [#_"float[]"   a] (alength a))
-    (defn #_"int" RT'alength_double  [#_"double[]"  a] (alength a))
-    (defn #_"int" RT'alength_object  [#_"Object[]"  a] (alength a))
-
-    (defn #_"boolean[]" RT'aclone_boolean [#_"boolean[]" a] (.clone a))
-    (defn #_"byte[]"    RT'aclone_byte    [#_"byte[]"    a] (.clone a))
-    (defn #_"short[]"   RT'aclone_short   [#_"short[]"   a] (.clone a))
-    (defn #_"char[]"    RT'aclone_char    [#_"char[]"    a] (.clone a))
-    (defn #_"int[]"     RT'aclone_int     [#_"int[]"     a] (.clone a))
-    (defn #_"long[]"    RT'aclone_long    [#_"long[]"    a] (.clone a))
-    (defn #_"float[]"   RT'aclone_float   [#_"float[]"   a] (.clone a))
-    (defn #_"double[]"  RT'aclone_double  [#_"double[]"  a] (.clone a))
-    (defn #_"Object[]"  RT'aclone_object  [#_"Object[]"  a] (.clone a))
 )
 )
 
-#_(ns cloiure.core)
+(clojure-ns cloiure.core
 
 (§ def unquote)
 (§ def unquote-splicing)
@@ -20598,33 +20539,33 @@
 ;;;
  ; Creates a new list containing the items.
  ;;
-(§ def list (cloiure.lang.PersistentList/creator))
+(§ def list (PersistentList/creator))
 
 ;;;
  ; Returns a new seq where x is the first element and seq is the rest.
  ;;
-(§ def cons (fn* cons [x seq] (cloiure.lang.RT/cons x seq)))
+(§ def cons (fn* cons [x seq] (RT/cons x seq)))
 
 ;; during bootstrap we don't have destructuring let, loop or fn, will redefine later
 
 (§ def ^:macro let  (fn* let  [&form &env & decl] (cons 'let* decl)))
 (§ def ^:macro loop (fn* loop [&form &env & decl] (cons 'loop* decl)))
-(§ def ^:macro fn   (fn* fn   [&form &env & decl] (.withMeta ^cloiure.lang.IObj (cons 'fn* decl) (.meta ^cloiure.lang.IMeta &form))))
+(§ def ^:macro fn   (fn* fn   [&form &env & decl] (.withMeta ^IObj (cons 'fn* decl) (.meta ^IMeta &form))))
 
 ;;;
  ; Returns the first item in the collection. Calls seq on its argument. If coll is nil, returns nil.
  ;;
-(§ def first (fn first [coll] (cloiure.lang.RT/first coll)))
+(§ def first (fn first [coll] (RT/first coll)))
 
 ;;;
  ; Returns a seq of the items after the first. Calls seq on its argument. If there are no more items, returns nil.
  ;;
-(§ def ^cloiure.lang.ISeq next (fn next [x] (cloiure.lang.RT/next x)))
+(§ def ^ISeq next (fn next [x] (RT/next x)))
 
 ;;;
  ; Returns a possibly empty seq of the items after the first. Calls seq on its argument.
  ;;
-(§ def ^cloiure.lang.ISeq rest (fn rest [x] (cloiure.lang.RT/rest x)))
+(§ def ^ISeq rest (fn rest [x] (RT/rest x)))
 
 ;;;
  ; conj[oin].
@@ -20635,11 +20576,11 @@
     (fn conj
         ([] [])
         ([coll] coll)
-        ([coll x] (cloiure.lang.RT/conj coll x))
+        ([coll x] (RT/conj coll x))
         ([coll x & xs]
             (if xs
-                (recur (cloiure.lang.RT/conj coll x) (first xs) (next xs))
-                (cloiure.lang.RT/conj coll x)
+                (recur (conj coll x) (first xs) (next xs))
+                (conj coll x)
             )
         )
     )
@@ -20655,18 +20596,18 @@
  ; Returns a seq on the collection. If the collection is empty, returns nil.
  ; (seq nil) returns nil. seq also works on strings, arrays (of reference types).
  ;;
-(§ def ^cloiure.lang.ISeq seq (fn seq [coll] (cloiure.lang.RT/seq coll)))
+(§ def ^ISeq seq (fn seq [coll] (RT/seq coll)))
 
 ;;;
  ; Evaluates x and tests if it is an instance of the class c. Returns true or false.
  ;;
 (§ def instance? (fn instance? [^Class c x] (.isInstance c x)))
 
-(§ def seq?    (fn seq?    [x] (instance? cloiure.lang.ISeq x)))
+(§ def seq?    (fn seq?    [x] (instance? ISeq x)))
 (§ def char?   (fn char?   [x] (instance? Character x)))
 (§ def string? (fn string? [x] (instance? String x)))
-(§ def map?    (fn map?    [x] (instance? cloiure.lang.IPersistentMap x)))
-(§ def vector? (fn vector? [x] (instance? cloiure.lang.IPersistentVector x)))
+(§ def map?    (fn map?    [x] (instance? IPersistentMap x)))
+(§ def vector? (fn vector? [x] (instance? IPersistentVector x)))
 
 ;;;
  ; assoc[iate].
@@ -20675,9 +20616,9 @@
  ;;
 (§ def assoc
     (fn assoc
-        ([map key val] (cloiure.lang.RT/assoc map key val))
+        ([map key val] (RT/assoc map key val))
         ([map key val & kvs]
-            (let [ret (cloiure.lang.RT/assoc map key val)]
+            (let [ret (assoc map key val)]
                 (if kvs
                     (if (next kvs)
                         (recur ret (first kvs) (second kvs) (nnext kvs))
@@ -20693,12 +20634,12 @@
 ;;;
  ; Returns the metadata of obj, returns nil if there is no metadata.
  ;;
-(§ def meta (fn meta [x] (if (instance? cloiure.lang.IMeta x) (.meta ^cloiure.lang.IMeta x))))
+(§ def meta (fn meta [x] (if (instance? IMeta x) (.meta ^IMeta x))))
 
 ;;;
  ; Returns an object of the same type and value as obj, with map m as its metadata.
  ;;
-(§ def with-meta (fn with-meta [^cloiure.lang.IObj x m] (.withMeta x m)))
+(§ def with-meta (fn with-meta [^IObj x m] (.withMeta x m)))
 
 (§ def ^:private ^:dynamic assert-valid-fdecl (fn [fdecl]))
 
@@ -20710,8 +20651,8 @@
                     (let [arglist (first fdecl)
                           ;; elide implicit macro args
                           arglist
-                            (if (cloiure.lang.Util/equals '&form (first arglist))
-                                (cloiure.lang.RT/subvec arglist 2 (cloiure.lang.RT/count arglist))
+                            (if (= '&form (first arglist))
+                                (RT/subvec arglist 2 (RT/count arglist))
                                 arglist
                             )
                           body (next fdecl)]
@@ -20726,13 +20667,13 @@
                 )
               resolve-tag
                 (fn [argvec]
-                    (let [m (meta argvec) ^cloiure.lang.Symbol tag (:tag m)]
+                    (let [m (meta argvec) ^Symbol tag (:tag m)]
                         (if (symbol? tag)
-                            (if (cloiure.lang.Util/equiv (.indexOf (.getName tag) ".") -1)
-                                (if (cloiure.lang.Util/equals nil (cloiure.lang.Compiler$HostExpr/maybeSpecialTag tag))
-                                    (let [c (cloiure.lang.Compiler$HostExpr/maybeClass tag false)]
+                            (if (= (.indexOf (.getName tag) ".") -1)
+                                (if (nil? (Interop/maybeSpecialTag tag))
+                                    (let [c (Interop/maybeClass tag false)]
                                         (if c
-                                            (with-meta argvec (assoc m :tag (cloiure.lang.Symbol/intern (.getName c))))
+                                            (with-meta argvec (assoc m :tag (Symbol/intern (.getName c))))
                                             argvec
                                         )
                                     )
@@ -20782,10 +20723,10 @@
               m     (conj {:arglists (list 'quote (sigs fdecl))} m)
               m     (let [inline (:inline m) ifn (first inline) iname (second inline)]
                         ;; same as: (if (and (= 'fn ifn) (not (symbol? iname))) ...)
-                        (if (if (cloiure.lang.Util/equiv 'fn ifn) (if (symbol? iname) false true))
+                        (if (if (= 'fn ifn) (if (symbol? iname) false true))
                             ;; inserts the same fn name to the inline fn if it does not have one
                             (assoc m :inline
-                                (cons ifn (cons (cloiure.lang.Symbol/intern (.concat (.getName ^cloiure.lang.Symbol name) "__inliner")) (next inline)))
+                                (cons ifn (cons (Symbol/intern (.concat (.getName ^Symbol name) "__inliner")) (next inline)))
                             )
                             m
                         )
@@ -20806,7 +20747,7 @@
 ;;;
  ; Returns an array of Objects containing the contents of coll.
  ;;
-(§ defn ^"[Ljava.lang.Object;" to-array [coll] (cloiure.lang.RT/toArray coll))
+(§ defn ^"[Ljava.lang.Object;" to-array [coll] (RT/toArray coll))
 
 ;;;
  ; Throws a ClassCastException if x is not a c, else returns x.
@@ -20824,7 +20765,7 @@
     ([a b c d] [a b c d])
     ([a b c d e] [a b c d e])
     ([a b c d e f] [a b c d e f])
-    ([a b c d e f & args] (cloiure.lang.LazilyPersistentVector/create (cons a (cons b (cons c (cons d (cons e (cons f args))))))))
+    ([a b c d e f & args] (LazilyPersistentVector/create (cons a (cons b (cons c (cons d (cons e (cons f args))))))))
 )
 
 ;;;
@@ -20833,11 +20774,11 @@
  ;;
 (§ defn vec [coll]
     (if (vector? coll)
-        (if (instance? cloiure.lang.IObj coll)
+        (if (instance? IObj coll)
             (with-meta coll nil)
-            (cloiure.lang.LazilyPersistentVector/create coll)
+            (LazilyPersistentVector/create coll)
         )
-        (cloiure.lang.LazilyPersistentVector/create coll)
+        (LazilyPersistentVector/create coll)
     )
 )
 
@@ -20848,7 +20789,7 @@
  ;;
 (§ defn hash-map
     ([] {})
-    ([& keyvals] (cloiure.lang.PersistentHashMap/create keyvals))
+    ([& keyvals] (PersistentHashMap/create keyvals))
 )
 
 ;;;
@@ -20857,7 +20798,7 @@
  ;;
 (§ defn hash-set
     ([] #{})
-    ([& keys] (cloiure.lang.PersistentHashSet/create keys))
+    ([& keys] (PersistentHashSet/create keys))
 )
 
 ;;;
@@ -20865,9 +20806,7 @@
  ; Returns a new sorted map with supplied mappings. If any keys are
  ; equal, they are handled as if by repeated uses of assoc.
  ;;
-(§ defn sorted-map [& keyvals]
-    (cloiure.lang.PersistentTreeMap/create keyvals)
-)
+(§ defn sorted-map [& keyvals] (PersistentTreeMap/create keyvals))
 
 ;;;
  ; keyval => key val
@@ -20875,34 +20814,25 @@
  ; comparator. If any keys are equal, they are handled as if by
  ; repeated uses of assoc.
  ;;
-(§ defn sorted-map-by [comparator & keyvals]
-    (cloiure.lang.PersistentTreeMap/create comparator keyvals)
-)
+(§ defn sorted-map-by [comp & keyvals] (PersistentTreeMap/create comp keyvals))
 
 ;;;
  ; Returns a new sorted set with supplied keys. Any equal keys are
  ; handled as if by repeated uses of conj.
  ;;
-(§ defn sorted-set [& keys]
-    (cloiure.lang.PersistentTreeSet/create keys)
-)
+(§ defn sorted-set [& keys] (PersistentTreeSet/create keys))
 
 ;;;
  ; Returns a new sorted set with supplied keys, using the supplied
  ; comparator. Any equal keys are handled as if by repeated uses of
  ; conj.
  ;;
-(§ defn sorted-set-by [comparator & keys]
-    (cloiure.lang.PersistentTreeSet/create comparator keys)
-)
+(§ defn sorted-set-by [comp & keys] (PersistentTreeSet/create comp keys))
 
 ;;;
  ; Returns true if x is nil, false otherwise.
  ;;
-(§ defn ^Boolean nil?
-    {:inline (fn [x] (list 'cloiure.lang.Util/identical x nil))}
-    [x] (cloiure.lang.Util/identical x nil)
-)
+(§ defn ^Boolean nil? [x] (identical? x nil))
 
 ;;;
  ; Like defn, but the resulting function name is declared as a macro
@@ -20979,12 +20909,12 @@
 ;;;
  ; Returns true if x is the value false, false otherwise.
  ;;
-(§ defn ^Boolean false? [x] (cloiure.lang.Util/identical x false))
+(§ defn ^Boolean false? [x] (identical? x false))
 
 ;;;
  ; Returns true if x is the value true, false otherwise.
  ;;
-(§ defn ^Boolean true? [x] (cloiure.lang.Util/identical x true))
+(§ defn ^Boolean true? [x] (identical? x true))
 
 ;;;
  ; Return true if x is a Boolean.
@@ -21028,19 +20958,19 @@
 ;;;
  ; Return true if x is a Symbol.
  ;;
-(§ defn symbol? [x] (instance? cloiure.lang.Symbol x))
+(§ defn symbol? [x] (instance? Symbol x))
 
 ;;;
  ; Return true if x is a Keyword.
  ;;
-(§ defn keyword? [x] (instance? cloiure.lang.Keyword x))
+(§ defn keyword? [x] (instance? Keyword x))
 
 ;;;
  ; Returns a Symbol with the given namespace and name.
  ;;
-(§ defn ^cloiure.lang.Symbol symbol
-    ([name] (if (symbol? name) name (cloiure.lang.Symbol/intern name)))
-    ([ns name] (cloiure.lang.Symbol/intern ns name))
+(§ defn ^Symbol symbol
+    ([name] (if (symbol? name) name (Symbol/intern name)))
+    ([ns name] (Symbol/intern ns name))
 )
 
 ;;;
@@ -21050,7 +20980,7 @@
  ;;
 (§ defn gensym
     ([] (gensym "G__"))
-    ([prefix] (cloiure.lang.Symbol/intern (str prefix (cloiure.lang.RT/nextID))))
+    ([prefix] (Symbol/intern (str prefix (RT/nextID))))
 )
 
 ;;;
@@ -21075,15 +21005,15 @@
  ; Returns a Keyword with the given namespace and name.
  ; Do not use ":" in the keyword strings, it will be added automatically.
  ;;
-(§ defn ^cloiure.lang.Keyword keyword
+(§ defn ^Keyword keyword
     ([name]
         (cond
             (keyword? name) name
-            (symbol? name) (cloiure.lang.Keyword/intern ^cloiure.lang.Symbol name)
-            (string? name) (cloiure.lang.Keyword/intern (cloiure.lang.Symbol/intern ^String name))
+            (symbol? name) (Keyword/intern ^Symbol name)
+            (string? name) (Keyword/intern (Symbol/intern ^String name))
         )
     )
-    ([ns name] (cloiure.lang.Keyword/intern (cloiure.lang.Symbol/intern ns name)))
+    ([ns name] (Keyword/intern (Symbol/intern ns name)))
 )
 
 ;;;
@@ -21092,15 +21022,15 @@
  ; been interned, it will return nil.
  ; Do not use ":" in the keyword strings, it will be added automatically.
  ;;
-(§ defn ^cloiure.lang.Keyword find-keyword
+(§ defn ^Keyword find-keyword
     ([name]
         (cond
             (keyword? name) name
-            (symbol? name) (cloiure.lang.Keyword/find ^cloiure.lang.Symbol name)
-            (string? name) (cloiure.lang.Keyword/find ^String name)
+            (symbol? name) (Keyword/find ^Symbol name)
+            (string? name) (Keyword/find ^String name)
         )
     )
-    ([ns name] (cloiure.lang.Keyword/find ns name))
+    ([ns name] (Keyword/find ns name))
 )
 
 (§ defn ^:private spread [arglist]
@@ -21127,11 +21057,11 @@
  ; Applies fn f to the argument list formed by prepending intervening arguments to args.
  ;;
 (§ defn apply
-    ([^cloiure.lang.IFn f args] (.applyTo f (seq args)))
-    ([^cloiure.lang.IFn f x args] (.applyTo f (list* x args)))
-    ([^cloiure.lang.IFn f x y args] (.applyTo f (list* x y args)))
-    ([^cloiure.lang.IFn f x y z args] (.applyTo f (list* x y z args)))
-    ([^cloiure.lang.IFn f a b c d & more] (.applyTo f (cons a (cons b (cons c (cons d (spread more)))))))
+    ([^IFn f args] (.applyTo f (seq args)))
+    ([^IFn f x args] (.applyTo f (list* x args)))
+    ([^IFn f x y args] (.applyTo f (list* x y args)))
+    ([^IFn f x y z args] (.applyTo f (list* x y z args)))
+    ([^IFn f a b c d & more] (.applyTo f (cons a (cons b (cons c (cons d (spread more)))))))
 )
 
 ;;;
@@ -21147,42 +21077,42 @@
  ; seq calls. See also - realized?
  ;;
 (§ defmacro lazy-seq [& body]
-    (list 'new 'cloiure.lang.LazySeq (list* '^{:once true} fn* [] body))
+    (list 'new 'cloiure.core.LazySeq (list* '^{:once true} fn* [] body))
 )
 
-(§ defn ^cloiure.lang.ChunkBuffer chunk-buffer [capacity]
-    (cloiure.lang.ChunkBuffer. capacity)
+(§ defn ^ChunkBuffer chunk-buffer [capacity]
+    (ChunkBuffer. capacity)
 )
 
-(§ defn chunk-append [^cloiure.lang.ChunkBuffer b x]
+(§ defn chunk-append [^ChunkBuffer b x]
     (.add b x)
 )
 
-(§ defn ^cloiure.lang.IChunk chunk [^cloiure.lang.ChunkBuffer b]
+(§ defn ^IChunk chunk [^ChunkBuffer b]
     (.chunk b)
 )
 
-(§ defn ^cloiure.lang.IChunk chunk-first [^cloiure.lang.IChunkedSeq s]
+(§ defn ^IChunk chunk-first [^IChunkedSeq s]
     (.chunkedFirst s)
 )
 
-(§ defn ^cloiure.lang.ISeq chunk-rest [^cloiure.lang.IChunkedSeq s]
+(§ defn ^ISeq chunk-rest [^IChunkedSeq s]
     (.chunkedMore s)
 )
 
-(§ defn ^cloiure.lang.ISeq chunk-next [^cloiure.lang.IChunkedSeq s]
+(§ defn ^ISeq chunk-next [^IChunkedSeq s]
     (.chunkedNext s)
 )
 
 (§ defn chunk-cons [chunk rest]
-    (if (cloiure.lang.Numbers/isZero (cloiure.lang.RT/count chunk))
+    (if (Numbers/isZero (RT/count chunk))
         rest
-        (cloiure.lang.ChunkedCons. chunk rest)
+        (ChunkedCons. chunk rest)
     )
 )
 
 (§ defn chunked-seq? [s]
-    (instance? cloiure.lang.IChunkedSeq s)
+    (instance? IChunkedSeq s)
 )
 
 ;;;
@@ -21232,17 +21162,17 @@
  ; will cache the result and return it on all subsequent force calls.
  ; See also - realized?
  ;;
-(§ defmacro delay [& body] (list 'new 'cloiure.lang.Delay (list* `^{:once true} fn* [] body)))
+(§ defmacro delay [& body] (list 'new 'cloiure.core.Delay (list* `^{:once true} fn* [] body)))
 
 ;;;
  ; Returns true if x is a Delay created with delay.
  ;;
-(§ defn delay? [x] (instance? cloiure.lang.Delay x))
+(§ defn delay? [x] (instance? Delay x))
 
 ;;;
  ; If x is a Delay, returns the (possibly cached) value of its expression, else returns x.
  ;;
-(§ defn force [x] (cloiure.lang.Delay/force x))
+(§ defn force [x] (Delay/force x))
 
 ;;;
  ; Evaluates test. If logical false, evaluates and returns then expr,
@@ -21254,22 +21184,13 @@
 )
 
 ;;;
- ; Tests if 2 arguments are the same object.
- ;;
-(§ defn identical?
-    {:inline (fn [x y] `(cloiure.lang.Util/identical ~x ~y)) :inline-arities #{2}}
-    ([x y] (cloiure.lang.Util/identical x y))
-)
-
-;;;
  ; Equality. Returns true if x equals y, false if not. Same as Java x.equals(y) except it also
  ; works for nil, and compares numbers and collections in a type-independent manner. Cloiure's
  ; immutable data structures define equals() (and thus =) as a value, not an identity, comparison.
  ;;
 (§ defn =
-    {:inline (fn [x y] `(cloiure.lang.Util/equiv ~x ~y)) :inline-arities #{2}}
     ([x] true)
-    ([x y] (cloiure.lang.Util/equiv x y))
+    ([x y] (Util/equiv x y))
     ([x y & more]
         (if (= x y)
             (if (next more)
@@ -21296,10 +21217,7 @@
  ; works for nil, and compares numbers and collections in a type-independent manner.
  ; x must implement Comparable.
  ;;
-(§ defn compare
-    {:inline (fn [x y] `(cloiure.lang.Util/compare ~x ~y))}
-    [x y] (cloiure.lang.Util/compare x y)
-)
+(§ defn compare [x y] (Util/compare x y))
 
 ;;;
  ; Evaluates exprs one at a time, from left to right. If a form returns logical false
@@ -21326,27 +21244,18 @@
 ;;;
  ; Returns true if num is zero, else false.
  ;;
-(§ defn zero?
-    {:inline (fn [num] `(cloiure.lang.Numbers/isZero ~num))}
-    [num] (cloiure.lang.Numbers/isZero num)
-)
+(§ defn zero? [num] (Numbers/isZero num))
 
 ;;;
  ; Returns the number of items in the collection. (count nil) returns 0.
  ; Also works on strings, arrays, collections and maps.
  ;;
-(§ defn count
-    {:inline (fn [coll] `(cloiure.lang.RT/count ~coll))}
-    [coll] (cloiure.lang.RT/count coll)
-)
+(§ defn count [coll] (RT/count coll))
 
 ;;;
  ; Coerce to int.
  ;;
-(§ defn int
-    {:inline (fn [x] `(cloiure.lang.RT/intCast ~x))}
-    [x] (cloiure.lang.RT/intCast x)
-)
+(§ defn int [x] (RT/intCast x))
 
 ;;;
  ; Returns the value at the index.
@@ -21354,18 +21263,16 @@
  ; nth also works for strings, arrays, regex matchers and lists, and, in O(n) time, for sequences.
  ;;
 (§ defn nth
-    {:inline (fn [c i & nf] `(cloiure.lang.RT/nth ~c ~i ~@nf)) :inline-arities #{2 3}}
-    ([coll index]           (cloiure.lang.RT/nth coll index          ))
-    ([coll index not-found] (cloiure.lang.RT/nth coll index not-found))
+    ([coll index]           (RT/nth coll index          ))
+    ([coll index not-found] (RT/nth coll index not-found))
 )
 
 ;;;
  ; Returns non-nil if nums are in monotonically increasing order, otherwise false.
  ;;
 (§ defn <
-    {:inline (fn [x y] `(cloiure.lang.Numbers/lt ~x ~y)) :inline-arities #{2}}
     ([x] true)
-    ([x y] (cloiure.lang.Numbers/lt x y))
+    ([x y] (Numbers/lt x y))
     ([x y & more]
         (if (< x y)
             (if (next more)
@@ -21381,19 +21288,13 @@
  ; Returns a number one greater than num. Supports arbitrary precision.
  ; See also: inc
  ;;
-(§ defn inc'
-    {:inline (fn [x] `(cloiure.lang.Numbers/incP ~x))}
-    [x] (cloiure.lang.Numbers/incP x)
-)
+(§ defn inc' [x] (Numbers/incP x))
 
 ;;;
  ; Returns a number one greater than num. Does not auto-promote longs, will throw on overflow.
  ; See also: inc'
  ;;
-(§ defn inc
-    {:inline (fn [x] `(cloiure.lang.Numbers/inc ~x))}
-    [x] (cloiure.lang.Numbers/inc x)
-)
+(§ defn inc [x] (Numbers/inc x))
 
 ;; reduce is defined again later after InternalReduce loads
 
@@ -21424,26 +21325,14 @@
  ;;
 (§ defn reverse [coll] (reduce1 conj () coll))
 
-(§ defn ^:private nary-inline [op]
-    (fn
-        ([x] `(. cloiure.lang.Numbers (~op ~x)))
-        ([x y] `(. cloiure.lang.Numbers (~op ~x ~y)))
-        ([x y & more] (reduce1 (fn [a b] `(. cloiure.lang.Numbers (~op ~a ~b))) `(. cloiure.lang.Numbers (~op ~x ~y)) more))
-    )
-)
-
-(§ defn ^:private >1? [n] (cloiure.lang.Numbers/gt n 1))
-(§ defn ^:private >0? [n] (cloiure.lang.Numbers/gt n 0))
-
 ;;;
  ; Returns the sum of nums. (+') returns 0. Supports arbitrary precision.
  ; See also: +
  ;;
 (§ defn +'
-    {:inline (nary-inline 'addP) :inline-arities >1?}
     ([] 0)
     ([x] (cast Number x))
-    ([x y] (cloiure.lang.Numbers/addP x y))
+    ([x y] (Numbers/addP x y))
     ([x y & more] (reduce1 +' (+' x y) more))
 )
 
@@ -21452,10 +21341,9 @@
  ; See also: +'
  ;;
 (§ defn +
-    {:inline (nary-inline 'add) :inline-arities >1?}
     ([] 0)
     ([x] (cast Number x))
-    ([x y] (cloiure.lang.Numbers/add x y))
+    ([x y] (Numbers/add x y))
     ([x y & more] (reduce1 + (+ x y) more))
 )
 
@@ -21464,10 +21352,9 @@
  ; See also: *
  ;;
 (§ defn *'
-    {:inline (nary-inline 'multiplyP) :inline-arities >1?}
     ([] 1)
     ([x] (cast Number x))
-    ([x y] (cloiure.lang.Numbers/multiplyP x y))
+    ([x y] (Numbers/multiplyP x y))
     ([x y & more] (reduce1 *' (*' x y) more))
 )
 
@@ -21476,10 +21363,9 @@
  ; See also: *'
  ;;
 (§ defn *
-    {:inline (nary-inline 'multiply) :inline-arities >1?}
     ([] 1)
     ([x] (cast Number x))
-    ([x y] (cloiure.lang.Numbers/multiply x y))
+    ([x y] (Numbers/multiply x y))
     ([x y & more] (reduce1 * (* x y) more))
 )
 
@@ -21488,9 +21374,8 @@
  ; else returns numerator divided by all of the denominators.
  ;;
 (§ defn /
-    {:inline (nary-inline 'divide) :inline-arities >1?}
     ([x] (/ 1 x))
-    ([x y] (cloiure.lang.Numbers/divide x y))
+    ([x y] (Numbers/divide x y))
     ([x y & more] (reduce1 / (/ x y) more))
 )
 
@@ -21500,9 +21385,8 @@
  ; See also: -
  ;;
 (§ defn -'
-    {:inline (nary-inline 'minusP) :inline-arities >0?}
-    ([x] (cloiure.lang.Numbers/minusP x))
-    ([x y] (cloiure.lang.Numbers/minusP x y))
+    ([x] (Numbers/minusP x))
+    ([x y] (Numbers/minusP x y))
     ([x y & more] (reduce1 -' (-' x y) more))
 )
 
@@ -21512,9 +21396,8 @@
  ; See also: -'
  ;;
 (§ defn -
-    {:inline (nary-inline 'minus) :inline-arities >0?}
-    ([x] (cloiure.lang.Numbers/minus x))
-    ([x y] (cloiure.lang.Numbers/minus x y))
+    ([x] (Numbers/minus x))
+    ([x y] (Numbers/minus x y))
     ([x y & more] (reduce1 - (- x y) more))
 )
 
@@ -21522,9 +21405,8 @@
  ; Returns non-nil if nums are in monotonically non-decreasing order, otherwise false.
  ;;
 (§ defn <=
-    {:inline (fn [x y] `(cloiure.lang.Numbers/lte ~x ~y)) :inline-arities #{2}}
     ([x] true)
-    ([x y] (cloiure.lang.Numbers/lte x y))
+    ([x y] (Numbers/lte x y))
     ([x y & more]
         (if (<= x y)
             (if (next more)
@@ -21540,9 +21422,8 @@
  ; Returns non-nil if nums are in monotonically decreasing order, otherwise false.
  ;;
 (§ defn >
-    {:inline (fn [x y] `(cloiure.lang.Numbers/gt ~x ~y)) :inline-arities #{2}}
     ([x] true)
-    ([x y] (cloiure.lang.Numbers/gt x y))
+    ([x y] (Numbers/gt x y))
     ([x y & more]
         (if (> x y)
             (if (next more)
@@ -21558,9 +21439,8 @@
  ; Returns non-nil if nums are in monotonically non-increasing order, otherwise false.
  ;;
 (§ defn >=
-    {:inline (fn [x y] `(cloiure.lang.Numbers/gte ~x ~y)) :inline-arities #{2}}
     ([x] true)
-    ([x y] (cloiure.lang.Numbers/gte x y))
+    ([x y] (Numbers/gte x y))
     ([x y & more]
         (if (>= x y)
             (if (next more)
@@ -21576,9 +21456,8 @@
  ; Returns non-nil if nums all have the equivalent value (type-independent), otherwise false.
  ;;
 (§ defn ==
-    {:inline (fn [x y] `(cloiure.lang.Numbers/equiv ~x ~y)) :inline-arities #{2}}
     ([x] true)
-    ([x y] (cloiure.lang.Numbers/equiv x y))
+    ([x y] (Numbers/equiv x y))
     ([x y & more]
         (if (== x y)
             (if (next more)
@@ -21594,9 +21473,8 @@
  ; Returns the greatest of the nums.
  ;;
 (§ defn max
-    {:inline (nary-inline 'max) :inline-arities >1?}
     ([x] x)
-    ([x y] (cloiure.lang.Numbers/max x y))
+    ([x y] (Numbers/max x y))
     ([x y & more] (reduce1 max (max x y) more))
 )
 
@@ -21604,9 +21482,8 @@
  ; Returns the least of the nums.
  ;;
 (§ defn min
-    {:inline (nary-inline 'min) :inline-arities >1?}
     ([x] x)
-    ([x y] (cloiure.lang.Numbers/min x y))
+    ([x y] (Numbers/min x y))
     ([x y & more] (reduce1 min (min x y) more))
 )
 
@@ -21614,197 +21491,133 @@
  ; Returns a number one less than num. Supports arbitrary precision.
  ; See also: dec
  ;;
-(§ defn dec'
-    {:inline (fn [x] `(cloiure.lang.Numbers/decP ~x))}
-    [x] (cloiure.lang.Numbers/decP x)
-)
+(§ defn dec' [x] (Numbers/decP x))
 
 ;;;
  ; Returns a number one less than num. Does not auto-promote longs, will throw on overflow.
  ; See also: dec'
  ;;
-(§ defn dec
-    {:inline (fn [x] `(cloiure.lang.Numbers/dec ~x))}
-    [x] (cloiure.lang.Numbers/dec x)
-)
+(§ defn dec [x] (Numbers/dec x))
 
 ;;;
  ; Returns a number one greater than x, an int.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-inc-int
-    {:inline (fn [x] `(cloiure.lang.Numbers/unchecked_int_inc ~x))}
-    [x] (cloiure.lang.Numbers/unchecked_int_inc x)
-)
+(§ defn unchecked-inc-int [x] (Numbers/unchecked_int_inc x))
 
 ;;;
  ; Returns a number one greater than x, a long.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-inc
-    {:inline (fn [x] `(cloiure.lang.Numbers/unchecked_inc ~x))}
-    [x] (cloiure.lang.Numbers/unchecked_inc x)
-)
+(§ defn unchecked-inc [x] (Numbers/unchecked_inc x))
 
 ;;;
  ; Returns a number one less than x, an int.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-dec-int
-    {:inline (fn [x] `(cloiure.lang.Numbers/unchecked_int_dec ~x))}
-    [x] (cloiure.lang.Numbers/unchecked_int_dec x)
-)
+(§ defn unchecked-dec-int [x] (Numbers/unchecked_int_dec x))
 
 ;;;
  ; Returns a number one less than x, a long.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-dec
-    {:inline (fn [x] `(cloiure.lang.Numbers/unchecked_dec ~x))}
-    [x] (cloiure.lang.Numbers/unchecked_dec x)
-)
+(§ defn unchecked-dec [x] (Numbers/unchecked_dec x))
 
 ;;;
  ; Returns the negation of x, an int.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-negate-int
-    {:inline (fn [x] `(cloiure.lang.Numbers/unchecked_int_negate ~x))}
-    [x] (cloiure.lang.Numbers/unchecked_int_negate x)
-)
+(§ defn unchecked-negate-int [x] (Numbers/unchecked_int_negate x))
 
 ;;;
  ; Returns the negation of x, a long.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-negate
-    {:inline (fn [x] `(cloiure.lang.Numbers/unchecked_minus ~x))}
-    [x] (cloiure.lang.Numbers/unchecked_minus x)
-)
+(§ defn unchecked-negate [x] (Numbers/unchecked_minus x))
 
 ;;;
  ; Returns the sum of x and y, both int.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-add-int
-    {:inline (fn [x y] `(cloiure.lang.Numbers/unchecked_int_add ~x ~y))}
-    [x y] (cloiure.lang.Numbers/unchecked_int_add x y)
-)
+(§ defn unchecked-add-int [x y] (Numbers/unchecked_int_add x y))
 
 ;;;
  ; Returns the sum of x and y, both long.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-add
-    {:inline (fn [x y] `(cloiure.lang.Numbers/unchecked_add ~x ~y))}
-    [x y] (cloiure.lang.Numbers/unchecked_add x y)
-)
+(§ defn unchecked-add [x y] (Numbers/unchecked_add x y))
 
 ;;;
  ; Returns the difference of x and y, both int.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-subtract-int
-    {:inline (fn [x y] `(cloiure.lang.Numbers/unchecked_int_subtract ~x ~y))}
-    [x y] (cloiure.lang.Numbers/unchecked_int_subtract x y)
-)
+(§ defn unchecked-subtract-int [x y] (Numbers/unchecked_int_subtract x y))
 
 ;;;
  ; Returns the difference of x and y, both long.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-subtract
-    {:inline (fn [x y] `(cloiure.lang.Numbers/unchecked_minus ~x ~y))}
-    [x y] (cloiure.lang.Numbers/unchecked_minus x y)
-)
+(§ defn unchecked-subtract [x y] (Numbers/unchecked_minus x y))
 
 ;;;
  ; Returns the product of x and y, both int.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-multiply-int
-    {:inline (fn [x y] `(cloiure.lang.Numbers/unchecked_int_multiply ~x ~y))}
-    [x y] (cloiure.lang.Numbers/unchecked_int_multiply x y)
-)
+(§ defn unchecked-multiply-int [x y] (Numbers/unchecked_int_multiply x y))
 
 ;;;
  ; Returns the product of x and y, both long.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-multiply
-    {:inline (fn [x y] `(cloiure.lang.Numbers/unchecked_multiply ~x ~y))}
-    [x y] (cloiure.lang.Numbers/unchecked_multiply x y)
-)
+(§ defn unchecked-multiply [x y] (Numbers/unchecked_multiply x y))
 
 ;;;
  ; Returns the division of x by y, both int.
  ; Note - uses a primitive operator subject to truncation.
  ;;
-(§ defn unchecked-divide-int
-    {:inline (fn [x y] `(cloiure.lang.Numbers/unchecked_int_divide ~x ~y))}
-    [x y] (cloiure.lang.Numbers/unchecked_int_divide x y)
-)
+(§ defn unchecked-divide-int [x y] (Numbers/unchecked_int_divide x y))
 
 ;;;
  ; Returns the remainder of division of x by y, both int.
  ; Note - uses a primitive operator subject to truncation.
  ;;
-(§ defn unchecked-remainder-int
-    {:inline (fn [x y] `(cloiure.lang.Numbers/unchecked_int_remainder ~x ~y))}
-    [x y] (cloiure.lang.Numbers/unchecked_int_remainder x y)
-)
+(§ defn unchecked-remainder-int [x y] (Numbers/unchecked_int_remainder x y))
 
 ;;;
  ; Returns true if num is greater than zero, else false.
  ;;
-(§ defn pos?
-    {:inline (fn [num] `(cloiure.lang.Numbers/isPos ~num))}
-    [num] (cloiure.lang.Numbers/isPos num)
-)
+(§ defn pos? [num] (Numbers/isPos num))
 
 ;;;
  ; Returns true if num is less than zero, else false.
  ;;
-(§ defn neg?
-    {:inline (fn [num] `(cloiure.lang.Numbers/isNeg ~num))}
-    [num] (cloiure.lang.Numbers/isNeg num)
-)
+(§ defn neg? [num] (Numbers/isNeg num))
 
 ;;;
  ; quot[ient] of dividing numerator by denominator.
  ;;
-(§ defn quot
-    {:inline (fn [x y] `(cloiure.lang.Numbers/quotient ~x ~y))}
-    [num div] (cloiure.lang.Numbers/quotient num div)
-)
+(§ defn quot [num div] (Numbers/quotient num div))
 
 ;;;
  ; rem[ainder] of dividing numerator by denominator.
  ;;
-(§ defn rem
-    {:inline (fn [x y] `(cloiure.lang.Numbers/remainder ~x ~y))}
-    [num div] (cloiure.lang.Numbers/remainder num div)
-)
+(§ defn rem [num div] (Numbers/remainder num div))
 
 ;;;
  ; Returns the rational value of num.
  ;;
-(§ defn rationalize [num] (cloiure.lang.Numbers/rationalize num))
+(§ defn rationalize [num] (Numbers/rationalize num))
 
 ;;;
  ; Bitwise complement.
  ;;
-(§ defn bit-not
-    {:inline (fn [x] `(cloiure.lang.Numbers/not ~x))}
-    [x] (cloiure.lang.Numbers/not x)
-)
+(§ defn bit-not [x] (Numbers/not x))
 
 ;;;
  ; Bitwise and.
  ;;
 (§ defn bit-and
-    {:inline (nary-inline 'and) :inline-arities >1?}
-    ([x y] (cloiure.lang.Numbers/and x y))
+    ([x y] (Numbers/and x y))
     ([x y & more] (reduce1 bit-and (bit-and x y) more))
 )
 
@@ -21812,8 +21625,7 @@
  ; Bitwise or.
  ;;
 (§ defn bit-or
-    {:inline (nary-inline 'or) :inline-arities >1?}
-    ([x y] (cloiure.lang.Numbers/or x y))
+    ([x y] (Numbers/or x y))
     ([x y & more] (reduce1 bit-or (bit-or x y) more))
 )
 
@@ -21821,8 +21633,7 @@
  ; Bitwise exclusive or.
  ;;
 (§ defn bit-xor
-    {:inline (nary-inline 'xor) :inline-arities >1?}
-    ([x y] (cloiure.lang.Numbers/xor x y))
+    ([x y] (Numbers/xor x y))
     ([x y & more] (reduce1 bit-xor (bit-xor x y) more))
 )
 
@@ -21830,54 +21641,44 @@
  ; Bitwise and with complement.
  ;;
 (§ defn bit-and-not
-    {:inline (nary-inline 'andNot) :inline-arities >1?}
-    ([x y] (cloiure.lang.Numbers/andNot x y))
+    ([x y] (Numbers/andNot x y))
     ([x y & more] (reduce1 bit-and-not (bit-and-not x y) more))
 )
 
 ;;;
  ; Clear bit at index n.
  ;;
-(§ defn bit-clear [x n] (cloiure.lang.Numbers/clearBit x n))
+(§ defn bit-clear [x n] (Numbers/clearBit x n))
 
 ;;;
  ; Set bit at index n.
  ;;
-(§ defn bit-set [x n] (cloiure.lang.Numbers/setBit x n))
+(§ defn bit-set [x n] (Numbers/setBit x n))
 
 ;;;
  ; Flip bit at index n.
  ;;
-(§ defn bit-flip [x n] (cloiure.lang.Numbers/flipBit x n))
+(§ defn bit-flip [x n] (Numbers/flipBit x n))
 
 ;;;
  ; Test bit at index n.
  ;;
-(§ defn bit-test [x n] (cloiure.lang.Numbers/testBit x n))
+(§ defn bit-test [x n] (Numbers/testBit x n))
 
 ;;;
  ; Bitwise shift left.
  ;;
-(§ defn bit-shift-left
-    {:inline (fn [x n] `(cloiure.lang.Numbers/shiftLeft ~x ~n))}
-    [x n] (cloiure.lang.Numbers/shiftLeft x n)
-)
+(§ defn bit-shift-left [x n] (Numbers/shiftLeft x n))
 
 ;;;
  ; Bitwise shift right.
  ;;
-(§ defn bit-shift-right
-    {:inline (fn [x n] `(cloiure.lang.Numbers/shiftRight ~x ~n))}
-    [x n] (cloiure.lang.Numbers/shiftRight x n)
-)
+(§ defn bit-shift-right [x n] (Numbers/shiftRight x n))
 
 ;;;
  ; Bitwise shift right, without sign-extension.
  ;;
-(§ defn unsigned-bit-shift-right
-    {:inline (fn [x n] `(cloiure.lang.Numbers/unsignedShiftRight ~x ~n))}
-    [x n] (cloiure.lang.Numbers/unsignedShiftRight x n)
-)
+(§ defn unsigned-bit-shift-right [x n] (Numbers/unsignedShiftRight x n))
 
 ;;;
  ; Returns true if n is an integer.
@@ -21885,7 +21686,7 @@
 (§ defn integer? [n]
     (or (instance? Integer n)
         (instance? Long n)
-        (instance? cloiure.lang.BigInt n)
+        (instance? BigInt n)
         (instance? BigInteger n)
         (instance? Short n)
         (instance? Byte n)
@@ -21897,7 +21698,7 @@
  ;;
 (§ defn even? [n]
     (if (integer? n)
-        (zero? (bit-and (cloiure.lang.RT/uncheckedLongCast n) 1))
+        (zero? (bit-and (RT/uncheckedLongCast n) 1))
         (throw! (str "argument must be an integer: " n))
     )
 )
@@ -21967,7 +21768,7 @@
  ; For a list or queue, same as first, for a vector, same as, but much
  ; more efficient than, last. If the collection is empty, returns nil.
  ;;
-(§ defn peek [coll] (cloiure.lang.RT/peek coll))
+(§ defn peek [coll] (RT/peek coll))
 
 ;;;
  ; For a list or queue, returns a new list/queue without the first item,
@@ -21975,14 +21776,14 @@
  ; If the collection is empty, throws an exception.
  ; Note - not the same as next/butlast.
  ;;
-(§ defn pop [coll] (cloiure.lang.RT/pop coll))
+(§ defn pop [coll] (RT/pop coll))
 
 ;; map stuff
 
 ;;;
  ; Return true if x is a map entry.
  ;;
-(§ defn map-entry? [x] (instance? cloiure.lang.IMapEntry x))
+(§ defn map-entry? [x] (instance? IMapEntry x))
 
 ;;;
  ; Returns true if key is present in the given collection, otherwise
@@ -21991,15 +21792,14 @@
  ; range of indexes. 'contains?' operates constant or logarithmic time;
  ; it will not perform a linear search for a value. See also 'some'.
  ;;
-(§ defn contains? [coll key] (cloiure.lang.RT/contains coll key))
+(§ defn contains? [coll key] (RT/contains coll key))
 
 ;;;
  ; Returns the value mapped to key, not-found or nil if key not present.
  ;;
 (§ defn get
-    {:inline (fn [m k & nf] `(cloiure.lang.RT/get ~m ~k ~@nf)) :inline-arities #{2 3}}
-    ([map key] (cloiure.lang.RT/get map key))
-    ([map key not-found] (cloiure.lang.RT/get map key not-found))
+    ([map key] (RT/get map key))
+    ([map key not-found] (RT/get map key not-found))
 )
 
 ;;;
@@ -22008,7 +21808,7 @@
  ;;
 (§ defn dissoc
     ([map] map)
-    ([map key] (cloiure.lang.RT/dissoc map key))
+    ([map key] (RT/dissoc map key))
     ([map key & ks]
         (let [ret (dissoc map key)]
             (if ks
@@ -22025,7 +21825,7 @@
  ;;
 (§ defn disj
     ([set] set)
-    ([^cloiure.lang.IPersistentSet set key]
+    ([^IPersistentSet set key]
         (when set
             (.disj set key)
         )
@@ -22045,7 +21845,7 @@
 ;;;
  ; Returns the map entry for key, or nil if key not present.
  ;;
-(§ defn find [map key] (cloiure.lang.RT/find map key))
+(§ defn find [map key] (RT/find map key))
 
 ;;;
  ; Returns a map containing only those entries in map whose key is in keys.
@@ -22053,7 +21853,7 @@
 (§ defn select-keys [map keyseq]
     (loop [ret {} keys (seq keyseq)]
         (if keys
-            (let [entry (cloiure.lang.RT/find map (first keys))]
+            (let [entry (find map (first keys))]
                 (recur (if entry (conj ret entry) ret) (next keys))
             )
             (with-meta ret (meta map))
@@ -22064,36 +21864,33 @@
 ;;;
  ; Returns a sequence of the map's keys, in the same order as (seq map).
  ;;
-(§ defn keys [map] (cloiure.lang.RT/keys map))
+(§ defn keys [map] (RT/keys map))
 
 ;;;
  ; Returns a sequence of the map's values, in the same order as (seq map).
  ;;
-(§ defn vals [map] (cloiure.lang.RT/vals map))
+(§ defn vals [map] (RT/vals map))
 
 ;;;
  ; Returns, in constant time, a seq of the items in rev (which can be a vector or sorted-map), in reverse order.
  ; If rev is empty, returns nil.
  ;;
-(§ defn rseq [^cloiure.lang.Reversible rev] (.rseq rev))
+(§ defn rseq [^Reversible rev] (.rseq rev))
 
 ;;;
  ; Returns the name String of a string, symbol or keyword.
  ;;
-(§ defn ^String name [x] (if (string? x) x (.getName ^cloiure.lang.Named x)))
+(§ defn ^String name [x] (if (string? x) x (.getName ^Named x)))
 
 ;;;
  ; Returns the namespace String of a symbol or keyword, or nil if not present.
  ;;
-(§ defn ^String namespace [^cloiure.lang.Named x] (.getNamespace x))
+(§ defn ^String namespace [^Named x] (.getNamespace x))
 
 ;;;
  ; Coerce to boolean.
  ;;
-(§ defn boolean
-    {:inline (fn [x] `(cloiure.lang.RT/booleanCast ~x))}
-    [x] (cloiure.lang.RT/booleanCast x)
-)
+(§ defn boolean [x] (RT/booleanCast x))
 
 ;;;
  ; Return true if x is a symbol or keyword.
@@ -22263,8 +22060,8 @@
               hierarchy (get options :hierarchy #'global-hierarchy)]
             (check-valid-options options :default :hierarchy)
             `(let [v# (def ~mm-name)]
-                (when-not (and (.hasRoot v#) (instance? cloiure.lang.MultiFn (deref v#)))
-                    (def ~mm-name (cloiure.lang.MultiFn. ~(name mm-name) ~dispatch-fn ~default ~hierarchy))
+                (when-not (and (.hasRoot v#) (instance? MultiFn (deref v#)))
+                    (def ~mm-name (MultiFn. ~(name mm-name) ~dispatch-fn ~default ~hierarchy))
                 )
             )
         )
@@ -22275,34 +22072,34 @@
  ; Creates and installs a new method of multimethod associated with dispatch-value.
  ;;
 (§ defmacro defmethod [multifn dispatch-val & fn-tail]
-    `(.addMethod ~(with-meta multifn {:tag 'cloiure.lang.MultiFn}) ~dispatch-val (fn ~@fn-tail))
+    `(.addMethod ~(with-meta multifn {:tag 'cloiure.core.MultiFn}) ~dispatch-val (fn ~@fn-tail))
 )
 
 ;;;
  ; Removes all of the methods of multimethod.
  ;;
-(§ defn remove-all-methods [^cloiure.lang.MultiFn multifn]
+(§ defn remove-all-methods [^MultiFn multifn]
     (.reset multifn)
 )
 
 ;;;
  ; Removes the method of multimethod associated with dispatch-value.
  ;;
-(§ defn remove-method [^cloiure.lang.MultiFn multifn dispatch-val]
+(§ defn remove-method [^MultiFn multifn dispatch-val]
     (.removeMethod multifn dispatch-val)
 )
 
 ;;;
  ; Causes the multimethod to prefer matches of dispatch-val-x over dispatch-val-y when there is a conflict.
  ;;
-(§ defn prefer-method [^cloiure.lang.MultiFn multifn dispatch-val-x dispatch-val-y]
+(§ defn prefer-method [^MultiFn multifn dispatch-val-x dispatch-val-y]
     (.preferMethod multifn dispatch-val-x dispatch-val-y)
 )
 
 ;;;
  ; Given a multimethod, returns a map of dispatch values -> dispatch fns.
  ;;
-(§ defn methods [^cloiure.lang.MultiFn multifn]
+(§ defn methods [^MultiFn multifn]
     (.getMethodTable multifn)
 )
 
@@ -22310,14 +22107,14 @@
  ; Given a multimethod and a dispatch value, returns the dispatch fn
  ; that would apply to that value, or nil if none apply and no default.
  ;;
-(§ defn get-method [^cloiure.lang.MultiFn multifn dispatch-val]
+(§ defn get-method [^MultiFn multifn dispatch-val]
     (.getMethod multifn dispatch-val)
 )
 
 ;;;
  ; Given a multimethod, returns a map of preferred value -> set of other values.
  ;;
-(§ defn prefers [^cloiure.lang.MultiFn multifn]
+(§ defn prefers [^MultiFn multifn]
     (.getPreferTable multifn)
 )
 
@@ -22426,18 +22223,18 @@
  ; (finally
  ; (pop-thread-bindings)))
  ;;
-(§ defn push-thread-bindings [bindings] (cloiure.lang.Var/pushThreadBindings bindings))
+(§ defn push-thread-bindings [bindings] (Var/pushThreadBindings bindings))
 
 ;;;
  ; Pop one set of bindings pushed with push-binding before.
  ; It is an error to pop bindings without pushing before.
  ;;
-(§ defn pop-thread-bindings [] (cloiure.lang.Var/popThreadBindings))
+(§ defn pop-thread-bindings [] (Var/popThreadBindings))
 
 ;;;
  ; Get a map with the Var/value pairs which is currently in effect for the current thread.
  ;;
-(§ defn get-thread-bindings [] (cloiure.lang.Var/getThreadBindings))
+(§ defn get-thread-bindings [] (Var/getThreadBindings))
 
 ;;;
  ; binding => var-symbol init-expr
@@ -22522,9 +22319,9 @@
  ; Returns the global var named by the namespace-qualified symbol,
  ; or nil if no var with that name.
  ;;
-(§ defn find-var [sym] (cloiure.lang.Var/find sym))
+(§ defn find-var [sym] (Var/find sym))
 
-(§ defn ^:private setup-reference [^cloiure.lang.IReference r options]
+(§ defn ^:private setup-reference [^IReference r options]
     (let [opts (apply hash-map options)]
         (when (:meta opts)
             (.resetMeta r (:meta opts))
@@ -22540,7 +22337,7 @@
  ; or atom, returns its current state. When applied to a delay, forces
  ; it if not already forced. See also - realized?.
  ;;
-(§ defn deref [ref] (.deref ^cloiure.lang.IDeref ref))
+(§ defn deref [ref] (.deref ^IDeref ref))
 
 ;;;
  ; Creates and returns an Atom with an initial value of x and zero or more
@@ -22551,7 +22348,7 @@
  ; If metadata-map is supplied, it will become the metadata on the atom.
  ;;
 (§ defn atom
-    ([x] (cloiure.lang.Atom. x))
+    ([x] (Atom. x))
     ([x & options] (setup-reference (atom x) options))
 )
 
@@ -22561,10 +22358,10 @@
  ; Returns the value that was swapped in.
  ;;
 (§ defn swap!
-    ([^cloiure.lang.IAtom atom f] (.swap atom f))
-    ([^cloiure.lang.IAtom atom f x] (.swap atom f x))
-    ([^cloiure.lang.IAtom atom f x y] (.swap atom f x y))
-    ([^cloiure.lang.IAtom atom f x y & args] (.swap atom f x y args))
+    ([^IAtom atom f] (.swap atom f))
+    ([^IAtom atom f x] (.swap atom f x))
+    ([^IAtom atom f x y] (.swap atom f x y))
+    ([^IAtom atom f x y & args] (.swap atom f x y args))
 )
 
 ;;;
@@ -22572,11 +22369,11 @@
  ; Note that f may be called multiple times, and thus should be free of side effects.
  ; Returns [old new], the value of the atom before and after the swap.
  ;;
-(§ defn ^cloiure.lang.IPersistentVector swap-vals!
-    ([^cloiure.lang.IAtom atom f] (.swapVals atom f))
-    ([^cloiure.lang.IAtom atom f x] (.swapVals atom f x))
-    ([^cloiure.lang.IAtom atom f x y] (.swapVals atom f x y))
-    ([^cloiure.lang.IAtom atom f x y & args] (.swapVals atom f x y args))
+(§ defn ^IPersistentVector swap-vals!
+    ([^IAtom atom f] (.swapVals atom f))
+    ([^IAtom atom f x] (.swapVals atom f x))
+    ([^IAtom atom f x y] (.swapVals atom f x y))
+    ([^IAtom atom f x y & args] (.swapVals atom f x y args))
 )
 
 ;;;
@@ -22584,7 +22381,7 @@
  ; current value of the atom is identical to oldval. Returns true if
  ; set happened, else false.
  ;;
-(§ defn compare-and-set! [^cloiure.lang.IAtom atom oldval newval]
+(§ defn compare-and-set! [^IAtom atom oldval newval]
     (.compareAndSet atom oldval newval)
 )
 
@@ -22592,7 +22389,7 @@
  ; Sets the value of atom to newval without regard for the current value.
  ; Returns newval.
  ;;
-(§ defn reset! [^cloiure.lang.IAtom atom newval]
+(§ defn reset! [^IAtom atom newval]
     (.reset atom newval)
 )
 
@@ -22600,7 +22397,7 @@
  ; Sets the value of atom to newval. Returns [old new], the value of the
  ; atom before and after the reset.
  ;;
-(§ defn ^cloiure.lang.IPersistentVector reset-vals! [^cloiure.lang.IAtom atom newval]
+(§ defn ^IPersistentVector reset-vals! [^IAtom atom newval]
     (.resetVals atom newval)
 )
 
@@ -22611,29 +22408,29 @@
  ;
  ; f must be free of side-effects.
  ;;
-(§ defn alter-meta! [^cloiure.lang.IReference iref f & args]
+(§ defn alter-meta! [^IReference iref f & args]
     (.alterMeta iref f args)
 )
 
 ;;;
  ; Atomically resets the metadata for a namespace/var/ref/atom.
  ;;
-(§ defn reset-meta! [^cloiure.lang.IReference iref metadata-map]
+(§ defn reset-meta! [^IReference iref metadata-map]
     (.resetMeta iref metadata-map)
 )
 
 ;;;
  ; Creates and returns a Volatile with an initial value of val.
  ;;
-(§ defn ^cloiure.lang.Volatile volatile! [val]
-    (cloiure.lang.Volatile. val)
+(§ defn ^Volatile volatile! [val]
+    (Volatile. val)
 )
 
 ;;;
  ; Sets the value of volatile to newval without regard for the
  ; current value. Returns newval.
  ;;
-(§ defn vreset! [^cloiure.lang.Volatile vol newval]
+(§ defn vreset! [^Volatile vol newval]
     (.reset vol newval)
 )
 
@@ -22643,7 +22440,7 @@
  ; Returns the value that was swapped in.
  ;;
 (§ defmacro vswap! [vol f & args]
-    (let [v (with-meta vol {:tag 'cloiure.lang.Volatile})]
+    (let [v (with-meta vol {:tag 'cloiure.core.Volatile})]
         `(.reset ~v (~f (.deref ~v) ~@args))
     )
 )
@@ -22651,7 +22448,7 @@
 ;;;
  ; Returns true if x is a volatile.
  ;;
-(§ defn volatile? [x] (instance? cloiure.lang.Volatile x))
+(§ defn volatile? [x] (instance? Volatile x))
 
 ;;;
  ; Takes a set of functions and returns a fn that is the composition
@@ -22804,7 +22601,7 @@
  ;;
 (§ defmacro dotimes [bindings & body]
     (let [i (first bindings) n (second bindings)]
-        `(let [n# (cloiure.lang.RT/longCast ~n)]
+        `(let [n# (RT/longCast ~n)]
             (loop [~i 0]
                 (when (< ~i n#)
                     ~@body
@@ -22958,15 +22755,12 @@
 ;;;
  ; Wraps x in a way such that a reduce will terminate with the value x.
  ;;
-(§ defn reduced [x] (cloiure.lang.Reduced. x))
+(§ defn reduced [x] (Reduced. x))
 
 ;;;
  ; Returns true if x is the result of a call to reduced.
  ;;
-(§ defn reduced?
-    {:inline (fn [x] `(cloiure.lang.RT/isReduced ~x)) :inline-arities #{1}}
-    [x] (cloiure.lang.RT/isReduced x)
-)
+(§ defn reduced? [x] (RT/isReduced x))
 
 ;;;
  ; If x is already reduced?, returns it, else returns (reduced x).
@@ -23143,7 +22937,7 @@
 ;;;
  ; Returns a lazy (infinite!) sequence of repetitions of the items in coll.
  ;;
-(§ defn cycle [coll] (cloiure.lang.Cycle/create (seq coll)))
+(§ defn cycle [coll] (Cycle/create (seq coll)))
 
 ;;;
  ; Returns a vector of [(take n coll) (drop n coll)].
@@ -23163,15 +22957,15 @@
  ; Returns a lazy (infinite!, or length n if supplied) sequence of xs.
  ;;
 (§ defn repeat
-    ([x]   (cloiure.lang.Repeat/create   x))
-    ([n x] (cloiure.lang.Repeat/create n x))
+    ([  x] (Repeat/create   x))
+    ([n x] (Repeat/create n x))
 )
 
 ;;;
  ; Returns a lazy sequence of x, (f x), (f (f x)), etc.
  ; f must be free of side-effects.
  ;;
-(§ defn iterate [f x] (cloiure.lang.Iterate/create f x))
+(§ defn iterate [f x] (Iterate/create f x))
 
 ;;;
  ; Returns a lazy seq of nums from start (inclusive) to end (exclusive),
@@ -23183,20 +22977,20 @@
     ([] (iterate inc' 0))
     ([end]
         (if (instance? Long end)
-            (cloiure.lang.LongRange/create end)
-            (cloiure.lang.Range/create end)
+            (LongRange/create end)
+            (Range/create end)
         )
     )
     ([start end]
         (if (and (instance? Long start) (instance? Long end))
-            (cloiure.lang.LongRange/create start end)
-            (cloiure.lang.Range/create start end)
+            (LongRange/create start end)
+            (Range/create start end)
         )
     )
     ([start end step]
         (if (and (instance? Long start) (instance? Long end) (instance? Long step))
-            (cloiure.lang.LongRange/create start end step)
-            (cloiure.lang.Range/create start end step)
+            (LongRange/create start end step)
+            (Range/create start end step)
         )
     )
 )
@@ -23254,7 +23048,7 @@
  ; Returns the lines of text from rdr as a lazy sequence of strings.
  ; rdr must implement java.io.BufferedReader.
  ;;
-(§ defn line-seq [^java.io.BufferedReader rdr]
+(§ defn line-seq [^BufferedReader rdr]
     (when-let [line (.readLine rdr)]
         (cons line (lazy-seq (line-seq rdr)))
     )
@@ -23277,7 +23071,7 @@
  ;;
 (§ defn sort
     ([coll] (sort compare coll))
-    ([^java.util.Comparator comp coll]
+    ([^Comparator comp coll]
         (if (seq coll)
             (let [a (to-array coll)]
                 (java.util.Arrays/sort a comp)
@@ -23298,7 +23092,7 @@
     ([keyfn coll]
         (sort-by keyfn compare coll)
     )
-    ([keyfn ^java.util.Comparator comp coll]
+    ([keyfn ^Comparator comp coll]
         (sort (fn [x y] (.compare comp (keyfn x) (keyfn y))) coll)
     )
 )
@@ -23405,7 +23199,7 @@
 ;;;
  ; Evaluates the form data structure (not text!) and returns the result.
  ;;
-(§ defn eval [form] (cloiure.lang.Compiler/eval form))
+(§ defn eval [form] (Compiler/eval form))
 
 ;;;
  ; Repeatedly executes body (presumably for side-effects) with bindings and filtering as provided by "for".
@@ -23430,7 +23224,7 @@
                                 )
                             )
                             (let [seq- (gensym "seq_")
-                                  chunk- (with-meta (gensym "chunk_") {:tag 'cloiure.lang.IChunk})
+                                  chunk- (with-meta (gensym "chunk_") {:tag 'cloiure.core.IChunk})
                                   count- (gensym "count_")
                                   i- (gensym "i_")
                                   recform `(recur (next ~seq-) nil 0 0)
@@ -23494,22 +23288,9 @@
 )
 
 ;;;
- ; Returns a new coll consisting of to-coll with all of the items of
- ; from-coll conjoined.
- ;;
-#_(defn into [to from]
-    (let [ret to items (seq from)]
-        (if items
-            (recur (conj ret (first items)) (next items))
-            ret
-        )
-    )
-)
-
-;;;
  ; Returns a new, transient version of the collection, in constant time.
  ;;
-(§ defn transient [^cloiure.lang.IEditableCollection coll]
+(§ defn transient [^IEditableCollection coll]
     (.asTransient coll)
 )
 
@@ -23518,7 +23299,7 @@
  ; constant time. The transient collection cannot be used after this
  ; call, any such use will throw an exception.
  ;;
-(§ defn persistent! [^cloiure.lang.ITransientCollection coll]
+(§ defn persistent! [^ITransientCollection coll]
     (.persistent coll)
 )
 
@@ -23529,7 +23310,7 @@
 (§ defn conj!
     ([] (transient []))
     ([coll] coll)
-    ([^cloiure.lang.ITransientCollection coll x] (.conj coll x))
+    ([^ITransientCollection coll x] (.conj coll x))
 )
 
 ;;;
@@ -23538,8 +23319,8 @@
  ; Note - index must be <= (count vector). Returns coll.
  ;;
 (§ defn assoc!
-    ([^cloiure.lang.ITransientAssociative coll key val] (.assoc coll key val))
-    ([^cloiure.lang.ITransientAssociative coll key val & kvs]
+    ([^ITransientAssociative coll key val] (.assoc coll key val))
+    ([^ITransientAssociative coll key val & kvs]
         (let [ret (.assoc coll key val)]
             (if kvs
                 (recur ret (first kvs) (second kvs) (nnext kvs))
@@ -23553,8 +23334,8 @@
  ; Returns a transient map that doesn't contain a mapping for key(s).
  ;;
 (§ defn dissoc!
-    ([^cloiure.lang.ITransientMap map key] (.dissoc map key))
-    ([^cloiure.lang.ITransientMap map key & ks]
+    ([^ITransientMap map key] (.dissoc map key))
+    ([^ITransientMap map key & ks]
         (let [ret (.dissoc map key)]
             (if ks
                 (recur ret (first ks) (next ks))
@@ -23568,7 +23349,7 @@
  ; Removes the last item from a transient vector.
  ; If the collection is empty, throws an exception. Returns coll.
  ;;
-(§ defn pop! [^cloiure.lang.ITransientVector coll]
+(§ defn pop! [^ITransientVector coll]
     (.pop coll)
 )
 
@@ -23578,8 +23359,8 @@
  ;;
 (§ defn disj!
     ([set] set)
-    ([^cloiure.lang.ITransientSet set key] (.disj set key))
-    ([^cloiure.lang.ITransientSet set key & ks]
+    ([^ITransientSet set key] (.disj set key))
+    ([^ITransientSet set key & ks]
         (let [ret (.disj set key)]
             (if ks
                 (recur ret (first ks) (next ks))
@@ -23595,7 +23376,7 @@
  ; Returns a new coll consisting of to-coll with all of the items of from-coll conjoined.
  ;;
 (§ defn ^:private into1 [to from]
-    (if (instance? cloiure.lang.IEditableCollection to)
+    (if (instance? IEditableCollection to)
         (persistent! (reduce1 conj! (transient to) from))
         (reduce1 conj to from)
     )
@@ -23610,7 +23391,7 @@
 (§ defmacro import [& import-symbols-or-lists]
     (let [specs (map #(if (and (seq? %) (= 'quote (first %))) (second %) %) import-symbols-or-lists)]
         `(do
-            ~@(map #(list 'cloiure.core/import* %)
+            ~@(map #(list 'import* %)
                 (reduce1
                     (fn [v spec]
                         (if (symbol? spec)
@@ -23632,8 +23413,8 @@
  ; Class objects for the primitive types can be obtained using, e.g., Integer/TYPE.
  ;;
 (§ defn into-array
-    ([aseq]      (cloiure.lang.RT/seqToTypedArray      (seq aseq)))
-    ([type aseq] (cloiure.lang.RT/seqToTypedArray type (seq aseq)))
+    ([     aseq] (RT/seqToTypedArray      (seq aseq)))
+    ([type aseq] (RT/seqToTypedArray type (seq aseq)))
 )
 
 (§ defn ^:private array [& items] (into-array items))
@@ -23651,114 +23432,72 @@
 ;;;
  ; Coerce to Number.
  ;;
-(§ defn ^Number num
-    {:inline (fn [x] `(cloiure.lang.Numbers/num ~x))}
-    [x] (cloiure.lang.Numbers/num x)
-)
+(§ defn ^Number num [x] (Numbers/num x))
 
 ;;;
  ; Coerce to long.
  ;;
-(§ defn long
-    {:inline (fn [x] `(cloiure.lang.RT/longCast ~x))}
-    [^Number x] (cloiure.lang.RT/longCast x)
-)
+(§ defn long [^Number x] (RT/longCast x))
 
 ;;;
  ; Coerce to float.
  ;;
-(§ defn float
-    {:inline (fn [x] `(cloiure.lang.RT/floatCast ~x))}
-    [^Number x] (cloiure.lang.RT/floatCast x)
-)
+(§ defn float [^Number x] (RT/floatCast x))
 
 ;;;
  ; Coerce to double.
  ;;
-(§ defn double
-    {:inline (fn [x] `(cloiure.lang.RT/doubleCast ~x))}
-    [^Number x] (cloiure.lang.RT/doubleCast x)
-)
+(§ defn double [^Number x] (RT/doubleCast x))
 
 ;;;
  ; Coerce to short.
  ;;
-(§ defn short
-    {:inline (fn [x] `(cloiure.lang.RT/shortCast ~x))}
-    [^Number x] (cloiure.lang.RT/shortCast x)
-)
+(§ defn short [^Number x] (RT/shortCast x))
 
 ;;;
  ; Coerce to byte.
  ;;
-(§ defn byte
-    {:inline (fn [x] `(cloiure.lang.RT/byteCast ~x))}
-    [^Number x] (cloiure.lang.RT/byteCast x)
-)
+(§ defn byte [^Number x] (RT/byteCast x))
 
 ;;;
  ; Coerce to char.
  ;;
-(§ defn char
-    {:inline (fn [x] `(cloiure.lang.RT/charCast ~x))}
-    [x] (cloiure.lang.RT/charCast x)
-)
+(§ defn char [x] (RT/charCast x))
 
 ;;;
  ; Coerce to byte. Subject to rounding or truncation.
  ;;
-(§ defn unchecked-byte
-    {:inline (fn [x] `(cloiure.lang.RT/uncheckedByteCast ~x))}
-    [^Number x] (cloiure.lang.RT/uncheckedByteCast x)
-)
+(§ defn unchecked-byte [^Number x] (RT/uncheckedByteCast x))
 
 ;;;
  ; Coerce to short. Subject to rounding or truncation.
  ;;
-(§ defn unchecked-short
-    {:inline (fn [x] `(cloiure.lang.RT/uncheckedShortCast ~x))}
-    [^Number x] (cloiure.lang.RT/uncheckedShortCast x)
-)
+(§ defn unchecked-short [^Number x] (RT/uncheckedShortCast x))
 
 ;;;
  ; Coerce to char. Subject to rounding or truncation.
  ;;
-(§ defn unchecked-char
-    {:inline (fn [x] `(cloiure.lang.RT/uncheckedCharCast ~x))}
-    [x] (cloiure.lang.RT/uncheckedCharCast x)
-)
+(§ defn unchecked-char [x] (RT/uncheckedCharCast x))
 
 ;;;
  ; Coerce to int. Subject to rounding or truncation.
  ;;
-(§ defn unchecked-int
-    {:inline (fn [x] `(cloiure.lang.RT/uncheckedIntCast ~x))}
-    [^Number x] (cloiure.lang.RT/uncheckedIntCast x)
-)
+(§ defn unchecked-int [^Number x] (RT/uncheckedIntCast x))
 
 ;;;
  ; Coerce to long. Subject to rounding or truncation.
  ;;
-(§ defn unchecked-long
-    {:inline (fn [x] `(cloiure.lang.RT/uncheckedLongCast ~x))}
-    [^Number x] (cloiure.lang.RT/uncheckedLongCast x)
-)
+(§ defn unchecked-long [^Number x] (RT/uncheckedLongCast x))
 
 ;;;
  ; Coerce to float. Subject to rounding.
  ;;
-(§ defn unchecked-float
-    {:inline (fn [x] `(cloiure.lang.RT/uncheckedFloatCast ~x))}
-    [^Number x] (cloiure.lang.RT/uncheckedFloatCast x)
-)
+(§ defn unchecked-float [^Number x] (RT/uncheckedFloatCast x))
 
 ;;;
  ; Coerce to double. Subject to rounding.
  ;;
-(§ defn unchecked-double
-    {:inline (fn [x] `(cloiure.lang.RT/uncheckedDoubleCast ~x))}
-    [^Number x] (cloiure.lang.RT/uncheckedDoubleCast x)
-)
+(§ defn unchecked-double [^Number x] (RT/uncheckedDoubleCast x))
 
 ;;;
  ; Returns true if x is a Number.
@@ -23780,17 +23519,17 @@
 ;;;
  ; Returns true if n is a Ratio.
  ;;
-(§ defn ratio? [n] (instance? cloiure.lang.Ratio n))
+(§ defn ratio? [n] (instance? Ratio n))
 
 ;;;
  ; Returns the numerator part of a Ratio.
  ;;
-(§ defn ^BigInteger numerator [r] (.numerator ^cloiure.lang.Ratio r))
+(§ defn ^BigInteger numerator [r] (.numerator ^Ratio r))
 
 ;;;
  ; Returns the denominator part of a Ratio.
  ;;
-(§ defn ^BigInteger denominator [r] (.denominator ^cloiure.lang.Ratio r))
+(§ defn ^BigInteger denominator [r] (.denominator ^Ratio r))
 
 ;;;
  ; Returns true if n is a BigDecimal.
@@ -23810,15 +23549,15 @@
 ;;;
  ; Coerce to BigInt.
  ;;
-(§ defn ^cloiure.lang.BigInt bigint [x]
+(§ defn ^BigInt bigint [x]
     (cond
-        (instance? cloiure.lang.BigInt x) x
-        (instance? BigInteger x) (cloiure.lang.BigInt/fromBigInteger x)
-        (decimal? x) (bigint (.toBigInteger ^BigDecimal x))
-        (float? x) (bigint (BigDecimal/valueOf (double x)))
-        (ratio? x) (bigint (.bigIntegerValue ^cloiure.lang.Ratio x))
-        (number? x) (cloiure.lang.BigInt/valueOf (long x))
-        :else (bigint (BigInteger. x))
+        (instance? BigInt x)     x
+        (instance? BigInteger x) (BigInt/fromBigInteger x)
+        (decimal? x)             (bigint (.toBigInteger ^BigDecimal x))
+        (float? x)               (bigint (BigDecimal/valueOf (double x)))
+        (ratio? x)               (bigint (.bigIntegerValue ^Ratio x))
+        (number? x)              (BigInt/valueOf (long x))
+        :else                    (bigint (BigInteger. x))
     )
 )
 
@@ -23828,12 +23567,12 @@
 (§ defn ^BigInteger biginteger [x]
     (cond
         (instance? BigInteger x) x
-        (instance? cloiure.lang.BigInt x) (.toBigInteger ^cloiure.lang.BigInt x)
-        (decimal? x) (.toBigInteger ^BigDecimal x)
-        (float? x) (.toBigInteger (BigDecimal/valueOf (double x)))
-        (ratio? x) (.bigIntegerValue ^cloiure.lang.Ratio x)
-        (number? x) (BigInteger/valueOf (long x))
-        :else (BigInteger. x)
+        (instance? BigInt x)     (.toBigInteger ^BigInt x)
+        (decimal? x)             (.toBigInteger ^BigDecimal x)
+        (float? x)               (.toBigInteger (BigDecimal/valueOf (double x)))
+        (ratio? x)               (.bigIntegerValue ^Ratio x)
+        (number? x)              (BigInteger/valueOf (long x))
+        :else                    (BigInteger. x)
     )
 )
 
@@ -23842,13 +23581,13 @@
  ;;
 (§ defn ^BigDecimal bigdec [x]
     (cond
-        (decimal? x) x
-        (float? x) (BigDecimal/valueOf (double x))
-        (ratio? x) (/ (BigDecimal. (.numerator ^cloiure.lang.Ratio x)) (.denominator ^cloiure.lang.Ratio x))
-        (instance? cloiure.lang.BigInt x) (.toBigDecimal ^cloiure.lang.BigInt x)
+        (decimal? x)             x
+        (float? x)               (BigDecimal/valueOf (double x))
+        (ratio? x)               (/ (BigDecimal. (.numerator ^Ratio x)) (.denominator ^Ratio x))
+        (instance? BigInt x)     (.toBigDecimal ^BigInt x)
         (instance? BigInteger x) (BigDecimal. ^BigInteger x)
-        (number? x) (BigDecimal/valueOf (long x))
-        :else (BigDecimal. x)
+        (number? x)              (BigDecimal/valueOf (long x))
+        :else                    (BigDecimal. x)
     )
 )
 
@@ -23941,14 +23680,14 @@
         (read stream true nil)
     )
     ([stream eof-error? eof-value]
-        (cloiure.lang.LispReader/read stream (boolean eof-error?) eof-value)
+        (LispReader/read stream (boolean eof-error?) eof-value)
     )
 )
 
 ;;;
  ; Reads one object from the string s.
  ;;
-(§ defn read-string [s] (cloiure.lang.RT/readString s))
+(§ defn read-string [s] (RT/readString s))
 
 ;;;
  ; Returns a persistent vector of the items in vector from start (inclusive) to end (exclusive).
@@ -23957,7 +23696,7 @@
  ;;
 (§ defn subvec
     ([v start] (subvec v start (count v)))
-    ([v start end] (cloiure.lang.RT/subvec v start end))
+    ([v start end] (RT/subvec v start end))
 )
 
 ;;;
@@ -24025,31 +23764,23 @@
     )
 )
 
-(§ import [java.lang.reflect Array])
-
 ;;;
  ; Returns the length of the Java array. Works on arrays of all types.
  ;;
-(§ defn alength
-    {:inline (fn [a] `(cloiure.lang.RT/alength ~a))}
-    [array] (cloiure.lang.RT/alength array)
-)
+(§ defn alength [array] (clojure.lang.RT/alength array))
 
 ;;;
  ; Returns a clone of the Java array. Works on arrays of known types.
  ;;
-(§ defn aclone
-    {:inline (fn [a] `(cloiure.lang.RT/aclone ~a))}
-    [array] (cloiure.lang.RT/aclone array)
-)
+(§ defn aclone [array] (clojure.lang.RT/aclone array))
 
 ;;;
  ; Returns the value at the index/indices. Works on Java arrays of all types.
  ;;
 (§ defn aget
-    {:inline (fn [a i] `(cloiure.lang.RT/aget ~a (int ~i))) :inline-arities #{2}}
+    {:inline (fn [a i] `(clojure.lang.RT/aget ~a (int ~i))) :inline-arities #{2}}
     ([array idx]
-        (cloiure.lang.Reflector/prepRet (.getComponentType (class array)) (Array/get array idx))
+        (Reflector/prepRet (.getComponentType (class array)) (Array/get array idx))
     )
     ([array idx & idxs]
         (apply aget (aget array idx) idxs)
@@ -24061,7 +23792,7 @@
  ; Works on Java arrays of reference types. Returns val.
  ;;
 (§ defn aset
-    {:inline (fn [a i v] `(cloiure.lang.RT/aset ~a (int ~i) ~v)) :inline-arities #{3}}
+    {:inline (fn [a i v] `(clojure.lang.RT/aset ~a (int ~i) ~v)) :inline-arities #{3}}
     ([array idx val]
         (Array/set array idx val)
         val
@@ -24144,7 +23875,7 @@
 ;;;
  ; If form represents a macro form, returns its expansion, else returns form.
  ;;
-(§ defn macroexpand-1 [form] (cloiure.lang.Compiler/macroexpand1 form))
+(§ defn macroexpand-1 [form] (Compiler/macroexpand1 form))
 
 ;;;
  ; Repeatedly calls macroexpand-1 on form until it no longer
@@ -24163,7 +23894,7 @@
 ;;;
  ; Sequentially read and evaluate the set of forms contained in the stream.
  ;;
-(§ defn load-reader [r] (cloiure.lang.Compiler/load r))
+(§ defn load-reader [r] (Compiler/load r))
 
 ;;;
  ; Sequentially read and evaluate the set of forms contained in the string.
@@ -24173,7 +23904,7 @@
 ;;;
  ; Returns true if x implements IPersistentSet.
  ;;
-(§ defn set? [x] (instance? cloiure.lang.IPersistentSet x))
+(§ defn set? [x] (instance? IPersistentSet x))
 
 ;;;
  ; Returns a set of the distinct elements of coll.
@@ -24181,8 +23912,8 @@
 (§ defn set [coll]
     (if (set? coll)
         (with-meta coll nil)
-        (if (instance? cloiure.lang.IReduceInit coll)
-            (persistent! (.reduce ^cloiure.lang.IReduceInit coll conj! (transient #{})))
+        (if (instance? IReduceInit coll)
+            (persistent! (.reduce ^IReduceInit coll conj! (transient #{})))
             (persistent! (reduce1 conj! (transient #{}) coll))
         )
     )
@@ -24203,31 +23934,31 @@
 ;;;
  ; Returns the namespace named by the symbol or nil if it doesn't exist.
  ;;
-(§ defn find-ns [sym] (cloiure.lang.Namespace/find sym))
+(§ defn find-ns [sym] (Namespace/find sym))
 
 ;;;
  ; Create a new namespace named by the symbol if one doesn't already exist,
  ; returns it or the already-existing namespace of the same name.
  ;;
-(§ defn create-ns [sym] (cloiure.lang.Namespace/findOrCreate sym))
+(§ defn create-ns [sym] (Namespace/findOrCreate sym))
 
 ;;;
  ; Removes the namespace named by the symbol. Use with caution.
  ; Cannot be used to remove the cloiure namespace.
  ;;
-(§ defn remove-ns [sym] (cloiure.lang.Namespace/remove sym))
+(§ defn remove-ns [sym] (Namespace/remove sym))
 
 ;;;
  ; Returns a sequence of all namespaces.
  ;;
-(§ defn all-ns [] (cloiure.lang.Namespace/all))
+(§ defn all-ns [] (Namespace/all))
 
 ;;;
  ; If passed a namespace, returns it. Else, when passed a symbol,
  ; returns the namespace named by it, throwing an exception if not found.
  ;;
-(§ defn ^cloiure.lang.Namespace the-ns [x]
-    (if (instance? cloiure.lang.Namespace x)
+(§ defn ^Namespace the-ns [x]
+    (if (instance? Namespace x)
         x
         (or (find-ns x) (throw! (str "no namespace: " x " found")))
     )
@@ -24260,8 +23991,8 @@
 (§ defn ns-publics [ns]
     (let [ns (the-ns ns)]
         (filter-key val
-            (fn [^cloiure.lang.Var v]
-                (and (instance? cloiure.lang.Var v) (= ns (.ns v)) (.isPublic v))
+            (fn [^Var v]
+                (and (var? v) (= ns (.ns v)) (.isPublic v))
             )
             (ns-map ns)
         )
@@ -24281,8 +24012,8 @@
 (§ defn ns-interns [ns]
     (let [ns (the-ns ns)]
         (filter-key val
-            (fn [^cloiure.lang.Var v]
-                (and (instance? cloiure.lang.Var v) (= ns (.ns v)))
+            (fn [^Var v]
+                (and (var? v) (= ns (.ns v)))
             )
             (ns-map ns)
         )
@@ -24320,15 +24051,9 @@
         (doseq [sym to-do]
             (when-not (exclude sym)
                 (let [v (nspublics sym)]
-                    (when-not v
-                        (throw (java.lang.IllegalAccessError.
-                            (if (get (ns-interns ns) sym)
-                                (str sym " is not public")
-                                (str sym " does not exist")
-                            )
-                        ))
+                    (when v => (throw! (str sym (if (get (ns-interns ns) sym) " is not public" " does not exist")))
+                        (.refer *ns* (or (rename sym) sym) v)
                     )
-                    (.refer *ns* (or (rename sym) sym) v)
                 )
             )
         )
@@ -24341,8 +24066,8 @@
 (§ defn ns-refers [ns]
     (let [ns (the-ns ns)]
         (filter-key val
-            (fn [^cloiure.lang.Var v]
-                (and (instance? cloiure.lang.Var v) (not= ns (.ns v)))
+            (fn [^Var v]
+                (and (var? v) (not= ns (.ns v)))
             )
             (ns-map ns)
         )
@@ -24433,13 +24158,13 @@
 ;;;
  ; Gets the value in the var object.
  ;;
-(§ defn var-get [^cloiure.lang.Var x] (.get x))
+(§ defn var-get [^Var x] (.get x))
 
 ;;;
  ; Sets the value in the var object to val.
  ; The var must be thread-locally bound.
  ;;
-(§ defn var-set [^cloiure.lang.Var x val] (.set x val))
+(§ defn var-set [^Var x val] (.set x val))
 
 ;;;
  ; varbinding => symbol init-expr
@@ -24454,7 +24179,7 @@
         (vector? name-vals-vec) "a vector for its binding"
         (even? (count name-vals-vec)) "an even number of forms in binding vector"
     )
-    `(let [~@(interleave (take-nth 2 name-vals-vec) (repeat '(.setDynamic (cloiure.lang.Var/create))))]
+    `(let [~@(interleave (take-nth 2 name-vals-vec) (repeat '(.setDynamic (Var/create))))]
         (push-thread-bindings (hash-map ~@name-vals-vec))
         (try
             ~@body
@@ -24474,7 +24199,7 @@
     ([ns sym] (ns-resolve ns nil sym))
     ([ns env sym]
         (when-not (contains? env sym)
-            (cloiure.lang.Compiler/maybeResolveIn (the-ns ns) sym)
+            (Compiler/maybeResolveIn (the-ns ns) sym)
         )
     )
 )
@@ -24489,8 +24214,8 @@
  ; If any keys are equal, they are handled as if by repeated uses of assoc.
  ;;
 (§ defn array-map
-    ([] cloiure.lang.PersistentArrayMap/EMPTY)
-    ([& keyvals] (cloiure.lang.PersistentArrayMap/createAsIfByAssoc (to-array keyvals)))
+    ([] PersistentArrayMap/EMPTY)
+    ([& keyvals] (PersistentArrayMap/createAsIfByAssoc (to-array keyvals)))
 )
 
 ;; redefine let and loop with destructuring
@@ -24526,9 +24251,9 @@
                         )
                       pmap
                         (fn [bvec b v]
-                            (let [gmap (gensym "map__") gmapseq (with-meta gmap {:tag 'cloiure.lang.ISeq}) defaults (:or b)]
+                            (let [gmap (gensym "map__") gmapseq (with-meta gmap {:tag 'cloiure.core.ISeq}) defaults (:or b)]
                                 (loop [ret (-> (conj bvec gmap v gmap)
-                                            (conj `(if (seq? ~gmap) (cloiure.lang.PersistentHashMap/create ~gmapseq) ~gmap))
+                                            (conj `(if (seq? ~gmap) (PersistentHashMap/create ~gmapseq) ~gmap))
                                             ((fn [ret] (if (:as b) (conj ret (:as b) gmap) ret)))
                                         )
                                        bes (let [trafos (reduce1
@@ -24554,7 +24279,7 @@
                                         )]
                                     (if (seq bes)
                                         (let [bb (key (first bes)) bk (val (first bes))
-                                              local (if (instance? cloiure.lang.Named bb) (with-meta (symbol nil (name bb)) (meta bb)) bb)
+                                              local (if (instance? Named bb) (with-meta (symbol nil (name bb)) (meta bb)) bb)
                                               bv (if (contains? defaults local)
                                                     (list `get gmap bk (defaults local))
                                                     (list `get gmap bk)
@@ -24902,7 +24627,7 @@
 ;;;
  ; Returns an instance of java.util.regex.Pattern, for use, e.g. in re-matcher.
  ;;
-(§ defn ^java.util.regex.Pattern re-pattern [s]
+(§ defn ^Pattern re-pattern [s]
     (if (instance? java.util.regex.Pattern s)
         s
         (java.util.regex.Pattern/compile s)
@@ -24912,7 +24637,7 @@
 ;;;
  ; Returns an instance of java.util.regex.Matcher, for use, e.g. in re-find.
  ;;
-(§ defn ^java.util.regex.Matcher re-matcher [^java.util.regex.Pattern re s]
+(§ defn ^Matcher re-matcher [^Pattern re s]
     (.matcher re s)
 )
 
@@ -24922,7 +24647,7 @@
  ; nested groups, returns a vector of the groups, the first element
  ; being the entire match.
  ;;
-(§ defn re-groups [^java.util.regex.Matcher m]
+(§ defn re-groups [^Matcher m]
     (let [gc (.groupCount m)]
         (if (zero? gc)
             (.group m)
@@ -24941,7 +24666,7 @@
  ; using java.util.regex.Matcher.find(), each such match processed with
  ; re-groups.
  ;;
-(§ defn re-seq [^java.util.regex.Pattern re s]
+(§ defn re-seq [^Pattern re s]
     (let [m (re-matcher re s)]
         ((fn step []
             (when (.find m)
@@ -24956,7 +24681,7 @@
  ; java.util.regex.Matcher.matches(). Uses re-groups to return
  ; the groups.
  ;;
-(§ defn re-matches [^java.util.regex.Pattern re s]
+(§ defn re-matches [^Pattern re s]
     (let [m (re-matcher re s)]
         (when (.matches m)
             (re-groups m)
@@ -24970,12 +24695,12 @@
  ; the groups.
  ;;
 (§ defn re-find
-    ([^java.util.regex.Matcher m]
+    ([^Matcher m]
         (when (.find m)
             (re-groups m)
         )
     )
-    ([^java.util.regex.Pattern re s]
+    ([^Pattern re s]
         (let [m (re-matcher re s)]
             (re-find m)
         )
@@ -25025,12 +24750,12 @@
 ;;;
  ; Returns true if s names a special form.
  ;;
-(§ defn special-symbol? [s] (contains? cloiure.lang.Compiler/specials s))
+(§ defn special-symbol? [s] (contains? Compiler/specials s))
 
 ;;;
- ; Returns true if v is of type cloiure.lang.Var.
+ ; Returns true if v is of type Var.
  ;;
-(§ defn var? [v] (instance? cloiure.lang.Var v))
+(§ defn var? [v] (instance? Var v))
 
 ;;;
  ; Returns the substring of s beginning at start inclusive,
@@ -25177,7 +24902,7 @@
     )
 )
 
-(§ defn ^:private mk-bound-fn [^cloiure.lang.Sorted sc test key]
+(§ defn ^:private mk-bound-fn [^Sorted sc test key]
     (fn [e] (test (.compare (.comparator sc) (.entryKey sc e) key) 0))
 )
 
@@ -25187,7 +24912,7 @@
  ; (test (.. sc comparator (compare ek key)) 0) is true.
  ;;
 (§ defn subseq
-    ([^cloiure.lang.Sorted sc test key]
+    ([^Sorted sc test key]
         (let [include (mk-bound-fn sc test key)]
             (if (#{> >=} test)
                 (when-let [[e :as s] (.seqFrom sc key true)]
@@ -25197,7 +24922,7 @@
             )
         )
     )
-    ([^cloiure.lang.Sorted sc start-test start-key end-test end-key]
+    ([^Sorted sc start-test start-key end-test end-key]
         (when-let [[e :as s] (.seqFrom sc start-key true)]
             (take-while (mk-bound-fn sc end-test end-key)
                 (if ((mk-bound-fn sc start-test start-key) e) s (next s))
@@ -25212,7 +24937,7 @@
  ; (test (.. sc comparator (compare ek key)) 0) is true.
  ;;
 (§ defn rsubseq
-    ([^cloiure.lang.Sorted sc test key]
+    ([^Sorted sc test key]
         (let [include (mk-bound-fn sc test key)]
             (if (#{< <=} test)
                 (when-let [[e :as s] (.seqFrom sc key false)]
@@ -25222,7 +24947,7 @@
             )
         )
     )
-    ([^cloiure.lang.Sorted sc start-test start-key end-test end-key]
+    ([^Sorted sc start-test start-key end-test end-key]
         (when-let [[e :as s] (.seqFrom sc end-key false)]
             (take-while (mk-bound-fn sc start-test start-key)
                 (if ((mk-bound-fn sc end-test end-key) e) s (next s))
@@ -25245,7 +24970,7 @@
  ; consistent with =, and thus is different than .hashCode for Integer,
  ; Short, Byte and Cloiure collections.
  ;;
-(§ defn hash [x] (cloiure.lang.Util/hasheq x))
+(§ defn hash [x] (Util/hasheq x))
 
 ;;;
  ; Mix final collection hash for ordered or unordered collections.
@@ -25254,14 +24979,14 @@
  ; consistent with =, different from .hashCode.
  ; See http://clojure.org/data_structures#hash for full algorithms.
  ;;
-(§ defn ^long mix-collection-hash [^long hash-basis ^long count] (cloiure.lang.Murmur3/mixCollHash hash-basis count))
+(§ defn ^long mix-collection-hash [^long hash-basis ^long count] (Murmur3/mixCollHash hash-basis count))
 
 ;;;
  ; Returns the hash code, consistent with =, for an external ordered
  ; collection implementing Seqable.
  ; See http://clojure.org/data_structures#hash for full algorithms.
  ;;
-(§ defn ^long hash-ordered-coll [coll] (cloiure.lang.Murmur3/hashOrdered coll))
+(§ defn ^long hash-ordered-coll [coll] (Murmur3/hashOrdered coll))
 
 ;;;
  ; Returns the hash code, consistent with =, for an external, unordered
@@ -25269,7 +24994,7 @@
  ; map entries, whose hash is computed as (hash-ordered-coll [k v]).
  ; See http://clojure.org/data_structures#hash for full algorithms.
  ;;
-(§ defn ^long hash-unordered-coll [coll] (cloiure.lang.Murmur3/hashUnordered coll))
+(§ defn ^long hash-unordered-coll [coll] (Murmur3/hashUnordered coll))
 
 ;;;
  ; Returns a lazy seq of the elements of coll separated by sep.
@@ -25321,7 +25046,7 @@
  ;;
 (§ defn empty [coll]
     (when (coll? coll)
-        (.empty ^cloiure.lang.IPersistentCollection coll)
+        (.empty ^IPersistentCollection coll)
     )
 )
 
@@ -25362,90 +25087,79 @@
  ; Creates an array of booleans.
  ;;
 (§ defn boolean-array
-    {:inline (fn [& args] `(cloiure.lang.Numbers/boolean_array ~@args)) :inline-arities #{1 2}}
-    ([size-or-seq]          (cloiure.lang.Numbers/boolean_array size-or-seq))
-    ([size init-val-or-seq] (cloiure.lang.Numbers/boolean_array size init-val-or-seq))
+    ([size-or-seq]          (Numbers/boolean_array size-or-seq))
+    ([size init-val-or-seq] (Numbers/boolean_array size init-val-or-seq))
 )
 
 ;;;
  ; Creates an array of bytes.
  ;;
 (§ defn byte-array
-    {:inline (fn [& args] `(cloiure.lang.Numbers/byte_array ~@args)) :inline-arities #{1 2}}
-    ([size-or-seq]          (cloiure.lang.Numbers/byte_array size-or-seq))
-    ([size init-val-or-seq] (cloiure.lang.Numbers/byte_array size init-val-or-seq))
+    ([size-or-seq]          (Numbers/byte_array size-or-seq))
+    ([size init-val-or-seq] (Numbers/byte_array size init-val-or-seq))
 )
 
 ;;;
  ; Creates an array of chars.
  ;;
 (§ defn char-array
-    {:inline (fn [& args] `(cloiure.lang.Numbers/char_array ~@args)) :inline-arities #{1 2}}
-    ([size-or-seq]          (cloiure.lang.Numbers/char_array size-or-seq))
-    ([size init-val-or-seq] (cloiure.lang.Numbers/char_array size init-val-or-seq))
+    ([size-or-seq]          (Numbers/char_array size-or-seq))
+    ([size init-val-or-seq] (Numbers/char_array size init-val-or-seq))
 )
 
 ;;;
  ; Creates an array of shorts.
  ;;
 (§ defn short-array
-    {:inline (fn [& args] `(cloiure.lang.Numbers/short_array ~@args)) :inline-arities #{1 2}}
-    ([size-or-seq]          (cloiure.lang.Numbers/short_array size-or-seq))
-    ([size init-val-or-seq] (cloiure.lang.Numbers/short_array size init-val-or-seq))
+    ([size-or-seq]          (Numbers/short_array size-or-seq))
+    ([size init-val-or-seq] (Numbers/short_array size init-val-or-seq))
 )
 
 ;;;
  ; Creates an array of ints.
  ;;
 (§ defn int-array
-    {:inline (fn [& args] `(cloiure.lang.Numbers/int_array ~@args)) :inline-arities #{1 2}}
-    ([size-or-seq]          (cloiure.lang.Numbers/int_array size-or-seq))
-    ([size init-val-or-seq] (cloiure.lang.Numbers/int_array size init-val-or-seq))
+    ([size-or-seq]          (Numbers/int_array size-or-seq))
+    ([size init-val-or-seq] (Numbers/int_array size init-val-or-seq))
 )
 
 ;;;
  ; Creates an array of longs.
  ;;
 (§ defn long-array
-    {:inline (fn [& args] `(cloiure.lang.Numbers/long_array ~@args)) :inline-arities #{1 2}}
-    ([size-or-seq]          (cloiure.lang.Numbers/long_array size-or-seq))
-    ([size init-val-or-seq] (cloiure.lang.Numbers/long_array size init-val-or-seq))
+    ([size-or-seq]          (Numbers/long_array size-or-seq))
+    ([size init-val-or-seq] (Numbers/long_array size init-val-or-seq))
 )
 
 ;;;
  ; Creates an array of floats.
  ;;
 (§ defn float-array
-    {:inline (fn [& args] `(cloiure.lang.Numbers/float_array ~@args)) :inline-arities #{1 2}}
-    ([size-or-seq]          (cloiure.lang.Numbers/float_array size-or-seq))
-    ([size init-val-or-seq] (cloiure.lang.Numbers/float_array size init-val-or-seq))
+    ([size-or-seq]          (Numbers/float_array size-or-seq))
+    ([size init-val-or-seq] (Numbers/float_array size init-val-or-seq))
 )
 
 ;;;
  ; Creates an array of doubles.
  ;;
 (§ defn double-array
-    {:inline (fn [& args] `(cloiure.lang.Numbers/double_array ~@args)) :inline-arities #{1 2}}
-    ([size-or-seq]          (cloiure.lang.Numbers/double_array size-or-seq))
-    ([size init-val-or-seq] (cloiure.lang.Numbers/double_array size init-val-or-seq))
+    ([size-or-seq]          (Numbers/double_array size-or-seq))
+    ([size init-val-or-seq] (Numbers/double_array size init-val-or-seq))
 )
 
 ;;;
  ; Creates an array of objects.
  ;;
-(§ defn object-array
-    {:inline (fn [arg] `(cloiure.lang.RT/object_array ~arg)) :inline-arities #{1}}
-    ([size-or-seq] (cloiure.lang.RT/object_array size-or-seq))
-)
+(§ defn object-array ([size-or-seq] (RT/object_array size-or-seq)))
 
-(§ definline booleans [xs] `(cloiure.lang.Numbers/booleans ~xs))
-(§ definline bytes    [xs] `(cloiure.lang.Numbers/bytes    ~xs))
-(§ definline chars    [xs] `(cloiure.lang.Numbers/chars    ~xs))
-(§ definline shorts   [xs] `(cloiure.lang.Numbers/shorts   ~xs))
-(§ definline ints     [xs] `(cloiure.lang.Numbers/ints     ~xs))
-(§ definline longs    [xs] `(cloiure.lang.Numbers/longs    ~xs))
-(§ definline floats   [xs] `(cloiure.lang.Numbers/floats   ~xs))
-(§ definline doubles  [xs] `(cloiure.lang.Numbers/doubles  ~xs))
+(§ definline booleans [xs] `(Numbers/booleans ~xs))
+(§ definline bytes    [xs] `(Numbers/bytes    ~xs))
+(§ definline chars    [xs] `(Numbers/chars    ~xs))
+(§ definline shorts   [xs] `(Numbers/shorts   ~xs))
+(§ definline ints     [xs] `(Numbers/ints     ~xs))
+(§ definline longs    [xs] `(Numbers/longs    ~xs))
+(§ definline floats   [xs] `(Numbers/floats   ~xs))
+(§ definline doubles  [xs] `(Numbers/doubles  ~xs))
 
 ;;;
  ; Return true if x is a byte array.
@@ -25460,19 +25174,19 @@
 ;;;
  ; Atomically alters the root binding of var v by applying f to its current value plus any args.
  ;;
-(§ defn alter-var-root [^cloiure.lang.Var v f & args] (.alterRoot v f args))
+(§ defn alter-var-root [^Var v f & args] (.alterRoot v f args))
 
 ;;;
  ; Returns true if all of the vars provided as arguments have any bound value, root or thread-local.
  ; Implies that deref'ing the provided vars will succeed. Returns true if no vars are provided.
  ;;
-(§ defn bound? [& vars] (every? #(.isBound ^cloiure.lang.Var %) vars))
+(§ defn bound? [& vars] (every? #(.isBound ^Var %) vars))
 
 ;;;
  ; Returns true if all of the vars provided as arguments have thread-local bindings.
  ; Implies that set!'ing the provided vars will succeed. Returns true if no vars are provided.
  ;;
-(§ defn thread-bound? [& vars] (every? #(.getThreadBinding ^cloiure.lang.Var %) vars))
+(§ defn thread-bound? [& vars] (every? #(.getThreadBinding ^Var %) vars))
 
 ;;;
  ; Creates a hierarchy object for use with derive, isa?, etc.
@@ -25603,15 +25317,15 @@
 (§ defn derive
     ([tag parent]
         (assert (namespace parent))
-        (assert (or (class? tag) (and (instance? cloiure.lang.Named tag) (namespace tag))))
+        (assert (or (class? tag) (and (instance? Named tag) (namespace tag))))
 
         (alter-var-root #'global-hierarchy derive tag parent)
         nil
     )
     ([h tag parent]
         (assert (not= tag parent))
-        (assert (or (class? tag) (instance? cloiure.lang.Named tag)))
-        (assert (instance? cloiure.lang.Named parent))
+        (assert (or (class? tag) (instance? Named tag)))
+        (assert (instance? Named parent))
 
         (let [tp (:parents h) td (:descendants h) ta (:ancestors h)
               tf
@@ -25735,7 +25449,7 @@
         `(do
             (cloiure.core/in-ns '~name)
             ~@(when name-metadata
-                `((.resetMeta (cloiure.lang.Namespace/find '~name) ~name-metadata))
+                `((.resetMeta (Namespace/find '~name) ~name-metadata))
             )
             (with-loading-context
                 ~@(when (and (not= name 'cloiure.core) (not-any? #(= :refer-cloiure (first %)) references))
@@ -25844,58 +25558,58 @@
 ;;;
  ; Returns true if x implements IPersistentCollection.
  ;;
-(§ defn coll? [x] (instance? cloiure.lang.IPersistentCollection x))
+(§ defn coll? [x] (instance? IPersistentCollection x))
 
 ;;;
  ; Returns true if x implements IPersistentList.
  ;;
-(§ defn list? [x] (instance? cloiure.lang.IPersistentList x))
+(§ defn list? [x] (instance? IPersistentList x))
 
 ;;;
  ; Return true if the seq function is supported for x.
  ;;
-(§ defn seqable? [x] (cloiure.lang.RT/canSeq x))
+(§ defn seqable? [x] (RT/canSeq x))
 
 ;;;
  ; Returns true if x implements IFn.
  ; Note that many data structures (e.g. sets and maps) implement IFn.
  ;;
-(§ defn ifn? [x] (instance? cloiure.lang.IFn x))
+(§ defn ifn? [x] (instance? IFn x))
 
 ;;;
  ; Returns true if x implements Fn, i.e. is an object created via fn.
  ;;
-(§ defn fn? [x] (instance? cloiure.lang.Fn x))
+(§ defn fn? [x] (instance? Fn x))
 
 ;;;
  ; Returns true if coll implements Associative.
  ;;
-(§ defn associative? [coll] (instance? cloiure.lang.Associative coll))
+(§ defn associative? [coll] (instance? Associative coll))
 
 ;;;
  ; Returns true if coll implements Sequential.
  ;;
-(§ defn sequential? [coll] (instance? cloiure.lang.Sequential coll))
+(§ defn sequential? [coll] (instance? Sequential coll))
 
 ;;;
  ; Returns true if coll implements Sorted.
  ;;
-(§ defn sorted? [coll] (instance? cloiure.lang.Sorted coll))
+(§ defn sorted? [coll] (instance? Sorted coll))
 
 ;;;
  ; Returns true if coll implements count in constant time.
  ;;
-(§ defn counted? [coll] (instance? cloiure.lang.Counted coll))
+(§ defn counted? [coll] (instance? Counted coll))
 
 ;;;
  ; Returns true if coll implements Reversible.
  ;;
-(§ defn reversible? [coll] (instance? cloiure.lang.Reversible coll))
+(§ defn reversible? [coll] (instance? Reversible coll))
 
 ;;;
  ; Return true if coll implements Indexed, indicating efficient lookup by index.
  ;;
-(§ defn indexed? [coll] (instance? cloiure.lang.Indexed coll))
+(§ defn indexed? [coll] (instance? Indexed coll))
 
 ;;;
  ; Bound in a repl thread to the most recent value printed.
@@ -25944,8 +25658,8 @@
  ; any metadata from the name symbol. Returns the var.
  ;;
 (§ defn intern
-    ([ns ^cloiure.lang.Symbol name]
-        (let [v (cloiure.lang.Var/intern (the-ns ns) name)]
+    ([ns ^Symbol name]
+        (let [v (Var/intern (the-ns ns) name)]
             (when (meta name)
                 (.setMeta v (meta name))
             )
@@ -25953,7 +25667,7 @@
         )
     )
     ([ns name val]
-        (let [v (cloiure.lang.Var/intern (the-ns ns) name val)]
+        (let [v (Var/intern (the-ns ns) name val)]
             (when (meta name)
                 (.setMeta v (meta name))
             )
@@ -26154,7 +25868,7 @@
     (let [buckets
             (loop [m {} ks tests vs thens]
                 (if (and ks vs)
-                    (recur (update m (cloiure.lang.Util/hash (first ks)) (fnil conj []) [(first ks) (first vs)]) (next ks) (next vs))
+                    (recur (update m (Util/hash (first ks)) (fnil conj []) [(first ks) (first vs)]) (next ks) (next vs))
                     m
                 )
             )
@@ -26192,7 +25906,7 @@
  ; post-switch equivalence checking must not be done (occurs with hash collisions).
  ;;
 (§ defn- prep-hashes [expr-sym default tests thens]
-    (let [hashcode #(cloiure.lang.Util/hash %) hashes (into1 #{} (map hashcode tests))]
+    (let [hashcode #(Util/hash %) hashes (into1 #{} (map hashcode tests))]
         (if (== (count tests) (count hashes))
             (if (fits-table? hashes)
                 ;; compact case ints, no shift-mask
@@ -26298,15 +26012,6 @@
     )
 )
 
-(§ in-ns 'cloiure.core)
-
-(§ import
-    [java.lang.reflect Constructor Modifier]
-    [cloiure.asm ClassVisitor ClassWriter Opcodes Type]
-    [cloiure.asm.commons GeneratorAdapter Method]
-    [cloiure.lang DynamicClassLoader IPersistentMap IProxy PersistentHashMap Reflector RT]
-)
-
 (§ defn method-sig [^java.lang.reflect.Method meth]
     [(.getName meth) (seq (.getParameterTypes meth)) (.getReturnType meth)]
 )
@@ -26348,7 +26053,7 @@
 (§ defn- generate-proxy [^Class super interfaces]
     (let [cv         (ClassWriter. ClassWriter/COMPUTE_MAXS)
           pname      (proxy-name super interfaces)
-          cname      (.replace pname \. \/) ;; (str "cloiure/lang/" (gensym "Proxy__"))
+          cname      (.replace pname \. \/) ;; (str "cloiure/core/" (gensym "Proxy__"))
           ctype      (Type/getObjectType cname)
           iname      (fn [^Class c] (.getInternalName (Type/getType c)))
           fmap       "__cloiureFnMap"
@@ -26356,11 +26061,11 @@
           to-types   (fn [cs] (if (pos? (count cs)) (into-array (map totype cs)) (make-array Type 0)))
           super-type ^Type (totype super)
           imap-type  ^Type (totype IPersistentMap)
-          ifn-type   (totype cloiure.lang.IFn)
+          ifn-type   (totype IFn)
           obj-type   (totype Object)
-          sym-type   (totype cloiure.lang.Symbol)
-          rt-type    (totype cloiure.lang.RT)
-          ex-type    (totype java.lang.UnsupportedOperationException)
+          sym-type   (totype Symbol)
+          rt-type    (totype RT)
+          ex-type    (totype UnsupportedOperationException)
           gen-bridge
             (fn [^java.lang.reflect.Method meth ^java.lang.reflect.Method dest]
                 (let [pclasses (.getParameterTypes meth)
@@ -26410,7 +26115,7 @@
                             ;; box args
                             (dotimes [i (count ptypes)]
                                 (.loadArg gen i)
-                                (cloiure.lang.Compiler$HostExpr/emitBoxReturn nil gen (nth pclasses i))
+                                (Interop/emitBoxReturn nil gen (nth pclasses i))
                             )
                             ;; call fn
                             (.invokeInterface gen ifn-type (Method. "invoke" obj-type (into-array (cons obj-type (repeat (count ptypes) obj-type)))))
@@ -26453,7 +26158,7 @@
             )
         )
         ;; add IProxy methods
-        (let [m (Method/getMethod "void __initCloiureFnMappings(cloiure.lang.IPersistentMap)")
+        (let [m (Method/getMethod "void __initCloiureFnMappings(cloiure.core.IPersistentMap)")
               gen (GeneratorAdapter. Opcodes/ACC_PUBLIC m nil nil cv)]
             (.visitCode gen)
             (.loadThis gen)
@@ -26462,21 +26167,21 @@
             (.returnValue gen)
             (.endMethod gen)
         )
-        (let [m (Method/getMethod "void __updateCloiureFnMappings(cloiure.lang.IPersistentMap)")
+        (let [m (Method/getMethod "void __updateCloiureFnMappings(cloiure.core.IPersistentMap)")
               gen (GeneratorAdapter. Opcodes/ACC_PUBLIC m nil nil cv)]
             (.visitCode gen)
             (.loadThis gen)
             (.dup gen)
             (.getField gen ctype fmap imap-type)
-            (.checkCast gen (totype cloiure.lang.IPersistentCollection))
+            (.checkCast gen (totype IPersistentCollection))
             (.loadArgs gen)
-            (.invokeInterface gen (totype cloiure.lang.IPersistentCollection) (Method/getMethod "cloiure.lang.IPersistentCollection cons(Object)"))
+            (.invokeInterface gen (totype IPersistentCollection) (Method/getMethod "cloiure.core.IPersistentCollection cons(Object)"))
             (.checkCast gen imap-type)
             (.putField gen ctype fmap imap-type)
             (.returnValue gen)
             (.endMethod gen)
         )
-        (let [m (Method/getMethod "cloiure.lang.IPersistentMap __getCloiureFnMappings()")
+        (let [m (Method/getMethod "cloiure.core.IPersistentMap __getCloiureFnMappings()")
               gen (GeneratorAdapter. Opcodes/ACC_PUBLIC m nil nil cv)]
             (.visitCode gen)
             (.loadThis gen)
@@ -26591,7 +26296,7 @@
 ;;;
  ; Takes a proxy instance and a map of strings (which must correspond to
  ; methods of the proxy superclass/superinterfaces) to fns (which must take
- ; arguments matching the corresponding method, plus an additional (explicit)
+ ; arguments matching the corresponding method), plus an additional (explicit)
  ; first arg corresponding to this, and sets the proxy's fn map.
  ; Returns the proxy.
  ;;
@@ -26603,7 +26308,7 @@
 ;;;
  ; Takes a proxy instance and a map of strings (which must correspond to
  ; methods of the proxy superclass/superinterfaces) to fns (which must take
- ; arguments matching the corresponding method, plus an additional (explicit)
+ ; arguments matching the corresponding method), plus an additional (explicit)
  ; first arg corresponding to this, and updates (via assoc) the proxy's fn map.
  ; nil can be passed instead of a fn, in which case the corresponding method
  ; will revert to the default behavior. Note that this function can be used
@@ -26688,10 +26393,6 @@
     `(proxy-call-with-super (fn [] (. ~'this ~meth ~@args)) ~'this ~(name meth))
 )
 
-(§ in-ns 'cloiure.core)
-
-(§ import [java.io Writer])
-
 ;;;
  ; *print-length* controls how many items of each collection the printer will print.
  ; If it is bound to logical false, there is no limit. Otherwise, it must be bound
@@ -26759,7 +26460,7 @@
 )
 
 (§ defmethod print-method :default [o, ^Writer w]
-    (if (instance? cloiure.lang.IObj o)
+    (if (instance? IObj o)
         (print-method (vary-meta o #(dissoc % :type)) w)
         (print-simple o w)
     )
@@ -26799,7 +26500,7 @@
     (print-object o w)
 )
 
-(§ defmethod print-method cloiure.lang.Keyword [o, ^Writer w]
+(§ defmethod print-method Keyword [o, ^Writer w]
     (.write w (str o))
 )
 
@@ -26829,19 +26530,19 @@
     (.write w (str o))
 )
 
-(§ defmethod print-method cloiure.lang.Symbol [o, ^Writer w]
+(§ defmethod print-method Symbol [o, ^Writer w]
     (print-simple o w)
 )
 
-(§ defmethod print-method cloiure.lang.Var [o, ^Writer w]
+(§ defmethod print-method Var [o, ^Writer w]
     (print-simple o w)
 )
 
-(§ defmethod print-method cloiure.lang.ISeq [o, ^Writer w]
+(§ defmethod print-method ISeq [o, ^Writer w]
     (print-sequential "(" pr-on " " ")" o w)
 )
 
-(§ prefer-method print-method cloiure.lang.ISeq cloiure.lang.IPersistentCollection)
+(§ prefer-method print-method ISeq IPersistentCollection)
 
 ;;;
  ; Returns escape string for char or nil if none.
@@ -26874,7 +26575,7 @@
     nil
 )
 
-(§ defmethod print-method cloiure.lang.IPersistentVector [v, ^Writer w]
+(§ defmethod print-method IPersistentVector [v, ^Writer w]
     (print-sequential "[" pr-on " " "]" v w)
 )
 
@@ -26922,7 +26623,7 @@
     )
 )
 
-(§ defmethod print-method cloiure.lang.IPersistentMap [m, ^Writer w]
+(§ defmethod print-method IPersistentMap [m, ^Writer w]
     (let [[ns lift-map] (lift-ns m)]
         (if ns
             (print-prefix-map (str "#:" ns) lift-map pr-on w)
@@ -26931,7 +26632,7 @@
     )
 )
 
-(§ defmethod print-method cloiure.lang.IPersistentSet [s, ^Writer w]
+(§ defmethod print-method IPersistentSet [s, ^Writer w]
     (print-sequential "#{" pr-on " " "}" (seq s) w)
 )
 
@@ -26949,7 +26650,7 @@
     )
 )
 
-(§ defmethod print-method java.lang.Character [^Character c, ^Writer w]
+(§ defmethod print-method Character [^Character c, ^Writer w]
     (if *print-readably*
         (do
             (.append w \\)
@@ -26984,14 +26685,14 @@
     (.write w "M")
 )
 
-(§ defmethod print-method cloiure.lang.BigInt [b, ^Writer w]
+(§ defmethod print-method BigInt [b, ^Writer w]
     (.write w (str b))
     (.write w "N")
 )
 
 (§ defmethod print-method java.util.regex.Pattern [p ^Writer w]
     (.write w "#\"")
-    (loop [[^Character c & r :as s] (seq (.pattern ^java.util.regex.Pattern p)) qmode false]
+    (loop [[^Character c & r :as s] (seq (.pattern ^Pattern p)) qmode false]
         (when s
             (condp = c
                 \\
@@ -27021,8 +26722,8 @@
     (.append w \") ;; oops! "
 )
 
-(§ defn- deref-as-map [^cloiure.lang.IDeref o]
-    (let [pending (and (instance? cloiure.lang.IPending o) (not (.isRealized ^cloiure.lang.IPending o)))
+(§ defn- deref-as-map [^IDeref o]
+    (let [pending (and (instance? IPending o) (not (.isRealized ^IPending o)))
           [ex val]
             (when-not pending
                 (try
@@ -27044,7 +26745,7 @@
     )
 )
 
-(§ defmethod print-method cloiure.lang.IDeref [o ^Writer w]
+(§ defmethod print-method IDeref [o ^Writer w]
     (print-tagged-object o (deref-as-map o) w)
 )
 
@@ -27130,15 +26831,6 @@
     (print-throwable o w)
 )
 
-(§ in-ns 'cloiure.core)
-
-(§ import
-    [java.lang.reflect Constructor Modifier]
-    [cloiure.asm ClassVisitor ClassWriter Opcodes Type]
-    [cloiure.asm.commons GeneratorAdapter Method]
-    [cloiure.lang IPersistentMap]
-)
-
 (§ def ^:private prim->class
      (hash-map
         'int      Integer/TYPE   'ints     (Class/forName "[I")
@@ -27157,7 +26849,7 @@
     (cond
         (class? x) x
         (contains? prim->class x) (prim->class x)
-        :else (let [s (str x)] (cloiure.lang.RT/classForName (if (some #{\. \[} s) s (str "java.lang." s))))
+        :else (let [s (str x)] (RT/classForName (if (some #{\. \[} s) s (str "java.lang." s))))
     )
 )
 
@@ -27223,8 +26915,6 @@
         (.defineClass ^DynamicClassLoader *class-loader* (str (:name options-map)) bytecode)
     )
 )
-
-(§ in-ns 'cloiure.core)
 
 ;;;
  ; Convert a Cloiure namespace name to a legal Java package name.
@@ -27327,11 +27017,11 @@
  ; == "foo"
  ;
  ; (seq (let [f "foo"]
- ;  (reify cloiure.lang.Seqable
+ ;  (reify cloiure.core.Seqable
  ;   (seq [this] (seq f)))))
  ; == (\f \o \o)
  ;
- ; reify always implements cloiure.lang.IObj and transfers meta
+ ; reify always implements cloiure.core.IObj and transfers meta
  ; data of the form to the created object.
  ;
  ; (meta ^{:k :v} (reify Object (toString [this] "foo")))
@@ -27344,11 +27034,11 @@
 )
 
 (§ defn hash-combine [x y]
-    (cloiure.lang.Util/hashCombine x (cloiure.lang.Util/hash y))
+    (Util/hashCombine x (Util/hash y))
 )
 
 (§ defn munge [s]
-    ((if (symbol? s) symbol str) (cloiure.lang.Compiler/munge (str s)))
+    ((if (symbol? s) symbol str) (Compiler/munge (str s)))
 )
 
 (§ defn- validate-fields [fields name]
@@ -27371,7 +27061,7 @@
  ; Do not use this directly - use deftype.
  ;;
 (§ defn- emit-deftype* [tagname cname fields interfaces methods opts]
-    (let [classname (with-meta (symbol (str (namespace-munge *ns*) "." cname)) (meta cname)) interfaces (conj interfaces 'cloiure.lang.IType)]
+    (let [classname (with-meta (symbol (str (namespace-munge *ns*) "." cname)) (meta cname)) interfaces (conj interfaces 'cloiure.core.IType)]
         `(deftype* ~(symbol (name (ns-name *ns*)) (name tagname))
             ~classname
             ~fields
@@ -27446,13 +27136,13 @@
     )
 )
 
-(§ defn- expand-method-impl-cache [^cloiure.lang.MethodImplCache cache c f]
+(§ defn- expand-method-impl-cache [^MethodImplCache cache c f]
     (if (.map cache)
-        (let [cs (assoc (.map cache) c (cloiure.lang.MethodImplCache$Entry. c f))]
-            (cloiure.lang.MethodImplCache. (.protocol cache) (.methodk cache) cs)
+        (let [cs (assoc (.map cache) c (Entry. c f))]
+            (MethodImplCache. (.protocol cache) (.methodk cache) cs)
         )
         (let [cs (into1 {} (remove (fn [[c e]] (nil? e)) (map vec (partition 2 (.table cache)))))
-              cs (assoc cs c (cloiure.lang.MethodImplCache$Entry. c f))]
+              cs (assoc cs c (Entry. c f))]
             (if-let [[shift mask] (maybe-min-hash (map hash (keys cs)))]
                 (let [table (make-array Object (* 2 (inc mask)))
                       table
@@ -27466,9 +27156,9 @@
                             )
                             table cs
                         )]
-                    (cloiure.lang.MethodImplCache. (.protocol cache) (.methodk cache) shift mask table)
+                    (MethodImplCache. (.protocol cache) (.methodk cache) shift mask table)
                 )
-                (cloiure.lang.MethodImplCache. (.protocol cache) (.methodk cache) cs)
+                (MethodImplCache. (.protocol cache) (.methodk cache) cs)
             )
         )
     )
@@ -27535,7 +27225,7 @@
     (boolean (find-protocol-impl protocol x))
 )
 
-(§ defn -cache-protocol-fn [^cloiure.lang.AFunction pf x ^Class c ^cloiure.lang.IFn interf]
+(§ defn -cache-protocol-fn [^AFunction pf x ^Class c ^IFn interf]
     (let [cache (.__methodImplCache pf)
           f (if (.isInstance c x) interf (find-protocol-method (.protocol cache) (.methodk cache) x))]
         (when-not f
@@ -27551,7 +27241,7 @@
 )
 
 (§ defn- emit-method-builder [on-interface method on-method arglists]
-    (let [methodk (keyword method) gthis (with-meta (gensym) {:tag 'cloiure.lang.AFunction}) ginterf (gensym)]
+    (let [methodk (keyword method) gthis (with-meta (gensym) {:tag 'cloiure.core.AFunction}) ginterf (gensym)]
         `(fn [cache#]
             (let [~ginterf
                     (fn ~@(map
@@ -27562,13 +27252,13 @@
                         )
                         arglists
                     ))
-                  ^cloiure.lang.AFunction f#
+                  ^AFunction f#
                     (fn ~gthis ~@(map
                         (fn [args]
                             (let [gargs (map #(gensym (str "gf__" % "__")) args) target (first gargs)]
                                 `([~@gargs]
                                     (let [cache# (.__methodImplCache ~gthis)
-                                          f# (.fnFor cache# (cloiure.lang.Reflector/classOf ~target))]
+                                          f# (.fnFor cache# (Reflector/classOf ~target))]
                                         (if f#
                                             (f# ~@gargs)
                                             ((-cache-protocol-fn ~gthis ~target ~on-interface ~ginterf) ~@gargs)
@@ -27587,8 +27277,8 @@
 )
 
 (§ defn -reset-methods [protocol]
-    (doseq [[^cloiure.lang.Var v build] (:method-builders protocol)]
-        (let [cache (cloiure.lang.MethodImplCache. protocol (keyword (.sym v)))]
+    (doseq [[^Var v build] (:method-builders protocol)]
+        (let [cache (MethodImplCache. protocol (keyword (.sym v)))]
             (.bindRoot v (build cache))
         )
     )
@@ -27891,8 +27581,9 @@
 (§ defmacro extend-protocol [p & specs]
     (emit-extend-protocol p specs)
 )
+)
 
-#_(ns cloiure.core.protocols)
+(clojure-ns cloiure.core.protocols
 
 ;;;
  ; Protocol for collection types that can implement reduce faster
@@ -27946,8 +27637,8 @@
  ; Reduces via IReduceInit if possible, else naively.
  ;;
 (§ defn- interface-or-naive-reduce [coll f val]
-    (if (instance? cloiure.lang.IReduceInit coll)
-        (.reduce ^cloiure.lang.IReduceInit coll f val)
+    (if (instance? IReduceInit coll)
+        (.reduce ^IReduceInit coll f val)
         (naive-seq-reduce coll f val)
     )
 )
@@ -27965,28 +27656,28 @@
         ([coll f val] (seq-reduce coll f val))
     )
 
-    cloiure.lang.IReduceInit
+    IReduceInit
     (coll-reduce
-        ([coll f] (.reduce ^cloiure.lang.IReduce coll f))
+        ([coll f] (.reduce ^IReduce coll f))
         ([coll f val] (.reduce coll f val))
     )
 
     ;; aseqs were iterable, masking internal-reducers
-    cloiure.lang.ASeq
+    ASeq
     (coll-reduce
         ([coll f] (seq-reduce coll f))
         ([coll f val] (seq-reduce coll f val))
     )
 
     ;; for range
-    cloiure.lang.LazySeq
+    LazySeq
     (coll-reduce
         ([coll f] (seq-reduce coll f))
         ([coll f val] (seq-reduce coll f val))
     )
 
     ;; vector's chunked seq is faster than its iter
-    cloiure.lang.PersistentVector
+    PersistentVector
     (coll-reduce
         ([coll f] (seq-reduce coll f))
         ([coll f val] (seq-reduce coll f val))
@@ -27998,7 +27689,7 @@
     (internal-reduce [s f val] val)
 
     ;; handles vectors and ranges
-    cloiure.lang.IChunkedSeq
+    IChunkedSeq
     (internal-reduce [s f val]
         (if-let [s (seq s)]
             (if (chunked-seq? s)
@@ -28014,7 +27705,7 @@
         )
     )
 
-    cloiure.lang.StringSeq
+    StringSeq
     (internal-reduce [str-seq f val]
         (let [s (.s str-seq) len (.length s)]
             (loop [i (.i str-seq) val val]
@@ -28031,7 +27722,7 @@
         )
     )
 
-    java.lang.Object
+    Object
     (internal-reduce [s f val]
         (loop [cls (class s) s s f f val val]
             (if-let [s (seq s)]
@@ -28060,10 +27751,6 @@
     (kv-reduce [amap f init])
 )
 
-(§ in-ns 'cloiure.core)
-
-(§ import [cloiure.lang Murmur3])
-
 (§ deftype VecNode [edit arr])
 
 (§ def EMPTY-NODE (VecNode. nil (object-array 32)))
@@ -28071,7 +27758,7 @@
 (§ definterface IVecImpl
     (^int tailoff [])
     (arrayFor [^int i])
-    (pushTail [^int level ^cloiure.core.VecNode parent ^cloiure.core.VecNode tailnode])
+    (pushTail [^int level ^VecNode parent ^VecNode tailnode])
     (popTail [^int level node])
     (newPath [edit ^int level node])
     (doAssoc [^int level node ^int i val])
@@ -28085,12 +27772,12 @@
     (aset [arr ^int i val])
 )
 
-(§ deftype ArrayChunk [^cloiure.core.ArrayManager am arr ^int off ^int end]
-    cloiure.lang.Indexed
+(§ deftype ArrayChunk [^ArrayManager am arr ^int off ^int end]
+    Indexed
     (nth [_ i] (.aget am arr (+ off i)))
     (count [_] (- end off))
 
-    cloiure.lang.IChunk
+    IChunk
     (dropFirst [_]
         (if (= off end)
             (throw! "dropFirst of empty chunk")
@@ -28112,7 +27799,7 @@
     )
 )
 
-(§ deftype VecSeq [^cloiure.core.ArrayManager am ^cloiure.core.IVecImpl vec anode ^int i ^int offset]
+(§ deftype VecSeq [^ArrayManager am ^IVecImpl vec anode ^int i ^int offset]
     Object
     (equals [this o]
         (cond
@@ -28132,7 +27819,7 @@
         )
     )
 
-    cloiure.core.protocols.InternalReduce
+    InternalReduce
     (internal-reduce [_ f val]
         (loop [result val aidx (+ i offset)]
             (if (< aidx (count vec))
@@ -28159,7 +27846,7 @@
         )
     )
 
-    cloiure.lang.ISeq
+    ISeq
     (first [_] (.aget am anode offset))
     (next [this]
         (if (< (inc offset) (.alength am anode))
@@ -28168,11 +27855,11 @@
         )
     )
     (rest [this] (or (next this) ()))
-    (cons [this o] (cloiure.lang.Cons. o this))
+    (cons [this o] (Cons. o this))
     (count [this]
         (loop [i 1 s (next this)]
             (if s
-                (if (instance? cloiure.lang.Counted s)
+                (if (counted? s)
                     (+ i (count s))
                     (recur (inc i) (next s))
                 )
@@ -28180,12 +27867,12 @@
             )
         )
     )
-    (empty [_] cloiure.lang.PersistentList/EMPTY)
+    (empty [_] PersistentList/EMPTY)
 
-    cloiure.lang.Seqable
+    Seqable
     (seq [this] this)
 
-    cloiure.lang.IChunkedSeq
+    IChunkedSeq
     (chunkedFirst [_]
         (ArrayChunk. am anode offset (.alength am anode))
     )
@@ -28198,16 +27885,16 @@
     )
     (chunkedMore [this]
         (let [s (.chunkedNext this)]
-            (or s cloiure.lang.PersistentList/EMPTY)
+            (or s PersistentList/EMPTY)
         )
     )
 )
 
 (§ defmethod print-method ::VecSeq [v w]
-    ((get (methods print-method) cloiure.lang.ISeq) v w)
+    ((get (methods print-method) ISeq) v w)
 )
 
-(§ deftype Vec [^cloiure.core.ArrayManager am ^int cnt ^int shift ^cloiure.core.VecNode root tail _meta]
+(§ deftype Vec [^ArrayManager am ^int cnt ^int shift ^VecNode root tail _meta]
     Object
     (equals [this o]
         (cond
@@ -28236,26 +27923,26 @@
             (if (= i cnt)
                 hash
                 (let [val (nth this i)]
-                    (recur (unchecked-add-int (unchecked-multiply-int 31 hash) (cloiure.lang.Util/hash val)) (inc i))
+                    (recur (unchecked-add-int (unchecked-multiply-int 31 hash) (Util/hash val)) (inc i))
                 )
             )
         )
     )
 
-    cloiure.lang.IHashEq
+    IHashEq
     ;; todo - cache
     (hasheq [this] (Murmur3/hashOrdered this))
 
-    cloiure.lang.Counted
+    Counted
     (count [_] cnt)
 
-    cloiure.lang.IMeta
+    IMeta
     (meta [_] _meta)
 
-    cloiure.lang.IObj
+    IObj
     (withMeta [_ m] (Vec. am cnt shift root tail m))
 
-    cloiure.lang.Indexed
+    Indexed
     (nth [this i]
         (let [a (.arrayFor this i)]
             (.aget am a (bit-and i (int 0x1f)))
@@ -28270,7 +27957,7 @@
         )
     )
 
-    cloiure.lang.IPersistentCollection
+    IPersistentCollection
     (cons [this val]
         (if (< (- cnt (.tailoff this)) (int 32))
             (let [new-tail (.array am (inc (.alength am tail)))]
@@ -28294,7 +27981,7 @@
     )
     (empty [_] (Vec. am 0 5 EMPTY-NODE (.array am 0) nil))
 
-    cloiure.lang.IPersistentStack
+    IPersistentStack
     (peek [this]
         (when (pos? cnt)
             (nth this (dec cnt))
@@ -28312,7 +27999,7 @@
                     (Vec. am (dec cnt) shift root new-tail (meta this))
                 )
             :else
-                (let [new-tail (.arrayFor this (- cnt 2)) new-root ^cloiure.core.VecNode (.popTail this shift root)]
+                (let [new-tail (.arrayFor this (- cnt 2)) new-root ^VecNode (.popTail this shift root)]
                     (cond
                         (nil? new-root)
                             (Vec. am (dec cnt) shift EMPTY-NODE new-tail (meta this))
@@ -28325,7 +28012,7 @@
         )
     )
 
-    cloiure.lang.IPersistentVector
+    IPersistentVector
     (assocN [this i val]
         (cond
             (and (<= (int 0) i) (< i cnt))
@@ -28345,36 +28032,36 @@
     )
     (length [_] cnt)
 
-    cloiure.lang.Reversible
+    Reversible
     (rseq [this]
         (if (pos? (count this))
-            (cloiure.lang.APersistentVector$RSeq. this (dec (count this)))
+            (RSeq. this (dec (count this)))
             nil
         )
     )
 
-    cloiure.lang.Associative
+    Associative
     (assoc [this k v]
-        (if (cloiure.lang.Numbers/isInteger k)
+        (if (Numbers/isInteger k)
             (.assocN this k v)
             (throw! "key must be integer")
         )
     )
     (containsKey [this k]
-        (and (cloiure.lang.Numbers/isInteger k)
+        (and (Numbers/isInteger k)
             (< -1 (int k) cnt)
         )
     )
     (entryAt [this k]
         (if (.containsKey this k)
-            (cloiure.lang.MapEntry/create k (nth this (int k)))
+            (MapEntry/create k (nth this (int k)))
             nil
         )
     )
 
-    cloiure.lang.ILookup
+    ILookup
     (valAt [this k not-found]
-        (when (cloiure.lang.Numbers/isInteger k) => not-found
+        (when (Numbers/isInteger k) => not-found
             (let-when [i (int k)] (< -1 i cnt) => not-found
                 (nth this i)
             )
@@ -28382,16 +28069,16 @@
     )
     (valAt [this k] (.valAt this k nil))
 
-    cloiure.lang.IFn
+    IFn
     (invoke [this k]
-        (when (cloiure.lang.Numbers/isInteger k) => (throw! "key must be integer")
+        (when (Numbers/isInteger k) => (throw! "key must be integer")
             (let-when [i (int k)] (< -1 i cnt) => (throw (IndexOutOfBoundsException.))
                 (nth this i)
             )
         )
     )
 
-    cloiure.lang.Seqable
+    Seqable
     (seq [this]
         (if (zero? cnt)
             nil
@@ -28399,9 +28086,9 @@
         )
     )
 
-    cloiure.lang.Sequential ;; marker, no methods
+    Sequential ;; marker, no methods
 
-    cloiure.core.IVecImpl
+    IVecImpl
     (tailoff [_] (- cnt (.alength am tail)))
     (arrayFor [this i]
         (if (and (<= (int 0) i) (< i cnt))
@@ -28419,7 +28106,7 @@
     )
     (pushTail [this level parent tailnode]
         (let [subidx (bit-and (bit-shift-right (dec cnt) level) (int 0x1f))
-              parent ^cloiure.core.VecNode parent
+              parent ^VecNode parent
               ret (VecNode. (.edit parent) (aclone ^objects (.arr parent)))
               node-to-insert
                 (if (= level (int 5))
@@ -28436,7 +28123,7 @@
         )
     )
     (popTail [this level node]
-        (let [node ^cloiure.core.VecNode node
+        (let [node ^VecNode node
               subidx (bit-and (bit-shift-right (- cnt (int 2)) level) (int 0x1f))]
             (cond
                 (> level 5)
@@ -28469,7 +28156,7 @@
         )
     )
     (doAssoc [this level node i val]
-        (let [node ^cloiure.core.VecNode node]
+        (let [node ^VecNode node]
             (if (zero? level)
                 ;; on this branch, array will need val type
                 (let [arr (.aclone am (.arr node))]
@@ -28485,11 +28172,11 @@
         )
     )
 
-    java.lang.Comparable
+    Comparable
     (compareTo [this o]
         (if (identical? this o)
             0
-            (let [^cloiure.lang.IPersistentVector v (cast cloiure.lang.IPersistentVector o) vcnt (count v)]
+            (let [^IPersistentVector v (cast IPersistentVector o) vcnt (count v)]
                 (cond
                     (< cnt vcnt)
                         -1
@@ -28499,7 +28186,7 @@
                         (loop [i (int 0)]
                             (if (= i cnt)
                                 0
-                                (let [comp (cloiure.lang.Util/compare (nth this i) (nth v i))]
+                                (let [comp (Util/compare (nth this i) (nth v i))]
                                     (if (= 0 comp)
                                         (recur (inc i))
                                         comp
@@ -28514,12 +28201,12 @@
 )
 
 (§ defmethod print-method ::Vec [v w]
-    ((get (methods print-method) cloiure.lang.IPersistentVector) v w)
+    ((get (methods print-method) IPersistentVector) v w)
 )
 
 (§ defmacro ^:private mk-am [t]
     (let [garr (gensym) tgarr (with-meta garr {:tag (symbol (str t "s"))})]
-        `(reify cloiure.core.ArrayManager
+        `(reify ArrayManager
             (array [_ size#] (~(symbol (str t "-array")) size#))
             (alength [_ ~garr] (alength ~tgarr))
             (aclone [_ ~garr] (aclone ~tgarr))
@@ -28561,25 +28248,25 @@
  ;;
 (§ defn vector-of
     ([t]
-        (let [^cloiure.core.ArrayManager am (ams-check t)]
+        (let [^ArrayManager am (ams-check t)]
             (Vec. am 0 5 EMPTY-NODE (.array am 0) nil)
         )
     )
     ([t x1]
-        (let [^cloiure.core.ArrayManager am (ams-check t) arr (.array am 1)]
+        (let [^ArrayManager am (ams-check t) arr (.array am 1)]
             (.aset am arr 0 x1)
             (Vec. am 1 5 EMPTY-NODE arr nil)
         )
     )
     ([t x1 x2]
-        (let [^cloiure.core.ArrayManager am (ams-check t) arr (.array am 2)]
+        (let [^ArrayManager am (ams-check t) arr (.array am 2)]
             (.aset am arr 0 x1)
             (.aset am arr 1 x2)
             (Vec. am 2 5 EMPTY-NODE arr nil)
         )
     )
     ([t x1 x2 x3]
-        (let [^cloiure.core.ArrayManager am (ams-check t) arr (.array am 3)]
+        (let [^ArrayManager am (ams-check t) arr (.array am 3)]
             (.aset am arr 0 x1)
             (.aset am arr 1 x2)
             (.aset am arr 2 x3)
@@ -28587,7 +28274,7 @@
         )
     )
     ([t x1 x2 x3 x4]
-        (let [^cloiure.core.ArrayManager am (ams-check t) arr (.array am 4)]
+        (let [^ArrayManager am (ams-check t) arr (.array am 4)]
             (.aset am arr 0 x1)
             (.aset am arr 1 x2)
             (.aset am arr 2 x3)
@@ -28605,8 +28292,6 @@
     )
 )
 
-(§ in-ns 'cloiure.core)
-
 ;; redefine reduce with internal-reduce
 
 ;;;
@@ -28621,14 +28306,14 @@
  ;;
 (§ defn reduce
     ([f coll]
-        (if (instance? cloiure.lang.IReduce coll)
-            (.reduce ^cloiure.lang.IReduce coll f)
+        (if (instance? IReduce coll)
+            (.reduce ^IReduce coll f)
             (cloiure.core.protocols/coll-reduce coll f)
         )
     )
     ([f val coll]
-        (if (instance? cloiure.lang.IReduceInit coll)
-            (.reduce ^cloiure.lang.IReduceInit coll f val)
+        (if (instance? IReduceInit coll)
+            (.reduce ^IReduceInit coll f val)
             (cloiure.core.protocols/coll-reduce coll f val)
         )
     )
@@ -28639,10 +28324,10 @@
     (kv-reduce [_ f init] init)
 
     ;; slow path default
-    cloiure.lang.IPersistentMap
+    IPersistentMap
     (kv-reduce [amap f init] (reduce (fn [ret [k v]] (f ret k v)) init amap))
 
-    cloiure.lang.IKVReduce
+    IKVReduce
     (kv-reduce [amap f init] (.kvreduce amap f init))
 )
 
@@ -28687,8 +28372,8 @@
     ([xform f init coll]
         (let [f (xform f)
               ret
-                (if (instance? cloiure.lang.IReduceInit coll)
-                    (.reduce ^cloiure.lang.IReduceInit coll f init)
+                (if (instance? IReduceInit coll)
+                    (.reduce ^IReduceInit coll f init)
                     (cloiure.core.protocols/coll-reduce coll f init)
                 )]
             (f ret)
@@ -28704,13 +28389,13 @@
     ([] [])
     ([to] to)
     ([to from]
-        (if (instance? cloiure.lang.IEditableCollection to)
+        (if (instance? IEditableCollection to)
             (with-meta (persistent! (reduce conj! (transient to) from)) (meta to))
             (reduce conj to from)
         )
     )
     ([to xform from]
-        (if (instance? cloiure.lang.IEditableCollection to)
+        (if (instance? IEditableCollection to)
             (with-meta (persistent! (transduce xform conj! (transient to) from)) (meta to))
             (transduce xform conj to from)
         )
@@ -29226,13 +28911,13 @@
     (let [root-bind
             (fn [m]
                 (doseq [[a-var a-val] m]
-                    (.bindRoot ^cloiure.lang.Var a-var a-val)
+                    (.bindRoot ^Var a-var a-val)
                 )
             )
           old-vals
             (zipmap
                 (keys binding-map)
-                (map #(.getRawRoot ^cloiure.lang.Var %) (keys binding-map))
+                (map #(.getRawRoot ^Var %) (keys binding-map))
             )]
         (try
             (root-bind binding-map)
@@ -29263,7 +28948,7 @@
 ;;;
  ; Returns true if a value has been produced for a delay or lazy sequence.
  ;;
-(§ defn realized? [^cloiure.lang.IPending x] (.isRealized x))
+(§ defn realized? [^IPending x] (.isRealized x))
 
 ;;;
  ; Takes an expression and a set of test/form pairs. Threads expr (via ->)
@@ -29417,8 +29102,9 @@
     (reduce #(proc %2) nil coll)
     nil
 )
+)
 
-#_(ns cloiure.set)
+(clojure-ns cloiure.set
 
 ;;;
  ; Move a maximal element of coll according to fn k (which returns a number) to the front of coll.
@@ -29608,9 +29294,10 @@
 (§ defn ^Boolean superset? [set1 set2]
     (and (>= (count set1) (count set2)) (every? #(contains? set1 %) set2))
 )
+)
 
-#_(ns cloiure.data
-    (:require [cloiure.set :as set]))
+(clojure-ns cloiure.data
+  #_(:require [cloiure.set :as set])
 
 (§ declare diff)
 
@@ -29752,6 +29439,7 @@
         )
     )
 )
+)
 
 ;;;
  ; This namespace defines a generic tree walker for Cloiure data structures.
@@ -29763,7 +29451,7 @@
  ; Note: "walk" supports all Cloiure data structures EXCEPT maps created with
  ; sorted-map-by. There is no (obvious) way to retrieve the sorting function.
  ;;
-#_(ns cloiure.walk)
+(clojure-ns cloiure.walk
 
 ;;;
  ; Traverses form, an arbitrary data structure. inner and outer are functions.
@@ -29847,29 +29535,28 @@
 (§ defn macroexpand-all [form]
     (prewalk (fn [x] (if (seq? x) (macroexpand x) x)) form)
 )
+)
 
-#_(ns cloiure.core.reducers
-    (:refer-cloiure :exclude [reduce map mapcat filter remove take take-while drop flatten cat])
-    (:require [cloiure.walk :as walk]))
+(clojure-ns cloiure.core.reducers
+  #_(:refer-cloiure :exclude [reduce map mapcat filter remove take take-while drop flatten cat])
+  #_(:require [cloiure.walk :as walk])
 
 (§ alias 'core 'cloiure.core)
 
-(§ def pool (delay (java.util.concurrent.ForkJoinPool.)))
+(§ def pool (delay (ForkJoinPool.)))
 
-(§ defn fjtask [^Callable f]
-    (java.util.concurrent.ForkJoinTask/adapt f)
-)
+(§ defn fjtask [^Callable f] (ForkJoinTask/adapt f))
 
 (§ defn- fjinvoke [f]
-    (if (java.util.concurrent.ForkJoinTask/inForkJoinPool)
+    (if (ForkJoinTask/inForkJoinPool)
         (f)
-        (.invoke ^java.util.concurrent.ForkJoinPool @pool ^java.util.concurrent.ForkJoinTask (fjtask f))
+        (.invoke ^ForkJoinPool @pool ^ForkJoinTask (fjtask f))
     )
 )
 
-(§ defn- fjfork [task] (.fork ^java.util.concurrent.ForkJoinTask task))
+(§ defn- fjfork [task] (.fork ^ForkJoinTask task))
 
-(§ defn- fjjoin [task] (.join ^java.util.concurrent.ForkJoinTask task))
+(§ defn- fjjoin [task] (.join ^ForkJoinTask task))
 
 ;;;
  ; Like core/reduce except:
@@ -29914,7 +29601,7 @@
 (§ defn reducer
     ([coll xf]
         (reify
-            cloiure.core.protocols/CollReduce
+            CollReduce
             (coll-reduce [this f1] (cloiure.core.protocols/coll-reduce this f1 (f1)))
             (coll-reduce [_ f1 init] (cloiure.core.protocols/coll-reduce coll (xf f1) init))
         )
@@ -29929,7 +29616,7 @@
 (§ defn folder
     ([coll xf]
         (reify
-            cloiure.core.protocols/CollReduce
+            CollReduce
             (coll-reduce [_ f1] (cloiure.core.protocols/coll-reduce coll (xf f1) (f1)))
             (coll-reduce [_ f1 init] (cloiure.core.protocols/coll-reduce coll (xf f1) init))
 
@@ -30123,13 +29810,13 @@
 ;; do not construct this directly, use cat
 
 (§ deftype Cat [cnt left right]
-    cloiure.lang.Counted
+    Counted
     (count [_] cnt)
 
-    cloiure.lang.Seqable
+    Seqable
     (seq [_] (concat (seq left) (seq right)))
 
-    cloiure.core.protocols/CollReduce
+    CollReduce
     (coll-reduce [this f1]
         (cloiure.core.protocols/coll-reduce this f1 (f1))
     )
@@ -30179,7 +29866,7 @@
 ;;;
  ; .adds x to acc and returns acc.
  ;;
-(§ defn append! [^java.util.Collection acc x] (doto acc (.add x)))
+(§ defn append! [^Collection acc x] (doto acc (.add x)))
 
 ;;;
  ; Equivalent to (fold cat append! coll).
@@ -30219,16 +29906,13 @@
     Object
     (coll-fold [coll n combinef reducef] (reduce reducef (combinef) coll)) ;; can't fold, single reduce
 
-    cloiure.lang.IPersistentVector
+    IPersistentVector
     (coll-fold [v n combinef reducef] (foldvec v n combinef reducef))
 
-    cloiure.lang.PersistentHashMap
+    PersistentHashMap
     (coll-fold [m n combinef reducef] (.fold m n combinef reducef fjinvoke fjtask fjfork fjjoin))
 )
-
-#_(ns cloiure.core
-    (:refer-clojure :exclude [when when-not])
-    (:use [cloiure slang]))
+)
 
 (defn -main [& args]
     )
