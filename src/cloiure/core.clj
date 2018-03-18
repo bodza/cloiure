@@ -1,8 +1,10 @@
 (ns cloiure.core
-    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + - -> .. / < <= = > >= aget alength alter-meta! and apply aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case cast char char? class class? coll? compare compare-and-set! concat cond condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defn- defprotocol defrecord deref dissoc doseq dotimes double extend-type find find-ns first float fn gen-interface get hash-map hash-set identical? identity if-let if-not import inc indexed? instance? int intern into into-array isa? key keys keyword keyword? let letfn list list* list? long loop make-array map map-entry? map? merge meta name namespace namespace-munge neg? next nil? not not= nth number? object-array or parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot reduce reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? second seq seq? sequential? set? short some? sorted-map str string? subvec swap! swap-vals! symbol symbol? to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector vector? when-let while with-meta zero?]))
+    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + - -> .. / < <= = > >= aget alength alter-meta! apply aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char coll? compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defn- defprotocol defrecord deref dissoc doseq dotimes double extend-type find find-ns first float fn gen-interface get hash-map hash-set identical? identity if-let if-not import inc indexed? int intern into into-array isa? key keys keyword keyword? let letfn list list* list? long loop make-array map map-entry? map? merge meta name namespace namespace-munge neg? next not= nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot reduce reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq seq? sequential? set? short sorted-map subvec swap! swap-vals! symbol symbol? to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector vector? when-let while with-meta zero?])
+)
 
 (import
-    [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Number Object RuntimeException String StringBuilder Thread Throwable UnsupportedOperationException])
+    [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Number Object RuntimeException String StringBuilder Thread Throwable UnsupportedOperationException]
+)
 
 (import
     [java.io BufferedReader InputStreamReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
@@ -16,47 +18,110 @@
     [java.util.concurrent.locks ReentrantReadWriteLock]
     [java.util.regex Matcher Pattern]
     [cloiure.asm ClassVisitor ClassWriter Label MethodVisitor Opcodes Type]
-    [cloiure.asm.commons GeneratorAdapter Method])
+    [cloiure.asm.commons GeneratorAdapter Method]
+)
 
 (import
-    [clojure.lang AFn AFunction APersistentMap APersistentSet APersistentVector ArraySeq BigInt DynamicClassLoader PersistentList$EmptyList IFn ILookup ILookupSite ILookupThunk IMapEntry IMeta IObj IPersistentCollection IPersistentList IPersistentMap IPersistentSet IPersistentVector IReference ISeq IType Keyword KeywordLookupSite LazySeq Namespace Numbers PersistentArrayMap PersistentHashMap PersistentHashSet PersistentList PersistentVector RestFn RT Symbol Tuple Util Var])
+    [clojure.lang AFn AFunction APersistentMap APersistentSet APersistentVector ArraySeq BigInt DynamicClassLoader PersistentList$EmptyList IFn ILookup ILookupSite ILookupThunk IMapEntry IMeta IObj IPersistentCollection IPersistentList IPersistentMap IPersistentSet IPersistentVector IReference ISeq IType Keyword KeywordLookupSite LazySeq Namespace Numbers PersistentArrayMap PersistentHashMap PersistentHashSet PersistentList PersistentVector RestFn RT Symbol Tuple Util Var]
+)
 
 (defmacro § [& _])
 (defmacro ß [& _])
 
+(defmacro throw! [^String s] `(throw (RuntimeException. ~s)))
+
 (defmacro def-
     ([s] `(def ~(vary-meta s assoc :private true)))
-    ([s i] `(def ~(vary-meta s assoc :private true) ~i)))
+    ([s i] `(def ~(vary-meta s assoc :private true) ~i))
+)
+
+(defn ^Boolean nil?   [x] (identical? x nil))
+(defn ^Boolean false? [x] (identical? x false))
+(defn ^Boolean true?  [x] (identical? x true))
+(defn ^Boolean not    [x] (if x false true))
+(defn ^Boolean some?  [x] (not (nil? x)))
+(defn ^Boolean any?   [_] true)
+
+(defn second [s] (first (next s)))
+(defn third  [s] (first (next (next s))))
+(defn fourth [s] (first (next (next (next s)))))
+(defn ffirst [s] (first (first s)))
+(defn nnext  [s] (next (next s)))
+(defn last   [s] (if-let [r (next s)] (recur r) (first s)))
+
+;;;
+ ; Evaluates exprs one at a time, from left to right. If a form returns logical false
+ ; (nil or false), and returns that value and doesn't evaluate any of the other expressions,
+ ; otherwise it returns the value of the last expr. (and) returns true.
+ ;;
+(defmacro and
+    ([] true)
+    ([x] x)
+    ([x & s] `(let [and# ~x] (if and# (and ~@s) and#)))
+)
+
+;;;
+ ; Evaluates exprs one at a time, from left to right. If a form returns a logical true value,
+ ; or returns that value and doesn't evaluate any of the other expressions, otherwise it returns
+ ; the value of the last expression. (or) returns nil.
+ ;;
+(defmacro or
+    ([] nil)
+    ([x] x)
+    ([x & s] `(let [or# ~x] (if or# or# (or ~@s))))
+)
+
+(letfn [(=> [s] (if (= '=> (first s)) (next s) (cons nil s)))]
+    (defmacro     when       [? & s] (let [[e & s] (=> s)]                    (list 'if     ? (cons 'do s) e)))
+    (defmacro     when-not   [? & s] (let [[e & s] (=> s)]                    (list 'if-not ? (cons 'do s) e)))
+    (defmacro let-when     [v ? & s] (let [[e & s] (=> s)] (list 'let (vec v) (list 'if     ? (cons 'do s) e))))
+    (defmacro let-when-not [v ? & s] (let [[e & s] (=> s)] (list 'let (vec v) (list 'if-not ? (cons 'do s) e))))
+)
+
+;;;
+ ; Takes a set of test/expr pairs. It evaluates each test one at a time.
+ ; If a test returns logical true, cond evaluates and returns the value of the
+ ; corresponding expr and doesn't evaluate any of the other tests or exprs.
+ ; (cond) returns nil.
+ ;;
+(defmacro cond [& s]
+    (when s
+        (list 'if (first s)
+            (when (next s) => (throw! "cond requires an even number of forms")
+                (second s)
+            )
+            (cons 'cloiure.core/cond (nnext s))
+        )
+    )
+)
+
+(letfn [(v' [v] (cond (vector? v) v (symbol? v) [v v] :else [`_# v]))
+        (r' [r] (cond (vector? r) `((recur ~@r)) (some? r) `((recur ~r))))
+        (=> [s] (if (= '=> (first s)) (next s) (cons nil s)))
+        (l' [v ? r s] (let [r (r' r) [e & s] (=> s)] (list 'loop (v' v) (list 'if ? `(do ~@s ~@r) e))))]
+    (defmacro loop-when [v ? & s] (l' v ? nil s))
+    (defmacro loop-when-recur [v ? r & s] (l' v ? r s))
+)
+
+(letfn [(=> [s] (if (= '=> (first s)) (second s)))]
+    (defmacro recur-if [? r & s] (list 'if ? (cond (vector? r) (cons 'recur r) (some? r) (list 'recur r)) (=> s)))
+)
+
+(defmacro cond-let [x y & s]
+    (let [x (if (vector? x) x [`_# x]) z (when (seq s) (cons 'cond-let s))]
+        (list 'if-let x y z)
+    )
+)
 
 (defmacro any
     ([f x y] `(~f ~x ~y))
-    ([f x y & z] `(let [f# ~f x# ~x _# (any f# x# ~y)] (if _# _# (any f# x# ~@z)))))
+    ([f x y & z] `(let [f# ~f x# ~x _# (any f# x# ~y)] (if _# _# (any f# x# ~@z))))
+)
+
 (defn =?
     ([x y] (if (sequential? x) (if (seq x) (or (=? (first x) y) (recur (rest x) y)) false) (if (sequential? y) (recur y x) (= x y))))
-    ([x y & z] (=? x (cons y z))))
-
-(letfn [(w' [w] (if (= '=> (first w)) (rest w) (cons nil w)))]
-    (defmacro     when       [y & w] (let [[_ & w] (w' w)]            `(if     ~y (do ~@w) ~_)))
-    (defmacro     when-not   [y & w] (let [[_ & w] (w' w)]            `(if-not ~y (do ~@w) ~_)))
-    (defmacro let-when     [x y & w] (let [[_ & w] (w' w)] `(let [~@x] (if     ~y (do ~@w) ~_))))
-    (defmacro let-when-not [x y & w] (let [[_ & w] (w' w)] `(let [~@x] (if-not ~y (do ~@w) ~_)))))
-
-(letfn [(z' [z] (cond (vector? z) `((recur ~@z)) (some? z) `((recur ~z))))
-        (w' [w] (if (= '=> (first w)) (rest w) (cons nil w)))
-        (l' [x y z w] (let [x (cond (vector? x) x (symbol? x) [x x] :else [`_# x]) z (z' z) [_ & w] (w' w)] `(loop [~@x] (if ~y (do ~@w ~@z) ~_))))]
-    (defmacro loop-when [x y & w] (l' x y nil w))
-    (defmacro loop-when-recur [x y z & w] (l' x y z w)))
-
-(letfn [(z' [z] (cond (vector? z) `(recur ~@z) (some? z) `(recur ~z)))
-        (w' [w] (if (= '=> (first w)) (second w)))]
-    (defmacro recur-if [y z & w] (let [z (z' z) _ (w' w)] `(if ~y ~z ~_))))
-
-(defmacro cond-let [x y & w]
-    (let [x (if (vector? x) x [`_# x]) z (when (seq w) `(cond-let ~@w))]
-        `(if-let ~x ~y ~z)))
-
-(defn third [s] (first (next (next s))))
-(defn fourth [s] (first (next (next (next s)))))
+    ([x y & z] (=? x (cons y z)))
+)
 
 (defn reduce!
     ([f coll] (reduce! f (f) coll))
@@ -72,11 +137,44 @@
 (def >> bit-shift-right)
 (def >>> unsigned-bit-shift-right)
 
-(defmacro throw! [^String s] `(throw (RuntimeException. ~s)))
+;;;
+ ; With no args, returns the empty string. With one arg x, returns x.toString().
+ ; (str nil) returns the empty string.
+ ; With more than one arg, returns the concatenation of the str values of the args.
+ ;;
+(defn ^String str
+    ([] "")
+    ([^Object x] (if (nil? x) "" (.toString x)))
+    ([x & y]
+        ((fn [^StringBuilder s z] (recur-if z [(.append s (str (first z))) (next z)] => (str s)))
+            (StringBuilder. (str x)) y
+        )
+    )
+)
 
-(defmacro java-ns [name & _] #_(ensure symbol? name) `(do ~@_))
-(defmacro class-ns [name & _] #_(ensure symbol? name) `(do ~@_))
-(defmacro clojure-ns [name & _] #_(ensure symbol? name) `(do ~@_))
+;;;
+ ; Returns the Class of x.
+ ;;
+(defn ^Class class [^Object x] (when (some? x) (.getClass x)))
+
+;;;
+ ; Evaluates x and tests if it is an instance of class c. Returns true or false.
+ ;;
+(defn instance? [^Class c x] (.isInstance c x))
+
+(defn class?   [x] (instance? Class x))
+(defn boolean? [x] (instance? Boolean x))
+(defn char?    [x] (instance? Character x))
+(defn number?  [x] (instance? Number x))
+(defn float?   [x] (or (instance? Double x) (instance? Float x)))
+(defn double?  [x] (instance? Double x))
+(defn decimal? [x] (instance? BigDecimal x))
+(defn string?  [x] (instance? String x))
+
+;;;
+ ; Throws a ClassCastException if x is not a c, else returns x.
+ ;;
+(defn cast [^Class c x] (.cast c x))
 
 (defmacro interface! [name [& sups] & sigs]
     (let [tag- #(or (:tag (meta %)) Object)
@@ -88,11 +186,15 @@
         )
     )
 )
-(defmacro class! [& _] `(interface! ~@_))
+(defmacro class! [& _] (cons 'interface! _))
 
 (defn- ßsym  [x] (condp instance? x                      Keyword (.sym x)                          Var (.sym x)  (:sym x) ))
 (defn- ßns   [x] (condp instance? x Symbol (namespace x) Keyword (namespace x)                     Var (.ns x)   (:ns x)  ))
 (defn- ßname [x] (condp instance? x Symbol (name x)                            Namespace (.name x)               (:name x)))
+
+(defmacro java-ns    [name & _] (cons 'do _))
+(defmacro class-ns   [name & _] (cons 'do _))
+(defmacro clojure-ns [name & _] (cons 'do _))
 
 (declare RT'CLOIURE_NS)
 (declare RT'printString)
@@ -7380,13 +7482,11 @@
 )
 
 (java-ns cloiure.lang.Fn
-    (interface! Fn []
-    )
+    (interface! Fn [])
 )
 
 (java-ns cloiure.lang.Sequential
-    (interface! Sequential []
-    )
+    (interface! Sequential [])
 )
 
 (java-ns cloiure.lang.Seqable
@@ -7643,8 +7743,7 @@
 )
 
 (java-ns cloiure.lang.IPersistentList
-    (§ soon interface! IPersistentList [Sequential IPersistentStack]
-    )
+    (§ soon interface! IPersistentList [Sequential IPersistentStack])
 )
 
 (java-ns cloiure.lang.IPersistentVector
@@ -7771,8 +7870,7 @@
 )
 
 (java-ns cloiure.lang.IType
-    (§ soon interface! IType []
-    )
+    (§ soon interface! IType [])
 )
 
 (java-ns cloiure.lang.IProxy
@@ -8258,8 +8356,7 @@
     (defn #_"<K, V> void" Util'clearCache [#_"ReferenceQueue" rq, #_"{K Reference<V>}'" cache]
         ;; cleanup any dead entries
         (when (some? (.poll rq))
-            (while (some? (.poll rq))
-            )
+            (while (some? (.poll rq)))
             (doseq [#_"IMapEntry<K, Reference<V>>" e @cache]
                 (let-when [#_"Reference<V>" r (val e)] (and (some? r) (nil? (.get r)))
                     (swap! cache #(if (identical? (get % (key e)) r) (dissoc % (key e)) %))
@@ -14988,129 +15085,107 @@
 
     #_override
     (defn #_"Object" IFn'''invoke-2--MultiFn [#_"MultiFn" this, #_"Object" arg1]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1)), arg1
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1)), arg1)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-3--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2)), arg1, arg2
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2)), arg1, arg2)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-4--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3)), arg1, arg2, arg3
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3)), arg1, arg2, arg3)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-5--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4)), arg1, arg2, arg3, arg4
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4)), arg1, arg2, arg3, arg4)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-6--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5)), arg1, arg2, arg3, arg4, arg5
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5)), arg1, arg2, arg3, arg4, arg5)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-7--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6)), arg1, arg2, arg3, arg4, arg5, arg6
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6)), arg1, arg2, arg3, arg4, arg5, arg6)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-8--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7)), arg1, arg2, arg3, arg4, arg5, arg6, arg7
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7)), arg1, arg2, arg3, arg4, arg5, arg6, arg7)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-9--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-10--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-11--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-12--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-13--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-14--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-15--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-16--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-17--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-18--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)
     )
 
     #_override
     (defn #_"Object" IFn'''invoke-19--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18)
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-20--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19)
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-21--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20)
     )
 
     #_override
   #_(defn #_"Object" IFn'''invoke-22--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, args)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20,
-            args
-        )
+        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, args)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, args)
     )
 )
 )
@@ -20533,9 +20608,6 @@
 
 (clojure-ns cloiure.core
 
-(§ def unquote)
-(§ def unquote-splicing)
-
 ;;;
  ; Creates a new list containing the items.
  ;;
@@ -20586,26 +20658,13 @@
     )
 )
 
-(§ def second (fn second [x] (first (next x))))
-(§ def ffirst (fn ffirst [x] (first (first x))))
-(§ def nfirst (fn nfirst [x] (next  (first x))))
-(§ def fnext  (fn fnext  [x] (first (next x))))
-(§ def nnext  (fn nnext  [x] (next  (next x))))
-
 ;;;
  ; Returns a seq on the collection. If the collection is empty, returns nil.
  ; (seq nil) returns nil. seq also works on strings, arrays (of reference types).
  ;;
 (§ def ^ISeq seq (fn seq [coll] (RT/seq coll)))
 
-;;;
- ; Evaluates x and tests if it is an instance of the class c. Returns true or false.
- ;;
-(§ def instance? (fn instance? [^Class c x] (.isInstance c x)))
-
 (§ def seq?    (fn seq?    [x] (instance? ISeq x)))
-(§ def char?   (fn char?   [x] (instance? Character x)))
-(§ def string? (fn string? [x] (instance? String x)))
 (§ def map?    (fn map?    [x] (instance? IPersistentMap x)))
 (§ def vector? (fn vector? [x] (instance? IPersistentVector x)))
 
@@ -20699,11 +20758,6 @@
 )
 
 ;;;
- ; Return the last item in coll, in linear time.
- ;;
-(§ def last (fn last [s] (if (next s) (recur (next s)) (first s))))
-
-;;;
  ; Return a seq of all but the last item in coll, in linear time.
  ;;
 (§ def butlast (fn butlast [s] (loop [ret [] s s] (if (next s) (recur (conj ret (first s)) (next s)) (seq ret)))))
@@ -20748,11 +20802,6 @@
  ; Returns an array of Objects containing the contents of coll.
  ;;
 (§ defn ^"[Ljava.lang.Object;" to-array [coll] (RT/toArray coll))
-
-;;;
- ; Throws a ClassCastException if x is not a c, else returns x.
- ;;
-(§ defn cast [^Class c x] (.cast c x))
 
 ;;;
  ; Creates a new vector containing the args.
@@ -20830,11 +20879,6 @@
 (§ defn sorted-set-by [comp & keys] (PersistentTreeSet/create comp keys))
 
 ;;;
- ; Returns true if x is nil, false otherwise.
- ;;
-(§ defn ^Boolean nil? [x] (identical? x nil))
-
-;;;
  ; Like defn, but the resulting function name is declared as a macro
  ; and will be used as a macro by the compiler when it is called.
  ;;
@@ -20897,65 +20941,6 @@
 (§ .setMacro (var defmacro))
 
 ;;;
- ; Evaluates test. If logical true, evaluates body in an implicit do.
- ;;
-(§ defmacro when [test & body] (list 'if test (cons 'do body)))
-
-;;;
- ; Evaluates test. If logical false, evaluates body in an implicit do.
- ;;
-(§ defmacro when-not [test & body] (list 'if test nil (cons 'do body)))
-
-;;;
- ; Returns true if x is the value false, false otherwise.
- ;;
-(§ defn ^Boolean false? [x] (identical? x false))
-
-;;;
- ; Returns true if x is the value true, false otherwise.
- ;;
-(§ defn ^Boolean true? [x] (identical? x true))
-
-;;;
- ; Return true if x is a Boolean.
- ;;
-(§ defn boolean? [x] (instance? Boolean x))
-
-;;;
- ; Returns true if x is logical false, false otherwise.
- ;;
-(§ defn ^Boolean not [x] (if x false true))
-
-;;;
- ; Returns true if x is not nil, false otherwise.
- ;;
-(§ defn ^Boolean some? [x] (not (nil? x)))
-
-;;;
- ; Returns true given any argument.
- ;;
-(§ defn ^Boolean any? [x] true)
-
-;;;
- ; With no args, returns the empty string. With one arg x, returns x.toString().
- ; (str nil) returns the empty string.
- ; With more than one arg, returns the concatenation of the str values of the args.
- ;;
-(§ defn ^String str
-    ([] "")
-    ([^Object x] (if (nil? x) "" (.toString x)))
-    ([x & ys]
-        ((fn [^StringBuilder sb more]
-            (if more
-                (recur (.append sb (str (first more))) (next more))
-                (str sb)
-            ))
-            (StringBuilder. (str x)) ys
-        )
-    )
-)
-
-;;;
  ; Return true if x is a Symbol.
  ;;
 (§ defn symbol? [x] (instance? Symbol x))
@@ -20981,24 +20966,6 @@
 (§ defn gensym
     ([] (gensym "G__"))
     ([prefix] (Symbol/intern (str prefix (RT/nextID))))
-)
-
-;;;
- ; Takes a set of test/expr pairs. It evaluates each test one at a time.
- ; If a test returns logical true, cond evaluates and returns the value of the
- ; corresponding expr and doesn't evaluate any of the other tests or exprs.
- ; (cond) returns nil.
- ;;
-(§ defmacro cond [& clauses]
-    (when clauses
-        (list 'if (first clauses)
-            (if (next clauses)
-                (second clauses)
-                (throw! "cond requires an even number of forms")
-            )
-            (cons 'cloiure.core/cond (next (next clauses)))
-        )
-    )
 )
 
 ;;;
@@ -21218,28 +21185,6 @@
  ; x must implement Comparable.
  ;;
 (§ defn compare [x y] (Util/compare x y))
-
-;;;
- ; Evaluates exprs one at a time, from left to right. If a form returns logical false
- ; (nil or false), and returns that value and doesn't evaluate any of the other expressions,
- ; otherwise it returns the value of the last expr. (and) returns true.
- ;;
-(§ defmacro and
-    ([] true)
-    ([x] x)
-    ([x & next] `(let [and# ~x] (if and# (and ~@next) and#)))
-)
-
-;;;
- ; Evaluates exprs one at a time, from left to right. If a form returns a logical true value,
- ; or returns that value and doesn't evaluate any of the other expressions, otherwise it returns
- ; the value of the last expression. (or) returns nil.
- ;;
-(§ defmacro or
-    ([] nil)
-    ([x] x)
-    ([x & next] `(let [or# ~x] (if or# or# (or ~@next))))
-)
 
 ;;;
  ; Returns true if num is zero, else false.
@@ -21733,11 +21678,6 @@
  ; Return true if x is a non-negative fixed precision integer.
  ;;
 (§ defn nat-int? [x] (and (int? x) (not (neg? x))))
-
-;;;
- ; Return true if x is a Double.
- ;;
-(§ defn double? [x] (instance? Double x))
 
 ;;;
  ; Takes a fn f and returns a fn that takes the same arguments as f,
@@ -23420,11 +23360,6 @@
 (§ defn ^:private array [& items] (into-array items))
 
 ;;;
- ; Returns the Class of x.
- ;;
-(§ defn ^Class class [^Object x] (when (some? x) (.getClass x)))
-
-;;;
  ; Returns the :type metadata of x, or its Class if none.
  ;;
 (§ defn type [x] (or (get (meta x) :type) (class x)))
@@ -23500,11 +23435,6 @@
 (§ defn unchecked-double [^Number x] (RT/uncheckedDoubleCast x))
 
 ;;;
- ; Returns true if x is a Number.
- ;;
-(§ defn number? [x] (instance? Number x))
-
-;;;
  ; Modulus of num and div. Truncates toward negative infinity.
  ;;
 (§ defn mod [num div]
@@ -23530,16 +23460,6 @@
  ; Returns the denominator part of a Ratio.
  ;;
 (§ defn ^BigInteger denominator [r] (.denominator ^Ratio r))
-
-;;;
- ; Returns true if n is a BigDecimal.
- ;;
-(§ defn decimal? [n] (instance? BigDecimal n))
-
-;;;
- ; Returns true if n is a floating point number.
- ;;
-(§ defn float? [n] (or (instance? Double n) (instance? Float n)))
 
 ;;;
  ; Returns true if n is a rational number.
@@ -25165,11 +25085,6 @@
  ; Return true if x is a byte array.
  ;;
 (§ defn bytes? [x] (if (nil? x) false (= (.getComponentType (class x)) Byte/TYPE)))
-
-;;;
- ; Returns true if x is an instance of Class.
- ;;
-(§ defn class? [x] (instance? Class x))
 
 ;;;
  ; Atomically alters the root binding of var v by applying f to its current value plus any args.
@@ -29914,5 +29829,4 @@
 )
 )
 
-(defn -main [& args]
-    )
+(defn -main [& args])
