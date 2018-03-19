@@ -1,6 +1,9 @@
 (ns cloiure.core
-    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + - -> .. / < <= = > >= aget alength alter-meta! apply aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char coll? compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defn- defprotocol defrecord deref dissoc doseq dotimes extend-type find find-ns first fn gen-interface get hash-map hash-set identical? identity if-let if-not import inc indexed? int intern into into-array isa? key keys keyword keyword? let letfn list list* list? long loop make-array map map-entry? map? merge meta name namespace namespace-munge neg? next not= nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot reduce reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq seq? sequential? set? sorted-map subvec swap! swap-vals! symbol symbol? to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector vector? when-let while with-meta zero?])
+    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + - -> .. / < <= = > >= aget alength alter-meta! apply aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defn- defprotocol defrecord deref dissoc doseq dotimes extend-type find find-ns first fn gen-interface get hash-map hash-set identical? if-let import inc indexed? int intern into into-array isa? key keys keyword let letfn list list* long loop make-array map map-entry? merge meta name namespace namespace-munge neg? next not= nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot reduce reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector when-let while with-meta zero?])
 )
+
+(defmacro § [& _])
+(defmacro ß [& _])
 
 (import
     [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Math Number Object RuntimeException String StringBuilder Thread Throwable UnsupportedOperationException]
@@ -21,142 +24,6 @@
     [cloiure.asm.commons GeneratorAdapter Method]
 )
 
-(import
-    [clojure.lang AFn AFunction APersistentMap APersistentSet APersistentVector ArraySeq BigInt DynamicClassLoader PersistentList$EmptyList IFn ILookup ILookupSite ILookupThunk IMapEntry IMeta IObj IPersistentCollection IPersistentList IPersistentMap IPersistentSet IPersistentVector IReference ISeq IType Keyword KeywordLookupSite LazySeq Namespace Numbers PersistentArrayMap PersistentHashMap PersistentHashSet PersistentList PersistentVector RestFn RT Symbol Tuple Util Var]
-)
-
-(defmacro § [& _])
-(defmacro ß [& _])
-
-(defmacro throw! [^String s] `(throw (RuntimeException. ~s)))
-
-(defmacro def-
-    ([s] `(def ~(vary-meta s assoc :private true)))
-    ([s i] `(def ~(vary-meta s assoc :private true) ~i))
-)
-
-(defn ^Boolean nil?   [x] (identical? x nil))
-(defn ^Boolean false? [x] (identical? x false))
-(defn ^Boolean true?  [x] (identical? x true))
-(defn ^Boolean not    [x] (if x false true))
-(defn ^Boolean some?  [x] (not (nil? x)))
-(defn ^Boolean any?   [_] true)
-
-(defn second [s] (first (next s)))
-(defn third  [s] (first (next (next s))))
-(defn fourth [s] (first (next (next (next s)))))
-(defn ffirst [s] (first (first s)))
-(defn nnext  [s] (next (next s)))
-(defn last   [s] (if-let [r (next s)] (recur r) (first s)))
-
-;;;
- ; Evaluates exprs one at a time, from left to right. If a form returns logical false
- ; (nil or false), and returns that value and doesn't evaluate any of the other expressions,
- ; otherwise it returns the value of the last expr. (and) returns true.
- ;;
-(defmacro and
-    ([] true)
-    ([x] x)
-    ([x & s] `(let [and# ~x] (if and# (and ~@s) and#)))
-)
-
-;;;
- ; Evaluates exprs one at a time, from left to right. If a form returns a logical true value,
- ; or returns that value and doesn't evaluate any of the other expressions, otherwise it returns
- ; the value of the last expression. (or) returns nil.
- ;;
-(defmacro or
-    ([] nil)
-    ([x] x)
-    ([x & s] `(let [or# ~x] (if or# or# (or ~@s))))
-)
-
-(letfn [(=> [s] (if (= '=> (first s)) (next s) (cons nil s)))]
-    (defmacro     when       [? & s] (let [[e & s] (=> s)]                    (list 'if     ? (cons 'do s) e)))
-    (defmacro     when-not   [? & s] (let [[e & s] (=> s)]                    (list 'if-not ? (cons 'do s) e)))
-    (defmacro let-when     [v ? & s] (let [[e & s] (=> s)] (list 'let (vec v) (list 'if     ? (cons 'do s) e))))
-    (defmacro let-when-not [v ? & s] (let [[e & s] (=> s)] (list 'let (vec v) (list 'if-not ? (cons 'do s) e))))
-)
-
-;;;
- ; Takes a set of test/expr pairs. It evaluates each test one at a time.
- ; If a test returns logical true, cond evaluates and returns the value of the
- ; corresponding expr and doesn't evaluate any of the other tests or exprs.
- ; (cond) returns nil.
- ;;
-(defmacro cond [& s]
-    (when s
-        (list 'if (first s)
-            (when (next s) => (throw! "cond requires an even number of forms")
-                (second s)
-            )
-            (cons 'cloiure.core/cond (nnext s))
-        )
-    )
-)
-
-(letfn [(v' [v] (cond (vector? v) v (symbol? v) [v v] :else [`_# v]))
-        (r' [r] (cond (vector? r) `((recur ~@r)) (some? r) `((recur ~r))))
-        (=> [s] (if (= '=> (first s)) (next s) (cons nil s)))
-        (l' [v ? r s] (let [r (r' r) [e & s] (=> s)] (list 'loop (v' v) (list 'if ? `(do ~@s ~@r) e))))]
-    (defmacro loop-when [v ? & s] (l' v ? nil s))
-    (defmacro loop-when-recur [v ? r & s] (l' v ? r s))
-)
-
-(letfn [(=> [s] (if (= '=> (first s)) (second s)))]
-    (defmacro recur-if [? r & s] (list 'if ? (cond (vector? r) (cons 'recur r) (some? r) (list 'recur r)) (=> s)))
-)
-
-(defmacro cond-let [x y & s]
-    (let [x (if (vector? x) x [`_# x]) z (when (seq s) (cons 'cond-let s))]
-        (list 'if-let x y z)
-    )
-)
-
-(defmacro any
-    ([f x y] `(~f ~x ~y))
-    ([f x y & z] `(let [f# ~f x# ~x _# (any f# x# ~y)] (if _# _# (any f# x# ~@z))))
-)
-
-(defn =?
-    ([x y] (if (sequential? x) (if (seq x) (or (=? (first x) y) (recur (rest x) y)) false) (if (sequential? y) (recur y x) (= x y))))
-    ([x y & z] (=? x (cons y z)))
-)
-
-(defn reduce!
-    ([f coll] (reduce! f (f) coll))
-    ([f init coll] (persistent! (reduce f (transient init) coll)))
-)
-
-(defmacro update! [x f & z] `(set! ~x (~f ~x ~@z)))
-
-(def % rem)
-(def & bit-and)
-(def | bit-or)
-(def << bit-shift-left)
-(def >> bit-shift-right)
-(def >>> unsigned-bit-shift-right)
-
-;;;
- ; With no args, returns the empty string. With one arg x, returns x.toString().
- ; (str nil) returns the empty string.
- ; With more than one arg, returns the concatenation of the str values of the args.
- ;;
-(defn ^String str
-    ([] "")
-    ([^Object x] (if (nil? x) "" (.toString x)))
-    ([x & y]
-        ((fn [^StringBuilder s z] (recur-if z [(.append s (str (first z))) (next z)] => (str s)))
-            (StringBuilder. (str x)) y
-        )
-    )
-)
-
-;;;
- ; Returns the Class of x.
- ;;
-(defn ^Class class [^Object x] (when (some? x) (.getClass x)))
-
 ;;;
  ; Evaluates x and tests if it is an instance of class c. Returns true or false.
  ;;
@@ -168,33 +35,13 @@
 (defn number?  [x] (instance? Number x))
 (defn string?  [x] (instance? String x))
 
-;;;
- ; Throws a ClassCastException if x is not a c, else returns x.
- ;;
-(defn cast [^Class c x] (.cast c x))
-
-(defmacro interface! [name [& sups] & sigs]
-    (let [tag- #(or (:tag (meta %)) Object)
-          sig- (fn [[name [this & args]]] [name (vec (map tag- args)) (tag- name) (map meta args)])
-          cname (with-meta (symbol (str (namespace-munge *ns*) "." name)) (meta name))]
-        `(do
-            (gen-interface :name ~cname :extends ~(vec (map resolve sups)) :methods ~(vec (map sig- sigs)))
-            (import ~cname)
-        )
-    )
+(import
+    [clojure.lang AFn AFunction APersistentMap APersistentSet APersistentVector ArraySeq BigInt DynamicClassLoader PersistentList$EmptyList IFn ILookup ILookupSite ILookupThunk IMapEntry IMeta IObj IPersistentCollection IPersistentList IPersistentMap IPersistentSet IPersistentVector IReference ISeq IType Keyword KeywordLookupSite LazySeq Namespace Numbers PersistentArrayMap PersistentHashMap PersistentHashSet PersistentList PersistentVector RestFn RT Symbol Tuple Util Var]
 )
-(defmacro class! [& _] (cons 'interface! _))
 
-(defn- ßsym  [x] (condp instance? x                      Keyword (.sym x)                          Var (.sym x)  (:sym x) ))
-(defn- ßns   [x] (condp instance? x Symbol (namespace x) Keyword (namespace x)                     Var (.ns x)   (:ns x)  ))
-(defn- ßname [x] (condp instance? x Symbol (name x)                            Namespace (.name x)               (:name x)))
-
-(defmacro java-ns    [name & _] (cons 'do _))
-(defmacro class-ns   [name & _] (cons 'do _))
-(defmacro clojure-ns [name & _] (cons 'do _))
-
-(declare RT'CLOIURE_NS)
-(declare RT'printString)
+(defmacro java-ns    [_ & s] (cons 'do s))
+(defmacro class-ns   [_ & s] (cons 'do s))
+(defmacro clojure-ns [_ & s] (cons 'do s))
 
 (java-ns cloiure.lang.Reflector
     (§ soon definterface Reflector) (import [clojure.lang Reflector])
@@ -293,6 +140,178 @@
     (defrecord NewInstanceExpr    [] #_"Expr" #_"IopObject")
     (defrecord CaseExpr           [] #_"Expr" #_"MaybePrimitive")
 )
+
+(defn seq?     [x] (instance? ISeq x))
+(defn coll?    [x] (instance? IPersistentCollection x))
+(defn list?    [x] (instance? IPersistentList x))
+(defn map?     [x] (instance? IPersistentMap x))
+(defn set?     [x] (instance? IPersistentSet x))
+(defn vector?  [x] (instance? IPersistentVector x))
+(defn symbol?  [x] (instance? Symbol x))
+(defn keyword? [x] (instance? Keyword x))
+
+(defmacro throw! [^String s] `(throw (RuntimeException. ~s)))
+
+(defmacro def-
+    ([s  ] `(def ~(vary-meta s assoc :private true)   ))
+    ([s i] `(def ~(vary-meta s assoc :private true) ~i))
+)
+
+(defn identity   [x] x)
+(defn constantly [x] (fn [& _] x))
+
+(defn ^Boolean nil?   [x] (identical? x nil))
+(defn ^Boolean false? [x] (identical? x false))
+(defn ^Boolean true?  [x] (identical? x true))
+(defn ^Boolean not    [x] (if x false true))
+(defn ^Boolean some?  [x] (not (nil? x)))
+(defn ^Boolean any?   [_] true)
+
+;;;
+ ; Evaluates test. If logical false, evaluates and returns then expr,
+ ; otherwise else expr, if supplied, else nil.
+ ;;
+(defmacro if-not
+    ([? then] (if-not ? then nil))
+    ([? then else] (list 'if ? else then))
+)
+
+(defn second [s] (first (next s)))
+(defn third  [s] (first (next (next s))))
+(defn fourth [s] (first (next (next (next s)))))
+(defn ffirst [s] (first (first s)))
+(defn nnext  [s] (next (next s)))
+(defn last   [s] (if-let [r (next s)] (recur r) (first s)))
+
+;;;
+ ; Evaluates exprs one at a time, from left to right. If a form returns logical false
+ ; (nil or false), and returns that value and doesn't evaluate any of the other expressions,
+ ; otherwise it returns the value of the last expr. (and) returns true.
+ ;;
+(defmacro and
+    ([] true)
+    ([x] x)
+    ([x & s] `(let [and# ~x] (if and# (and ~@s) and#)))
+)
+
+;;;
+ ; Evaluates exprs one at a time, from left to right. If a form returns a logical true value,
+ ; or returns that value and doesn't evaluate any of the other expressions, otherwise it returns
+ ; the value of the last expression. (or) returns nil.
+ ;;
+(defmacro or
+    ([] nil)
+    ([x] x)
+    ([x & s] `(let [or# ~x] (if or# or# (or ~@s))))
+)
+
+(letfn [(=> [s] (if (= '=> (first s)) (next s) (cons nil s)))]
+    (defmacro     when       [? & s] (let [[e & s] (=> s)]               `(if     ~? (do ~@s) ~e)))
+    (defmacro     when-not   [? & s] (let [[e & s] (=> s)]               `(if-not ~? (do ~@s) ~e)))
+    (defmacro let-when     [v ? & s] (let [[e & s] (=> s)] `(let ~(vec v) (if     ~? (do ~@s) ~e))))
+    (defmacro let-when-not [v ? & s] (let [[e & s] (=> s)] `(let ~(vec v) (if-not ~? (do ~@s) ~e))))
+)
+
+;;;
+ ; Takes a set of test/expr pairs. It evaluates each test one at a time.
+ ; If a test returns logical true, cond evaluates and returns the value of the
+ ; corresponding expr and doesn't evaluate any of the other tests or exprs.
+ ; (cond) returns nil.
+ ;;
+(defmacro cond [& s]
+    (when s
+        `(if ~(first s)
+            ~(when (next s) => (throw! "cond requires an even number of forms")
+                (second s)
+            )
+            (cond ~@(nnext s))
+        )
+    )
+)
+
+(letfn [(v' [v] (cond (vector? v) v (symbol? v) [v v] :else [`_# v]))
+        (r' [r] (cond (vector? r) `((recur ~@r)) (some? r) `((recur ~r))))
+        (=> [s] (if (= '=> (first s)) (next s) (cons nil s)))
+        (l' [v ? r s] (let [r (r' r) [e & s] (=> s)] `(loop ~(v' v) (if ~? (do ~@s ~@r) ~e))))]
+    (defmacro loop-when [v ? & s] (l' v ? nil s))
+    (defmacro loop-when-recur [v ? r & s] (l' v ? r s))
+)
+
+(letfn [(r' [r] (cond (vector? r) `(recur ~@r) (some? r) `(recur ~r)))
+        (=> [s] (if (= '=> (first s)) (second s)))]
+    (defmacro recur-if [? r & s] `(if ~? ~(r' r) ~(=> s)))
+)
+
+(defmacro cond-let [v r & s]
+    (let [v (if (vector? v) v [`_# v]) e (when (seq s) `(cond-let ~@s))]
+        `(if-let ~v ~r ~e)
+    )
+)
+
+(defmacro any
+    ([f x y] `(~f ~x ~y))
+    ([f x y & z] `(let [f# ~f x# ~x _# (any f# x# ~y)] (if _# _# (any f# x# ~@z))))
+)
+
+(defn =?
+    ([x y] (if (sequential? x) (if (seq x) (or (=? (first x) y) (recur (rest x) y)) false) (if (sequential? y) (recur y x) (= x y))))
+    ([x y & z] (=? x (cons y z)))
+)
+
+(defn reduce!
+    ([f coll] (reduce! f (f) coll))
+    ([f init coll] (persistent! (reduce f (transient init) coll)))
+)
+
+(defmacro update! [x f & z] `(set! ~x (~f ~x ~@z)))
+
+(def % rem)
+(def & bit-and)
+(def | bit-or)
+(def << bit-shift-left)
+(def >> bit-shift-right)
+(def >>> unsigned-bit-shift-right)
+
+;;;
+ ; Throws a ClassCastException if x is not a c, else returns x.
+ ;;
+(defn cast [^Class c x] (.cast c x))
+
+;;;
+ ; Returns the Class of x.
+ ;;
+(defn ^Class class [^Object x] (when (some? x) (.getClass x)))
+
+;;;
+ ; With no args, returns the empty string. With one arg x, returns x.toString().
+ ; (str nil) returns the empty string.
+ ; With more than one arg, returns the concatenation of the str values of the args.
+ ;;
+(defn ^String str
+    ([] "")
+    ([^Object x] (if (nil? x) "" (.toString x)))
+    ([x & y]
+        ((fn [^StringBuilder s z] (recur-if z [(.append s (str (first z))) (next z)] => (str s)))
+            (StringBuilder. (str x)) y
+        )
+    )
+)
+
+(defmacro interface! [name [& sups] & sigs]
+    (let [tag- #(or (:tag (meta %)) Object)
+          sig- (fn [[name [this & args]]] [name (vec (map tag- args)) (tag- name) (map meta args)])
+          cname (with-meta (symbol (str (namespace-munge *ns*) "." name)) (meta name))]
+        `(do
+            (gen-interface :name ~cname :extends ~(vec (map resolve sups)) :methods ~(vec (map sig- sigs)))
+            (import ~cname)
+        )
+    )
+)
+(defmacro class! [& s] `(interface! ~@s))
+
+(defn- ßsym  [x] (condp instance? x                      Keyword (.sym x)                          Var (.sym x)  (:sym x) ))
+(defn- ßns   [x] (condp instance? x Symbol (namespace x) Keyword (namespace x)                     Var (.ns x)   (:ns x)  ))
+(defn- ßname [x] (condp instance? x Symbol (name x)                            Namespace (.name x)               (:name x)))
 
 (java-ns cloiure.lang.Intrinsics
 
@@ -856,7 +875,7 @@
                 (dotimes [#_"int" j n]
                     (aset b j t)
                 )
-                (aset b n (Type/getType "[Ljava/lang/Object;"))
+                (aset b n (Type/getType Compiler'OBJECTS_CLASS))
                 (aset a (inc n) b)
                 a
             )
@@ -11710,6 +11729,8 @@
         (:_meta this)
     )
 
+    (declare RT'printString)
+
     #_foreign
     (defn #_"String" toString---ASeq [#_"ASeq" this]
         (RT'printString this)
@@ -14247,6 +14268,8 @@
     (defn #_"IPersistentMap" Namespace''getMappings [#_"Namespace" this]
         (.get (:mappings this))
     )
+
+    (declare RT'CLOIURE_NS)
 
     #_method
     (defn- #_"void" Namespace''warnOrFailOnReplace [#_"Namespace" this, #_"Symbol" sym, #_"Object" o, #_"Var" var]
@@ -19432,66 +19455,49 @@
 (§ def ^:macro fn   (fn* fn   [&form &env & decl] (.withMeta ^IObj (cons 'fn* decl) (.meta ^IMeta &form))))
 
 ;;;
- ; Returns the first item in the collection. Calls seq on its argument. If coll is nil, returns nil.
+ ; Returns the first item in the collection. Calls seq on its argument. If s is nil, returns nil.
  ;;
-(§ def first (fn first [coll] (RT/first coll)))
+(§ defn first [s] (RT/first s))
 
 ;;;
  ; Returns a seq of the items after the first. Calls seq on its argument. If there are no more items, returns nil.
  ;;
-(§ def ^ISeq next (fn next [x] (RT/next x)))
+(§ defn ^ISeq next [s] (RT/next s))
 
 ;;;
  ; Returns a possibly empty seq of the items after the first. Calls seq on its argument.
  ;;
-(§ def ^ISeq rest (fn rest [x] (RT/rest x)))
+(§ defn ^ISeq rest [s] (RT/rest s))
 
 ;;;
  ; conj[oin].
  ; Returns a new collection with the xs 'added'. (conj nil item) returns (item).
  ; The 'addition' may happen at different 'places' depending on the concrete type.
  ;;
-(§ def conj
-    (fn conj
-        ([] [])
-        ([coll] coll)
-        ([coll x] (RT/conj coll x))
-        ([coll x & xs]
-            (if xs
-                (recur (conj coll x) (first xs) (next xs))
-                (conj coll x)
-            )
-        )
-    )
+(§ defn conj
+    ([] [])
+    ([coll] coll)
+    ([coll x] (RT/conj coll x))
+    ([coll x & xs] (recur-if xs [(conj coll x) (first xs) (next xs)] => (conj coll x)))
 )
 
 ;;;
  ; Returns a seq on the collection. If the collection is empty, returns nil.
  ; (seq nil) returns nil. seq also works on strings, arrays (of reference types).
  ;;
-(§ def ^ISeq seq (fn seq [coll] (RT/seq coll)))
-
-(§ def seq?    (fn seq?    [x] (instance? ISeq x)))
-(§ def map?    (fn map?    [x] (instance? IPersistentMap x)))
-(§ def vector? (fn vector? [x] (instance? IPersistentVector x)))
+(§ defn ^ISeq seq [s] (RT/seq s))
 
 ;;;
  ; assoc[iate].
  ; When applied to a map, returns a new map of the same (hashed/sorted) type, that contains the mapping of key(s) to val(s).
  ; When applied to a vector, returns a new vector that contains val at index. Note - index must be <= (count vector).
  ;;
-(§ def assoc
-    (fn assoc
-        ([map key val] (RT/assoc map key val))
-        ([map key val & kvs]
-            (let [ret (assoc map key val)]
-                (if kvs
-                    (if (next kvs)
-                        (recur ret (first kvs) (second kvs) (nnext kvs))
-                        (throw! "assoc expects even number of arguments after map/vector, found odd number")
-                    )
-                    ret
-                )
+(§ defn assoc
+    ([m k v] (RT/assoc m k v))
+    ([m k v & s]
+        (let-when [m (assoc m k v)] s => m
+            (when (next s) => (throw! "assoc expects even number of arguments after map/vector, found odd number")
+                (recur m (first s) (second s) (nnext s))
             )
         )
     )
@@ -19500,66 +19506,37 @@
 ;;;
  ; Returns the metadata of obj, returns nil if there is no metadata.
  ;;
-(§ def meta (fn meta [x] (if (instance? IMeta x) (.meta ^IMeta x))))
+(§ defn meta [x] (when (instance? IMeta x) (.meta ^IMeta x)))
 
 ;;;
  ; Returns an object of the same type and value as obj, with map m as its metadata.
  ;;
-(§ def with-meta (fn with-meta [^IObj x m] (.withMeta x m)))
+(§ defn with-meta [^IObj x m] (.withMeta x m))
 
-(§ def ^:private ^:dynamic assert-valid-fdecl (fn [fdecl]))
+(defn- ^:dynamic assert-valid-fdecl [_])
 
-(§ def ^:private sigs
-    (fn [fdecl]
-        (assert-valid-fdecl fdecl)
-        (let [asig
-                (fn [fdecl]
-                    (let [arglist (first fdecl)
-                          ;; elide implicit macro args
-                          arglist
-                            (if (= '&form (first arglist))
-                                (RT/subvec arglist 2 (RT/count arglist))
-                                arglist
-                            )
-                          body (next fdecl)]
-                        (if (map? (first body))
-                            (if (next body)
-                                (with-meta arglist (conj (if (meta arglist) (meta arglist) {}) (first body)))
-                                arglist
-                            )
-                            arglist
-                        )
+(§ defn- sigs [s]
+    (assert-valid-fdecl s)
+    (letfn [(sig- [s]
+                (let [v (first s) s (next s) v (if (= '&form (first v)) (subvec v 2) v)] ;; elide implicit macro args
+                    (let-when [m (first s)] (and (map? m) (next s)) => v
+                        (with-meta v (conj (or (meta v) {}) m))
                     )
                 )
-              resolve-tag
-                (fn [argvec]
-                    (let [m (meta argvec) ^Symbol tag (:tag m)]
-                        (if (symbol? tag)
-                            (if (= (.indexOf (.getName tag) ".") -1)
-                                (if (nil? (Interop/maybeSpecialTag tag))
-                                    (let [c (Interop/maybeClass tag false)]
-                                        (if c
-                                            (with-meta argvec (assoc m :tag (Symbol/intern (.getName c))))
-                                            argvec
-                                        )
-                                    )
-                                    argvec
-                                )
-                                argvec
-                            )
-                            argvec
-                        )
-                    )
-                )]
-            (if (seq? (first fdecl))
-                (loop [ret [] fdecls fdecl]
-                    (if fdecls
-                        (recur (conj ret (resolve-tag (asig (first fdecls)))) (next fdecls))
-                        (seq ret)
-                    )
-                )
-                (list (resolve-tag (asig fdecl)))
             )
+            (tag- [s]
+                (let [v (sig- s) m (meta v) ^Symbol tag (:tag m)]
+                    (when (and (symbol? tag) (not (some #{\.} (ßname tag))) (not (Interop/maybeSpecialTag tag))) => v
+                        (let [c (Interop/maybeClass tag false)]
+                            (when c => v
+                                (with-meta v (assoc m :tag (symbol (.getName c))))
+                            )
+                        )
+                    )
+                )
+            )]
+        (when (seq? (first s)) => (list (tag- s))
+            (seq (mapv tag- s))
         )
     )
 )
@@ -19567,48 +19544,40 @@
 ;;;
  ; Return a seq of all but the last item in coll, in linear time.
  ;;
-(§ def butlast (fn butlast [s] (loop [ret [] s s] (if (next s) (recur (conj ret (first s)) (next s)) (seq ret)))))
+(§ defn butlast [s] (loop-when-recur [v [] s s] (next s) [(conj v (first s)) (next s)] => (seq v)))
 
 ;;;
  ; Same as (def name (fn [params*] exprs*)) or (def name (fn ([params*] exprs*)+)) with any attrs added to the var metadata.
  ;;
-(§ def defn
-    (fn defn [&form &env name & fdecl]
-        ;; note: cannot delegate this check to def because of the call to (with-meta name ..)
-        (if (symbol? name) nil (throw! "first argument to defn must be a symbol"))
-        (let [m     (if (map?    (first fdecl)) (first fdecl)         {})
-              fdecl (if (map?    (first fdecl)) (next fdecl)          fdecl)
-              fdecl (if (vector? (first fdecl)) (list fdecl)          fdecl)
-              m     (if (map?    (last fdecl))  (conj m (last fdecl)) m)
-              fdecl (if (map?    (last fdecl))  (butlast fdecl)       fdecl)
-              m     (conj {:arglists (list 'quote (sigs fdecl))} m)
-              m     (let [inline (:inline m) ifn (first inline) iname (second inline)]
-                        ;; same as: (if (and (= 'fn ifn) (not (symbol? iname))) ...)
-                        (if (if (= 'fn ifn) (if (symbol? iname) false true))
-                            ;; inserts the same fn name to the inline fn if it does not have one
-                            (assoc m :inline
-                                (cons ifn (cons (Symbol/intern (.concat (.getName ^Symbol name) "__inliner")) (next inline)))
-                            )
-                            m
-                        )
+(§ defmacro defn [&form &env fname & s]
+    ;; note: cannot delegate this check to def because of the call to (with-meta name ..)
+    (when (symbol? fname) => (throw! "first argument to defn must be a symbol")
+        (let [m (if (map?    (first s)) (first s)        {})
+              s (if (map?    (first s)) (next s)          s)
+              s (if (vector? (first s)) (list s)          s)
+              m (if (map?    (last  s)) (conj m (last s)) m)
+              s (if (map?    (last  s)) (butlast s)       s)
+              m (conj {:arglists (list 'quote (sigs s))} m)
+              m (let [inline (:inline m) ifn (first inline) iname (second inline)]
+                    (when (and (= 'fn ifn) (not (symbol? iname))) => m
+                        ;; inserts the same fn name to the inline fn if it does not have one
+                        (assoc m :inline (cons ifn (cons (symbol (str (ßname ^Symbol fname) "__inliner")) (next inline))))
                     )
-              m     (conj (if (meta name) (meta name) {}) m)]
-            (list 'def (with-meta name m)
+                )
+              m (conj (or (meta fname) {}) m)]
+            (list 'def (with-meta fname m)
                 ;; todo - restore propagation of fn name
                 ;; must figure out how to convey primitive hints to self calls first
-                ;; (cons `fn fdecl)
-                (with-meta (cons `fn fdecl) {:rettag (:tag m)})
+                (with-meta (cons `fn s) {:rettag (:tag m)})
             )
         )
     )
 )
 
-(§ .setMacro (var defn))
-
 ;;;
  ; Returns an array of Objects containing the contents of coll.
  ;;
-(§ defn ^"[Ljava.lang.Object;" to-array [coll] (RT/toArray coll))
+(§ defn ^objects to-array [coll] (RT/toArray coll))
 
 ;;;
  ; Creates a new vector containing the args.
@@ -19629,12 +19598,8 @@
  ; will be aliased and should not be modified.
  ;;
 (§ defn vec [coll]
-    (if (vector? coll)
-        (if (instance? IObj coll)
-            (with-meta coll nil)
-            (LazilyPersistentVector/create coll)
-        )
-        (LazilyPersistentVector/create coll)
+    (when (and (vector? coll) (instance? IObj coll)) => (LazilyPersistentVector/create coll)
+        (with-meta coll nil)
     )
 )
 
@@ -19748,16 +19713,6 @@
 (§ .setMacro (var defmacro))
 
 ;;;
- ; Return true if x is a Symbol.
- ;;
-(§ defn symbol? [x] (instance? Symbol x))
-
-;;;
- ; Return true if x is a Keyword.
- ;;
-(§ defn keyword? [x] (instance? Keyword x))
-
-;;;
  ; Returns a Symbol with the given namespace and name.
  ;;
 (§ defn ^Symbol symbol
@@ -19772,7 +19727,7 @@
  ;;
 (§ defn gensym
     ([] (gensym "G__"))
-    ([prefix] (Symbol/intern (str prefix (RT/nextID))))
+    ([prefix] (symbol (str prefix (RT/nextID))))
 )
 
 ;;;
@@ -19784,10 +19739,10 @@
         (cond
             (keyword? name) name
             (symbol? name) (Keyword/intern ^Symbol name)
-            (string? name) (Keyword/intern (Symbol/intern ^String name))
+            (string? name) (Keyword/intern (symbol ^String name))
         )
     )
-    ([ns name] (Keyword/intern (Symbol/intern ns name)))
+    ([ns name] (keyword (symbol ns name)))
 )
 
 ;;;
@@ -19807,11 +19762,11 @@
     ([ns name] (Keyword/find ns name))
 )
 
-(§ defn ^:private spread [arglist]
+(defn- spread [s]
     (cond
-        (nil? arglist) nil
-        (nil? (next arglist)) (seq (first arglist))
-        :else (cons (first arglist) (spread (next arglist)))
+        (nil? s) nil
+        (nil? (next s)) (seq (first s))
+        :else (cons (first s) (spread (next s)))
     )
 )
 
@@ -19858,36 +19813,21 @@
     (ChunkBuffer. capacity)
 )
 
-(§ defn chunk-append [^ChunkBuffer b x]
-    (.add b x)
-)
+(§ defn chunk-append  [^ChunkBuffer b x] (.add b x))
+(§ defn ^IChunk chunk [^ChunkBuffer b  ] (.chunk b))
 
-(§ defn ^IChunk chunk [^ChunkBuffer b]
-    (.chunk b)
-)
-
-(§ defn ^IChunk chunk-first [^IChunkedSeq s]
-    (.chunkedFirst s)
-)
-
-(§ defn ^ISeq chunk-rest [^IChunkedSeq s]
-    (.chunkedMore s)
-)
-
-(§ defn ^ISeq chunk-next [^IChunkedSeq s]
-    (.chunkedNext s)
-)
+(§ defn ^IChunk chunk-first [^IChunkedSeq s] (.chunkedFirst s))
+(§ defn ^ISeq   chunk-rest  [^IChunkedSeq s] (.chunkedMore  s))
+(§ defn ^ISeq   chunk-next  [^IChunkedSeq s] (.chunkedNext  s))
 
 (§ defn chunk-cons [chunk rest]
-    (if (Numbers/isZero (RT/count chunk))
+    (if (zero? (count chunk))
         rest
         (ChunkedCons. chunk rest)
     )
 )
 
-(§ defn chunked-seq? [s]
-    (instance? IChunkedSeq s)
-)
+(defn chunked-seq? [s] (instance? IChunkedSeq s))
 
 ;;;
  ; Returns a lazy seq representing the concatenation of the elements in the supplied colls.
@@ -19941,21 +19881,12 @@
 ;;;
  ; Returns true if x is a Delay created with delay.
  ;;
-(§ defn delay? [x] (instance? Delay x))
+(defn delay? [x] (instance? Delay x))
 
 ;;;
  ; If x is a Delay, returns the (possibly cached) value of its expression, else returns x.
  ;;
 (§ defn force [x] (Delay/force x))
-
-;;;
- ; Evaluates test. If logical false, evaluates and returns then expr,
- ; otherwise else expr, if supplied, else nil.
- ;;
-(§ defmacro if-not
-    ([test then] `(if-not ~test ~then nil))
-    ([test then else] `(if (not ~test) ~then ~else))
-)
 
 ;;;
  ; Equality. Returns true if x equals y, false if not. Same as Java x.equals(y) except it also
@@ -20491,16 +20422,6 @@
         ([x y & zs] (not (apply f x y zs)))
     )
 )
-
-;;;
- ; Returns a function that takes any number of arguments and returns x.
- ;;
-(§ defn constantly [x] (fn [& args] x))
-
-;;;
- ; Returns its argument.
- ;;
-(§ defn identity [x] x)
 
 ;; list stuff
 
@@ -22558,11 +22479,6 @@
 (§ defn load-string [s] (load-reader (-> s (java.io.StringReader.) (java.io.PushbackReader.))))
 
 ;;;
- ; Returns true if x implements IPersistentSet.
- ;;
-(§ defn set? [x] (instance? IPersistentSet x))
-
-;;;
  ; Returns a set of the distinct elements of coll.
  ;;
 (§ defn set [coll]
@@ -24143,16 +24059,6 @@
  ; Please use the idiom (seq x) rather than (not (empty? x)).
  ;;
 (§ defn empty? [coll] (not (seq coll)))
-
-;;;
- ; Returns true if x implements IPersistentCollection.
- ;;
-(§ defn coll? [x] (instance? IPersistentCollection x))
-
-;;;
- ; Returns true if x implements IPersistentList.
- ;;
-(§ defn list? [x] (instance? IPersistentList x))
 
 ;;;
  ; Return true if the seq function is supported for x.
